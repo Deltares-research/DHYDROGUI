@@ -1,0 +1,6 @@
+QUANTITY=outflowbnd
+FILENAME=testcrop_outflow.pli
+FILETYPE=9
+METHOD=3
+OPERAND=O
+ 

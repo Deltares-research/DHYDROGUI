@@ -1,5 +1,7 @@
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using GeoAPI.Geometries;
+using GeoAPI.IO;
 using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers
@@ -264,6 +266,31 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
                 {
                     Line = new Pen(Color.DeepPink, 2f),
                     Fill = new SolidBrush(Color.DeepPink),
+                    GeometryType = typeof(IPoint)
+                };
+            }
+        }
+
+        public static VectorStyle LeveeSnappedStyle
+        {
+            get
+            {
+                return new VectorStyle
+                {
+                    Line = new Pen(Color.FromArgb(128, Color.LawnGreen), 3f) ,
+                    GeometryType = typeof(ILineString)
+                };
+            }
+        }
+
+        public static VectorStyle BreachSnappedStyle
+        {
+            get
+            {
+                return new VectorStyle
+                {
+                    Line = new Pen(Color.FromArgb(64,Color.DeepPink), 2f),
+                    Fill = new SolidBrush(Color.FromArgb(64,Color.DeepPink)),
                     GeometryType = typeof(IPoint)
                 };
             }

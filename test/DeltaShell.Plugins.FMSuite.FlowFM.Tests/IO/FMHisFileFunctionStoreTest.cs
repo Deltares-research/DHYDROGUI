@@ -148,6 +148,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
 
         [Test]
+        public void OpenLeveeBreachTimeSeries()
+        {
+            var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\leveeBreach_his.nc"));
+
+            var result = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "dambreak_discharge");
+            Assert.IsNotNull(result, "dambreak_discharge");
+
+            result = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "dambreak_cumulative_discharge");
+            Assert.IsNotNull(result, "dambreak_cumulative_discharge");
+
+            result = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "dambreak_s1up");
+            Assert.IsNotNull(result, "dambreak_s1up");
+
+            result = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "dambreak_s1dn");
+            Assert.IsNotNull(result, "dambreak_s1dn");
+
+            result = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "dambreak_breach_depth");
+            Assert.IsNotNull(result, "dambreak_breach_depth");
+
+            result = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "dambreak_breach_width");
+            Assert.IsNotNull(result, "dambreak_breach_width");
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
+        public void OpenLeveeBreachHisFileInModelContextAndExpectFeaturesToBeSameInstance()
+        {
+            var mduPath = TestHelper.GetTestFilePath(@"bommelerwaard\testcrop_breach_2.mdu");
+            var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
+
+            var model = new WaterFlowFMModel(localMduFilePath);
+
+            ActivityRunner.RunActivity(model);
+
+            var leveeBrachDepthFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "dambreak_breach_depth");
+            Assert.IsNotNull(leveeBrachDepthFunction);
+            Assert.AreSame(model.Area.LeveeBreaches.First(),
+                           leveeBrachDepthFunction.Arguments[1].Values.OfType<IFeature>().First(), "dambreak_breach_depth");
+            Assert.AreSame(model.Area.LeveeBreaches.First(),
+                           leveeBrachDepthFunction.Features.First(), "dambreak_breach_depth");
+
+         }
+
+        [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void RunModelDeleteObservationPointsRunAgain()

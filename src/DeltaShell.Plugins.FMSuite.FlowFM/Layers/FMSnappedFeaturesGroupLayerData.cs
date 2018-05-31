@@ -9,6 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
 {
     public class FMSnappedFeaturesGroupLayerData
     {
+        public const string SNAPPED_LEVEE_BREACH_LAYER_NAME = "Levee breaches (snapped)";
         private readonly WaterFlowFMModel model;
         private IList<SnappedFeatureCollection> childData;
         private int SnapVersion { get; set; }
@@ -44,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.FixedWeirs,
                                                       AreaLayerStyles.FixedWeirStyle, "Fixed weirs (snapped)", UnstrucGridOperationApi.FixedWeir);
             yield return new SnappedLeveeBreachCollection(model, model.CoordinateSystem, (IList)model.Area.LeveeBreaches,
-                                          AreaLayerStyles.LeveeStyle, "Levee breaches (snapped)", UnstrucGridOperationApi.LeveeBreach);
+                                          AreaLayerStyles.LeveeStyle, SNAPPED_LEVEE_BREACH_LAYER_NAME, UnstrucGridOperationApi.LeveeBreach);
             yield return
                 new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.DryPoints,
                     AreaLayerStyles.DryPointStyle, "Dry points (snapped)", UnstrucGridOperationApi.ObsPoint);

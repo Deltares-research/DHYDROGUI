@@ -2169,7 +2169,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     OutputHisFileStore = new FMHisFileFunctionStore(hisFilePath, CoordinateSystem,
                         Area.ObservationPoints,
                         Area.ObservationCrossSections,
-                        Area.Weirs.Where( w => w.WeirFormula is GeneralStructureWeirFormula));
+                        Area.Weirs.Where( w => w.WeirFormula is GeneralStructureWeirFormula),
+                        Area.LeveeBreaches);
                 }
             }
 

@@ -35,6 +35,8 @@ using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
+using SharpMap.Api;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
@@ -204,6 +206,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                             Selectable = false,
                             NameIsReadOnly = true,
                         };
+                    if (snappedFeatures.LayerName == FMSnappedFeaturesGroupLayerData.SNAPPED_LEVEE_BREACH_LAYER_NAME)
+                    {
+                        layer.Style = null;
+                        layer.CustomRenderers = new List<IFeatureRenderer>(new[] { new LeveeBreachRenderer(AreaLayerStyles.LeveeSnappedStyle, AreaLayerStyles.BreachSnappedStyle)});
+                    }
                     groupLayer.Layers.Add(layer);
                     snappedFeatures.Layer = layer;
                 }

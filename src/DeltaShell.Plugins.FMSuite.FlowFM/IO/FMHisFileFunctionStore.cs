@@ -31,6 +31,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private readonly IList<IFeature> stationFeatures;
         private readonly IList<IFeature> crossSectionFeatures;
         private readonly IList<IFeature> generalStructuresFeatures;
+        private readonly IList<IFeature> leveeBreachFeatures;
+        private const string leveeBreachName = "dambreak";
         protected const string StandardNameAttribute = "standard_name";
         protected const string LongNameAttribute = "long_name";
         protected const string UnitAttribute = "units";
@@ -45,7 +47,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public FMHisFileFunctionStore(string hisPath, ICoordinateSystem coordinateSystem=null,
                                       IEnumerable<Feature2D> modelObsPoints = null,
                                       IEnumerable<Feature2D> modelObsCrossSections = null,
-                                      IEnumerable<Weir2D> modelGeneralStructures = null)
+                                      IEnumerable<Weir2D> modelGeneralStructures = null,
+                                      IEnumerable<LeveeBreach> modelLeveeBreaches = null)
             : base(hisPath) //loads the actual functions
         {
             CoordinateSystem = coordinateSystem;
@@ -55,6 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 stationFeatures = InitializeStationFeatures(modelObsPoints ?? new Feature2D[0]);
                 crossSectionFeatures = InitializeCrossSectionFeatures(modelObsCrossSections ?? new Feature2D[0]);
                 generalStructuresFeatures = InitializeGeneralStructuresFeatures(modelGeneralStructures ?? new Weir2D[0]);
+                leveeBreachFeatures = InitializeLeveeBreachFeatures(modelLeveeBreaches ?? new LeveeBreach[0]);
             }
 
             // initialize 'Features' collection of each coverage
@@ -161,11 +165,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 coverage.Features = new EventedList<IFeature>(generalStructuresFeatures);
             }
+            if (featureName == leveeBreachName && leveeBreachFeatures != null)
+            {
+                coverage.Features = new EventedList<IFeature>(generalStructuresFeatures);
+            }
         }
 
         private IMultiDimensionalArray<IFeature> cachedStationsArray;
         private IMultiDimensionalArray<IFeature> cachedCrossSectionsArray;
         private IMultiDimensionalArray<IFeature> cachedGeneralStructures;
+        private IMultiDimensionalArray<IFeature> cachedLeveeBreach;
 
         protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(IVariable function, DelftTools.Functions.Filters.IVariableFilter[] filters)
         {
@@ -195,6 +204,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                 new[] { GetSize(function) });
                         }
                         return (MultiDimensionalArray<T>)cachedGeneralStructures;
+                    case leveeBreachName:
+                        if (cachedLeveeBreach == null)
+                        {
+                            cachedLeveeBreach = new MultiDimensionalArray<IFeature>(leveeBreachFeatures,
+                                new[] { GetSize(function) });
+                        }
+                        return (MultiDimensionalArray<T>)cachedLeveeBreach;
                     default:
                         throw new ArgumentException(string.Format("Unexpected dimension name: {0}", dimensionName));
                 }
@@ -216,6 +232,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 // first try to find the right one in the model features, otherwise we skip it for now. We are not ready to fill in all the data just yet.
                 results.Add(modelGeneralStructures.FirstOrDefault(m => (m as Weir2D) != null && (m as Weir2D).Name == names[i]) ??
                             CreateGeneralStructureFromNetCdf(i, names));
+            }
+            return results;
+        }
+
+        private IList<IFeature> InitializeLeveeBreachFeatures(IEnumerable<IFeature> modelLeveeFeatures)
+        {
+            var results = new List<IFeature>();
+
+            var leveeBreachNameVariable = netCdfFile.GetVariableByName(leveeBreachName + "_name");
+            if (leveeBreachNameVariable == null)
+                return results;
+
+            var names = netCdfFile.Read(leveeBreachNameVariable).Cast<char[]>().Select(CharArrayToString).ToArray();
+            for (int i = 0; i < names.Length; i++)
+            {
+                results.Add(modelLeveeFeatures.FirstOrDefault(m => (m as LeveeBreach) != null && (m as LeveeBreach).Name == names[i]) ??
+                            CreateLeveeBreachFromNetCdf(i, names));
             }
             return results;
         }
@@ -306,6 +339,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 Name = names[i],
                 WeirFormula = new GeneralStructureWeirFormula()
+            };
+        }
+
+        private static LeveeBreach CreateLeveeBreachFromNetCdf(int i, string[] names)
+        {
+            return new LeveeBreach
+            {
+                Name = names[i]
             };
         }
 

@@ -467,7 +467,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             }
         }
 
-
         [Test]
         public void TestGetSnappedCrossSectionFeature()
         {

@@ -18,7 +18,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             public const string AdvancedWeir = "advancedWeir";
             public const string Orifice = "orifice";
             public const string GeneralStructure = "generalstructure";
-            public const string LeveeBreach = "leveebreach";
+            public const string LeveeBreach = "dambreak";
             public const string Culvert = "culvert";
             public const string InvertedSiphon = "invertedSiphon";
             public const string Siphon = "siphon";
