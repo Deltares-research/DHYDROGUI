@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -6,26 +8,41 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Validation;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net.Core;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
 using SharpMap;
+using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
+using SharpMap.CoordinateSystems.Transformations;
+using SharpMap.Data.Providers;
+using SharpMap.Editors.Snapping;
 using SharpMap.Layers;
+using SharpMap.Styles;
+using SharpMap.UI.Forms;
 using SharpMap.UI.Tools;
+using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 {
     public class LeveeBreachMapTool: Feature2DLineTool
     {
-        NewPointFeatureTool breachLocationTool;
         private bool movingBreachLocation = false;
+        private IPoint newBreachLocationPoint;
+        private IFeature newBreachLocationFeature;
+        private VectorLayer newBreachLocationLayer;
+        private readonly Collection<IGeometry> newPointFeatureGeometry = new Collection<IGeometry>();
+        private VectorStyle pointFeatureStyle;
+        private VectorStyle errorPointFeatureStyle;
+        private SnapResult snapResult;
+        private LeveeBreach selectedLeveeBreach;
+        private double hitAreaDistance = 25;
+
         public LeveeBreachMapTool(string targetLayerName, string name, Bitmap icon) : base(targetLayerName, name, icon)
         {
-            
-            breachLocationTool = new NewPointFeatureTool(GetLeveesLayer(),"BreachLocation");
         }
 
         public override void Execute()
@@ -43,7 +60,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         {
             if(IsOnBreachLocation(worldPosition))
             {
-                movingBreachLocation = true;
+                StartMovingBreachLocation(worldPosition);
             }
             else
             {
@@ -54,7 +71,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         public override void OnMouseMove(Coordinate worldPosition, MouseEventArgs e)
         {
-            if (!movingBreachLocation)
+            if (movingBreachLocation)
+            {
+                MoveBreachLocation(worldPosition, e);
+            }
+            else
             {
                 base.OnMouseMove(worldPosition, e);
             }
@@ -64,14 +85,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         {
             if (movingBreachLocation)
             {
-                StopDrawing();
-                MapControl.Refresh();
-//                if (breachLocationTool.SnapResult == null)
-//                {
-//                    MapControl.SelectTool.Clear();
-//                }
-//                var point = GetNewFeatureGeometry(layer);
-                movingBreachLocation = false;
+                StopMovingBreachLocation(worldPosition);
             }
             else
             {
@@ -79,11 +93,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             }
         }
 
+        public override void StartDrawing()
+        {
+            base.StartDrawing();
+            AddDrawingLayer();
+        }
+
+        public override void StopDrawing()
+        {
+            base.StopDrawing();
+            RemoveDrawingLayer();
+        }
+
         public override void Render(Graphics graphics, Map mapBox)
         {
             if (movingBreachLocation)
             {
-                breachLocationTool.Render(graphics, mapBox);
+                //breachLocationTool.Render(graphics, mapBox);
             }
             else
             {
@@ -91,44 +117,98 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             }
         }
 
-        private IPoint GetNewFeatureGeometry(ILayer layer)
-        {
-            //            var nearestTargetLineString = SnapResult.NearestTarget as ILineString;//check if the snap result is on a linesegment
-            //            if (layer.CoordinateTransformation == null || nearestTargetLineString == null)
-            //            {
-            //                var point = (IPoint)GeometryHelper.SetCoordinate(newPointFeature, 0, SnapResult.Location);
-            //                return layer.CoordinateTransformation != null
-            //                    ? GeometryTransform.TransformPoint(point, layer.CoordinateTransformation.MathTransform.Inverse())
-            //                    : point;
-            //            }
-            //
-            //            var previousCoordinate = nearestTargetLineString.Coordinates[SnapResult.SnapIndexPrevious];
-            //            var nextCoorinate = nearestTargetLineString.Coordinates[SnapResult.SnapIndexNext];
-            //
-            //            var distanceToPrevious = previousCoordinate.Distance(SnapResult.Location);
-            //            var percentageFromPrevious = distanceToPrevious / previousCoordinate.Distance(nextCoorinate);
-            //
-            //            var mathTransform = layer.CoordinateTransformation.MathTransform.Inverse();
-            //            var c1 = TransformCoordinate(previousCoordinate, mathTransform);
-            //            var c2 = TransformCoordinate(nextCoorinate, mathTransform);
-            //
-            //            var targetLineString = new LineString(new[] { c1, c2 });
-            //
-            //            var coordinate = GeometryHelper.LineStringCoordinate(targetLineString,
-            //                targetLineString.Length * percentageFromPrevious);
-            //            return (IPoint)GeometryHelper.SetCoordinate(newPointFeature, 0, coordinate);
-            return (IPoint)GeometryHelper.SetCoordinate(new Point(0.0,0.0), 0, new Coordinate());
-        }
-
-
-        private Func<ILayer, bool> GetLeveesLayer()
-        {
-            throw new NotImplementedException();
-        }
-
         private bool IsOnBreachLocation(Coordinate worldPosition)
         {
-            throw new NotImplementedException();
+            var c1 = new Coordinate(worldPosition.X - hitAreaDistance, worldPosition.Y - hitAreaDistance);
+            var c2 = new Coordinate(worldPosition.X + hitAreaDistance, worldPosition.Y + hitAreaDistance);
+            var hitArea = new Envelope(c1, c2);
+            var leveeBreachLayer = this.VectorLayer;
+            foreach (var feature in this.VectorLayer.DataSource.Features)
+            {
+                var leveeBreach = feature as LeveeBreach;
+                if (leveeBreach != null && hitArea.Intersects(leveeBreach.BreachLocation.Coordinate))
+                {
+                    selectedLeveeBreach = leveeBreach;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        private void StartMovingBreachLocation(Coordinate worldPosition)
+        {
+            movingBreachLocation = true;
+            StartDrawing();
+            newBreachLocationPoint = GeometryFactory.CreatePoint(worldPosition);
+            ((DataTableFeatureProvider)newBreachLocationLayer.DataSource).Clear();
+            newBreachLocationLayer.DataSource.Add(newBreachLocationPoint);
+            newBreachLocationFeature = newBreachLocationLayer.DataSource.GetFeature(0);
+
+            SetMovingFeatureCoordinates(worldPosition);
+        }
+
+        private void SetMovingFeatureCoordinates(Coordinate worldPosition)
+        {
+            var snapRule = new SnapRule {Obligatory = true, SnapRole = SnapRole.FreeAtObject, PixelGravity = 8};
+
+            snapResult = MapControl.SnapTool.ExecuteSnapRule(snapRule, newBreachLocationFeature, newBreachLocationPoint,
+                new List<IFeature>() {selectedLeveeBreach}, worldPosition, -1);
+
+            if (snapResult != null)
+            {
+                newBreachLocationPoint.Coordinates[0].X = snapResult.Location.X;
+                newBreachLocationPoint.Coordinates[0].Y = snapResult.Location.Y;
+            }
+            newBreachLocationLayer.Style = MapControl.SnapTool.Failed ? errorPointFeatureStyle : pointFeatureStyle;
+        }
+
+        private void MoveBreachLocation(Coordinate worldPosition, MouseEventArgs mouseEventArgs)
+        {
+            if (VectorLayer == null)
+            {
+                return;
+            }
+
+            //to avoid listening to the mousewheel in the mean time
+            if (AdditionalButtonsBeingPressed(mouseEventArgs))
+                return;
+
+            StartDrawing();
+            SetMovingFeatureCoordinates(worldPosition);
+            DoDrawing(true);
+            StopDrawing();
+        }
+
+
+        private void StopMovingBreachLocation(Coordinate worldPosition)
+        {
+            StopDrawing();
+            SetMovingFeatureCoordinates(worldPosition);
+            selectedLeveeBreach.BreachLocationX = newBreachLocationPoint.Coordinates[0].X;
+            selectedLeveeBreach.BreachLocationX = newBreachLocationPoint.Coordinates[0].Y;
+            MapControl.Refresh();
+            movingBreachLocation = false;
+        }
+
+        private void AddDrawingLayer()
+        {
+            newBreachLocationLayer = new VectorLayer(VectorLayer) { Name = "newBreachLocation", Map = VectorLayer.Map };
+
+            DataTableFeatureProvider trackingProvider = new DataTableFeatureProvider(newPointFeatureGeometry);
+            newBreachLocationLayer.DataSource = trackingProvider;
+
+            pointFeatureStyle = (VectorStyle)newBreachLocationLayer.Style.Clone();
+            errorPointFeatureStyle = (VectorStyle)newBreachLocationLayer.Style.Clone();
+            SharpMap.UI.Forms.MapControl.PimpStyle(pointFeatureStyle, true);
+            SharpMap.UI.Forms.MapControl.PimpStyle(errorPointFeatureStyle, false);
+            newBreachLocationLayer.Style = pointFeatureStyle;
+        }
+
+        private void RemoveDrawingLayer()
+        {
+            newPointFeatureGeometry.Clear();
+            newBreachLocationLayer = null;
         }
     }
 }
