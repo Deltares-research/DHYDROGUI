@@ -14,9 +14,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
     [TestFixture]
     public class UgridWrapperTests
     {
-        //network name
-        private string networkName = "network";
-
         //dimension info
         private int nNodes = 4;
         private int nBranches = 3;
@@ -47,9 +44,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         private double[] geopointsY = {4.0, 4.0, 4.0, 4.0, 4.0, 1.0, 2.0};
 
-        //mesh name
-        private string meshname = "1dmesh";
-
         //mesh dimension
         private int nmesh1dPoints = 10;
         private int nedgenodes = 9;
@@ -69,8 +63,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         private double convversion = 0.0;
 
         //mesh links
-        private string linkmeshname = "links";
-
         private int nlinks = 3;
         private int linkmesh1 = 1;
         private int linkmesh2 = 2;
@@ -191,7 +183,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 var rnetworkName = new StringBuilder(GridApiDataSet.GridConstants.MAXSTRLEN);
                 ierr = wrapper.GetMeshName(ioncId, networkId, rnetworkName);
                 Assert.That(ierr, Is.EqualTo(0));
-                Assert.That(rnetworkName.ToString().Trim(), Is.EqualTo(meshname));
+                Assert.That(rnetworkName.ToString().Trim(), Is.EqualTo(GridApiDataSet.DataSetNames.Mesh1D));
 
                 //8. Get the number of mesh points
                 int rnmeshpoints = -1;
@@ -582,7 +574,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             //4. Create a 1d network
             int networkId = -1;
             int mesh1D = -1;
-            ierr = wrapper.Create1DNetwork(ioncId, ref networkId, networkName, nNodes,
+            ierr = wrapper.Create1DNetwork(ioncId, ref networkId, GridApiDataSet.DataSetNames.Network, nNodes,
                     nBranches, nGeometry);
                 Assert.That(ierr, Is.EqualTo(0));
 
@@ -621,7 +613,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             //3. write 1D network
             int networkId = -1;
             int mesh1DId = -1;
-            ierr = wrapper.Create1DNetwork(fileId, ref networkId, networkName, nNodes,
+            ierr = wrapper.Create1DNetwork(fileId, ref networkId, GridApiDataSet.DataSetNames.Network, nNodes,
                 nBranches, nGeometry);
             Assert.That(ierr, Is.EqualTo(0));
             Assert.That(networkId, Is.GreaterThan(-1));
@@ -630,7 +622,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             //4. define links
             int mesh1D2DId = -1;
-            int expectedNlinks = 0;
+            int expectedNlinks = 2;
             var ierrCreating = wrapper.Create1D2DLinks(fileId, ref mesh1D2DId, "1D2Dlinks", expectedNlinks, mesh1DId, mesh2DId,
                 locationType1, locationType2);
 
@@ -730,7 +722,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.That(sourceNetworkId, Is.EqualTo(1));
 
             //5. Create 1d geometry and mesh in the new file (target.nc)
-            ierr = wrapper.Create1DNetwork(targetFileId, ref sourceNetworkId, networkName, nNodes,
+            ierr = wrapper.Create1DNetwork(targetFileId, ref sourceNetworkId, GridApiDataSet.DataSetNames.Network, nNodes,
                 nBranches, nGeometry);
             Assert.That(ierr, Is.EqualTo(0));
 
@@ -861,7 +853,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             //3. write 1D network
             int networkId = -1;
             int mesh1DId = -1;
-            ierr = wrapper.Create1DNetwork(fileId, ref networkId, networkName, nNodes,
+            ierr = wrapper.Create1DNetwork(fileId, ref networkId, GridApiDataSet.DataSetNames.Network, nNodes,
                 nBranches, nGeometry);
             Assert.That(ierr, Is.EqualTo(0));
             Assert.That(networkId, Is.GreaterThan(-1));
