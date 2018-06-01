@@ -186,7 +186,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             {
                 return new VectorStyle
                 {
-                    GeometryType = typeof(IPoint),
+                    GeometryType = typeof(IMultiPoint),
                     Fill = new SolidBrush(Color.Tomato),
                     ShapeSize = 8,
                 };
