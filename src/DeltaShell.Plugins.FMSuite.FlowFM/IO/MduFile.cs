@@ -171,33 +171,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         }
                     }
 
-                    NetCdfFile netCdfFile = null;
-                    string nameProjectedCS = string.Empty;
-
-                    try
-                    {
-                        netCdfFile = NetCdfFile.OpenExisting(targetFile, true);
-                        var projectedCSVariable = netCdfFile.GetVariableByName("projected_coordinate_system");
-                        if (projectedCSVariable != null)
-                            nameProjectedCS = netCdfFile.GetAttributeValue(projectedCSVariable, "name");
-                    }
-                    finally
-                    {
-                        if (netCdfFile != null)
-                            netCdfFile.Close();
-                    }
-
                     // if needed, adjust coordinate system in netfile
-                    if (modelDefinition.CoordinateSystem != null && File.Exists(targetFile))
-                    {
-                        var fileCoordinateSystem = NetFile.ReadCoordinateSystem(targetFile);
-                        if (fileCoordinateSystem == null ||
-                            fileCoordinateSystem.AuthorityCode != modelDefinition.CoordinateSystem.AuthorityCode || 
-                            (nameProjectedCS != null && nameProjectedCS != modelDefinition.CoordinateSystem.Name)) 
-                        {
-                            UnstructuredGridFileHelper.SetCoordinateSystem(targetFile, modelDefinition.CoordinateSystem);
-                        }
-                    }
+                    if (File.Exists(targetFile) && !IsNetfileCoordinateSystemUpToDate(modelDefinition, targetFile))
+                        UnstructuredGridFileHelper.SetCoordinateSystem(targetFile, modelDefinition.CoordinateSystem);
                 }
 
                 // copy along any mdu-referenced files that are *not* yet supported/written in the UI:
@@ -317,6 +293,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     modelDefinition.GetModelProperty(itemPair.Key).SetValueAsString(itemPair.Value.Item1);
                 }
             }
+        }
+
+        private bool IsNetfileCoordinateSystemUpToDate(WaterFlowFMModelDefinition modelDefinition, string targetFile)
+        {
+            if (modelDefinition.CoordinateSystem != null && File.Exists(targetFile))
+            {
+                var fileCoordinateSystem = NetFile.ReadCoordinateSystem(targetFile);
+                var fileProjectedCSName = GetProjectedCoordinateSystemNameFromNetFile(targetFile);
+
+                if (fileCoordinateSystem == null ||
+                    fileCoordinateSystem.AuthorityCode != modelDefinition.CoordinateSystem.AuthorityCode ||
+                    (!string.IsNullOrEmpty(fileProjectedCSName) && fileProjectedCSName != modelDefinition.CoordinateSystem.Name))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private string GetProjectedCoordinateSystemNameFromNetFile(string targetFile)
+        {
+            NetCdfFile netCdfFile = null;
+            string nameProjectedCS = string.Empty;
+
+            try
+            {
+                netCdfFile = NetCdfFile.OpenExisting(targetFile, true);
+                var projectedCSVariable = netCdfFile.GetVariableByName("projected_coordinate_system");
+                if (projectedCSVariable != null)
+                    nameProjectedCS = netCdfFile.GetAttributeValue(projectedCSVariable, "name");
+            }
+            finally
+            {
+                if (netCdfFile != null)
+                    netCdfFile.Close();
+            }
+
+            return nameProjectedCS;
         }
 
         public void WriteProperties(string filePath, IEnumerable<WaterFlowFMProperty> modelDefinition, bool writeExtForcings, bool writeFeatures, bool writePartionFile = true, bool useNetCDFMapFormat = false, bool disableFlowNodeRenumbering = false)
