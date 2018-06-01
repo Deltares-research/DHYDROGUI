@@ -287,6 +287,7 @@
     <Compile Include="IO\FMPartitionExporterTest.cs" />
     <Compile Include="IO\GroupablePointCloudImporterTest.cs" />
     <Compile Include="IO\Importers\BcmFileImporterTest.cs" />
+    <Compile Include="IO\Importers\GisToFeature2DImporterTests.cs" />
     <Compile Include="IO\Importers\SourceAndSinkImporterHelperTest.cs" />
     <Compile Include="IO\Importers\TimFileImporterTest.cs" />
     <Compile Include="IO\Importers\GwswFileImporterTest.cs" />
@@ -343,8 +344,9 @@
     <Compile Include="Validation\WaterFlowFMModelTimersValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMModelValidationExtensionsTest.cs" />
     <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidatorTests.cs" />
-	<Compile Include="WaterFlowFMTestHelper.cs" />
-    <Compile Include="WaterFlowFMModelNetworkTest.cs" />    <Compile Include="WaterFlowFMModelRestartTest.cs" />
+    <Compile Include="WaterFlowFMTestHelper.cs" />
+    <Compile Include="WaterFlowFMModelNetworkTest.cs" />
+    <Compile Include="WaterFlowFMModelRestartTest.cs" />
     <Compile Include="WaterFlowFMModelSedimentFractionsIntegrationTest.cs" />
     <Compile Include="WaterFlowFMModelSedimentFractionsTest.cs" />
     <Compile Include="WaterFlowFMNHibernateIntegrationTest.cs" />
