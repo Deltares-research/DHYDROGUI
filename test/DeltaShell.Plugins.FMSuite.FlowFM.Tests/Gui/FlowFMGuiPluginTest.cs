@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [TestCase(@"ReloadGrid\netfile_spherical_assigned.nc", 4326, @"ReloadGrid\netfile_spherical_assigned.nc", 4326)]
         [TestCase(@"ReloadGrid\netfile_spherical_assigned.nc", 4326, @"ReloadGrid\netfile_projected_unassigned.nc", 0)]
 
-        public void ReloadGridTest(string originalNetFile, int originalEspg, string editedNetFile, int expectedEspg)
+        public void ReloadGridTest(string originalNetFile, int originalEpsg, string editedNetFile, int expectedEpsg)
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"ReloadGrid\reloadGrid.mdu");
             mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             
             var model = new WaterFlowFMModel(mduFilePath);
 
-            var originalCoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(originalEspg);
+            var originalCoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(originalEpsg);
 
             Assert.IsTrue(model.CoordinateSystem.EqualsTo(originalCoordinateSystem));
             Assert.IsTrue(model.ModelDefinition.CoordinateSystem.EqualsTo(originalCoordinateSystem));
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             TypeUtils.CallPrivateStaticMethod(typeof(FlowFMGuiPlugin), "ReloadGrid", model, view);
 
-            var expectedCoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(expectedEspg);
+            var expectedCoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(expectedEpsg);
 
             Assert.IsTrue(model.CoordinateSystem.EqualsTo(expectedCoordinateSystem));
             Assert.IsTrue(model.ModelDefinition.CoordinateSystem.EqualsTo(expectedCoordinateSystem));
