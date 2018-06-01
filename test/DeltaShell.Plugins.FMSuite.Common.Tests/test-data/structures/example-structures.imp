@@ -55,7 +55,7 @@ polylinefile     = gs_01.pli
 widthcenter      = 2.3
 
 [structure]
-type                  = leveebreach
+type                  = dambreak
 id                    = lb_01
 polylinefile          = lb_01.pli
 Start_Location_X      = 100

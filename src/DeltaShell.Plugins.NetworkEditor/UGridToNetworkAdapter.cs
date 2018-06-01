@@ -165,15 +165,6 @@ namespace DeltaShell.Plugins.NetworkEditor
                 using (var uGridNetworkDiscretisation = new UGridNetworkDiscretisation(netFilePath, GridApiDataSet.NetcdfOpenMode.nf90_write))
                 {
                     uGridNetworkDiscretisation.Initialize();
-
-                    /* PLEASE NOTE (DELFT3DFM-879):
-                     * The network discretisation must be coupled to a network, therefore the network ID is required.
-                     * At this moment only one network will be stored in a netCDF file and hence it is safe to obtain the ALL the network IDs 
-                     * and pick the first in the list as the network to couple to.
-                     * However, when more networks will be stored this method is no longer valid and another method to obtain the correct 
-                     * network ID must be implemented.
-                     */
-                  
                     uGridNetworkDiscretisation.CreateNetworkDiscretisationInFile(discretisationDataModel.NumberOfDiscretisationPoints);
                     uGridNetworkDiscretisation.WriteNetworkDiscretisationPoints(discretisationDataModel.BranchIdx, discretisationDataModel.Offset, discretisationDataModel.DiscretisationPointIds, discretisationDataModel.DiscretisationPointDescriptions);
                 }

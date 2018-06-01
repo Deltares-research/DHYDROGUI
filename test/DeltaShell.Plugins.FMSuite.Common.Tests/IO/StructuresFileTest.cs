@@ -939,7 +939,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual(propertiesA.Count, propertiesB.Count, "Expected the same number of properties.");
             for (var i = 0; i < propertiesA.Count; i++)
             {
-                Assert.AreEqual(propertiesA[i].Name, propertiesB[i].Name, String.Format("Names are not the same at index = {0}.", i));
+                Assert.AreEqual(propertiesA[i].Name.ToLower(), propertiesB[i].Name.ToLower(), String.Format("Names are not the same at index = {0}.", i));
                 Assert.AreEqual(propertiesA[i].Value, propertiesB[i].Value, String.Format("Values are not the same at index = {0}.", i));
                 // Don't care about comments
             }
