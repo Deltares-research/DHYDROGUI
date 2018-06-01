@@ -19,6 +19,9 @@ using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
+using SharpMap.Api;
+using SharpMap.Data.Providers;
+using SharpMap.Extensions.Data.Providers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
@@ -55,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             get 
             {
-              yield return typeof(IList<IPump>);
+              yield return typeof(IList<TFeature2D>);
             }
         }
 
@@ -78,67 +81,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
             if (target == null)
             {
-                Log.ErrorFormat("No target was presented to import to (requires a Flexible Mesh Water Flow model or Area.");
+                Log.ErrorFormat("No target was presented to import to.");
+                return null;
+            }
+
+            var importer = new ShapeFile(path);
+
+            if (!ValidateShapeType(importer))
+            {
+                Log.ErrorFormat("Shape type {0} is not matching the expected type {1}", importer.ShapeType, typeof(TGeometry));
                 return null;
             }
 
             var list = (IList)target;
-            var model = GetModelForList(list);
 
-            var structuresFile = new StructuresFile()
-            {
-                StructureSchema = model.ModelDefinition.StructureSchema,
-                ReferenceDate = (DateTime)model.ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value
-            };
-            IEnumerable<IStructure> structures;
-            try
-            {
-                structures = structuresFile.Read(path);
-            }
-            catch (Exception e)
-            {
-                if (e is ArgumentException || e is FileNotFoundException || e is DirectoryNotFoundException ||
-                    e is IOException || e is FormatException || e is OverflowException)
-                {
-                    Log.Error(String.Format("An error occurred while importing structures file, import stopped; Cause: "), e);
-                    return null;
-                }
-                // Unexpected exception, let it bubble:
-                throw;
-            }
 
-            InsertStructures(structures, list);
-            return target;
+
+            InsertFeatures(importer.Features.OfType<Feature>(), list);
+            return list;
         }
 
-        private void InsertStructures(IEnumerable<IStructure> structures, IList list)
+        private static bool ValidateShapeType(ShapeFile importer)
         {
-            var count = 0;
-            InsertStructure<IPump>(structures, list, ref count);
-            Log.InfoFormat("Read {0} {1}.", count, "temp name");
+            switch (importer.ShapeType)
+            {
+                case ShapeType.Point:
+                    return typeof(TGeometry) == typeof(IPoint);
+                case ShapeType.PolyLine:
+                    return typeof(TGeometry) == typeof(ILineString);
+                case ShapeType.Polygon:
+                    return typeof(TGeometry) == typeof(IPolygon);
+                default:
+                    return false;
+            }
         }
 
         [InvokeRequired]
-        private static void InsertStructure<TFeat>(IEnumerable<IStructure> structures, IList list, ref int count) where TFeat : INameable
+        private static void InsertFeatures(IEnumerable<Feature> features, IList list)// where TFeat : INameable
         {
-            foreach (var structure in structures.Where(s => s is TFeat))
+            foreach (var feature in features)
             {
-                var replaced = false;
-                for (var i = 0; i < list.Count; ++i)
-                {
-                    if (list[i] is TFeat && ((TFeat)list[i]).Name == structure.Name)
-                    {
-                        list[i] = structure;
-                        replaced = true;
-                        count++;
-                        break;
-                    }
-                }
-                if (!replaced)
-                {
-                    list.Add(structure);
-                    count++;
-                }
+                    list.Add(new Feature2D() {Geometry = feature.Geometry});
             }
         }
 
