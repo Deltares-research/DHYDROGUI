@@ -44,6 +44,7 @@ using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Geometries;
 using Mono.Addins;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;

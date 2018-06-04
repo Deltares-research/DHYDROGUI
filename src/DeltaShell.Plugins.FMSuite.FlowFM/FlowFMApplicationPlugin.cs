@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.FixedWeirs)),
                 GetEditableObject = target => GetModelFor(target, a => a.FixedWeirs).Area
             };
-            
+
             yield return new PliFileImporterExporter<ThinDam2D, ThinDam2D>
             {
                 Mode = Feature2DImportExportMode.Import,
@@ -223,6 +223,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     WindFileImporter = true,
                     GetModelForWindTimeSeries = GetModelForWindField
                 };
+
+
+            yield return new GisToFeature2DImporter<ILineString, FixedWeir>();
+            yield return new GisToFeature2DImporter<ILineString, LeveeBreach>();
 
             yield return new GwswFileImporter();
         }

@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             if (featureName == leveeBreachName && leveeBreachFeatures != null)
             {
-                coverage.Features = new EventedList<IFeature>(generalStructuresFeatures);
+                coverage.Features = new EventedList<IFeature>(leveeBreachFeatures);
             }
         }
 
@@ -204,7 +204,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                 new[] { GetSize(function) });
                         }
                         return (MultiDimensionalArray<T>)cachedGeneralStructures;
-                    case leveeBreachName:
+                    case "dambreaks":
                         if (cachedLeveeBreach == null)
                         {
                             cachedLeveeBreach = new MultiDimensionalArray<IFeature>(leveeBreachFeatures,

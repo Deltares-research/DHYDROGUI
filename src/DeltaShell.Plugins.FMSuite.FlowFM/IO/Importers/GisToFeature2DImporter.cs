@@ -2,26 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.FMSuite.Common.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
-using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
-using SharpMap.Api;
+using NetTopologySuite.Geometries;
 using SharpMap.Data.Providers;
-using SharpMap.Extensions.Data.Providers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
@@ -101,6 +91,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return list;
         }
 
+        #endregion IFileImporter
+
+        [InvokeRequired]
+        private static void InsertFeatures(IEnumerable<Feature> features, IList list)// where TFeat : INameable
+        {
+            foreach (var feature in features)
+            {
+                var instance = (TFeature2D)Activator.CreateInstance(typeof(TFeature2D));
+                instance.Name = NamingHelper.GetUniqueName<TFeature2D>("imported_feature_{0}",list as IList<TFeature2D>);
+                instance.Geometry = ConvertGeometry(feature);
+                list.Add(instance);
+            }
+        }
+
         private static bool ValidateShapeType(ShapeFile importer)
         {
             switch (importer.ShapeType)
@@ -116,15 +120,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
         }
 
-        [InvokeRequired]
-        private static void InsertFeatures(IEnumerable<Feature> features, IList list)// where TFeat : INameable
+        private static IGeometry ConvertGeometry(Feature shapeFeature)
         {
-            foreach (var feature in features)
+            var coordinates = shapeFeature.Geometry.Coordinates;
+            var factory = new GeometryFactory();
+            IGeometry result = null;
+            if (typeof (TGeometry) == typeof (IPoint))
             {
-                    list.Add(new Feature2D() {Geometry = feature.Geometry});
+                var coordinate = coordinates.FirstOrDefault();
+                if (coordinate != null)
+                {
+                    result = factory.CreatePoint(coordinate);
+                }
             }
+            else if (typeof(TGeometry) == typeof(ILineString))
+            {
+                result = factory.CreateLineString(coordinates);
+            }
+            else if (typeof(TGeometry) == typeof(IPolygon))
+            {
+                result = factory.CreatePolygon(coordinates);
+            }
+            return result;
         }
-
-        #endregion
     }
 }
