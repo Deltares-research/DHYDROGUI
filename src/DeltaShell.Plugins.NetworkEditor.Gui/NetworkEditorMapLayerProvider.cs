@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var network = hydroRegion as IHydroNetwork;
                 if (network != null)
                 {
-                    // The order below is also the order in which the layers will be stacked
+                    // The order below is also the order in which the layers will be stacked (layer order)
                     yield return network.HydroNodes;
                     yield return network.Pumps;
                     yield return network.LateralSources;
@@ -128,8 +128,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 if (area2D != null)
                 {
                     yield return area2D.ThinDams;
-                    yield return area2D.FixedWeirs;
                     yield return area2D.LeveeBreaches;
+                    yield return area2D.FixedWeirs;
                     yield return area2D.ObservationPoints;
                     yield return area2D.ObservationCrossSections;
                     yield return area2D.Pumps;
