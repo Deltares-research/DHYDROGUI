@@ -480,9 +480,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             };
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<Embankment, Embankment>>();
+            yield return GetGisToFeature2DImportDialogViewInfo<GisToFeature2DImporter<ILineString, Embankment>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<FixedWeir, FixedWeir>>();
+            yield return GetGisToFeature2DImportDialogViewInfo<GisToFeature2DImporter<ILineString,FixedWeir>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<ThinDam2D, ThinDam2D>>();
+            yield return GetGisToFeature2DImportDialogViewInfo<GisToFeature2DImporter<ILineString, ThinDam2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<IWeir, Feature2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<IPump, Feature2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<IGate, Feature2D>>();
@@ -492,6 +495,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return GetFeature2DImportDialogViewInfo<PointFileImporterExporter>();
             yield return GetFeature2DImportDialogViewInfo<PolFileImporterExporter>();
             yield return GetFeature2DImportDialogViewInfo<LdbFileImporterExporter>();
+
+            yield return GetGisToFeature2DImportDialogViewInfo<GisToFeature2DImporter<ILineString, LeveeBreach>>();
 
             yield return new ViewInfo<BoundaryConditionWpsImporter, BoundaryConditionWpsDialog>
             {
@@ -621,6 +626,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                             v.FileFilter = o.FileFilter;
                         }
                 };
+        }
+
+        private ViewInfo<TImporter, Feature2DImportExportDialog> GetGisToFeature2DImportDialogViewInfo<TImporter>()
+    where TImporter : MapFeaturesImporterBase, new()
+        {
+            return new ViewInfo<TImporter, Feature2DImportExportDialog>
+            {
+                AfterCreate = (v, o) =>
+                {
+                    var model = FlowModels.FirstOrDefault();
+
+                    v.ModelCoordinateSystem = model == null ? null : model.CoordinateSystem;
+                    v.Title = o.Name;
+                    v.FileFilter = o.FileFilter;
+                    v.ImportMode = true;
+                }
+            };
         }
 
         private BoundaryConditionSet FindSetForBoundaryCondition(BoundaryCondition arg)

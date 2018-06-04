@@ -2,16 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using SharpMap.Data.Providers;
+using SharpMap.Extensions.Data.Providers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
@@ -40,7 +43,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             get
             {
-                return Properties.Resources.PumpSmall;
+                if (typeof (TGeometry) == typeof (IPoint))
+                {
+                    return Properties.Resources.points;
+                }
+                else if (typeof (TGeometry) == typeof (ILineString))
+                {
+                    return Properties.Resources.lines;
+                }
+                else
+                {
+                    return Properties.Resources.polygon;
+                }
+
             }
         }
 
@@ -54,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public override bool CanImportOnRootLevel { get { return false; } }
 
-        public override string FileFilter { get { return "Shape file|*.shp"; } }
+        public override string FileFilter { get { return "Shape file (*.shp)|*.shp|GML file (*.gml)|*.gml|GeoJSON (*.geojson)|*.geojson"; } }
 
         public override string TargetDataDirectory { get; set; }
 
@@ -75,26 +90,69 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 return null;
             }
 
-            var importer = new ShapeFile(path);
-
-            if (!ValidateShapeType(importer))
-            {
-                Log.ErrorFormat("Shape type {0} is not matching the expected type {1}", importer.ShapeType, typeof(TGeometry));
-                return null;
-            }
-
             var list = (IList)target;
+            var fileExtention = Path.GetExtension(path).ToLower();
 
-
-
-            InsertFeatures(importer.Features.OfType<Feature>(), list);
-            return list;
+            switch (fileExtention)
+            {
+                case ".shp":
+                    return ImportShapeFile(path, list);
+                case ".gml":
+                    return ImportByOgrFeatureProvider(path, list);
+                case ".geojson":
+                    return ImportByOgrFeatureProvider(path, list);
+                default:
+                    return null;
+            }
         }
 
         #endregion IFileImporter
 
+
+        private static IList ImportShapeFile(string path, IList list)
+        {
+            var importer = new ShapeFile(path);
+
+            if (IsShapeTypeValid(importer))
+            {
+                InsertFeatures(importer.Features.OfType<IFeature>(), list);
+            }
+            else
+            {
+                Log.ErrorFormat("Shape type {0} is not matching the expected type {1}", importer.ShapeType, typeof(TGeometry));
+            }
+
+            importer.Close();
+            importer.Dispose();
+            return list;
+        }
+
+
+        private static IList ImportByOgrFeatureProvider(string path, IList list)
+        {
+            var provider = new OgrFeatureProvider(path);
+
+            var firstFeature = provider.Features.OfType<IFeature>().FirstOrDefault();
+            if (firstFeature != null)
+            {
+                if (IsGeometryTypeValid(firstFeature.Geometry))
+                {
+                    InsertFeatures(provider.Features.OfType<IFeature>(), list);
+                }
+                else
+                {
+                    Log.ErrorFormat("Import type {0} is not matching the expected type {1}", firstFeature.Geometry.GeometryType, typeof(TGeometry));
+                }
+            }
+
+            provider.Close();
+            provider.Dispose();
+
+            return list;
+        }
+
         [InvokeRequired]
-        private static void InsertFeatures(IEnumerable<Feature> features, IList list)// where TFeat : INameable
+        private static void InsertFeatures(IEnumerable<IFeature> features, IList list)// where TFeat : INameable
         {
             foreach (var feature in features)
             {
@@ -105,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
         }
 
-        private static bool ValidateShapeType(ShapeFile importer)
+        private static bool IsShapeTypeValid(ShapeFile importer)
         {
             switch (importer.ShapeType)
             {
@@ -120,7 +178,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
         }
 
-        private static IGeometry ConvertGeometry(Feature shapeFeature)
+        private static bool IsGeometryTypeValid(IGeometry geometry)
+        {
+            switch (geometry.GeometryType)
+            {
+                case "Points":
+                case "Point":
+                    return typeof(TGeometry) == typeof(IPoint);
+                case "LineString":
+                    return typeof(TGeometry) == typeof(ILineString);
+                case "Polygon":
+                    return typeof(TGeometry) == typeof(IPolygon);
+                default:
+                    return false;
+            }
+        }
+
+        private static IGeometry ConvertGeometry(IFeature shapeFeature)
         {
             var coordinates = shapeFeature.Geometry.Coordinates;
             var factory = new GeometryFactory();

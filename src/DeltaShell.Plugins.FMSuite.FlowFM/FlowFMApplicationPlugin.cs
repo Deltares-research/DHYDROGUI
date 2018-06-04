@@ -114,6 +114,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 },
             };
 
+            yield return new GisToFeature2DImporter<ILineString, Embankment>();
+
             yield return new PliFileImporterExporter<FixedWeir, FixedWeir>
             {
                 Mode = Feature2DImportExportMode.Import,
@@ -128,6 +130,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 GetEditableObject = target => GetModelFor(target, a => a.FixedWeirs).Area
             };
 
+            yield return new GisToFeature2DImporter<ILineString, FixedWeir>();
+
             yield return new PliFileImporterExporter<ThinDam2D, ThinDam2D>
             {
                 Mode = Feature2DImportExportMode.Import,
@@ -135,6 +139,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.ThinDams)),
                 GetEditableObject = target => GetModelFor(target, a => a.ThinDams).Area
             };
+
+            yield return new GisToFeature2DImporter<ILineString, ThinDam2D>();
 
             yield return new PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D>
                 {
@@ -152,6 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.Weirs)),
                 GetEditableObject = target => GetModelFor(target, a => a.Weirs).Area
             };
+
             yield return new PliFileImporterExporter<Pump2D, Pump2D>
             {
                 Mode = Feature2DImportExportMode.Import,
@@ -161,6 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.Pumps)),
                 GetEditableObject = target => GetModelFor(target, a => a.Pumps).Area
             };
+
             yield return new PliFileImporterExporter<Gate2D, Gate2D>
             {
                 Mode = Feature2DImportExportMode.Import,
@@ -170,6 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.Gates)),
                 GetEditableObject = target => GetModelFor(target, a => a.Gates).Area
             };
+
             yield return new PliFileImporterExporter<SourceAndSink, Feature2D>
             {
                 Mode = Feature2DImportExportMode.Import,
@@ -211,6 +220,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 GetEditableObject = target => GetModelFor(target, a => a.LandBoundaries).Area
             };
 
+            yield return new GisToFeature2DImporter<ILineString, DelftTools.Hydro.LandBoundary2D>();
+
             yield return new FlowFMNetFileImporter {GetModelForGrid = GetModelForGrid};
             yield return new TimFileImporter
                 {
@@ -225,7 +236,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 };
 
 
-            yield return new GisToFeature2DImporter<ILineString, FixedWeir>();
+            yield return new PliFileImporterExporter<LeveeBreach, LeveeBreach>
+            {
+                Mode = Feature2DImportExportMode.Import,
+                CreateDelegate = delegate (List<Coordinate> points1, string name1)
+                {
+                    var feature1 = new LeveeBreach { Name = name1, Geometry = PliFile<FixedWeir>.CreatePolyLineGeometry(points1) };
+                    return feature1;
+                },
+                EqualityComparer = new GroupableFeatureComparer<LeveeBreach>(),
+                AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.LeveeBreaches)),
+                GetEditableObject = target => GetModelFor(target, a => a.LeveeBreaches).Area
+            };
+
             yield return new GisToFeature2DImporter<ILineString, LeveeBreach>();
 
             yield return new GwswFileImporter();
