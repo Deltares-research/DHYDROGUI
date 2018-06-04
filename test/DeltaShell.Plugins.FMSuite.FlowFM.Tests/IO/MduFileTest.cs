@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -7,9 +8,14 @@ using System.Threading.Tasks;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using log4net.Util;
 using NUnit.Framework;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -58,6 +64,69 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 FileUtils.DeleteIfExists(mduDir);
             }
+        }
+
+        [TestCase(@"cs_after_save\before_save_AmersfoortRDNew_net.nc", 28992, "Amersfoort / RD New")]
+        [TestCase(@"cs_after_save\before_save_AmersfoortRDOld_net.nc", 28991, "Amersfoort / RD Old")]
+        [TestCase(@"cs_after_save\before_save_UTMzone30N_net.nc", 32630, "WGS 84 / UTM zone 30N")]
+        public void SetCoordinateSystemNameNetfileWithModelCoordinateSystemNameTest(string netFile, int espgModel, string expectedCoordinateSystemName)
+        {
+            var workingDirectory = FileUtils.CreateTempDirectory();
+            var coordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(espgModel);
+
+            var netFilePath = TestHelper.GetTestFilePath(netFile);
+            var netFileInfo = new FileInfo(netFilePath);
+            Assert.IsTrue(netFileInfo.Exists);
+
+            var workingNetFilePath = Path.Combine(workingDirectory, netFileInfo.Name);
+            var workingNetFileInfo = new FileInfo(workingNetFilePath);
+            FileUtils.CopyFile(netFileInfo.FullName, workingNetFilePath);
+            Assert.IsTrue(workingNetFileInfo.Exists);
+
+            var mduFile = new MduFile();
+            var fileProjectedName = TypeUtils.CallPrivateMethod<string>(mduFile, "GetProjectedCoordinateSystemNameFromNetFile", workingNetFilePath);
+            Assert.That(fileProjectedName, Is.EqualTo("Unknown projected"));
+
+            UnstructuredGridFileHelper.SetCoordinateSystem(workingNetFilePath, coordinateSystem);
+
+            var editedFileProjectedName = TypeUtils.CallPrivateMethod<string>(mduFile, "GetProjectedCoordinateSystemNameFromNetFile", workingNetFilePath);
+            Assert.IsTrue(editedFileProjectedName.Equals(expectedCoordinateSystemName));
+
+            FileUtils.DeleteIfExists(workingDirectory);
+        }
+
+        [TestCase(true, @"update_CS_netfile\amersfoortRDNew_net.nc", 28992, true)]
+        [TestCase(true, @"update_CS_netfile\unknown_projected_net.nc", 28992, false)]
+        [TestCase(true, @"update_CS_netfile\wgs84_net.nc", 4326 , true)]
+
+        [TestCase(false, @"update_CS_netfile\amersfoortRDNew_net.nc", 28992, true)]
+        [TestCase(false, @"update_CS_netfile\unknown_projected_net.nc", 28992, true)]
+        [TestCase(false, @"update_CS_netfile\wgs84_net.nc", 4326, true)]
+
+        [TestCase(true, @"update_CS_netfile\amersfoortRDNew_net.nc", 28991, false)]
+        [TestCase(true, @"update_CS_netfile\unknown_projected_net.nc", 28991, false)]
+        [TestCase(true, @"update_CS_netfile\wgs84_net.nc", 4326, true)]
+
+        [TestCase(false, @"update_CS_netfile\amersfoortRDNew_net.nc", 28991, true)]
+        [TestCase(false, @"update_CS_netfile\unknown_projected_net.nc", 28991, true)]
+
+        [TestCase(true, @"update_CS_netfile\wgs84_net.nc", 28992, false)]
+        [TestCase(true, @"update_CS_netfile\amersfoortRDNew_net.nc", 4326, false)]
+
+        public void ShouldUpdateNetfileCoordinateSystemTest(bool hasCoordinateSystem, string targetFile, int epsgModelDefinition, bool expected)
+        {
+            var netFilePath = TestHelper.GetTestFilePath(targetFile);
+            var netFileInfo = new FileInfo(netFilePath);
+            Assert.IsTrue(netFileInfo.Exists);
+
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var mduFile = new MduFile();
+            if (hasCoordinateSystem == true)
+                modelDefinition.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(epsgModelDefinition);
+      
+            var result = TypeUtils.CallPrivateMethod<bool>(mduFile, "IsNetfileCoordinateSystemUpToDate", modelDefinition, netFilePath);
+
+            Assert.That(result, Is.EqualTo(expected));
         }
     }
 }

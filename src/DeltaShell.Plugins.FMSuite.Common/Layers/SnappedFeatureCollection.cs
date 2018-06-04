@@ -91,6 +91,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
                     snappedStyle.GeometryType = typeof (ILineString);
                     snappedStyle.Line = new Pen(Color.Gray) {EndCap = LineCap.DiamondAnchor};
                 }
+                else if (typeof(IMultiPoint).IsAssignableFrom(snappedStyle.GeometryType))
+                {
+                    snappedStyle.GeometryType = typeof(IMultiLineString);
+                    snappedStyle.Line = new Pen(Color.Gray) { EndCap = LineCap.Round };
+                }
                 else if (typeof(ILineString).IsAssignableFrom(snappedStyle.GeometryType))
                 {
                     snappedStyle.Line = AdjustPenTransparency(snappedStyle.Line, 64);
@@ -191,18 +196,53 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             if (feature.Geometry is IPoint)
             {
                 //hack: line to snapped point
-                snappedGeometry = snappedGeometry.IsEmpty
-                                      ? snappedGeometry
-                                      : new LineString(new[]
-                                          {
-                                              (Coordinate) feature.Geometry.Coordinate.Clone(),
-                                              snappedGeometry.Coordinate
-                                          });
+                snappedGeometry = GetSnappedGeometryForPoint(snappedGeometry, feature.Geometry.Coordinate);
+            }     
+
+            if (snappedGeometry is MultiPoint && typeof(IMultiLineString).IsAssignableFrom(SnappedLayerStyle.GeometryType))
+            {
+                var points = snappedGeometry as MultiPoint;
+                var auxGeom = new List<ILineString>();
+
+                if (points.Count == 1)
+                { 
+                    var coordinateSnappedPoint = points.Coordinate;
+                    var distances = new List<double>();
+                    
+                    foreach (var coord in feature.Geometry.Coordinates)
+                    {
+                        distances.Add(coord.Distance(points.Coordinate));
+                    }
+
+                    var smallestNumberIndex = distances.IndexOf(distances.Min());
+
+                    auxGeom.Add((LineString)GetSnappedGeometryForPoint(points, feature.Geometry.Coordinates[smallestNumberIndex]));
+                    snappedGeometry = new MultiLineString(auxGeom.ToArray());
+                }
+            
+                if (points.Count == 2)
+                {
+                    auxGeom.Add((LineString)GetSnappedGeometryForPoint(points.FirstOrDefault(), feature.Geometry.Coordinates.FirstOrDefault()));
+                    auxGeom.Add((LineString)GetSnappedGeometryForPoint(points.LastOrDefault(), feature.Geometry.Coordinates.LastOrDefault()));
+                    snappedGeometry = new MultiLineString(auxGeom.ToArray());
+                }
             }
+
             feature2D.Geometry = snappedGeometry;
             return feature2D;
         }
-        
+
+        private static IGeometry GetSnappedGeometryForPoint(IGeometry snappedGeometry, Coordinate featureCoordinate)
+        {
+            return snappedGeometry.IsEmpty
+                ? snappedGeometry
+                : new LineString(new[]
+                {
+                    (Coordinate) featureCoordinate.Clone(),
+                    snappedGeometry.Coordinate
+                });
+        }
+
         void OriginalFeaturesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (dirty)
@@ -240,7 +280,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             originalGeometries.AddRange(OriginalFeatures.OfType<IFeature>().Select(f => f.Geometry));
             //SourceSink is a FeatureData, so we need to extract the feature geometry from it.
             originalGeometries.AddRange(OriginalFeatures.OfType<IFeatureData>().Select(f => f.Feature.Geometry));
-
+            
             var snappedGeometries = OperationApi.GetGridSnappedGeometry(SnapApiFeatureType, originalGeometries).ToArray();
 
             for (var i = 0; i < OriginalFeatures.Count; i++)
