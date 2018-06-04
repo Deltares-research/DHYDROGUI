@@ -165,7 +165,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 coverage.Features = new EventedList<IFeature>(generalStructuresFeatures);
             }
-            if (featureName == leveeBreachName && leveeBreachFeatures != null)
+            if (featureName == "dambreaks" && leveeBreachFeatures != null)
             {
                 coverage.Features = new EventedList<IFeature>(leveeBreachFeatures);
             }
