@@ -197,7 +197,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 GetFeature = b => b.Feature
             };
 
-            yield return new PointFileImporterExporter { Mode = Feature2DImportExportMode.Import };
+            yield return new PointFileImporterExporter
+            {
+                Mode = Feature2DImportExportMode.Import,
+                EqualityComparer = new GroupableFeatureComparer<GroupableFeature2DPolygon>(),
+                AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.Gullies)),
+                GetEditableObject = target => GetModelFor(target, a => a.Gullies).Area
+            };
+
             yield return new ObsFileImporterExporter<GroupableFeature2DPoint>
             {
                 Mode = Feature2DImportExportMode.Import,
@@ -209,8 +216,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 Mode = Feature2DImportExportMode.Import,
                 EqualityComparer = new GroupableFeatureComparer<GroupableFeature2DPolygon>(),
-                AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.Enclosures, a => a.DryAreas)),
-                GetEditableObject = target => GetModelFor(target, a => a.Enclosures, a => a.DryAreas).Area
+                AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.Enclosures, a => a.DryAreas, a => a.RoofAreas)),
+                GetEditableObject = target => GetModelFor(target, a => a.Enclosures, a => a.DryAreas, a => a.RoofAreas).Area
             };
             yield return new LdbFileImporterExporter
             {
@@ -241,7 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Mode = Feature2DImportExportMode.Import,
                 CreateDelegate = delegate (List<Coordinate> points1, string name1)
                 {
-                    var feature1 = new LeveeBreach { Name = name1, Geometry = PliFile<FixedWeir>.CreatePolyLineGeometry(points1) };
+                    var feature1 = new LeveeBreach { Name = name1, Geometry = PliFile<LeveeBreach>.CreatePolyLineGeometry(points1) };
                     return feature1;
                 },
                 EqualityComparer = new GroupableFeatureComparer<LeveeBreach>(),
@@ -250,6 +257,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             };
 
             yield return new GisToFeature2DImporter<ILineString, LeveeBreach>();
+
+            yield return new GisToFeature2DImporter<IPoint, Gully>();
+
+            yield return new GisToFeature2DImporter<IPolygon, RoofArea>();
 
             yield return new GwswFileImporter();
         }

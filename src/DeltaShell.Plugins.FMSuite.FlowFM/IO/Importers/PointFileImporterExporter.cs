@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using DelftTools.Hydro;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
-    public class PointFileImporterExporter : Feature2DImportExportBase<Feature2DPoint>
+    public class PointFileImporterExporter : Feature2DImportExportBase<GroupableFeature2DPoint>
     {
         protected override string ImporterName
         {
@@ -18,15 +19,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             get { return "Points to .xyn file"; }
         }
 
-        protected override IEnumerable<Feature2DPoint> Import(string path)
+        protected override IEnumerable<GroupableFeature2DPoint> Import(string path)
         {
-            var reader = new ObsFile<Feature2DPoint>();
+            var reader = new ObsFile<GroupableFeature2DPoint>();
             return reader.Read(path);
         }
 
-        protected override void Export(IEnumerable<Feature2DPoint> features, string path)
+        protected override void Export(IEnumerable<GroupableFeature2DPoint> features, string path)
         {
-            var writer = new ObsFile<Feature2DPoint>();
+            var writer = new ObsFile<GroupableFeature2DPoint>();
             writer.Write(path, features);
         }
 

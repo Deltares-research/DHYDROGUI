@@ -496,7 +496,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return GetFeature2DImportDialogViewInfo<PolFileImporterExporter>();
             yield return GetFeature2DImportDialogViewInfo<LdbFileImporterExporter>();
 
+            yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<LeveeBreach, LeveeBreach>>();
+
             yield return GetGisToFeature2DImportDialogViewInfo<GisToFeature2DImporter<ILineString, LeveeBreach>>();
+            yield return GetGisToFeature2DImportDialogViewInfo<GisToFeature2DImporter<IPolygon, RoofArea>>();
+            yield return GetGisToFeature2DImportDialogViewInfo<GisToFeature2DImporter<IPoint, Gully>>();
+
+            yield return GetFeature2DImportDialogViewInfo<PolFileImporterExporter>();
+            yield return GetFeature2DImportDialogViewInfo<PointFileImporterExporter>();
 
             yield return new ViewInfo<BoundaryConditionWpsImporter, BoundaryConditionWpsDialog>
             {
@@ -620,7 +627,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     AfterCreate = (v, o) =>
                         {
                             var model = FlowModels.FirstOrDefault();
-
                             v.ModelCoordinateSystem = model == null ? null : model.CoordinateSystem;
                             v.ImportMode = o.Mode == Feature2DImportExportMode.Import;
                             v.FileFilter = o.FileFilter;

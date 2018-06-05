@@ -56,8 +56,8 @@ namespace DelftTools.Hydro
             Weirs = new EventedList<Weir2D>();
             Gates = new EventedList<Gate2D>();
 
-            RoofAreas = new EventedList<GroupableFeature2DPolygon>();
-            Gullies = new EventedList<GroupableFeature2DPoint>();
+            RoofAreas = new EventedList<RoofArea>();
+            Gullies = new EventedList<Gully>();
         }
 
         public virtual IEventedList<LandBoundary2D> LandBoundaries { get; protected set; }
@@ -77,9 +77,9 @@ namespace DelftTools.Hydro
         public virtual IEventedList<Weir2D> Weirs { get; protected set; }
         public virtual IEventedList<Gate2D> Gates { get; protected set; }
 
-        public virtual IEventedList<GroupableFeature2DPolygon> RoofAreas { get; protected set; }
+        public virtual IEventedList<RoofArea> RoofAreas { get; protected set; }
 
-        public virtual IEventedList<GroupableFeature2DPoint> Gullies { get; protected set; }
+        public virtual IEventedList<Gully> Gullies { get; protected set; }
 
         #region IHydroRegion
 
@@ -165,9 +165,9 @@ namespace DelftTools.Hydro
                 yield return roofArea;
             }
             yield return Gullies;
-            foreach (var Gully in Gullies)
+            foreach (var gully in Gullies)
             {
-                yield return Gully;
+                yield return gully;
             }
         }
 

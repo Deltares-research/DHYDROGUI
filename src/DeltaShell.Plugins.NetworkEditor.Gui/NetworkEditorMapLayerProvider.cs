@@ -68,12 +68,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || data is IEventedList<LandBoundary2D>
                    || data is IEventedList<ThinDam2D>
                    || data is IEventedList<ObservationCrossSection2D> 
-                   || (data is IEventedList<Feature2DPoint> && parentObject is HydroArea) //obs points, Gullies
+                   || (data is IEventedList<Feature2DPoint> && parentObject is HydroArea) //obs points
                    || (data is IEventedList<GroupableFeature2DPoint> && parentObject is HydroArea) //obs points
-                   || (data is IEventedList<GroupableFeature2DPolygon> && parentObject is HydroArea) // dry areas, roof areas & enclosures
-                   || (data is IEventedList<GroupablePointFeature> && parentObject is HydroArea) // dry points
+                   || (data is IEventedList<GroupableFeature2DPolygon> && parentObject is HydroArea) // dry area & enclosures
+                   || (data is IEventedList<GroupablePointFeature> && parentObject is HydroArea) // dry points, 
                    || (data is IEventedList<FixedWeir> && parentObject is HydroArea) //fixed weirs
-                   || (data is IEventedList<LeveeBreach> && parentObject is HydroArea) //dambreak
+                   || (data is IEventedList<LeveeBreach> && parentObject is HydroArea) //levee breach
+                   || (data is IEventedList<Gully> && parentObject is HydroArea) //gullies
+                   || (data is IEventedList<RoofArea> && parentObject is HydroArea) //roofareas
                    || (data is IEventedList<Embankment> && parentObject is HydroArea);
         }
 

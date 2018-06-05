@@ -7,7 +7,9 @@ using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net;
@@ -18,14 +20,16 @@ using SharpMap.Extensions.Data.Providers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
-    public class GisToFeature2DImporter<TGeometry, TFeature2D> : MapFeaturesImporterBase  where TGeometry : IGeometry where TFeature2D: Feature2D
+    public class GisToFeature2DImporter<TGeometry, TFeature2D> : MapFeaturesImporterBase, IFeature2DImporterExporter where TGeometry : IGeometry where TFeature2D: Feature2D
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(GisToFeature2DImporter<TGeometry, TFeature2D>));
 
+        public GisToFeature2DImporter()
+        {
+            Mode = Feature2DImportExportMode.Import; 
+        }
+
         public Func<IEnumerable, WaterFlowFMModel> GetModelForList { get; set; }
-
-        public override bool OpenViewAfterImport { get { return false; } }
-
 
         #region IFileImporter
 
@@ -69,17 +73,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public override bool CanImportOnRootLevel { get { return false; } }
 
+        public ICoordinateTransformation CoordinateTransformation { get; set; }
+
+        public string[] Files { get; set; }
         public override string FileFilter { get { return "Shape file (*.shp)|*.shp|GML file (*.gml)|*.gml|GeoJSON (*.geojson)|*.geojson"; } }
+        public Feature2DImportExportMode Mode { get; }
+        public IEqualityComparer EqualityComparer { get; set; }
+        public Func<object, object, bool> ShouldReplace { get; set; }
 
         public override string TargetDataDirectory { get; set; }
 
         public override bool ShouldCancel { get; set; }
 
         public override ImportProgressChangedDelegate ProgressChanged { get; set; }
+        public override bool OpenViewAfterImport { get; }
 
         protected override object OnImportItem(string path, object target = null)
         {
+            var filePath = path;
+
             if (String.IsNullOrEmpty(path))
+            {
+                if (Files != null && Files.Any())
+                {
+                    filePath = Files.First();
+                }
+            }
+
+            if (String.IsNullOrEmpty(filePath))
             {
                 Log.ErrorFormat("No file was presented to import from.");
                 return null;
@@ -90,17 +111,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 return null;
             }
 
-            var list = (IList)target;
-            var fileExtention = Path.GetExtension(path).ToLower();
+            var list = (IList<TFeature2D>)target;
+
+            var fileExtention = Path.GetExtension(filePath).ToLower();
 
             switch (fileExtention)
             {
                 case ".shp":
-                    return ImportShapeFile(path, list);
+                    return ImportShapeFile(filePath, list);
                 case ".gml":
-                    return ImportByOgrFeatureProvider(path, list);
+                    return ImportByOgrFeatureProvider(filePath, list);
                 case ".geojson":
-                    return ImportByOgrFeatureProvider(path, list);
+                    return ImportByOgrFeatureProvider(filePath, list);
                 default:
                     return null;
             }
@@ -109,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         #endregion IFileImporter
 
 
-        private static IList ImportShapeFile(string path, IList list)
+        private static IList<TFeature2D> ImportShapeFile(string path, IList<TFeature2D> list)
         {
             var importer = new ShapeFile(path);
 
@@ -127,8 +149,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return list;
         }
 
-
-        private static IList ImportByOgrFeatureProvider(string path, IList list)
+        private static IList<TFeature2D> ImportByOgrFeatureProvider(string path, IList<TFeature2D> list)
         {
             var provider = new OgrFeatureProvider(path);
 
@@ -152,12 +173,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         }
 
         [InvokeRequired]
-        private static void InsertFeatures(IEnumerable<IFeature> features, IList list)// where TFeat : INameable
+        private static void InsertFeatures(IEnumerable<IFeature> features, IList<TFeature2D> list)// where TFeat : INameable
         {
             foreach (var feature in features)
             {
                 var instance = (TFeature2D)Activator.CreateInstance(typeof(TFeature2D));
-                instance.Name = NamingHelper.GetUniqueName<TFeature2D>("imported_feature_{0}",list as IList<TFeature2D>);
+                instance.Name = NamingHelper.GetUniqueName<TFeature2D>("imported_feature_{0}",list);
                 instance.Geometry = ConvertGeometry(feature);
                 list.Add(instance);
             }

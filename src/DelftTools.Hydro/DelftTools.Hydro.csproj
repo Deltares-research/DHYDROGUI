@@ -188,12 +188,14 @@
     <Compile Include="GroupableFeatureComparer.cs" />
     <Compile Include="GroupableFeatureExtensions.cs" />
     <Compile Include="GroupablePointFeature.cs" />
+    <Compile Include="Gully.cs" />
     <Compile Include="HydroNetwork351LegacyLoader.cs" />
     <Compile Include="HydroNetworkExtensions.cs" />
     <Compile Include="IGroupableFeature.cs" />
     <Compile Include="ISewerConnection.cs" />
     <Compile Include="Compartment.cs" />
     <Compile Include="OutletCompartment.cs" />
+    <Compile Include="RoofArea.cs" />
     <Compile Include="SewerConnectionExtensionMethods.cs" />
     <Compile Include="SewerConnectionOrifice.cs" />
     <Compile Include="SewerConnectionWaterType.cs" />
