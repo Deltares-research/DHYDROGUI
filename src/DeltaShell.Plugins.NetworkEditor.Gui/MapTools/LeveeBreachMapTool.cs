@@ -1,30 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
-using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils;
-using DelftTools.Utils.Validation;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
-using log4net.Core;
-using NetTopologySuite.Extensions.Geometries;
-using NetTopologySuite.Geometries;
 using SharpMap;
 using SharpMap.Api.Editors;
-using SharpMap.Api.Layers;
-using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Data.Providers;
 using SharpMap.Editors.Snapping;
 using SharpMap.Layers;
 using SharpMap.Styles;
-using SharpMap.UI.Forms;
 using SharpMap.UI.Tools;
 using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 {

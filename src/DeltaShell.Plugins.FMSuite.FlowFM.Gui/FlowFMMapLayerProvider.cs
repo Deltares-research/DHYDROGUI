@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
@@ -15,6 +16,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
@@ -229,6 +231,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             }
 
+            var coverage = data as FileBasedFeatureCoverage;
+            if (coverage != null && IsCoverageLeveeBreachWidth(coverage))
+            {
+                // Create feature coverage layer
+                var featureCoverageLayer = new FeatureCoverageLayer(new LeveeBreachWidthRenderer())
+                {
+                    FeatureCoverage = coverage,
+                    Name = coverage.Name,
+                    NameIsReadOnly = !coverage.IsEditable,
+                };
+                
+                if (coverage.CoordinateSystem != null)
+                {
+                    featureCoverageLayer.DataSource.CoordinateSystem = coverage.CoordinateSystem;
+                }
+
+                return featureCoverageLayer;
+            }
+            
             return null;
         }
 
@@ -265,6 +286,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 return true;
 
             return data is WaterFlowFMModel
+                // TODO Sil: add check if data is Featurecoverage with a certain name/type (find the breach width coverage)
+                   || data is FileBasedFeatureCoverage && IsCoverageLeveeBreachWidth((FileBasedFeatureCoverage)data)
                    || data is IEventedList<WaterFlowFM1D2DLink> && parentObject is WaterFlowFMModel
                    || data is IGrouping<string, IFunction>
                    || data is FMMapFileFunctionStore
@@ -275,6 +298,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                    || data is FMOutputSnappedFeaturesGroupLayerData
                    || data is CoverageDepthLayersList
                    || data is IEventedList<Feature2D>;  // Boundaries and sources&sinks
+        }
+
+        private bool IsCoverageLeveeBreachWidth(INameable data)
+        {
+            if (data == null) return false;
+
+            return data.Name == "dambreak breach width (dambreak_breach_width)";
         }
 
         public IEnumerable<object> ChildLayerObjects(object data)
@@ -401,7 +431,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         yield return output;
                 }
             }
-
+            
             // groupings currently used by FMMapFileFunctionStore (for sedimentation outputs)
             var grouping = data as IGrouping<string, IFunction>;
             if (grouping != null)

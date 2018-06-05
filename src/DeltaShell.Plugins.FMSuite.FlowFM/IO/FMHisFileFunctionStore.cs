@@ -32,6 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private readonly IList<IFeature> crossSectionFeatures;
         private readonly IList<IFeature> generalStructuresFeatures;
         private readonly IList<IFeature> leveeBreachFeatures;
+        private const string leveeBreachesName = "dambreaks";
         private const string leveeBreachName = "dambreak";
         protected const string StandardNameAttribute = "standard_name";
         protected const string LongNameAttribute = "long_name";
@@ -165,7 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 coverage.Features = new EventedList<IFeature>(generalStructuresFeatures);
             }
-            if (featureName == "dambreaks" && leveeBreachFeatures != null)
+            if (featureName == leveeBreachesName && leveeBreachFeatures != null)
             {
                 coverage.Features = new EventedList<IFeature>(leveeBreachFeatures);
             }
@@ -204,7 +205,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                 new[] { GetSize(function) });
                         }
                         return (MultiDimensionalArray<T>)cachedGeneralStructures;
-                    case "dambreaks":
+                    case leveeBreachesName:
                         if (cachedLeveeBreach == null)
                         {
                             cachedLeveeBreach = new MultiDimensionalArray<IFeature>(leveeBreachFeatures,

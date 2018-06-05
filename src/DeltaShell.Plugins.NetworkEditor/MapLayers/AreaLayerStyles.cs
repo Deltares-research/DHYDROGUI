@@ -295,5 +295,30 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
                 };
             }
         }
+
+        public static VectorStyle BreachWidthLineStyle
+        {
+            get
+            {
+                return new VectorStyle
+                {
+                    Line = new Pen(Color.DeepPink, 3f),
+                    GeometryType = typeof(ILineString)
+                };
+            }
+        }
+
+        public static VectorStyle BreachWidthPointStyle
+        {
+            get
+            {
+                return new VectorStyle
+                {
+                    Fill = new SolidBrush(Color.DeepPink),
+                    GeometryType = typeof(IPoint),
+                    SymbolScale = 0.75f,
+                };
+            }
+        }
     }
 }
