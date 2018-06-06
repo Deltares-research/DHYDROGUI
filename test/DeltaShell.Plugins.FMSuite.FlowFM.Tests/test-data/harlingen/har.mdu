@@ -88,6 +88,7 @@ Wrishp_emb        = 1
 Wrishp_dryarea    = 1
 Wrishp_enc        = 1
 Wrishp_src        = 1
+Wrishp_pump       = 1
 ObsFile              = har_fine_V3_obs.xyn # *.xyn Coords+name of observation stations.
 CrsFile              = har_crs_V2.pli      # *_crs.pli Polyline(s) definining cross section(s).
 HisFile              = 001_his.nc          # *_his.nc History file in NetCDF format.
