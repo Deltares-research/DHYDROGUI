@@ -186,6 +186,7 @@ output,Wrishp_emb,,,Write shape file for embankments,0|1,0,,,FALSE,,,,,,Write sh
 output,Wrishp_dryarea,,,Write shape file for dry area,0|1,0,,,FALSE,,,,,,Write shape file for dry area
 output,Wrishp_enc,,,Write shape file for enclosure,0|1,0,,,FALSE,,,,,,Write shape file for enclosure
 output,Wrishp_src,,,Write shape file for sources,0|1,0,,,FALSE,,,,,,Write shape file for sources
+output,Wrishp_pump,,,Write shape file for pump,0|1,0,,,FALSE,,,,,,Write shape file for pump
 *,,,,,,,,,,,,,,,
 GUIOnly,WriteHisFile,output,His,Write His File,0|1,0,,,FALSE,,,,,,Write a history file
 GUIOnly,HisOutputDeltaT,output,His,His output Interval,Interval,,,,FALSE,,WriteHisFile,,,,Interval for writing His Output

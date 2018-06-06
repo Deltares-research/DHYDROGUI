@@ -266,7 +266,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             KnownProperties.Wrishp_weir,
             KnownProperties.Wrishp_dryarea,
             KnownProperties.Wrishp_enc,
-            KnownProperties.Wrishp_src
+            KnownProperties.Wrishp_src,
+            KnownProperties.Wrishp_pump
         };
 
         private void OnWriteSnappedFeaturesPropertyChanged(WaterFlowFMProperty prop)
