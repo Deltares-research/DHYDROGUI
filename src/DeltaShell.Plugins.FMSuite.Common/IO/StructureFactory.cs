@@ -353,6 +353,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return weir;
         }
 
+        #endregion
+
+        #region Levee breach
+
         /// <summary>
         /// Create a levee breach
         /// </summary>
@@ -366,9 +370,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             SetLeveeBreachSettings(leveeBreach, structure2D, path, refDate);
 
-
             Log.InfoFormat("Work in progess on loading the levee breaches from file. The breaches will be loaded with only their positions.");
-            //SetCommonStructureData(leveeBreach, structure2D, path);
+            return leveeBreach;
+        }
+
+        private static LeveeBreach SetLeveeBreachProperties(Structure2D structure2D)
+        {
+            var breachLocationX = GetPropertyValue(structure2D, KnownStructureProperties.BreachLocationX, 0.0);
+            var breachLocationY = GetPropertyValue(structure2D, KnownStructureProperties.BreachLocationY, 0.0);
+
+            var leveeBreach = new LeveeBreach
+            {
+                BreachLocationX = breachLocationX,
+                BreachLocationY = breachLocationY,
+
+            };
+
             return leveeBreach;
         }
 
@@ -376,7 +393,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             // Base settings
             var startTime = GetBreachGrowthStartTime(structure2D, refDate);
-            var breachGrowthActive = GetPropertyValue(structure2D, KnownStructureProperties.BreachGrowthActivated, false);
+            var breachGrowthActive = GetPropertyValue(structure2D, KnownStructureProperties.BreachGrowthActivated, true);
             leveeBreach.SetBaseLeveeBreachSettings(startTime, breachGrowthActive);
 
             // formula
@@ -444,23 +461,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             settings.CreateTableFromTimeSeries(timeSeries);
         }
-
-        private static LeveeBreach SetLeveeBreachProperties(Structure2D structure2D)
-        {
-            var breachLocationX = GetPropertyValue(structure2D, KnownStructureProperties.BreachLocationX, 0.0);
-            var breachLocationY = GetPropertyValue(structure2D, KnownStructureProperties.BreachLocationY, 0.0);
-
-            var leveeBreach = new LeveeBreach
-            {
-                BreachLocationX = breachLocationX,
-                BreachLocationY = breachLocationY,
-
-            };
-
-            return leveeBreach;
-        }
         
-
         private static T GetPropertyValue<T>(Structure2D structure2D, string propertyName, T defaultValue)
         {
             var property = structure2D.GetProperty(propertyName);
