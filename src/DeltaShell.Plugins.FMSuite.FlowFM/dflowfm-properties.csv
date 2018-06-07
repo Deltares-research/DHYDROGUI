@@ -214,7 +214,7 @@ output,FlowGeomFile,,,,FileName,,,,TRUE,,,,,,Flow geometry NetCDF *_flowgeom.nc
 output,ObsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Points file *.xyn with observation stations with rows x, y, station name"
 output,CrsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,Polyline file *_crs.pli defining observation cross sections
 output,HisFile,,,,FileName,,,,TRUE,,,,,,History output file *_his.nc in NetCDF format
-output,HisInterval,,,His output interval,DoubleArray,300,0,,FALSE,,WriteHisFile,,,,"History output times, given as 'interval' 'start period' 'end period' (s)"
+output,HisInterval,,,His output interval,DoubleArray,300,0,,TRUE,,,,,,"History output times, given as 'interval' 'start period' 'end period' (s)"
 output,XLSInterval,,,XLS output interval,Interval,0,0,,FALSE,,,,,,Interval (s) between XLS history
 output,MapFile,,,,FileName,,,,TRUE,,,,,,Map file output file *_map.nc in NetCDF format
 output,MapInterval,,,Map output interval,DoubleArray,1200,0,,TRUE,,WriteMapFile,,,,"Map file output times, given as 'interval' 'start period' 'end period' (s)"
