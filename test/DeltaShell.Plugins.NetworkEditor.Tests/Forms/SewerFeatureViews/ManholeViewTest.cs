@@ -30,17 +30,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
                 Target = manhole,
             };
 
+            var internalConnection = new SewerConnection
+            {
+                Name = "Interne verbinding",
+                SourceCompartment = compartment1,
+                TargetCompartment = compartment2,
+                Source = manhole,
+                Target = manhole,
+            };
+
+            internalConnection.BranchFeatures.Add(new Pump{StartSuction = 1.3, StopSuction = -0.8, StartDelivery = 1, StopDelivery = -1, Name = "Pump 01"});
+
             var connections = new List<ISewerConnection>
             {
                 new Pipe {Name = "leiding 1", SourceCompartment = compartment1, Source = manhole, LevelSource = 0.8},
                 new Pipe {Name = "leiding 2", TargetCompartment = compartment1, Target = manhole, LevelTarget = 0.25},
                 new Pipe {Name = "leiding 3", SourceCompartment = compartment2, Source = manhole, LevelSource = -1.2},
+                internalConnection,
                 orifice,
             };
             
             network.Branches.AddRange(connections);
             manhole.Network = network;
-            
+            network.Manholes = new List<IManhole>{manhole};
             manhole.Compartments.AddRange(new List<Compartment>
             {
                 compartment1,

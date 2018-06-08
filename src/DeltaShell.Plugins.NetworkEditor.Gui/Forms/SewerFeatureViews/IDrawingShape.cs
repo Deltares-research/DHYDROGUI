@@ -212,6 +212,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         protected double GetWidthBasedOnCompartments()
         {
+            if (sourceCompartmentShape == null || targetCompartmentShape == null) return 0;
             var sourceIsLeft = sourceCompartmentShape.LeftOffset < targetCompartmentShape.LeftOffset;
 
             var leftShape = sourceIsLeft ? sourceCompartmentShape : targetCompartmentShape;
