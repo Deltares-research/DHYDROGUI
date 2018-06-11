@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DelftTools.Shell.Core;
+﻿using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Core;
 using DeltaShell.Plugins.CommonTools;
@@ -20,50 +15,41 @@ using DeltaShell.Plugins.Scripting;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.Toolbox;
 using NUnit.Framework;
+using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
     [TestFixture]
     public class HydroModelApplicationPluginTest
     {
+        private void SetUpApplication(DeltaShellApplication app, ApplicationPlugin appPlugin)
+        {
+            app.Plugins.Add(new CommonToolsApplicationPlugin());
+            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+            app.Plugins.Add(new NetCdfApplicationPlugin());
+            app.Plugins.Add(new NetworkEditorApplicationPlugin());
+            app.Plugins.Add(new ScriptingApplicationPlugin());
+            app.Plugins.Add(new SharpMapGisApplicationPlugin());
+            app.Plugins.Add(new ToolboxApplicationPlugin());
+            app.Plugins.Add(appPlugin);
+            app.Project = new Project();
+        }
 
         [Test]
         public void AdditionalOwnerCheckTest_HydroModel()
         {
             using (var app = new DeltaShellApplication())
             {
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new NetCdfApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new ScriptingApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new ToolboxApplicationPlugin());
-
                 var appPlugin = new HydroModelApplicationPlugin();
-                app.Plugins.Add(appPlugin);
+                SetUpApplication(app, appPlugin);
 
-                app.Project = new Project();
-
-                var project = app.Project.RootFolder;
-                var hydroModel = new HydroModel();
-                var parallelActivity = new ParallelActivity();
-                var sequentialActivity = new SequentialActivity();
-                
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
-                var result = modelInfos.AdditionalOwnerCheck(project);
-                Assert.AreEqual(result, true);
-
-                result = modelInfos.AdditionalOwnerCheck(hydroModel);
-                Assert.AreEqual(result, false);
-
-                result = modelInfos.AdditionalOwnerCheck(parallelActivity);
-                Assert.AreEqual(result, false);
-
-                result = modelInfos.AdditionalOwnerCheck(sequentialActivity);
-                Assert.AreEqual(result, false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
             }
         }
 
@@ -72,38 +58,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             using (var app = new DeltaShellApplication())
             {
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new NetCdfApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new ScriptingApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new ToolboxApplicationPlugin());
-
                 var appPlugin = new RainfallRunoffApplicationPlugin();
-                app.Plugins.Add(appPlugin);
-
-                app.Project = new Project();
-
-                var project = app.Project.RootFolder;
-                var hydroModel = new HydroModel();
-                var parallelActivity = new ParallelActivity();
-                var sequentialActivity = new SequentialActivity();
+                SetUpApplication(app, appPlugin);
 
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
-                var result = modelInfos.AdditionalOwnerCheck(project);
-                Assert.AreEqual(result, true);
-
-                result = modelInfos.AdditionalOwnerCheck(hydroModel);
-                Assert.AreEqual(result, true);
-
-                result = modelInfos.AdditionalOwnerCheck(parallelActivity);
-                Assert.AreEqual(result, false);
-
-                result = modelInfos.AdditionalOwnerCheck(sequentialActivity);
-                Assert.AreEqual(result, false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
             }
         }
 
@@ -112,38 +76,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             using (var app = new DeltaShellApplication())
             {
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new NetCdfApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new ScriptingApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new ToolboxApplicationPlugin());
-
                 var appPlugin = new RealTimeControlApplicationPlugin();
-                app.Plugins.Add(appPlugin);
-
-                app.Project = new Project();
-
-                var project = app.Project.RootFolder;
-                var hydroModel = new HydroModel();
-                var parallelActivity = new ParallelActivity();
-                var sequentialActivity = new SequentialActivity();
+                SetUpApplication(app, appPlugin);
 
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
-                var result = modelInfos.AdditionalOwnerCheck(project);
-                Assert.AreEqual(result, false);
-
-                result = modelInfos.AdditionalOwnerCheck(hydroModel);
-                Assert.AreEqual(result, true);
-
-                result = modelInfos.AdditionalOwnerCheck(parallelActivity);
-                Assert.AreEqual(result, false);
-
-                result = modelInfos.AdditionalOwnerCheck(sequentialActivity);
-                Assert.AreEqual(result, false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
             }
         }
 
@@ -152,38 +94,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             using (var app = new DeltaShellApplication())
             {
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new NetCdfApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new ScriptingApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new ToolboxApplicationPlugin());
-
                 var appPlugin = new WaterFlowModel1DApplicationPlugin();
-                app.Plugins.Add(appPlugin);
-
-                app.Project = new Project();
-
-                var project = app.Project.RootFolder;
-                var hydroModel = new HydroModel();
-                var parallelActivity = new ParallelActivity();
-                var sequentialActivity = new SequentialActivity();
+                SetUpApplication(app, appPlugin);
 
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
-                var result = modelInfos.AdditionalOwnerCheck(project);
-                Assert.AreEqual(result, true);
-
-                result = modelInfos.AdditionalOwnerCheck(hydroModel);
-                Assert.AreEqual(result, true);
-
-                result = modelInfos.AdditionalOwnerCheck(parallelActivity);
-                Assert.AreEqual(result, false);
-
-                result = modelInfos.AdditionalOwnerCheck(sequentialActivity);
-                Assert.AreEqual(result, false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
             }
         }
 
@@ -192,38 +112,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             using (var app = new DeltaShellApplication())
             {
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new NetCdfApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new ScriptingApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new ToolboxApplicationPlugin());
-
                 var appPlugin = new WaterQualityModelApplicationPlugin();
-                app.Plugins.Add(appPlugin);
-
-                app.Project = new Project();
-
-                var project = app.Project.RootFolder;
-                var hydroModel = new HydroModel();
-                var parallelActivity = new ParallelActivity();
-                var sequentialActivity = new SequentialActivity();
+                SetUpApplication(app, appPlugin);
 
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
-                var result = modelInfos.AdditionalOwnerCheck(project);
-                Assert.AreEqual(result, true);
-
-                result = modelInfos.AdditionalOwnerCheck(hydroModel);
-                Assert.AreEqual(result, false);
-
-                result = modelInfos.AdditionalOwnerCheck(parallelActivity);
-                Assert.AreEqual(result, false);
-
-                result = modelInfos.AdditionalOwnerCheck(sequentialActivity);
-                Assert.AreEqual(result, false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
             }
         }
 
@@ -232,38 +130,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             using (var app = new DeltaShellApplication())
             {
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new NetCdfApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new ScriptingApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new ToolboxApplicationPlugin());
-
                 var appPlugin = new FlowFMApplicationPlugin();
-                app.Plugins.Add(appPlugin);
-
-                app.Project = new Project();
-
-                var project = app.Project.RootFolder;
-                var hydroModel = new HydroModel();
-                var parallelActivity = new ParallelActivity();
-                var sequentialActivity = new SequentialActivity();
+                SetUpApplication(app, appPlugin);
 
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
-                var result = modelInfos.AdditionalOwnerCheck(project);
-                Assert.AreEqual(result, true);
-
-                result = modelInfos.AdditionalOwnerCheck(hydroModel);
-                Assert.AreEqual(result, true);
-
-                result = modelInfos.AdditionalOwnerCheck(parallelActivity);
-                Assert.AreEqual(result, false);
-
-                result = modelInfos.AdditionalOwnerCheck(sequentialActivity);
-                Assert.AreEqual(result, false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
             }
         }
 
@@ -272,38 +148,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             using (var app = new DeltaShellApplication())
             {
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new NetCdfApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new ScriptingApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new ToolboxApplicationPlugin());
-
                 var appPlugin = new WaveApplicationPlugin();
-                app.Plugins.Add(appPlugin);
-
-                app.Project = new Project();
-
-                var project = app.Project.RootFolder;
-                var hydroModel = new HydroModel();
-                var parallelActivity = new ParallelActivity();
-                var sequentialActivity = new SequentialActivity();
+                SetUpApplication(app, appPlugin);
 
                 var modelInfos = appPlugin.GetModelInfos().FirstOrDefault();
                 Assert.NotNull(modelInfos);
 
-                var result = modelInfos.AdditionalOwnerCheck(project);
-                Assert.AreEqual(result, true);
-
-                result = modelInfos.AdditionalOwnerCheck(hydroModel);
-                Assert.AreEqual(result, true);
-
-                result = modelInfos.AdditionalOwnerCheck(parallelActivity);
-                Assert.AreEqual(result, false);
-
-                result = modelInfos.AdditionalOwnerCheck(sequentialActivity);
-                Assert.AreEqual(result, false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
             }
         }
     }
