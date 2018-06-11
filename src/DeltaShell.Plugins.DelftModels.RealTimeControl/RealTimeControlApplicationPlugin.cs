@@ -78,8 +78,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     AdditionalOwnerCheck = owner =>
                         (owner is IHydroModel) // Only allow composite activities as target
                         && (!((ICompositeActivity)owner).Activities.OfType<RealTimeControlModel>().Any()), // Don't allow multiple realtime control models in one composite activity
-                                                                                          //((owner is ICompositeActivity activity) && (activity is IHydroModel)) // Only allow composite activities as target
-                                                                                          //&& !activity.Activities.OfType<RealTimeControlModel>().Any(), // Don't allow multiple realtime control models in one composite activity
                 CreateModel = owner => new RealTimeControlModel("Real-Time Control")
                 };
         }
