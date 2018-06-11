@@ -1,0 +1,23 @@
+using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Aop;
+
+namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
+{
+    [Entity]
+    public class WeirShape : ConnectionShape
+    {
+        public Weir Weir { get; set; }
+
+        public override double BottomLevel
+        {
+            get { return Weir?.CrestLevel ?? double.NaN; }
+            set { }
+        }
+
+        public override double TopLevel
+        {
+            get { return GetTopLevelBasedOnCompartments(); }
+            set { }
+        }
+    }
+}
