@@ -43,7 +43,6 @@
             </Setter>
             <Setter Property="Margin" Value="2"/>
         </Style>
-        <converters:ObjectNotNullToBooleanConverter x:Key="ObjectNotNullToEnabledConverter" />
         <BooleanToVisibilityConverter x:Key="NullToVisibleConverter" />
     </UserControl.Resources>
 
@@ -123,14 +122,12 @@
                                                       SelectedItem="{Binding SourceCompartment}" 
                                                       Height="{Binding ElementName=Label, Path=ActualHeight}" 
                                                       Width="130"
-                                                      Margin="0,3,3,3"
-                                                      IsEnabled="{Binding SourceCompartment, Converter={StaticResource ObjectNotNullToEnabledConverter}}"/>
+                                                      Margin="0,3,3,3"/>
                                             <ComboBox ItemsSource="{Binding Path=DataContext.Manhole.Compartments, ElementName=UserControl}"
                                                       SelectedItem="{Binding TargetCompartment}" 
                                                       Height="{Binding ElementName=Label, Path=ActualHeight}" 
                                                       Width="130"
-                                                      Margin="0,3,3,3"
-                                                      IsEnabled="{Binding TargetCompartment, Converter={StaticResource ObjectNotNullToEnabledConverter}}"/>
+                                                      Margin="0,3,3,3"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
