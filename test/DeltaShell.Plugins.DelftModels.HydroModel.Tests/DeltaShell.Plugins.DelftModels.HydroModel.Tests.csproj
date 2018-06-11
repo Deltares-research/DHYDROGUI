@@ -229,6 +229,7 @@
     <Compile Include="Forms\ActivityShapes\SimpleActivityShapeTest.cs" />
     <Compile Include="Forms\HydroModelSettingsTest.cs" />
     <Compile Include="Forms\WorkflowEditorControlTest.cs" />
+    <Compile Include="HydroModelApplicationPluginTest.cs" />
     <Compile Include="HydroModelGuiIntegrationTest.cs" />
     <Compile Include="HydroModelTest.cs" />
     <Compile Include="Iterative1D2DCouplerLinkFeatureCollectionTest.cs" />

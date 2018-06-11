@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
@@ -46,8 +47,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     Name = "Waves Model",
                     Category = "1D / 2D / 3D Standalone Models",
                     Image = Properties.Resources.wave,
-                    AdditionalOwnerCheck = owner => !(owner is ICompositeActivity) // Allow "standalone" wave models
-                             || !((ICompositeActivity)owner).Activities.OfType<WaveModel>().Any(), // Don't allow multiple wave models in one composite activity
+                    AdditionalOwnerCheck = owner => 
+                        !(owner is ICompositeActivity) // Allow "standalone" wave models
+                        || (!((ICompositeActivity)owner).Activities.OfType<WaveModel>().Any() && owner is IHydroModel), // Don't allow multiple wave models in one composite activity
                     CreateModel = t => new WaveModel()
                 };
         }

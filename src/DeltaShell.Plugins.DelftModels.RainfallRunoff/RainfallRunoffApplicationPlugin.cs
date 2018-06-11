@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
@@ -85,7 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                     Name = "Rainfall Runoff Model",
                     Category = "1D / 2D / 3D Standalone Models",
                     AdditionalOwnerCheck = owner => !(owner is ICompositeActivity) // Allow "standalone" rainfall runoff models
-                                                 || !((ICompositeActivity)owner).Activities.OfType<RainfallRunoffModel>().Any(), // Don't allow multiple rainfall runoff models in one composite activity
+                            || (!((ICompositeActivity)owner).Activities.OfType<RainfallRunoffModel>().Any() && owner is IHydroModel), // Don't allow multiple rainfall runoff models in one composite activity
                     CreateModel = owner => new RainfallRunoffModel
                     {
                         Name = "Rainfall Runoff"
