@@ -186,6 +186,7 @@ output,Wrishp_emb,,,Write shape file for embankments,0|1,0,,,FALSE,,,,,,Write sh
 output,Wrishp_dryarea,,,Write shape file for dry area,0|1,0,,,FALSE,,,,,,Write shape file for dry area
 output,Wrishp_enc,,,Write shape file for enclosure,0|1,0,,,FALSE,,,,,,Write shape file for enclosure
 output,Wrishp_src,,,Write shape file for sources,0|1,0,,,FALSE,,,,,,Write shape file for sources
+output,Wrishp_pump,,,Write shape file for pump,0|1,0,,,FALSE,,,,,,Write shape file for pump
 *,,,,,,,,,,,,,,,
 GUIOnly,WriteHisFile,output,His,Write His File,0|1,0,,,FALSE,,,,,,Write a history file
 GUIOnly,HisOutputDeltaT,output,His,His output Interval,Interval,,,,FALSE,,WriteHisFile,,,,Interval for writing His Output
@@ -213,7 +214,7 @@ output,FlowGeomFile,,,,FileName,,,,TRUE,,,,,,Flow geometry NetCDF *_flowgeom.nc
 output,ObsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Points file *.xyn with observation stations with rows x, y, station name"
 output,CrsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,Polyline file *_crs.pli defining observation cross sections
 output,HisFile,,,,FileName,,,,TRUE,,,,,,History output file *_his.nc in NetCDF format
-output,HisInterval,,,His output interval,DoubleArray,300,0,,FALSE,,WriteHisFile,,,,"History output times, given as 'interval' 'start period' 'end period' (s)"
+output,HisInterval,,,His output interval,DoubleArray,300,0,,TRUE,,,,,,"History output times, given as 'interval' 'start period' 'end period' (s)"
 output,XLSInterval,,,XLS output interval,Interval,0,0,,FALSE,,,,,,Interval (s) between XLS history
 output,MapFile,,,,FileName,,,,TRUE,,,,,,Map file output file *_map.nc in NetCDF format
 output,MapInterval,,,Map output interval,DoubleArray,1200,0,,TRUE,,WriteMapFile,,,,"Map file output times, given as 'interval' 'start period' 'end period' (s)"

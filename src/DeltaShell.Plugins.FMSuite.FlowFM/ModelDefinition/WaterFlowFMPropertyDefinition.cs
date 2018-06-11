@@ -92,6 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string Wrishp_dryarea = "Wrishp_dryarea";
         public const string Wrishp_enc = "Wrishp_enc";
         public const string Wrishp_src = "Wrishp_src";
+        public const string Wrishp_pump = "Wrishp_pump";
     }
 
 
