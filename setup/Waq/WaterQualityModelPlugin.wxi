@@ -15,6 +15,8 @@
           <File Id="x64_delwaq.dll" Source="$(var.waq_kernel_dir)x64\delwaq.dll" />
           <File Id="x64_delwaq1.exe" Source="$(var.waq_kernel_dir)x64\delwaq1.exe" KeyPath="yes"/>
           <File Id="x64_delwaq2.exe" Source="$(var.waq_kernel_dir)x64\delwaq2.exe" />
+          <File Id="x64_hdf5.dll" Source="$(var.waq_kernel_dir)x64\hdf5.dll" />
+          <File Id="x64_hdf5_hl.dll" Source="$(var.waq_kernel_dir)x64\hdf5_hl.dll" />
           <File Id="x64_libifcoremd.dll" Source="$(var.waq_kernel_dir)x64\libifcoremd.dll" />
           <File Id="x64_libifportmd.dll" Source="$(var.waq_kernel_dir)x64\libifportmd.dll" />
           <File Id="x64_libiomp5md.dll" Source="$(var.waq_kernel_dir)x64\libiomp5md.dll" />
@@ -24,6 +26,7 @@
           <File Id="x64_svml_dispmd.dll" Source="$(var.waq_kernel_dir)x64\svml_dispmd.dll" />
           <File Id="x64_vcruntime140.dll" Source="$(var.waq_kernel_dir)x64\vcruntime140.dll" />
           <File Id="x64_waq_plugin_wasteload.dll" Source="$(var.waq_kernel_dir)x64\waq_plugin_wasteload.dll" />
+          <File Id="x64_zlib1.dll" Source="$(var.waq_kernel_dir)x64\zlib1.dll" />
         </Component>
         <Component Id="DuflowProcessLibraryPlugin_x64" Guid="7A0AEAE4-D3F2-4BB9-BD1E-8AFC41AF56F6">
           <File Id="x64_duflow.dll" Source="$(var.waq_kernel_dir)x64\duflow.dll" />
