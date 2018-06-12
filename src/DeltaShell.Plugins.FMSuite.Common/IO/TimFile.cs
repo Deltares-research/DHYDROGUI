@@ -162,7 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 {
                     timeSeries.Components.Add(new Variable<double>());
                 }
-                FunctionHelper.SetValuesRaw<DateTime>(timeSeries.Time, dateTimes);
+                FunctionHelper.SetValuesRaw<DateTime?>(timeSeries.Time, dateTimes);
                 for (var i = 0; i < cols; ++i)
                 {
                     FunctionHelper.SetValuesRaw<double>(timeSeries.Components[i], values[i]);
