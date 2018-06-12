@@ -100,40 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogMock, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
 
-            fileDialogMock.AssertWasCalled(f => f.Filter = @"Q-h series file|*.qh");
-        }
-
-        [TestCaseSource(typeof(WithoutFlowBoundaryTestData), "RiemannWithTimeSeries")]
-        public void GivenFlowBoundaryQuantityTypeWithRiemannWhenImportDialogIsOpenedThenValidExtentionsWithoutBcArePresent(FlowBoundaryQuantityType flowBoundaryQuantityType, BoundaryConditionDataType Riemann)
-        {
-            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, Riemann);
-            WaterFlowFMModel wfmodel = new WaterFlowFMModel();
-        
-            BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogMock, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
-
-            fileDialogMock.AssertWasCalled(f => f.Filter = @"Time series file (*.tim)|*.tim");
-        }
-
-        [TestCaseSource(typeof(WithoutFlowBoundaryTestData), "RiemannWithQh")]
-        public void GivenFlowBoundaryQuantityTypeWithRiemannWhenImportDialogIsOpenedThenValidExtentionsWithoutBcArePresent2(FlowBoundaryQuantityType flowBoundaryQuantityType, BoundaryConditionDataType Riemann2)
-        {
-            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, Riemann2);
-            WaterFlowFMModel wfmodel = new WaterFlowFMModel();
-        
-            BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogMock, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
-
-            fileDialogMock.AssertWasCalled(f => f.Filter = @"Q-h series file|*.qh");
-        }
-
-        [TestCaseSource(typeof(WithoutFlowBoundaryTestData), "RiemannWithHarmonics")]
-        public void GivenFlowBoundaryQuantityTypeWithRiemannWhenImportDialogIsOpenedThenValidExtentionsWithoutBcArePresent3(FlowBoundaryQuantityType flowBoundaryQuantityType, BoundaryConditionDataType Riemann3)
-        {
-            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, Riemann3);
-            WaterFlowFMModel wfmodel = new WaterFlowFMModel();
-        
-            BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogMock, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
-
-            fileDialogMock.AssertWasCalled(f => f.Filter = @"Harmonic series file|*.cmp");
+            fileDialogMock.AssertWasCalled(f => f.Filter = @"Boundary conditions file|*.bc|Q-h series file|*.qh");
         }
     }
 
@@ -142,6 +109,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         static readonly object[] TimeSeries =
         {
             new object[] {FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries},
+            new object[] {FlowBoundaryQuantityType.Riemann, BoundaryConditionDataType.TimeSeries},
+            new object[] {FlowBoundaryQuantityType.RiemannVelocity, BoundaryConditionDataType.TimeSeries},
             new object[] {FlowBoundaryQuantityType.Velocity, BoundaryConditionDataType.TimeSeries},
             new object[] {FlowBoundaryQuantityType.Neumann, BoundaryConditionDataType.TimeSeries},
             new object[] {FlowBoundaryQuantityType.Discharge, BoundaryConditionDataType.TimeSeries},
@@ -151,6 +120,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         static object[] Harmonics =
         {
             new object[] {FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.Harmonics},
+            new object[] {FlowBoundaryQuantityType.Riemann, BoundaryConditionDataType.TimeSeries},
+            new object[] {FlowBoundaryQuantityType.RiemannVelocity, BoundaryConditionDataType.TimeSeries},
             new object[] {FlowBoundaryQuantityType.Velocity, BoundaryConditionDataType.Harmonics},
             new object[] {FlowBoundaryQuantityType.Neumann, BoundaryConditionDataType.Harmonics},
             new object[] {FlowBoundaryQuantityType.Discharge, BoundaryConditionDataType.Harmonics},
@@ -160,6 +131,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         static object[] HarmonicsCorrection =
         {
             new object[] {FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.HarmonicCorrection},
+            new object[] {FlowBoundaryQuantityType.Riemann, BoundaryConditionDataType.TimeSeries},
+            new object[] {FlowBoundaryQuantityType.RiemannVelocity, BoundaryConditionDataType.TimeSeries},
             new object[] {FlowBoundaryQuantityType.Velocity, BoundaryConditionDataType.HarmonicCorrection},
             new object[] {FlowBoundaryQuantityType.Neumann, BoundaryConditionDataType.HarmonicCorrection},
             new object[] {FlowBoundaryQuantityType.Discharge, BoundaryConditionDataType.HarmonicCorrection},
@@ -167,6 +140,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         static object[] Astronomical =
         {
             new object[] {FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.AstroComponents},
+            new object[] {FlowBoundaryQuantityType.Riemann, BoundaryConditionDataType.TimeSeries},
+            new object[] {FlowBoundaryQuantityType.RiemannVelocity, BoundaryConditionDataType.TimeSeries},
             new object[] {FlowBoundaryQuantityType.Velocity, BoundaryConditionDataType.AstroComponents},
             new object[] {FlowBoundaryQuantityType.Neumann, BoundaryConditionDataType.AstroComponents},
             new object[] {FlowBoundaryQuantityType.Discharge, BoundaryConditionDataType.AstroComponents},
@@ -174,6 +149,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         static object[] AstronomicalCorrection =
         {
             new object[] {FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.AstroCorrection},
+            new object[] {FlowBoundaryQuantityType.Riemann, BoundaryConditionDataType.TimeSeries},
+            new object[] {FlowBoundaryQuantityType.RiemannVelocity, BoundaryConditionDataType.TimeSeries},
             new object[] {FlowBoundaryQuantityType.Velocity, BoundaryConditionDataType.AstroCorrection},
             new object[] {FlowBoundaryQuantityType.Neumann, BoundaryConditionDataType.AstroCorrection},
             new object[] {FlowBoundaryQuantityType.Discharge, BoundaryConditionDataType.AstroCorrection},
@@ -181,25 +158,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         static object[] Qh =
         {
             new object[] {FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.Qh},
+            new object[] {FlowBoundaryQuantityType.Riemann, BoundaryConditionDataType.Qh},
+            new object[] {FlowBoundaryQuantityType.RiemannVelocity, BoundaryConditionDataType.Qh},
             new object[] {FlowBoundaryQuantityType.Velocity, BoundaryConditionDataType.Qh},
             new object[] {FlowBoundaryQuantityType.Neumann, BoundaryConditionDataType.Qh},
             new object[] {FlowBoundaryQuantityType.Discharge, BoundaryConditionDataType.Qh},
-        };
-    }
-
-    class WithoutFlowBoundaryTestData
-    {
-        private static object[] RiemannWithTimeSeries =
-        {
-            new object[] {FlowBoundaryQuantityType.Riemann, BoundaryConditionDataType.TimeSeries},
-        };
-        private static object[] RiemannWithQh =
-        {
-            new object[] {FlowBoundaryQuantityType.Riemann, BoundaryConditionDataType.Qh}
-        };
-        private static object[] RiemannWithHarmonics =
-        {
-            new object[] {FlowBoundaryQuantityType.Riemann, BoundaryConditionDataType.Harmonics}
         };
     }
 }

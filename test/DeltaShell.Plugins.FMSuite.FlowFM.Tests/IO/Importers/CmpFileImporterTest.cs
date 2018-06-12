@@ -35,6 +35,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsFalse(result);
         }
 
+        [Test]
+        public void GivenBcmFileImporterWhenBoundaryConditionHasInCorrectDataTypeThenValidateFalse()
+        {
+            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.Empty);
+            var result = importer.CanImportOnBoundaryCondition(flowBoundaryCondition);
+
+            Assert.IsFalse(result);
+        }
+
         [TestCase(BoundaryConditionDataType.AstroComponents)]
         [TestCase(BoundaryConditionDataType.Harmonics)]
         [TestCase(BoundaryConditionDataType.HarmonicCorrection)]
@@ -46,15 +55,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             Assert.IsTrue(result, "The flowboundary quantity type is incorrect");
         }
-
-        [Test]
-        public void GivenBcmFileImporterWhenBoundaryConditionHasInCorrectDataTypeThenValidateFalse()
-        {
-            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.Empty);
-            var result = importer.CanImportOnBoundaryCondition(flowBoundaryCondition);
-
-            Assert.IsFalse(result);
-        }
-
     }
 }

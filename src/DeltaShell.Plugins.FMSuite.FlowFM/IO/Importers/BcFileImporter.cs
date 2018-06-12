@@ -201,6 +201,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 yield return BoundaryConditionDataType.Harmonics;
                 yield return BoundaryConditionDataType.HarmonicCorrection;
                 yield return BoundaryConditionDataType.TimeSeries;
+                yield return BoundaryConditionDataType.Qh;
             }
         }
 

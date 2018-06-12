@@ -227,6 +227,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             return (flowQuantity == FlowBoundaryQuantityType.WaterLevel ||
                     flowQuantity == FlowBoundaryQuantityType.Discharge ||
                     flowQuantity == FlowBoundaryQuantityType.Neumann ||
+                    flowQuantity == FlowBoundaryQuantityType.Riemann ||
+                    flowQuantity == FlowBoundaryQuantityType.RiemannVelocity ||
                     flowQuantity == FlowBoundaryQuantityType.NormalVelocity ||
                     flowQuantity == FlowBoundaryQuantityType.Salinity ||
                     flowQuantity == FlowBoundaryQuantityType.TangentVelocity ||
