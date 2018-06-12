@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Windows.Forms;
+using BasicModelInterface;
 using DelftTools.Shell.Core;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -13,88 +16,17 @@ using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
-    public static class BoundaryConditionDialogLauncher
+    public static partial class BoundaryConditionDialogLauncher
     {
         private static IEnumerable<BoundaryDataImporterBase> DataImporters
         {
             get
             {
-                yield return new TimFileImporter() {WindFileImporter = false};
+                yield return new BcFileImporter();
+                yield return new TimFileImporter() { WindFileImporter = false };
                 yield return new CmpFileImporter();
                 yield return new QhFileImporter();
-            }
-        }
-
-        public static void LaunchImporterDialog(FlowBoundaryCondition boundaryCondition, int selectedPointIndex, DateTime modelRefDate)
-        {
-            var fileDialog = new OpenFileDialog
-                {
-                    AddExtension = true,
-                    DefaultExt = BcFile.Extension,
-                    Multiselect = true,
-                    Filter = new BcFileImporter().FileFilter
-                };
-
-            var dataImporter = DataImporters.FirstOrDefault(i => i.ForcingTypes.Contains(boundaryCondition.DataType));
-            if (dataImporter != null)
-            {
-                fileDialog.Filter += "|" + ((IFileImporter) dataImporter).FileFilter;
-            }
-
-            if (fileDialog.ShowDialog() != DialogResult.OK)
-            {
-                return;
-            }
-
-            if (fileDialog.FilterIndex == 1)
-            {
-                var configureDialog = new BoundaryConditionBcFileImportDialog();
-                if (configureDialog.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-                var importer = new BcFileImporter {FilePaths = fileDialog.FileNames};
-                configureDialog.Configure(importer);
-                importer.ImportItem(null, boundaryCondition);
-            }
-            else if (dataImporter != null)
-            {
-                IList<string> supportPointNames = null;
-
-                if (boundaryCondition.Feature.Attributes != null &&
-                    boundaryCondition.Feature.Attributes.ContainsKey(Feature2D.LocationKey))
-                {
-                    var nameList = boundaryCondition.Feature.Attributes[Feature2D.LocationKey] as IList<string>;
-                    if (nameList != null)
-                    {
-                        supportPointNames = nameList;
-                    }
-                }
-
-                if (supportPointNames == null)
-                {
-                    supportPointNames =
-                        Enumerable.Range(0, boundaryCondition.Feature.Geometry.Coordinates.Count())
-                                  .Select(i => (i + 1).ToString("D4"))
-                                  .ToList();
-                }
-                if (!boundaryCondition.IsHorizontallyUniform)
-                {
-                    var configureDialog = new BoundaryDataImportDialog(supportPointNames,
-                                                                       boundaryCondition.DataPointIndices);
-                    configureDialog.Select(selectedPointIndex);
-                    if (configureDialog.ShowDialog() != DialogResult.OK)
-                    {
-                        return;
-                    }
-                    configureDialog.Configure(dataImporter);
-                }
-                else
-                {
-                    dataImporter.DataPointIndices = new[] {0};
-                }
-                dataImporter.ModelReferenceDate = modelRefDate;
-                dataImporter.Import(fileDialog.FileName, boundaryCondition);
+                yield return new BcmFileImporter();
             }
         }
 
@@ -108,6 +40,101 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             }
         }
 
+        private static void InitializeFileDialog(OpenFileDialog fileDialog, FlowBoundaryCondition boundaryCondition)
+        {
+            var fileFilters = new List<string>();
+
+            foreach (var dataImporter in DataImporters)
+            {
+                if (dataImporter.CanImportOnBoundaryCondition(boundaryCondition))
+                {
+                    fileFilters.Add(dataImporter.FileFilter);
+                }
+
+                fileDialog.Filter = string.Join("|", fileFilters); 
+            }
+        }
+
+        public static void LaunchImporterDialog(OpenFileDialog fileDialog, FlowBoundaryCondition boundaryCondition, int selectedPointIndex, DateTime? modelRefDate)
+        {
+            if (boundaryCondition == null)
+            {
+                throw new ArgumentException("Boundary condition is not set");
+            }
+            if (fileDialog == null)
+            {
+                throw new ArgumentException("File dialog is not set");
+            }
+
+            if (modelRefDate == null)
+            {
+                throw new ArgumentException("Datetime is not set");
+            }
+
+            InitializeFileDialog(fileDialog, boundaryCondition);
+
+            if (fileDialog.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            var selectedFileExtension = fileDialog.SafeFileName?.Split('.').LastOrDefault();
+            ImportFileDataIntoBoundaryCondition(boundaryCondition, fileDialog, selectedPointIndex, modelRefDate, selectedFileExtension);
+        }
+
+        private static void ImportFileDataIntoBoundaryCondition(FlowBoundaryCondition boundaryCondition, OpenFileDialog fileDialog, int selectedPointIndex,
+            DateTime? modelRefDate, string selectedFileExtension)
+        {
+            if (boundaryCondition == null)
+            {
+                return;
+            }
+            if (string.IsNullOrEmpty(selectedFileExtension))
+            {
+                return;
+            }
+
+            var dataImporter = DataImporters.FirstOrDefault(di => di.FileFilter.EndsWith(selectedFileExtension));
+            if (dataImporter != null)
+            {
+                IList<string> supportPointNames = Enumerable.Range(0, boundaryCondition.Feature.Geometry.Coordinates.Count())
+                            .Select(i => (i + 1).ToString("D4"))
+                            .ToList();
+            
+                if (boundaryCondition.Feature.Attributes != null &&
+                    boundaryCondition.Feature.Attributes.ContainsKey(Feature2D.LocationKey))
+                {
+                    var nameList = boundaryCondition.Feature.Attributes[Feature2D.LocationKey] as IList<string>;
+
+                    if (nameList != null)
+                    {
+                        supportPointNames = nameList;
+                    }
+                }
+
+                if (!boundaryCondition.IsHorizontallyUniform)
+                {
+                    var configureDialog = new BoundaryDataImportDialog(supportPointNames,
+                        boundaryCondition.DataPointIndices);
+                    configureDialog.Select(selectedPointIndex);
+
+                    if (configureDialog.ShowDialog() != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    configureDialog.Configure(dataImporter);
+                }
+                else
+                {
+                    dataImporter.DataPointIndices = new[] {0};
+                }
+
+                dataImporter.ModelReferenceDate = modelRefDate;
+                dataImporter.Import(fileDialog.FileName, boundaryCondition);
+            }
+        }
+
         public static void LaunchExporterDialog(FlowBoundaryCondition boundaryCondition, int selectedPointIndex,
             DateTime modelRefDate)
         {
@@ -118,9 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 GetFeature = bc => bc.Feature
             };
             var exporters = new List<IFileExporter>(new IFileExporter[] {bcFileExporter, pliFileExporter});
-            
             var dataExporter = DataExporters.FirstOrDefault(e => e.ForcingTypes.Contains(boundaryCondition.DataType));
-
 
             if (dataExporter != null)
             {
@@ -139,21 +164,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 return;
             }
 
-            var chosenFilter = fileDialog.FilterIndex;
-
-            if (chosenFilter == 1)
+            var chosenFilter = (FileType)fileDialog.FilterIndex;
+            if (chosenFilter == FileType.Bc)
             {
                 bcFileExporter.WriteMode = BcFile.WriteMode.SingleFile;
                 bcFileExporter.Export(boundaryCondition, fileDialog.FileName);
             }
-            if (chosenFilter == 2)
+
+            if (chosenFilter == FileType.Pli)
             {
                 pliFileExporter.Export(boundaryCondition, fileDialog.FileName);
             }
-            if (chosenFilter == 3 && dataExporter != null)
+
+            if (chosenFilter == FileType.Other && dataExporter != null)
             {
                 dataExporter.SelectedIndex = selectedPointIndex;
                 dataExporter.ModelReferenceDate = modelRefDate;
+
                 ((IFileExporter) dataExporter).Export(boundaryCondition, fileDialog.FileName);
             }
         }

@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
         }
 
-        public void Read(string timFilePath, IFunction function, DateTime refDate)
+        public void Read(string timFilePath, IFunction function, DateTime? refDate)
         {
             if (function == null || !(function.Arguments.Count == 1 && function.Arguments.First() is IVariable<DateTime>))
             {
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             OpenInputFile(timFilePath);
             try
             {
-                var dateTimes = new List<DateTime>();
+                var dateTimes = new List<DateTime?>();
                 var values = new List<List<double>>();
                 for (var i = 0; i < cols; i++)
                 {
@@ -175,13 +175,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
         }
 
-        public DateTime GetDateTime(string lineField, DateTime reference, string errorMessageKey = null)
+        public DateTime? GetDateTime(string lineField, DateTime? reference, string errorMessageKey = null)
         {
             var value = GetDouble(lineField, errorMessageKey);
             return GetDateTime(value, reference);
         }
 
-        private static DateTime GetDateTime(double value, DateTime reference)
+        private static DateTime? GetDateTime(double value, DateTime? reference)
         {
             if (value > 189912312359.0d) // TODO: remove magic number... ?
             {

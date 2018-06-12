@@ -235,6 +235,7 @@
     <Compile Include="Gui\AstroComponentSelectionTest.cs" />
     <Compile Include="Gui\BcFileExportDialogTest.cs" />
     <Compile Include="Gui\BcFileImportDialogTest.cs" />
+    <Compile Include="Gui\BoundaryConditionDialogLauncherTest.cs" />
     <Compile Include="Gui\CustomRenderers\EnclosureRendererTest.cs" />
     <Compile Include="Gui\DataImportPointsListBoxTest.cs" />
     <Compile Include="Gui\Editors\BoundaryConditionExtensionsTest.cs" />
@@ -280,7 +281,10 @@
     <Compile Include="IO\FMHisFileFunctionStoreTest.cs" />
     <Compile Include="IO\FMPartitionExporterTest.cs" />
     <Compile Include="IO\GroupablePointCloudImporterTest.cs" />
+    <Compile Include="IO\Importers\BcFileImporterTest.cs" />
     <Compile Include="IO\Importers\BcmFileImporterTest.cs" />
+    <Compile Include="IO\Importers\CmpFileImporterTest.cs" />
+    <Compile Include="IO\Importers\QhFileImporterTest.cs" />
     <Compile Include="IO\Importers\SourceAndSinkImporterHelperTest.cs" />
     <Compile Include="IO\Importers\TimFileImporterTest.cs" />
     <Compile Include="IO\MduFileHelperTest.cs" />

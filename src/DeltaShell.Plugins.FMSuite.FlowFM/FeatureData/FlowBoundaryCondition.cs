@@ -214,6 +214,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             #endregion
         };
 
+        internal static bool IsBoundaryCondition(IBoundaryCondition boundaryCondition)
+        {
+            var flowBC = boundaryCondition as FlowBoundaryCondition;
+            if (flowBC == null) return false;
+
+            return IsBoundaryConditionFlowQuantityType(flowBC.FlowQuantity);
+        }
+
+        private static bool IsBoundaryConditionFlowQuantityType(FlowBoundaryQuantityType flowQuantity)
+        {
+            return (flowQuantity == FlowBoundaryQuantityType.WaterLevel ||
+                    flowQuantity == FlowBoundaryQuantityType.Discharge ||
+                    flowQuantity == FlowBoundaryQuantityType.Neumann ||
+                    flowQuantity == FlowBoundaryQuantityType.NormalVelocity ||
+                    flowQuantity == FlowBoundaryQuantityType.Salinity ||
+                    flowQuantity == FlowBoundaryQuantityType.TangentVelocity ||
+                    flowQuantity == FlowBoundaryQuantityType.Velocity
+                    );
+        }
+
         public static readonly IList<FlowBoundaryQuantityType> AlwaysAllowedQuantities =
             Enum.GetValues(typeof (FlowBoundaryQuantityType))
                 .Cast<FlowBoundaryQuantityType>()

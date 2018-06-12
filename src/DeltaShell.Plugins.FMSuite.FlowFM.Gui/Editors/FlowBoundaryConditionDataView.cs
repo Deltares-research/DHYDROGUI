@@ -35,6 +35,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
     public partial class FlowBoundaryConditionDataView : UserControl, ICompositeView
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FlowBoundaryConditionDataView));
+
+        private static readonly OpenFileDialog FileDialog = new OpenFileDialog()
+        {
+            AddExtension = true,
+        };
+
         private class AddSeriesTool: IChartViewContextMenuTool
         {
             public readonly IList<IBoundaryCondition> AddedBoundaryConditions = new List<IBoundaryCondition>();
@@ -1044,7 +1050,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void FileImportButtonClick(object sender, EventArgs e)
         {
-            BoundaryConditionDialogLauncher.LaunchImporterDialog(BoundaryCondition as FlowBoundaryCondition,
+            BoundaryConditionDialogLauncher.LaunchImporterDialog(FileDialog, BoundaryCondition as FlowBoundaryCondition,
                                                                  SupportPointIndex, Model.ReferenceTime);
             FillFunctionView();
         }

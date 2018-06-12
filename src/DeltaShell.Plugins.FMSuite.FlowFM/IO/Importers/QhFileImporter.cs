@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Editing;
@@ -43,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public bool CanImportOnRootLevel { get { return false; } }
 
-        public string FileFilter
+        public override string FileFilter
         {
             get { return "Q-h series file|*.qh"; }
         }
@@ -95,6 +96,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public override void Import(string fileName, FlowBoundaryCondition boundaryCondition)
         {
             ImportItem(fileName, boundaryCondition);
+        }
+
+        public override bool CanImportOnBoundaryCondition(FlowBoundaryCondition boundaryCondition)
+        {
+            return ForcingTypes.Contains(boundaryCondition.DataType);
         }
     }
 }

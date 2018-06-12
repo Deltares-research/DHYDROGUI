@@ -13,7 +13,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
-    public class BcmFileImporter : IFileImporter
+    public class BcmFileImporter : BoundaryDataImporterBase, IFileImporter
     {
         public BcmFileImporter()
         {
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         }
 
         [ExcludeFromCodeCoverage]
-        public string FileFilter
+        public override string FileFilter
         {
             get { return "Morphology boundary conditions file|*.bcm"; }
         }
@@ -198,5 +198,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public bool DeleteDataBeforeImport { private get; set; }
 
         public bool OverwriteExistingData { private get; set; }
+        public override IEnumerable<BoundaryConditionDataType> ForcingTypes
+        {
+            get { yield return BoundaryConditionDataType.TimeSeries; }
+        }
+
+        public override void Import(string fileName, FlowBoundaryCondition boundaryCondition)
+        {
+            ImportItem(fileName, boundaryCondition);
+        }
+
+        public override bool CanImportOnBoundaryCondition(FlowBoundaryCondition boundaryCondition)
+        {
+            return FlowBoundaryCondition.IsMorphologyBoundary(boundaryCondition) && ForcingTypes.Contains(boundaryCondition.DataType);
+        }
     }
 }

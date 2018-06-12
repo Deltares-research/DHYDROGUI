@@ -1,12 +1,15 @@
 ﻿using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NUnit.Framework;
+using Rhino.Mocks;
 using Assert = NUnit.Framework.Assert;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
@@ -14,6 +17,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
     [TestFixture]
     public class TimFileImporterTest
     {
+        private MockRepository mocks;
+        private TimFileImporter importer;
+
+        [SetUp]
+        public void Setup()
+        {
+            mocks = new MockRepository();
+            importer = new TimFileImporter();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            mocks.VerifyAll();
+        }
+
+        [Test]
+        public void GivenTimFileImporterWhenBoundaryConditionHasCorrectDataTypeThenValidate()
+        {
+            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries);
+            var result = importer.CanImportOnBoundaryCondition(flowBoundaryCondition);
+
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void GivenTimFileImporterWhenBoundaryConditionHasInCorrectDataTypeThenValidate()
+        {
+            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.AstroComponents);
+            var result = importer.CanImportOnBoundaryCondition(flowBoundaryCondition);
+
+            Assert.IsFalse(result);
+        }
+
         [TestCase(@"timFiles\NoSalinityOrTemperature.tim", false, false)] // None
         [TestCase(@"timFiles\SalinityOnly.tim", true, false)] // Salinity only
         [TestCase(@"timFiles\TemperatureOnly.tim", false, true)] // Temperature only
