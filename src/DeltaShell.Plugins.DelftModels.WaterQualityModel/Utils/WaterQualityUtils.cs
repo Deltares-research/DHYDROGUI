@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
             Log.InfoFormat("Starting process: '{0} {1}' from working directory '{2}'.", exePath, parameters, workDirectory);
             
             var waqModelProcess = new Process
-                                      {
+                                      { 
                                           StartInfo =
                                               {
                                                   FileName = exePath,

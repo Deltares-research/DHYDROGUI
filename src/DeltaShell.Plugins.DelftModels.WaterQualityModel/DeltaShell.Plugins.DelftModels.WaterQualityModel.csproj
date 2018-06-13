@@ -278,16 +278,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="UML\WaterQualityOverview.cd" />
-    <None Include="waq_kernel\Data\Default\bloom.spe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Default\bloominp.d09">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="waq_kernel\Data\Default\coefedit_duflow.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Default\proc_def.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="waq_kernel\Data\Default\proc_def_duflow.dat">
@@ -605,6 +596,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
+      <Project>{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}</Project>
+      <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
       <Project>{e22a9330-5ee9-4c26-a014-3269bcf78ded}</Project>
       <Name>DeltaShell.NGHS.IO</Name>
@@ -652,24 +648,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="waq_kernel\x64\hdf5.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="waq_kernel\x64\hdf5_hl.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="waq_kernel\x64\svml_dispmd.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="waq_kernel\x64\vcruntime140.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="waq_kernel\x64\waq_plugin_wasteload.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="waq_kernel\x64\zlib1.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <EmbeddedResource Include="WaterQualityModel.3.5.0.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -1032,40 +1010,10 @@
     <Content Include="plct\bin\zlib1.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="waq_kernel\Data\Default\proc_def.def">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="waq_kernel\Data\Default\proc_def_duflow.def">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="waq_kernel\x64\delwaq.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="waq_kernel\x64\delwaq1.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="waq_kernel\x64\delwaq2.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="waq_kernel\x64\duflow.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="waq_kernel\x64\libifcoremd.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="waq_kernel\x64\libifportmd.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="waq_kernel\x64\libiomp5md.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="waq_kernel\x64\libmmd.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="waq_kernel\x64\msvcr110.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="waq_kernel\x64\netcdf.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\hydFile.png" />

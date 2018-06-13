@@ -16,9 +16,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
     [Entity]
     public class SubstanceProcessLibrary : Unique<long>, INameable, ICloneable
     {
-        public static readonly string DefaultSobekProcessDefinitionFilesPath = Path.Combine(DelwaqFileStructureHelper.GetDelwaqDataFolderPath(), "Default", "proc_def");
-        public static readonly string DefaultDuflowProcessDefinitionFilesPath = Path.Combine(DelwaqFileStructureHelper.GetDelwaqDataFolderPath(), "Default", "proc_def_duflow");
-        public static readonly string DefaultDuflowProcessDllFilePath = Path.Combine(DelwaqFileStructureHelper.GetDelwaqBinariesFolderPath(), "duflow.dll");
+        public static readonly string DefaultSobekProcessDefinitionFilesPath = Path.Combine(DelwaqFileStructureHelper.GetDelwaqKernelMainFolderPath(), "default", "proc_def");
+        public static readonly string DefaultDuflowProcessDefinitionFilesPath = Path.Combine(DelwaqFileStructureHelper.GetDelwaqDataFolderPath(), "default", "proc_def_duflow");
+        public static readonly string DefaultDuflowProcessDllFilePath = Path.Combine(DelwaqFileStructureHelper.GetDelwaqKernelPluginFolderPath(), "x64", "duflow.dll");
 
         /// <summary>
         /// Creates a substance process library without substances

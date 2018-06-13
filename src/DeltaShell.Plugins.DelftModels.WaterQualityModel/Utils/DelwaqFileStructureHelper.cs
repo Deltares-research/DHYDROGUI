@@ -1,23 +1,44 @@
 using System;
 using System.IO;
+using System.Reflection;
+using DeltaShell.Dimr;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
 {
     public static class DelwaqFileStructureHelper
     {
-        private const string delwaq_kernel = "waq_kernel";
+        private const string delwaq_kernel = "dwaq";
+        private const string delwaq_plugin = "waq_kernel";
         public const string DELWAQ1_EXE = "delwaq1.exe";
         public const string DELWAQ2_EXE = "delwaq2.exe";
         public const string DELWAQ2LIB = "delwaq2_lib";
         public const string DELWAQ2LIB_DLL = "delwaq2_lib.dll";
 
+        static DelwaqFileStructureHelper()
+        {
+            DimrApiDataSet.SetSharedPath();
+        }
         /// <summary>
         /// Gets the delwaq root folder file-path.
         /// </summary>
         public static string GetDelwaqKernelMainFolderPath()
         {
+            return DWaqDllPath;
+        }
+
+        private static string DWaqDllPath
+        {
+            get
+            {
+                return Path.Combine(DimrApiDataSet.KernelsDirectory, "x64", delwaq_kernel);
+            }
+        }
+
+        public static string GetDelwaqKernelPluginFolderPath()
+        {
             string assemblyFolder = Path.GetDirectoryName(typeof(DelwaqFileStructureHelper).Assembly.Location);
-            return Path.Combine(assemblyFolder, delwaq_kernel);
+           return Path.Combine(assemblyFolder, delwaq_plugin);
+            
         }
 
         /// <summary>
@@ -26,7 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         /// 
         public static string GetDelwaqBinariesFolderPath()
         {
-            return Path.Combine(GetDelwaqKernelMainFolderPath(), "x64");
+            return Path.Combine(GetDelwaqKernelMainFolderPath(), "bin");
         }
 
         /// <summary>
@@ -50,12 +71,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         /// </summary>
         public static string GetDelwaqDataFolderPath()
         {
-            return Path.Combine(GetDelwaqKernelMainFolderPath(), "Data");
+            return Path.Combine(GetDelwaqKernelPluginFolderPath(), "Data");
         }
 
         public static string GetDelwaqDataDefaultFolderPath()
         {
-            return Path.Combine(GetDelwaqDataFolderPath(), "Default");
+            return Path.Combine(GetDelwaqKernelMainFolderPath(), "Default");
         }
     }
 }
