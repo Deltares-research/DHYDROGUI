@@ -15,6 +15,7 @@ using DelftTools.Controls.Swf.Table;
 using DelftTools.Controls.Swf.Table.Validation;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.Shell.Core;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
@@ -27,6 +28,7 @@ using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using GeoAPI.Extensions.CoordinateSystems;
 using log4net;
 
@@ -39,6 +41,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private static readonly OpenFileDialog FileDialog = new OpenFileDialog()
         {
             AddExtension = true,
+        };
+
+        private static readonly SaveFileDialog SaveFileDialog = new SaveFileDialog()
+        {
+            AddExtension = true,
+            DefaultExt = BcFile.Extension
         };
 
         private class AddSeriesTool: IChartViewContextMenuTool
@@ -1057,7 +1065,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void FileExportButtonClick(object sender, EventArgs e)
         {
-            BoundaryConditionDialogLauncher.LaunchExporterDialog(BoundaryCondition as FlowBoundaryCondition,
+            BoundaryConditionDialogLauncher.LaunchExporterDialog(SaveFileDialog, BoundaryCondition as FlowBoundaryCondition,
                                                                  SupportPointIndex, Model.ReferenceTime);
         }
     }

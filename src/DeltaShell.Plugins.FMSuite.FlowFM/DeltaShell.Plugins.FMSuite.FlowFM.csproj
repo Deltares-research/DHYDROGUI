@@ -140,6 +140,7 @@
     <Compile Include="FeatureData\BoundaryConditionQuantityTypeConverter.cs" />
     <Compile Include="FeatureData\FlowBoundaryCondition.cs" />
     <Compile Include="FeatureData\FlowBoundaryConditionFactory.cs" />
+    <Compile Include="FeatureData\FlowBoundaryConditionHelper.cs" />
     <Compile Include="FeatureData\SupportedVerticalProfileTypes.cs" />
     <Compile Include="FlowFMApplicationPlugin.cs" />
     <Compile Include="IO\BcmFile.cs" />

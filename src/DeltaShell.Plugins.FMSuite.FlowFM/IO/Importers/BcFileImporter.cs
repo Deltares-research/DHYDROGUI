@@ -213,7 +213,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public override bool CanImportOnBoundaryCondition(FlowBoundaryCondition boundaryCondition)
         {
             return
-                FlowBoundaryCondition
+                FlowBoundaryConditionHelper
                     .IsBoundaryCondition(boundaryCondition) && ForcingTypes.Contains(boundaryCondition.DataType);
         }
     }

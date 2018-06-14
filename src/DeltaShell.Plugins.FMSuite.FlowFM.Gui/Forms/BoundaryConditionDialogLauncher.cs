@@ -1,23 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
 using BasicModelInterface;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.IO;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using log4net;
 using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
     public static partial class BoundaryConditionDialogLauncher
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(BoundaryConditionDialogLauncher));
+
         private static IEnumerable<BoundaryDataImporterBase> DataImporters
         {
             get
@@ -34,7 +40,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         {
             get
             {
-                yield return new TimFileExporter();
+
+                //yield return new TimFileExporter();
                 yield return new CmpFileExporter();
                 yield return new QhFileExporter();
             }
@@ -57,18 +64,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         public static void LaunchImporterDialog(OpenFileDialog fileDialog, FlowBoundaryCondition boundaryCondition, int selectedPointIndex, DateTime? modelRefDate)
         {
-            if (boundaryCondition == null)
-            {
-                throw new ArgumentException("Boundary condition is not set");
-            }
             if (fileDialog == null)
             {
                 throw new ArgumentException("File dialog is not set");
             }
 
+            if (boundaryCondition == null)
+            {
+                Log.Error("Boundary condition is not set");
+                return;
+            }
+
             if (modelRefDate == null)
             {
-                throw new ArgumentException("Datetime is not set");
+                Log.Error("Datetime is not set");
+                return;
             }
 
             InitializeFileDialog(fileDialog, boundaryCondition);
@@ -78,7 +88,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 return;
             }
 
-            var selectedFileExtension = fileDialog.SafeFileName?.Split('.').LastOrDefault();
+            if (fileDialog.SafeFileName == String.Empty)
+            {
+                 
+            }
+
+            var selectedFileExtension = Path.GetExtension(fileDialog.SafeFileName)?.Replace(".", "");
             ImportFileDataIntoBoundaryCondition(boundaryCondition, fileDialog, selectedPointIndex, modelRefDate, selectedFileExtension);
         }
 
@@ -135,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             }
         }
 
-        public static void LaunchExporterDialog(FlowBoundaryCondition boundaryCondition, int selectedPointIndex,
+        public static void LaunchExporterDialog(SaveFileDialog saveFileDialog, FlowBoundaryCondition boundaryCondition, int selectedPointIndex,
             DateTime modelRefDate)
         {
             var bcFileExporter = new BcFileExporter {GetRefDateForBoundaryCondition = bc => modelRefDate};
@@ -152,36 +167,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 exporters.Add(dataExporter as IFileExporter);
             }
 
-            var fileDialog = new SaveFileDialog
-            {
-                AddExtension = true,
-                DefaultExt = BcFile.Extension,
-                Filter = string.Join("|", exporters.Select(e => e.FileFilter))
-            };
+            saveFileDialog.Filter = string.Join("|", exporters.Select(e => e.FileFilter));
 
-            if (fileDialog.ShowDialog() != DialogResult.OK)
+            if (saveFileDialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            var chosenFilter = (FileType)fileDialog.FilterIndex;
-            if (chosenFilter == FileType.Bc)
-            {
-                bcFileExporter.WriteMode = BcFile.WriteMode.SingleFile;
-                bcFileExporter.Export(boundaryCondition, fileDialog.FileName);
-            }
+            var chosenFilter = (FileType)saveFileDialog.FilterIndex;
 
-            if (chosenFilter == FileType.Pli)
+            switch (chosenFilter)
             {
-                pliFileExporter.Export(boundaryCondition, fileDialog.FileName);
-            }
+                case FileType.Bc:
+                    bcFileExporter.WriteMode = BcFile.WriteMode.SingleFile;
+                    bcFileExporter.Export(boundaryCondition, saveFileDialog.FileName);
+                    break;
 
-            if (chosenFilter == FileType.Other && dataExporter != null)
-            {
-                dataExporter.SelectedIndex = selectedPointIndex;
-                dataExporter.ModelReferenceDate = modelRefDate;
+                case FileType.Pli:
+                    pliFileExporter.Export(boundaryCondition, saveFileDialog.FileName);
+                    break;
 
-                ((IFileExporter) dataExporter).Export(boundaryCondition, fileDialog.FileName);
+                case FileType.Other:
+                    dataExporter.SelectedIndex = selectedPointIndex;
+                    dataExporter.ModelReferenceDate = modelRefDate;
+
+                    ((IFileExporter)dataExporter).Export(boundaryCondition, saveFileDialog.FileName);
+                    break;
+                default:
+                    if (dataExporter != null)
+                    {
+                        dataExporter.SelectedIndex = selectedPointIndex;
+                        dataExporter.ModelReferenceDate = modelRefDate;
+
+                        ((IFileExporter)dataExporter).Export(boundaryCondition, saveFileDialog.FileName);
+                    }
+
+                    break;
             }
         }
     }

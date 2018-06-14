@@ -82,7 +82,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
     [Entity]
     public class FlowBoundaryCondition : BoundaryCondition
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(FlowBoundaryCondition));
         /// <summary>
         /// Constrained BC combinations within a set. Quantities not appearing anywhere in these lists are considered to be unconstrained, 
         /// i.e. the user can combine these with any quantity. (e.g. SedimentConcentration)
@@ -213,28 +212,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             
             #endregion
         };
-
-        internal static bool IsBoundaryCondition(IBoundaryCondition boundaryCondition)
-        {
-            var flowBC = boundaryCondition as FlowBoundaryCondition;
-            if (flowBC == null) return false;
-
-            return IsBoundaryConditionFlowQuantityType(flowBC.FlowQuantity);
-        }
-
-        private static bool IsBoundaryConditionFlowQuantityType(FlowBoundaryQuantityType flowQuantity)
-        {
-            return (flowQuantity == FlowBoundaryQuantityType.WaterLevel ||
-                    flowQuantity == FlowBoundaryQuantityType.Discharge ||
-                    flowQuantity == FlowBoundaryQuantityType.Neumann ||
-                    flowQuantity == FlowBoundaryQuantityType.Riemann ||
-                    flowQuantity == FlowBoundaryQuantityType.RiemannVelocity ||
-                    flowQuantity == FlowBoundaryQuantityType.NormalVelocity ||
-                    flowQuantity == FlowBoundaryQuantityType.Salinity ||
-                    flowQuantity == FlowBoundaryQuantityType.TangentVelocity ||
-                    flowQuantity == FlowBoundaryQuantityType.Velocity
-                    );
-        }
 
         public static readonly IList<FlowBoundaryQuantityType> AlwaysAllowedQuantities =
             Enum.GetValues(typeof (FlowBoundaryQuantityType))

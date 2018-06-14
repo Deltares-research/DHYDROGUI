@@ -11,7 +11,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 {
-    public class BcFileExporter : IFileExporter
+    public class BcFileExporter : BoundaryDataExporterBase, IFileExporter
     {
         [ExcludeFromCodeCoverage]
         public string Name
@@ -152,5 +152,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
         public IList<FlowBoundaryQuantityType> ExcludedQuantities { private get; set; }
 
         public string FilePath { private get; set; }
+        public override IEnumerable<BoundaryConditionDataType> ForcingTypes { get; }
     }
 }
