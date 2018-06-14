@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using SharpMap.SpatialOperations;
@@ -12,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
     public static class WaterFlowFMSedimentMorphologyValidator
     {
-        public static ValidationIssue ValidateSedimentName(string name)
+        public static ValidationIssue ValidateSedimentName(string name) // Also used in WPF validation!
         {
             Regex regex = new Regex("^[a-zA-Z0-9_-]*$");
             if (!regex.IsMatch(name) || string.IsNullOrEmpty(name))
@@ -23,21 +24,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return null;
         }
 
-        public static ValidationReport ValidateMorphologyBetaWarning(WaterFlowFMModel model)
+        public static ValidationReport ValidateWithMorphologyBetaWarning(WaterFlowFMModel model)
+        {
+            if(!model.UseMorSed) return new ValidationReport("Sediment & Morphology", Enumerable.Empty<ValidationIssue>());
+
+            var issues = new List<ValidationIssue>();
+            issues.AddRange(model.SedimentFractions.Select(sedimentFraction => ValidateSedimentName(sedimentFraction.Name)).Where(issue => issue != null));
+
+            issues.AddRange(ValidateInitialSedimentThicknessOfSedimentFractionsInModel(model));
+
+            issues.AddRange(ValidateSpaciallyVaryingSedimentFractionProperties(model));
+
+            issues.Add(new ValidationIssue(model, ValidationSeverity.Warning,
+                string.Format(Resources.WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_________Morphology_is_beta_version_________0_You_are_using_morphology___sediment_in_this_model__Please_be_aware_this_feature_is_in_beta_, Environment.NewLine)));
+            
+            return new ValidationReport(Resources.WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_Morphology___Sediment_Beta_warning, issues);
+        }
+
+        private static IEnumerable<ValidationIssue> ValidateInitialSedimentThicknessOfSedimentFractionsInModel(WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
 
-            if (model.UseMorSed)
-            {
-                issues.AddRange(model.SedimentFractions.Select(sedimentFraction => ValidateSedimentName(sedimentFraction.Name)).Where(issue => issue != null));
-                
-                issues.AddRange(ValidateSedimentFraction(model));
+            var sedimentFraction = model.SedimentFractions;
+            if (!sedimentFraction.Any()) return issues;
+            
+            var anySedimentFractionsWithInitialSedimentThicknessGreaterThanZero =
+                sedimentFraction.Any(
+                    sf =>
+                        sf.CurrentSedimentType.Properties.OfType<SedimentProperty<double>>()
+                            .Any(p => p.Name == "IniSedThick" && p.Value > 0));
 
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Warning,
-                    string.Format(Resources.WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_________Morphology_is_beta_version_________0_You_are_using_morphology___sediment_in_this_model__Please_be_aware_this_feature_is_in_beta_, Environment.NewLine)));
+            if (!anySedimentFractionsWithInitialSedimentThicknessGreaterThanZero)
+            {
+                issues.Add(new ValidationIssue(model, ValidationSeverity.Error, Resources.WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness));
             }
 
-            return new ValidationReport(Resources.WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_Morphology___Sediment_Beta_warning, issues);
+            return issues;
         }
 
         /// <summary>
@@ -45,12 +67,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         /// </summary>
         /// <param name="model">The WaterFlowFMModel that is being </param>
         /// <returns></returns>
-        private static IEnumerable<ValidationIssue> ValidateSedimentFraction(IWaterFlowFMModel model)
+        private static IEnumerable<ValidationIssue> ValidateSpaciallyVaryingSedimentFractionProperties(IWaterFlowFMModel model)
         {
-            var spaceVarNames = model.SedimentFractions
+            var spaciallyVaryingPropertyNames = model.SedimentFractions
                 .SelectMany(s => s.GetAllActiveSpatiallyVaryingPropertyNames()).Where(n => !n.EndsWith("SedConc"))
                 .ToList();
-            var dataItemsFound = spaceVarNames
+            var dataItemsFound = spaciallyVaryingPropertyNames
                 .SelectMany(spaceVarName => model.DataItems.Where(di => di.Name.Equals(spaceVarName)))
                 .ToArray();
             var dataItemsWithConverter = dataItemsFound

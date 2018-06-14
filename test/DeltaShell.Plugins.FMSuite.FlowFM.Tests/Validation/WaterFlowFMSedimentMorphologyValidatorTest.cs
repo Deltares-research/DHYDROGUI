@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -12,8 +13,9 @@ using SharpMap.SpatialOperations;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 {
     [TestFixture()]
-    public class WaterFlowFMSedimentMorphologyValidatorTests
+    public class WaterFlowFMSedimentMorphologyValidatorTest
     {
+
         [Test]
         public void ValidateSedimentNameTest()
         {
@@ -42,6 +44,54 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.IsNotNull(betaWarningIssue);
 
             Assert.That(betaWarningIssue.Message, Is.StringContaining("Morphology is beta version"));
+        }
+
+        [Test]
+        public void TestValidateInitialSedimentThicknessOfSedimentFractionsInModel_WithNoSedimentFractions()
+        {
+            var fmModel = new WaterFlowFMModel("MyFmModel") { ModelDefinition = { UseMorphologySediment = true } };
+            var issues = GetValidationIssuesWithMessages(fmModel, new List<string>(){ Resources.WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness});
+            Assert.AreEqual(0, issues.Count());
+        }
+        
+        [Test]
+        public void TestValidateInitialSedimentThicknessOfSedimentFractionsInModel_WithSedimentFractionWithInitialSedimentThicknessGreaterThanZero()
+        {
+            var fmModel = GetFMModelWithDefaultSandAndMudFractions();
+            fmModel.SedimentFractions.ForEach(
+                sf => sf.CurrentSedimentType.Properties.OfType<SedimentProperty<double>>()
+                .First(p => p.Name == "IniSedThick").Value = 1);
+
+            var issues = GetValidationIssuesWithMessages(fmModel, new List<string>() { Resources.WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness });
+            Assert.AreEqual(0, issues.Count());
+        }
+
+        [Test]
+        public void TestValidateInitialSedimentThicknessOfSedimentFractionsInModel_WithOneOfTheSedimentFractionsWithInitialSedimentThicknessGreaterThanZero()
+        {
+            var fmModel = GetFMModelWithDefaultSandAndMudFractions();
+            Assert.AreEqual(2, fmModel.SedimentFractions.Count);
+            
+            fmModel.SedimentFractions[0].CurrentSedimentType.Properties.OfType<SedimentProperty<double>>()
+                .First(p => p.Name == "IniSedThick").Value = 0;
+
+            fmModel.SedimentFractions[1].CurrentSedimentType.Properties.OfType<SedimentProperty<double>>()
+                .First(p => p.Name == "IniSedThick").Value = 1;
+
+            var issues = GetValidationIssuesWithMessages(fmModel, new List<string>() { Resources.WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness });
+            Assert.AreEqual(0, issues.Count());
+        }
+
+        [Test]
+        public void TestValidateInitialSedimentThicknessOfSedimentFractionsInModel_WithNoSedimentFractionsWithInitialSedimentThicknessGreaterThanZero()
+        {
+            var fmModel = GetFMModelWithDefaultSandAndMudFractions();
+            fmModel.SedimentFractions.ForEach(
+                sf => sf.CurrentSedimentType.Properties.OfType<SedimentProperty<double>>()
+                .First(p => p.Name == "IniSedThick").Value = 0);
+
+            var issues = GetValidationIssuesWithMessages(fmModel, new List<string>() { Resources.WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness });
+            Assert.AreEqual(1, issues.Count());
         }
 
         [Test]
@@ -148,6 +198,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         #region Test helper methods
+        private static WaterFlowFMModel GetFMModelWithDefaultSandAndMudFractions()
+        {
+            var fmModel = new WaterFlowFMModel("MyFmModel")
+            {
+                ModelDefinition = { UseMorphologySediment = true },
+                SedimentFractions = new EventedList<ISedimentFraction>()
+                {
+                    new SedimentFraction
+                    {
+                        Name = "Sand",
+                        CurrentSedimentType = SedimentFractionHelper.GetSedimentationTypes().FirstOrDefault(st => st.Name == "Sand"),
+                    },
+                    new SedimentFraction
+                    {
+                        Name = "Mud",
+                        CurrentSedimentType = SedimentFractionHelper.GetSedimentationTypes().FirstOrDefault(st => st.Name == "Mud"),
+                    }
+                }
+            };
+
+            return fmModel;
+        }
+
         private static WaterFlowFMModel GetFmModelWithSedimentFraction(IEventedList<ISedimentProperty> sedimentProperties)
         {
             var fmModel = new WaterFlowFMModel("MyFmModel") {ModelDefinition = {UseMorphologySediment = true}};

@@ -226,7 +226,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     SpatiallyVaryingName = "mysedimentName_SedConc",
                     Value = 12.3
                 };
-                var thickProp = new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 0, 0, false, 0, true, "cc", "mydoubledescription", true, false)
+                var thickProp = new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, false, 0, true, "cc", "mydoubledescription", true, false)
                 {
                     SpatiallyVaryingName = "mysedimentName_IniSedThick",
                     Value = 12.3
