@@ -149,6 +149,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.ObservationCrossSections)),
                     GetEditableObject = target => GetModelFor(target, a => a.ObservationCrossSections).Area
             };
+            yield return new GisToFeature2DImporter<IPoint, ObservationCrossSection2D>();
+
             yield return new PliFileImporterExporter<Weir2D, Weir2D>
             {
                 Mode = Feature2DImportExportMode.Import,
@@ -190,6 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             ? new Feature2DPoint {Name = name, Geometry = new Point(points[0])}
                             : new Feature2D {Name = name, Geometry = PliFile<Feature2D>.CreatePolyLineGeometry(points)}
             };
+
             yield return new PliFileImporterExporter<BoundaryConditionSet, Feature2D>
             {
                 Mode = Feature2DImportExportMode.Import,
