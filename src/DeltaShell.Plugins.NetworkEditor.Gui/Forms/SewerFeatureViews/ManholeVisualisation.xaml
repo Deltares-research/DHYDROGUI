@@ -18,10 +18,11 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <local:CanvasItemsControl ItemsSource="{Binding Shapes}">
+        <local:CanvasItemsControl ItemsSource="{Binding Shapes}" ClipToBounds="True">
             <ItemsControl.Resources>
                 <DataTemplate DataType="{x:Type local:CompartmentShape}">
-                    <Grid>
+                    <Grid 
+                        >
                         <Rectangle Fill="White"
                                    Stroke="Black" StrokeThickness="2"
                                    Width="{Binding WidthPix}" Height="{Binding HeightPix}"
@@ -86,7 +87,7 @@
                         </Border>
                         <Path Stretch="Uniform" Fill="RoyalBlue" StrokeThickness="1" Stroke="White"
                               Data="M 0,115 95,115 65,90 85,90 120,120 85,150  65,150 95,125  0,125 Z"
-                              HorizontalAlignment="Center" VerticalAlignment="Center" Width="50"/>
+                              HorizontalAlignment="Center" VerticalAlignment="Center" Width="{Binding ElementName=OrificeShapeBorder, Path=ActualWidth}"/>
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type local:PumpShape}">
@@ -113,7 +114,16 @@
             </ItemsControl.Resources>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Canvas Width="{Binding ElementName=ViewGrid, Path=ActualWidth}" Height="{Binding ElementName=ViewGrid, Path=ActualHeight}" IsItemsHost="True" SnapsToDevicePixels="True" />
+                    <Canvas 
+                        PreviewKeyDown="UIElement_OnPreviewKeyDown"
+                        PreviewMouseLeftButtonDown="UIElement_OnPreviewMouseLeftButtonDown"
+                        PreviewMouseMove="UIElement_OnPreviewMouseMove"
+                        PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp"
+                        Width="{Binding ElementName=ViewGrid, Path=ActualWidth}" 
+                        Height="{Binding ElementName=ViewGrid, Path=ActualHeight}" 
+                        IsItemsHost="True" 
+                        SnapsToDevicePixels="True" 
+                        />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </local:CanvasItemsControl>

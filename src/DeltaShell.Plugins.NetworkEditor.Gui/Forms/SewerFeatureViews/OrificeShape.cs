@@ -8,6 +8,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     {
         public SewerConnectionOrifice Orifice { get; set; }
 
+        public override ISewerConnection SewerConnection
+        {
+            get
+            {
+                return Orifice;
+            }
+            set
+            {
+                var orifice = value as SewerConnectionOrifice;
+                if (orifice != null) Orifice = orifice;
+            }
+        }
+
         public override double BottomLevel
         {
             get { return GetBottomLevelBasedOnCompartments(); }
@@ -16,7 +29,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         public override double TopLevel
         {
-            get { return Orifice?.Bottom_Level ?? double.NaN; }
+            get { return ((SewerConnectionOrifice)SewerConnection)?.Bottom_Level ?? double.NaN; }
             set { }
         }
     }

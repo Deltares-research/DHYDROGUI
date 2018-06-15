@@ -42,10 +42,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             set { }
         }
 
-        public override double Width
+        /*public override double Width
         {
-            get { return GetWidthBasedOnCompartments() * 4.0; }
+            get { return base.Width * 4.0; }
             set { }
-        }
+        }*/
     }
 }

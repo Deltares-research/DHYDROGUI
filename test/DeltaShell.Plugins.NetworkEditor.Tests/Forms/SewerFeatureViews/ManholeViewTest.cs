@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
@@ -16,11 +17,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
         {
             var view = new ManholeView();
 
+            var manhole = CreateManhole();
+            view.Data = manhole;
+            WpfTestHelper.ShowModal(view);
+        }
+
+        [Test]
+        public void TestReorderingOfShapes()
+        {
+            var manhole = CreateManhole();
+            var shapes = manhole.CreateShapes().ToList();
+
+            shapes.OrderShapes();
+        }
+
+        private static Manhole CreateManhole()
+        {
             var manhole = new Manhole("manhole 1");
 
-            var compartment1 = new Compartment("Compartment 1") { SurfaceLevel = 1, BottomLevel = -5, ManholeWidth = 2.5 };
-            var compartment2 = new Compartment("Compartment 2") { SurfaceLevel = 1, BottomLevel = -1, ManholeWidth = 2.5 };
-            
+            var compartment1 = new Compartment("Compartment 1") {SurfaceLevel = 1, BottomLevel = -5, ManholeWidth = 2.5};
+            var compartment2 = new Compartment("Compartment 2") {SurfaceLevel = 1, BottomLevel = -1, ManholeWidth = 2.5};
+            var compartment3 = new Compartment("Compartment 3") {SurfaceLevel = 1, BottomLevel = -1, ManholeWidth = 2.5};
+
             var network = new HydroNetwork();
             var orifice = new SewerConnectionOrifice
             {
@@ -33,13 +51,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
             var internalConnection = new SewerConnection
             {
                 Name = "Interne verbinding",
-                SourceCompartment = compartment1,
-                TargetCompartment = compartment2,
+                SourceCompartment = compartment2,
+                TargetCompartment = compartment3,
                 Source = manhole,
                 Target = manhole,
             };
 
-            internalConnection.BranchFeatures.Add(new Pump{StartSuction = 1.3, StopSuction = -0.8, StartDelivery = 1, StopDelivery = -1, Name = "Pump 01"});
+            internalConnection.BranchFeatures.Add(new Pump {StartSuction = 1.3, StopSuction = -0.8, StartDelivery = 1, StopDelivery = -1, Name = "Pump 01"});
 
             var connections = new List<ISewerConnection>
             {
@@ -49,17 +67,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
                 internalConnection,
                 orifice,
             };
-            
+
             network.Branches.AddRange(connections);
             manhole.Network = network;
-            network.Manholes = new List<IManhole>{manhole};
+            network.Manholes = new List<IManhole> {manhole};
             manhole.Compartments.AddRange(new List<Compartment>
             {
                 compartment1,
                 compartment2,
+                compartment3,
             });
-            view.Data = manhole;
-            WpfTestHelper.ShowModal(view);
+            return manhole;
         }
     }
 }

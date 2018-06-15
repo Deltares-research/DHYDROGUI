@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Utils.Aop;
 
@@ -13,13 +14,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             get { return compartment; }
             set
             {
+                if (compartment != null)
+                {
+                    ((INotifyPropertyChanged)compartment).PropertyChanged -= OnPropertyChanged;
+                }
                 compartment = value;
 
                 if (compartment != null)
                 {
+                    ((INotifyPropertyChanged)compartment).PropertyChanged += OnPropertyChanged;
                     SetProperties();
                 }
             }
+        }
+
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            SetProperties();
         }
 
         private void SetProperties()

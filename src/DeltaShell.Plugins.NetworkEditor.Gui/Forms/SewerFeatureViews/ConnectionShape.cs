@@ -7,12 +7,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     [Entity]
     public class ConnectionShape : DrawingShape
     {
-        private Compartment sourceCompartment;
-        private Compartment targetCompartment;
-        private CompartmentShape sourceCompartmentShape;
-        private CompartmentShape targetCompartmentShape;
+        //private Compartment sourceCompartment;
+        //private Compartment targetCompartment;
+        //private CompartmentShape sourceCompartmentShape;
+        //private CompartmentShape targetCompartmentShape;
 
-        public CompartmentShape SourceCompartmentShape
+        public virtual ISewerConnection SewerConnection { get; set; }
+
+        /*public CompartmentShape SourceCompartmentShape
         {
             get { return sourceCompartmentShape; }
             set
@@ -31,12 +33,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 targetCompartment = targetCompartmentShape?.Compartment;
             }
         }
-     
-        public override double Width
-        {
-            get { return GetWidthBasedOnCompartments(); }
-            set { }
-        }
+*/     
+        public override double Width { get; set; }
         
         public override double Height
         {
@@ -44,7 +42,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             set { }
         }
 
-        protected double GetWidthBasedOnCompartments()
+        /*protected double GetWidthBasedOnCompartments()
         {
             if (sourceCompartmentShape == null || targetCompartmentShape == null) return 0;
             var sourceIsLeft = sourceCompartmentShape.LeftOffset < targetCompartmentShape.LeftOffset;
@@ -53,26 +51,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             var rightShape = sourceIsLeft ? targetCompartmentShape : sourceCompartmentShape;
 
             return rightShape.LeftOffset - (leftShape.LeftOffset + leftShape.Width);
-        }
+        }*/
 
         protected double GetTopLevelBasedOnCompartments()
         {
-            if (sourceCompartment == null || targetCompartment == null)
+            var sc = SewerConnection?.SourceCompartment;
+            var tc = SewerConnection?.TargetCompartment;
+
+            if (sc == null || tc == null)
             {
-                return double.NaN;
+                return topLevel;
             }
 
-            return Math.Min(sourceCompartment.SurfaceLevel, targetCompartment.SurfaceLevel);
+            topLevel = Math.Min(sc.SurfaceLevel, tc.SurfaceLevel);
+            return topLevel;
         }
+
+        private double topLevel;
+        private double bottomLevel;
 
         protected double GetBottomLevelBasedOnCompartments()
         {
-            if (sourceCompartment == null || targetCompartment == null)
+            var sc = SewerConnection?.SourceCompartment;
+            var tc = SewerConnection?.TargetCompartment;
+
+            if (sc == null || tc == null)
             {
-                return double.NaN;
+                return bottomLevel;
             }
 
-            return Math.Max(sourceCompartment.BottomLevel, targetCompartment.BottomLevel);
+            bottomLevel = Math.Max(sc.BottomLevel, tc.BottomLevel);
+            return bottomLevel;
         }
     }
 }
