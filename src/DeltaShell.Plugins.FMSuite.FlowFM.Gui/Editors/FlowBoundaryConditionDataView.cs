@@ -38,12 +38,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FlowBoundaryConditionDataView));
 
-        private static readonly OpenFileDialog FileDialog = new OpenFileDialog()
+        private readonly OpenFileDialog FileDialog = new OpenFileDialog()
         {
             AddExtension = true,
         };
 
-        private static readonly SaveFileDialog SaveFileDialog = new SaveFileDialog()
+        private readonly SaveFileDialog SaveFileDialog = new SaveFileDialog()
         {
             AddExtension = true,
             DefaultExt = BcFile.Extension

@@ -50,6 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         private static void InitializeFileDialog(OpenFileDialog fileDialog, FlowBoundaryCondition boundaryCondition)
         {
             var fileFilters = new List<string>();
+            fileDialog.FileName = String.Empty;
 
             foreach (var dataImporter in DataImporters)
             {
@@ -86,11 +87,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             if (fileDialog.ShowDialog() != DialogResult.OK)
             {
                 return;
-            }
-
-            if (fileDialog.SafeFileName == String.Empty)
-            {
-                 
             }
 
             var selectedFileExtension = Path.GetExtension(fileDialog.SafeFileName)?.Replace(".", "");
