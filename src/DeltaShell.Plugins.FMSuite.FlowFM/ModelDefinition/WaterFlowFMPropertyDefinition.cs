@@ -90,6 +90,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string Wrishp_enc = "Wrishp_enc";
         public const string Wrishp_src = "Wrishp_src";
         public const string Wrishp_pump = "Wrishp_pump";
+        public const string TrtRou = "TrtRou";
+        public const string TrtDef = "TrtDef";
+        public const string TrtL = "TrtL";
     }
 
 

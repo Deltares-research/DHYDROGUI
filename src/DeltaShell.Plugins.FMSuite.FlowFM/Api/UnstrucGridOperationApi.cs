@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             KnownProperties.ObsCrsFile, KnownProperties.LandBoundaryFile, KnownProperties.ObsFile,
             KnownProperties.StructuresFile, KnownProperties.PartitionFile, KnownProperties.ManholeFile,
             KnownProperties.ProfdefFile, KnownProperties.ProflocFile, KnownProperties.RestartFile,
-            KnownProperties.WaterLevIniFile
+            KnownProperties.WaterLevIniFile, KnownProperties.TrtRou, KnownProperties.TrtDef, KnownProperties.TrtL
         };
 
         private bool disposed;
@@ -76,7 +76,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             {
                 var existingProperty = model.ModelDefinition.GetModelProperty(propertyToClear);
                 var clonedProperty = (WaterFlowFMProperty)existingProperty.Clone();
-                clonedProperty.SetValueAsString(string.Empty); //clear
+                if (propertyToClear == "TrtRou")
+                {
+                    clonedProperty.SetValueAsString("N");
+                }
+                else
+                {
+                    clonedProperty.SetValueAsString(string.Empty); //clear 
+                }
+                
 
                 int adjustedIndex = adjustedMduProperties.FindIndex(p => p.PropertyDefinition.MduPropertyName.Equals(propertyToClear, StringComparison.InvariantCultureIgnoreCase));
                 adjustedMduProperties[adjustedIndex] = clonedProperty;
