@@ -505,6 +505,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 {
                     Gui.MainWindow.ProjectExplorer.TreeView.Refresh();
                 }
+                if (importer is WaveGridFileImporter &&
+                    activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished && ActiveMapView != null)
+                {
+                    ActiveMapView.Map.ZoomToExtents();
+                }       
             }
             if (!(sender is WaveModel) || activityStatusChangedEventArgs.NewStatus != ActivityStatus.Failed) return;
 
