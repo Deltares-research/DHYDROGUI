@@ -36,7 +36,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
 
         public void ValidateItems()
         {
-            ViewModel.RefreshButtons();
+            ViewModelRegion.RefreshButtons();
+            ViewModel1D2D.RefreshButtons();
         }
 
         public bool IsContextualTabVisible(string tabGroupName, string tabName)

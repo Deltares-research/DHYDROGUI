@@ -4,7 +4,7 @@
     
     <Style x:Key="LinkTypeStyle" TargetType="Rectangle">
         <Style.Triggers>
-            <DataTrigger Binding="{Binding LinkType.Type}" Value="{x:Static local:LinkTypeType.Embedded}">
+            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:LinkTypeType.Embedded}">
                 <Setter Property="Fill">
                     <Setter.Value>
                         <DrawingBrush Stretch="Uniform">
@@ -118,7 +118,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding LinkType.Type}" Value="{x:Static local:LinkTypeType.Lateral}">
+            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:LinkTypeType.Lateral}">
                 <Setter Property="Fill">
                     <Setter.Value>
                         <DrawingBrush Stretch="Uniform">
@@ -192,7 +192,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding LinkType.Type}" Value="{x:Static local:LinkTypeType.RoofSewer}">
+            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:LinkTypeType.RoofSewer}">
                 <Setter Property="Fill">
                     <Setter.Value>
                         <DrawingBrush Stretch="Uniform">
@@ -246,7 +246,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding LinkType.Type}" Value="{x:Static local:LinkTypeType.InhabitantsSewer}">
+            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:LinkTypeType.InhabitantsSewer}">
                 <Setter Property="Fill">
                     <Setter.Value>
                         <DrawingBrush Stretch="Uniform">
@@ -310,7 +310,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding LinkTypeType}" Value="{x:Static local:LinkTypeType.GullySewer}">
+            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:LinkTypeType.GullySewer}">
                 <Setter Property="Fill">
                     <Setter.Value>
                         <DrawingBrush Stretch="Uniform">
@@ -371,6 +371,7 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
+    
     <DrawingBrush x:Key="AddLinkBrush">
         <DrawingBrush.Drawing>
             <DrawingGroup>
@@ -422,9 +423,4 @@
             </DrawingGroup>
         </DrawingBrush.Drawing>
     </DrawingBrush>
-
-
-
-
-
 </ResourceDictionary>

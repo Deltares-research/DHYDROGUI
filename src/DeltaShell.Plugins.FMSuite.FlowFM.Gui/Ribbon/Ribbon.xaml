@@ -14,15 +14,16 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <UserControl.DataContext>
-        <ribbon:RibbonViewModel x:Name="ViewModel"/>
-    </UserControl.DataContext>
+    
     <fluent:Ribbon Name="RibbonControl" x:FieldModifier="private">
         <fluent:Ribbon.ContextualGroups>
             <fluent:RibbonContextualTabGroup Header="GIS" Visibility="Visible" Name="geospatialContextualGroup" Background="Green" BorderBrush="Green" />
         </fluent:Ribbon.ContextualGroups>
         <fluent:RibbonTabItem Header="Map" Name="mapTab" Group="{Binding ElementName=geospatialContextualGroup}" ReduceOrder="FmRegion" fluent:KeyTip.Keys="M">
-            <fluent:RibbonGroupBox Header="FM Region"  Name="FmRegion" >
+            <fluent:RibbonGroupBox Header="FM Region"  Name="FmRegion">
+                <fluent:RibbonGroupBox.DataContext>
+                    <ribbon:RibbonViewModelRegion x:Name="ViewModelRegion" />
+                </fluent:RibbonGroupBox.DataContext>
                 <!--<fluent:ToggleButton x:Name="ButtonAddDredging" ToolTip="Add a (2D) dredging polygon" Header="Add Dredging" Click="OnClick"  Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\dredging.png" Size="Middle" SizeDefinition="Middle,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddDumping" ToolTip="Add a (2D) dumping polygon" Header="Add Dumping" Click="OnClick"  Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\dumping.png" Size="Middle" SizeDefinition="Middle,Small,Small" />-->
                 <fluent:ToggleButton x:Name="ButtonAddBoundary" ToolTip="Add a (2D) flow boundary" Header="Add Flow Boundary" Command="{Binding ActivateAddBoundaryToolCommand}" IsChecked="{Binding ActivateAddBoundaryToolCommand.IsActive}" Icon="/DeltaShell.Plugins.FMSuite.Common.Gui;component\Resources\boundary.png" Size="Middle" SizeDefinition="Small,Small,Small" />
@@ -33,13 +34,16 @@
                 <fluent:Button x:Name="ButtonMergeEmbankments" Header="Merge embankments" Command="{Binding ActivateMergeEmbankmentsToolCommand}" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\wrenchPlus.png" Size="Middle" SizeDefinition="Small, Small, Small" ToolTip="Merge two selected embankments"/>
                 <fluent:ToggleButton x:Name="ButtonGridWizard" Header="Grid creation wizard" Command="{Binding ActivateGridWizardToolCommand}" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\gridwizard.png" Size="Middle" SizeDefinition="Small, Small, Small" ToolTip="Generate grid based on embankments"/>
             </fluent:RibbonGroupBox>
-            <fluent:RibbonGroupBox Header="1D2D Links"  Name="Fm1D2D">
-                <fluent:DropDownButton Header="{Binding LinkTypes.Name}" ClosePopupOnMouseDown="True" SizeDefinition="Large;Large;Large" VerticalAlignment="Top">
+            <fluent:RibbonGroupBox Header="1D2D Links" Name="Fm1D2D">
+                <fluent:RibbonGroupBox.DataContext>
+                    <ribbon:RibbonViewModel1D2D x:Name="ViewModel1D2D" />
+                </fluent:RibbonGroupBox.DataContext>
+                <fluent:DropDownButton Header="{Binding SelectedLinkType.Name}" ClosePopupOnMouseDown="True" SizeDefinition="Large;Large;Large" VerticalAlignment="Top">
                     <fluent:DropDownButton.Icon>
-                        <Rectangle DataContext="{Binding SelectedLinkType}" Style="{StaticResource LinkTypeStyle}"/>
+                        <Rectangle MinWidth="32" MinHeight="32" DataContext="{Binding SelectedLinkType}" Style="{StaticResource LinkTypeStyle}"/>
                     </fluent:DropDownButton.Icon>
                     <fluent:DropDownButton.LargeIcon>
-                        <Rectangle DataContext="{Binding SelectedLinkType}" Style="{StaticResource LinkTypeStyle}"/>
+                        <Rectangle MinWidth="32" MinHeight="32" DataContext="{Binding SelectedLinkType}" Style="{StaticResource LinkTypeStyle}"/>
                     </fluent:DropDownButton.LargeIcon>
                     <ListView ItemsSource="{Binding LinkTypes}" 
                                   SelectedValue="{Binding SelectedLinkType}" 
@@ -52,10 +56,10 @@
                                     MinHeight="64" 
                                     MinWidth="64">
                                     <StackPanel>
-                                        <Rectangle MinWidth="32" MinHeight="32" Style="{StaticResource LinkTypeStyle}"/>
+                                        <Rectangle MinWidth="32" MinHeight="32" HorizontalAlignment="Left" Style="{StaticResource LinkTypeStyle}"/>
                                         <TextBlock Text="{Binding Name}"
                                                VerticalAlignment="Top"
-                                               HorizontalAlignment="Center" />
+                                               HorizontalAlignment="Left" />
                                     </StackPanel>
                                 </Border>
                             </DataTemplate>

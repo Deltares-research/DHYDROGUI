@@ -315,7 +315,8 @@
     </Compile>
     <Compile Include="MapTools\GenerateLinksMapTool.cs" />
     <Compile Include="Ribbon\RelayMapToolCommand.cs" />
-    <Compile Include="Ribbon\RibbonViewModel.cs" />
+    <Compile Include="Ribbon\RibbonViewModel1D2D.cs" />
+    <Compile Include="Ribbon\RibbonViewModelRegion.cs" />
     <Compile Include="ViewModels\DelimeterSelectorViewModel.cs" />
     <Compile Include="ViewModels\GwswFeatureViewItem.cs" />
     <Compile Include="ViewModels\GwswImportDialogViewModel.cs" />

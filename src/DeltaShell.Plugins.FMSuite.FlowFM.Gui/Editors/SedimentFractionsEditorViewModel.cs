@@ -161,7 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         #endregion
 
-        #region ViewModel specific
+        #region ViewModel1D2D specific
 
         public event PropertyChangedEventHandler PropertyChanged;
 
