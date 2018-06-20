@@ -36,6 +36,7 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using SharpMap.Api;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
 {
@@ -653,6 +654,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                            ? Delft3DGridFileReader.Read(grdFilePath)
                            : CurvilinearGrid.CreateDefault();
             grid.Name = "Grid (" + Path.GetFileNameWithoutExtension(grdFilePath) + ")";
+            grid.CoordinateSystem = grid.Attributes[CurvilinearGrid.CoordinateSystemKey] == "Spherical" ? new OgrCoordinateSystemFactory().CreateFromEPSG(4326) : null;
             domain.Grid = grid;
         }
 
