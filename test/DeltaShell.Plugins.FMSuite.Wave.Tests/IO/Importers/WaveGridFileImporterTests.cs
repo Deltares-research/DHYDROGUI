@@ -26,6 +26,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
                 waveGridFileImporter.ImportItem(waveGridFileFilePath, waveModel.OuterDomain.Grid);
                 Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem.IsGeographic, Is.True);
                 Assert.That(waveModel.OuterDomain.Grid.Attributes[CurvilinearGrid.CoordinateSystemKey], Is.EqualTo("Spherical"));
+                Assert.That(waveModel.CoordinateSystem, Is.Not.Null);
+                Assert.That(waveModel.CoordinateSystem.IsGeographic, Is.True);
             }
             finally
             {
@@ -49,12 +51,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
                 waveGridFileImporter.ImportItem(waveGridFileFilePath, waveModel.OuterDomain.Grid);
                 Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Null);
                 Assert.That(waveModel.OuterDomain.Grid.Attributes[CurvilinearGrid.CoordinateSystemKey], Is.EqualTo("Cartesian"));
+                Assert.That(waveModel.CoordinateSystem, Is.Null);
             }
             finally
             {
                 FileUtils.DeleteIfExists(tempWorkingDirectory);
             }
-            
         }
     }
 }

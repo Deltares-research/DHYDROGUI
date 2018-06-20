@@ -294,6 +294,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
                 UpdateBathymetry(domain);
                 UpdateBathymetryOperations(domain);
+
+                if (domain.Grid != null) CoordinateSystem = domain.Grid.CoordinateSystem;
             }
         }
         

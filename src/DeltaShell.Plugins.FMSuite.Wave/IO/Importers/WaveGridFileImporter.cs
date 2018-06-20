@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using GeoAPI.CoordinateSystems;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Grids;
@@ -74,7 +75,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
                     ? new OgrCoordinateSystemFactory()
                         .CreateFromEPSG(4326)
                     : null;
-
+                /*
+                model.CoordinateSystem =
+                    grid.Attributes[CurvilinearGrid.CoordinateSystemKey] == "Spherical"
+                    ? new OgrCoordinateSystemFactory()
+                        .CreateFromEPSG(4326)
+                    : null;
+                    */
                 var coordinates = grid.X.Values.Zip(grid.Y.Values, (x, y) => new Coordinate(x, y));
                 if (model.CoordinateSystem != null &&
                     !CoordinateSystemValidator.CanAssignCoordinateSystem(coordinates, model.CoordinateSystem))
@@ -95,8 +102,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
              }
 
             return target;
-        } 
-        
+        }
+
         public string TargetDataDirectory { get; set; }
         public bool ShouldCancel { get; set; }
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
