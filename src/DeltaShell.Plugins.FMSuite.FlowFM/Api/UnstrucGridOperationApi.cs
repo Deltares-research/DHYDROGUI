@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             {
                 var existingProperty = model.ModelDefinition.GetModelProperty(propertyToClear);
                 var clonedProperty = (WaterFlowFMProperty)existingProperty.Clone();
-                if (propertyToClear == "TrtRou")
+                if (propertyToClear.ToLowerInvariant() == KnownProperties.TrtRou.ToLowerInvariant())
                 {
                     clonedProperty.SetValueAsString("N");
                 }
