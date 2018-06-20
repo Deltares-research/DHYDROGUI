@@ -77,6 +77,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     Category = "1D / 2D / 3D Standalone Models",
                     AdditionalOwnerCheck = owner =>
                         (owner is ICompositeActivity) // Only allow composite activities as target
+                        && (!(owner is ParallelActivity))
+                        && (!(owner is SequentialActivity))
                         && (!((ICompositeActivity)owner).Activities.OfType<RealTimeControlModel>().Any()), // Don't allow multiple realtime control models in one composite activity
                 CreateModel = owner => new RealTimeControlModel("Real-Time Control")
                 };
