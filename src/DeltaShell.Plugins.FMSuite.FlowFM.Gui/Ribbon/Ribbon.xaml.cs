@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
 
         public bool IsContextualTabVisible(string tabGroupName, string tabName)
         {
-            return true;
+            return false;
         }
 
         public IEnumerable<ICommand> Commands => Enumerable.Empty<ICommand>();

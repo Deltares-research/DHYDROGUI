@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             FaceIndex = toCell;
             DiscretisationPointIndex = fromPoint;
-            TypeOfLink = GridApiDataSet.LinkType.Mesh1DMesh2D;
+            TypeOfLink = GridApiDataSet.LinkType.Embedded;
         }
 
         [DisplayName("Name")]

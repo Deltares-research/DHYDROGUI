@@ -314,6 +314,7 @@
       <DependentUpon>GridWizard.cs</DependentUpon>
     </Compile>
     <Compile Include="MapTools\GenerateLinksMapTool.cs" />
+    <Compile Include="MapTools\GenerateLinksMapToolHelper.cs" />
     <Compile Include="Ribbon\RelayMapToolCommand.cs" />
     <Compile Include="Ribbon\RibbonViewModel1D2D.cs" />
     <Compile Include="Ribbon\RibbonViewModelRegion.cs" />

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:fluent="clr-namespace:Fluent;assembly=Fluent"
              xmlns:ribbon="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon"
+             xmlns:grid="clr-namespace:DeltaShell.NGHS.IO.Grid;assembly=DeltaShell.NGHS.IO"
              mc:Ignorable="d" Width="686.4" Height="168" Background="White">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -38,28 +39,30 @@
                 <fluent:RibbonGroupBox.DataContext>
                     <ribbon:RibbonViewModel1D2D x:Name="ViewModel1D2D" />
                 </fluent:RibbonGroupBox.DataContext>
-                <fluent:DropDownButton Header="{Binding SelectedLinkType.Name}" ClosePopupOnMouseDown="True" SizeDefinition="Large;Large;Large" VerticalAlignment="Top">
+
+                <fluent:DropDownButton Header="{Binding SelectedRibbonLink.Name}" ClosePopupOnMouseDown="True" SizeDefinition="Large;Middle" VerticalAlignment="Top">
                     <fluent:DropDownButton.Icon>
-                        <Rectangle MinWidth="32" MinHeight="32" DataContext="{Binding SelectedLinkType}" Style="{StaticResource LinkTypeStyle}"/>
+                        <Rectangle MinWidth="16" MinHeight="16" DataContext="{Binding SelectedRibbonLink.Type}" Style="{StaticResource LinkTypeStyle}"/>
                     </fluent:DropDownButton.Icon>
                     <fluent:DropDownButton.LargeIcon>
-                        <Rectangle MinWidth="32" MinHeight="32" DataContext="{Binding SelectedLinkType}" Style="{StaticResource LinkTypeStyle}"/>
+                        <StackPanel>
+                            <Rectangle MinWidth="32" MinHeight="32" DataContext="{Binding SelectedRibbonLink.Type}" Style="{StaticResource LinkTypeStyle}"/>
+                        </StackPanel>
                     </fluent:DropDownButton.LargeIcon>
                     <ListView ItemsSource="{Binding LinkTypes}" 
-                                  SelectedValue="{Binding SelectedLinkType}" 
+                                  SelectedValue="{Binding SelectedRibbonLink}" 
                                   BorderThickness="0">
                         <ListView.ItemTemplate>
-                            <DataTemplate DataType="ribbon:LinkType">
+                            <DataTemplate DataType="ribbon:RibbonLink">
                                 <Border 
                                     BorderThickness="4"
                                     BorderBrush="Transparent" 
                                     MinHeight="64" 
                                     MinWidth="64">
-                                    <StackPanel>
-                                        <Rectangle MinWidth="32" MinHeight="32" HorizontalAlignment="Left" Style="{StaticResource LinkTypeStyle}"/>
-                                        <TextBlock Text="{Binding Name}"
-                                               VerticalAlignment="Top"
-                                               HorizontalAlignment="Left" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <Rectangle DataContext="{Binding Type}" MinWidth="32" MinHeight="32" HorizontalAlignment="Left" Style="{StaticResource LinkTypeStyle}"/>
+                                        <TextBlock Padding="5" Text="{Binding Name}"
+                                                   VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Border>
                             </DataTemplate>

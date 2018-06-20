@@ -54,6 +54,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             InDrawingStage = false;
         }
 
+        public GridApiDataSet.LinkType LinkType { get; set; }
+
         public override bool Enabled
         {
             get
@@ -175,7 +177,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             if (fmModel.NetworkDiscretization == null || !fmModel.NetworkDiscretization.Locations.AllValues.Any()) return;
 
             // Talk to the api!
-            var gGeomApi = new GridGeomApi();
             var linksFrom = new List<int>();
             var linksTo = new List<int>();
             var startIndex = 1;
@@ -183,12 +184,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
             try
             {
-                var ierr = gGeomApi.Get1d2dLinksFromGridAndNetwork(fmModel.NetFilePath, fmModel.NetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, selectedArea);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
-                {
-                    log.ErrorFormat("1D2D Links were not generated between the grid and the network of WaterFlowFMModel {0}. Please make sure the grid has been saved and the network is correct.", Name);
-                    return;
-                }
+                if (GenerateLinksMapToolHelper.Get1D2DLinks(fmModel, selectedArea, startIndex, ref linksFrom, ref linksTo, ref linksCount, LinkType)) return;
 
                 fmModel.Links.Clear();
                 fmModel.Links.AddRange(Creates1d2dLinks(linksCount, linksFrom, linksTo, fmModel.Grid, fmModel.NetworkDiscretization));

@@ -1,8 +1,12 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.RightsManagement;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
 
@@ -11,58 +15,76 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
     [Entity]
     public class RibbonViewModel1D2D
     {
-        private readonly ObservableCollection<LinkType> _linkTypes;
+        private readonly ObservableCollection<RibbonLink> _linkTypes;
+        private MapToolCommandGenerateLinksMapTool mapToolCommandGenerateLinksMapTool;
+        private RibbonLink selectedRibbonLink;
 
         public RibbonViewModel1D2D()
         {
-            ActivateGenerateLinksToolCommand = new RelayMapToolCommand
+            mapToolCommandGenerateLinksMapTool = new MapToolCommandGenerateLinksMapTool(FlowFMMapViewDecorator.GenerateLinksToolName)
             {
-                MapToolCommand = new MapToolCommand(FlowFMMapViewDecorator.GenerateLinksToolName) { LayerType = typeof(AreaLayer) }
+                LayerType = typeof (AreaLayer)
             };
 
-            _linkTypes = new ObservableCollection<LinkType>
+            ActivateGenerateLinksToolCommand = new RelayMapToolCommand
             {
-                new LinkType()
+                MapToolCommand = mapToolCommandGenerateLinksMapTool
+            };
+
+            _linkTypes = new ObservableCollection<RibbonLink>
+            {
+                new RibbonLink()
                 {
                     Name = "Embedded",
                     ToolTipText = "Embedded 1D2D links for polder and manholes",
-                    Type = LinkTypeType.Embedded
+                    Type = GridApiDataSet.LinkType.Embedded
                 },
-                new LinkType()
+                new RibbonLink()
                 {
                     Name = "Lateral",
                     ToolTipText = "Lateral 1D2D links for rivers",
-                    Type = LinkTypeType.Lateral
+                    Type = GridApiDataSet.LinkType.Lateral
                 },
-                new LinkType()
+                new RibbonLink()
                 {
                     Name = "Roof-sewer",
                     ToolTipText = "Roof-sewer links for rainfall",
-                    Type = LinkTypeType.RoofSewer
+                    Type = GridApiDataSet.LinkType.RoofSewer
                 },
-                new LinkType()
+                new RibbonLink()
                 {
                     Name = "Inhabitants",
                     ToolTipText = "Inhabitants-sewer links for household wastewater",
-                    Type = LinkTypeType.InhabitantsSewer
+                    Type = GridApiDataSet.LinkType.InhabitantsSewer
                 },
-                new LinkType()
+                new RibbonLink()
                 {
                     Name = "Gully-sewer",
                     ToolTipText = "Gully-sewer links for street in/outlet",
-                    Type = LinkTypeType.GullySewer
+                    Type = GridApiDataSet.LinkType.GullySewer
                 }
             };
 
-            SelectedLinkType = LinkTypes.First();
+            SelectedRibbonLink = LinkTypes.First();
         }
 
-        public ObservableCollection<LinkType> LinkTypes
+        public ObservableCollection<RibbonLink> LinkTypes
         {
             get { return _linkTypes; }
         }
 
-        public LinkType SelectedLinkType { get; set; }
+        public RibbonLink SelectedRibbonLink
+        {
+            get
+            {
+                return selectedRibbonLink;
+            }
+            set
+            {
+                selectedRibbonLink = value;
+                mapToolCommandGenerateLinksMapTool.LinkType = selectedRibbonLink.Type;
+            }
+        }
 
         public RelayMapToolCommand ActivateGenerateLinksToolCommand { get; private set; }
 
@@ -75,22 +97,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
                 ActivateGenerateLinksToolCommand
             }.ForEach(c => c.Refresh());
         }
+
+        private class MapToolCommandGenerateLinksMapTool : MapToolCommand
+        {
+            public MapToolCommandGenerateLinksMapTool(string toolName) : base(toolName)
+            {
+            }
+
+            public GridApiDataSet.LinkType LinkType
+            {
+                set
+                {
+                    var mapTool = MapTool as GenerateLinksMapTool;
+                    if (mapTool != null) mapTool.LinkType = value;
+                }
+            }
+        }
     }
 
-    public class LinkType : INameable
+    [Entity]
+    public class RibbonLink : INameable
     {
         public string Name { get; set; }
-        public string ToolTipText { get; set; }
-        public LinkTypeType Type { get; set; }
-    }
 
-    public enum LinkTypeType
-    {
-        Embedded,
-        Lateral,
-        RoofSewer,
-        InhabitantsSewer,
-        GullySewer
+        public string ToolTipText { get; set; }
+
+        public GridApiDataSet.LinkType Type { get; set; }
     }
 }
 

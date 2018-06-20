@@ -34,8 +34,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             {
                 var links = new List<WaterFlowFM1D2DLink>
                 {
-                    new WaterFlowFM1D2DLink(2, 2) { Name = "link1", LongName = "link1 longname", TypeOfLink = GridApiDataSet.LinkType.Mesh1DMesh2D },
-                    new WaterFlowFM1D2DLink(4, 7) { Name = "link2", LongName = "link2 longname", TypeOfLink = GridApiDataSet.LinkType.RoofManhole }
+                    new WaterFlowFM1D2DLink(2, 2) { Name = "link1", LongName = "link1 longname", TypeOfLink = GridApiDataSet.LinkType.Embedded },
+                    new WaterFlowFM1D2DLink(4, 7) { Name = "link2", LongName = "link2 longname", TypeOfLink = GridApiDataSet.LinkType.RoofSewer }
                 };
 
                 UGrid1D2DLinksAdapter.Save1D2DLinks(localCopyOfTestFile, links);

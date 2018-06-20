@@ -245,6 +245,7 @@
     <Compile Include="Gui\FlowFMGuiPluginTest.cs" />
     <Compile Include="Gui\FMFileBasedTreeViewTest.cs" />
     <Compile Include="Gui\FMOutputSnappedFeaturesGroupLayerDataTest.cs" />
+    <Compile Include="Gui\MapTools\GenerateLinksMapToolHelperTests.cs" />
     <Compile Include="Gui\Views\DelimeterSelectorTest.cs" />
     <Compile Include="Gui\Views\GwswImportDialogTest.cs" />
     <Compile Include="Gui\FMSnappedFeaturesGroupLayerDataTest.cs" />
@@ -438,9 +439,7 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Gui\MapTools\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>

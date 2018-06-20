@@ -1,10 +1,10 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon">
-    
+                    xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon"
+                    xmlns:grid="clr-namespace:DeltaShell.NGHS.IO.Grid;assembly=DeltaShell.NGHS.IO">
     <Style x:Key="LinkTypeStyle" TargetType="Rectangle">
         <Style.Triggers>
-            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:LinkTypeType.Embedded}">
+            <DataTrigger Binding="{Binding}" Value="{x:Static grid:GridApiDataSet+LinkType.Embedded}">
                 <Setter Property="Fill">
                     <Setter.Value>
                         <DrawingBrush Stretch="Uniform">
@@ -118,7 +118,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:LinkTypeType.Lateral}">
+            <DataTrigger Binding="{Binding}" Value="{x:Static grid:GridApiDataSet+LinkType.Lateral}">
                 <Setter Property="Fill">
                     <Setter.Value>
                         <DrawingBrush Stretch="Uniform">
@@ -192,7 +192,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:LinkTypeType.RoofSewer}">
+            <DataTrigger Binding="{Binding}" Value="{x:Static grid:GridApiDataSet+LinkType.RoofSewer}">
                 <Setter Property="Fill">
                     <Setter.Value>
                         <DrawingBrush Stretch="Uniform">
@@ -246,7 +246,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:LinkTypeType.InhabitantsSewer}">
+            <DataTrigger Binding="{Binding}" Value="{x:Static grid:GridApiDataSet+LinkType.InhabitantsSewer}">
                 <Setter Property="Fill">
                     <Setter.Value>
                         <DrawingBrush Stretch="Uniform">
@@ -310,7 +310,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:LinkTypeType.GullySewer}">
+            <DataTrigger Binding="{Binding}" Value="{x:Static grid:GridApiDataSet+LinkType.GullySewer}">
                 <Setter Property="Fill">
                     <Setter.Value>
                         <DrawingBrush Stretch="Uniform">

@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DelftTools.Shell.Core.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.Grid;
 using log4net;
@@ -76,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             else
             {
                 Log.ErrorFormat("Unknown link type ({0}) of link {1} detected. Type has been set to 'mesh1D-mesh2D', no 3.", linkType, linkId);
-                link.TypeOfLink = GridApiDataSet.LinkType.Mesh1DMesh2D;
+                link.TypeOfLink = GridApiDataSet.LinkType.Embedded;
             }
             return link;
         }

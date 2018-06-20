@@ -99,10 +99,20 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public enum LinkType
         {
-            [Description("1D2D flow link")]
-            Mesh1DMesh2D = 3,
-            [Description("Roof sewer link")]
-            RoofManhole = 5
+            [Description("1D2D embedded")]
+            Embedded = 3,
+
+            [Description("1D2D lateral")]
+            Lateral = -1,
+
+            [Description("Roof sewer")]
+            RoofSewer = 5,
+
+            [Description("Inhabitants sewer")]
+            InhabitantsSewer = -2,
+
+            [Description("Gully sewer")]
+            GullySewer = 8
         }
 
         public const string GRIDDLL_NAME = "io_netcdf.dll";
