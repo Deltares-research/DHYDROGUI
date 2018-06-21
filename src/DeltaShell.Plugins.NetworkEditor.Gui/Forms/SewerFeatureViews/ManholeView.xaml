@@ -5,6 +5,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews"
+             xmlns:hydro="clr-namespace:DelftTools.Hydro;assembly=DelftTools.Hydro"
+             xmlns:structures="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1000" d:DataContext="{d:DesignInstance local:ManholeViewModel}">
     <UserControl.DataContext>
@@ -104,7 +106,27 @@
                     </Grid>
 
                     <!-- Pipes -->
-                    <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" Margin="7,0,0,0" Height="Auto" VerticalAlignment="Top">
+                    <ContentControl Grid.Column="2" Content="{Binding SelectedItem}" x:Name="ContentControl">
+                        <ContentControl.Resources>
+                            <DataTemplate DataType="{x:Type hydro:Compartment}">
+                                <local:CompartmentView Compartment="{Binding}"/>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type structures:Weir}">
+                                <Rectangle Fill="LimeGreen" Width="32" Height="32"/>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type structures:Pump}">
+                                <Rectangle Fill="HotPink" Width="32" Height="32"/>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type hydro:SewerConnectionOrifice}">
+                                <Rectangle Fill="Red" Width="32" Height="32"/>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type structures:Pipe}">
+                                <Rectangle Fill="Blue" Width="32" Height="32"/>
+                            </DataTemplate>
+                        </ContentControl.Resources>
+                    </ContentControl>
+                    
+                    <!--<ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" Margin="7,0,0,0" Height="Auto" VerticalAlignment="Top">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="Pipe:" FontWeight="Bold" Width="90"/>
@@ -131,16 +153,17 @@
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
                         </StackPanel>
-                    </ScrollViewer>
+                    </ScrollViewer>-->
 
                     <!-- Manhole overview -->
-                    <Border Grid.Column="2" BorderBrush="#FF8B8B8B" BorderThickness="1" Margin="7,7,0,5">
+                    <Border Grid.Column="1" BorderBrush="#FF8B8B8B" BorderThickness="1" Margin="7,7,0,5">
                         <Grid>
                             
                             <local:ManholeVisualisation Background="#FFE8E8E8"
-                                                               Manhole="{Binding DataContext.Manhole, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}" 
-                                                               HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                               Width="500" Height="300"/>
+                                                        Manhole="{Binding DataContext.Manhole, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}"
+                                                        SelectedItem="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}"
+                                                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                        Width="500" Height="300"/>
                         </Grid>
                     </Border>
                     
@@ -162,7 +185,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <ListBox ItemsSource="{Binding CompartmentsWrapper}" 
+                    <!--<ListBox ItemsSource="{Binding CompartmentsWrapper}" 
                              SelectedItem="{Binding SelectedCompartment}"
                              Grid.Column="0" Grid.Row="0"
                              HorizontalAlignment="Left"
@@ -185,8 +208,7 @@
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
-
-                    </ListBox>
+                    </ListBox>-->
 
                     <!-- Compartment view -->
                     <local:CompartmentView Grid.Column="1" Grid.Row="0" 
@@ -196,10 +218,12 @@
 
                     <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
                         <Button Content="Add compartment" Command="{Binding AddCompartmentCommand}" Margin="5,3,3,3"/>
-                        <Button Content="Remove compartment" Command="{Binding RemoveCompartmentCommand}" Margin="0,3,3,3"/>
+                        <Button Content="Add orifice" Command="{Binding AddOrificeCommand}" Margin="5,3,3,3"/>
+                        <Button Content="Add pump" Command="{Binding AddPumpCommand}" Margin="5,3,3,3"/>
+                        <Button Content="Add weir" Command="{Binding AddWeirCommand}" Margin="5,3,3,3"/>
+                        <Button Content="Remove item" Command="{Binding RemoveCompartmentCommand}" Margin="0,3,3,3"/>
                     </StackPanel>
                 </Grid>
-
             </Expander>
 
             <!-- Structures -->
@@ -229,12 +253,8 @@
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
-
                 </ListBox>
-
             </Expander>
-
-
         </StackPanel>
     </ScrollViewer>
 </UserControl>

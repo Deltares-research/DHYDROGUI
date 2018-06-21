@@ -20,6 +20,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         private double minY;
         private double maxY;
 
+        private IHydroNetwork network;
+
         public double HeigthWidthRatio => (maxY - minY) / (maxX - minX);
 
         private Manhole manhole;
@@ -42,6 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 }
 
                 manhole = value;
+                Network = manhole?.Network as IHydroNetwork;
 
                 if (manhole != null)
                 {
@@ -55,7 +58,38 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
         }
 
-        // Lijstje met de uiteindelijke shapes. Dit wordt gebonden aan het control
+        private IHydroNetwork Network
+        {
+            get { return network; }
+            set
+            {
+                if (network != null)
+                {
+                    network.Branches.CollectionChanged -= Branches_CollectionChanged;
+                }
+                network = value;
+                if (network != null)
+                {
+                    network.Branches.CollectionChanged += Branches_CollectionChanged;
+                }
+            }
+        }
+
+        private void Branches_CollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangeAction.Add)
+            {
+                var sewerConnection = e.Item as SewerConnection;
+                if (sewerConnection == null) return;
+
+                var newConnection = sewerConnection.CreateStructureShape();
+                if (newConnection == null) return;
+                newConnection.Width = 0.5;
+
+                Shapes.Add(newConnection);
+            }
+        }
+
         public ObservableCollection<IDrawingShape> Shapes
         {
             get { return shapes; }
@@ -98,7 +132,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             maxX = dim.MaxX;
             minY = dim.MinY;
             maxY = dim.MaxY;
-            
+
             Shapes.PositionShapes(maxY);
             SetShapesPixelValues();
             SetWindowSize?.Invoke();
@@ -126,7 +160,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         {
             UpdateShapes();
         }
- 
+
         private void CompartmentsOnCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (e.Action == NotifyCollectionChangeAction.Add)
@@ -134,9 +168,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 var compartment = e.Item as Compartment;
                 if (compartment != null)
                 {
-                    Shapes.Add(new CompartmentShape{ Compartment = compartment});
+                    Shapes.Add(new CompartmentShape { Compartment = compartment });
                 }
-                
+
             }
 
             if (e.Action == NotifyCollectionChangeAction.Remove)
@@ -147,11 +181,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                     var compartmentShapeToRemove = Shapes.OfType<CompartmentShape>().FirstOrDefault(cs => cs.Compartment == compartment);
                     Shapes.Remove(compartmentShapeToRemove);
                 }
-            }
-
-            if (e.Action == NotifyCollectionChangeAction.Replace)
-            {
-                // move?
             }
         }
 
@@ -174,8 +203,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             {
                 foreach (var item in e.NewItems)
                 {
-                    if(item == null) continue;
-                    ((INotifyPropertyChanged) item).PropertyChanged += OnShapePropertyChanged;
+                    if (item == null) continue;
+                    ((INotifyPropertyChanged)item).PropertyChanged += OnShapePropertyChanged;
                 }
             }
 
@@ -184,13 +213,39 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 foreach (var item in e.OldItems)
                 {
                     if (item == null) continue;
-                    ((INotifyPropertyChanged) item).PropertyChanged -= OnShapePropertyChanged;
+                    ((INotifyPropertyChanged)item).PropertyChanged -= OnShapePropertyChanged;
+                }
+            }
+
+            if (e.Action == NotifyCollectionChangedAction.Move)
+            {
+                // An item has been moved to a new position in the list -> Synchronise 
+
+                // Update all connections
+                var items = (sender as IList<IDrawingShape>)?.Where(ids => !(ids is PipeShape)).ToList();
+                if (items != null && items.Any())
+                {
+                    var connections = items.OfType<ConnectionShape>().ToList();
+
+                    foreach (var connection in connections)
+                    {
+                        var connectionIndex = items.IndexOf(connection);
+                        var sewerConnection = connection.SewerConnection;
+                       
+                        var sourceItem = connectionIndex > 0 ? items[connectionIndex - 1] : null;
+                        var targetItem = connectionIndex < items.Count - 1 ? items[connectionIndex + 1] : null;
+
+                        var newSourceCompartment = (sourceItem as CompartmentShape)?.Compartment;
+                        var newTargetCompartment = (targetItem as CompartmentShape)?.Compartment;
+
+                        sewerConnection.ReplaceCompartmentsOnInternalConnection(newSourceCompartment, newTargetCompartment);
+                    }
                 }
             }
 
             UpdateShapes();
         }
-
+        
         public void SetShapesPixelValues()
         {
             foreach (var shape in Shapes)
@@ -306,16 +361,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
             var internalConnections = manhole.GetManholeInternalConnections().ToList();
 
-            var orificeConnections = internalConnections.OfType<SewerConnectionOrifice>().Where(c => c.SourceCompartment != null && c.TargetCompartment != null);
-            connectionShapes.AddRange(CreateOrificeShapes(orificeConnections, shapes, manhole));
-
-            var structureConnections = internalConnections.Where(c => c.BranchFeatures.Any());
-            connectionShapes.AddRange(CreateStructureConnections(structureConnections.ToList(), shapes));
+            connectionShapes.AddRange(CreateStructureShapes(internalConnections));
 
             // get width based on current compartments
             var compartments = shapes.OfType<CompartmentShape>();
             var connectionWidth = compartments.Sum(cs => cs.Width) * 0.1;
-
+            
             // Set width for each connection
             connectionShapes.ForEach(cs => cs.Width = connectionWidth);
 
@@ -344,48 +395,112 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
 
         // Create
-        private static IEnumerable<IDrawingShape> CreateStructureConnections(IList<ISewerConnection> structureConnections, ICollection<IDrawingShape> shapes)
+        private static IEnumerable<IDrawingShape> CreateStructureShapes(IEnumerable<ISewerConnection> structureConnections)
         {
-            var structureShapes = new List<IDrawingShape>();
-            var pumpConnections = structureConnections.Select(s => s).Where(sc => sc.BranchFeatures.OfType<Pump>().Any()).ToList();
-            foreach (var pumpConnection in pumpConnections)
-            {
-                var pump = pumpConnection.BranchFeatures.OfType<Pump>().FirstOrDefault();
-                var pumpShape = new PumpShape { Pump = pump, SewerConnection = pumpConnection };
-                structureShapes.Add(pumpShape);
-            }
+            /*var pumpConnections = structureConnections.Select(s => s).Where(sc => sc.BranchFeatures.OfType<Pump>().Any()).ToList();
+            var structureShapes = pumpConnections.Select(pumpConnection => pumpConnection.CreatePumpShape()).Cast<IDrawingShape>().ToList();
 
             var weirConnections = structureConnections.Select(s => s).Where(sc => sc.BranchFeatures.OfType<Weir>().Any()).ToList();
-            foreach (var weirConnection in weirConnections)
-            {
-                var weir = weirConnection.BranchFeatures.OfType<Weir>().FirstOrDefault();
-                var weirShape = new WeirShape { Weir = weir, SewerConnection = weirConnection };
-                structureShapes.Add(weirShape);
-            }
+            structureShapes.AddRange(weirConnections.Select(weirConnection => weirConnection.CreateWeirShape()));
+*/
+            var structureShapes = structureConnections.Select(sc => sc.CreateStructureShape());
 
             return structureShapes;
         }
 
-        // Create
-        private static IEnumerable<IDrawingShape> CreateOrificeShapes(IEnumerable<SewerConnectionOrifice> orifices, ICollection<IDrawingShape> shapes, Manhole manhole)
+       /* private static PumpShape CreatePumpShape(this ISewerConnection pumpConnection)
         {
-            var orificeShapes = new List<OrificeShape>();
-            foreach (var orifice in orifices)
+            var pump = pumpConnection.BranchFeatures.OfType<Pump>().FirstOrDefault();
+            var pumpShape = new PumpShape { Pump = pump, SewerConnection = pumpConnection };
+            return pumpShape;
+        }*/
+
+       /* private static WeirShape CreateWeirShape(this ISewerConnection weirConnection)
+        {
+            var weir = weirConnection.BranchFeatures.OfType<Weir>().FirstOrDefault();
+            var weirShape = new WeirShape { Weir = weir, SewerConnection = weirConnection };
+            return weirShape;
+        }*/
+
+       /* private static IEnumerable<IDrawingShape> CreateOrificeShapes(IEnumerable<SewerConnectionOrifice> orifices)
+        {
+            return orifices.Select(orifice => orifice.CreateOrificeShape()).ToList();
+        }*/
+
+        public static IDrawingShape CreateStructureShape(this ISewerConnection connection)
+        {
+            var sewerConnectionOrifice = connection as SewerConnectionOrifice;
+            if (sewerConnectionOrifice != null)
             {
-                var orificeShape = new OrificeShape
-                {
-                    Orifice = orifice,
-                };
-                orificeShapes.Add(orificeShape);
+                return sewerConnectionOrifice.CreateOrificeShape();
             }
 
-            return orificeShapes;
+            var pump = connection.BranchFeatures.FirstOrDefault() as Pump;
+            if (pump != null)
+            {
+                return connection.CreatePumpShape();
+            }
+
+            var weir = connection.BranchFeatures.FirstOrDefault() as Weir;
+            if (weir != null)
+            {
+                return connection.CreateWeirShape();
+            }
+
+            return null;
         }
+
+        private static PumpShape CreatePumpShape(this ISewerConnection connection)
+        {
+            var pump = connection.BranchFeatures.FirstOrDefault() as Pump;
+            return new PumpShape
+            {
+                Pump = pump,
+                SewerConnection = connection,
+            };
+        }
+
+        private static WeirShape CreateWeirShape(this ISewerConnection connection)
+        {
+            var weir = connection.BranchFeatures.FirstOrDefault() as Weir;
+            return new WeirShape
+            {
+                Weir = weir,
+                SewerConnection = connection,
+            };
+        }
+
+        private static OrificeShape CreateOrificeShape(this SewerConnectionOrifice orifice)
+        {
+            return new OrificeShape
+            {
+                Orifice = orifice,
+                Width = 0.5,
+            };
+        }
+
+        public static void ReplaceCompartmentsOnInternalConnection(this ISewerConnection sewerConnection, Compartment newSourceCompartment, Compartment newTargetCompartment)
+        {
+            var tempSource = sewerConnection.Source;
+            var tempTarget = sewerConnection.Target;
+
+            sewerConnection.SourceCompartment = null;
+            sewerConnection.TargetCompartment = null;
+
+            sewerConnection.SourceCompartment = newSourceCompartment;
+            sewerConnection.TargetCompartment = newTargetCompartment;
+
+            sewerConnection.Source = tempSource;
+            sewerConnection.Target = tempTarget;
+        }
+
 
         /// <summary>
         /// Finds the compartment shape to which the pipe is connected. Returns null if it is an internal pipe or if no match can be found
         /// </summary>
         /// <param name="pipeShape"></param>
+        /// <param name="manhole"></param>
+        /// <param name="shapes"></param>
         /// <returns></returns>
         private static CompartmentShape FindConnectedCompartmentShape(PipeShape pipeShape, Manhole manhole, ICollection<IDrawingShape> shapes)
         {
@@ -434,7 +549,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
             // Set top levels of shapes
             SetTopOfShapes(shapes, maxY);
-        }    
+        }
 
         // Helper - Position
         private static void SetTopOfShape(IDrawingShape shape, double maxY)
@@ -546,14 +661,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         private static Dimension GetDimensions(IEnumerable<IDrawingShape> shapes)
         {
             double minX = 0;
-            double maxX = 0;    
+            double maxX = 0;
 
             double minY = 0;
             double maxY = 0;
 
             HeightDimensionsFromShapes(shapes, out minY, out maxY);
             WidthDimensionsFromShapes(shapes, out minX, out maxX);
-                    
+
             var dim = new Dimension
             {
                 MinX = minX,
@@ -575,7 +690,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
 
             minY = min;
-            maxY = max; 
+            maxY = max;
             return height;
         }
 

@@ -12,6 +12,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         public CompartmentShape ConnectedCompartmentShape { get; set; }
 
+        public override object Source
+        {
+            get { return Pipe; }
+            set { Pipe = value as IPipe; }
+        }
+
         public override double TopLevel
         {
             get { return BottomLevel + Height; }

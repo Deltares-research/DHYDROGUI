@@ -2,6 +2,7 @@
 {
     public interface IDrawingShape
     {
+        object Source { get; set; }
         double TopLevel { get; set; }
 
         double BottomLevel { get; set; }

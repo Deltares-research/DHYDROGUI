@@ -35,8 +35,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
         {
             var manhole = new Manhole("manhole 1");
 
-            var compartment1 = new Compartment("Compartment 1") {SurfaceLevel = 1, BottomLevel = -5, ManholeWidth = 2.5};
-            var compartment2 = new Compartment("Compartment 2") {SurfaceLevel = 1, BottomLevel = -1, ManholeWidth = 2.5};
+            var compartment1 = new Compartment("Compartment 1") {SurfaceLevel = 1, BottomLevel = -3, ManholeWidth = 2.5};
+            var compartment2 = new Compartment("Compartment 2") {SurfaceLevel = 1, BottomLevel = -2, ManholeWidth = 2.5};
             var compartment3 = new Compartment("Compartment 3") {SurfaceLevel = 1, BottomLevel = -1, ManholeWidth = 2.5};
 
             var network = new HydroNetwork();

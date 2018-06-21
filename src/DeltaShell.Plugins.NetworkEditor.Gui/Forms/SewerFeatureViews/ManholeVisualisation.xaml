@@ -11,7 +11,8 @@
     <UserControl.DataContext>
         <local:ManholeVisualisationViewModel x:Name="ViewModel"/>
     </UserControl.DataContext>
-    <Grid x:Name="ViewGrid" SizeChanged="ViewGrid_OnSizeChanged" Background="Aquamarine" >
+    <Grid x:Name="ViewGrid" SizeChanged="ViewGrid_OnSizeChanged" Background="Aquamarine" PreviewMouseLeftButtonDown="UIElement_OnPreviewMouseLeftButtonDown"
+    >
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -21,15 +22,20 @@
         <local:CanvasItemsControl ItemsSource="{Binding Shapes}" ClipToBounds="True">
             <ItemsControl.Resources>
                 <DataTemplate DataType="{x:Type local:CompartmentShape}">
-                    <Grid 
-                        >
-                        <Rectangle Fill="White"
-                                   Stroke="Black" StrokeThickness="2"
+                    <Grid>
+                        <Rectangle
+                            Stroke="Black" StrokeThickness="2"
                                    Width="{Binding WidthPix}" Height="{Binding HeightPix}"
                                    ToolTip="{Binding Compartment.Name}">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#FFF0F0F0" Offset="0.0"/>
+                                    <GradientStop Color="#FFB0B0B0" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
                         </Rectangle>
-                        <TextBlock Text="{Binding TopLevel, StringFormat={}{0:G2} m}" HorizontalAlignment="Center" FontSize="15" Margin="0, -20, 0, 0"/>
-                        <TextBlock Text="{Binding BottomLevel, StringFormat={}{0:G2} m}" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="15" Margin="0, 0, 0, -20"/>
+                        <TextBlock Text="{Binding TopLevel, StringFormat={}{0:G2} m}" HorizontalAlignment="Center" FontSize="15" />
+                        <TextBlock Text="{Binding BottomLevel, StringFormat={}{0:G2} m}" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="15"/>
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type local:PipeShape}">
@@ -82,8 +88,15 @@
                     <Grid>
                         <Border x:Name="OrificeShapeBorder" Width="{Binding WidthPix}" Height="{Binding HeightPix}" HorizontalAlignment="Left"
                                 BorderThickness="0, 2, 0, 2" BorderBrush="Black" >
-                            <Rectangle Fill="White"
-                                       ToolTip="{Binding Orifice.Name}"/>
+                            <Rectangle
+                                ToolTip="{Binding Orifice.Name}">
+                                <Rectangle.Fill>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#FFF0F0F0" Offset="0.0"/>
+                                        <GradientStop Color="#FFB0B0B0" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
                         </Border>
                         <Path Stretch="Uniform" Fill="RoyalBlue" StrokeThickness="1" Stroke="White"
                               Data="M 0,115 95,115 65,90 85,90 120,120 85,150  65,150 95,125  0,125 Z"
@@ -96,7 +109,8 @@
                             PumpShape="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DataContext}"
                             SnapsToDevicePixels="True" 
                             Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DataContext.WidthPix}" 
-                            Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DataContext.HeightPix}"/>
+                            Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DataContext.HeightPix}"
+                            Background="Transparent"/>
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type local:WeirShape}">

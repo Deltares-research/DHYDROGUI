@@ -11,7 +11,7 @@ namespace DelftTools.Hydro.Structures
 
             if(network == null) return new List<ISewerConnection>();
 
-            var connections = network.SewerConnections.Where(c => c.Source?.Name == manhole.Name && c.Target?.Name == manhole.Name).ToList();
+            var connections = network.SewerConnections.Where(c => c.Source == manhole && c.Target == manhole  ).ToList();
             return connections;
         }
 

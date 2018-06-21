@@ -40,5 +40,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             Width = compartment.ManholeWidth;
             Height = compartment.SurfaceLevel - compartment.BottomLevel;
         }
+
+        public override object Source
+        {
+            get
+            {
+                return Compartment;
+            }
+            set
+            {
+                Compartment = value as Compartment;
+            }
+        }
     }
 }

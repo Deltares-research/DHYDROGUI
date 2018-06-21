@@ -4,8 +4,9 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {
     [Entity]
-    public class DrawingShape : IDrawingShape
+    public abstract class DrawingShape : IDrawingShape
     {
+        public virtual object Source { get; set; }
         public virtual double TopLevel { get; set; }
         public virtual double BottomLevel { get; set; }
         public virtual double Width { get; set; }
