@@ -350,7 +350,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             @"Water_Quality_output\includes_deltashell\B9_Mapvar.inc"
         };
 
-        private static void CheckFeatureCoverageFunctionStore(IEnumerable<IDataItem> outputDataItemValues, string tag, bool connectedToData = true)
+        private static void CheckFeatureCoverageFunctionStore(IEnumerable<IDataItem> outputDataItemValues, string tag,
+            bool connectedToData = true)
         {
             var dataItemValues = outputDataItemValues.ToArray();
             Assert.That(dataItemValues.Count(di => di.Tag == tag), Is.EqualTo(1));

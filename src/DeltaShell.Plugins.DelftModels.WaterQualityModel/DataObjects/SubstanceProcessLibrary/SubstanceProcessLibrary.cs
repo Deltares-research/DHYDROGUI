@@ -93,6 +93,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
         /// </summary>
         public string ProcessDefinitionFilesPath { get; set; }
 
+        public string ImportedSubstanceFilePath { get; set; }
+
         public override string ToString()
         {
             var libraryString = "";

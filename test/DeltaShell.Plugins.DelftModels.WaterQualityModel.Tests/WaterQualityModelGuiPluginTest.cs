@@ -1,16 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
+using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DelftTools.Utils.UndoRedo;
+using DeltaShell.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExplorer;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
+using DeltaShell.Plugins.NetworkEditor.Gui;
+using DeltaShell.Plugins.ProjectExplorer;
+using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands.SpatialOperations;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -200,6 +209,75 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             mocks.VerifyAll();
 
+        }
+
+        private static WaterQualityModel AddWaterQualityModelToProject(IApplication app)
+        {
+            // Add WaterQualityModel to project
+            var project = app.Project;
+            project.RootFolder.Add(new WaterQualityModel());
+
+            //Check model name
+            var targetmodel = project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
+            Assert.IsNotNull(targetmodel);
+            return targetmodel;
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.WindowsForms)]
+        public void Check_When_NewWaqModel_Created_And_HydFileImported_Then_ZoomToExtents()
+        {
+            var hydFile = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\flow-model\westernscheldt01.hyd");
+            hydFile = TestHelper.CreateLocalCopy(hydFile);
+
+            using (var gui = new DeltaShellGui())
+            {
+                var app = gui.Application;
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new WaterQualityModelApplicationPlugin());
+
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                var waqGuiPlugin = new WaterQualityModelGuiPlugin();
+                gui.Plugins.Add(waqGuiPlugin);
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+
+                gui.Run();
+
+                Action mainWindowShown = delegate
+                {
+                    var waqModel = AddWaterQualityModelToProject(app);
+                    //First call to initialize the view.
+                    gui.CommandHandler.OpenView(waqModel, typeof(ProjectItemMapView));
+
+                    //import hyd model that contains grid
+                    var importer = app.FileImporters.OfType<HydFileImporter>().FirstOrDefault();
+                    Assert.IsNotNull(importer);
+
+                    var subFileImportActivity =
+                        new FileImportActivity(importer, waqModel)
+                        {
+                            Files = new[] { hydFile }
+                        };
+                    app.RunActivity(subFileImportActivity);
+
+                    //Get the view
+                    var targetView = gui.DocumentViews.AllViews.OfType<ProjectItemMapView>().FirstOrDefault();
+
+                    //Get the height and Width we got from the map after the above actions.
+                    var map = targetView.MapView.Map;
+                    var orHeight = targetView.MapView.Map.Envelope.Height;
+                    var orWidth = targetView.MapView.Map.Envelope.Width;
+
+                    Assert.AreEqual(orHeight, map.Envelope.Height);
+                    Assert.AreEqual(orWidth, map.Envelope.Width);
+                };
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+            }
+
+            //Clean directory
+            FileUtils.DeleteIfExists(hydFile);
         }
     }
 }

@@ -101,15 +101,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             if (!ShouldCancel) ImportOutputParameters(substanceProcessLibrary, subFileText);
 
             substanceProcessLibrary.Name = Path.GetFileNameWithoutExtension(path) + (ShouldCancel ? " (import cancelled)" : "");
-
+ 
             if (ShouldCancel)
             {
                 Log.Warn("Sub file import cancelled");
+                return;
             }
-            else
-            {
-                Log.Info("Sub file successfully imported");
-            }
+
+            Log.Info(string.Format(Resources.SubFileImporter_Import_Sub_file_successfully_imported_from___0_, path));
+            substanceProcessLibrary.ImportedSubstanceFilePath = path;
         }
 
         private void ImportSubstances(SubstanceProcessLibrary substanceProcessLibrary, string subFileText)

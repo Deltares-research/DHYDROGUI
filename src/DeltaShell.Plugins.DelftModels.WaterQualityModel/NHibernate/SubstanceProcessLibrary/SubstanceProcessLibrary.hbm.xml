@@ -15,7 +15,8 @@
     <property name="Name" column="name"/>
     <property name="ProcessDllFilePath" column="process_dll_file_path"/>
     <property name="ProcessDefinitionFilesPath" column="process_definition_files_path"/>
-
+    <property name="ImportedSubstanceFilePath" column="imported_substance_file_path"/>
+    
     <list name="Substances"
           lazy="false"
           batch-size="10"

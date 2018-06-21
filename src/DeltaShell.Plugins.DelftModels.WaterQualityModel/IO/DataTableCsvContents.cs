@@ -102,14 +102,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// </summary>
     public class LocationData
     {
-        private readonly IDictionary<DateTime, IDictionary<string, double>> data = new SortedDictionary<DateTime, IDictionary<string, double>>();
+        private readonly IDictionary<DateTime, IDictionary<string, string>> data = new SortedDictionary<DateTime, IDictionary<string, string>>();
 
         public string Name;
 
         /// <summary>
         /// Gets the sparse time dependent substance data.
         /// </summary>
-        public IDictionary<DateTime, IDictionary<string, double>> TimeDependentSubstanceData
+        public IDictionary<DateTime, IDictionary<string, string>> TimeDependentSubstanceData
         {
             get { return data; }
         }

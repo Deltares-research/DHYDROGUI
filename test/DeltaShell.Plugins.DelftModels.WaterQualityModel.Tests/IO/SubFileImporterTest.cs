@@ -6,6 +6,7 @@ using System.Threading;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using log4net.Core;
 using NUnit.Framework;
 
@@ -51,17 +52,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void ImporterLogsErrorWhenPathIsNull()
         {
-            var log = PerformActionAndGetLog(() => new SubFileImporter().Import(new SubstanceProcessLibrary(), null));
-
-            Assert.IsTrue(log.Contains("No sub file was imported: no file selection was made"));
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => new SubFileImporter().Import(new SubstanceProcessLibrary(), null),
+                Resources.SubFileImporter_Path_not_set);
         }
 
         [Test]
         public void ImporterLogsErrorOnNonExistingFile()
         {
-            var log = PerformActionAndGetLog(() => new SubFileImporter().Import(new SubstanceProcessLibrary(), "test.sub"));
-
-            Assert.IsTrue(log.Contains("No sub file was imported: the selected sub file does not exist"));
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => new SubFileImporter().Import(new SubstanceProcessLibrary(), "test.sub"),
+                Resources.SubFileImporter_File_not_found);
         }
 
         [Test]
@@ -76,13 +77,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(0, library.OutputParameters.Count);
 
             // Perform import on empty substance process library
-            new SubFileImporter().Import(library, Path.Combine(TestHelper.GetDataDir(), "IO", "Eutrof_simple.sub"));
+            var testFilePath = TestHelper.GetTestFilePath(@"IO\Eutrof_simple.sub");
+            new SubFileImporter().Import(library, testFilePath);
 
             Assert.AreEqual("Eutrof_simple", library.Name);
             Assert.AreEqual(12, library.Substances.Count);
             Assert.AreEqual(56, library.Parameters.Count);
             Assert.AreEqual(37, library.Processes.Count);
             Assert.AreEqual(15, library.OutputParameters.Count); // 11x imported output parameter, 4x default output parameter 
+            Assert.AreEqual(testFilePath, library.ImportedSubstanceFilePath); //To check if the property ImportedSubstanceFilePath & the imported file path are equal.
 
             var firstSubstanceVariable = library.Substances[0];
             var firstParameter = library.Parameters[0];
@@ -250,6 +253,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             }
 
             return log;
+        }
+
+        [Test]
+        public void CheckWhenImportingASubFileAndSetImportedSubstanceFilePathIsTrueTheCorrectLogMessageIsShown()
+        {
+            var library = new SubstanceProcessLibrary();
+            var subFileImporter = new SubFileImporter();
+
+            var testFilePath = TestHelper.GetTestFilePath(@"IO\SubstateWithPercentageSign.sub");
+            testFilePath = TestHelper.CreateLocalCopy(testFilePath);
+
+            var expecedMssg = string.Format(Resources.SubFileImporter_Import_Sub_file_successfully_imported_from___0_,testFilePath);
+
+            Action action = () =>
+            {
+                subFileImporter.Import(library, testFilePath);
+            };
+            TestHelper.AssertAtLeastOneLogMessagesContains(action, expecedMssg);
         }
     }
 }

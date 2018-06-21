@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using DelftTools.Utils.Csv.Importer;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using log4net;
-using log4net.Config;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
@@ -116,14 +117,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                         new CsvColumnInfo(2, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("value", typeof (double)),
+                        new CsvRequiredField("value", typeof (string)),
                         new CsvColumnInfo(3, CultureInfo.InvariantCulture)
                     },
                 }
             };
 
             var dataTable = csvImporter.ImportCsv(path, csvMappingData);
-
             if (dataTable.HasErrors && dataTable.Rows.Count>0)
             {
                 var i = 0;
@@ -161,7 +161,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             };
 
             LocationData locationData = null;
-            foreach (DataRow row in dataTable.Select(null, string.Format("{0} ASC", LocationHeaderName))) // Presort rows on location without filtering any entries
+            var dataRows = dataTable.Select(null, string.Format("{0} ASC", LocationHeaderName)).ToList();
+            foreach (var row in dataRows) // Presort rows on location without filtering any entries
             {
                 var location = (string)row[1];
                 if (locationData == null || locationData.Name != location)
@@ -176,11 +177,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 var time = (DateTime)row[0];
                 if (!locationData.TimeDependentSubstanceData.ContainsKey(time))
                 {
-                    locationData.TimeDependentSubstanceData[time] = new Dictionary<string, double>();
+                    locationData.TimeDependentSubstanceData[time] = new Dictionary<string, string>();
                 }
 
                 var substance = (string)row[2];
-                var substanceValue = (double)row[3];
+                var substanceValue = (string)row[3];
+                double buffer = 0.0;
+                if (!double.TryParse(substanceValue, NumberStyles.Any, CultureInfo.InvariantCulture, out buffer))
+                    Log.ErrorFormat( Resources.DataTableCsvFileReader_CreateDataTableCsvContents_Line__0__contains_wrong_substance_value___1_, dataRows.IndexOf(row)+1, substanceValue);
+
                 locationData.TimeDependentSubstanceData[time][substance] = substanceValue;
             }
             return result;

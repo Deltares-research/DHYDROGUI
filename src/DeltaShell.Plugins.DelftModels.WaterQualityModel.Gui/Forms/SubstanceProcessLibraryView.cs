@@ -145,7 +145,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
 
             if (!ShowNameAndDescriptionColumnsOnly)
             {
-                tableViewActiveSubstances.AddColumn("InitialValue", Resources.SubstanceProcessLibraryView_InitializeTableView_Initial_value, true, 100);
+                tableViewActiveSubstances.AddColumn("InitialValue", Resources.SubstanceProcessLibraryView_InitializeTableViewActiveSubstances_Default_value, true, 100);
                 tableViewActiveSubstances.AddColumn("ConcentrationUnit", Resources.SubstanceProcessLibraryView_InitializeTableView_Concentration_unit, true, 100);
             }
 
@@ -161,7 +161,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
 
             if (!ShowNameAndDescriptionColumnsOnly)
             {
-                tableViewInactiveSubstances.AddColumn("InitialValue", Resources.SubstanceProcessLibraryView_InitializeTableView_Initial_value, true, 100);
+                tableViewInactiveSubstances.AddColumn("InitialValue", Resources.SubstanceProcessLibraryView_InitializeTableViewActiveSubstances_Default_value, true, 100);
                 tableViewInactiveSubstances.AddColumn("ConcentrationUnit", Resources.SubstanceProcessLibraryView_InitializeTableView_Concentration_unit, true, 100);
             }
 

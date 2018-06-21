@@ -8,13 +8,11 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.Editors;
 using DelftTools.Functions;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Threading;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
@@ -46,6 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         private readonly string argumentPropertyName = TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.Arguments);
         private readonly string componentsPropertyName = TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.Components);
         private readonly string editPropertyName = TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.Edit);
+        private bool useInitialValueColumn;
 
         #endregion
 
@@ -69,6 +68,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
             ExcludeList = new HashSet<string>();
         }
 
+        /// <summary>
+        /// By setting this property we change the name of the fourth column (Default value) in the Table.
+        /// NOTE: Set this value only during initialization (WaterQualityModelGuiPlugin.cs)
+        /// </summary>
+        public bool UseInitialValueColumn
+        {
+            get { return useInitialValueColumn; }
+            set
+            {
+                if (useInitialValueColumn == value) return;
+
+                useInitialValueColumn = value;
+                defaultValueColumn.Caption = GetDefaultValueColumnName();
+            } 
+        }
+
+        private ITableViewColumn defaultValueColumn;
+        private ITableViewColumn segmentFunctionColumn;
+
         private void InitializeTableView()
         {
             tableView.AutoGenerateColumns = false;
@@ -80,9 +98,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
             tableView.AddColumn(namePropertyName, Resources.FunctionListView_InitializeTableView_Name);
             tableView.AddColumn(descriptionPropertyName, Resources.FunctionListView_InitializeTableView_Description);
             tableView.AddColumn(functionTypePropertyName, Resources.FunctionListView_InitializeTableView_Function_type);
-            tableView.AddColumn(defaultValuePropertyName, Resources.FunctionListView_InitializeTableView_Default_value);
+            
+            defaultValueColumn = tableView.AddColumn(defaultValuePropertyName, GetDefaultValueColumnName());
             tableView.AddColumn(unitPropertyName, Resources.FunctionListView_InitializeTableView_Unit);
-            tableView.AddColumn(urlPropertyName, Resources.FunctionListView_InitializeTableView_SegmentFunctionFilePath);
+            segmentFunctionColumn = tableView.AddColumn(urlPropertyName, Resources.FunctionListView_InitializeTableView_SegmentFunctionFilePath);
             tableView.AddColumn(argumentPropertyName, Resources.FunctionListView_InitializeTableView_Arguments, true, 100);
             tableView.AddColumn(componentsPropertyName, Resources.FunctionListView_InitializeTableView_Components, true, 100);
             tableView.AddColumn(editPropertyName, Resources.FunctionListView_InitializeTableView_Edit);
@@ -96,6 +115,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
             ShowNamesReadOnly = true;
             ShowDescriptionsReadOnly = true;
             ShowUnitsReadOnly = true;
+        }
+
+        private string GetDefaultValueColumnName()
+        {
+            return UseInitialValueColumn
+                ? Resources.FunctionListView_GetDefaultValueColumnName_Initial_value
+                : Resources.FunctionListView_InitializeTableView_Default_value;
         }
 
         public object Data
@@ -236,19 +262,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         private bool ReadOnlyCellFilter(TableViewCell tableViewCell)
         {
             // Default value should be readonly when data coming from external source.
-            if (IsDefaultValueCellReadOnly == null || (tableViewCell.Column.Caption != Resources.FunctionListView_InitializeTableView_Default_value && tableViewCell.Column.Caption != Resources.FunctionListView_InitializeTableView_SegmentFunctionFilePath))
+            if (IsDefaultValueCellReadOnly == null 
+                || tableViewCell.Column != defaultValueColumn && tableViewCell.Column != segmentFunctionColumn)
                 return false;
 
             var functionCorrespondingToCell = GetFunctionForCell(tableViewCell.RowIndex);
-            return functionCorrespondingToCell == null || IsDefaultValueCellReadOnly(functionCorrespondingToCell) || (tableViewCell.Column.Caption == Resources.FunctionListView_InitializeTableView_SegmentFunctionFilePath && !functionCorrespondingToCell.IsSegmentFile());
+            return functionCorrespondingToCell == null 
+                   || IsDefaultValueCellReadOnly(functionCorrespondingToCell) 
+                   || tableViewCell.Column == segmentFunctionColumn && !functionCorrespondingToCell.IsSegmentFile();
         }
 
         private IFunction GetFunctionForCell(int rowIndex)
         {
             var functionWrapper = tableView.GetRowObjectAt(rowIndex) as FunctionWrapper;
-            return functionWrapper != null
-                ? functionWrapper.Function
-                : null;
+            return functionWrapper?.Function;
         }
 
         private void OpenViewForFunction()

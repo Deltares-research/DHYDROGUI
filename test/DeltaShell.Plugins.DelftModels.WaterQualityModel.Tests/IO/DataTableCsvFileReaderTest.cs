@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
@@ -158,8 +160,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                     CollectionAssert.AreEquivalent(timeBlockCsvSubstances, substanceAndValue.Keys);
                     foreach (var value in substanceAndValue.Values)
                     {
-                        Assert.GreaterOrEqual(value, 1.2);
-                        Assert.LessOrEqual(value, 4.6);
+                        var valueToDouble = double.Parse(value, CultureInfo.InvariantCulture);
+                        Assert.GreaterOrEqual(valueToDouble, 1.2);
+                        Assert.LessOrEqual(valueToDouble, 4.6);
                     }
                 }
             }
@@ -186,8 +189,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                     CollectionAssert.AreEquivalent(timeBlockCsvSubstances, substanceAndValue.Keys);
                     foreach (var value in substanceAndValue.Values)
                     {
-                        Assert.GreaterOrEqual(value, 1.2);
-                        Assert.LessOrEqual(value, 4.6);
+                        var valueToDouble = double.Parse(value, CultureInfo.InvariantCulture);
+                        Assert.GreaterOrEqual(valueToDouble, 1.2);
+                        Assert.LessOrEqual(valueToDouble, 4.6);
                     }
                 }
             }
@@ -214,8 +218,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                     CollectionAssert.AreEquivalent(timeLinearCsvSubstances, substanceAndValue.Keys);
                     foreach (var value in substanceAndValue.Values)
                     {
-                        Assert.GreaterOrEqual(value, 0.0);
-                        Assert.LessOrEqual(value, 101.0);
+                        var valueToDouble = double.Parse(value, CultureInfo.InvariantCulture);
+                        Assert.GreaterOrEqual(valueToDouble, 0.0);
+                        Assert.LessOrEqual(valueToDouble, 101.0);
                     }
                 }
             }
@@ -285,6 +290,44 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var expected = "Not a valid file-path (not-a-valid-path) specified." + Environment.NewLine +
                            "Parameter name: path";
             Assert.AreEqual(expected, exception.Message);
+        }
+
+        [Test]
+        public void Read_File_With_ExponentialNotation_KeepsTheFormat()
+        {
+            var filePath = TestHelper.GetTestFilePath(@"CsvExponentialNumbers\spill.csv");
+            Assert.IsTrue(File.Exists(filePath));
+
+            filePath = TestHelper.CreateLocalCopy(filePath);
+            var path = Path.Combine("test", "test");
+            var dataRead = DataTableCsvFileReader.Read(filePath, path);
+
+            var values = dataRead.DataRows
+                        .SelectMany( dr => dr.TimeDependentSubstanceData.Values)
+                        .SelectMany( k => k.Values).ToList();
+
+            Assert.IsTrue(values.Contains("4.0E12"));
+            Assert.IsTrue(values.Contains("13.0E12"));
+
+            FileUtils.DeleteIfExists(filePath);
+        }
+
+        [Test]
+        public void Read_File_With_WrongNumber_LogsMessage()
+        {
+            var filePath = TestHelper.GetTestFilePath(@"CsvDataTableValueColumn\wrongFormat.csv");
+            Assert.IsTrue(File.Exists(filePath));
+
+            filePath = TestHelper.CreateLocalCopy(filePath);
+            var path = Path.Combine("test", "test");
+            var expectedErrorMessage = 
+                string.Format(
+                    Resources.DataTableCsvFileReader_CreateDataTableCsvContents_Line__0__contains_wrong_substance_value___1_, 
+                    2, "wr0ngV4lu3");
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DataTableCsvFileReader.Read(filePath, path), expectedErrorMessage);
+
+            FileUtils.DeleteIfExists(filePath);
         }
     }
 }

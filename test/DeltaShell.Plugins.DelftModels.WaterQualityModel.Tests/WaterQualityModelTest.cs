@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
@@ -20,6 +20,7 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -188,7 +189,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.AreEqual(BalanceUnit.Gram, settings.BalanceUnit);
             Assert.AreEqual(NumericalScheme.Scheme15, settings.NumericalScheme);
 
-            Assert.IsFalse(settings.NoDispersionIfFlowIsZero);
+            Assert.IsTrue(settings.NoDispersionIfFlowIsZero);
             Assert.IsTrue(settings.NoDispersionOverOpenBoundaries);
 
             Assert.IsFalse(settings.UseFirstOrder);
@@ -452,7 +453,37 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             Assert.IsFalse(model.HasHydroDataImported);
         }
-        
+
+        [Test]
+        public void Import_HydroData_OverExistingModel_Overwrites_Timers()
+        {
+            var waqModel = new WaterQualityModel{ Name = "Model 1"};
+            var testFilePath = TestHelper.GetTestFilePath("IO\\attribute files\\random_3x5.atr");
+            var fileData = new HydFileData()
+            {
+                Path = new FileInfo(testFilePath),
+                AttributesRelativePath = "random_3x5.atr",
+                NumberOfDelwaqSegmentsPerHydrodynamicLayer = 3,
+                NumberOfHydrodynamicLayersPerWaqSegmentLayer = new int[]{0, 1, 2, 3, 4},
+                HydrodynamicLayerThicknesses = new double[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
+                NumberOfWaqSegmentLayers = 5,
+                ConversionStartTime = waqModel.StartTime.AddYears(10),
+                ConversionStopTime = waqModel.StopTime.AddYears(10),
+                ConversionTimeStep = waqModel.TimeStep.Add(new TimeSpan(1000)),
+                Boundaries = new EventedList<WaterQualityBoundary>(),
+            };
+
+            Assert.AreNotEqual(waqModel.StartTime, fileData.ConversionStartTime);
+            Assert.AreNotEqual(waqModel.StopTime, fileData.ConversionStopTime);
+            Assert.AreNotEqual(waqModel.TimeStep, fileData.ConversionTimeStep);
+
+            //Improt the second model on top of waqmodel.
+            waqModel.ImportHydroData(fileData);
+            Assert.AreEqual(waqModel.StartTime, fileData.ConversionStartTime);
+            Assert.AreEqual(waqModel.StopTime, fileData.ConversionStopTime);
+            Assert.AreEqual(waqModel.TimeStep, fileData.ConversionTimeStep);
+        }
+
         #region ImportHydroData Twice
 
         [Test]
@@ -1058,6 +1089,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             TypeUtils.SetPrivatePropertyValue(model, TypeUtils.GetMemberName<WaterQualityModel>(m => m.OutputIsEmpty), false);
         }
 
+        #region Timers synchronization
+
         [Test]
         public void GivenWAQModelWhenSetEventedListObservationPointsOnLoadThenCollectionChangedEventShouldStillFire()
 		{   var model = new WaterQualityModel();
@@ -1081,5 +1114,185 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.That(model.Loads.Count, Is.EqualTo(1));
             //Assert.That(model.LoadsDataManager.Count, Is.EqualTo(1));
 		}
+
+        [Test]
+        [TestCase(false, false)]
+        [TestCase(false, true)]
+        [TestCase(true, false)]
+        [TestCase(true, true)]
+        [TestCase(false, false)]
+        [TestCase(false, true)]
+        [TestCase(true, false)]
+        [TestCase(true, true)]
+        public void Given_WAQModel_When_SimulationTimeChanges_OutputTimers_AreSynchronized(bool syncStart, bool syncStop)
+        {
+            var model = new WaterQualityModel();
+            var settings = model.ModelSettings;
+            
+            CheckTimersAreEqual(model, settings);
+
+            model.StartTime = model.StartTime.AddYears(syncStart ? 1 : 0);
+            model.StopTime = model.StopTime.AddYears(syncStop ? 1 : 0);
+
+            CheckTimersAreEqual(model, settings);
+        }
+
+        [Test]
+        public void Given_WAQModel_When_SimulationTimeStepChanges_OutputTimers_AreNotSynchronized()
+        {
+            var model = new WaterQualityModel();
+            var settings = model.ModelSettings;
+
+            CheckTimersAreEqual(model, settings);
+
+            model.TimeStep = model.TimeStep.Add(new TimeSpan(1000));
+
+            CheckTimersAreEqual(model, settings);
+
+            Assert.AreNotEqual(model.TimeStep, settings.BalanceTimeStep);
+            Assert.AreNotEqual(model.TimeStep, settings.HisStartTime);
+            Assert.AreNotEqual(model.TimeStep, settings.MapTimeStep);
+        }
+
+        private static void CheckTimersAreEqual(WaterQualityModel model, WaterQualityModelSettings settings)
+        {
+            Assert.AreEqual(model.StartTime, settings.BalanceStartTime);
+            Assert.AreEqual(model.StopTime, settings.BalanceStopTime);
+
+            Assert.AreEqual(model.StartTime, settings.HisStartTime);
+            Assert.AreEqual(model.StopTime, settings.HisStopTime);
+
+            Assert.AreEqual(model.StartTime, settings.MapStartTime);
+            Assert.AreEqual(model.StopTime, settings.MapStopTime);
+        }
+
+        [Test]
+        [TestCase(false)]
+        [TestCase(true)]
+        public void Given_WAQMode_When_SimulationStartTimeChanges_And_OutputTimerSynchronizes_LogMessageIsGiven(bool synchronize)
+        {
+            var model = new WaterQualityModel();
+
+            var newDate = model.StartTime.AddYears(synchronize ? 1 : 0);
+            var expectedLogMessage = string.Format(
+                Resources.WaterQualityModel_LogSynchronizedTimer_Output_timers___0___have_been_synchronized_to_match_the_Simulation__0____1___, 
+                "Start Time", 
+                newDate);
+
+            Action action = () => model.StartTime = newDate;
+            CheckLogMessageIfSync(synchronize, action, expectedLogMessage);
+        }
+
+        [Test]
+        [TestCase(false)]
+        [TestCase(true)]
+        public void Given_WAQMode_When_SimulationStopTimeChanges_And_OutputTimerSynchronizes_LogMessageIsGiven(bool synchronize)
+        {
+            var model = new WaterQualityModel();
+
+            var newDate = model.StopTime.AddYears(synchronize ? 1 : 0);
+            var expectedLogMessage = string.Format(
+                Resources.WaterQualityModel_LogSynchronizedTimer_Output_timers___0___have_been_synchronized_to_match_the_Simulation__0____1___,
+                "Stop Time",
+                newDate);
+
+            Action action = () => model.StopTime = newDate;
+            CheckLogMessageIfSync(synchronize, action, expectedLogMessage);
+        }
+
+        [Test]
+        [TestCase(false)]
+        [TestCase(true)]
+        public void Given_WAQMode_When_SimulationTimeStepChanges_And_OutputTimerSynchronizes_LogMessageIsNotGiven(bool synchronize)
+        {
+            var model = new WaterQualityModel();
+            var newDate = model.TimeStep.Add(new TimeSpan(synchronize ? 1000 : 0));
+
+            Action action = () => model.TimeStep = newDate;
+            TestHelper.AssertLogMessagesCount(action, 0);
+        }
+
+        private static void CheckLogMessageIfSync(bool synchronize, Action action, string expectedLogMessage)
+        {
+            if (synchronize)
+            {
+                TestHelper.AssertLogMessageIsGenerated(action, expectedLogMessage, 1);
+            }
+            else
+            {
+                TestHelper.AssertLogMessagesCount(action, 0);
+            }
+        }
+
+        [Test]
+        public void Given_WAQModel_When_BalanceTimer_Changes_SimulationTimeDoesNot()
+        {
+            var model = new WaterQualityModel();
+            var settings = model.ModelSettings;
+
+            Assert.AreEqual(model.StartTime, settings.BalanceStartTime);
+            Assert.AreEqual(model.StopTime, settings.BalanceStopTime);
+            Assert.AreEqual(model.TimeStep, settings.BalanceTimeStep);
+
+            settings.BalanceStartTime = model.StartTime.AddYears(1);
+            settings.BalanceStopTime = model.StopTime.AddYears(1);
+            settings.BalanceTimeStep = model.TimeStep.Add(new TimeSpan(0, 5, 0, 0));
+
+            Assert.AreNotEqual(model.StartTime, settings.BalanceStartTime);
+            Assert.AreNotEqual(model.StopTime, settings.BalanceStopTime);
+            Assert.AreNotEqual(model.TimeStep, settings.BalanceTimeStep);
+        }
+
+        [Test]
+        public void Given_WAQModel_When_CellsTimer_Changes_SimulationTimeDoesNot()
+        {
+            var model = new WaterQualityModel();
+            var settings = model.ModelSettings;
+
+            Assert.AreEqual(model.StartTime, settings.MapStartTime);
+            Assert.AreEqual(model.StopTime, settings.MapStopTime);
+            Assert.AreEqual(model.TimeStep, settings.MapTimeStep);
+
+            settings.MapStartTime = model.StartTime.AddYears(1);
+            settings.MapStopTime = model.StopTime.AddYears(1);
+            settings.MapTimeStep = model.TimeStep.Add(new TimeSpan(0, 5, 0, 0));
+
+            Assert.AreNotEqual(model.StartTime, settings.MapStartTime);
+            Assert.AreNotEqual(model.StopTime, settings.MapStopTime);
+            Assert.AreNotEqual(model.TimeStep, settings.MapTimeStep);
+        }
+
+        [Test]
+        public void Given_WAQModel_When_MonitoringLocationsTimer_Changes_SimulationTimeDoesNot()
+        {
+            var model = new WaterQualityModel();
+            var settings = model.ModelSettings;
+
+            Assert.AreEqual(model.StartTime, settings.HisStartTime);
+            Assert.AreEqual(model.StopTime, settings.HisStopTime);
+            Assert.AreEqual(model.TimeStep, settings.HisTimeStep);
+
+            settings.HisStartTime = model.StartTime.AddYears(1);
+            settings.HisStopTime = model.StopTime.AddYears(1);
+            settings.HisTimeStep = model.TimeStep.Add(new TimeSpan(0, 5, 0, 0));
+
+            Assert.AreNotEqual(model.StartTime, settings.HisStartTime);
+            Assert.AreNotEqual(model.StopTime, settings.HisStopTime);
+            Assert.AreNotEqual(model.TimeStep, settings.HisTimeStep);
+        }
+
+        private static WaterQualityModel AddWaterQualityModelToProject(IApplication app)
+        {
+            // Add WaterQualityModel to project
+            var project = app.Project;
+            project.RootFolder.Add(new WaterQualityModel());
+
+            //Check model name
+            var targetmodel = project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
+            Assert.IsNotNull(targetmodel);
+            return targetmodel;
+        }
+
+        #endregion
     }
 }
