@@ -144,6 +144,9 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="SharpMap">
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.39740\lib\net40\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>
@@ -183,6 +186,7 @@
     <Compile Include="Common\IO\GridFileReaderTest.cs" />
     <Compile Include="FunctionArgumentSyncerTest.cs" />
     <Compile Include="Gui\WaveBoundaryTimeSelectionDialogTest.cs" />
+    <Compile Include="Gui\WaveGuiPluginTest.cs" />
     <Compile Include="Gui\WaveMeteoDataEditorTest.cs" />
     <Compile Include="Gui\WaveModelGroupLayerTest.cs" />
     <Compile Include="Gui\WaveBoundaryConditionEditorTest.cs" />
@@ -193,6 +197,7 @@
     <Compile Include="Gui\WaveObstacleListViewTest.cs" />
     <Compile Include="Gui\WaveTimePointEditorTest.cs" />
     <Compile Include="IO\BcwFileTest.cs" />
+    <Compile Include="IO\Importers\WaveGridFileImporterTests.cs" />
     <Compile Include="IO\MdwFileTest.cs" />
     <Compile Include="IO\Sp2FileTest.cs" />
     <Compile Include="IO\WavmFileFunctionStoreTest.cs" />

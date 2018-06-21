@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public bool CanImportOnRootLevel { get { return false; } }
 
-        public string FileFilter
+        public override string FileFilter
         {
             get
             {
@@ -194,7 +194,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         }
 
         [InvokeRequired]
-        private static void InsertTimeSeries(string path, IFunction data, DateTime refDate)
+        private static void InsertTimeSeries(string path, IFunction data, DateTime? refDate)
         {
             new TimFile().Read(path, data, refDate);
         }
@@ -223,6 +223,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public override void Import(string fileName, FlowBoundaryCondition boundaryCondition)
         {
             ImportItem(fileName, boundaryCondition);
+        }
+
+        public override bool CanImportOnBoundaryCondition(FlowBoundaryCondition boundaryCondition)
+        {
+            return ForcingTypes.Contains(boundaryCondition.DataType);
         }
     }
 }

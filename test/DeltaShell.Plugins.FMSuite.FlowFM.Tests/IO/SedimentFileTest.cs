@@ -288,7 +288,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 /* Use this variable to check if regardless of being a SpatiallyVaryingSedimentProperty it will NOT be stored as
                  spatially varying property if we set the value to false. */
-                var doubleValuePropertyProp = new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 0, 0, false, 0, false, "cc", "mydoubledescription", false, false);
+                var doubleValuePropertyProp = new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, false, 0, false, "cc", "mydoubledescription", false, false);
                 doubleValuePropertyProp.Value = 13.0;
 
                 var formulaProp = new SedimentProperty<int>("TraFrm", -1, -2, false, 18, false, string.Empty, "Integer selecting the transport formula", true);
@@ -379,7 +379,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 doubleSpatProp.SpatiallyVaryingName = "mysedimentName_SedConc";
                 doubleSpatProp.Value = 12.3;
 
-                var doubleSpatProp2 = new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 0, 0, false, 0, true, "Joule", "mydoubledescription", true, false);
+                var doubleSpatProp2 = new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, false, 0, true, "Joule", "mydoubledescription", true, false);
                 doubleSpatProp2.SpatiallyVaryingName = "mysedimentName_IniSedThick";
                 doubleSpatProp2.Value = 80.1;
 

@@ -44,9 +44,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         private static readonly Bitmap PhysicalParametersImage = Common.Gui.Properties.Resources.folder_wrench;
 
         private static readonly Bitmap WaveImage = Wave.Properties.Resources.wave;
+        
+		private bool firstTimeCreate = true;
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, WaveModel model)
         {
+            if (firstTimeCreate)
+            {
+                node.Expand();
+                firstTimeCreate = false;
+            }
+
             node.Text = model.Name;
             node.Image = WaveImage;
         }

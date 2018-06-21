@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 {
                     Name = modelGroupNameLookUp[modelGroup],
                     Category = DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__1D___2D___3D_Integrated_Models,
-                    AdditionalOwnerCheck = owner => !(owner is HydroModel), // Don't allow creation of sub-hydro models
+                    AdditionalOwnerCheck = owner => !(owner is ICompositeActivity), // Don't allow creation of sub-hydro models
                     CreateModel = owner => HydroModel.BuildModel(modelGroup)
                 };
             }

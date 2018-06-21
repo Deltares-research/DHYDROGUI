@@ -61,8 +61,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 {
                     Name = "Water Quality Model",
                     Category = "1D / 2D / 3D Standalone Models",
+                    AdditionalOwnerCheck = owner => !(owner is ICompositeActivity), // Don't allow water quality models to be added to composite activity
                     CreateModel = owner => new WaterQualityModel()
-                };
+            };
         }
 
         public override IEnumerable<IFileImporter> GetFileImporters()

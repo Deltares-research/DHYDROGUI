@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
@@ -85,8 +86,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 {
                     Name = "Flow 1D Model",
                     Category = "1D / 2D / 3D Standalone Models",
-                    AdditionalOwnerCheck = owner => !(owner is ICompositeActivity) // Allow "standalone" flow models
-                                                 || !((ICompositeActivity) owner).Activities.OfType<WaterFlowModel1D>().Any(), // Don't allow multiple flow models in one composite activity
+                    AdditionalOwnerCheck = owner => 
+                            !(owner is ICompositeActivity) // Allow "standalone" flow models
+                            || (!((ICompositeActivity) owner).Activities.OfType<WaterFlowModel1D>().Any() && owner is IHydroModel), // Don't allow multiple flow models in one composite activity
                     CreateModel = owner => new WaterFlowModel1D("Flow1D")
                 };
         }

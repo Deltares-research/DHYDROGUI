@@ -6,17 +6,56 @@ using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 {
     [TestFixture()]
     public class BcmFileImporterTest
     {
+        private BcmFileImporter importer;
+        private BoundaryCondition boundaryCondition;
+
+        [SetUp]
+        public void Setup()
+        {
+            importer = new BcmFileImporter();
+        }
+
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)]
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed)]
+        public void GivenBcmFileImporterWhenBoundaryConditionHasCorrectQuantityThenValidateTrue(FlowBoundaryQuantityType flowBoundaryQuantityType)
+        {
+            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, BoundaryConditionDataType.TimeSeries);
+            var result = importer.CanImportOnBoundaryCondition(flowBoundaryCondition);
+
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void GivenBcmFileImporterWhenBoundaryConditionHasInCorrectQuantityTypeThenValidateFalse()
+        {
+            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.Discharge, BoundaryConditionDataType.TimeSeries);
+            var result = importer.CanImportOnBoundaryCondition(flowBoundaryCondition);
+
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void GivenBcmFileImporterWhenBoundaryConditionHasInCorrectDataTypeThenValidateFalse()
+        {
+            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed, BoundaryConditionDataType.Empty);
+            var result = importer.CanImportOnBoundaryCondition(flowBoundaryCondition);
+
+            Assert.IsFalse(result);
+        }
+
         [Test()]
         public void TestBcmFileImporter()
         {

@@ -28,12 +28,6 @@
   <ComponentRef Id="dido_icons"/>
   <ComponentRef Id="dido_manuals"/>-->
 
-  <Feature Id="delwaq_x64_feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
-  <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
-    <?ifndef var.NOKERNELS?>
-    <ComponentRef Id="delwaq_x64"/>
-    <?endif?>
-  </Feature>
 
   <?ifndef var.NOKERNELS?>
   <Feature Id="DuflowProcesses" Title="!(loc.DuFlowProcessFeatureName)" Description="!(loc.DuFlowProcessFeatureDescription)" Level="1000" Absent="allow" AllowAdvertise="no">

@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public bool CanImportOnRootLevel { get { return false; } }
 
-        public string FileFilter { get { return "Harmonic series file|*.cmp"; } }
+        public override string FileFilter { get { return "Harmonic series file|*.cmp"; } }
 
         public string TargetDataDirectory { get; set; }
 
@@ -136,6 +136,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public override void Import(string fileName, FlowBoundaryCondition boundaryCondition)
         {
             ImportItem(fileName, boundaryCondition);
+        }
+
+        public override bool CanImportOnBoundaryCondition(FlowBoundaryCondition boundaryCondition)
+        {
+            return ForcingTypes.Contains(boundaryCondition.DataType);
         }
     }
 }

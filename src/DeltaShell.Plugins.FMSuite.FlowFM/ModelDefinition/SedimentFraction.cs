@@ -88,14 +88,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             {
                 setOfActiveLayers.AddRange(CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>()
                     .Where(p => p.IsSpatiallyVarying)
-                    .Select(p => p.SpatiallyVaryingName));
+                    .Select(p => p.SpatiallyVaryingName)
+                    .Where(n => !string.IsNullOrEmpty(n)));
 
             }
             if (CurrentFormulaType != null)
             {
                 setOfActiveLayers.AddRange(CurrentFormulaType.Properties.OfType<ISpatiallyVaryingSedimentProperty>()
                     .Where(p => p.IsSpatiallyVarying)
-                    .Select(p => p.SpatiallyVaryingName));
+                    .Select(p => p.SpatiallyVaryingName)
+                    .Where(n => !string.IsNullOrEmpty(n)));
             }
 
             return setOfActiveLayers;

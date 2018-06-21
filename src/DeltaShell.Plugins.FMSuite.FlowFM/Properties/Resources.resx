@@ -488,6 +488,9 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology_boundary_condition_cannot_have_more_than_one_timeseries_per_boundary_" xml:space="preserve">
     <value>A morphology boundary condition cannot have more than one timeseries per boundary.</value>
   </data>
+  <data name="WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness" xml:space="preserve">
+    <value>At least one sediment fraction should have a positive thickness</value>
+  </data>
   <data name="lines" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\lines.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

@@ -82,7 +82,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
     [Entity]
     public class FlowBoundaryCondition : BoundaryCondition
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(FlowBoundaryCondition));
         /// <summary>
         /// Constrained BC combinations within a set. Quantities not appearing anywhere in these lists are considered to be unconstrained, 
         /// i.e. the user can combine these with any quantity. (e.g. SedimentConcentration)

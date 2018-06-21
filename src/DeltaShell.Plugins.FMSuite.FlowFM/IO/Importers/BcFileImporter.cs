@@ -9,7 +9,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
-    public class BcFileImporter : IFileImporter
+    public class BcFileImporter : BoundaryDataImporterBase, IFileImporter
     {
         public BcFileImporter()
         {
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             get { return false; }
         }
 
-        public string FileFilter
+        public override string FileFilter
         {
             get { return "Boundary conditions file|*.bc"; }
         }
@@ -191,5 +191,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public bool DeleteDataBeforeImport { private get; set; }
 
         public bool OverwriteExistingData { private get; set; }
+
+        public override IEnumerable<BoundaryConditionDataType> ForcingTypes
+        {
+            get
+            {
+                yield return BoundaryConditionDataType.AstroComponents;
+                yield return BoundaryConditionDataType.AstroCorrection;
+                yield return BoundaryConditionDataType.Harmonics;
+                yield return BoundaryConditionDataType.HarmonicCorrection;
+                yield return BoundaryConditionDataType.TimeSeries;
+                yield return BoundaryConditionDataType.Qh;
+            }
+        }
+
+        public override void Import(string fileName, FlowBoundaryCondition boundaryCondition)
+        {
+            ImportItem(fileName, boundaryCondition);
+        }
+
+        public override bool CanImportOnBoundaryCondition(FlowBoundaryCondition boundaryCondition)
+        {
+            return
+                FlowBoundaryConditionHelper
+                    .IsBoundaryCondition(boundaryCondition) && ForcingTypes.Contains(boundaryCondition.DataType);
+        }
     }
 }

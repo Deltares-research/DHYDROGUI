@@ -25,6 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             foreach (var subDomain in domain.SubDomains)
             {
+
                 list.Add(subDomain);
                 AddSubDomains(subDomain, ref list); // recursively!!
             }

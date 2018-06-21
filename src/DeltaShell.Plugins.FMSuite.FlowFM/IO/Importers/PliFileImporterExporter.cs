@@ -10,7 +10,7 @@ using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
-    public class PliFileImporterExporter<TParent, TFeat>: Feature2DImportExportBase<TFeat> where TFeat: class, IFeature, INameable, new() where TParent: INameable
+    public class PliFileImporterExporter<TParent, TFeat> : Feature2DImportExportBase<TFeat> where TFeat: class, IFeature, INameable, new() where TParent: INameable
     {
         protected override string ImporterName
         {
