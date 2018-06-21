@@ -12,11 +12,11 @@ class FMwriter:
     def __init__(self, model):
         self.model = model
 
-    def writeAll(self, dirPath, outputDir, generate2DGrid):  # write all fm files from GWSW model
+    def writeAll(self, dirPath, outputDir, gridFileAvailable, generate2DGrid):  # write all fm files from GWSW model
         self.rewriteGeometryOfManholeCompartments()
 
         ugridWriter = UgridWriter(self.model)
-        ugridWriter.write(dirPath, outputDir, generate2DGrid)
+        ugridWriter.write(dirPath, outputDir, gridFileAvailable, generate2DGrid)
         self.writeMdFiles(dirPath, outputDir)
         self.writeRetentions(dirPath, outputDir)
         self.writeStructures(dirPath, outputDir)

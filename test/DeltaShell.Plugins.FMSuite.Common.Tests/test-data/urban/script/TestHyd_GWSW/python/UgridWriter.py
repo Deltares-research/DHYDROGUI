@@ -13,18 +13,22 @@ class UgridWriter:
     def __init__(self, model):
         self.model = model
 
-    def write(self, dirPath, outputDir, generate2DGrid):  # write ugrid file from GWSW model
+    def write(self, dirPath, outputDir, gridFileAvailable = False, generate2DGrid = True):  # write ugrid file from GWSW model
         ncfile = self.create_netcdf(dirPath, outputDir, "sewer_system")
 
         print("start generating 1d data")
         networkdata = self.generate_networkdata()
 
-        if( generate2DGrid == True):
+        if gridFileAvailable:
+            print("using import 2d data")
+            data_2dmesh = self.model.grid
+        elif generate2DGrid:
             print("start generating 2d data")
             data_2dmesh = self.generate_2dmesh_data()
         else:
             print("start generating 2d DUMMY data")
             data_2dmesh = self.generate_dummy2dmesh_2columnsrightside()
+
 
         print("init ugrid 1d")
         self.init_1dnetwork(ncfile,networkdata)

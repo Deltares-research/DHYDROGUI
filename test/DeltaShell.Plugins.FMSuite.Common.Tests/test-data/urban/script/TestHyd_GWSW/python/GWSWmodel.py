@@ -12,3 +12,5 @@ class GWSWmodel:
 
     inlets = {}         # inlets
 
+    grid = {}           #2d grid
+

@@ -3,6 +3,7 @@ import os
 import csv
 from collections import OrderedDict
 from GWSWmodel import GWSWmodel
+from UgridReader import UgridReader
 
 class GWSWreader:
     """Reads all GWSW files"""
@@ -10,8 +11,9 @@ class GWSWreader:
     csvDelimeter = ';'
     dirPath = ''
     inputDir = ''
+    gridFile = ''
 
-    def readAll(self, dirPath, inputDir, oppervlakOnNode = False):   # path directory files
+    def readAll(self, dirPath, inputDir, gridFile, oppervlakOnNode = False):   # path directory files
         self.dirPath = dirPath
         self.inputDir = inputDir
         self.oppervlakOnNode = oppervlakOnNode
@@ -21,6 +23,11 @@ class GWSWreader:
         model.profiles = self.readProfiles2Dict()
         model.structures = self.readStructures2Dict()
         model.inlets = self.readInlet2Dict(model)
+        if gridFile is not None and gridFile != '':
+            reader = UgridReader(model)
+            filePath = os.path.join(self.dirPath, self.inputDir, gridFile)
+            reader.ReadFile(filePath)
+
         return model
 
     def file2Dict(self, filePath):
@@ -36,11 +43,11 @@ class GWSWreader:
 
     def readNodes2Dict(self):
         filePath = os.path.join(self.dirPath, self.inputDir,'Knooppunt.csv')
-        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts Ã©Ã©n keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
+        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #RST_IDE  Identificatie (naam, nummer, code) van het rioolstelsel
         #PUT_IDE  Identificatie (naam, nummer, code) van de put of het bouwwerk
-        #KNP_XCO  X-coÃ¶rdinaat knooppunt. Conform coÃ¶rdinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
-        #KNP_YCO  Y-coÃ¶rdinaat knooppunt. Conform coÃ¶rdinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
+        #KNP_XCO  X-coördinaat knooppunt. Conform coördinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
+        #KNP_YCO  Y-coördinaat knooppunt. Conform coördinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
         #CMP_IDE  Identificatie (naam, nummer, code) van het compartiment
         #MVD_NIV  Niveau maaiveld t.o.v. NAP
         #MVD_SCH  Type maaiveldschematisering
@@ -52,7 +59,7 @@ class GWSWreader:
         #KNP_LEN  Lengte putbodem
         #KNP_TYP  Type knooppunt
         #INZ_TYP  Type afvalwater dat wordt ingezameld
-        #INI_NIV  InitiÃ«le waterstand t.o.v. NAP
+        #INI_NIV  Initiële waterstand t.o.v. NAP
         #STA_OBJ  Status van het object
         #AAN_MVD  Aanname maaiveldhoogte
         #ITO_IDE  Definitie infiltratiekarakteristieken. Koppeling tussen ItObject.csv en Verbinding.csv of Knooppunt.csv
@@ -62,7 +69,7 @@ class GWSWreader:
 
     def readConnections2Dict(self):
         filePath = os.path.join(self.dirPath, self.inputDir,'Verbinding.csv')
-        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts Ã©Ã©n keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
+        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #KN1_IDE  Identificatie knooppunt 1. Verwijzing naar UNI_IDE in Knooppunt.csv. Als het type verbinding een overstortdrempel of doorlaat is (Verbinding/VRB_TYP=DRP, DRL) dan moet het type knooppunt een compartiment zijn (Knooppunt/KNP_TYP=CMP).
         #KN2_IDE  Identificatie knooppunt 2. Verwijzing naar UNI_IDE in Knooppunt.csv. Als het type verbinding een overstortdrempel of doorlaat is (Verbinding/VRB_TYP=DRP, DRL) dan moet het type knooppunt een compartiment zijn (Knooppunt/KNP_TYP=CMP).
         #VRB_TYP  Type verbinding
@@ -72,16 +79,16 @@ class GWSWreader:
         #STR_RCH  Mogelijke stromingsrichting door verbinding
         #VRB_LEN  Lengte van de leiding of de lengte die via het kunstwerk overbrugd wordt (bijvoorbeeld de lengte van de persleiding tussen pomp en lozingspunt)
         #INZ_TYP  Type afvalwater dat wordt ingezameld
-        #INV_KN1  InstroomverliescoÃ«fficient knooppunt 1
-        #UTV_KN1  UitstroomverliescoÃ«fficient knooppunt 1
-        #INV_KN2  InstroomverliescoÃ«fficient knooppunt 2
-        #UTV_KN2  UitstroomverliescoÃ«fficient knooppunt 2
+        #INV_KN1  Instroomverliescoëfficient knooppunt 1
+        #UTV_KN1  Uitstroomverliescoëfficient knooppunt 1
+        #INV_KN2  Instroomverliescoëfficient knooppunt 2
+        #UTV_KN2  Uitstroomverliescoëfficient knooppunt 2
         #ITO_IDE  Definitie infiltratiekarakteristieken. Koppeling tussen ItObject.csv en Verbinding.csv of Knooppunt.csv
         #PRO_IDE  Profieldefinitie. Koppeling tussen Profiel.csv en Verbinding.csv
         #STA_OBJ  Status van het object
         #AAN_BB1  Aanname waarde BOB_KN1
         #AAN_BB2  Aanname waarde BOB_KN2
-        #INI_NIV  InitiÃ«le waterstand t.o.v. NAP
+        #INI_NIV  Initiële waterstand t.o.v. NAP
         #ALG_TOE  Toelichting bij deze regel
         return self.file2Dict(filePath)
 
@@ -104,15 +111,15 @@ class GWSWreader:
 
     def readStructures2Dict(self):
         filePath = os.path.join(self.dirPath, self.inputDir,'Kunstwerk.csv')
-        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts Ã©Ã©n keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
+        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #KWK_TYP  Type hydraulisch component in het kunstwerk
         #BWS_NIV  Buitenwaterstand t.o.v. NAP
         #PRO_BOK  Niveau binnenonderkant profiel t.o.v. NAP
-        #DRL_COE  ContractiecoÃ«fficient doorlaatprofiel
+        #DRL_COE  Contractiecoëfficient doorlaatprofiel
         #DRL_CAP  Maximale capaciteit doorlaat
         #OVS_BRE  Breedte overstortdrempel
         #OVS_NIV  Niveau overstortdrempel t.o.v. NAP
-        #OVS_COE  AfvoercoÃ«fficient overstortdrempel
+        #OVS_COE  Afvoercoëfficient overstortdrempel
         #PMP_CAP  Capaciteit van de individuele pomp
         #PMP_AN1  Aanslagniveau benedenstrooms (zuigzijde) pomp t.o.v. NAP
         #PMP_AF1  Afslagniveau benedenstrooms (zuigzijde) pomp t.o.v. NAP
@@ -131,7 +138,7 @@ class GWSWreader:
 
     def readBoundary2Dict(self):
         filePath = os.path.join(self.dirPath, self.inputDir,'Debiet.csv')
-        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts Ã©Ã©n keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
+        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #DEB_TYP  Debiet vanuit DWA, RWA en Lozing
         #VER_IDE  Verloop van debiet. Koppeling tussen Debiet.csv en Verloop.csv.
         #AVV_ENH  Aantal vervuilingseenheden behorend bij de verloop-definitie

@@ -2,7 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="54f8637b-0428-4088-aa25-580f3ff12285" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UgridReader.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FMwriter.py" afterPath="$PROJECT_DIR$/FMwriter.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/GWSWmodel.py" afterPath="$PROJECT_DIR$/GWSWmodel.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/GWSWreader.py" afterPath="$PROJECT_DIR$/GWSWreader.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Run.py" afterPath="$PROJECT_DIR$/Run.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UgridWriter.py" afterPath="$PROJECT_DIR$/UgridWriter.py" />
     </list>
     <ignored path="python.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,7 +33,7 @@
         <entry file="file://$PROJECT_DIR$/Run.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="18" column="25" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
+              <caret line="36" column="26" selection-start-line="36" selection-start-column="26" selection-end-line="36" selection-end-column="26" />
               <folding>
                 <element signature="e#18#32#0" expanded="true" />
               </folding>
@@ -39,10 +45,9 @@
         <entry file="file://$PROJECT_DIR$/UgridWriter.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="315" column="8" selection-start-line="315" selection-start-column="8" selection-end-line="315" selection-end-column="8" />
+              <caret line="82" column="0" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
               <folding>
                 <element signature="e#18#38#0" expanded="true" />
-                <element signature="e#261#279#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -52,8 +57,10 @@
         <entry file="file://$PROJECT_DIR$/GWSWreader.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="32" column="44" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="44" />
-              <folding />
+              <caret line="181" column="8" selection-start-line="181" selection-start-column="8" selection-end-line="181" selection-end-column="8" />
+              <folding>
+                <element signature="e#18#27#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -81,12 +88,22 @@
       <file leaf-file-name="FMwriter.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/FMwriter.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.12576064">
-              <caret line="635" column="31" selection-start-line="635" selection-start-column="31" selection-end-line="635" selection-end-column="31" />
+            <state vertical-scroll-proportion="0.7715517">
+              <caret line="222" column="42" selection-start-line="222" selection-start-column="23" selection-end-line="222" selection-end-column="42" />
               <folding>
                 <element signature="e#18#35#0" expanded="true" />
-                <element signature="e#40845#40937#0" expanded="false" />
+                <element signature="e#40883#40975#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UgridReader.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/UgridReader.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="55" column="57" selection-start-line="55" selection-start-column="57" selection-end-line="55" selection-end-column="57" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -95,7 +112,7 @@
         <entry file="file://$PROJECT_DIR$/GWSWmodel.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+              <caret line="14" column="32" selection-start-line="14" selection-start-column="32" selection-end-line="14" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -117,14 +134,16 @@
         <option value="$PROJECT_DIR$/resources/FMmdu" />
         <option value="$PROJECT_DIR$/resources/FMmd1d" />
         <option value="$PROJECT_DIR$/Logger.py" />
-        <option value="$PROJECT_DIR$/GWSWreader.py" />
         <option value="$PROJECT_DIR$/create_ugrid_1d2d_map.py" />
         <option value="$PROJECT_DIR$/resources/FMmd1d.txt" />
         <option value="$PROJECT_DIR$/resources/FMmdu.txt" />
-        <option value="$PROJECT_DIR$/UgridWriter.py" />
+        <option value="$PROJECT_DIR$/UgridReader" />
         <option value="$PROJECT_DIR$/GWSWmodel.py" />
+        <option value="$PROJECT_DIR$/GWSWreader.py" />
         <option value="$PROJECT_DIR$/Run.py" />
         <option value="$PROJECT_DIR$/FMwriter.py" />
+        <option value="$PROJECT_DIR$/UgridWriter.py" />
+        <option value="$PROJECT_DIR$/UgridReader.py" />
       </list>
     </option>
   </component>
@@ -423,7 +442,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24973656" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4268427" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4268427" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -467,9 +486,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="python-line">
-          <url>file://$PROJECT_DIR$/FMwriter.py</url>
-          <line>650</line>
-          <option name="timeStamp" value="81" />
+          <url>file://$PROJECT_DIR$/UgridWriter.py</url>
+          <line>82</line>
+          <option name="timeStamp" value="82" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -479,29 +498,11 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="82" />
+      <option name="time" value="83" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/GWSWmodel.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="11" column="32" selection-start-line="11" selection-start-column="32" selection-end-line="11" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/FMwriter.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#18#35#0" expanded="true" />
-            <element signature="e#40845#40937#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Run.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -532,7 +533,7 @@
           <caret line="286" column="29" selection-start-line="286" selection-start-column="29" selection-end-line="286" selection-end-column="29" />
           <folding>
             <element signature="e#18#35#0" expanded="true" />
-            <element signature="e#40845#40937#0" expanded="false" />
+            <element signature="e#40883#40975#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -567,7 +568,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#18#35#0" expanded="true" />
-            <element signature="e#40845#40937#0" expanded="false" />
+            <element signature="e#40883#40975#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -602,7 +603,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#18#35#0" expanded="true" />
-            <element signature="e#40845#40937#0" expanded="false" />
+            <element signature="e#40883#40975#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -637,7 +638,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#18#35#0" expanded="true" />
-            <element signature="e#40845#40937#0" expanded="false" />
+            <element signature="e#40883#40975#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -672,7 +673,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#18#35#0" expanded="true" />
-            <element signature="e#40845#40937#0" expanded="false" />
+            <element signature="e#40883#40975#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -707,7 +708,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#18#35#0" expanded="true" />
-            <element signature="e#40845#40937#0" expanded="false" />
+            <element signature="e#40883#40975#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -742,7 +743,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#18#35#0" expanded="true" />
-            <element signature="e#40845#40937#0" expanded="false" />
+            <element signature="e#40883#40975#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -777,7 +778,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#18#35#0" expanded="true" />
-            <element signature="e#40845#40937#0" expanded="false" />
+            <element signature="e#40883#40975#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -812,7 +813,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#18#35#0" expanded="true" />
-            <element signature="e#40845#40937#0" expanded="false" />
+            <element signature="e#40883#40975#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -862,10 +863,25 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd_file_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3448276">
+          <caret line="341" column="0" selection-start-line="341" selection-start-column="0" selection-end-line="341" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/resources/FMmdu.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="32" column="56" selection-start-line="32" selection-start-column="56" selection-end-line="32" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GWSWmodel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="14" column="32" selection-start-line="14" selection-start-column="32" selection-end-line="14" selection-end-column="32" />
           <folding />
         </state>
       </provider>
@@ -878,10 +894,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/GWSWmodel.py">
+    <entry file="file://$PROJECT_DIR$/Run.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+          <caret line="36" column="26" selection-start-line="36" selection-start-column="26" selection-end-line="36" selection-end-column="26" />
+          <folding>
+            <element signature="e#18#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UgridWriter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="82" column="0" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
+          <folding>
+            <element signature="e#18#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UgridReader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="55" column="57" selection-start-line="55" selection-start-column="57" selection-end-line="55" selection-end-column="57" />
           <folding />
         </state>
       </provider>
@@ -889,39 +925,20 @@
     <entry file="file://$PROJECT_DIR$/GWSWreader.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="32" column="44" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/UgridWriter.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="315" column="8" selection-start-line="315" selection-start-column="8" selection-end-line="315" selection-end-column="8" />
+          <caret line="181" column="8" selection-start-line="181" selection-start-column="8" selection-end-line="181" selection-end-column="8" />
           <folding>
-            <element signature="e#18#38#0" expanded="true" />
-            <element signature="e#261#279#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Run.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="18" column="25" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
-          <folding>
-            <element signature="e#18#32#0" expanded="true" />
+            <element signature="e#18#27#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/FMwriter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.12576064">
-          <caret line="635" column="31" selection-start-line="635" selection-start-column="31" selection-end-line="635" selection-end-column="31" />
+        <state vertical-scroll-proportion="0.7715517">
+          <caret line="222" column="42" selection-start-line="222" selection-start-column="23" selection-end-line="222" selection-end-column="42" />
           <folding>
             <element signature="e#18#35#0" expanded="true" />
-            <element signature="e#40845#40937#0" expanded="false" />
+            <element signature="e#40883#40975#0" expanded="false" />
           </folding>
         </state>
       </provider>

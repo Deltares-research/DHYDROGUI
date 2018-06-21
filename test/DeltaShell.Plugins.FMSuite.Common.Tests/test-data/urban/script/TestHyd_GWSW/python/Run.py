@@ -18,21 +18,23 @@ oppervlakOnNode = True
 
 #inputDir = 'GWSW_gemaal'
 #oppervlakOnNode = True
-generate2DGrid = False
 
 #inputDir = 'W_C4'
 #oppervlakOnNode = True
 
+gridFile = "waardenburg_2dC_net.nc"
+generate2DGrid = True
+
 outputDir = 'output_FM'
 dirPath = os.path.abspath(p)
-
 
 if __name__ == '__main__':
     sys.stdout = Logger(os.path.join(dirPath, outputDir,'run.log'))
     reader = GWSWreader()
-    model = reader.readAll(dirPath, inputDir, oppervlakOnNode)
+    model = reader.readAll(dirPath, inputDir, gridFile, oppervlakOnNode)
     writer = FMwriter(model)
-    succeeded = writer.writeAll(dirPath, outputDir,generate2DGrid)
+    gridFileAvailable = gridFile is not None and gridFile != ''
+    succeeded = writer.writeAll(dirPath, outputDir, gridFileAvailable, generate2DGrid)
     print('Succeeded = ' + str(succeeded))
 
 
