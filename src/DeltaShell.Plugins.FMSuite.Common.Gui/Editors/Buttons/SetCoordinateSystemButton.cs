@@ -6,6 +6,7 @@ using DelftTools.Controls.Swf.DataEditorGenerator;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
+using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -128,6 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons
             return true;
         }
 
+        [InvokeRequired]
         public void UpdateLabelText()
         {
             text.Text = CoordinateSystemName;
