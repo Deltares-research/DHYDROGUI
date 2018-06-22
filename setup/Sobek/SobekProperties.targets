@@ -3,5 +3,6 @@
   <PropertyGroup>  
     <DimrProjectTransformFile>SobekDimrKernels.xsl</DimrProjectTransformFile>
     <PLCTProjectTransformFile>..\Waq\PLCTKernels.xsl</PLCTProjectTransformFile>
+    <RGFGridProjectTransformFile>..\FM\RGFGridKernels.xsl</RGFGridProjectTransformFile>
  </PropertyGroup>
 </Project>
