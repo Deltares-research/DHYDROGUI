@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Target Name="HarvestDimrLibsTarget">
+	<Target Name="HarvestPLCTLibsTarget">
 	  <HeatDirectory
 
-		 OutputFile="$(ProjectDir)..\Dimr\DimrLibs.wxs"
+		 OutputFile="$(ProjectDir)..\Waq\PLCTLibs.wxs"
 
-		 Directory="$(SolutionDir)bin\$(ConfigurationName)\plugins\DeltaShell.Dimr\kernels"
+		 Directory="$(SolutionDir)bin\$(ConfigurationName)\plugins\DeltaShell.Plugins.DelftModels.WaterQualityModel\plct\bin"
 
-		 ComponentGroupName="DimrLibs"
+		 ComponentGroupName="PLCTLibs"
 
-		 DirectoryRefId="DimrLibDir"
+		 DirectoryRefId="PLCTLibDir"
 
 		 AutogenerateGuids="true"
 		 
 		 GenerateGuidsNow="true"
 
-		 PreprocessorVariable="var.dimr_kernels_lib_dir"
+		 PreprocessorVariable="var.PLCT_kernels_lib_dir"
 
 		 SuppressRegistry="true"
 
@@ -25,14 +25,14 @@
 
 		 ToolPath="$(WixToolPath)"
 		 
-		 Transforms='$(DimrProjectTransformFile)'
-
 		 VerboseOutput='true'
 		 
 		 SuppressFragments='true'
 		 
 		 KeepEmptyDirectories='true'
 		 
+		 Transforms='$(PLCTProjectTransformFile)'
+  
 		 NoLogo="false" />
 	</Target>
 </Project>

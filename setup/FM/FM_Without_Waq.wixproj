@@ -77,6 +77,9 @@
     <Content Include="..\Scripts\RealTimeControlScripts.wxi">
       <Link>Scripts\RealTimeControlScripts.wxi</Link>
     </Content>
+    <Content Include="..\Waq\WaqDefines.wxi">
+      <Link>WaqDefines.wxi</Link>
+    </Content>
     <Content Include="..\Waq\WaqPlugin_FeatureContent.wxi">
       <Link>WaqPlugin_FeatureContent.wxi</Link>
     </Content>
@@ -123,7 +126,10 @@
     <Compile Include="..\Dimr\DimrLibs.wxs">
       <Link>DimrLibs.wxs</Link>
     </Compile>
-    <Compile Include="Product.wxs" />
+    <Compile Include="..\Waq\PLCTLibs.wxs">
+      <Link>PLCTLibs.wxs</Link>
+    </Compile>
+	<Compile Include="Product.wxs" />
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUtilExtension">
@@ -180,4 +186,13 @@
   <Import Project="..\Framework\DeltaShell\CreateZipFromMSI.targets" />
   <Import Project="FMProperties.targets" />
   <Import Project="..\Dimr\HarvestDimrLibs.targets" />
+  <Import Project="..\Waq\HarvestPLCTLibs.targets" />
+  <PropertyGroup>
+    <BuildDependsOn>
+     HarvestDimrLibsTarget;
+	 HarvestPLCTLibsTarget;
+	 $(BuildDependsOn);   
+   </BuildDependsOn>
+  </PropertyGroup>
+  <Target Name="Build" DependsOnTargets="$(BuildDependsOn)" />
 </Project>

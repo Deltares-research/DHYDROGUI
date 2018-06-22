@@ -35,6 +35,9 @@
     <Compile Include="..\Dimr\DimrLibs.wxs">
       <Link>DimrLibs.wxs</Link>
     </Compile>
+    <Compile Include="..\Waq\PLCTLibs.wxs">
+      <Link>PLCTLibs.wxs</Link>
+    </Compile>
     <Compile Include="Product.wxs" />
     <Compile Include="WixUI\Sobek_WixUI_Deltares.wxs" />
   </ItemGroup>
@@ -107,6 +110,9 @@
     </Content>
     <Content Include="..\Scripts\WFM1DScripts.wxi">
       <Link>Scripts\WFM1DScripts.wxi</Link>
+    </Content>
+    <Content Include="..\Waq\WaqDefines.wxi">
+      <Link>WaqDefines.wxi</Link>
     </Content>
     <Content Include="..\Waq\WaqPlugin_FeatureContent.wxi">
       <Link>WaqPlugin_FeatureContent.wxi</Link>
@@ -210,7 +216,13 @@
   <Import Project="..\Framework\DeltaShell\CreateZipFromMSI.targets" />
   <Import Project="SobekProperties.targets" />
   <Import Project="..\Dimr\HarvestDimrLibs.targets" />
+  <Import Project="..\Waq\HarvestPLCTLibs.targets" />
   <PropertyGroup>
-    <PreBuildEvent />
+    <BuildDependsOn>
+     HarvestDimrLibsTarget;
+	 HarvestPLCTLibsTarget;
+	 $(BuildDependsOn);   
+   </BuildDependsOn>
   </PropertyGroup>
+  <Target Name="Build" DependsOnTargets="$(BuildDependsOn)" />
 </Project>

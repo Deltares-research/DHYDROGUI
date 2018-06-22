@@ -83,6 +83,9 @@
     <Content Include="..\Scripts\WaterQualityScripts.wxi">
       <Link>Scripts\WaterQualityScripts.wxi</Link>
     </Content>
+	<Content Include="..\Waq\WaqDefines.wxi">
+      <Link>WaqDefines.wxi</Link>
+    </Content>
     <Content Include="..\Waq\WaqPlugin_FeatureContent.wxi">
       <Link>WaqPlugin_FeatureContent.wxi</Link>
     </Content>
@@ -127,7 +130,10 @@
     <Compile Include="..\Dimr\DimrLibs.wxs">
       <Link>DimrLibs.wxs</Link>
     </Compile>
-    <Compile Include="WixUI\FM_WixUI_Deltares.wxs" />
+    <Compile Include="..\Waq\PLCTLibs.wxs">
+      <Link>PLCTLibs.wxs</Link>
+    </Compile>
+	<Compile Include="WixUI\FM_WixUI_Deltares.wxs" />
     <Compile Include="Product.wxs" />
   </ItemGroup>
   <ItemGroup>
@@ -185,4 +191,13 @@
   <Import Project="..\Framework\DeltaShell\CreateZipFromMSI.targets" />
   <Import Project="FMProperties.targets" />
   <Import Project="..\Dimr\HarvestDimrLibs.targets" />
+  <Import Project="..\Waq\HarvestPLCTLibs.targets" />
+  <PropertyGroup>
+    <BuildDependsOn>
+     HarvestDimrLibsTarget;
+	 HarvestPLCTLibsTarget;
+	 $(BuildDependsOn);   
+   </BuildDependsOn>
+  </PropertyGroup>
+  <Target Name="Build" DependsOnTargets="$(BuildDependsOn)" />
 </Project>
