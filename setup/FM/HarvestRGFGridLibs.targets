@@ -3,7 +3,7 @@
 	<Target Name="HarvestRGFGridLibsTarget">
 	  <HeatDirectory
 
-		 OutputFile="RGFGridLibs.wxs"
+		 OutputFile="$(ProjectDir)..\FM\RGFGridLibs.wxs"
 
 		 Directory="$(SolutionDir)bin\$(ConfigurationName)\plugins\DeltaShell.Plugins.FMSuite.Common.Gui\plugins-qt\x64"
 
