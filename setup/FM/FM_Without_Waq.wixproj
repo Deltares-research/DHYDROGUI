@@ -118,6 +118,7 @@
     <Content Include="Resources\FM.png" />
     <Content Include="Resources\Welcome.htm" />
     <Content Include="Resources\WindowLayout_normal.en-US.xml" />
+    <Content Include="RGFGridDefines.wxi" />
     <Content Include="RGFGrid_x64.wxi" />
     <Content Include="UtilityShortcuts.wxi" />
   </ItemGroup>
@@ -128,6 +129,9 @@
     </Compile>
     <Compile Include="..\Waq\PLCTLibs.wxs">
       <Link>PLCTLibs.wxs</Link>
+    </Compile>
+	<Compile Include="RGFGridLibs.wxs">
+      <Link>RGFGridLibs.wxs</Link>
     </Compile>
 	<Compile Include="Product.wxs" />
   </ItemGroup>
@@ -187,10 +191,12 @@
   <Import Project="FMProperties.targets" />
   <Import Project="..\Dimr\HarvestDimrLibs.targets" />
   <Import Project="..\Waq\HarvestPLCTLibs.targets" />
+  <Import Project="HarvestRGFGridLibs.targets" />
   <PropertyGroup>
     <BuildDependsOn>
      HarvestDimrLibsTarget;
 	 HarvestPLCTLibsTarget;
+	 HarvestRGFGridLibsTarget;
 	 $(BuildDependsOn);   
    </BuildDependsOn>
   </PropertyGroup>

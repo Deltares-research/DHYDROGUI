@@ -21,11 +21,8 @@
 
   <Feature Id="FM_x64_Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
     <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
-    <ComponentRef Id="FM_rgfgrid_platforms_x64"/>
-    <ComponentRef Id="FM_rgfgrid_icons_x64"/>
+    <ComponentGroupRef Id="RGFGridLibs"/>
     <ComponentRef Id="FM_rgfgrid_manuals_x64"/>
-    <ComponentRef Id="FM_rgfgrid_colormaps_x64"/>
-    <ComponentRef Id="FM_rgfgrid_bin_x64"/>
   </Feature>
   
 </Include>
