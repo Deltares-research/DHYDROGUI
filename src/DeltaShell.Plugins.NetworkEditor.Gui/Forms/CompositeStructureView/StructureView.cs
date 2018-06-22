@@ -64,8 +64,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         private double leftView = 0;
         private double rightView = 0;
 
-        private readonly IDictionary<IShapeFeature, IStructure> Shapes2Structures = new Dictionary<IShapeFeature, IStructure>();
-        private readonly IDictionary<IStructure, IShapeFeature> Structures2Shape = new Dictionary<IStructure, IShapeFeature>();
+        private readonly IDictionary<IShapeFeature, IStructure1D> Shapes2Structures = new Dictionary<IShapeFeature, IStructure1D>();
+        private readonly IDictionary<IStructure1D, IShapeFeature> Structures2Shape = new Dictionary<IStructure1D, IShapeFeature>();
         //private readonly IDictionary<IFunction, IStructure> Function2Structures = new Dictionary<IFunction, IStructure>();
        
         private readonly VectorStyle selectStyle = new VectorStyle
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             structurePresenter = new StructurePresenter(shapeModifyTool);
         }
 
-        private static StructureType StructureToStructureType(IStructure structure)
+        private static StructureType StructureToStructureType(IStructure1D structure)
         {
             if (structure is IWeir)
             {
@@ -183,14 +183,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         private void NetworkPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             bool updateAxes = false;
-            IStructure selectedStructure = null;
-            if (sender is IStructure)
+            IStructure1D selectedStructure = null;
+            if (sender is IStructure1D)
             {
                 if (e.PropertyName == "OffsetY")
                 {
                     return;
                 }
-                var structure = sender as IStructure;
+                var structure = sender as IStructure1D;
 
                 // Try to maintain the selected structure in the shapeModifyTool
                 // for example when a weir is selected with Trackers and the user modifies the crest width in
@@ -346,7 +346,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             {
                 return;
             }
-            IStructure structure = Shapes2Structures[e.ShapeFeature];
+            IStructure1D structure = Shapes2Structures[e.ShapeFeature];
             Validate(this);
             if (null != SelectionChanged)
             {
@@ -543,7 +543,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             
         }
 
-        private void AddStructureAndShape(IStructure structure, IShapeFeature shape)
+        private void AddStructureAndShape(IStructure1D structure, IShapeFeature shape)
         {
             shapeModifyTool.AddShape(shape);
             Structures2Shape[structure] = shape;
@@ -558,7 +558,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             Shapes2Structures[weirShape] = weir;
         }
 
-        private void RemoveShapeFeature(IStructure structure)
+        private void RemoveShapeFeature(IStructure1D structure)
         {
             if (!Structures2Shape.ContainsKey(structure)) 
                 return;
@@ -568,7 +568,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             shapeModifyTool.RemoveShape(shapeFeature);
         }
 
-        private Envelope GetBoundingRectStructure(IStructure structure)
+        private Envelope GetBoundingRectStructure(IStructure1D structure)
         {
             
             switch (StructureToStructureType(structure))
@@ -729,7 +729,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         public void EnsureVisible(object item) { }
         public ViewInfo ViewInfo { get; set; }
 
-        public IStructure SelectedStructure
+        public IStructure1D SelectedStructure
         {
             get
             {
@@ -926,7 +926,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         {
             if (Shapes2Structures.ContainsKey(shapeFeature))
             {
-                IStructure structure = Shapes2Structures[shapeFeature];
+                IStructure1D structure = Shapes2Structures[shapeFeature];
                 var result = structure.Validate();
                 return result.IsValid ? (shapeFeature.Selected ? selectStyle : defaultStyle) : errorStyle;
             }
@@ -977,7 +977,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         protected override void OnPaint(PaintEventArgs e)
         {
             //validate
-            foreach (IStructure s in Shapes2Structures.Values)
+            foreach (IStructure1D s in Shapes2Structures.Values)
             {
                 if (double.IsInfinity(s.OffsetY))
                 {

@@ -332,7 +332,7 @@ namespace DelftTools.Hydro.Helpers
                         continue;
                     }
 
-                    if (branch.BranchFeatures.OfType<IStructure>().Any(bf => Math.Abs(bf.Chainage - feature.Chainage) < BranchFeature.Epsilon))
+                    if (branch.BranchFeatures.OfType<IStructure1D>().Any(bf => Math.Abs(bf.Chainage - feature.Chainage) < BranchFeature.Epsilon))
                     {
                         log.InfoFormat("No grid point generated for {3} {0}:{1} at {2:f2}. Grid point would overlap with structure.", feature.Name, branch.Name, feature.Chainage, typeName);
                         continue;
@@ -518,7 +518,7 @@ namespace DelftTools.Hydro.Helpers
             //return NetworkHelper.GetUniqueName(featureName + "{0:D3}", region.AllHydroObjects.Where(f => f != feature), featureName);
         }
 
-        public static void AddStructureToComposite(ICompositeBranchStructure compositeBranchStructure, IStructure structure)
+        public static void AddStructureToComposite(ICompositeBranchStructure compositeBranchStructure, IStructure1D structure)
         {
             structure.Branch = compositeBranchStructure.Branch;
             structure.ParentStructure = compositeBranchStructure;
@@ -532,7 +532,7 @@ namespace DelftTools.Hydro.Helpers
             structure.Branch.BranchFeatures.Add(structure);
         }
 
-        public static void AddStructureToExistingCompositeStructureOrToANewOne(IStructure structure, IBranch branch)
+        public static void AddStructureToExistingCompositeStructureOrToANewOne(IStructure1D structure, IBranch branch)
         {
 
             var compositeBranchStructure = branch.BranchFeatures.OfType<ICompositeBranchStructure>().FirstOrDefault(f => Math.Abs(f.Chainage - structure.Chainage) < 0.01);
@@ -560,7 +560,7 @@ namespace DelftTools.Hydro.Helpers
         /// Removes a structure from the hydro network
         ///</summary>
         ///<param name="structure"></param>
-        public static void RemoveStructure(IStructure structure)
+        public static void RemoveStructure(IStructure1D structure)
         {
             var channel = structure.Branch;
             if (channel == null) return; // Do nothing if structure is not on a branch
@@ -574,7 +574,7 @@ namespace DelftTools.Hydro.Helpers
         }
 
         [EditAction]
-        private static void RemoveFromChannel(IStructure structure, IBranch channel)
+        private static void RemoveFromChannel(IStructure1D structure, IBranch channel)
         {
             if (null == structure.ParentStructure)
             {

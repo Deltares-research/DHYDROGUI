@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
     /// Class updates shape features just before paint and contains. Descended classes need to have a CalculatedShapeFeatures
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class StructureSideViewShape<T>: CompositeShapeFeature where  T :IStructure
+    public abstract class StructureSideViewShape<T>: CompositeShapeFeature where  T :IStructure1D
     {
         protected StructureSideViewShape(IChart chart, double offsetInSideView, T structure):base(chart)
         {

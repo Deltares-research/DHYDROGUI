@@ -14,9 +14,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             IniCategory = new DelftIniCategory(StructureRegion.Header);
         }
 
-        public abstract DelftIniCategory CreateStructureRegion(IStructure structure);
+        public abstract DelftIniCategory CreateStructureRegion(IStructure1D structure);
 
-        protected void AddCommonRegionElements(IStructure structure, string definitionType)
+        protected void AddCommonRegionElements(IStructure1D structure, string definitionType)
         {
             if (structure.Branch == null) return;
             string nameWithoutHashSigns = structure.Name.Replace("##", "~~");
@@ -35,6 +35,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
     public interface IDefinitionGeneratorStructure
     {
-        DelftIniCategory CreateStructureRegion(IStructure structure);
+        DelftIniCategory CreateStructureRegion(IStructure1D structure);
     }
 }

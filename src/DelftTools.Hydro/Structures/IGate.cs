@@ -15,7 +15,7 @@ namespace DelftTools.Hydro.Structures
         FromRight,
     }
 
-    public interface IGate : IStructure
+    public interface IGate : IStructure1D
     {
         /// <summary>
         /// The base level of the gate. Same as crest level, but it cannot have a time series.

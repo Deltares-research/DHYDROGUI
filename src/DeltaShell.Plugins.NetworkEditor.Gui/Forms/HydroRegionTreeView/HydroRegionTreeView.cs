@@ -466,7 +466,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             gui.CommandHandler.ShowProperties();
         }
 
-        private void AddBranchFeatureToBranch(IStructure branchFeature)
+        private void AddBranchFeatureToBranch(IStructure1D branchFeature)
         {
             HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(branchFeature, branchFeature.Branch);
         }

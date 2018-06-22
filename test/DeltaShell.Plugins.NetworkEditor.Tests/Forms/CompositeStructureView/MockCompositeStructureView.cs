@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
         public Image Image { get; set; }
         public void EnsureVisible(object item) { }
 
-        public IStructure SelectedStructure { get; private set; }
+        public IStructure1D SelectedStructure { get; private set; }
 
         public IStructureView CrossSectionStructureView
         {
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 
         public INetworkSideView SideView { get; private set; }
 
-        public void ActivateFormView(IStructure structure)
+        public void ActivateFormView(IStructure1D structure)
         {
             SelectedStructure = structure;
         }

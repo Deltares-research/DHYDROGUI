@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 {
     public class NetworkSideViewDataTestHelper
     {
-        public static void AssertMinMaxIsUpdatedForStructure(int expectedZMin, int expectedZMax, IStructure weir)
+        public static void AssertMinMaxIsUpdatedForStructure(int expectedZMin, int expectedZMax, IStructure1D weir)
         {
             var data = CreateDefaultViewData();
             var network = data.Network;

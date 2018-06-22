@@ -23,7 +23,7 @@ namespace DelftTools.Hydro.Structures
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(CompositeBranchStructure));
 
-        private IEventedList<IStructure> structures;
+        private IEventedList<IStructure1D> structures;
         private ICompositeBranchStructure parentStructure;
 
         ///<summary>
@@ -60,7 +60,7 @@ namespace DelftTools.Hydro.Structures
         /// Do not bubble Property changed event because structures are also member of branchFeatures in branch
         /// TODO: make it a composition, structures must be only part of the composite structure isn't it?
         [Aggregation]
-        public virtual IEventedList<IStructure> Structures
+        public virtual IEventedList<IStructure1D> Structures
         {
             get { return structures; }
             set
@@ -86,7 +86,7 @@ namespace DelftTools.Hydro.Structures
         [EditAction]
         void StructuresCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var structure = (IStructure)e.Item;
+            var structure = (IStructure1D)e.Item;
             switch (e.Action)
             {
                 case NotifyCollectionChangeAction.Replace:
@@ -109,12 +109,12 @@ namespace DelftTools.Hydro.Structures
 
         public CompositeBranchStructure(string name, double offset)
         {
-            Structures = new EventedList<IStructure>();
+            Structures = new EventedList<IStructure1D>();
             base.Chainage = offset;
             base.Name = name;
         }
 
-        ICompositeBranchStructure IStructure.ParentStructure
+        ICompositeBranchStructure IStructure1D.ParentStructure
         {
             get { return parentStructure; }
             set { parentStructure = value; }

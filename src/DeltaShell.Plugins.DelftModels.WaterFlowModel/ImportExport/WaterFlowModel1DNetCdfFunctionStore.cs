@@ -530,9 +530,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 var branchIndex = branchFeature.Network.Branches.IndexOf(branchFeature.Branch);
                 location = MetaData.Locations.FirstOrDefault(l => l.BranchId - 1 == branchIndex && Math.Abs(l.Chainage - branchFeature.Chainage) < double.Epsilon);
             }
-            else if (branchFeature is IStructure)
+            else if (branchFeature is IStructure1D)
             {
-                var structure = (IStructure)branchFeature;
+                var structure = (IStructure1D)branchFeature;
 
                 var compositePrefix = structure.ParentStructure?.Structures.Count > 1
                     ? structure.ParentStructure.Name + "_"

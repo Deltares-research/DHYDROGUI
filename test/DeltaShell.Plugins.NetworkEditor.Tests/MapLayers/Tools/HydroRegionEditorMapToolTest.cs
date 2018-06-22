@@ -234,7 +234,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             Assert.AreEqual(2, network.CompositeBranchStructures.First().Structures.Count);
 
             // use feature interactor to modify (also delete) features
-            IStructure structure = network.Pumps.First();
+            IStructure1D structure = network.Pumps.First();
             IFeatureInteractor featureInteractor = mapControl.SelectTool.GetFeatureInteractor(pumpLayer, structure);
 
             featureInteractor.Delete();

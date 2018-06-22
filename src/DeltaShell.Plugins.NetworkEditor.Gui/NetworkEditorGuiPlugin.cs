@@ -340,7 +340,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     } 
             };
 
-            yield return new ViewInfo<IStructure, AreaStructureView>()
+            yield return new ViewInfo<IStructure1D, AreaStructureView>()
             {
                 AdditionalDataCheck = o => o.Branch == null,
                 Description = "Structure Editor"
@@ -390,7 +390,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             return viewInfo;
         }
 
-        private ViewInfo<IEventedList<T>, ILayer, VectorLayerAttributeTableView> CreateAreaStructureCollectionViewInfo<T>(string name) where T : IStructure
+        private ViewInfo<IEventedList<T>, ILayer, VectorLayerAttributeTableView> CreateAreaStructureCollectionViewInfo<T>(string name) where T : IStructure1D
         {
             return new ViewInfo<IEventedList<T>, ILayer, VectorLayerAttributeTableView>
             {
@@ -527,7 +527,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         
              */
 
-        private static void ConfigureAreaFeatureRowCreation<T>(VectorLayerAttributeTableView view) where T : IStructure
+        private static void ConfigureAreaFeatureRowCreation<T>(VectorLayerAttributeTableView view) where T : IStructure1D
         {
             if (typeof(T) == typeof(IWeir))
             {
@@ -1101,7 +1101,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 var structureView = (CompositeStructureView)activeView;
 
-                var structure = structureView.Data as IStructure;
+                var structure = structureView.Data as IStructure1D;
 
                 if (structure != null)
                 {

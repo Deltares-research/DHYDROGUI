@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 {
     class StructureShapeStyleProvider
     {
-        public VectorStyle GetNormalStyleForStructure(IStructure structure)
+        public VectorStyle GetNormalStyleForStructure(IStructure1D structure)
         {
             if (structure is IWeir)
             {
@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             throw new NotImplementedException();
         }
 
-        public VectorStyle GetSelectedStyleForStructure(IStructure structure)
+        public VectorStyle GetSelectedStyleForStructure(IStructure1D structure)
         {
             if (structure is IWeir)
             {
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             throw new NotImplementedException();
         }
 
-        public VectorStyle GetDisabledStyleForStructure(IStructure structure)
+        public VectorStyle GetDisabledStyleForStructure(IStructure1D structure)
         {
             if (structure is IWeir)
             {

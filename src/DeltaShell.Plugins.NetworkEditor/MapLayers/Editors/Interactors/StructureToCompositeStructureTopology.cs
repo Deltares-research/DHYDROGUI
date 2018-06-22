@@ -12,7 +12,7 @@ using SharpMap.Rendering;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 {
-    class StructureToCompositeStructureTopology<T> where T : IStructure
+    class StructureToCompositeStructureTopology<T> where T : IStructure1D
     {
         public IHydroNetwork Network { set; get; }
         public IEnumerable<ICompositeBranchStructure> CompositeStructures { get; set; }
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             int newIndex = -1;
             if (null != snapResult)
             {
-                var newSnappedStructure = snapResult.SnappedFeature as IStructure;
+                var newSnappedStructure = snapResult.SnappedFeature as IStructure1D;
                 if (newSnappedStructure != null)
                 {
                     newParentCompositeStructure = newSnappedStructure.ParentStructure;
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                 parentStructure.Structures.Add(t);
         }
 
-        private void AddStructureToNewCompositeStructure(IStructure structure)
+        private void AddStructureToNewCompositeStructure(IStructure1D structure)
         {
             IBranch branch = structure.Branch;
 

@@ -83,9 +83,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
                 }
             }
 
-            if (branchFeature is IStructure && ((IStructure)branchFeature).ParentStructure != null)
+            if (branchFeature is IStructure1D && ((IStructure1D)branchFeature).ParentStructure != null)
             {
-                ((IStructure)branchFeature).ParentStructure.Chainage = chainage;
+                ((IStructure1D)branchFeature).ParentStructure.Chainage = chainage;
             }
         }
 

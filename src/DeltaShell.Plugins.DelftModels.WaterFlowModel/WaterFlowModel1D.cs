@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         private List<WaterFlowModel1DBoundaryNodeData> boundaryConditionDataList;
 
         // ordered lists of features as used in outputcoverages and by modelapi; allows to store arrays from modelapi to featurecoverage
-        private List<IStructure> structureMappingToModelApi;
+        private List<IStructure1D> structureMappingToModelApi;
         private List<IObservationPoint> observationPointsMappingToModelApi;
         private List<ILateralSource> lateralSourcesMappingToModelApi;
         private List<IRetention> retentionMappingToModelApi;
@@ -3759,7 +3759,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                     ModelStateHandler.FeedStateToModel(ModelStateHandler.CreateStateFromFile(Name, RestartInput.Path));
                 }
 
-                structureMappingToModelApi = new List<IStructure>();
+                structureMappingToModelApi = new List<IStructure1D>();
 
                 foreach (var compositeStructure in Network.Structures.OfType<ICompositeBranchStructure>())
                 {

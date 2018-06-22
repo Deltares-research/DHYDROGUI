@@ -255,7 +255,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 Geometry = new LineString(new[] { new Coordinate(4, 5), new Coordinate(6, 7) }),
                 WeirFormula = initialFormula
             };
-            var structures = new IStructure[] { initialGeneralStructure };
+            var structures = new IStructure1D[] { initialGeneralStructure };
             var structuresFile = new StructuresFile
             {
                 StructureSchema = schema,
@@ -445,7 +445,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 Geometry = new LineString(new [] { new Coordinate(8, 9), new Coordinate(10, 11) })
             };
 
-            var structures = new IStructure[]
+            var structures = new IStructure1D[]
                 {
                     pump, simpleWeir, simpleGate
                 };
@@ -576,7 +576,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             simpleGate.OpeningWidthTimeSeries[new DateTime(2013, 1, 1, 1, 1, 0)] = 8.7;
             simpleGate.OpeningWidthTimeSeries[new DateTime(2013, 2, 3, 4, 5, 0)] = 6.5;
 
-            var structures = new IStructure[]
+            var structures = new IStructure1D[]
                 {
                     pump, simpleWeir, simpleGate
                 };

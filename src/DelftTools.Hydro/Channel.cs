@@ -47,7 +47,7 @@ namespace DelftTools.Hydro
                 // will have performance impact. Possible issue in implementation of propertychanged aspect
                 // check with performance tests in HydroNetworkTest
                 crossSections = BranchFeatures.OfType<ICrossSection>();
-                structures = BranchFeatures.OfType<IStructure>();
+                structures = BranchFeatures.OfType<IStructure1D>();
                 pumps = BranchFeatures.OfType<IPump>();
                 culverts = BranchFeatures.OfType<ICulvert>();
                 bridges = BranchFeatures.OfType<IBridge>();
@@ -61,7 +61,7 @@ namespace DelftTools.Hydro
         #region IChannel Members
 
         private IEnumerable<ICrossSection> crossSections;
-        private IEnumerable<IStructure> structures;
+        private IEnumerable<IStructure1D> structures;
         private IEnumerable<IPump> pumps;
         private IEnumerable<ICulvert> culverts;
         private IEnumerable<IBridge> bridges;
@@ -72,7 +72,7 @@ namespace DelftTools.Hydro
 
         public virtual IEnumerable<ICrossSection> CrossSections { get { return crossSections; } }
 
-        public virtual IEnumerable<IStructure> Structures { get { return structures; } }
+        public virtual IEnumerable<IStructure1D> Structures { get { return structures; } }
 
         public virtual IEnumerable<IPump> Pumps { get { return pumps; } }
 
@@ -102,7 +102,7 @@ namespace DelftTools.Hydro
                 var compositeBranchStructureClone = (ICompositeBranchStructure)clone.BranchFeatures[BranchFeatures.IndexOf(compositeBranchStructure)];
                 foreach (var structure in compositeBranchStructure.Structures)
                 {
-                    var structureClone = (IStructure)clone.BranchFeatures[BranchFeatures.IndexOf(structure)];
+                    var structureClone = (IStructure1D)clone.BranchFeatures[BranchFeatures.IndexOf(structure)];
                     structureClone.ParentStructure = compositeBranchStructureClone;
                     compositeBranchStructureClone.Structures.Add(structureClone);
                 }

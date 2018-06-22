@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
     public class StructureFeatureToStructureRelationInteractor : FeatureRelationInteractor 
     {
         IFeature lastFeature;
-        IList<IStructure> clonedRelatedFeatures;
+        IList<IStructure1D> clonedRelatedFeatures;
 
         public IHydroNetwork Network { get; set; }
 
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
         private void Start(ICompositeBranchStructure CompositeBranchStructure, ICompositeBranchStructure cloneCompositeBranchStructure, AddRelatedFeature addRelatedFeature, int level)
         {
             lastFeature = CompositeBranchStructure;
-            clonedRelatedFeatures = new List<IStructure>();
+            clonedRelatedFeatures = new List<IStructure1D>();
 
             foreach (var structure in CompositeBranchStructure.Structures)
             {
@@ -78,9 +78,9 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             }
         }
 
-        private IStructure CloneStructure(IStructure structure, ICompositeBranchStructure cloneCompositeBranchStructure)
+        private IStructure1D CloneStructure(IStructure1D structure, ICompositeBranchStructure cloneCompositeBranchStructure)
         {
-            var clone = (IStructure)structure.Clone();
+            var clone = (IStructure1D)structure.Clone();
             clone.Geometry = (IGeometry)structure.Geometry.Clone();
             clone.ParentStructure = cloneCompositeBranchStructure;
             cloneCompositeBranchStructure.Structures.Add(clone);

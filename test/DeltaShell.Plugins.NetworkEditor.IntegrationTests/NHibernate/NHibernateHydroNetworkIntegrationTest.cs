@@ -1119,7 +1119,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             Assert.AreEqual(orderNumber, firstChannelOfRetrievedNetwork.OrderNumber);
         }
         
-        private T SaveLoadStructure<T>(T structure, string path) where T : IStructure
+        private T SaveLoadStructure<T>(T structure, string path) where T : IStructure1D
         {
             var compositeStructure = new CompositeBranchStructure { Geometry = new Point(5, 0), Chainage = 5, Structures = { structure } };
 

@@ -282,7 +282,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 }
 
                 var hydroNetwork = (IHydroNetwork) route.Network;
-                foreach (IStructure structure in hydroNetwork.Structures)
+                foreach (IStructure1D structure in hydroNetwork.Structures)
                 {
                     if (!(structure is ICompositeBranchStructure))
                         continue;
@@ -306,9 +306,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
-        private IList<IStructure> ActiveStructures
+        private IList<IStructure1D> ActiveStructures
         {
-            get { return ActiveBranchFeatures.Where(x => x is IStructure).Cast<IStructure>().ToList(); }
+            get { return ActiveBranchFeatures.Where(x => x is IStructure1D).Cast<IStructure1D>().ToList(); }
         }
 
         private static IEnumerable<IBranchFeature> GetFeaturesInRoute(IEnumerable<IBranchFeature> branchFeatures, Route route1)
@@ -331,7 +331,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             {
                 var result = new List<IBranchFeature>();
                 var hydroNetwork = (IHydroNetwork) route.Network;
-                foreach (IStructure structure in hydroNetwork.Structures)
+                foreach (IStructure1D structure in hydroNetwork.Structures)
                 {
                     if (!(structure is ICompositeBranchStructure))
                         continue;

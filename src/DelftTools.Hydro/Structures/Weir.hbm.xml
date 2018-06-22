@@ -3,7 +3,7 @@
                    auto-import="false" 
                     namespace="DelftTools.Hydro.Structures" 
                     assembly="DelftTools.Hydro">
-  <subclass name="DelftTools.Hydro.Structures.Weir, DelftTools.Hydro" discriminator-value="branch_structure_weir"  extends="DelftTools.Hydro.IStructure, DelftTools.Hydro">
+  <subclass name="DelftTools.Hydro.Structures.Weir, DelftTools.Hydro" discriminator-value="branch_structure_weir"  extends="DelftTools.Hydro.IStructure1D, DelftTools.Hydro">
     <meta attribute="anyType">IValueConverter.OriginalValue</meta>
 
     <property name="CrestWidth" column="crest_width" />

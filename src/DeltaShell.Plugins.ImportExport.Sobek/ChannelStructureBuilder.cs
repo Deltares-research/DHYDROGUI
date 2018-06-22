@@ -140,13 +140,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         /// </summary>
         public void SetStructuresOnChannels()
         {
-            SetStructuresOnChannels(new List<IStructure>());
+            SetStructuresOnChannels(new List<IStructure1D>());
         }
 
         /// <summary>
         /// Constructs or replace the structures and associates them with the channels on the network
         /// </summary>
-        public void SetStructuresOnChannels(IEnumerable<IStructure> existingStructures)
+        public void SetStructuresOnChannels(IEnumerable<IStructure1D> existingStructures)
         {
             foreach (var location in locations)
             {
@@ -246,7 +246,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
         }
 
-        private void HandleStructureNotInStructDat(SobekStructureLocation location, IEnumerable<IStructure> existingStructures)
+        private void HandleStructureNotInStructDat(SobekStructureLocation location, IEnumerable<IStructure1D> existingStructures)
         {
             if (sobekExtraFriction.ContainsKey(location.ID))
             {
@@ -266,7 +266,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
         }
 
-        private void ProcesStruct(SobekStructureLocation location, IChannel channel, SobekStructureMapping definitionMapping, ICompositeBranchStructure compositeStructure, IEnumerable<IStructure> existingStructures, string structureName)
+        private void ProcesStruct(SobekStructureLocation location, IChannel channel, SobekStructureMapping definitionMapping, ICompositeBranchStructure compositeStructure, IEnumerable<IStructure1D> existingStructures, string structureName)
         {
             SobekStructureDefinition sobekStructureDefinition = definitions[definitionMapping.DefinitionId];
 
@@ -306,7 +306,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
         }
 
-        private static void AddOrReplaceStructure(BranchStructure structure, ICompositeBranchStructure compositeStructure, IEnumerable<IStructure> existingStructures)
+        private static void AddOrReplaceStructure(BranchStructure structure, ICompositeBranchStructure compositeStructure, IEnumerable<IStructure1D> existingStructures)
         {
             var existingStructure = existingStructures.Where(bf => bf.GetType() == structure.GetType() && bf.Name == structure.Name).FirstOrDefault();
             if (existingStructure != null)

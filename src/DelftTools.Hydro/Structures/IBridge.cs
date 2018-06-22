@@ -2,7 +2,7 @@ using DelftTools.Hydro.CrossSections;
 
 namespace DelftTools.Hydro.Structures
 {
-    public interface IBridge : IStructure, IFrictionData, IGroundLayer
+    public interface IBridge : IStructure1D, IFrictionData, IGroundLayer
     {
         string Name { get; set; }
         string LongName { get; set; }

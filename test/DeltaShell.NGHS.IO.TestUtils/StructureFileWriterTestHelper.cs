@@ -559,7 +559,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
 
         #endregion Structure Creation Helpers
 
-        public static void WriteCrossSectionsToIni(IEnumerable<IStructure> structures)
+        public static void WriteCrossSectionsToIni(IEnumerable<IStructure1D> structures)
         {
             // Mock of StructureFileWriter
 
@@ -617,7 +617,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             category.AddProperty(StructureRegion.GroundFriction.Key, groundLayerRoughness, StructureRegion.GroundFriction.Description, StructureRegion.GroundFriction.Format);
         }
 
-        private static void AddStructure(this IBranch branch, IStructure structure)
+        private static void AddStructure(this IBranch branch, IStructure1D structure)
         {
             // Note: DeltaShell always wraps structures into CompositeStructures
             var composite = new CompositeBranchStructure()

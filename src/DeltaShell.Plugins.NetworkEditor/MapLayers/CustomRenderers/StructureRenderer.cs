@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 
             var style = GetCurrentStyle(vectorLayer,feature);
             
-            var structure = feature as IStructure;
+            var structure = feature as IStructure1D;
             var styleSymbol = (Bitmap)style.Symbol.Clone();
 
             if (structure != null && structure.ParentStructure != null)
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
         /// <returns></returns>
         private IGeometry GenerateCustomGeometry(IFeature feature, VectorLayer layer)
         {
-            var structure = (IStructure)feature;
+            var structure = (IStructure1D)feature;
             var compositeStructure = structure.ParentStructure;
 
             // structure can be disconnected during
@@ -207,7 +207,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
         }
         #endregion
 
-        public void InvalidateStructure(IStructure structure)
+        public void InvalidateStructure(IStructure1D structure)
         {
             if (customGeometries.ContainsKey(structure))
                 customGeometries.Remove(structure);

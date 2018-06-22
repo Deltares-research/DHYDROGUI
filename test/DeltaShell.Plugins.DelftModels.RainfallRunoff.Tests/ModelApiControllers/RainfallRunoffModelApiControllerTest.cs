@@ -12,7 +12,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation;
 using GeoAPI.Extensions.Coverages;
 using NUnit.Framework;
 

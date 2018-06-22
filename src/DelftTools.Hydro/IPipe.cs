@@ -9,7 +9,7 @@ namespace DelftTools.Hydro
     {
         ICrossSectionDefinition CrossSectionDefinition { get; set; }
 
-        IEnumerable<IStructure> Structures { get; set; }
+        IEnumerable<IStructure1D> Structures { get; set; }
 
         IEnumerable<IPump> Pumps { get; }
         

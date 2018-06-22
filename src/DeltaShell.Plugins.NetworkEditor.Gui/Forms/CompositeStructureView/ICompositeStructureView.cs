@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         /// <summary>
         /// Gets or sets the selected structure
         /// </summary>
-        IStructure SelectedStructure { get; }
+        IStructure1D SelectedStructure { get; }
 
         /// <summary>
         /// Sets the view data into the contained cross section view
@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         /// Activates the form view for the given structure
         /// </summary>
         /// <param name="structure"></param>
-        void ActivateFormView(IStructure structure);
+        void ActivateFormView(IStructure1D structure);
         
         /// <summary>
         /// Sets the specific form views (child forms in tab pages) for each structure

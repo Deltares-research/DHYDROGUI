@@ -10,7 +10,7 @@ using NetTopologySuite.Geometries;
 namespace DelftTools.Hydro
 {
     [Entity(FireOnCollectionChange=false)]
-    public abstract class BranchStructure : BranchFeatureHydroObject, IStructure
+    public abstract class BranchStructure : BranchFeatureHydroObject, IStructure1D
     {
         // TODO: check if we need composite structure here, maybe better via Owner, so that child structures will exist only in composite structures
         private ICompositeBranchStructure parentStructure;

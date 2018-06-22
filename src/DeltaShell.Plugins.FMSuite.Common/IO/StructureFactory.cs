@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(StructureFactory));
 
-        private static readonly Dictionary<StructureType, Func<Structure2D, string, DateTime, IStructure>> CreateStructureType = new Dictionary<StructureType, Func<Structure2D, string, DateTime, IStructure>>
+        private static readonly Dictionary<StructureType, Func<Structure2D, string, DateTime, IStructure1D>> CreateStructureType = new Dictionary<StructureType, Func<Structure2D, string, DateTime, IStructure1D>>
         {
             { StructureType.Pump, CreatePumpCore },
             { StructureType.Gate, CreateGateCore },
@@ -29,18 +29,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         };
 
         /// <summary>
-        /// Constructs a <see cref="IStructure"/> for the following supported types:
+        /// Constructs a <see cref="IStructure1D"/> for the following supported types:
         /// Pump, Weir, Gate
         /// </summary>
         /// <param name="structure2D">The description of the structure.</param>
         /// <param name="path">Filepath of the <see cref="StructuresFile"/>.</param>
         /// <param name="refDate">Reference date for the model, required for time dependent data.</param>
         /// <returns>Returns the constructed structure.</returns>
-        public static IStructure CreateStructure(Structure2D structure2D, string path, DateTime refDate, string oldPath = null)
+        public static IStructure1D CreateStructure(Structure2D structure2D, string path, DateTime refDate, string oldPath = null)
         {
             StructureFactoryValidator.ThrowIfInvalidType(structure2D, StructureFactoryValidator.SupportedTypes);
 
-            IStructure structure = null;
+            IStructure1D structure = null;
             structure = CreateStructureType[structure2D.StructureType](structure2D, path, refDate);
             SetCommonStructureData(structure, structure2D, path);
 
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// <param name="structure">Structure to be updated.</param>
         /// <param name="structure2D">Source of data to update <paramref name="structure"/>.</param>
         /// <param name="path">Filepath of the <see cref="StructuresFile"/>.</param>
-        private static void SetCommonStructureData(IStructure structure, Structure2D structure2D, string path)
+        private static void SetCommonStructureData(IStructure1D structure, Structure2D structure2D, string path)
         {
             var property = structure2D.GetProperty(KnownStructureProperties.Name);
             if (property != null)
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             structure.Chainage = double.NaN;
         }
 
-        private static void SetTimeSeriesProperty(Structure2D structure2D, string propertyName, string path, DateTime refDate, IStructure structure, string useTimeSeriesProperty, string constantValueProperty, TimeSeries timeSeries)
+        private static void SetTimeSeriesProperty(Structure2D structure2D, string propertyName, string path, DateTime refDate, IStructure1D structure, string useTimeSeriesProperty, string constantValueProperty, TimeSeries timeSeries)
         {
             ModelProperty property = structure2D.GetProperty(propertyName);
             if (property != null)
