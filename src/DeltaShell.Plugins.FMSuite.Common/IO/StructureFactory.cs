@@ -80,6 +80,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 var pliFile = new PliFile<Feature2D>();
                 structure.Geometry = pliFile.Read(filePath).First().Geometry;
             }
+
+            var structure1D = structure as IStructure1D;
+            if (structure1D != null)
+            {
+                structure1D.Chainage = double.NaN;
+            }
         }
 
         private static void SetTimeSeriesProperty(Structure2D structure2D, string propertyName, string path, DateTime refDate, IStructure1D structure, string useTimeSeriesProperty, string constantValueProperty, TimeSeries timeSeries)
