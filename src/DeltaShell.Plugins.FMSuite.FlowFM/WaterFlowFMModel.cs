@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public WaterFlowFMModel() : this(null)
         {
             // network
-            Network = new HydroNetwork { Name = "Network" };
+            Network = new HydroNetwork { Name = NetworkObjectName };
             // Computational Grid For network
             NetworkDiscretization = new Discretization { Network = network, Name = DiscretizationObjectName };
 

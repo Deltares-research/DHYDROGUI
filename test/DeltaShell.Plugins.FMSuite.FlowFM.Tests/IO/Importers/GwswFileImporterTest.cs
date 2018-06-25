@@ -633,7 +633,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
         [Test]
         [TestCase(@"gwswFiles\GWSW_DidactischStelsel\GWSW.hydx_Definitie_DM.csv", 4000)]
-        [TestCase(@"gwswFiles\GWSW_Leiden\GWSW.hydx_Definitie_DM.csv", 100000)]
+        [TestCase(@"gwswFiles\GWSW_Leiden\GWSW.hydx_Definitie_DM.csv", 180000)]
         public void GivenGwswDatabase_WhenImporting_ShouldBeFasterThan(string testFilePath, float maximumImportingTimeInMs)
         {
             var model = new WaterFlowFMModel();

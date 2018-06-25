@@ -27,12 +27,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             ((INotifyCollectionChange) network).CollectionChanged += (s, a) => colChangedCount++;
             ((INotifyPropertyChanged) network).PropertyChanged += (s, a) => propChangedCount++;
             model.Network = network;
+            Assert.That(propChangedCount, Is.EqualTo(1));
             var node = new HydroNode();
             model.Network.Nodes.Add(node);
             Assert.That(colChangedCount, Is.EqualTo(1));
             node.Name = "myNodeName";
             model.Network.Name = "myNetworkName";
-            Assert.That(propChangedCount, Is.EqualTo(2));
+            Assert.That(propChangedCount, Is.EqualTo(3));
 
             //create new network so old eventing should be removed
             TypeUtils.SetPrivatePropertyValue(model,"OutputIsEmpty", false);
@@ -42,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.Network.Nodes.Add(new HydroNode());
             Assert.That(colChangedCount, Is.EqualTo(1)); // old event handler should not be fired!
             model.Network.Name = "new";
-            Assert.That(propChangedCount, Is.EqualTo(2)); // old event handler should not be fired!
+            Assert.That(propChangedCount, Is.EqualTo(3)); // old event handler should not be fired!
         }
 
         [Test]
