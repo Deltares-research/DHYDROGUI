@@ -14,13 +14,13 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
     public interface IDefinitionReader
     {
         ICrossSectionDefinition ReadCrossSectionDefinition(IDelftIniCategory category);
-        IStructure ReadStructureDefinition(IDelftIniCategory category);
+        IStructure1D ReadStructureDefinition(IDelftIniCategory category);
     }
 
     abstract class DefinitionReader : IDefinitionReader
     {
         public virtual ICrossSectionDefinition ReadCrossSectionDefinition(IDelftIniCategory category){return null;}
-        public virtual IStructure ReadStructureDefinition(IDelftIniCategory category){ return null; }
+        public virtual IStructure1D ReadStructureDefinition(IDelftIniCategory category){ return null; }
 
         protected void SetCommonCrossSectionDefinitionsProperties(ICrossSectionDefinition crossSectionDefinition, IDelftIniCategory category)
         {
@@ -28,7 +28,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
             crossSectionDefinition.Thalweg = category.ReadProperty<double>(DefinitionRegion.Thalweg.Key);
         }
 
-        protected void SetCommonStructureDefinitionsProperties(IStructure structureDefinition, IDelftIniCategory category)
+        protected void SetCommonStructureDefinitionsProperties(IStructure1D structureDefinition, IDelftIniCategory category)
         {
             
         }
@@ -290,7 +290,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
     }
     class WeirDefinitionReader : DefinitionReader
     {
-        public override IStructure ReadStructureDefinition(IDelftIniCategory category)
+        public override IStructure1D ReadStructureDefinition(IDelftIniCategory category)
         {
 
             var slope = category.ReadProperty<double>(DefinitionRegion.Slope.Key);

@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
 
             NetworkHelper.UpdateBranchFeatureChainageFromGeometry(branchFeature);
 
-            var structure = branchFeature as IStructure;
+            var structure = branchFeature as IStructure1D;
             if (structure != null)
             {
                 if (structure.ParentStructure == null)

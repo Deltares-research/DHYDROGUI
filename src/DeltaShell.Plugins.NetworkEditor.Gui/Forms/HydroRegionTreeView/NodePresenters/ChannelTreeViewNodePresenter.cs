@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             foreach (var branchFeature in branchFeatures)
             {
                 // skip elements of the composite structure.
-                if(branchFeature is IStructure && !(branchFeature is ICompositeBranchStructure))
+                if(branchFeature is IStructure1D && !(branchFeature is ICompositeBranchStructure))
                 {
                     //Trace.WriteLine(string.Format("child {0}", branchFeature.Name));
                     continue;

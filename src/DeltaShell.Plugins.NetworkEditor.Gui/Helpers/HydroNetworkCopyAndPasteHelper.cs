@@ -377,9 +377,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 PasteStructuresFromSourceToNewCompositeStructure(branchFeature, channel, newCompositeBranchStructure);
                 return true;
             }
-            if (newBranchFeature is IStructure)
+            if (newBranchFeature is IStructure1D)
             {
-                var newStructure = (IStructure) newBranchFeature;
+                var newStructure = (IStructure1D) newBranchFeature;
                 newStructure.Geometry = newPointGeometry;
                 HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(newStructure, newStructure.Branch);
                 return true;
@@ -456,7 +456,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     newStructure.Geometry = newCompositeBranchStructure.Geometry;
                 }
                 
-                HydroNetworkHelper.AddStructureToComposite(newCompositeBranchStructure, (IStructure)newStructure);
+                HydroNetworkHelper.AddStructureToComposite(newCompositeBranchStructure, (IStructure1D)newStructure);
             }
         }
     }

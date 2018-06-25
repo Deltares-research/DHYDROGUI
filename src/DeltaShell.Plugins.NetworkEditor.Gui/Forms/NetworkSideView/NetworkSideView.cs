@@ -853,7 +853,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             return new ExtraResistanceInSideViewShape(chart, offset, extraResistance);
         }
         
-        private void AddStructureAndShape(IStructure structure, IShapeFeature symbolShapeFeature)
+        private void AddStructureAndShape(IStructure1D structure, IShapeFeature symbolShapeFeature)
         {
             ((IHover)symbolShapeFeature).AddHover(new HoverRectangle(symbolShapeFeature, Color.FromArgb(50, Color.DarkTurquoise)));
             var hoverText = new HoverText(structure.Name, null, symbolShapeFeature, Color.Black, HoverPosition.Top, ArrowHeadPosition.None);

@@ -2,7 +2,7 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" >
   <subclass name="DelftTools.Hydro.Structures.Culvert, DelftTools.Hydro" 
             discriminator-value="branch_structure_culvert"  
-            extends="DelftTools.Hydro.IStructure, DelftTools.Hydro"
+            extends="DelftTools.Hydro.IStructure1D, DelftTools.Hydro"
             persister="DeltaShell.Plugins.Data.NHibernate.LegacyLoaderInjector`1[[DelftTools.Hydro.Structures.Culvert350LegacyLoader, DelftTools.Hydro]], DeltaShell.Plugins.Data.NHibernate">
     
     <meta attribute="anyType">IValueConverter.OriginalValue</meta>

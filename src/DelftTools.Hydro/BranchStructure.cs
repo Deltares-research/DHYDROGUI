@@ -10,7 +10,7 @@ using NetTopologySuite.Geometries;
 namespace DelftTools.Hydro
 {
     [Entity(FireOnCollectionChange=false)]
-    public abstract class BranchStructure : BranchFeatureHydroObject, IStructure
+    public abstract class BranchStructure : BranchFeatureHydroObject, IStructure1D
     {
         // TODO: check if we need composite structure here, maybe better via Owner, so that child structures will exist only in composite structures
         private ICompositeBranchStructure parentStructure;
@@ -21,6 +21,9 @@ namespace DelftTools.Hydro
             get { return parentStructure; }
             set { parentStructure = value; }
         }
+
+        [Obsolete] // TODO This "Channel" is introduced after an merge from the trunk. Is it required? Can it be deleted from the IStructure1D interface?
+        public IChannel Channel { get; set; }
 
         [NoNotifyPropertyChange]
         public virtual double OffsetY

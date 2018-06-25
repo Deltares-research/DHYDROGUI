@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         private static readonly ILog log = LogManager.GetLogger(typeof(ControlGroupBuilder));
 
         public static void CreateControlGroupForStructureAndAddToRtcModel(SobekStructureMapping sobekStructureMapping,
-                                                                  IStructure structure,
+                                                                  IStructure1D structure,
                                                                   IModel model,
                                                                   RealTimeControlModel rtcModel,
                                                                   IDictionary<string, SobekController> sobekControllers,
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             return returnList;
         }
 
-        private static void AddConditionsToControlGroup(IStructure structure, IEnumerable<Trigger> sobekControllerTriggers, IDictionary<string, SobekTrigger> sobekTriggers, IModel model, RealTimeControlModel rtcModel, RuleBase rule, ControlGroup controlGroup)
+        private static void AddConditionsToControlGroup(IStructure1D structure, IEnumerable<Trigger> sobekControllerTriggers, IDictionary<string, SobekTrigger> sobekTriggers, IModel model, RealTimeControlModel rtcModel, RuleBase rule, ControlGroup controlGroup)
         {
             if (sobekControllerTriggers == null) return;
 
@@ -308,7 +308,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 string.Format("Unsupported triggertype {0}", sobekTrigger.TriggerParameterType), "sobekTrigger");
         }
 
-        private static Input AddInputItemToControlGroup(IStructure structure, SobekTrigger sobekTrigger, ControlGroup controlGroup, IModel model, RealTimeControlModel rtcModel)
+        private static Input AddInputItemToControlGroup(IStructure1D structure, SobekTrigger sobekTrigger, ControlGroup controlGroup, IModel model, RealTimeControlModel rtcModel)
         {
             IDataItem inputDataItem;
 
@@ -377,7 +377,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         }
 
 
-        private static Input AddInputItemToControlGroup(IStructure structure, SobekController sobekController, ControlGroup controlGroup, IModel model, RealTimeControlModel rtcModel)
+        private static Input AddInputItemToControlGroup(IStructure1D structure, SobekController sobekController, ControlGroup controlGroup, IModel model, RealTimeControlModel rtcModel)
         {
             IDataItem outputDataItem;
             if (!string.IsNullOrEmpty(sobekController.MeasurementStationId))
@@ -473,7 +473,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         /// <param name="structureDataItems"></param>
         /// <param name="controller"></param>
         /// <returns>Returns null if not exists</returns>
-        private static Output GetOutputItemFromControlGroup(SobekStructureMapping sobekStructureMapping, IStructure structure, ControlGroup controlGroup,
+        private static Output GetOutputItemFromControlGroup(SobekStructureMapping sobekStructureMapping, IStructure1D structure, ControlGroup controlGroup,
             IEnumerable<IDataItem> structureDataItems, SobekController controller)
         {
 
@@ -505,7 +505,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         /// <param name="structureDataItems"></param>
         /// <param name="controller"></param>
         /// <returns></returns>
-        private static Output AddNewOutputItemToControlGroup(SobekStructureMapping sobekStructureMapping, IStructure structure, ControlGroup controlGroup,
+        private static Output AddNewOutputItemToControlGroup(SobekStructureMapping sobekStructureMapping, IStructure1D structure, ControlGroup controlGroup,
             IEnumerable<IDataItem> structureDataItems, SobekController controller, RealTimeControlModel rtcModel)
         {
 
@@ -778,7 +778,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             return timeCondition;
         }
 
-        public static QuantityType GetWaterFlowModelQuantityType(IStructure structure, SobekControllerParameter sobekControllerParameter)
+        public static QuantityType GetWaterFlowModelQuantityType(IStructure1D structure, SobekControllerParameter sobekControllerParameter)
         {
             var type = structure.GetType();
             switch (sobekControllerParameter)
@@ -803,7 +803,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             throw new ArgumentException("Unsupported type", "measurementLocationParameter");
         }
 
-        public static QuantityType GetWaterFlowModelQuantityType(IStructure structure, SobekTriggerParameterType triggerParameterType)
+        public static QuantityType GetWaterFlowModelQuantityType(IStructure1D structure, SobekTriggerParameterType triggerParameterType)
         {
             var type = structure.GetType();
             switch (triggerParameterType)

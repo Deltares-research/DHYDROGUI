@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 };
             try
             {
-                var structures = targetHydroArea.Weirs.Cast<IStructure>().Concat(targetHydroArea.Pumps).Concat(targetHydroArea.Gates);
+                var structures = targetHydroArea.Weirs.Cast<IStructure1D>().Concat(targetHydroArea.Pumps).Concat(targetHydroArea.Gates);
                 structuresFile.Write(path, structures);
                 Log.InfoFormat("Written {0} structures (Pumps: {1}; Weirs {2}; Gates {3}).",
                                targetHydroArea.Pumps.Count + targetHydroArea.Weirs.Count + targetHydroArea.Gates.Count, targetHydroArea.Pumps.Count,

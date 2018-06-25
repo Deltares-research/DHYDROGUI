@@ -9,7 +9,7 @@ using DelftTools.Utils.Collections;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
-    internal class StructureViewNodePresenter<T> : TreeViewNodePresenterBaseForPluginGui<T> where T : IStructure
+    internal class StructureViewNodePresenter<T> : TreeViewNodePresenterBaseForPluginGui<T> where T : IStructure1D
     {
         public StructureViewNodePresenter(GuiPlugin guiPlugin)
             : base(guiPlugin)

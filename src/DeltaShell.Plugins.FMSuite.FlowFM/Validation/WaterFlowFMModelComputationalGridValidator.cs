@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             foreach (var branch in networkDiscretization.Network.Branches)
             {
-                var branchStructures = branch.BranchFeatures.OfType<IStructure>();
+                var branchStructures = branch.BranchFeatures.OfType<IStructure1D>();
                 var branchLocations = networkDiscretization.GetLocationsForBranch(branch);
 
                 var structureWithInvalidLocation = branchStructures.FirstOrDefault(bs => branchLocations.Any(bl => Math.Abs(bl.Chainage - bs.Chainage) < BranchFeature.Epsilon));
@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             // There should be at least one grid point between structures
             var branchStructures =
-                branch.BranchFeatures.OfType<IStructure>()
+                branch.BranchFeatures.OfType<IStructure1D>()
                       .Where(s => s.ParentStructure == null)
                       .OrderBy(s => s.Chainage)
                       .ToList();

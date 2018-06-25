@@ -11,7 +11,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
         }
 
-        public override DelftIniCategory CreateStructureRegion(IStructure structure)
+        public override DelftIniCategory CreateStructureRegion(IStructure1D structure)
         {
             AddCommonRegionElements(structure, StructureRegion.StructureTypeName.Siphon);
 

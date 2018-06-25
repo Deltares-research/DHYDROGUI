@@ -282,7 +282,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             WindowsFormsTestHelper.ShowModal(sideView);
         }
 
-        public static void ShowInSideView(IStructure weir)
+        public static void ShowInSideView(IStructure1D weir)
         {
             var hydroNetwork = GetDefaultHydroNetwork();
             var viewData = CreateDefaultViewData(hydroNetwork,null);

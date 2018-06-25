@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Snapping
         public override SnapResult Execute(IFeature sourceFeature, Tuple<IFeature, ILayer>[] candidates, IGeometry sourceGeometry, IList<IFeature> snapTargets,
                                            Coordinate worldPos, Envelope envelope, int trackingIndex)
         {
-            var structures = new List<IStructure>();
+            var structures = new List<IStructure1D>();
             var structureRenderedGeometries = new List<IGeometry>();
             var structureLayers = new List<ILayer>();
             var distances = new List<double>();
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Snapping
                 StructureLayers = layers.SelectMany(l => l.Layers)
                                         .OfType<VectorLayer>()
                                         .Where(l => l.DataSource != null &&
-                                                    l.DataSource.FeatureType.Implements(typeof (IStructure)) &&
+                                                    l.DataSource.FeatureType.Implements(typeof (IStructure1D)) &&
                                                     l.CustomRenderers.Any(r => r is StructureRenderer))
                                         .ToList();
             }
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Snapping
             // since we use rendered geometry - skip candidates and use rendered geometry
             foreach (var layer in StructureLayers)
             {
-                foreach (IStructure structure in layer.DataSource.Features)
+                foreach (IStructure1D structure in layer.DataSource.Features)
                 {
                     var renderer = (StructureRenderer)layer.CustomRenderers.FirstOrDefault();
                     var renderedGeometry = renderer.GetRenderedFeatureGeometry(structure, layer);

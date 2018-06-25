@@ -12,7 +12,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
         }
 
-        public override DelftIniCategory CreateStructureRegion(IStructure structure)
+        public override DelftIniCategory CreateStructureRegion(IStructure1D structure)
         { 
             if (structure.Branch != null)
                 AddCommonRegionElements(structure, StructureRegion.StructureTypeName.GeneralStructure);

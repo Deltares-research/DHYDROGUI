@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         {
             if (args.Item is ICompositeBranchStructure) return;
 
-            SelectObjectInViews(args.Item as IStructure);
+            SelectObjectInViews(args.Item as IStructure1D);
         }
 
         public ICompositeStructureView View
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         /// <param name="invoker">The object / caller requesting the selection change</param>
         /// <param name="structure">The structure which becomes the new selected object</param>
         /// TODO: code smell, generic setter (invoker) used in a very specific presenter, make it SetStructure or even set property Setructure in a CompositeStructureView directly
-        public void SelectObjectInViews(IStructure structure)
+        public void SelectObjectInViews(IStructure1D structure)
         {
             if (View != null)
             {
@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                 {
                     return;
                 }
-                IStructure visibleSelection = structure;
+                IStructure1D visibleSelection = structure;
                 if (!((ICompositeBranchStructure)View.Data).Structures.Contains(structure))
                 {
                     visibleSelection = null;

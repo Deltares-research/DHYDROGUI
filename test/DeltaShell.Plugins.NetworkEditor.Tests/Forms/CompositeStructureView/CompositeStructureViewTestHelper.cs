@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
                                                                                     });
         }
 
-        public static CompositeBranchStructure AddCompositeBranchStructureForStructureAtLocation(IStructure bridge, NetworkLocation location)
+        public static CompositeBranchStructure AddCompositeBranchStructureForStructureAtLocation(IStructure1D bridge, NetworkLocation location)
         {
             var compositeBranchStructure = new CompositeBranchStructure();
             NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, location.Branch, location.Chainage);
@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
             return bridge;
         }
 
-        public static void ShowStructureAtFirstBranch(IStructure structure, HydroNetwork network, Action<Form> action)
+        public static void ShowStructureAtFirstBranch(IStructure1D structure, HydroNetwork network, Action<Form> action)
         {
             var compositeBranchStructure = new CompositeBranchStructure();
 
@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, structure);
             ShowStructure(compositeBranchStructure,action);
         }
-        public static void ShowStructureAtFirstBranch(IStructure structure, HydroNetwork network)
+        public static void ShowStructureAtFirstBranch(IStructure1D structure, HydroNetwork network)
         {
             ShowStructureAtFirstBranch(structure,network,null);
         }

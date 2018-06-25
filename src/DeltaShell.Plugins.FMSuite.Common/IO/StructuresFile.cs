@@ -264,7 +264,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             throw new NotImplementedException();
         }
 
-        private IEnumerable<DelftIniProperty> ConstructWeirProperties(IStructure structure, string structureType, string path, DateTime refDate)
+        private IEnumerable<DelftIniProperty> ConstructWeirProperties(IStructure1D structure, string structureType, string path, DateTime refDate)
         {
             var weir = (IWeir)structure;
             var weirFormula = weir.WeirFormula;
@@ -273,14 +273,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             throw new NotImplementedException();
         }
 
-        private IEnumerable<DelftIniProperty> ConstructGeneralStructureProperties(IStructure structure)
+        private IEnumerable<DelftIniProperty> ConstructGeneralStructureProperties(IStructure1D structure)
         {
             var structureGenerator = new DefinitionGeneratorStructureGeneralStructure(new CompoundStructureInfo(0, string.Empty));
             var generalStructureCategory = structureGenerator.CreateStructureRegion(structure);
             return generalStructureCategory.Properties;
         }
 
-        private IEnumerable<DelftIniProperty> ConstructPumpProperties(IStructure structure, string structureType, string path, DateTime refDate)
+        private IEnumerable<DelftIniProperty> ConstructPumpProperties(IStructure1D structure, string structureType, string path, DateTime refDate)
         {
             var pump = (IPump)structure;
             var properties = new List<DelftIniProperty>();
@@ -305,7 +305,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return properties;
         }
 
-        private IEnumerable<DelftIniProperty> ConstructSimpleWeirProperties(IStructure structure, string path, string structureType, DateTime refDate)
+        private IEnumerable<DelftIniProperty> ConstructSimpleWeirProperties(IStructure1D structure, string path, string structureType, DateTime refDate)
         {
             var weir = (IWeir)structure;
             var properties = new List<DelftIniProperty>();
@@ -331,7 +331,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return properties;
         }
 
-        private IEnumerable<DelftIniProperty> ConstructGateProperties(IStructure structure, string structureType, string path, DateTime refDate)
+        private IEnumerable<DelftIniProperty> ConstructGateProperties(IStructure1D structure, string structureType, string path, DateTime refDate)
         {
             var gate = (IGate)structure;
             var properties = new List<DelftIniProperty>();

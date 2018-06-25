@@ -124,7 +124,7 @@ namespace DelftTools.ModelExchange
             {
                 return FunctionAttributes.StandardFeatureNames.ObservationPoint;
             }
-            if (dataItemLocation is IStructure)
+            if (dataItemLocation is IStructure1D)
             {
                 return FunctionAttributes.StandardFeatureNames.Structure;
             }

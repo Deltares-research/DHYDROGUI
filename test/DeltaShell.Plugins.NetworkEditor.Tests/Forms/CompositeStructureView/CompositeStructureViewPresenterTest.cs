@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
         private CompositeStructureViewPresenter presenter;
         // private readonly IGui gui = new MockGui();
 
-        readonly List<IStructure> structures = new List<IStructure>
+        readonly List<IStructure1D> structures = new List<IStructure1D>
                                               {
                                                   new Pump("pump1") { OffsetY = 150 },
                                                   new Weir("Weir1") { CrestLevel = 15 }
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 
         }
 
-        private static ICompositeBranchStructure CreateBrancheStructureWithPumpAndWeir(IEnumerable<IStructure> structures)
+        private static ICompositeBranchStructure CreateBrancheStructureWithPumpAndWeir(IEnumerable<IStructure1D> structures)
         {
             // create network
             var network = new HydroNetwork();

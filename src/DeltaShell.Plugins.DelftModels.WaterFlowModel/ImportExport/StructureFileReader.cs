@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 throw new FileReadingException(string.Format("While reading cross section definitions for structures an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
             }
 
-            IList<IStructure> structureDefinitions = new List<IStructure>();
+            IList<IStructure1D> structureDefinitions = new List<IStructure1D>();
             foreach (var structureDefinitionCategory in structuresCategories.Where(category => category.Name == StructureRegion.Header))
             {
                 try
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
         }
         
-        private static IStructure ReadStructureDefinition(IDelftIniCategory definitionCategory)
+        private static IStructure1D ReadStructureDefinition(IDelftIniCategory definitionCategory)
         {
             var type = definitionCategory.ReadProperty<string>(StructureRegion.DefinitionType.Key);
             StructureType structureType;

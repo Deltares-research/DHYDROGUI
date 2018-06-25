@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 {
     public static class NetworkSideViewHelper
     {
-        public static bool GetReversed(Route route, IStructure structure)
+        public static bool GetReversed(Route route, IStructure1D structure)
         {
             INetworkSegment segment = RouteHelper.GetSegmentForNetworkLocation(route,
                                                                                new NetworkLocation(structure.Branch, structure.Chainage));

@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
         private static IEnumerable<INetworkLocation> GetFiniteVolumeStructureNetworkLocations(INetwork network)
         {
-            foreach (var structure in network.BranchFeatures.OfType<IStructure>())
+            foreach (var structure in network.BranchFeatures.OfType<IStructure1D>())
             {
                 var compositeStructure = structure as CompositeBranchStructure;
 

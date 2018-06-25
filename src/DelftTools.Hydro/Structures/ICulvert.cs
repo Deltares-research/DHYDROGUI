@@ -3,7 +3,7 @@ using DelftTools.Hydro.CrossSections;
 
 namespace DelftTools.Hydro.Structures
 {
-    public interface ICulvert : IStructure, IFrictionData, IGroundLayer
+    public interface ICulvert : IStructure1D, IFrictionData, IGroundLayer
     {
         //repeat members for binding in FPAT :(
         string Name { get; set; }

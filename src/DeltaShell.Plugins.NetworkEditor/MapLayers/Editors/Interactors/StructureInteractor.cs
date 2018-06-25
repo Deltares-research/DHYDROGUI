@@ -19,7 +19,7 @@ using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 {
-    public class StructureInteractor<T> : PointInteractor,IBranchMaintainableInteractor,  INetworkFeatureInteractor where T : class, IStructure, new()
+    public class StructureInteractor<T> : PointInteractor,IBranchMaintainableInteractor,  INetworkFeatureInteractor where T : class, IStructure1D, new()
     {
         private bool moving;
         private bool addingNew;
@@ -167,14 +167,14 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
             NetworkHelper.UpdateBranchFeatureChainageFromGeometry(branchFeature);
 
-            var structureToCompositeStructureTopology = new StructureToCompositeStructureTopology<IStructure>
+            var structureToCompositeStructureTopology = new StructureToCompositeStructureTopology<IStructure1D>
                                                                                                           {
                                                                                                               Network = hydroNetwork,
                                                                                                               CompositeStructures = hydroNetwork.CompositeBranchStructures,
                                                                                                               Layer = Layer,
                                                                                                               Tolerance = Tolerance
                                                                                                           };
-            structureToCompositeStructureTopology.OnStructureAdded((IStructure)SourceFeature, snapResult);
+            structureToCompositeStructureTopology.OnStructureAdded((IStructure1D)SourceFeature, snapResult);
 
             if (moving)
             {

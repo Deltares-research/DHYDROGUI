@@ -411,7 +411,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             {
                 return ElementSet.Laterals;
             }
-            if (feature is IStructure)
+            if (feature is IStructure1D)
             {
                 return ElementSet.Structures;
             }

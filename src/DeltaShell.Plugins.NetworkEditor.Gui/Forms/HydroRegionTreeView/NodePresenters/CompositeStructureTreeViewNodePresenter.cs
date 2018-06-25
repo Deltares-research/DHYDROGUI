@@ -27,13 +27,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
 
         public override DragOperations CanDrop(object item, ITreeNode sourceNode, ITreeNode targetNode, DragOperations validOperations)
         {
-            return item.GetType().IsSubclassOf(typeof (IStructure)) ? DragOperations.Move : DragOperations.None;
+            return item.GetType().IsSubclassOf(typeof (IStructure1D)) ? DragOperations.Move : DragOperations.None;
         }
 
         public override void OnDragDrop(object item, object sourceParentNodeData, ICompositeBranchStructure target, DragOperations operation, int position)
         {
-            ((ICompositeBranchStructure)sourceParentNodeData).Structures.Remove((IStructure)item);
-            target.Structures.Insert(position, (IStructure)item);
+            ((ICompositeBranchStructure)sourceParentNodeData).Structures.Remove((IStructure1D)item);
+            target.Structures.Insert(position, (IStructure1D)item);
         }
 
         protected override void OnPropertyChanged(ICompositeBranchStructure feature, ITreeNode node, PropertyChangedEventArgs e)

@@ -13,7 +13,7 @@ namespace DelftTools.Hydro.Structures
 
     ///<summary>
     ///</summary>
-    public interface IExtraResistance : IStructure
+    public interface IExtraResistance : IStructure1D
     {
         ///<summary>
         /// Used formulate to calculate the extra friction

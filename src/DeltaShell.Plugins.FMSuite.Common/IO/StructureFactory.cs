@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         };
 
         /// <summary>
-        /// Constructs a <see cref="IStructure"/> for the following supported types:
+        /// Constructs a <see cref="IStructure1D"/> for the following supported types:
         /// Pump, Weir, Gate
         /// </summary>
         /// <param name="structure2D">The description of the structure.</param>
@@ -80,11 +80,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 var pliFile = new PliFile<Feature2D>();
                 structure.Geometry = pliFile.Read(filePath).First().Geometry;
             }
-
-            structure.Chainage = double.NaN;
         }
 
-        private static void SetTimeSeriesProperty(Structure2D structure2D, string propertyName, string path, DateTime refDate, IStructure structure, string useTimeSeriesProperty, string constantValueProperty, TimeSeries timeSeries)
+        private static void SetTimeSeriesProperty(Structure2D structure2D, string propertyName, string path, DateTime refDate, IStructure1D structure, string useTimeSeriesProperty, string constantValueProperty, TimeSeries timeSeries)
         {
             ModelProperty property = structure2D.GetProperty(propertyName);
             if (property != null)

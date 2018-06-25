@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
     public interface IStructureView : IView
     {
         event EventHandler<SelectedItemChangedEventArgs> SelectionChanged;
-        IStructure SelectedStructure { get; set; }
+        IStructure1D SelectedStructure { get; set; }
         object CommandReceiver { get; }
     }
 

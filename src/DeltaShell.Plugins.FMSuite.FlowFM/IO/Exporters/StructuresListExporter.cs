@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 };
             try
             {
-                structuresFile.Write(path, list.OfType<IStructure>());
+                structuresFile.Write(path, list.OfType<IStructure1D>());
                 Log.InfoFormat("Written {0} {1}.", list.Count, GetStructuresName());
                 return true;
             }

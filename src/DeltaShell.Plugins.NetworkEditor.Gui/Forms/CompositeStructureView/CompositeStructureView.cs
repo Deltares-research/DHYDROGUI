@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
     {
         private CompositeStructureViewPresenter presenter;
         private ICompositeBranchStructure data;
-        private IStructure selectedStructure;
+        private IStructure1D selectedStructure;
         private static Control previousFocusedControl;
 
         private bool settingFormsView;
@@ -130,13 +130,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                 }
             }
 
-            var structure = sender as IStructure;
+            var structure = sender as IStructure1D;
             if ( structure == null) return;
 
             UpdateStucture(structure,e.PropertyName);
         }
 
-        private void UpdateStucture(IStructure structure, string propertyName)
+        private void UpdateStucture(IStructure1D structure, string propertyName)
         {
             if (!Data.Structures.Contains(structure)) return;
 
@@ -168,11 +168,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         /// <param name="e"></param>
         void NetworkCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            if (!(e.Item is IStructure))
+            if (!(e.Item is IStructure1D))
             {
                 return;
             }
-            var structure = (IStructure) e.Item;
+            var structure = (IStructure1D) e.Item;
             if (structure.Network != null && structure.Network.IsEditing)
             {
                 return;//TODO: wait for finish and refresh
@@ -196,7 +196,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         /// <summary>
         /// Gets the structure that has the focus
         /// </summary>
-        public IStructure SelectedStructure
+        public IStructure1D SelectedStructure
         {
             get { return selectedStructure; }
             set
@@ -249,7 +249,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                 tabControl1.TabPages.Clear();
                 childViews.Clear();
 
-                IEnumerable<IStructure> structures = Data.Structures;
+                IEnumerable<IStructure1D> structures = Data.Structures;
                 
                 foreach (var structure in structures)
                 {
@@ -292,7 +292,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         /// Activates the form view for the given structure
         /// </summary>
         /// <param name="structure"></param>
-        public void ActivateFormView(IStructure structure)
+        public void ActivateFormView(IStructure1D structure)
         {
             RememberPreviouslyFocusedControl();
 
@@ -342,7 +342,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         
         public void ActivateChildView(IView childView)
         {
-            var structure = childView.Data as IStructure;
+            var structure = childView.Data as IStructure1D;
             if (structure == null) return;
 
             RememberPreviouslyFocusedControl();

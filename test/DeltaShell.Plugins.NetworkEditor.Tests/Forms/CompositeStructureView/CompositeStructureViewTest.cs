@@ -341,7 +341,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
                 };
             gui.SelectionChanged += delegate
                                         {
-                                            compositeStructureViewPresenter.SelectObjectInViews((IStructure) gui.Selection);
+                                            compositeStructureViewPresenter.SelectObjectInViews((IStructure1D) gui.Selection);
                                         };
             
             mocks.ReplayAll();
@@ -406,10 +406,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 
             CompositeStructureViewHelper.UpdateMinMaxForBranchFeatures(new IBranchFeature[]
             {
-                new CompositeBranchStructure { Structures = new EventedList<IStructure>(new [] {weir}) }, 
-                new CompositeBranchStructure { Structures = new EventedList<IStructure>(new [] {pump}) },
-                new CompositeBranchStructure { Structures = new EventedList<IStructure>(new [] {bridge}) },
-                new CompositeBranchStructure { Structures = new EventedList<IStructure>(new [] {culvert}) },
+                new CompositeBranchStructure { Structures = new EventedList<IStructure1D>(new [] {weir}) }, 
+                new CompositeBranchStructure { Structures = new EventedList<IStructure1D>(new [] {pump}) },
+                new CompositeBranchStructure { Structures = new EventedList<IStructure1D>(new [] {bridge}) },
+                new CompositeBranchStructure { Structures = new EventedList<IStructure1D>(new [] {culvert}) },
                 crossSection
             }, ref minValue, ref maxValue);
 
@@ -423,10 +423,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 
             CompositeStructureViewHelper.UpdateMinMaxForBranchFeatures(new IBranchFeature[]
             {
-                new CompositeBranchStructure { Structures = new EventedList<IStructure>(new [] {weir}) }, 
-                new CompositeBranchStructure { Structures = new EventedList<IStructure>(new [] {pump}) },
-                new CompositeBranchStructure { Structures = new EventedList<IStructure>(new [] {bridge}) },
-                new CompositeBranchStructure { Structures = new EventedList<IStructure>(new [] {culvert}) },
+                new CompositeBranchStructure { Structures = new EventedList<IStructure1D>(new [] {weir}) }, 
+                new CompositeBranchStructure { Structures = new EventedList<IStructure1D>(new [] {pump}) },
+                new CompositeBranchStructure { Structures = new EventedList<IStructure1D>(new [] {bridge}) },
+                new CompositeBranchStructure { Structures = new EventedList<IStructure1D>(new [] {culvert}) },
                 crossSection
             }, ref minValue, ref maxValue);
 

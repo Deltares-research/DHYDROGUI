@@ -969,7 +969,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         public void ReverseBranch(IChannel branch)
         {
-            if (branch.BranchFeatures.OfType<IStructure>().Any(IsOriented))
+            if (branch.BranchFeatures.OfType<IStructure1D>().Any(IsOriented))
             {
                 var result = MessageBox.Show(
                     "Your branch contains oriented structures and cross sections, which will not be reversed upon reversal of the flow direction. Continue?",

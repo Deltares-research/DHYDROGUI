@@ -7,7 +7,6 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Utils.Collections.Generic;
-using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro.Structures
 {
@@ -104,29 +103,7 @@ namespace DelftTools.Hydro.Structures
             breachLocationY = point.Y;
         }
 
-        #region Implementation of IStructure
-
-        public int CompareTo(INetworkFeature other)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public INetwork Network { get; set; }
-        public IHydroNetwork HydroNetwork { get; }
-
-        string IHydroNetworkFeature.Description
-        {
-            get { throw new System.NotImplementedException(); }
-            set { throw new System.NotImplementedException(); }
-        }
-
-        public string LongName { get; set; }
-
-        string INetworkFeature.Description
-        {
-            get { throw new System.NotImplementedException(); }
-            set { throw new System.NotImplementedException(); }
-        }
+        #region Implementation of IStructure // TODO: Implement this if necessary (first check if required)
 
         public IHydroRegion Region { get; }
         public IEventedList<HydroLink> Links { get; set; }
@@ -134,39 +111,19 @@ namespace DelftTools.Hydro.Structures
         public bool CanBeLinkTarget { get; }
         public HydroLink LinkTo(IHydroObject target)
         {
-            throw new System.NotImplementedException();
+            return null;
         }
 
         public void UnlinkFrom(IHydroObject target)
         {
-            throw new System.NotImplementedException();
         }
 
         public bool CanLinkTo(IHydroObject target)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public int CompareTo(IBranchFeature other)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void CopyFrom(object source)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public IBranch Branch { get; set; }
-        public double Chainage { get; set; }
-        public double Length { get; set; }
-        public ICompositeBranchStructure ParentStructure { get; set; }
-        public double OffsetY { get; set; }
-        public StructureType GetStructureType()
-        {
-            throw new System.NotImplementedException();
+            return false;
         }
 
         #endregion
+
     }
 }

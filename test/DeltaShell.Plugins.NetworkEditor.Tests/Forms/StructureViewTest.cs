@@ -356,7 +356,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms
             WindowsFormsTestHelper.ShowModal(structureView);
         }
 
-        private void AddExtraStructure(IStructure structure)
+        private void AddExtraStructure(IStructure1D structure)
         {
             Branch1.BranchFeatures.Add(structure);
             HydroNetworkHelper.AddStructureToComposite(CompositeBranchStructure, structure);

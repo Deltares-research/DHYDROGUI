@@ -12,7 +12,7 @@ namespace DelftTools.Hydro
         /// </summary>
         /// <param name="sewerConnection"></param>
         /// <param name="structure"></param>
-        public static ICompositeBranchStructure AddStructureToBranch(this ISewerConnection sewerConnection, IStructure structure)
+        public static ICompositeBranchStructure AddStructureToBranch(this ISewerConnection sewerConnection, IStructure1D structure)
         {
             structure.Branch = sewerConnection;
             structure.Network = sewerConnection.Network;
