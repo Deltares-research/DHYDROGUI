@@ -39,6 +39,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         public bool MarkModelOutputOutOfSync { get; set; }
 
+        public bool SkipImportTimers { get; set; }
+
         /// <summary>
         /// Import data on a water quality model,
         /// or create a new one if the target doesn't exist.
@@ -59,7 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
             try
             {
-                model.ImportHydroData(data, markOutputOutOfSync: MarkModelOutputOutOfSync);
+                model.ImportHydroData(data, skipImportTimers: SkipImportTimers, markOutputOutOfSync: MarkModelOutputOutOfSync);
 
                 if (ExpandModelNode != null)
                 {

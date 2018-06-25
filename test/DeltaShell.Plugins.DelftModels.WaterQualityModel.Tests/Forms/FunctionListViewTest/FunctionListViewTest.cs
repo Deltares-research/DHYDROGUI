@@ -1,4 +1,5 @@
 using System;
+using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
@@ -10,6 +11,7 @@ using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionListView;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -108,7 +110,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.FunctionL
 
             // check manually that function 2 is excluded from the list
         }
-        
+
+        [Test]
+        public void TestFunctionListView_SetInitialValueColumn_True_UpdatesDefaultValueColumnCaption()
+        {
+            var listView = new FunctionListView { UseInitialValueColumn = true };
+            var column = TypeUtils.GetField<FunctionListView, ITableViewColumn>(listView, "defaultValueColumn");
+            Assert.AreEqual(Resources.FunctionListView_GetDefaultValueColumnName_Initial_value, column.Caption);
+
+            listView.UseInitialValueColumn = false;
+            Assert.AreEqual(Resources.FunctionListView_InitializeTableView_Default_value, column.Caption);
+        }
+
+        [Test]
+        public void TestFunctionListView_SetInitialValueColumn_False_UpdatesDefaultValueColumnCaption()
+        {
+            var listView = new FunctionListView { UseInitialValueColumn = false };
+            var column = TypeUtils.GetField<FunctionListView, ITableViewColumn>(listView, "defaultValueColumn");
+            Assert.AreEqual(Resources.FunctionListView_InitializeTableView_Default_value, column.Caption);
+
+            listView.UseInitialValueColumn = true;
+            Assert.AreEqual(Resources.FunctionListView_GetDefaultValueColumnName_Initial_value, column.Caption);
+        }
+
         private static EventedList<IFunction> CreateFunctionList()
         {
             return new EventedList<IFunction>

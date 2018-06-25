@@ -738,7 +738,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             throw new NotSupportedException("WaterQualityModel does not support cloning.");
         }
        
-        public virtual void ImportHydroData(IHydroData data, bool importTimers = false, bool importCoordinateSystem = false, bool markOutputOutOfSync = true)
+        /// <summary>
+        /// Imports the contents of a HydFile into the WAQ model.
+        /// </summary>
+        /// <param name="data">Contents from a HydFile (or generated HydroData).</param>
+        /// <param name="importCoordinateSystem">Optional parameter (default False).</param>
+        /// <param name="skipImportTimers">Optional parameter (default False).</param>
+        /// <param name="markOutputOutOfSync">Optional parameter (default True).</param>
+        public virtual void ImportHydroData(IHydroData data,bool importCoordinateSystem = false, bool skipImportTimers = false, bool markOutputOutOfSync = true)
         {
             if (data == null)
             {   
@@ -775,7 +782,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 }
 
                 // import settings that should not be overridden by re-importing the hyd file
-                if (!HasEverImportedHydroData || importTimers)
+                if (!skipImportTimers)
                 {
                     SetImportProgress("Importing timers");
                     StartTime = HydroData.ConversionStartTime;
@@ -783,16 +790,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     TimeStep = HydroData.ConversionTimeStep;
                     ReferenceTime = HydroData.ConversionReferenceTime;
 
-                    // import the times from the hyd file when importing the first time.
-                    ModelSettings.HisStartTime = HydroData.ConversionStartTime;
-                    ModelSettings.HisStopTime = HydroData.ConversionStopTime;
+                    //Sync of time step needs to be explicit.
                     ModelSettings.HisTimeStep = HydroData.ConversionTimeStep;
-                    ModelSettings.MapStartTime = HydroData.ConversionStartTime;
-                    ModelSettings.MapStopTime = HydroData.ConversionStopTime;
                     ModelSettings.MapTimeStep = HydroData.ConversionTimeStep;
-                    ModelSettings.BalanceStartTime = HydroData.ConversionStartTime;
-                    ModelSettings.BalanceStopTime = HydroData.ConversionStopTime;
                     ModelSettings.BalanceTimeStep = HydroData.ConversionTimeStep;
+                    LogSynchronizedTimer("Time Step", TimeStep);
                 }
 
                 if (!HasEverImportedHydroData || importCoordinateSystem)
@@ -1142,12 +1144,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             // use the output directory to find the files to zip if writerestart is true.
             modelStateHandler.ModelWorkingDirectory = ModelSettings.OutputDirectory;
-
             waqPreProcessor = new WaqFileBasedPreProcessor();
             var success = waqPreProcessor.InitializeWaq(waqInitializationSettings, (displayName, filePath) => this.AddTextDocument(displayName, filePath));
+            
             if (!success)
             {
-                throw new Exception("Failed to initialize pre-processor.\r\nPlease look at List file for more information.");
+               throw new Exception(string.Format(Resources.WaterQualityModel_OnInitializeCore_Failed_to_initialize_pre_processor__0_Please_look_at_the_List_file_for_more_information__0_List_file_found_in__Project_view____Output____List_file__0___1_, Environment.NewLine,  Path.GetDirectoryName(Path.Combine(ExplicitOutputDirectory,"output"))));
             }
 
             //initialize and fill initial values in output coverages (needs to be available after initialize for rtc to pick up, for example)
@@ -1281,6 +1283,49 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             this.InputPropertyChanged(sender, e);
 
             MarkOutputOutOfSync();
+        }
+
+        /// <summary>
+        /// Overriden to synchronize the StartTime and the output timers.
+        /// </summary>
+        public override DateTime StartTime
+        {
+            get { return base.StartTime; }
+            set
+            {
+                if (StartTime == value) return;
+                base.StartTime = value;
+
+                ModelSettings.BalanceStartTime = StartTime;
+                ModelSettings.MapStartTime = StartTime;
+                ModelSettings.HisStartTime = StartTime;
+                LogSynchronizedTimer("Start Time", StartTime);
+            }
+        }
+
+        /// <summary>
+        /// Overriden to synchronize the StopTime and the output timers.
+        /// </summary>
+        public override DateTime StopTime
+        {
+            get { return base.StopTime; }
+            set
+            {
+                if (StopTime == value) return;
+                base.StopTime = value;
+
+                ModelSettings.BalanceStopTime = StopTime;
+                ModelSettings.MapStopTime = StopTime;
+                ModelSettings.HisStopTime = StopTime;
+                LogSynchronizedTimer("Stop Time", StopTime);
+            }
+        }
+
+        private void LogSynchronizedTimer(string timer, object value)
+        {
+            //For some info the test will only pass if the message is contained in the string.Format, but not in the Log.InfoFormat.
+            var message = string.Format(Resources.WaterQualityModel_LogSynchronizedTimer_Output_timers___0___have_been_synchronized_to_match_the_Simulation__0____1___, timer,value);
+            Log.Info(message);
         }
 
         /// <summary>

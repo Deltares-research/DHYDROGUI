@@ -46,11 +46,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions
                 {
                     ((IModel) model).DataItems.Insert(insertIndex, dataItem);
                 }
+                
+                CleanupInvalidFiles(filePath, dataItem);
             }
             else
             {
                 UpdateTextFromFileDocument(dataItem);
             }
+        }
+
+        private static void CleanupInvalidFiles(string filePath, IDataItem dataItem)
+        {
+            //D3DFMIQ-76
+            /* When adding a TextDocumentFromFile - DataItem to the DataItems collection,
+             * it gets updated with a temporary file that should not be created.
+             * To avoid this behaviour we do hereby a cleanup of such files.
+             */
+            if (dataItem == null 
+                || (TextDocumentFromFile)dataItem.Value == null
+                || ((TextDocumentFromFile) dataItem.Value).Path == filePath)
+                return;
+
+            var fileToRemove = ((TextDocumentFromFile) dataItem.Value).Path;
+            ((TextDocumentFromFile) dataItem.Value).Path = filePath;
+            File.Delete(fileToRemove);
         }
 
         private static void UpdateTextFromFileDocument(IDataItem dataItem)

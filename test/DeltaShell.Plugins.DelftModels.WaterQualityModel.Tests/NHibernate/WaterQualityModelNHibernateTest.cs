@@ -10,15 +10,20 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-
+using DeltaShell.Core;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
+using DeltaShell.Plugins.NetCDF;
+using DeltaShell.Plugins.NetworkEditor;
+using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
-
+using DeltaShell.Plugins.Toolbox;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -415,82 +420,91 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
         [Test]
         [Category(TestCategory.Slow)]
-        public void SaveAndRetrieveStandaloneWaterQualityModelWithHydFileImported()
+        public void SaveAndRetrieveStandAloneWaterQualityModelWithHydFileImported()
         {
-            // setup
-            var waqModels = new List<WaterQualityModel>();
-            var mocks = new MockRepository();
-            var app = mocks.DynamicMock<IApplication>();
-            var activityRunner = mocks.DynamicMock<IActivityRunner>();
-            
-            app.Expect(a => a.ActivityRunner).Return(activityRunner);
-            app.Expect(a => a.GetAllModelsInProject()).Return(waqModels);
-            mocks.ReplayAll();
+            var filePath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
+            using (var app = new DeltaShellApplication{ IsProjectCreatedInTemporaryDirectory = true })
+            {
+                var waqAppPlugin = new WaterQualityModelApplicationPlugin();
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new NetCdfApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new ToolboxApplicationPlugin());
+                app.Plugins.Add(waqAppPlugin);
 
-            var waqAppPlugin = new WaterQualityModelApplicationPlugin {Application = app};
+                app.Run();
 
-            var filePath = Path.Combine(TestHelper.GetDataDir(), "IO", "real", "uni3d.hyd");
+                var importedWaq = (WaterQualityModel) new HydFileImporter().ImportItem(filePath);
 
-            var entity = new WaterQualityModel();
-            new HydFileImporter().ImportItem(filePath, entity);
+                app.Project.RootFolder.Add(importedWaq);
 
-            var middleHeight = (entity.ZTop + entity.ZBot) / 2;
-            entity.ObservationPoints.Add(new WaterQualityObservationPoint { Z = middleHeight});
-            entity.Loads.Add(new WaterQualityLoad { Z = middleHeight });
+                var middleHeight = (importedWaq.ZTop + importedWaq.ZBot) / 2;
+                importedWaq.ObservationPoints.Add(new WaterQualityObservationPoint { Z = middleHeight });
+                importedWaq.Loads.Add(new WaterQualityLoad { Z = middleHeight });
 
-            entity.StartTime = new DateTime(2015, 3, 24, 11, 15, 0);
-            entity.TimeStep = new TimeSpan(0, 0, 10);
-            entity.StopTime = new DateTime(2015, 3, 24, 11, 16, 0);
+                var startTime = new DateTime(2015, 3, 24, 11, 15, 0);
+                var timeStep = new TimeSpan(0, 0, 10);
+                var stopTime = new DateTime(2015, 3, 24, 11, 16, 0);
 
-            const string boundaryAlias = "I need somebody to love";
-            entity.Boundaries[0].LocationAliases = boundaryAlias;
+                importedWaq.StartTime = startTime;
+                importedWaq.TimeStep = timeStep;
+                importedWaq.StopTime = stopTime;
 
-            entity.ObservationAreas.SetValuesAsLabels(Enumerable.Repeat("Model wide", entity.Grid.Cells.Count));
+                const string boundaryAlias = "I need somebody to love";
+                importedWaq.Boundaries[0].LocationAliases = boundaryAlias;
 
-            // call
-            var project = SaveAndRetrieveObjectCore(entity);
-            var retrievedEntity = RetrievePersistedObjectFromProject<WaterQualityModel>(project);
-            
-            waqModels.Add(retrievedEntity);
-            app.Raise( a => a.ProjectOpened +=null, project);
+                importedWaq.ObservationAreas.SetValuesAsLabels(Enumerable.Repeat("Model wide", importedWaq.Grid.Cells.Count));
 
-            // assert
-            Assert.AreEqual(filePath, retrievedEntity.HydroData.ToString());
-            Assert.IsFalse(retrievedEntity.Grid.IsEmpty);
-            Assert.AreEqual(entity.Grid.Cells.Count, retrievedEntity.Grid.Cells.Count);
-            Assert.AreEqual(entity.Grid.Vertices.Count, retrievedEntity.Grid.Vertices.Count);
+                // call
+                var savePath = Path.GetRandomFileName();
+                app.SaveProjectAs(savePath);
 
-            Assert.AreEqual(entity.AreasRelativeFilePath, retrievedEntity.AreasRelativeFilePath);
-            Assert.AreEqual(entity.AttributesRelativeFilePath, retrievedEntity.AttributesRelativeFilePath);
-            Assert.AreEqual(entity.FlowsRelativeFilePath, retrievedEntity.FlowsRelativeFilePath);
-            Assert.AreEqual(entity.LengthsRelativeFilePath, retrievedEntity.LengthsRelativeFilePath);
-            Assert.AreEqual(entity.PointersRelativeFilePath, retrievedEntity.PointersRelativeFilePath);
-            Assert.AreEqual(entity.SalinityRelativeFilePath, retrievedEntity.SalinityRelativeFilePath);
-            Assert.AreEqual(entity.ShearStressesRelativeFilePath, retrievedEntity.ShearStressesRelativeFilePath);
-            Assert.AreEqual(entity.SurfacesRelativeFilePath, retrievedEntity.SurfacesRelativeFilePath);
-            Assert.AreEqual(entity.TemperatureRelativeFilePath, retrievedEntity.TemperatureRelativeFilePath);
-            Assert.AreEqual(entity.VerticalDiffusionRelativeFilePath, retrievedEntity.VerticalDiffusionRelativeFilePath);
-            Assert.AreEqual(entity.VolumesRelativeFilePath, retrievedEntity.VolumesRelativeFilePath);
+                app.CloseProject();
 
-            Assert.AreEqual(entity.NumberOfHydrodynamicLayers, retrievedEntity.NumberOfHydrodynamicLayers);
-            CollectionAssert.AreEqual(entity.HydrodynamicLayerThicknesses, retrievedEntity.HydrodynamicLayerThicknesses);
-            Assert.AreEqual(entity.NumberOfWaqSegmentLayers, retrievedEntity.NumberOfWaqSegmentLayers);
-            CollectionAssert.AreEqual(entity.NumberOfHydrodynamicLayersPerWaqLayer, retrievedEntity.NumberOfHydrodynamicLayersPerWaqLayer);
+                app.OpenProject(savePath);
+                var openedWaq = app.Project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
+                Assert.IsNotNull(openedWaq);
 
-            Assert.AreEqual(entity.ModelType, retrievedEntity.ModelType);
-            Assert.AreEqual(entity.LayerType, retrievedEntity.LayerType);
+                // assert
+                Assert.AreEqual(filePath, openedWaq.HydroData.ToString());
+                Assert.IsFalse(openedWaq.Grid.IsEmpty);
+                Assert.AreEqual(importedWaq.Grid.Cells.Count, openedWaq.Grid.Cells.Count);
+                Assert.AreEqual(importedWaq.Grid.Vertices.Count, openedWaq.Grid.Vertices.Count);
 
-            Assert.AreEqual(middleHeight, retrievedEntity.ObservationPoints[0].Z);
-            Assert.AreEqual(middleHeight, retrievedEntity.Loads[0].Z);
+                Assert.AreEqual(importedWaq.AreasRelativeFilePath, openedWaq.AreasRelativeFilePath);
+                Assert.AreEqual(importedWaq.AttributesRelativeFilePath, openedWaq.AttributesRelativeFilePath);
+                Assert.AreEqual(importedWaq.FlowsRelativeFilePath, openedWaq.FlowsRelativeFilePath);
+                Assert.AreEqual(importedWaq.LengthsRelativeFilePath, openedWaq.LengthsRelativeFilePath);
+                Assert.AreEqual(importedWaq.PointersRelativeFilePath, openedWaq.PointersRelativeFilePath);
+                Assert.AreEqual(importedWaq.SalinityRelativeFilePath, openedWaq.SalinityRelativeFilePath);
+                Assert.AreEqual(importedWaq.ShearStressesRelativeFilePath, openedWaq.ShearStressesRelativeFilePath);
+                Assert.AreEqual(importedWaq.SurfacesRelativeFilePath, openedWaq.SurfacesRelativeFilePath);
+                Assert.AreEqual(importedWaq.TemperatureRelativeFilePath, openedWaq.TemperatureRelativeFilePath);
+                Assert.AreEqual(importedWaq.VerticalDiffusionRelativeFilePath, openedWaq.VerticalDiffusionRelativeFilePath);
+                Assert.AreEqual(importedWaq.VolumesRelativeFilePath, openedWaq.VolumesRelativeFilePath);
 
-            Assert.AreEqual(new DateTime(2015, 3, 24, 11, 15, 0), retrievedEntity.StartTime);
-            Assert.AreEqual(new TimeSpan(0, 0, 10), retrievedEntity.TimeStep);
-            Assert.AreEqual(new DateTime(2015, 3, 24, 11, 16, 0), retrievedEntity.StopTime);
+                Assert.AreEqual(importedWaq.NumberOfHydrodynamicLayers, openedWaq.NumberOfHydrodynamicLayers);
+                CollectionAssert.AreEqual(importedWaq.HydrodynamicLayerThicknesses, openedWaq.HydrodynamicLayerThicknesses);
+                Assert.AreEqual(importedWaq.NumberOfWaqSegmentLayers, openedWaq.NumberOfWaqSegmentLayers);
+                CollectionAssert.AreEqual(importedWaq.NumberOfHydrodynamicLayersPerWaqLayer, openedWaq.NumberOfHydrodynamicLayersPerWaqLayer);
 
-            Assert.AreEqual(6, retrievedEntity.Boundaries.Count);
-            Assert.AreEqual(boundaryAlias, entity.Boundaries[0].LocationAliases);
+                Assert.AreEqual(importedWaq.ModelType, openedWaq.ModelType);
+                Assert.AreEqual(importedWaq.LayerType, openedWaq.LayerType);
 
-            CollectionAssert.AreEquivalent(Enumerable.Repeat("model wide", entity.Grid.Cells.Count), entity.ObservationAreas.GetValuesAsLabels());
+                Assert.AreEqual(middleHeight, openedWaq.ObservationPoints[0].Z);
+                Assert.AreEqual(middleHeight, openedWaq.Loads[0].Z);
+
+                Assert.AreEqual(startTime, openedWaq.StartTime);
+                Assert.AreEqual(timeStep, openedWaq.TimeStep);
+                Assert.AreEqual(stopTime, openedWaq.StopTime);
+
+                Assert.AreEqual(6, openedWaq.Boundaries.Count);
+                Assert.AreEqual(boundaryAlias, importedWaq.Boundaries[0].LocationAliases);
+
+                CollectionAssert.AreEquivalent(Enumerable.Repeat("model wide", importedWaq.Grid.Cells.Count), importedWaq.ObservationAreas.GetValuesAsLabels());
+            }
         }
 
         [Test]

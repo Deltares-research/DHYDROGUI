@@ -4,7 +4,6 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
@@ -530,6 +529,63 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 string dir = Path.GetDirectoryName(localHydFile);
                 FileUtils.DeleteIfExists(dir);
             }
+        }
+
+        [Test]
+        public void Check_That_Property_ImportedSubstanceFilePath_Persists_After_SaveLoad_Model()
+        {
+            // copy hyd file and related files
+            var dataDir = TestHelper.GetDataDir();
+            var squareHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
+            var localHydFile = TestHelper.CreateLocalCopy(squareHydFile);
+
+            try
+            {
+                // start deltashell
+                using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+                {
+                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                    app.Plugins.Add(new CommonToolsApplicationPlugin());
+                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                    app.Plugins.Add(new WaterQualityModelApplicationPlugin());
+
+                    app.Run();
+
+                    // create a model
+                    var originalWaqModel = new WaterQualityModel();
+
+                    // add to project
+                    app.Project.RootFolder.Items.Add(originalWaqModel);
+
+                    var library = originalWaqModel.SubstanceProcessLibrary;
+                    library.ImportedSubstanceFilePath = null;
+                    
+                    //Import 
+                    new SubFileImporter().Import(library, Path.Combine(TestHelper.GetDataDir(), "IO", "Eutrof_simple.sub"));
+
+                    // save it and close
+                    var savePath = Path.Combine(Path.GetDirectoryName(localHydFile), "savedProject", "project1.dsproj");
+                    app.SaveProjectAs(savePath);
+                    app.CloseProject();
+                    
+                    // load the model
+                    app.OpenProject(savePath);
+                    
+                    var reopenedWaqModel = app.Project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
+                    Assert.NotNull(reopenedWaqModel);
+                    
+                    // Expect that the ImportedSubstanceFilePath is not null
+                    Assert.IsNotNull(reopenedWaqModel.SubstanceProcessLibrary.ImportedSubstanceFilePath);
+                }
+            }
+            finally
+            {
+                // cleanup all files after test has ran.
+                string dir = Path.GetDirectoryName(localHydFile);
+                FileUtils.DeleteIfExists(dir);
+            }
+
         }
 
         [Test]

@@ -361,4 +361,10 @@
   <data name="WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Could_not_find_process_definition_files___0___but_now_using__1_" xml:space="preserve">
     <value>Could not find process definition files: {0}, but now using {1}</value>
   </data>
+  <data name="SubstanceProcessLibraryView_InitializeTableViewActiveSubstances_Default_value" xml:space="preserve">
+    <value>Default value</value>
+  </data>
+  <data name="FunctionListView_GetDefaultValueColumnName_Initial_value" xml:space="preserve">
+    <value>Initial value</value>
+  </data>
 </root>

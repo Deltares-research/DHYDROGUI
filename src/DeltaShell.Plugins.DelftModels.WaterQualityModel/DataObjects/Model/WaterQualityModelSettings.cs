@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
             BalanceTimeStep = new TimeSpan(0, 1, 0, 0);
             BalanceUnit = BalanceUnit.Gram;
             NumericalScheme = NumericalScheme.Scheme15;
-            NoDispersionIfFlowIsZero = false;
+            NoDispersionIfFlowIsZero = true;
             NoDispersionOverOpenBoundaries = true;
             UseFirstOrder = false;
             LumpProcesses = true;

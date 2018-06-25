@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -187,6 +187,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("Folder", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initial value.
+        /// </summary>
+        internal static string FunctionListView_GetDefaultValueColumnName_Initial_value {
+            get {
+                return ResourceManager.GetString("FunctionListView_GetDefaultValueColumnName_Initial_value", resourceCulture);
             }
         }
         
@@ -514,6 +523,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
         internal static string SubstanceProcessLibraryView_InitializeTableView_Unit {
             get {
                 return ResourceManager.GetString("SubstanceProcessLibraryView_InitializeTableView_Unit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default value.
+        /// </summary>
+        internal static string SubstanceProcessLibraryView_InitializeTableViewActiveSubstances_Default_value {
+            get {
+                return ResourceManager.GetString("SubstanceProcessLibraryView_InitializeTableViewActiveSubstances_Default_value", resourceCulture);
             }
         }
         

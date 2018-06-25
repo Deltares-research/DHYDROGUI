@@ -136,14 +136,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 yield break;
             }
 
-            // 'toBeChecked' time range must be in 'reference' time range
-            if (toBeCheckedStartTime < referenceStartTime || toBeCheckedStopTime > referenceStopTime)
+            // 'toBeChecked' time range must be equal to 'reference' time
+            if (toBeCheckedStartTime != referenceStartTime || toBeCheckedStopTime != referenceStopTime)
             {
-                yield return new ValidationIssue(model, ValidationSeverity.Warning, String.Format(
-                        Resources.WaterQualityModelValidate_CheckTimers_Period_should_be_correctly_bounded,
-                        description, FormatTimeString(toBeCheckedStartTime), FormatTimeString(toBeCheckedStopTime),
-                        referenceDescription, referenceIsFromLinkedFlowModel ? Resources.WaterQualityModelValidate_CheckTimers_Linked_flow : "",
-                        FormatTimeString(referenceStartTime), FormatTimeString(referenceStopTime)));
+                //var validationMessage = Resources.WaterQualityModelValidate_CheckTimers_Period_should_be_correctly_bounded;
+                yield return new ValidationIssue(model, ValidationSeverity.Info, string.Format(
+                        Resources.WaterQualityModelValidator_CheckTimers_Timers_for__0__are_not_equal_to_the_simulation_period_of_the_model___1____2____Please_verify_that_they_overlap_with_the_simulation_period_,
+                        description, FormatTimeString(referenceStartTime), FormatTimeString(referenceStopTime)));
             }
 
             // 'toBeChecked' start time should be aligned with the reference samples

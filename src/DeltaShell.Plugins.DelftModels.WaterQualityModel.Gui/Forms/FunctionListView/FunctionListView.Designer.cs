@@ -1,9 +1,4 @@
-﻿using System;
-using System.Security.AccessControl;
-
-using DelftTools.Controls;
-using DelftTools.Utils;
-
+﻿
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionListView
 {
     partial class FunctionListView

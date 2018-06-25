@@ -2,13 +2,13 @@
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
@@ -332,10 +332,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 Assert.AreEqual(loadHeight, load.Z);
             }
 
+            //Timers have been synchronized to the latest imported.
+            Assert.AreNotEqual(oldStartTime, model.StartTime);
+            Assert.AreNotEqual(oldStopTime, model.StopTime);
+            Assert.AreNotEqual(oldTimeStep, model.TimeStep);
+
             // Properties that should not be changed / updated:
-            Assert.AreEqual(oldStartTime, model.StartTime);
-            Assert.AreEqual(oldStopTime, model.StopTime);
-            Assert.AreEqual(oldTimeStep, model.TimeStep);
             AssertFirstInitialConditionHasSetValueSpatialOperation(model, constantDefaultValue);
             CollectionAssert.AreEqual(oldSubstances, model.SubstanceProcessLibrary.Substances);
             CollectionAssert.AreEqual(oldProcesses, model.SubstanceProcessLibrary.Processes);
@@ -413,11 +415,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void Import_ImportAgainWithoutVerticalDiffusion_ShouldntChange()
         {
             // setup
-            var commonFilePath = TestHelper.GetTestFilePath("IO");
+            var hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
+            hydPath = TestHelper.CreateLocalCopy(hydPath);
 
-            string hydPath = Path.Combine(commonFilePath, "real", "uni3d.hyd");
-
-            WaterQualityModel model = new WaterQualityModel();
+            var model = new WaterQualityModel();
 
             // 1st import:
             new HydFileImporter().ImportItem(hydPath, model);
@@ -426,11 +427,85 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.IsTrue(model.UseAdditionalHydrodynamicVerticalDiffusion);
 
             // 2nd import:
-            new HydFileImporter().ImportItem(Path.Combine(commonFilePath, "square", "square.hyd"), model);
+            var newHydPath = TestHelper.GetTestFilePath(@"IO\square\square.hyd");
+            newHydPath = TestHelper.CreateLocalCopy(newHydPath);
+            new HydFileImporter().ImportItem(newHydPath, model);
 
             Assert.IsEmpty(model.HydroData.VerticalDiffusionRelativePath);
             // the vertical diffusion should not be changed, because there was already a value on it
             Assert.IsTrue(model.UseAdditionalHydrodynamicVerticalDiffusion);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Import_WAQModel_SkipImportTimers_IsTrue_Then_DoesNotImportTimers()
+        {
+            var model = new WaterQualityModel();
+
+            var startTime = new DateTime(2010, 10, 10);
+            var stopTime = new DateTime(2010, 12, 12);
+            var timeStep = new TimeSpan(2, 0, 0);
+
+            model.StartTime = startTime;
+            model.StopTime = stopTime;
+            model.TimeStep = timeStep;
+
+            // Import item with value set to true:
+            var hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
+            var importedItem = (WaterQualityModel) new HydFileImporter{ SkipImportTimers = true }.ImportItem(hydPath, model);
+            Assert.IsNotNull(importedItem);
+
+            //The timer import should have been skipped, thus the values should be the ones we first defined.
+            Assert.AreEqual(importedItem.StartTime, startTime);
+            Assert.AreEqual(importedItem.StopTime, stopTime);
+            Assert.AreEqual(importedItem.TimeStep, timeStep);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Import_WAQModel_SkipImportTimers_IsFalse_Then_ImportsTimers()
+        {
+            var model = new WaterQualityModel();
+            var startTime = new DateTime(2010, 10, 10);
+            var stopTime = new DateTime(2010, 12, 12);
+            var timeStep = new TimeSpan(2, 0, 0);
+
+            model.StartTime = startTime;
+            model.StopTime = stopTime;
+            model.TimeStep = timeStep;
+
+            // Import item with value set to true:
+            var hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
+            var importedItem = (WaterQualityModel)new HydFileImporter { SkipImportTimers = false }.ImportItem(hydPath, model);
+            Assert.IsNotNull(importedItem);
+
+            //The timers should have been overriden with the ones from the hydFile.
+            Assert.AreNotEqual(importedItem.StartTime, startTime);
+            Assert.AreNotEqual(importedItem.StopTime, stopTime);
+            Assert.AreNotEqual(importedItem.TimeStep, timeStep);
+        }
+
+
+        [Test]
+        public void Import_WAQ_Model_OverExistingModel_Overwrites_Timers()
+        {
+            var waqModel = new WaterQualityModel { Name = "Model 1" };
+
+            var testFilePath = TestHelper.GetTestFilePath(@"ImportModels\westerscheldt.hyd");
+            var secondModel = new WaterQualityModel();
+
+            //Import the second model on top of waqmodel.
+            var importer = new HydFileImporter();
+            importer.ImportItem(testFilePath, secondModel);
+            Assert.AreNotEqual(waqModel.StartTime, secondModel.StartTime);
+            Assert.AreNotEqual(waqModel.StopTime, secondModel.StopTime);
+            Assert.AreNotEqual(waqModel.TimeStep, secondModel.TimeStep);
+
+
+            importer.ImportItem(testFilePath, waqModel);
+            Assert.AreEqual(waqModel.StartTime, secondModel.StartTime);
+            Assert.AreEqual(waqModel.StopTime, secondModel.StopTime);
+            Assert.AreEqual(waqModel.TimeStep, secondModel.TimeStep);
         }
 
         // TODO TOOLS-21848: Create test to verify some boundaries with data are retained, but have their ID's updated

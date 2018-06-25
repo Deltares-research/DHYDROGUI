@@ -70,6 +70,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Line {0} contains wrong substance value: {1}.
+        /// </summary>
+        public static string DataTableCsvFileReader_CreateDataTableCsvContents_Line__0__contains_wrong_substance_value___1_ {
+            get {
+                return ResourceManager.GetString("DataTableCsvFileReader_CreateDataTableCsvContents_Line__0__contains_wrong_substan" +
+                        "ce_value___1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap hydFile {
@@ -104,6 +114,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         public static string SubFileImporter_File_not_found {
             get {
                 return ResourceManager.GetString("SubFileImporter_File_not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sub file successfully imported from: {0}.
+        /// </summary>
+        public static string SubFileImporter_Import_Sub_file_successfully_imported_from___0_ {
+            get {
+                return ResourceManager.GetString("SubFileImporter_Import_Sub_file_successfully_imported_from___0_", resourceCulture);
             }
         }
         
@@ -312,6 +331,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Output timers ({0}) have been synchronized to match the Simulation {0} ({1})..
+        /// </summary>
+        public static string WaterQualityModel_LogSynchronizedTimer_Output_timers___0___have_been_synchronized_to_match_the_Simulation__0____1___ {
+            get {
+                return ResourceManager.GetString("WaterQualityModel_LogSynchronizedTimer_Output_timers___0___have_been_synchronized" +
+                        "_to_match_the_Simulation__0____1___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to initialize pre-processor.{0}Please look at the List file for more information.{0}List file found in: Project view -&gt; Output -&gt; List file.{0} {1}.
+        /// </summary>
+        public static string WaterQualityModel_OnInitializeCore_Failed_to_initialize_pre_processor__0_Please_look_at_the_List_file_for_more_information__0_List_file_found_in__Project_view____Output____List_file__0___1_ {
+            get {
+                return ResourceManager.GetString("WaterQualityModel_OnInitializeCore_Failed_to_initialize_pre_processor__0_Please_l" +
+                        "ook_at_the_List_file_for_more_information__0_List_file_found_in__Project_view___" +
+                        "_Output____List_file__0___1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to linked flow.
         /// </summary>
         public static string WaterQualityModelValidate_CheckTimers_Linked_flow {
@@ -392,6 +432,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
             get {
                 return ResourceManager.GetString("WaterQualityModelValidate_CheckTimers_Time_step_must_be_result_of_integer_divisio" +
                         "n", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timers for {0} are not equal to the simulation period of the model ({1}, {2}). Please verify that they overlap with the simulation period..
+        /// </summary>
+        public static string WaterQualityModelValidator_CheckTimers_Timers_for__0__are_not_equal_to_the_simulation_period_of_the_model___1____2____Please_verify_that_they_overlap_with_the_simulation_period_ {
+            get {
+                return ResourceManager.GetString("WaterQualityModelValidator_CheckTimers_Timers_for__0__are_not_equal_to_the_simula" +
+                        "tion_period_of_the_model___1____2____Please_verify_that_they_overlap_with_the_si" +
+                        "mulation_period_", resourceCulture);
             }
         }
         

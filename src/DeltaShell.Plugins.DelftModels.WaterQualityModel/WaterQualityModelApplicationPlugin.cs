@@ -246,7 +246,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             if (importedHydFile.Path.Exists)
             {
-                new HydFileImporter{MarkModelOutputOutOfSync = false}.ImportItem(importedHydFile.FilePath, waqModel);
+                new HydFileImporter
+                {
+                    MarkModelOutputOutOfSync = false,
+                    SkipImportTimers = true /*We don't reimport the timers from the hyd file when opening the project */
+                }.ImportItem(importedHydFile.FilePath, waqModel);
             }
             else
             {

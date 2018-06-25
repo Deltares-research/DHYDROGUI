@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
@@ -10,6 +11,7 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -864,7 +866,109 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             ExpectValidationIssue(report, "Version 2 is not supported.");
         }
 
-        #endregion 
+        #endregion
+
+        #region Output Timers
+
+        private static string FormatTimeString(DateTime dateTime)
+        {
+            var culture = CultureInfo.InvariantCulture;
+            var format = String.Format("yyyy{0}MM{0}dd HH{1}mm{1}ss", culture.DateTimeFormat.DateSeparator,
+                culture.DateTimeFormat.TimeSeparator);
+
+            return dateTime.ToString(format, culture);
+        }
+
+        private static object[] OutputTimersCase =
+        {
+            new object[] { 0, 0},
+            new object[] { 0, 1},
+            new object[] { 1, 0},
+            new object[] { 1, 1},
+            new object[] { 0, -1},
+            new object[] { -1, 0},
+            new object[] { -1, -1},
+        };
+
+        [Test]
+        [TestCaseSource(nameof(OutputTimersCase))]
+        public void Test_When_BalanceOutputTimers_DoNotMatch_ModelSimulationTimer_ValidationInfo_IsGiven(double startTime, double stopTime)
+        {
+            var model = new WaterQualityModel();
+            var description = "balance output";
+
+            var referenceStartTime = model.StartTime;
+            var referenceStopTime = model.StopTime;
+            var expectedMssg = string.Format(
+                Resources.WaterQualityModelValidator_CheckTimers_Timers_for__0__are_not_equal_to_the_simulation_period_of_the_model___1____2____Please_verify_that_they_overlap_with_the_simulation_period_,
+                description, FormatTimeString(referenceStartTime), FormatTimeString(referenceStopTime));
+
+            //Set output timers:
+            var changeStartTime = startTime > 0 || startTime < 0;
+            var changeStopTime = stopTime > 0 || stopTime < 0;
+            model.ModelSettings.BalanceStartTime = changeStartTime ? referenceStartTime.AddDays(startTime) : referenceStartTime;
+            model.ModelSettings.BalanceStopTime = changeStopTime ? referenceStopTime.AddDays(stopTime) : referenceStopTime;
+
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            Assert.GreaterOrEqual(1, report.InfoCount);
+            var timeChanged = changeStartTime || changeStopTime;
+            Assert.AreEqual(timeChanged, report.GetAllIssuesRecursive().Any( i => i.Severity == ValidationSeverity.Info && i.Message == expectedMssg));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(OutputTimersCase))]
+        public void Test_When_MonitoringLocations_OutputTimers_DoNotMatch_ModelSimulationTimer_ValidationInfo_IsGiven(double startTime, double stopTime)
+        {
+            var model = new WaterQualityModel();
+            var description = "monitoring locations output";
+
+            var referenceStartTime = model.StartTime;
+            var referenceStopTime = model.StopTime;
+            var expectedMssg = string.Format(
+                Resources.WaterQualityModelValidator_CheckTimers_Timers_for__0__are_not_equal_to_the_simulation_period_of_the_model___1____2____Please_verify_that_they_overlap_with_the_simulation_period_,
+                description, FormatTimeString(referenceStartTime), FormatTimeString(referenceStopTime));
+
+            //Set output timers:
+            var changeStartTime = startTime > 0 || startTime < 0;
+            var changeStopTime = stopTime > 0 || stopTime < 0;
+            model.ModelSettings.HisStartTime = changeStartTime ? referenceStartTime.AddDays(startTime) : referenceStartTime;
+            model.ModelSettings.HisStopTime = changeStopTime ? referenceStopTime.AddDays(stopTime) : referenceStopTime;
+
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            Assert.GreaterOrEqual(1, report.InfoCount);
+            var timeChanged = changeStartTime || changeStopTime;
+            Assert.AreEqual(timeChanged, report.GetAllIssuesRecursive().Any(i => i.Severity == ValidationSeverity.Info && i.Message == expectedMssg));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(OutputTimersCase))]
+        public void Test_When_Cells_OutputTimers_DoNotMatch_ModelSimulationTimer_ValidationInfo_IsGiven(double startTime, double stopTime)
+        {
+            var model = new WaterQualityModel();
+            var description = "cells output";
+
+            var referenceStartTime = model.StartTime;
+            var referenceStopTime = model.StopTime;
+            var expectedMssg = string.Format(
+                Resources.WaterQualityModelValidator_CheckTimers_Timers_for__0__are_not_equal_to_the_simulation_period_of_the_model___1____2____Please_verify_that_they_overlap_with_the_simulation_period_,
+                description, FormatTimeString(referenceStartTime), FormatTimeString(referenceStopTime));
+
+            //Set output timers:
+            var changeStartTime = startTime > 0 || startTime < 0;
+            var changeStopTime = stopTime > 0 || stopTime < 0;
+            model.ModelSettings.MapStartTime = changeStartTime ? referenceStartTime.AddDays(startTime) : referenceStartTime;
+            model.ModelSettings.MapStopTime = changeStopTime ? referenceStopTime.AddDays(stopTime) : referenceStopTime;
+
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            Assert.GreaterOrEqual(1, report.InfoCount);
+            var timeChanged = changeStartTime || changeStopTime;
+            Assert.AreEqual(timeChanged, report.GetAllIssuesRecursive().Any(i => i.Severity == ValidationSeverity.Info && i.Message == expectedMssg));
+        }
+
+        #endregion
 
         private static void AssertExpectedValidationIssue(ValidationReport report, string text, Func<ValidationIssue, bool> filter)
         {

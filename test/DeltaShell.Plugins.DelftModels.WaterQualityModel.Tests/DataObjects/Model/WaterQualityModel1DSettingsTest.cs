@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Mod
             Assert.AreEqual(waterQualityModel1DSettings.BalanceStartTime.AddHours(24), waterQualityModel1DSettings.BalanceStopTime);
             Assert.AreEqual(new TimeSpan(0, 1, 0, 0), waterQualityModel1DSettings.BalanceTimeStep);
             Assert.AreEqual(NumericalScheme.Scheme15, waterQualityModel1DSettings.NumericalScheme);
-            Assert.IsFalse(waterQualityModel1DSettings.NoDispersionIfFlowIsZero);
+            Assert.IsTrue(waterQualityModel1DSettings.NoDispersionIfFlowIsZero);
             Assert.IsTrue(waterQualityModel1DSettings.NoDispersionOverOpenBoundaries);
             Assert.IsFalse(waterQualityModel1DSettings.UseFirstOrder);
             Assert.IsTrue(waterQualityModel1DSettings.LumpProcesses);

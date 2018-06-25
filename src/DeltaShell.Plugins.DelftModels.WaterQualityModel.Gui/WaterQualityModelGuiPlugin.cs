@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
@@ -118,6 +117,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                         gui.Application.Project.RootFolder.CollectionChanged -= RootFolderCollectionChanged;
                     }
 
+                    
                     gui.Application.ActivityRunner.ActivityStatusChanged -= ActivityRunnerActivityStatusChanged;
                     gui.Application.ActivityRunner.ActivityCompleted -= ActivityRunnerOnActivityCompleted;
 
@@ -140,6 +140,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                         gui.Application.Project.RootFolder.CollectionChanged += RootFolderCollectionChanged;
                     }
 
+                    //Subscribe to activities when gui is not null
                     gui.Application.ActivityRunner.ActivityStatusChanged += ActivityRunnerActivityStatusChanged;
                     gui.Application.ActivityRunner.ActivityCompleted += ActivityRunnerOnActivityCompleted;
 
@@ -161,6 +162,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     gui.UndoRedoManager.Enabled = false;
                 }
             }
+        }
+
+        private MapView GetActiveMapView()
+        {
+            if (Gui == null)
+                return null;
+
+            var activeView = Gui.DocumentViews.ActiveView;
+            if (activeView == null)
+                return null;
+
+            var mapView = FindMapView(activeView);
+            if (mapView != null)
+                return mapView;
+            return null;
+        }
+
+        private static MapView FindMapView(IView activeView)
+        {
+            var mapView = activeView as MapView;
+
+            if (mapView != null)
+                return mapView;
+
+            var compositeView = activeView as ICompositeView;
+
+            //todo: recursion
+            return compositeView != null ? compositeView.ChildViews.OfType<MapView>().FirstOrDefault() : null;
         }
 
         public override void Activate()
@@ -274,7 +303,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     {
                         FunctionListViewExtraActions(Gui.SelectedModel as WaterQualityModel, v);
                     }
-                }
+                },                
             };
 
             yield return new ViewInfo<WaterQualityBloomFunctionWrapper, IEventedList<IFunction>, BloomFunctionsTableView>()
@@ -540,17 +569,35 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             {
                 var importer = fileImportActivity.FileImporter as HydFileImporter;
                 if (importer == null) return;
-
-                if (e.NewStatus == ActivityStatus.Initialized)
+                var activeMapView = GetActiveMapView();
+                
+                switch (e.NewStatus)
                 {
-                    importer.ExpandModelNode = ExpandModelInputNodes;
+
+                    case ActivityStatus.Initialized:
+                        importer.ExpandModelNode = ExpandModelInputNodes;
+                        break;
+
+                    case ActivityStatus.Done:
+                        activeMapView?.Map.ZoomToExtents();
+                        importer.ExpandModelNode = null;
+                        break;
+
+                    case ActivityStatus.Failed:
+                        importer.ExpandModelNode = null;
+                        break;
+
+                    case ActivityStatus.Cancelled:
+                        importer.ExpandModelNode = null;
+                        break;
+
+                    default:
+                        break;
                 }
 
-                if (e.NewStatus == ActivityStatus.Done || 
-                    e.NewStatus == ActivityStatus.Failed ||
-                    e.NewStatus == ActivityStatus.Cancelled)
+                if (e.NewStatus == ActivityStatus.Finished)
                 {
-                    importer.ExpandModelNode = null;
+                    activeMapView?.Map.ZoomToExtents();
                 }
             }
 
@@ -647,7 +694,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             {
                 viewInfoClone.GetViewName = (v, o) => "Initial Conditions";
                 view.FunctionCreators.Add(FunctionTypeCreatorFactory.CreateUnstructuredGridCoverageCreator());
-
+                view.UseInitialValueColumn = true;
                 view.IsDefaultValueCellReadOnly = function => function.IsUnstructuredGridCellCoverage();
             }
 
@@ -768,7 +815,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
 
             return baseContextMenu;
         }
-
         private static IEnumerable<WaterQualitySubstance> CreateFractionSubstances(WaterQualityModel model)
         {
             var substances = model.Boundaries.Select(b => new WaterQualitySubstance

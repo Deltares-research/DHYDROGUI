@@ -55,15 +55,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             {
                 Name = "A"
             };
-            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 10, 0)] = new Dictionary<string, double>
+            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 10, 0)] = new Dictionary<string, string>
             {
-                { "foo", 1.1 },
-                { "test", 3.3 }
+                { "foo", "1.1" },
+                { "test", "3.3" }
             };
-            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 14, 0)] = new Dictionary<string, double>
+            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 14, 0)] = new Dictionary<string, string>
             {
-                { "bar", 4.4 },
-                { "test", 5.5 }
+                { "bar", "4.4" },
+                { "test", "5.5" }
             };
             dataTableFileContents.DataRows.Add(locationA);
 
@@ -71,9 +71,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             {
                 Name = "B"
             };
-            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 33, 0)] = new Dictionary<string, double>
+            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 33, 0)] = new Dictionary<string, string>
             {
-                { "Not_in_SubstancesInFile", 1.1 },
+                { "Not_in_SubstancesInFile", "1.1" },
             };
             dataTableFileContents.DataRows.Add(locationB);
 
@@ -116,15 +116,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             };
 
             var locationA = new LocationData{ Name = "A" };
-            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 10, 0)] = new Dictionary<string, double>{ { "foo", 1.1 }, { "test", 3.3 } };
-            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 24, 10, 10, 0)] = new Dictionary<string, double>{ { "bar", 4.4 }, { "test", 5.5 } };
-            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 26, 10, 10, 0)] = new Dictionary<string, double>{ { "foo", 7.7 }, { "bar", 8.8 } };
+            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 10, 0)] = new Dictionary<string, string>{ { "foo", "1.1" }, { "test", "3.3" } };
+            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 24, 10, 10, 0)] = new Dictionary<string, string>{ { "bar", "4.4" }, { "test", "5.5" } };
+            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 26, 10, 10, 0)] = new Dictionary<string, string> { { "foo", "7.7" }, { "bar", "8.8" } };
             dataTableFileContents.DataRows.Add(locationA);
 
             var locationB = new LocationData{ Name = "B" };
-            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 33, 0)] = new Dictionary<string, double>{ { "Not_in_SubstancesInFile", 1.1 } };
-            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 24, 10, 33, 0)] = new Dictionary<string, double>{ { "Not_in_SubstancesInFile", 2.2 } };
-            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 26, 10, 33, 0)] = new Dictionary<string, double>{ { "Not_in_SubstancesInFile", 3.3 } };
+            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 33, 0)] = new Dictionary<string, string>{ { "Not_in_SubstancesInFile", "1.1" } };
+            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 24, 10, 33, 0)] = new Dictionary<string, string>{ { "Not_in_SubstancesInFile", "2.2" } };
+            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 26, 10, 33, 0)] = new Dictionary<string, string> { { "Not_in_SubstancesInFile", "3.3" } };
             dataTableFileContents.DataRows.Add(locationB);
 
             // call
@@ -158,15 +158,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             {
                 Name = "A"
             };
-            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 10, 0)] = new Dictionary<string, double>
+            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 10, 0)] = new Dictionary<string, string>
             {
-                { "foo", 1.1 },
-                { "test", 3.3 }
+                { "foo", "1.1" },
+                { "test", "3.3" }
             };
-            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 14, 0)] = new Dictionary<string, double>
+            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 14, 0)] = new Dictionary<string, string>
             {
-                { "bar", 4.4 },
-                { "test", 5.5 }
+                { "bar", "4.4" },
+                { "test", "5.5" }
             };
             dataTableFileContents.DataRows.Add(locationA);
 
@@ -174,9 +174,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             {
                 Name = "B"
             };
-            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 33, 0)] = new Dictionary<string, double>
+            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 33, 0)] = new Dictionary<string, string>
             {
-                { "haha", 1.1 },
+                { "haha", "1.1" },
             };
             dataTableFileContents.DataRows.Add(locationB);
 
@@ -208,7 +208,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             // add one timeslot
             locationData.TimeDependentSubstanceData.Add(new DateTime(1999, 12, 16, 0, 0, 0),
-                new Dictionary<string, double>() {{"NH4", 10},});
+                new Dictionary<string, string>() {{"NH4", "10"},});
             dataTableFileContents.DataRows.Add(locationData);
 
             string content = dataTableFileContents.CreateDataTableDelwaqFormat();

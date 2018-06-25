@@ -66,5 +66,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         {
             get { return data.ProcessDllFilePath; }
         }
+
+        [PropertyOrder(3)]
+        [Category("Process files")]
+        [DisplayName("Imported substance file location")]
+        [Description("The file location of the imported substance file")]
+        public string ImportedSubFilePath
+        {
+            get { return data.ImportedSubstanceFilePath; }
+        }
     }
 }
