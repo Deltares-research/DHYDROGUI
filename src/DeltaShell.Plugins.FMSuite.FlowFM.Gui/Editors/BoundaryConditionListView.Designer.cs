@@ -1,4 +1,5 @@
-﻿using DelftTools.Utils.Reflection;
+﻿using System.Windows.Forms;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
@@ -64,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             this.Name = "BoundaryConditionListView";
             this.Size = new System.Drawing.Size(214, 196);
             this.ResumeLayout(false);
-
+            this.Dock = DockStyle.Fill;
         }
 
         #endregion
