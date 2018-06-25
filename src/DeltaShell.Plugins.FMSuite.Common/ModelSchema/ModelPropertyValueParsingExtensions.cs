@@ -18,7 +18,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         public static IEnumerable<string> GetFileNames(this ModelProperty modelProperty, string extension, char separator)
         {
             var concatenatedNames = modelProperty.GetValueAsString();
-            //if (concatenatedNames == null) return Enumerable.Empty<string>();
 
             var names = concatenatedNames.Split(new[] { extension }, StringSplitOptions.RemoveEmptyEntries);
 
