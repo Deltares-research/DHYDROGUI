@@ -11,7 +11,7 @@ namespace DelftTools.Hydro
         ICompositeBranchStructure ParentStructure { get; set; }
 
         // TODO: why? This "Channel" is introduced after an merge from the trunk. Is it required? Can it be deleted from the IStructure1D interface?
-        IChannel Channel { get; set; }
+        //IChannel Channel { get; set; }
 
         /// <summary>
         /// Y offset relative in the profile. This value is used by the structure view to display

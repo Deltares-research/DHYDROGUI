@@ -77,6 +77,9 @@
     <Content Include="..\Scripts\RealTimeControlScripts.wxi">
       <Link>Scripts\RealTimeControlScripts.wxi</Link>
     </Content>
+    <Content Include="..\Waq\WaqDefines.wxi">
+      <Link>WaqDefines.wxi</Link>
+    </Content>
     <Content Include="..\Waq\WaqPlugin_FeatureContent.wxi">
       <Link>WaqPlugin_FeatureContent.wxi</Link>
     </Content>
@@ -115,6 +118,7 @@
     <Content Include="Resources\FM.png" />
     <Content Include="Resources\Welcome.htm" />
     <Content Include="Resources\WindowLayout_normal.en-US.xml" />
+    <Content Include="RGFGridDefines.wxi" />
     <Content Include="RGFGrid_x64.wxi" />
     <Content Include="UtilityShortcuts.wxi" />
   </ItemGroup>
@@ -123,7 +127,13 @@
     <Compile Include="..\Dimr\DimrLibs.wxs">
       <Link>DimrLibs.wxs</Link>
     </Compile>
-    <Compile Include="Product.wxs" />
+    <Compile Include="..\Waq\PLCTLibs.wxs">
+      <Link>PLCTLibs.wxs</Link>
+    </Compile>
+	<Compile Include="RGFGridLibs.wxs">
+      <Link>RGFGridLibs.wxs</Link>
+    </Compile>
+	<Compile Include="Product.wxs" />
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUtilExtension">
@@ -180,4 +190,15 @@
   <Import Project="..\Framework\DeltaShell\CreateZipFromMSI.targets" />
   <Import Project="FMProperties.targets" />
   <Import Project="..\Dimr\HarvestDimrLibs.targets" />
+  <Import Project="..\Waq\HarvestPLCTLibs.targets" />
+  <Import Project="HarvestRGFGridLibs.targets" />
+  <PropertyGroup>
+    <BuildDependsOn>
+     HarvestDimrLibsTarget;
+	 HarvestPLCTLibsTarget;
+	 HarvestRGFGridLibsTarget;
+	 $(BuildDependsOn);   
+   </BuildDependsOn>
+  </PropertyGroup>
+  <Target Name="Build" DependsOnTargets="$(BuildDependsOn)" />
 </Project>

@@ -6,9 +6,9 @@
              xmlns:local="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:converters="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Converters"
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:gui="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui"
              xmlns:leveeBreachFormula="clr-namespace:DelftTools.Hydro.Structures.LeveeBreachFormula;assembly=DelftTools.Hydro"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="1000">
     <UserControl.DataContext>

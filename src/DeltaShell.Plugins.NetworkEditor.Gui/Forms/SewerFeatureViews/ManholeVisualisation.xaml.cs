@@ -8,9 +8,9 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using DelftTools.Controls.Wpf.Extensions;
 using DelftTools.Hydro.Structures;
 using Point = System.Windows.Point;
-using DelftTools.Controls.Wpf.Extensions;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {

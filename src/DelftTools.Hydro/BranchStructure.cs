@@ -22,8 +22,8 @@ namespace DelftTools.Hydro
             set { parentStructure = value; }
         }
 
-        [Obsolete] // TODO This "Channel" is introduced after an merge from the trunk. Is it required? Can it be deleted from the IStructure1D interface?
-        public IChannel Channel { get; set; }
+        // TODO This "Channel" is introduced after an merge from the trunk. Is it required? Can it be deleted from the IStructure1D interface?
+        //public IChannel Channel { get; set; }
 
         [NoNotifyPropertyChange]
         public virtual double OffsetY
