@@ -141,6 +141,7 @@
     <Compile Include="IO\StructureSchemaTest.cs" />
     <Compile Include="IO\StructuresFileTest.cs" />
     <Compile Include="IO\WindFileTest.cs" />
+    <Compile Include="ModelSchema\ModelPropertyValueParsingExtensionsTest.cs" />
     <Compile Include="ModelSchema\ModelPropertyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StructuresTestHelper.cs" />

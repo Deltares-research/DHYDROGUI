@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Resources;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Functions;
@@ -28,6 +29,7 @@ using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
@@ -209,9 +211,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     var targetMduFilePath = model.MduFilePath;
                     writer.WriteLandBoundaries(targetMduFilePath, model.ModelDefinition, model.Area);
 
-                    var modelLdbPath = model.ModelDefinition.GetModelProperty(KnownProperties.LandBoundaryFile).GetValueAsString();
+                    var modelLdbPaths = model.ModelDefinition.GetModelProperty(KnownProperties.LandBoundaryFile).GetFileNames(".ldb", ' ');
 
-                    if (!string.IsNullOrEmpty(modelLdbPath))
+                    foreach (var modelLdbPath in modelLdbPaths)
                     {
                         var landBoundariesFilePath = Path.Combine(Path.GetDirectoryName(targetMduFilePath), modelLdbPath);
                         paths.Add(landBoundariesFilePath);

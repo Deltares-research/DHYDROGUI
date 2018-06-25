@@ -178,6 +178,7 @@
     <Compile Include="ModelSchema\FileBasedModelItem.cs" />
     <Compile Include="ModelSchema\ModelProperty.cs" />
     <Compile Include="ModelSchema\ModelPropertyDefinition.cs" />
+    <Compile Include="ModelSchema\ModelPropertyValueParsingExtensions.cs" />
     <Compile Include="ModelSchema\ModelPropertyGroup.cs" />
     <Compile Include="ModelSchema\ModelSchema.cs" />
     <Compile Include="IO\ModelSchemaCsvFile.cs" />
