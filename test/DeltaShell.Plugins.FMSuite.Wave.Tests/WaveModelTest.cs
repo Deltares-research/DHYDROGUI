@@ -1,8 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
@@ -134,94 +132,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 .WaveModel_WaveSetup_With_WaveSetup_set_to_True_parallel_runs_will_fail__normal_runs_with_lakes_will_produce_unreliable_values_;
             TestHelper.AssertAtLeastOneLogMessagesContains( () => waveModel.ModelDefinition.WaveSetup = true, expectedMssg);
             Assert.IsTrue(waveModel.ModelDefinition.WaveSetup);
-        }
-
-        [Test]
-        public void
-            GivenWaveModelWithOuterDomainWithCoordinateSystemSetWhenAddingInnerDomainThenInnerDomainShouldGetSameCoordinateSystem()
-        {
-            var waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_001.grd");
-            var waveModel = new WaveModel();
-            var tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            try
-            {
-                waveModel.MdwFile.MdwFilePath = tempWorkingDirectory;
-                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[] { waveModel });
-                waveModel.OuterDomain.Grid.Attributes[CurvilinearGrid.CoordinateSystemKey] = "Test";
-                waveGridFileImporter.ImportItem(waveGridFileFilePath, waveModel.OuterDomain.Grid);
-                Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Not.Null);
-                Assert.That(waveModel.CoordinateSystem, Is.Not.Null);
-                waveModel.AddSubDomain(waveModel.OuterDomain, new WaveDomainData("inner"));
-                Assert.That(waveModel.CoordinateSystem, Is.Not.Null);
-                Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Not.Null);
-                Assert.That(waveModel.OuterDomain.SubDomains[0].Grid.CoordinateSystem, Is.Not.Null);
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(tempWorkingDirectory);
-            }
-        }
-
-        [Test]
-        public void
-            GivenWaveModelWithOuterDomainWithCoordinateSystemSetWhenSettingExteriorDomainThenExteriorDomainShouldGetSameCoordinateSystem()
-        {
-            var waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_001.grd");
-            var waveModel = new WaveModel();
-            var tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            try
-            {
-                waveModel.MdwFile.MdwFilePath = tempWorkingDirectory;
-                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[] { waveModel });
-                waveModel.OuterDomain.Grid.Attributes[CurvilinearGrid.CoordinateSystemKey] = "Test";
-                waveGridFileImporter.ImportItem(waveGridFileFilePath, waveModel.OuterDomain.Grid);
-                Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Not.Null);
-                Assert.That(waveModel.CoordinateSystem, Is.Not.Null);
-                var exterior = new WaveDomainData("exterior");
-                var oldOuterDomain = waveModel.OuterDomain;
-                waveModel.OuterDomain = exterior;
-                waveModel.AddSubDomain(exterior, oldOuterDomain);
-                Assert.That(waveModel.CoordinateSystem, Is.Not.Null);
-                Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Not.Null);
-                Assert.That(waveModel.OuterDomain.SubDomains[0].Grid.CoordinateSystem, Is.Not.Null);
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(tempWorkingDirectory);
-            }
-        }
-
-        [Test]
-        public void
-            GivenWaveModelWithOuterDomainWithCoordinateSystemSetWhenAddingInnerDomainTwiceThenInnerDomainsShouldGetSameCoordinateSystem()
-        {
-            var waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_001.grd");
-            var waveModel = new WaveModel();
-            var tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            try
-            {
-                waveModel.MdwFile.MdwFilePath = tempWorkingDirectory;
-                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[] { waveModel });
-                waveModel.OuterDomain.Grid.Attributes[CurvilinearGrid.CoordinateSystemKey] = "Test";
-                waveGridFileImporter.ImportItem(waveGridFileFilePath, waveModel.OuterDomain.Grid);
-                Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Not.Null);
-                Assert.That(waveModel.CoordinateSystem, Is.Not.Null);
-                var waveDomainData = new WaveDomainData("inner");
-                waveModel.AddSubDomain(waveModel.OuterDomain, waveDomainData);
-                waveModel.AddSubDomain(waveDomainData, new WaveDomainData("innerior"));
-                Assert.That(waveModel.CoordinateSystem, Is.Not.Null);
-                Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Not.Null);
-                Assert.That(waveModel.OuterDomain.SubDomains[0].Grid.CoordinateSystem, Is.Not.Null);
-                Assert.That(waveModel.OuterDomain.SubDomains[0].SubDomains[0].Grid.CoordinateSystem, Is.Not.Null);
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(tempWorkingDirectory);
-            }
-            
-            
-           
-
         }
     }
 

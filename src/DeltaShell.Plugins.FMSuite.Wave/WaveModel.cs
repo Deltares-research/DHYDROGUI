@@ -449,7 +449,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             domain.SubDomains.Add(subDomain);
             subDomain.SuperDomain = domain;
             AddDataItemsForDomain(subDomain);
-            AfterCoordinateSystemSet();
         }
 
         public void DeleteSubDomain(WaveDomainData domain, WaveDomainData subDomain)
