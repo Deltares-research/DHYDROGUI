@@ -1,4 +1,4 @@
-Sobek Parser V2.07.004.50272
+Deltares, Parsen Version 2.08.002.54560 (Win64), Feb 20 2018, 11:17:39
 
 Warning    : Start date in meteo-file differs from Sobek start date
 Object-id  : Bui                                     

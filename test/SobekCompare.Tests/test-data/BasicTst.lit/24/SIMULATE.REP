@@ -1,13 +1,13 @@
 Information about Simulation
 ============================
 
-SOBEKVersion                       : Sobek Advanced Version 2.16.000.14
+SOBEKVersion                       : Sobek Advanced Version 2.16.000.22
 Case Name                          : RiverProfileMainFP1
 
 Simulation Mode                    : Run 1DFLOW (Rural) and 1DFLOW (River) module simultaneously
 
-Start                              : 07-September-2017 16:27:30
-End                                : 07-September-2017 16:27:36
+Start                              : 26-June-2018 11:41:51
+End                                : 26-June-2018 11:41:57
 
 Rainfall-Runoff Module used        : No
 Channel Module used                : Yes
@@ -62,14 +62,14 @@ Largest Timestep (s)               :             300.0000
 
 External structure                  Spilled volume (m3)
 
-Boundaries in (m3)                 :          40537781.82
-Boundaries out (m3)                :          40537781.82
+Boundaries in (m3)                 :          51875568.51
+Boundaries out (m3)                :          51875568.51
 Structures in (m3)                 :                 0.00
 Structures out (m3)                :                 0.00
 Lateral disch. in (m3)             :                 0.00
 Lateral disch. out (m3)            :                 0.00
 Storage (m3)                       :                 0.00
-Error (m3)                         :                 0.00
+Error (m3)                         :                -0.00
 
 Initial conditions
 ==================
@@ -83,33 +83,33 @@ Vervang                            : 22/10/2013 15:50:12, Version: 4.05.012
 Caseman                            : 22/10/2013 15:50:12, Version: 4.07.03
 CmUtil                             : 22/10/2013 15:50:12, Version: 4.07.03
 CmUpdate                           : 22/10/2013 15:50:12, Version: 4.07.03
-Sobek_3B (RR)                      : 17/08/2017 16:26:50, Version: 3.216.20.52093
-Parsen                             : 17/03/2017 11:46:18, Version: 2.07.004.50272
-Parsen2D                           : 15/02/2017 16:01:28, Version: 1.03.002.49913
-Flow (Delftflow) (Details Below)   : 26/07/2017 15:26:16, Version: 1.01.00.51843
-RTC                                : 19/04/2017 09:16:18, Version: 3.216.001.50671
+Sobek_3B (RR)                      : 08/06/2018 10:42:16, Version: 3.216.28.56039
+Parsen                             : 20/02/2018 12:26:16, Version: 2.08.002.54560
+Parsen2D                           : 20/02/2018 12:26:16, Version: 1.04.001.54559
+Flow (Delftflow) (Details Below)   : 25/06/2018 10:01:32, Version: 5.00.025.56418M
+RTC                                : 08/06/2018 10:42:36, Version: 3.216.004.56039
 EM                                 : 22/10/2013 15:50:12, Version: 1.00.0001
-WQInt                              : 13/04/2016 11:53:08, Version: 2.03.08
-Delwaq1                            : 13/03/2017 12:06:02, Version: 5.06.00.7073
-Delwaq2                            : 13/03/2017 12:06:02, Version: 5.06.00.7073
+WQInt                              : 05/06/2018 14:06:06, Version: 3.00.03.55966
+Delwaq1                            : 28/03/2017 15:15:56, Version: 5.06.00.7073
+Delwaq2                            : 28/03/2017 15:15:56, Version: 5.06.00.7073
 Waterbal                           : 22/10/2013 15:50:12, Version: 2.00.04
-Simulate                           : 03/01/2017 15:46:42, Version: 2.13.0024
+Simulate                           : 03/01/2017 17:26:08, Version: 2.13.0024
 
 
 Detailed Information about Flow (DelftFlow):
 ============================================
 
+Deltares, DelftFlow Version 5.00.025.56418M (Win32), Jun 25 2018, 10:01:28
+$HeadURL: https://repos.deltares.nl/repos/ds/trunk/src/engines/delftflow/packages/delftflow/src/omi_flow1d/delftflow_version.F90.svn $
 Intel Fortran RTL Message Catalog	V16.0-001 Oct 15 2015
-Deltares, DELFTIO Version 1.09.00.7413, Jul 26 2017, 15:18:35
-Deltares, DELTARES_COMMON Version 1.00.00.7413, Jul 26 2017, 15:18:05
-Deltares, DELFTFLOW Version 1.01.00.51843 (Win32), Jul 26 2017, 15:18:05
-Deltares, SOBEKSIM Version 4.08.038.51843, Jul 26 2017, 15:18:04
-Deltares, WL_OPENMI_SUPPORT Version 1.00.00.51843, Jul 26 2017, 15:18:03
-Deltares, NEFIS Version 5.09.00.7413 (Win32), Jul 26 2017, 15:18:04
-Deltares, GW_SOBEK Version 0.08.00.51843, Jul 26 2017, 15:18:02
+Deltares, DELFTIO Version 1.09.00.9109, Jun 25 2018, 09:55:32
+Deltares, WLOpenMI Version 1.01.00.56418 (Win32), Jun 25 2018, 09:55:01
+Deltares, DELTARES_COMMON Version 1.00.00.9109, Jun 25 2018, 09:55:09
+Deltares, GW_Sobek Version 0.08.00.56418 (Win32), Jun 25 2018, 09:55:56
+Deltares, NEFIS Version 5.09.00.9109M (Win32), Jun 25 2018, 09:55:03
 
 
-SOBEKVersion   = Sobek Advanced Version 2.16.000.14
+SOBEKVersion   = Sobek Advanced Version 2.16.000.22
 Case Name      = RiverProfileMainFP1
 
 
@@ -135,9 +135,9 @@ LevelFromStreetLevel=0
 RunOff=0
 Salinity=0
 TimeWaterOnStreet=0
-TotalArea=0
-TotalWidth=0
-Volume=0
+TotalArea=-1
+TotalWidth=-1
+Volume=-1
 VolumeError=0
 VolumesOnStreet=0
 WaterDepth=-1

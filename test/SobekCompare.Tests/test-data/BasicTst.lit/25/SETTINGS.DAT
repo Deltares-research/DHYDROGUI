@@ -57,6 +57,9 @@ UseCMTRunoff4Flow=0
 PeriodFromRR=0
 NoNegativeQlatWhenThereIsNoWater=-1
 Remote=0
+LateralLocation=1
+MaxVolFact=.9
+MaxLoweringCrossAtCulvert=0
 
 [Timesteps]
 SobekDays=0
@@ -77,6 +80,9 @@ LevelFromStreetLevel=-1
 RunOff=-1
 VolumeOnStreet=-1
 NodeVolume=0
+TotalWidth=0
+TotalArea=0
+LateralOnNodes=0
 
 [ResultsBranches]
 Discharge=-1
@@ -88,6 +94,7 @@ Froude=-1
 WaterLevelSlope=-1
 Chezy=-1
 SubSections=-1
+InfiltrationPipes=0
 
 [ResultsStructures]
 Discharge=-1
@@ -139,28 +146,31 @@ Option=1
 CourantNumber=1
 MaxDegree=6
 MaxIterations=8
-DtMinimum=0.001
-EpsilonValueVolume=0.0001
-EpsilonValueWaterDepth=0.0001
+DtMinimum=.001
+EpsilonValueVolume=.0001
+EpsilonValueWaterDepth=.0001
 StructureDynamicsFactor=1
 RelaxationFactor=1
 Rho=1000
 Gravity=9.81
 VolumeCorrection=0
-ThresholdValueFlooding=0.01
-ThresholdValueFloodingFLS=0.001
+ThresholdValueFlooding=.01
+ThresholdValueFloodingFLS=.001
 Theta=1
 MinimumLength=1
 AccurateVersusSpeed=3
 StructureInertiaDampingFactor=1
-MinimumSurfaceinNode=0.1
-MinimumSurfaceatStreet=0.1
+MinimumSurfaceinNode=.1
+MinimumSurfaceatStreet=.1
 ExtraResistanceGeneralStructure=0
 LowerTimeStepsLargeQlat=0
 AccelerationTermFactor=1
 UseTimeStepReducerStructures=0
 MinumumTimeStepNegativeQlat=1
 MinumumLength=1
+Limtyphu1D=1
+Iadvec1D=1
+Momdilution1D=1
 
 [Overland Flow]
 InitialValueFromNetter=-1
@@ -240,3 +250,8 @@ NrOfKeys=0
 1 Chapter=dummy
 1 KeyWord=DummyKey
 1 KeyValue=DummyValue
+[ResultsPumps]
+PumpResults=0
+
+
+
