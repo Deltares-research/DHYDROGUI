@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             if (!gridPaths.Any()) return;
 
             var emptyFlags = domains.Select(d => d.Grid == null || d.Grid.IsEmpty).ToArray();
-            RgfGridEditor.OpenGrids(gridPaths, emptyFlags);
+            RgfGridEditor.OpenGrids(gridPaths, emptyFlags, systemType:model.CoordinateSystem != null && model.CoordinateSystem.IsGeographic ? CoordinateSystemType.Spherical : CoordinateSystemType.Cartesian);
             
             // reload grid..
             try

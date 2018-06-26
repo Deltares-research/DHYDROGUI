@@ -186,6 +186,7 @@
     <Compile Include="Common\IO\GridFileReaderTest.cs" />
     <Compile Include="FunctionArgumentSyncerTest.cs" />
     <Compile Include="Gui\WaveBoundaryTimeSelectionDialogTest.cs" />
+    <Compile Include="Gui\WaveDomainNodePresenterTest.cs" />
     <Compile Include="Gui\WaveGuiPluginTest.cs" />
     <Compile Include="Gui\WaveMeteoDataEditorTest.cs" />
     <Compile Include="Gui\WaveModelGroupLayerTest.cs" />
