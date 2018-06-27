@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using NetTopologySuite.Extensions.Grids;
@@ -132,6 +133,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 .WaveModel_WaveSetup_With_WaveSetup_set_to_True_parallel_runs_will_fail__normal_runs_with_lakes_will_produce_unreliable_values_;
             TestHelper.AssertAtLeastOneLogMessagesContains( () => waveModel.ModelDefinition.WaveSetup = true, expectedMssg);
             Assert.IsTrue(waveModel.ModelDefinition.WaveSetup);
+        }
+
+        [Test]
+        public void TestUpdatingGridFileIsSyncedWithDataItemTag()
+        {
+            const string originalName = "Outer";
+            const string newName = "Blarg";
+
+            var waveModel = new WaveModel
+            {
+                OuterDomain = new WaveDomainData(originalName)
+            };
+
+            var dataItem = waveModel.GetDataItemByTag(WaveModel.WavmStoreDataItemTag + originalName) as DataItem;
+            Assert.NotNull(dataItem);
+
+            // Simulate setting a new Grid Filepath
+            waveModel.OuterDomain.GridFileName = newName;
+
+            Assert.AreEqual(WaveModel.WavmStoreDataItemTag + newName, dataItem.Tag);
         }
     }
 

@@ -228,6 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 if (outerDomain != null)
                 {
+                    ((INotifyPropertyChanging)outerDomain).PropertyChanging -= OnOuterDomainPropertyChanging;
                     ((INotifyPropertyChanged)outerDomain).PropertyChanged -= OnOuterDomainPropertyChanged;
                     RemoveDataItemsForDomain(outerDomain);
                 }
@@ -237,6 +238,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
                 if (outerDomain != null)
                 {
+                    ((INotifyPropertyChanging)outerDomain).PropertyChanging += OnOuterDomainPropertyChanging;
                     ((INotifyPropertyChanged)outerDomain).PropertyChanged += OnOuterDomainPropertyChanged;
                     AddDataItemsForDomain(outerDomain);
 
@@ -282,20 +284,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
 
         private static readonly string GridPropertyName = TypeUtils.GetMemberName<WaveDomainData>(d => d.Grid);
+        private string previousGridName;
+
+        private void OnOuterDomainPropertyChanging(object sender, PropertyChangingEventArgs e)
+        {
+            var domain = sender as WaveDomainData;
+            if (domain == null || e.PropertyName != nameof(domain.GridFileName)) return;
+
+            previousGridName = domain.Name;
+        }
+
         private void OnOuterDomainPropertyChanged(object sender, PropertyChangedEventArgs eventArgs)
         {
             var domain = sender as WaveDomainData;
-            if (domain != null && eventArgs.PropertyName == GridPropertyName)
+            if (domain != null)
             {
-                if (Equals(OuterDomain, domain))
+                if (eventArgs.PropertyName == nameof(domain.GridFileName) && !string.IsNullOrEmpty(previousGridName))
                 {
-                    gridOperationApi = new WaveGridOperationApi(outerDomain.Grid);
+                    var dataItem = GetDataItemByTag(WavmStoreDataItemTag + previousGridName) as DataItem;
+                    if (dataItem == null) return;
+                    
+                    dataItem.Tag = WavmStoreDataItemTag + domain.Name;
+                    dataItemByTagDictionaryIsDirty = true;
                 }
+                if (eventArgs.PropertyName == GridPropertyName)
+                {
+                    if (Equals(OuterDomain, domain))
+                    {
+                        gridOperationApi = new WaveGridOperationApi(outerDomain.Grid);
+                    }
 
-                UpdateBathymetry(domain);
-                UpdateBathymetryOperations(domain);
+                    UpdateBathymetry(domain);
+                    UpdateBathymetryOperations(domain);
 
-                if (domain.Grid != null) CoordinateSystem = domain.Grid.CoordinateSystem;
+                    if (domain.Grid != null) CoordinateSystem = domain.Grid.CoordinateSystem;
+                }
             }
         }
         
@@ -373,6 +396,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 if (outerDomain != null)
                 {
+                    ((INotifyPropertyChanging)outerDomain).PropertyChanging -= OnOuterDomainPropertyChanging;
                     ((INotifyPropertyChanged) outerDomain).PropertyChanged -= OnOuterDomainPropertyChanged;
                 }
 
@@ -380,6 +404,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 ReplaceDataItemsForDomain(outerDomain);
                 if (outerDomain != null)
                 {
+                    ((INotifyPropertyChanging)outerDomain).PropertyChanging += OnOuterDomainPropertyChanging;
                     ((INotifyPropertyChanged) outerDomain).PropertyChanged += OnOuterDomainPropertyChanged;
                     gridOperationApi = new WaveGridOperationApi(outerDomain.Grid);
                 }
