@@ -1096,19 +1096,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         protected override void OnInitialize()
         {
             Log.Info(KernelVersions);
-            RemoveOutputDataItems();
             InvokeAndRestoreDirectory(OnInitializeCore);
-        }
-
-        private void RemoveOutputDataItems()
-        {
-            var textDocumentOutputDataItems = DataItems.Where(di =>
-                di.Role == DataItemRole.Output &&
-                di.ValueType == typeof(TextDocumentFromFile) &&
-                di.Tag != ListFileDataItemMetaData.Tag)
-                .ToList();
-
-            textDocumentOutputDataItems.ForEach(di => DataItems.Remove(di));
         }
 
         private void OnInitializeCore()
@@ -1197,7 +1185,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         protected override void OnCleanup()
         {
             ClearPreProcessorAndProcessor();
-
             waqInitializationSettings = null;
             progressPercentage = 0.0;
         }
@@ -1209,7 +1196,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             var outputDataItemsValues = AllDataItems.Where(di => di.Role.HasFlag(DataItemRole.Output)).Select(di => di.Value).ToList();
             var outputCoverages = outputDataItemsValues.OfType<UnstructuredGridCellCoverage>().ToList();
             var outputFeatureCoverages = outputDataItemsValues.OfType<IFeatureCoverage>();
-            var outputTextDocuments = outputDataItemsValues.OfType<TextDocument>();
             var outputTextDocumentsFromFile = outputDataItemsValues.OfType<TextDocumentFromFile>();
             var waqObservationPointOutput = outputDataItemsValues.OfType<WaterQualityObservationVariableOutput>();
 
@@ -1226,17 +1212,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 featureCoverage.Clear();
             }
 
-            // Remove all text documents
-            foreach (var textDocument in outputTextDocuments)
-            {
-                DataItems.Remove(GetDataItemByValue(textDocument));
-            }
-
             // Remove all text documents based on files
             foreach (var textDocumentFromFile in outputTextDocumentsFromFile)
             {
                 FileUtils.DeleteIfExists(textDocumentFromFile.Path);
-                DataItems.Remove(GetDataItemByValue(textDocumentFromFile));
             }
 
             // Clear all time series values for observation point output

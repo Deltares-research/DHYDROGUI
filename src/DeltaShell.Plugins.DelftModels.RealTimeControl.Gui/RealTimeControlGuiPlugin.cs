@@ -85,14 +85,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             {
                 if (base.Gui != null)
                 {
-                    Gui.Application.ProjectSaving -= ProjectServiceProjectSaving;
                     Gui.Application.ActivityRunner.ActivityStatusChanged -= ActivityRunnerActivityStatusChanged;
                 }
 
                 gui = value;
                 if (gui == null) return;
 
-                Gui.Application.ProjectSaving += ProjectServiceProjectSaving;
                 Gui.Application.ActivityRunner.ActivityStatusChanged += ActivityRunnerActivityStatusChanged;
             }
         }
@@ -191,22 +189,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             }
 
             return true;
-        }
-
-        /// <summary> 
-        /// Clean up any resources being used.
-        /// </summary>
-        public override void Dispose()
-        {
-            if (gui != null)
-            {
-                if (gui.DocumentViews != null)
-                {
-                    Gui.Application.ProjectSaving -= ProjectServiceProjectSaving;
-                }
-            }
-
-            base.Dispose();
         }
 
         public override void Activate()
@@ -332,15 +314,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             }
         }
        
-        private void ProjectServiceProjectSaving(Project project)
-        {
-            var views = Gui.DocumentViews.OfType<ControlGroupGraphView>();
-            foreach (var view in views)
-            {
-                //view.ControlGroupEditor.SyncViewContext();
-            }
-        }
-
         private void Application_ProjectClosing(Project project)
         {
             RealTimeControlModelCopyPasteHelper.CopiedShapes = null;
