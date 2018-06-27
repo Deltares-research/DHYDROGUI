@@ -1,4 +1,4 @@
-Sobek Parser V2.07.004.50272
+Deltares, Parsen Version 2.08.002.54560 (Win64), Feb 20 2018, 11:17:39
 
 Warning    : Calculation point at Structure: Calculation Point Skipped
 Object-id  : 5                                       
