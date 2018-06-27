@@ -38,16 +38,16 @@ EmptyWells=0
 
 [Simulation]
 Mode=1010
-BeginYear=1996
+BeginYear=2010
 BeginMonth=1
 BeginDay=1
 BeginHour=0
 BeginMinute=0
 BeginSecond=0
-EndYear=1996
+EndYear=2010
 EndMonth=1
 EndDay=2
-EndHour=0
+EndHour=12
 EndMinute=0
 EndSecond=0
 PeriodFromEvent=0
@@ -76,12 +76,12 @@ WaterLevel=-1
 WaterDepth=-1
 WaterOnStreet=-1
 TimeWaterOnStreet=-1
-LevelFromStreetLevel=-1
+LevelFromStreetLevel=0
 RunOff=-1
 VolumeOnStreet=-1
 NodeVolume=0
-TotalWidth=0
-TotalArea=0
+TotalWidth=-1
+TotalArea=-1
 LateralOnNodes=0
 
 [ResultsBranches]
@@ -111,7 +111,7 @@ WaterlevelOnCrest=-1
 ThresholdForSpillCountInHours=24
 
 [ResultsGeneral]
-NrOfTimesteps=1
+NrOfTimesteps=24
 ActualValue=-1
 MeanValue=0
 MaximumValue=0
@@ -252,6 +252,7 @@ NrOfKeys=0
 1 KeyValue=DummyValue
 [ResultsPumps]
 PumpResults=0
+
 
 
 

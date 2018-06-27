@@ -6,8 +6,8 @@ Case Name                          : RiverProfileSummerdike
 
 Simulation Mode                    : Run 1DFLOW (Rural) and 1DFLOW (River) module simultaneously
 
-Start                              : 26-June-2018 15:06:51
-End                                : 26-June-2018 15:06:56
+Start                              : 27-June-2018 16:14:19
+End                                : 27-June-2018 16:14:24
 
 Rainfall-Runoff Module used        : No
 Channel Module used                : Yes
@@ -62,14 +62,14 @@ Largest Timestep (s)               :             300.0000
 
 External structure                  Spilled volume (m3)
 
-Boundaries in (m3)                 :         173458122.63
-Boundaries out (m3)                :         173716872.06
+Boundaries in (m3)                 :         828878513.54
+Boundaries out (m3)                :         810946009.70
 Structures in (m3)                 :                 0.00
 Structures out (m3)                :                 0.00
 Lateral disch. in (m3)             :                 0.00
 Lateral disch. out (m3)            :                 0.00
-Storage (m3)                       :           -258749.46
-Error (m3)                         :                 0.03
+Storage (m3)                       :          17932504.09
+Error (m3)                         :                -0.26
 
 Initial conditions
 ==================

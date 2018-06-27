@@ -38,16 +38,16 @@ EmptyWells=0
 
 [Simulation]
 Mode=1010
-BeginYear=1996
+BeginYear=2010
 BeginMonth=1
 BeginDay=1
 BeginHour=0
 BeginMinute=0
 BeginSecond=0
-EndYear=1996
+EndYear=2010
 EndMonth=1
 EndDay=2
-EndHour=0
+EndHour=12
 EndMinute=0
 EndSecond=0
 PeriodFromEvent=0
@@ -111,7 +111,7 @@ WaterlevelOnCrest=-1
 ThresholdForSpillCountInHours=24
 
 [ResultsGeneral]
-NrOfTimesteps=1
+NrOfTimesteps=24
 ActualValue=-1
 MeanValue=0
 MaximumValue=0
@@ -146,22 +146,22 @@ Option=1
 CourantNumber=1
 MaxDegree=6
 MaxIterations=8
-DtMinimum=0.001
-EpsilonValueVolume=0.0001
-EpsilonValueWaterDepth=0.0001
+DtMinimum=.001
+EpsilonValueVolume=.0001
+EpsilonValueWaterDepth=.0001
 StructureDynamicsFactor=1
 RelaxationFactor=1
 Rho=1000
 Gravity=9.81
 VolumeCorrection=0
-ThresholdValueFlooding=0.01
-ThresholdValueFloodingFLS=0.001
+ThresholdValueFlooding=.01
+ThresholdValueFloodingFLS=.001
 Theta=1
 MinimumLength=1
 AccurateVersusSpeed=3
 StructureInertiaDampingFactor=1
-MinimumSurfaceinNode=0.1
-MinimumSurfaceatStreet=0.1
+MinimumSurfaceinNode=.1
+MinimumSurfaceatStreet=.1
 ExtraResistanceGeneralStructure=0
 LowerTimeStepsLargeQlat=0
 AccelerationTermFactor=1
@@ -253,3 +253,9 @@ NrOfKeys=0
 
 [ResultsPumps]
 PumpResults=0
+
+
+
+
+
+

@@ -46,8 +46,8 @@ BeginMinute=0
 BeginSecond=0
 EndYear=2010
 EndMonth=1
-EndDay=2
-EndHour=0
+EndDay=3
+EndHour=12
 EndMinute=0
 EndSecond=0
 PeriodFromEvent=0
@@ -111,7 +111,7 @@ WaterlevelOnCrest=0
 ThresholdForSpillCountInHours=24
 
 [ResultsGeneral]
-NrOfTimesteps=1
+NrOfTimesteps=144
 ActualValue=-1
 MeanValue=0
 MaximumValue=0
@@ -238,6 +238,17 @@ NrOfKeys=0
 1 KeyValue=DummyValue
 [ResultsPumps]
 PumpResults=0
+
+
+
+
+
+
+
+
+
+
+
 
 
 

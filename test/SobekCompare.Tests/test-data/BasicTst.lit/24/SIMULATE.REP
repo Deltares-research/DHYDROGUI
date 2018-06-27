@@ -6,8 +6,8 @@ Case Name                          : RiverProfileMainFP1
 
 Simulation Mode                    : Run 1DFLOW (Rural) and 1DFLOW (River) module simultaneously
 
-Start                              : 26-June-2018 11:41:51
-End                                : 26-June-2018 11:41:57
+Start                              : 27-June-2018 13:40:45
+End                                : 27-June-2018 13:40:51
 
 Rainfall-Runoff Module used        : No
 Channel Module used                : Yes
@@ -62,13 +62,13 @@ Largest Timestep (s)               :             300.0000
 
 External structure                  Spilled volume (m3)
 
-Boundaries in (m3)                 :          51875568.51
-Boundaries out (m3)                :          51875568.51
+Boundaries in (m3)                 :          56466761.23
+Boundaries out (m3)                :          54981757.23
 Structures in (m3)                 :                 0.00
 Structures out (m3)                :                 0.00
 Lateral disch. in (m3)             :                 0.00
 Lateral disch. out (m3)            :                 0.00
-Storage (m3)                       :                 0.00
+Storage (m3)                       :           1485004.00
 Error (m3)                         :                -0.00
 
 Initial conditions
@@ -201,21 +201,21 @@ VelocityStructures=.75
 AccelerationTermFactor=1
 AccurateVersusSpeed=3
 CourantNumber=1
-DtMinimum=0.001
-EpsilonValueVolume=0.0001
-EpsilonValueWaterDepth=0.0001
+DtMinimum=.001
+EpsilonValueVolume=.0001
+EpsilonValueWaterDepth=.0001
 Gravity=9.81
 MaxDegree=6
 MaxIterations=8
-MinimumSurfaceatStreet=0.1
-MinimumSurfaceinNode=0.1
+MinimumSurfaceatStreet=.1
+MinimumSurfaceinNode=.1
 MinumumLength=1
 RelaxationFactor=1
 Rho=1000
 StructureInertiaDampingFactor=1
 Theta=1
-ThresholdValueFlooding=0.01
-ThresholdValueFloodingFLS=0.001
+ThresholdValueFlooding=.01
+ThresholdValueFloodingFLS=.001
 UseTimeStepReducerStructures=0
 
 [SimulationOptions]
