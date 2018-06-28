@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
-        public void GivenValidWaqModel_WhenRunningWithInvalidData_ThenOutputDataItemsAreRemovedFromModel()
+        public void GivenValidWaqModel_WhenRunningWithInvalidData_ThenOutputDataItemsAreNotRemovedFromModel()
         {
             var testDir = FileUtils.CreateTempDirectory();
             var originalDir = TestHelper.GetTestFilePath("WaterQualityDataFiles");
@@ -154,9 +154,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 dataFile.Content = dataFile.Content.Replace("2014/01/01-00:00:00 0.1", "2014/01/01-00:00:00 wrongValue");
 
                 // Run the model again (which will fail) and check that the output data items connected to the .lsp & .mor-files
-                // are removed from the model.
+                // are not removed from the model.
                 ActivityRunner.RunActivity(model);
-                Assert.IsEmpty(model.DataItems.Where(di => isWaqOutputFileDataItem(di)));
+                Assert.That(model.DataItems.Count(di => isWaqOutputFileDataItem(di)), Is.EqualTo(2));
                 model.Dispose();
             }
             finally
@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
-        public void GivenValidWaqModel_WhenClearingOutput_ThenOutputDataItemsAndFilesAreRemovedFromModel()
+        public void GivenValidWaqModel_WhenClearingOutput_ThenOutputDataItemsAndFilesAreNotRemovedFromModel()
         {
             var testDir = FileUtils.CreateTempDirectory();
             var projectFolder = Path.Combine(testDir, "BasicWaqProject.dsproj_data");
@@ -238,10 +238,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     
                     waqModel.ClearOutput(); // Clearing output
 
-                    // Check if output file data items are non-existent AND that feature coverage data items
+                    // Check if output file data items are still existent AND that feature coverage data items
                     // are not connected to data
-                    foreach (var tag in outputTextDocumentsTags) Assert.IsFalse(outputDataItemValues.Any(di => di.Tag == tag));
-                    foreach (var tag in outputFeatureCoveragesTags) CheckFeatureCoverageFunctionStore(outputDataItemValues, tag, false);
+                    foreach (var tag in outputTextDocumentsTags)
+                        Assert.IsTrue(outputDataItemValues.Any(di => di.Tag == tag));
+                    foreach (var tag in outputFeatureCoveragesTags)
+                        CheckFeatureCoverageFunctionStore(outputDataItemValues, tag, false);
 
                     // Check folder structure after model cleanup
                     var outputFolderFilesAfterCleanup = Directory.GetFileSystemEntries(projectFolder, "*", SearchOption.AllDirectories).Select(path => FileUtils.GetRelativePath(projectFolder, path)).ToArray();
