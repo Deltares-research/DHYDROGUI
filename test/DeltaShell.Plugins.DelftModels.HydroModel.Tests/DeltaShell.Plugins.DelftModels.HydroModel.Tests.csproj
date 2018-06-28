@@ -220,7 +220,6 @@
     <Compile Include="DHydroConfigModelCouplerTest.cs" />
     <Compile Include="DHydroConfigWriterTest.cs" />
     <Compile Include="DimrConfigModelCouplerFactoryTest.cs" />
-    <Compile Include="Export\DHydroConfigWriterTest.cs" />
     <Compile Include="Forms\ActivityShapes\ActivityShapeTestHelper.cs" />
     <Compile Include="Forms\ActivityShapes\CompositeActivityShapeTest.cs" />
     <Compile Include="Forms\ActivityShapes\ParallelActivityShapeTest.cs" />

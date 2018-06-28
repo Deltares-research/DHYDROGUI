@@ -23,63 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         private const string targetmodelText = "My TargetModel";
         private const string couplerText = "source_coupler";
 
-        private MockRepository mocks;
-        private IRainfallRunoffModel source;
-        private IModel target;
-        private ICompositeActivity sourceCoupler;
-        private IDataItem dataItemOutput;
-
-        [SetUp]
-        public void Setup()
-        {
-            /**
-             * Testing rr + 'f1d' model with links but then generic way!
-             * 
-             **/
-
-            mocks = new MockRepository();
-            var dataItemInputChild = mocks.StrictMock<IDataItem>();
-            dataItemInputChild.Expect(di => di.Role).Return(DataItemRole.Input).Repeat.Any();
-            dataItemInputChild.Expect(di => di.Children).Return(new EventedList<IDataItem>()).Repeat.Any();
-            dataItemInputChild.Expect(di => di.Name).Return("Water level").Repeat.Any();
-            
-            var dataItemInput = mocks.StrictMock<IDataItem>();
-            dataItemInput.Expect(di => di.Role).Return(DataItemRole.Input).Repeat.Any();
-            dataItemInput.Expect(di => di.Children).Return(new EventedList<IDataItem>() { dataItemInputChild }).Repeat.Any();
-            dataItemInput.Expect(di => di.Name).Return("Water level").Repeat.Any();
-            
-            var dataItemOutputChild = mocks.StrictMock<IDataItem>();
-            dataItemOutputChild.Expect(di => di.Role).Return(DataItemRole.Output).Repeat.Any();
-            dataItemOutputChild.Expect(di => di.Children).Return(new EventedList<IDataItem>()).Repeat.Any();
-            dataItemOutputChild.Expect(di => di.Name).Return(RainfallRunoffModelParameterNames.BoundaryDischarge).Repeat.Any();
-            
-            dataItemOutput = mocks.StrictMock<IDataItem>();
-            dataItemOutput.Expect(di => di.Role).Return(DataItemRole.Output).Repeat.Any();
-            dataItemOutput.Expect(di => di.Children).Return(new EventedList<IDataItem>() { dataItemOutputChild }).Repeat.Any();
-            dataItemOutput.Expect(di => di.Name).Return(RainfallRunoffModelParameterNames.BoundaryDischarge).Repeat.Any();
-
-            dataItemInputChild.Expect(di => di.LinkedTo).Return(dataItemOutput).Repeat.Any();
-            dataItemInput.Expect(di => di.LinkedTo).Return(null).Repeat.Any();
-            dataItemOutputChild.Expect(di => di.LinkedTo).Return(dataItemInput).Repeat.Any();
-            dataItemOutput.Expect(di => di.LinkedTo).Return(null).Repeat.Any();
-            
-            // our rainfall runoff model
-            source = mocks.StrictMultiMock<IRainfallRunoffModel>(typeof(IHydroModel), typeof(IDimrModel));// MockRepository.GenerateMock<IRainfallRunoffModel, IHydroModel, IDimrModel>();
-            var sourceDataItems = new List<IDataItem> { dataItemOutput, dataItemInput };
-            source.Expect(m => m.AllDataItems).Return(sourceDataItems).Repeat.Any();
-            source.Expect(m => m.Name).Return(sourcemodelText).Repeat.Any();
-            ((IDimrModel)source).Expect(m => m.ShortName).Return("rr").Repeat.Any();
-            
-            // our 'f1d' model
-            target = mocks.StrictMultiMock<IModel>(typeof(IDimrModel));//  MockRepository.GenerateMock<IModel, IDimrModel>();
-            var targetDataItems = new List<IDataItem> { dataItemInput, dataItemOutput };
-            target.Expect(m => m.AllDataItems).Return(targetDataItems).Repeat.Any();
-            target.Expect(m => m.Name).Return(targetmodelText).Repeat.Any();
-            ((IDimrModel)target).Expect(dm => dm.GetItemString(dataItemInput)).Return(targetDataitemText).Repeat.Any();
-            ((IDimrModel)target).Expect(m => m.ShortName).Return("flowd1d").Repeat.Any();
-
-        }
-
+       
         [Test]
         [TestCase("Polder", true)]
         [TestCase("Greenhouse", true)]
@@ -101,17 +45,99 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         */
         public void GenerateRRFlowWithCouplerDimrConfigTest(string catchment, bool parallel)
         {
+            var mocks = new MockRepository();
+            var dataItemInput = mocks.StrictMock<IDataItem>();
+            var dataItemInputChild = mocks.StrictMock<IDataItem>();
+            var dataItemOutput = mocks.StrictMock<IDataItem>();
+            var dataItemOutputChild = mocks.StrictMock<IDataItem>();
+
+            dataItemInputChild.Expect(di => di.Role).Return(DataItemRole.Input).Repeat.Any();
+            dataItemInputChild.Expect(di => di.Children).Return(new EventedList<IDataItem>()).Repeat.Any();
+            dataItemInputChild.Expect(di => di.Name).Return("Water level").Repeat.Any();
+            
+            dataItemInput.Expect(di => di.Role).Return(DataItemRole.Input).Repeat.Any();
+            dataItemInput.Expect(di => di.Children).Return(new EventedList<IDataItem>() { dataItemInputChild }).Repeat.Any();
+            dataItemInput.Expect(di => di.Name).Return("Water level").Repeat.Any();
+            
+            dataItemOutputChild.Expect(di => di.Role).Return(DataItemRole.Output).Repeat.Any();
+            dataItemOutputChild.Expect(di => di.Children).Return(new EventedList<IDataItem>()).Repeat.Any();
+            dataItemOutputChild.Expect(di => di.Name).Return(RainfallRunoffModelParameterNames.BoundaryDischarge).Repeat.Any();
+            
+            dataItemOutput.Expect(di => di.Role).Return(DataItemRole.Output).Repeat.Any();
+            dataItemOutput.Expect(di => di.Children).Return(new EventedList<IDataItem>() { dataItemOutputChild }).Repeat.Any();
+            dataItemOutput.Expect(di => di.Name).Return(RainfallRunoffModelParameterNames.BoundaryDischarge).Repeat.Any();
+
+            dataItemInputChild.Expect(di => di.LinkedTo).Return(dataItemOutput).Repeat.Any();
+            dataItemInput.Expect(di => di.LinkedTo).Return(null).Repeat.Any();
+            dataItemOutputChild.Expect(di => di.LinkedTo).Return(dataItemInput).Repeat.Any();
+            dataItemOutput.Expect(di => di.LinkedTo).Return(null).Repeat.Any();
+
+            // our rainfall runoff model
+            var source = mocks.StrictMultiMock<IRainfallRunoffModel>(typeof(IHydroModel), typeof(IDimrModel));
+            var sourceDataItems = new List<IDataItem> { dataItemOutput, dataItemInput };
+            source.Expect(m => m.AllDataItems).Return(sourceDataItems).Repeat.Any();
+            source.Expect(m => m.Name).Return(sourcemodelText).Repeat.Any();
+            source.Expect(m => m.StatusChanged += null).IgnoreArguments().Repeat.Any();
+            source.Expect(m => m.ProgressChanged += null).IgnoreArguments().Repeat.Any();
+            ((IDimrModel)source).Expect(m => m.ShortName).Return("rr").Repeat.Any();
+
+            // our 'f1d' model
+            var target = mocks.StrictMultiMock<IModel>(typeof(IDimrModel));
+            var targetDataItems = new List<IDataItem> { dataItemInput, dataItemOutput };
+            target.Expect(m => m.AllDataItems).Return(targetDataItems).Repeat.Any();
+            target.Expect(m => m.Name).Return(targetmodelText).Repeat.Any();
+            target.Expect(m => m.StatusChanged += null).IgnoreArguments().Repeat.Any();
+            target.Expect(m => m.ProgressChanged += null).IgnoreArguments().Repeat.Any();
+            ((IDimrModel)target).Expect(dm => dm.GetItemString(dataItemInput)).Return(targetDataitemText).Repeat.Any();
+            ((IDimrModel)target).Expect(m => m.ShortName).Return("flowd1d").Repeat.Any();
+
             CatchmentType catchmentType = CatchmentType.LoadFromString(catchment);
-            AddCatchment(catchmentType);
+            var targetObj = mocks.StrictMultiMock<IHydroObject>(typeof(IHydroNode));
+            targetObj.Expect(so => so.Name).Return("Node001").Repeat.Any();
+
+            var catchment1 = mocks.StrictMock<Catchment>();
+            catchment1.Expect(c => c.Name).Return("Catchment1").Repeat.Any();
+            catchment1.Expect(c => c.CatchmentType).Return(catchmentType).Repeat.Any();
+            var links = new EventedList<HydroLink>() {new HydroLink() {Source =  catchment1, Target = targetObj} };
+            catchment1.Expect(c => c.Links).Return(links).Repeat.Any();
+
+            var basin = mocks.PartialMock<DrainageBasin>();
+            var catchments = new EventedList<Catchment>() { catchment1 };
+            basin.Expect(b => b.Catchments).Return(catchments).Repeat.Any();
+            ((IHydroModel)source).Expect(m => m.Region).Return(basin).Repeat.Any();
+            ((IDimrModel)source).Expect(dm => dm.GetItemString(dataItemOutput)).Return(sourceDataitemText).Repeat.Any();
+
+            ICompositeActivity sourceCoupler;
+
+            var activities = new EventedList<IActivity>();
+
             if (parallel)
             {
-                RunAsParallel();
+                var workflow = mocks.StrictMock<ParallelActivity>();// similar to rr + f1d workflow
+                workflow.Expect(wf => wf.Activities).Return(activities).Repeat.Any();
+
+                sourceCoupler = mocks.StrictMultiMock<ICompositeActivity>(typeof(IDimrModel));
+                sourceCoupler.Expect(c => c.CurrentWorkflow).Return(workflow).Repeat.Any();
+
+                ((IDimrModel)sourceCoupler).Expect(dm => dm.ShortName).Return(couplerText).Repeat.Any();
+
+                source.Expect(m => m.Owner).Return(sourceCoupler).Repeat.Any();
             }
             else
             {
-                RunAsSequential(); /// NO CLUE HOW TO TEST THIS!!
+                var workflow = mocks.StrictMock<SequentialActivity>(); // similar to rr + f1d workflow
+                workflow.Expect(wf => wf.Activities).Return(activities).Repeat.Any();
+
+                sourceCoupler = mocks.StrictMultiMock<ICompositeActivity>(typeof(IDimrModel));
+                sourceCoupler.Expect(c => c.CurrentWorkflow).Return(workflow).Repeat.Any();
+
+                ((IDimrModel)sourceCoupler).Expect(dm => dm.ShortName).Return(couplerText).Repeat.Any();
+
+                source.Expect(m => m.Owner).Return(sourceCoupler).Repeat.Any();
             }
             mocks.ReplayAll();
+
+            activities.AddRange(new [] { new ActivityWrapper(source), new ActivityWrapper(target) });
             DimrConfigModelCouplerFactory.CouplerProviders.Add(new RRDimrConfigModelCouplerProvider());
             var expectedCouperName = ((IDimrModel)source).ShortName + DimrConfigModelCouplerFactory.COUPLER_NAME_COMBINER + ((IDimrModel)target).ShortName;
 
@@ -140,54 +166,5 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             }
             mocks.VerifyAll();
         }
-
-        
-
-        private void AddCatchment(CatchmentType catchmentType)
-        {
-            var targetObj = mocks.StrictMultiMock<IHydroObject>(typeof(IHydroNode));
-            targetObj.Expect(so => so.Name).Return("Node001").Repeat.Any();
-            var catchment = mocks.StrictMock<Catchment>();
-            catchment.Expect(c => c.Name).Return("Catchment1").Repeat.Any();
-            catchment.Expect(c => c.CatchmentType).Return(catchmentType).Repeat.Any();
-            catchment.Expect(c => c.Links).Return(new EventedList<HydroLink>() {new HydroLink() {Source =  catchment, Target = targetObj} }).Repeat.Any();
-            
-            var catchmentTypes = new EventedList<CatchmentType>();
-            var basin = mocks.PartialMock<DrainageBasin>();// MockRepository.GeneratePartialMock<DrainageBasin>();
-            basin.Expect(b => b.Catchments).Return(new EventedList<Catchment>() { catchment }).Repeat.Any();
-            ((IHydroModel)source).Expect(m => m.Region).Return(basin).Repeat.Any();
-            ((IDimrModel)source).Expect(dm => dm.GetItemString(dataItemOutput)).Return(sourceDataitemText).Repeat.Any();
-
-        }
-
-        private void RunAsParallel()
-        {
-            var workflow = mocks.StrictMock<ParallelActivity>();// similar to rr + f1d workflow
-            workflow.Expect(wf => wf.Activities).Return(
-                new EventedList<IActivity>() { new ActivityWrapper(source), new ActivityWrapper(target) }
-            ).Repeat.Any();
-
-            sourceCoupler = mocks.StrictMultiMock<ICompositeActivity>(typeof(IDimrModel));
-            sourceCoupler.Expect(c => c.CurrentWorkflow).Return(workflow).Repeat.Any();
-
-            ((IDimrModel)sourceCoupler).Expect(dm => dm.ShortName).Return(couplerText).Repeat.Any();
-
-            source.Expect(m => m.Owner).Return(sourceCoupler).Repeat.Any();
-        }
-        private void RunAsSequential()
-        {
-            var workflow = mocks.StrictMock<SequentialActivity>(); // similar to rr + f1d workflow
-            workflow.Expect(wf => wf.Activities).Return(
-                new EventedList<IActivity>() { new ActivityWrapper(source), new ActivityWrapper(target) }
-            ).Repeat.Any();
-
-            sourceCoupler = mocks.StrictMultiMock<ICompositeActivity>(typeof(IDimrModel));
-            sourceCoupler.Expect(c => c.CurrentWorkflow).Return(workflow).Repeat.Any();
-
-            ((IDimrModel)sourceCoupler).Expect(dm => dm.ShortName).Return(couplerText).Repeat.Any();
-
-            source.Expect(m => m.Owner).Return(sourceCoupler).Repeat.Any();
-        }
-
     }
 }
