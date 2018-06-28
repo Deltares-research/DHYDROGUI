@@ -350,7 +350,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
-        public void CallingClearOutputOnWaterQualityModelShouldClearAllOutputDataItem()
+        public void CallingClearOutputOnWaterQualityModelShouldNotClearAllOutputDataItem()
         {
             var model = new WaterQualityModel {ModelSettings = {MonitoringOutputLevel = MonitoringOutputLevel.None}};
             var grid = UnstructuredGridTestHelper.GenerateRegularGrid(10, 10, 10, 10);
@@ -392,8 +392,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             model.ClearOutput();
 
             Assert.AreEqual(0, featureCoverage.GetValues().Count);
-            Assert.AreEqual(5, model.DataItems.Count(di => di.Role.HasFlag(DataItemRole.Output)));
-            Assert.IsNull(model.GetDataItemByValue(document2));
+            Assert.AreEqual(7, model.DataItems.Count(di => di.Role.HasFlag(DataItemRole.Output)));
+            Assert.IsNotNull(model.GetDataItemByValue(document2));
 
             // Should be default values (cell argument is reset)
             Assert.AreEqual(100, unstructuredGridCellCoverage.GetValues().Count);
