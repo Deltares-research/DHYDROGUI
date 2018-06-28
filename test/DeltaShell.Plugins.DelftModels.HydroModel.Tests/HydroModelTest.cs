@@ -1,19 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Reflection;
-using DelftTools.Utils.Validation;
-using DeltaShell.Dimr;
-using DeltaShell.Plugins.DelftModels.HydroModel.Export;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpTestsEx;
@@ -145,46 +137,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             ActivityRunner.RunActivity(hydroModel);
             Assert.AreEqual(hydroModel.Status, ActivityStatus.Cleaned);
             Assert.IsFalse(hydroModel.OutputIsEmpty);
-        }
-
-        [Test]
-        public void CheckIfSubModelStatusIsSetToNoneWhenRunningOnInitializeTest()
-        {
-            var mocks = new MockRepository();
-            
-            var dimrModel = mocks.DynamicMultiMock<IDimrModel>(typeof(IActivity));
-            dimrModel.Expect(m => m.Status).PropertyBehavior();
-            dimrModel.Expect(m => m.ExplicitWorkingDirectory).PropertyBehavior();
-            dimrModel.Expect(m => m.RunsInIntegratedModel).PropertyBehavior();
-            dimrModel.Expect(m => m.KernelDirectoryLocation).Return(".").Repeat.Any();
-            dimrModel.Expect(m => m.DirectoryName).Return(".").Repeat.Any();
-            dimrModel.Expect(m => m.Name).Return("dimrModel").Repeat.Any();
-            dimrModel.Expect(m => m.ExporterType).Return(typeof(SimpleExporter)).Repeat.Any();
-            Expect.Call(dimrModel.Validate()).Return(new ValidationReport("dimrmodel",new List<ValidationIssue>())).Repeat.Any();
-            Expect.Call(dimrModel.GetExporterPath(Arg<string>.Is.Anything)).IgnoreArguments().Return(".").Repeat.Any();
-            
-            var activities = new EventedList<IActivity>() {dimrModel};
-            
-            mocks.ReplayAll();
-            dimrModel.Status = ActivityStatus.Failed;
-            dimrModel.RunsInIntegratedModel = true;
-            dimrModel.ExplicitWorkingDirectory = ".";
-
-            var hydroModel = new HydroModel();
-            var workFlow = new SequentialActivity
-            {
-                Activities = activities
-                        
-            };
-
-            hydroModel.Workflows.Add(workFlow);
-            hydroModel.CurrentWorkflow = workFlow;
-            Assert.That(dimrModel.Status, Is.EqualTo(ActivityStatus.Failed));
-            TypeUtils.CallPrivateMethod<HydroModel>(hydroModel, "OnInitialize");
-            Assert.That(dimrModel.Status, Is.EqualTo(ActivityStatus.None));
-            mocks.VerifyAll();
-
-            
         }
 
         [Test]
@@ -364,28 +316,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.AreEqual(hydroModelWorkFlow4.Data, hydroModelWorkFlowData4);
         }
 
-        public class SimpleExporter : IFileExporter
-        {
-            public bool Export(object item, string path)
-            {
-                return true;
-            }
-
-            public IEnumerable<Type> SourceTypes()
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool CanExportFor(object item)
-            {
-                throw new NotImplementedException();
-            }
-
-            public string Name { get; }
-            public string Category { get; }
-            public string FileFilter { get; }
-            public Bitmap Icon { get; }
-        }
         public class SimpleHydroModel : ModelBase, IHydroModel
         {
             public SimpleHydroModel()

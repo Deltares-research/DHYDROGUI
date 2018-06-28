@@ -675,7 +675,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         protected override void OnInitialize()
         {
             if (CurrentWorkflow == null) return;
-
             if (!WorkFlowTypeValidatorFactory.GetWorkFlowTypeValidator(CurrentWorkflow).Valid())
             {
                 LogInvalidWorkflow();
@@ -703,7 +702,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     m.ExplicitWorkingDirectory = Path.Combine(ExplicitWorkingDirectory, m.DirectoryName);
                     m.RunsInIntegratedModel = true;
                     m.DisconnectOutput();
-                    m.Status = ActivityStatus.None;
                 });
 
                 var kernelDirectories = GetKernelDirectories(dimrModels);
