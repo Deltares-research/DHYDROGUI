@@ -10,27 +10,11 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
-//using DeltaShell.Gui;
-//using DeltaShell.Plugins.CommonTools;
-//using DeltaShell.Plugins.CommonTools.Gui;
-//using DeltaShell.Plugins.Data.NHibernate;
-//using DeltaShell.Plugins.DelftModels.HydroModel;
-//using DeltaShell.Plugins.DelftModels.RealTimeControl;
-//using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
-//using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
-//using DeltaShell.Plugins.FMSuite.Wave;
-//using DeltaShell.Plugins.FMSuite.Wave.Gui;
-//using DeltaShell.Plugins.NetCDF;
-//using DeltaShell.Plugins.NetworkEditor;
-//using DeltaShell.Plugins.NetworkEditor.Gui;
-//using DeltaShell.Plugins.ProjectExplorer;
-//using DeltaShell.Plugins.SharpMapGis;
-//using DeltaShell.Plugins.SharpMapGis.Gui;
+
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -1358,53 +1342,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(modelDefinition.SourcesAndSinks.Count, Is.EqualTo(0));
             new MduFile().Read(mduFilePath, modelDefinition, area);
             Assert.That(modelDefinition.SourcesAndSinks.Count, Is.EqualTo(1));
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void GivenWaterFlowFMModelDefinitionUsingMorphology_WhenReadingWithMdu_ThenLogWarningMessageAboutBoundaryConditionsIsShown()
-        {
-            var testDirectory = FileUtils.CreateTempDirectory();
-            var mduFilePath = Path.Combine(testDirectory, "myMdu.mdu");
-            try
-            {
-                var modelDefinition = new WaterFlowFMModelDefinition(mduFilePath, "myModel") { UseMorphologySediment = true };
-                new MduFile().Write(mduFilePath, modelDefinition, new HydroArea());
-                Action action = () => new MduFile().Read(mduFilePath, new WaterFlowFMModelDefinition(mduFilePath, "myModel"), new HydroArea());
-                TestHelper.AssertLogMessageIsGenerated(action, Resources.WaterFlowFMModelDefinition_LogMessageWhenMorphologyIsEnabled_The_model_will_not_validate_with_boundary_data_in_more_than_one_point_of_a_Morphology_Boundary_Condition_);
-            }
-            finally
-                {
-                FileUtils.DeleteIfExists(testDirectory);
-                }
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void GivenWaterFlowFMModelDefiwdqadnitionUsingMorphology_WhenReadingWithMdu_ThenLogWarningMessageAboutBoundaryConditionsIsShown()
-                {
-            var testDirectory = FileUtils.CreateTempDirectory();
-            var mduFilePath = Path.Combine(testDirectory, "myMdu.mdu");
-            try
-            {
-                var modelDefinition = new WaterFlowFMModelDefinition(mduFilePath, "myModel") { UseMorphologySediment = false };
-                new MduFile().Write(mduFilePath, modelDefinition, new HydroArea());
-                Action action = () => new MduFile().Read(mduFilePath, new WaterFlowFMModelDefinition(mduFilePath, "myModel"), new HydroArea());
-                TestHelper.AssertLogMessageIsNotGenerated(action, Resources.WaterFlowFMModelDefinition_LogMessageWhenMorphologyIsEnabled_The_model_will_not_validate_with_boundary_data_in_more_than_one_point_of_a_Morphology_Boundary_Condition_);
-                }
-            finally
-            {
-                FileUtils.DeleteIfExists(testDirectory);
-            }
-        }
-
-        [Test]
-        public void GivenWaterFlowFMModelDefinition_WhenEnablingUsingMorphology_ThenLogWarningMessageAboutBoundaryConditionsIsShown()
-        {
-            var modelDefinition = new WaterFlowFMModelDefinition();
-            var expectedMessage =
-                "The model will not validate with boundary data in more than one point of a Morphology Boundary Condition.";
-            TestHelper.AssertLogMessageIsGenerated(() => modelDefinition.UseMorphologySediment = true, expectedMessage, 1);
         }
 
         #region TestHelpers
