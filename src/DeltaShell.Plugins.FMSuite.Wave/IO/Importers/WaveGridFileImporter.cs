@@ -11,6 +11,7 @@ using GeoAPI.CoordinateSystems;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Grids;
+using SharpMap;
 using SharpMap.CoordinateSystems;
 using SharpMap.Extensions.CoordinateSystems;
 
@@ -72,17 +73,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             {
                 var grid = Delft3DGridFileReader.Read(path);
                 grid.CoordinateSystem = grid.Attributes[CurvilinearGrid.CoordinateSystemKey] == "Spherical"
-                    ? new OgrCoordinateSystemFactory()
-                        .CreateFromEPSG(4326)
-                    : null;
-                /*
-                model.CoordinateSystem =
-                    grid.Attributes[CurvilinearGrid.CoordinateSystemKey] == "Spherical"
-                    ? new OgrCoordinateSystemFactory()
-                        .CreateFromEPSG(4326)
-                    : null;
-                    */
+                    ? new OgrCoordinateSystemFactory().CreateFromEPSG(4326): null;
+
                 var coordinates = grid.X.Values.Zip(grid.Y.Values, (x, y) => new Coordinate(x, y));
+                if(Map.CoordinateSystemFactory == null)
+                    Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+
                 if (model.CoordinateSystem != null &&
                     !CoordinateSystemValidator.CanAssignCoordinateSystem(coordinates, model.CoordinateSystem))
                 {
