@@ -104,10 +104,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
                     () => waveGridFileImporter.ImportItem(waveGridFileFilePath, waveModel.OuterDomain.Grid),
                     string.Format(Resources.WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_doesn_t_contain_a_coordinate_system__The_model_has_co_ordinate_system__0___setting_grid_to_this_co_oordinate_system_type_,
                         waveModel.CoordinateSystem));
-                Assert.That(waveModel.CoordinateSystem, Is.Not.Null);
-                Assert.That(waveModel.CoordinateSystem.AuthorityCode, Is.EqualTo(3857));
-                Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Not.Null);
-                Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem.AuthorityCode, Is.EqualTo(3857));
+                Assert.That(waveModel.CoordinateSystem, Is.Null);
+                Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Null);
             }
             finally
             {
