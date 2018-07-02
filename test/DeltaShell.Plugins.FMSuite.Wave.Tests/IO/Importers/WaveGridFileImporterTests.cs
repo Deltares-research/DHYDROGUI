@@ -5,7 +5,6 @@ using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
-using Rhino.Mocks;
 using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
@@ -15,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
     {
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void Spherical()
+        public void GivenAGridFileWithASphericalCoordinateSystemWhenImportingThenCoordinateSystemOnTheModelIsSpherical()
         {
             var waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_001.grd");
             var waveModel = new WaveModel();
@@ -40,9 +39,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void SphericalToCartesian()
+        public void GivenAGridFileWithACartesianCoordinateSystemWhenImportingThenCoordinateSystemOnTheModelIsCartesian()
         {
-            var waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_001.grd");
+            var waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_002.grd");
             var waveModel = new WaveModel();
             var tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             try
@@ -50,32 +49,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
                 waveModel.MdwFile.MdwFilePath = tempWorkingDirectory;
                 var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[] { waveModel });
                 waveModel.OuterDomain.Grid.Attributes[CurvilinearGrid.CoordinateSystemKey] = "Test";
-                Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Null);
-                waveGridFileImporter.ImportItem(waveGridFileFilePath, waveModel.OuterDomain.Grid);
-                Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem.IsGeographic, Is.True);
-                Assert.That(waveModel.OuterDomain.Grid.Attributes[CurvilinearGrid.CoordinateSystemKey], Is.EqualTo("Spherical"));
-                Assert.That(waveModel.CoordinateSystem, Is.Not.Null);
-                Assert.That(waveModel.CoordinateSystem.IsGeographic, Is.True);
-                
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(tempWorkingDirectory);
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void Cartesian()
-        {
-            var waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\smallbend.grd");
-            var waveModel = new WaveModel();
-            var tempWorkingDirectory = FileUtils.CreateTempDirectory();
-            try
-            {
-                waveModel.MdwFile.MdwFilePath = Path.Combine(tempWorkingDirectory, Path.GetRandomFileName());
-                waveModel.OuterDomain.Grid.Attributes[CurvilinearGrid.CoordinateSystemKey] = "Test";
-                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[] { waveModel });
                 Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Null);
                 waveGridFileImporter.ImportItem(waveGridFileFilePath, waveModel.OuterDomain.Grid);
                 Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Null);
@@ -87,6 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
                 FileUtils.DeleteIfExists(tempWorkingDirectory);
             }
         }
+
         [Test]
         public void
             GivenWaveModelWithOuterDomainWithDifferentCartesianCoordinateSystemSetWhenImportingCartesianShouldImportedGridGetSameCoordinateSystemAsModelCoordinateSystem()
