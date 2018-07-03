@@ -16,6 +16,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [TestCase(@"windFiles\myWindFile3.apwxwy", null)]
         [TestCase("NonExistingFilePath.apwxwy", null)]
         [TestCase(@"windFiles\myWindFileWithComments.apwxwy", "wind3.grd")]
+        [TestCase(@"windFiles\myWindFileExceptionBeforeGridFileNameGiven.apwxwy", "wind4.grd")]
+        [TestCase(@"windFiles\myWindFileExceptionAfterGridFileNameGiven.apwxwy", "wind4.grd")]
         public void GivenApwxwyFile_WhenReading_GridFileNameIsReturned(string relativeTestFilePath, string expectedGridFileName)
         {
             var filePath = TestHelper.GetTestFilePath(relativeTestFilePath);

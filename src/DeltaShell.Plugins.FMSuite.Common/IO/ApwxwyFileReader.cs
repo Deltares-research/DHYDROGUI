@@ -44,17 +44,25 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         private string[] GetKeyValueComment(string line)
         {
-            var result = new string[3];
+            try
+            {
+                var result = new string[3];
 
-            var matches = RegularExpression.GetMatches(KeyValueCommentPattern, line);
-            if (matches.Count == 0) throw new FormatException(String.Format("Invalid key-value-comment line on line {0} in file {1}",
-                LineNumber, InputFilePath));
+                var matches = RegularExpression.GetMatches(KeyValueCommentPattern, line);
+                if (matches.Count == 0) throw new FormatException(String.Format("Invalid key-value-comment line on line {0} in file {1}",
+                    LineNumber, InputFilePath));
 
-            result[0] = matches[0].Groups["key"].Value.Trim();
-            result[1] = matches[0].Groups["value"].Value.Trim();
-            result[2] = matches[0].Groups["comment"].Value.Trim(); // Returns "" if comment group not matched
+                result[0] = matches[0].Groups["key"].Value.Trim();
+                result[1] = matches[0].Groups["value"].Value.Trim();
+                result[2] = matches[0].Groups["comment"].Value.Trim(); // Returns "" if comment group not matched
 
-            return result;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Log.WarnFormat("During reading apwxwy file: {0}", ex.Message);
+                return new string[3] {"a","b","c"};
+            }
         }
     }
 }
