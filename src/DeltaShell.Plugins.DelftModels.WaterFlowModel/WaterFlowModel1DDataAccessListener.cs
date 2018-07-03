@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             var crossSectionDefinitionsWithoutSections = hydroNetwork.CrossSections
                 .Select(cs => cs.Definition)
                 .Union(hydroNetwork.SharedCrossSectionDefinitions)
-                .Where(csd => !csd.Sections.Any())
+                .Where(csd => csd != null && !csd.Sections.Any())
                 .ToList();
 
             if (!crossSectionDefinitionsWithoutSections.Any()) return;
