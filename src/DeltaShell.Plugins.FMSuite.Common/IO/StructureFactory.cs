@@ -434,7 +434,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         private static void SetVerheijVdKnaapSettings(LeveeBreach leveeBreach, Structure2D structure2D)
         {
-            var settings = leveeBreach.GetLeveeBreachSettings() as VerheijVdKnaap2002Breach;
+            var settings = leveeBreach.GetActiveLeveeBreachSettings() as VerheijVdKnaap2002Breach;
             if (settings == null) return;
 
             settings.InitialCrestLevel = GetPropertyValue(structure2D, KnownStructureProperties.InitialCrestLevel, 0.0);
@@ -449,7 +449,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         private static void SetUserDefinedSettings(LeveeBreach leveeBreach, Structure2D structure2D, string path, DateTime refDate)
         {
-            var settings = leveeBreach.GetLeveeBreachSettings() as UserDefinedBreach;
+            var settings = leveeBreach.GetActiveLeveeBreachSettings() as UserDefinedBreach;
             if (settings == null) return;
 
             var timeSeriesFilePath = GetPropertyValue(structure2D, KnownStructureProperties.TimeFilePath, "");

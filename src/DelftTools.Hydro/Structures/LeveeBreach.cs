@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DelftTools.Utils.Aop;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -16,14 +15,15 @@ namespace DelftTools.Hydro.Structures
         private double breachLocationX;
         private double breachLocationY;
         private bool isLocationSet = false;
-        private readonly IEnumerable<LeveeBreachSettings> leveeBreachSettings;
+
+        private readonly Dictionary<LeveeBreachGrowthFormula, LeveeBreachSettings> settings;
 
         public LeveeBreach()
         {
-            leveeBreachSettings = new List<LeveeBreachSettings>
+            settings = new Dictionary<LeveeBreachGrowthFormula, LeveeBreachSettings>
             {
-                new UserDefinedBreach(),
-                new VerheijVdKnaap2002Breach()
+                {LeveeBreachGrowthFormula.UserDefinedBreach, new UserDefinedBreach() },
+                {LeveeBreachGrowthFormula.VerheijvdKnaap2002, new VerheijVdKnaap2002Breach() }
             };
         }
 
@@ -71,23 +71,18 @@ namespace DelftTools.Hydro.Structures
 
         public LeveeBreachGrowthFormula LeveeBreachFormula { get; set; } = LeveeBreachGrowthFormula.VerheijvdKnaap2002;
 
-        public LeveeBreachSettings GetLeveeBreachSettings()
+        public LeveeBreachSettings GetActiveLeveeBreachSettings()
         {
-            return GetLeveeBreachSettingsByFormula(LeveeBreachFormula);
+            return settings.ContainsKey(LeveeBreachFormula) ? settings[LeveeBreachFormula] : null;
         }
 
         public void SetBaseLeveeBreachSettings(DateTime startTime, bool breachGrowthActive)
         {
-            foreach (var setting in leveeBreachSettings)
+            foreach (var setting in settings.Values)
             {
                 setting.StartTimeBreachGrowth = startTime;
                 setting.BreachGrowthActive = breachGrowthActive;
             }
-        }
-
-        private LeveeBreachSettings GetLeveeBreachSettingsByFormula(LeveeBreachGrowthFormula growthFormula)
-        {
-            return leveeBreachSettings.FirstOrDefault(s => s.GrowthFormula == growthFormula);
         }
 
         private void SetDefaultBreachLocation()

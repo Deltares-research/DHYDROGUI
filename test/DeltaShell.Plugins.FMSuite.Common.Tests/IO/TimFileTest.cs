@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using NUnit.Framework;
 
@@ -206,6 +208,100 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         {
             var fileReader = new TimFile();
             fileReader.Read(string.Empty, null, DateTime.MinValue);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void WriteTimFile_WithComments_CommentsShouldAppearInFile()
+        {
+            var refDate = new DateTime(2014, 5, 1, 0, 0, 0);
+
+            var startDate = new DateTime(2014, 5, 5, 13, 25, 30);
+
+            var timeStep = new TimeSpan(0, 0, 1, 00);
+
+            const int count = 100;
+
+            var timesList = new List<DateTime>();
+            var valuesList1 = new List<double>();
+            var valuesList2 = new List<double>();
+            var valuesList3 = new List<double>();
+
+            var date = startDate;
+            for (var i = 0; i < count; ++i)
+            {
+                timesList.Add(date);
+                date += timeStep;
+                valuesList1.Add(1.0 / (i * i + 1));
+                valuesList2.Add(1.0 / (i * i + 2));
+                valuesList3.Add(1.0 / (i * i + 3));
+            }
+
+            var function = new TimeSeries();
+            function.Components.Add(new Variable<double>("a"));
+            function.Components.Add(new Variable<double>("b"));
+            function.Components.Add(new Variable<double>("c"));
+
+            function.Time.SetValues(timesList);
+            function.Components[0].SetValues(valuesList1);
+            function.Components[1].SetValues(valuesList2);
+            function.Components[2].SetValues(valuesList3);
+
+            const string comment1 = "This is a comment";
+            const string comment2 = "Another comment";
+            const string comment3 = "And the final comment, the most awesome comment of comments.";
+            var comments = new List<string> { comment1, comment2, comment3 };
+            
+            var filePath = Path.Combine(FileUtils.CreateTempDirectory(),"comments.tim");
+            FileUtils.DeleteIfExists(filePath);
+
+            try
+            {
+                var fileWriter = new TimFile();
+                fileWriter.Write(filePath, function, refDate, comments);
+
+                Assert.True(File.Exists(filePath), $"{filePath} does not exist");
+                var text = File.ReadAllLines(filePath).ToList();
+
+                Assert.True(text.Any(line => line.IndexOf(comment1, StringComparison.OrdinalIgnoreCase) >= 0));
+                Assert.True(text.Any(line => line.IndexOf(comment2, StringComparison.OrdinalIgnoreCase) >= 0));
+                Assert.True(text.Any(line => line.IndexOf(comment3, StringComparison.OrdinalIgnoreCase) >= 0));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(filePath);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadingTimFileWithComments_CommentsShouldNotAppearInData()
+        {
+            var testFile = TestHelper.GetTestFilePath("timFiles/commentsFile.tim");
+            Assert.True(File.Exists(testFile));
+
+            var refDate = new DateTime(2014, 5, 1, 0, 0, 0);
+
+            var readFunction = new TimeSeries();
+            readFunction.Components.Add(new Variable<double>("a"));
+            readFunction.Components.Add(new Variable<double>("b"));
+            readFunction.Components.Add(new Variable<double>("c"));
+            readFunction.Components.Add(new Variable<double>("d"));
+            readFunction.Components.Add(new Variable<double>("e"));
+
+            new TimFile().Read(testFile, readFunction, refDate);
+
+            var componentAValues = readFunction.Components[0].GetValues<double>();
+            var componentBValues = readFunction.Components[1].GetValues<double>();
+            var componentCValues = readFunction.Components[2].GetValues<double>();
+            var componentDValues = readFunction.Components[3].GetValues<double>();
+            var componentEValues = readFunction.Components[4].GetValues<double>();
+
+            Assert.AreEqual(6, componentAValues.Count);
+            Assert.AreEqual(6, componentBValues.Count);
+            Assert.AreEqual(6, componentCValues.Count);
+            Assert.AreEqual(6, componentDValues.Count);
+            Assert.AreEqual(6, componentEValues.Count);
         }
     }
 }

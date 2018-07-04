@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         public LeveeBreachSettings LeveeBreachSettings
         {
-            get { return LeveeBreach?.GetLeveeBreachSettings(); }
+            get { return LeveeBreach?.GetActiveLeveeBreachSettings(); }
             set { }
         }
 

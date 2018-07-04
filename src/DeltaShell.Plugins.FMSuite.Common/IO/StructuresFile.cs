@@ -4,13 +4,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Hydro.Structures.WeirFormula;
-using DelftTools.Units;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
@@ -399,7 +397,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var properties = new List<DelftIniProperty>();
             if (leveeBreach == null) return properties;
 
-            var settings = leveeBreach.GetLeveeBreachSettings();
+            var settings = leveeBreach.GetActiveLeveeBreachSettings();
             if (settings == null) return properties;
 
             // general properties
@@ -413,7 +411,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             
             // specific properties
             properties.Add(ConstructProperty(KnownStructureProperties.Algorithm, (int)leveeBreach.LeveeBreachFormula, structureType));
-            var breachSettings = leveeBreach.GetLeveeBreachSettings() as VerheijVdKnaap2002Breach;
+            var breachSettings = leveeBreach.GetActiveLeveeBreachSettings() as VerheijVdKnaap2002Breach;
             var useVerheij = breachSettings != null;
             if (useVerheij)
             {
@@ -426,14 +424,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 properties.Add(ConstructProperty(KnownStructureProperties.CriticalFlowVelocity, breachSettings.CriticalFlowVelocity, structureType));
             }
 
-            // Write tm file for table?
+            // Write tm file for table
             var userDefinedSettings = settings as UserDefinedBreach;
             if (userDefinedSettings != null)
             {
                 var timeSeries = userDefinedSettings.CreateTimeSeriesFromTable();
                 var timeFilePath = ConstructTimeFilePath(leveeBreach, KnownStructureProperties.TimeFilePath);
                 properties.Add(ConstructProperty(KnownStructureProperties.TimeFilePath, timeFilePath, structureType));
-                WriteTimeFile(GetOtherFilePathInSameDirectory(path, timeFilePath), timeSeries, settings.StartTimeBreachGrowth);
+                var commentLines = new List<string> { "Time entries are defined in minutes, relative to the breach growth start" };
+                WriteTimeFile(GetOtherFilePathInSameDirectory(path, timeFilePath), timeSeries, settings.StartTimeBreachGrowth, commentLines);
             }
 
             return properties;
@@ -538,7 +537,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return filePath;
         }
 
-        private static void WriteTimeFile(string filePath, IFunction capacityTimeSeries, DateTime refDate)
+        private static void WriteTimeFile(string filePath, IFunction capacityTimeSeries, DateTime refDate, IEnumerable<string> commentLines = null)
         {
             var timeFile = new TimFile();
             var directory = Path.GetDirectoryName(Path.GetFullPath(filePath));
@@ -546,7 +545,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 Directory.CreateDirectory(directory);
             }
-            timeFile.Write(filePath, capacityTimeSeries, refDate);
+            timeFile.Write(filePath, capacityTimeSeries, refDate, commentLines);
         }
         #endregion
 

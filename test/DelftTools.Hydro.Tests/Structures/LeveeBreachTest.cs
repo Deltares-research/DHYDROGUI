@@ -83,7 +83,7 @@ namespace DelftTools.Hydro.Tests.Structures
         public void LeveeBreachWithGrowthFormula_GettingsSettings_ShouldReturnCorrectType<T>(LeveeBreachGrowthFormula growthFormula, T type)
         {
             var leveeBreach = new LeveeBreach { LeveeBreachFormula = growthFormula };
-            var settings = leveeBreach.GetLeveeBreachSettings();
+            var settings = leveeBreach.GetActiveLeveeBreachSettings();
             Assert.AreEqual(type, settings.GetType());
         }
     }

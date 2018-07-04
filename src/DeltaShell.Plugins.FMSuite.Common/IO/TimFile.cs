@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(TimFile));
         // if modelStartTime is null, we write absolute time values. 
-        public void Write(string timFilePath, IFunction timeSeries, DateTime? modelReferenceDate)
+        public void Write(string timFilePath, IFunction timeSeries, DateTime? modelReferenceDate, IEnumerable<string> commentLines = null)
         {
             using (CultureUtils.SwitchToInvariantCulture())
             {
@@ -25,8 +25,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     {
                         throw new ArgumentException("Incorrect function type: can only write time series to tim files");
                     }
-                    var timeValues = timeArgument.Values.ToArray();
 
+                    if (commentLines != null)
+                    {
+                        foreach (var commentLine in commentLines)
+                        {
+                            WriteLine("* " + commentLine);
+                        }
+                    }
+
+                    var timeValues = timeArgument.Values.ToArray();
                     var components = timeSeries.Components.OfType<IVariable<double>>().ToList();
                    
                     for (int i = 0; i < timeValues.Length; i++)
