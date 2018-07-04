@@ -135,29 +135,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        public void WaveModel_With_MixedOuterDomain_CoordinateSystem_ValidationFails()
-        {
-            var filePath = TestHelper.GetTestFilePath(@"WaveWithMixedCoordinates\tst.mdw");
-            Assert.IsTrue(File.Exists(filePath));
-
-            var fileCopy = TestHelper.CreateLocalCopy(filePath);
-            Assert.IsTrue(File.Exists(fileCopy));
-
-            using (var model = new WaveModel(fileCopy))
-            {
-                var domains = WaveDomainHelper.GetAllDomains(model.OuterDomain);
-                Assert.IsTrue(domains.Any(d => CheckDomainGrid(d, WaveModel.CoordinateSystemType.Spherical)));
-                Assert.IsTrue(domains.Any(d => CheckDomainGrid(d, WaveModel.CoordinateSystemType.Cartesian)));
-
-                var validationReport = WaveDomainValidator.Validate(model);
-                Assert.IsTrue(validationReport.AllErrors.Any());
-
-                var expectedMssg = Resources.WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_All_the_grids_Coordinate_System_should_be_the_same__either_Spherical_or_Cardesian;
-                Assert.IsTrue(validationReport.AllErrors.Any(err => err.Message == expectedMssg));
-            }
-        }
-
-        [Test]
         public void WaveModel_With_SphericalCoordinates_And_WaveSetupIsFalse_ValidationSucceeds()
         {
             var filePath = TestHelper.GetTestFilePath(@"WaveWithSphericalCoordinates\nonValidModel\d3dfm1125.mdw");

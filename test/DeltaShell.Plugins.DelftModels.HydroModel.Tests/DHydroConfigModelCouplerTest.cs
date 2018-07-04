@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -103,12 +102,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var sourceDataItems = new List<IDataItem> { dataItemOutput };
             source.Expect(m => m.AllDataItems).Return(sourceDataItems).Repeat.Any();
             source.Expect(m => m.Name).Return(sourcemodelText).Repeat.Any();
+            source.Expect(m => m.StatusChanged += null).IgnoreArguments().Repeat.Any();
+            source.Expect(m => m.ProgressChanged += null).IgnoreArguments().Repeat.Any();
             ((IDimrModel)source).Expect(dm => dm.GetItemString(dataItemOutput)).Return(sourceDataitemText).Repeat.Any();
 
             var extraSource = mocks.StrictMultiMock<IModel>(typeof(IDimrModel), typeof(IActivity));
             var extraSourceDataItems = new List<IDataItem> { dataItemOutput };
             extraSource.Expect(m => m.AllDataItems).Return(extraSourceDataItems).Repeat.Any();
-            
+            extraSource.Expect(m => m.StatusChanged += null).IgnoreArguments().Repeat.Any();
+            extraSource.Expect(m => m.ProgressChanged += null).IgnoreArguments().Repeat.Any();
+
             extraSource.Expect(m => m.Name).Return(otherSourceModelText).Repeat.Any();
             ((IDimrModel)extraSource).Expect(dm => dm.GetItemString(dataItemOutput)).Return(sourceDataitemText).Repeat.Any();
 
@@ -117,18 +120,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             target.Expect(m => m.AllDataItems).Return(targetDataItems).Repeat.Any();
             target.Expect(dm => dm.Name).Return(targetmodelText).Repeat.Any();
             target.Expect(dm => dm.Owner).Return(null).Repeat.Any();
+            target.Expect(m => m.StatusChanged += null).IgnoreArguments().Repeat.Any();
+            target.Expect(m => m.ProgressChanged += null).IgnoreArguments().Repeat.Any();
             ((IDimrModel)target).Expect(dm => dm.ShortName).Return(targetmodelText).Repeat.Any();
             ((IDimrModel)target).Expect(dm => dm.GetItemString(dataItemInput)).Return(targetDataitemText).Repeat.Any();
 
+            var subWFActivities = new EventedList<IActivity>();
             var subWF = mocks.StrictMultiMock<ICompositeActivity>(typeof(IDimrModel)); // similar to iterative1d2dCoupler
-            subWF.Expect(wf => wf.Activities).Return(
-                new EventedList<IActivity>() { source, new ActivityWrapper(extraSource) }
-                ).Repeat.Any();
+            subWF.Expect(wf => wf.Activities).Return(subWFActivities).Repeat.Any();
+            subWF.Expect(m => m.StatusChanged += null).IgnoreArguments().Repeat.Any();
+            subWF.Expect(m => m.ProgressChanged += null).IgnoreArguments().Repeat.Any();
             ((IDimrModel)subWF).Expect(dm => dm.IsMasterTimeStep).Return(true).Repeat.Any();
+
+            var workflowActivities = new EventedList<IActivity>();
             var workflow = mocks.StrictMock<ICompositeActivity>(); // similar to rtc + {fm + f1d} workflow
-            workflow.Expect(wf => wf.Activities).Return(
-                new EventedList<IActivity>() { new ActivityWrapper(target), new ActivityWrapper(subWF)}
-                ).Repeat.Any();
+            workflow.Expect(wf => wf.Activities).Return(workflowActivities).Repeat.Any();
 
             var sourceCoupler = mocks.StrictMultiMock<ICompositeActivity>(typeof(IDimrModel));
             sourceCoupler.Expect(c => c.CurrentWorkflow).Return(workflow).Repeat.Any();
@@ -140,8 +146,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             source.Expect(m => m.Owner).Return(sourceCoupler).Repeat.Any();
             extraSource.Expect(m => m.Owner).Return(sourceCoupler).Repeat.Any();
 
-            
             mocks.ReplayAll();
+
+            subWFActivities.AddRange(new List<IActivity> { source, new ActivityWrapper(extraSource) });
+            workflowActivities.AddRange(new List<IActivity> { new ActivityWrapper(target), new ActivityWrapper(subWF) });
 
             var expectedCouperName = ((IDimrModel)sourceCoupler).ShortName + DimrConfigModelCouplerFactory.COUPLER_NAME_COMBINER + ((IDimrModel)target).ShortName;
 

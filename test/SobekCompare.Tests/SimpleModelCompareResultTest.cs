@@ -195,7 +195,6 @@ namespace SobekCompare.Tests
         [Test]
         public void RiverProfileMainOnly()
         {
-
             var pathDirSobek = Path.Combine(baseDir, "22");
             CompareJaapHelper.RunAndCompareSobekAndWaterFlow1D(pathDirSobek);
         }
@@ -203,17 +202,21 @@ namespace SobekCompare.Tests
         [Test]
         public void RiverProfileMainFP1()
         {
-
             var pathDirSobek = Path.Combine(baseDir, "24");
             CompareJaapHelper.RunAndCompareSobekAndWaterFlow1D(pathDirSobek);
         }
- 
-        [Test]
-        public void RiverProfileMainFP1FP2()
-        {
 
-            var pathDirSobek = Path.Combine(baseDir, "25");
-            CompareJaapHelper.RunAndCompareSobekAndWaterFlow1D(pathDirSobek);
-        }
+       [Test]
+       public void RiverProfileMainFP1FP2()
+       {
+          var pathDirSobek = Path.Combine(baseDir, "25");
+          CompareJaapHelper.RunAndCompareSobekAndWaterFlow1D(pathDirSobek);
+       }
+       [Test]
+       public void RiverProfileSummerDike()
+       {
+          var pathDirSobek = Path.Combine(baseDir, "28");
+          CompareJaapHelper.RunAndCompareSobekAndWaterFlow1D(pathDirSobek);
+       }
     }
 }

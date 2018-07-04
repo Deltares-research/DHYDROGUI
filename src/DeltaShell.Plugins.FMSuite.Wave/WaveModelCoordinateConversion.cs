@@ -6,8 +6,10 @@ using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using SharpMap;
 using SharpMap.CoordinateSystems;
 using SharpMap.CoordinateSystems.Transformations;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
 {
@@ -27,6 +29,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 coordinates.Add(new Coordinate(minX, maxY));
                 coordinates.Add(new Coordinate(maxX, minY));
                 coordinates.Add(new Coordinate(maxX, maxY));
+                if (Map.CoordinateSystemFactory == null)
+                    Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+
                 return CoordinateSystemValidator.CanAssignCoordinateSystem(coordinates, potentialCoordinateSystem);
             }
             return true;

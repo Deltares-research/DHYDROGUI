@@ -282,14 +282,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             if(prop.PropertyDefinition.MduPropertyName != GuiProperties.UseMorSed) return;
             SetMapFormatPropertyValue();
-            LogMessageWhenMorphologyIsEnabled(prop);
-        }
-
-        private void LogMessageWhenMorphologyIsEnabled(WaterFlowFMProperty prop)
-        {
-            var useMorphology = prop.Value is bool && (bool)prop.Value;
-            if (!useMorphology) return;
-            Log.Warn(Resources.WaterFlowFMModelDefinition_LogMessageWhenMorphologyIsEnabled_The_model_will_not_validate_with_boundary_data_in_more_than_one_point_of_a_Morphology_Boundary_Condition_);
         }
 
         private void SetModelProperty(string mduPropertyName, WaterFlowFMProperty property)

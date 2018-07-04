@@ -18,7 +18,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 WaterFlowFMModelNetworkValidator.Validate(model.Network),
                 WaterFlowFMGridValidator.Validate(model),
                 ValidateBathymetry(model),
-                ValidateInitialConditions(model),
                 ValidatePhysicalProcesses(model),
                 WaterFlowFMWindValidator.Validate(model),
                 WaterFlowFMModelDefinitionValidator.Validate(model),
@@ -46,62 +45,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             var roughnessValues = model.Roughness.GetValues<double>();
             if (roughnessValues.Contains(model.Roughness.Components[0].NoDataValue))
             {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Warning,
+                issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
                     string.Format("Roughness contains unspecified points, the calculation kernel will replace these with default values")));
             }
 
             var viscosityValues = model.Viscosity.GetValues<double>();
             if (viscosityValues.Contains(model.Viscosity.Components[0].NoDataValue))
             {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Warning,
+                issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
                     string.Format("Viscosity contains unspecified points, the calculation kernel will replace these with default values")));
             }
 
             var diffusivityValues = model.Diffusivity.GetValues<double>();
             if (diffusivityValues.Contains(model.Diffusivity.Components[0].NoDataValue))
             {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Warning,
+                issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
                     string.Format("Diffusivity contains unspecified points, the calculation kernel will replace these with default values")));
             }
 
             return new ValidationReport("Physical Processes", issues);
-        }
-
-        private static ValidationReport ValidateInitialConditions(WaterFlowFMModel model)
-        {
-            var issues = new List<ValidationIssue>();
-
-            var waterlevelValues = model.InitialWaterLevel.GetValues<double>();
-            if (waterlevelValues.Contains(model.InitialWaterLevel.Components[0].NoDataValue))
-            {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Warning,
-                    string.Format("Initial Water Level contains unspecified points, the calculation kernel will replace these with default values")));   
-            }
-
-            var salinityValues = model.InitialSalinity.Coverages.SelectMany(c => c.GetValues<double>());
-            if (model.UseSalinity && model.InitialSalinity.Coverages.Any() && salinityValues.Contains((double)model.InitialSalinity.Coverages[0].Components[0].NoDataValue))
-            {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Warning,
-                    string.Format("Initial Salinity contains unspecified points, the calculation kernel will replace these with default values")));
-            }
-
-            var tracerValues = model.InitialTracers.SelectMany(c => c.GetValues<double>());
-            var firstTracer = model.InitialTracers.FirstOrDefault();
-            if (firstTracer != null && tracerValues.Contains((double)firstTracer.Components[0].NoDataValue))
-            {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Warning,
-                    string.Format("Initial Tracers contain unspecified points, the calculation kernel will replace these with default values")));
-            }
-
-            var temperatureValues = model.InitialTemperature.GetValues<double>();
-            if (model.HeatFluxModelType != HeatFluxModelType.None && temperatureValues.Contains(model.InitialTemperature.Components[0].NoDataValue))
-            {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Warning, 
-                    string.Format("Initial Temperature contains unspecified points, the calculation kernel will replace these with default values")));   
-            }
-
-
-            return new ValidationReport("Initial Conditions", issues);
         }
 
         private static ValidationReport ValidateBathymetry(WaterFlowFMModel model)
@@ -111,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             var values = model.Bathymetry.GetValues<double>();
             if (values.Contains(model.Bathymetry.Components[0].NoDataValue))
             {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Warning,
+                issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
                     string.Format("Bathymetry contains unspecified points, the calculation kernel will replace these with default values")));
             }
             return new ValidationReport("Bathymetry", issues);

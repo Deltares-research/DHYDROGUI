@@ -139,4 +139,13 @@
   <data name="WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_All_the_grids_Coordinate_System_should_be_the_same__either_Spherical_or_Cardesian" xml:space="preserve">
     <value>All the grids Coordinate System should be the same, either Spherical or Cartesian</value>
   </data>
+  <data name="WaveModel_OnOuterDomainPropertyChanged_The_model_coordinates_do_not_appear_to_be_in___0____as_they_fall_outside_the_expected_range_of_values_for_this_system__Please_verify_the_selected_coordinate_system_is_the_system_the_coordinates_were_measured_in__Continuing_could_lead_to_the_map_visualization_failing_and_unexpected_behaviour_of_spatial_operations__1__1_Grid_coordinates_are_incompatible_with_current_model_coordinate_system" xml:space="preserve">
+    <value>The model coordinates do not appear to be in '{0}',. Please select a grid with the appropriate coordinate system. Continuing could lead to the map visualization failing and unexpected behaviour of spatial operations {1}{1}Grid coordinates are incompatible with current model coordinate system</value>
+  </data>
+  <data name="WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_doesn_t_contain_a_coordinate_system__The_model_has_co_ordinate_system__0___setting_grid_to_this_co_oordinate_system_type_" xml:space="preserve">
+    <value>Grid is set in project but doesn't contain a coordinate system. The model has co-ordinate system {0}, setting grid to this co-oordinate system type.</value>
+  </data>
+  <data name="WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_isn_t_the_same_coordinate_system_as_our_model__The_model_has_co_ordinate_system__0___the_grid_has__1___Setting_the_model_to_the_grid_co_ordinate_system_type__1__" xml:space="preserve">
+    <value>Grid is set in project but isn't the same coordinate system as our model. The model has co-ordinate system {0}, the grid has {1}. Setting the model to the grid co-ordinate system type {1}.</value>
+  </data>
 </root>

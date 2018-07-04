@@ -91,6 +91,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Grid is set in project but doesn&apos;t contain a coordinate system. The model has co-ordinate system {0}, setting grid to this co-oordinate system type..
+        /// </summary>
+        public static string WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_doesn_t_contain_a_coordinate_system__The_model_has_co_ordinate_system__0___setting_grid_to_this_co_oordinate_system_type_ {
+            get {
+                return ResourceManager.GetString("WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_doesn_t_contain" +
+                        "_a_coordinate_system__The_model_has_co_ordinate_system__0___setting_grid_to_this" +
+                        "_co_oordinate_system_type_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grid is set in project but isn&apos;t the same coordinate system as our model. The model has co-ordinate system {0}, the grid has {1}. Setting the model to the grid co-ordinate system type {1}..
+        /// </summary>
+        public static string WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_isn_t_the_same_coordinate_system_as_our_model__The_model_has_co_ordinate_system__0___the_grid_has__1___Setting_the_model_to_the_grid_co_ordinate_system_type__1__ {
+            get {
+                return ResourceManager.GetString("WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_isn_t_the_same_" +
+                        "coordinate_system_as_our_model__The_model_has_co_ordinate_system__0___the_grid_h" +
+                        "as__1___Setting_the_model_to_the_grid_co_ordinate_system_type__1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The model coordinates do not appear to be in &apos;{0}&apos;,. Please select a grid with the appropriate coordinate system. Continuing could lead to the map visualization failing and unexpected behaviour of spatial operations {1}{1}Grid coordinates are incompatible with current model coordinate system.
+        /// </summary>
+        public static string WaveModel_OnOuterDomainPropertyChanged_The_model_coordinates_do_not_appear_to_be_in___0____as_they_fall_outside_the_expected_range_of_values_for_this_system__Please_verify_the_selected_coordinate_system_is_the_system_the_coordinates_were_measured_in__Continuing_could_lead_to_the_map_visualization_failing_and_unexpected_behaviour_of_spatial_operations__1__1_Grid_coordinates_are_incompatible_with_current_model_coordinate_system {
+            get {
+                return ResourceManager.GetString(@"WaveModel_OnOuterDomainPropertyChanged_The_model_coordinates_do_not_appear_to_be_in___0____as_they_fall_outside_the_expected_range_of_values_for_this_system__Please_verify_the_selected_coordinate_system_is_the_system_the_coordinates_were_measured_in__Continuing_could_lead_to_the_map_visualization_failing_and_unexpected_behaviour_of_spatial_operations__1__1_Grid_coordinates_are_incompatible_with_current_model_coordinate_system", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to With WaveSetup set to True parallel runs will fail, normal runs with lakes will produce unreliable values..
         /// </summary>
         public static string WaveModel_WaveSetup_With_WaveSetup_set_to_True_parallel_runs_will_fail__normal_runs_with_lakes_will_produce_unreliable_values_ {

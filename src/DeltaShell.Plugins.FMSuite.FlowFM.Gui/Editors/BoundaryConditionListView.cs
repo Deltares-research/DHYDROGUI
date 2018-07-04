@@ -40,6 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             boundaryConditionTableView.AddColumn(ForcingTypePropertyName, ForcingTypePropertyDescription, true, 100);
             boundaryConditionTableView.AddColumn(FactorPropertyName, FactorPropertyDescription, false, 100);
             boundaryConditionTableView.AddColumn(OffsetPropertyName, OffsetPropertyDescription, false, 100);
+            boundaryConditionTableView.Dock = DockStyle.Fill;
 
             boundaryConditionTableView.SelectionChanged += TableViewOnSelectionChanged;
 

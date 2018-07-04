@@ -132,9 +132,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 app.Plugins.Add(new NetCdfApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new ScriptingApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new ToolboxApplicationPlugin());
-                app.Plugins.Add(new WaterQualityModelApplicationPlugin());
 
                 app.Run();
 
@@ -170,20 +168,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.DataAccess)]
         public void Check_When_RunningTwice_WaqModel_OutputFiles_AreNot_Duplicated(string outputFile)
         {
-            var projPath = TestHelper.GetTestFilePath(@"ValidWaqModel\Project1.dsproj");
+            var projPath = TestHelper.GetTestFilePath(@"TestRunningModelTwiceSaveCheck\Project1.dsproj");
             projPath = TestHelper.CreateLocalCopy(projPath);
 
             using (var app = new DeltaShellApplication())
             {
                 //Declaring plugins.
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new WaterQualityModelApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new NetCdfApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new ScriptingApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new ToolboxApplicationPlugin());
                 app.Plugins.Add(new WaterQualityModelApplicationPlugin());
 
@@ -193,7 +189,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
                 var waqModel = app.Project.RootFolder.Models.OfType<WaterQualityModel>().First();
                 Assert.IsNotNull(waqModel);
-
+                
                 //First run
                 ActivityRunner.RunActivity(waqModel);
                 CheckDataItems(outputFile, waqModel);
@@ -215,20 +211,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.DataAccess)]
         public void Check_When_RunningTwice_WaqModel_OutputFiles_And_Saving_TheFilesArePersisted(string outputFileName)
         {
-            var projPath = TestHelper.GetTestFilePath(@"ValidWaqModel\Project1.dsproj");
+            var projPath = TestHelper.GetTestFilePath(@"TestRunningModelTwiceSaveCheck\Project1.dsproj");
             projPath = TestHelper.CreateLocalCopy(projPath);
 
             using (var app = new DeltaShellApplication())
             {
                 //Declaring plugins.
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new WaterQualityModelApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new NetCdfApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new ScriptingApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new ToolboxApplicationPlugin());
                 app.Plugins.Add(new WaterQualityModelApplicationPlugin());
 

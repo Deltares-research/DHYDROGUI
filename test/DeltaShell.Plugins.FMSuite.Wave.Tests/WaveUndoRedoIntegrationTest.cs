@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     newOuterDomain.SuperDomain = null;
                     model.OuterDomain = newOuterDomain;
                     model.EndEdit();
-
+                   
                     model.OuterDomain.SpectralDomainData.NDir = 20;
 
                 };

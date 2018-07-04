@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -228,6 +229,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 if (outerDomain != null)
                 {
+                    ((INotifyPropertyChanging)outerDomain).PropertyChanging -= OnOuterDomainPropertyChanging;
                     ((INotifyPropertyChanged)outerDomain).PropertyChanged -= OnOuterDomainPropertyChanged;
                     RemoveDataItemsForDomain(outerDomain);
                 }
@@ -237,6 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
                 if (outerDomain != null)
                 {
+                    ((INotifyPropertyChanging)outerDomain).PropertyChanging += OnOuterDomainPropertyChanging;
                     ((INotifyPropertyChanged)outerDomain).PropertyChanged += OnOuterDomainPropertyChanged;
                     AddDataItemsForDomain(outerDomain);
 
@@ -282,23 +285,93 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
 
         private static readonly string GridPropertyName = TypeUtils.GetMemberName<WaveDomainData>(d => d.Grid);
+        private string previousGridName;
+
+        private void OnOuterDomainPropertyChanging(object sender, PropertyChangingEventArgs e)
+        {
+            var domain = sender as WaveDomainData;
+            if (domain == null || e.PropertyName != nameof(domain.GridFileName)) return;
+
+            previousGridName = domain.Name;
+        }
+
         private void OnOuterDomainPropertyChanged(object sender, PropertyChangedEventArgs eventArgs)
         {
             var domain = sender as WaveDomainData;
-            if (domain != null && eventArgs.PropertyName == GridPropertyName)
+            if (domain != null)
             {
-                if (Equals(OuterDomain, domain))
+                if (eventArgs.PropertyName == nameof(domain.GridFileName) && !string.IsNullOrEmpty(previousGridName))
                 {
-                    gridOperationApi = new WaveGridOperationApi(outerDomain.Grid);
+                    var dataItem = GetDataItemByTag(WavmStoreDataItemTag + previousGridName) as DataItem;
+                    if (dataItem == null) return;
+                    
+                    dataItem.Tag = WavmStoreDataItemTag + domain.Name;
+                    dataItemByTagDictionaryIsDirty = true;
                 }
+                if (eventArgs.PropertyName == GridPropertyName)
+                {
+                    if (Equals(OuterDomain, domain))
+                    {
+                        gridOperationApi = new WaveGridOperationApi(outerDomain.Grid);
+                    }
 
-                UpdateBathymetry(domain);
-                UpdateBathymetryOperations(domain);
+                    UpdateBathymetry(domain);
+                    UpdateBathymetryOperations(domain);
 
-                if (domain.Grid != null) CoordinateSystem = domain.Grid.CoordinateSystem;
+                if (domain.Grid != null) UpdateCoordinateSystem(domain.Grid.CoordinateSystem);
+
+                    if (domain.Grid != null) CoordinateSystem = domain.Grid.CoordinateSystem;
+                }
             }
         }
-        
+        /// <summary>
+        /// if current Coordinate System is not set always take <paramref name="potentialCoordinateSystem"/>.
+        /// if this model has a CoordinateSystem but the new grid doesn't, set the grids coordinate system to the model coordinate system.
+        /// if this model has a CoordinateSystem and the new grid has a coordinate system too check if they are the same. If so do nothing.
+        /// if this model has a CoordinateSystem and the new grid has a coordinate system too but they are different check if you can transform the model coordinate system to the grid coordinate system.
+        /// </summary>
+        /// <param name="potentialCoordinateSystem"></param>
+        private void UpdateCoordinateSystem(ICoordinateSystem potentialCoordinateSystem)
+        {
+            if (CoordinateSystem == null)
+            {
+                CoordinateSystem = potentialCoordinateSystem;
+                return;
+            }
+
+            if (potentialCoordinateSystem == null)
+            {
+                Log.WarnFormat(
+                    Resources
+                        .WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_doesn_t_contain_a_coordinate_system__The_model_has_co_ordinate_system__0___setting_grid_to_this_co_oordinate_system_type_,
+                    CoordinateSystem);
+     
+                CoordinateSystem = null;
+                AfterCoordinateSystemSet();
+            }
+            else
+            {
+                if (coordinateSystem.EqualsTo(potentialCoordinateSystem)) return;
+                // else (check for) transform
+                if (!CanSetCoordinateSystem(potentialCoordinateSystem))
+                {
+                    throw new Exception(string.Format(
+                        Resources
+                            .WaveModel_OnOuterDomainPropertyChanged_The_model_coordinates_do_not_appear_to_be_in___0____as_they_fall_outside_the_expected_range_of_values_for_this_system__Please_verify_the_selected_coordinate_system_is_the_system_the_coordinates_were_measured_in__Continuing_could_lead_to_the_map_visualization_failing_and_unexpected_behaviour_of_spatial_operations__1__1_Grid_coordinates_are_incompatible_with_current_model_coordinate_system,
+                        potentialCoordinateSystem, Environment.NewLine));
+                }
+
+                //transform model
+                Log.WarnFormat(
+                    Resources
+                        .WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_isn_t_the_same_coordinate_system_as_our_model__The_model_has_co_ordinate_system__0___the_grid_has__1___Setting_the_model_to_the_grid_co_ordinate_system_type__1__,
+                    CoordinateSystem, potentialCoordinateSystem);
+                TransformCoordinates(
+                    new OgrCoordinateSystemFactory().CreateTransformation(CoordinateSystem,
+                        potentialCoordinateSystem));
+            }
+        }
+
         public IEventedList<Feature2DPoint> ObservationPoints { get; set; }
         public IEventedList<Feature2D> ObservationCrossSections; 
         public IEventedList<WaveObstacle> Obstacles { get; set; }
@@ -373,6 +446,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 if (outerDomain != null)
                 {
+                    ((INotifyPropertyChanging)outerDomain).PropertyChanging -= OnOuterDomainPropertyChanging;
                     ((INotifyPropertyChanged) outerDomain).PropertyChanged -= OnOuterDomainPropertyChanged;
                 }
 
@@ -380,6 +454,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 ReplaceDataItemsForDomain(outerDomain);
                 if (outerDomain != null)
                 {
+                    ((INotifyPropertyChanging)outerDomain).PropertyChanging += OnOuterDomainPropertyChanging;
                     ((INotifyPropertyChanged) outerDomain).PropertyChanged += OnOuterDomainPropertyChanged;
                     gridOperationApi = new WaveGridOperationApi(outerDomain.Grid);
                 }
@@ -388,6 +463,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 OuterDomain = ModelDefinition.OuterDomain;
             }
+
+            if(outerDomain != null && outerDomain.Grid != null)
+                UpdateCoordinateSystem(outerDomain.Grid.CoordinateSystem);
 
             BoundaryConditions = ModelDefinition.BoundaryConditions;
             Obstacles = ModelDefinition.Obstacles;
@@ -449,6 +527,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             domain.SubDomains.Add(subDomain);
             subDomain.SuperDomain = domain;
             AddDataItemsForDomain(subDomain);
+            AfterCoordinateSystemSet();
         }
 
         public void DeleteSubDomain(WaveDomainData domain, WaveDomainData subDomain)

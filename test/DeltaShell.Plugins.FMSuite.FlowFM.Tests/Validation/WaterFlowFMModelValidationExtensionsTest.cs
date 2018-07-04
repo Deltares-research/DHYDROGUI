@@ -69,6 +69,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
+        public void CheckThatInitializingFmModelWithSalinityAndTemperatureEnabledNoWarningMessagesAreGiven()
+        {
+
+            var model = new WaterFlowFMModel();
+            //Enable Salinity and Temperature checkboxes
+            var salinityProperty = model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity);
+            var temperatureProperty = model.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature);
+            //Create a grid
+            model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+            model.UseRestart = true;
+
+            //Validate model
+            var report = model.Validate(model);
+            salinityProperty.Value = true;
+            temperatureProperty.Value = true;
+
+            Assert.AreEqual(0,
+                report.GetAllIssuesRecursive()
+                    .Count(i => i.Severity == ValidationSeverity.Warning && i.Message.Contains("Initial")));
+        }
+
+
+        [Test]
         public void CheckPumpCapacityIsNotNegative()
         {
             var model = new WaterFlowFMModel();
