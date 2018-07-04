@@ -641,20 +641,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             {
                 api.Initialize(model.MduFilePath);
 
-                model.SourcesAndSinks.Add(new SourceAndSink
+                Assert.True(model.Grid.Cells.Count > 1);
+                var geometry = new LineString(new[]
                 {
-                    Feature = new Feature2D
-                    {
-                        Geometry = model.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                            .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry //Geometry from above test
-                    }
+                    model.Grid.Cells.First().Center,
+                    model.Grid.Cells.Last().Center
                 });
 
-                var snappedSourcesAndSinksBnd =
+                model.SourcesAndSinks.Add(new SourceAndSink { Feature = new Feature2D { Geometry = geometry } });
+
+                var snappedSourceAndSink =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.SourceSink,
                         model.SourcesAndSinks.First().Feature.Geometry);
 
-                Assert.IsTrue(model.SnapsToGrid(snappedSourcesAndSinksBnd));
+                Assert.IsTrue(model.SnapsToGrid(snappedSourceAndSink));
             }
         }
 
