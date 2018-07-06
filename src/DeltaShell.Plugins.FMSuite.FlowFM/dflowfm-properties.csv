@@ -167,7 +167,7 @@ external forcing,ExtForceFileNew,,,,FileName,,,,TRUE,,,,,,"New format for extern
 trachytopes,TrtRou,,,Include trachytopes?:Yes (Y)|No (N),Y|N,N,,,TRUE,,,,,,"Include alluvial and vegetation roughness (trachytopes) (Y: yes, N: no)"
 trachytopes,TrtDef,,,,FileName,,,,TRUE,,,,,,File (*.ttd) containing trachytope definitions
 trachytopes,TrtL,,,,FileName,,,,TRUE,,,,,,File (*.arl) containing distribution of trachytope definitions
-trachytopes,TrtDt,,,,Double,60,,,TRUE,,,,,,Trachytope roughness update time interval (s)
+trachytopes,DtTrt,,,,Double,60,,,TRUE,,,,,,Trachytope roughness update time interval (s)
 ****,,,,,,,,,,,,,,,
 *,,,,,,,,,,,,,,,
 GUIOnly,StartTime,timeframe,,Start Time,DateTime,,,,FALSE,,,,,,Begin of simulation period
