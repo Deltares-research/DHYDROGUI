@@ -46,7 +46,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Controls.Wpf">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.40036\lib\net40\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.40067\lib\net40\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Functions">
@@ -158,7 +158,7 @@
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsFormsIntegration" />
     <Reference Include="Xceed.Wpf.Toolkit">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.40036\lib\net40\DeltaShell\Xceed.Wpf.Toolkit.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.40067\lib\net40\DeltaShell\Xceed.Wpf.Toolkit.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

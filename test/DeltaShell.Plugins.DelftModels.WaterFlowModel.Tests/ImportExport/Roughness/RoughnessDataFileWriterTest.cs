@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             coverage.DefaultValue = defaultValue;
             coverage.Arguments[0].InterpolationType = interpolationType;
 
-            var expectedFile = Path.Combine(Environment.CurrentDirectory,"FileWriters", TestHelper.GetCurrentMethodName() + ".txt");
+            var expectedFile = FileUtils.CreateTempDirectory() + @"roughness.txt";
             
             try
             {
