@@ -229,6 +229,7 @@
     <Compile Include="FeatureData\BoundaryConditionIntegrationTest.cs" />
     <Compile Include="FeatureData\BoundaryConditionQuantityTypeConverterTest.cs" />
     <Compile Include="FeatureData\FlowBoundaryConditionTest.cs" />
+    <Compile Include="FeatureData\ModelFeatureCoordinateDataTest.cs" />
     <Compile Include="FeatureData\SourceAndSinkTest.cs" />
     <Compile Include="FlowFMTestHelper.cs" />
     <Compile Include="GridWizardMapToolHelperTest.cs" />
