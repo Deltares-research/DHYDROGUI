@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
     {
         [Test]
         [Category(TestCategory.WindowsForms)]
-        public void Test()
+        public void DisplayViewWithoutErrors()
         {
             var view = new ManholeView();
 

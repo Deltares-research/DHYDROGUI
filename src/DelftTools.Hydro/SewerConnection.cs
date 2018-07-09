@@ -18,8 +18,6 @@ namespace DelftTools.Hydro
         private static readonly ILog Log = LogManager.GetLogger(typeof(SewerConnection));
 
         protected IEventedList<IBranchFeature> branchFeatures;
-        private Compartment sourceCompartment;
-        private Compartment targetCompartment;
 
         public SewerConnection() : this(null, null)
         {
@@ -50,33 +48,17 @@ namespace DelftTools.Hydro
                 Geometry = new LineString(new[] { fromNode.Geometry.Coordinate, toNode.Geometry.Coordinate });
             }
         }
-        
+
         public double LevelSource { get; set; }
 
         public double LevelTarget { get; set; }
         
         public SewerConnectionWaterType WaterType { get; set; }
-
-        public Compartment SourceCompartment
-        {
-            get { return sourceCompartment; }
-            set
-            {
-                sourceCompartment = value;
-                Source = sourceCompartment?.ParentManhole;
-            }
-        }
-
-        public Compartment TargetCompartment
-        {
-            get { return targetCompartment; }
-            set
-            {
-                targetCompartment = value;
-                Target = targetCompartment?.ParentManhole;
-            }
-        }
         
+        public Compartment SourceCompartment { get; set; }
+
+        public Compartment TargetCompartment { get; set; }
+
         public override bool IsLengthCustom
         {
             get { return true; }
@@ -105,6 +87,13 @@ namespace DelftTools.Hydro
             }
         }
 
+        public IEnumerable<IStructure1D> GetStructuresFromBranchFeatures()
+        {
+            var compositeStructures = branchFeatures.OfType<ICompositeBranchStructure>();
+            var structures = branchFeatures.OfType<IStructure1D>().Except(compositeStructures);
+            return structures;
+        }
+
         public IEnumerable<T> GetStructuresFromBranchFeatures<T>()
         {
             //Branch features are added as a composite branch structure.
@@ -122,21 +111,19 @@ namespace DelftTools.Hydro
             }
             return branchStructuresT;
         }
-
-        private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs notifyCollectionChangingEventArgs)
+        
+        private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {
-            if (notifyCollectionChangingEventArgs.Action != NotifyCollectionChangeAction.Add) return;
+            if (e.Action != NotifyCollectionChangeAction.Add) return;
+            if (!branchFeatures.Any()) return;
 
-            if (branchFeatures.Any())
+            var compositeStructures = branchFeatures.OfType<CompositeBranchStructure>().ToList();
+            if (!compositeStructures.Any() ||
+                (compositeStructures.First().Structures.Any() &&
+                 !compositeStructures.First().Structures.Contains(e.Item)))
             {
-                var compositeStructures = branchFeatures.OfType<CompositeBranchStructure>().ToList();
-                if (!compositeStructures.Any() ||
-                    (compositeStructures.First().Structures.Any()  &&
-                    !compositeStructures.First().Structures.Contains(notifyCollectionChangingEventArgs.Item)))
-                {
-                    Log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, this.Name);
-                    notifyCollectionChangingEventArgs.Cancel = true;
-                }
+                Log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, this.Name);
+                e.Cancel = true;
             }
         }
     }

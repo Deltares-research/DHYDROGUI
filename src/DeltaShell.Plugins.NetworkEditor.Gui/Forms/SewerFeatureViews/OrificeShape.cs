@@ -8,6 +8,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     {
         public SewerConnectionOrifice Orifice { get; set; }
 
+        public override object Source
+        {
+            get { return Orifice; }
+            set { Orifice = value as SewerConnectionOrifice; }
+        }
+
         public override ISewerConnection SewerConnection
         {
             get

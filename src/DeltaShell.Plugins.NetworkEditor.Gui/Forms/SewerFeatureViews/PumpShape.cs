@@ -9,6 +9,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     {
         public IPump Pump { get; set; }
 
+        public override object Source
+        {
+            get { return Pump; }
+            set { Pump = value as IPump; }
+        }
+        
         public double StartDeliveryLevel
         {
             get { return Pump?.StartDelivery ?? double.NaN; }
@@ -41,11 +47,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             get { return Math.Min(StopDeliveryLevel, StopSuctionLevel); }
             set { }
         }
-
-        /*public override double Width
-        {
-            get { return base.Width * 4.0; }
-            set { }
-        }*/
     }
 }

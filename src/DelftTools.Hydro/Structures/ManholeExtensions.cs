@@ -5,31 +5,25 @@ namespace DelftTools.Hydro.Structures
 {
     public static class ManholeExtensions
     {
-        public static IEnumerable<ISewerConnection> GetManholeInternalConnections(this IManhole manhole)
+        public static IEnumerable<ISewerConnection> InternalConnections(this IManhole manhole)
         {
             var network = manhole?.Network as IHydroNetwork;
-
-            if(network == null) return new List<ISewerConnection>();
-
-            var connections = network.SewerConnections.Where(c => c.Source == manhole && c.Target == manhole  ).ToList();
-            return connections;
+            return network?.SewerConnections.Where(c => c.Source == manhole && c.Target == manhole) ?? new List<ISewerConnection>();
         }
 
-        public static IEnumerable<IPipe> GetPipesConnectedToManhole(this IManhole manhole, IEnumerable<IPipe> pipes)
+        public static IEnumerable<IStructure1D> InternalStructures(this IManhole manhole)
         {
-            var compartments = manhole.Compartments;
-
-            var connectedPipes = new List<IPipe>();
-
-            foreach (var pipe in pipes)
-            {
-                if (compartments.Contains(pipe.SourceCompartment) || compartments.Contains(pipe.TargetCompartment))
-                {
-                    connectedPipes.Add(pipe);
-                }
-            }
-
-            return connectedPipes;
+            var internalConnections = manhole.InternalConnections();
+            var structures = internalConnections.SelectMany(s => ((SewerConnection) s).GetStructuresFromBranchFeatures()); // TODO add orifice
+            return structures;
+        }
+        
+        public static IEnumerable<IPipe> Pipes(this IManhole manhole)
+        {
+            var network = manhole?.Network as IHydroNetwork;
+            if(network == null) return new List<IPipe>();
+            var pipes = network.Pipes.ToList();
+            return pipes.Where(p => p.Source == manhole || p.Target == manhole);
         }
     }
 }

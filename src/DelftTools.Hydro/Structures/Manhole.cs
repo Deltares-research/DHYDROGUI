@@ -65,7 +65,7 @@ namespace DelftTools.Hydro.Structures
                 }
             }
         }
-
+        
         private void CompartmentCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             var compartment = e.Item as Compartment;

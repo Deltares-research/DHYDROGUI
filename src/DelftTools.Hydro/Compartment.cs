@@ -1,10 +1,11 @@
 ﻿using DelftTools.Hydro.Structures;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 
 namespace DelftTools.Hydro
 {
     [Entity]
-    public class Compartment
+    public class Compartment : INameable
     {
         private Manhole parentManhole;
 

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Drawing;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using SharpMap.Api;
@@ -97,8 +95,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
         /// <returns></returns>
         private IGeometry GenerateCustomGeometry(IFeature feature, VectorLayer layer)
         {
-            var structure = (IStructure1D)feature;
-            var compositeStructure = structure.ParentStructure;
+            var structure = feature as IStructure1D;
+            var compositeStructure = structure?.ParentStructure;
 
             // structure can be disconnected during
             var index = 0;

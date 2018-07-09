@@ -8,13 +8,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     public class ConnectionShape : DrawingShape
     {
         public virtual ISewerConnection SewerConnection { get; set; }
-
-        public override object Source
-        {
-            get { return SewerConnection; } 
-            set { SewerConnection = value as ISewerConnection; }
-        }
-        
+     
         public override double Height
         {
             get { return TopLevel - BottomLevel; }

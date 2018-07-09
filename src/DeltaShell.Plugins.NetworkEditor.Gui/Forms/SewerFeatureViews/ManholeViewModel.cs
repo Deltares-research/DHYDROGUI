@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Input;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.Plugins.NetworkEditor.Gui.Commands;
 using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {
@@ -20,8 +17,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     {
         private IHydroNetwork network;
         private Manhole manhole;
-        private bool isSynchronising = false;
-        private Compartment selectedCompartment;
 
         public ManholeViewModel()
         {
@@ -29,7 +24,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             AddPumpCommand = new RelayCommand(AddPump, CanAddPump);
             AddOrificeCommand = new RelayCommand(AddOrifice, CanAddOrifice);
             AddWeirCommand = new RelayCommand(AddWeir, CanAddWeir);
-            RemoveCompartmentCommand = new RelayCommand(RemoveCompartment, CanRemoveCompartment);
+            RemoveCompartmentCommand = new RelayCommand(RemoveItem, CanRemoveItem);
         }
 
         public Manhole Manhole
@@ -41,8 +36,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 {
                     network = null;
                     UnsubscribeEvents();
-                    CompartmentsWrapper.Clear();
-                    PipesInManholes.Clear();
                     return;
                 }
 
@@ -54,25 +47,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                     }
                 }
 
-                PipesInManholes.Clear();
-                CompartmentsWrapper.Clear();
                 manhole = value;
 
                 if (manhole.Compartments != null)
                 {
                     DetermineSurfaceAndBottomLevels();
-                    CompartmentsWrapper.AddRange(manhole.Compartments);
-
                     SubscribeEvents();
                 }
 
                 network = manhole.Network as IHydroNetwork;
-
-                if (network?.Pipes != null)
-                {
-                    var pipes = manhole.GetPipesConnectedToManhole(network.Pipes);
-                    PipesInManholes.AddRange(pipes);
-                }
             }
         }
 
@@ -85,27 +68,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         public ICommand AddWeirCommand { get; set; }
 
         public ICommand RemoveCompartmentCommand { get; set; }
-
-        /* This collection is required because the collection changed event from the EventedList is not working correctly. 
-         * This is an known issue and will be fixed with the upgrade to the framework version 1.4.
-         * When that is done, remove CompartmentsWrapper and bind the Manhole.Compartments directly to the ItemsControl in the view. */
-        public ObservableCollection<Compartment> CompartmentsWrapper { get; set; } = new ObservableCollection<Compartment>();
-
-        public ObservableCollection<ISewerConnection> StructuresWrapper { get; set; } = new ObservableCollection<ISewerConnection>();
-
-        public ObservableCollection<IPipe> PipesInManholes { get; set; } = new ObservableCollection<IPipe>();
-
-        public Compartment SelectedCompartment
-        {
-            get { return selectedCompartment; }
-            set
-            {
-                selectedCompartment = value;
-                HasSelectedCompartment = selectedCompartment != null;
-            }
-        }
-
-        public bool HasSelectedCompartment { get; set; }
 
         public double SurfaceLevel { get; set; }
 
@@ -141,181 +103,92 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             return 0;
         }
 
-        private void RemoveCompartment(object obj)
+        private void EventedListCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            // First remove the internal connection, connected to that specific compartment
+            DetermineSurfaceAndBottomLevels();
+        }
 
-            // 
-            // Remove selected item
-            // if selectedItem is compartment:
+        private void SubscribeEvents()
+        {
+            manhole.Compartments.CollectionChanged += EventedListCollectionChanged;
+        }
 
-            // if selectedItem is orifice:
+        private void UnsubscribeEvents()
+        {
+            manhole.Compartments.CollectionChanged -= EventedListCollectionChanged;
+        }
 
-            // if selectedItem is.. etc.
-            
+        #region Add/remove methods
+
+        private void RemoveItem(object obj)
+        {
             var compartmentToRemove = SelectedItem as Compartment;
             if (compartmentToRemove != null)
             {
                 // Remove compartment
-                var sewerConnections = manhole.GetManholeInternalConnections();
+                var sewerConnections = manhole.InternalConnections();
                 foreach (var sewerConnection in sewerConnections)
                 {
                     if (sewerConnection.SourceCompartment == compartmentToRemove)
                     {
-                        sewerConnection.ReplaceCompartmentsOnInternalConnection(null, sewerConnection.TargetCompartment);
+                        sewerConnection.SourceCompartment = null;
                     }
 
                     if (sewerConnection.TargetCompartment == compartmentToRemove)
                     {
-                        sewerConnection.ReplaceCompartmentsOnInternalConnection(sewerConnection.SourceCompartment, null);
+                        sewerConnection.TargetCompartment = null;
                     }
                 }
 
                 manhole.Compartments.Remove(compartmentToRemove);
-                // Remove from sewer connection source/target compartments. 
-                // Reset source / target such that they stay connected
-
-
             }
 
-            var pump = SelectedItem as Pump;
-            if (pump != null)
+            var structure1D = SelectedItem as IStructure1D;
+            if (structure1D != null)
             {
-                // Remove pump connection
+                var connectionsToRemove = manhole.InternalConnections().Where(connection => connection.BranchFeatures.Contains(structure1D)).ToList();
+                foreach (var connection in connectionsToRemove)
+                {
+                    manhole.Network.Branches.Remove(connection);
+                }
             }
 
             var orifice = SelectedItem as SewerConnectionOrifice;
             if (orifice != null)
             {
-                // Remove orifice connection
+                manhole.Network.Branches.Remove(orifice);
             }
-
-            CompartmentsWrapper.Remove(SelectedCompartment);
         }
 
-        private bool CanRemoveCompartment(object obj)
+        private bool CanRemoveItem(object obj)
         {
             return SelectedItem != null;
         }
-
+        
         private void AddCompartment(object obj)
         {
-            var name = GetUniqueCompartmentName(network);
-
-            var newCompartment = new Compartment
-            {
-                Name = name,
-                ParentManhole = Manhole,
-                ManholeWidth = 1,
-                BottomLevel = 0,
-                SurfaceLevel = 1,
-            };
-
-            try
-            {
-                // Find sewer connection where this compartment can be a target
-                var sewerConnections = manhole.GetManholeInternalConnections().ToList();
-
-                var sewerConnectionsWithoutTargetCompartments = sewerConnections.FirstOrDefault(sc => sc.TargetCompartment == null);
-                if (sewerConnectionsWithoutTargetCompartments != null)
-                {
-                    sewerConnectionsWithoutTargetCompartments.TargetCompartment = newCompartment;
-                    return;
-                }
-
-                // Cant find a sewerconnection with an empty target. Try to find a connection with an empty source
-                var sewerConnectionWithoutSourceCompartment = sewerConnections.FirstOrDefault(sc => sc.SourceCompartment == null);
-                if (sewerConnectionWithoutSourceCompartment == null) return;
-
-                sewerConnectionWithoutSourceCompartment.SourceCompartment = newCompartment;
-            }
-            finally
-            {
-                Manhole.Compartments.Add(newCompartment);
-            }
-
-            //CompartmentsWrapper.Add(newCompartment);
+            var newCompartment = SewerFactory.CreateNewCompartmentAndAddToManhole(network, manhole);
+            TryConnectCompartmentToConnection(manhole, newCompartment);
         }
 
-        private readonly Dictionary<Key, Func<ISewerConnection>> CreateSewerConnectionDictionary = new Dictionary<Key, Func<ISewerConnection>>
+        private bool CanAddCompartment(object obj)
         {
-            { Key.Orifice, CreateOrificeConnection},
-            { Key.Pump, CreatePumpConnection },
-            { Key.Weir, CreateWeirConnection }
-        };
-
-        private static ISewerConnection CreateWeirConnection()
-        {
-            var connection = new SewerConnection();
-            connection.BranchFeatures.Add(CreateNewWeir());
-            return connection;
+            return Manhole?.Compartments != null;
         }
 
-        private static Weir CreateNewWeir()
+        private void AddPump(object obj)
         {
-            return new Weir();
+            AddNewSewerConnectionWithStructure<Pump>();
         }
 
-        private static ISewerConnection CreatePumpConnection()
+        private bool CanAddPump(object obj)
         {
-            var connection = new SewerConnection();
-            connection.BranchFeatures.Add(CreateNewPump());
-            return connection;
-        }
-
-        private static ISewerConnection CreateOrificeConnection()
-        {
-            return new SewerConnectionOrifice
-            {
-                Bottom_Level = 1,
-            };
-        }
-
-        private enum Key
-        {
-            Orifice,
-            Pump,
-            Weir
-        }
-
-        private void AddNewConnection(Key key)
-        {
-            var connection = CreateSewerConnection(key);
-            if (connection == null) return;
-
-            network.Branches.Add(connection);
-        }
-
-        private ISewerConnection CreateSewerConnection(Key key)
-        {
-            if (!CreateSewerConnectionDictionary.ContainsKey(key)) return null;
-
-            var connection = CreateSewerConnectionDictionary[key]?.Invoke();
-
-            if (connection == null) return null;
-
-            connection.Source = Manhole;
-            connection.Target = Manhole;
-            TryConnectNewSewerConnectionSourceCompartment(connection, manhole);
-            
-            return connection;
+            return true;
         }
 
         private void AddOrifice(object obj)
         {
-            AddNewConnection(Key.Orifice);
-        }
-
-        private static void TryConnectNewSewerConnectionSourceCompartment(ISewerConnection sewerConnection, Manhole manhole)
-        {
-            var currentConnections = manhole.GetManholeInternalConnections().ToList();
-
-            var availableCompartment = manhole.Compartments.FirstOrDefault(compartment => currentConnections.All(cc => cc.SourceCompartment != compartment));
-
-            if (availableCompartment != null)
-            {
-                sewerConnection.SourceCompartment = availableCompartment;
-            }
+            AddNewSewerConnectionWithStructure<SewerConnectionOrifice>();
         }
 
         private bool CanAddOrifice(object obj)
@@ -323,9 +196,137 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             return true;
         }
 
-        private void AddPump(object obj)
+        private void AddWeir(object obj)
         {
-            AddNewConnection(Key.Pump);
+            AddNewSewerConnectionWithStructure<Weir>();
+        }
+
+        private bool CanAddWeir(object obj)
+        {
+            return true;
+        }
+
+        private void AddNewSewerConnectionWithStructure<T>()
+        {
+            var connection = SewerFactory.CreateConnectionWithStructure<T>(manhole);
+            if (connection == null) return;
+
+            TryConnecTSewerConnectionToCompartments(connection, manhole);
+
+            network.Branches.Add(connection);
+        }
+
+        private static void TryConnecTSewerConnectionToCompartments(ISewerConnection sewerConnection, Manhole manhole)
+        {
+            var currentConnections = manhole.InternalConnections().ToList();
+ 
+            for (var i = 1; i < manhole.Compartments.Count; i++)
+            {
+                var sourceCompartment = manhole.Compartments[i - 1];
+                var sourceAvailable = currentConnections.All(cc => cc.SourceCompartment != sourceCompartment);
+                var targetCompartment = manhole.Compartments[i];
+                var targetAvailable = currentConnections.All(cc => cc.SourceCompartment != targetCompartment);
+
+                if (sourceAvailable && targetAvailable)
+                {
+                    sewerConnection.SourceCompartment = sourceCompartment;
+                    sewerConnection.TargetCompartment = targetCompartment;
+                    break;
+                }
+            }
+        }
+
+        private static void TryConnectCompartmentToConnection(Manhole parentManhole, Compartment newCompartment)
+        {
+            // Find sewer connection where this compartment can be a target
+            var sewerConnections = parentManhole.InternalConnections().ToList();
+
+            var sewerConnectionsWithoutTargetCompartments = sewerConnections.FirstOrDefault(sc => sc.TargetCompartment == null);
+            var sewerConnectionWithoutSourceCompartment = sewerConnections.FirstOrDefault(sc => sc.SourceCompartment == null);
+            if (sewerConnectionsWithoutTargetCompartments != null)
+            {
+                sewerConnectionsWithoutTargetCompartments.TargetCompartment = newCompartment;
+            }
+            if (sewerConnectionWithoutSourceCompartment == null) return;
+
+            sewerConnectionWithoutSourceCompartment.SourceCompartment = newCompartment;
+        }
+
+        #endregion
+    }
+
+    public static class SewerFactory
+    {
+        private static readonly Dictionary<Type, Func<ISewerConnection, ISewerConnection>> SewerConnectionStructureCreators = new Dictionary<Type, Func<ISewerConnection, ISewerConnection>>
+        {
+            { typeof(SewerConnectionOrifice), CreateOrificeConnection},
+            { typeof(Pump), CreatePumpConnection },
+            { typeof(Weir), CreateWeirConnection }
+        };
+
+        public static Compartment CreateNewCompartmentAndAddToManhole(IHydroNetwork network, Manhole parentManhole)
+        {
+            var name = GetUniqueCompartmentName(network);
+
+            var newCompartment = new Compartment
+            {
+                Name = name,
+                ParentManhole = parentManhole,
+                ManholeWidth = 1,
+                BottomLevel = 0,
+                SurfaceLevel = 1,
+            }; 
+            parentManhole.Compartments.Add(newCompartment);
+            return newCompartment;
+        }
+
+        public static ISewerConnection CreateConnectionWithStructure<T>(Manhole manhole)
+        {
+            if (!SewerConnectionStructureCreators.ContainsKey(typeof(T))) return null;
+
+            var connection = CreateNewInternalConnection(manhole);
+            var connectionWithStructure = SewerConnectionStructureCreators[typeof(T)]?.Invoke(connection);
+
+            return connectionWithStructure;
+        }
+
+        private static ISewerConnection CreateNewInternalConnection(Manhole manhole)
+        {
+            var connection = new SewerConnection
+            {
+                Source = manhole,
+                Target = manhole,
+                Geometry = new LineString(new[]
+                {
+                    manhole.Geometry.Coordinate,
+                    manhole.Geometry.Coordinate
+                })
+            };
+
+            return connection;
+        }
+
+        private static ISewerConnection CreateWeirConnection(ISewerConnection sewerConnection)
+        {
+            sewerConnection.AddStructureToBranch(CreateNewWeir());
+            return sewerConnection;
+        }
+
+        private static ISewerConnection CreatePumpConnection(ISewerConnection sewerConnection)
+        {
+            sewerConnection.AddStructureToBranch(CreateNewPump());
+            return sewerConnection;
+        }
+
+        private static ISewerConnection CreateOrificeConnection(ISewerConnection sewerConnection)
+        {
+            sewerConnection.AddStructureToBranch(CreateNewOrifice());
+            return sewerConnection;
+        }
+
+        private static Weir CreateNewWeir()
+        {
+            return new Weir();
         }
 
         private static Pump CreateNewPump()
@@ -339,116 +340,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             };
         }
 
-        private bool CanAddPump(object obj)
+        private static Orifice CreateNewOrifice()
         {
-            return true;
-        }
-
-        private void AddWeir(object obj)
-        {
-            AddNewConnection(Key.Weir);
-        }
-
-        private bool CanAddWeir(object obj)
-        {
-            return true;
-        }
-
-        private bool CanAddCompartment(object obj)
-        {
-            return CompartmentsWrapper != null && Manhole?.Compartments != null;
-        }
-      
-        private void ObservableCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (isSynchronising) return;
-
-            isSynchronising = true;
-            // If item is added, also add to evented list (if not already there)
-            if (e.Action == NotifyCollectionChangedAction.Add)
+            return new Orifice
             {
-                AddItemsToCollection(e.NewItems, Manhole.Compartments);
-            }
-
-            // If item is removed, also remove from evented list
-            if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                RemoveOldItemsFromCollection(e.OldItems, Manhole.Compartments);
-            }
-            isSynchronising = false;
-
-        }
-
-        private void EventedListCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
-        {
-            if (isSynchronising) return;
-
-            isSynchronising = true;
-
-            // If an item is added to the evented list, also add to the observable collection
-            if (e.Action == NotifyCollectionChangeAction.Add)
-            {
-                AddItemToCollection(CompartmentsWrapper, e.Item);
-            }
-
-            // If an item is removed from the evented list, also remove from the observable collection
-            if (e.Action == NotifyCollectionChangeAction.Remove)
-            {
-                RemoveItemsFromCollection(CompartmentsWrapper, e.Item);
-            }
-
-            isSynchronising = false;
-
-            // Update surface and bottom levels
-            DetermineSurfaceAndBottomLevels();
-
-        }
-
-        private void AddItemsToCollection<T>(IList items, IList<T> target)
-        {
-            foreach (var newItem in items)
-            {
-                AddItemToCollection(target, newItem);
-            }
-        }
-
-        private static void AddItemToCollection<T>(IList<T> target, object newItem)
-        {
-            if (!(newItem is T) || target.Contains((T)newItem)) return;
-
-            target.Add((T)newItem);
-        }
-
-        private void RemoveOldItemsFromCollection<T>(IList items, IList<T> target)
-        {
-            foreach (var item in items)
-            {
-                RemoveItemsFromCollection(target, item);
-            }
-        }
-
-        private static void RemoveItemsFromCollection<T>(IList<T> target, object item)
-        {
-            if (!(item is T) || !target.Contains((T)item)) return;
-
-            target.Remove((T)item);
-        }
-
-        private void SubscribeEvents()
-        {
-            manhole.Compartments.CollectionChanged += EventedListCollectionChanged;
-            CompartmentsWrapper.CollectionChanged += ObservableCollectionChanged;
-        }
-
-        private void UnsubscribeEvents()
-        {
-            manhole.Compartments.CollectionChanged -= EventedListCollectionChanged;
-            CompartmentsWrapper.CollectionChanged -= ObservableCollectionChanged;
+                
+            };
         }
 
         private static string GetUniqueCompartmentName(IHydroNetwork network)
         {
-            var compartmentList = network.Manholes.SelectMany(m => m.Compartments);
+            var compartmentList = network.Manholes.SelectMany(m => m.Compartments); 
             return NetworkHelper.GetUniqueName("Compartment{0:D2}", compartmentList, "Compartment");
         }
     }

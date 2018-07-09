@@ -209,6 +209,7 @@
     <Compile Include="NameableFeatureComparer.cs" />
     <Compile Include="Structures\ManholeExtensions.cs" />
     <Compile Include="Structures\LeveeBreachFormula\BreachGrowthSetting.cs" />
+    <Compile Include="Structures\Orifice.cs" />
     <Compile Include="Structures\Pipe.cs" />
     <Compile Include="SewerConnection.cs" />
     <Compile Include="Structures\FixedWeir.cs" />

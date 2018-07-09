@@ -126,134 +126,28 @@
                         </ContentControl.Resources>
                     </ContentControl>
                     
-                    <!--<ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" Margin="7,0,0,0" Height="Auto" VerticalAlignment="Top">
-                        <StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="Pipe:" FontWeight="Bold" Width="90"/>
-                                <Label Content="Source:" FontWeight="Bold" Width="130"/>
-                                <Label Content="Target:" FontWeight="Bold" Width="130"/>
-                            </StackPanel>
-                            <ItemsControl ItemsSource="{Binding PipesInManholes}" >
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Label Content="{Binding Name}" VerticalAlignment="Center" Width="90" x:Name="Label"/>
-                                            <ComboBox ItemsSource="{Binding Path=DataContext.Manhole.Compartments, ElementName=UserControl}" 
-                                                      SelectedItem="{Binding SourceCompartment}" 
-                                                      Height="{Binding ElementName=Label, Path=ActualHeight}" 
-                                                      Width="130"
-                                                      Margin="0,3,3,3"/>
-                                            <ComboBox ItemsSource="{Binding Path=DataContext.Manhole.Compartments, ElementName=UserControl}"
-                                                      SelectedItem="{Binding TargetCompartment}" 
-                                                      Height="{Binding ElementName=Label, Path=ActualHeight}" 
-                                                      Width="130"
-                                                      Margin="0,3,3,3"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
-                    </ScrollViewer>-->
-
                     <!-- Manhole overview -->
                     <Border Grid.Column="1" BorderBrush="#FF8B8B8B" BorderThickness="1" Margin="7,7,0,5">
                         <Grid>
-                            
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
                             <local:ManholeVisualisation Background="#FFE8E8E8"
                                                         Manhole="{Binding DataContext.Manhole, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}"
                                                         SelectedItem="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}"
                                                         HorizontalAlignment="Center" VerticalAlignment="Center"
                                                         Width="500" Height="300"/>
+                            <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
+                                <Button Content="Add compartment" Command="{Binding AddCompartmentCommand}" Margin="5,3,3,3"/>
+                                <Button Content="Add orifice" Command="{Binding AddOrificeCommand}" Margin="5,3,3,3"/>
+                                <Button Content="Add pump" Command="{Binding AddPumpCommand}" Margin="5,3,3,3"/>
+                                <Button Content="Add weir" Command="{Binding AddWeirCommand}" Margin="5,3,3,3"/>
+                                <Button Content="Remove item" Command="{Binding RemoveCompartmentCommand}" Margin="0,3,3,3"/>
+                            </StackPanel>
                         </Grid>
                     </Border>
-                    
-
                 </Grid>
-            </Expander>
-
-            <!-- Compartments -->
-            <Expander IsExpanded="True">
-                <Expander.Header>
-                    <TextBlock Text="Compartments" FontWeight="Bold"/>
-                </Expander.Header>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <!--<ListBox ItemsSource="{Binding CompartmentsWrapper}" 
-                             SelectedItem="{Binding SelectedCompartment}"
-                             Grid.Column="0" Grid.Row="0"
-                             HorizontalAlignment="Left"
-                             Margin="10,7,7,7" 
-                             Width="350" Height="150"
-                             Background="#FFE6E6E6"
-                             ItemContainerStyle="{StaticResource ListBoxStyle}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Vertical" Margin="2">
-                                    <TextBlock Text="{Binding Name}" Margin="1,3,3,0" VerticalAlignment="Center"/>
-                                    <TextBlock FontStyle="Italic" Margin="1,3,3,3" VerticalAlignment="Center">
-                                        <TextBlock.Text>
-                                            <MultiBinding StringFormat="Surface level [m]: {0:G3}. Bottom level [m]: {1:G3}">
-                                                <Binding Path="SurfaceLevel"/>
-                                                <Binding Path="BottomLevel"/>
-                                            </MultiBinding>
-                                        </TextBlock.Text>
-                                    </TextBlock>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>-->
-
-                    <!-- Compartment view -->
-                    <local:CompartmentView Grid.Column="1" Grid.Row="0" 
-                                           HorizontalAlignment="Left" 
-                                           Compartment="{Binding DataContext.SelectedCompartment, ElementName=UserControl}"
-                                           Visibility="{Binding DataContext.HasSelectedCompartment, ElementName=UserControl, Converter={StaticResource NullToVisibleConverter}}"/>
-
-                    <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
-                        <Button Content="Add compartment" Command="{Binding AddCompartmentCommand}" Margin="5,3,3,3"/>
-                        <Button Content="Add orifice" Command="{Binding AddOrificeCommand}" Margin="5,3,3,3"/>
-                        <Button Content="Add pump" Command="{Binding AddPumpCommand}" Margin="5,3,3,3"/>
-                        <Button Content="Add weir" Command="{Binding AddWeirCommand}" Margin="5,3,3,3"/>
-                        <Button Content="Remove item" Command="{Binding RemoveCompartmentCommand}" Margin="0,3,3,3"/>
-                    </StackPanel>
-                </Grid>
-            </Expander>
-
-            <!-- Structures -->
-            <Expander IsExpanded="True">
-                <Expander.Header>
-                    <TextBlock Text="Structures" FontWeight="Bold"/>
-                </Expander.Header>
-                <ListBox ItemsSource="{Binding StructuresWrapper}" 
-                         SelectedItem="{Binding SelectedConnection}"
-                         HorizontalAlignment="Left"
-                         Margin="10,7,7,7" 
-                         Width="350" Height="150"
-                         Background="#FFE6E6E6"
-                         ItemContainerStyle="{StaticResource ListBoxStyle}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Vertical" Margin="2">
-                                <TextBlock Text="{Binding Name}" Margin="1,3,3,0" VerticalAlignment="Center"/>
-                                <TextBlock FontStyle="Italic" Margin="1,3,3,3" VerticalAlignment="Center">
-                                    <TextBlock.Text>
-                                        <MultiBinding StringFormat="From: {0}. To: {1}">
-                                            <Binding Path="SourceCompartment"/>
-                                            <Binding Path="TargetCompartment"/>
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                </TextBlock>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
             </Expander>
         </StackPanel>
     </ScrollViewer>

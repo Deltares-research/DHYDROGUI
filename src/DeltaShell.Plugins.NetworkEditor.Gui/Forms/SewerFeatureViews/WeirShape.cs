@@ -8,6 +8,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     {
         public Weir Weir { get; set; }
 
+        public override object Source
+        {
+            get { return Weir; }
+            set { Weir = value as Weir; }
+        }
+
         public override double BottomLevel
         {
             get { return Weir?.CrestLevel ?? double.NaN; }
