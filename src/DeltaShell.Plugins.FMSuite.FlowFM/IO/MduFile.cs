@@ -752,6 +752,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         var fields = GetPropertyLine(line, out mduPropertyName, out mduPropertyLowerCase);
 
                         // some backwards compatibility issues (properties have been renamed
+                        if (mduPropertyLowerCase.Equals("trtdt"))
+                        {
+                            mduPropertyName = "DtTrt";
+                        }
                         if (mduPropertyLowerCase.Equals("botlevuni"))
                         {
                             mduPropertyName = "BedLevUni";
