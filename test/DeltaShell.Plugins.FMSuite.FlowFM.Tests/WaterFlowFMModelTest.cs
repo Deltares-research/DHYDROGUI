@@ -68,6 +68,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        public void BoundaryConditionSetShouldBubbleEvents()
+        {
+            var model = new WaterFlowFMModel();
+            var set = new BoundaryConditionSet();
+
+            model.BoundaryConditionSets.Add(set);
+            
+            var count = 0;
+            model.CollectionChanged += (sender, args) => count++;
+
+            set.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty));
+
+            Assert.AreEqual(1, count);
+        }
+
+        [Test]
         public void CheckWeirFormulaPropertyChangeEventPropagatesToModel()
         {
             var model = new WaterFlowFMModel();

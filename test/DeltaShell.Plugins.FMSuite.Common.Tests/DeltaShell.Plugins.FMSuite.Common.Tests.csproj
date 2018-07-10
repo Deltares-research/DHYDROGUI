@@ -115,6 +115,7 @@
     <Compile Include="Dependency\BooleanIsTrueDependencyExpressionTest.cs" />
     <Compile Include="Dependency\ValueEqualsDependencyExpressionTest.cs" />
     <Compile Include="Dependency\ValueGreaterOrLesserThanDependencyExpressionTest.cs" />
+    <Compile Include="FeatureData\BoundaryConditionSetTest.cs" />
     <Compile Include="FeatureData\BoundaryConditionTest.cs" />
     <Compile Include="Dependency\DependenciesTest.cs" />
     <Compile Include="FeatureData\Structure2DTest.cs" />

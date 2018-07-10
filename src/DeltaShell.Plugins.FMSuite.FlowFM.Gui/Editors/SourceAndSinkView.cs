@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -98,8 +99,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 model = value;
                 if (model != null)
                 {
-                    SetVisibility(true, model.UseSalinity, model.UseTemperature);
-                    ((INotifyPropertyChange)model).PropertyChanged += ModelPropertyChanged;
+                    var visibilitySettings = CalculateComponentVisibilitySettings();
+                    SetVisibility(visibilitySettings);
+                    ((INotifyPropertyChange) model).PropertyChanged += ModelPropertyChanged;
                 }
             }
         }
@@ -107,29 +109,73 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == TypeUtils.GetMemberName(() => Model.UseSalinity) ||
-                e.PropertyName == TypeUtils.GetMemberName(() => Model.HeatFluxModelType))
+                e.PropertyName == TypeUtils.GetMemberName(() => Model.HeatFluxModelType) ||
+                e.PropertyName == TypeUtils.GetMemberName(() => Model.UseMorSed) ||
+                e.PropertyName == TypeUtils.GetMemberName(() => Model.UseSecondaryFlow)
+            )
             {
-                SetVisibility(true, Model.UseSalinity, Model.UseTemperature);
+                var visibilitySettings = CalculateComponentVisibilitySettings();
+                SetVisibility(visibilitySettings);
             }
         }
 
-        private void SetVisibility(bool dischargeVisible, bool salinityVisible, bool temperatureVisible)
+        private IList<bool> CalculateComponentVisibilitySettings()
+        {
+            var componentIsForTracer = false;
+            var visibilitySettings = new List<bool>();
+
+            foreach (var componentName in SourceAndSink.Function.Components.Select(c => c.Name))
+            {
+                switch (componentName)
+                {
+                    case SourceAndSink.DischargeVariableName:
+                        visibilitySettings.Add(true);
+                        break;
+                    case SourceAndSink.SalinityVariableName:
+                        visibilitySettings.Add(Model.UseSalinity);
+                        break;
+                    case SourceAndSink.TemperatureVariableName:
+                        visibilitySettings.Add(Model.UseTemperature);
+                        break;
+                    case SourceAndSink.SecondaryFlowVariableName:
+                        visibilitySettings.Add(Model.UseSecondaryFlow);
+                        componentIsForTracer = true; // Tracers should come after SecondaryFlow
+                        break;
+                    default:
+                        if (!componentIsForTracer && SourceAndSink.SedimentFractionNames.Contains(componentName))
+                        {
+                            visibilitySettings.Add(Model.UseMorSed);
+                        }
+                        else                             
+                        {
+                            visibilitySettings.Add(true);
+                        }
+                        break;
+                }
+            }
+            return visibilitySettings;
+        }
+
+        private void SetVisibility(IList<bool> visibilitySettings)
         {
             FunctionView.TableView.GetColumnByName(SourceAndSink.Function.Arguments[0].Name).Visible = true;
-
-            var visibilities = new[] {dischargeVisible, salinityVisible, temperatureVisible};
             int k = 1;
-            for (int i = 0; i < 3; ++i)
+            for (int i = 0; i < SourceAndSink.Function.Components.Count; i++)
             {
                 var component = SourceAndSink.Function.Components[i];
-                var visible = visibilities[i];
-                var tableViewColumn = FunctionView.TableView.GetColumnByName(component.Name);
-                tableViewColumn.Visible = visible;
-                if (visible)
+                var visibility = i >= visibilitySettings.Count || visibilitySettings[i];
+
+                var columnIndex = i + 1;
+                if (columnIndex < FunctionView.TableView.Columns.Count)
                 {
-                    tableViewColumn.DisplayIndex = k++;
+                    var tableViewColumn = FunctionView.TableView.Columns[columnIndex];
+                    tableViewColumn.Visible = visibility;
+                    FunctionView.ChartSeries.First(s => s.YValuesDataMember == component.DisplayName).Visible =
+                        visibility;
+
+                    if (tableViewColumn.Visible)
+                        tableViewColumn.DisplayIndex = k++;
                 }
-                FunctionView.ChartSeries.First(s => s.YValuesDataMember == component.DisplayName).Visible = visible;
             }
             FunctionView.TableView.GetColumnByName(SourceAndSink.Function.Arguments[0].Name).DisplayIndex = 0;
             FunctionView.TableView.BestFitColumns(false);

@@ -248,6 +248,7 @@
     <Compile Include="Gui\FMSnappedFeaturesGroupLayerDataTest.cs" />
     <Compile Include="Gui\HarmonicConditionsDialogTest.cs" />
     <Compile Include="Gui\HarmonicConditionsDialogViewModelTest.cs" />
+    <Compile Include="Gui\SourceAndSinkViewTest.cs" />
     <Compile Include="Gui\SupportPointSelectionFormTest.cs" />
     <Compile Include="Gui\FlowBoundaryPropertiesControlTest.cs" />
     <Compile Include="Gui\BoundaryDataMapSymbolsTest.cs" />
