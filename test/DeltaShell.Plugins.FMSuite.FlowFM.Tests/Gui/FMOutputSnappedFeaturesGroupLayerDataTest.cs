@@ -338,10 +338,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Assert.IsTrue(outputSnappedLayerNames.Contains("Fixed weirs"));
                 Assert.IsTrue(outputSnappedLayerNames.Contains("Thin dams"));
                 Assert.IsTrue(outputSnappedLayerNames.Contains("Observation stations"));
+                Assert.IsTrue(outputSnappedLayerNames.Contains("Dry areas"));
 
                 /* If the assert below fails, did the FM kernel add support for more outputSnappedFeatures?
                    See about adding them to the Asserts above^ */
-                Assert.AreEqual(6, outputSnappedLayers.Count, "Number of outputSnappedFeatures differs from expected");
+                Assert.AreEqual(7, outputSnappedLayers.Count, "Number of outputSnappedFeatures differs from expected");
                
                 //Limitation from the tests. CreateLayers do not get disposed properly
                 outputSnappedLayers.ForEach(l => l.Dispose());
@@ -396,7 +397,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 var outputSnappedLayers = groupLayerData.CreateLayers().ToList();
 
                 //For the moment we have only 6 shapes in the example given.
-                Assert.AreEqual(6, outputSnappedLayers.Count);
+                Assert.AreEqual(7, outputSnappedLayers.Count);
                 var expectedLayers = new List<string>
                 {
                     "Cross Sections",
@@ -405,7 +406,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     "Fixed weirs",
                     "Thin dams",
                     "Observation stations",
-                    "Embankments"
+                    "Embankments",
+                    "Dry areas"
                 };
                 foreach (var ol in outputSnappedLayers)
                 {
