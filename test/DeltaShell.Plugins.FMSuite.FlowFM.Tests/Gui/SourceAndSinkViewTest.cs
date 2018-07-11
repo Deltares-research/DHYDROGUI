@@ -21,7 +21,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [TestCase(false, false, false, true)]
         [TestCase(false, false, false, false)]
         [TestCase(true,true,true,true)]
-
         public void SetVisiblityTest(bool useSalinity, bool useTemperature, bool useMorSed,bool useSecondaryFlow)
         {
             var sourceSink = new SourceAndSink();
@@ -41,7 +40,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = useMorSed;
             model.ModelDefinition.GetModelProperty(KnownProperties.SecondaryFlow).Value = useSecondaryFlow;
             model.SourcesAndSinks.Add(sourceSink);
-            var componentNames = sourceSink.Function.Components.Select(c => c.Name);
 
             var view = new SourceAndSinkView {Data = sourceSink, Model = model};
             var visibilitySettings = TypeUtils.CallPrivateMethod<List<bool>>(view, "CalculateComponentVisibilitySettings");

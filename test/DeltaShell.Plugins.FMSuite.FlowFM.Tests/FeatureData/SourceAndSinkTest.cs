@@ -25,8 +25,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 
             Assert.NotNull(sourceAndSink);
             Assert.IsTrue(sourceAndSink.IsPointSource);
-            
-            sourceAndSink.Feature.Geometry = new LineString( new []{ new Coordinate(0, 0), new Coordinate(1,1) });
+
+            sourceAndSink.Feature.Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(1, 1)});
             Assert.IsFalse(sourceAndSink.IsPointSource);
         }
 
@@ -47,14 +47,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         {
             var sourceAndSink = new SourceAndSink()
             {
-                Feature = new Feature2D() { Name = "test", Geometry = new Point(new Coordinate(0, 0)) }
+                Feature = new Feature2D() {Name = "test", Geometry = new Point(new Coordinate(0, 0))}
             };
             Assert.NotNull(sourceAndSink);
 
             /* It should always be the opposit of isPointSource */
-            Assert.AreEqual( !sourceAndSink.IsPointSource, sourceAndSink.CanIncludeMomentum);
-            
-            sourceAndSink.Feature.Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 1) });
+            Assert.AreEqual(!sourceAndSink.IsPointSource, sourceAndSink.CanIncludeMomentum);
+
+            sourceAndSink.Feature.Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(1, 1)});
             Assert.AreEqual(!sourceAndSink.IsPointSource, sourceAndSink.CanIncludeMomentum);
         }
 
@@ -63,12 +63,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         {
             /* Mainly test the name is correctly replaced. */
             var sourceAndSink = new SourceAndSink();
-            sourceAndSink.Feature = new Feature2D() { Name = "test"};
+            sourceAndSink.Feature = new Feature2D() {Name = "test"};
             int changedProps = 0;
-            ((INotifyPropertyChange)sourceAndSink.Feature).PropertyChanged += (s, e) =>
-            {
-                changedProps++;
-            };
+            ((INotifyPropertyChange) sourceAndSink.Feature).PropertyChanged += (s, e) => { changedProps++; };
 
             var newName = "New name";
             sourceAndSink.Feature.Name = newName;
@@ -78,19 +75,68 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         }
 
         [Test]
-        public void GivenAModelWithSourcesAndSinks_WhenAddingTracersAndSedimentsFractionsToModel_ThenTheyShouldBeAddedToComponents()
+        public void
+            GivenAModelWithSourcesAndSinks_WhenAddingTracersAndSedimentsFractionsToModel_ThenTheyShouldBeAddedToComponents()
         {
+            var fractionList = CreateSedimentFractionList();
+            var tracerList = CreateBoundaryConditionList();
 
-            var fractionList = new List<SedimentFraction>
+            var sourceSink = new SourceAndSink();
+            var boundarySet = new BoundaryConditionSet();
+
+            var model = new WaterFlowFMModel
             {
-                new SedimentFraction {Name = "Fraction_1"},
-                new SedimentFraction {Name = "Fraction_2"},
-                new SedimentFraction {Name = "Fraction_3"}
+                SourcesAndSinks = {sourceSink},
+                BoundaryConditionSets = {boundarySet}
             };
 
-            var tracerList = new List<FlowBoundaryCondition>
-            {
+            var initialComponentsCount = sourceSink.Function.Components.Count;
 
+            model.SedimentFractions.AddRange(fractionList);
+            boundarySet.BoundaryConditions.AddRange(tracerList);
+
+            var finalComponents = sourceSink.Function.Components;
+            var finalComponentsCount = sourceSink.Function.Components.Count;
+
+            Assert.AreEqual(fractionList.Count + tracerList.Count, finalComponentsCount - initialComponentsCount);
+            fractionList.ForEach(sf => Assert.That(finalComponents.Select(c => c.Name).Contains(sf.Name)));
+            tracerList.ForEach(t => Assert.That(finalComponents.Select(c => c.Name).Contains(t.TracerName)));
+        }
+
+        [Test]
+        public void
+            GivenAModelWithSourcesAndSinks_WhenRemovingTracersAndSedimentsFractionsToModel_ThenTheyShouldBeRemovedFromComponents()
+        {
+            var fractionList = CreateSedimentFractionList();
+            var tracerList = CreateBoundaryConditionList();
+
+            var sourceSink = new SourceAndSink();
+            var boundarySet = new BoundaryConditionSet();
+
+            var model = new WaterFlowFMModel
+            {
+                SourcesAndSinks = { sourceSink },
+                BoundaryConditionSets = { boundarySet }
+            };
+
+            model.SedimentFractions.AddRange(fractionList);
+            boundarySet.BoundaryConditions.AddRange(tracerList);
+
+            model.SedimentFractions.Clear();
+            Assert.IsFalse(sourceSink.Function.Components.Select(c => c.Name).Contains("Fraction_1"));
+            Assert.IsFalse(sourceSink.Function.Components.Select(c => c.Name).Contains("Fraction_2"));
+            Assert.IsFalse(sourceSink.Function.Components.Select(c => c.Name).Contains("Fraction_3"));
+
+            model.BoundaryConditionSets.ForEach(bcs => bcs.BoundaryConditions.Clear());
+            Assert.IsFalse(sourceSink.Function.Components.Select(c => c.Name).Contains("Tracer_1"));
+            Assert.IsFalse(sourceSink.Function.Components.Select(c => c.Name).Contains("Tracer_2"));
+            Assert.IsFalse(sourceSink.Function.Components.Select(c => c.Name).Contains("Tracer_3"));
+        }
+
+        private List<FlowBoundaryCondition> CreateBoundaryConditionList()
+        {
+            return new List<FlowBoundaryCondition>
+            {
                 new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
                 {
                     Name = "Tracer_1",
@@ -105,39 +151,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
                 {
                     Name = "Tracer_3",
                     TracerName = "Tracer_3",
-                },
+                }
             };
-
-            var model = new WaterFlowFMModel();
-            var boundarySet = new BoundaryConditionSet();
-
-
-            
-            var sourceSink = new SourceAndSink();
-            var initialComponents = sourceSink.Function.Components;
-            var initialComponentsCount = initialComponents.Count;
-
-            model.SourcesAndSinks.Add(sourceSink);
-            model.SedimentFractions.AddRange(fractionList);
-            model.BoundaryConditionSets.Add(boundarySet);
-            boundarySet.BoundaryConditions.AddRange(tracerList);
-     
-            var finalComponents = sourceSink.Function.Components;
-            var finalComponentsCount = finalComponents.Count;
-            Assert.AreEqual(fractionList.Count + tracerList.Count, finalComponentsCount - initialComponentsCount );
-
-            fractionList.ForEach(sf=> Assert.That(finalComponents.Select(c => c.Name).Contains(sf.Name)));
-            tracerList.ForEach(t => Assert.That(finalComponents.Select(c => c.Name).Contains(t.TracerName)));
-
-            model.SedimentFractions.Clear();
-            Assert.IsFalse(sourceSink.Function.Components.Select(c => c.Name).Contains("Fraction_1"));
-            Assert.IsFalse(sourceSink.Function.Components.Select(c => c.Name).Contains("Fraction_2"));
-            Assert.IsFalse(sourceSink.Function.Components.Select(c => c.Name).Contains("Fraction_3"));
-
-            model.BoundaryConditionSets.ForEach(bcs => bcs.BoundaryConditions.Clear());
-            Assert.IsFalse(sourceSink.Function.Components.Select(c => c.Name).Contains("Tracer_1"));
-            Assert.IsFalse(sourceSink.Function.Components.Select(c => c.Name).Contains("Tracer_2"));
-            Assert.IsFalse(sourceSink.Function.Components.Select(c => c.Name).Contains("Tracer_3"));
         }
+
+        private List<SedimentFraction> CreateSedimentFractionList()
+        {
+            return new List<SedimentFraction>
+            {
+                new SedimentFraction {Name = "Fraction_1"},
+                new SedimentFraction {Name = "Fraction_2"},
+                new SedimentFraction {Name = "Fraction_3"}
+            };
+        }
+
     }
 }

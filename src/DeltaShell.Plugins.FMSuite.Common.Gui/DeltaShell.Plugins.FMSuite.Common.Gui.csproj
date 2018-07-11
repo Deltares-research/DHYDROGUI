@@ -246,10 +246,6 @@
       <Name>DeltaShell.Plugins.FMSuite.Common</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj">
-      <Project>{56103155-E7A6-45D7-BA64-50A6F9D81B94}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.FlowFM</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FileBasedWindDefinitionView.resx">

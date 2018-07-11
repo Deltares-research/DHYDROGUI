@@ -397,23 +397,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var bc = e.Item as FlowBoundaryCondition;
             if (bc == null)
                 return;
-
+            var name = bc.Name;
+            var IsTracer = bc.FlowQuantity == FlowBoundaryQuantityType.Tracer;
             switch (e.Action)
             {
                 case NotifyCollectionChangeAction.Add:
-                    if (bc.FlowQuantity == FlowBoundaryQuantityType.Tracer)
-                    {
-                        SourcesAndSinks.ForEach(ss => ss.TracerNames.Add(bc.TracerName));
-                    }
+                    if (IsTracer) AddTracerToSourcesAndSink(name);
                     break;
                 case NotifyCollectionChangeAction.Remove:
-                    if (bc.FlowQuantity == FlowBoundaryQuantityType.Tracer)
-                    {
-                        SourcesAndSinks.ForEach(ss => ss.TracerNames.Remove(bc.TracerName));
-                    }
+                    if (IsTracer) RemoveTracerFromSourcesAndSink(name);
                     break;
                 case NotifyCollectionChangeAction.Replace:
-                    // can't rename yet
                     throw new NotImplementedException("Renaming of Tracers is not yet supported");
                     break;
                 case NotifyCollectionChangeAction.Reset:
@@ -422,6 +416,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private void RemoveTracerFromSourcesAndSink(string name)
+        {
+            SourcesAndSinks.ForEach(ss => ss.TracerNames.Remove(name));
+        }
+
+        private void AddTracerToSourcesAndSink(string name)
+        {
+            SourcesAndSinks.ForEach(ss => ss.TracerNames.Add(name));
         }
 
         private void TracerDefinitionsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
@@ -609,35 +613,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 case NotifyCollectionChangeAction.Add:
                     sedimentFraction.UpdateSpatiallyVaryingNames();
-
                     sedimentFraction.CompileAndSetVisibilityAndIfEnabled();
-
                     sedimentFraction.SetTransportFormulaInCurrentSedimentType();
                     
                     if (InitialFractions == null || BoundaryConditionSets == null) break;
+                    
                     // sync the initial fractions
-                    foreach (var layerName in sedimentFraction.GetAllActiveSpatiallyVaryingPropertyNames())
-                    {
-                        if (InitialFractions.FirstOrDefault(fr => fr.Name.Equals(layerName)) == null)
-                        {
-                            AddToIntialFractions(layerName);
-                        }
-                    }
-                    foreach (var set in BoundaryConditionSets)
-                    {
-                        foreach (var bc in set.BoundaryConditions)
-                        {
-                            var flowCondition = bc as FlowBoundaryCondition;
-                            if (flowCondition != null
-                                && flowCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport)
-                            {
-                                foreach (var point in bc.PointData)
-                                {
-                                    flowCondition.AddSedimentFractionToFunction(point, name);
-                                }
-                            }
-                        }
-                    }
+                    SyncInitialFractions(sedimentFraction);                
+                    AddSedimentFractionToFlowBoundaryConditionFunction(name);
                     SourcesAndSinks.ForEach(ss=>ss.SedimentFractionNames.Add(sedimentFraction.Name));               
                     break;
                 case NotifyCollectionChangeAction.Remove:
@@ -646,70 +629,114 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     InitialFractions.RemoveAllWhere( ifs => layersToRemove.Contains(ifs.Name) );
 
                     // Remove dataItems for coverages related to Removed Fraction
-                    DataItems.RemoveAllWhere(di => di.Value is UnstructuredGridCoverage && layersToRemove.Contains(di.Name));
-                    
-                    // remove all boundary conditions with that fraction name
-                    foreach (var set in BoundaryConditionSets)
-                    {
-                        set.BoundaryConditions.RemoveAllWhere(bc =>
-                        {
-                            var flowCondition = bc as FlowBoundaryCondition;
+                    DataItems.RemoveAllWhere(di => di.Value is UnstructuredGridCoverage && layersToRemove.Contains(di.Name));                               
+                    RemoveSedimentFractionFromBoundaryConditionSets(name);
 
-                            if (flowCondition != null &&
-                                flowCondition.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration && Equals(flowCondition.SedimentFractionName, name))
-                            {
-                                return true;
-                            }
-                            return false;
-                        });
-
-                        foreach (var bc in set.BoundaryConditions)
-                        {
-                            var flowCondition = bc as FlowBoundaryCondition;
-                            if (flowCondition != null
-                                && flowCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport)
-                            {
-                                foreach (var point in bc.PointData)
-                                {
-                                    flowCondition.RemoveSedimentFractionFromFunction(point, name);
-                                }
-                            }
-                        }
-                        set.BoundaryConditions.RemoveAllWhere(bc =>
-                        {
-                            var flowCondition = bc as FlowBoundaryCondition;
-
-                            if (flowCondition != null &&
-                                flowCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport
-                                && (flowCondition.SedimentFractionNames == null || flowCondition.SedimentFractionNames.Count == 0))
-                            {
-                                return true;
-                            }
-                            return false;
-                        });
-                    }
                     SourcesAndSinks.ForEach(ss => ss.SedimentFractionNames.Remove(sedimentFraction.Name));
                     break;
                 case NotifyCollectionChangeAction.Replace:
-                    // can't rename yet
                     throw new NotImplementedException("Renaming of sediment fraction is not yet supported");
                     break;
                 case NotifyCollectionChangeAction.Reset:
                     // sync the initial fractions
                     InitialFractions.Clear();
-                    // remove all fraction  boundary conditions
-                    foreach (var set in BoundaryConditionSets)
-                    {
-                        set.BoundaryConditions.RemoveAllWhere(bc =>
-                        {
-                            var flowCondition = bc as FlowBoundaryCondition;
-                            return flowCondition != null && (flowCondition.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration
-                                || flowCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport);
-                        });
-                    }
+
+                    RemoveAllSedimentFractionsFromBoundaryConditionSets();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private void RemoveAllSedimentFractionsFromBoundaryConditionSets()
+        {
+            foreach (var set in BoundaryConditionSets)
+            {
+                set.BoundaryConditions.RemoveAllWhere(bc =>
+                {
+                    var flowCondition = bc as FlowBoundaryCondition;
+                    return flowCondition != null &&
+                           (flowCondition.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration
+                            || flowCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport);
+                });
+            }
+        }
+
+        private void SyncInitialFractions(ISedimentFraction sedimentFraction)
+        {
+            foreach (var layerName in sedimentFraction.GetAllActiveSpatiallyVaryingPropertyNames())
+            {
+                if (InitialFractions.FirstOrDefault(fr => fr.Name.Equals(layerName)) == null)
+                {
+                    AddToIntialFractions(layerName);
+                }
+            }
+        }
+
+        private void AddSedimentFractionToFlowBoundaryConditionFunction(string name)
+        {
+            foreach (var set in BoundaryConditionSets)
+            {
+                foreach (var bc in set.BoundaryConditions)
+                {
+                    var flowCondition = bc as FlowBoundaryCondition;
+                    if (flowCondition != null
+                        && flowCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport)
+                    {
+                        foreach (var point in bc.PointData)
+                        {
+                            flowCondition.AddSedimentFractionToFunction(point, name);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void RemoveSedimentFractionFromBoundaryConditionSets(string name)
+        {
+            foreach (var set in BoundaryConditionSets)
+            {
+                set.BoundaryConditions.RemoveAllWhere(bc =>
+                {
+                    var flowCondition = bc as FlowBoundaryCondition;
+
+                    if (flowCondition != null &&
+                        flowCondition.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration &&
+                        Equals(flowCondition.SedimentFractionName, name))
+                    {
+                        return true;
+                    }
+
+                    return false;
+                });
+
+                foreach (var bc in set.BoundaryConditions)
+                {
+                    var flowCondition = bc as FlowBoundaryCondition;
+                    if (flowCondition != null
+                        && flowCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport)
+                    {
+                        foreach (var point in bc.PointData)
+                        {
+                            flowCondition.RemoveSedimentFractionFromFunction(point, name);
+                        }
+                    }
+                }
+
+
+                set.BoundaryConditions.RemoveAllWhere(bc =>
+                {
+                    var flowCondition = bc as FlowBoundaryCondition;
+
+                    if (flowCondition != null &&
+                        flowCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport
+                        && (flowCondition.SedimentFractionNames == null || flowCondition.SedimentFractionNames.Count == 0))
+                    {
+                        return true;
+                    }
+
+                    return false;
+                });
             }
         }
 
