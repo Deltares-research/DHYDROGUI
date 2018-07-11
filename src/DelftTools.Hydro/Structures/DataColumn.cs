@@ -2,15 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
+namespace DelftTools.Hydro.Structures
 {
     public class DataColumn<T> : IDataColumn
     {
-        public DataColumn()
+        public DataColumn(string name)
         {
             ValueList = new List<T>();
             DefaultValue = default(T);
+            Name = name;
+            IsActive = true;
         }
 
         public bool IsActive { get; set; }
@@ -40,5 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             get { return ValueList; }
             set { ValueList = (List<T>) value; }
         }
+
+        public string Name { get; set; }
     }
 }

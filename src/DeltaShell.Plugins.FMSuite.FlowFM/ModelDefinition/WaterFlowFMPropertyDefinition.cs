@@ -37,6 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string MapFile__Obsolete = "mapfile";
         public const string HisFile__Obsolete = "hisfile";
         public const string FixedWeirFile = "fixedweirfile";
+        public const string FixedWeirScheme = "fixedweirscheme";
         public const string StructuresFile = "structurefile";
         public const string Kmx = "kmx";
         public const string DtInit = "dtinit";

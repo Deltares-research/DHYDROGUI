@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections;
+using DelftTools.Utils;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
+namespace DelftTools.Hydro.Structures
 {
-    public interface IDataColumn
+    public interface IDataColumn : INameable
     {
         bool IsActive { get; set; }
 

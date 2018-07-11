@@ -27,6 +27,7 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -48,6 +49,7 @@ using NetTopologySuite.Extensions.Grids;
 using SharpMap;
 using SharpMap.Api;
 using SharpMap.SpatialOperations;
+using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 using INotifyCollectionChanged = DelftTools.Utils.Collections.INotifyCollectionChanged;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
@@ -70,6 +72,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private bool disposing;
         private bool updatingGroupName;
 
+        //private IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties;
+        private ModelDataForFeatures modelDataForFeatures;
         private IEventedList<ISedimentFraction> sedimentFractions;
         private IEventedList<BoundaryConditionSet> boundaryConditionSets;
         private IDataItem areaDataItem;
@@ -108,6 +112,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             DisableFlowNodeRenumbering = false;
             TracerDefinitions = new EventedList<string>();
             SedimentFractions = new EventedList<ISedimentFraction>();
+
+            //allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
+            modelDataForFeatures = new ModelDataForFeatures();
+
             SedimentOverallProperties = SedimentFractionHelper.GetSedimentationOverAllProperties();
             tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             
@@ -873,6 +881,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var prop = (WaterFlowFMProperty) sender;
             if (e.PropertyName == TypeUtils.GetMemberName(() => prop.Value))
             {
+                if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.FixedWeirScheme,
+                    StringComparison.InvariantCultureIgnoreCase))
+                {
+                    Area.FixedWeirs.ForEach(fw =>
+                    {
+                        modelDataForFeatures.UpdateDataColums(fw,prop.GetValueAsString());
+                    });
+                    
+                }
                 if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.BedlevType,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -2257,6 +2274,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void HydroAreaCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
+            var fixedWeir = e.Item as IModelDataColumnsFeature;
+            if (fixedWeir != null)
+            {
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangeAction.Add:
+                        var selector = ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme)
+                            .GetValueAsString();
+                        var newFixedWeirModelData =  new ModelFeatureCoordinateData(fixedWeir, selector);
+                        modelDataForFeatures.Attach(newFixedWeirModelData);
+                        break;
+                    case NotifyCollectionChangeAction.Remove:
+                        modelDataForFeatures.Detach(fixedWeir);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+
             var groupableFeature = e.Item as IGroupableFeature;
             if (groupableFeature != null && e.Action != NotifyCollectionChangeAction.Remove && !Area.IsEditing)
             {
@@ -2871,5 +2908,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         IEventedList<ISedimentProperty> SedimentOverallProperties { get; }
         IEventedList<ISedimentFraction> SedimentFractions { get; }
         string MduFilePath { get; }
+        WaterFlowFMModelDefinition ModelDefinition { get; }
     }
 }

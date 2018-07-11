@@ -139,9 +139,6 @@
     <Compile Include="Coverages\FileBasedFeatureCoverage.cs" />
     <Compile Include="Coverages\UnstructuredGridCoverageExtensions.cs" />
     <Compile Include="FeatureData\BoundaryConditionQuantityTypeConverter.cs" />
-    <Compile Include="FeatureData\DataColumn.cs" />
-    <Compile Include="FeatureData\IDataColumn.cs" />
-    <Compile Include="FeatureData\ModelFeatureCoordinateData.cs" />
     <Compile Include="FeatureData\FlowBoundaryCondition.cs" />
     <Compile Include="FeatureData\FlowBoundaryConditionFactory.cs" />
     <Compile Include="FeatureData\FlowBoundaryConditionHelper.cs" />
@@ -211,6 +208,7 @@
     <Compile Include="IO\WaterFlowFMModelHydroAreaExtensions.cs" />
     <Compile Include="Layers\FMOutputSnappedFeaturesGroupLayerData.cs" />
     <Compile Include="Layers\FMSnappedFeaturesGroupLayerData.cs" />
+    <Compile Include="ModelDataForFeatures.cs" />
     <Compile Include="ModelDefinition\HeatFluxModel.cs" />
     <Compile Include="FeatureData\SourceAndSink.cs" />
     <Compile Include="ModelDefinition\ISediment.cs" />
