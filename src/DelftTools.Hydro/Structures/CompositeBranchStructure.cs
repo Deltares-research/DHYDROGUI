@@ -5,6 +5,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using log4net;
 using NetTopologySuite.Geometries;
@@ -194,5 +195,12 @@ namespace DelftTools.Hydro.Structures
         {
             return StructureType.CompositeBranchStructure;
         }
+
+        public virtual IEnumerable<IFeature> GetPointFeatures()
+        {
+            return structures;
+        }
+
+        public virtual NetworkFeatureType NetworkFeatureType { get; set; } = NetworkFeatureType.Branch;
     }
 }

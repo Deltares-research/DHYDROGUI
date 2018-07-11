@@ -87,30 +87,7 @@ namespace DelftTools.Hydro
             }
         }
 
-        public IEnumerable<IStructure1D> GetStructuresFromBranchFeatures()
-        {
-            var compositeStructures = branchFeatures.OfType<ICompositeBranchStructure>();
-            var structures = branchFeatures.OfType<IStructure1D>().Except(compositeStructures);
-            return structures;
-        }
-
-        public IEnumerable<T> GetStructuresFromBranchFeatures<T>()
-        {
-            //Branch features are added as a composite branch structure.
-            var branchStructuresT = branchFeatures.OfType<T>().ToList();
-            if (!branchStructuresT.Any())
-            {
-                //Try as a composite structure as it should be the type added.
-                var compositeStructures = branchFeatures.OfType<CompositeBranchStructure>().ToList();
-                if (compositeStructures.Any())
-                {
-                    var compositeStructure = compositeStructures.First();
-                    //Only one compositeStructure allowed per connection, so we are good to go.
-                    return compositeStructure.Structures.OfType<T>();
-                }
-            }
-            return branchStructuresT;
-        }
+        
         
         private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {

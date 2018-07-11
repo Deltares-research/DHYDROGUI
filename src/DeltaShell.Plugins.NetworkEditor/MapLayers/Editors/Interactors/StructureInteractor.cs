@@ -65,9 +65,18 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             var anchor = geometry.Coordinates[0];
             
             var halfWidth = (range.X - org.X) / 2;
+            var halfHeight = (range.Y - org.Y) / 2;
+
+            var pointFeature = (IPointFeature) structure;
+            int upwardTranslationFactor;
+            int downwardTranslationFactor;
+
+            PointFeatureRenderingHelper.DetermineTranslationFactorForStructures(pointFeature.ParentPointFeature.NetworkFeatureType, out upwardTranslationFactor, out downwardTranslationFactor);
+            var verticalTranslationFactor = (upwardTranslationFactor + downwardTranslationFactor) / 2.0;
+
             return new Coordinate(
                 anchor.X - (halfWidth * (structureCount - 1)) + (2 * halfWidth * index),
-                anchor.Y);
+                anchor.Y + verticalTranslationFactor * halfHeight);
         }
 
         public override void UpdateTracker(IGeometry geometry)

@@ -821,6 +821,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return new List<IFeatureRenderer> { new StructureRenderer() };
             }
 
+            if (type == typeof(Manhole))
+            {
+                return new List<IFeatureRenderer> { new CompositeStructureRenderer(new StructureRenderer())};
+            }
+
             if (type == typeof(CrossSection))
             {
                  return new List<IFeatureRenderer> {new CrossSectionRenderer()};

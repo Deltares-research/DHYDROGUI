@@ -1,11 +1,14 @@
-﻿using DelftTools.Hydro.Structures;
+﻿using System;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using GeoAPI.Extensions.Feature;
+using GeoAPI.Geometries;
 
 namespace DelftTools.Hydro
 {
     [Entity]
-    public class Compartment : INameable
+    public class Compartment : IPointFeature, INameable
     {
         private Manhole parentManhole;
 
@@ -27,7 +30,14 @@ namespace DelftTools.Hydro
         public Manhole ParentManhole
         {
             get { return parentManhole; }
-            set {parentManhole = value; }
+            set
+            {
+                parentManhole = value;
+                if (parentManhole != null)
+                {
+                    ParentPointFeature = parentManhole;
+                }
+            }
         }
 
         /// <summary>
@@ -76,5 +86,22 @@ namespace DelftTools.Hydro
         {
             return Name;
         }
+
+        public object Clone()
+        {
+            return new Compartment();
+        }
+
+        public Type GetEntityType()
+        {
+            return typeof(Compartment);
+        }
+
+        public long Id { get; set; }
+        public IGeometry Geometry { get; set; }
+        public IFeatureAttributeCollection Attributes { get; set; }
+
+        [NoNotifyPropertyChange]
+        public ICompositeNetworkPointFeature ParentPointFeature { get; set; }
     }
 }

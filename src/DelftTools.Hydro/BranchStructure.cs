@@ -19,7 +19,14 @@ namespace DelftTools.Hydro
         public virtual ICompositeBranchStructure ParentStructure
         {
             get { return parentStructure; }
-            set { parentStructure = value; }
+            set
+            {
+                parentStructure = value;
+                if (parentStructure != null)
+                {
+                    ParentPointFeature = parentStructure;
+                }
+            }
         }
 
         // TODO This "Channel" is introduced after an merge from the trunk. Is it required? Can it be deleted from the IStructure1D interface?
@@ -107,5 +114,7 @@ namespace DelftTools.Hydro
         }
 
         public abstract StructureType GetStructureType();
+
+        public virtual ICompositeNetworkPointFeature ParentPointFeature { get; set; }
     }
 }

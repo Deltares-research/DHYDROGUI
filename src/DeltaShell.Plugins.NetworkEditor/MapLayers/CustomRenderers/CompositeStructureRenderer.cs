@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -46,7 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
         /// <param name="g"></param>
         /// <param name="layer"></param>
         /// <returns></returns>
-        public bool Render(IFeature feature, Graphics g, ILayer layer)
+        public virtual bool Render(IFeature feature, Graphics g, ILayer layer)
         {
             if ((null == lastEnvelope)
                 || (lastEnvelope.Width != layer.Map.Envelope.Width)
@@ -57,51 +56,20 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
                 structureCounts.Clear();
             }
 
-            var compositeStructure = (ICompositeBranchStructure)feature;
-            if (compositeStructure.Structures.Count <= 1)
-                return true;
-
-            var vectorLayer = (VectorLayer)layer;
-
-            customGeometries[feature] = GetRenderedFeatureGeometry(feature, vectorLayer);
-            structureCounts[feature] = compositeStructure.Structures.Count;
-
-            var polygon = (IPolygon)customGeometries[feature];
-            VectorRenderingHelper.DrawPolygon(g, polygon, Brushes.GreenYellow, Pens.Red, false, vectorLayer.Map);
-            return true;
-        }
-
-        private static IGeometry GenerateCustomGeometry(IFeature feature, VectorLayer layer)
-        {
-            var compositeStructure = (ICompositeBranchStructure)feature;
-            var org = layer.Map.ImageToWorld(new PointF(0, 0));
-            var range = layer.Map.ImageToWorld(new PointF(layer.Style.Symbol.Width * compositeStructure.Structures.GroupBy(s => s.GetType()).Count(), layer.Style.Symbol.Height));
-            var anchor = feature.Geometry.Coordinates[0];
-
-            var width = range.X - org.X;
-            var halfHeight = (range.Y - org.Y) / 2;
-
-            var vertices = new List<Coordinate>
-                {
-                    new Coordinate(anchor.X - width/2, anchor.Y + 2*halfHeight),
-                    new Coordinate(anchor.X - width/2, anchor.Y + 1*halfHeight),
-                    new Coordinate(anchor.X + width/2, anchor.Y + 1*halfHeight),
-                    new Coordinate(anchor.X + width/2, anchor.Y + 2*halfHeight)
-                };
-
-            vertices.Add((Coordinate)vertices[0].Clone());
-
-            var newLinearRing = GeometryFactory.CreateLinearRing(vertices.ToArray());
-            var polygon = GeometryFactory.CreatePolygon(newLinearRing, null);
-
-            if (layer.CoordinateTransformation != null)
+            var compositePointFeature = (ICompositeNetworkPointFeature) feature;
+            
+            if (IsBranchWithSingleFeature(compositePointFeature))
             {
-                polygon = GeometryTransform.TransformPolygon(polygon, layer.CoordinateTransformation.MathTransform);
+                return true;
             }
 
-            // Store original position to detect when feature has moved.
-            polygon.UserData = feature.Geometry.Coordinates[0].Clone();
-            return polygon;
+            if (IsNodeWithoutFeatures(compositePointFeature))
+            {
+                return false;
+            }
+
+            DrawPolygon(feature, g, layer, compositePointFeature);
+            return compositePointFeature.NetworkFeatureType == NetworkFeatureType.Branch;
         }
 
         public virtual IEnumerable<IFeature> GetFeatures(Envelope box, ILayer layer)
@@ -126,47 +94,107 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 
         public IGeometry GetRenderedFeatureGeometry(IFeature feature, ILayer layer)
         {
-            var compositeStructure = (ICompositeBranchStructure)feature;
+            var compositeStructure = (ICompositeNetworkPointFeature) feature;
             IGeometry geometry;
 
             if (!customGeometries.ContainsKey(feature))
             {
                 if (null != structureRenderer)
                 {
-                    foreach (BranchStructure structure in compositeStructure.Structures)
+                    foreach (var structure in compositeStructure.GetPointFeatures())
                     {
                         structureRenderer.InvalidateStructure(structure);
                     }
                 }
-                geometry = GenerateCustomGeometry(feature, (VectorLayer)layer);
+                geometry = GenerateCustomGeometry(feature, (VectorLayer) layer);
             }
             else
             {
                 geometry = customGeometries[feature];
-                var oldCoordinate = (Coordinate)geometry.UserData;
+                var oldCoordinate = (Coordinate) geometry.UserData;
 
                 // Update the geometry if feature has moved or #structures in 
                 // structureFeature has changed
                 if ((!feature.Geometry.Coordinates[0].Equals2D(oldCoordinate)))
                 {
-                    geometry = GenerateCustomGeometry(feature, (VectorLayer)layer);
+                    geometry = GenerateCustomGeometry(feature, (VectorLayer) layer);
                 }
-                else if (structureCounts[feature] != compositeStructure.Structures.Count)
+                else if (structureCounts[feature] != compositeStructure.GetPointFeatures().Count())
                 {
                     if (null != structureRenderer)
                     {
-                        foreach (var structure in compositeStructure.Structures)
+                        foreach (var structure in compositeStructure.GetPointFeatures())
                         {
                             structureRenderer.InvalidateStructure(structure);
                         }
                     }
-                    geometry = GenerateCustomGeometry(feature, (VectorLayer)layer);
+                    geometry = GenerateCustomGeometry(feature, (VectorLayer) layer);
                 }
             }
             customGeometries[feature] = geometry;
-            structureCounts[feature] = compositeStructure.Structures.Count;
+            structureCounts[feature] = compositeStructure.GetPointFeatures().Count();
             return geometry;
         }
+
+        private static bool IsNodeWithoutFeatures(ICompositeNetworkPointFeature compositePointFeature)
+        {
+            return compositePointFeature.NetworkFeatureType == NetworkFeatureType.Node && !compositePointFeature.GetPointFeatures().Any();
+        }
+
+        private static bool IsBranchWithSingleFeature(ICompositeNetworkPointFeature compositePointFeature)
+        {
+            return compositePointFeature.NetworkFeatureType == NetworkFeatureType.Branch && compositePointFeature.GetPointFeatures().Count() <= 1;
+        }
+
+        private void DrawPolygon(IFeature feature, Graphics g, ILayer layer, ICompositeNetworkPointFeature compositePointFeature)
+        {
+            var vectorLayer = (VectorLayer) layer;
+
+            customGeometries[feature] = GetRenderedFeatureGeometry(feature, vectorLayer);
+            structureCounts[feature] = compositePointFeature.GetPointFeatures().Count();
+
+            var polygon = (IPolygon) customGeometries[feature];
+            VectorRenderingHelper.DrawPolygon(g, polygon, Brushes.GreenYellow, Pens.Red, false, vectorLayer.Map);
+        }
+
+        private static IGeometry GenerateCustomGeometry(IFeature feature, VectorLayer layer)
+        {
+            var compositeStructure = (ICompositeNetworkPointFeature) feature;
+            var org = layer.Map.ImageToWorld(new PointF(0, 0));
+            var range = layer.Map.ImageToWorld(new PointF(layer.Style.Symbol.Width * compositeStructure.GetPointFeatures().GroupBy(s => s.GetType()).Count(), layer.Style.Symbol.Height));
+            var anchor = feature.Geometry.Coordinates[0];
+
+            var width = range.X - org.X;
+            var halfHeight = (range.Y - org.Y) / 2;
+
+            int upwardTranslationFactor;
+            int downwardTranslationFactor;
+            PointFeatureRenderingHelper.DetermineTranslationFactorForComposite(compositeStructure.NetworkFeatureType, out upwardTranslationFactor, out downwardTranslationFactor);
+
+            var vertices = new List<Coordinate>
+            {
+                new Coordinate(anchor.X - width / 2, anchor.Y + downwardTranslationFactor * halfHeight),
+                new Coordinate(anchor.X - width / 2, anchor.Y + upwardTranslationFactor * halfHeight),
+                new Coordinate(anchor.X + width / 2, anchor.Y + upwardTranslationFactor * halfHeight),
+                new Coordinate(anchor.X + width / 2, anchor.Y + downwardTranslationFactor * halfHeight)
+            };
+
+            vertices.Add((Coordinate) vertices[0].Clone());
+
+            var newLinearRing = GeometryFactory.CreateLinearRing(vertices.ToArray());
+            var polygon = GeometryFactory.CreatePolygon(newLinearRing, null);
+
+            if (layer.CoordinateTransformation != null)
+            {
+                polygon = GeometryTransform.TransformPolygon(polygon, layer.CoordinateTransformation.MathTransform);
+            }
+
+            // Store original position to detect when feature has moved.
+            polygon.UserData = feature.Geometry.Coordinates[0].Clone();
+            return polygon;
+        }
+
+        
 
         #endregion
 

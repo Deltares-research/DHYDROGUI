@@ -25,5 +25,11 @@ namespace DelftTools.Hydro.Structures
             var pipes = network.Pipes.ToList();
             return pipes.Where(p => p.Source == manhole || p.Target == manhole);
         }
+
+        public static IEnumerable<OutletCompartment> OutletCompartments(this IManhole manhole)
+        {
+            var outletCompartments = manhole.Compartments.OfType<OutletCompartment>().ToList();
+            return outletCompartments;
+        }
     }
 }

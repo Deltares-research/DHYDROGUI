@@ -86,10 +86,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var structureTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Structure).Select(k => k.Value).ToList();
             if (structureTypes.Any())
             {
-                var structureFeatures = structureTypes.Select(element => CreateInstance(element, network)).Where(c => c != null);
+                var structureFeatures = structureTypes.Select(element => CreateInstance(element, network)).Where(c => c != null).ToList();
+                var pointFeatures = structureFeatures.OfType<IStructure1D>();
+
+                foreach (var pointFeature in pointFeatures)
+                {
+                    if (pointFeature.Branch.Source == pointFeature.Branch.Target)
+                    {
+                        // is internal connection
+                        pointFeature.ParentPointFeature = (Manhole) pointFeature.Branch.Source;
+                    }
+                }
+                
                 createdNetworkFeatures.AddRange(structureFeatures);
             }
-
             return createdNetworkFeatures;
         }
 

@@ -1,6 +1,3 @@
-using DelftTools.Hydro.Structures;
-using GeoAPI.Extensions.Networks;
-
 namespace DelftTools.Hydro
 {
     /// <summary>

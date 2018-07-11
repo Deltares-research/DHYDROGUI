@@ -52,19 +52,19 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 
             var style = GetCurrentStyle(vectorLayer,feature);
             
-            var structure = feature as IStructure1D;
+            var pointFeature = feature as IPointFeature;
             var styleSymbol = (Bitmap)style.Symbol.Clone();
 
-            if (structure != null && structure.ParentStructure != null)
+            if (pointFeature?.ParentPointFeature != null)
             {
-                var numberOfSameStructures = structure.ParentStructure.Structures.Count(s => s.GetType() == structure.GetType());
-                if (numberOfSameStructures != 1)
+                var numberOfSameFeatures = pointFeature.ParentPointFeature.GetPointFeatures().Count(s => s.GetType() == pointFeature.GetType());
+                if (numberOfSameFeatures != 1)
                 {
                     using (var graphics = Graphics.FromImage(styleSymbol))
                     using (var font = new Font(FontFamily.GenericMonospace, 8, FontStyle.Regular))
                     {
-                        var numbOfStructuresString = numberOfSameStructures.ToString();
-                        var messageSize = graphics.MeasureString(numbOfStructuresString, font);
+                        var numbOfFeaturesString = numberOfSameFeatures.ToString();
+                        var messageSize = graphics.MeasureString(numbOfFeaturesString, font);
 
                         using (var blackBrush = new SolidBrush(Color.Black))
                         using (var whiteBrush = new SolidBrush(Color.FromArgb(200, Color.White)))
@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
                         {
                             graphics.FillEllipse(whiteBrush, new RectangleF(new PointF(0, 0), messageSize));
                             graphics.DrawEllipse(blackPen, new RectangleF(new PointF(0, 0), messageSize));
-                            graphics.DrawString(numbOfStructuresString, font, blackBrush, 0, 0);
+                            graphics.DrawString(numbOfFeaturesString, font, blackBrush, 0, 0);
                         }
                     }
                 }
@@ -80,69 +80,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 
             VectorRenderingHelper.DrawPoint(g, point, styleSymbol, style.SymbolScale, style.SymbolOffset, style.SymbolRotation, layer.Map);
             return true;
-        }
-
-        private static VectorStyle GetCurrentStyle(VectorLayer vectorLayer,IFeature feature)
-        {
-            return (VectorStyle) (vectorLayer.Theme != null ? vectorLayer.Theme.GetStyle(feature) : vectorLayer.Style);
-        }
-
-        /// <summary>
-        /// Calculates a geometry for structuce that is an offset in StructureFeature
-        /// </summary>
-        /// <param name="feature"></param>
-        /// <param name="layer"></param>
-        /// <returns></returns>
-        private IGeometry GenerateCustomGeometry(IFeature feature, VectorLayer layer)
-        {
-            var structure = feature as IStructure1D;
-            var compositeStructure = structure?.ParentStructure;
-
-            // structure can be disconnected during
-            var index = 0;
-            var structureFeatureCount = 1;
-            if (null != compositeStructure)
-            {
-                var grouping = compositeStructure.Structures.GroupBy(s => s.GetType());
-                var structureGrouping = grouping.Select(t => t.Key).ToList();
-                index = structureGrouping.IndexOf(structure.GetType());
-                structureFeatureCount = structureGrouping.Count;
-            }
-
-            return GenerateCustomGeometry(feature, layer, index, structureFeatureCount);
-        }
-
-        private static IGeometry GenerateCustomGeometry(IFeature feature, VectorLayer layer, int index, int structureFeatureCount)
-        {
-            var org = layer.Map.ImageToWorld(new PointF(0, 0));
-            var style = GetCurrentStyle(layer,feature);
-
-            var range = layer.Map.ImageToWorld(new PointF(style.Symbol.Width, style.Symbol.Height));
-            var anchor = feature.Geometry.Coordinates[0];
-            
-            var halfWidth = (range.X - org.X) / 2;
-            var d = anchor.X - (halfWidth * (structureFeatureCount - 1)) + (2 * halfWidth * index) - halfWidth;
-
-            var vertices = new List<Coordinate>();
-            
-            var halfHeight = (range.Y - org.Y) / 2;
-            vertices.Add(new Coordinate(d, anchor.Y - 1 * halfHeight));
-            vertices.Add(new Coordinate(d, anchor.Y + 1 * halfHeight));
-            vertices.Add(new Coordinate(d + (2 * halfWidth), anchor.Y + 1 * halfHeight));
-            vertices.Add(new Coordinate(d + (2 * halfWidth), anchor.Y - 1 * halfHeight));
-            vertices.Add((Coordinate)vertices[0].Clone());
-            
-            var newLinearRing = GeometryFactory.CreateLinearRing(vertices.ToArray());
-            var polygon = GeometryFactory.CreatePolygon(newLinearRing, null);
-
-            if (layer.CoordinateTransformation != null)
-            {
-                polygon = GeometryTransform.TransformPolygon(polygon, layer.CoordinateTransformation.MathTransform);
-            }
-
-            // Store original position to detect when feature has moved.
-            polygon.UserData = polygon.EnvelopeInternal.Centre.Clone();
-            return polygon;
         }
 
         public IGeometry GetRenderedFeatureGeometry(IFeature feature, ILayer layer)
@@ -188,6 +125,76 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             return intersectedFeatures;
         }
 
+        private static VectorStyle GetCurrentStyle(VectorLayer vectorLayer,IFeature feature)
+        {
+            return (VectorStyle) (vectorLayer.Theme != null ? vectorLayer.Theme.GetStyle(feature) : vectorLayer.Style);
+        }
+
+        /// <summary>
+        /// Calculates a geometry for structuce that is an offset in StructureFeature
+        /// </summary>
+        /// <param name="feature"></param>
+        /// <param name="layer"></param>
+        /// <returns></returns>
+        private IGeometry GenerateCustomGeometry(IFeature feature, VectorLayer layer)
+        {
+            var pointFeature = feature as IPointFeature;
+            var parentPointFeature = pointFeature?.ParentPointFeature;
+
+            // structure can be disconnected during
+            var index = 0;
+            var pointFeatureCount = 1;
+            if (null != parentPointFeature)
+            {
+                var grouping = parentPointFeature.GetPointFeatures().GroupBy(s => s.GetType());
+                var pointFeatureGrouping = grouping.Select(t => t.Key).ToList();
+                index = pointFeatureGrouping.IndexOf(pointFeature.GetType());
+                pointFeatureCount = pointFeatureGrouping.Count;
+            }
+
+            return GenerateCustomGeometry(feature, layer, index, pointFeatureCount);
+        }
+
+        private static IGeometry GenerateCustomGeometry(IFeature feature, VectorLayer layer, int index, int pointFeatureCount)
+        {
+            var org = layer.Map.ImageToWorld(new PointF(0, 0));
+            var style = GetCurrentStyle(layer,feature);
+
+            var range = layer.Map.ImageToWorld(new PointF(style.Symbol.Width, style.Symbol.Height));
+            var anchor = feature.Geometry.Coordinates[0];
+            
+            var halfWidth = (range.X - org.X) / 2;
+            var d = anchor.X - (halfWidth * (pointFeatureCount - 1)) + (2 * halfWidth * index) - halfWidth;
+
+            var vertices = new List<Coordinate>();
+
+            var pointFeature = (IPointFeature)feature;
+            var type = pointFeature.ParentPointFeature.NetworkFeatureType;
+
+            int upwardTranslationFactor;
+            int downwardTranslationFactor;
+            PointFeatureRenderingHelper.DetermineTranslationFactorForStructures(type, out upwardTranslationFactor, out downwardTranslationFactor);
+
+            var halfHeight = (range.Y - org.Y) / 2;
+            vertices.Add(new Coordinate(d, anchor.Y + upwardTranslationFactor * halfHeight));
+            vertices.Add(new Coordinate(d, anchor.Y + downwardTranslationFactor * halfHeight));
+            vertices.Add(new Coordinate(d + (2 * halfWidth), anchor.Y + downwardTranslationFactor * halfHeight));
+            vertices.Add(new Coordinate(d + (2 * halfWidth), anchor.Y + upwardTranslationFactor * halfHeight));
+            vertices.Add((Coordinate)vertices[0].Clone());
+            
+            var newLinearRing = GeometryFactory.CreateLinearRing(vertices.ToArray());
+            var polygon = GeometryFactory.CreatePolygon(newLinearRing, null);
+
+            if (layer.CoordinateTransformation != null)
+            {
+                polygon = GeometryTransform.TransformPolygon(polygon, layer.CoordinateTransformation.MathTransform);
+            }
+
+            // Store original position to detect when feature has moved.
+            polygon.UserData = polygon.EnvelopeInternal.Centre.Clone();
+            return polygon;
+        }
+        
         #endregion
 
         #region ICloneable Members
@@ -205,7 +212,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
         }
         #endregion
 
-        public void InvalidateStructure(IStructure1D structure)
+        public void InvalidateStructure(IFeature structure)
         {
             if (customGeometries.ContainsKey(structure))
                 customGeometries.Remove(structure);

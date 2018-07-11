@@ -179,6 +179,7 @@
     <Compile Include="MapLayers\CustomRenderers\EmbankmentRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\EnclosureRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\LeveeBreachWidthRenderer.cs" />
+    <Compile Include="MapLayers\CustomRenderers\PointFeatureRenderingHelper.cs" />
     <Compile Include="MapLayers\Editors\CatchmentFeatureEditor.cs" />
     <Compile Include="MapLayers\Editors\DrainageBasinFeatureEditor.cs" />
     <Compile Include="MapLayers\Editors\HydroAreaFeatureEditor.cs" />

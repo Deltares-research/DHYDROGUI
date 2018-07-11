@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
@@ -10,7 +12,7 @@ using NetTopologySuite.Geometries;
 namespace DelftTools.Hydro.Structures
 {
     [Entity]
-    public class Manhole : Node, IManhole
+    public class Manhole : Node, IManhole, ICompositeNetworkPointFeature
     {
         private IEventedList<Compartment> compartments;
 
@@ -97,5 +99,18 @@ namespace DelftTools.Hydro.Structures
         {
             return Compartments != null && Compartments.Any(c => c.Name.Equals(compartmentName));
         }
+
+        public IEnumerable<IFeature> GetPointFeatures()
+        {
+            var branchFeatures = this.InternalStructures();
+            var outletCompartments = compartments.Where(c => c.IsOutletCompartment());
+
+            var features = new List<IFeature>();
+            features.AddRange(branchFeatures);
+            features.AddRange(outletCompartments);
+            return features;
+        }
+
+        public NetworkFeatureType NetworkFeatureType { get; } = NetworkFeatureType.Node;
     }
 }
