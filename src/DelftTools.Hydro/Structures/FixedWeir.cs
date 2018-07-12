@@ -87,7 +87,8 @@ namespace DelftTools.Hydro.Structures
             var modelDataOfFixedWeir = modelDataForFeatureWithDataColumns as IModelFeatureCoordinateData;
             if (modelDataOfFixedWeir != null)
             {
-                if (!Enum.TryParse(modelDataOfFixedWeir.Selector.ToString(), true, out FixedWeirSchemes scheme))
+                FixedWeirSchemes scheme;
+                if (!Enum.TryParse(modelDataOfFixedWeir.Selector.ToString(), true, out scheme))
                     return; //or throw exception?
                 SetActiveFields(modelDataOfFixedWeir.DataColumns, scheme);
             }

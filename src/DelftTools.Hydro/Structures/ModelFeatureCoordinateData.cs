@@ -37,7 +37,7 @@ namespace DelftTools.Hydro.Structures
 
         public object Selector
         {
-            get => selector;
+            get { return selector; }
             set
             {
                 if (selector == null || !selector.Equals(value))
