@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
@@ -21,7 +22,13 @@ namespace DelftTools.Hydro
 
             if (sewerConnection.Geometry != null && sewerConnection.Geometry.Coordinates.Any())
             {
-                structure.Geometry = new Point(sewerConnection.Geometry.Coordinates[0]);
+                var x = (sewerConnection.Geometry.Coordinates[0].X + sewerConnection.Geometry.Coordinates[1].X) / 2;
+                var y = (sewerConnection.Geometry.Coordinates[0].Y + sewerConnection.Geometry.Coordinates[1].Y) / 2;
+                structure.Geometry = new Point(x,y);
+
+                var dx = x - sewerConnection.Geometry.Coordinates[0].X;
+                var dy = y - sewerConnection.Geometry.Coordinates[0].Y; 
+                structure.Chainage = Math.Sqrt(dx*dx + dy*dy);
             }
             structure.Name = sewerConnection.Name;
 
@@ -61,6 +68,23 @@ namespace DelftTools.Hydro
         public static bool IsPipe(this ISewerConnection sewerConnection)
         {
             return sewerConnection is Pipe;
+        }
+
+
+        public static bool IsInternalConnection(this ISewerConnection sewerConnection)
+        {
+            return sewerConnection.Source != null && sewerConnection.Source == sewerConnection.Target;
+        }
+
+        /// <summary>
+        /// Returns special connections between manholes. E.g. 'persleidingen', 'overstort leidingen'
+        /// </summary>
+        /// <param name="sewerConnection"></param>
+        /// <returns></returns>
+        public static bool IsSpecialConnection(this ISewerConnection sewerConnection)
+        {
+            var isCandidate = !sewerConnection.IsPipe() && !sewerConnection.IsInternalConnection();
+            return isCandidate && sewerConnection.BranchFeatures.Any();
         }
     }
 }

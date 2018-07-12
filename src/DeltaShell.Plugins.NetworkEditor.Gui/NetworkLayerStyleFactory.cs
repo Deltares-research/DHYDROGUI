@@ -250,8 +250,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
 
             const int lineWidth = 3;
-            var connections = networkObjects as IEnumerable<ISewerConnection>;
-            if (connections != null)
+            var pipes = networkObjects as IEnumerable<IPipe>;
+            if (pipes != null)
             {
                 var branchStyle = new VectorStyle
                 {
@@ -291,6 +291,49 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         new CategorialThemeItem("Storm water", stormWaterConnectionStyle, null, SewerConnectionWaterType.StormWater),
                         new CategorialThemeItem("Dry water", dryWaterConnectionStyle, null, SewerConnectionWaterType.DryWater),
                         new CategorialThemeItem("Combined", combinedWaterConnectionStyle, null, SewerConnectionWaterType.Combined),
+                    }
+                };
+            }
+
+            var sewerConnections = networkObjects as IEnumerable<ISewerConnection>;
+            if (sewerConnections != null)
+            {
+                var branchStyle = new VectorStyle
+                {
+                    GeometryType = typeof(ILineString),
+                    Line = new Pen(Color.Pink, lineWidth),
+                    EnableOutline = false,
+                };
+
+                var pumpStyle = new VectorStyle
+                {
+                    GeometryType = typeof(ILineString),
+                    Line = new Pen(Color.Red, lineWidth)
+                    {
+                        DashStyle = DashStyle.Dash
+                    },
+                    EnableOutline = false,
+                };
+
+                var weirStyle = new VectorStyle
+                {
+                    GeometryType = typeof(ILineString),
+                    Line = new Pen(Color.Lime, lineWidth)
+                    {
+                        DashStyle = DashStyle.Dash
+                    },
+                    EnableOutline = false,
+                };
+                
+                return new CategorialTheme
+                {
+                    AttributeName = "SpecialConnectionType",
+                    DefaultStyle = branchStyle,
+                    ThemeItems = new EventedList<IThemeItem>
+                    {
+                        new CategorialThemeItem("Pump", pumpStyle, null, SewerConnectionSpecialConnectionType.Pump),
+                        new CategorialThemeItem("Overflow", weirStyle, null, SewerConnectionSpecialConnectionType.Weir),
+                        new CategorialThemeItem("None", branchStyle, null, SewerConnectionSpecialConnectionType.None),
                     }
                 };
             }

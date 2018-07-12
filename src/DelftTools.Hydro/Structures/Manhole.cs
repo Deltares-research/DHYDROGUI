@@ -67,28 +67,6 @@ namespace DelftTools.Hydro.Structures
                 }
             }
         }
-        
-        private void CompartmentCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
-        {
-            var compartment = e.Item as Compartment;
-            if (compartment == null) return;
-
-            switch (e.Action)
-            {
-                case NotifyCollectionChangeAction.Remove:
-                    //It has a NoNotifyPropertyChanged, so it won't propagate again.
-                    compartment.ParentManhole = null;
-                    return;
-                case NotifyCollectionChangeAction.Add:
-                    var oldParentManhole = compartment.ParentManhole;
-                    if (oldParentManhole != null && oldParentManhole != this && oldParentManhole.ContainsCompartmentWithName(compartment.Name))
-                    {
-                        oldParentManhole.Compartments.Remove(compartment);
-                    }
-                    compartment.ParentManhole = this;
-                    break;
-            }
-        }
 
         public Compartment GetCompartmentByName(string compartmentName)
         {
@@ -112,5 +90,27 @@ namespace DelftTools.Hydro.Structures
         }
 
         public NetworkFeatureType NetworkFeatureType { get; } = NetworkFeatureType.Node;
+
+        private void CompartmentCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            var compartment = e.Item as Compartment;
+            if (compartment == null) return;
+
+            switch (e.Action)
+            {
+                case NotifyCollectionChangeAction.Remove:
+                    //It has a NoNotifyPropertyChanged, so it won't propagate again.
+                    compartment.ParentManhole = null;
+                    return;
+                case NotifyCollectionChangeAction.Add:
+                    var oldParentManhole = compartment.ParentManhole;
+                    if (oldParentManhole != null && oldParentManhole != this && oldParentManhole.ContainsCompartmentWithName(compartment.Name))
+                    {
+                        oldParentManhole.Compartments.Remove(compartment);
+                    }
+                    compartment.ParentManhole = this;
+                    break;
+            }
+        }
     }
 }

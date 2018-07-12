@@ -151,7 +151,11 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
             }
             if (FeatureType == typeof(SewerConnection))
             {
-                return GetEnumerableList(Network.SewerConnections.OfType<SewerConnection>(), (INotifyCollectionChange)Network);
+                return GetEnumerableList(Network.SewerConnections.OfType<SewerConnection>().Where(sc => sc.IsSpecialConnection()), (INotifyCollectionChange)Network);
+            }
+            if (FeatureType == typeof(Pipe))
+            {
+                return GetEnumerableList(Network.Branches.OfType<Pipe>(), (INotifyCollectionChange) Network);
             }
             if (FeatureType == typeof(CompositeBranchStructure))
             {

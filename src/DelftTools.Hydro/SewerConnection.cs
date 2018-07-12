@@ -54,7 +54,9 @@ namespace DelftTools.Hydro
         public double LevelTarget { get; set; }
         
         public SewerConnectionWaterType WaterType { get; set; }
-        
+
+        public SewerConnectionSpecialConnectionType SpecialConnectionType { get { return GetConnectionType(); } }
+
         public Compartment SourceCompartment { get; set; }
 
         public Compartment TargetCompartment { get; set; }
@@ -87,8 +89,18 @@ namespace DelftTools.Hydro
             }
         }
 
-        
-        
+        private SewerConnectionSpecialConnectionType GetConnectionType()
+        {
+            if(!this.IsSpecialConnection()) return SewerConnectionSpecialConnectionType.None;
+
+            if (!BranchFeatures.Any()) return SewerConnectionSpecialConnectionType.None;
+
+            if(BranchFeatures.Any(bf => bf.GetType() == typeof(Pump))) return SewerConnectionSpecialConnectionType.Pump;
+            if(BranchFeatures.Any(bf => bf.GetType() == typeof(Weir))) return SewerConnectionSpecialConnectionType.Weir;
+
+            return SewerConnectionSpecialConnectionType.None;
+        }
+
         private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (e.Action != NotifyCollectionChangeAction.Add) return;

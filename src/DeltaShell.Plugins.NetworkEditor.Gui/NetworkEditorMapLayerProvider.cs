@@ -48,6 +48,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || data is IEnumerable<IHydroNode>
                    || data is IEnumerable<IChannel>
                    || data is IEnumerable<IManhole>
+                   || data is IEnumerable<IPipe>
                    || data is IEnumerable<ISewerConnection>
                    || (data is IEventedList<Pump2D> && parentObject is HydroArea)
                    || (data is IEventedList<Weir2D> && parentObject is HydroArea)
@@ -114,6 +115,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     yield return network.Routes;
                     yield return network.Channels;
                     yield return network.Manholes;
+                    yield return network.Pipes;
                     yield return network.SewerConnections;
                 }
 
@@ -180,6 +182,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             if (hydroNetwork != null && manholeNodes != null)
             {
                 return CreateNetworkVectorLayer<Manhole>(manholeNodes, "Manholes", hydroNetwork);
+            }
+
+            var pipes = data as IEnumerable<IPipe>;
+            if (hydroNetwork != null && pipes != null)
+            {
+                return CreateNetworkVectorLayer<Pipe>(pipes, "Pipes", hydroNetwork);
             }
 
             var sewerConnections = data as IEnumerable<ISewerConnection>;
