@@ -21,6 +21,7 @@ namespace DelftTools.Hydro
             Name = name;
         }
 
+        [FeatureAttribute]
         public string Name { get; set; }
 
         /// <summary>
@@ -36,6 +37,7 @@ namespace DelftTools.Hydro
                 if (parentManhole != null)
                 {
                     ParentPointFeature = parentManhole;
+                    Geometry = parentManhole.Geometry;
                 }
             }
         }
@@ -99,6 +101,7 @@ namespace DelftTools.Hydro
 
         public long Id { get; set; }
         public IGeometry Geometry { get; set; }
+
         public IFeatureAttributeCollection Attributes { get; set; }
 
         [NoNotifyPropertyChange]

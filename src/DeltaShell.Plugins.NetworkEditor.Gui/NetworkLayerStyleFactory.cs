@@ -83,6 +83,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return CreatePointStyle(Properties.Resources.WeirSmall);
             }
 
+            if (networkObjects is IEnumerable<OutletCompartment>)
+            {
+                return CreatePointStyle(Properties.Resources.Outlet);
+            }
+
             if (networkObjects is IEnumerable<ICulvert>)
             {
                 return CreatePointStyle(Properties.Resources.CulvertSmall);
@@ -228,24 +233,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     Outline = new Pen(Color.FromArgb(255, Color.Black), 1f),
                 };
 
-                var onMultipleBranchesStyle = new VectorStyle
+                /*var onMultipleBranchesStyle = new VectorStyle
                 {
                     GeometryType = typeof(IPoint),
                     Shape = ShapeType.Ellipse,
                     ShapeSize = 11,
                     Fill = new SolidBrush(Color.DarkOrange),
                     Outline = new Pen(Color.FromArgb(255, Color.Black), 1f),
-                };
+                };*/
 
                 return new CategorialTheme
                 {
-                    AttributeName = "IsOnSingleBranch",
+                    /*AttributeName = "IsOnSingleBranch",*/
                     DefaultStyle = onSingleBranchesStyle,
-                    ThemeItems = new EventedList<IThemeItem>
+                    /*ThemeItems = new EventedList<IThemeItem>
                     {
                         new CategorialThemeItem("True", onSingleBranchesStyle, null, true),
                         new CategorialThemeItem("False", onMultipleBranchesStyle, null, false)
-                    }
+                    }*/
                 };
             }
 

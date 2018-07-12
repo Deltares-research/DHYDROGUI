@@ -50,6 +50,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || data is IEnumerable<IManhole>
                    || data is IEnumerable<IPipe>
                    || data is IEnumerable<ISewerConnection>
+                   || data is IEnumerable<OutletCompartment>
                    || (data is IEventedList<Pump2D> && parentObject is HydroArea)
                    || (data is IEventedList<Weir2D> && parentObject is HydroArea)
                    || (data is IEventedList<Gate2D> && parentObject is HydroArea)
@@ -106,6 +107,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     yield return network.Retentions;
                     yield return network.ObservationPoints;
                     yield return network.Weirs;
+                    yield return network.Outlets;
                     yield return network.Gates;
                     yield return network.Culverts;
                     yield return network.Bridges;
@@ -181,8 +183,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var manholeNodes = data as IEnumerable<IManhole>;
             if (hydroNetwork != null && manholeNodes != null)
             {
-                return CreateNetworkVectorLayer<Manhole>(manholeNodes, "Manholes", hydroNetwork);
+                return CreateNetworkVectorLayer<Manhole>(manholeNodes, "Manholes", hydroNetwork); ;
             }
+
+            var outletCompartments = data as IEnumerable<OutletCompartment>;
+            if (outletCompartments != null)
+            {
+                return CreateNetworkVectorLayer<OutletCompartment>(outletCompartments, "Outlets", hydroNetwork);
+            }
+
 
             var pipes = data as IEnumerable<IPipe>;
             if (hydroNetwork != null && pipes != null)
@@ -824,7 +833,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
 
             if (type == typeof(Weir) || type == typeof(Pump) || type == typeof(Culvert) || 
-                type == typeof(Bridge) || type == typeof(ExtraResistance))
+                type == typeof(Bridge) || type == typeof(ExtraResistance) || type == typeof(OutletCompartment))
             {
                 return new List<IFeatureRenderer> { new StructureRenderer() };
             }

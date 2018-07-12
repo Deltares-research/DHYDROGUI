@@ -68,10 +68,11 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             var halfHeight = (range.Y - org.Y) / 2;
 
             var pointFeature = (IPointFeature) structure;
+            var numberOfFeatures = pointFeature.ParentPointFeature.GetPointFeatures().Count();
             int upwardTranslationFactor;
             int downwardTranslationFactor;
 
-            PointFeatureRenderingHelper.DetermineTranslationFactorForStructures(pointFeature.ParentPointFeature.NetworkFeatureType, out upwardTranslationFactor, out downwardTranslationFactor);
+            PointFeatureRenderingHelper.DetermineTranslationFactorForStructures(pointFeature.ParentPointFeature.NetworkFeatureType, numberOfFeatures, out upwardTranslationFactor, out downwardTranslationFactor);
             var verticalTranslationFactor = (upwardTranslationFactor + downwardTranslationFactor) / 2.0;
 
             return new Coordinate(

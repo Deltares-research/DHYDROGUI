@@ -1,4 +1,6 @@
-﻿namespace DelftTools.Hydro
+﻿using GeoAPI.Extensions.Feature;
+
+namespace DelftTools.Hydro
 {
     public class OutletCompartment : Compartment
     {
@@ -10,6 +12,7 @@
         {
         }
 
+        [FeatureAttribute]
         public double SurfaceWaterLevel { get; set; }
     }
 }

@@ -1260,7 +1260,9 @@
     <None Include="Resources\Gully.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Outlet.png" />
+    <None Include="Resources\Outlet.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

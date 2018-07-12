@@ -4,7 +4,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 {
     public static class PointFeatureRenderingHelper
     {
-        public static void DetermineTranslationFactorForStructures(NetworkFeatureType type, out int upwardTranslation, out int downwardTranslation)
+        public static void DetermineTranslationFactorForStructures(NetworkFeatureType type, int numberOfFeatures, out int upwardTranslation, out int downwardTranslation)
         {
             switch (type)
             {
@@ -13,8 +13,15 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
                     downwardTranslation = 1;
                     break;
                 case NetworkFeatureType.Node:
-                    upwardTranslation = -4;
-                    downwardTranslation = -2;
+                    if (numberOfFeatures > 1)
+                    {
+                        upwardTranslation = -4;
+                        downwardTranslation = -2;
+                        break;
+                    }
+
+                    upwardTranslation = -3;
+                    downwardTranslation = -1;
                     break;
                 default:
                     upwardTranslation = -1;
