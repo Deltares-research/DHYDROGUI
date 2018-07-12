@@ -74,6 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         //private IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties;
         private ModelDataForFeatures modelDataForFeatures;
+        private IEventedList<SourceAndSink> sourcesAndSinks;
         private IEventedList<ISedimentFraction> sedimentFractions;
         private IEventedList<BoundaryConditionSet> boundaryConditionSets;
         private IDataItem areaDataItem;
@@ -400,6 +401,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             syncers.Add(new FeatureDataSyncer<Feature2D, BoundaryConditionSet>(Boundaries, BoundaryConditionSets, CreateBoundaryCondition));
             syncers.Add(new FeatureDataSyncer<Feature2D, SourceAndSink>(Pipes, SourcesAndSinks, CreateSourceAndSink));
         }
+
+        private void SourcesAndSinksCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            var sourceAndSink = e.Item as SourceAndSink;
+
+            if (sourceAndSink == null)
+                return;
+
+            if (e.Action == NotifyCollectionChangeAction.Add)
+            {
+                SyncFractionsAndTracers(sourceAndSink);
+            }
+        }
+
+        private void SyncFractionsAndTracers(SourceAndSink sourceAndSink)
+        {
+            SedimentFractions.ForEach(sf => sourceAndSink.SedimentFractionNames.Add(sf.Name));
+
+            BoundaryConditionSets.ForEach(bcs =>
+            {
+                bcs.BoundaryConditions.ForEach(bc =>
+                {
+                    var flowCondition = bc as FlowBoundaryCondition;
+                    if (flowCondition != null && flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
+                    {
+                        sourceAndSink.TracerNames.Add(flowCondition.Name);
+                    }
+                });
+            });
+        }
+
         private void BoundaryConditionSetsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             var bc = e.Item as FlowBoundaryCondition;
@@ -1382,7 +1414,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         public IEventedList<Feature2D> Pipes { get; private set; }
-        public IEventedList<SourceAndSink> SourcesAndSinks { get; private set; }
+
+        public IEventedList<SourceAndSink> SourcesAndSinks
+        {
+            get { return sourcesAndSinks; }
+            set
+            {
+                if (sourcesAndSinks != null)
+                {
+                    SourcesAndSinks.CollectionChanged -= SourcesAndSinksCollectionChanged;
+                }
+                sourcesAndSinks = value;
+                if (sourcesAndSinks != null)
+                {
+                    SourcesAndSinks.CollectionChanged += SourcesAndSinksCollectionChanged;
+                }
+            }
+        }
 
         public IEnumerable<IBoundaryCondition> BoundaryConditions
         {

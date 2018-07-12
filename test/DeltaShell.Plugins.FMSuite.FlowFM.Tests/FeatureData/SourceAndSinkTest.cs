@@ -133,6 +133,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             Assert.IsFalse(sourceSink.Function.Components.Select(c => c.Name).Contains("Tracer_3"));
         }
 
+        [Test]
+        public void
+            GivenAModelWithSourcesAndSinks_WhenAddingANewSourceAndSink_ThenTheirFunctionDataShouldBeSynced()
+        {
+            var fractionList = CreateSedimentFractionList();
+            var tracerList = CreateBoundaryConditionList();
+
+            var firstSourceSink = new SourceAndSink();
+            var boundarySet = new BoundaryConditionSet();
+
+            var model = new WaterFlowFMModel
+            {
+                SourcesAndSinks = { firstSourceSink },
+                BoundaryConditionSets = { boundarySet }
+            };
+
+            model.SedimentFractions.AddRange(fractionList);
+            boundarySet.BoundaryConditions.AddRange(tracerList);
+
+            var componentsFirst = firstSourceSink.Function.Components;
+            var componentsfFirstCount = firstSourceSink.Function.Components.Count;
+
+            var newSourceSink = new SourceAndSink();
+            model.SourcesAndSinks.Add(newSourceSink);
+
+            var componentsNew = newSourceSink.Function.Components;
+            var componentsNewCount = newSourceSink.Function.Components.Count;
+
+            Assert.AreEqual(
+                componentsfFirstCount, componentsNewCount);
+            Assert.AreEqual(
+                componentsFirst.Select(c => c.Name), 
+                componentsNew.Select(c => c.Name));
+        }
+
         private List<FlowBoundaryCondition> CreateBoundaryConditionList()
         {
             return new List<FlowBoundaryCondition>
