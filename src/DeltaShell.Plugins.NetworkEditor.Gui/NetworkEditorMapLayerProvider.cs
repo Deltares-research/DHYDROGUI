@@ -115,8 +115,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     yield return network.Routes;
                     yield return network.Channels;
                     yield return network.Manholes;
-                    yield return network.Pipes;
                     yield return network.SewerConnections;
+                    yield return network.Pipes;
                 }
 
                 var drainageBasin = hydroRegion as DrainageBasin;

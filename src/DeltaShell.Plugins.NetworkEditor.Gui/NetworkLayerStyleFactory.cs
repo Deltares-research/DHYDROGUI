@@ -318,7 +318,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var weirStyle = new VectorStyle
                 {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.Lime, lineWidth)
+                    Line = new Pen(Color.LimeGreen, lineWidth)
                     {
                         DashStyle = DashStyle.Dash
                     },
@@ -331,8 +331,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     DefaultStyle = branchStyle,
                     ThemeItems = new EventedList<IThemeItem>
                     {
-                        new CategorialThemeItem("Pump", pumpStyle, null, SewerConnectionSpecialConnectionType.Pump),
-                        new CategorialThemeItem("Overflow", weirStyle, null, SewerConnectionSpecialConnectionType.Weir),
+                        new CategorialThemeItem("Pressurized pipe", pumpStyle, null, SewerConnectionSpecialConnectionType.Pump),
+                        new CategorialThemeItem("Weir", weirStyle, null, SewerConnectionSpecialConnectionType.Weir),
                         new CategorialThemeItem("None", branchStyle, null, SewerConnectionSpecialConnectionType.None),
                     }
                 };
