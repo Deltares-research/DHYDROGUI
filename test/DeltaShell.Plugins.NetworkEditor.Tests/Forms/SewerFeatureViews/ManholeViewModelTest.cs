@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
             manholeViewModel.AddOrificeCommand.Execute(null);
 
             // Test is failing because orifice is at the moment not a structure on a branch. This might become a structure
-            AssertManholeAndInternalStructure<SewerConnectionOrifice>(manholeViewModel.Manhole, 1, 0);
+            AssertManholeAndInternalStructure<Orifice>(manholeViewModel.Manhole, 1, 0);
         }
 
         [Test]

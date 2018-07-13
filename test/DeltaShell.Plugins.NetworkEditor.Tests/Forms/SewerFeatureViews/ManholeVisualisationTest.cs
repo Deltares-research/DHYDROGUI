@@ -95,21 +95,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
                 Source = manhole,
                 Target = manhole,
             };
-            weirConnection.BranchFeatures.Add(new Weir { CrestLevel = 1.8, Name = "Weir 01"});
+            weirConnection.AddStructureToBranch(new Weir { CrestLevel = 1.8, Name = "Weir 01"});
+
+            var orificeConnection = new SewerConnection
+            {
+                SourceCompartment = compartment1,
+                Source = manhole,
+                TargetCompartment = compartment2,
+                Target = manhole,
+            };
+            orificeConnection.AddStructureToBranch(new Orifice {BottomLevel = -1});
 
             var connections = new List<ISewerConnection>
             {
                 new Pipe {Name = "leiding 1", SourceCompartment = compartment1, LevelSource = 0, SewerProfileDefinition = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRectangle {Width = 1, Height = 1}) },
                 new Pipe {Name = "leiding 2", TargetCompartment = compartment1, LevelTarget = 0, SewerProfileDefinition = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRound { Diameter = 0.6 }) },
                 new Pipe {Name = "leiding 3", SourceCompartment = compartment2, LevelSource = -1.5, SewerProfileDefinition = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRectangle {Width = 1, Height = 1}) },
-                new SewerConnectionOrifice
-                {
-                    SourceCompartment = compartment1,
-                    Source = manhole,
-                    TargetCompartment = compartment2,
-                    Target = manhole,
-                    Bottom_Level = -1
-                },
+                orificeConnection,
                 pumpConnection,
                 pumpConnection2,
                 weirConnection

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using DelftTools.Hydro.Structures;
+using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests
 {
@@ -8,11 +9,8 @@ namespace DelftTools.Hydro.Tests
         [Test]
         public void OrificeIsSewerConnection()
         {
-            var orifice = new SewerConnectionOrifice();
+            var orifice = new Orifice();
             Assert.IsNotNull(orifice);
-            Assert.IsTrue(orifice is SewerConnection);
-            Assert.IsFalse(orifice.IsPipe());
-            Assert.IsTrue(orifice.IsOrifice());
         }
     }
 }

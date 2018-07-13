@@ -148,12 +148,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                     manhole.Network.Branches.Remove(connection);
                 }
             }
-
-            var orifice = SelectedItem as SewerConnectionOrifice;
-            if (orifice != null)
-            {
-                manhole.Network.Branches.Remove(orifice);
-            }
         }
 
         private bool CanRemoveItem(object obj)
@@ -184,7 +178,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         private void AddOrifice(object obj)
         {
-            AddNewSewerConnectionWithStructure<SewerConnectionOrifice>();
+            AddNewSewerConnectionWithStructure<Orifice>();
         }
 
         private bool CanAddOrifice(object obj)

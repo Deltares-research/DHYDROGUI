@@ -198,7 +198,6 @@
     <Compile Include="OutletCompartment.cs" />
     <Compile Include="RoofArea.cs" />
     <Compile Include="SewerConnectionExtensionMethods.cs" />
-    <Compile Include="SewerConnectionOrifice.cs" />
     <Compile Include="SewerConnectionSpecialConnectionType.cs" />
     <Compile Include="SewerConnectionWaterType.cs" />
     <Compile Include="Structures\ICompositeNetworkPointFeature.cs" />

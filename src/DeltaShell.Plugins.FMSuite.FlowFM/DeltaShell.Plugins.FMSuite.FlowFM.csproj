@@ -147,6 +147,7 @@
     <Compile Include="IO\Links1D2DHelper.cs" />
     <Compile Include="RectangleCrossSectionDefinitionGenerator.cs" />
     <Compile Include="SewerManholeGenerator.cs" />
+    <Compile Include="SewerOrificeGenerator.cs" />
     <Compile Include="SewerProfileMapping.cs" />
     <Compile Include="EmbankmentGenerator.cs" />
     <Compile Include="EmbankmentMerger.cs" />
@@ -254,7 +255,6 @@
     <Compile Include="SewerCompartmentOutletGenerator.cs" />
     <Compile Include="SewerConnectionGenerator.cs" />
     <Compile Include="SewerConnectionMapping.cs" />
-    <Compile Include="SewerConnectionOrificeGenerator.cs" />
     <Compile Include="SewerConnectionPipeGenerator.cs" />
     <Compile Include="ASewerProfileDefinitionReader.cs" />
     <Compile Include="SewerFeatureFactory.cs" />

@@ -117,7 +117,7 @@
                             <DataTemplate DataType="{x:Type structures:Pump}">
                                 <Rectangle Fill="HotPink" Width="32" Height="32"/>
                             </DataTemplate>
-                            <DataTemplate DataType="{x:Type hydro:SewerConnectionOrifice}">
+                            <DataTemplate DataType="{x:Type structures:Orifice}">
                                 <Rectangle Fill="Red" Width="32" Height="32"/>
                             </DataTemplate>
                             <DataTemplate DataType="{x:Type structures:Pipe}">

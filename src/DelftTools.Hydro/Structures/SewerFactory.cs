@@ -10,7 +10,7 @@ namespace DelftTools.Hydro.Structures
     {
         private static readonly Dictionary<Type, Func<ISewerConnection, ISewerConnection>> SewerConnectionStructureCreators = new Dictionary<Type, Func<ISewerConnection, ISewerConnection>>
         {
-            { typeof(SewerConnectionOrifice), CreateOrificeConnection},
+            { typeof(Orifice), CreateOrificeConnection},
             { typeof(Pump), CreatePumpConnection },
             { typeof(Weir), CreateWeirConnection }
         };

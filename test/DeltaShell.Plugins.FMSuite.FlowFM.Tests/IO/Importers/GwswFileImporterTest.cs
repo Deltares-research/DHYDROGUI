@@ -1123,7 +1123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             //Check placeholders have been created.
             Assert.IsTrue(network.Branches.Any());
 
-            var orificeStructures = network.Branches.OfType<SewerConnectionOrifice>().ToList();
+            var orificeStructures = network.SewerConnections.SelectMany(sc => sc.GetStructuresFromBranchFeatures<Orifice>()).ToList();
             Assert.IsTrue(orificeStructures.Any());
 
             // Now Load connections.
@@ -1133,10 +1133,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             foreach (var orifice in orificeStructures)
             {
-                var extendedOrifice = network.Branches.OfType<SewerConnectionOrifice>().FirstOrDefault(b => b.Name.Equals(orifice.Name));
+                var extendedOrifice = network.SewerConnections.SelectMany(sc => sc.GetStructuresFromBranchFeatures<Orifice>()).FirstOrDefault(o => o.Name.Equals(orifice.Name));
                 Assert.IsNotNull(extendedOrifice);
 
-                Assert.AreEqual(orifice.Bottom_Level, extendedOrifice.Bottom_Level, "the attributes from the element do not match");
+                Assert.AreEqual(orifice.BottomLevel, extendedOrifice.BottomLevel, "the attributes from the element do not match");
             }
 
         }

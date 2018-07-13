@@ -373,8 +373,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var leveeBreach = SetLeveeBreachProperties(structure2D);
 
             SetLeveeBreachSettings(leveeBreach, structure2D, path, refDate);
-
-            Log.InfoFormat("Work in progess on loading the levee breaches from file. The breaches will be loaded with only their positions.");
             return leveeBreach;
         }
 

@@ -174,7 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 case SewerStructureMapping.StructureType.Outlet:
                     return new SewerCompartmentOutletGenerator();
                 case SewerStructureMapping.StructureType.Orifice:
-                    return new SewerConnectionOrificeGenerator();
+                    return new SewerOrificeGenerator();
                 default:
                     return new SewerConnectionGenerator();
             }
@@ -206,7 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (!sewerTypeAttribute.IsValidAttribute()) return basicGenerator;
 
             if (sewerTypeAttribute.IsGwswPipe()) return new SewerConnectionPipeGenerator();
-            if (sewerTypeAttribute.IsGwswOrifice()) return new SewerConnectionOrificeGenerator();
+            if (sewerTypeAttribute.IsGwswOrifice()) return new SewerOrificeGenerator();
             if (sewerTypeAttribute.IsGwswPump()) return new SewerPumpGenerator();
             if (sewerTypeAttribute.IsGwswWeir()) return new SewerWeirGenerator();
 

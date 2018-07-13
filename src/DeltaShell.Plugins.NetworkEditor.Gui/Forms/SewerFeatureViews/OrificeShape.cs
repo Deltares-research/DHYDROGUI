@@ -1,4 +1,5 @@
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
@@ -6,27 +7,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     [Entity]
     public class OrificeShape : ConnectionShape
     {
-        public SewerConnectionOrifice Orifice { get; set; }
+        public Orifice Orifice { get; set; }
 
         public override object Source
         {
             get { return Orifice; }
-            set { Orifice = value as SewerConnectionOrifice; }
+            set { Orifice = value as Orifice; }
         }
-
-        public override ISewerConnection SewerConnection
-        {
-            get
-            {
-                return Orifice;
-            }
-            set
-            {
-                var orifice = value as SewerConnectionOrifice;
-                if (orifice != null) Orifice = orifice;
-            }
-        }
-
+        
         public override double BottomLevel
         {
             get { return GetBottomLevelBasedOnCompartments(); }
@@ -35,7 +23,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         public override double TopLevel
         {
-            get { return ((SewerConnectionOrifice)SewerConnection)?.Bottom_Level ?? double.NaN; }
+            get { return Orifice?.BottomLevel ?? double.NaN; }
             set { }
         }
     }

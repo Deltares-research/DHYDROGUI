@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
@@ -28,10 +29,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             };
 
             var network = new HydroNetwork();
-            var element = new SewerConnectionOrificeGenerator().Generate(nodeGwswElement, network);
+            var connection = new SewerOrificeGenerator().Generate(nodeGwswElement, network) as SewerConnection;
 
-            //A sewer connection is created.
-            var orifice = element as SewerConnectionOrifice;
+            Assert.NotNull(connection);
+
+            var orifice = connection.BranchFeatures.FirstOrDefault(bf => bf.GetType() == typeof(Orifice));
             Assert.IsNotNull(orifice);
         }
 
@@ -57,16 +59,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var network = new HydroNetwork();
             //Now createInstance for the pump definition.
-            var generator = new SewerConnectionOrificeGenerator();
+            var generator = new SewerOrificeGenerator();
             var createdElement = generator.Generate(structureOrificeGwswElement, network);
             Assert.IsNotNull(createdElement);
 
-            var createdPump = createdElement as SewerConnectionOrifice;
+            var createdPump = createdElement as Orifice;
             Assert.IsNotNull(createdPump);
             Assert.AreEqual(orificeId, createdPump.Name);
-            Assert.AreEqual(bottomLevel, createdPump.Bottom_Level);
-            Assert.AreEqual(contractionCoef, createdPump.Contraction_Coefficent);
-            Assert.AreEqual(maxDischarge, createdPump.Max_Discharge);
+            Assert.AreEqual(bottomLevel, createdPump.BottomLevel);
+            Assert.AreEqual(contractionCoef, createdPump.ContractionCoefficent);
+            Assert.AreEqual(maxDischarge, createdPump.MaxDischarge);
 
         }
 
@@ -108,28 +110,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             #endregion
 
             //Generate the Orifice from the Gwsw STRUCTURE
-            var generator = new SewerConnectionOrificeGenerator();
+            var generator = new SewerOrificeGenerator();
             var structureElement = generator.Generate(structureGwswElement, network);
             Assert.IsNotNull(structureElement);
 
-            var structureOrifice = structureElement as SewerConnectionOrifice;
+            var structureOrifice = structureElement as Orifice;
             Assert.IsNotNull(structureOrifice);
             Assert.IsTrue(network.SewerConnections.Any(p => p.Name.Equals(structureId)));
-            Assert.AreEqual(bottomLevel, structureOrifice.Bottom_Level, "The given attribute has been overriden with the connection Gwsw element.");
+            Assert.AreEqual(bottomLevel, structureOrifice.BottomLevel, "The given attribute has been overriden with the connection Gwsw element.");
 
             //Generate the Orifice from the Gwsw SEWER CONNECTION
-            var connectionElement = generator.Generate(sewerConnectionGwswElement, network);
-            Assert.IsNotNull(connectionElement);
+            var connection = generator.Generate(sewerConnectionGwswElement, network) as SewerConnection;
+            Assert.IsNotNull(connection);
 
-            var connectionOrifice = connectionElement as SewerConnectionOrifice;
-            Assert.IsNotNull(connectionOrifice);
+            var orifice = connection.GetStructuresFromBranchFeatures<Orifice>().FirstOrDefault();
+            Assert.NotNull(orifice);
 
-            Assert.IsTrue(network.SewerConnections.Any(p => p.Name.Equals(structureId)));
+            Assert.IsTrue(network.SewerConnections.Any(sc => sc.Name.Equals(structureId)));
 
             var replacedStructure = network.SewerConnections.FirstOrDefault(s => s.Name.Equals(structureElement.Name));
-            Assert.AreEqual(structureElement, replacedStructure, "the attributes from the element do not match");
+            Assert.NotNull(replacedStructure);
+            Assert.AreEqual(structureElement, replacedStructure.GetStructuresFromBranchFeatures<Orifice>().FirstOrDefault(), "the attributes from the element do not match");
 
-            Assert.AreEqual(bottomLevel, connectionOrifice.Bottom_Level, "The given attribute has been overriden with the connection Gwsw element.");
+            Assert.AreEqual(bottomLevel, orifice.BottomLevel, "The given attribute has been overriden with the connection Gwsw element.");
         }
 
         [Test]
@@ -154,23 +157,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             //Create the pump, we know it works because of the previous tests.
             var network = new HydroNetwork();
-            var orifice = new SewerConnectionOrifice();
-            network.Branches.Add(orifice);
-            Assert.IsTrue(network.Branches.Contains(orifice));
+            var orifice = new Orifice();
+            var sewerConnection = new SewerConnection("");
+            sewerConnection.AddStructureToBranch(orifice);
+            network.Branches.Add(sewerConnection);
+            Assert.IsTrue(network.Branches.Contains(sewerConnection));
             //it should be found under sewerconnections as well
-            Assert.IsTrue(network.SewerConnections.Contains(orifice));
+            Assert.IsTrue(network.SewerConnections.Contains(sewerConnection));
 
             //Now createInstance for the pump definition.
-            var generator = new SewerConnectionOrificeGenerator();
-            var createdElement = generator.Generate(structureOrificeGwswElement, network);
+            var generator = new SewerOrificeGenerator();
+            var createdElement = generator.Generate(structureOrificeGwswElement, network) as Orifice;
             Assert.IsNotNull(createdElement);
 
-            var createdPump = createdElement as SewerConnectionOrifice;
-            Assert.IsNotNull(createdPump);
-            Assert.AreEqual(orificeId, createdPump.Name);
-            Assert.AreEqual(bottomLevel, createdPump.Bottom_Level);
-            Assert.AreEqual(contractionCoef, createdPump.Contraction_Coefficent);
-            Assert.AreEqual(maxDischarge, createdPump.Max_Discharge);
+            var createdOrifice = createdElement;
+            Assert.IsNotNull(createdOrifice);
+            Assert.AreEqual(orificeId, createdOrifice.Name);
+            Assert.AreEqual(bottomLevel, createdOrifice.BottomLevel);
+            Assert.AreEqual(contractionCoef, createdOrifice.ContractionCoefficent);
+            Assert.AreEqual(maxDischarge, createdOrifice.MaxDischarge);
         }
     }
 }

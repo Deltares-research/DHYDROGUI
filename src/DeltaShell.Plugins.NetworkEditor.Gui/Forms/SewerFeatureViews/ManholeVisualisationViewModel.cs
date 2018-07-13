@@ -414,19 +414,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         public static IDrawingShape CreateStructureShape(this ISewerConnection connection)
         {
-            var sewerConnectionOrifice = connection as SewerConnectionOrifice;
-            if (sewerConnectionOrifice != null)
+            var orifice = connection.GetStructuresFromBranchFeatures<Orifice>().FirstOrDefault();
+            if (orifice != null)
             {
-                return sewerConnectionOrifice.CreateOrificeShape();
+                return connection.CreateOrificeShape(orifice);
             }
 
-            var pump = connection.BranchFeatures.FirstOrDefault(feature => feature is Pump) as Pump;
+            var pump = connection.GetStructuresFromBranchFeatures<Pump>().FirstOrDefault();
             if (pump != null)
             {
                 return connection.CreatePumpShape(pump);
             }
 
-            var weir = connection.BranchFeatures.FirstOrDefault(feature => feature is Weir) as Weir;
+            var weir = connection.GetStructuresFromBranchFeatures<Weir>().FirstOrDefault();
             if (weir != null)
             {
                 return connection.CreateWeirShape(weir);
@@ -453,12 +453,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             };
         }
 
-        private static OrificeShape CreateOrificeShape(this SewerConnectionOrifice orifice)
+        private static OrificeShape CreateOrificeShape(this ISewerConnection connection, Orifice orifice)
         {
             return new OrificeShape
             {
                 Orifice = orifice,
-                SewerConnection = orifice,
+                SewerConnection = connection,
             };
         }
 

@@ -62,7 +62,7 @@ namespace DelftTools.Hydro
         
         public static bool IsOrifice(this ISewerConnection sewerConnection)
         {
-            return sewerConnection is SewerConnectionOrifice;
+            return sewerConnection.BranchFeatures.Any(bf => bf is Orifice);
         }
 
         public static bool IsPipe(this ISewerConnection sewerConnection)
