@@ -48,9 +48,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || data is IEnumerable<IHydroNode>
                    || data is IEnumerable<IChannel>
                    || data is IEnumerable<IManhole>
+                   || data is IEnumerable<OutletCompartment>
+                   || data is IEnumerable<Orifice>
                    || data is IEnumerable<IPipe>
                    || data is IEnumerable<ISewerConnection>
-                   || data is IEnumerable<OutletCompartment>
                    || (data is IEventedList<Pump2D> && parentObject is HydroArea)
                    || (data is IEventedList<Weir2D> && parentObject is HydroArea)
                    || (data is IEventedList<Gate2D> && parentObject is HydroArea)
@@ -107,8 +108,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     yield return network.Retentions;
                     yield return network.ObservationPoints;
                     yield return network.Weirs;
-                    yield return network.Outlets;
+                    yield return network.OutletCompartments;
                     yield return network.Gates;
+                    yield return network.Orifices;
                     yield return network.Culverts;
                     yield return network.Bridges;
                     yield return network.ExtraResistances;
@@ -118,6 +120,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     yield return network.Channels;
                     yield return network.Manholes;
                     yield return network.SewerConnections;
+
                     yield return network.Pipes;
                 }
 
@@ -187,11 +190,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
 
             var outletCompartments = data as IEnumerable<OutletCompartment>;
-            if (outletCompartments != null)
+            if (hydroNetwork != null && outletCompartments != null)
             {
                 return CreateNetworkVectorLayer<OutletCompartment>(outletCompartments, "Outlets", hydroNetwork);
             }
 
+            var orifices = data as IEnumerable<Orifice>;
+            if (orifices != null && hydroNetwork != null)
+            {
+                return CreateNetworkVectorLayer<Orifice>(orifices, "Orifices", hydroNetwork);
+            }
 
             var pipes = data as IEnumerable<IPipe>;
             if (hydroNetwork != null && pipes != null)
@@ -833,7 +841,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
 
             if (type == typeof(Weir) || type == typeof(Pump) || type == typeof(Culvert) || 
-                type == typeof(Bridge) || type == typeof(ExtraResistance) || type == typeof(OutletCompartment))
+                type == typeof(Bridge) || type == typeof(ExtraResistance) 
+                || type == typeof(OutletCompartment) || type == typeof(Orifice))
             {
                 return new List<IFeatureRenderer> { new StructureRenderer() };
             }

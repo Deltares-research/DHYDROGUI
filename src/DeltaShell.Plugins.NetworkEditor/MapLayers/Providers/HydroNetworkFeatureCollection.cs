@@ -153,6 +153,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
             {
                 return GetEnumerableList(Network.Manholes.SelectMany(m => m.OutletCompartments()), (INotifyCollectionChange) Network);
             }
+            if (FeatureType == typeof(Orifice))
+            {
+                return GetEnumerableList(Network.Orifices.OfType<Orifice>(), (INotifyCollectionChange) Network);
+            }
             if (FeatureType == typeof(SewerConnection))
             {
                 return GetEnumerableList(Network.SewerConnections.OfType<SewerConnection>().Where(sc => sc.IsSpecialConnection()), (INotifyCollectionChange)Network);

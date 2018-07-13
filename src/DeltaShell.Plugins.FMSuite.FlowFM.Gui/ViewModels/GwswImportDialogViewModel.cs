@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
         public GwswImportDialogViewModel()
         {
             GwswFeatureFiles = new ObservableCollection<GwswFeatureViewItem>();
-            selectedDirectoryPath = GetPreviousDirectoryPath();
+            SelectedDirectoryPath = GetPreviousDirectoryPath();
             FeatureDelimeter = ';';
         }
         
@@ -77,10 +77,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
             get { return selectedDirectoryPath; }
             set
             {
-                if (!String.IsNullOrEmpty(value) && Directory.Exists(value))
-                    selectedDirectoryPath = value;
-                    IsDirectorySelected = true;
-                    SaveLastDirectoryPath(selectedDirectoryPath);
+                if (string.IsNullOrEmpty(value) || !Directory.Exists(value)) return;
+                selectedDirectoryPath = value;
+                IsDirectorySelected = true;
+                SaveLastDirectoryPath(selectedDirectoryPath);
             }
         }
 

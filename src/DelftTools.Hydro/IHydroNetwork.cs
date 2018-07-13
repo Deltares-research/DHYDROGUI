@@ -14,7 +14,8 @@ namespace DelftTools.Hydro
         IEnumerable<IHydroNode> HydroNodes{ get; }
         IEnumerable<IPipe> Pipes { get; }
         IEnumerable<IManhole> Manholes { get; }
-        IEnumerable<OutletCompartment> Outlets { get; }
+        IEnumerable<OutletCompartment> OutletCompartments { get; }
+        IEnumerable<Orifice> Orifices { get; }
         IEnumerable<ISewerConnection> SewerConnections { get; }
         IEnumerable<IChannel> Channels { get; }
 

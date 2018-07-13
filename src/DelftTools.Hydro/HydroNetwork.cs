@@ -234,6 +234,7 @@ namespace DelftTools.Hydro
                 CrossSections = BranchFeatures.OfType<ICrossSection>();
                 Pumps = BranchFeatures.OfType<IPump>();
                 Weirs = BranchFeatures.OfType<IWeir>();
+                Orifices = BranchFeatures.OfType<Orifice>();
                 Gates = BranchFeatures.OfType<IGate>();
                 Gullies = BranchFeatures.OfType<IGully>();
                 Culverts = BranchFeatures.OfType<ICulvert>();
@@ -253,7 +254,7 @@ namespace DelftTools.Hydro
                 base.Nodes = value; 
                 
                 Manholes = Nodes.OfType<IManhole>();
-                Outlets = Manholes.SelectMany(m => m.OutletCompartments());
+                OutletCompartments = Manholes.SelectMany(m => m.OutletCompartments());
                 HydroNodes = Nodes.OfType<IHydroNode>();
             }
         }
@@ -268,8 +269,8 @@ namespace DelftTools.Hydro
         }
         
         public virtual IEnumerable<IManhole> Manholes { get; protected set; }
-        public virtual IEnumerable<OutletCompartment> Outlets { get; protected set; }
-
+        public virtual IEnumerable<OutletCompartment> OutletCompartments { get; protected set; }
+        public virtual IEnumerable<Orifice> Orifices { get; protected set; }
         public virtual IEnumerable<IStructure1D> Structures { get; protected set; }
         public virtual IEnumerable<ICompositeBranchStructure> CompositeBranchStructures { get; protected set; }
         public virtual IEnumerable<ICrossSection> CrossSections { get; protected set; }
