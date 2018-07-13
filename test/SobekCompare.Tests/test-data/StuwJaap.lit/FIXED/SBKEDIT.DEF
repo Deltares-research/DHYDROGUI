@@ -92,4 +92,4 @@ tble
 crds
 STRU id '-10' nm '' dd '-10' stru
 STDS id '-10' nm '' ty 10 tc 1 ll 0 rl 0 dl 10 si '-10' li 0.7 lo 1 ov 0 tv 0 rt 0 stds
-GLIN FLIN id '-1' nm '' ci '-1' ty 0 lv ll 0 4 q_ lq 0 0 flin glin
+GLIN FLIN id '-1' nm '' ci '-1' ty 1 lv ll 0 7.5 q_ lq 0 60 flin glin
