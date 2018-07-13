@@ -72,8 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private bool disposing;
         private bool updatingGroupName;
 
-        //private IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties;
-        private ModelDataForFeatures modelDataForFeatures;
+        private IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties;
         private IEventedList<SourceAndSink> sourcesAndSinks;
         private IEventedList<ISedimentFraction> sedimentFractions;
         private IEventedList<BoundaryConditionSet> boundaryConditionSets;
@@ -114,9 +113,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             TracerDefinitions = new EventedList<string>();
             SedimentFractions = new EventedList<ISedimentFraction>();
 
-            //allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-            modelDataForFeatures = new ModelDataForFeatures();
-
+            allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
+            
             SedimentOverallProperties = SedimentFractionHelper.GetSedimentationOverAllProperties();
             tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             
@@ -916,11 +914,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.FixedWeirScheme,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
-                    Area.FixedWeirs.ForEach(fw =>
-                    {
-                        modelDataForFeatures.UpdateDataColums(fw,prop.GetValueAsString());
-                    });
-                    
+                    allFixedWeirsAndCorrespondingProperties.ForEach(p => p.UpdateDataColumns(prop.GetValueAsString()));                    
                 }
                 if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.BedlevType,
                     StringComparison.InvariantCultureIgnoreCase))
@@ -1113,6 +1107,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             DisposeSnapApi();
             syncers.ForEach(s => s.Dispose());
             syncers.Clear();
+
+            allFixedWeirsAndCorrespondingProperties.ForEach(d => d.Dispose());
         }
 
         private void InitializeRunTimeGridOperationApi()
@@ -2322,25 +2318,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void HydroAreaCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var fixedWeir = e.Item as IModelDataColumnsFeature;
+            var fixedWeir = e.Item as FixedWeir;
             if (fixedWeir != null)
             {
                 switch (e.Action)
                 {
                     case NotifyCollectionChangeAction.Add:
-                        var selector = ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme)
-                            .GetValueAsString();
-                        var newFixedWeirModelData =  new ModelFeatureCoordinateData(fixedWeir, selector);
-                        modelDataForFeatures.Attach(newFixedWeirModelData);
+                        allFixedWeirsAndCorrespondingProperties.Add(CreateModelFeatureCoordinateDataFor(fixedWeir));
                         break;
                     case NotifyCollectionChangeAction.Remove:
-                        modelDataForFeatures.Detach(fixedWeir);
+                        var dataToRemove = allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir);
+                        if (dataToRemove == null) break;
+
+                        allFixedWeirsAndCorrespondingProperties.Remove(dataToRemove);
+                        dataToRemove.Dispose();
                         break;
+                    case NotifyCollectionChangeAction.Replace:
+                        var dataToUpdate = allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir);
+                        if (dataToUpdate == null)
+                        {
+                            allFixedWeirsAndCorrespondingProperties.Add(CreateModelFeatureCoordinateDataFor(fixedWeir));
+                            break;
+                        }
+
+                        dataToUpdate.Feature = fixedWeir;
+                        break;
+                    
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
-
 
             var groupableFeature = e.Item as IGroupableFeature;
             if (groupableFeature != null && e.Action != NotifyCollectionChangeAction.Remove && !Area.IsEditing)
@@ -2379,6 +2386,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             String.Format("Action {0} on feature collection not supported", e.Action));
                 }
             }
+        }
+
+        private ModelFeatureCoordinateData<FixedWeir> CreateModelFeatureCoordinateDataFor(FixedWeir fixedWeir)
+        {
+            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir> {Feature = fixedWeir};
+            var scheme = ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
+
+            modelFeatureCoordinateData.UpdateDataColumns(scheme);
+            return modelFeatureCoordinateData;
         }
 
         private void HydroAreaPropertyChanged(object sender, PropertyChangedEventArgs e)

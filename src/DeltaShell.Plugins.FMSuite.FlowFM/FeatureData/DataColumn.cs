@@ -4,10 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils;
 
-namespace DelftTools.Hydro.Structures
+namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
     public class DataColumn<T> : IDataColumn
     {
+        public DataColumn() : this("")
+        {
+        }
+
         public DataColumn(string name)
         {
             ValueList = new List<T>();

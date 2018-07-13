@@ -2,62 +2,33 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Geometries;
-   
 
-namespace DelftTools.Hydro.Structures
+namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
-    [Entity]
-    public class ModelFeatureCoordinateData : IDisposable, IModelFeatureCoordinateData
+    public class ModelFeatureCoordinateData<TFeature> : IDisposable where TFeature : IFeature
     {
-        private IModelDataColumnsFeature feature;
+        private TFeature feature;
         private IGeometry previousGeometry;
-        private object selector;
-        
-        public ModelFeatureCoordinateData(IModelDataColumnsFeature feature) 
+
+        public ModelFeatureCoordinateData()
         {
             DataColumns = new EventedList<IDataColumn>();
-            Feature = feature;
+            DataColumns.CollectionChanged += DataColumnsCollectionChanged;
         }
 
-        public ModelFeatureCoordinateData(IModelDataColumnsFeature feature, object selector)
-        {
-            DataColumns = new EventedList<IDataColumn>();
-            Selector = selector;
-            Feature = feature;
-        }
-
-        public object Selector
-        {
-            get { return selector; }
-            set
-            {
-                if (selector == null || !selector.Equals(value))
-                {
-                    selector = value;
-                    UpdateDataColumns();
-                }
-            }
-        }
-
-        public IModelDataColumnsFeature Feature
+        public TFeature Feature
         {
             get { return feature; }
             set
             {
                 if (feature != null)
                 {
-                    ((INotifyPropertyChanged) feature).PropertyChanged -= GeometryChanged;
-                    if (DataColumns != null) DataColumns.ForEach(dc => dc.ValueList.Clear());
-                    DataColumns = new EventedList<IDataColumn>(); ;
+                    ((INotifyPropertyChanged)feature).PropertyChanged -= GeometryChanged;
                 }
 
                 feature = value;
@@ -65,25 +36,35 @@ namespace DelftTools.Hydro.Structures
                 if (feature != null)
                 {
                     previousGeometry = feature.Geometry;
-                    ((INotifyPropertyChanged) feature).PropertyChanged += GeometryChanged;
-                    var featureWeCanGenerateColumnsFor = feature as IModelDataColumnsFeature;
-                    if (featureWeCanGenerateColumnsFor != null)
-                    {
-                        DataColumns = featureWeCanGenerateColumnsFor.GenerateDataColumns(this);
-                        DataColumns.ForEach(SyncDataColumnValueList);
-                        return;
-                    }
+                    DataColumns.ForEach(SyncDataColumnValueList);
+                    ((INotifyPropertyChanged)feature).PropertyChanged += GeometryChanged;
+                }
+                else
+                {
+                    DataColumns.ForEach(dc => dc.ValueList.Clear());
                 }
             }
         }
 
         public IEventedList<IDataColumn> DataColumns { get; private set; }
-        
+
         public void Dispose()
         {
-            Feature = null;
-            DataColumns.ForEach(dc => dc.ValueList.Clear());
-            DataColumns = null;
+            Feature = default(TFeature);
+        }
+
+        private void DataColumnsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangeAction.Add:
+                    SyncDataColumnValueList((IDataColumn)e.Item);
+                    break;
+                case NotifyCollectionChangeAction.Remove:
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         private void SyncDataColumnValueList(IDataColumn dataColumn)
@@ -160,17 +141,5 @@ namespace DelftTools.Hydro.Structures
 
             dataColumn.ValueList = list;
         }
-
-        private void UpdateDataColumns()
-        {
-            if (Feature != null)
-            {
-                Feature.UpdateDataColumns(this);
-                DataColumns.ForEach(SyncDataColumnValueList);
-            }
-        }
-
-        
-        
     }
 }

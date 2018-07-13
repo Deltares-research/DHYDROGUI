@@ -2,7 +2,7 @@
 using System.Collections;
 using DelftTools.Utils;
 
-namespace DelftTools.Hydro.Structures
+namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
     public interface IDataColumn : INameable
     {

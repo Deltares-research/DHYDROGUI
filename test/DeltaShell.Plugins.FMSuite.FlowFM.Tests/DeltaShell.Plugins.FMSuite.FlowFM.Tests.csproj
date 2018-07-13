@@ -228,6 +228,8 @@
     <Compile Include="Editors\FlowBoundaryConditionsListViewTest.cs" />
     <Compile Include="FeatureData\BoundaryConditionIntegrationTest.cs" />
     <Compile Include="FeatureData\BoundaryConditionQuantityTypeConverterTest.cs" />
+    <Compile Include="FeatureData\DataColumnsNameComparerTest.cs" />
+    <Compile Include="FeatureData\FixedWeirFmModelFeatureCoordinateDataSyncExtensionsTest.cs" />
     <Compile Include="FeatureData\FlowBoundaryConditionTest.cs" />
     <Compile Include="FeatureData\ModelFeatureCoordinateDataTest.cs" />
     <Compile Include="FeatureData\SourceAndSinkTest.cs" />

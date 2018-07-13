@@ -133,6 +133,8 @@
     <Compile Include="Api\UnstrucGridOperationApi.cs" />
     <Compile Include="Api\LocationInfoApiHelper.cs" />
     <Compile Include="Api\WriteNetGeomApi.cs" />
+    <Compile Include="FeatureData\DataColumn.cs" />
+    <Compile Include="FeatureData\DataColumnsNameComparer.cs" />
     <Compile Include="EmbankmentGenerator.cs" />
     <Compile Include="EmbankmentMerger.cs" />
     <Compile Include="CoverageDefinition\CoverageDepthLayersList.cs" />
@@ -142,7 +144,11 @@
     <Compile Include="FeatureData\FlowBoundaryCondition.cs" />
     <Compile Include="FeatureData\FlowBoundaryConditionFactory.cs" />
     <Compile Include="FeatureData\FlowBoundaryConditionHelper.cs" />
+    <Compile Include="FeatureData\IDataColumn.cs" />
+    <Compile Include="FeatureData\ModelFeatureCoordinateData.cs" />
     <Compile Include="FeatureData\SupportedVerticalProfileTypes.cs" />
+    <Compile Include="FeatureData\FixedWeirFmModelFeatureCoordinateDataSyncExtensions.cs" />
+    <Compile Include="FixedWeirSchemes.cs" />
     <Compile Include="FlowFMApplicationPlugin.cs" />
     <Compile Include="IO\BcmFile.cs" />
     <Compile Include="IO\BcmFileFlowBoundaryDataBuilder.cs" />
@@ -208,7 +214,6 @@
     <Compile Include="IO\WaterFlowFMModelHydroAreaExtensions.cs" />
     <Compile Include="Layers\FMOutputSnappedFeaturesGroupLayerData.cs" />
     <Compile Include="Layers\FMSnappedFeaturesGroupLayerData.cs" />
-    <Compile Include="ModelDataForFeatures.cs" />
     <Compile Include="ModelDefinition\HeatFluxModel.cs" />
     <Compile Include="FeatureData\SourceAndSink.cs" />
     <Compile Include="ModelDefinition\ISediment.cs" />
