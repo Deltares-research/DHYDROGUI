@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 using System.Windows.Input;
 using DelftTools.Controls.Wpf.Commands;
@@ -32,10 +30,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
         public GwswImportDialogViewModel()
         {
             GwswFeatureFiles = new ObservableCollection<GwswFeatureViewItem>();
-            selectedDirectoryPath = null;
+            selectedDirectoryPath = GetPreviousDirectoryPath();
             FeatureDelimeter = ';';
         }
-
+        
         /// <summary>
         /// Gets or sets the importer.
         /// </summary>
@@ -82,6 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
                 if (!String.IsNullOrEmpty(value) && Directory.Exists(value))
                     selectedDirectoryPath = value;
                     IsDirectorySelected = true;
+                    SaveLastDirectoryPath(selectedDirectoryPath);
             }
         }
 
@@ -300,6 +299,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
         private void TriggerSelectedFilesCheckbox()
         {
             AllFilesSelected = true; // trigger event
+        }
+
+        private static string GetPreviousDirectoryPath()
+        {
+            return Properties.Settings.Default.Last_GwswImport_FolderPath;
+        }
+
+        private static void SaveLastDirectoryPath(string folderPath)
+        {
+            if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath)) return;
+            Properties.Settings.Default.Last_GwswImport_FolderPath = folderPath;
+            Properties.Settings.Default.Save();
         }
     }
 }
