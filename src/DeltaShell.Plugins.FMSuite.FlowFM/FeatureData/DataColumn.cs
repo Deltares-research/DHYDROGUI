@@ -2,10 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Utils;
+using DelftTools.Utils.Aop;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
+    [Entity]
     public class DataColumn<T> : IDataColumn
     {
         public DataColumn() : this("")
@@ -19,6 +20,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             Name = name;
             IsActive = true;
         }
+
+        public string Name { get; set; }
 
         public bool IsActive { get; set; }
 
@@ -47,7 +50,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             get { return ValueList; }
             set { ValueList = (List<T>) value; }
         }
-
-        public string Name { get; set; }
     }
 }

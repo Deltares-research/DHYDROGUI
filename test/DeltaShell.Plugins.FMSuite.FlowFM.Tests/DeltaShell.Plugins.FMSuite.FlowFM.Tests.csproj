@@ -208,13 +208,18 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\FlexibleMeshModelDllTest.cs" />
     <Compile Include="Api\GridHelperTest.cs" />
     <Compile Include="Api\GridOperationApiTest.cs" />
     <Compile Include="Api\UnstrucGridOperationApiTests.cs" />
+    <Compile Include="Editors\ModelFeatureCoordinateDataEditor\BoundaryGeometryPreviewWindowsFormsHostMapTest.cs" />
+    <Compile Include="Editors\ModelFeatureCoordinateDataEditor\CoordinateDataRowTest.cs" />
     <Compile Include="Editors\EditTracersControlHelperTest.cs" />
+    <Compile Include="Editors\ModelFeatureCoordinateDataEditor\ModelFeatureCoordinateDataViewTest.cs" />
+    <Compile Include="Editors\ModelFeatureCoordinateDataEditor\ModelFeatureCoordinateDataViewViewModelTest.cs" />
     <Compile Include="Editors\SedimentFractionsEditorTest.cs" />
     <Compile Include="Editors\SedimentFractionsEditorTestHelper.cs" />
     <Compile Include="Editors\SedimentFractionsEditorViewModelTest.cs" />

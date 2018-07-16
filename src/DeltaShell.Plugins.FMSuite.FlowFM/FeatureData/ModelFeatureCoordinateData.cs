@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Geometries;
 
+
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
-    public class ModelFeatureCoordinateData<TFeature> : IDisposable where TFeature : IFeature
+    [Entity]
+    public class ModelFeatureCoordinateData<TFeature> : IModelFeatureCoordinateData where TFeature : IFeature
     {
         private TFeature feature;
         private IGeometry previousGeometry;
@@ -47,6 +50,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         }
 
         public IEventedList<IDataColumn> DataColumns { get; private set; }
+
+        IFeature IModelFeatureCoordinateData.Feature
+        {
+            get { return Feature;}
+            set { Feature = (TFeature) value; }
+        }
 
         public void Dispose()
         {

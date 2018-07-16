@@ -173,7 +173,15 @@
     <Compile Include="Editors\BoundaryConditionExtensions.cs" />
     <Compile Include="Editors\Buttons\EditCoverageLayersButton.cs" />
     <Compile Include="Editors\Buttons\EditDepthLayersButton.cs" />
+    <Compile Include="Editors\ModelFeatureCoordinateDataEditor\CoordinateDataRow.cs" />
+    <Compile Include="Editors\ModelFeatureCoordinateDataEditor\CoordinateDataRowGeometryPropertyDescriptor.cs" />
+    <Compile Include="Editors\ModelFeatureCoordinateDataEditor\GeometryPropertyDescriptorType.cs" />
+    <Compile Include="Editors\ModelFeatureCoordinateDataEditor\CoordinateDataRowPropertyDescriptor.cs" />
     <Compile Include="Editors\EditTracersControlHelper.cs" />
+    <Compile Include="Editors\ModelFeatureCoordinateDataEditor\ModelFeatureCoordinateDataView.xaml.cs">
+      <DependentUpon>ModelFeatureCoordinateDataView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\ModelFeatureCoordinateDataEditor\ModelFeatureCoordinateDataViewViewModel.cs" />
     <Compile Include="Editors\FlowBoundaryConditionDataView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -243,6 +251,7 @@
     <Compile Include="Editors\WaterFlowFMModelView.Designer.cs">
       <DependentUpon>WaterFlowFMModelView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editors\ModelFeatureCoordinateDataEditor\BoundaryGeometryPreviewWindowsFormsHostMap.cs" />
     <Compile Include="FlowFMGuiPlugin.cs" />
     <Compile Include="FlowFMMapViewDecorator.cs" />
     <Compile Include="Forms\BcmFileExportDialog.cs">
@@ -548,6 +557,10 @@
     <Content Include="Resources\arrow.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Editors\ModelFeatureCoordinateDataEditor\ModelFeatureCoordinateDataView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Editors\SedimentFractionsEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

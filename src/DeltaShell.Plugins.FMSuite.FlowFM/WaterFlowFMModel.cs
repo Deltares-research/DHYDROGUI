@@ -197,6 +197,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public HeatFluxModelType HeatFluxModelType { get; private set; }
 
+        public IList<ModelFeatureCoordinateData<FixedWeir>> FixedWeirsProperties
+        {
+            get { return allFixedWeirsAndCorrespondingProperties; }
+        }
+
         public bool UseDepthLayers
         {
             get { return ModelDefinition.Kmx != 0; }
