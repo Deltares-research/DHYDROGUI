@@ -360,6 +360,7 @@ cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.3.0.40092\tools\mklink-t
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.3.0.40092\build\net40\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.3.0.40092\build\net40\DeltaShell.Framework.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.TestProject.1.3.0.40092\build\net40\DeltaShell.TestProject.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.TestProject.1.3.0.40092\build\net40\DeltaShell.TestProject.targets'))" />
+    <Error Condition="!Exists('..\..\packages\RGFGRID.5.4.0.56795\build\net40\RGFGRID.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\RGFGRID.5.4.0.56795\build\net40\RGFGRID.targets'))" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets')" />
@@ -369,4 +370,5 @@ cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.3.0.40092\tools\mklink-t
   </Target>
   <Import Project="..\..\packages\DeltaShell.Framework.1.3.0.40092\build\net40\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.3.0.40092\build\net40\DeltaShell.Framework.targets')" />
   <Import Project="..\..\packages\DeltaShell.TestProject.1.3.0.40092\build\net40\DeltaShell.TestProject.targets" Condition="Exists('..\..\packages\DeltaShell.TestProject.1.3.0.40092\build\net40\DeltaShell.TestProject.targets')" />
+  <Import Project="..\..\packages\RGFGRID.5.4.0.56795\build\net40\RGFGRID.targets" Condition="Exists('..\..\packages\RGFGRID.5.4.0.56795\build\net40\RGFGRID.targets')" />
 </Project>
