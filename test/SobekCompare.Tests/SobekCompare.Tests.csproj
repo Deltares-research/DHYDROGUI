@@ -161,7 +161,6 @@
     <Compile Include="CompareStuwJaapResultTest.cs" />
     <Compile Include="Helpers\ModelRunnerAndResultComparer.cs" />
     <Compile Include="Helpers\SobekCompareTestHelper.cs" />
-    <Compile Include="SOBEKTestBench.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleModelCompareResultTest.cs" />
     <Compile Include="SobekTestBenchHelper.cs" />
