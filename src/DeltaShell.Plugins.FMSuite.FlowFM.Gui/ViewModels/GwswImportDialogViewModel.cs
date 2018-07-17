@@ -207,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
 
         private void LoadFeatureFiles()
         {
-            Importer.LoadFeatureFiles(this.SelectedDirectoryPath);
+            Importer.LoadFeatureFiles(SelectedDirectoryPath);
 
             GwswFeatureFiles = new ObservableCollection<GwswFeatureViewItem>();
             Importer.GwswDefaultFeatures.ForEach(

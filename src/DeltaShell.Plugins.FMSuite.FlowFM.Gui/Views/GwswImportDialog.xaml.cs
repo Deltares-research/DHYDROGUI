@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Views;
@@ -24,6 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                     DialogResult = result;
                     Close();
                 };
+            Loaded += OnLoaded;
         }
 
         public object Data
@@ -77,8 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         private char GetDelimeter(char delimeter)
         {
-            var selector = new DelimeterSelector();
-            selector.Data = delimeter;
+            var selector = new DelimeterSelector {Data = delimeter};
 
             var value = selector.ShowModal(this);
             if (value == DelftDialogResult.OK)
@@ -106,6 +104,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             var result = MessageBox.Show(message, title, button, icon);
             return result == System.Windows.Forms.DialogResult.OK ||
                    result == System.Windows.Forms.DialogResult.Yes;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
+        {
+            ViewModel.OnDirectorySelected.Execute(null);
         }
     }
 }
