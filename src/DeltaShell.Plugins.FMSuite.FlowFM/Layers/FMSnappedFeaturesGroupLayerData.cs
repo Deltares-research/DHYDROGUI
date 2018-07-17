@@ -45,16 +45,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.FixedWeirs,
                                                       AreaLayerStyles.FixedWeirStyle, "Fixed weirs (snapped)", UnstrucGridOperationApi.FixedWeir);
             yield return new SnappedLeveeBreachCollection(model, model.CoordinateSystem, (IList)model.Area.LeveeBreaches,
-                                          AreaLayerStyles.LeveeStyle, SNAPPED_LEVEE_BREACH_LAYER_NAME, UnstrucGridOperationApi.LeveeBreach);
-            yield return
-                new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.DryPoints,
-                    AreaLayerStyles.DryPointStyle, "Dry points (snapped)", UnstrucGridOperationApi.ObsPoint);
-            yield return
-                new SnappedFeatureCollection(model, model.CoordinateSystem, (IList) model.Area.DryAreas,
-                    AreaLayerStyles.DryAreaStyle, "Dry areas (snapped)", UnstrucGridOperationApi.ObsCrossSection);
-            yield return
-                new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.Enclosures,
-                    AreaLayerStyles.EnclosureStyle, "Enclosure (snapped)", UnstrucGridOperationApi.ObsCrossSection);
+                                                      AreaLayerStyles.LeveeStyle, SNAPPED_LEVEE_BREACH_LAYER_NAME, UnstrucGridOperationApi.LeveeBreach);
+            yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList) model.Area.RoofAreas,
+                                                      AreaLayerStyles.RoofAreaStyle, "Roof Areas (snapped)", UnstrucGridOperationApi.RoofArea);
+            yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.DryPoints,
+                                                      AreaLayerStyles.DryPointStyle, "Dry points (snapped)", UnstrucGridOperationApi.ObsPoint);
+            yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList) model.Area.DryAreas,
+                                                      AreaLayerStyles.DryAreaStyle, "Dry areas (snapped)", UnstrucGridOperationApi.ObsCrossSection);
+            yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.Enclosures,
+                                                      AreaLayerStyles.EnclosureStyle, "Enclosure (snapped)", UnstrucGridOperationApi.ObsCrossSection);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.Pumps,
                                                       AreaLayerStyles.PumpStyle, "Pumps (snapped)", UnstrucGridOperationApi.Pump);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.Weirs,

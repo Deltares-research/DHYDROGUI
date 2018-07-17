@@ -5,18 +5,18 @@ using System.Linq;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.Properties;
 using DelftTools.Utils;
+using DeltaShell.NGHS.IO.FileWriters.Structure;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
-using NetTopologySuite.Geometries;
 using SharpMap.Api;
 using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Layers
 {
-    public class SnappedLeveeBreachCollection: SnappedFeatureCollection
+    public class SnappedLeveeBreachCollection : SnappedFeatureCollection
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SnappedLeveeBreachCollection));
 
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
                 {
                     try
                     {
-                        snappedLeveeBreachGeometry = OperationApi.GetGridSnappedGeometry("dambreak", new[] { leveeBreach.Geometry, leveeBreach.BreachLocation});
+                        snappedLeveeBreachGeometry = OperationApi.GetGridSnappedGeometry(StructureRegion.StructureTypeName.LeveeBreach, new[] { leveeBreach.Geometry, leveeBreach.BreachLocation});
                         if (snappedLeveeBreachGeometry.Count() != 2)
                         {
                             Log.WarnFormat(Resources.SnappedFeatureCollection_GetSnappedFeature_No_snapped_geometry_was_generated_for_type__0__, feature.Geometry.GeometryType);
