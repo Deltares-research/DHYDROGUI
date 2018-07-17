@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Resources;
@@ -32,6 +33,7 @@ using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDataEditor;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
@@ -51,7 +53,6 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
 using SharpMap.CoordinateSystems;
 using SharpMap.Data.Providers;
-using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.Layers;
 using FeatureCollectionViewInfoHelper = DeltaShell.Plugins.FMSuite.Common.Gui.FeatureCollectionViewInfoHelper;
 using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
@@ -127,6 +128,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new ViewInfo<WaterFlowFMModel, WaterFlowFMFileStructureView>
             {
                 Description = "File tree"
+            };
+
+            // Todo : think about a weir that is shared between 2 FM models -> Show a dialog to choose model ??
+            yield return new ViewInfo<FixedWeir, IModelFeatureCoordinateData, ModelFeatureCoordinateDataView>
+            {
+                Description = "Data for feature",
+                GetViewName = (v,o) => $"{o?.Feature.ToString()} data",
+                GetViewData = o => FlowModels.SelectMany(fm => fm.FixedWeirsProperties).FirstOrDefault(p => Equals(p.Feature, o)),
+                AdditionalDataCheck = o => FlowModels.Any(m => m.FixedWeirsProperties.Any(d => ReferenceEquals(d.Feature, o)))
             };
 
             yield return new ViewInfo<FileBasedFeatureCoverage, CoverageView>

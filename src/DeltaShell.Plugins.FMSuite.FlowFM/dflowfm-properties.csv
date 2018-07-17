@@ -82,7 +82,7 @@ numerics,TransportMethod,,,,0|1,1,,,TRUE,,,,,,"Transport method (0: Herman's met
 numerics,Vertadvtypsal,advanced,,Vertical salinity advection:None|UpwexpL|Centralexpl|UpwimpL|CentraLimpL|CentraLimpL/UpwimpL-neg.|higher order expl,0|1|2|3|4|5|6,5,0,6,FALSE,Salinity,,,,,"Vertical advection type for salinity (0: none, 1: upwind explicit, 2: central explicit, 3: upwind implicit, 4: central implicit, 5: central implicit but upwind for neg. stratif., 6: higher order explicit, no Forester)"
 numerics,Icgsolver,advanced,,Solver type:sobekGS_OMP|sobekGS_OMPthreadsafe|sobekGS|sobekGS + Saadilud|parallel/Uniform Saad|parallel/Petsc|parallel/GS,1|2|3|4|5|6|7,4,1,7,FALSE,,,,,,"Solver type (1: sobekGS_OMP, 2: sobekGS_OMPthreadsafe, 3: sobekGS, 4: sobekGS + Saadilud, 5: parallel/global Saad, 6: parallel/Petsc, 7: parallel/GS)"
 numerics,Maxdegree,advanced,,Max degree in Gauss elimination,Integer,6,0,,FALSE,,,,,,Maximum degree in Gauss elimination
-numerics,FixedWeirScheme,numerics,Fixed weirs,Fixed weir scheme :None|Scheme1|Scheme2|Scheme3|Scheme4|Scheme5|Scheme6|Scheme8|Scheme9,0|1|2|3|4|5|6|8|9,0,0,9,FALSE,,,,,,"Fixed weir scheme (0: none, 1: compact stencil, 2: whole tile lifted, full subgrid weir + factor, 6: semi-subgrid scheme, 8: tabellenboek, 9: Villemonte)"
+numerics,FixedWeirScheme,numerics,Fixed weirs,Fixed weir scheme :None|Scheme6|Scheme8|Scheme9,0|6|8|9,6,0,9,FALSE,,,,,,"Fixed weir scheme (0: none, 6: semi-subgrid scheme, 8: tabellenboek, 9: Villemonte)"
 numerics,FixedWeirContraction,numerics,Fixed weirs,Fixed weir contraction,Double,1,0,,FALSE,,,,,,Fixed weir flow width contraction factor
 numerics,FixedWeirfrictscheme,numerics,Fixed weirs,Fixed weir friction scheme:hu|Subgrid Weir,0|1,1,0,1,FALSE,,,,,,"Fixed weir friction scheme (0: friction based on hu, 1: friction based on subgrid weir friction scheme)"
 numerics,Fixedweirtopwidth,numerics,Fixed weirs,Fixed weir top width,Double,3,,,FALSE,,,,,,Uniform width of the groyne part of fixed weirs
@@ -167,7 +167,7 @@ external forcing,ExtForceFileNew,,,,FileName,,,,TRUE,,,,,,"New format for extern
 trachytopes,TrtRou,,,Include trachytopes?:Yes (Y)|No (N),Y|N,N,,,TRUE,,,,,,"Include alluvial and vegetation roughness (trachytopes) (Y: yes, N: no)"
 trachytopes,TrtDef,,,,FileName,,,,TRUE,,,,,,File (*.ttd) containing trachytope definitions
 trachytopes,TrtL,,,,FileName,,,,TRUE,,,,,,File (*.arl) containing distribution of trachytope definitions
-trachytopes,TrtDt,,,,Double,60,,,TRUE,,,,,,Trachytope roughness update time interval (s)
+trachytopes,DtTrt,,,,Double,60,,,TRUE,,,,,,Trachytope roughness update time interval (s)
 ****,,,,,,,,,,,,,,,
 *,,,,,,,,,,,,,,,
 GUIOnly,StartTime,timeframe,,Start Time,DateTime,,,,FALSE,,,,,,Begin of simulation period

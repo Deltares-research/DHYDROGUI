@@ -15,6 +15,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
     [Entity]
     public class BoundaryConditionSet : NetTopologySuite.Extensions.Features.Generic.FeatureData<IEventedList<IBoundaryCondition>, Feature2D>, IFeature
     {
+        private IEventedList<IBoundaryCondition> boundaryConditions;
+
         protected override void UpdateName()
         {
             Name = Feature != null ? Feature.Name + " (Boundary conditions)" : "";
@@ -31,13 +33,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
         public IEventedList<IBoundaryCondition> BoundaryConditions
         {
-            get { return Data; }
-            set { Data = value; }
+            get { return boundaryConditions; }
+            set
+            {
+                boundaryConditions = value;
+                Data = value;
+            }
         }
 
         public BoundaryConditionSet()
         {
-            BoundaryConditions = new EventedList<IBoundaryCondition>();
+            boundaryConditions = new EventedList<IBoundaryCondition>();
         }
 
         public override Feature2D Feature
@@ -59,7 +65,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 }
             }
         }
-
 
         private string cachedFeatureName;
 

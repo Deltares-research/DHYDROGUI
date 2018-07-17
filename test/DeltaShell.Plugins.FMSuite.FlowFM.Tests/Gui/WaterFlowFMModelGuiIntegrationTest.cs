@@ -376,7 +376,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     gui.CommandHandler.OpenView(model, typeof (ProjectItemMapView));
 
                     var gridSnappedFeatureGroupLayer = ((ProjectItemMapView) gui.DocumentViews.ActiveView).MapView.Map.GetAllLayers(true)
-                        .First(l => l.Name == "Grid-snapped features");
+                        .First(l => l.Name == "Estimated Grid-snapped features");
 
                     gridSnappedFeatureGroupLayer.Visible = true;
 

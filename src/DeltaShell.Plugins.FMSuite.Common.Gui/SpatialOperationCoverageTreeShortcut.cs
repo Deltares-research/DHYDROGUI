@@ -35,7 +35,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
                 {
                     projectItemMapView.SetSpatialOperationLayer(layer, true);
                     SharpMapGisGuiPlugin.Instance.FocusSpatialOperationView();
-                    SharpMapGisGuiPlugin.Instance.EnableColorScaleLegend();
                 }
             }
         }

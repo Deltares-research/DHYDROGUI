@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -209,25 +210,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var originalFunction = sourceAndSink.Function;
                 if (originalFunction == null) return extForceFileItem;
 
-                var function = (IFunction)originalFunction.Clone(true);
-                
-                var useSalinityProperty = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
-                var salinityEnabled = useSalinityProperty != null
-                    ? (bool)useSalinityProperty.Value
-                    : true; // default to True
+                var function = (IFunction) originalFunction.Clone(true);
 
-                var useTemperatureProperty = modelDefinition.GetModelProperty(GuiProperties.UseTemperature);
-                var temperatureEnabled = useTemperatureProperty != null
-                    ? (bool)useTemperatureProperty.Value
-                    : true; // default to True
-
-                if (!salinityEnabled) function.RemoveComponentByName(SourceAndSink.SalinityVariableName);
-                if (!temperatureEnabled) function.RemoveComponentByName(SourceAndSink.TemperatureVariableName);
+                RemoveDisabledComponentsFromSourceAndSink(sourceAndSink, modelDefinition, function);
 
                 new TimFile().Write(dataFilePath, function, referenceTime);
             }
 
             return extForceFileItem;
+
+        }
+
+        private static void RemoveDisabledComponentsFromSourceAndSink(SourceAndSink sourceAndSink, WaterFlowFMModelDefinition modelDefinition,
+            IFunction function)
+        {
+            if (!useProperty(modelDefinition, KnownProperties.UseSalinity))
+                function.RemoveComponentByName(SourceAndSink.SalinityVariableName);
+
+            if (!useProperty(modelDefinition, GuiProperties.UseTemperature))
+                function.RemoveComponentByName(SourceAndSink.TemperatureVariableName);
+
+            if (!useProperty(modelDefinition, GuiProperties.UseMorSed))
+                sourceAndSink.SedimentFractionNames.ForEach(sfn => function.RemoveComponentByName(sfn));
+
+            if (!useProperty(modelDefinition, KnownProperties.SecondaryFlow))
+                function.RemoveComponentByName(SourceAndSink.SecondaryFlowVariableName);
+        }
+
+        private static bool useProperty(WaterFlowFMModelDefinition modelDefinition, string useProperty)
+        {
+            var enable = modelDefinition.GetModelProperty(useProperty);
+            return enable != null ? (bool)enable.Value : true; // default to True
         }
 
         public static IEnumerable<string[]> GetBoundaryDataFiles(FlowBoundaryCondition boundaryCondition,
@@ -568,24 +581,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 log.ErrorFormat(Resources.Read_SourceAndSink_values_failed__no_function_detected_for_SourceAndSink__0_, sourceAndSink.Name);
                 return;
             }
-            var readFunction = (IFunction)data.Clone(true);
+
+            var readFunction = (IFunction) data.Clone(true);
             new TimFile().Read(filePath, readFunction, modelReferenceDate);
 
-            var useSalinityProperty = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
-            var salinityEnabled = useSalinityProperty != null
-                ? (bool)useSalinityProperty.Value
-                : true; // default to True
+            var salinityEnabled = useProperty(modelDefinition,KnownProperties.UseSalinity);
+            var temperatureEnabled = useProperty(modelDefinition, GuiProperties.UseTemperature);
+            var sedimentFractionsEnabled = useProperty(modelDefinition, GuiProperties.UseMorSed);
+            var secondaryFlowEnabled = useProperty(modelDefinition, KnownProperties.SecondaryFlow);
 
-            var useTemperatureProperty = modelDefinition.GetModelProperty(GuiProperties.UseTemperature);
-            var temperatureEnabled = useTemperatureProperty != null
-                ? (bool)useTemperatureProperty.Value
-                : true; // default to True
-            
             var componentSettings = new Dictionary<string, bool>()
             {
                 {SourceAndSink.SalinityVariableName, salinityEnabled},
                 {SourceAndSink.TemperatureVariableName, temperatureEnabled},
+                {SourceAndSink.SecondaryFlowVariableName,secondaryFlowEnabled }
             };
+            sourceAndSink.SedimentFractionNames.ForEach(sfn => componentSettings.Add(sfn, sedimentFractionsEnabled));
+            sourceAndSink.TracerNames.ForEach(tn => componentSettings.Add(tn, true));
 
             if (SourceAndSinkImporterHelper.AdaptComponentValuesFromFileToSourceAndSinkFunction(readFunction, componentSettings))
             {

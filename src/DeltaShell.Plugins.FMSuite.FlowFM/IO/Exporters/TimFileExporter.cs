@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Functions;
 using DelftTools.Shell.Core;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -57,6 +58,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                     
                     if (!model.UseSalinity) data.RemoveComponentByName(SourceAndSink.SalinityVariableName);
                     if (!model.UseTemperature) data.RemoveComponentByName(SourceAndSink.TemperatureVariableName);
+                    if (!model.UseMorSed) sourceAndSink.SedimentFractionNames.ForEach(sfn => data.RemoveComponentByName(sfn));
+                    if (!model.UseSecondaryFlow) data.RemoveComponentByName(SourceAndSink.SecondaryFlowVariableName);
                 }
             }
 

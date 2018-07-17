@@ -480,7 +480,7 @@ namespace Sobek.IntegrationTests
             projectRepository.Close();
         }
 
-        [Test]
+        [Test, Category(TestCategory.WindowsForms)]
         public void SaveModelWithTimeSerieAsBoundaryConditionWithView()
         {
             var path = TestHelper.GetCurrentMethodName() + ".dsproj";

@@ -10,6 +10,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     public interface IWaterFlowFMModel : ITimeDependentModel
     {
         UnstructuredGrid Grid { get; set; }
+        WaterFlowFMModelDefinition ModelDefinition { get; }
+
         IHydroNetwork Network { get; set; }
         IDiscretization NetworkDiscretization { get; set; }
         bool DisableFlowNodeRenumbering { get; set; }

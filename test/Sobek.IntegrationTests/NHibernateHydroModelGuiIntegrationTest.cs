@@ -654,6 +654,9 @@ namespace Sobek.IntegrationTests
 
                 var path = TestHelper.GetTestFilePath("LazyLoadPerformance\\ap_perf.dsproj");
 
+                // Note: is this test failing? perhaps the project is now going through migration?
+                //       consider updating the test-data such that the project no longer migrates
+
                 // 21+5sec on my pc (was: 19+152sec)
                 Action onMainWindowShown = () => TestHelper.AssertIsFasterThan(125000, () =>
                     {

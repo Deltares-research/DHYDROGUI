@@ -163,7 +163,7 @@ ExtForceFileNew   =
 TrtRou            = N
 TrtDef            =
 TrtL              =
-TrtDt             = 60
+DtTrt             = 60
 
 [output]
 Wrishp_crs        = 1
