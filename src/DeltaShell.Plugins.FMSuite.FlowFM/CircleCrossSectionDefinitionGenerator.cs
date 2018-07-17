@@ -1,5 +1,6 @@
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections.StandardShapes;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using GeoAPI.Extensions.Networks;

@@ -301,6 +301,7 @@
     <Compile Include="Structures\LeveeBreachFormula\UserDefinedBreach.cs" />
     <Compile Include="Structures\LeveeBreachFormula\VerheijVdKnaap2002Breach.cs" />
     <Compile Include="Structures\SewerFactory.cs" />
+    <Compile Include="Structures\SewerProfileMapping.cs" />
     <Compile Include="Structures\Weir.cs" />
     <Compile Include="Structures\Weir2D.cs" />
     <Compile Include="Structures\WeirFormula\FreeFormWeirFormula.cs" />

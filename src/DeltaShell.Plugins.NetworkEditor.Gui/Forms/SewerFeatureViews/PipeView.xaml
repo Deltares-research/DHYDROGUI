@@ -19,6 +19,11 @@
                     <x:Type TypeName="hydro:SewerConnectionWaterType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
+            <ObjectDataProvider x:Key="RoughnessTypes" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="hydro:RoughnessType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
             <Style TargetType="{x:Type TextBlock}">
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="Margin" Value="0,3,3,3"/>
@@ -91,19 +96,19 @@
 
                     <!-- Row 5 -->
                     <Label Grid.Column="0" Grid.Row="5" Content="Material"/>
-                    <TextBlock Grid.Column="1" Grid.Row="5" Text="Dummy"/>
+                    <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding Pipe.Material}"/>
 
                     <!-- Row 6 -->
                     <Label Grid.Column="0" Grid.Row="6" Content="Roughness"/>
-                    <TextBlock Grid.Column="1" Grid.Row="6" Text="Dummy"/>
+                    <TextBlock Grid.Column="1" Grid.Row="6" Text="{Binding Pipe.PipeRoughness}"/>
 
                     <!-- Row 7 -->
-                    <Label Grid.Column="0" Grid.Row="7" Content="Rougness type"/>
-                    <ComboBox Grid.Column="1" Grid.Row="7" />
+                    <Label Grid.Column="0" Grid.Row="7" Content="Roughness type"/>
+                    <ComboBox Grid.Column="1" Grid.Row="7" SelectedItem="{Binding Pipe.PipeRoughnessType}" ItemsSource="{Binding Source={StaticResource RoughnessTypes}}" IsEnabled="False"/>
 
                     <!-- Row 8 -->
-                    <Label Grid.Column="0" Grid.Row="8" Content="Flow direction"/>
-                    <ComboBox Grid.Column="1" Grid.Row="8"/>
+                    <!--<Label Grid.Column="0" Grid.Row="8" Content="Flow direction"/>
+                    <ComboBox Grid.Column="1" Grid.Row="8"/>-->
                 </Grid>
             </Expander>
 

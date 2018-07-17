@@ -203,6 +203,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
             TryConnecTSewerConnectionToCompartments(connection, manhole);
 
+            foreach (var pointFeature in connection.BranchFeatures.OfType<IPointFeature>())
+            {
+                pointFeature.ParentPointFeature = manhole;
+            }
+
             network.Branches.Add(connection);
         }
 

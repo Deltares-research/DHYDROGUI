@@ -109,7 +109,7 @@
                     <ContentControl Grid.Column="2" Content="{Binding SelectedItem}" x:Name="ContentControl">
                         <ContentControl.Resources>
                             <DataTemplate DataType="{x:Type hydro:Compartment}">
-                                <local:CompartmentView Compartment="{Binding}"/>
+                                <local:CompartmentView Compartment="{Binding Content, ElementName=ContentControl}"/>
                             </DataTemplate>
                             <DataTemplate DataType="{x:Type structures:Weir}">
                                 <Rectangle Fill="LimeGreen" Width="32" Height="32"/>

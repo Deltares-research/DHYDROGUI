@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -20,6 +21,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             where TShape : CrossSectionStandardShapeBase
         {
             var csIdAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileId);
+            var materialAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileMaterial);
+            var material = materialAttribute.GetValueFromDescription<SewerProfileMapping.SewerProfileMaterial>();
             var csDefinitionName = csIdAttribute.GetValidStringValue();
 
             var csDefinition = new CrossSectionDefinitionStandard(csShape)
@@ -30,7 +33,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (network == null) return;
             network.SharedCrossSectionDefinitions.RemoveAllWhere(csd => csd.Name == csDefinitionName);
             network.SharedCrossSectionDefinitions.Add(csDefinition);
-            network.Pipes.Where(p => p.SewerProfileDefinition.Name == csDefinitionName).ForEach(p => p.SewerProfileDefinition = csDefinition);
+            var pipes = network.Pipes.Where(p => p.SewerProfileDefinition.Name == csDefinitionName);
+            foreach (var p in pipes)
+            {
+                p.SewerProfileDefinition = csDefinition;
+                ((Pipe) p).Material = material;
+            }
         }
 
         protected void MessageForMissingValues(GwswElement gwswElement, string missingValuesText)

@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM
+namespace DelftTools.Hydro.Structures
 {
     public static class SewerProfileMapping
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Properties;
+using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Networks;
@@ -9,6 +10,7 @@ using log4net;
 namespace DelftTools.Hydro.Structures
 {
     [Serializable]
+    [Entity]
     public class Pipe : SewerConnection, IPipe
     {
         private static ILog Log = LogManager.GetLogger(typeof(Pipe));
@@ -16,6 +18,12 @@ namespace DelftTools.Hydro.Structures
         public string PipeId { get; set; }
 
         public CrossSectionDefinitionStandard SewerProfileDefinition { get; set; } 
+
+        public SewerProfileMapping.SewerProfileMaterial Material { get; set; }
+
+        public double PipeRoughness { get; set; } = 0.003;
+
+        public RoughnessType PipeRoughnessType { get; set; } = RoughnessType.WhiteColebrook;
 
         public override IEventedList<IBranchFeature> BranchFeatures
         {
