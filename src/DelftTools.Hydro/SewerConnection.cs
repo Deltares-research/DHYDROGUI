@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
@@ -18,6 +17,8 @@ namespace DelftTools.Hydro
         private static readonly ILog Log = LogManager.GetLogger(typeof(SewerConnection));
 
         protected IEventedList<IBranchFeature> branchFeatures;
+        private Compartment sourceCompartment;
+        private Compartment targetCompartment;
 
         public SewerConnection() : this(null, null)
         {
@@ -55,11 +56,28 @@ namespace DelftTools.Hydro
         
         public SewerConnectionWaterType WaterType { get; set; }
 
+        // This property is used in the NetworkLayerStyleFactory, do not remove :)
         public SewerConnectionSpecialConnectionType SpecialConnectionType { get { return GetConnectionType(); } }
 
-        public Compartment SourceCompartment { get; set; }
+        public Compartment SourceCompartment
+        {
+            get { return sourceCompartment; }
+            set
+            {
+                sourceCompartment = value;
+                UpdateSource(sourceCompartment);
+            }
+        }
 
-        public Compartment TargetCompartment { get; set; }
+        public Compartment TargetCompartment
+        {
+            get { return targetCompartment; }
+            set
+            {
+                targetCompartment = value;
+                UpdateTarget(targetCompartment);
+            }
+        }
 
         public override bool IsLengthCustom
         {
@@ -86,6 +104,26 @@ namespace DelftTools.Hydro
                 {
                     Log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, this.Name);
                 }
+            }
+        }
+
+        private void UpdateTarget(Compartment compartment)
+        {
+            var parent = compartment?.ParentManhole;
+            if (this.IsInternalConnection()) return;
+            if ((Manhole) Target != parent)
+            {
+                Target = parent;
+            }
+        }
+
+        private void UpdateSource(Compartment compartment)
+        {
+            var parent = compartment?.ParentManhole;
+            if (this.IsInternalConnection()) return;
+            if ((Manhole) Source != parent)
+            {
+                Source = parent;
             }
         }
 

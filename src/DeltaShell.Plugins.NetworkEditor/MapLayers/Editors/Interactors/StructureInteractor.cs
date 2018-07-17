@@ -2,6 +2,7 @@
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using GeoAPI.Extensions.Feature;
@@ -68,13 +69,18 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             var halfHeight = (range.Y - org.Y) / 2;
 
             var pointFeature = (IPointFeature) structure;
-            var numberOfFeatures = pointFeature.ParentPointFeature.GetPointFeatures().Count();
-            int upwardTranslationFactor;
-            int downwardTranslationFactor;
+            var upwardTranslationFactor = -1;
+            var downwardTranslationFactor = 1;
+            
+            if (pointFeature.ParentPointFeature != null)
+            {
+                var numberOfFeatures = pointFeature.ParentPointFeature?.GetPointFeatures().Count() ?? 1;
 
-            PointFeatureRenderingHelper.DetermineTranslationFactorForStructures(pointFeature.ParentPointFeature.NetworkFeatureType, numberOfFeatures, out upwardTranslationFactor, out downwardTranslationFactor);
+                var networkFeatureType = pointFeature.ParentPointFeature.NetworkFeatureType;
+                PointFeatureRenderingHelper.DetermineTranslationFactorForStructures(networkFeatureType, numberOfFeatures, out upwardTranslationFactor, out downwardTranslationFactor);
+            }
+
             var verticalTranslationFactor = (upwardTranslationFactor + downwardTranslationFactor) / 2.0;
-
             return new Coordinate(
                 anchor.X - (halfWidth * (structureCount - 1)) + (2 * halfWidth * index),
                 anchor.Y + verticalTranslationFactor * halfHeight);
