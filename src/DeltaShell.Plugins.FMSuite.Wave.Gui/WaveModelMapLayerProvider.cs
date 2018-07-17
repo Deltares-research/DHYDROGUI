@@ -29,6 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         public const string BoundaryConditionLayerName = "Boundary Conditions";
         public const string ObservationPointLayerName = "Observation Points";
         public const string ObservationCrossSectionLayerName = "Observation Cross-Sections";
+        public const string GridSnappedFeaturesLayerName = "Estimated Grid-snapped features";
 
         private static readonly string ModelName = typeof (WaveModel).Name;
 
@@ -192,7 +193,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             var snappedGroupLayerData = data as WaveSnappedFeaturesGroupLayerData;
             if (snappedGroupLayerData != null)
             {
-                var groupLayer = new GroupLayer("Grid-snapped features");
+                var groupLayer = new GroupLayer(GridSnappedFeaturesLayerName);
                 foreach (var snappedFeatures in snappedGroupLayerData.ChildData)
                 {
                     var vectorLayer = new VectorLayer("Boundaries")
