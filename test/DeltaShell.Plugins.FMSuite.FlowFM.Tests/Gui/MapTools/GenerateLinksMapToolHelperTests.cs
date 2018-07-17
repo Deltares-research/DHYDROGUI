@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
-using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
@@ -18,80 +14,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
     [TestFixture]
     public class GenerateLinksMapToolHelperTests
     {
+
         [Test]
-        public void GetSelectedPointsTest_OutOfSelectionArea_NoPoints()
+        public void Get_1DPointsMask_DWA()
         {
             var discretisation = GetTestDiscretization();
-            var coordinates = new List<Coordinate>();
-            coordinates.Add(new Coordinate(-10,10));
-            coordinates.Add(new Coordinate(-100, 10));
-            coordinates.Add(new Coordinate(-100, 100));
-            coordinates.Add(new Coordinate(-10, 100));
-            coordinates.Add(new Coordinate(-10, 10));
-            var selectionArea = new Polygon(new LinearRing(coordinates.ToArray()));
-            var indexesAndPoints = GenerateLinksMapToolHelper.GetSelectedPoints(discretisation,selectionArea,SewerConnectionWaterType.DryWater);
+            var filter1DPoints = GenerateLinksMapToolHelper.GetMesh1DFilter(discretisation, GridApiDataSet.LinkType.InhabitantsSewer);
 
-            Assert.AreEqual(0, indexesAndPoints.Count);
+            Assert.AreEqual(2, filter1DPoints.Count(p => p));
+
+            Assert.IsTrue(filter1DPoints[0]);
+            Assert.IsTrue(filter1DPoints[1]);
         }
 
         [Test]
-        public void GetSelectedPointsTest_DWA_DWAPoints()
+        public void Get_1DPointsMask_HWA()
         {
             var discretisation = GetTestDiscretization();
-            var coordinates = new List<Coordinate>();
-            coordinates.Add(new Coordinate(-10, -10));
-            coordinates.Add(new Coordinate(110, -10));
-            coordinates.Add(new Coordinate(110, 110));
-            coordinates.Add(new Coordinate(-10, 110));
-            coordinates.Add(new Coordinate(-10, -10));
-            var selectionArea = new Polygon(new LinearRing(coordinates.ToArray()));
-            var indexesAndPoints = GenerateLinksMapToolHelper.GetSelectedPoints(discretisation, selectionArea, SewerConnectionWaterType.DryWater);
+            var filter1DPoints = GenerateLinksMapToolHelper.GetMesh1DFilter(discretisation, GridApiDataSet.LinkType.RoofSewer);
 
-            Assert.AreEqual(2, indexesAndPoints.Count);
+            Assert.AreEqual(2, filter1DPoints.Count(p => p));
 
-            var index1 = indexesAndPoints[0].Item1;
-            var point1 = indexesAndPoints[0].Item2;
-
-            var index2 = indexesAndPoints[1].Item1;
-            var point2 = indexesAndPoints[1].Item2;
-
-            Assert.AreEqual(0, index1);
-            Assert.AreEqual(0, point1.Coordinate.X);
-            Assert.AreEqual(0, point1.Coordinate.Y);
-
-            Assert.AreEqual(1, index2);
-            Assert.AreEqual(100, point2.Coordinate.X);
-            Assert.AreEqual(0, point2.Coordinate.Y);
-        }
-
-        [Test]
-        public void GetSelectedPointsTest_HWA_HWAPoints()
-        {
-            var discretisation = GetTestDiscretization();
-            var coordinates = new List<Coordinate>();
-            coordinates.Add(new Coordinate(-10, -10));
-            coordinates.Add(new Coordinate(110, -10));
-            coordinates.Add(new Coordinate(110, 110));
-            coordinates.Add(new Coordinate(-10, 110));
-            coordinates.Add(new Coordinate(-10, -10));
-            var selectionArea = new Polygon(new LinearRing(coordinates.ToArray()));
-            var indexesAndPoints = GenerateLinksMapToolHelper.GetSelectedPoints(discretisation, selectionArea, SewerConnectionWaterType.StormWater);
-
-            Assert.AreEqual(2, indexesAndPoints.Count);
-
-            var index1 = indexesAndPoints[0].Item1;
-            var point1 = indexesAndPoints[0].Item2;
-
-            var index2 = indexesAndPoints[1].Item1;
-            var point2 = indexesAndPoints[1].Item2;
-
-            Assert.AreEqual(2, index1);
-            Assert.AreEqual(0, point1.Coordinate.X);
-            Assert.AreEqual(10, point1.Coordinate.Y);
-
-            Assert.AreEqual(3, index2);
-            Assert.AreEqual(100, point2.Coordinate.X);
-            Assert.AreEqual(10, point2.Coordinate.Y);
+            Assert.IsTrue(filter1DPoints[2]);
+            Assert.IsTrue(filter1DPoints[3]);
         }
 
         private static Discretization GetTestDiscretization()

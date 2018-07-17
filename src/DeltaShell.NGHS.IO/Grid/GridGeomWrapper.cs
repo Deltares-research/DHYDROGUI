@@ -15,12 +15,20 @@ namespace DeltaShell.NGHS.IO.Grid
         public static extern int ggeo_convert_dll([In, Out] ref GridWrapper.meshgeom meshgeom, [In] ref GridWrapper.meshgeomdim meshgeomdim, ref int startIndex);
 
         /// <summary>
-        /// Makes the 1d/2d links (results are stored in memory)
+        /// Makes the 1d / 2d links (results are stored in memory)
         /// </summary>
         /// <returns></returns>
         [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2Dinternalnetlinks", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_make1D2Dinternalnetlinks_dll( ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
-        
+        public static extern int ggeo_make1D2Dinternalnetlinks_dll( ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe, ref IntPtr c_mesh1DIndexesMask);
+
+        /// <summary>
+        /// Makes the 2d / 1d links (results are stored in memory)
+        /// </summary>
+        /// <returns></returns>
+        [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make2D1Dlinks_dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ggeo_make2D1Dlinks_dll(ref int cNin, ref IntPtr cXpl, ref IntPtr cYpl, ref IntPtr cZpl,ref int cJsferic, ref int cJasfer3D, ref int cJglobe, ref IntPtr cMesh1DIndexesMask,
+            ref IntPtr c_2Dxlocations, ref IntPtr c_2Dylocations, ref IntPtr c_2Dzlocations);
+
         /// <summary>
         /// Use 1d array to fill kn matrix
         /// </summary>
@@ -83,12 +91,21 @@ namespace DeltaShell.NGHS.IO.Grid
             return ierr;
         }
 
-        public int Make1d2dInternalnetlinks(ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl)
+        public int Make1D2DInternalNetlinks(ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref IntPtr c_mesh1DIndexesMask)
         {
             int c_jsferic = 0;
             int c_jasfer3D = 0;
             int c_jglobe = 0;
-            int ierr = ggeo_make1D2Dinternalnetlinks_dll(ref c_nin, ref c_xpl, ref c_ypl, ref c_zpl, ref c_jsferic, ref c_jasfer3D, ref c_jglobe);
+            int ierr = ggeo_make1D2Dinternalnetlinks_dll(ref c_nin, ref c_xpl, ref c_ypl, ref c_zpl, ref c_jsferic, ref c_jasfer3D, ref c_jglobe, ref c_mesh1DIndexesMask);
+            return ierr;
+        }
+
+        public int Make2D1DInternalNetlinks(ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref IntPtr c_mesh1DIndexesMask, ref IntPtr c_2dxlocations, ref IntPtr c_2dylocations, ref IntPtr c_2dzlocations)
+        {
+            int c_jsferic = 0;
+            int c_jasfer3D = 0;
+            int c_jglobe = 0;
+            int ierr = ggeo_make2D1Dlinks_dll(ref c_nin, ref c_xpl, ref c_ypl, ref c_zpl, ref c_jsferic, ref c_jasfer3D, ref c_jglobe, ref c_mesh1DIndexesMask, ref c_2dxlocations, ref c_2dylocations,ref c_2dzlocations); 
             return ierr;
         }
 

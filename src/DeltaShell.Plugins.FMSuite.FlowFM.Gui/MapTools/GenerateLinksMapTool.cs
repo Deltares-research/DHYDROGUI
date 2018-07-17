@@ -184,10 +184,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
             try
             {
-                if (GenerateLinksMapToolHelper.Get1D2DLinks(fmModel, selectedArea, startIndex, ref linksFrom, ref linksTo, ref linksCount, LinkType)) return;
+                if (!GenerateLinksMapToolHelper.Get1D2DLinks(fmModel, selectedArea, startIndex, ref linksFrom, ref linksTo, ref linksCount, LinkType)) return;
 
-                fmModel.Links.Clear();
-                fmModel.Links.AddRange(Creates1d2dLinks(linksCount, linksFrom, linksTo, fmModel.Grid, fmModel.NetworkDiscretization));
+                var created1D2DLinks = Creates1d2dLinks(linksCount, linksFrom, linksTo, fmModel.Grid, fmModel.NetworkDiscretization);
+                created1D2DLinks = GetNew1D2DLinks(created1D2DLinks, fmModel.Links);
+                fmModel.Links.AddRange(created1D2DLinks);
             }
             catch (Exception e)
             {
@@ -196,6 +197,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             }
         }
 
+        private IList<WaterFlowFM1D2DLink> GetNew1D2DLinks(IList<WaterFlowFM1D2DLink> created1D2DLinks, IEventedList<WaterFlowFM1D2DLink> existingLinks)
+        {
+            var result = new List<WaterFlowFM1D2DLink>();
+            foreach (var newLink in created1D2DLinks)
+            {
+                if (!existingLinks.Contains(newLink))
+                {
+                    result.Add(newLink);
+                }
+            }
+            return result;
+        }
+        
         private IList<WaterFlowFM1D2DLink> Creates1d2dLinks(int linksCount, List<int> linksToIndex, List<int> linksFromIndex, UnstructuredGrid grid, IDiscretization networkDiscretization)
         {
             var lstNewLinks = new List<WaterFlowFM1D2DLink>();

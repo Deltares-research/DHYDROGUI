@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var linksTo = new List<int>();
             var startIndex = 0;
             var linksCount = 0;
-            var ierr = geomWrapper.Get1d2dLinksFromGridAndNetwork(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
+            var ierr = geomWrapper.Get1D2DLinksFrom1DTo2D(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
             Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, ierr);
             Assert.AreNotEqual(0, linksCount);
             Assert.IsNotEmpty(linksFrom);
@@ -169,8 +169,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var linksCount = 0;
             try
             {
-                geomWrapper.Get1d2dLinksFromGridAndNetwork(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
-                geomWrapper.Get1d2dLinksFromGridAndNetwork(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
+                geomWrapper.Get1D2DLinksFrom1DTo2D(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
+                geomWrapper.Get1D2DLinksFrom1DTo2D(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
             }
             catch (Exception e)
             {
@@ -311,12 +311,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 IntPtr intPtrXValuesSelectedArea;
                 IntPtr intPtrYValuesSelectedArea;
                 IntPtr intPtrZValuesSelectedArea;
+                IntPtr intPtrfilterMesh1DPoints;
 
                 //1. make area
-                int nCoordinates = areaXValues.Length;
+                var filterMesh1DPoints = Enumerable.Repeat(1, nmeshpoints).ToArray();
+                int nCoordinates = areaXValues.Count();
                 intPtrXValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
                 intPtrYValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
                 intPtrZValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
+                intPtrfilterMesh1DPoints = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nmeshpoints);
+
                 var selectedAreaXCoords = areaXValues;
                 var selectedAreaYCoords = areaYValues;
                 var selectedAreaZCoords = Enumerable.Repeat(0.0,nCoordinates).ToArray();
@@ -324,10 +328,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 Marshal.Copy(selectedAreaXCoords, 0, intPtrXValuesSelectedArea, nCoordinates);
                 Marshal.Copy(selectedAreaYCoords, 0, intPtrYValuesSelectedArea, nCoordinates);
                 Marshal.Copy(selectedAreaZCoords, 0, intPtrZValuesSelectedArea, nCoordinates);
+                Marshal.Copy(filterMesh1DPoints, 0, intPtrfilterMesh1DPoints, nmeshpoints);
+
 
                 //2. generate links
-                ierr = gridGeomWrapper.Make1d2dInternalnetlinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
-                    ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea);
+                ierr = gridGeomWrapper.Make1D2DInternalNetlinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
+                    ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref intPtrfilterMesh1DPoints);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 //3. get the number of links
@@ -359,6 +365,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 Marshal.FreeCoTaskMem(intPtrXValuesSelectedArea);
                 Marshal.FreeCoTaskMem(intPtrYValuesSelectedArea);
                 Marshal.FreeCoTaskMem(intPtrZValuesSelectedArea);
+                Marshal.FreeCoTaskMem(intPtrfilterMesh1DPoints);
 
                 gridGeomWrapper.DeallocateMemory();
 
