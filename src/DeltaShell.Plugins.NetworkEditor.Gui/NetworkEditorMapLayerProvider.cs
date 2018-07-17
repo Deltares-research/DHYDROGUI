@@ -6,7 +6,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
-using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
@@ -657,14 +656,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     if (!(geometry is IPolygon))
                     {
                         var coordinates = geometry.Coordinates.ToList();
-                        if (coordinates.Count() < 4) return null;
+                        if (coordinates.Count < 3) return null;
                         if (!coordinates.First().Equals(coordinates.Last()))
                         {
                             coordinates.Add(coordinates.First());
                         }
                         geometry = new Polygon(new LinearRing(coordinates.ToArray()));
                     }
-                    var newFeature = new GroupableFeature2DPolygon() { Geometry = geometry };
+                    var newFeature = new RoofArea { Geometry = geometry };
                     ds.Features.Add(newFeature);
 
                     return newFeature;
