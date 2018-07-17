@@ -3034,14 +3034,4 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ModelStateHandler.ModelWorkingDirectory = modelExplicitWorkingDirectory;
         }
     }
-
-    /*public interface IWaterFlowFMModel : ITimeDependentModel
-    {
-        UnstructuredGrid Grid { get; set; }
-        bool DisableFlowNodeRenumbering { get; set; }
-        IEventedList<ISedimentProperty> SedimentOverallProperties { get; }
-        IEventedList<ISedimentFraction> SedimentFractions { get; }
-        string MduFilePath { get; }
-        WaterFlowFMModelDefinition ModelDefinition { get; }
-    }*/
 }
