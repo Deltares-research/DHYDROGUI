@@ -31,7 +31,7 @@
 		 
 		 KeepEmptyDirectories='true'
 		 
-		 Transforms='$(PLCTProjectTransformFile)'
+		 Transforms='$(WaqProjectTransformFile)'
   
 		 NoLogo="false" />
 	</Target>
