@@ -20,12 +20,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
             InitializeComponent();
 
             // inject view logic in viewmodel
-            ViewModel.AddColumn = (propertyName, columnHeader, isReadOnly) => DataGrid.Columns.Add(new DataGridTextColumn
+            ViewModel.AddColumn = (propertyName, columnHeader, isReadOnly, format) =>
             {
-                Header = columnHeader,
-                Binding = new Binding{Path = new PropertyPath(propertyName)},
-                IsReadOnly = isReadOnly
-            });
+                var bindingBase = new Binding{Path = new PropertyPath(propertyName)};
+                if (!string.IsNullOrEmpty(format))
+                {
+                    bindingBase.StringFormat = format;
+                }
+
+                DataGrid.Columns.Add(new DataGridTextColumn
+                {
+                    Header = columnHeader,
+                    Binding = bindingBase,
+                    IsReadOnly = isReadOnly
+                });
+            };
             ViewModel.ClearColumns = () => DataGrid.Columns.Clear();
         }
 

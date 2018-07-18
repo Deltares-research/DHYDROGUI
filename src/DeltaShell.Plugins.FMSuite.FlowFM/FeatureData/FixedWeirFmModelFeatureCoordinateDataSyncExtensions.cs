@@ -46,17 +46,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         private static IEnumerable<IDataColumn> DataColumnsForScheme6And8And0()
         {
-            yield return new DataColumn<double>("Crest Levels");
-            yield return new DataColumn<double>("Ground Levels Left");
-            yield return new DataColumn<double>("Ground Levels Right");
+            yield return new DataColumn<double>("Crest Levels [m]");
+            yield return new DataColumn<double>("Sill up [m]");
+            yield return new DataColumn<double>("Sill down [m]");
         }
 
         private static IEnumerable<IDataColumn> DataColumnsScheme9()
         {
-            yield return new DataColumn<double>("Crest Length") {DefaultValue = 3.0};
-            yield return new DataColumn<double>("Talud Up") {DefaultValue = 4.0};
-            yield return new DataColumn<double>("Talud Down") {DefaultValue = 4.0};
-            yield return new DataColumn<double>("Vegetation Coefficient");
+            yield return new DataColumn<double>("Crest Length [m]") {DefaultValue = 3.0};
+            yield return new DataColumn<double>("Talud Up [-]") {DefaultValue = 4.0};
+            yield return new DataColumn<double>("Talud Down [-]") {DefaultValue = 4.0};
+            yield return new DataColumn<double>("Vegetation Coefficient [-]");
         }
     }
 }
