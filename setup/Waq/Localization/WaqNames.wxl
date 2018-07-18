@@ -9,4 +9,5 @@
   <String Id="WaqReferenceManualName">D-Water Quality Processes Technical Reference Manual</String>
   <String Id="WaqFileManualName">D-Water Quality Input File Description</String>
   <String Id="PLCTUserManualName">D-Water Quality PLCT User Manual</String>
+  <String Id="DidoUserManualName">D-Water Quality Dido User Manual</String>
 </WixLocalization>
