@@ -7,6 +7,7 @@
              xmlns:local="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews"
              xmlns:hydro="clr-namespace:DelftTools.Hydro;assembly=DelftTools.Hydro"
              xmlns:structures="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
+             xmlns:structureFeatureView="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1000" d:DataContext="{d:DesignInstance local:ManholeViewModel}">
     <UserControl.DataContext>
@@ -43,7 +44,6 @@
             </Setter>
             <Setter Property="Margin" Value="2"/>
         </Style>
-        <BooleanToVisibilityConverter x:Key="NullToVisibleConverter" />
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -54,13 +54,18 @@
                     <TextBlock Text="General info" FontWeight="Bold"/>
                 </Expander.Header>
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="10"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid Width="300">
+                    <Grid Width="300" Grid.Row="1" HorizontalAlignment="Left">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -105,8 +110,29 @@
                         <TextBlock Grid.Column="1" Grid.Row="6" Text="{Binding BottomLevel}"/>
                     </Grid>
 
-                    <!-- Pipes -->
-                    <ContentControl Grid.Column="2" Content="{Binding SelectedItem}" x:Name="ContentControl">
+                    <!-- Manhole overview -->
+                    <Border Grid.Column="0" BorderBrush="#FF8B8B8B" BorderThickness="1" Margin="7,7,0,5">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <local:ManholeVisualisation Background="#FFE8E8E8"
+                                                        Manhole="{Binding DataContext.Manhole, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}"
+                                                        SelectedItem="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}"
+                                                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                        Width="700" Height="500"/>
+                            <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
+                                <Button Content="Add compartment" Command="{Binding AddCompartmentCommand}" Margin="5,3,3,3"/>
+                                <Button Content="Add orifice" Command="{Binding AddOrificeCommand}" Margin="5,3,3,3"/>
+                                <Button Content="Add pump" Command="{Binding AddPumpCommand}" Margin="5,3,3,3"/>
+                                <Button Content="Add weir" Command="{Binding AddWeirCommand}" Margin="5,3,3,3"/>
+                                <Button Content="Remove item" Command="{Binding RemoveCompartmentCommand}" Margin="0,3,3,3"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    
+                    <ContentControl Grid.Column="3" Content="{Binding SelectedItem}" x:Name="ContentControl" VerticalContentAlignment="Top">
                         <ContentControl.Resources>
                             <DataTemplate DataType="{x:Type hydro:Compartment}">
                                 <local:CompartmentView Compartment="{Binding Content, ElementName=ContentControl}"/>
@@ -125,28 +151,6 @@
                             </DataTemplate>
                         </ContentControl.Resources>
                     </ContentControl>
-                    
-                    <!-- Manhole overview -->
-                    <Border Grid.Column="1" BorderBrush="#FF8B8B8B" BorderThickness="1" Margin="7,7,0,5">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <local:ManholeVisualisation Background="#FFE8E8E8"
-                                                        Manhole="{Binding DataContext.Manhole, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}"
-                                                        SelectedItem="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}"
-                                                        HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                        Width="500" Height="300"/>
-                            <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
-                                <Button Content="Add compartment" Command="{Binding AddCompartmentCommand}" Margin="5,3,3,3"/>
-                                <Button Content="Add orifice" Command="{Binding AddOrificeCommand}" Margin="5,3,3,3"/>
-                                <Button Content="Add pump" Command="{Binding AddPumpCommand}" Margin="5,3,3,3"/>
-                                <Button Content="Add weir" Command="{Binding AddWeirCommand}" Margin="5,3,3,3"/>
-                                <Button Content="Remove item" Command="{Binding RemoveCompartmentCommand}" Margin="0,3,3,3"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
                 </Grid>
             </Expander>
         </StackPanel>

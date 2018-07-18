@@ -371,7 +371,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
             // get width based on current compartments
             var compartments = shapes.OfType<CompartmentShape>();
-            var connectionWidth = compartments.Sum(cs => cs.Width) * 0.1;
+            const double connectionWidth = 0.5; // compartments.Sum(cs => cs.Width) * 0.1;
 
             // Set width for each connection
             connectionShapes.ForEach(cs => cs.Width = connectionWidth);
