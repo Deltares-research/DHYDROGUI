@@ -8,6 +8,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
     public static class FixedWeirFmModelFeatureCoordinateDataSyncExtensions
     {
+        public const string CrestLevelColumnName = "Crest Levels [m]";
+        public const string SillUpColumnName = "Sill up [m]";
+        public const string SillDownColumnName = "Sill down [m]";
+        public const string CrestLengthColumnName = "Crest Length [m]";
+        public const string TaludUpColumnName = "Talud Up [-]";
+        public const string TaludDownColumnName = "Talud Down [-]";
+        public const string VegetationCoefficientColumnName = "Vegetation Coefficient [-]";
+
         public static void UpdateDataColumns(this ModelFeatureCoordinateData<FixedWeir> data, string fixedWeirScheme)
         {
             FixedWeirSchemes scheme;
@@ -27,6 +35,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
 
             unexpectedColumns.ForEach(c => c.IsActive = false);
+
+           data.DataColumns
+               .Where(c => expectedColumns.Contains(c, nameComparer))
+               .ForEach(c => c.IsActive = true);
         }
 
         private static IEnumerable<IDataColumn> GetExpectedColumns(FixedWeirSchemes scheme)
@@ -46,17 +58,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         private static IEnumerable<IDataColumn> DataColumnsForScheme6And8And0()
         {
-            yield return new DataColumn<double>("Crest Levels [m]");
-            yield return new DataColumn<double>("Sill up [m]");
-            yield return new DataColumn<double>("Sill down [m]");
+            yield return new DataColumn<double>(CrestLevelColumnName);
+            yield return new DataColumn<double>(SillUpColumnName);
+            yield return new DataColumn<double>(SillDownColumnName);
         }
 
         private static IEnumerable<IDataColumn> DataColumnsScheme9()
         {
-            yield return new DataColumn<double>("Crest Length [m]") {DefaultValue = 3.0};
-            yield return new DataColumn<double>("Talud Up [-]") {DefaultValue = 4.0};
-            yield return new DataColumn<double>("Talud Down [-]") {DefaultValue = 4.0};
-            yield return new DataColumn<double>("Vegetation Coefficient [-]");
+            yield return new DataColumn<double>(CrestLengthColumnName) {DefaultValue = 3.0};
+            yield return new DataColumn<double>(TaludUpColumnName) {DefaultValue = 4.0};
+            yield return new DataColumn<double>(TaludDownColumnName) {DefaultValue = 4.0};
+            yield return new DataColumn<double>(VegetationCoefficientColumnName);
         }
     }
 }
