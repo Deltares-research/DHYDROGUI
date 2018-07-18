@@ -161,7 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
             }
         }
 
-        private string GetPropertyName(string name)
+        private static string GetPropertyName(string name)
         {
             return name.Replace(" ", "_").Replace("[", "_").Replace("]", "_");
         }

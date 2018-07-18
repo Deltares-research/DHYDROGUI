@@ -40,6 +40,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
 
             Assert.IsNotNull(boundaryGeometryPreview.DataPoints);
             Assert.AreEqual(4, boundaryGeometryPreview.DataPoints.Count);
+
+            // first point should be selected
+            var selectedPoints = (IList<int>)TypeUtils.GetField(boundaryGeometryPreview, "selectedPoints");
+
+            Assert.AreEqual(1, selectedPoints.Count);
+            Assert.AreEqual(0, selectedPoints[0]);
         }
 
         [Test, NUnit.Framework.Category(TestCategory.Integration)]
