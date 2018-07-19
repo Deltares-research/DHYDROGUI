@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Layers;
@@ -16,6 +12,11 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
     {
         public SewerConnectionInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, IEditableObject editableObject) : base(layer, feature, vectorStyle, editableObject)
         {
+        }
+
+        public override void Add(IFeature feature)
+        {
+            HydroNetworkHelper.AddPipeToHydroNetwork(Network, (IPipe)feature);
         }
     }
 }

@@ -403,7 +403,7 @@ namespace DelftTools.Hydro
         {
             return new HydroNode();
         }
-        
+
         public virtual new bool EditWasCancelled
         {
             get { return base.EditWasCancelled; }

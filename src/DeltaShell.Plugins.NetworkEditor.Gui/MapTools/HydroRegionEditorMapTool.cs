@@ -51,6 +51,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public const string AddLineCrossSectionToolName = "add line cross-section";
         public const string AddChannelScribleToolName = "add branch (scribble way)";
         public const string AddChannelToolName = "add channel";
+        public const string AddPipeToolName = "add pipe";
         public const string AddCatchmentToolName = "add catchment";
         public const string InsertNodeToolName = "insert new node";
         public const string AddWasteWaterTreatmentPlantToolName = "add waste water treatment plant";
@@ -153,6 +154,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
             var newInsertNodeTool = new NewPointFeatureTool<HydroNode>(InsertNodeToolName) { Cursor = NewInsertNodeCursor };
             AddMapTool(newInsertNodeTool);
+            
+            var newPipeTool = new NewLineTool(FeatureTypeLayerFilter<Pipe>, AddPipeToolName)
+            {
+                AutoCurve = false,
+                MinDistance = 0,
+                IsActive = false,
+                Cursor = MapCursors.CreateArrowOverlayCuror(Resources.new_branch_small),
+                MaxPoints = 2
+            };
+            AddMapTool(newPipeTool);
 
             var newPointCrossSectionTool = new NewPointFeatureTool<CrossSection>(AddPointCrossSectionToolName) { Cursor = PointCrossSectionCuror };
             AddMapTool(newPointCrossSectionTool);

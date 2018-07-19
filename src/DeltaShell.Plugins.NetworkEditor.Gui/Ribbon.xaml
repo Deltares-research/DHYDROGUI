@@ -45,17 +45,17 @@
                 <fluent:ToggleButton x:Name="ButtonAddNewBranchScribble" Header="Add Branch (Freeform)" ToolTip="Add new branch (Freeform)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\network_branches11.png" Click="ButtonAddNewBranchScribble_Click" SizeDefinition="Small,Small,Small" fluent:KeyTip.Keys="F"/>
                 <fluent:ToggleButton x:Name="ButtonInsertNewNode" Header="Split Branch" ToolTip="Split branch" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\NodeOnMultipleBranches.png" Click="ButtonInsertNewNode_Click" SizeDefinition="Small,Small,Small" fluent:KeyTip.Keys="N"/>
                 <Separator />
-                <fluent:ToggleButton x:Name="ButtonAddNewPipe" ToolTip="Add new pipe" Header="Add pipe" Click="OnClick"  Size="Middle" SizeDefinition="Small,Small,Small">
+                <fluent:ToggleButton x:Name="ButtonAddNewPipe" Header="Add pipe" ToolTip="Add new pipe" Click="ButtonAddNewPipe_Click" Size="Middle" SizeDefinition="Small,Small,Small">
                     <fluent:ToggleButton.Icon>
                         <Rectangle Fill="{StaticResource PipeBrush}"/>
                     </fluent:ToggleButton.Icon>
                 </fluent:ToggleButton>
-                <fluent:ToggleButton x:Name="ButtonInsertManhole" ToolTip="Insert manhole, split pipe" Header="Split pipe" Click="OnClick"  Size="Middle" SizeDefinition="Small,Small,Small">
+                <fluent:ToggleButton x:Name="ButtonInsertManhole" Header="Split pipe" ToolTip="Insert manhole, split pipe" Click="OnClick" Size="Middle" SizeDefinition="Small,Small,Small">
                     <fluent:ToggleButton.Icon>
                         <Rectangle Fill="{StaticResource ManholeBrush}"/>
                     </fluent:ToggleButton.Icon>
                 </fluent:ToggleButton>
-                <fluent:ToggleButton x:Name="ButtonAddNewOutlet" ToolTip="Add new outlet" Header="Add outlet" Click="OnClick"  Size="Middle" SizeDefinition="Small,Small,Small">
+                <fluent:ToggleButton x:Name="ButtonAddNewOutlet" Header="Add outlet" ToolTip="Add new outlet" Click="OnClick" Size="Middle" SizeDefinition="Small,Small,Small">
                     <fluent:ToggleButton.Icon>
                         <Rectangle Fill="{StaticResource OutletBrush}"/>
                     </fluent:ToggleButton.Icon>
