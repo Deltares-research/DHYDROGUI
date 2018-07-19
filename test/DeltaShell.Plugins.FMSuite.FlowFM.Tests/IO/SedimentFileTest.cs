@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             const string saveToDir = "LoadAndSaveSedFlowFM";
             Directory.CreateDirectory(saveToDir);
             var mduFileSaveToPath = Path.Combine(saveToDir, "FlowFMWithCustomProperties.mdu");
-            mduFile.Write(mduFileSaveToPath, flowFM.ModelDefinition, flowFM.Area);
+            mduFile.Write(mduFileSaveToPath, flowFM.ModelDefinition, flowFM.Area, flowFM.FixedWeirsProperties);
 
             /* Check if properties have been written again. */
             var newFlowFM = new WaterFlowFMModel(mduFileSaveToPath);

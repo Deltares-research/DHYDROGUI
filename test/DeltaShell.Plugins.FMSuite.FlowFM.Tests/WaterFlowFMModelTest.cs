@@ -1240,6 +1240,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             FileUtils.DeleteIfExists(filePath);
         }
+        
+        
+        [Test]
+        public void GivenModelForImporting_WhenThereAreFixedWeirs_ThenTheseFixedWeirsShouldBeCorrectlyImported()
+        {
+            var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFMFixedWeirs\FlowFM.mdu");
+            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            Assert.NotNull(mduDir);
+            
+            try
+            {
+
+                var model = new WaterFlowFMModel(mduFilePath);
+
+                var modelvalue = model.FixedWeirsProperties[0].DataColumns[0].ValueList[0];
+                Assert.AreEqual(1.2 , modelvalue);
+                modelvalue = model.FixedWeirsProperties[0].DataColumns[0].ValueList[1];
+                Assert.AreEqual(6.4, modelvalue);
+                modelvalue = model.FixedWeirsProperties[0].DataColumns[1].ValueList[0];
+                Assert.AreEqual(3.5, modelvalue);
+
+                //To do test write function also
+
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(mduDir);
+            }
+        }
 
         /* Clone of function from WaterFlowFMModel */
         private static List<double> GetWaterLevelValuesAtPoint(WaterFlowFMModel model, Coordinate measureLocation)
