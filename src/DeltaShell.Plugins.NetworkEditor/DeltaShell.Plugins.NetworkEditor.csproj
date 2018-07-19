@@ -254,7 +254,7 @@
     <Compile Include="MapLayers\Providers\HydroNetworkFeatureCollection.cs" />
     <Compile Include="MapLayers\Editors\Snapping\HydroLinkSnapRule.cs" />
     <Compile Include="MapLayers\Editors\Snapping\HydroNodeSnapRule.cs" />
-    <Compile Include="MapLayers\Editors\Snapping\ChannelSnapRule.cs" />
+    <Compile Include="MapLayers\Editors\Snapping\BranchSnapRule.cs" />
     <Compile Include="MapLayers\Editors\Snapping\CrossSectionSnapRule.cs" />
     <Compile Include="MapLayers\Editors\Snapping\StructureSnapRule.cs" />
     <Compile Include="MapLayers\Editors\Interactors\BranchToCrossSectionRelationInteractor.cs" />

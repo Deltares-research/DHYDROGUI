@@ -740,7 +740,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 return new List<ISnapRule>
                            {
-                               new ChannelSnapRule
+                               new BranchSnapRule
                                    {
                                        Criteria = (layer, feature) => feature is IHydroNode && layer.DataSource is HydroNetworkFeatureCollection &&
                                                                       ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
@@ -751,6 +751,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                                        PixelGravity = 40
                                    }
                            };
+            }
+
+            if (type == typeof(Pipe))
+            {
+                return new List<ISnapRule>
+                {
+                    new BranchSnapRule
+                    {
+                        Criteria = (layer, feature) => feature is IManhole && layer.DataSource is HydroNetworkFeatureCollection &&
+                                                       ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
+                                                       ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
+                        NewFeatureLayer = vectorLayer,
+                        SnapRole = SnapRole.AllTrackers,
+                        Obligatory = false,
+                        PixelGravity = 40
+                    }
+                };
             }
 
             if (type == typeof (CrossSection))

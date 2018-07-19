@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Snapping
     /// <summary>
     /// Snaps a branch to a node
     /// </summary>
-    public class ChannelSnapRule : SnapRule
+    public class BranchSnapRule : SnapRule
     {
         public override SnapResult Execute(IFeature sourceFeature, Tuple<IFeature, ILayer>[] candidates, IGeometry sourceGeometry, IList<IFeature> snapTargets, Coordinate worldPos, Envelope envelope, int trackingIndex)
         {

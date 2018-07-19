@@ -18,17 +18,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Snapping
         [Test]
         public void BranchSnap()
         {
-            Channel channel = new Channel { Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(20, 0) }) };
+            var channel = new Channel { Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(20, 0) }) };
 
             var candidates = new[] { new Tuple<IFeature, ILayer>(channel, new VectorLayer()) };
 
-            ChannelSnapRule channelSnapRule = new ChannelSnapRule
-                                                {
-                                                    SnapRole = SnapRole.AllTrackers,
-                                                    PixelGravity = 40
-                                                };
+            var branchSnapRule = new BranchSnapRule
+            {
+                SnapRole = SnapRole.AllTrackers,
+                PixelGravity = 40
+            };
 
-            SnapResult snapResult = channelSnapRule.Execute(null, candidates, channel.Geometry, null, new Coordinate(0, 0), 
+            var snapResult = branchSnapRule.Execute(null, candidates, channel.Geometry, null, new Coordinate(0, 0), 
                 new Envelope(new Coordinate(0, 0)), 0);
 
             Assert.AreEqual(new Coordinate(0, 0), snapResult.Location);
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Snapping
             Assert.AreEqual(channel.Geometry, snapResult.NearestTarget);
             Assert.AreEqual(null, snapResult.SnappedFeature);
 
-            snapResult = channelSnapRule.Execute(channel, candidates, channel.Geometry, null, new Coordinate(0, 0), 
+            snapResult = branchSnapRule.Execute(channel, candidates, channel.Geometry, null, new Coordinate(0, 0), 
                 new Envelope(new Coordinate(0, 0)), 0);
             Assert.AreEqual(new Coordinate(0, 0), snapResult.Location);
             Assert.AreEqual(0, snapResult.SnapIndexNext);
