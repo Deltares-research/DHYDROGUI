@@ -139,7 +139,7 @@
                         <!-- Row 1 -->
                         <Label Grid.Column="0" Grid.Row="1" Content="Manhole ID"/>
                         <TextBlock Grid.Column ="1" Grid.Row="1" Text="{Binding Pipe.Source.Name}"/>
-                        <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding Pipe.Source.Name}"/>
+                        <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding Pipe.Target.Name}"/>
 
                         <!-- Row 2 -->
                         <Label Grid.Column="0" Grid.Row="2" Content="Compartment ID"/>
