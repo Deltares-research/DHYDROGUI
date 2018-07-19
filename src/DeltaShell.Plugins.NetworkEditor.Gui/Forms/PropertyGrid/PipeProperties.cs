@@ -5,11 +5,14 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
+using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {
     public class PipeProperties : ObjectProperties<Pipe>
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(PipeProperties));
+
         #region Connection properties
 
         [Category("Connection properties")]
@@ -178,22 +181,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisibleValidationMethod]
         public bool IsVisible(string propertyName)
         {
+            var shape = data?.SewerProfileDefinition?.Shape;
             switch (propertyName)
             {
                 case "CrossSectionDiameter":
-                    return data.SewerProfileDefinition.Shape is CrossSectionStandardShapeRound;
+                    return shape is CrossSectionStandardShapeRound;
                 case "CrossSectionWidth":
                 case "CrossSectionHeight":
-                    var shape = data.SewerProfileDefinition.Shape;
                     return shape is CrossSectionStandardShapeWidthHeightBase || shape is CrossSectionStandardShapeArch;
                 case "ArcHeight":
-                    return data.SewerProfileDefinition.Shape is CrossSectionStandardShapeArch;
+                    return shape is CrossSectionStandardShapeArch;
                 case "Slope":
                 case "BottomWidthB":
                 case "MaximumFlowWidth":
-                    return data.SewerProfileDefinition.Shape is CrossSectionStandardShapeTrapezium;
+                    return shape is CrossSectionStandardShapeTrapezium;
+                default:
+                    log.DebugFormat("The visibility of an unknown property '" + propertyName + "' has been requested.");
+                    return true;
             }
-            return true;
         }
 
         #endregion
