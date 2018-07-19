@@ -193,8 +193,15 @@ namespace SobekCompare.Tests
        [Test]
        public void TestGeneralStructureStates()
        {
-            var pathDirSobek = Path.Combine(baseDir, "32");
-            CompareJaapHelper.RunAndCompareSobekAndWaterFlow1D(pathDirSobek);
+          var pathDirSobek = Path.Combine(baseDir, "32");
+          CompareJaapHelper.RunAndCompareSobekAndWaterFlow1D(pathDirSobek);
+       }
+
+       [Test]
+       public void TestAllStructureStates()
+       {
+          var pathDirSobek = Path.Combine(baseDir, "33");
+          CompareJaapHelper.RunAndCompareSobekAndWaterFlow1D(pathDirSobek);
        }
 
         [Test]

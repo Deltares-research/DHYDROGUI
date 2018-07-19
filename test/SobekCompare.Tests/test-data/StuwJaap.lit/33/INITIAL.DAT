@@ -1,0 +1,8 @@
+GLIN FLIN id '-1' nm '' ci '-1' ty 1 lv ll 0 7.5 q_ lq 0 5 flin glin
+FLIN id '1' nm 'initial' ci '1' ty 1 lv ll 0 7.5 q_ lq 0 80 flin
+FLIN id '4' nm 'initial' ci '4' ty 1 lv ll 0 7.5 q_ lq 0 6.5 flin
+FLIN id '2' nm 'initial' ci '2' ty 1 lv ll 0 7.5 q_ lq 0 110 flin
+FLIN id '3' nm 'initial' ci '3' ty 1 lv ll 0 7.5 q_ lq 0 80 flin
+FLIN id '5' nm 'initial' ci '5' ty 1 lv ll 0 7.5 q_ lq 0 0 flin
+FLIN id '6' nm 'initial' ci '6' ty 1 lv ll 0 7.5 q_ lq 0 6.5 flin
+FLIN id '7' nm 'initial' ci '7' ty 1 lv ll 0 7.5 q_ lq 0 95 flin
