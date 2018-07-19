@@ -38,8 +38,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
             var compartment1 = new Compartment("Compartment 1") {SurfaceLevel = 1, BottomLevel = -3, ManholeWidth = 2.5};
             var compartment2 = new Compartment("Compartment 2") {SurfaceLevel = 1, BottomLevel = -2, ManholeWidth = 2.5};
             var compartment3 = new Compartment("Compartment 3") {SurfaceLevel = 1, BottomLevel = -1, ManholeWidth = 2.5};
+            var compartment4 = new Compartment("Compartment 4") {SurfaceLevel = 1, BottomLevel = -2, ManholeWidth = 2.5};
+
+            manhole.Compartments.AddRange(new List<Compartment>
+            {
+                compartment1,
+                compartment2,
+                compartment3,
+                compartment4
+            });
 
             var network = new HydroNetwork();
+            network.Nodes.AddRange(new List<IManhole> { manhole });
+            manhole.Network = network;
+
             var orificeConnection = new SewerConnection
             {
                 SourceCompartment = compartment1,
@@ -50,7 +62,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
             var orifice = new Orifice();
             orificeConnection.AddStructureToBranch(orifice);
             
-            var internalConnection = new SewerConnection
+            var pumpConnection = new SewerConnection
             {
                 Name = "Interne verbinding",
                 SourceCompartment = compartment2,
@@ -58,27 +70,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
                 Source = manhole,
                 Target = manhole,
             };
+            pumpConnection.AddStructureToBranch(new Pump {StartSuction = 1.3, StopSuction = -0.8, StartDelivery = 1, StopDelivery = -1, Name = "Pump 01"});
 
-            internalConnection.BranchFeatures.Add(new Pump {StartSuction = 1.3, StopSuction = -0.8, StartDelivery = 1, StopDelivery = -1, Name = "Pump 01"});
+            var weirConnection = new SewerConnection
+            {
+                SourceCompartment = compartment3,
+                TargetCompartment = compartment4,
+                Source = manhole,
+                Target = manhole,
+            };
+            weirConnection.AddStructureToBranch(new Weir {CrestLevel = 0.23});
 
             var connections = new List<ISewerConnection>
             {
                 new Pipe {Name = "leiding 1", SourceCompartment = compartment1, Source = manhole, LevelSource = 0.8},
                 new Pipe {Name = "leiding 2", TargetCompartment = compartment1, Target = manhole, LevelTarget = 0.25},
                 new Pipe {Name = "leiding 3", SourceCompartment = compartment2, Source = manhole, LevelSource = -1.2},
-                internalConnection,
+                pumpConnection,
                 orificeConnection,
+                weirConnection
             };
 
             network.Branches.AddRange(connections);
-            manhole.Network = network;
-            network.Nodes.AddRange(new List<IManhole> { manhole });  
-            manhole.Compartments.AddRange(new List<Compartment>
-            {
-                compartment1,
-                compartment2,
-                compartment3,
-            });
+            
             return manhole;
         }
     }

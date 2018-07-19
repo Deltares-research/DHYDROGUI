@@ -39,16 +39,12 @@
                   Stroke="Red" StrokeThickness="2"/>
 
             <!-- Pump -->
-            <Path Stretch="Uniform" SnapsToDevicePixels="True" 
-                  Data="M -1,0 A 1,1 0 1 1 1,0 M -1,0 A 1,1 0 1 0 1,0 M -0.666,0 H 0.666 M 0,-0.666 V 0.666" 
-                  Stroke="Black" StrokeThickness="1" Width="{Binding IconWidth}" Height="{Binding IconWidth}" Canvas.Left="{Binding IconLeftOffset}" Canvas.Top="{Binding IconTopOffset}">
-                <Path.Fill>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#FFFF8812" Offset="0.33"/>
-                        <GradientStop Color="#FFFFBA75" Offset="1"/>
-                    </LinearGradientBrush>
-                </Path.Fill>
-            </Path>
+            <Rectangle Canvas.Left="{Binding IconLeftOffset}" Canvas.Top="{Binding IconTopOffset}"
+                       Width="16" Height="16">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="../../Resources/PumpSmall.png"/>
+                </Rectangle.Fill>
+            </Rectangle>
         </Canvas>
     </Grid>
 </UserControl>

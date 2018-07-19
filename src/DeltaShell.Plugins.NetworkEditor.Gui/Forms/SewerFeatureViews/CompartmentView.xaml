@@ -24,11 +24,11 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="120"/>
-            <ColumnDefinition Width="120"/>
             <ColumnDefinition Width="120"/>
             <ColumnDefinition Width="120"/>
         </Grid.ColumnDefinitions>
@@ -43,14 +43,14 @@
         <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Compartment.BottomLevel}"/>
 
         <!-- Right column -->
-        <Label Grid.Column="2" Grid.Row="0" Content="Width / diameter [m]"/>
-        <TextBox Grid.Column="3" Grid.Row="0" Text="{Binding Compartment.ManholeWidth}"/>
+        <Label Grid.Column="0" Grid.Row="3" Content="Width / diameter [m]"/>
+        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Compartment.ManholeWidth}"/>
 
-        <Label Grid.Column="2" Grid.Row="1" Content="Length"/>
-        <TextBox Grid.Column="3" Grid.Row="1" Text="{Binding Compartment.ManholeLength}"/>
+        <Label Grid.Column="0" Grid.Row="4" Content="Length"/>
+        <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Compartment.ManholeLength}"/>
 
-        <Label Grid.Column="2" Grid.Row="2" Content="Storage area [m2]"/>
-        <TextBox Grid.Column="3" Grid.Row="2" Text="{Binding Compartment.FloodableArea}"/>
+        <Label Grid.Column="0" Grid.Row="5" Content="Storage area [m2]"/>
+        <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Compartment.FloodableArea}"/>
 
        
 

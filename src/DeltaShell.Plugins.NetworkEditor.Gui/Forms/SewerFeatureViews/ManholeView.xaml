@@ -8,7 +8,7 @@
              xmlns:hydro="clr-namespace:DelftTools.Hydro;assembly=DelftTools.Hydro"
              xmlns:structures="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
              mc:Ignorable="d" 
-             d:DesignHeight="800" d:DesignWidth="1000" d:DataContext="{d:DesignInstance local:ManholeViewModel}">
+             d:DesignHeight="1000" d:DesignWidth="1000" d:DataContext="{d:DesignInstance local:ManholeViewModel}">
     <UserControl.DataContext>
         <local:ManholeViewModel x:Name="ViewModel" />
     </UserControl.DataContext>
@@ -109,13 +109,14 @@
                         <local:CompartmentView Compartment="{Binding Content, ElementName=ContentControl}"/>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type structures:Weir}">
-                        <Rectangle Fill="LimeGreen" Width="32" Height="32"/>
+                        <local:ShapeEditView Source="{Binding Content, ElementName=ContentControl}"/>
+                        
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type structures:Pump}">
-                        <Rectangle Fill="HotPink" Width="32" Height="32"/>
+                        <local:ShapeEditView Source="{Binding Content, ElementName=ContentControl}"/>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type structures:Orifice}">
-                        <Rectangle Fill="Red" Width="32" Height="32"/>
+                        <local:ShapeEditView Source="{Binding Content, ElementName=ContentControl}"/>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type structures:Pipe}">
                         <Rectangle Fill="Blue" Width="32" Height="32"/>

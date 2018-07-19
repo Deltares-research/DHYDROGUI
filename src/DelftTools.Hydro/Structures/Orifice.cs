@@ -1,5 +1,8 @@
-﻿namespace DelftTools.Hydro.Structures
+﻿using DelftTools.Utils.Aop;
+
+namespace DelftTools.Hydro.Structures
 {
+    [Entity]
     public class Orifice : Gate
     {
         public Orifice() : this("Orifice")

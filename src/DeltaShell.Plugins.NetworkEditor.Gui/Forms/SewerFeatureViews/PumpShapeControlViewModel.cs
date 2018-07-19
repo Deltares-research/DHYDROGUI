@@ -40,7 +40,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         public Func<double> GetActualWidth { get; set; }
         public Func<double> GetActualHeight { get; set; }
 
-        public double IconWidth { get; set; }
         public double IconLeftOffset { get; set; }
         public double IconTopOffset { get; set; }
         
@@ -57,9 +56,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
             var centerX = pumpShape.Width / 2.0;
             var centerY = (suctionMid + deliveryMid) / 2.0;
-
-            var iconWidth = pumpShape.Width / 4.0;
-            SetPumpIconProperties(centerX, centerY, iconWidth);
+            
+            SetPumpIconProperties(centerX, centerY);
 
             Connection = new PointCollection
             {
@@ -74,11 +72,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             };
         }
 
-        private void SetPumpIconProperties(double x, double y, double iconWidth)
+        private void SetPumpIconProperties(double x, double y)
         {
-            IconLeftOffset = ScaleX(x - 0.5 * iconWidth);
-            IconTopOffset = ScaleY(y + 0.333 * iconWidth); 
-            IconWidth = ScaleX(iconWidth);
+            IconLeftOffset = ScaleX(x) - 8;
+            IconTopOffset = ScaleY(y) - 8; 
         }
 
         private double UpdateDeliverySide(out double deliveryMid)

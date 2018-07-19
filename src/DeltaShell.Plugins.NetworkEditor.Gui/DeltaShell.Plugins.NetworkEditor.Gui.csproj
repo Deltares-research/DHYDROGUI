@@ -240,6 +240,9 @@
     </Compile>
     <Compile Include="Forms\SewerFeatureViews\PumpShapeControlViewModel.cs" />
     <Compile Include="Forms\SewerFeatureViews\WeirShape.cs" />
+    <Compile Include="Forms\SewerFeatureViews\ShapeEditView.xaml.cs">
+      <DependentUpon>ShapeEditView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\CoordinateScalingHelper.cs" />
     <Compile Include="Forms\StructureFeatureView\CulvertViewWpf.xaml.cs">
       <DependentUpon>CulvertViewWpf.xaml</DependentUpon>
@@ -678,6 +681,7 @@
     <Compile Include="Ribbon.xaml.cs">
       <DependentUpon>Ribbon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ShapeEditViewModel.cs" />
     <Compile Include="Wizard\CrossSectionImportSettingsWizardPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1147,6 +1151,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Forms\SewerFeatureViews\PumpShapeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\SewerFeatureViews\ShapeEditView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
