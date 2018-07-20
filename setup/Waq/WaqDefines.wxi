@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
   <?define PLCT_kernels_lib_dir="$(var.SolutionDir)bin\$(var.Configuration)\plugins\DeltaShell.Plugins.DelftModels.WaterQualityModel\plct\bin" ?>  	
+  <?define dido_kernels_lib_dir="$(var.SolutionDir)bin\$(var.Configuration)\plugins\DeltaShell.Plugins.DelftModels.WaterQualityModel\plugins-qt\x64" ?>  	
 </Include>

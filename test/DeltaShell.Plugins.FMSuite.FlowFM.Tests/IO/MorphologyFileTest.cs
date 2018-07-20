@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
@@ -14,6 +15,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -34,7 +36,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             const string saveToDir = "LoadAndSaveMorFlowFM";
             Directory.CreateDirectory(saveToDir);
             var mduFileSaveToPath = Path.Combine(saveToDir, "FlowFMWithCustomProperties.mdu");
-            mduFile.Write(mduFileSaveToPath, flowFM.ModelDefinition, flowFM.Area);
+            var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
+            mduFile.Write(mduFileSaveToPath, flowFM.ModelDefinition, flowFM.Area, allFixedWeirsAndCorrespondingProperties);
 
             /* Check if properties have been written again. */
             var newFlowFM = new WaterFlowFMModel(mduFileSaveToPath);

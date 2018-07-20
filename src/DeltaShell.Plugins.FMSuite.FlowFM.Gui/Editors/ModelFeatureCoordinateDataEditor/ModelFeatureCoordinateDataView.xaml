@@ -20,8 +20,10 @@
         <DataGrid x:Name="DataGrid" 
                   ItemsSource="{Binding CoordinateDataRows}" 
                   HeadersVisibility="Column" 
-                  GridLinesVisibility="None" 
-                  AlternatingRowBackground="LightGray"
+                  GridLinesVisibility="Vertical" 
+                  HorizontalGridLinesBrush="LightGray"
+                  VerticalGridLinesBrush="LightGray"
+                  AlternatingRowBackground="WhiteSmoke"
                   AutoGenerateColumns="False"
                   CanUserAddRows="True"
                   CanUserDeleteRows="True"
@@ -32,6 +34,26 @@
                   HorizontalScrollBarVisibility="Auto"
                   VerticalScrollBarVisibility="Auto"
                   SelectedIndex="{Binding SelectedCoordinateIndex}">
+            <DataGrid.CellStyle>
+                <Style TargetType="{x:Type DataGridCell}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                <Grid Background="{TemplateBinding Background}">
+                                    <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Padding" Value="3"/>
+                    <Setter Property="Background" Value="#008fc5"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
         </DataGrid>
 
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>

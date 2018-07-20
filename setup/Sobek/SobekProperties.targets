@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>  
     <DimrProjectTransformFile>SobekDimrKernels.xsl</DimrProjectTransformFile>
-    <PLCTProjectTransformFile>..\Waq\PLCTKernels.xsl</PLCTProjectTransformFile>
+    <WaqProjectTransformFile>..\Waq\WaqKernels.xsl</WaqProjectTransformFile>
     <RGFGridProjectTransformFile>..\FM\RGFGridKernels.xsl</RGFGridProjectTransformFile>
  </PropertyGroup>
 </Project>

@@ -123,6 +123,9 @@
     <Content Include="UtilityShortcuts.wxi" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Waq\DidoLibs.wxs">
+      <Link>DidoLibs.wxs</Link>
+    </Compile>
     <Compile Include="WixUI\FM_WixUI_Deltares.wxs" />
     <Compile Include="..\Dimr\DimrLibs.wxs">
       <Link>DimrLibs.wxs</Link>
@@ -130,10 +133,10 @@
     <Compile Include="..\Waq\PLCTLibs.wxs">
       <Link>PLCTLibs.wxs</Link>
     </Compile>
-	<Compile Include="RGFGridLibs.wxs">
+    <Compile Include="RGFGridLibs.wxs">
       <Link>RGFGridLibs.wxs</Link>
     </Compile>
-	<Compile Include="Product.wxs" />
+    <Compile Include="Product.wxs" />
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUtilExtension">
@@ -191,14 +194,19 @@
   <Import Project="FMProperties.targets" />
   <Import Project="..\Dimr\HarvestDimrLibs.targets" />
   <Import Project="..\Waq\HarvestPLCTLibs.targets" />
+  <Import Project="..\Waq\HarvestDidoLibs.targets" />
   <Import Project="HarvestRGFGridLibs.targets" />
   <PropertyGroup>
     <BuildDependsOn>
-     HarvestDimrLibsTarget;
-	 HarvestPLCTLibsTarget;
-	 HarvestRGFGridLibsTarget;
-	 $(BuildDependsOn);   
-   </BuildDependsOn>
+      HarvestDimrLibsTarget;
+      HarvestPLCTLibsTarget;
+      HarvestDidoLibsTarget;
+      HarvestRGFGridLibsTarget;
+      $(BuildDependsOn);
+    </BuildDependsOn>
   </PropertyGroup>
   <Target Name="Build" DependsOnTargets="$(BuildDependsOn)" />
+  <PropertyGroup>
+    <PreBuildEvent />
+  </PropertyGroup>
 </Project>

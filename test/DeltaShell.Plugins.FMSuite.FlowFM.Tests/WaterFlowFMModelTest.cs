@@ -1265,6 +1265,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             FileUtils.DeleteIfExists(filePath);
         }
+        
+        
+        [Test]
+        public void GivenModelForImporting_WhenThereAreFixedWeirs_ThenTheseFixedWeirsShouldBeCorrectlyImported()
+        {
+            var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFMFixedWeirs\FlowFM.mdu");
+            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            Assert.NotNull(mduDir);
+            
+            try
+            {
+
+                var model = new WaterFlowFMModel(mduFilePath);
+
+                var modelvalue = model.FixedWeirsProperties[0].DataColumns[0].ValueList[0];
+                Assert.AreEqual(1.2 , modelvalue);
+                modelvalue = model.FixedWeirsProperties[0].DataColumns[0].ValueList[1];
+                Assert.AreEqual(6.4, modelvalue);
+                modelvalue = model.FixedWeirsProperties[0].DataColumns[1].ValueList[0];
+                Assert.AreEqual(3.5, modelvalue);
+
+                //To do test write function also
+
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(mduDir);
+            }
+        }
 
         /* Clone of function from WaterFlowFMModel */
         private static List<double> GetWaterLevelValuesAtPoint(WaterFlowFMModel model, Coordinate measureLocation)
@@ -1305,7 +1335,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void CreateFixedWeirAndChangeSchemeAndNumberOfCoordinates()
         {
-            var lineGeomery = new LineString(new Coordinate[]
+            var lineGeomery = new LineString(new[]
             {
                 new Coordinate(0, 0),
                 new Coordinate(10, 10),
@@ -1316,20 +1346,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var fixedWeir = new DelftTools.Hydro.Structures.FixedWeir { Geometry = lineGeomery };
 
             var fmModel = new WaterFlowFMModel();
+
             fmModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).SetValueAsString("8");
             fmModel.Area.FixedWeirs.Add(fixedWeir);
 
-            var allData =
-                TypeUtils.GetField(fmModel, "allFixedWeirsAndCorrespondingProperties") as
-                    IList<ModelFeatureCoordinateData<DelftTools.Hydro.Structures.FixedWeir>>;
+            var allData = fmModel.FixedWeirsProperties;
            
             Assert.That(allData.Count, Is.EqualTo(1));
+
             var modelFeatureCoordinateData = allData.First();
+
             Assert.That(modelFeatureCoordinateData.Feature, Is.EqualTo(fixedWeir));
             Assert.That(modelFeatureCoordinateData.DataColumns.Count, Is.EqualTo(3));
             Assert.That(modelFeatureCoordinateData.DataColumns.First().ValueList.Count, Is.EqualTo(4));
 
-            fixedWeir.Geometry = new LineString(new Coordinate[]
+            fixedWeir.Geometry = new LineString(new[]
             {
                 new Coordinate(0, 0),
                 new Coordinate(10, 10),
@@ -1338,60 +1369,62 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(0, 100),
             });
 
-            allData =
-                TypeUtils.GetField(fmModel, "allFixedWeirsAndCorrespondingProperties") as
-                    IList<ModelFeatureCoordinateData<DelftTools.Hydro.Structures.FixedWeir>>;
+            allData = fmModel.FixedWeirsProperties;
 
             Assert.That(allData.Count, Is.EqualTo(1));
+
             modelFeatureCoordinateData = allData.First();
+
             Assert.That(modelFeatureCoordinateData.Feature, Is.EqualTo(fixedWeir));
             Assert.That(modelFeatureCoordinateData.DataColumns.Count, Is.EqualTo(3));
             Assert.That(modelFeatureCoordinateData.DataColumns.First().ValueList.Count, Is.EqualTo(5));
 
             fmModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).SetValueAsString("9");
 
-            allData =
-                TypeUtils.GetField(fmModel, "allFixedWeirsAndCorrespondingProperties") as
-                    IList<ModelFeatureCoordinateData<DelftTools.Hydro.Structures.FixedWeir>>;
+            allData = fmModel.FixedWeirsProperties;
 
             Assert.That(allData.Count, Is.EqualTo(1));
+
             modelFeatureCoordinateData = allData.First();
+
             Assert.That(modelFeatureCoordinateData.Feature, Is.EqualTo(fixedWeir));
             Assert.That(modelFeatureCoordinateData.DataColumns.Count, Is.EqualTo(7));
+
             foreach (var dataColumn in modelFeatureCoordinateData.DataColumns)
             {
                 Assert.That(dataColumn.ValueList.Count, Is.EqualTo(5));
                 Assert.That(dataColumn.IsActive, Is.True);
             }
 
-
             fmModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).SetValueAsString("6");
 
-            allData =
-                TypeUtils.GetField(fmModel, "allFixedWeirsAndCorrespondingProperties") as
-                    IList<ModelFeatureCoordinateData<DelftTools.Hydro.Structures.FixedWeir>>; 
+            allData = fmModel.FixedWeirsProperties;
 
             Assert.That(allData.Count, Is.EqualTo(1));
             modelFeatureCoordinateData = allData.First();
             Assert.That(modelFeatureCoordinateData.Feature, Is.EqualTo(fixedWeir));
             Assert.That(modelFeatureCoordinateData.DataColumns.Count, Is.EqualTo(7));
+
             foreach (var dataColumn in modelFeatureCoordinateData.DataColumns)
             {
                 Assert.That(dataColumn.ValueList.Count, Is.EqualTo(5));
-                if (dataColumn.Name == "Crest Length" || dataColumn.Name == "Talud Up" ||
-                    dataColumn.Name == "Talud Down" || dataColumn.Name == "Vegetation Coefficient")
+
+                if (dataColumn.Name == FixedWeirFmModelFeatureCoordinateDataSyncExtensions.CrestLengthColumnName ||
+                    dataColumn.Name == FixedWeirFmModelFeatureCoordinateDataSyncExtensions.TaludUpColumnName ||
+                    dataColumn.Name == FixedWeirFmModelFeatureCoordinateDataSyncExtensions.TaludDownColumnName ||
+                    dataColumn.Name == FixedWeirFmModelFeatureCoordinateDataSyncExtensions.VegetationCoefficientColumnName)
                     Assert.That(dataColumn.IsActive, Is.False);
                 else
                     Assert.That(dataColumn.IsActive, Is.True);
             }
+
             fixedWeir.Geometry = lineGeomery;
 
-            allData =
-                TypeUtils.GetField(fmModel, "allFixedWeirsAndCorrespondingProperties") as
-                    IList<ModelFeatureCoordinateData<DelftTools.Hydro.Structures.FixedWeir>>;
+            allData = fmModel.FixedWeirsProperties;
 
             Assert.That(allData.Count, Is.EqualTo(1));
             modelFeatureCoordinateData = allData.First();
+
             Assert.That(modelFeatureCoordinateData.Feature, Is.EqualTo(fixedWeir));
             Assert.That(modelFeatureCoordinateData.DataColumns.Count, Is.EqualTo(7));
             foreach (var dataColumn in modelFeatureCoordinateData.DataColumns)
@@ -1400,9 +1433,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
 
             fmModel.Area.FixedWeirs.Remove(fixedWeir);
-            allData =
-                TypeUtils.GetField(fmModel, "allFixedWeirsAndCorrespondingProperties") as
-                    IList<ModelFeatureCoordinateData<DelftTools.Hydro.Structures.FixedWeir>>;
+
+            allData = fmModel.FixedWeirsProperties;
 
             Assert.That(allData.Count, Is.EqualTo(0));
 

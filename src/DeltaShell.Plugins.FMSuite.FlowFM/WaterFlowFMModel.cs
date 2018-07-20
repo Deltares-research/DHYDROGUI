@@ -1834,7 +1834,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             // intialize model definition from mdu file if it exists
             if (File.Exists(mduFilePath))
             {
-                mduFile.Read(mduFilePath, ModelDefinition, Area, (name, current, total) => FireImportProgressChanged(this, "Reading mdu - " + name, current, total));
+                isLoading = true;
+                mduFile.Read(mduFilePath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, (name, current, total) => FireImportProgressChanged(this, "Reading mdu - " + name, current, total));
+                isLoading = false;
                 SyncModelTimesWithBase();
             }
 
@@ -1899,7 +1901,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             WriteMorSedFilesIfNeeded(mduPath);
 
-            mduFile.Write(mduPath, ModelDefinition, Area, switchTo, writeExtForcings, writeFeatures, DisableFlowNodeRenumbering);
+            mduFile.Write(mduPath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, switchTo, writeExtForcings, writeFeatures, DisableFlowNodeRenumbering);
 
             if (Grid != null)
             {
@@ -2158,6 +2160,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private const string HydroAreaTag = "hydro_area_tag";
         private FMMapFileFunctionStore outputMapFileStore;
         private IEventedList<string> tracerDefinitions;
+        private bool isLoading;
 
         private const int TotalImportSteps = 10;
 
@@ -2388,34 +2391,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void HydroAreaCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var fixedWeir = e.Item as FixedWeir;
-            if (fixedWeir != null)
+            if (!isLoading)
             {
-                switch (e.Action)
+                var fixedWeir = e.Item as FixedWeir;
+                if (fixedWeir != null)
                 {
-                    case NotifyCollectionChangeAction.Add:
-                        allFixedWeirsAndCorrespondingProperties.Add(CreateModelFeatureCoordinateDataFor(fixedWeir));
-                        break;
-                    case NotifyCollectionChangeAction.Remove:
-                        var dataToRemove = allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir);
-                        if (dataToRemove == null) break;
-
-                        allFixedWeirsAndCorrespondingProperties.Remove(dataToRemove);
-                        dataToRemove.Dispose();
-                        break;
-                    case NotifyCollectionChangeAction.Replace:
-                        var dataToUpdate = allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir);
-                        if (dataToUpdate == null)
-                        {
+                    switch (e.Action)
+                    {
+                        case NotifyCollectionChangeAction.Add:
                             allFixedWeirsAndCorrespondingProperties.Add(CreateModelFeatureCoordinateDataFor(fixedWeir));
                             break;
-                        }
+                        case NotifyCollectionChangeAction.Remove:
+                            var dataToRemove =
+                                allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir);
+                            if (dataToRemove == null) break;
 
-                        dataToUpdate.Feature = fixedWeir;
-                        break;
-                    
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                            allFixedWeirsAndCorrespondingProperties.Remove(dataToRemove);
+                            dataToRemove.Dispose();
+                            break;
+                        case NotifyCollectionChangeAction.Replace:
+                            var dataToUpdate =
+                                allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir);
+                            if (dataToUpdate == null)
+                            {
+                                allFixedWeirsAndCorrespondingProperties.Add(
+                                    CreateModelFeatureCoordinateDataFor(fixedWeir));
+                                break;
+                            }
+
+                            dataToUpdate.Feature = fixedWeir;
+                            break;
+
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
             }
 

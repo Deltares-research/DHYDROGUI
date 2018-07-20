@@ -20,14 +20,8 @@
   <!-- ugrid api dlls -->
   <ComponentRef Id="NGHS.IO"/>
 
-  <!-- TODO: agrhyd is not yet finished, so dido is not required in the installations
-  <ComponentRef Id="dido_cmd"/>
-  <ComponentRef Id="dido_bin"/>
-  <ComponentRef Id="dido_colormaps"/>
-  <ComponentRef Id="dido_platforms"/>
-  <ComponentRef Id="dido_icons"/>
-  <ComponentRef Id="dido_manuals"/>-->
-
+  <ComponentGroupRef Id="DidoLibs"/>
+  <ComponentRef Id="dido_manuals"/>
 
   <?ifndef var.NOKERNELS?>
   <Feature Id="DuflowProcesses" Title="!(loc.DuFlowProcessFeatureName)" Description="!(loc.DuFlowProcessFeatureDescription)" Level="1000" Absent="allow" AllowAdvertise="no">

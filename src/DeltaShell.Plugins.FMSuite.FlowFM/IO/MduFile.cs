@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,12 +15,15 @@ using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Geometries;
 using SharpMap;
 using SharpMap.Api.SpatialOperations;
 using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
@@ -124,8 +128,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region write logic
 
-        public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea,
-            bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false)
+        public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
+        bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false)
         {
             var targetDir = System.IO.Path.GetDirectoryName(targetMduFilePath);
             if (targetDir != string.Empty && !Directory.Exists(targetDir))
@@ -228,7 +232,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             if (writeFeatures)
             {
-                WriteAreaFeatures(targetMduFilePath, modelDefinition, hydroArea);
+                WriteAreaFeatures(targetMduFilePath, modelDefinition, hydroArea, allFixedWeirsAndCorrespondingProperties);
+
             }
 
             // write external forcings (ExtForceFile.Write() will check if indeed the file is written)
@@ -607,13 +612,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return fileWriter;
         }
 
-        private void WriteAreaFeatures(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea)
+        private void WriteAreaFeatures(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties)
         {
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.LandBoundaryFile,
                 hydroArea.LandBoundaries, ref landBoundariesFile, LandBoundariesExtension);
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.ThinDamFile, hydroArea.ThinDams.ToList(),
                 ref thinDamFile, ThinDamExtension, ThinDamAlternativeExtension);
+
+            //fix attributes for fixed weirs. Create attributes from modelfeaturecoordinatdata.
+            foreach (var fixedWeir in hydroArea.FixedWeirs)
+            {
+                fixedWeir.Attributes=new DictionaryFeatureAttributeCollection();
+
+                var correspondingModelFeatureCoordinateData =
+                    allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir);
+
+                if (correspondingModelFeatureCoordinateData == null) break; 
+                
+                for (var index = 0; index < correspondingModelFeatureCoordinateData.DataColumns.Count; index++)
+                {
+                    if (!correspondingModelFeatureCoordinateData.DataColumns[index].IsActive) break;      
+                    var dataColumnWithData = correspondingModelFeatureCoordinateData.DataColumns[index].ValueList;
+
+                    GeometryPointsSyncedList<double> syncedList;
+                    syncedList = new GeometryPointsSyncedList<double>
+                    {
+                        CreationMethod = (f, i) => 0.0,
+                        Feature = fixedWeir
+                    };
+                    fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] = syncedList;
+
+                    for (var i = 0; i < dataColumnWithData.Count; ++i)
+                    {
+                        syncedList[i] = (double)dataColumnWithData[i];
+                    }
+                }
+            }
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.FixedWeirFile, hydroArea.FixedWeirs.ToList(),
                 ref fixedWeirFile, FixedWeirExtension, FixedWeirAlternativeExtension);
@@ -633,6 +668,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.EnclosureFile, hydroArea.Enclosures,
                 ref enclosureFile, EnclosureExtension);
+        }
+
+        private void LoadDataColumnIntroAttribute(object newAttribute, IList dataColumnWithData)
+        {
+            throw new NotImplementedException();
         }
 
         public void WriteLandBoundaries(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea)
@@ -670,7 +710,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region read logic
 
-        public void Read(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, Action<string,int,int> reportProgress = null)
+        public void Read(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, Action<string,int,int> reportProgress = null)
         {
             if (reportProgress == null) reportProgress = (name, current, total) => { };
             var totalSteps = 5;
@@ -684,6 +724,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             reportProgress("Reading area features", 3, totalSteps);
             ReadAreaFeatures(filePath, modelDefinition, hydroArea);
 
+            //fix for fixed weirs
+
+            foreach (var fixedWeir in hydroArea.FixedWeirs)
+            {
+                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir>() {Feature = fixedWeir};
+                modelFeatureCoordinateData.UpdateDataColumns(modelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString());
+                for (var index = 0; index < modelFeatureCoordinateData.DataColumns.Count; index++)
+                {
+                    if (index < fixedWeir.Attributes.Count)
+                    {
+                        var dataColumn = modelFeatureCoordinateData.DataColumns[index];
+                        var attributeWithListOfLoadedData =
+                            fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] as
+                                GeometryPointsSyncedList<double>;
+                        LoadAttributeIntoDataColumn(attributeWithListOfLoadedData, dataColumn);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                allFixedWeirsAndCorrespondingProperties.Add(modelFeatureCoordinateData);
+            }
+
+            foreach (var fixedWeir in hydroArea.FixedWeirs)
+            {
+                // fixedWeir.Attributes.Clear(); To Do during last step of cleaning. Turn this on. 
+            }
+           
             reportProgress("Reading external forcings file", 4, totalSteps);
             var extForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.ExtForceFile);
             if (extForceFileProperty != null)
@@ -713,7 +782,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             hydroArea.Embankments.AddRange(modelDefinition.Embankments);
         }
-        
+
+        private void LoadAttributeIntoDataColumn(GeometryPointsSyncedList<double> attributeWithListOfLoadedData, IDataColumn dataColumn)
+        {
+            // checks uit voeren op lengte ed..
+            dataColumn.ValueList = attributeWithListOfLoadedData.ToList();
+        }
+
         private void ReadProperties(string filePath, WaterFlowFMModelDefinition definition)
         {
             Path = filePath;

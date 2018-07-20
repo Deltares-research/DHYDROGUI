@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         private const int MaximumAmountOfNumericValuesInPliFile = 9;
         private const int AmountOfDimensionalValuesInPliFile = 2;
 
-        protected readonly string[] NumericColumnAttributesKeys =
+        public static readonly string[] NumericColumnAttributesKeys =
         {
             "Column3",
             "Column4",

@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
         /// <summary>
         /// Function for adding dynamic property columns of <see cref="ModelFeatureCoordinateData"/>
         /// </summary>
-        public Action<string,string,bool> AddColumn { get; set; }
+        public Action<string,string,bool,string> AddColumn { get; set; }
 
         /// <summary>
         /// Function for clearing previous dynamic properties columns for <see cref="ModelFeatureCoordinateData"/>
@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
 
             var rowPropertyDescriptors = modelFeatureCoordinateData?.DataColumns
                                              .Where(dc => dc.IsActive)
-                                             .Select((c, i) => new CoordinateDataRowPropertyDescriptor(c.Name, c.Name, c.DataType, i)) 
+                                             .Select((c, i) => new CoordinateDataRowPropertyDescriptor(GetPropertyName(c.Name), c.Name, c.DataType, i)) 
                                          ?? Enumerable.Empty<PropertyDescriptor>();
 
             coordinateDataRowPropertyDescriptors.Clear();
@@ -156,8 +156,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
 
             foreach (var rowPropertyDescriptor in coordinateDataRowPropertyDescriptors)
             {
-                AddColumn?.Invoke(rowPropertyDescriptor.Name, rowPropertyDescriptor.DisplayName, rowPropertyDescriptor is CoordinateDataRowGeometryPropertyDescriptor);
+                var isCoordinatePropertyDescriptor = rowPropertyDescriptor is CoordinateDataRowGeometryPropertyDescriptor;
+                AddColumn?.Invoke(rowPropertyDescriptor.Name, rowPropertyDescriptor.DisplayName, isCoordinatePropertyDescriptor, isCoordinatePropertyDescriptor ? "{0:E3}" : null);
             }
+        }
+
+        private static string GetPropertyName(string name)
+        {
+            return name.Replace(" ", "_").Replace("[", "_").Replace("]", "_");
         }
 
         private void UpdateRowsForGeometry()

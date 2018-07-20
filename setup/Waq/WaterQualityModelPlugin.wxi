@@ -122,9 +122,6 @@
     </Directory>
 
     <?include PLCT.wxi?>
-
-    <!-- TODO: DIDO is not yet included, because agrhyd is not yet ready.
     <?include DIDO.wxi?>
-    -->
   </Directory>
 </Include>

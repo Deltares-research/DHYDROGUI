@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
             return (IFeature) element.GetValue(FeatureProperty);
         }
 
-        static void PropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private static void PropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             var boundaryGeometryPreview = (sender as WindowsFormsHost).Child as BoundaryGeometryPreview;
             if (boundaryGeometryPreview == null) return;
@@ -68,6 +68,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
 
                 if (featureGeometry == null) return;
                 boundaryGeometryPreview.DataPoints = new EventedList<int>(Enumerable.Range(0, featureGeometry.Coordinates.Length));
+
+                if (featureGeometry.Coordinates.Length > 0)
+                {
+                    boundaryGeometryPreview.SelectedPoints = new List<int> { 0 };
+                }
             }
 
             if (e.Property == SelectedIndexProperty && e.NewValue is int)

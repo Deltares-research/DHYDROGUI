@@ -35,13 +35,16 @@
     <Compile Include="..\Dimr\DimrLibs.wxs">
       <Link>DimrLibs.wxs</Link>
     </Compile>
+    <Compile Include="..\Waq\DidoLibs.wxs">
+      <Link>DidoLibs.wxs</Link>
+    </Compile>
     <Compile Include="..\Waq\PLCTLibs.wxs">
       <Link>PLCTLibs.wxs</Link>
     </Compile>
     <Compile Include="..\FM\RGFGridLibs.wxs">
       <Link>RGFGridLibs.wxs</Link>
     </Compile>
-	<Compile Include="Product.wxs" />
+    <Compile Include="Product.wxs" />
     <Compile Include="WixUI\Sobek_WixUI_Deltares.wxs" />
   </ItemGroup>
   <ItemGroup>
@@ -66,7 +69,7 @@
     <Content Include="..\FM\FMPlugin.wxi">
       <Link>FMPlugin.wxi</Link>
     </Content>
-	<Content Include="..\FM\RGFGridDefines.wxi">
+    <Content Include="..\FM\RGFGridDefines.wxi">
       <Link>RGFGridDefines.wxi</Link>
     </Content>
     <Content Include="..\FM\RGFGrid_x64.wxi">
@@ -226,14 +229,16 @@
   <Import Project="SobekProperties.targets" />
   <Import Project="..\Dimr\HarvestDimrLibs.targets" />
   <Import Project="..\Waq\HarvestPLCTLibs.targets" />
+  <Import Project="..\Waq\HarvestDidoLibs.targets" />
   <Import Project="..\FM\HarvestRGFGridLibs.targets" />
   <PropertyGroup>
     <BuildDependsOn>
-     HarvestDimrLibsTarget;
-	 HarvestPLCTLibsTarget;
-	 HarvestRGFGridLibsTarget;
-	 $(BuildDependsOn);   
-   </BuildDependsOn>
+      HarvestDimrLibsTarget;
+      HarvestPLCTLibsTarget;
+      HarvestDidoLibsTarget;
+      HarvestRGFGridLibsTarget;
+      $(BuildDependsOn);
+    </BuildDependsOn>
   </PropertyGroup>
   <Target Name="Build" DependsOnTargets="$(BuildDependsOn)" />
 </Project>

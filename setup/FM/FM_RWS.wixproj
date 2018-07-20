@@ -128,13 +128,16 @@
     <Compile Include="..\Dimr\DimrLibs.wxs">
       <Link>DimrLibs.wxs</Link>
     </Compile>
+    <Compile Include="..\Waq\DidoLibs.wxs">
+      <Link>DidoLibs.wxs</Link>
+    </Compile>
     <Compile Include="..\Waq\PLCTLibs.wxs">
       <Link>PLCTLibs.wxs</Link>
     </Compile>
-	<Compile Include="RGFGridLibs.wxs">
+    <Compile Include="RGFGridLibs.wxs">
       <Link>RGFGridLibs.wxs</Link>
     </Compile>
-	<Compile Include="Product.wxs" />
+    <Compile Include="Product.wxs" />
     <Compile Include="WixUI\FM_WixUI_Deltares.wxs" />
   </ItemGroup>
   <ItemGroup>
@@ -193,14 +196,16 @@
   <Import Project="FMProperties.targets" />
   <Import Project="..\Dimr\HarvestDimrLibs.targets" />
   <Import Project="..\Waq\HarvestPLCTLibs.targets" />
+  <Import Project="..\Waq\HarvestDidoLibs.targets" />
   <Import Project="HarvestRGFGridLibs.targets" />
   <PropertyGroup>
     <BuildDependsOn>
-     HarvestDimrLibsTarget;
-	 HarvestPLCTLibsTarget;
-	 HarvestRGFGridLibsTarget;
-	 $(BuildDependsOn);   
-   </BuildDependsOn>
+      HarvestDimrLibsTarget;
+      HarvestPLCTLibsTarget;
+      HarvestRGFGridLibsTarget;
+      HarvestDidoLibsTarget;
+      $(BuildDependsOn);
+    </BuildDependsOn>
   </PropertyGroup>
   <Target Name="Build" DependsOnTargets="$(BuildDependsOn)" />
 </Project>

@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
                 var expectedExceptionMsg =
                     string.Format(Resources.WaterQualityModel_OnInitializeCore_Failed_to_initialize_pre_processor__0_Please_look_at_the_List_file_for_more_information__0_List_file_found_in__Project_view____Output____List_file__0___1_,
-                        Environment.NewLine, Path.GetDirectoryName(Path.Combine(waqModel.ExplicitOutputDirectory, "output")));
+                        Environment.NewLine, waqModel.ExplicitOutputDirectory);
 
                 //Expect the exception message thrown as log message
                 TestHelper.AssertAtLeastOneLogMessagesContains(() => ActivityRunner.RunActivity(waqModel), expectedExceptionMsg);

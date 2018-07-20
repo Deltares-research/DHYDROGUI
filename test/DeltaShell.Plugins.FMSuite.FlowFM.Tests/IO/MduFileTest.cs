@@ -6,10 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
@@ -53,8 +55,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var originalArea = new HydroArea();
                 var originalMD = new WaterFlowFMModelDefinition(mduDir, modelName);
-                mduFile.Read(mduFilePath, originalMD, originalArea);
-                mduFile.Write(savePath, originalMD, originalArea, false);
+                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
+                mduFile.Read(mduFilePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties);
+                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties, false);
                 
                 var netFileLocationShouldBe = Path.Combine(newMduDir, relativeNcFilePath);
 
