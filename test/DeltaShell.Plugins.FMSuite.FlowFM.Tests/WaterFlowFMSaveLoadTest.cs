@@ -838,11 +838,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     Geometry =
                         new LineString(new [] { new Coordinate(0.0, 0.0), new Coordinate(0.3, 0.3), new Coordinate(0.6, 1.3) })
                 };
-                fixedWeir.CrestLevels[1] = 0.9876;
+                
                 var hydroArea = new HydroArea();
-                hydroArea.FixedWeirs.Add(fixedWeir);
                 model.Area = hydroArea;
-
+                hydroArea.FixedWeirs.Add(fixedWeir);
+                model.FixedWeirsProperties[0].DataColumns[0].ValueList[0] = 0.9876;
                 app.SaveProjectAs(path);
 
                 app.CloseProject();
@@ -853,7 +853,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 Assert.IsNotNull(loadedModel);
                 Assert.IsNotNull(loadedModel.Area.FixedWeirs.First());
-                Assert.AreEqual(0.9876, loadedModel.Area.FixedWeirs[0].CrestLevels[1]);
+                Assert.AreEqual(0.9876, loadedModel.FixedWeirsProperties[0].DataColumns[0].ValueList[0]);
             }
         }
 
