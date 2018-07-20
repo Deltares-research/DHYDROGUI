@@ -207,12 +207,15 @@
     <Compile Include="Forms\PropertyGrid\PipeProperties.cs" />
     <Compile Include="Forms\SewerFeatureViews\CanvasItemsControl.cs" />
     <Compile Include="Forms\SewerFeatureViews\CompartmentShape.cs" />
+    <Compile Include="Forms\SewerFeatureViews\CompartmentShapeDragAndDropStrategy.cs" />
     <Compile Include="Forms\SewerFeatureViews\CompartmentView.xaml.cs">
       <DependentUpon>CompartmentView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Forms\SewerFeatureViews\CompartmentViewModel.cs" />
     <Compile Include="Forms\SewerFeatureViews\ConnectionShape.cs" />
+    <Compile Include="Forms\SewerFeatureViews\ConnectionShapeDragAndDropStrategy.cs" />
     <Compile Include="Forms\SewerFeatureViews\DrawingShape.cs" />
+    <Compile Include="Forms\SewerFeatureViews\IDragAndDropStrategy.cs" />
     <Compile Include="Forms\SewerFeatureViews\LeveeBreachView.xaml.cs">
       <DependentUpon>LeveeBreachView.xaml</DependentUpon>
     </Compile>
@@ -228,6 +231,7 @@
     <Compile Include="Forms\SewerFeatureViews\ManholeVisualisationViewModel.cs" />
     <Compile Include="Forms\SewerFeatureViews\OrificeShape.cs" />
     <Compile Include="Forms\SewerFeatureViews\PipeShape.cs" />
+    <Compile Include="Forms\SewerFeatureViews\PipeShapeDragAndDropStrategy.cs" />
     <Compile Include="Forms\SewerFeatureViews\PipeView.xaml.cs">
       <DependentUpon>PipeView.xaml</DependentUpon>
     </Compile>

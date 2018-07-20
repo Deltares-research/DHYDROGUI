@@ -11,8 +11,10 @@
     <UserControl.DataContext>
         <local:ManholeVisualisationViewModel x:Name="ViewModel"/>
     </UserControl.DataContext>
-    <Grid x:Name="ViewGrid" SizeChanged="ViewGrid_OnSizeChanged" Background="Aquamarine" PreviewMouseLeftButtonDown="UIElement_OnPreviewMouseLeftButtonDown"
-    >
+    <Grid x:Name="ViewGrid" 
+          SizeChanged="ViewGrid_OnSizeChanged" Background="Aquamarine" 
+          PreviewMouseLeftButtonDown="UIElement_OnPreviewMouseLeftButtonDown"
+          PreviewKeyDown="UIElement_OnPreviewKeyDown">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -104,9 +106,6 @@
                             </Rectangle.Fill>
                         </Rectangle>
                         
-                        <!--<Path Stretch="Uniform" Fill="RoyalBlue" StrokeThickness="1" Stroke="White"
-                              Data="M 0,115 95,115 65,90 85,90 120,120 85,150  65,150 95,125  0,125 Z"
-                              HorizontalAlignment="Center" VerticalAlignment="Center" Width="{Binding ElementName=OrificeShapeBorder, Path=ActualWidth}"/>-->
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type local:PumpShape}">
@@ -132,16 +131,13 @@
                                 <ImageBrush ImageSource="../../Resources/Weir.png"/>
                             </Rectangle.Fill>
                         </Rectangle>
-                        <!--<Path Stretch="Uniform" Fill="RoyalBlue" 
-                              Data="M 0,115 95,115 65,90 85,90 120,120 85,150  65,150 95,125  0,125 Z"
-                               VerticalAlignment="Center" HorizontalAlignment="Center" Width="{Binding Path=ActualWidth, ElementName=WeirShapeBorder}"/>-->
+                       
                     </Grid>
                 </DataTemplate>
             </ItemsControl.Resources>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas 
-                        PreviewKeyDown="UIElement_OnPreviewKeyDown"
                         PreviewMouseLeftButtonDown="UIElement_OnPreviewMouseLeftButtonDown"
                         PreviewMouseMove="UIElement_OnPreviewMouseMove"
                         PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp"

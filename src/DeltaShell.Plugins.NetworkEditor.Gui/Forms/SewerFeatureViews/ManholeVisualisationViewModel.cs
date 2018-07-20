@@ -37,7 +37,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             {
                 if (manhole != null)
                 {
-                    // unsubscribe
                     manhole.Compartments.CollectionChanged -= CompartmentsOnCollectionChanged;
                 }
 
@@ -46,9 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
                 if (manhole != null)
                 {
-                    // subscribe 
                     manhole.Compartments.CollectionChanged += CompartmentsOnCollectionChanged;
-
                 }
 
                 CreateShapes();
@@ -238,20 +235,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         {
             UpdateShapes();
         }
-
-        #region Helper - Code behind?
-
-        // Code behind/helper
+        
         public Func<double> ContainerWidth { get; set; }
-
-        // Code behind/helper
+        
         public Func<double> ContainerHeight { get; set; }
 
-        // Code behind/helper
         public Action SetWindowSize { get; set; }
-
-        #endregion
-
+        
         public void SetShapesPixelValues()
         {
             foreach (var shape in Shapes)
@@ -370,7 +360,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             connectionShapes.AddRange(CreateStructureShapes(internalConnections));
 
             // get width based on current compartments
-            var compartments = shapes.OfType<CompartmentShape>();
             const double connectionWidth = 0.5; // compartments.Sum(cs => cs.Width) * 0.1;
 
             // Set width for each connection

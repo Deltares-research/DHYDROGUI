@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -40,11 +38,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         private UIElement selectedElement;
         private MoveAdorner moveAdorner;
         private SelectedAdorner selectedItemAdorner;
-
-        private int oldIndex;
-        private int newIndex;
+        
         private bool moveIsValid;
         private bool foundNewPosition;
+
+        private readonly PipeShapeDragAndDropStrategy pipeStrategy;
+        private readonly CompartmentShapeDragAndDropStrategy compartmentStrategy;
+        private readonly ConnectionShapeDragAndDropStrategy connectionStrategy;
 
         public object SelectedItem
         {
@@ -58,6 +58,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             ViewModel.ContainerWidth = () => ViewGrid.ActualWidth;
             ViewModel.ContainerHeight = () => ViewGrid.ActualHeight;
             ViewModel.SetWindowSize = SetViewGridSize;
+
+            pipeStrategy = new PipeShapeDragAndDropStrategy();
+            compartmentStrategy = new CompartmentShapeDragAndDropStrategy(ViewModel.Shapes);
+            connectionStrategy = new ConnectionShapeDragAndDropStrategy(ViewModel.Shapes);
         }
 
         public Manhole Manhole
@@ -121,11 +125,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             
             DragFinished(false);
 
-            RemoveSelectedItemAdorner();
-
-            selectedElement = contentPresenter;
-            AddSelectedItemAdorner();
-
             e.Handled = true;
         }
 
@@ -158,28 +157,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             moveIsValid = false;
             foundNewPosition = false;
 
-            try
-            {
-                if (contentPresenter == null || canvas == null) return;
-                foundNewPosition = TryDetermineNewPosition(canvas, contentPresenter);
-            }
-            finally
-            {
-                moveIsValid = ValidateMove();
-            }
+            if (contentPresenter == null || canvas == null) return;
+
+            var helper = GetStrategyForShape(contentPresenter.Content as IDrawingShape);
+            foundNewPosition = helper.FindNewPosition(canvas, contentPresenter, moveAdorner.LeftOffset, originalLeft);
+            moveIsValid = helper.Validate();
         }
 
         private void DragFinished(bool cancelled)
         {
-            Mouse.Capture(null);
+            Mouse. Capture(null);
             try
             {
                 if (!isDragging || cancelled) return;
 
-                if (moveIsValid && foundNewPosition)
-                {
-                    ViewModel.Shapes.Move(oldIndex, newIndex);
-                }
+                if (!moveIsValid || !foundNewPosition) return;
+
+                var helper = GetStrategyForShape(contentPresenter.Content as IDrawingShape);
+                helper.Reposition();
             }
             finally
             {
@@ -191,50 +186,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
         }
 
-        private bool ValidateMove()
-        {
-            return true;
-        }
-
-        private bool TryDetermineNewPosition(Canvas canvas, ContentPresenter contentPresenter)
-        {
-            var originalDrawingShape = contentPresenter.Content as IDrawingShape;
-            if (originalDrawingShape == null) return false;
-
-            var cps = canvas.Children.OfType<ContentPresenter>().Where(cp => cp.Content is CompartmentShape || cp.Content is ConnectionShape);
-            var newPosition = moveAdorner.LeftOffset + originalLeft + 0.5 * contentPresenter.ActualWidth;
-
-            var tuple = cps.Select(cp => new KeyValuePair<ContentPresenter, double>(cp, GetElementMiddle(cp))).ToList();
-            var closestLeft = tuple.Where(t => t.Value <= newPosition).OrderBy(t => Math.Abs(t.Value - newPosition)).FirstOrDefault().Key;
-            // insert after closest left
-            if (closestLeft?.Content is IDrawingShape)
-            {
-                var leftItem = (IDrawingShape)closestLeft.Content;
-                if (leftItem == originalDrawingShape) return false;
-                var indexOfClosestLeft = ViewModel.Shapes.IndexOf(leftItem);
-                oldIndex = ViewModel.Shapes.IndexOf(originalDrawingShape);
-                newIndex = oldIndex < indexOfClosestLeft ? indexOfClosestLeft : indexOfClosestLeft + 1;
-
-                return true;
-            }
-
-            // Insert before closest right
-            var closestRight = tuple.Where(t => t.Value > newPosition).OrderBy(t => Math.Abs(t.Value - newPosition)).FirstOrDefault().Key;
-            if (!(closestRight?.Content is IDrawingShape)) return false;
-
-            var closestRightShape = (IDrawingShape)closestRight.Content;
-            var indexOfClosestRight = ViewModel.Shapes.IndexOf(closestRightShape);
-
-            oldIndex = ViewModel.Shapes.IndexOf(originalDrawingShape);
-            newIndex = indexOfClosestRight;
-            return true;
-        }
-
-        private double GetElementMiddle(FrameworkElement element)
-        {
-            var x = Canvas.GetLeft(element) + 0.5 * element.ActualWidth;
-            return x;
-        }
+        #region Adorner adding/removal
 
         private void AddMoveAdorner()
         {
@@ -246,7 +198,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         private void RemoveMoveAdorner()
         {
             if (moveAdorner == null) return;
-            
+
             AdornerLayer.GetAdornerLayer(moveAdorner.AdornedElement)?.Remove(moveAdorner);
             moveAdorner = null;
         }
@@ -267,6 +219,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             selectedItemAdorner = null;
         }
 
+        #endregion
+        
         private void SetViewGridSize()
         {
             var ratio = ViewModel.HeigthWidthRatio;
@@ -286,6 +240,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             ViewGrid.Width = width;
             ViewGrid.Height = width * ratio;
 
+        }
+
+        private IDragAndDropStrategy GetStrategyForShape(IDrawingShape shape)
+        {
+            if (shape == null) return null;
+
+            if (shape is CompartmentShape)
+                return compartmentStrategy;
+
+            if (shape is PipeShape)
+                return pipeStrategy;
+
+            if (shape is ConnectionShape)
+                return connectionStrategy;
+
+            throw new NotImplementedException($"Not able to obtain a strategy for the shape of type '{shape.GetType()}'");
         }
 
         private void ViewGrid_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -308,6 +278,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         private SolidColorBrush renderBrush = new SolidColorBrush(Colors.Pink);
         private Pen renderPen = new Pen(new SolidColorBrush(Colors.Navy), 1.5);
         private Rect adornedElementRect;
+
         public MoveAdorner(UIElement adornedElement) : base(adornedElement)
         {
         }
@@ -321,7 +292,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
             // Some arbitrary drawing implements.
             renderBrush.Opacity = 0.2;
-            
             
             // Just draw a circle at each corner.
             drawingContext.DrawRectangle(renderBrush, renderPen, adornedElementRect);

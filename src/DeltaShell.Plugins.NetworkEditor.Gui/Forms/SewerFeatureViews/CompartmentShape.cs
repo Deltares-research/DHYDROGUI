@@ -28,6 +28,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
         }
 
+        public override object Source
+        {
+            get { return Compartment; }
+            set { Compartment = value as Compartment; }
+        }
+
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
             SetProperties();
@@ -39,18 +45,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             BottomLevel = compartment.BottomLevel;
             Width = compartment.ManholeWidth;
             Height = compartment.SurfaceLevel - compartment.BottomLevel;
-        }
-
-        public override object Source
-        {
-            get
-            {
-                return Compartment;
-            }
-            set
-            {
-                Compartment = value as Compartment;
-            }
         }
     }
 }

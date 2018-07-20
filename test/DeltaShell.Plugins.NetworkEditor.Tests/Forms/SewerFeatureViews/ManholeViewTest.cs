@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews;
@@ -83,9 +85,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
 
             var connections = new List<ISewerConnection>
             {
-                new Pipe {Name = "leiding 1", SourceCompartment = compartment1, Source = manhole, LevelSource = 0.8},
-                new Pipe {Name = "leiding 2", TargetCompartment = compartment1, Target = manhole, LevelTarget = 0.25},
-                new Pipe {Name = "leiding 3", SourceCompartment = compartment2, Source = manhole, LevelSource = -1.2},
+                new Pipe {Name = "leiding 1", SourceCompartment = compartment1, Source = manhole, LevelSource = 0.8, SewerProfileDefinition = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRound {Diameter = 1})},
+                new Pipe {Name = "leiding 2", TargetCompartment = compartment1, Target = manhole, LevelTarget = 0.25, SewerProfileDefinition = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRound {Diameter = 1})},
+                new Pipe {Name = "leiding 3", SourceCompartment = compartment2, Source = manhole, LevelSource = -1.2, SewerProfileDefinition = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRound {Diameter = 1})},
                 pumpConnection,
                 orificeConnection,
                 weirConnection
