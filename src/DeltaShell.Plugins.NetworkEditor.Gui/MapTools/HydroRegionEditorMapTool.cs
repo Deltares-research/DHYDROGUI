@@ -54,6 +54,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public const string AddPipeToolName = "add pipe";
         public const string AddCatchmentToolName = "add catchment";
         public const string InsertNodeToolName = "insert new node";
+        public const string InsertManholeToolName = "insert new manhole";
         public const string AddWasteWaterTreatmentPlantToolName = "add waste water treatment plant";
         public const string AddRunoffBoundaryToolName = "add runoff boundary";
         public const string AddHydroLinkToolName = "add hydro link";
@@ -164,6 +165,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 MaxPoints = 2
             };
             AddMapTool(newPipeTool);
+
+            var newInsertManholeTool = new NewPointFeatureTool<Manhole>(InsertManholeToolName) { Cursor = NewInsertNodeCursor };
+            AddMapTool(newInsertManholeTool);
 
             var newPointCrossSectionTool = new NewPointFeatureTool<CrossSection>(AddPointCrossSectionToolName) { Cursor = PointCrossSectionCuror };
             AddMapTool(newPointCrossSectionTool);

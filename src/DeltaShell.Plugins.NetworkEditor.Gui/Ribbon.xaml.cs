@@ -34,6 +34,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addNewBranchScribbleCommand = new AddNewBranchUsingScribbleModeCommand();
         private ICommand insertNewNodeCommand = new InsertNewNodeCommand();
         private ICommand addNewPipeCommand = new AddNewPipeCommand();
+        private ICommand splitPipeCommand = new SplitPipeCommand();
         private ICommand addNewCrossSectionYZCommand = new AddNewCrossSectionYZCommand();
         private ICommand addNewCrossSectionZWCommand = new AddNewCrossSectionZWCommand();
         private ICommand addNewCrossSectionXYZCommand= new AddNewCrossSectionXYZCommand();
@@ -342,6 +343,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewPipe_Click(object sender, RoutedEventArgs e)
         {
             addNewPipeCommand.Execute();
+            ValidateItems();
+        }
+
+        private void ButtonSplitPipe_Click(object sender, RoutedEventArgs e)
+        {
+            splitPipeCommand.Execute();
             ValidateItems();
         }
 

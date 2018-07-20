@@ -50,7 +50,7 @@
                         <Rectangle Fill="{StaticResource PipeBrush}"/>
                     </fluent:ToggleButton.Icon>
                 </fluent:ToggleButton>
-                <fluent:ToggleButton x:Name="ButtonInsertManhole" Header="Split pipe" ToolTip="Insert manhole, split pipe" Click="OnClick" Size="Middle" SizeDefinition="Small,Small,Small">
+                <fluent:ToggleButton x:Name="ButtonInsertManhole" Header="Split pipe" ToolTip="Insert manhole, split pipe" Click="ButtonSplitPipe_Click" Size="Middle" SizeDefinition="Small,Small,Small">
                     <fluent:ToggleButton.Icon>
                         <Rectangle Fill="{StaticResource ManholeBrush}"/>
                     </fluent:ToggleButton.Icon>

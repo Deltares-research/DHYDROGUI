@@ -36,8 +36,16 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             // exceptional case for nodes
             if (layer.DataSource.FeatureType == typeof(HydroNode))
             {
-                var branch = (IChannel)NetworkHelper.GetNearestBranch(Network.Branches, geometry, 0.1);
+                var branch = (IChannel) NetworkHelper.GetNearestBranch(Network.Branches, geometry, 0.1);
                 return HydroNetworkHelper.SplitChannelAtNode(branch, geometry.Coordinate);
+            }
+
+            var hydroNetwork = Network as HydroNetwork;
+            if (hydroNetwork != null && layer.DataSource.FeatureType == typeof(Manhole))
+            {
+                return null;
+                //var pipe = (IPipe) NetworkHelper.GetNearestBranch(hydroNetwork.Pipes, geometry, 0.1);
+                //return HydroNetworkHelper.SplitPipeAtCoordinate(pipe, geometry.Coordinate);
             }
 
             var newFeature = layer.FeatureEditor.CreateNewFeature != null
@@ -116,9 +124,9 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
                     SnapRules = { }
                 };
             else if (feature is IManhole)
-                featureInteractor = new HydroNodeInteractor(layer, feature, vectorStyle, Network);
-            else if (feature is INode)
                 featureInteractor = new ManholeInteractor(layer, feature, vectorStyle, Network);
+            else if (feature is INode)
+                featureInteractor = new HydroNodeInteractor(layer, feature, vectorStyle, Network);
             else if (feature is IChannel)
                 featureInteractor = new ChannelInteractor(layer, feature, vectorStyle, Network);
             else if (feature is ISewerConnection)

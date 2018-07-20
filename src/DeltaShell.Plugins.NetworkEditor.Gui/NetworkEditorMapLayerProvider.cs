@@ -804,6 +804,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                            };
             }
 
+            if (type == typeof(Manhole))
+            {
+                return new List<ISnapRule>
+                {
+                    new HydroNodeSnapRule
+                    {
+                        Criteria = (layer, feature) => feature is Pipe && layer.DataSource is HydroNetworkFeatureCollection &&
+                                                       ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
+                                                       ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
+                        NewFeatureLayer = vectorLayer,
+                        SnapRole = SnapRole.FreeAtObject,
+                        Obligatory = true,
+                        PixelGravity = 40
+                    }
+                };
+            }
+
             if (type == typeof(CompositeBranchStructure) || type == typeof(LateralSource) || type == typeof(Retention) || type == typeof(ObservationPoint))
             {
                 return new List<ISnapRule>
