@@ -8,9 +8,7 @@
 
   <?ifndef var.NOKERNELS?>
   <ComponentRef Id="WaterQualityDefaultLibrary"/>
-  <!--<ComponentRef Id="WaterQualitySobekLibrary"/>-->
-  <ComponentGroupRef Id="SubstancesFiles"/>
-
+  <ComponentRef Id="WaterQualitySobekLibrary"/>
   <?endif?>
   
   <ComponentRef Id="WaterQuality_scripts_examples_files"/>
