@@ -60,11 +60,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     issues.Add(new ValidationIssue(fixedWeir, ValidationSeverity.Warning,
                                                    "fixed weir '" + fixedWeir.Name + "' not within grid extent", area.FixedWeirs));
                 }
-                if (fixedWeir.GroundLevelsLeft.Any(x => x <= 0.0) || fixedWeir.GroundLevelsRight.Any(x => x <= 0.0))
+
+                var dataToCheck =
+                    model.FixedWeirsProperties.FirstOrDefault(d => d.Feature == fixedWeir);
+                var counter = dataToCheck.DataColumns[1].ValueList.Count;
+                for (int i = 0; i < counter; i++)
                 {
-                    issues.Add(new ValidationIssue(fixedWeir, ValidationSeverity.Warning,
-                        "fixed weir '" + fixedWeir.Name +
-                        "' has unphysical sill depths, parts will be ignored by dflow-fm", area.FixedWeirs));
+                    if (((double)dataToCheck.DataColumns[1].ValueList[i] <= 0.0) ||
+                        ((double)dataToCheck.DataColumns[2].ValueList[i] <= 0.0))
+                        {
+                            issues.Add(new ValidationIssue(fixedWeir, ValidationSeverity.Warning,
+                                "fixed weir '" + fixedWeir.Name +
+                                "' has unphysical sill depths, parts will be ignored by dflow-fm", area.FixedWeirs));
+                        }
                 }
             }
 

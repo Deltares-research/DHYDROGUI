@@ -463,8 +463,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Name = "fxw",
                 Geometry = new LineString(new[] { new Coordinate(100, 0), new Coordinate(100, 200) })
             });
-            flow.Area.FixedWeirs[0].CrestLevels[0] = 10.0;
-            flow.Area.FixedWeirs[0].CrestLevels[1] = 10.0;
+            
+            flow.FixedWeirsProperties[0].DataColumns[0].ValueList[0] = 10.0;
+            flow.FixedWeirsProperties[0].DataColumns[0].ValueList[1] = 10.0;
 
             flow.Area.Weirs.Add(new Weir2D("weir")
             {
@@ -472,7 +473,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 CrestLevel = 2.5
             });
             flow.Area.ObservationPoints.Add(new GroupableFeature2DPoint { Name = "obs", Geometry = new Point(50, 50) });
-
+            
             var controlGroup = RealTimeControlModelHelper.CreateGroupRelativeTimeRule();
             rtc.ControlGroups.Add(controlGroup);
             var relativeTimeRule = ((RelativeTimeRule)controlGroup.Rules[0]);
