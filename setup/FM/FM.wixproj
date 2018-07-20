@@ -137,6 +137,9 @@
     <Compile Include="..\Waq\PLCTLibs.wxs">
       <Link>PLCTLibs.wxs</Link>
     </Compile>
+    <Compile Include="..\Waq\SubstancesFiles.wxs">
+      <Link>SubstancesFiles.wxs</Link>
+    </Compile>
     <Compile Include="RGFGridLibs.wxs">
       <Link>RGFGridLibs.wxs</Link>
     </Compile>
@@ -199,6 +202,7 @@
   <Import Project="FMProperties.targets" />
   <Import Project="..\Dimr\HarvestDimrLibs.targets" />
   <Import Project="..\Waq\HarvestPLCTLibs.targets" />
+  <Import Project="..\Waq\HarvestSubstancesFiles.targets" />
   <Import Project="HarvestRGFGridLibs.targets" />
   <Import Project="..\Waq\HarvestDidoLibs.targets" />
   <PropertyGroup>
@@ -207,6 +211,7 @@
       HarvestPLCTLibsTarget;
       HarvestRGFGridLibsTarget;
       HarvestDidoLibsTarget;
+      HarvestSubstancesFilesTarget;
       $(BuildDependsOn);
     </BuildDependsOn>
   </PropertyGroup>

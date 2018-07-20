@@ -137,6 +137,9 @@
     <Compile Include="..\Waq\PLCTLibs.wxs">
       <Link>PLCTLibs.wxs</Link>
     </Compile>
+    <Compile Include="..\Waq\SubstancesFiles.wxs">
+      <Link>SubstancesFiles.wxs</Link>
+    </Compile>
     <Compile Include="RGFGridLibs.wxs">
       <Link>RGFGridLibs.wxs</Link>
     </Compile>
@@ -200,15 +203,17 @@
   <Import Project="..\Dimr\HarvestDimrLibs.targets" />
   <Import Project="..\Waq\HarvestPLCTLibs.targets" />
   <Import Project="..\Waq\HarvestDidoLibs.targets" />
+  <Import Project="..\Waq\HarvestSubstancesFiles.targets" />
   <Import Project="HarvestRGFGridLibs.targets" />
   <PropertyGroup>
     <BuildDependsOn>
-     HarvestDimrLibsTarget;
-	 HarvestPLCTLibsTarget;
-	 HarvestRGFGridLibsTarget;
-	 HarvestDidoLibsTarget;
-	 $(BuildDependsOn);   
-   </BuildDependsOn>
+      HarvestDimrLibsTarget;
+      HarvestPLCTLibsTarget;
+      HarvestRGFGridLibsTarget;
+      HarvestDidoLibsTarget;
+      HarvestSubstancesFilesTarget;
+      $(BuildDependsOn);
+    </BuildDependsOn>
   </PropertyGroup>
   <Target Name="Build" DependsOnTargets="$(BuildDependsOn)" />
 </Project>
