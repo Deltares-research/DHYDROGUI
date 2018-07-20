@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
@@ -153,5 +154,35 @@ namespace DelftTools.Hydro
                 e.Cancel = true;
             }
         }
+
+        #region IHydroNetworkFeature
+
+        public virtual IHydroRegion Region { get { return HydroNetwork; } }
+
+        public virtual IEventedList<HydroLink> Links { get; set; }
+
+        public virtual bool CanBeLinkSource { get { return false; } }
+
+        public virtual bool CanBeLinkTarget { get { return false; } }
+
+        public virtual HydroLink LinkTo(IHydroObject target)
+        {
+            throw new NotSupportedException();
+        }
+
+        public virtual void UnlinkFrom(IHydroObject target)
+        {
+            throw new NotSupportedException();
+        }
+
+        public virtual bool CanLinkTo(IHydroObject target)
+        {
+            return false; // no linking to/from pipe yet
+        }
+
+        public virtual IHydroNetwork HydroNetwork { get { return (IHydroNetwork) Network; } }
+        public virtual string LongName { get; set; }
+
+        #endregion
     }
 }

@@ -2,7 +2,7 @@
 
 namespace DelftTools.Hydro
 {
-    public interface ISewerConnection : IBranch
+    public interface ISewerConnection : IBranch, IHydroNetworkFeature
     {
         double Length { get; set; }
 
