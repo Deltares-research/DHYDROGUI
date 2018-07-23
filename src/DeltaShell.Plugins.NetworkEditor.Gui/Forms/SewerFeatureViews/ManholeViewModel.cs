@@ -34,27 +34,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 if (value == null)
                 {
                     network = null;
-                    UnsubscribeEvents();
                     return;
                 }
 
-                if (manhole != null)
-                {
-                    if (manhole.Compartments != null)
-                    {
-                        UnsubscribeEvents();
-                    }
-                }
-
                 manhole = value;
-
-                if (manhole.Compartments != null)
-                {
-                    DetermineSurfaceAndBottomLevels();
-                    SubscribeEvents();
-                }
-
-                network = manhole.Network as IHydroNetwork;
+                network = manhole?.Network as IHydroNetwork;
             }
         }
 
@@ -72,11 +56,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         public ICommand DeleteCommand { get; set; }
 
-        public double SurfaceLevel { get; set; }
-
-        public double BottomLevel { set; get; }
-
-        public object SelectedItem { get; set; }
+    public object SelectedItem { get; set; }
 
         public Action DeselectItem { get; set; }
 
@@ -89,50 +69,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         {
             DeselectItem?.Invoke();
         }
-
-        private void DetermineSurfaceAndBottomLevels()
-        {
-            SurfaceLevel = CalculateSurfaceLevel();
-            BottomLevel = CalculateBottomLevel();
-        }
-
-        private double CalculateSurfaceLevel()
-        {
-            var compartments = manhole?.Compartments;
-            if (compartments != null && compartments.Any())
-            {
-                return compartments.Max(c => c.SurfaceLevel);
-            }
-
-            return 0;
-        }
-
-        private double CalculateBottomLevel()
-        {
-            var compartments = manhole?.Compartments;
-            if (compartments != null && compartments.Any())
-            {
-                return compartments.Min(c => c.BottomLevel);
-            }
-
-            return 0;
-        }
-
-        private void EventedListCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
-        {
-            DetermineSurfaceAndBottomLevels();
-        }
-
-        private void SubscribeEvents()
-        {
-            manhole.Compartments.CollectionChanged += EventedListCollectionChanged;
-        }
-
-        private void UnsubscribeEvents()
-        {
-            manhole.Compartments.CollectionChanged -= EventedListCollectionChanged;
-        }
-
+        
         #region Add/remove methods
 
         private void RemoveItem(object obj)

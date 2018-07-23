@@ -25,29 +25,6 @@
         <Style TargetType="{x:Type TextBox}">
             <Setter Property="Margin" Value="0,3,3,3"/>
         </Style>
-        <Style TargetType="ListBoxItem" x:Key="ListBoxStyle">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                        <Border Name="ItemBorder"
-                                BorderBrush="Black" 
-                                BorderThickness="1"
-                                Background="White">
-                            <ContentPresenter/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="ItemBorder" Property="Background" Value="#FFD0ECFD"/>
-                            </Trigger>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="ItemBorder" Property="Background" Value="LightSkyBlue"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Margin" Value="2"/>
-        </Style>
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -110,10 +87,6 @@
                                             Manhole="{Binding DataContext.Manhole, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}"
                                             SelectedItem="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}"
                                             Margin="5"/>
-                
-                
-                
-                
             </Grid>
 
             <GridSplitter Grid.Row="0" Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" ResizeDirection="Columns"/>

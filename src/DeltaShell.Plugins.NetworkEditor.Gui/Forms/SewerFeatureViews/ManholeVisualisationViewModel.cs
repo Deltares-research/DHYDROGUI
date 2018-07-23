@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             if (!Shapes.Any() || isUpdating) return;
 
             isUpdating = true;
-            var dim = Shapes.GetDimensionWithMargin(0); // TODO Remove margin
+            var dim = Shapes.GetDimensions();
             minX = dim.MinX;
             maxX = dim.MaxX;
             minY = dim.MinY;
@@ -601,32 +601,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         public double MinY { get; set; }
         public double MaxX { get; set; }
         public double MinX { get; set; }
-
-        public double Height { get { return MaxY - MinY; } }
-        public double Width { get { return MaxX - MinX; } }
     }
 
     public static class DimensionsHelper
     {
-        public static Dimension GetDimensionWithMargin(this IEnumerable<IDrawingShape> shapes, double margin)
-        {
-            var dim = GetDimensions(shapes);
-
-            var height = dim.Height;
-            var width = dim.Width;
-
-            var dimensionWithMargin = new Dimension
-            {
-                MaxY = dim.MaxY + margin * height,
-                MinY = dim.MinY - margin * height,
-                MaxX = dim.MaxX + margin * width,
-                MinX = dim.MinX - margin * width,
-
-            };
-            return dimensionWithMargin;
-        }
-
-        private static Dimension GetDimensions(IEnumerable<IDrawingShape> shapes)
+        public static Dimension GetDimensions(this IList<IDrawingShape> shapes)
         {
             double minX = 0;
             double maxX = 0;
