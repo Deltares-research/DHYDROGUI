@@ -7,14 +7,14 @@
              xmlns:local="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews"
              xmlns:crossSections="clr-namespace:DelftTools.Hydro.CrossSections;assembly=DelftTools.Hydro"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" >
+             d:DesignHeight="300" d:DesignWidth="300"
+             SizeChanged="ManholeVisualisation_OnSizeChanged">
     <UserControl.DataContext>
-        <local:ManholeVisualisationViewModel x:Name="ViewModel"/>
+        <local:ManholeVisualisationViewModel x:Name="ViewModel" x:FieldModifier="internal"/>
     </UserControl.DataContext>
     <Grid x:Name="ViewGrid" 
           SizeChanged="ViewGrid_OnSizeChanged" Background="Aquamarine" 
-          PreviewMouseLeftButtonDown="UIElement_OnPreviewMouseLeftButtonDown"
-          PreviewKeyDown="UIElement_OnPreviewKeyDown">
+          PreviewMouseLeftButtonDown="UIElement_OnPreviewMouseLeftButtonDown">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -23,18 +23,16 @@
         </Grid.ColumnDefinitions>
         <local:CanvasItemsControl ItemsSource="{Binding Shapes}" ClipToBounds="True">
             <ItemsControl.Resources>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" x:Key="BackgroundBrush">
+                    <GradientStop Color="#FFF0F0F0" Offset="0.0"/>
+                    <GradientStop Color="#FFB0B0B0" Offset="1"/>
+                </LinearGradientBrush>
                 <DataTemplate DataType="{x:Type local:CompartmentShape}">
                     <Grid>
                         <Rectangle
                             Stroke="Black" StrokeThickness="2"
                                    Width="{Binding WidthPix}" Height="{Binding HeightPix}"
-                                   ToolTip="{Binding Compartment.Name}">
-                            <Rectangle.Fill>
-                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                    <GradientStop Color="#FFF0F0F0" Offset="0.0"/>
-                                    <GradientStop Color="#FFB0B0B0" Offset="1"/>
-                                </LinearGradientBrush>
-                            </Rectangle.Fill>
+                                   ToolTip="{Binding Compartment.Name}" Fill="{StaticResource BackgroundBrush}">
                         </Rectangle>
                         <TextBlock Text="{Binding TopLevel, StringFormat={}{0:G2} m}" HorizontalAlignment="Center" FontSize="15" />
                         <TextBlock Text="{Binding BottomLevel, StringFormat={}{0:G2} m}" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="15"/>
@@ -91,13 +89,7 @@
                         <Border x:Name="OrificeShapeBorder" Width="{Binding WidthPix}" Height="{Binding HeightPix}" HorizontalAlignment="Left"
                                 BorderThickness="0, 2, 0, 2" BorderBrush="Black" >
                             <Rectangle
-                                ToolTip="{Binding Orifice.Name}">
-                                <Rectangle.Fill>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                        <GradientStop Color="#FFF0F0F0" Offset="0.0"/>
-                                        <GradientStop Color="#FFB0B0B0" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Rectangle.Fill>
+                                ToolTip="{Binding Orifice.Name}" Fill="{StaticResource BackgroundBrush}">
                             </Rectangle>
                         </Border>
                         <Rectangle Width="16" Height="16">
@@ -105,7 +97,6 @@
                                 <ImageBrush ImageSource="../../Resources/Gate.png"/>
                             </Rectangle.Fill>
                         </Rectangle>
-                        
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type local:PumpShape}">
@@ -115,7 +106,7 @@
                             SnapsToDevicePixels="True" 
                             Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DataContext.WidthPix}" 
                             Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DataContext.HeightPix}"
-                            Background="Transparent"/>
+                            Background="{StaticResource BackgroundBrush}"/>
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type local:WeirShape}">
@@ -123,8 +114,7 @@
                         <Border BorderThickness="0,2,0,2" BorderBrush="Black" HorizontalAlignment="Left"
                                 Width="{Binding WidthPix}" Height="{Binding HeightPix}"
                                 x:Name="WeirShapeBorder">
-                            <Rectangle Fill="White"/>
-
+                            <Rectangle Fill="{StaticResource BackgroundBrush}"/>
                         </Border>
                         <Rectangle Width="16" Height="16">
                             <Rectangle.Fill>

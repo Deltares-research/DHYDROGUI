@@ -35,7 +35,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         private bool isDown;
         private bool isDragging;
         private ContentPresenter contentPresenter;
-        private UIElement selectedElement;
+
+        private ContentPresenter ContentPresenter
+        {
+            get { return contentPresenter; }
+            set
+            {
+                RemoveSelectedItemAdorner();
+                contentPresenter = value;
+                AddSelectedItemAdorner();
+
+                SelectedItem = (contentPresenter?.Content as IDrawingShape)?.Source;
+            }
+        }
+
         private MoveAdorner moveAdorner;
         private SelectedAdorner selectedItemAdorner;
         
@@ -55,43 +68,41 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         public ManholeVisualisation()
         {
             InitializeComponent();
-            ViewModel.ContainerWidth = () => ViewGrid.ActualWidth;
-            ViewModel.ContainerHeight = () => ViewGrid.ActualHeight;
+            ViewModel.ContainerWidth = () => ViewGrid.Width;
+            ViewModel.ContainerHeight = () => ViewGrid.Height;
             ViewModel.SetWindowSize = SetViewGridSize;
 
             pipeStrategy = new PipeShapeDragAndDropStrategy();
             compartmentStrategy = new CompartmentShapeDragAndDropStrategy(ViewModel.Shapes);
             connectionStrategy = new ConnectionShapeDragAndDropStrategy(ViewModel.Shapes);
         }
-
+        
         public Manhole Manhole
         {
             get { return (Manhole)GetValue(ManholeProperty); }
             set { SetValue(ManholeProperty, value); }
         }
 
+        public void DeselectItem()
+        {
+            ContentPresenter = null;
+            SelectedItem = null;
+            if (isDragging) DragFinished(true);
+        }
+
         private void UIElement_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            isDown = false;
+
             var canvas = sender as Canvas;
             if (canvas == null)
             {
-                RemoveSelectedItemAdorner();
-                selectedElement = null;
-                SelectedItem = null;
+                ContentPresenter = null;
                 return;
             }
 
-            contentPresenter = (e.Source as DependencyObject)?.TryFindParent<ContentPresenter>();
+            ContentPresenter = (e.Source as DependencyObject)?.TryFindParent<ContentPresenter>();
             if (contentPresenter == null) return;
-
-            // remove old selected element layer
-            RemoveSelectedItemAdorner();
-
-            selectedElement = contentPresenter;
-            SelectedItem = (((ContentPresenter)selectedElement).Content as IDrawingShape)?.Source;
-
-            // Create element layer
-            AddSelectedItemAdorner();
 
             startPoint = e.GetPosition(canvas);
 
@@ -107,10 +118,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             var canvas = sender as Canvas;
             if (canvas == null) return;
 
-            if (isDragging == false && (Math.Abs(e.GetPosition(canvas).X - startPoint.X) > SystemParameters.MinimumHorizontalDragDistance ||
-                                        Math.Abs(e.GetPosition(canvas).Y - startPoint.Y) > SystemParameters.MinimumVerticalDragDistance))
+            var mousePosition = e.GetPosition(canvas);
+
+            if (isDragging == false && (Math.Abs(mousePosition.X - startPoint.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                                        Math.Abs(mousePosition.Y - startPoint.Y) > SystemParameters.MinimumVerticalDragDistance))
             {
                 DragStarted();
+            }
+
+            var diff = startPoint - mousePosition;
+
+            if (e.LeftButton != MouseButtonState.Pressed ||
+                (!(Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance) &&
+                 !(Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)))
+            {
+                return;
             }
 
             if (isDragging)
@@ -126,14 +148,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             DragFinished(false);
 
             e.Handled = true;
-        }
-
-        private void UIElement_OnPreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Escape && isDragging)
-            {
-                DragFinished(true);
-            }
         }
 
         private void DragStarted()
@@ -159,7 +173,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
             if (contentPresenter == null || canvas == null) return;
 
-            var helper = GetStrategyForShape(contentPresenter.Content as IDrawingShape);
+            var helper = GetStrategyForShape(contentPresenter?.Content as IDrawingShape);
+            if (helper == null) return;
             foundNewPosition = helper.FindNewPosition(canvas, contentPresenter, moveAdorner.LeftOffset, originalLeft);
             moveIsValid = helper.Validate();
         }
@@ -173,8 +188,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
                 if (!moveIsValid || !foundNewPosition) return;
 
-                var helper = GetStrategyForShape(contentPresenter.Content as IDrawingShape);
-                helper.Reposition();
+                var helper = GetStrategyForShape(contentPresenter?.Content as IDrawingShape);
+                helper?.Reposition();
             }
             finally
             {
@@ -190,9 +205,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         private void AddMoveAdorner()
         {
+            if (contentPresenter == null) return;
+
             moveAdorner = new MoveAdorner(contentPresenter);
-            AdornerLayer layer = AdornerLayer.GetAdornerLayer(contentPresenter);
-            layer.Add(moveAdorner);
+            AdornerLayer.GetAdornerLayer(contentPresenter).Add(moveAdorner);
         }
 
         private void RemoveMoveAdorner()
@@ -205,10 +221,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         private void AddSelectedItemAdorner()
         {
-            if (selectedElement == null) return;
+            if (contentPresenter == null) return;
 
-            selectedItemAdorner = new SelectedAdorner(selectedElement as ContentPresenter);
-            AdornerLayer.GetAdornerLayer(selectedElement).Add(selectedItemAdorner);
+            selectedItemAdorner = new SelectedAdorner(contentPresenter);
+            AdornerLayer.GetAdornerLayer(contentPresenter).Add(selectedItemAdorner);
         }
 
         private void RemoveSelectedItemAdorner()
@@ -223,23 +239,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         
         private void SetViewGridSize()
         {
-            var ratio = ViewModel.HeigthWidthRatio;
+            var ratio = ViewModel.HeightWidthRatio;
             if (double.IsNaN(ratio)) return;
 
-            if (UserControl.ActualHeight / ratio < UserControl.ActualWidth)
+            var actualHeight = UserControl.ActualHeight;
+            var actualWidth = UserControl.ActualWidth;
+
+            if (actualHeight / ratio < actualWidth)
             {
                 // Adjust height to available height, scale width by ratio
-                var height = UserControl.ActualHeight;
+                var height = actualHeight;
                 ViewGrid.Height = height;
                 ViewGrid.Width = height / ratio;
                 return;
             }
 
             // Adjust width to available width, scale height by ratio
-            var width = UserControl.ActualWidth;
+            var width = actualWidth;
             ViewGrid.Width = width;
             ViewGrid.Height = width * ratio;
-
         }
 
         private IDragAndDropStrategy GetStrategyForShape(IDrawingShape shape)
@@ -260,8 +278,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         private void ViewGrid_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            SetViewGridSize();
-            ViewModel.SetShapesPixelValues();
+            /*SetViewGridSize();
+            ViewModel.SetShapesPixelValues();*/
         }
 
         private static void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
@@ -270,6 +288,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             if (view == null) return;
 
             view.ViewModel.Manhole = dependencyPropertyChangedEventArgs.NewValue as Manhole;
+        }
+
+        private void ManholeVisualisation_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            SetViewGridSize();
+            ViewModel.SetShapesPixelValues();
         }
     }
 

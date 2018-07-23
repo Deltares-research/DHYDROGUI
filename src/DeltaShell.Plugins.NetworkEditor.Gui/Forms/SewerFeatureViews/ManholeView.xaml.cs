@@ -13,6 +13,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         public ManholeView()
         {
             InitializeComponent();
+            ViewModel.DeselectItem = () => ManholeVisualisationControl.DeselectItem();
         }
 
         #region IView implementation

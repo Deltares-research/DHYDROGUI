@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows.Input;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
@@ -21,8 +22,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             AddOrificeCommand = new RelayCommand(AddOrifice, CanAddOrifice);
             AddWeirCommand = new RelayCommand(AddWeir, CanAddWeir);
             RemoveCompartmentCommand = new RelayCommand(RemoveItem, CanRemoveItem);
+            EscapeCommand = new RelayCommand(Escape);
+            DeleteCommand = new RelayCommand(Delete);
         }
-
+        
         public Manhole Manhole
         {
             get { return manhole; }
@@ -65,11 +68,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         public ICommand RemoveCompartmentCommand { get; set; }
 
+        public ICommand EscapeCommand { get; set; }
+
+        public ICommand DeleteCommand { get; set; }
+
         public double SurfaceLevel { get; set; }
 
         public double BottomLevel { set; get; }
 
         public object SelectedItem { get; set; }
+
+        public Action DeselectItem { get; set; }
+
+        private void Delete(object o)
+        {
+            RemoveItem(null);
+        }
+
+        private void Escape(object o)
+        {
+            DeselectItem?.Invoke();
+        }
 
         private void DetermineSurfaceAndBottomLevels()
         {

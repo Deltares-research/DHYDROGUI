@@ -24,6 +24,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         private IHydroNetwork network;
         private ObservableCollection<IDrawingShape> shapes;
         private bool isUpdating;
+        private bool isCreating;
 
         public ManholeVisualisationViewModel()
         {
@@ -48,8 +49,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                     manhole.Compartments.CollectionChanged += CompartmentsOnCollectionChanged;
                 }
 
-                CreateShapes();
                 UpdateShapes();
+                UpdateShapeDimensions();
             }
         }
 
@@ -72,7 +73,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
         }
 
-        public double HeigthWidthRatio {get { return (maxY - minY) / (maxX - minX); } }
+        public double HeightWidthRatio {get { return (maxY - minY) / (maxX - minX); } }
 
         private IHydroNetwork Network
         {
@@ -91,31 +92,40 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
         }
 
-        private void CreateShapes()
+        private void UpdateShapes()
         {
-            Shapes.Clear();
+            isCreating = true;
 
-            var drawingShapes = new List<IDrawingShape>();
-            drawingShapes.AddRange(manhole.CreateShapes());
-            var reorderedshapes = drawingShapes.OrderShapes();
+            try
+            {
+                Shapes.Clear();
 
-            Shapes.AddRange(reorderedshapes);
+                var drawingShapes = new List<IDrawingShape>();
+                drawingShapes.AddRange(manhole.CreateShapes());
+                var reorderedshapes = drawingShapes.OrderShapes();
+
+                Shapes.AddRange(reorderedshapes);
+            }
+            finally
+            {
+                isCreating = false;
+            }
         }
 
-        private void UpdateShapes()
+        private void UpdateShapeDimensions()
         {
             if (!Shapes.Any() || isUpdating) return;
 
             isUpdating = true;
-            var dim = Shapes.GetDimensionWithMargin(0.1);
+            var dim = Shapes.GetDimensionWithMargin(0); // TODO Remove margin
             minX = dim.MinX;
             maxX = dim.MaxX;
             minY = dim.MinY;
             maxY = dim.MaxY;
 
             Shapes.PositionShapes(maxY);
-            SetShapesPixelValues();
             SetWindowSize?.Invoke();
+            SetShapesPixelValues();
 
             isUpdating = false;
         }
@@ -228,12 +238,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 }
             }
 
-            UpdateShapes();
+            if (isCreating) return;
+
+            UpdateShapeDimensions();
         }
 
         private void OnShapePropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            UpdateShapes();
+            UpdateShapeDimensions();
         }
         
         public Func<double> ContainerWidth { get; set; }
@@ -241,7 +253,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         public Func<double> ContainerHeight { get; set; }
 
         public Action SetWindowSize { get; set; }
-        
+
         public void SetShapesPixelValues()
         {
             foreach (var shape in Shapes)

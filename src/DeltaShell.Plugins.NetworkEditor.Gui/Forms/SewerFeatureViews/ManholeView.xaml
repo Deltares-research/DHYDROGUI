@@ -7,11 +7,16 @@
              xmlns:local="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews"
              xmlns:hydro="clr-namespace:DelftTools.Hydro;assembly=DelftTools.Hydro"
              xmlns:structures="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="1000" d:DesignWidth="1000" d:DataContext="{d:DesignInstance local:ManholeViewModel}">
     <UserControl.DataContext>
         <local:ManholeViewModel x:Name="ViewModel" />
     </UserControl.DataContext>
+    <UserControl.InputBindings>
+        <KeyBinding Key="Escape" Command="{Binding EscapeCommand}"/>
+        <KeyBinding Key="Delete" Command="{Binding DeleteCommand}"/>
+    </UserControl.InputBindings>
     <UserControl.Resources>
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -58,16 +63,18 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" HorizontalAlignment="Left">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="120"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="120"/>
                     </Grid.ColumnDefinitions>
@@ -77,21 +84,14 @@
                     <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Manhole.Name}"/>
 
                     <!-- Row 1 -->
-                    <Label Grid.Column="0" Grid.Row="1" Content="Coordinate"/>
-                    <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
+                    <Label Grid.Column="2" Grid.Row="0" Content="Coordinate"/>
+                    <StackPanel Grid.Column="3" Grid.Row="0" Orientation="Horizontal">
                         <TextBlock Text="{Binding Manhole.XCoordinate, StringFormat=X: \{0\}}"/>
                         <TextBlock Margin="5,0,0,0" Text="{Binding Manhole.YCoordinate, StringFormat=Y: \{0\}}"/>
                     </StackPanel>
                         
                 </Grid>
 
-                <!-- Background="#FFE8E8E8"-->
-                <local:ManholeVisualisation Grid.Row="2"
-                                            Width="700"
-                                            Height="800"
-                                            Manhole="{Binding DataContext.Manhole, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}"
-                                            SelectedItem="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}"/>
-                
                 <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
                     <Button Content="Add compartment" Command="{Binding AddCompartmentCommand}" Margin="0,3,3,3"/>
                     <Button Content="Add orifice" Command="{Binding AddOrificeCommand}" Margin="5,3,3,3"/>
@@ -99,6 +99,21 @@
                     <Button Content="Add weir" Command="{Binding AddWeirCommand}" Margin="5,3,3,3"/>
                     <Button Content="Remove item" Command="{Binding RemoveCompartmentCommand}" Margin="5,3,3,3"/>
                 </StackPanel>
+                
+                <ListView Grid.Row="2">
+
+                </ListView>
+                
+                <!-- Background="#FFE8E8E8"-->
+                <local:ManholeVisualisation Grid.Row="3"
+                                            x:Name="ManholeVisualisationControl"
+                                            Manhole="{Binding DataContext.Manhole, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}"
+                                            SelectedItem="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}"
+                                            Margin="5"/>
+                
+                
+                
+                
             </Grid>
 
             <GridSplitter Grid.Row="0" Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" ResizeDirection="Columns"/>
@@ -126,3 +141,4 @@
         </Grid>
     </ScrollViewer>
 </UserControl>
+
