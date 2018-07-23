@@ -295,7 +295,7 @@
     <Compile Include="IO\Importers\BcmFileImporterTest.cs" />
     <Compile Include="IO\Importers\CmpFileImporterTest.cs" />
     <Compile Include="IO\Importers\QhFileImporterTest.cs" />
-    <Compile Include="IO\Importers\SourceAndSinkImporterHelperTest.cs" />
+    <Compile Include="IO\Importers\SourceAndSinkImportExtensionsTest.cs" />
     <Compile Include="IO\Importers\TimFileImporterTest.cs" />
     <Compile Include="IO\MduFileHelperTest.cs" />
     <Compile Include="IO\MduFileTest.cs" />

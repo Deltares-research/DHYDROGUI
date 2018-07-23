@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using DelftTools.Controls;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
@@ -785,14 +784,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             var removedIndex = e.Index;
             if (boundaryCondition!=null)
             {
-                boundaryConditionSet.BoundaryConditions.Remove(boundaryCondition);
-
                 var condition = boundaryCondition as BoundaryCondition;
                 if (condition != null)
                 {
-                    // Note: setting Feature to null changes the boundaryCondition.Name!
                     condition.Feature = null; // unsubscribe to geometry changes
                 }
+
+                boundaryConditionSet.BoundaryConditions.Remove(boundaryCondition);
             }
             if (removedIndex < conditionsListBox.Items.Count)
             {

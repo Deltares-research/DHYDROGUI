@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -149,23 +150,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                         return sourceAndSink;
                     }
 
-                    var readFunction = (IFunction)sourceAndSinkFunction.Clone(true);
-                    InsertTimeSeries(path, readFunction, model.ReferenceTime);
-
+                    var readFunction = new TimFile().Read(path, model.ReferenceTime);
+                    sourceAndSink.CopyValuesFromFileToSourceAndSinkAttributes(readFunction);
+                    
                     var componentSettings = new Dictionary<string, bool>()
                     {
                         {SourceAndSink.SalinityVariableName, model.UseSalinity},
                         {SourceAndSink.TemperatureVariableName, model.UseTemperature},
+                        {SourceAndSink.SecondaryFlowVariableName, model.UseSecondaryFlow }
                     };
-                    
-                    if (SourceAndSinkImporterHelper.AdaptComponentValuesFromFileToSourceAndSinkFunction(readFunction, componentSettings))
-                    {
-                        sourceAndSink.Data = readFunction;
-                    }
-                    else
-                    {
-                        Log.ErrorFormat(Resources.Tim_file_import_failed__could_not_determine_physical_processes_for_imported_SourceAndSink__0_, sourceAndSink.Name);
-                    }
+
+                    sourceAndSink.SedimentFractionNames.ForEach(sfn => componentSettings.Add(sfn, model.UseMorSed));
+                    sourceAndSink.TracerNames.ForEach(tn => componentSettings.Add(tn, true));
+                    sourceAndSink.PopulateFunctionValuesFromAttributes(componentSettings);
+
                     return sourceAndSink;
                 }
                 catch (Exception e)

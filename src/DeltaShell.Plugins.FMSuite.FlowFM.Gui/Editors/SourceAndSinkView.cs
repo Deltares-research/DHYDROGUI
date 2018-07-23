@@ -170,8 +170,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 {
                     var tableViewColumn = FunctionView.TableView.Columns[columnIndex];
                     tableViewColumn.Visible = visibility;
-                    FunctionView.ChartSeries.First(s => s.YValuesDataMember == component.DisplayName).Visible =
-                        visibility;
+                    var chartSeries = FunctionView.ChartSeries.FirstOrDefault(s => s.YValuesDataMember == component.DisplayName);
+                    if(chartSeries != null) chartSeries.Visible = visibility;
 
                     if (tableViewColumn.Visible)
                         tableViewColumn.DisplayIndex = k++;

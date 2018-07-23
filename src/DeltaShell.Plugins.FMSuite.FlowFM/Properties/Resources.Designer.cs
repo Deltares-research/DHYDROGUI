@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -765,6 +765,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("SourceAndSinkImporterHelper_TryAdjustSalinityAndTemperatureComponents_Additional_" +
                         "values_detected_for_one_or_more_physical_processes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There were less columns in the *.tim file for {0} than expected.
+        /// </summary>
+        public static string SourceAndSinkImportExtensions_GenerateFunctionFromAttributes_There_were_less_columns_in_the___tim_file_for__0__than_expected {
+            get {
+                return ResourceManager.GetString("SourceAndSinkImportExtensions_GenerateFunctionFromAttributes_There_were_less_colu" +
+                        "mns_in_the___tim_file_for__0__than_expected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There were more columns in the *.tim file for {0} than expected.
+        /// </summary>
+        public static string SourceAndSinkImportExtensions_GenerateFunctionFromAttributes_There_were_more_columns_in_the___tim_file_for__0__than_expected {
+            get {
+                return ResourceManager.GetString("SourceAndSinkImportExtensions_GenerateFunctionFromAttributes_There_were_more_colu" +
+                        "mns_in_the___tim_file_for__0__than_expected", resourceCulture);
             }
         }
         
