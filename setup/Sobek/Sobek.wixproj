@@ -44,6 +44,9 @@
     <Compile Include="..\FM\RGFGridLibs.wxs">
       <Link>RGFGridLibs.wxs</Link>
     </Compile>
+    <Compile Include="..\Waq\SubstancesFiles.wxs">
+      <Link>SubstancesFiles.wxs</Link>
+    </Compile>
     <Compile Include="Product.wxs" />
     <Compile Include="WixUI\Sobek_WixUI_Deltares.wxs" />
   </ItemGroup>
@@ -229,6 +232,7 @@
   <Import Project="SobekProperties.targets" />
   <Import Project="..\Dimr\HarvestDimrLibs.targets" />
   <Import Project="..\Waq\HarvestPLCTLibs.targets" />
+  <Import Project="..\Waq\HarvestSubstancesFiles.targets" />
   <Import Project="..\Waq\HarvestDidoLibs.targets" />
   <Import Project="..\FM\HarvestRGFGridLibs.targets" />
   <PropertyGroup>
@@ -237,6 +241,7 @@
       HarvestPLCTLibsTarget;
       HarvestDidoLibsTarget;
       HarvestRGFGridLibsTarget;
+      HarvestSubstancesFilesTarget;
       $(BuildDependsOn);
     </BuildDependsOn>
   </PropertyGroup>
