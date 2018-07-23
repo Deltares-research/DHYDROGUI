@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Editing;
@@ -698,6 +699,11 @@ namespace DelftTools.Hydro.Helpers
         {
             var hydroNetwork = network as HydroNetwork;
             if(hydroNetwork == null) return;
+
+            if (pipe.SewerProfileDefinition == null)
+            {
+                pipe.SewerProfileDefinition = new CrossSectionDefinitionStandard(CrossSectionStandardShapeRound.CreateDefault());
+            }
 
             if (pipe.Source == null)
             {
