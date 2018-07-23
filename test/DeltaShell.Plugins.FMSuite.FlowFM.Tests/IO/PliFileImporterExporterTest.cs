@@ -117,12 +117,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             // Check first weir's properties
             var firstWeir = fixedWeirs[0];
-            Assert.That(firstWeir.CrestLevels[0], Is.EqualTo(1.2));
-            Assert.That(firstWeir.CrestLevels[1], Is.EqualTo(6.4));
-            Assert.That(firstWeir.GroundLevelsLeft[0], Is.EqualTo(3.5));
-            Assert.That(firstWeir.GroundLevelsLeft[1], Is.EqualTo(3.0));
-            Assert.That(firstWeir.GroundLevelsRight[0], Is.EqualTo(3.2));
-            Assert.That(firstWeir.GroundLevelsRight[1], Is.EqualTo(3.3));
             var attributes = firstWeir.Attributes;
             attributes.CheckDoubleValuesForColumn("Column3", 1.2, 6.4);
             attributes.CheckDoubleValuesForColumn("Column4", 3.5, 3.0);
@@ -135,12 +129,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             // Check second weir's properties
             var secondWeir = fixedWeirs[1];
-            Assert.That(secondWeir.CrestLevels[0], Is.EqualTo(1.7));
-            Assert.That(secondWeir.CrestLevels[1], Is.EqualTo(6.1));
-            Assert.That(secondWeir.GroundLevelsLeft[0], Is.EqualTo(4.5));
-            Assert.That(secondWeir.GroundLevelsLeft[1], Is.EqualTo(4.0));
-            Assert.That(secondWeir.GroundLevelsRight[0], Is.EqualTo(4.2));
-            Assert.That(secondWeir.GroundLevelsRight[1], Is.EqualTo(4.3));
             attributes = secondWeir.Attributes;
             attributes.CheckDoubleValuesForColumn("Column3", 1.7, 6.1);
             attributes.CheckDoubleValuesForColumn("Column4", 4.5, 4.0);

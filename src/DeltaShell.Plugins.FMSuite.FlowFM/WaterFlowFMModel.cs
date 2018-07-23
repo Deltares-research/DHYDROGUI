@@ -1435,10 +1435,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     ((INotifyPropertyChanged)value).PropertyChanged -= HydroAreaPropertyChanged;
                 }
 
+                allFixedWeirsAndCorrespondingProperties.Clear();
+
                 areaItem.Value = value;
 
                 if (value != null)
                 {
+                    foreach (var fixedWeir in value.FixedWeirs)
+                    {
+                        allFixedWeirsAndCorrespondingProperties.Add(CreateModelFeatureCoordinateDataFor(fixedWeir));
+                    }
+
                     ((INotifyCollectionChanged)value).CollectionChanged += HydroAreaCollectionChanged;
                     ((INotifyPropertyChanged) value).PropertyChanged += HydroAreaPropertyChanged;
                 }
@@ -2386,7 +2393,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     switch (e.Action)
                     {
                         case NotifyCollectionChangeAction.Add:
-                            allFixedWeirsAndCorrespondingProperties.Add(CreateModelFeatureCoordinateDataFor(fixedWeir));
+                            if (allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir) == null)
+                            {
+                                allFixedWeirsAndCorrespondingProperties.Add(
+                                    CreateModelFeatureCoordinateDataFor(fixedWeir));
+                            }
+
                             break;
                         case NotifyCollectionChangeAction.Remove:
                             var dataToRemove =

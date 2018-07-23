@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -36,6 +38,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             get { return Properties.Resources.TextDocument; }
         }
+
+
 
         public override IEnumerable<Type> SourceTypes()
         {
@@ -71,11 +75,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         protected override void Export(IEnumerable<TFeat> features, string path)
         {
+            foreach (var feature in features)
+            {
+                features.OfType<FixedWeir>().ForEach(f => BeforeExportActionDelegate?.Invoke(features, feature));
+            }
+            
             if (Path.GetExtension(path) == ".pli")
             {
                 var writer = new PliFile<TFeat>
                 {
                     CreateDelegate = CreateDelegate,
+                    
                 };
                 writer.Write(path, features);
             }
@@ -84,9 +94,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 var writer = new PlizFile<TFeat>
                 {
                     CreateDelegate = CreateDelegate,
+                    
                 };
                 writer.Write(path, features);
             }
+            foreach (var feature in features)
+            {
+                features.OfType<FixedWeir>().ForEach(f => AfterExportActionDelegate?.Invoke(features, feature));
+            }
+
         }
 
         public Func<TFeat,TParent> CreateFromFeature { get; set; }

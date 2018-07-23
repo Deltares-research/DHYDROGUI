@@ -26,7 +26,6 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Export;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms.Feature2DEditors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
@@ -326,9 +325,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     GetViewName = (v, o) => v.Title,
                     AfterCreate = (v, o) => v.Importer = o
                 };
-
-            yield return new ViewInfo<FixedWeir, FixedWeirEditor> { GetViewName = (v, o) => o.Name };
-
+            
             yield return new ViewInfo<Embankment, IGeometry, GeometryEditor>
             {
                 GetViewData = (v) => v.Geometry,

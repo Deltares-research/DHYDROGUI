@@ -653,6 +653,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.FixedWeirFile, hydroArea.FixedWeirs.ToList(),
                 ref fixedWeirFile, FixedWeirExtension, FixedWeirAlternativeExtension);
 
+            foreach (var fixedWeir in hydroArea.FixedWeirs)
+            {
+                fixedWeir.Attributes.Clear(); 
+            }
+
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.ObsFile, hydroArea.ObservationPoints,
                 ref obsFile, ObsExtension);
 
@@ -750,7 +755,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             foreach (var fixedWeir in hydroArea.FixedWeirs)
             {
-                // fixedWeir.Attributes.Clear(); To Do during last step of cleaning. Turn this on. 
+                fixedWeir.Attributes.Clear(); //To Do during last step of cleaning. Turn this on. 
             }
            
             reportProgress("Reading external forcings file", 4, totalSteps);

@@ -23,6 +23,7 @@ using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using Mono.Addins;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Grids;
 using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
@@ -115,8 +116,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     return feature1;
                 },
                 EqualityComparer = new GroupableFeatureComparer<FixedWeir>(),
-                AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.FixedWeirs)),
-                GetEditableObject = target => GetModelFor(target, a => a.FixedWeirs).Area
+                AfterCreateAction = delegate(object featureList, FixedWeir fixedWeir)
+                {
+                    fixedWeir.UpdateGroupName(GetModelFor(featureList, a => a.FixedWeirs));
+
+                    
+                    var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir>() {Feature = fixedWeir};
+                    modelFeatureCoordinateData.UpdateDataColumns(GetModelFor(featureList, a => a.FixedWeirs).ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString()); 
+                      
+                    for (var index = 0; index < modelFeatureCoordinateData.DataColumns.Count; index++)
+                    {
+                        if (index < fixedWeir.Attributes.Count)
+                        {
+                            var dataColumn = modelFeatureCoordinateData.DataColumns[index];
+                            var attributeWithListOfLoadedData =
+                                fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] as
+                                    GeometryPointsSyncedList<double>;
+                            dataColumn.ValueList = attributeWithListOfLoadedData.ToList();
+                            
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    GetModelFor(featureList, a => a.FixedWeirs).FixedWeirsProperties.Add(modelFeatureCoordinateData);
+                    
+                        fixedWeir.Attributes.Clear(); //To Do during last step of cleaning. Turn this on. 
+                    
+                },
+
+            GetEditableObject = target => GetModelFor(target, a => a.FixedWeirs).Area
             };
             
             yield return new PliFileImporterExporter<ThinDam2D, ThinDam2D>
@@ -240,7 +270,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new BcFileExporter {GetRefDateForBoundaryCondition = GetRefDateForBoundaryCondition};
             yield return new BcmFileExporter {GetRefDateForBoundaryCondition = GetRefDateForBoundaryCondition};
             yield return new PliFileImporterExporter<Embankment, Embankment> { Mode = Feature2DImportExportMode.Export };
-            yield return new PliFileImporterExporter<FixedWeir, FixedWeir> { Mode = Feature2DImportExportMode.Export };
+            yield return new PliFileImporterExporter<FixedWeir, FixedWeir>
+            {
+                Mode = Feature2DImportExportMode.Export,
+                BeforeExportActionDelegate = delegate (object featureList, FixedWeir fixedWeir)
+                {
+                    fixedWeir.Attributes = new DictionaryFeatureAttributeCollection();
+
+                    var correspondingModelFeatureCoordinateData =
+                        GetModelFor(featureList, a => a.FixedWeirs).FixedWeirsProperties.FirstOrDefault(d => d.Feature == fixedWeir);
+
+                    if (correspondingModelFeatureCoordinateData == null) return;
+
+                    for (var index = 0; index < correspondingModelFeatureCoordinateData.DataColumns.Count; index++)
+                    {
+                        if (!correspondingModelFeatureCoordinateData.DataColumns[index].IsActive) break;
+                        var dataColumnWithData = correspondingModelFeatureCoordinateData.DataColumns[index].ValueList;
+
+                        GeometryPointsSyncedList<double> syncedList;
+                        syncedList = new GeometryPointsSyncedList<double>
+                        {
+                            CreationMethod = (f, i) => 0.0,
+                            Feature = fixedWeir
+                        };
+                        fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] = syncedList;
+
+                        for (var i = 0; i < dataColumnWithData.Count; ++i)
+                        {
+                            syncedList[i] = (double)dataColumnWithData[i];
+                        }
+                    }
+                },
+
+                AfterExportActionDelegate = delegate (object featureList, FixedWeir fixedWeir)
+                {
+                    fixedWeir.Attributes.Clear();
+                },
+            };
             yield return new PliFileImporterExporter<ThinDam2D, ThinDam2D> { Mode = Feature2DImportExportMode.Export };
             yield return
                 new PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D>
