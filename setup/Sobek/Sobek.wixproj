@@ -44,6 +44,9 @@
     <Compile Include="..\FM\RGFGridLibs.wxs">
       <Link>RGFGridLibs.wxs</Link>
     </Compile>
+    <Compile Include="..\Waq\SubstancesFiles.wxs">
+      <Link>SubstancesFiles.wxs</Link>
+    </Compile>
     <Compile Include="Product.wxs" />
     <Compile Include="WixUI\Sobek_WixUI_Deltares.wxs" />
   </ItemGroup>
