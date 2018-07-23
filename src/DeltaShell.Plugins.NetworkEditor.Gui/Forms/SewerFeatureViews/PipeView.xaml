@@ -7,6 +7,7 @@
              xmlns:local="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:hydro="clr-namespace:DelftTools.Hydro;assembly=DelftTools.Hydro"
+             xmlns:sewer="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1000">
     <UserControl.DataContext>
@@ -22,6 +23,11 @@
             <ObjectDataProvider x:Key="RoughnessTypes" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="hydro:RoughnessType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider x:Key="MaterialTypes" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="sewer:SewerProfileMapping+SewerProfileMaterial"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <Style TargetType="{x:Type TextBlock}">
@@ -65,8 +71,6 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
@@ -79,36 +83,32 @@
                     <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Pipe.Name}"/>
 
                     <!-- Row 1 -->
-                    <Label Grid.Column="0" Grid.Row="1" Content="ID"/>
-                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Pipe.Id}"/>
+                    <Label Grid.Column="0" Grid.Row="1" Content="Type"/>
+                    <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Source={StaticResource SewerConnectionWaterTypes}}" SelectedItem="{Binding Pipe.WaterType}"/>
 
                     <!-- Row 2 -->
-                    <Label Grid.Column="0" Grid.Row="2" Content="Type"/>
-                    <ComboBox Grid.Column="1" Grid.Row="2" ItemsSource="{Binding Source={StaticResource SewerConnectionWaterTypes}}" SelectedItem="{Binding Pipe.WaterType}"/>
+                    <Label Grid.Column="0" Grid.Row="2" Content="Length [m]"/>
+                    <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Pipe.Length, StringFormat={}{0:G3}}"/>
 
                     <!-- Row 3 -->
-                    <Label Grid.Column="0" Grid.Row="3" Content="Length [m]"/>
-                    <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding Pipe.Length, StringFormat={}{0:G3}}"/>
+                    <Label Grid.Column="0" Grid.Row="3" Content="Slope [deg]"/>
+                    <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding PipeSlope, StringFormat={}{0:G3}}"/>
 
                     <!-- Row 4 -->
-                    <Label Grid.Column="0" Grid.Row="4" Content="Slope [deg]"/>
-                    <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding PipeSlope, StringFormat={}{0:G3}}"/>
+                    <Label Grid.Column="0" Grid.Row="4" Content="Material"/>
+                    <ComboBox Grid.Column="1" Grid.Row="4" ItemsSource="{Binding Source={StaticResource MaterialTypes}}" SelectedItem="{Binding Pipe.Material}"/>
 
                     <!-- Row 5 -->
-                    <Label Grid.Column="0" Grid.Row="5" Content="Material"/>
-                    <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding Pipe.Material}"/>
+                    <Label Grid.Column="0" Grid.Row="5" Content="Roughness"/>
+                    <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding Pipe.PipeRoughness}"/>
 
                     <!-- Row 6 -->
-                    <Label Grid.Column="0" Grid.Row="6" Content="Roughness"/>
-                    <TextBlock Grid.Column="1" Grid.Row="6" Text="{Binding Pipe.PipeRoughness}"/>
+                    <Label Grid.Column="0" Grid.Row="6" Content="Roughness type"/>
+                    <ComboBox Grid.Column="1" Grid.Row="6" SelectedItem="{Binding Pipe.PipeRoughnessType}" ItemsSource="{Binding Source={StaticResource RoughnessTypes}}" IsEnabled="False"/>
 
                     <!-- Row 7 -->
-                    <Label Grid.Column="0" Grid.Row="7" Content="Roughness type"/>
-                    <ComboBox Grid.Column="1" Grid.Row="7" SelectedItem="{Binding Pipe.PipeRoughnessType}" ItemsSource="{Binding Source={StaticResource RoughnessTypes}}" IsEnabled="False"/>
-
-                    <!-- Row 8 -->
-                    <!--<Label Grid.Column="0" Grid.Row="8" Content="Flow direction"/>
-                    <ComboBox Grid.Column="1" Grid.Row="8"/>-->
+                    <!--<Label Grid.Column="0" Grid.Row="7" Content="Flow direction"/>
+                    <ComboBox Grid.Column="1" Grid.Row="7"/>-->
                 </Grid>
             </Expander>
 
