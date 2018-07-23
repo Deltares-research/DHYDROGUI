@@ -9,7 +9,7 @@
   <?ifndef var.NOKERNELS?>
   <ComponentRef Id="WaterQualityDefaultLibrary"/>
   <!--<ComponentRef Id="WaterQualitySobekLibrary"/>-->
-  <ComponentRef Id="SubstancesFiles"/>
+  <ComponentGroupRef Id="SubstancesFiles"/>
 
   <?endif?>
   
