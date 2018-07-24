@@ -10,7 +10,6 @@
   <ComponentRef Id="WaterQualityDefaultLibrary"/>
   <!--<ComponentRef Id="WaterQualitySobekLibrary"/>-->
   <ComponentGroupRef Id="SubstancesFiles"/>
-
   <?endif?>
   
   <ComponentRef Id="WaterQuality_scripts_examples_files"/>

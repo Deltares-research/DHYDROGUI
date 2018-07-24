@@ -202,9 +202,9 @@
   <Import Project="FMProperties.targets" />
   <Import Project="..\Dimr\HarvestDimrLibs.targets" />
   <Import Project="..\Waq\HarvestPLCTLibs.targets" />
+  <Import Project="..\Waq\HarvestDidoLibs.targets" />
   <Import Project="..\Waq\HarvestSubstancesFiles.targets" />
   <Import Project="HarvestRGFGridLibs.targets" />
-  <Import Project="..\Waq\HarvestDidoLibs.targets" />
   <PropertyGroup>
     <BuildDependsOn>
       HarvestDimrLibsTarget;

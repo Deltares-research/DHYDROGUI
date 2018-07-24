@@ -233,12 +233,14 @@
   <Import Project="..\Dimr\HarvestDimrLibs.targets" />
   <Import Project="..\Waq\HarvestPLCTLibs.targets" />
   <Import Project="..\Waq\HarvestDidoLibs.targets" />
+  <Import Project="..\Waq\HarvestSubstancesFiles.targets" />
   <Import Project="..\FM\HarvestRGFGridLibs.targets" />
   <PropertyGroup>
     <BuildDependsOn>
       HarvestDimrLibsTarget;
       HarvestPLCTLibsTarget;
       HarvestDidoLibsTarget;
+      HarvestSubstancesFilesTarget;
       HarvestRGFGridLibsTarget;
       $(BuildDependsOn);
     </BuildDependsOn>
