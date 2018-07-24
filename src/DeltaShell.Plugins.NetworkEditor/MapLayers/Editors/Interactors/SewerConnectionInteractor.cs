@@ -1,5 +1,4 @@
-﻿using DelftTools.Hydro.Helpers;
-using DelftTools.Hydro.Structures;
+﻿using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Layers;
@@ -16,7 +15,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
         public override void Add(IFeature feature)
         {
-            HydroNetworkHelper.AddPipeToHydroNetwork(Network, (IPipe)feature);
+            SewerFactory.SetDefaultSettingPipeAndAddToNetwork(Network, (IPipe)feature);
         }
     }
 }

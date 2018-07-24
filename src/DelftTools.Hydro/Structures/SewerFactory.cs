@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.CrossSections.StandardShapes;
+using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 
@@ -8,12 +12,90 @@ namespace DelftTools.Hydro.Structures
 {
     public static class SewerFactory
     {
+        private const string DefaultProfileDefinitionName = "Default Sewer Profile";
+        private static readonly CrossSectionDefinitionStandard DefaultSewerProfile = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRound { Diameter = 0.4 })
+        {
+            Name = DefaultProfileDefinitionName
+        };
+
         private static readonly Dictionary<Type, Func<ISewerConnection, ISewerConnection>> SewerConnectionStructureCreators = new Dictionary<Type, Func<ISewerConnection, ISewerConnection>>
         {
             { typeof(Orifice), CreateOrificeConnection},
             { typeof(Pump), CreatePumpConnection },
             { typeof(Weir), CreateWeirConnection }
         };
+
+        public static void SetDefaultSettingPipeAndAddToNetwork(INetwork network, IPipe pipe)
+        {
+            var hydroNetwork = network as HydroNetwork;
+            if (hydroNetwork == null) return;
+
+            // Setting default properties for pipe's cross section definition
+            var defSewerProfile = hydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(d => d.Name.Equals(DefaultProfileDefinitionName));
+            if (defSewerProfile == null)
+            {
+                defSewerProfile = DefaultSewerProfile;
+                hydroNetwork.SharedCrossSectionDefinitions.Add(defSewerProfile);
+                ((CrossSectionStandardShapeRound) ((CrossSectionDefinitionStandard) defSewerProfile).Shape).Diameter = 0.4;
+            }
+            pipe.SewerProfileDefinition = DefaultSewerProfile;
+
+            // Setting source and target compartment
+            if (pipe.Source == null)
+            {
+                var manhole = GetExistingOrNewManholeFromNetwork(hydroNetwork, pipe.Geometry.Coordinates.First());
+                pipe.Source = manhole;
+                pipe.SourceCompartment = manhole.Compartments.FirstOrDefault();
+            }
+
+            if (pipe.Target == null)
+            {
+                var manhole = GetExistingOrNewManholeFromNetwork(hydroNetwork, pipe.Geometry.Coordinates.Last());
+                pipe.Target = manhole;
+                pipe.TargetCompartment = manhole.Compartments.FirstOrDefault();
+            }
+
+            // Setting default values for pipe properties
+            pipe.LevelSource = -2.0;
+            pipe.LevelTarget = -2.0;
+            pipe.Length = pipe.Geometry.Length;
+            pipe.WaterType = SewerConnectionWaterType.Combined;
+
+            lock (network.Branches)
+                network.Branches.Add(pipe);
+            BranchOrderHelper.SetOrderForBranch(network, pipe);
+        }
+
+        private static IManhole GetExistingOrNewManholeFromNetwork(IHydroNetwork network, Coordinate coordinate)
+        {
+            var existingManhole = network.Manholes.FirstOrDefault(n =>
+            {
+                if (n.Geometry.Coordinate.X.IsEqualTo(coordinate.X) && n.Geometry.Coordinate.Y.IsEqualTo(coordinate.Y)) return true;
+                return false;
+            });
+            return existingManhole ?? CreateDefaultManholeAndAddToNetwork(network, coordinate);
+        }
+
+        public static IManhole CreateDefaultManholeAndAddToNetwork(IHydroNetwork network, Coordinate coordinate)
+        {
+            var uniqueName = NetworkHelper.GetUniqueName("Manhole{0:D3}", network.Manholes, "Manhole");
+            var newManhole = new Manhole(uniqueName) {Geometry = new Point(coordinate)};
+
+            var uniqueCompartmentName = NetworkHelper.GetUniqueName("Compartment{0:D3}",
+                network.Manholes.SelectMany(m => m.Compartments), "Compartment");
+            var newCompartment = new Compartment(uniqueCompartmentName)
+            {
+                SurfaceLevel = 0.0,
+                BottomLevel = -2.0,
+                FloodableArea = 100.0,
+                ManholeLength = 0.64,
+                ManholeWidth = 0.64
+            };
+            newManhole.Compartments.Add(newCompartment);
+
+            network.Nodes.Add(newManhole);
+            return newManhole;
+        }
 
         public static Compartment CreateNewCompartmentAndAddToManhole(IHydroNetwork network, Manhole parentManhole, string compartmentName = null)
         {

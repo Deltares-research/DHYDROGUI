@@ -90,6 +90,7 @@
     <Compile Include="Structures\PumpTest.cs" />
     <Compile Include="SewerConnectionTest.cs" />
     <Compile Include="Structures\SewerConnectionExtensionsTest.cs" />
+    <Compile Include="Structures\SewerFactoryTests.cs" />
     <Compile Include="Structures\WeirFormula\FreeFormWeirFormulaTest.cs" />
     <Compile Include="Structures\WeirFormula\GeneralStructureWeirFormulaTest.cs" />
     <Compile Include="Structures\WeirTest.cs" />

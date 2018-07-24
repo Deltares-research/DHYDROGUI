@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Binding;
-using DelftTools.Utils.Collections;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCrossSections
 {
@@ -21,10 +20,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCr
 
             var dataSource = EnumBindingHelper.ToList<CrossSectionStandardShapeType>();
             
-            //Not implemented yet. Wait for closed cross-sections
-            dataSource.RemoveAllWhere(ds => ds.Key == CrossSectionStandardShapeType.Egg);
-            dataSource.RemoveAllWhere(ds => ds.Key == CrossSectionStandardShapeType.Round);
-
             comboBoxShapeType.DataSource = dataSource;
             comboBoxShapeType.DisplayMember = "Value";
             comboBoxShapeType.ValueMember = "Key";

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Editing;
@@ -693,55 +692,6 @@ namespace DelftTools.Hydro.Helpers
             branchFeature.Name = "cross_section";
             NetworkHelper.AddBranchFeatureToBranch(branchFeature,branch, offset);
             return branchFeature;
-        }
-
-        public static void AddPipeToHydroNetwork(INetwork network, IPipe pipe)
-        {
-            var hydroNetwork = network as HydroNetwork;
-            if(hydroNetwork == null) return;
-
-            if (pipe.SewerProfileDefinition == null)
-            {
-                pipe.SewerProfileDefinition = new CrossSectionDefinitionStandard(CrossSectionStandardShapeRound.CreateDefault());
-            }
-
-            if (pipe.Source == null)
-            {
-                var manhole = GetExistingOrNewManholeFromNetwork(hydroNetwork, pipe.Geometry.Coordinates.First());
-                pipe.Source = manhole;
-                pipe.SourceCompartment = manhole.Compartments.FirstOrDefault();
-            }
-
-            if (pipe.Target == null)
-            {
-                var manhole = GetExistingOrNewManholeFromNetwork(hydroNetwork, pipe.Geometry.Coordinates.Last());
-                pipe.Target = manhole;
-                pipe.TargetCompartment = manhole.Compartments.FirstOrDefault();
-            }
-
-            lock (network.Branches)
-                network.Branches.Add(pipe);
-            BranchOrderHelper.SetOrderForBranch(network, pipe);
-        }
-
-        private static IManhole GetExistingOrNewManholeFromNetwork(IHydroNetwork network, Coordinate coordinate)
-        {
-            var existingManhole = network.Manholes.FirstOrDefault(n =>
-            {
-                if (n.Geometry.Coordinate.X == coordinate.X) return n.Geometry.Coordinate.Y == coordinate.Y;
-                return false;
-            });
-            if (existingManhole != null) return existingManhole;
-
-            var uniqueName = NetworkHelper.GetUniqueName("Manhole{0:D3}", network.Manholes, "Manhole");
-            var newManhole = new Manhole(uniqueName) {Geometry = new Point(coordinate)};
-
-            var uniqueManholeName = NetworkHelper.GetUniqueName("put{0:D3}", network.Manholes.SelectMany(m => m.Compartments), "put");
-            var newCompartment = new Compartment(uniqueManholeName);
-            newManhole.Compartments.Add(newCompartment);
-
-            network.Nodes.Add(newManhole);
-            return newManhole;
         }
     }
 }
