@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
@@ -260,6 +261,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             {
                 shape.SetPixelValues(minX, maxX, minY, maxY, ContainerWidth.Invoke(), ContainerHeight.Invoke());
             }
+        }
+
+        public int GetIndexFor(Point pos)
+        {
+            for (var index = 0; index < shapes.Count; index++)
+            {
+                var drawingShape = shapes[index];
+                var shapeMiddleX = drawingShape.LeftOffsetPix + 0.5 * drawingShape.WidthPix;
+
+                if (pos.X < shapeMiddleX)
+                {
+                    return index;
+                }
+            }
+
+            return shapes.Count;
         }
     }
 

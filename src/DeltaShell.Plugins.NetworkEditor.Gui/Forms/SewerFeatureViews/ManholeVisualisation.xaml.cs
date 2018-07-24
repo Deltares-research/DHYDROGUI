@@ -295,6 +295,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             SetViewGridSize();
             ViewModel.SetShapesPixelValues();
         }
+
+        public int GetIndexFor(Point pos)
+        {
+            return ViewModel.GetIndexFor(pos);
+        }
     }
 
     public class MoveAdorner : SimpleAdorner

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
@@ -17,13 +19,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         public ManholeViewModel()
         {
-            AddCompartmentCommand = new RelayCommand(AddCompartment, CanAddCompartment);
-            AddPumpCommand = new RelayCommand(AddPump, CanAddPump);
-            AddOrificeCommand = new RelayCommand(AddOrifice, CanAddOrifice);
-            AddWeirCommand = new RelayCommand(AddWeir, CanAddWeir);
-            RemoveCompartmentCommand = new RelayCommand(RemoveItem, CanRemoveItem);
             EscapeCommand = new RelayCommand(Escape);
             DeleteCommand = new RelayCommand(Delete);
+
+            ShapeTypes = new ObservableCollection<ShapeType>(Enum.GetValues(typeof(ShapeType)).OfType<ShapeType>());
         }
         
         public Manhole Manhole
@@ -42,15 +41,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
         }
 
-        public ICommand AddCompartmentCommand { get; set; }
-
-        public ICommand AddOrificeCommand { get; set; }
-
-        public ICommand AddPumpCommand { get; set; }
-
-        public ICommand AddWeirCommand { get; set; }
-
-        public ICommand RemoveCompartmentCommand { get; set; }
+        public ObservableCollection<ShapeType> ShapeTypes { get; set; }
 
         public ICommand EscapeCommand { get; set; }
 
@@ -204,5 +195,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         }
 
         #endregion
+
+        public void AddShape(ShapeType item, int index)
+        {
+            switch (item)
+            {
+                case ShapeType.Compartment:
+                    AddCompartment(null);
+                    break;
+                case ShapeType.Pump:
+                    AddPump(null);
+                    break;
+                case ShapeType.Weir:
+                    AddWeir(null);
+                    break;
+                case ShapeType.Orifice:
+                    AddOrifice(null);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(item), item, null);
+            }
+        }
     }
 }

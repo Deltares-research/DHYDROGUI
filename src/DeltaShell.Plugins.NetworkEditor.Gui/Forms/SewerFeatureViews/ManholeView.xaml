@@ -7,9 +7,8 @@
              xmlns:local="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews"
              xmlns:hydro="clr-namespace:DelftTools.Hydro;assembly=DelftTools.Hydro"
              xmlns:structures="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
-             xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
-             d:DesignHeight="1000" d:DesignWidth="1000" d:DataContext="{d:DesignInstance local:ManholeViewModel}">
+             d:DesignHeight="1000" d:DesignWidth="1000" >
     <UserControl.DataContext>
         <local:ManholeViewModel x:Name="ViewModel" />
     </UserControl.DataContext>
@@ -40,7 +39,6 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -69,20 +67,75 @@
                         
                 </Grid>
 
-                <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
-                    <Button Content="Add compartment" Command="{Binding AddCompartmentCommand}" Margin="0,3,3,3"/>
-                    <Button Content="Add orifice" Command="{Binding AddOrificeCommand}" Margin="5,3,3,3"/>
-                    <Button Content="Add pump" Command="{Binding AddPumpCommand}" Margin="5,3,3,3"/>
-                    <Button Content="Add weir" Command="{Binding AddWeirCommand}" Margin="5,3,3,3"/>
-                    <Button Content="Remove item" Command="{Binding RemoveCompartmentCommand}" Margin="5,3,3,3"/>
-                </StackPanel>
-                
-                <ListView Grid.Row="2">
-
+                <ListView Grid.Row="1" 
+                          PreviewMouseDown="ToolBoxMouseDown"
+                          PreviewMouseMove="ToolBoxMouseMove"
+                          ItemsSource="{Binding ShapeTypes}" 
+                          SelectionMode="Single">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate DataType="local:ShapeType">
+                            <StackPanel Margin="5">
+                                <Rectangle Width="48" Height="48">
+                                    <Rectangle.Style>
+                                        <Style TargetType="{x:Type Rectangle}">
+                                            <Setter Property="Fill" Value="Transparent"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding}" Value="{x:Static local:ShapeType.Compartment}">
+                                                    <Setter Property="Fill">
+                                                        <Setter.Value>
+                                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" >
+                                                                <GradientStop Color="#FFF0F0F0" Offset="0.0"/>
+                                                                <GradientStop Color="#FFB0B0B0" Offset="1"/>
+                                                            </LinearGradientBrush>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Setter Property="Stroke">
+                                                        <Setter.Value>
+                                                            <SolidColorBrush Color="Black"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Setter Property="StrokeThickness" Value="2"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding}" Value="{x:Static local:ShapeType.Pump}">
+                                                    <Setter Property="Fill">
+                                                        <Setter.Value>
+                                                            <ImageBrush ImageSource="../../Resources/PumpSmall.png"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding}" Value="{x:Static local:ShapeType.Weir}">
+                                                    <Setter Property="Fill">
+                                                        <Setter.Value>
+                                                            <ImageBrush ImageSource="../../Resources/WeirSmall.png"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding}" Value="{x:Static local:ShapeType.Orifice}">
+                                                    <Setter Property="Fill">
+                                                        <Setter.Value>
+                                                            <ImageBrush ImageSource="../../Resources/Gate.png"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Rectangle.Style>
+                                </Rectangle>
+                                <TextBlock Text="{Binding}" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
                 </ListView>
                 
                 <!-- Background="#FFE8E8E8"-->
-                <local:ManholeVisualisation Grid.Row="3"
+                <local:ManholeVisualisation Grid.Row="2"
+                                            AllowDrop="True"
+                                            Drop="ManholeVisualisationControl_OnDrop"
                                             x:Name="ManholeVisualisationControl"
                                             Manhole="{Binding DataContext.Manhole, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}"
                                             SelectedItem="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}"

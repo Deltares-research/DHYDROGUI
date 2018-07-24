@@ -13,7 +13,7 @@
         <local:ManholeVisualisationViewModel x:Name="ViewModel" x:FieldModifier="internal"/>
     </UserControl.DataContext>
     <Grid x:Name="ViewGrid" 
-          SizeChanged="ViewGrid_OnSizeChanged" Background="Aquamarine" 
+          SizeChanged="ViewGrid_OnSizeChanged"
           PreviewMouseLeftButtonDown="UIElement_OnPreviewMouseLeftButtonDown">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

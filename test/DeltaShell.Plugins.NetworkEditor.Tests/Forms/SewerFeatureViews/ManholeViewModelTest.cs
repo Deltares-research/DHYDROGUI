@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
     [TestFixture]
     public class ManholeViewModelTest
     {
-        [Test]
+/*        [Test]
         public void TestTestManhole()
         {
             var testManhole = GetManholeWithTwoCompartments();
@@ -170,6 +170,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
             network.Branches.Add(pumpConnection);
 
             return manhole;
-        }
+        }*/
     }
 }
