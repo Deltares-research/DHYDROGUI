@@ -853,7 +853,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                         string mduPropertyValue = fields[1].Trim();
 
-                        if(mduPropertyLowerCase == KnownProperties.FixedWeirScheme && (mduPropertyValue != "0" || mduPropertyValue != "6" || mduPropertyValue != "8"|| mduPropertyValue != "9"))
+                        if(mduPropertyLowerCase == KnownProperties.FixedWeirScheme && (mduPropertyValue != "0" && mduPropertyValue != "6" && mduPropertyValue != "8" && mduPropertyValue != "9"))
                         {
                             Log.Warn(string.Format("Obsolete Fixed Weir Scheme {0} detected and it will be corrected to the default Numerical Scheme.", mduPropertyValue));
                             mduPropertyValue = "6";
