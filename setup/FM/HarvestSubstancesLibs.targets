@@ -3,7 +3,7 @@
 	<Target Name="HarvestSubstancesFilesTarget">
 	  <HeatDirectory
 
-		 OutputFile="$(ProjectDir)..\FM\RGFGridLibs.wxs"
+		 OutputFile="$(ProjectDir)..\Waq\SubstancesFiles.wxs"
 
 		 Directory="$(SolutionDir)bin\$(ConfigurationName)\plugins\DeltaShell.Plugins.DelftModels.WaterQualityModel\plugins-qt\x64"
 
