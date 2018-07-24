@@ -69,34 +69,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void TestRenamingBoundaryUpdatesTracerBoundaryNameInSourceAndSink()
-        {
-            var model = new WaterFlowFMModel();
-
-            var sourceAndSink = new SourceAndSink();
-            model.SourcesAndSinks.Add(sourceAndSink);
-
-            var set = new BoundaryConditionSet();
-            model.BoundaryConditionSets.Add(set);
-
-            var boundary = new Feature2D() { Name = "Boundary01" };
-            var boundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
-            {
-                Feature = boundary,
-                TracerName = "Tr1"
-            };
-            set.BoundaryConditions.Add(boundaryCondition);
-
-            Assert.True(boundaryCondition.Name.StartsWith(boundary.Name));
-            Assert.True(sourceAndSink.TracerNames.Contains(boundaryCondition.Name));
-
-            boundary.Name = "BoundaryABC";
-
-            Assert.True(boundaryCondition.Name.StartsWith(boundary.Name));
-            Assert.True(sourceAndSink.TracerNames.Contains(boundaryCondition.Name));
-        }
-
-        [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         [NUnit.Framework.Category(TestCategory.Slow)]
         public void TestImportSimpleModelWith_SourceAndSink_Tracer_Morphology_CorrectlyUpdatesSourceAndSinkComponents()
@@ -110,9 +82,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.True(sourceAndSink.Function.Components.Any(c => c.Name == sedimentFraction.Name));
             }
 
-            foreach (var tracerBoundaryCondition in model.BoundaryConditions.OfType<FlowBoundaryCondition>().Where(fbc => fbc.FlowQuantity == FlowBoundaryQuantityType.Tracer))
+            var tracerBoundaryConditions = model.BoundaryConditions.OfType<FlowBoundaryCondition>().Where(fbc => fbc.FlowQuantity == FlowBoundaryQuantityType.Tracer);
+            var tracerBoundaryConditionsTracerNames = tracerBoundaryConditions.Select(tbc => tbc.TracerName);
+
+            foreach (var tracerName in model.TracerDefinitions.Where(t => tracerBoundaryConditionsTracerNames.Contains(t)))
             {
-                Assert.True(sourceAndSink.Function.Components.Any(c => c.Name == tracerBoundaryCondition.Name));
+                Assert.True(sourceAndSink.Function.Components.Any(c => c.Name == tracerName));
+            }
+
+            foreach (var tracerName in model.TracerDefinitions.Where(t => !tracerBoundaryConditionsTracerNames.Contains(t)))
+            {
+                Assert.False(sourceAndSink.Function.Components.Any(c => c.Name == tracerName));
             }
         }
 

@@ -1,11 +1,11 @@
-# Generated on 2018-07-23 17:09:07
-# Deltares, D-Flow FM user interface version 1.4.5.40201, D-Flow FM kernel version 1.2.0.53941M
+# Generated on 2018-07-24 16:58:00
+# Deltares, D-Flow FM user interface version 1.4.5.40230, D-Flow FM kernel version 1.2.0.53941M
 
 [model]
 Program           = D-Flow FM
 Version           = 1.2.0.53941M
 MDUFormatVersion  = 1.02
-GuiVersion        = 1.4.5.40201
+GuiVersion        = 1.4.5.40230
 AutoStart         = 0
 
 [geometry]

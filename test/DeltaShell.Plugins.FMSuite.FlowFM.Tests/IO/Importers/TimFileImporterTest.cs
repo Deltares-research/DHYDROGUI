@@ -165,13 +165,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             if (useTracers)
             {
                 fmModel.TracerDefinitions.Add("Tracer1");
+                fmModel.TracerDefinitions.Add("Tracer2");
 
                 var boundaryConditionSet = new BoundaryConditionSet();
                 fmModel.BoundaryConditionSets.Add(boundaryConditionSet);
                 boundaryConditionSet.BoundaryConditions.AddRange(new List<IBoundaryCondition>()
                 {
-                    new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Constant) {Name = "Bnd01-Tracer1"},
-                    new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Constant) {Name = "Bnd01-Tracer1(2)"}
+                    new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Constant) { TracerName = "Tracer1" },
+                    new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Constant) { TracerName = "Tracer2" }
                 });
 
                 expectedNumberOfComponents += 2;
