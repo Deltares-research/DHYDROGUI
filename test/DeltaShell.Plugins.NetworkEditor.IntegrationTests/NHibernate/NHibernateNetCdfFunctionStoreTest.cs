@@ -89,6 +89,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             IList<double> values = function.GetValues<double>(new ComponentFilter(f1));
             Assert.AreEqual(6, values.Count);
 
+
             // setup repository
             string path = TestHelper.GetCurrentMethodName() + ".dsproj";
             
