@@ -34,7 +34,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == TypeUtils.GetMemberName<Pipe>(p => p.LevelTarget) ||
-                e.PropertyName == TypeUtils.GetMemberName<Pipe>(p => p.LevelSource))
+                e.PropertyName == TypeUtils.GetMemberName<Pipe>(p => p.LevelSource) ||
+                e.PropertyName == TypeUtils.GetMemberName<Pipe>(p => p.Length))
             {
                 OnPropertyChanged(nameof(PipeSlope));
             }
