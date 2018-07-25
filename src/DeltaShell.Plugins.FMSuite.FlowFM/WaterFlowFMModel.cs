@@ -480,7 +480,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void RemoveTracerFromSourcesAndSink(string name)
         {
-            SourcesAndSinks.ForEach(ss => ss.TracerNames.Remove(name));
+            if(BoundaryConditions.OfType<FlowBoundaryCondition>().All(bc => bc.TracerName != name))
+                SourcesAndSinks.ForEach(ss => ss.TracerNames.Remove(name));
         }
 
         private void AddTracerToSourcesAndSink(string name)
