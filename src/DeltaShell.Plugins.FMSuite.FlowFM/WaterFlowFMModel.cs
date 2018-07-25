@@ -445,7 +445,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     var flowCondition = bc as FlowBoundaryCondition;
                     if (flowCondition != null && flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
                     {
-                        sourceAndSink.TracerNames.Add(flowCondition.Name);
+                        var tracerName = flowCondition.TracerName;
+                        if (!sourceAndSink.TracerNames.Contains(tracerName))
+                            sourceAndSink.TracerNames.Add(tracerName);
                     }
                 });
             });

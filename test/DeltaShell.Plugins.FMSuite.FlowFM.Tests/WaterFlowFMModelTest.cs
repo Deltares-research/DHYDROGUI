@@ -82,8 +82,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.True(sourceAndSink.Function.Components.Any(c => c.Name == sedimentFraction.Name));
             }
 
-            var tracerBoundaryConditions = model.BoundaryConditions.OfType<FlowBoundaryCondition>().Where(fbc => fbc.FlowQuantity == FlowBoundaryQuantityType.Tracer);
-            var tracerBoundaryConditionsTracerNames = tracerBoundaryConditions.Select(tbc => tbc.TracerName);
+            var tracerBoundaryConditionsTracerNames = model.BoundaryConditions
+                .OfType<FlowBoundaryCondition>()
+                .Where(fbc => fbc.FlowQuantity == FlowBoundaryQuantityType.Tracer)
+                .Select(tbc => tbc.TracerName)
+                .Distinct();
 
             foreach (var tracerName in model.TracerDefinitions.Where(t => tracerBoundaryConditionsTracerNames.Contains(t)))
             {
@@ -95,6 +98,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.False(sourceAndSink.Function.Components.Any(c => c.Name == tracerName));
             }
         }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
+        public void TestAddingSourceAndSinkCorrectlyUpdatesSedimentFractionAndTracerNamesForSourceAndSink()
+        {
+            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"SimpleModel_SourceAndSink_Tracer_Morphology\SimpleModel.mdu"));
+            var sourceAndSink = new SourceAndSink();
+
+            Assert.AreEqual(0, sourceAndSink.SedimentFractionNames.Count);
+            Assert.AreEqual(0, sourceAndSink.TracerNames.Count);
+
+            model.SourcesAndSinks.Add(sourceAndSink);
+
+            foreach (var sedimentFraction in model.SedimentFractions)
+            {
+                Assert.True(sourceAndSink.SedimentFractionNames.Contains(sedimentFraction.Name));
+            }
+
+            var tracerBoundaryConditionsTracerNames = model.BoundaryConditions
+                .OfType<FlowBoundaryCondition>()
+                .Where(fbc => fbc.FlowQuantity == FlowBoundaryQuantityType.Tracer)
+                .Select(tbc => tbc.TracerName)
+                .Distinct();
+
+            foreach (var tracerName in model.TracerDefinitions.Where(t => tracerBoundaryConditionsTracerNames.Contains(t)))
+            {
+                Assert.True(sourceAndSink.TracerNames.Contains(tracerName));
+            }
+
+            foreach (var tracerName in model.TracerDefinitions.Where(t => !tracerBoundaryConditionsTracerNames.Contains(t)))
+            {
+                Assert.False(sourceAndSink.TracerNames.Contains(tracerName));
+            }
+        }
+
 
         [Test]
         public void BoundaryConditionSetShouldBubbleEvents()
