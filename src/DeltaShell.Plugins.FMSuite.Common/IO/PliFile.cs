@@ -159,12 +159,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     var numPoints = GetInt(lineFields[0], "value for nr of points");
                     var numColumns = GetInt(lineFields[1], "value for nr of columns");
 
-                    if (numColumns < 5 && typeof(T).Name == "FixedWeir")
-                    {
-                        throw new FormatException(
-                            $"Not enough columns for fixed weirs given in file {pliFilePath}");
-                    }
-
                     maxColumns = Math.Max(maxColumns, numColumns);
 
                     var columnNumericalValuesList = new List<IList<double>>(Enumerable.Range(0, numColumns - AmountOfDimensionalValuesInPliFile).Select(i => new List<double>(numPoints)));
@@ -295,7 +289,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             feature.TrySetGroupName(pliFilePath);
 
-            if (numColumns > 2)
+            if (numColumns >= 2)
             {
                 if (feature.Attributes == null)
                 {
