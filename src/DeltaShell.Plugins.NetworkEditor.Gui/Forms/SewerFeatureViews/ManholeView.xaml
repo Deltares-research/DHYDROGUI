@@ -17,13 +17,20 @@
         <KeyBinding Key="Delete" Command="{Binding DeleteCommand}"/>
     </UserControl.InputBindings>
     <UserControl.Resources>
-        <Style TargetType="{x:Type TextBlock}">
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Margin" Value="0,3,3,3"/>
-        </Style>
-        <Style TargetType="{x:Type TextBox}">
-            <Setter Property="Margin" Value="0,3,3,3"/>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="NetworkStructureBrushes.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="0,3,3,3"/>
+            </Style>
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="Margin" Value="0,3,3,3"/>
+            </Style>
+        </ResourceDictionary>
+
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -102,25 +109,13 @@
                                                     <Setter Property="StrokeThickness" Value="2"/>
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding}" Value="{x:Static local:ShapeType.Pump}">
-                                                    <Setter Property="Fill">
-                                                        <Setter.Value>
-                                                            <ImageBrush ImageSource="../../Resources/PumpSmall.png"/>
-                                                        </Setter.Value>
-                                                    </Setter>
+                                                    <Setter Property="Fill" Value="{StaticResource PumpBrush}"/>
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding}" Value="{x:Static local:ShapeType.Weir}">
-                                                    <Setter Property="Fill">
-                                                        <Setter.Value>
-                                                            <ImageBrush ImageSource="../../Resources/WeirSmall.png"/>
-                                                        </Setter.Value>
-                                                    </Setter>
+                                                    <Setter Property="Fill" Value="{StaticResource WeirBrush}"/>
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding}" Value="{x:Static local:ShapeType.Orifice}">
-                                                    <Setter Property="Fill">
-                                                        <Setter.Value>
-                                                            <ImageBrush ImageSource="../../Resources/Gate.png"/>
-                                                        </Setter.Value>
-                                                    </Setter>
+                                                    <Setter Property="Fill" Value="{StaticResource OrificeBrush}"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
