@@ -3,7 +3,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using DelftTools.Controls;
+using DelftTools.Controls.Wpf.Extensions;
 using DelftTools.Hydro.Structures;
 using Image = System.Drawing.Image;
 
@@ -15,6 +17,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     public partial class ManholeView : UserControl, IView
     {
         private Point startPoint;
+        private Cursor customCursor;
 
         public ManholeView()
         {
@@ -60,7 +63,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             var listView = sender as ListView;
 
             // Get the dragged ListViewItem
-            var listViewItem = FindAnchestor<ListViewItem>((DependencyObject) e.OriginalSource);
+            var listViewItem = ((DependencyObject) e.OriginalSource).TryFindParent<ListViewItem>();
             if (listViewItem == null) return;
 
             // Find the data behind the ListViewItem
@@ -69,7 +72,44 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             // Initialize the drag & drop operation
             var dragData = new DataObject("ShapeType", data);
 
+            var rect = (UIElement)GetChildOfType<Rectangle>(listViewItem);
+
+            if (customCursor == null)
+            {
+                CreateDragCursor(rect);
+            }
+
             DragDrop.DoDragDrop(listViewItem, dragData, DragDropEffects.Move);
+
+            customCursor.Dispose();
+            customCursor = null;
+        }
+
+        private void CreateDragCursor(UIElement rect)
+        {
+            var iconItem = new Grid();
+
+            var dragRectangle = new Rectangle
+            {
+                Style = (Style) Resources["DragRectangleStyle"],
+                Width = rect.RenderSize.Width,
+                Height = rect.RenderSize.Height,
+                Fill = new VisualBrush(rect)
+            };
+
+            var dragCenterPoint = new Ellipse
+            {
+                Style = (Style) Resources["DragCenterPointStyle"]
+            };
+
+            iconItem.Children.Add(dragRectangle);
+            iconItem.Children.Add(dragCenterPoint);
+
+            var source = PresentationSource.FromVisual(this)?.CompositionTarget?.TransformToDevice;
+            if (source != null)
+            {
+                customCursor = CursorHelper.CreateCursor(iconItem, source.Value.M11, source.Value.M22);
+            }
         }
 
         private bool MouseMoved(MouseEventArgs e)
@@ -82,16 +122,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                    Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance;
         }
 
-        private static T FindAnchestor<T>(DependencyObject current) where T : DependencyObject
+        private static T GetChildOfType<T>(DependencyObject depObj) where T : DependencyObject
         {
-            do
+            if (depObj == null) return null;
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
             {
-                if (current is T)
-                {
-                    return (T) current;
-                }
-                current = VisualTreeHelper.GetParent(current);
-            } while (current != null);
+                var child = VisualTreeHelper.GetChild(depObj, i);
+
+                var result = (child as T) ?? GetChildOfType<T>(child);
+                if (result != null) return result;
+            }
             return null;
         }
 
@@ -107,13 +148,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
             ViewModel.AddShape((ShapeType) item, index);
         }
-    }
 
-    public enum ShapeType
-    {
-        Compartment,
-        Pump,
-        Weir,
-        Orifice
+        private void ToolBoxGiveFeedback(object sender, GiveFeedbackEventArgs e)
+        {
+            if (customCursor != null)
+            {
+                e.UseDefaultCursors = false;
+                Mouse.SetCursor(customCursor);
+            }
+
+            e.Handled = true;
+        }
     }
 }

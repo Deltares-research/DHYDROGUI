@@ -29,6 +29,18 @@
             <Style TargetType="{x:Type TextBox}">
                 <Setter Property="Margin" Value="0,3,3,3"/>
             </Style>
+
+            <Style x:Key="DragRectangleStyle" TargetType="{x:Type Rectangle}">
+                <Setter Property="Stroke" Value="Red"/>
+                <Setter Property="StrokeThickness" Value="2"/>
+                <Setter Property="StrokeDashArray" Value="2"/>
+            </Style>
+
+            <Style x:Key="DragCenterPointStyle" TargetType="{x:Type Ellipse}">
+                <Setter Property="Fill" Value="BlueViolet"/>
+                <Setter Property="Width" Value="10"/>
+                <Setter Property="Height" Value="10"/>
+            </Style>
         </ResourceDictionary>
 
     </UserControl.Resources>
@@ -77,6 +89,7 @@
                 <ListView Grid.Row="1" 
                           PreviewMouseDown="ToolBoxMouseDown"
                           PreviewMouseMove="ToolBoxMouseMove"
+                          GiveFeedback="ToolBoxGiveFeedback"
                           ItemsSource="{Binding ShapeTypes}" 
                           SelectionMode="Single">
                     <ListView.ItemsPanel>
