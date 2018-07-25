@@ -113,27 +113,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         private void SynchronizeWithNewCoordinates()
         {
-            var coordinateComparison2D = new CoordinateComparison2D();
-            var geometryCoordinates = feature.Geometry.Coordinates.ToList();
-
-            // todo increase performance (Hashset ??)
-            var pointerList = new List<int>(previousGeometry.Coordinates.Length);
-            foreach (var previousGeometryCoordinate in previousGeometry.Coordinates)
+            if (feature.Geometry.Coordinates.Length == previousGeometry.Coordinates.Length)
+            { previousGeometry = feature.Geometry;
+                return;
+            }
+            else
             {
-                var toIndex = -1;
-                for (int i = 0; i < geometryCoordinates.Count; i++)
-                {
-                    if (!coordinateComparison2D.Equals(geometryCoordinates[i], previousGeometryCoordinate)) continue;
+                var coordinateComparison2D = new CoordinateComparison2D();
+                var geometryCoordinates = feature.Geometry.Coordinates.ToList();
 
-                    toIndex = i;
-                    break;
+
+                // todo increase performance (Hashset ??)
+                var pointerList = new List<int>(previousGeometry.Coordinates.Length);
+                foreach (var previousGeometryCoordinate in previousGeometry.Coordinates)
+                {
+                    var toIndex = -1;
+                    for (int i = 0; i < geometryCoordinates.Count; i++)
+                    {
+                        if (!coordinateComparison2D.Equals(geometryCoordinates[i], previousGeometryCoordinate)) continue;
+
+                        toIndex = i;
+                        break;
+                    }
+
+                    pointerList.Add(toIndex);
                 }
 
-                pointerList.Add(toIndex);
-            }
+                DataColumns.ForEach(dc => UpdateColumnValuesWithPointerTable(dc, pointerList));
+                previousGeometry = feature.Geometry;
 
-            DataColumns.ForEach(dc => UpdateColumnValuesWithPointerTable(dc, pointerList));
+            }
         }
+
 
         private void UpdateColumnValuesWithPointerTable(IDataColumn dataColumn, List<int> pointerList)
         {
