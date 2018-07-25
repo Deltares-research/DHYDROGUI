@@ -1481,5 +1481,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(allData.Count, Is.EqualTo(0));
 
         }
+
+        [Test]
+        public void GivenAnFMModel_WhenCloningThisModel_ThenTheNewFixedWeirPropertiesShouldBeLinkedToTheNewFixedWeirs()
+        {
+            var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFMFixedWeirs\FlowFM.mdu"); //model with two fixed weirs and every fixed weir has two coordinates.
+            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            Assert.NotNull(mduDir);
+
+            try
+            {
+                var fmModel = new WaterFlowFMModel(mduFilePath);
+                var clonedFmModel = fmModel.DeepClone() as WaterFlowFMModel;
+
+                Assert.NotNull(clonedFmModel);
+
+                Assert.That(fmModel.FixedWeirsProperties[0].Feature, Is.Not.SameAs(clonedFmModel.FixedWeirsProperties[0].Feature));
+                Assert.That(fmModel.FixedWeirsProperties[1].Feature, Is.Not.SameAs(clonedFmModel.FixedWeirsProperties[1].Feature));
+                Assert.That(fmModel.FixedWeirsProperties[0].Feature, Is.Not.SameAs(clonedFmModel.FixedWeirsProperties[1].Feature));
+                Assert.That(fmModel.FixedWeirsProperties[1].Feature, Is.Not.SameAs(clonedFmModel.FixedWeirsProperties[0].Feature));
+
+                Assert.That(fmModel.FixedWeirsProperties[0].Feature, Is.SameAs(fmModel.Area.FixedWeirs[0]));
+                Assert.That(fmModel.FixedWeirsProperties[1].Feature, Is.SameAs(fmModel.Area.FixedWeirs[1]));
+                Assert.That(clonedFmModel.FixedWeirsProperties[0].Feature, Is.SameAs(clonedFmModel.Area.FixedWeirs[0]));
+                Assert.That(clonedFmModel.FixedWeirsProperties[1].Feature, Is.SameAs(clonedFmModel.Area.FixedWeirs[1]));
+
+                var lineGeomery = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(10, 10),
+                    new Coordinate(10, 0),
+                    new Coordinate(0, 0)
+                });
+
+                fmModel.Area.FixedWeirs[0].Geometry = lineGeomery;
+
+                Assert.AreEqual(4,fmModel.FixedWeirsProperties[0].DataColumns[0].ValueList.Count);
+                Assert.AreEqual(2,clonedFmModel.FixedWeirsProperties[0].DataColumns[0].ValueList.Count);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(mduDir);
+            }
+
+        }
     }
 }
