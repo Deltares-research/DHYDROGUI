@@ -9,6 +9,9 @@
     <UserControl.DataContext>
         <local:PumpShapeControlViewModel x:Name="ViewModel"/>
     </UserControl.DataContext>
+    <UserControl.Resources>
+        <ResourceDictionary Source="NetworkStructureBrushes.xaml"/>
+    </UserControl.Resources>
     <Grid x:Name="ViewGrid" SizeChanged="ViewGrid_OnSizeChanged">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -40,11 +43,7 @@
 
             <!-- Pump -->
             <Rectangle Canvas.Left="{Binding IconLeftOffset}" Canvas.Top="{Binding IconTopOffset}"
-                       Width="16" Height="16">
-                <Rectangle.Fill>
-                    <ImageBrush ImageSource="../../Resources/PumpSmall.png"/>
-                </Rectangle.Fill>
-            </Rectangle>
+                       Width="16" Height="16" Fill="{StaticResource PumpBrush}"/>
         </Canvas>
     </Grid>
 </UserControl>

@@ -12,6 +12,9 @@
     <UserControl.DataContext>
         <local:ManholeVisualisationViewModel x:Name="ViewModel" x:FieldModifier="internal"/>
     </UserControl.DataContext>
+    <UserControl.Resources>
+        <ResourceDictionary Source="NetworkStructureBrushes.xaml"/>
+    </UserControl.Resources>
     <Grid x:Name="ViewGrid" 
           SizeChanged="ViewGrid_OnSizeChanged"
           PreviewMouseLeftButtonDown="UIElement_OnPreviewMouseLeftButtonDown">
@@ -92,10 +95,7 @@
                                 ToolTip="{Binding Orifice.Name}" Fill="{StaticResource BackgroundBrush}">
                             </Rectangle>
                         </Border>
-                        <Rectangle Width="16" Height="16">
-                            <Rectangle.Fill>
-                                <ImageBrush ImageSource="../../Resources/Gate.png"/>
-                            </Rectangle.Fill>
+                        <Rectangle Width="16" Height="16" Fill="{StaticResource OrificeBrush}">
                         </Rectangle>
                     </Grid>
                 </DataTemplate>
@@ -116,12 +116,7 @@
                                 x:Name="WeirShapeBorder">
                             <Rectangle Fill="{StaticResource BackgroundBrush}"/>
                         </Border>
-                        <Rectangle Width="16" Height="16">
-                            <Rectangle.Fill>
-                                <ImageBrush ImageSource="../../Resources/Weir.png"/>
-                            </Rectangle.Fill>
-                        </Rectangle>
-                       
+                        <Rectangle Width="16" Height="16" Fill="{StaticResource WeirBrush}"/>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.Resources>
@@ -134,8 +129,7 @@
                         Width="{Binding ElementName=ViewGrid, Path=ActualWidth}" 
                         Height="{Binding ElementName=ViewGrid, Path=ActualHeight}" 
                         IsItemsHost="True" 
-                        SnapsToDevicePixels="True" 
-                        />
+                        SnapsToDevicePixels="True"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </local:CanvasItemsControl>

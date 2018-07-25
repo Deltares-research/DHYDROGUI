@@ -42,7 +42,6 @@
                 <Setter Property="Height" Value="10"/>
             </Style>
         </ResourceDictionary>
-
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -140,7 +139,6 @@
                     </ListView.ItemTemplate>
                 </ListView>
                 
-                <!-- Background="#FFE8E8E8"-->
                 <local:ManholeVisualisation Grid.Row="2"
                                             AllowDrop="True"
                                             Drop="ManholeVisualisationControl_OnDrop"

@@ -35,20 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         private bool isDown;
         private bool isDragging;
         private ContentPresenter contentPresenter;
-
-        private ContentPresenter ContentPresenter
-        {
-            get { return contentPresenter; }
-            set
-            {
-                RemoveSelectedItemAdorner();
-                contentPresenter = value;
-                AddSelectedItemAdorner();
-
-                SelectedItem = (contentPresenter?.Content as IDrawingShape)?.Source;
-            }
-        }
-
+        
         private MoveAdorner moveAdorner;
         private SelectedAdorner selectedItemAdorner;
         
@@ -88,6 +75,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             ContentPresenter = null;
             SelectedItem = null;
             if (isDragging) DragFinished(true);
+        }
+
+        private ContentPresenter ContentPresenter
+        {
+            get { return contentPresenter; }
+            set
+            {
+                RemoveSelectedItemAdorner();
+                contentPresenter = value;
+                AddSelectedItemAdorner();
+
+                SelectedItem = (contentPresenter?.Content as IDrawingShape)?.Source;
+            }
         }
 
         private void UIElement_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
