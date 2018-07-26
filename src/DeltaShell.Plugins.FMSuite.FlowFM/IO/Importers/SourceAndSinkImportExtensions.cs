@@ -77,7 +77,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
                 matchingVariable.Values = (IMultiDimensionalArray)matchingAttribute.Value;
             }
-            
+
+            // Finally, remove the attributes
+            sourceAndSink.Feature.Attributes.RemoveAllWhere(a => a.Key.StartsWith(TimFileColumnAttributePrefix));
         }
 
     }

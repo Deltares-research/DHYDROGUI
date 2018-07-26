@@ -141,6 +141,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 string.Format(Resources.SourceAndSinkImportExtensions_GenerateFunctionFromAttributes_There_were_less_columns_in_the___tim_file_for__0__than_expected, sourceAndSink.Name));
         }
 
+        [Test]
+        public void TestPopulateFunctionValuesFromAttributes_RemovesAttributesFromFeature()
+        {
+            const int numAttributes = 5;
+            const int numValues = 8;
+
+            var sourceAndSink = GenerateSourceAndSink(GenerateAttributes(numAttributes, numValues));
+            sourceAndSink.Data = GenerateSimpleFunction(numAttributes + 1, 0);
+
+            Assert.True(sourceAndSink.Feature.Attributes.Any(a => a.Key.StartsWith(SourceAndSinkImportExtensions.TimFileColumnAttributePrefix)));
+            sourceAndSink.PopulateFunctionValuesFromAttributes(null);
+            Assert.False(sourceAndSink.Feature.Attributes.Any(a => a.Key.StartsWith(SourceAndSinkImportExtensions.TimFileColumnAttributePrefix)));
+        }
+
         private SourceAndSink GenerateSourceAndSink(DictionaryFeatureAttributeCollection attributes = null)
         {
             var geometry = new LineString(new[]
