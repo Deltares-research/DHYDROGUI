@@ -455,27 +455,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void BoundaryConditionSetsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var bc = e.Item as FlowBoundaryCondition;
-            if (bc == null) return;
-            switch (e.Action)
+            var tracerBoundaryConditions = Enumerable.Empty<FlowBoundaryCondition>(); ;
+
+            var boundaryConditionSet = e.Item as BoundaryConditionSet;
+            if (boundaryConditionSet == null)
             {
-                case NotifyCollectionChangeAction.Add:
-                    if (bc.FlowQuantity == FlowBoundaryQuantityType.Tracer)
-                        AddTracerToSourcesAndSink(bc.TracerName);
-                    break;
-                case NotifyCollectionChangeAction.Remove:
-                    if (bc.FlowQuantity == FlowBoundaryQuantityType.Tracer)
-                        RemoveTracerFromSourcesAndSink(bc.TracerName);
-                    break;
-                case NotifyCollectionChangeAction.Replace:
-                    throw new NotImplementedException("Renaming of Tracers is not yet supported");
-                    break;
-                case NotifyCollectionChangeAction.Reset:
-                    SourcesAndSinks.ForEach(ss => ss.TracerNames.Clear());
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                var flowBoundaryCondition = e.Item as FlowBoundaryCondition;
+                if (flowBoundaryCondition != null && flowBoundaryCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
+                {
+                    tracerBoundaryConditions = new List<FlowBoundaryCondition>() { flowBoundaryCondition };
+                }
             }
+            else
+            {
+                tracerBoundaryConditions = boundaryConditionSet.BoundaryConditions
+                    .OfType<FlowBoundaryCondition>()
+                    .Where(fbc => fbc.FlowQuantity == FlowBoundaryQuantityType.Tracer);
+            }
+
+            foreach (var tracerBoundaryCondition in tracerBoundaryConditions)
+            {
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangeAction.Add:
+                        AddTracerToSourcesAndSink(tracerBoundaryCondition.TracerName);
+                        break;
+                    case NotifyCollectionChangeAction.Remove:
+                        RemoveTracerFromSourcesAndSink(tracerBoundaryCondition.TracerName);
+                        break;
+                    case NotifyCollectionChangeAction.Replace:
+                        throw new NotImplementedException("Renaming of Tracers is not yet supported");
+                        break;
+                    case NotifyCollectionChangeAction.Reset:
+                        SourcesAndSinks.ForEach(ss => ss.TracerNames.Clear());
+                        return;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            
         }
 
         private void RemoveTracerFromSourcesAndSink(string name)

@@ -15,7 +15,6 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
@@ -148,8 +147,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             model.SourcesAndSinks.Add(sourceAndSink);
 
-            var tracer = "Tracer01";
-            model.TracerDefinitions.Add(tracer);
+            var tracer01 = "Tracer01";
+            var tracer02 = "Tracer02";
+            model.TracerDefinitions.AddRange(new List<string> { tracer01, tracer02 });
 
             var boundary01 = new Feature2D() { Name = "Boundary01" };
             var set01 = new BoundaryConditionSet();
@@ -158,7 +158,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             set01.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
             {
                 Feature = boundary01,
-                TracerName = tracer
+                TracerName = tracer01
+            });
+
+            set01.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
+            {
+                Feature = boundary01,
+                TracerName = tracer02
             });
 
             var boundary02 = new Feature2D() { Name = "Boundary02" };
@@ -167,16 +173,69 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             set02.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
             {
                 Feature = boundary02,
-                TracerName = tracer
+                TracerName = tracer01
             });
 
-            Assert.AreEqual(1, sourceAndSink.TracerNames.Count);
-            Assert.AreEqual(tracer, sourceAndSink.TracerNames[0]);
+            Assert.AreEqual(2, sourceAndSink.TracerNames.Count);
+            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
+            Assert.AreEqual(tracer02, sourceAndSink.TracerNames[1]);
 
             set01.BoundaryConditions.Clear();
 
             Assert.AreEqual(1, sourceAndSink.TracerNames.Count);
-            Assert.AreEqual(tracer, sourceAndSink.TracerNames[0]);
+            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
+        public void TestRemovingBoundaryConditionSet_OnlyRemovesTracerNameFromSourceAndSink_IfNoOtherTracerBoundaryConditionsExistsForSameTracer()
+        {
+            var model = new WaterFlowFMModel();
+            var sourceAndSink = new SourceAndSink();
+
+            Assert.AreEqual(0, sourceAndSink.SedimentFractionNames.Count);
+            Assert.AreEqual(0, sourceAndSink.TracerNames.Count);
+
+            model.SourcesAndSinks.Add(sourceAndSink);
+
+            var tracer01 = "Tracer01";
+            var tracer02 = "Tracer02";
+            model.TracerDefinitions.AddRange(new List<string> { tracer01, tracer02 });
+            
+            var boundary01 = new Feature2D() { Name = "Boundary01" };
+            var set01 = new BoundaryConditionSet();
+            model.BoundaryConditionSets.Add(set01);
+
+            set01.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
+            {
+                Feature = boundary01,
+                TracerName = tracer01
+            });
+
+            set01.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
+            {
+                Feature = boundary01,
+                TracerName = tracer02
+            });
+
+            var boundary02 = new Feature2D() { Name = "Boundary02" };
+            var set02 = new BoundaryConditionSet();
+            model.BoundaryConditionSets.Add(set02);
+            set02.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
+            {
+                Feature = boundary02,
+                TracerName = tracer01
+            });
+
+            Assert.AreEqual(2, sourceAndSink.TracerNames.Count);
+            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
+            Assert.AreEqual(tracer02, sourceAndSink.TracerNames[1]);
+
+            model.BoundaryConditionSets.Remove(set01);
+            
+            Assert.AreEqual(1, sourceAndSink.TracerNames.Count);
+            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
         }
 
         [Test]
