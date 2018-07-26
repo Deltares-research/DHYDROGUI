@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.NetworkEditor.Gui.Commands;
+using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {
@@ -47,13 +46,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         public ICommand DeleteCommand { get; set; }
 
-    public object SelectedItem { get; set; }
+        public object SelectedItem { get; set; }
 
         public Action DeselectItem { get; set; }
 
         private void Delete(object o)
         {
-            RemoveItem(null);
+            RemoveItem();
         }
 
         private void Escape(object o)
@@ -63,26 +62,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         
         #region Add/remove methods
 
-        private void RemoveItem(object obj)
+        private void RemoveItem()
         {
             var compartmentToRemove = SelectedItem as Compartment;
             if (compartmentToRemove != null)
             {
-                // Remove compartment
-                var sewerConnections = manhole.InternalConnections();
-                foreach (var sewerConnection in sewerConnections)
-                {
-                    if (sewerConnection.SourceCompartment == compartmentToRemove)
-                    {
-                        sewerConnection.SourceCompartment = null;
-                    }
-
-                    if (sewerConnection.TargetCompartment == compartmentToRemove)
-                    {
-                        sewerConnection.TargetCompartment = null;
-                    }
-                }
-
                 manhole.Compartments.Remove(compartmentToRemove);
             }
 
@@ -97,58 +81,31 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
         }
 
-        private bool CanRemoveItem(object obj)
-        {
-            return SelectedItem != null;
-        }
-        
-        private void AddCompartment(object obj)
+        private IFeature AddCompartment()
         {
             var newCompartment = SewerFactory.CreateNewCompartmentAndAddToManhole(network, manhole);
-            TryConnectCompartmentToConnection(manhole, newCompartment);
+            return newCompartment;
         }
 
-        private bool CanAddCompartment(object obj)
+        private IFeature AddPump()
         {
-            return Manhole?.Compartments != null;
+            return AddNewSewerConnectionWithStructure<Pump>();
         }
 
-        private void AddPump(object obj)
+        private IFeature AddOrifice()
         {
-            AddNewSewerConnectionWithStructure<Pump>();
+            return AddNewSewerConnectionWithStructure<Orifice>();
         }
 
-        private bool CanAddPump(object obj)
+        private IFeature AddWeir()
         {
-            return true;
+            return AddNewSewerConnectionWithStructure<Weir>();
         }
 
-        private void AddOrifice(object obj)
-        {
-            AddNewSewerConnectionWithStructure<Orifice>();
-        }
-
-        private bool CanAddOrifice(object obj)
-        {
-            return true;
-        }
-
-        private void AddWeir(object obj)
-        {
-            AddNewSewerConnectionWithStructure<Weir>();
-        }
-
-        private bool CanAddWeir(object obj)
-        {
-            return true;
-        }
-
-        private void AddNewSewerConnectionWithStructure<T>()
+        private IFeature AddNewSewerConnectionWithStructure<T>()
         {
             var connection = SewerFactory.CreateConnectionWithStructure<T>(manhole);
-            if (connection == null) return;
-
-            TryConnecTSewerConnectionToCompartments(connection, manhole);
+            if (connection == null) return null;
 
             foreach (var pointFeature in connection.BranchFeatures.OfType<IPointFeature>())
             {
@@ -156,62 +113,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
 
             network.Branches.Add(connection);
-        }
-
-        private static void TryConnecTSewerConnectionToCompartments(ISewerConnection sewerConnection, Manhole manhole)
-        {
-            var currentConnections = manhole.InternalConnections().ToList();
- 
-            for (var i = 1; i < manhole.Compartments.Count; i++)
-            {
-                var sourceCompartment = manhole.Compartments[i - 1];
-                var sourceAvailable = currentConnections.All(cc => cc.SourceCompartment != sourceCompartment);
-                var targetCompartment = manhole.Compartments[i];
-                var targetAvailable = currentConnections.All(cc => cc.SourceCompartment != targetCompartment);
-
-                if (sourceAvailable && targetAvailable)
-                {
-                    sewerConnection.SourceCompartment = sourceCompartment;
-                    sewerConnection.TargetCompartment = targetCompartment;
-                    break;
-                }
-            }
-        }
-
-        private static void TryConnectCompartmentToConnection(Manhole parentManhole, Compartment newCompartment)
-        {
-            // Find sewer connection where this compartment can be a target
-            var sewerConnections = parentManhole.InternalConnections().ToList();
-
-            var sewerConnectionsWithoutTargetCompartments = sewerConnections.FirstOrDefault(sc => sc.TargetCompartment == null);
-            var sewerConnectionWithoutSourceCompartment = sewerConnections.FirstOrDefault(sc => sc.SourceCompartment == null);
-            if (sewerConnectionsWithoutTargetCompartments != null)
-            {
-                sewerConnectionsWithoutTargetCompartments.TargetCompartment = newCompartment;
-            }
-            if (sewerConnectionWithoutSourceCompartment == null) return;
-
-            sewerConnectionWithoutSourceCompartment.SourceCompartment = newCompartment;
+            return connection.GetStructuresFromBranchFeatures().FirstOrDefault();
         }
 
         #endregion
 
-        public void AddShape(ShapeType item, int index)
+        public IFeature AddShape(ShapeType item)
         {
             switch (item)
             {
                 case ShapeType.Compartment:
-                    AddCompartment(null);
-                    break;
+                    return AddCompartment();
                 case ShapeType.Pump:
-                    AddPump(null);
-                    break;
+                    return AddPump();                    
                 case ShapeType.Weir:
-                    AddWeir(null);
-                    break;
+                    return AddWeir();
                 case ShapeType.Orifice:
-                    AddOrifice(null);
-                    break;
+                    return AddOrifice();
                 default:
                     throw new ArgumentOutOfRangeException(nameof(item), item, null);
             }

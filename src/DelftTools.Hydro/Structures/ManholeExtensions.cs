@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,6 +31,12 @@ namespace DelftTools.Hydro.Structures
         {
             var outletCompartments = manhole.Compartments.OfType<OutletCompartment>();
             return outletCompartments;
+        }
+
+        // TODO: Move to a good location
+        public static bool IndexInRange(this ICollection shapes, int index)
+        {
+            return index >= 0 && index < shapes.Count;
         }
     }
 }

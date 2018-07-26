@@ -270,7 +270,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             if (shape is PipeShape)
                 return pipeStrategy;
 
-            if (shape is ConnectionShape)
+            if (shape is InternalConnectionShape)
                 return connectionStrategy;
 
             throw new NotImplementedException($"Not able to obtain a strategy for the shape of type '{shape.GetType()}'");

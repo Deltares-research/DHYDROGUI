@@ -4,7 +4,7 @@ using DelftTools.Utils.Aop;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {
     [Entity]
-    public class WeirShape : ConnectionShape
+    public class WeirShape : InternalConnectionShape
     {
         public Weir Weir { get; set; }
 

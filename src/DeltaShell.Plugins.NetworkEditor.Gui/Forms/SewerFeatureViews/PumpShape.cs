@@ -5,7 +5,7 @@ using DelftTools.Utils.Aop;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {
     [Entity]
-    public class PumpShape : ConnectionShape
+    public class PumpShape : InternalConnectionShape
     {
         public IPump Pump { get; set; }
 

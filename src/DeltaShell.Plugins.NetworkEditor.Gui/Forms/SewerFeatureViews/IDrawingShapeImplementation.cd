@@ -8,11 +8,11 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.ConnectionShape" Collapsed="true">
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.InternalConnectionShape" Collapsed="true">
     <Position X="15" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAABAAAAAAAAQAAAAAAAAAAAAAAAAAQCAAAQAI=</HashCode>
-      <FileName>Forms\SewerFeatureViews\ConnectionShape.cs</FileName>
+      <FileName>Forms\SewerFeatureViews\InternalConnectionShape.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.CompartmentShape" Collapsed="true">

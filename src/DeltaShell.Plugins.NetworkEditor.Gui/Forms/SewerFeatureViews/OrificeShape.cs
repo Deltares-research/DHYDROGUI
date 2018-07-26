@@ -5,7 +5,7 @@ using DelftTools.Utils.Aop;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {
     [Entity]
-    public class OrificeShape : ConnectionShape
+    public class OrificeShape : InternalConnectionShape
     {
         public Orifice Orifice { get; set; }
 

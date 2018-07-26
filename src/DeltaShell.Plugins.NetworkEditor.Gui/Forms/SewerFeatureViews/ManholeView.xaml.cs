@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -146,7 +147,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             var pos = e.GetPosition((IInputElement) sender);
             var index = ManholeVisualisationControl.GetIndexFor(pos);
 
-            ViewModel.AddShape((ShapeType) item, index);
+            var addedFeature = ViewModel.AddShape((ShapeType) item);
+
+            var shapes = ManholeVisualisationControl.ViewModel.Shapes;
+
+            var addedShape = shapes.FirstOrDefault(s => ReferenceEquals(s.Source, addedFeature));
+            if (addedShape == null) return;
+            var oldIndex = shapes.IndexOf(addedShape);
+
+            if (!shapes.IndexInRange(oldIndex) || !shapes.IndexInRange(index)) return;
+
+            shapes.Move(oldIndex, index);
         }
 
         private void ToolBoxGiveFeedback(object sender, GiveFeedbackEventArgs e)

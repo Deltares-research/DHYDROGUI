@@ -1,10 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using DelftTools.Hydro.Structures;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {
@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         {
             var originalDrawingShape = contentPresenter.Content as IDrawingShape;
             
-            var cps = GetContentPresentersByContentType<CompartmentShape>(canvas).Concat(GetContentPresentersByContentType<ConnectionShape>(canvas));
+            var cps = GetContentPresentersByContentType<CompartmentShape>(canvas).Concat(GetContentPresentersByContentType<InternalConnectionShape>(canvas));
             var movedShapeMiddle = leftOffset + originalLeft + 0.5 * contentPresenter.ActualWidth;
 
             var tuple = cps.Select(cp => new KeyValuePair<ContentPresenter, double>(cp, GetElementMiddle(cp))).ToList();
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         public bool Validate()
         {
-            return IndexInRange(shapes, oldIndex) && IndexInRange(shapes, newIndex);
+            return shapes.IndexInRange(oldIndex) && shapes.IndexInRange(newIndex);
         }
 
         public void Reposition()
@@ -74,11 +74,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         {
             var x = Canvas.GetLeft(element) + 0.5 * element.ActualWidth;
             return x;
-        }
-
-        private static bool IndexInRange(ICollection shapes, int index)
-        {
-            return index >= 0 && index < shapes.Count;
         }
     }
 }
