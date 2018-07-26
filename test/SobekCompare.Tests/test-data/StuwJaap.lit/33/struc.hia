@@ -18,3 +18,12 @@ TimeStepMultiplyer=60
  
 [Long Locations]
  
+[Location Descriptions]
+1=GeneralStructure
+2=Weir
+3=Orifice
+4=Culvert
+5=Siphon
+6=InvertedSiphon
+7=RiverWeir
+ 

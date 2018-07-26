@@ -14,10 +14,16 @@
  The velocity in reach segment 7_1 exceeds    0.50000 m/s
  The velocity in reach segment 7_7 exceeds    0.50000 m/s
  The velocity in reach segment 7_8 exceeds    0.50000 m/s
- The velocity in structure General Structure, id = 5 exceeds    0.75000 m/s
- The velocity in structure Weir, id = 28 exceeds    0.75000 m/s
- The velocity in structure Orifice, id = 29 exceeds    0.75000 m/s
- The velocity in structure Culvert, id = 30 exceeds    0.75000 m/s
- The velocity in structure Siphon, id = 31 exceeds    0.75000 m/s
- The velocity in structure Inverted Siphon, id = 32 exceeds    0.75000 m/s
- The velocity in structure River Weir, id = 35 exceeds    0.75000 m/s
+ The velocity in structure General Structure, id = GeneralStructure, name = Gene
+ ralStructure exceeds    0.75000 m/s
+ The velocity in structure Weir, id = Weir, name = Weir exceeds    0.75000 m/s
+ The velocity in structure Orifice, id = Orifice, name = Orifice exceeds    0.75
+ 000 m/s
+ The velocity in structure Culvert, id = Culvert, name = Culvert exceeds    0.75
+ 000 m/s
+ The velocity in structure Siphon, id = Siphon, name = Siphon exceeds    0.75000
+  m/s
+ The velocity in structure Inverted Siphon, id = InvertedSiphon, name = Inverted
+ Siphon exceeds    0.75000 m/s
+ The velocity in structure River Weir, id = RiverWeir, name = RiverWeir exceeds 
+    0.75000 m/s

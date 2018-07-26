@@ -6,8 +6,8 @@ Case Name                          : TestAllStructureStates
 
 Simulation Mode                    : Run 1DFLOW (Rural) and 1DFLOW (River) module simultaneously
 
-Start                              : 19-July-2018 13:31:20
-End                                : 19-July-2018 13:31:26
+Start                              : 26-July-2018 11:06:08
+End                                : 26-July-2018 11:06:13
 
 Rainfall-Runoff Module used        : No
 Channel Module used                : Yes
