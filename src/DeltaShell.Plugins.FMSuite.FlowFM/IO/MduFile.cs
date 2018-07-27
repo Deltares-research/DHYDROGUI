@@ -737,8 +737,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var scheme = modelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
                 modelFeatureCoordinateData.UpdateDataColumns(scheme);
 
-                var difference = Math.Abs(modelFeatureCoordinateData.DataColumns.Count - fixedWeir.Attributes.Count);
+                var locationKeyFound = fixedWeir.Attributes.ContainsKey(Feature2D.LocationKey);
+                var indexKey = !locationKeyFound ? -1 : fixedWeir.Attributes.Keys.ToList().IndexOf(Feature2D.LocationKey);
 
+                var numberFixedWeirAttributes = !locationKeyFound ? fixedWeir.Attributes.Count : (fixedWeir.Attributes.Count - 1);
+
+                var difference = Math.Abs(modelFeatureCoordinateData.DataColumns.Count - numberFixedWeirAttributes);
+                
                 if (modelFeatureCoordinateData.DataColumns.Count < fixedWeir.Attributes.Count)
                 {
                     Log.Warn($"Based on the Fixed Weir Scheme {scheme}, there are too many column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been ignored");
@@ -753,11 +758,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     if (index < fixedWeir.Attributes.Count)
                     {
-                        var dataColumn = modelFeatureCoordinateData.DataColumns[index];
-                        var attributeWithListOfLoadedData =
-                            fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] as
-                                GeometryPointsSyncedList<double>;
-                        LoadAttributeIntoDataColumn(attributeWithListOfLoadedData, dataColumn);
+                        if (index == indexKey) continue;
+
+                      
+                            var dataColumn = modelFeatureCoordinateData.DataColumns[index];
+                            var attributeWithListOfLoadedData =
+                                fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] as
+                                    GeometryPointsSyncedList<double>;
+                            LoadAttributeIntoDataColumn(attributeWithListOfLoadedData, dataColumn);
                     }
                     else
                     {
