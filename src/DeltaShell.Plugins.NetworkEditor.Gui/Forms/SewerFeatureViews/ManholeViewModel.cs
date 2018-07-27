@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         private void Delete(object o)
         {
-            RemoveItem();
+            RemoveSelectedItem();
         }
 
         private void Escape(object o)
@@ -62,11 +62,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         
         #region Add/remove methods
 
-        private void RemoveItem()
+        private void RemoveSelectedItem()
         {
             var compartmentToRemove = SelectedItem as Compartment;
             if (compartmentToRemove != null)
             {
+                if (!CanRemoveCompartment(compartmentToRemove)) return;
+
+                // incoming pipes => replace target compartment
+                foreach (var pipe in manhole.IncomingPipes().Where(p => p.TargetCompartment == compartmentToRemove))
+                {
+                    pipe.TargetCompartment = manhole.Compartments.FirstOrDefault(c => c != compartmentToRemove);
+                }
+
+                // outgoing pipes => replace source compartment
+                foreach (var pipe in manhole.OutgoingPipes().Where(p => p.SourceCompartment == compartmentToRemove))
+                {
+                    pipe.SourceCompartment = manhole.Compartments.FirstOrDefault(c => c != compartmentToRemove);
+                }
                 manhole.Compartments.Remove(compartmentToRemove);
             }
 
@@ -79,6 +92,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                     manhole.Network.Branches.Remove(connection);
                 }
             }
+        }
+
+        private bool CanRemoveCompartment(Compartment compartment)
+        {
+            var containsCompartment = manhole.Compartments.Contains(compartment);
+            var hasMoreThanOneCompartment = manhole.Compartments.Count > 1;
+            return containsCompartment && hasMoreThanOneCompartment;
         }
 
         private IFeature AddCompartment()

@@ -75,6 +75,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
         }
 
+        private IEnumerable<PipeShape> PipeShapes { get { return shapes.OfType<PipeShape>(); } }
+
+        private IEnumerable<CompartmentShape> CompartmentShapes { get { return shapes.OfType<CompartmentShape>(); } }
+
         public double HeightWidthRatio {get { return (maxY - minY) / (maxX - minX); } }
         public Func<double> ContainerWidth { get; set; }
         
@@ -182,7 +186,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 {
                     Shapes.Add(new CompartmentShape { Compartment = compartment });
                 }
-
             }
 
             if (e.Action == NotifyCollectionChangeAction.Remove)
@@ -191,6 +194,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 if (compartment != null)
                 {
                     var compartmentShapeToRemove = Shapes.OfType<CompartmentShape>().FirstOrDefault(cs => cs.Compartment == compartment);
+                    // Set new compartment shape in pipe when a pipe is connected to the compartment to remove
+                    var pipeShapes = PipeShapes.Where(ps => ps.ConnectedCompartmentShape == compartmentShapeToRemove);
+                    foreach (var pipeShape in pipeShapes)
+                    {
+                        var compartmentInManhole = (Manhole)pipeShape.Pipe.Source == manhole
+                            ? pipeShape.Pipe.SourceCompartment
+                            : pipeShape.Pipe.TargetCompartment;
+
+                        pipeShape.ConnectedCompartmentShape = CompartmentShapes.FirstOrDefault(cs => cs.Compartment == compartmentInManhole);
+                    }
                     Shapes.Remove(compartmentShapeToRemove);
                 }
             }
@@ -226,18 +239,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         {
             var list = sender as IList;
             var drawingShapes = list as List<IDrawingShape> ?? new List<IDrawingShape>();
-            
+
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 foreach (var item in e.NewItems)
                 {
                     if (item == null) continue;
+                    ((INotifyPropertyChanged)item).PropertyChanged += OnShapePropertyChanged;
 
+                    if (isCreating) continue;
                     var indexAddedItem = e.NewStartingIndex;
                     var addedItem = item as IDrawingShape;
                     UpdateSewerConnectionsAfterAdd(drawingShapes, addedItem, indexAddedItem);
-
-                    ((INotifyPropertyChanged)item).PropertyChanged += OnShapePropertyChanged;
                 }
             }
 
@@ -246,12 +259,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 foreach (var item in e.OldItems)
                 {
                     if (item == null) continue;
+                    ((INotifyPropertyChanged)item).PropertyChanged -= OnShapePropertyChanged;
 
+                    if (isCreating) continue;
                     var indexRemovedItem = e.OldStartingIndex;
                     var removedItem = item as IDrawingShape;
                     UpdateSewerConnectionsAfterRemove(drawingShapes, removedItem, indexRemovedItem);
-
-                    ((INotifyPropertyChanged)item).PropertyChanged -= OnShapePropertyChanged;
                 }
             }
 
@@ -260,7 +273,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 foreach (var item in e.NewItems)
                 {
                     if (item == null) continue;
-
+                    if (isCreating) continue;
                     var indexOld = e.OldStartingIndex;
                     var indexNew = e.NewStartingIndex;
                     UpdateSewerConnectionsAfterMove(drawingShapes, item as IDrawingShape, indexOld, indexNew);

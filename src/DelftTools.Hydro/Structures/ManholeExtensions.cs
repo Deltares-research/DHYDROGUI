@@ -33,6 +33,18 @@ namespace DelftTools.Hydro.Structures
             return outletCompartments;
         }
 
+        public static IEnumerable<IPipe> IncomingPipes(this IManhole manhole)
+        {
+            var pipes = manhole.Pipes();
+            return pipes.Where(p => p.Target == manhole);
+        }
+
+        public static IEnumerable<IPipe> OutgoingPipes(this IManhole manhole)
+        {
+            var pipes = manhole.Pipes();
+            return pipes.Where(p => p.Source == manhole);
+        }
+
         // TODO: Move to a good location
         public static bool IndexInRange(this ICollection shapes, int index)
         {

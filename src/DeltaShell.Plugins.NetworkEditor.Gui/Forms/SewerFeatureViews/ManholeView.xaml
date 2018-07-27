@@ -35,7 +35,7 @@
                 <Setter Property="StrokeThickness" Value="2"/>
                 <Setter Property="StrokeDashArray" Value="2"/>
             </Style>
-
+            
             <Style x:Key="DragCenterPointStyle" TargetType="{x:Type Ellipse}">
                 <Setter Property="Fill" Value="BlueViolet"/>
                 <Setter Property="Width" Value="10"/>
