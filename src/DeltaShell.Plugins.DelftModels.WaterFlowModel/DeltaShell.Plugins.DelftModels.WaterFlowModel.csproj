@@ -248,6 +248,7 @@
     <Compile Include="DataObjects\WaterFlowModel1DLateralSourceData.cs" />
     <Compile Include="WaterFlowModel1D30LegacyLoader.cs" />
     <Compile Include="WaterFlowModel1D350LegacyLoader.cs" />
+    <Compile Include="WaterFlowModel1D352LegacyLoader.cs" />
     <Compile Include="WaterFlowModel1DDataAccessListener.cs" />
     <Compile Include="WaterFlowModel1DDataSet.cs" />
     <Compile Include="WaterFlowModel1DGridDataValueConverter.cs" />
@@ -371,6 +372,7 @@
     <EmbeddedResource Include="FlowWaterLevelTable.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="WaterFlowModel1D.3.5.2.hbm.xml" />
     <EmbeddedResource Include="WaterFlowModel1D.3.5.0.hbm.xml" />
     <EmbeddedResource Include="Roughness\RoughnessNetworkCoverage.3.1.hbm.xml" />
     <EmbeddedResource Include="Roughness\ReverseRoughnessSection.hbm.xml">

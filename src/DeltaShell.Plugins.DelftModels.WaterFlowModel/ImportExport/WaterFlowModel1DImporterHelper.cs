@@ -12,6 +12,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         private const string DispersionF3Component = "Dispersion F3 coefficient";
         private const string UseThatcherHarlemanTag = "usethatcherharleman";
 
+        private const string PreviousDischargeAtLateralOutputDataItemTag = "Discharge (l)";
+
+        public static void RemovePreviousVersionOfDischargeAtLateralsCoverage(WaterFlowModel1D waterFlowModel1D)
+        {
+            if (waterFlowModel1D == null) return;
+
+            // SOBEK3-115: Output for Laterals has now changed from 'Discharge' to 'Actual Discharge', 'Defined Discharge', and 'Lateral Difference'
+            var previousDischargeAtLateralOutputDataItem = waterFlowModel1D.DataItems
+                .FirstOrDefault(di => di.Role == DataItemRole.Output && di.Tag == PreviousDischargeAtLateralOutputDataItemTag);
+
+            if (previousDischargeAtLateralOutputDataItem != null)
+                waterFlowModel1D.DataItems.Remove(previousDischargeAtLateralOutputDataItem);
+        }
+
         public static void AdaptExistingDispersionCoverageToNewDispersionCoverages(WaterFlowModel1D waterFlowModel1D)
         {
             // get existing dispersion coverage

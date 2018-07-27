@@ -269,13 +269,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                                         WaterFlowModelParameterNames.ObservationPointTemperature,
                                         new Unit("parts per thousand", "ppt")),
                     // Laterals
-                    new EngineParameter(QuantityType.Discharge, ElementSet.Laterals,
-                                        DataItemRole.Input,
-                                        WaterFlowModelParameterNames.LateralDischarge,
+                    new EngineParameter(QuantityType.ActualDischarge, ElementSet.Laterals, DataItemRole.Output | DataItemRole.Input,
+                                        WaterFlowModelParameterNames.LateralActualDischarge,
                                         new Unit("cubic meter per second", "m³/s")),
-                    new EngineParameter(QuantityType.Discharge, ElementSet.Laterals,
-                                        DataItemRole.Output,
-                                        WaterFlowModelParameterNames.LateralDischarge,
+                    new EngineParameter(QuantityType.DefinedDischarge, ElementSet.Laterals, DataItemRole.Output | DataItemRole.Input,
+                                        WaterFlowModelParameterNames.LateralDefinedDischarge,
+                                        new Unit("cubic meter per second", "m³/s")),
+                    new EngineParameter(QuantityType.LateralDifference, ElementSet.Laterals, DataItemRole.Output | DataItemRole.Input,
+                                        WaterFlowModelParameterNames.LateralDifference,
                                         new Unit("cubic meter per second", "m³/s")),
                     new EngineParameter(QuantityType.WaterLevel, ElementSet.Laterals, DataItemRole.Output,
                                         WaterFlowModelParameterNames.LateralWaterLevel,
@@ -595,7 +596,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             if (qt == QuantityType.NegativeDepth && es == ElementSet.GridpointsOnBranches) return "nonstandard_negative_depth";
             if (qt == QuantityType.NoIteration && es == ElementSet.GridpointsOnBranches) return "nonstandard_no_iteration";
             if (qt == QuantityType.TimeStepEstimation && es == ElementSet.ReachSegElmSet) return "nonstandard_timestep_estimation";
-            if (qt == QuantityType.Discharge && es == ElementSet.Laterals) return FunctionAttributes.StandardNames.WaterDischarge;
+            if (qt == QuantityType.ActualDischarge && es == ElementSet.Laterals) return "nonstandard_lateral_actual_discharge";
+            if (qt == QuantityType.DefinedDischarge && es == ElementSet.Laterals) return "nonstandard_lateral_defined_discharge";
+            if (qt == QuantityType.LateralDifference && es == ElementSet.Laterals) return "nonstandard_lateral_difference";
             if (qt == QuantityType.WaterLevel && es == ElementSet.Laterals) return FunctionAttributes.StandardNames.WaterLevel;
             if (qt == QuantityType.FiniteGridType && es == ElementSet.FiniteVolumeGridOnGridPoints) return "nonstandard_finite_grid_type";
             if (qt == QuantityType.Discharge && es == ElementSet.FiniteVolumeGridOnGridPoints) return FunctionAttributes.StandardNames.WaterDischarge;

@@ -9,7 +9,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
     public class WaterFlowModel1DOutputCoverageMappingsTest
     {
         [TestCase(WaterFlowModel1DOutputFileConstants.FileNames.GridPointsFile, WaterFlowModel1DOutputFileConstants.VariableNames.WaterLevel, WaterFlowModelParameterNames.LocationWaterLevel)]
-        [TestCase(WaterFlowModel1DOutputFileConstants.FileNames.LateralsFile, WaterFlowModel1DOutputFileConstants.VariableNames.WaterDischarge, WaterFlowModelParameterNames.LateralDischarge)]
+        [TestCase(WaterFlowModel1DOutputFileConstants.FileNames.LateralsFile, WaterFlowModel1DOutputFileConstants.VariableNames.LateralActualDischarge, WaterFlowModelParameterNames.LateralActualDischarge)]
+        [TestCase(WaterFlowModel1DOutputFileConstants.FileNames.LateralsFile, WaterFlowModel1DOutputFileConstants.VariableNames.LateralDefinedDischarge, WaterFlowModelParameterNames.LateralDefinedDischarge)]
+        [TestCase(WaterFlowModel1DOutputFileConstants.FileNames.LateralsFile, WaterFlowModel1DOutputFileConstants.VariableNames.LateralDifference, WaterFlowModelParameterNames.LateralDifference)]
+        [TestCase(WaterFlowModel1DOutputFileConstants.FileNames.LateralsFile, WaterFlowModel1DOutputFileConstants.VariableNames.LateralWaterLevel, WaterFlowModelParameterNames.LateralWaterLevel)]
         [TestCase(WaterFlowModel1DOutputFileConstants.FileNames.ObservationsFile, WaterFlowModel1DOutputFileConstants.VariableNames.WaterDepth, WaterFlowModelParameterNames.ObservationPointWaterDepth)]
         [TestCase(WaterFlowModel1DOutputFileConstants.FileNames.ReachSegmentsFile, WaterFlowModel1DOutputFileConstants.VariableNames.Froude, WaterFlowModelParameterNames.BranchFroudeNumber)]
         [TestCase(WaterFlowModel1DOutputFileConstants.FileNames.GridPointsFile, WaterFlowModel1DOutputFileConstants.VariableNames.WaterTemperature, WaterFlowModelParameterNames.LocationTemperature)]
@@ -39,7 +42,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         }
 
         [TestCase(WaterFlowModel1DOutputFileConstants.FileNames.GridPointsFile, WaterFlowModelParameterNames.LocationWaterLevel, WaterFlowModel1DOutputFileConstants.VariableNames.WaterLevel)]
-        [TestCase(WaterFlowModel1DOutputFileConstants.FileNames.LateralsFile, WaterFlowModelParameterNames.LateralDischarge, WaterFlowModel1DOutputFileConstants.VariableNames.WaterDischarge)]
+        [TestCase(WaterFlowModel1DOutputFileConstants.FileNames.LateralsFile, WaterFlowModelParameterNames.LateralActualDischarge, WaterFlowModel1DOutputFileConstants.VariableNames.LateralActualDischarge)]
+        [TestCase(WaterFlowModel1DOutputFileConstants.FileNames.LateralsFile, WaterFlowModelParameterNames.LateralDefinedDischarge, WaterFlowModel1DOutputFileConstants.VariableNames.LateralDefinedDischarge)]
+        [TestCase(WaterFlowModel1DOutputFileConstants.FileNames.LateralsFile, WaterFlowModelParameterNames.LateralDifference, WaterFlowModel1DOutputFileConstants.VariableNames.LateralDifference)]
+        [TestCase(WaterFlowModel1DOutputFileConstants.FileNames.LateralsFile, WaterFlowModelParameterNames.LateralWaterLevel, WaterFlowModel1DOutputFileConstants.VariableNames.LateralWaterLevel)]
         [TestCase(WaterFlowModel1DOutputFileConstants.FileNames.ObservationsFile, WaterFlowModelParameterNames.ObservationPointWaterDepth, WaterFlowModel1DOutputFileConstants.VariableNames.WaterDepth)]
         [TestCase(WaterFlowModel1DOutputFileConstants.FileNames.ReachSegmentsFile, WaterFlowModelParameterNames.BranchFroudeNumber, WaterFlowModel1DOutputFileConstants.VariableNames.Froude)]
         [TestCase(WaterFlowModel1DOutputFileConstants.FileNames.GridPointsFile, WaterFlowModelParameterNames.LocationTemperature, WaterFlowModel1DOutputFileConstants.VariableNames.WaterTemperature)]
