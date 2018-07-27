@@ -303,7 +303,7 @@
     <Compile Include="IO\Importers\GisToFeature2DImporterTests.cs" />
     <Compile Include="IO\Importers\CmpFileImporterTest.cs" />
     <Compile Include="IO\Importers\QhFileImporterTest.cs" />
-    <Compile Include="IO\Importers\SourceAndSinkImporterHelperTest.cs" />
+    <Compile Include="IO\Importers\SourceAndSinkImportExtensionsTest.cs" />
     <Compile Include="IO\Importers\TimFileImporterTest.cs" />
     <Compile Include="IO\Importers\GwswFileImporterTest.cs" />
     <Compile Include="IO\Importers\GwswFileImporterTestHelper.cs" />

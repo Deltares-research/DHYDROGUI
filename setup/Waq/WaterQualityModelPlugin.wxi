@@ -18,36 +18,9 @@
       </Directory>
       
       <Directory Id="Data" Name="Data" >
-        <Directory Id="Sobek" Name="Sobek" >
-          <?ifndef var.NOKERNELS?>
-          <Component Id="WaterQualitySobekLibrary" Guid="17DE9AE2-2A8E-4683-B013-79155533A51E">
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\01_Oxygen_simple.0" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\01_Oxygen_simple.des" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\01_Oxygen_simple.sub" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\01_Tracers.des" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\01_Tracers.sub" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\02_Oxygen_bod.0" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\02_Oxygen_bod.des" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\02_Oxygen_bod.sub" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\02b_Oxygen_bod_sediment.des" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\02b_Oxygen_bod_sediment.sub" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\03_Coliform_bacteria.des" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\03_Coliform_bacteria.sub" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\04_Eutrof_simple.0" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\04_Eutrof_simple.des" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\04_Eutrof_simple.sub" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\05_Eutrof_multiple_species.des" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\05_Eutrof_multiple_species.sub" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\06_Suspended_sediment.0" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\06_Suspended_sediment.des" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\06_Suspended_sediment.sub" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\07_Metals_Cd.0" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\07_Metals_Cd.des" />
-            <File Source="$(var.waq_kernel_dir)Data\Sobek\07_Metals_Cd.sub" />
-          </Component>
-          <?endif?>
-        </Directory>
-        
+        <?ifndef var.NOKERNELS?>
+        <Directory Id="SubstancesFilesDir" Name="Sobek" />
+        <?endif?>
         <Directory Id="Duflow" Name="Duflow" >
           <?ifndef var.NOKERNELS?>
           <Component Id="WaterQualityDuflowLibrary" Guid="F9B29CFE-B4B8-442F-A865-EE53FED914FE">

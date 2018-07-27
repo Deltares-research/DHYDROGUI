@@ -217,7 +217,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                     Function.RemoveComponentByName(tracerName);
                     break;
                 case NotifyCollectionChangeAction.Replace:
-                    throw new NotImplementedException("Renaming of tracer name is not yet supported");
+                    var previousTracerName = e.OldItem as string;
+                    if (previousTracerName == null) break;
+
+                    var matchingComponent = Function.Components.FirstOrDefault(c => c.Name == previousTracerName);
+                    if (matchingComponent == null) break;
+
+                    matchingComponent.Name = tracerName;
+                    break;
                 case NotifyCollectionChangeAction.Reset:
                     break;
                 default: throw new ArgumentOutOfRangeException();

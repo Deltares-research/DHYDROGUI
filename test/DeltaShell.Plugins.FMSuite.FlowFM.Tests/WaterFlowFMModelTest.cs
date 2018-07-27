@@ -74,6 +74,176 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
+        public void TestImportSimpleModelWith_SourceAndSink_Tracer_Morphology_CorrectlyUpdatesSourceAndSinkComponents()
+        {
+            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"SimpleModel_SourceAndSink_Tracer_Morphology\SimpleModel.mdu"));
+            var sourceAndSink = model.SourcesAndSinks.FirstOrDefault();
+
+            Assert.NotNull(sourceAndSink);
+            foreach (var sedimentFraction in model.SedimentFractions)
+            {
+                Assert.True(sourceAndSink.Function.Components.Any(c => c.Name == sedimentFraction.Name));
+            }
+
+            var tracerBoundaryConditionsTracerNames = model.BoundaryConditions
+                .OfType<FlowBoundaryCondition>()
+                .Where(fbc => fbc.FlowQuantity == FlowBoundaryQuantityType.Tracer)
+                .Select(tbc => tbc.TracerName)
+                .Distinct();
+
+            foreach (var tracerName in model.TracerDefinitions.Where(t => tracerBoundaryConditionsTracerNames.Contains(t)))
+            {
+                Assert.True(sourceAndSink.Function.Components.Any(c => c.Name == tracerName));
+            }
+
+            foreach (var tracerName in model.TracerDefinitions.Where(t => !tracerBoundaryConditionsTracerNames.Contains(t)))
+            {
+                Assert.False(sourceAndSink.Function.Components.Any(c => c.Name == tracerName));
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
+        public void TestAddingSourceAndSinkCorrectlyUpdatesSedimentFractionAndTracerNamesForSourceAndSink()
+        {
+            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"SimpleModel_SourceAndSink_Tracer_Morphology\SimpleModel.mdu"));
+            var sourceAndSink = new SourceAndSink();
+
+            Assert.AreEqual(0, sourceAndSink.SedimentFractionNames.Count);
+            Assert.AreEqual(0, sourceAndSink.TracerNames.Count);
+
+            model.SourcesAndSinks.Add(sourceAndSink);
+
+            foreach (var sedimentFraction in model.SedimentFractions)
+            {
+                Assert.True(sourceAndSink.SedimentFractionNames.Contains(sedimentFraction.Name));
+            }
+
+            var tracerBoundaryConditionsTracerNames = model.BoundaryConditions
+                .OfType<FlowBoundaryCondition>()
+                .Where(fbc => fbc.FlowQuantity == FlowBoundaryQuantityType.Tracer)
+                .Select(tbc => tbc.TracerName)
+                .Distinct();
+
+            foreach (var tracerName in model.TracerDefinitions.Where(t => tracerBoundaryConditionsTracerNames.Contains(t)))
+            {
+                Assert.True(sourceAndSink.TracerNames.Contains(tracerName));
+            }
+
+            foreach (var tracerName in model.TracerDefinitions.Where(t => !tracerBoundaryConditionsTracerNames.Contains(t)))
+            {
+                Assert.False(sourceAndSink.TracerNames.Contains(tracerName));
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
+        public void TestRemovingTracerBoundaryCondition_OnlyRemovesTracerNameFromSourceAndSink_IfNoOtherTracerBoundaryConditionsExistsForSameTracer()
+        {
+            var model = new WaterFlowFMModel();
+            var sourceAndSink = new SourceAndSink();
+
+            Assert.AreEqual(0, sourceAndSink.SedimentFractionNames.Count);
+            Assert.AreEqual(0, sourceAndSink.TracerNames.Count);
+
+            model.SourcesAndSinks.Add(sourceAndSink);
+
+            var tracer01 = "Tracer01";
+            var tracer02 = "Tracer02";
+            model.TracerDefinitions.AddRange(new List<string> { tracer01, tracer02 });
+
+            var boundary01 = new Feature2D() { Name = "Boundary01" };
+            var set01 = new BoundaryConditionSet();
+            model.BoundaryConditionSets.Add(set01);
+
+            set01.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
+            {
+                Feature = boundary01,
+                TracerName = tracer01
+            });
+
+            set01.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
+            {
+                Feature = boundary01,
+                TracerName = tracer02
+            });
+
+            var boundary02 = new Feature2D() { Name = "Boundary02" };
+            var set02 = new BoundaryConditionSet();
+            model.BoundaryConditionSets.Add(set02);
+            set02.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
+            {
+                Feature = boundary02,
+                TracerName = tracer01
+            });
+
+            Assert.AreEqual(2, sourceAndSink.TracerNames.Count);
+            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
+            Assert.AreEqual(tracer02, sourceAndSink.TracerNames[1]);
+
+            set01.BoundaryConditions.Clear();
+
+            Assert.AreEqual(1, sourceAndSink.TracerNames.Count);
+            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
+        public void TestRemovingBoundaryConditionSet_OnlyRemovesTracerNameFromSourceAndSink_IfNoOtherTracerBoundaryConditionsExistsForSameTracer()
+        {
+            var model = new WaterFlowFMModel();
+            var sourceAndSink = new SourceAndSink();
+
+            Assert.AreEqual(0, sourceAndSink.SedimentFractionNames.Count);
+            Assert.AreEqual(0, sourceAndSink.TracerNames.Count);
+
+            model.SourcesAndSinks.Add(sourceAndSink);
+
+            var tracer01 = "Tracer01";
+            var tracer02 = "Tracer02";
+            model.TracerDefinitions.AddRange(new List<string> { tracer01, tracer02 });
+            
+            var boundary01 = new Feature2D() { Name = "Boundary01" };
+            var set01 = new BoundaryConditionSet();
+            model.BoundaryConditionSets.Add(set01);
+
+            set01.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
+            {
+                Feature = boundary01,
+                TracerName = tracer01
+            });
+
+            set01.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
+            {
+                Feature = boundary01,
+                TracerName = tracer02
+            });
+
+            var boundary02 = new Feature2D() { Name = "Boundary02" };
+            var set02 = new BoundaryConditionSet();
+            model.BoundaryConditionSets.Add(set02);
+            set02.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
+            {
+                Feature = boundary02,
+                TracerName = tracer01
+            });
+
+            Assert.AreEqual(2, sourceAndSink.TracerNames.Count);
+            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
+            Assert.AreEqual(tracer02, sourceAndSink.TracerNames[1]);
+
+            model.BoundaryConditionSets.Remove(set01);
+            
+            Assert.AreEqual(1, sourceAndSink.TracerNames.Count);
+            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
+        }
+
+        [Test]
         public void BoundaryConditionSetShouldBubbleEvents()
         {
             var model = new WaterFlowFMModel();
@@ -1437,6 +1607,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             allData = fmModel.FixedWeirsProperties;
 
             Assert.That(allData.Count, Is.EqualTo(0));
+
+        }
+
+        [Test]
+        public void GivenAnFMModel_WhenCloningThisModel_ThenTheNewFixedWeirPropertiesShouldBeLinkedToTheNewFixedWeirs()
+        {
+            var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFMFixedWeirs\FlowFM.mdu"); //model with two fixed weirs and every fixed weir has two coordinates.
+            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            Assert.NotNull(mduDir);
+
+            try
+            {
+                var fmModel = new WaterFlowFMModel(mduFilePath);
+                var clonedFmModel = fmModel.DeepClone() as WaterFlowFMModel;
+
+                Assert.NotNull(clonedFmModel);
+
+                Assert.That(fmModel.FixedWeirsProperties[0].Feature, Is.Not.SameAs(clonedFmModel.FixedWeirsProperties[0].Feature));
+                Assert.That(fmModel.FixedWeirsProperties[1].Feature, Is.Not.SameAs(clonedFmModel.FixedWeirsProperties[1].Feature));
+                Assert.That(fmModel.FixedWeirsProperties[0].Feature, Is.Not.SameAs(clonedFmModel.FixedWeirsProperties[1].Feature));
+                Assert.That(fmModel.FixedWeirsProperties[1].Feature, Is.Not.SameAs(clonedFmModel.FixedWeirsProperties[0].Feature));
+
+                Assert.That(fmModel.FixedWeirsProperties[0].Feature, Is.SameAs(fmModel.Area.FixedWeirs[0]));
+                Assert.That(fmModel.FixedWeirsProperties[1].Feature, Is.SameAs(fmModel.Area.FixedWeirs[1]));
+                Assert.That(clonedFmModel.FixedWeirsProperties[0].Feature, Is.SameAs(clonedFmModel.Area.FixedWeirs[0]));
+                Assert.That(clonedFmModel.FixedWeirsProperties[1].Feature, Is.SameAs(clonedFmModel.Area.FixedWeirs[1]));
+
+                var lineGeomery = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(10, 10),
+                    new Coordinate(10, 0),
+                    new Coordinate(0, 0)
+                });
+
+                fmModel.Area.FixedWeirs[0].Geometry = lineGeomery;
+
+                Assert.AreEqual(4,fmModel.FixedWeirsProperties[0].DataColumns[0].ValueList.Count);
+                Assert.AreEqual(2,clonedFmModel.FixedWeirsProperties[0].DataColumns[0].ValueList.Count);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(mduDir);
+            }
 
         }
     }

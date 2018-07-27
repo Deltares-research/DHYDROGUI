@@ -133,31 +133,38 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
         }
 
-        public TimeSeries Read(string timFilePath, DateTime modelReferenceDate, int cols=1)
+        public TimeSeries Read(string timFilePath, DateTime modelReferenceDate)
         {
             OpenInputFile(timFilePath);
             try
             {
                 var dateTimes = new List<DateTime?>();
                 var values = new List<List<double>>();
-                for (var i = 0; i < cols; i++)
+
+                var timeSeries = new TimeSeries();
+
+                var line = GetNextLine();
+                if (line == null) return timeSeries;
+
+                var componentColumns = line.Split(' ').Length - 1;
+
+                for (var i = 0; i < componentColumns; i++)
                 {
                     values.Add(new List<double>());
                 }
-                var line = GetNextLine();
+                
                 while (line != null)
                 {
                     var lineFields = (IList<string>) SplitLine(line).ToList();
 
-                    if (lineFields.Count < cols + 1)
+                    if (lineFields.Count < componentColumns + 1)
                     {
-                        throw new FormatException(String.Format("Invalid time/value row on line {0} in file {1}",
-                            LineNumber, timFilePath));
+                        throw new FormatException(String.Format("Invalid time/value row on line {0} in file {1}", LineNumber, timFilePath));
                     }
 
                     dateTimes.Add(GetDateTime(lineFields[0], modelReferenceDate, "time"));
 
-                    for (var i = 0; i < cols; ++i)
+                    for (var i = 0; i < componentColumns; ++i)
                     {
                         values[i].Add(GetDouble(lineFields[i + 1], "value"));
                     }
@@ -165,13 +172,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     line = GetNextLine();
                 }
 
-                var timeSeries = new TimeSeries();
-                for (var i = 0; i < cols; ++i)
+                for (var i = 0; i < componentColumns; ++i)
                 {
                     timeSeries.Components.Add(new Variable<double>());
                 }
                 FunctionHelper.SetValuesRaw<DateTime?>(timeSeries.Time, dateTimes);
-                for (var i = 0; i < cols; ++i)
+                for (var i = 0; i < componentColumns; ++i)
                 {
                     FunctionHelper.SetValuesRaw<double>(timeSeries.Components[i], values[i]);
                 }

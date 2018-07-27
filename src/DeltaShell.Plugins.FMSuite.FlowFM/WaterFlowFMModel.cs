@@ -27,12 +27,12 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
-using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
@@ -369,6 +369,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             SynchronizeModelDefinitions();
 
+            // import SedimentFractions (these are not part of the model definition, however they are needed for SourcesAndSinks and TracerDefinitions)
+            var mduFileDir = Path.GetDirectoryName(mduFilePath);
+            var sedimentFileProperty = ModelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SedFile));
+            if (mduFileDir != null && sedimentFileProperty != null && UseMorSed && File.Exists(Path.Combine(mduFileDir, sedimentFileProperty.Value.ToString())))
+            {
+                SedimentFile.LoadSediments(SedFilePath, this);
+            }
+
             FireImportProgressChanged(this, "Reading grid", 4, TotalImportSteps);
             var is1D2DModel = (bool) ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
             Grid = ReadGridFromNetFile(NetFilePath, is1D2DModel) ?? new UnstructuredGrid();
@@ -394,15 +402,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             // find all names for tracer definitions
             AssembleTracerDefinitions();
 
-            var sedimentFileProperty = ModelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SedFile));
-            var mduFileDir = Path.GetDirectoryName(mduFilePath);
-            if (mduFileDir != null && sedimentFileProperty != null && UseMorSed && File.Exists(Path.Combine(mduFileDir, sedimentFileProperty.Value.ToString())))
-            {
-                SedimentFile.LoadSediments(SedFilePath, this);
-            }
-
             AssembleSpatiallyVaryingSedimentProperties();
-            
+
+            // now that tracers and sediment fractions are imported we can complete the source and sink function
+            SourcesAndSinks.ForEach(sourceAndSink =>
+            {
+                var componentSettings = new Dictionary<string, bool>()
+                {
+                    {SourceAndSink.SalinityVariableName, UseSalinity},
+                    {SourceAndSink.TemperatureVariableName, UseTemperature},
+                    {SourceAndSink.SecondaryFlowVariableName, UseSecondaryFlow }
+                };
+
+                sourceAndSink.SedimentFractionNames.ForEach(sfn => componentSettings.Add(sfn, UseMorSed));
+                sourceAndSink.TracerNames.ForEach(tn => componentSettings.Add(tn, true));
+                sourceAndSink.PopulateFunctionValuesFromAttributes(componentSettings);
+            });
+
             FireImportProgressChanged(this, "Reading model output", 8, TotalImportSteps);
 
             LoadRestartFile(mduFilePath);
@@ -451,7 +467,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     var flowCondition = bc as FlowBoundaryCondition;
                     if (flowCondition != null && flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
                     {
-                        sourceAndSink.TracerNames.Add(flowCondition.Name);
+                        var tracerName = flowCondition.TracerName;
+                        if (!sourceAndSink.TracerNames.Contains(tracerName))
+                            sourceAndSink.TracerNames.Add(tracerName);
                     }
                 });
             });
@@ -459,38 +477,60 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void BoundaryConditionSetsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var bc = e.Item as FlowBoundaryCondition;
-            if (bc == null)
-                return;
-            var name = bc.Name;
-            var IsTracer = bc.FlowQuantity == FlowBoundaryQuantityType.Tracer;
-            switch (e.Action)
+            var tracerBoundaryConditions = Enumerable.Empty<FlowBoundaryCondition>(); ;
+
+            var boundaryConditionSet = e.Item as BoundaryConditionSet;
+            if (boundaryConditionSet == null)
             {
-                case NotifyCollectionChangeAction.Add:
-                    if (IsTracer) AddTracerToSourcesAndSink(name);
-                    break;
-                case NotifyCollectionChangeAction.Remove:
-                    if (IsTracer) RemoveTracerFromSourcesAndSink(name);
-                    break;
-                case NotifyCollectionChangeAction.Replace:
-                    throw new NotImplementedException("Renaming of Tracers is not yet supported");
-                    break;
-                case NotifyCollectionChangeAction.Reset:
-                    SourcesAndSinks.ForEach(ss => ss.TracerNames.Clear());
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                var flowBoundaryCondition = e.Item as FlowBoundaryCondition;
+                if (flowBoundaryCondition != null && flowBoundaryCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
+                {
+                    tracerBoundaryConditions = new List<FlowBoundaryCondition>() { flowBoundaryCondition };
+                }
             }
+            else
+            {
+                tracerBoundaryConditions = boundaryConditionSet.BoundaryConditions
+                    .OfType<FlowBoundaryCondition>()
+                    .Where(fbc => fbc.FlowQuantity == FlowBoundaryQuantityType.Tracer);
+            }
+
+            foreach (var tracerBoundaryCondition in tracerBoundaryConditions)
+            {
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangeAction.Add:
+                        AddTracerToSourcesAndSink(tracerBoundaryCondition.TracerName);
+                        break;
+                    case NotifyCollectionChangeAction.Remove:
+                        RemoveTracerFromSourcesAndSink(tracerBoundaryCondition.TracerName);
+                        break;
+                    case NotifyCollectionChangeAction.Replace:
+                        throw new NotImplementedException("Renaming of Tracers is not yet supported");
+                        break;
+                    case NotifyCollectionChangeAction.Reset:
+                        SourcesAndSinks.ForEach(ss => ss.TracerNames.Clear());
+                        return;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            
         }
 
         private void RemoveTracerFromSourcesAndSink(string name)
         {
-            SourcesAndSinks.ForEach(ss => ss.TracerNames.Remove(name));
+            if(BoundaryConditions.OfType<FlowBoundaryCondition>().All(bc => bc.TracerName != name))
+                SourcesAndSinks.ForEach(ss => ss.TracerNames.Remove(name));
         }
 
         private void AddTracerToSourcesAndSink(string name)
         {
-            SourcesAndSinks.ForEach(ss => ss.TracerNames.Add(name));
+            SourcesAndSinks.ForEach(ss =>
+            {
+                if(!ss.TracerNames.Contains(name))
+                    ss.TracerNames.Add(name);
+            });
         }
 
         private void TracerDefinitionsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
@@ -553,10 +593,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var flowCondition = boundaryCondition as FlowBoundaryCondition;
                 if (flowCondition != null)
                 {
-                    if (flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer &&
-                        !TracerDefinitions.Contains(flowCondition.TracerName))
+                    if (flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
                     {
-                        TracerDefinitions.Add(flowCondition.TracerName);
+                        if(!TracerDefinitions.Contains(flowCondition.TracerName))
+                        {
+                            TracerDefinitions.Add(flowCondition.TracerName);
+                        }
+                        AddTracerToSourcesAndSink(flowCondition.TracerName);
                     }
                 }
             }
@@ -680,13 +723,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     sedimentFraction.UpdateSpatiallyVaryingNames();
                     sedimentFraction.CompileAndSetVisibilityAndIfEnabled();
                     sedimentFraction.SetTransportFormulaInCurrentSedimentType();
-                    
+                    SourcesAndSinks.ForEach(ss => ss.SedimentFractionNames.Add(sedimentFraction.Name));
+
                     if (InitialFractions == null || BoundaryConditionSets == null) break;
                     
                     // sync the initial fractions
                     SyncInitialFractions(sedimentFraction);                
-                    AddSedimentFractionToFlowBoundaryConditionFunction(name);
-                    SourcesAndSinks.ForEach(ss=>ss.SedimentFractionNames.Add(sedimentFraction.Name));               
+                    AddSedimentFractionToFlowBoundaryConditionFunction(name);            
                     break;
                 case NotifyCollectionChangeAction.Remove:
                     // sync the initial fractions
@@ -1413,10 +1456,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     ((INotifyPropertyChanged)value).PropertyChanged -= HydroAreaPropertyChanged;
                 }
 
+                allFixedWeirsAndCorrespondingProperties.Clear();
+
                 areaItem.Value = value;
 
                 if (value != null)
                 {
+                    foreach (var fixedWeir in value.FixedWeirs)
+                    {
+                        allFixedWeirsAndCorrespondingProperties.Add(CreateModelFeatureCoordinateDataFor(fixedWeir));
+                    }
+
                     ((INotifyCollectionChanged)value).CollectionChanged += HydroAreaCollectionChanged;
                     ((INotifyPropertyChanged) value).PropertyChanged += HydroAreaPropertyChanged;
                 }
@@ -2399,7 +2449,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     switch (e.Action)
                     {
                         case NotifyCollectionChangeAction.Add:
-                            allFixedWeirsAndCorrespondingProperties.Add(CreateModelFeatureCoordinateDataFor(fixedWeir));
+                            if (allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir) == null)
+                            {
+                                allFixedWeirsAndCorrespondingProperties.Add(
+                                    CreateModelFeatureCoordinateDataFor(fixedWeir));
+                            }
+
                             break;
                         case NotifyCollectionChangeAction.Remove:
                             var dataToRemove =

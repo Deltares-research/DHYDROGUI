@@ -6,9 +6,9 @@ using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NetTopologySuite.Extensions.Features;
@@ -32,93 +32,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(expectedFileName, item.FileName);
         }
 
-        [TestCase(false, false, "NoSalinityOrTemperature.tim")]
-        [TestCase(true, false, "SalinityOnly.tim")]
-        [TestCase(false, true, "TemperatureOnly.tim")]
-        [TestCase(true, true, "BothSalinityAndTemperature.tim")]
-        public void TestReadSourceAndSinkData(bool useSalinity, bool useTemperature, string fileName)
+        [Test]
+        public void TestReadSourceAndSinkData()
         {
-            var testFilePath = TestHelper.GetTestFilePath(Path.Combine(@"timFiles", fileName));
-            
+            var testFilePath = TestHelper.GetTestFilePath(@"timFiles\10Columns10Values.tim");
+
             // setup
             var feature = new Feature2D();
             var extForceFileItem = new ExtForceFileItem(ExtForceQuantNames.SourceAndSink);
-            var modelDefinition = new WaterFlowFMModelDefinition();
-
-            var useSalinityProperty = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
-            Assert.NotNull(useSalinityProperty);
-            useSalinityProperty.Value = useSalinity;
-
-            var useTemperatureProperty = modelDefinition.GetModelProperty(GuiProperties.UseTemperature);
-            Assert.NotNull(useTemperatureProperty);
-            useTemperatureProperty.Value = useTemperature;
 
             // do the import
-            var sourceAndSink = ExtForceFileHelper.ReadSourceAndSinkData(testFilePath, feature, extForceFileItem, DateTime.Now, modelDefinition);
+            var sourceAndSink = ExtForceFileHelper.ReadSourceAndSinkData(testFilePath, feature, extForceFileItem, DateTime.Now);
 
             // check results
-            var function = sourceAndSink.Function;
-            var dischargeVariable = function.Components.FirstOrDefault(c => c.Name == SourceAndSink.DischargeVariableName);
-            Assert.NotNull(dischargeVariable);
-
-            var dischargeValues = ((MultiDimensionalArray<double>)dischargeVariable.Values).ToList();
-            Assert.IsTrue(dischargeValues.All(v => v >= double.Epsilon));
-
-            var salinityVariable = function.Components.FirstOrDefault(c => c.Name == SourceAndSink.SalinityVariableName);
-            Assert.NotNull(salinityVariable);
-
-            var salinityValues = ((MultiDimensionalArray<double>)salinityVariable.Values).ToList();
-            Assert.AreEqual(useSalinity, salinityValues.All(v => v >= double.Epsilon));
-            Assert.AreEqual(!useSalinity, salinityValues.All(v => v < double.Epsilon));
-
-            var temperatureVariable = function.Components.FirstOrDefault(c => c.Name == SourceAndSink.TemperatureVariableName);
-            Assert.NotNull(temperatureVariable);
-
-            var temperatureValues = ((MultiDimensionalArray<double>)temperatureVariable.Values).ToList();
-            Assert.AreEqual(useTemperature, temperatureValues.All(v => v >= double.Epsilon));
-            Assert.AreEqual(!useTemperature, temperatureValues.All(v => v < double.Epsilon));
+            var sourceAndSinkAttributes = sourceAndSink.Feature.Attributes.Where(a => a.Key.StartsWith(SourceAndSinkImportExtensions.TimFileColumnAttributePrefix)).ToList();
+            Assert.AreEqual(10, sourceAndSinkAttributes.Count);
+            Assert.True(sourceAndSinkAttributes.Select(a => a.Value).OfType<MultiDimensionalArray<double>>().All(v => v.Count == 10));
         }
 
         [Test]
         public void TestReadSourceAndSinkValues_HandlesNullFunction()
         {
             var sourceAndSink = new SourceAndSink { Data = null };
-            var arguments = new object[] { sourceAndSink, string.Empty, DateTime.MinValue, new WaterFlowFMModelDefinition() };
+            var arguments = new object[] { sourceAndSink, string.Empty, DateTime.MinValue };
             var expectedError = string.Format(Resources.Read_SourceAndSink_values_failed__no_function_detected_for_SourceAndSink__0_, sourceAndSink.Name);
 
             TestHelper.AssertAtLeastOneLogMessagesContains(() =>
             {
                 TypeUtils.CallPrivateStaticMethod(typeof(ExtForceFileHelper), "ReadSourceAndSinkValues", arguments );
             }, 
-            expectedError);
-        }
-
-        [Test]
-        public void TestReadSourceAndSinkValues_HandlesNullComponent()
-        {
-            var testFilePath = TestHelper.GetTestFilePath(@"timFiles\testFile.tim");
-
-            var sourceAndSink = new SourceAndSink();
-            // Remove temperatureComponent
-            sourceAndSink.Function.RemoveComponentByName(SourceAndSink.TemperatureVariableName);
-
-            var modelDefinition = new WaterFlowFMModelDefinition();
-
-            var useSalinityProperty = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
-            Assert.NotNull(useSalinityProperty);
-            useSalinityProperty.Value = true;
-
-            var useTemperatureProperty = modelDefinition.GetModelProperty(GuiProperties.UseTemperature);
-            Assert.NotNull(useTemperatureProperty);
-            useTemperatureProperty.Value = true;
-
-            var arguments = new object[] { sourceAndSink, testFilePath, DateTime.Now, modelDefinition };
-            var expectedError = string.Format(Resources.Read_SourceAndSink_values_failed__could_not_determine_component_values_for_SourceAndSink__0_, sourceAndSink.Name);
-
-            TestHelper.AssertAtLeastOneLogMessagesContains(() =>
-            {
-                TypeUtils.CallPrivateStaticMethod(typeof(ExtForceFileHelper), "ReadSourceAndSinkValues", arguments);
-            },
             expectedError);
         }
 

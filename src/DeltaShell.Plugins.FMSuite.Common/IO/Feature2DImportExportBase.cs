@@ -68,6 +68,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// </summary>
         public Action<object, TFeat> AfterCreateAction { get; set; }
 
+        public Action<object, TFeat> BeforeExportActionDelegate { get; set; }
+
+        public Action<object, TFeat> AfterExportActionDelegate { get; set; }
+        
         /// <summary>
         /// Optional check for replacing duplicate features (return false to cancel)
         /// (object1 = current feature, object 2 = new feature to replace with)
@@ -202,7 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         protected void AddOrReplace<T>(IList<T> featureList, IEnumerable<T> featuresToAdd, IEqualityComparer comparer) where T : INameable
         {
             var featuresToAddList = featuresToAdd.ToList();
-            featuresToAddList.OfType<TFeat>().ForEach(f => AfterCreateAction?.Invoke(featureList, f));
+           featuresToAddList.OfType<TFeat>().ForEach(f => AfterCreateAction?.Invoke(featureList, f));
 
             GetEditableObject?.Invoke(featureList).BeginEdit(new DefaultEditAction($"Importing features of type {typeof(T).Name}"));
 
@@ -221,7 +225,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 ProgressChanged?.Invoke("Adding features", i, featuresToAddList.Count);
 
-                var item = featuresToAddList[i];
+                var item = featuresToAddList[i];   
                 if (hashSet.Contains(item))
                 {
                     var hash = equalityComparer.GetHashCode(item);

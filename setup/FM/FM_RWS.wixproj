@@ -6,9 +6,9 @@
     <!-- This version is wix specific -->
     <ProductVersion>3.5</ProductVersion>
     <!-- This is our release version -->
-    <ReleaseVersion>1.4.5</ReleaseVersion>
+    <ReleaseVersion>1.4.6</ReleaseVersion>
     <!-- This is the product name -->
-    <ProductName>D-HYDRO Suite 2018.02</ProductName>
+    <ProductName>D-HYDRO Suite 2018.03</ProductName>
     <ProjectGuid>{5725d793-35b5-48a1-bb6a-2291df6c2980}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ProductName) ($(ReleaseVersion))</OutputName>
@@ -134,6 +134,9 @@
     <Compile Include="..\Waq\PLCTLibs.wxs">
       <Link>PLCTLibs.wxs</Link>
     </Compile>
+    <Compile Include="..\Waq\SubstancesFiles.wxs">
+      <Link>SubstancesFiles.wxs</Link>
+    </Compile>
     <Compile Include="RGFGridLibs.wxs">
       <Link>RGFGridLibs.wxs</Link>
     </Compile>
@@ -196,6 +199,7 @@
   <Import Project="FMProperties.targets" />
   <Import Project="..\Dimr\HarvestDimrLibs.targets" />
   <Import Project="..\Waq\HarvestPLCTLibs.targets" />
+  <Import Project="..\Waq\HarvestSubstancesFiles.targets" />
   <Import Project="..\Waq\HarvestDidoLibs.targets" />
   <Import Project="HarvestRGFGridLibs.targets" />
   <PropertyGroup>
@@ -203,6 +207,7 @@
       HarvestDimrLibsTarget;
       HarvestPLCTLibsTarget;
       HarvestRGFGridLibsTarget;
+      HarvestSubstancesFilesTarget;
       HarvestDidoLibsTarget;
       $(BuildDependsOn);
     </BuildDependsOn>

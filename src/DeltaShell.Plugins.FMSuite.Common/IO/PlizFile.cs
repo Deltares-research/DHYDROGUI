@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// </summary>
         private T FromPolyline(T f)
         {
-            if (f.Attributes == null) return f;
+            if (f.Attributes == null || (f.Attributes.Count == 0)) return f;
             var newFeature = (T) f.Clone();
             newFeature.Attributes.Clear();
 

@@ -21,8 +21,10 @@ using DeltaShell.Plugins.NetworkEditor.Import;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using log4net;
 using Mono.Addins;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Grids;
 using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
@@ -34,6 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     [Extension(typeof(IPlugin))]
     public class FlowFMApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
+        private static ILog Log = LogManager.GetLogger(typeof(FlowFMApplicationPlugin));
         public static string PluginVersion; // 1.2
         public static string PluginName; // D-Flow Flexible Mesh Plugin
         
@@ -127,8 +130,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     return feature1;
                 },
                 EqualityComparer = new GroupableFeatureComparer<FixedWeir>(),
-                AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.FixedWeirs)),
-                GetEditableObject = target => GetModelFor(target, a => a.FixedWeirs).Area
+                AfterCreateAction = delegate(object featureList, FixedWeir fixedWeir)
+                {
+                    fixedWeir.UpdateGroupName(GetModelFor(featureList, a => a.FixedWeirs));
+
+                    
+                    var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir>() {Feature = fixedWeir};
+                    var scheme = GetModelFor(featureList, a => a.FixedWeirs).ModelDefinition
+                        .GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
+                    modelFeatureCoordinateData.UpdateDataColumns(scheme);
+                    var difference = Math.Abs(modelFeatureCoordinateData.DataColumns.Count - fixedWeir.Attributes.Count);
+                    
+                    if (modelFeatureCoordinateData.DataColumns.Count < fixedWeir.Attributes.Count)
+                    {
+                        Log.Warn($"Based on the Fixed Weir Scheme {scheme}, there are too many column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been ignored");
+                    }
+
+                    if (modelFeatureCoordinateData.DataColumns.Count > fixedWeir.Attributes.Count)
+                    {
+                        Log.Warn($"Based on the Fixed Weir Scheme {scheme}, there are not enough column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been generated using default values");
+                    }
+
+
+                    for (var index = 0; index < modelFeatureCoordinateData.DataColumns.Count; index++)
+                    {
+                        if (index < fixedWeir.Attributes.Count)
+                        {
+                            var dataColumn = modelFeatureCoordinateData.DataColumns[index];
+                            var attributeWithListOfLoadedData =
+                                fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] as
+                                    GeometryPointsSyncedList<double>;
+                            dataColumn.ValueList = attributeWithListOfLoadedData.ToList();
+                            
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    GetModelFor(featureList, a => a.FixedWeirs).FixedWeirsProperties.Add(modelFeatureCoordinateData);
+                    
+                        fixedWeir.Attributes.Clear(); //To Do during last step of cleaning. Turn this on. 
+                    
+                },
+
+            GetEditableObject = target => GetModelFor(target, a => a.FixedWeirs).Area
             };
 
             yield return new GisToFeature2DImporter<ILineString, FixedWeir>();
@@ -293,7 +339,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new BcFileExporter {GetRefDateForBoundaryCondition = GetRefDateForBoundaryCondition};
             yield return new BcmFileExporter {GetRefDateForBoundaryCondition = GetRefDateForBoundaryCondition};
             yield return new PliFileImporterExporter<Embankment, Embankment> { Mode = Feature2DImportExportMode.Export };
-            yield return new PliFileImporterExporter<FixedWeir, FixedWeir> { Mode = Feature2DImportExportMode.Export };
+            yield return new PliFileImporterExporter<FixedWeir, FixedWeir>
+            {
+                Mode = Feature2DImportExportMode.Export,
+                BeforeExportActionDelegate = delegate (object featureList, FixedWeir fixedWeir)
+                {
+                    fixedWeir.Attributes = new DictionaryFeatureAttributeCollection();
+
+                    var correspondingModelFeatureCoordinateData =
+                        GetModelFor(featureList, a => a.FixedWeirs).FixedWeirsProperties.FirstOrDefault(d => d.Feature == fixedWeir);
+
+                    if (correspondingModelFeatureCoordinateData == null) return;
+
+                    for (var index = 0; index < correspondingModelFeatureCoordinateData.DataColumns.Count; index++)
+                    {
+                        if (!correspondingModelFeatureCoordinateData.DataColumns[index].IsActive) break;
+                        var dataColumnWithData = correspondingModelFeatureCoordinateData.DataColumns[index].ValueList;
+
+                        GeometryPointsSyncedList<double> syncedList;
+                        syncedList = new GeometryPointsSyncedList<double>
+                        {
+                            CreationMethod = (f, i) => 0.0,
+                            Feature = fixedWeir
+                        };
+                        fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] = syncedList;
+
+                        for (var i = 0; i < dataColumnWithData.Count; ++i)
+                        {
+                            syncedList[i] = (double)dataColumnWithData[i];
+                        }
+                    }
+                },
+
+                AfterExportActionDelegate = delegate (object featureList, FixedWeir fixedWeir)
+                {
+                    fixedWeir.Attributes.Clear();
+                },
+            };
             yield return new PliFileImporterExporter<ThinDam2D, ThinDam2D> { Mode = Feature2DImportExportMode.Export };
             yield return
                 new PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D>

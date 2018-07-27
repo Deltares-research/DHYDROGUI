@@ -8,13 +8,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
     public static class FixedWeirFmModelFeatureCoordinateDataSyncExtensions
     {
-        public const string CrestLevelColumnName = "Crest Levels [m]";
-        public const string SillUpColumnName = "Sill up [m]";
-        public const string SillDownColumnName = "Sill down [m]";
-        public const string CrestLengthColumnName = "Crest Length [m]";
-        public const string TaludUpColumnName = "Talud Up [-]";
-        public const string TaludDownColumnName = "Talud Down [-]";
-        public const string VegetationCoefficientColumnName = "Vegetation Coefficient [-]";
+        public const string CrestLevelColumnName = "Crest Level [mAD]";
+        public const string SillUpColumnName = "Ground Height Left [m]";
+        public const string SillDownColumnName = "Ground Height Right [m]";
+        public const string CrestLengthColumnName = "Crest Width [m]";
+        public const string TaludUpColumnName = "Slope Left [-]";
+        public const string TaludDownColumnName = "Slope Right  [-]";
+        public const string VegetationCoefficientColumnName = "Roughness Code [-]";
 
         public static void UpdateDataColumns(this ModelFeatureCoordinateData<FixedWeir> data, string fixedWeirScheme)
         {

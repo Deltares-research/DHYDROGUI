@@ -64,13 +64,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 new SedimentFraction {Name = "Fraction_2"}
             };
 
-            var tracerList = new List<FlowBoundaryCondition>
+            var tracerList = new List<string>() { "Tracer_1", "Tracer_2" };
+            var tracerBoundaryConditions = new List<FlowBoundaryCondition>();
+            foreach (var tracer in tracerList)
             {
-                new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer,
-                    BoundaryConditionDataType.Empty) {Name = "Tracer_1"},
-                new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer,
-                    BoundaryConditionDataType.Empty) {Name = "Tracer_2"}
-            };
+                tracerBoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty){ TracerName = tracer });
+            }
 
             var boundarySet = new BoundaryConditionSet();
 
@@ -79,8 +78,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 SourcesAndSinks = { sourceAndSink },
                 BoundaryConditionSets = { boundarySet },
             };
+
             model.SedimentFractions.AddRange(fractionList);
-            if (tracersPresent) boundarySet.BoundaryConditions.AddRange(tracerList);
+            if (tracersPresent)
+            {
+                model.TracerDefinitions.AddRange(tracerList);
+                boundarySet.BoundaryConditions.AddRange(tracerBoundaryConditions);
+            }
 
             var modelDefinition = fmModel.ModelDefinition;
 

@@ -1,17 +1,17 @@
 TP_1.0
 NODE id '1' nm '' px 104000 py 452000 node
 NODE id '8' nm '' px 104000 py 451500 node
-NODE id '2' nm '' px 109000 py 452000 node
 NODE id '9' nm '' px 104000 py 451000 node
 NODE id '10' nm '' px 104000 py 450500 node
 NODE id '11' nm '' px 104000 py 450000 node
 NODE id '12' nm '' px 104000 py 449500 node
+NODE id '33' nm '' px 104000 py 449000 node
 NODE id '13' nm '' px 109000 py 451500 node
+NODE id '2' nm '' px 109000 py 452000 node
 NODE id '14' nm '' px 109000 py 451000 node
 NODE id '15' nm '' px 109000 py 450500 node
 NODE id '16' nm '' px 109000 py 450000 node
 NODE id '17' nm '' px 109000 py 449500 node
-NODE id '33' nm '' px 104000 py 449000 node
 NODE id '34' nm '' px 109000 py 449000 node
 BRCH id '1' nm '' bn '1' en '2' al 5000 vc_opt 1 vc_equi -1 vc_len 500 brch
 BRCH id '2' nm '' bn '8' en '13' al 5000 vc_opt 1 vc_equi -1 vc_len 500 brch

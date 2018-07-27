@@ -653,6 +653,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.FixedWeirFile, hydroArea.FixedWeirs.ToList(),
                 ref fixedWeirFile, FixedWeirExtension, FixedWeirAlternativeExtension);
 
+            foreach (var fixedWeir in hydroArea.FixedWeirs)
+            {
+                fixedWeir.Attributes.Clear(); 
+            }
+
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.ObsFile, hydroArea.ObservationPoints,
                 ref obsFile, ObsExtension);
 
@@ -725,11 +730,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ReadAreaFeatures(filePath, modelDefinition, hydroArea);
 
             //fix for fixed weirs
-
+            
             foreach (var fixedWeir in hydroArea.FixedWeirs)
             {
                 var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir>() {Feature = fixedWeir};
-                modelFeatureCoordinateData.UpdateDataColumns(modelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString());
+                var scheme = modelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
+                modelFeatureCoordinateData.UpdateDataColumns(scheme);
+
+                var difference = Math.Abs(modelFeatureCoordinateData.DataColumns.Count - fixedWeir.Attributes.Count);
+
+                if (modelFeatureCoordinateData.DataColumns.Count < fixedWeir.Attributes.Count)
+                {
+                    Log.Warn($"Based on the Fixed Weir Scheme {scheme}, there are too many column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been ignored");
+                }
+
+                if (modelFeatureCoordinateData.DataColumns.Count > fixedWeir.Attributes.Count)
+                {
+                    Log.Warn($"Based on the Fixed Weir Scheme {scheme}, there are not enough column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been generated using default values");
+                }
+
                 for (var index = 0; index < modelFeatureCoordinateData.DataColumns.Count; index++)
                 {
                     if (index < fixedWeir.Attributes.Count)
@@ -750,7 +769,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             foreach (var fixedWeir in hydroArea.FixedWeirs)
             {
-                // fixedWeir.Attributes.Clear(); To Do during last step of cleaning. Turn this on. 
+                fixedWeir.Attributes.Clear(); //To Do during last step of cleaning. Turn this on. 
             }
            
             reportProgress("Reading external forcings file", 4, totalSteps);
@@ -847,6 +866,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         mduPropertyLowerCase = mduPropertyName.ToLower();
 
                         string mduPropertyValue = fields[1].Trim();
+
+                        if(mduPropertyLowerCase == KnownProperties.FixedWeirScheme && (mduPropertyValue != "0" && mduPropertyValue != "6" && mduPropertyValue != "8" && mduPropertyValue != "9"))
+                        {
+                            Log.Warn(string.Format("Obsolete Fixed Weir Scheme {0} detected and it will be corrected to the default Numerical Scheme.", mduPropertyValue));
+                            mduPropertyValue = "6";
+                        }
                         GetPropertyComment(line, mduPropertyName, fields.Length > 2, false);
 
                         if (!definition.ContainsProperty(mduPropertyLowerCase))

@@ -289,7 +289,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             feature.TrySetGroupName(pliFilePath);
 
-            if (numColumns > 2)
+            if (numColumns >= 2)
             {
                 if (feature.Attributes == null)
                 {

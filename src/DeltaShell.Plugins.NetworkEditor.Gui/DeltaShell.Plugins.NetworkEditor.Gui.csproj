@@ -464,12 +464,6 @@
       <DependentUpon>ZWSectionsView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\CrossSectionView\ZWSectionsViewModel.cs" />
-    <Compile Include="Forms\Feature2DEditors\FixedWeirEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Feature2DEditors\FixedWeirEditor.Designer.cs">
-      <DependentUpon>FixedWeirEditor.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FMWeirView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -813,9 +807,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CrossSectionView\ZWSectionsView.resx">
       <DependentUpon>ZWSectionsView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Feature2DEditors\FixedWeirEditor.resx">
-      <DependentUpon>FixedWeirEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FMWeirView.resx">
       <DependentUpon>FMWeirView.cs</DependentUpon>
@@ -1275,6 +1266,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\enclosure.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Forms\Feature2DEditors\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Pipe_Small.png" />

@@ -427,7 +427,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public static SourceAndSink ReadSourceAndSinkData(string filePath, Feature2D feature2D,
                                                               ExtForceFileItem extForceFileItem,
-                                                              DateTime modelReferenceDate, WaterFlowFMModelDefinition modelDefinition)
+                                                              DateTime modelReferenceDate)
         {
             if (!Equals(extForceFileItem.Quantity, ExtForceQuantNames.SourceAndSink)) return null;
 
@@ -449,7 +449,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return sourceAndSink;
             }
 
-            ReadSourceAndSinkValues(sourceAndSink, dataFilePath, modelReferenceDate, modelDefinition);
+            ReadSourceAndSinkValues(sourceAndSink, dataFilePath, modelReferenceDate);
 
             return sourceAndSink;
         }
@@ -573,7 +573,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static void ReadSourceAndSinkValues(SourceAndSink sourceAndSink, string filePath, DateTime modelReferenceDate, WaterFlowFMModelDefinition modelDefinition)
+        private static void ReadSourceAndSinkValues(SourceAndSink sourceAndSink, string filePath, DateTime modelReferenceDate)
         {
             var data = sourceAndSink.Data;
             if (data == null)
@@ -582,31 +582,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return;
             }
 
-            var readFunction = (IFunction) data.Clone(true);
-            new TimFile().Read(filePath, readFunction, modelReferenceDate);
-
-            var salinityEnabled = useProperty(modelDefinition,KnownProperties.UseSalinity);
-            var temperatureEnabled = useProperty(modelDefinition, GuiProperties.UseTemperature);
-            var sedimentFractionsEnabled = useProperty(modelDefinition, GuiProperties.UseMorSed);
-            var secondaryFlowEnabled = useProperty(modelDefinition, KnownProperties.SecondaryFlow);
-
-            var componentSettings = new Dictionary<string, bool>()
-            {
-                {SourceAndSink.SalinityVariableName, salinityEnabled},
-                {SourceAndSink.TemperatureVariableName, temperatureEnabled},
-                {SourceAndSink.SecondaryFlowVariableName,secondaryFlowEnabled }
-            };
-            sourceAndSink.SedimentFractionNames.ForEach(sfn => componentSettings.Add(sfn, sedimentFractionsEnabled));
-            sourceAndSink.TracerNames.ForEach(tn => componentSettings.Add(tn, true));
-
-            if (SourceAndSinkImporterHelper.AdaptComponentValuesFromFileToSourceAndSinkFunction(readFunction, componentSettings))
-            {
-                sourceAndSink.Data = readFunction;
-            }
-            else
-            {
-                log.ErrorFormat(Resources.Read_SourceAndSink_values_failed__could_not_determine_component_values_for_SourceAndSink__0_, sourceAndSink.Name);
-            }
+            var readFunction = new TimFile().Read(filePath, modelReferenceDate);
+            sourceAndSink.CopyValuesFromFileToSourceAndSinkAttributes(readFunction);
         }
 
         public static ExtForceFileItem WriteInitialConditionsPolygon(string extForceFilePath, string extForceFileQuantityName, SetValueOperation operation, ExtForceFileItem existingExtForceFileItem = null, bool writeToDisk = true, string prefix = null)

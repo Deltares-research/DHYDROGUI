@@ -6,6 +6,7 @@ using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Geometries;
 using NUnit.Framework;
 using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 
@@ -62,12 +63,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             var fixedWeir = fixedWeirs.FirstOrDefault();
             Assert.That(fixedWeir.Attributes.Count, Is.EqualTo(7));
-            Assert.That(fixedWeir.CrestLevels[0], Is.EqualTo(10.96));
-            Assert.That(fixedWeir.CrestLevels[1], Is.EqualTo(10.89));
-            Assert.That(fixedWeir.GroundLevelsLeft[0], Is.EqualTo(3.5));
-            Assert.That(fixedWeir.GroundLevelsLeft[1], Is.EqualTo(3.0));
-            Assert.That(fixedWeir.GroundLevelsRight[0], Is.EqualTo(3.2));
-            Assert.That(fixedWeir.GroundLevelsRight[1], Is.EqualTo(3.3));
+           
+           var crestLevelsAttributes = (fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[0]] as
+                    GeometryPointsSyncedList<double>).ToList();
+
+            var GroundLevelsLeftAttributes = (fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[1]] as
+                GeometryPointsSyncedList<double>).ToList();
+
+            var GroundLevelsRightAttributes = (fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[2]] as
+                GeometryPointsSyncedList<double>).ToList();
+
+            Assert.That(crestLevelsAttributes[0], Is.EqualTo(10.96));
+            Assert.That(crestLevelsAttributes[1], Is.EqualTo(10.89));
+            Assert.That(GroundLevelsLeftAttributes[0], Is.EqualTo(3.5));
+            Assert.That(GroundLevelsLeftAttributes[1], Is.EqualTo(3.0));
+            Assert.That(GroundLevelsRightAttributes[0], Is.EqualTo(3.2));
+            Assert.That(GroundLevelsRightAttributes[1], Is.EqualTo(3.3));
         }
     }
 }

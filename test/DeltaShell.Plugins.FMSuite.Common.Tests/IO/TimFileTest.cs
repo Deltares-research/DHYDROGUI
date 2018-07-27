@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var fileWriter = new TimFile();
             fileWriter.Write("testFile.tim", function, refDate);
 
-            var readFunction = fileWriter.Read("testFile.tim", refDate, 3);
+            var readFunction = fileWriter.Read("testFile.tim", refDate);
             
             Assert.AreEqual(1, readFunction.Arguments.Count);
             Assert.AreEqual(3, readFunction.Components.Count);
@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             function.Components[2].SetValues(valuesList3);
 
             var fileWriter = new TimFile();
-            var readFunction = fileWriter.Read(TestHelper.GetTestFilePath("timFiles/testFile.tim"), refDate, 3);
+            var readFunction = fileWriter.Read(TestHelper.GetTestFilePath("timFiles/testFile.tim"), refDate);
 
             Assert.AreEqual(1, readFunction.Arguments.Count);
             Assert.AreEqual(3, readFunction.Components.Count);

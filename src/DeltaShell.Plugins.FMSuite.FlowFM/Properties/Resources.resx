@@ -497,4 +497,10 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="polygon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\polygon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="SourceAndSinkImportExtensions_GenerateFunctionFromAttributes_There_were_more_columns_in_the___tim_file_for__0__than_expected" xml:space="preserve">
+    <value>There were more columns in the *.tim file for {0} than expected</value>
+  </data>
+  <data name="SourceAndSinkImportExtensions_GenerateFunctionFromAttributes_There_were_less_columns_in_the___tim_file_for__0__than_expected" xml:space="preserve">
+    <value>There were less columns in the *.tim file for {0} than expected</value>
+  </data>
 </root>

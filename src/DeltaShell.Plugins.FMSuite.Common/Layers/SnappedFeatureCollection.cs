@@ -247,7 +247,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         {
             if (dirty)
                 return; //list already dirty, so don't update
-            var feature = e.Item is IFeatureData ? ((IFeatureData)e.Item).Feature : (IFeature) e.Item;
+
+            var data = e.Item as IFeatureData;
+            var feature = data != null 
+                ? data.Feature 
+                : e.Item as IFeature;
+
+            if (feature == null) return;
+
             switch (e.Action)
             {
                 case NotifyCollectionChangeAction.Add:
