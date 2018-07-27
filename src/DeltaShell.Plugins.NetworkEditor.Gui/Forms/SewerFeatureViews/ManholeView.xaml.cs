@@ -145,6 +145,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             if (item == null || !(item is ShapeType)) return;
 
             var pos = e.GetPosition((IInputElement) sender);
+
+            var actualWidth = ManholeVisualisationControl.ActualWidth;
+            var desiredWidth = ManholeVisualisationControl.DesiredSize.Width;
+
+            var horizontalOffset = (actualWidth - desiredWidth) * 0.5;
+            pos.X = pos.X - horizontalOffset;
+
             var index = ManholeVisualisationControl.GetIndexFor(pos);
 
             var addedFeature = ViewModel.AddShape((ShapeType) item);
