@@ -1,10 +1,13 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
+using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -37,6 +40,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
 
             Assert.IsTrue(filter1DPoints[2]);
             Assert.IsTrue(filter1DPoints[3]);
+        }
+
+        [Test]
+        public void Get_Later1D2DLinks() 
+        {
+            var grid = GetUnstructedTestGrid();
+
+            var node1 = new HydroNode("from") {Geometry = new Point(40,-5)};
+            var node2 = new HydroNode("to") { Geometry = new Point(0, -5)};
+            var branch = new Branch("test", node1, node2 , 40.0);
+            var networkLocations = new List<INetworkLocation>();
+            networkLocations.Add(new NetworkLocation(branch,5.0) { Geometry = new Point(5.0, -5.0)});
+            networkLocations.Add(new NetworkLocation(branch, 35.0) { Geometry = new Point(35.0, -5.0) });
+
+            var areaCoordinates = new List<Coordinate>();
+            areaCoordinates.Add(new Coordinate(-1,-10));
+            areaCoordinates.Add(new Coordinate(41,-10));
+            areaCoordinates.Add(new Coordinate(35, 20));
+            areaCoordinates.Add(new Coordinate(5, 20));
+            areaCoordinates.Add(new Coordinate(-1, -10));
+
+            var area = new Polygon(new LinearRing(areaCoordinates.ToArray()));
+
+            var filterMesh1D = Enumerable.Repeat(true, networkLocations.Count).ToList();
+
+            var tuplesFromToIndexes = GenerateLinksMapToolHelper.TemporaryMethodGetFromToIndexesFor1D2DLinks(grid, networkLocations, area, filterMesh1D);
+
+            Assert.AreEqual(4, tuplesFromToIndexes.Count);
+            Assert.IsNotNull(tuplesFromToIndexes.FirstOrDefault(l => l.Item1 == 0 && l.Item2 == 0));
+            Assert.IsNotNull(tuplesFromToIndexes.FirstOrDefault(l => l.Item1 == 0 && l.Item2 == 1));
+            Assert.IsNotNull(tuplesFromToIndexes.FirstOrDefault(l => l.Item1 == 1 && l.Item2 == 2));
+            Assert.IsNotNull(tuplesFromToIndexes.FirstOrDefault(l => l.Item1 == 1 && l.Item2 == 3));
+
         }
 
         private static Discretization GetTestDiscretization()
@@ -144,6 +180,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
             });
 
             return discretisation;
+        }
+
+        private static UnstructuredGrid GetUnstructedTestGrid()
+        {
+            var grid = new UnstructuredGrid();
+            var vertices = new List<Coordinate>();
+            vertices.Add(new Coordinate(0, 0)); //1
+            vertices.Add(new Coordinate(10, 0));
+            vertices.Add(new Coordinate(20, 0));
+            vertices.Add(new Coordinate(30, 0));
+            vertices.Add(new Coordinate(40, 0));
+            vertices.Add(new Coordinate(0, 10)); //6
+            vertices.Add(new Coordinate(10, 10));
+            vertices.Add(new Coordinate(20, 10));
+            vertices.Add(new Coordinate(30, 10));
+            vertices.Add(new Coordinate(40, 10));
+            vertices.Add(new Coordinate(0, 20)); //11
+            vertices.Add(new Coordinate(10, 20));
+            vertices.Add(new Coordinate(20, 20));
+            vertices.Add(new Coordinate(30, 20));
+            vertices.Add(new Coordinate(40, 20));
+            vertices.Add(new Coordinate(0, 30)); //16
+            vertices.Add(new Coordinate(10, 30));
+            vertices.Add(new Coordinate(20, 30));
+            vertices.Add(new Coordinate(30, 30));
+            vertices.Add(new Coordinate(40, 30)); //20
+
+            var edgesVertexIndices = new[,]
+            {
+                {1, 2}, {2, 3}, {3, 4}, {4, 5}, //1-4
+                {1, 6}, {2, 7}, {3, 8}, {4, 9}, {5, 10} , //5-9
+
+                {6, 7}, {7, 8}, {8, 9}, {9, 10}, //10-13
+                {6, 11}, {7, 12}, {8, 13}, {9, 14}, {10, 15} ,//14-18
+
+                {11, 2}, {12, 13}, {13, 14}, {14, 15}, //19-22
+                {11, 16}, {12, 17}, {13, 18}, {14, 19}, { 15, 20} , //23-27
+
+                {16, 17}, {17, 18}, {18, 19}, {19, 20} //28-31
+            };
+
+            var cellVertexIndices = new[,] //based on vertices (why not edges?)
+            {
+                {1, 2, 7, 6},  {2, 3, 8, 7},  {3, 4, 9, 8},  {4, 5, 10, 9},
+                {6, 7, 12, 11},  {7, 8, 13, 12},  {8, 9, 14, 13},  {9, 10, 15, 14},
+                {11, 12, 17, 16},  {12, 13, 18, 17},  {13, 14, 19, 18},  {14, 15, 20, 19}
+            };
+            UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edgesVertexIndices, cellVertexIndices, grid);
+
+            return grid;
         }
     }
 }

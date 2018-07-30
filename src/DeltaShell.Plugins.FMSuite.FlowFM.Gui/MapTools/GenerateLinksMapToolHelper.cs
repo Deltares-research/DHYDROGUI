@@ -2,13 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.Grid;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using log4net;
+using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
+using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 {
@@ -40,6 +43,59 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                     log.ErrorFormat("1D2D Links were not generated between the grid and the network of WaterFlowFMModel {0}. Type of link {1} unknown", fmModel.Name, linkType);
                     return false;
             }
+        }
+
+        /// <summary>
+        /// Temporary method to get from/to indexes for creating lateral1d2d links. Can be deleted when GridGeom function for Lateral/River links is ready
+        /// </summary>
+        /// <param name="grid">The grid.</param>
+        /// <param name="gridPoints1D">The grid points1 d.</param>
+        /// <param name="selectionArea">The selection area.</param>
+        /// <returns></returns>
+       public static IList<Tuple<int,int>> TemporaryMethodGetFromToIndexesFor1D2DLinks(UnstructuredGrid grid, IList<INetworkLocation> gridPoints1D, IPolygon selectionArea, IList<bool> filterMesh1D)
+        {
+            var edgesInSelectedArea = grid.Edges.Where(e => selectionArea.Intersects(new Point(e.GetEdgeCenter(grid)))).ToList();
+            var filteredGridPoints1D = new List<Tuple<INetworkLocation, int>>();
+            for(int i = 0; i < gridPoints1D.Count; i++)
+            {
+                if (filterMesh1D[i])
+                {
+                    filteredGridPoints1D.Add(new Tuple<INetworkLocation, int>(gridPoints1D[i],i));
+                }
+            }
+
+            var dictionaryCellIndexLink = new Dictionary<int,Tuple<int,int>>();
+            foreach (var edge in edgesInSelectedArea)
+            {
+                var edgeCenter = edge.GetEdgeCenter(grid);
+                var closestPoint = filteredGridPoints1D.Select(p => new Tuple<int, INetworkLocation, double>(p.Item2, p.Item1, p.Item1.Geometry.Coordinate.Distance(edgeCenter)))
+                        .OrderBy(t => t.Item3).FirstOrDefault();
+
+                if (closestPoint == null)
+                {
+                    continue;
+                }
+
+                //subselection of all cells
+                var cells = grid.VertexToCellIndices[edge.VertexFromIndex]
+                    .Concat(grid.VertexToCellIndices[edge.VertexToIndex])
+                    .Select(i => grid.Cells[i]).Distinct().ToList();
+
+                var cellsOnEdge = cells.Where(c =>
+                    c.VertexIndices.Contains(edge.VertexFromIndex) &&
+                    c.VertexIndices.Contains(edge.VertexToIndex));
+
+                if (cellsOnEdge.Count() == 1)
+                {
+                    var edgeCell = cellsOnEdge.First();
+                    var index = grid.Cells.IndexOf(edgeCell);
+                    if (!dictionaryCellIndexLink.ContainsKey(index))
+                    {
+                        dictionaryCellIndexLink.Add(index, new Tuple<int,int>(closestPoint.Item1, index));
+                    }
+                }
+            }
+            return dictionaryCellIndexLink.Values.ToList();
         }
 
         #region main methods
@@ -98,17 +154,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         private static bool Get1D2DLateralLinks(WaterFlowFMModel fmModel, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount)
         {
-            var filter1DMesh = GetMesh1DFilter(fmModel.NetworkDiscretization, GridApiDataSet.LinkType.Lateral);
+            var filterMesh1D = GetMesh1DFilter(fmModel.NetworkDiscretization, GridApiDataSet.LinkType.Lateral);
+            FilterMesh1DPointOutsideGrid(fmModel.NetworkDiscretization, fmModel.Grid, ref filterMesh1D);
 
             var gGeomApi = new GridGeomApi();
-            var ierr = gGeomApi.Get1D2DLinksFrom2DBoundaryCellsTo1D(fmModel.NetFilePath, fmModel.NetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, selectedArea, filter1DMesh);
-            if (ierr != GridApiDataSet.GridConstants.NOERR)
-            {
-                log.ErrorFormat(
-                    "1D2D Links were not generated between the grid and the network of WaterFlowFMModel {0}. Please make sure the grid has been saved and the network is correct.",
-                    fmModel.Name);
-                return true;
-            }
+            //Not ready yet
+            //            var ierr = gGeomApi.Get1D2DLinksFrom2DBoundaryCellsTo1D(fmModel.NetFilePath, fmModel.NetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, selectedArea, filterMesh1D);
+            //            if (ierr != GridApiDataSet.GridConstants.NOERR)
+            //            {
+            //                log.ErrorFormat(
+            //                    "1D2D Links were not generated between the grid and the network of WaterFlowFMModel {0}. Please make sure the grid has been saved and the network is correct.",
+            //                    fmModel.Name);
+            //                return true;
+            //            }
+            var grid = fmModel.Grid;
+            var discretization = fmModel.NetworkDiscretization;
+            var tuplesFromToIndexes = TemporaryMethodGetFromToIndexesFor1D2DLinks(grid, discretization.Locations.Values, selectedArea, filterMesh1D);
+            linksFrom = tuplesFromToIndexes.Select(t => t.Item1).ToList();
+            linksTo = tuplesFromToIndexes.Select(t => t.Item2).ToList();
+            linksCount = tuplesFromToIndexes.Count;
             return false;
         }
 
@@ -193,6 +257,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             return sewerConnection != null && (sewerConnection.WaterType == SewerConnectionWaterType.Combined || sewerConnection.WaterType == SewerConnectionWaterType.DryWater);
         }
 
+
+        private static void FilterMesh1DPointOutsideGrid(IDiscretization networkDiscretization, UnstructuredGrid grid, ref List<bool> filterMesh1D)
+        {
+            if (!filterMesh1D.Any(b => b)) return;
+            if (!grid.Cells.Any()) return;
+
+            var polygons = grid.Cells.Select(c => (IPolygon)c.ToPolygon(grid)).ToArray();
+            var multiPolygonOfCells = new MultiPolygon(polygons);
+            var locations = networkDiscretization.Locations.Values;
+            for (int i = 0; i < locations.Count; i++)
+            {
+                if (filterMesh1D[i])
+                {
+                    if(multiPolygonOfCells.Intersects(locations[i].Geometry))
+                    {
+                        filterMesh1D[i] = false;
+                    }
+                }
+            }
+        }
         #endregion sub methods
     }
 }

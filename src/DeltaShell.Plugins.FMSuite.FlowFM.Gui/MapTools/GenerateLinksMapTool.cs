@@ -210,7 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             return result;
         }
         
-        private IList<WaterFlowFM1D2DLink> Creates1d2dLinks(int linksCount, List<int> linksToIndex, List<int> linksFromIndex, UnstructuredGrid grid, IDiscretization networkDiscretization)
+        private IList<WaterFlowFM1D2DLink> Creates1d2dLinks(int linksCount, List<int> linksFromIndex, List<int> linksToIndex, UnstructuredGrid grid, IDiscretization networkDiscretization)
         {
             var lstNewLinks = new List<WaterFlowFM1D2DLink>();
             for (int i = 0; i < linksCount; i++)
