@@ -121,9 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// <summary>
         /// Lateral Source parameter names
         /// </summary>        
-        public const string LateralActualDischarge = "Actual discharge (l)";
-        public const string LateralDefinedDischarge = "Defined discharge (l)";
-        public const string LateralDifference = "Lateral difference (l)";
+        public const string LateralDischarge = "Discharge (l)";
         public const string LateralWaterLevel = "Water level (l)";
 
         /// <summary>

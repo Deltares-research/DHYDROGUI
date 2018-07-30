@@ -79,9 +79,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             dHydroNamesDictionary.Add(WaterFlowModelParameterNames.StructureWaterLevelAtCrest, FunctionAttributes.StandardNames.StructureWaterLevelAtCrest);
             dHydroNamesDictionary.Add(WaterFlowModelParameterNames.StructureSetPoint, FunctionAttributes.StandardNames.StructureSetPoint);
 
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.LateralActualDischarge, FunctionAttributes.StandardNames.WaterDischarge);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.LateralDefinedDischarge, FunctionAttributes.StandardNames.WaterDischarge);
-            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.LateralDifference, FunctionAttributes.StandardNames.WaterDischarge);
+            dHydroNamesDictionary.Add(WaterFlowModelParameterNames.LateralDischarge, FunctionAttributes.StandardNames.WaterDischarge);
             dHydroNamesDictionary.Add(WaterFlowModelParameterNames.LateralWaterLevel, FunctionAttributes.StandardNames.WaterLevel);
 
             dHydroNamesDictionary.Add(WaterFlowModelParameterNames.RetentionWaterLevel, FunctionAttributes.StandardNames.WaterLevel);

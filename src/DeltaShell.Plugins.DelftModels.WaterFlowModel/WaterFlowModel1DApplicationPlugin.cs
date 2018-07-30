@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
         public override string FileFormatVersion
         {
-            get { return "3.5.3.0"; }
+            get { return "3.5.2.0"; }
         }
 
         public override Image Image

@@ -86,11 +86,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             public const string WaterBalanceVolume = "water_balance_volume";
             public const string WaterTemperature = "water_temperature";
 
-            public const string LateralActualDischarge = "actual_lateral_discharge";
-            public const string LateralDefinedDischarge = "defined_lateral_discharge";
-            public const string LateralDifference = "lateral_difference";
-            public const string LateralWaterLevel = "water_level_at_lateral";
-
             public const string EffectiveBackRad = "effective_background_radiation";
             public const string HeatlossForcedConv = "heatloss_forced_convection";
             public const string HeatlossForcedEvap = "heatloss_forced_evaporation";

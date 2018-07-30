@@ -942,7 +942,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             };
             var listLatSources = new List<string>()
             {
-                "ActualDischarge", "DefinedDischarge", "LateralDifference", "WaterLevel"
+                "Discharge", "WaterLevel"
             };
             var listVolumeGrid = new List<string>()
             {

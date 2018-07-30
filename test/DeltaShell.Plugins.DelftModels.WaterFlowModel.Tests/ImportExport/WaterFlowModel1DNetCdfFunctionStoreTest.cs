@@ -293,7 +293,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         }
 
         [TestCase("gridpoints.nc", 54, "Water level", 0.1, 0.1000000146683305, 1.0, 0.0)]
-        [TestCase("laterals.nc", 4, "Actual discharge (l)", 0.0, 0.0, 1.0, 0.0)]
+        [TestCase("laterals.nc", 4, "Discharge (l)", 5.0, 3.0, 1.0, 0.0)]
         [TestCase("observations.nc", 6, "Water level (op)", 0.1, 0.14595623763293833, 1.0, 0.0)]
         [TestCase("reachsegments.nc", 50, "Discharge", 1.0, 0.099558974458171884, 1.0, 0.0)]
         public void GetVariableValues_ReturnsAllValuesForVariableOfTypeDoubleWithNoFilters(
@@ -326,7 +326,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         }
 
         [TestCase("gridpoints.nc", 27, "Water level", 0.14595623763293833, 0.1000000146683305, 0.16450473553176148, 0.1000000146683305)]
-        [TestCase("laterals.nc", 2, "Actual discharge (l)", 0.0, 0.0, 0.0, 0.0)]
+        [TestCase("laterals.nc", 2, "Discharge (l)", 5.0, 3.0, 5.0, 3.0)]
         [TestCase("observations.nc", 3, "Water level (op)", 0.14595623763293833, 0.14595623763293833, 0.14595623763293833, 0.14595623763293833)]
         [TestCase("reachsegments.nc", 25, "Discharge", 1.0000000733416525, 0.099558974458171884, 1.0000000733416525, 0.09955897445817187)]
         public void GetVariableValues_ReturnsTimeStepValuesForAllLocationsForVariableOfTypeDoubleWithTimeFilters(
@@ -414,7 +414,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             Assert.AreEqual(expectedMinValue, minValue, Delta);
         }
 
-        [TestCase("laterals.nc", 1, "Actual discharge (l)", 0.0, "LateralSource1", 0.0, 0.0, 0.0)]
+        [TestCase("laterals.nc", 1, "Discharge (l)", 0.0, "LateralSource1", 5.0, 5.0, 5.0)]
         [TestCase("observations.nc", 1, "Water level (op)", 0.0, "observationPoint1", 0.14595623763293833, 0.14595623763293833, 0.14595623763293833)]
         public void GetVariableValues_ReturnsTimeStepValueForOneBranchFeatureForVariableOfTypeDoubleWithTimeFiltersAndLocationFilters(
             string path, int numValues, string coverageName, double locationChainage, string featureName, double value,
@@ -528,7 +528,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             Assert.AreEqual(expectedMinValue, minValue, Delta);
         }
 
-        [TestCase("laterals.nc", 2, "Actual discharge (l)", 0.0, "lateralSource1", 1.0, "lateralSource2", 0.0, 0.0, 0.0, 0.0)]
+        [TestCase("laterals.nc", 2, "Discharge (l)", 0.0, "lateralSource1", 1.0, "lateralSource2", 5.0, 3.0, 5.0, 3.0)]
         [TestCase("observations.nc", 2, "Water level (op)", 0.0, "observationPoint1", 1.0, "observationPoint2", 0.14595623763293833, 0.14595623763293833, 0.14595623763293833, 0.14595623763293833)]
         public void GetVariableValues_ReturnsTimeStepValuesForRangeOfBranchFeatureForVariableOfTypeDoubleWithTimeFiltersAndLocationRangeFilters(
             string path, int numValues, string coverageName, double firstLocationChainage, string firstFeatureName, double secondLocationChainage, 
@@ -640,7 +640,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             Assert.AreEqual(expectedMinValue, minValue, Delta);
         }
 
-        [TestCase("laterals.nc", 2, "Actual discharge (l)", 0.0, "LateralSource1", 0.0, 0.0, 0.0, 0.0)]
+        [TestCase("laterals.nc", 2, "Discharge (l)", 0.0, "LateralSource1", 5.0, 5.0, 5.0, 5.0)]
         [TestCase("observations.nc", 2, "Water level (op)", 0.0, "observationPoint1", 0.1, 0.14595623763293833, 0.14595623763293833, 0.1)]
         public void GetVariableValues_ReturnsTimeSeriesValuesForOneBranchFeatureForVariableOfTypeDoubleWithLocationFilterOnly(
             string path, int numValues, string coverageName, double locationChainage, string featureName, double firstValue,
@@ -739,7 +739,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             Assert.AreEqual(expectedLocation, maxValue);
         }
         
-        [TestCase("laterals.nc", "Actual discharge (l)", 2, "lateralSource2")]
+        [TestCase("laterals.nc", "Discharge (l)", 2, "lateralSource2")]
         [TestCase("observations.nc", "Water level (op)", 3, "observationPoint3")]
         public void GetMaxValue_ReturnsLastLocationForTypeOfBranchFeature(string path, string coverageName, int numFeatures, string featureName)
         {

@@ -680,7 +680,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             {
 
                 //enable discharge output at laterals
-                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.ActualDischarge, ElementSet.Laterals, DataItemRole.Output).AggregationOptions
+                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.Discharge, ElementSet.Laterals, DataItemRole.Output).AggregationOptions
                     = AggregationOptions.Current;
 
                 //set a nice output timestep
@@ -709,7 +709,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 RunModel(waterFlowModel1D);
 
-                var dischargeAtLateral = waterFlowModel1D.OutputFunctions.OfType<FeatureCoverage>().First(c => c.Name == WaterFlowModelParameterNames.LateralActualDischarge);
+                var dischargeAtLateral = waterFlowModel1D.OutputFunctions.OfType<FeatureCoverage>().First(c => c.Name == WaterFlowModelParameterNames.LateralDischarge);
                 foreach (var value in dischargeAtLateral.Components[0].Values.OfType<double>().Skip(1))
                 //not the first timestep
                 {
@@ -727,7 +727,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
             {
                 //enable discharge output at laterals
-                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.ActualDischarge, ElementSet.Laterals, DataItemRole.Output).AggregationOptions
+                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.Discharge, ElementSet.Laterals, DataItemRole.Output).AggregationOptions
                     = AggregationOptions.Current;
 
                 //set a nice output timestep
@@ -749,7 +749,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 RunModel(waterFlowModel1D);
 
-                var dischargeAtLateral = waterFlowModel1D.OutputFunctions.OfType<FeatureCoverage>().First(c => c.Name == WaterFlowModelParameterNames.LateralActualDischarge);
+                var dischargeAtLateral = waterFlowModel1D.OutputFunctions.OfType<FeatureCoverage>().First(c => c.Name == WaterFlowModelParameterNames.LateralDischarge);
                 foreach (var value in dischargeAtLateral.Components[0].Values.OfType<double>().Skip(1))
                 //not the first timestep
                 {
@@ -824,7 +824,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             {
 
                 //enable discharge output at laterals
-                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.ActualDischarge, ElementSet.Laterals, DataItemRole.Output).AggregationOptions
+                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.Discharge, ElementSet.Laterals, DataItemRole.Output).AggregationOptions
                     = AggregationOptions.Current;
 
                 //set a nice output timestep
@@ -844,7 +844,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 RunModel(waterFlowModel1D);
 
-                var dischargeAtLateral = waterFlowModel1D.OutputFunctions.OfType<FeatureCoverage>().First(c => c.Name == WaterFlowModelParameterNames.LateralActualDischarge);
+                var dischargeAtLateral = waterFlowModel1D.OutputFunctions.OfType<FeatureCoverage>().First(c => c.Name == WaterFlowModelParameterNames.LateralDischarge);
                 foreach (var value in dischargeAtLateral.Components[0].Values.OfType<double>().Skip(1))
                 //not the first timestep
                 {
@@ -1089,7 +1089,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 waterFlowModel1D.InitialConditions.DefaultValue = 0.1;
 
                 waterFlowModel1D.OutputSettings.StructureOutputTimeStep = new TimeSpan(0, 0, 1);
-                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.ActualDischarge, ElementSet.Laterals,DataItemRole.Output).
+                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.Discharge, ElementSet.Laterals,DataItemRole.Output).
                     AggregationOptions = AggregationOptions.Current;
 
                 RunModel(waterFlowModel1D);
@@ -1097,7 +1097,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 var lateralDischargeCoverage =
                     (FeatureCoverage)
                     waterFlowModel1D.OutputFunctions.First(
-                        c => c.Name.StartsWith(WaterFlowModelParameterNames.LateralActualDischarge));
+                        c => c.Name.StartsWith(WaterFlowModelParameterNames.LateralDischarge));
                 //check the 2nd timestep should be equal to what is set on the lateral..
                 Assert.AreEqual(branch1Discharge,
                                 lateralDischargeCoverage[startTime.AddSeconds(1), lateralSourceOnBranch1]);
@@ -1149,7 +1149,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 waterFlowModel1D.InitialConditions.DefaultValue = 0.1;
 
                 waterFlowModel1D.OutputSettings.StructureOutputTimeStep = new TimeSpan(0, 0, 1);
-                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.ActualDischarge, ElementSet.Laterals, DataItemRole.Output).
+                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.Discharge, ElementSet.Laterals, DataItemRole.Output).
                     AggregationOptions = AggregationOptions.Current;
 
                 RunModel(waterFlowModel1D);
@@ -1157,7 +1157,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 var lateralDischargeCoverage =
                     (FeatureCoverage)
                     waterFlowModel1D.OutputFunctions.First(
-                        c => c.Name.StartsWith(WaterFlowModelParameterNames.LateralActualDischarge));
+                        c => c.Name.StartsWith(WaterFlowModelParameterNames.LateralDischarge));
                 //check the 2nd timestep, should be equal to what is set on the lateral
                 Assert.AreEqual(branch1Discharge,
                                 lateralDischargeCoverage[startTime.AddSeconds(1), lateralSourceOnBranch1]);
