@@ -3379,17 +3379,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
-        public void SetPumpOutputAddsSeveralDataItems()
-        {
-            // When setting the output parameter for Pumps to current, this should lead to approx 6 new coverages, packaged in data items. 
-            var model = new WaterFlowModel1D("model");
-            int dataItemsCount = model.DataItems.Count; 
-            model.OutputSettings.GetEngineParameter(QuantityType.PumpResults, ElementSet.Pumps).AggregationOptions = AggregationOptions.Current;
-            int newDataItemsCount = model.DataItems.Count; 
-            Assert.That(newDataItemsCount >= dataItemsCount + 2);  // At least two extra data items, so the test is robust against kernel changes. 
-        }
-
-        [Test]
         [Category(TestCategory.Integration)]
         public void ObservationPointsLinearOrNearest_Jira_Tools_8102()
         {

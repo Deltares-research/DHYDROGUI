@@ -65,13 +65,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             public const string StructureWaterLevelAtCrest = "structure_water_level_at_crest";
             public const string StructureWaterLevelDown = "structure_water_level_down";
             public const string StructureWaterLevelUp = "structure_water_level_up";
-            public const string PumpSuctionSide = "suction_side";
-            public const string PumpDeliverySide = "delivery_side";
+            public const string PumpSuctionSide = "suction_side_level";
+            public const string PumpDeliverySide = "delivery_side_level";
             public const string PumpHead = "pump_head";
-            public const string PumpStage = "pump_stage";
+            public const string PumpStage = "actual_pump_stage";
             public const string PumpReductionFactor = "reduction_factor";
             public const string PumpCapacity = "pump_capacity";
-            public const string PumpDischarge = "discharge";
+            public const string PumpDischarge = "pump_discharge";
             public const string WaterBalance2D1DIn = "water_balance_2d1d_in";
             public const string WaterBalance2D1DOut = "water_balance_2d1d_out";
             public const string WaterBalance2D1DTotal = "water_balance_2d1d_total";

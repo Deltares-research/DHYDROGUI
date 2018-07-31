@@ -239,9 +239,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                                         new Unit("cubic meter per second", "m³/s")),
           
                     // Pumps
-                    new EngineParameter(QuantityType.PumpResults, ElementSet.Pumps, DataItemRole.Output,
-                                        WaterFlowModelParameterNames.PumpOutput,
+                    new EngineParameter(QuantityType.SuctionSideLevel, ElementSet.Pumps, DataItemRole.Output,
+                                        WaterFlowModelParameterNames.PumpSuctionSide,
+                                        new Unit("meter above reference level", "m AD")),
+
+                    new EngineParameter(QuantityType.DeliverySideLevel, ElementSet.Pumps, DataItemRole.Output,
+                                        WaterFlowModelParameterNames.PumpDeliverySide,
+                                        new Unit("meter above reference level", "m AD")),
+
+                    new EngineParameter(QuantityType.PumpHead, ElementSet.Pumps, DataItemRole.Output,
+                                        WaterFlowModelParameterNames.PumpHead,
+                                        new Unit("meter", "m")),
+
+                    new EngineParameter(QuantityType.ActualPumpStage, ElementSet.Pumps, DataItemRole.Output,
+                                        WaterFlowModelParameterNames.PumpStage,
                                         new Unit("", "")),
+
+                    new EngineParameter(QuantityType.PumpCapacity, ElementSet.Pumps, DataItemRole.Output,
+                                        WaterFlowModelParameterNames.PumpCapacity,
+                                        new Unit("cubic meter per second", "m³/s")),
+
+                    new EngineParameter(QuantityType.ReductionFactor, ElementSet.Pumps, DataItemRole.Output,
+                                        WaterFlowModelParameterNames.PumpReductionFactor,
+                                        new Unit("", "")),
+
+                    new EngineParameter(QuantityType.PumpDischarge, ElementSet.Pumps, DataItemRole.Output,
+                                        WaterFlowModelParameterNames.PumpDischarge,
+                                        new Unit("cubic meter per second", "m³/s")),
 
                     // Observation points
                     new EngineParameter(QuantityType.WaterLevel, ElementSet.Observations, DataItemRole.Output,
@@ -575,14 +599,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             if (qt == QuantityType.PressureDifference && es == ElementSet.Structures) return FunctionAttributes.StandardNames.StructurePressureDifference;
             if (qt == QuantityType.WaterLevelAtCrest && es == ElementSet.Structures) return FunctionAttributes.StandardNames.StructureWaterLevelAtCrest;
             if (qt == QuantityType.Setpoint && es == ElementSet.Structures) return FunctionAttributes.StandardNames.StructureSetPoint;
-            if (qt == QuantityType.Discharge && es == ElementSet.Pumps) return "nonstandard_pump_discharge";
-            if (qt == QuantityType.PumpSuctionSide && es == ElementSet.Pumps) return "nonstandard_pump_suction_side";
-            if (qt == QuantityType.PumpDeliverySide && es == ElementSet.Pumps) return "nonstandard_pump_delivery_side";
+            if (qt == QuantityType.SuctionSideLevel && es == ElementSet.Pumps) return "nonstandard_pump_suction_side";
+            if (qt == QuantityType.DeliverySideLevel && es == ElementSet.Pumps) return "nonstandard_pump_delivery_side";
             if (qt == QuantityType.PumpHead && es == ElementSet.Pumps) return "nonstandard_pump_head";
-            if (qt == QuantityType.PumpStage && es == ElementSet.Pumps) return "nonstandard_pump_stage";
+            if (qt == QuantityType.ActualPumpStage && es == ElementSet.Pumps) return "nonstandard_pump_stage";
             if (qt == QuantityType.PumpCapacity && es == ElementSet.Pumps) return "nonstandard_pump_capacity";
-            if (qt == QuantityType.PumpReductionFactor && es == ElementSet.Pumps) return "nonstandard_pump_reduction_factor";
-            if (qt == QuantityType.PumpResults && es == ElementSet.Pumps) return "nonstandard_pump_results";
+            if (qt == QuantityType.ReductionFactor && es == ElementSet.Pumps) return "nonstandard_pump_reduction_factor";
+            if (qt == QuantityType.PumpDischarge && es == ElementSet.Pumps) return "nonstandard_pump_discharge";
             if (qt == QuantityType.WaterLevel && es == ElementSet.Observations) return FunctionAttributes.StandardNames.WaterLevel;
             if (qt == QuantityType.WaterDepth && es == ElementSet.Observations) return FunctionAttributes.StandardNames.WaterDepth;
             if (qt == QuantityType.Discharge && es == ElementSet.Observations) return FunctionAttributes.StandardNames.WaterDischarge;

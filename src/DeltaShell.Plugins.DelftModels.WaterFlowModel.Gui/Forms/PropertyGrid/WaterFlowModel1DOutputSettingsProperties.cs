@@ -643,20 +643,90 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
             set { data.OutputSettings.GetEngineParameter(QuantityType.Temperature, ElementSet.Observations).AggregationOptions = value; }
         }
 
+        #endregion
+
+        #region Pumps
+        
         [Category(PumpsCategoryName)]
-        [Description("Pump results")]
-        [DisplayName(WaterFlowModelParameterNames.PumpOutput)]
-        [PropertyOrder(54)]
+        [Description("Pump Suction Side")]
+        [DisplayName(WaterFlowModelParameterNames.PumpSuctionSide)]
+        [PropertyOrder(55)]
         [DefaultValue(typeof(AggregationOptions), "None")]
-        public AggregationOptions StructurePumpResults
+        public AggregationOptions StructurePumpSuctionSide
         {
-            get { return data.OutputSettings.GetEngineParameter(QuantityType.PumpResults, ElementSet.Pumps).AggregationOptions; }
-            set { data.OutputSettings.GetEngineParameter(QuantityType.PumpResults, ElementSet.Pumps).AggregationOptions = value; }
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.SuctionSideLevel, ElementSet.Pumps).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.SuctionSideLevel, ElementSet.Pumps).AggregationOptions = value; }
         }
 
-        # endregion
+        [Category(PumpsCategoryName)]
+        [Description("Pump Delivery Side")]
+        [DisplayName(WaterFlowModelParameterNames.PumpDeliverySide)]
+        [PropertyOrder(56)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions StructurePumpDeliverySide
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.DeliverySideLevel, ElementSet.Pumps).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.DeliverySideLevel, ElementSet.Pumps).AggregationOptions = value; }
+        }
 
-        # region Retentions
+        [Category(PumpsCategoryName)]
+        [Description("Pump Head")]
+        [DisplayName(WaterFlowModelParameterNames.PumpHead)]
+        [PropertyOrder(57)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions StructurePumpHead
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.PumpHead, ElementSet.Pumps).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.PumpHead, ElementSet.Pumps).AggregationOptions = value; }
+        }
+
+        [Category(PumpsCategoryName)]
+        [Description("Pump Stage")]
+        [DisplayName(WaterFlowModelParameterNames.PumpStage)]
+        [PropertyOrder(58)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions StructurePumpStage
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.ActualPumpStage, ElementSet.Pumps).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.ActualPumpStage, ElementSet.Pumps).AggregationOptions = value; }
+        }
+
+        [Category(PumpsCategoryName)]
+        [Description("Pump Capacity")]
+        [DisplayName(WaterFlowModelParameterNames.PumpCapacity)]
+        [PropertyOrder(59)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions StructurePumpCapacity
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.PumpCapacity, ElementSet.Pumps).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.PumpCapacity, ElementSet.Pumps).AggregationOptions = value; }
+        }
+
+        [Category(PumpsCategoryName)]
+        [Description("Pump Reduction Factor")]
+        [DisplayName(WaterFlowModelParameterNames.PumpReductionFactor)]
+        [PropertyOrder(60)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions StructurePumpReductionFactor
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.ReductionFactor, ElementSet.Pumps).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.ReductionFactor, ElementSet.Pumps).AggregationOptions = value; }
+        }
+
+        [Category(PumpsCategoryName)]
+        [Description("Pump Discharge")]
+        [DisplayName(WaterFlowModelParameterNames.PumpDischarge)]
+        [PropertyOrder(61)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions StructurePumpDischarge
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.PumpDischarge, ElementSet.Pumps).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.PumpDischarge, ElementSet.Pumps).AggregationOptions = value; }
+        }
+
+        #endregion
+
+        #region Retentions
 
         [Category(RetentionsCategoryName)]
         [Description("Water level at retention locations")]

@@ -305,7 +305,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             ConditionallyAddOutputSetting(sobekCaseSettings.CrestlevelOpeningsHeight, QuantityType.GateOpeningHeight, ElementSet.Structures);
 
             // Pumps
-            ConditionallyAddOutputSetting(sobekCaseSettings.PumpResults, QuantityType.PumpResults, ElementSet.Pumps);
+            ConditionallyAddOutputSetting(sobekCaseSettings.PumpResults, QuantityType.SuctionSideLevel, ElementSet.Pumps);
+            ConditionallyAddOutputSetting(sobekCaseSettings.PumpResults, QuantityType.DeliverySideLevel, ElementSet.Pumps);
+            ConditionallyAddOutputSetting(sobekCaseSettings.PumpResults, QuantityType.PumpHead, ElementSet.Pumps);
+            ConditionallyAddOutputSetting(sobekCaseSettings.PumpResults, QuantityType.ActualPumpStage, ElementSet.Pumps);
+            ConditionallyAddOutputSetting(sobekCaseSettings.PumpResults, QuantityType.PumpCapacity, ElementSet.Pumps);
+            ConditionallyAddOutputSetting(sobekCaseSettings.PumpResults, QuantityType.ReductionFactor, ElementSet.Pumps);
+            ConditionallyAddOutputSetting(sobekCaseSettings.PumpResults, QuantityType.PumpDischarge, ElementSet.Pumps);
 
             // This is an odd one: it selects 15 output settings at once and is accessed differently. 
             if (sobekCaseSettings.RiverSubsectionParameters)
