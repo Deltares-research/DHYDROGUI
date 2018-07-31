@@ -753,9 +753,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 throw new ArgumentNullException("data", "No hydrodynamics data was specified.");
             }
 
-            if (data.Equals(HydroData))
-                return;
-
             HasHydroDataImported = false;
 
             enableMarkOutputOutOfSync = markOutputOutOfSync;
@@ -776,12 +773,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 ZBot = HydroData.ZBot;
                 SetNewGrid(HydroData.Grid, schematizationRemainsUnchanged);
 
-                if (!schematizationRemainsUnchanged)
+                if (!schematizationRemainsUnchanged && !data.Equals(HydroData))
                 {
                     ClearOutput();
                 }
 
-                // import settings that should not be overridden by re-importing the hyd file
+                //As of issue D3DFMIQ-329, the timers should be overriden when importing the hyd file again.
                 if (!skipImportTimers)
                 {
                     SetImportProgress("Importing timers");

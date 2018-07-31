@@ -11,6 +11,9 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Core;
+using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
@@ -23,6 +26,11 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
+using DeltaShell.Plugins.NetCDF;
+using DeltaShell.Plugins.NetworkEditor;
+using DeltaShell.Plugins.Scripting;
+using DeltaShell.Plugins.SharpMapGis;
+using DeltaShell.Plugins.Toolbox;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
@@ -1291,6 +1299,94 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var targetmodel = project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
             Assert.IsNotNull(targetmodel);
             return targetmodel;
+        }
+
+        [Test]
+        public void Test_When_HydFile_IsImported_InWaqModel_SimulationTimers_AreUpdated()
+        {
+
+            using (var app = new DeltaShellApplication())
+            {
+                var waqPlugin = new WaterQualityModelApplicationPlugin();
+                //Initialize WAQ Model
+                var model = new WaterQualityModel();
+
+                app.Plugins.Add(waqPlugin);
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetCdfApplicationPlugin());
+                app.Plugins.Add(new ScriptingApplicationPlugin());
+                app.Plugins.Add(new ToolboxApplicationPlugin());
+                app.Run();
+
+                //Change Simulation Timers
+                model.StartTime = DateTime.Now;
+                model.StopTime = DateTime.Now.AddDays(3);
+
+                var tempDirectory = FileUtils.CreateTempDirectory();
+                app.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
+
+                app.Project.RootFolder.Items.Add(model);
+
+                //Import hyd file
+                string hydPath =
+                    TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFile\westernscheldt01.hyd");
+                var importer = new HydFileImporter();
+                var importedItem = importer.ImportItem(hydPath, model);
+                Assert.IsNotNull(importedItem);
+
+                //Assert timers of hyd file and of project are equal
+                Assert.AreEqual("2014-01-01 00:00:00", model.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                Assert.AreEqual("2014-01-08 00:00:00", model.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            }
+        }
+
+        [Test]
+        public void Test_When_HydFile_IsImported_OverExistingHydFile_SimulationTimers_AreUpdated_ToNewHydFile()
+        {
+
+            using (var app = new DeltaShellApplication())
+            {
+                var waqPlugin = new WaterQualityModelApplicationPlugin();
+                //Initialize WAQ Model
+                var model = new WaterQualityModel();
+
+                app.Plugins.Add(waqPlugin);
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetCdfApplicationPlugin());
+                app.Plugins.Add(new ScriptingApplicationPlugin());
+                app.Plugins.Add(new ToolboxApplicationPlugin());
+                app.Run();
+
+                //Import hyd file
+                string hydPath =
+                    TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFile\westernscheldt01.hyd");
+                var importer = new HydFileImporter();
+                var importedItem = importer.ImportItem(hydPath, model);
+                Assert.IsNotNull(importedItem);
+
+                //Change Simulation Timers
+                model.StartTime = DateTime.Now;
+                model.StopTime = DateTime.Now.AddDays(3);
+
+                var tempDirectory = FileUtils.CreateTempDirectory();
+                app.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
+
+                app.Project.RootFolder.Items.Add(model);
+
+                //Import hyd file
+                importedItem = importer.ImportItem(hydPath, model);
+                Assert.IsNotNull(importedItem);
+
+                //Assert timers of hyd file and of project are equal
+                Assert.AreEqual("2014-01-01 00:00:00", model.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                Assert.AreEqual("2014-01-08 00:00:00", model.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            }
         }
 
         #endregion
