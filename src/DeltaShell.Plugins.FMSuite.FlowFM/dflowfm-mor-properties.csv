@@ -1,34 +1,12 @@
 #,,,,,,,,,,,,,,,
 GUIGroups,(order determines order of appearance),,,,,,,,,,,,,,
-id,caption,,,,,,,,,,,,,,
-general,General,,,,,,,,,,,,,,
-timeframe,Time Frame,,,,,,,,,,,,,,
-processes,Processes,,,,,,,,,,,,,,
-initial,Initial Conditions,,,,,,,,,,,,,,
-physics,Physical Parameters,,,,,,,,,,,,,,
-wind,Wind,,,,,,,,,,,,,,
-numerics,Numerical Parameters,,,,,,,,,,,,,,
-output,Output Parameters,,,,,,,,,,,,,,
-#sediment,Sediment Parameters,,,,,,,,,,,,,,
-#trachytopes,Trachytopes,,,,,,,,,,,,,,
-advanced,Advanced,,,,,,,,,,,,,,
-misc,Miscellaneous,,,,,,,,,,,,,,
+sediment,Sediment,,,,,,,,,,,,,,
+misc,Miscellaneous,,,,,,,,,,,,,, #default for MorFile, SedFile, Sedimentmodelnr
 morphology,Morphology,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,
+
 MduGroups,(order determines order in written mdu file),,,,,,,,,,,,,,
-model,,,,,,,,,,,,,,,
-geometry,,,,,,,,,,,,,,,
-numerics,,,,,,,,,,,,,,,
-physics,,,,,,,,,,,,,,,
 sediment,,,,,,,,,,,,,,,
-wind,,,,,,,,,,,,,,,
-waves,,,,,,,,,,,,,,,
-time,,,,,,,,,,,,,,,
-restart,,,,,,,,,,,,,,,
-external forcing,,,,,,,,,,,,,,,
-equatorial,,,,,,,,,,,,,,,
-output,,,,,,,,,,,,,,,
-trachytopes,,,,,,,,,,,,,,,
+
 MduGroup,MduName,GUIGroup,Subcategory,Caption,Type,Default,Min,Max,MduOnly,Enabled,Visible,DocSection,FromRev,ToRev,Description
 sediment,MorFile,,,,FileName,,,,TRUE,,,,,,Morphology file *mor.nc
 sediment,SedFile,,,,FileName,,,,TRUE,,,,,,Sediment descriptions file *sed.nc

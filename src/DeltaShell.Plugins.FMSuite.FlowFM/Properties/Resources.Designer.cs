@@ -1247,6 +1247,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to At least one sediment fraction is required when using morphology..
+        /// </summary>
+        public static string WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology {
+            get {
+                return ResourceManager.GetString("WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_" +
+                        "At_least_one_sediment_fraction_is_required_when_using_morphology", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to At least one sediment fraction should have a positive thickness.
         /// </summary>
         public static string WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness {

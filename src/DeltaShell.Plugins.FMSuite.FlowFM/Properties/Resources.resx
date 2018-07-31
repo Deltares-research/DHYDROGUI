@@ -487,6 +487,9 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness" xml:space="preserve">
     <value>At least one sediment fraction should have a positive thickness</value>
   </data>
+  <data name="WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology" xml:space="preserve">
+    <value>At least one sediment fraction is required when using morphology.</value>
+  </data>
   <data name="SourceAndSinkImportExtensions_GenerateFunctionFromAttributes_There_were_more_columns_in_the___tim_file_for__0__than_expected" xml:space="preserve">
     <value>There were more columns in the *.tim file for {0} than expected</value>
   </data>

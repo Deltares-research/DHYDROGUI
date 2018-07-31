@@ -64,7 +64,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public IEventedList<WaterFlowFMProperty> Properties { get; private set; }
         public static Dictionary<string, ModelPropertyGroup> GuiPropertyGroups
         {
-            get { return ModelPropertySchema.GuiPropertyGroups; }
+            get
+            {
+                var modelPropertyGroups = ModelPropertySchema.GuiPropertyGroups;
+                return modelPropertyGroups.Union(MorphologyModelPropertySchema.GuiPropertyGroups)
+                    .GroupBy(kvp => kvp.Key)
+                    .Select(grp => grp.First())
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            }
         }
         public string ModelDirectory { get; set; }
         public string ModelName { get; set; }

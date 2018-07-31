@@ -29,6 +29,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             if(!model.UseMorSed) return new ValidationReport("Sediment & Morphology", Enumerable.Empty<ValidationIssue>());
 
             var issues = new List<ValidationIssue>();
+
+            if (!AtLeastOneSedimentFractionInModel(model)) issues.Add(ValidateAtLeastOneSedimentFractionInModel(model));
+
             issues.AddRange(model.SedimentFractions.Select(sedimentFraction => ValidateSedimentName(sedimentFraction.Name)).Where(issue => issue != null));
 
             issues.AddRange(ValidateInitialSedimentThicknessOfSedimentFractionsInModel(model));
@@ -39,6 +42,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 string.Format(Resources.WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_________Morphology_is_beta_version_________0_You_are_using_morphology___sediment_in_this_model__Please_be_aware_this_feature_is_in_beta_, Environment.NewLine)));
             
             return new ValidationReport(Resources.WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_Morphology___Sediment_Beta_warning, issues);
+        }
+
+        private static bool AtLeastOneSedimentFractionInModel(WaterFlowFMModel model)
+        {
+            var sedimentFractions = model.SedimentFractions;
+            if (sedimentFractions.Any())
+                return true;
+            return false;
+        }
+
+        private static ValidationIssue ValidateAtLeastOneSedimentFractionInModel(WaterFlowFMModel model)
+        {
+            return new ValidationIssue(
+                GetSedimentTabName(model), 
+                ValidationSeverity.Error, 
+                Resources.WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology,
+                model);
         }
 
         private static IEnumerable<ValidationIssue> ValidateInitialSedimentThicknessOfSedimentFractionsInModel(WaterFlowFMModel model)
@@ -92,6 +112,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                             operations.Key))));
             }
             return issues;
+        }
+
+        private static string GetSedimentTabName(WaterFlowFMModel model)
+        {
+            var useSedFileFlowFmProperty = model.ModelDefinition.GetModelProperty(KnownProperties.SedFile);
+            var guiSedimentGroupId = string.IsNullOrEmpty(useSedFileFlowFmProperty.PropertyDefinition.FileCategoryName)
+                ? "sediment"
+                : useSedFileFlowFmProperty.PropertyDefinition.FileCategoryName;
+            if (!WaterFlowFMModelDefinition.GuiPropertyGroups.ContainsKey(guiSedimentGroupId))
+            {
+                throw new FormatException(String.Format(
+                    "Invalid group id for sediment file in the scheme of dflowfm-mor-properties.csv \"{0}\"", 
+                    guiSedimentGroupId));
+            }
+            return WaterFlowFMModelDefinition.GuiPropertyGroups[guiSedimentGroupId].Name;
         }
     }
 }

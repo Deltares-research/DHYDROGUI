@@ -17,6 +17,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Layers;
 
@@ -145,7 +146,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
                     generatedEditor = DataEditorGeneratorSwf.GenerateView(objectDescription);
 
-                    tabPageSediment = new TabPage("Sediment");
+                    var sedimentTabName = GetSedimentTabName();
+                    tabPageSediment = new TabPage(sedimentTabName);
                     tabPageSediment.Controls.Add(
                         new ElementHost
                         {
@@ -153,10 +155,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                             Dock = DockStyle.Fill,
                         });
 
+                    var morphologyTabName = GetMorphologyTabName();
                     tabPageMorphology = generatedEditor.Controls.OfType<TabControl>()
                         .First()
                         .TabPages.OfType<TabPage>()
-                        .FirstOrDefault(p => p.Text == "Morphology");
+                        .FirstOrDefault(p => p.Text == morphologyTabName);
 
                     tabPanelContainer = generatedEditor.Controls.OfType<TabControl>().FirstOrDefault();
                     if (tabPanelContainer != null)
@@ -169,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                         {
                             tabPanelContainer.Controls.Remove(tabPageSediment);
                         }
-                        else if(tabPageSediment != null && !tabPanelContainer.TabPages.OfType<TabPage>().Any(p => p.Text == "Sediment"))
+                        else if(tabPageSediment != null && !tabPanelContainer.TabPages.OfType<TabPage>().Any(p => p.Text == sedimentTabName))
                         {
 
                             var indexOfMorphologyTab = tabPageMorphology != null ? tabPanelContainer.TabPages.IndexOf(tabPageMorphology) : -1;
@@ -210,6 +213,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     Controls.Add(generatedEditor);
                 }
             }
+        }
+
+        private string GetSedimentTabName()
+        {
+            var useSedFileFlowFmProperty = data.ModelDefinition.GetModelProperty(KnownProperties.SedFile);
+            var guiSedimentGroupId =
+                string.IsNullOrEmpty(useSedFileFlowFmProperty.PropertyDefinition.FileCategoryName)
+                    ? "sediment"
+                    : useSedFileFlowFmProperty.PropertyDefinition.FileCategoryName;
+            if (!WaterFlowFMModelDefinition.GuiPropertyGroups.ContainsKey(guiSedimentGroupId))
+            {
+                throw new FormatException(String.Format(
+                    "Invalid gui group id for sediment file in the scheme of dflowfm-mor-properties.csv \"{0}\"",
+                    guiSedimentGroupId));
+            }
+            return WaterFlowFMModelDefinition.GuiPropertyGroups[guiSedimentGroupId].Name;
+        }
+
+        private static string GetMorphologyTabName()
+        {
+            if (!WaterFlowFMModelDefinition.GuiPropertyGroups.ContainsKey(KnownProperties.morphology))
+            {
+                throw new FormatException(String.Format(
+                    "Invalid gui group id for morphology in the scheme of dflowfm-mor-properties.csv \"{0}\"",
+                    KnownProperties.morphology));
+            }
+            return WaterFlowFMModelDefinition.GuiPropertyGroups[KnownProperties.morphology].Name;
         }
 
         private static readonly string CoordinateSystemPropertyName = TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.CoordinateSystem);
