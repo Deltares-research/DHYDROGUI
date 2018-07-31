@@ -68,9 +68,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// </summary>
         public Action<object, TFeat> AfterCreateAction { get; set; }
 
-        public Action<object, TFeat> BeforeExportActionDelegate { get; set; }
+        /// <summary>
+        /// Gets or sets the before export action delegate.
+        /// </summary>
+        /// <value>
+        /// The before export action delegate.
+        /// </value>
+        public Action<object> BeforeExportActionDelegate { get; set; }
 
-        public Action<object, TFeat> AfterExportActionDelegate { get; set; }
+        /// <summary>
+        /// Gets or sets the after export action delegate.
+        /// </summary>
+        /// <value>
+        /// The after export action delegate.
+        /// </value>
+        public Action<object> AfterExportActionDelegate { get; set; }
         
         /// <summary>
         /// Optional check for replacing duplicate features (return false to cancel)
@@ -206,7 +218,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         protected void AddOrReplace<T>(IList<T> featureList, IEnumerable<T> featuresToAdd, IEqualityComparer comparer) where T : INameable
         {
             var featuresToAddList = featuresToAdd.ToList();
-           featuresToAddList.OfType<TFeat>().ForEach(f => AfterCreateAction?.Invoke(featureList, f));
+
+            featuresToAdd.OfType<TFeat>().ForEach(f => AfterCreateAction?.Invoke(featureList, f));
 
             GetEditableObject?.Invoke(featureList).BeginEdit(new DefaultEditAction($"Importing features of type {typeof(T).Name}"));
 

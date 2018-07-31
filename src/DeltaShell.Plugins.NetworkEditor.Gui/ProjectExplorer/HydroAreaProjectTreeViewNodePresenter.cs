@@ -29,7 +29,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer
                 parentNodeData.Weirs, 
                 parentNodeData.Gates, 
                 parentNodeData.Embankments,
-                parentNodeData.Enclosures
+                parentNodeData.Enclosures,
+                parentNodeData.BridgePillars,
             };
         }
     }

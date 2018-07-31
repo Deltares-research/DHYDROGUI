@@ -504,18 +504,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             foreach (var expectedResultsFilePath in Directory.GetFiles(expectedResultsDir))
             {
                 var generatedResultsFilePath = Path.Combine(saveToDir, Path.GetFileName(expectedResultsFilePath));
-                var expectedResultsContent = File.ReadAllLines(expectedResultsFilePath);
-                var generatedResultsContent = File.ReadAllLines(generatedResultsFilePath);
-                var startIndex = generatedResultsFilePath.EndsWith(".mdu") ? 8 : 0; // skip date/program/version lines
-
-                Assert.AreEqual(expectedResultsContent.Length, generatedResultsContent.Length,
-                                    "Length of generated file " + generatedResultsFilePath + " differs from expected result");
-                for (int i = startIndex; i < expectedResultsContent.Length; i++)
-                {
-                    Assert.AreEqual(expectedResultsContent[i], generatedResultsContent[i],
-                                    "Line " + (i + 1) + " of generated file " + generatedResultsFilePath +
-                                    " differs from expected result");
-                }
+                var skipNLines = generatedResultsFilePath.EndsWith(".mdu") ? 8 : 0; // skip date/program/version lines
+                var expectedResultsContent = File.ReadAllLines(expectedResultsFilePath).Skip(skipNLines);
+                var generatedResultsContent = File.ReadAllLines(generatedResultsFilePath).Skip(skipNLines);
+                
+                Assert.IsNotNull(generatedResultsContent);
+                Assert.IsNotNull(expectedResultsContent);
+                expectedResultsContent.ForEach(er =>
+                    Assert.IsTrue(generatedResultsContent.Contains(er), $"Expected {er} in File {Path.GetFileName(expectedResultsFilePath)} but not found.")
+                );
             }
         }
 

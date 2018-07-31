@@ -80,7 +80,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var gate = addedFeature as Gate2D;
             if (gate != null) RemoveAddedFeatureIfDuplicate(features, gate, modelName);
-            
+
+            var bridgePillar = addedFeature as BridgePillar;
+            if (bridgePillar != null) RemoveAddedFeatureIfDuplicate(features, bridgePillar, modelName);
+
         }
 
         private static void RemoveAddedFeatureIfDuplicate<T>(object features, T addedFeature, string modelName) where T : IGroupableFeature, INameable

@@ -188,6 +188,7 @@
     <Compile Include="IGroupableFeature.cs" />
     <Compile Include="IStructure.cs" />
     <Compile Include="NameableFeatureComparer.cs" />
+    <Compile Include="Structures\BridgePillar.cs" />
     <Compile Include="Structures\FixedWeir.cs" />
     <Compile Include="Friction.cs" />
     <Compile Include="FrictionTypeConverter.cs" />

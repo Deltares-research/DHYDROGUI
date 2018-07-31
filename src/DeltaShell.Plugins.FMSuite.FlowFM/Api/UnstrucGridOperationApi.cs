@@ -43,6 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         {
             KnownProperties.ExtForceFile, KnownProperties.ThinDamFile,
             KnownProperties.FixedWeirFile, KnownProperties.DryPointsFile,
+            KnownProperties.BridgePillarFile,
             KnownProperties.ObsCrsFile, KnownProperties.LandBoundaryFile, KnownProperties.ObsFile,
             KnownProperties.StructuresFile, KnownProperties.PartitionFile, KnownProperties.ManholeFile,
             KnownProperties.ProfdefFile, KnownProperties.ProflocFile, KnownProperties.RestartFile,

@@ -493,4 +493,10 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="SourceAndSinkImportExtensions_GenerateFunctionFromAttributes_There_were_less_columns_in_the___tim_file_for__0__than_expected" xml:space="preserve">
     <value>There were less columns in the *.tim file for {0} than expected</value>
   </data>
+  <data name="MduFile_Read_Based_on_the_Bridge_Pillar_file__0___there_are_too_many_column_s__defined_for__1___The_last__2__column_s__have_been_ignored" xml:space="preserve">
+    <value>Based on the Bridge Pillar file {0}, there are too many column(s) defined for {1}. The last {2} column(s) have been ignored</value>
+  </data>
+  <data name="MduFile_Read_Based_on_the_Bridge_Pillar_file__0___there_are_not_enough_column_s__defined_for__1___The_last__2__column_s__have_been_generated_using_default_values" xml:space="preserve">
+    <value>Based on the Bridge Pillar file {0}, there are not enough column(s) defined for {1}. The last {2} column(s) have been generated using default values</value>
+  </data>
 </root>

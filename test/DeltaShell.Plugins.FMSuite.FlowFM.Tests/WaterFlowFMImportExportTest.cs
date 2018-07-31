@@ -3,15 +3,21 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
@@ -325,6 +331,86 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Integration)]
+        public void Test_Export_WaterFlowFmModel_WithPillarBridges()
+        {
+            var tempDir = FileUtils.CreateTempDirectory();
+            var exportPath = Path.Combine(tempDir, "testBridgePillars.mdu");
+            exportPath = TestHelper.CreateLocalCopy(exportPath);
+            FileUtils.DeleteIfExists(exportPath);
+            try
+            {
+                var fmModel = new WaterFlowFMModel();
+
+                #region Set Pillar and DataModel
+
+                var pillar = new BridgePillar()
+                {
+                    Name = "BridgePillarTest",
+                    Geometry =
+                        new LineString(new[]
+                        {
+                            new Coordinate(20.0, 60.0, 0),
+                            new Coordinate(140.0, 8.0, 1.0),
+                            new Coordinate(180.0, 4.0, 2.0),
+                            new Coordinate(260.0, 0.0, 3.0)
+                        }),
+                };
+
+                /* Set data model */
+                var modelFeatureCoordinateDatas = fmModel.BridgePillarsDataModel;
+                modelFeatureCoordinateDatas.Clear();
+                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar>() { Feature = pillar };
+                modelFeatureCoordinateData.UpdateDataColumns();
+                //Diameters
+                modelFeatureCoordinateData.DataColumns[0].ValueList = new List<double> { 1.0, 2.5, 5.0, 10.0 };
+                //DragCoefficient
+                modelFeatureCoordinateData.DataColumns[1].ValueList = new List<double> { 10.0, 5.0, 2.5, 1.0 };
+
+                modelFeatureCoordinateDatas.Add(modelFeatureCoordinateData);
+                MduFile.SetBridgePillarAttributes(fmModel.Area.BridgePillars, modelFeatureCoordinateDatas);
+                /* Done only for testing purposes. 
+                 * Please do not attempt to do this without the supervision of another adult. */
+                TypeUtils.SetPrivatePropertyValue(fmModel, "BridgePillarsDataModel", modelFeatureCoordinateDatas);
+
+                #endregion
+                fmModel.Area.BridgePillars.Add(pillar);
+                Assert.IsTrue(fmModel.ExportTo(exportPath));
+                Assert.IsTrue(File.Exists(exportPath));
+
+                var bridgeFile = exportPath.Replace(".mdu",".pliz");
+                Assert.IsTrue(File.Exists(bridgeFile));
+
+                //Check contents of the file
+                var readLines = File.ReadAllLines(bridgeFile);
+                var expectedLines = new List<string>
+                {
+                    "BridgePillarTest",
+                    "    4    4",
+                    "2.000000000000000E+001  6.000000000000000E+001  1.000000000000000E+000  1.000000000000000E+001",
+                    "1.400000000000000E+002  8.000000000000000E+000  2.500000000000000E+000  5.000000000000000E+000",
+                    "1.800000000000000E+002  4.000000000000000E+000  5.000000000000000E+000  2.500000000000000E+000",
+                    "2.600000000000000E+002  0.000000000000000E+000  1.000000000000000E+001  1.000000000000000E+000"
+                };
+
+                var idx = 0;
+                foreach (var textLine in readLines)
+                {
+                    var expectedLine = expectedLines[idx];
+                    Assert.AreEqual(expectedLine, textLine);
+                    idx++;
+                }
+
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(exportPath);
+            }
+        }
+
+
         private static WaterFlowFMModel GetWaterFlowFmModelWithMeteoData(bool useSolarRadiation)
         {
             var fmModel = new WaterFlowFMModel();
@@ -366,7 +452,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             return fmModel;
         }
-
 
         private static void ImportExportRun(string mduFilePath, ref string exportDir)
         {

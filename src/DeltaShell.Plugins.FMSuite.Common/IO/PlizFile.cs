@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Feature;
@@ -31,7 +32,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         private T ToPolyline(T f)
         {
             var fixedWeir = f as FixedWeir;
-            if (fixedWeir != null) return f;
+            var bridgePillar = f as BridgePillar;
+            if (fixedWeir != null || bridgePillar != null) return f;
 
             if (f.Geometry == null)
             {
@@ -78,22 +80,28 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             newFeature.Attributes.Clear();
 
             // Re-link the attribute names with the Level attributes of FixedWeir
-            var fixedWeirSwitchConstant = 1; // Ugly switch between Fixed Weirs and other IFeature objects. Please remove when possible
+            var boolSwitch = 1; // Ugly switch between Fixed Weirs/BridgePillars and other IFeature objects. Please remove when possible
+            var bridgePillar = newFeature as BridgePillar;
             var fixedWeir = newFeature as FixedWeir;
             if (fixedWeir != null)
             {
-                fixedWeirSwitchConstant = 0;
+                boolSwitch = 0;
                 fixedWeir.SetupAttributeToPropertyLinks();
             }
 
-            var numericAttributeCount = f.Attributes.Count(a => a.Value is GeometryPointsSyncedList<double>) - fixedWeirSwitchConstant;
+            if (bridgePillar != null)
+            {
+                boolSwitch = 0;
+            }
+
+            var numericAttributeCount = f.Attributes.Count(a => a.Value is GeometryPointsSyncedList<double>) - boolSwitch;
             var stringAttributeCount = f.Attributes.Count(a => a.Value is GeometryPointsSyncedList<string>);
             
             var zValues = (IList<double>)f.Attributes[NumericColumnAttributesKeys[0]];
             newFeature.Geometry.Coordinates.ForEach((c,i) => c.Z = zValues[i]);
             for (var i = 0; i < numericAttributeCount; i++)
             {
-                var columnValues = (IList<double>)f.Attributes[NumericColumnAttributesKeys[i + fixedWeirSwitchConstant]];
+                var columnValues = (IList<double>)f.Attributes[NumericColumnAttributesKeys[i + boolSwitch]];
                 AssignDoubleValuesToAttribute(columnValues, newFeature, NumericColumnAttributesKeys[i]);
             }
             for (var i = 0; i < stringAttributeCount; i++)

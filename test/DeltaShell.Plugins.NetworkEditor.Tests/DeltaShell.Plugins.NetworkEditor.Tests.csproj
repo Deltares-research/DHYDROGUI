@@ -242,6 +242,7 @@
     <Compile Include="Forms\StructureFeatureView\FMWeirViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\GateViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirViewModelTest.cs" />
+    <Compile Include="HydroAreaProjectTreeViewNodePresenterTest.cs" />
     <Compile Include="HydroRegionEditorGuiIntegrationTest.cs" />
     <Compile Include="Import\HydroAreaEmbankmentHeightImporterTests.cs" />
     <Compile Include="Import\HydroAreaEmbankmentImporterTest.cs" />

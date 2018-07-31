@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
@@ -14,10 +11,14 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.SharpMapGis.ImportExport;
-using log4net.Util;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
+using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -30,7 +31,316 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         private string saveDirectory;
         private string savePath;
         private string newMduDir;
-        private string newMduName;
+
+        private static void CheckAttributeCollection(DictionaryFeatureAttributeCollection attributes,  string columnName, List<double> valueList)
+        {
+            Assert.IsNotNull(valueList);
+            object setValues;
+            Assert.IsTrue(attributes.TryGetValue(columnName, out setValues));
+            var geometryPointsSyncedList = (setValues as GeometryPointsSyncedList<double>);
+
+            Assert.IsNotNull(geometryPointsSyncedList);
+
+            var idx = 0;
+            foreach (var point in geometryPointsSyncedList)
+            {
+                Assert.AreEqual(point, valueList[idx]);
+                idx++;
+            }
+        }
+
+        [Test]
+        public void Test_MduFile_Read_Loads_BridgePillars()
+        {
+            var testPath = TestHelper.GetTestFilePath(@"ImportMDUFile\bridge-1.mdu");
+            testPath = TestHelper.CreateLocalCopy(testPath);
+            Assert.IsNotNull(testPath);
+            Assert.IsTrue(File.Exists(testPath));
+
+            var mduFile = new MduFile();
+            var area = new HydroArea();
+
+            mduFile.Read(testPath,new WaterFlowFMModelDefinition(), area,null);
+            Assert.IsTrue(area.BridgePillars.Any());
+
+            var pillar = area.BridgePillars.First();
+            Assert.IsNotNull(pillar);
+
+
+            var expectedName = "BridgePillar01";
+            var expectedDiameters = new List<double>(){-599,-599,-999,-999};
+            var expectedCoeff = new List<double>(){-999,-999,-499,-499};
+            Assert.AreEqual(expectedName, pillar.Name);
+
+            //Check if now they are present.
+            Assert.AreEqual(pillar.Attributes.Count, 2);
+            var attributes = pillar.Attributes as DictionaryFeatureAttributeCollection;
+            Assert.IsNotNull(attributes);
+
+            CheckAttributeCollection(attributes, "Column3", expectedDiameters);
+            CheckAttributeCollection(attributes, "Column4", expectedCoeff);
+        }
+
+        [Test]
+        public void Test_MduFile_Write_Writes_BridgePillars_Entry()
+        {
+            var testFile = "mduBridgePillars.mdu";
+            //Set up the model
+            var mduFile = new MduFile();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var hydroArea = new HydroArea();
+            //Write it
+            try
+            {
+                mduFile.Write(testFile, modelDefinition, hydroArea, null);
+            }
+            catch (Exception e )
+            {
+                Assert.Fail($"Test crashed. {e.Message}");
+            }
+            
+            //Find if the line for the object has been created.
+            Assert.IsTrue(File.Exists(testFile));
+            var lines = File.ReadLines(testFile);
+            Assert.IsTrue( lines.Any( l => l.Contains("PillarFile")));
+        }
+
+        [Test]
+        public void Test_MduFile_Write_WithBridgePillars_Writes_BridgePillars_Entry_AndFile()
+        {
+            var tempFileName = Path.GetTempFileName();
+            var testFile = string.Concat(tempFileName, ".mdu");
+
+            //Set up the model
+            var mduFile = new MduFile();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var hydroArea = new HydroArea();
+            var pillar = new BridgePillar()
+            {
+                Name = "BridgePillar2Test",
+                Geometry =
+                    new LineString(new[]
+                    {
+                        new Coordinate(20.0, 60.0, 0),
+                        new Coordinate(140.0, 8.0, 1.0),
+                        new Coordinate(180.0, 4.0, 2.0),
+                        new Coordinate(260.0, 0.0, 3.0)
+                    }),
+            };
+            hydroArea.BridgePillars.Add(pillar);
+            
+            //Write it
+            try
+            {
+                mduFile.Write(testFile, modelDefinition, hydroArea, null);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Test crashed. {e.Message}");
+            }
+
+            //Find if the line for the object has been created.
+            Assert.IsTrue(File.Exists(testFile));
+            var lines = File.ReadLines(testFile);
+            var expectedLine = $"PillarFile        = {Path.GetFileName(tempFileName)}.pliz";
+            Assert.IsTrue(lines.Any(l => l.Contains(expectedLine)));
+            //The contents of th efile are checked at the PliZ Exporter and WaterFlowFM export level.
+            Assert.IsTrue(File.Exists(tempFileName.Replace(".mdu", ".pliz")));
+        }
+
+        [Test]
+        public void MduFile_SetBridgePillarAttributes_Updates_BridgePillar_ModelData_WithGiven_Columns()
+        {
+            var bp = new BridgePillar()
+            {
+                Geometry =
+                    new LineString(new[]
+                    {
+                        new Coordinate(0.0, 160.0, 0),
+                        new Coordinate(40.0, 80.0, 10.0),
+                        new Coordinate(80.0, 40.0, 20.0),
+                        new Coordinate(160.0, 0.0, 30.0)
+                    }),
+            };
+            var modelFeatureCoordinateDatas = new List<ModelFeatureCoordinateData<BridgePillar>>();
+            
+            //Create values for the DataColumns.
+            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar>();
+            modelFeatureCoordinateData.UpdateDataColumns();
+            modelFeatureCoordinateData.Feature = bp;
+            modelFeatureCoordinateData.DataColumns[0].ValueList = new List<double> { 1.0, 2.5, 5.0, 10.0 };
+            modelFeatureCoordinateData.DataColumns[1].ValueList = new List<double> { 10.0, 5.0, 2.5, 1.0 };
+
+            modelFeatureCoordinateDatas.Add(modelFeatureCoordinateData);
+
+            MduFile.SetBridgePillarAttributes(new List<BridgePillar> {bp}, modelFeatureCoordinateDatas);
+
+            //Check if now they are present.
+            Assert.AreEqual(bp.Attributes.Count, 2);
+            var attributes = bp.Attributes as DictionaryFeatureAttributeCollection;
+            Assert.IsNotNull(attributes);
+
+            CheckAttributeCollection(attributes, "Column3", modelFeatureCoordinateData.DataColumns[0].ValueList as List<double>);
+            CheckAttributeCollection(attributes, "Column4", modelFeatureCoordinateData.DataColumns[1].ValueList as List<double>);
+        }
+
+        [Test]
+        public void MduFile_CleanBridgePillarAttributes_RemovesAll_AttributesFromFeature()
+        {
+            var dictionaryFeatureAttributeCollection = new DictionaryFeatureAttributeCollection();
+            dictionaryFeatureAttributeCollection.Add("testAttr", 23);
+            var bp = new BridgePillar{Attributes = dictionaryFeatureAttributeCollection};
+            
+
+            Assert.IsTrue(bp.Attributes.Any());
+            MduFile.CleanBridgePillarAttributes(new List<BridgePillar>{bp});
+            Assert.IsFalse(bp.Attributes.Any());
+        }
+
+        [Test]
+        public void MduFile_CleanBridgePillarAttributes_NullArgument_DoesNot_Crash()
+        {
+            try
+            {
+                MduFile.CleanBridgePillarAttributes(null);
+            }
+            catch (Exception)
+            {
+                Assert.Fail("Should not crash.");
+            }
+            Assert.Pass("Test did not crash.");
+        }
+
+        [Test]
+        public void MduFile_SetBridgePillarDataModel_Arguments_Null_DoesNotCrash()
+        {
+            try
+            {
+                MduFile.SetBridgePillarDataModel(null, null, null);
+            }
+            catch (Exception)
+            {
+                Assert.Fail("Should not crash.");
+            }
+            Assert.Pass("Test did not crash.");
+        }
+
+        [Test]
+        public void MduFile_SetBridgePillarDataModel_Attributes_AreSetTo_BridgePillar()
+        {
+            var bp = new BridgePillar()
+            {
+                Geometry =
+                    new LineString(new[]
+                    {
+                        new Coordinate(0.0, 160.0, 0),
+                        new Coordinate(40.0, 80.0, 10.0),
+                        new Coordinate(80.0, 40.0, 20.0),
+                        new Coordinate(160.0, 0.0, 30.0)
+                    }),
+            };
+
+            var listofDataModel = new List<ModelFeatureCoordinateData<BridgePillar>>();
+            #region set Attribute values to bridge pillar
+            /*We were not able to set the Attributes property for Bridge pillar, so we use the following code to di for us*/
+            //Create values for the DataColumns
+            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar>();
+            modelFeatureCoordinateData.UpdateDataColumns();
+            modelFeatureCoordinateData.Feature = bp;
+            modelFeatureCoordinateData.DataColumns[0].ValueList = new List<double> { 1.0, 2.5, 5.0, 10.0 };
+            modelFeatureCoordinateData.DataColumns[1].ValueList = new List<double> { 10.0, 5.0, 2.5, 1.0 };
+
+            listofDataModel.Add(modelFeatureCoordinateData);
+
+            MduFile.SetBridgePillarAttributes(new List<BridgePillar> { bp }, listofDataModel);
+
+            Assert.IsNotNull(bp.Attributes);
+            Assert.AreEqual(2, bp.Attributes.Count);
+            #endregion
+
+            /**/
+            listofDataModel.Clear();
+            var bpDataModel = new ModelFeatureCoordinateData<BridgePillar>(){Feature = bp};
+            bpDataModel.UpdateDataColumns();
+
+            listofDataModel.Add(bpDataModel);
+
+            //Check the values are not present
+            Assert.IsNotNull(bpDataModel.DataColumns);
+            Assert.AreEqual(2, bpDataModel.DataColumns.Count);
+
+            var diameterList = new List<double> { 1.0, 2.5, 5.0, 10.0 };
+            var coeffList = new List<double> { 10.0, 5.0, 2.5, 1.0 };
+
+            Assert.AreNotEqual(diameterList, bpDataModel.DataColumns[0].ValueList as List<double> );
+            Assert.AreNotEqual(coeffList, bpDataModel.DataColumns[1].ValueList as List<double>);
+
+            //Run method
+            MduFile.SetBridgePillarDataModel(listofDataModel, bpDataModel, bp);
+
+            Assert.IsNotNull(bpDataModel.DataColumns);
+            Assert.AreEqual(2, bpDataModel.DataColumns.Count);
+
+            //Check if now they are present.
+            Assert.AreEqual(diameterList, bpDataModel.DataColumns[0].ValueList as List<double>);
+            Assert.AreEqual(coeffList, bpDataModel.DataColumns[1].ValueList as List<double>);
+        }
+
+        [Test]
+        public void MduFile_SetBridgePillarDataModel_WithTooManyColumns_DoesNotCrash()
+        {
+            var testPath = TestHelper.GetTestFilePath(@"ImportMDUFile\IncorrectPlizFile\bridge-1.mdu");
+            testPath = TestHelper.CreateLocalCopy(testPath);
+            Assert.IsNotNull(testPath);
+            Assert.IsTrue(File.Exists(testPath));
+
+            var mduFile = new MduFile();
+            var area = new HydroArea();
+
+            Assert.DoesNotThrow(() => mduFile.Read(testPath, new WaterFlowFMModelDefinition(), area, null, allBridgePillarsAndCorrespondingProperties: new List<ModelFeatureCoordinateData<BridgePillar>>()), "It Crashed");
+            
+        }
+
+        [Test]
+        public void Test_MduFile_Read_BridgePillar_WithTooManyColumns_IsImported_AndMessageIsGiven()
+        {
+            var testPath = TestHelper.GetTestFilePath(@"ImportMDUFile\IncorrectPlizFile\bridge-1.mdu");
+            testPath = TestHelper.CreateLocalCopy(testPath);
+            Assert.IsNotNull(testPath);
+            Assert.IsTrue(File.Exists(testPath));
+
+            var mduFile = new MduFile();
+            var area = new HydroArea();
+
+            var expectedMsg = string.Format(
+                Resources.MduFile_Read_Based_on_the_Bridge_Pillar_file__0___there_are_too_many_column_s__defined_for__1___The_last__2__column_s__have_been_ignored, 
+                "bridge-1.pliz", "BridgePillar01", 1);
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => mduFile.Read(testPath, new WaterFlowFMModelDefinition(), area, null, allBridgePillarsAndCorrespondingProperties: new List<ModelFeatureCoordinateData<BridgePillar>>()),
+                expectedMsg
+                );          
+        }
+
+        [Test]
+        public void Test_MduFile_Read_BridgePillar_WithTooFewColumns_IsImported_AndMessageIsGiven()
+        {
+            var testPath = TestHelper.GetTestFilePath(@"ImportMDUFile\IncorrectPlizFile\bridge-2.mdu");
+            testPath = TestHelper.CreateLocalCopy(testPath);
+            Assert.IsNotNull(testPath);
+            Assert.IsTrue(File.Exists(testPath));
+
+            var mduFile = new MduFile();
+            var area = new HydroArea();
+
+            var expectedMsg = string.Format(
+                Resources.MduFile_Read_Based_on_the_Bridge_Pillar_file__0___there_are_not_enough_column_s__defined_for__1___The_last__2__column_s__have_been_generated_using_default_values,
+                "bridge-2.pliz", "BridgePillar02", 1);
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => mduFile.Read(testPath, new WaterFlowFMModelDefinition(), area, null,allBridgePillarsAndCorrespondingProperties:new List<ModelFeatureCoordinateData<BridgePillar>>()),
+                expectedMsg
+            );
+        }
 
         [TestCase(@"TestModelWithNcInSubFolder\trynet.mdu", "Sub\\gridtry.nc")]
         [TestCase(@"TestModelWithoutNcInSubFolder\trynet.mdu", "gridtry.nc")]
@@ -48,7 +358,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             savePath = Path.Combine(saveDirectory, "trynet.mdu");
             newMduDir = Path.GetDirectoryName(savePath);
             Assert.NotNull(newMduDir);
-            newMduName = Path.GetFileName(savePath);
             try
             {
                 var mduFile = new MduFile();
@@ -146,7 +455,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             savePath = Path.Combine(saveDirectory, "FlowFM2.mdu");
             newMduDir = Path.GetDirectoryName(savePath);
             Assert.NotNull(newMduDir);
-            newMduName = Path.GetFileName(savePath);
             try
             {
                 var mduFile = new MduFile();
@@ -230,7 +538,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             savePath = Path.Combine(saveDirectory, "FlowFM3.mdu");
             newMduDir = Path.GetDirectoryName(savePath);
             Assert.NotNull(newMduDir);
-            newMduName = Path.GetFileName(savePath);
+
             try
                 {
                     var mduFile = new MduFile();

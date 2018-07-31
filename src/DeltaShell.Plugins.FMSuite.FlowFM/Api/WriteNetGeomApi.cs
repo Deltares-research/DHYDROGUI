@@ -32,6 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 tempModel.ModelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).SetValueAsString("");
                 tempModel.ModelDefinition.GetModelProperty(KnownProperties.DryPointsFile).SetValueAsString("");
                 tempModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirFile).SetValueAsString("");
+                tempModel.ModelDefinition.GetModelProperty(KnownProperties.BridgePillarFile).SetValueAsString("");
                 tempModel.ModelDefinition.GetModelProperty(KnownProperties.LandBoundaryFile).SetValueAsString("");
                 tempModel.ModelDefinition.GetModelProperty(KnownProperties.ThinDamFile).SetValueAsString("");
                 tempModel.ModelDefinition.GetModelProperty(KnownProperties.StructuresFile).SetValueAsString("");

@@ -70,7 +70,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || (data is IEventedList<GroupableFeature2DPolygon> && parentObject is HydroArea) // dry areas & enclosures
                    || (data is IEventedList<GroupablePointFeature> && parentObject is HydroArea) // dry points
                    || (data is IEventedList<FixedWeir> && parentObject is HydroArea) //fixed weirs
-                   || (data is IEventedList<Embankment> && parentObject is HydroArea);
+                   || (data is IEventedList<Embankment> && parentObject is HydroArea)
+                   || (data is IEventedList<BridgePillar> && parentObject is HydroArea);
         }
 
         public IEnumerable<object> ChildLayerObjects(object data)
@@ -132,6 +133,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     yield return area2D.DryAreas;
                     yield return area2D.Embankments;
                     yield return area2D.Enclosures;
+                    yield return area2D.BridgePillars;
                 }
 
             }
@@ -587,6 +589,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 };
             }
 
+            var bridgePillars = data as IEventedList<BridgePillar>;
+            if (bridgePillars != null && area2DParent != null && Equals(bridgePillars, area2DParent.BridgePillars))
+            {
+                return new VectorLayer(HydroArea.BridgePillarsPluralName)
+                {
+                    NameIsReadOnly = true,
+                    FeatureEditor = new Feature2DEditor(area2DParent),
+                    Style = AreaLayerStyles.BridgePillarStyle,
+                    DataSource =
+                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.BridgePillars, "BridgePillar", modelName,
+                            area2DParent.CoordinateSystem)
+                };
+            }
 
             return null;
         }

@@ -133,6 +133,7 @@
     <Compile Include="Api\UnstrucGridOperationApi.cs" />
     <Compile Include="Api\LocationInfoApiHelper.cs" />
     <Compile Include="Api\WriteNetGeomApi.cs" />
+    <Compile Include="FeatureData\BridgePillarFmModelFeatureCoordinateDataSyncExtensions.cs" />
     <Compile Include="FeatureData\DataColumn.cs" />
     <Compile Include="FeatureData\DataColumnsNameComparer.cs" />
     <Compile Include="EmbankmentGenerator.cs" />
@@ -163,6 +164,7 @@
     <Compile Include="IO\Exporters\WindItemExporter.cs" />
     <Compile Include="IO\Importers\BcmFileImporter.cs" />
     <Compile Include="IO\Importers\ObsFileImporterExporter.cs" />
+    <Compile Include="IO\Importers\PlizFileImporterExporter.cs" />
     <Compile Include="IO\Importers\SourceAndSinkImportExtensions.cs" />
     <Compile Include="IO\MorphologyBoundaryConditionQuantityType.cs" />
     <Compile Include="IO\MorphologySedimentIniFileGenerator.cs" />

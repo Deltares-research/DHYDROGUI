@@ -11,6 +11,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Core;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
@@ -18,6 +19,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.NetworkEditor;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -31,6 +33,110 @@ namespace Sobek.IntegrationTests
     [Category(TestCategory.Integration)]
     public class RunDimrWorkflowsTest
     {
+        [Test]
+        public void TestDimrConfigurationExport_BrdigePillar()
+        {
+            // Create a basic FlowFM with bridge pillars and check 
+            // their content was correctly added.
+            using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+            {
+                app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new HydroModelApplicationPlugin());
+
+                app.Run();
+
+                #region Set up model
+                Model1D2DBuilder.Create1d2dModel(app);
+
+                var hydroModel = app.GetAllModelsInProject().OfType<HydroModel>().First();
+                var fmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().First();
+
+                var observationPointFm = new GroupableFeature2DPoint { Name = "ObservationFM" };
+                fmModel.Area.ObservationPoints.Add(observationPointFm);
+                //Bridge Pillar
+                var bridgePillar = new BridgePillar()
+                {
+                    Name = "BridgePillarTest",
+                    Geometry =
+                        new LineString(new[]
+                        {
+                            new Coordinate(0.0, 160.0, 0),
+                            new Coordinate(40.0, 80.0, 10.0),
+                            new Coordinate(80.0, 40.0, 20.0),
+                            new Coordinate(160.0, 0.0, 30.0)
+                        }),
+                };
+
+                fmModel.Area.BridgePillars.Add(bridgePillar);
+                Assert.IsTrue(fmModel.Area.BridgePillars.Contains(bridgePillar));
+
+                /*Set the data model.*/
+                var modelFeatureCoordinateDatas = fmModel.BridgePillarsDataModel;
+                modelFeatureCoordinateDatas.Clear();
+                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar>() { Feature = bridgePillar };
+                modelFeatureCoordinateData.UpdateDataColumns();
+                //Diameters
+                modelFeatureCoordinateData.DataColumns[0].ValueList = new List<double> { 1.0, 2.5, 5.0, 10.0 };
+                //DragCoefficient
+                modelFeatureCoordinateData.DataColumns[1].ValueList = new List<double> { 10.0, 5.0, 2.5, 1.0 };
+                modelFeatureCoordinateDatas.Add(modelFeatureCoordinateData);
+                /* Done only for testing purposes. 
+                 * Please do not attempt to do this without the supervision of another adult. */
+                TypeUtils.SetPrivatePropertyValue(fmModel, "BridgePillarsDataModel", modelFeatureCoordinateDatas);
+
+                #endregion
+
+                #region Set up Dimr Exporter
+                //(FlowFM)
+                var workflow = hydroModel.Workflows.FirstOrDefault(wf => wf.Name == "(FlowFM)");
+                Assert.NotNull(workflow);
+                hydroModel.CurrentWorkflow = workflow;
+
+                FileUtils.DeleteIfExists(Path.GetFullPath("DimrFmWithPillars"));
+
+                var dirInfo = Directory.CreateDirectory("DimrFmWithPillars");
+                var exportFilePath = Path.Combine(dirInfo.FullName, "dimrFmWithPillars.xml");
+                var exporter = new DHydroConfigXmlExporter
+                {
+                    ExportFilePath = exportFilePath
+                };
+                #endregion
+
+                Assert.IsTrue(exporter.Export(hydroModel, null));
+                Assert.IsTrue(File.Exists(exportFilePath));
+
+                // Find Pliz file
+                var directoryPath = Path.GetDirectoryName(exportFilePath) ?? string.Empty;
+                var fmDirectory = Path.Combine(directoryPath, fmModel.DirectoryName);
+                Assert.IsTrue(Directory.Exists(fmDirectory));
+
+                var bridgeFile = Path.Combine(fmDirectory, $"{fmModel.Name}.pliz");
+                Assert.IsTrue(File.Exists(bridgeFile));
+
+                var readLines = File.ReadAllLines(bridgeFile);
+                var expectedLines = new List<string>
+                {
+                    "BridgePillarTest",
+                    "    4    4",
+                    "0.000000000000000E+000  1.600000000000000E+002  1.000000000000000E+000  1.000000000000000E+001",
+                    "4.000000000000000E+001  8.000000000000000E+001  2.500000000000000E+000  5.000000000000000E+000",
+                    "8.000000000000000E+001  4.000000000000000E+001  5.000000000000000E+000  2.500000000000000E+000",
+                    "1.600000000000000E+002  0.000000000000000E+000  1.000000000000000E+001  1.000000000000000E+000"
+                };
+
+                var idx = 0;
+                foreach (var textLine in readLines)
+                {
+                    var expectedLine = expectedLines[idx];
+                    Assert.AreEqual(expectedLine, textLine);
+                    idx++;
+                }
+
+            }
+        }
+
         [Test]
         public void TestDimrConfigurationExport1D2DWorkflow() // Flow1D + FlowFM
         {

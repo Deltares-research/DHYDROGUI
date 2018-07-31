@@ -73,6 +73,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private bool updatingGroupName;
 
         private IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties;
+        
+        /// <summary>
+        /// Gets the bridge pillars data model.
+        /// </summary>
+        /// <value>
+        /// The bridge pillars data model.
+        /// </value>
+        public IList<ModelFeatureCoordinateData<BridgePillar>> BridgePillarsDataModel { get; private set; }
         private IEventedList<SourceAndSink> sourcesAndSinks;
         private IEventedList<ISedimentFraction> sedimentFractions;
         private IEventedList<BoundaryConditionSet> boundaryConditionSets;
@@ -114,7 +122,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             SedimentFractions = new EventedList<ISedimentFraction>();
 
             allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-            
+            BridgePillarsDataModel = new List<ModelFeatureCoordinateData<BridgePillar>>();
+
             SedimentOverallProperties = SedimentFractionHelper.GetSedimentationOverAllProperties();
             tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             
@@ -1157,6 +1166,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             syncers.Clear();
 
             allFixedWeirsAndCorrespondingProperties.ForEach(d => d.Dispose());
+            BridgePillarsDataModel.ForEach( d => d.Dispose());
         }
 
         private void InitializeRunTimeGridOperationApi()
@@ -1427,15 +1437,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
 
                 allFixedWeirsAndCorrespondingProperties.Clear();
+                BridgePillarsDataModel.Clear();
 
                 areaItem.Value = value;
 
                 if (value != null)
                 {
-                    foreach (var fixedWeir in value.FixedWeirs)
-                    {
-                        allFixedWeirsAndCorrespondingProperties.Add(CreateModelFeatureCoordinateDataFor(fixedWeir));
-                    }
+                    value.FixedWeirs.ForEach(fw => allFixedWeirsAndCorrespondingProperties.Add(CreateModelFeatureCoordinateDataFor(fw)));
+                    value.BridgePillars.ForEach( bp => BridgePillarsDataModel.Add(CreateModelFeatureCoordinateDataFor(bp)));
 
                     ((INotifyCollectionChanged)value).CollectionChanged += HydroAreaCollectionChanged;
                     ((INotifyPropertyChanged) value).PropertyChanged += HydroAreaPropertyChanged;
@@ -1855,7 +1864,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (File.Exists(mduFilePath))
             {
                 isLoading = true;
-                mduFile.Read(mduFilePath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, (name, current, total) => FireImportProgressChanged(this, "Reading mdu - " + name, current, total));
+                mduFile.Read(mduFilePath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, (name, current, total) => FireImportProgressChanged(this, "Reading mdu - " + name, current, total), BridgePillarsDataModel);
                 isLoading = false;
                 SyncModelTimesWithBase();
             }
@@ -1921,7 +1930,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             WriteMorSedFilesIfNeeded(mduPath);
 
+            InitializeAreaDataColumns();
+
             mduFile.Write(mduPath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, switchTo, writeExtForcings, writeFeatures, DisableFlowNodeRenumbering);
+
+            RestoreAreaDataColumns();
 
             if (switchTo)
             {
@@ -1929,6 +1942,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 SaveOutput();
             }
             return true;
+        }
+
+        private void InitializeAreaDataColumns()
+        {
+            MduFile.SetBridgePillarAttributes(Area.BridgePillars, BridgePillarsDataModel);
+        }
+
+        private void RestoreAreaDataColumns()
+        {
+            MduFile.CleanBridgePillarAttributes(Area.BridgePillars);
         }
 
         private void WriteMorSedFilesIfNeeded(string mduPath)
@@ -2416,8 +2439,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             throw new ArgumentOutOfRangeException();
                     }
                 }
-            }
 
+                var bridgePillar = e.Item as BridgePillar;
+                if (bridgePillar != null)
+                {
+                    switch (e.Action)
+                    {
+                        case NotifyCollectionChangeAction.Add:
+                            BridgePillarsDataModel.Add(
+                                CreateModelFeatureCoordinateDataFor(bridgePillar));
+                            break;
+                        case NotifyCollectionChangeAction.Remove:
+                            var dataToRemove =
+                                BridgePillarsDataModel.FirstOrDefault(
+                                    d => d.Feature == bridgePillar);
+                            if (dataToRemove == null) break;
+
+                            BridgePillarsDataModel.Remove(dataToRemove);
+                            dataToRemove.Dispose();
+                            break;
+                        case NotifyCollectionChangeAction.Replace:
+                            var dataToUpdate =
+                                BridgePillarsDataModel.FirstOrDefault(
+                                    d => d.Feature == bridgePillar);
+                            if (dataToUpdate == null)
+                            {
+                                BridgePillarsDataModel.Add(
+                                    CreateModelFeatureCoordinateDataFor(bridgePillar));
+                                break;
+                            }
+
+                            dataToUpdate.Feature = bridgePillar;
+                            break;
+
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+            }
+            
             var groupableFeature = e.Item as IGroupableFeature;
             if (groupableFeature != null && e.Action != NotifyCollectionChangeAction.Remove && !Area.IsEditing)
             {
@@ -2463,6 +2523,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var scheme = ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
 
             modelFeatureCoordinateData.UpdateDataColumns(scheme);
+            return modelFeatureCoordinateData;
+        }
+
+        private ModelFeatureCoordinateData<BridgePillar> CreateModelFeatureCoordinateDataFor(BridgePillar bridgePillar)
+        {
+            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar> { Feature = bridgePillar };
+            modelFeatureCoordinateData.UpdateDataColumns();
+
             return modelFeatureCoordinateData;
         }
 

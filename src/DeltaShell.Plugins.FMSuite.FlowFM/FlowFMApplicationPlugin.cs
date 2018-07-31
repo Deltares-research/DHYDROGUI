@@ -10,6 +10,7 @@ using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -121,7 +122,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 AfterCreateAction = delegate(object featureList, FixedWeir fixedWeir)
                 {
                     fixedWeir.UpdateGroupName(GetModelFor(featureList, a => a.FixedWeirs));
-
                     
                     var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir>() {Feature = fixedWeir};
                     var scheme = GetModelFor(featureList, a => a.FixedWeirs).ModelDefinition
@@ -172,7 +172,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             GetEditableObject = target => GetModelFor(target, a => a.FixedWeirs).Area
             };
-            
+
+            yield return new PlizFileImporterExporter<BridgePillar, BridgePillar>
+            {
+                Mode = Feature2DImportExportMode.Import,
+                CreateDelegate = delegate (List<Coordinate> points, string name)
+                {
+                    return MduFile.CreateDelegateBridgePillar(name, points);
+                },
+                EqualityComparer = new GroupableFeatureComparer<BridgePillar>(),
+                AfterCreateAction = delegate (object featureList, BridgePillar bridgePillar)
+                {
+                    var waterFlowFmModel = GetModelFor(featureList, a => a.BridgePillars);
+                    if (waterFlowFmModel == null) return;
+
+                    bridgePillar.UpdateGroupName(waterFlowFmModel);
+
+                    var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar>() { Feature = bridgePillar };
+                    modelFeatureCoordinateData.UpdateDataColumns();
+                    MduFile.SetBridgePillarDataModel(waterFlowFmModel.BridgePillarsDataModel,modelFeatureCoordinateData,bridgePillar);
+
+
+                    bridgePillar.Attributes.Clear(); //To Do during last step of cleaning. Turn this on. 
+                },
+
+                GetEditableObject = target => GetModelFor(target, a => a.BridgePillars).Area
+            };
+
             yield return new PliFileImporterExporter<ThinDam2D, ThinDam2D>
             {
                 Mode = Feature2DImportExportMode.Import,
@@ -297,38 +323,67 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new PliFileImporterExporter<FixedWeir, FixedWeir>
             {
                 Mode = Feature2DImportExportMode.Export,
-                BeforeExportActionDelegate = delegate (object featureList, FixedWeir fixedWeir)
+                BeforeExportActionDelegate = delegate (object featureList)
                 {
-                    fixedWeir.Attributes = new DictionaryFeatureAttributeCollection();
+                    var waterFlowFmModel = GetModelFor(featureList, a => a.FixedWeirs);
+                    var fixedWeirs = featureList as IEnumerable<FixedWeir>;
+                    if (fixedWeirs == null || waterFlowFmModel == null) return;
 
-                    var correspondingModelFeatureCoordinateData =
-                        GetModelFor(featureList, a => a.FixedWeirs).FixedWeirsProperties.FirstOrDefault(d => d.Feature == fixedWeir);
-
-                    if (correspondingModelFeatureCoordinateData == null) return;
-
-                    for (var index = 0; index < correspondingModelFeatureCoordinateData.DataColumns.Count; index++)
+                    foreach (var fixedWeir in fixedWeirs)
                     {
-                        if (!correspondingModelFeatureCoordinateData.DataColumns[index].IsActive) break;
-                        var dataColumnWithData = correspondingModelFeatureCoordinateData.DataColumns[index].ValueList;
+                        fixedWeir.Attributes = new DictionaryFeatureAttributeCollection();
+                        var correspondingModelFeatureCoordinateData = waterFlowFmModel?.FixedWeirsProperties.FirstOrDefault(d => d.Feature == fixedWeir);
 
-                        GeometryPointsSyncedList<double> syncedList;
-                        syncedList = new GeometryPointsSyncedList<double>
-                        {
-                            CreationMethod = (f, i) => 0.0,
-                            Feature = fixedWeir
-                        };
-                        fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] = syncedList;
+                        if (correspondingModelFeatureCoordinateData == null) return;
 
-                        for (var i = 0; i < dataColumnWithData.Count; ++i)
+                        for (var index = 0; index < correspondingModelFeatureCoordinateData.DataColumns.Count; index++)
                         {
-                            syncedList[i] = (double)dataColumnWithData[i];
+                            if (!correspondingModelFeatureCoordinateData.DataColumns[index].IsActive) break;
+                            var dataColumnWithData = correspondingModelFeatureCoordinateData.DataColumns[index].ValueList;
+
+                            GeometryPointsSyncedList<double> syncedList;
+                            syncedList = new GeometryPointsSyncedList<double>
+                            {
+                                CreationMethod = (f, i) => 0.0,
+                                Feature = fixedWeir
+                            };
+                            fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] = syncedList;
+
+                            for (var i = 0; i < dataColumnWithData.Count; ++i)
+                            {
+                                syncedList[i] = (double)dataColumnWithData[i];
+                            }
                         }
                     }
                 },
 
-                AfterExportActionDelegate = delegate (object featureList, FixedWeir fixedWeir)
+                AfterExportActionDelegate = delegate (object featureList)
                 {
-                    fixedWeir.Attributes.Clear();
+                    var fixedWeirs = featureList as IEnumerable<FixedWeir>;
+                    if (fixedWeirs == null) return;
+
+                    fixedWeirs.ForEach(fw => fw.Attributes.Clear());
+                }
+            };
+            yield return new PlizFileImporterExporter<BridgePillar, BridgePillar>
+            {
+                Mode = Feature2DImportExportMode.Export,
+                BeforeExportActionDelegate = delegate (object featureList)
+                {
+                    var waterFlowFmModel = GetModelFor(featureList, a => a.BridgePillars);
+                    var bridgePillars = featureList as IEnumerable<BridgePillar>;
+                    if (bridgePillars == null || waterFlowFmModel == null) return;
+
+                    var modelFeatureCoordinateDatas = waterFlowFmModel.BridgePillarsDataModel;
+                    MduFile.SetBridgePillarAttributes(bridgePillars, modelFeatureCoordinateDatas);
+                },
+
+                AfterExportActionDelegate = delegate (object featureList)
+                {
+                    var bridgePillars = featureList as IEnumerable<BridgePillar>;
+                    if (bridgePillars == null) return;
+
+                    MduFile.CleanBridgePillarAttributes(bridgePillars);
                 },
             };
             yield return new PliFileImporterExporter<ThinDam2D, ThinDam2D> { Mode = Feature2DImportExportMode.Export };
@@ -422,6 +477,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private WaterFlowFMModel GetModelForSourceAndSink(SourceAndSink sourceAndSink)
         {
             return FlowModels.FirstOrDefault(m => m.SourcesAndSinks.Contains(sourceAndSink));
+        }
+
+        private WaterFlowFMModel GetModelForBridgePillar(BridgePillar bridgePillar)
+        {
+            return FlowModels.FirstOrDefault(m => m.Area.BridgePillars.Contains(bridgePillar));
         }
 
         private WaterFlowFMModel GetModelForWindField(IWindField windField)
