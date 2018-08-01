@@ -31,6 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void ValidateMorphologyBetaWarningTest()
         {
             var model = new WaterFlowFMModel();
+            model.SedimentFractions.Add(new SedimentFraction {Name = "SedFrac"});
             var report = model.Validate();
             var morReport = report.SubReports.FirstOrDefault(r => r.Category.Contains("Morphology / Sediment Beta warning"));
             Assert.IsNull(morReport);
