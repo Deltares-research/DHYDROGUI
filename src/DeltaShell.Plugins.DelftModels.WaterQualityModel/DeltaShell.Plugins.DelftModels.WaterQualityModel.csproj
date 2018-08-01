@@ -519,7 +519,7 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    
     <Error Condition="!Exists('..\..\packages\Substances.Libs.1.0.0.56223\build\net40\Substances.Libs.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Substances.Libs.1.0.0.56223\build\net40\Substances.Libs.targets'))" />
     <Error Condition="!Exists('..\..\packages\PLCT.Libs.1.0.0.56223\build\net40\plct.Libs.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PLCT.Libs.1.0.0.56223\build\net40\plct.Libs.targets'))" />
     <Error Condition="!Exists('..\..\packages\DIDO.5.3.0.56795\build\net40\DIDO.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DIDO.5.3.0.56795\build\net40\DIDO.targets'))" />

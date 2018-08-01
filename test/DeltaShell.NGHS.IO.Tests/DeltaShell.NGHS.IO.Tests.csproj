@@ -182,7 +182,7 @@ cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.3.0.40301\tools\mklink-t
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    
     <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.3.0.40301\build\net40\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.3.0.40301\build\net40\DeltaShell.Framework.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.TestProject.1.3.0.40301\build\net40\DeltaShell.TestProject.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.TestProject.1.3.0.40301\build\net40\DeltaShell.TestProject.targets'))" />
   </Target>
