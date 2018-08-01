@@ -779,7 +779,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 ZBot = HydroData.ZBot;
                 SetNewGrid(HydroData.Grid, schematizationRemainsUnchanged);
 
-                if (!schematizationRemainsUnchanged && !data.Equals(HydroData))
+                if (!schematizationRemainsUnchanged)
                 {
                     ClearOutput();
                 }
