@@ -753,6 +753,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 throw new ArgumentNullException("data", "No hydrodynamics data was specified.");
             }
 
+            if (data.Equals(HydroData))
+            {
+                OverWriteModelTimersWithImportTimers(skipImportTimers);
+                return;
+            } 
+
             HasHydroDataImported = false;
 
             enableMarkOutputOutOfSync = markOutputOutOfSync;
@@ -763,7 +769,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             {
                 overriddenCoordinateSystem = data.Grid.CoordinateSystem;
             }
-
+            
             HydroData = data;
 
             BeginEdit(new DefaultEditAction("Importing hydrodynamics data"));
@@ -785,20 +791,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 }
 
                 //As of issue D3DFMIQ-329, the timers should be overriden when importing the hyd file again.
-                if (!skipImportTimers)
-                {
-                    SetImportProgress("Importing timers");
-                    StartTime = HydroData.ConversionStartTime;
-                    StopTime = HydroData.ConversionStopTime;
-                    TimeStep = HydroData.ConversionTimeStep;
-                    ReferenceTime = HydroData.ConversionReferenceTime;
+                OverWriteModelTimersWithImportTimers(skipImportTimers);
 
-                    //Sync of time step needs to be explicit.
-                    ModelSettings.HisTimeStep = HydroData.ConversionTimeStep;
-                    ModelSettings.MapTimeStep = HydroData.ConversionTimeStep;
-                    ModelSettings.BalanceTimeStep = HydroData.ConversionTimeStep;
-                    LogSynchronizedTimer("Time Step", TimeStep);
-                }
 
                 if (!HasEverImportedHydroData || importCoordinateSystem)
                 {
@@ -845,6 +839,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 EndEdit();
                 enableMarkOutputOutOfSync = true;
             }
+        }
+
+        private void OverWriteModelTimersWithImportTimers(bool skipImportTimers)
+        {
+            if (skipImportTimers) return;
+
+            SetImportProgress("Importing timers");
+            StartTime = HydroData.ConversionStartTime;
+            StopTime = HydroData.ConversionStopTime;
+            TimeStep = HydroData.ConversionTimeStep;
+            ReferenceTime = HydroData.ConversionReferenceTime;
+
+            //Sync of time step needs to be explicit.
+            ModelSettings.HisTimeStep = HydroData.ConversionTimeStep;
+            ModelSettings.MapTimeStep = HydroData.ConversionTimeStep;
+            ModelSettings.BalanceTimeStep = HydroData.ConversionTimeStep;
+            LogSynchronizedTimer("Time Step", TimeStep);
         }
 
         private void ResolveBoundaryImport(IEnumerable<WaterQualityBoundary> importedBoundaries)
