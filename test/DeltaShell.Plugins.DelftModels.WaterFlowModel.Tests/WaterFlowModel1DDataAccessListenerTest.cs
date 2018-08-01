@@ -1,8 +1,13 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using DelftTools.Units;
+using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Core;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -10,6 +15,7 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
+using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
@@ -84,6 +90,59 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                     Assert.AreEqual(matchingEngineParameter.AggregationOptions, AggregationOptions.Current);
                 } 
             }
+        }
+
+        [Test]
+        public void TestSyncAggregationOptionsForExistingOutputCoverages_HandlesNoMatchingEngineParameter()
+        {
+            var dataItems = new List<DataItem>()
+            {
+                new DataItem(new FeatureCoverage(), DataItemRole.Output, "ExampleTag"), // simulate existing output coverage without matching engine parameter
+            }; 
+
+            var engineParameters = new List<EngineParameter>(); // empty list
+
+            TypeUtils.CallPrivateStaticMethod(typeof(WaterFlowModel1DDataAccessListener),
+                "SyncAggregationOptionsForExistingOutputCoverages", dataItems, engineParameters);
+        }
+
+        [Test]
+        public void TestSyncAggregationOptionsForExistingOutputCoverages_HandlesNoComponentsInOutputCoverage()
+        {
+            var dataItems = new List<DataItem>()
+            {
+                new DataItem(new FeatureCoverage(), DataItemRole.Output, QuantityType.PumpDischarge.ToString()) // simulate existing output coverage
+            };
+
+            var engineParameters = new List<EngineParameter>()
+            {
+                new EngineParameter(QuantityType.PumpDischarge, ElementSet.Pumps, DataItemRole.Output, QuantityType.PumpDischarge.ToString(), new Unit()) // simulate existing engine parameter
+            };
+
+            TypeUtils.CallPrivateStaticMethod(typeof(WaterFlowModel1DDataAccessListener),
+                "SyncAggregationOptionsForExistingOutputCoverages", dataItems, engineParameters);
+        }
+
+        [Test]
+        public void TestSyncAggregationOptionsForExistingOutputCoverages_HandlesNoAggregationOptionAttribute()
+        {
+            var dataItems = new List<DataItem>()
+            {
+                new DataItem(new FeatureCoverage()
+                {
+                    Components = new EventedList<IVariable>() { new Variable<double>()} // simulate existing component without Attributes
+                }, 
+                DataItemRole.Output, 
+                "PumpDischarge") // simulate existing output coverage
+            };
+
+            var engineParameters = new List<EngineParameter>()
+            {
+                new EngineParameter(QuantityType.PumpDischarge, ElementSet.Pumps, DataItemRole.Output, QuantityType.PumpDischarge.ToString(), new Unit()) // simulate existing engine parameter
+            };
+
+            TypeUtils.CallPrivateStaticMethod(typeof(WaterFlowModel1DDataAccessListener),
+                "SyncAggregationOptionsForExistingOutputCoverages", dataItems, engineParameters);
         }
 
     }
