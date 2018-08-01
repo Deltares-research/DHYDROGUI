@@ -1420,7 +1420,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
                 //Change Coordinate System to something random and assert it is set to something different
                 ICoordinateSystem newCoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(25000);
-                Assert.AreNotEqual(model.CoordinateSystem.Name, newCoordinateSystem);
+                model.CoordinateSystem = newCoordinateSystem;
+                Assert.AreNotEqual(model.CoordinateSystem.Name, "Amersfoort / RD New");
 
                 var tempDirectory = FileUtils.CreateTempDirectory();
                 app.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
