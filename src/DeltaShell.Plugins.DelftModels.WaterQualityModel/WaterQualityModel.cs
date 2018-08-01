@@ -758,6 +758,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             enableMarkOutputOutOfSync = markOutputOutOfSync;
 
             var schematizationRemainsUnchanged = data.HasSameSchematization(HydroData);
+            if (data.Grid?.CoordinateSystem != null
+                && data.Grid.CoordinateSystem != overriddenCoordinateSystem)
+            {
+                overriddenCoordinateSystem = data.Grid.CoordinateSystem;
+            }
+
             HydroData = data;
 
             BeginEdit(new DefaultEditAction("Importing hydrodynamics data"));

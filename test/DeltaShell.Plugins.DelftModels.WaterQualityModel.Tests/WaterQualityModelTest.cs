@@ -1389,6 +1389,53 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             }
         }
 
+        [Test]
+        public void Test_When_HydFile_IsImported_OverExistingHydFile_CoordinateSystem_IsUpdated_ToNewHydFile()
+        {
+            using (var app = new DeltaShellApplication())
+            {
+                var waqPlugin = new WaterQualityModelApplicationPlugin();
+                //Initialize WAQ Model
+                var model = new WaterQualityModel();
+
+                app.Plugins.Add(waqPlugin);
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetCdfApplicationPlugin());
+                app.Plugins.Add(new ScriptingApplicationPlugin());
+                app.Plugins.Add(new ToolboxApplicationPlugin());
+                app.Run();
+
+                //Import hyd file
+                string hydPath =
+                    TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFileForCoordSystem\westernscheldt01.hyd");
+                var importer = new HydFileImporter();
+                var importedItem = importer.ImportItem(hydPath, model);
+                Assert.IsNotNull(importedItem);
+
+                //Assert that Coordinate System is now set to Amersfoort/RD
+                Assert.AreEqual(model.CoordinateSystem.Name, "Amersfoort / RD New");
+
+                //Change Coordinate System to something random and assert it is set to something different
+                ICoordinateSystem newCoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(25000);
+                Assert.AreNotEqual(model.CoordinateSystem.Name, newCoordinateSystem);
+
+                var tempDirectory = FileUtils.CreateTempDirectory();
+                app.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
+
+                app.Project.RootFolder.Items.Add(model);
+
+                //Import hyd file
+                importedItem = importer.ImportItem(hydPath, model);
+                Assert.IsNotNull(importedItem);
+
+                //Assert that Coordinate System is now again set to Amersfoort/RD
+                Assert.AreEqual(model.CoordinateSystem.Name, "Amersfoort / RD New");
+            }
+        }
+
         #endregion
     }
 }
