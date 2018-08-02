@@ -427,7 +427,8 @@ Manhole with unique id '{4}' is not imported.</value>
   </data>
   <data name="GwswElementExtensions_GetAttributeFromList_Attribute__0__was_not_found_for_element__1__of_type__2__" xml:space="preserve">
     <value>Attribute {0} was not found for element {1} of type {2}.</value>
-  </data>  <data name="Could_not_export_data_for_SourceAndSink___0___no_Function_was_found" xml:space="preserve">
+  </data>
+  <data name="Could_not_export_data_for_SourceAndSink___0___no_Function_was_found" xml:space="preserve">
     <value>Could not export data for SourceAndSink: {0}, no Function was found</value>
   </data>
   <data name="TimFileExporter_Export_Failed_to_export_data_to__0____1_" xml:space="preserve">
@@ -501,5 +502,8 @@ Manhole with unique id '{4}' is not imported.</value>
   </data>
   <data name="MduFile_Read_Based_on_the_Bridge_Pillar_file__0___there_are_not_enough_column_s__defined_for__1___The_last__2__column_s__have_been_generated_using_default_values" xml:space="preserve">
     <value>Based on the Bridge Pillar file {0}, there are not enough column(s) defined for {1}. The last {2} column(s) have been generated using default values</value>
+  </data>
+  <data name="WaterFlowFMModelDefinition_GetTabName_Invalid_gui_group_id_for___0___in_the_scheme_of_dflowfmmorpropertiescsv___1_" xml:space="preserve">
+    <value>Invalid gui group id for {0} in the scheme of dflowfm-mor-properties.csv: '{1}'</value>
   </data>
 </root>

@@ -48,8 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
-
-        public void ValidateAtLeastOneSedimentFractionInModelTest()
+        public void Test_ValidateWithMorpohlogyBetaWarning_WithoutSediments_Returns_ValidationIssue_With_ExpectedMessage()
         {
             var model = new WaterFlowFMModel() {ModelDefinition = {UseMorphologySediment = true}};
             var expectedMessage = Resources
@@ -58,11 +57,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var validationReport = WaterFlowFMSedimentMorphologyValidator.ValidateWithMorphologyBetaWarning(model);
             var errorMessages = validationReport.AllErrors.Where(i => i.Message == expectedMessage).Select(i => i.Message);
             Assert.AreEqual(errorMessages.Count(), 1);
+        }
 
-            model.SedimentFractions.Add(new SedimentFraction(){Name = "SedFrac"});
+        [Test]
+        public void Test_ValidateWithMorpohlogyBetaWarning_WithSediments_Returns_No_ValidationIssue()
+        {
+            var model = new WaterFlowFMModel() { ModelDefinition = { UseMorphologySediment = true } };
+            var expectedMessage = Resources
+                .WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology;
 
-            validationReport = WaterFlowFMSedimentMorphologyValidator.ValidateWithMorphologyBetaWarning(model);
-            errorMessages = validationReport.AllErrors.Where(i => i.Message == expectedMessage).Select(i=>i.Message);
+            model.SedimentFractions.Add(new SedimentFraction() { Name = "SedFrac" });
+
+            var validationReport = WaterFlowFMSedimentMorphologyValidator.ValidateWithMorphologyBetaWarning(model);
+            var errorMessages = validationReport.AllErrors.Where(i => i.Message == expectedMessage).Select(i => i.Message);
             Assert.AreEqual(errorMessages.Count(), 0);
         }
 

@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
                     generatedEditor = DataEditorGeneratorSwf.GenerateView(objectDescription);
 
-                    var sedimentTabName = GetSedimentTabName();
+                    var sedimentTabName =WaterFlowFMModelDefinition.GetTabName(KnownProperties.SedFile, fmModel:data);
                     tabPageSediment = new TabPage(sedimentTabName);
                     tabPageSediment.Controls.Add(
                         new ElementHost
@@ -155,7 +155,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                             Dock = DockStyle.Fill,
                         });
 
-                    var morphologyTabName = GetMorphologyTabName();
+                    var morphologyTabName = WaterFlowFMModelDefinition.GetTabName(KnownProperties.morphology, "morphology");
                     tabPageMorphology = generatedEditor.Controls.OfType<TabControl>()
                         .First()
                         .TabPages.OfType<TabPage>()
@@ -213,33 +213,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     Controls.Add(generatedEditor);
                 }
             }
-        }
-
-        private string GetSedimentTabName()
-        {
-            var useSedFileFlowFmProperty = data.ModelDefinition.GetModelProperty(KnownProperties.SedFile);
-            var guiSedimentGroupId =
-                string.IsNullOrEmpty(useSedFileFlowFmProperty.PropertyDefinition.FileCategoryName)
-                    ? "sediment"
-                    : useSedFileFlowFmProperty.PropertyDefinition.FileCategoryName;
-            if (!WaterFlowFMModelDefinition.GuiPropertyGroups.ContainsKey(guiSedimentGroupId))
-            {
-                throw new FormatException(String.Format(
-                    "Invalid gui group id for sediment file in the scheme of dflowfm-mor-properties.csv \"{0}\"",
-                    guiSedimentGroupId));
-            }
-            return WaterFlowFMModelDefinition.GuiPropertyGroups[guiSedimentGroupId].Name;
-        }
-
-        private static string GetMorphologyTabName()
-        {
-            if (!WaterFlowFMModelDefinition.GuiPropertyGroups.ContainsKey(KnownProperties.morphology))
-            {
-                throw new FormatException(String.Format(
-                    "Invalid gui group id for morphology in the scheme of dflowfm-mor-properties.csv \"{0}\"",
-                    KnownProperties.morphology));
-            }
-            return WaterFlowFMModelDefinition.GuiPropertyGroups[KnownProperties.morphology].Name;
         }
 
         private static readonly string CoordinateSystemPropertyName = TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.CoordinateSystem);

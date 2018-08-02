@@ -1154,6 +1154,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid gui group id for {0} in the scheme of dflowfm-mor-properties.csv: &apos;{1}&apos;.
+        /// </summary>
+        public static string WaterFlowFMModelDefinition_GetTabName_Invalid_gui_group_id_for___0___in_the_scheme_of_dflowfmmorpropertiescsv___1_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelDefinition_GetTabName_Invalid_gui_group_id_for___0___in_the_schem" +
+                        "e_of_dflowfmmorpropertiescsv___1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Duplication of spatial operations for {0}. Please verify the model after saving..
         /// </summary>
         public static string WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_ {
