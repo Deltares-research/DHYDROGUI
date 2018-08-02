@@ -7,7 +7,7 @@
    Description2         =                              
    Description3         =                              
    OnlyInputVerify      = false                         
-   SimMode              = quasi-stationary                   
+   SimMode              = non-stationary                  
    DirConvention        = nautical                     
    ReferenceDate        = 1987-12-01                   
    ObstacleFile         =                              

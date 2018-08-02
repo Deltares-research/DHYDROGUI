@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -137,6 +137,42 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         public static string WavePropertiesValidator_Validate_Waves_Model_Properties {
             get {
                 return ResourceManager.GetString("WavePropertiesValidator_Validate_Waves_Model_Properties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The time step should be a divisor of the time interval..
+        /// </summary>
+        public static string WavePropertiesValidator_ValidateDivisor {
+            get {
+                return ResourceManager.GetString("WavePropertiesValidator_ValidateDivisor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The time step can not be bigger than the time interval..
+        /// </summary>
+        public static string WavePropertiesValidator_ValidateThat_TimeStep_Is_Not_Bigger_Than_TimeScale {
+            get {
+                return ResourceManager.GetString("WavePropertiesValidator_ValidateThat_TimeStep_Is_Not_Bigger_Than_TimeScale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The time step should be a integer..
+        /// </summary>
+        public static string WavePropertiesValidator_ValidateTimeStep {
+            get {
+                return ResourceManager.GetString("WavePropertiesValidator_ValidateTimeStep", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The time interval should be a integer..
+        /// </summary>
+        public static string WavePropertiesValidator_ValidateTScale {
+            get {
+                return ResourceManager.GetString("WavePropertiesValidator_ValidateTScale", resourceCulture);
             }
         }
         

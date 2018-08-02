@@ -97,6 +97,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
+        public int DirectionalSpaceType
+        {
+            get
+            {
+                return (int)ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.DirectionalSpaceType).Value;
+            }
+            set
+            {
+                // don't don anything, used for events
+            }
+        }
+
         public bool WriteCOM
         {
             get
@@ -554,6 +566,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 {
                     BeginEdit(new DefaultEditAction("Switching simulation mode"));
                     SimulationMode = SimulationMode;
+                    EndEdit();
+                }
+                else if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.DirectionalSpaceType,
+                    StringComparison.InvariantCultureIgnoreCase))
+                {
+                    BeginEdit(new DefaultEditAction("Switching directional space type"));
+                    DirectionalSpaceType = DirectionalSpaceType;
                     EndEdit();
                 }
                 else if(prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.WriteCOM, StringComparison.InvariantCultureIgnoreCase))
