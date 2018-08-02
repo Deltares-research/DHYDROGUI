@@ -623,4 +623,7 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
   <data name="SubFileImporter_Import_Sub_file_successfully_imported_from___0_" xml:space="preserve">
     <value>Sub file successfully imported from: {0}</value>
   </data>
+  <data name="WaterQualityModel_CoordinateSystem_The_coordinate_system_of_the_model_has_been_set_to__0_" xml:space="preserve">
+    <value>The coordinate system of the model has been set to {0}</value>
+  </data>
 </root>

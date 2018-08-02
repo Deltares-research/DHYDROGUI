@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -327,6 +327,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         public static string WaterQualityBoundaryData_Time_series_post_fix {
             get {
                 return ResourceManager.GetString("WaterQualityBoundaryData_Time_series_post_fix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The coordinate system of the model has been set to {0}.
+        /// </summary>
+        public static string WaterQualityModel_CoordinateSystem_The_coordinate_system_of_the_model_has_been_set_to__0_ {
+            get {
+                return ResourceManager.GetString("WaterQualityModel_CoordinateSystem_The_coordinate_system_of_the_model_has_been_se" +
+                        "t_to__0_", resourceCulture);
             }
         }
         

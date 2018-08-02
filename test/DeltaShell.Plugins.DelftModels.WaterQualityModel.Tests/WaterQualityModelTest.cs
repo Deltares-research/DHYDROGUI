@@ -90,7 +90,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Assert.Fail("Waq model temp folder should only be created when required.");
             }
 
-            var parentFolderOfWaqModelTempFolder = Path.GetDirectoryName(waqModelTempFolder) + Path.DirectorySeparatorChar;
+            var parentFolderOfWaqModelTempFolder =
+                Path.GetDirectoryName(waqModelTempFolder) + Path.DirectorySeparatorChar;
             Assert.AreEqual(tempPath, parentFolderOfWaqModelTempFolder,
                 "Waq model temp folder should be located directly in temp folder.");
             var waqModelFolderName = model.Name.Replace(" ", "_");
@@ -107,7 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.AreEqual(waqModelDataFolder, Path.GetDirectoryName(model.LoadsDataManager.FolderPath),
                 "Parent folder of load data manager should be the waq data directory.");
         }
-        
+
         [Test]
         public void DefaultConstructorExpectedValuesTest()
         {
@@ -225,7 +226,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             // call
             var model = new WaterQualityModel();
-            
+
             // assert
             var inputFileDataItem = model.GetDataItemByTag(WaterQualityModel.InputFileCommandLineDataItemMetaData.Tag);
             Assert.AreEqual(DataItemRole.Input, inputFileDataItem.Role);
@@ -241,9 +242,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.AreSame(model, inputFileHybridDataItem.Owner);
             Assert.AreSame(model.InputFileHybrid, inputFileHybridDataItem.Value);
 
-            var substanceProcessLibraryDataItem = model.GetDataItemByTag(WaterQualityModel.SubstanceProcessLibraryDataItemMetaData.Tag);
+            var substanceProcessLibraryDataItem =
+                model.GetDataItemByTag(WaterQualityModel.SubstanceProcessLibraryDataItemMetaData.Tag);
             Assert.AreEqual(DataItemRole.Input, substanceProcessLibraryDataItem.Role);
-            Assert.AreEqual(WaterQualityModel.SubstanceProcessLibraryDataItemMetaData.Name, substanceProcessLibraryDataItem.Name);
+            Assert.AreEqual(WaterQualityModel.SubstanceProcessLibraryDataItemMetaData.Name,
+                substanceProcessLibraryDataItem.Name);
             Assert.AreEqual(typeof(SubstanceProcessLibrary), substanceProcessLibraryDataItem.ValueType);
             Assert.AreSame(model, substanceProcessLibraryDataItem.Owner);
             Assert.AreSame(model.SubstanceProcessLibrary, substanceProcessLibraryDataItem.Value);
@@ -276,30 +279,36 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.AreSame(model, loadsDataDataItem.Owner);
             Assert.AreSame(model.LoadsDataManager, loadsDataDataItem.Value);
 
-            var initialConditionsDataItemSet = model.GetDataItemByTag(WaterQualityModel.InitialConditionsDataItemMetaData.Tag);
+            var initialConditionsDataItemSet =
+                model.GetDataItemByTag(WaterQualityModel.InitialConditionsDataItemMetaData.Tag);
             Assert.AreEqual(DataItemRole.Input, initialConditionsDataItemSet.Role);
-            Assert.AreEqual(WaterQualityModel.InitialConditionsDataItemMetaData.Name, initialConditionsDataItemSet.Name);
+            Assert.AreEqual(WaterQualityModel.InitialConditionsDataItemMetaData.Name,
+                initialConditionsDataItemSet.Name);
             Assert.AreEqual(typeof(IList<IDataItem>), initialConditionsDataItemSet.ValueType);
             Assert.AreSame(model, initialConditionsDataItemSet.Owner);
-            var adapter = (IDataItemsEventedListAdapter)initialConditionsDataItemSet.Value;
+            var adapter = (IDataItemsEventedListAdapter) initialConditionsDataItemSet.Value;
             Assert.AreEqual(typeof(IFunction), adapter.ItemType);
-            CollectionAssert.AreEqual(model.InitialConditions.ToArray(), adapter.DataItems.Select(di=>di.Value).ToArray());
+            CollectionAssert.AreEqual(model.InitialConditions.ToArray(),
+                adapter.DataItems.Select(di => di.Value).ToArray());
 
-            var processCoefficientsDataItemSet = model.GetDataItemByTag(WaterQualityModel.ProcessCoefficientsDataItemMetaData.Tag);
+            var processCoefficientsDataItemSet =
+                model.GetDataItemByTag(WaterQualityModel.ProcessCoefficientsDataItemMetaData.Tag);
             Assert.AreEqual(DataItemRole.Input, processCoefficientsDataItemSet.Role);
-            Assert.AreEqual(WaterQualityModel.ProcessCoefficientsDataItemMetaData.Name, processCoefficientsDataItemSet.Name);
+            Assert.AreEqual(WaterQualityModel.ProcessCoefficientsDataItemMetaData.Name,
+                processCoefficientsDataItemSet.Name);
             Assert.AreEqual(typeof(IList<IDataItem>), processCoefficientsDataItemSet.ValueType);
             Assert.AreSame(model, processCoefficientsDataItemSet.Owner);
-            adapter = (IDataItemsEventedListAdapter)processCoefficientsDataItemSet.Value;
+            adapter = (IDataItemsEventedListAdapter) processCoefficientsDataItemSet.Value;
             Assert.AreEqual(typeof(IFunction), adapter.ItemType);
-            CollectionAssert.AreEqual(model.ProcessCoefficients.ToArray(), adapter.DataItems.Select(di => di.Value).ToArray());
+            CollectionAssert.AreEqual(model.ProcessCoefficients.ToArray(),
+                adapter.DataItems.Select(di => di.Value).ToArray());
 
             var dispersionDataItemSet = model.GetDataItemByTag(WaterQualityModel.DispersionDataItemMetaData.Tag);
             Assert.AreEqual(DataItemRole.Input, dispersionDataItemSet.Role);
             Assert.AreEqual(WaterQualityModel.DispersionDataItemMetaData.Name, dispersionDataItemSet.Name);
             Assert.AreEqual(typeof(IList<IDataItem>), dispersionDataItemSet.ValueType);
             Assert.AreSame(model, dispersionDataItemSet.Owner);
-            adapter = (IDataItemsEventedListAdapter)dispersionDataItemSet.Value;
+            adapter = (IDataItemsEventedListAdapter) dispersionDataItemSet.Value;
             Assert.AreEqual(typeof(IFunction), adapter.ItemType);
             CollectionAssert.AreEqual(model.Dispersion.ToArray(), adapter.DataItems.Select(di => di.Value).ToArray());
         }
@@ -327,8 +336,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var model = new WaterQualityModel();
             model.DataItems.Add(new DataItem(1.1, DataItemRole.Output, "test"));
 
-            Assert.AreEqual(4, model.DataItems.Count(di => di.Role.HasFlag(DataItemRole.Output))); // the sets (Monitoring locations, Substances and Ouput parameters) and the coverage
-            Assert.AreEqual(0, model.DataItems.Count(di => di.Role.HasFlag(DataItemRole.Output) && di.Value is UnstructuredGridCellCoverage));
+            Assert.AreEqual(4,
+                model.DataItems.Count(di =>
+                    di.Role.HasFlag(DataItemRole
+                        .Output))); // the sets (Monitoring locations, Substances and Ouput parameters) and the coverage
+            Assert.AreEqual(0,
+                model.DataItems.Count(di =>
+                    di.Role.HasFlag(DataItemRole.Output) && di.Value is UnstructuredGridCellCoverage));
 
             // call
             var outputItems = model.GetOutputCoverages().ToArray();
@@ -346,8 +360,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var model = new WaterQualityModel();
             model.DataItems.Add(new DataItem(unstructuredGridCellCoverage, DataItemRole.Output, "test"));
 
-            Assert.AreEqual(4, model.DataItems.Count(di => di.Role.HasFlag(DataItemRole.Output))); // the sets (Monitoring locations, Substances and Ouput parameters) and the test coverage
-            Assert.AreEqual(1, model.DataItems.Count(di => di.Role.HasFlag(DataItemRole.Output) && di.Value is UnstructuredGridCellCoverage));
+            Assert.AreEqual(4,
+                model.DataItems.Count(di =>
+                    di.Role.HasFlag(DataItemRole
+                        .Output))); // the sets (Monitoring locations, Substances and Ouput parameters) and the test coverage
+            Assert.AreEqual(1,
+                model.DataItems.Count(di =>
+                    di.Role.HasFlag(DataItemRole.Output) && di.Value is UnstructuredGridCellCoverage));
 
             // call
             var outputItems = model.GetOutputCoverages().ToArray();
@@ -372,22 +391,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             var document = new TextDocument();
             var document2 = new TextDocument();
-            
+
             var outputItems = new List<IDataItem>
-                {
-                    new DataItem(unstructuredGridCellCoverage, DataItemRole.Output),
-                    new DataItem(timeDependentCellCoverage, DataItemRole.Output),
-                    new DataItem(document, DataItemRole.Output),
-                    new DataItem(document2, DataItemRole.Output),
-                    new DataItem(featureCoverage, DataItemRole.Output)
-                };
+            {
+                new DataItem(unstructuredGridCellCoverage, DataItemRole.Output),
+                new DataItem(timeDependentCellCoverage, DataItemRole.Output),
+                new DataItem(document, DataItemRole.Output),
+                new DataItem(document2, DataItemRole.Output),
+                new DataItem(featureCoverage, DataItemRole.Output)
+            };
 
             model.DataItems.AddRange(outputItems);
 
             unstructuredGridCellCoverage.Components[0].DefaultValue = -999.0;
             unstructuredGridCellCoverage.SetValues(Enumerable.Range(0, 100).Select(i => i * 1.0));
 
-            timeDependentCellCoverage.Time.AddValues(new []{DateTime.Now, DateTime.Now.AddDays(2)});
+            timeDependentCellCoverage.Time.AddValues(new[] {DateTime.Now, DateTime.Now.AddDays(2)});
             timeDependentCellCoverage.SetValues(Enumerable.Range(0, 200).Select(i => i * 1.0));
 
             Assert.AreEqual(100, unstructuredGridCellCoverage.GetValues().Count);
@@ -413,7 +432,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.AreEqual(100, timeDependentCellCoverage.Arguments[1].Values.Count);
         }
 
-        private static UnstructuredGridCellCoverage CreateUnstructuredGridCellCoverage(UnstructuredGrid grid, bool isTimeDependent)
+        private static UnstructuredGridCellCoverage CreateUnstructuredGridCellCoverage(UnstructuredGrid grid,
+            bool isTimeDependent)
         {
             var coverage = new UnstructuredGridCellCoverage(grid, isTimeDependent);
             coverage.Components[0].NoDataValue = -999.0;
@@ -456,7 +476,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             TestDelegate call = () => model.ImportHydroData(null);
 
             var exception = Assert.Throws<ArgumentNullException>(call);
-            Assert.AreEqual("No hydrodynamics data was specified."+Environment.NewLine +
+            Assert.AreEqual("No hydrodynamics data was specified." + Environment.NewLine +
                             "Parameter name: data", exception.Message);
 
             Assert.IsFalse(model.HasHydroDataImported);
@@ -465,14 +485,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         public void Import_HydroData_OverExistingModel_Overwrites_Timers()
         {
-            var waqModel = new WaterQualityModel{ Name = "Model 1"};
+            var waqModel = new WaterQualityModel {Name = "Model 1"};
             var testFilePath = TestHelper.GetTestFilePath("IO\\attribute files\\random_3x5.atr");
             var fileData = new HydFileData()
             {
                 Path = new FileInfo(testFilePath),
                 AttributesRelativePath = "random_3x5.atr",
                 NumberOfDelwaqSegmentsPerHydrodynamicLayer = 3,
-                NumberOfHydrodynamicLayersPerWaqSegmentLayer = new int[]{0, 1, 2, 3, 4},
+                NumberOfHydrodynamicLayersPerWaqSegmentLayer = new int[] {0, 1, 2, 3, 4},
                 HydrodynamicLayerThicknesses = new double[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
                 NumberOfWaqSegmentLayers = 5,
                 ConversionStartTime = waqModel.StartTime.AddYears(10),
@@ -514,12 +534,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.IsTrue(model.HasHydroDataImported);
             Assert.IsTrue(model.HasEverImportedHydroData);
         }
-        
+
         [Test]
         public void Import_DifferentModelTypeOnSecondImport_ChangeObservationPointAndLoadCoordinateZToNaN()
         {
             // setup
-            var hydroData = new TestHydroDataStub { LayerType = LayerType.Sigma };
+            var hydroData = new TestHydroDataStub {LayerType = LayerType.Sigma};
 
             var model = new WaterQualityModel();
             model.ImportHydroData(hydroData);
@@ -548,7 +568,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 }
             });
 
-            hydroData = new TestHydroDataStub { LayerType = LayerType.ZLayer };
+            hydroData = new TestHydroDataStub {LayerType = LayerType.ZLayer};
 
             // call
             model.ImportHydroData(hydroData);
@@ -558,6 +578,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 Assert.AreEqual(0, load.Z);
             }
+
             foreach (var observationPoint in model.ObservationPoints)
             {
                 Assert.AreEqual(0, observationPoint.Z);
@@ -626,7 +647,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             // the salinity function is still a constant, because the user specified as such
             var replacedFunction = FindFunctionInModel(functionName, model);
             Assert.IsNotNull(replacedFunction);
-            Assert.AreEqual(constantFunction, replacedFunction); // the function should not be replaced, because it is the same
+            Assert.AreEqual(constantFunction,
+                replacedFunction); // the function should not be replaced, because it is the same
             Assert.IsTrue(replacedFunction.IsConst());
         }
 
@@ -672,7 +694,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         /// <param name="functionName">Salinity, Tau or Temp</param>
         /// <param name="dataFile">The string to specify. lalala.data or maybe just <see cref="string.Empty"/>.</param>
         /// <returns>A new hyd file importer stub</returns>
-        private static TestHydroDataStub CreateHydFileStubWithRelativePathOnFunction(string functionName, string dataFile)
+        private static TestHydroDataStub CreateHydFileStubWithRelativePathOnFunction(string functionName,
+            string dataFile)
         {
             TestHydroDataStub hydroData;
 
@@ -699,6 +722,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 default:
                     throw new InvalidOperationException("The test case is not supported by the model. " + functionName);
             }
+
             return hydroData;
         }
 
@@ -713,10 +737,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var model = new WaterQualityModel();
             Assert.IsNull(model.HydroData);
 
-            var function = WaterQualityFunctionFactory.CreateConst("Definitely not in hydro data", 1.2, "No, really!", "g", "is it?");
+            var function =
+                WaterQualityFunctionFactory.CreateConst("Definitely not in hydro data", 1.2, "No, really!", "g",
+                    "is it?");
 
             // call
-            var hasData = fromFunction ? model.HasDataInHydroDynamics(function) : model.HasDataInHydroDynamics(function.Name);
+            var hasData = fromFunction
+                ? model.HasDataInHydroDynamics(function)
+                : model.HasDataInHydroDynamics(function.Name);
 
             // assert
             Assert.IsFalse(hasData);
@@ -731,10 +759,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var model = new WaterQualityModel();
             SetUpModelToHaveFunctionInHydroDataWithName(model, "Test", "<some filepath>");
 
-            var function = WaterQualityFunctionFactory.CreateConst("Definitely not in hydro data", 1.2, "No, really!", "g", "is it?");
+            var function =
+                WaterQualityFunctionFactory.CreateConst("Definitely not in hydro data", 1.2, "No, really!", "g",
+                    "is it?");
 
             // call
-            var hasData = fromFunction ? model.HasDataInHydroDynamics(function) : model.HasDataInHydroDynamics(function.Name);
+            var hasData = fromFunction
+                ? model.HasDataInHydroDynamics(function)
+                : model.HasDataInHydroDynamics(function.Name);
 
             // assert
             Assert.IsFalse(hasData);
@@ -754,7 +786,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var function = WaterQualityFunctionFactory.CreateConst(functionName, 1.2, "No, really!", "g", "is it?");
 
             // call
-            var hasData = fromFunction ? model.HasDataInHydroDynamics(function) : model.HasDataInHydroDynamics(function.Name);
+            var hasData = fromFunction
+                ? model.HasDataInHydroDynamics(function)
+                : model.HasDataInHydroDynamics(function.Name);
 
             // assert
             Assert.IsTrue(hasData);
@@ -767,7 +801,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var model = new WaterQualityModel();
             SetUpModelToHaveFunctionInHydroDataWithName(model, "Test", "<some filepath>");
 
-            var function = WaterQualityFunctionFactory.CreateConst("Definitely not in hydro data", 1.2, "No, really!", "g", "is it?");
+            var function =
+                WaterQualityFunctionFactory.CreateConst("Definitely not in hydro data", 1.2, "No, really!", "g",
+                    "is it?");
 
             // call
             TestDelegate testCall = () => model.GetFilePathFromHydroDynamics(function);
@@ -783,7 +819,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var model = new WaterQualityModel();
             Assert.IsNull(model.HydroData);
 
-            var function = WaterQualityFunctionFactory.CreateConst("Definitely not in hydro data", 1.2, "No, really!", "g", "is it?");
+            var function =
+                WaterQualityFunctionFactory.CreateConst("Definitely not in hydro data", 1.2, "No, really!", "g",
+                    "is it?");
 
             // call
             TestDelegate testCall = () => model.GetFilePathFromHydroDynamics(function);
@@ -822,7 +860,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             // assert
             var exception = Assert.Throws<InvalidOperationException>(call);
-            Assert.AreEqual("Cannot determine grid cell index for location as no hydro dynamic data was imported.", exception.Message);
+            Assert.AreEqual("Cannot determine grid cell index for location as no hydro dynamic data was imported.",
+                exception.Message);
         }
 
         [Test]
@@ -867,7 +906,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             // assert
             var exception = Assert.Throws<InvalidOperationException>(call);
-            Assert.AreEqual("Cannot determine if location is inside active cell as no hydro dynamic data was imported.", exception.Message);
+            Assert.AreEqual("Cannot determine if location is inside active cell as no hydro dynamic data was imported.",
+                exception.Message);
         }
 
         [Test]
@@ -926,10 +966,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Assert.IsTrue(model.IsInsideActiveCell(expectedActiveLocation),
                     string.Format("Expected coordinate {0} to be active, but was not.", expectedActiveLocation));
             }
+
             foreach (var expectedInactiveLocation in expectedInactiveLocations)
             {
                 Assert.IsFalse(model.IsInsideActiveCell(expectedInactiveLocation),
-                    string.Format("Expected coordinate {0} to be inactive, but actually was active.", expectedInactiveLocation));
+                    string.Format("Expected coordinate {0} to be inactive, but actually was active.",
+                        expectedInactiveLocation));
             }
         }
 
@@ -1002,13 +1044,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.IsNotNull(model.CoordinateSystem);
             Assert.AreEqual(system, model.Grid.CoordinateSystem);
             Assert.AreEqual(system, model.Bathymetry.CoordinateSystem);
-            Assert.AreEqual(system, ((ICoverage)model.Dispersion[0]).CoordinateSystem);
+            Assert.AreEqual(system, ((ICoverage) model.Dispersion[0]).CoordinateSystem);
 
-            Assert.AreEqual(system, ((ICoverage)model.InitialConditions[0]).CoordinateSystem);
+            Assert.AreEqual(system, ((ICoverage) model.InitialConditions[0]).CoordinateSystem);
 
             Assert.AreEqual(system, model.ObservationAreas.CoordinateSystem);
 
-            Assert.AreEqual(system, ((ICoverage)model.ProcessCoefficients[0]).CoordinateSystem);
+            Assert.AreEqual(system, ((ICoverage) model.ProcessCoefficients[0]).CoordinateSystem);
         }
 
         [Test] // DELFT3DFM-464: Waq output always loaded as 'OutOfDate'
@@ -1031,7 +1073,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             model.CoordinateSystem = system;
 
             Assert.AreEqual(system, model.Grid.CoordinateSystem);
-            Assert.AreEqual(1, eventCounter, "Changing the CoordinateSystem to the same as existing should not fire a PropertyChangedEvent on the Grid");
+            Assert.AreEqual(1, eventCounter,
+                "Changing the CoordinateSystem to the same as existing should not fire a PropertyChangedEvent on the Grid");
         }
 
         [Test]
@@ -1074,7 +1117,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             processor.VerifyAllExpectations();
         }
 
-        private void SetUpModelToHaveFunctionInHydroDataWithName(WaterQualityModel model, string functionName, string someValidFilepath)
+        private void SetUpModelToHaveFunctionInHydroDataWithName(WaterQualityModel model, string functionName,
+            string someValidFilepath)
         {
             var hydroData = new TestHydroDataStub
             {
@@ -1085,6 +1129,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     {
                         return someValidFilepath;
                     }
+
                     throw new NotImplementedException();
                 }
             };
@@ -1094,34 +1139,38 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         private void SetFakeOutputOnModel(WaterQualityModel model)
         {
             // Fake the output not being empty or out of sync
-            TypeUtils.SetPrivatePropertyValue(model, TypeUtils.GetMemberName<WaterQualityModel>(m => m.OutputIsEmpty), false);
+            TypeUtils.SetPrivatePropertyValue(model, TypeUtils.GetMemberName<WaterQualityModel>(m => m.OutputIsEmpty),
+                false);
         }
 
         #region Timers synchronization
 
         [Test]
         public void GivenWAQModelWhenSetEventedListObservationPointsOnLoadThenCollectionChangedEventShouldStillFire()
-		{   var model = new WaterQualityModel();
-            TypeUtils.SetPrivatePropertyValue(model, "ObservationPoints", new EventedList<WaterQualityObservationPoint>());
-            
+        {
+            var model = new WaterQualityModel();
+            TypeUtils.SetPrivatePropertyValue(model, "ObservationPoints",
+                new EventedList<WaterQualityObservationPoint>());
+
             Assert.That(model.ObservationPoints.Count, Is.EqualTo(0));
             Assert.That(model.ObservationVariableOutputs.Count, Is.EqualTo(0));
             model.ObservationPoints.Add(new WaterQualityObservationPoint());
             Assert.That(model.ObservationPoints.Count, Is.EqualTo(1));
             Assert.That(model.ObservationVariableOutputs.Count, Is.EqualTo(1));
-		}
+        }
+
         [Test]
         public void GivenWAQModelWhenSetEventedListLoadsOnLoadThenCollectionChangedEventShouldStillFire()
-		{   
+        {
             var model = new WaterQualityModel();
             TypeUtils.SetPrivatePropertyValue(model, "Loads", new EventedList<WaterQualityLoad>());
-            
+
             Assert.That(model.Loads.Count, Is.EqualTo(0));
             Assert.That(model.Loads.Count, Is.EqualTo(0));
             model.Loads.Add(new WaterQualityLoad());
             Assert.That(model.Loads.Count, Is.EqualTo(1));
             //Assert.That(model.LoadsDataManager.Count, Is.EqualTo(1));
-		}
+        }
 
         [Test]
         [TestCase(false, false)]
@@ -1132,11 +1181,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [TestCase(false, true)]
         [TestCase(true, false)]
         [TestCase(true, true)]
-        public void Given_WAQModel_When_SimulationTimeChanges_OutputTimers_AreSynchronized(bool syncStart, bool syncStop)
+        public void Given_WAQModel_When_SimulationTimeChanges_OutputTimers_AreSynchronized(bool syncStart,
+            bool syncStop)
         {
             var model = new WaterQualityModel();
             var settings = model.ModelSettings;
-            
+
             CheckTimersAreEqual(model, settings);
 
             model.StartTime = model.StartTime.AddYears(syncStart ? 1 : 0);
@@ -1177,14 +1227,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         [TestCase(false)]
         [TestCase(true)]
-        public void Given_WAQMode_When_SimulationStartTimeChanges_And_OutputTimerSynchronizes_LogMessageIsGiven(bool synchronize)
+        public void Given_WAQMode_When_SimulationStartTimeChanges_And_OutputTimerSynchronizes_LogMessageIsGiven(
+            bool synchronize)
         {
             var model = new WaterQualityModel();
 
             var newDate = model.StartTime.AddYears(synchronize ? 1 : 0);
             var expectedLogMessage = string.Format(
-                Resources.WaterQualityModel_LogSynchronizedTimer_Output_timers___0___have_been_synchronized_to_match_the_Simulation__0____1___, 
-                "Start Time", 
+                Resources
+                    .WaterQualityModel_LogSynchronizedTimer_Output_timers___0___have_been_synchronized_to_match_the_Simulation__0____1___,
+                "Start Time",
                 newDate);
 
             Action action = () => model.StartTime = newDate;
@@ -1194,13 +1246,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         [TestCase(false)]
         [TestCase(true)]
-        public void Given_WAQMode_When_SimulationStopTimeChanges_And_OutputTimerSynchronizes_LogMessageIsGiven(bool synchronize)
+        public void Given_WAQMode_When_SimulationStopTimeChanges_And_OutputTimerSynchronizes_LogMessageIsGiven(
+            bool synchronize)
         {
             var model = new WaterQualityModel();
 
             var newDate = model.StopTime.AddYears(synchronize ? 1 : 0);
             var expectedLogMessage = string.Format(
-                Resources.WaterQualityModel_LogSynchronizedTimer_Output_timers___0___have_been_synchronized_to_match_the_Simulation__0____1___,
+                Resources
+                    .WaterQualityModel_LogSynchronizedTimer_Output_timers___0___have_been_synchronized_to_match_the_Simulation__0____1___,
                 "Stop Time",
                 newDate);
 
@@ -1211,7 +1265,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         [TestCase(false)]
         [TestCase(true)]
-        public void Given_WAQMode_When_SimulationTimeStepChanges_And_OutputTimerSynchronizes_LogMessageIsNotGiven(bool synchronize)
+        public void Given_WAQMode_When_SimulationTimeStepChanges_And_OutputTimerSynchronizes_LogMessageIsNotGiven(
+            bool synchronize)
         {
             var model = new WaterQualityModel();
             var newDate = model.TimeStep.Add(new TimeSpan(synchronize ? 1000 : 0));
@@ -1369,7 +1424,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             using (var app = new DeltaShellApplication())
             {
                 var waqPlugin = new WaterQualityModelApplicationPlugin();
-                
+
                 app.Plugins.Add(waqPlugin);
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -1384,7 +1439,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 // Initialize Project by saving it.
                 var tempDirectory = FileUtils.CreateTempDirectory();
                 app.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
-                
+
                 //Initialize WAQ Model and add it to the project.
                 var model = new WaterQualityModel();
                 app.Project.RootFolder.Items.Add(model);
@@ -1429,52 +1484,98 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         public void Test_When_HydFile_IsImported_OverExistingHydFile_CoordinateSystem_IsUpdated_ToNewHydFile()
         {
-            using (var app = new DeltaShellApplication())
-            {
-                var waqPlugin = new WaterQualityModelApplicationPlugin();
-                //Initialize WAQ Model
-                var model = new WaterQualityModel();
+            var epsgAmersfoort = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
 
-                app.Plugins.Add(waqPlugin);
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetCdfApplicationPlugin());
-                app.Plugins.Add(new ScriptingApplicationPlugin());
-                app.Plugins.Add(new ToolboxApplicationPlugin());
-                app.Run();
+            //Initialize WAQ Model
+            var model = new WaterQualityModel();
+            Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
 
-                //Import hyd file
-                string hydPath =
-                    TestHelper.GetTestFilePath(
-                        @"WaterQualityDataFiles\ImportHydFileForCoordSystem\westernscheldt01.hyd");
-                var importer = new HydFileImporter();
-                var importedItem = importer.ImportItem(hydPath, model);
-                Assert.IsNotNull(importedItem);
+            //Import hyd file
+            var hydPath =
+                TestHelper.GetTestFilePath(
+                    @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
+            var importer = new HydFileImporter();
+            var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
+            Assert.IsNotNull(importedItem);
 
-                //Assert that Coordinate System is now set to Amersfoort/RD
-                Assert.AreEqual(model.CoordinateSystem.Name, "Amersfoort / RD New");
+            //Assert that Coordinate System is now set to Amersfoort/RD
+            Assert.AreEqual(model.CoordinateSystem, epsgAmersfoort);
 
-                //Change Coordinate System to something random and assert it is set to something different
-                ICoordinateSystem newCoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(25000);
-                model.CoordinateSystem = newCoordinateSystem;
-                Assert.AreNotEqual(model.CoordinateSystem.Name, "Amersfoort / RD New");
+            //Change Coordinate System to something random and assert it is set to something different
+            var newCoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(25000);
+            model.CoordinateSystem = newCoordinateSystem;
+            Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
 
-                var tempDirectory = FileUtils.CreateTempDirectory();
-                app.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
+            //Import hyd file
+            importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
+            Assert.IsNotNull(importedItem);
 
-                app.Project.RootFolder.Items.Add(model);
-
-                //Import hyd file
-                importedItem = importer.ImportItem(hydPath, model);
-                Assert.IsNotNull(importedItem);
-
-                //Assert that Coordinate System is now again set to Amersfoort/RD
-                Assert.AreEqual(model.CoordinateSystem.Name, "Amersfoort / RD New");
-            }
+            //Assert that Coordinate System is now again set to Amersfoort/RD
+            Assert.AreEqual(epsgAmersfoort, model.CoordinateSystem);
         }
 
-        #endregion
+        [Test]
+        public void
+            Test_When_HydFile_IsImported_OverExisting_ButDifferent_HydFile_CoordinateSystem_IsUpdated_ToNewHydFile()
+        {
+            var epsgAmersfoort = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
+            var epsgZ20Par = new OgrCoordinateSystemFactory().CreateFromEPSG(32210);
+
+            //Initialize WAQ Model
+            var model = new WaterQualityModel();
+            Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
+
+            //Import hyd file
+            var hydPath =
+                TestHelper.GetTestFilePath(
+                    @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
+            var importer = new HydFileImporter();
+            var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
+            Assert.IsNotNull(importedItem);
+
+            //Assert that Coordinate System is now set to Amersfoort/RD
+            Assert.AreEqual(model.CoordinateSystem, epsgAmersfoort);
+
+            //Import a hyd file with a different coordinate system
+            var differentHydPath = TestHelper.GetTestFilePath(
+                @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DifferentCoordSystem\z20_par.hyd");
+            importedItem = importer.ImportItem(differentHydPath, model) as WaterQualityModel;
+            Assert.IsNotNull(importedItem);
+
+            //Assert that Coordinate System is set to te new coordinate system
+            Assert.AreEqual(model.CoordinateSystem, epsgZ20Par);
+        }
+
+        [Test]
+        public void
+            Test_When_HydFile_IsImported_OverExisting_HydFile_ButWithDifferent_CoordinateSystem_InfoMessageIsThrown()
+        {
+            var epsgAmersfoort = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
+            var epsgZ20Par = new OgrCoordinateSystemFactory().CreateFromEPSG(32210);
+
+            //Initialize WAQ Model
+            var model = new WaterQualityModel();
+            Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
+
+            //Import hyd file
+            var hydPath =
+                TestHelper.GetTestFilePath(
+                    @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
+            var importer = new HydFileImporter();
+            var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
+            Assert.IsNotNull(importedItem);
+
+            //Assert that Coordinate System is now set to Amersfoort/RD
+            Assert.AreEqual(model.CoordinateSystem, epsgAmersfoort);
+
+            //Import a hyd file with a different coordinate system
+            var differentHydPath = TestHelper.GetTestFilePath(
+                @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DifferentCoordSystem\z20_par.hyd");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(differentHydPath, model),"The coordinate system of the model has been set to");
+        }
     }
 }
+
+    #endregion
+   
+

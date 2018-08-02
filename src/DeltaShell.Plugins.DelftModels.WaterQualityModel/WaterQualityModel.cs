@@ -711,6 +711,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 if (existingGridCoordinateSystemString == newCoordinateSystemString) return;
 
                 Grid.CoordinateSystem = value;
+                Log.Info(string.Format(Resources.WaterQualityModel_CoordinateSystem_The_coordinate_system_of_the_model_has_been_set_to__0_, CoordinateSystem));
                 OnInputPropertyChanged(this, new PropertyChangedEventArgs("CoordinateSystem"));
             }
         }
@@ -753,29 +754,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 throw new ArgumentNullException("data", "No hydrodynamics data was specified.");
             }
 
+            //As per issue D3DFMIQ-318, we should override the coordinate system with the imported one. 
+            CoordinateSystem = data.Grid?.CoordinateSystem;
             if (data.Equals(HydroData))
             {
                 OverWriteModelTimersWithImportTimers(skipImportTimers);
                 return;
-            } 
-
+            }
+            
             HasHydroDataImported = false;
 
             enableMarkOutputOutOfSync = markOutputOutOfSync;
 
             var schematizationRemainsUnchanged = data.HasSameSchematization(HydroData);
-            if (data.Grid?.CoordinateSystem != null
-                && data.Grid.CoordinateSystem != overriddenCoordinateSystem)
-            {
-                overriddenCoordinateSystem = data.Grid.CoordinateSystem;
-            }
-            
+
+
             HydroData = data;
 
             BeginEdit(new DefaultEditAction("Importing hydrodynamics data"));
 
             importingHydroData = true;
-
+            
             try
             {
                 SetImportProgress("Importing grid");
@@ -792,13 +791,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
                 //As of issue D3DFMIQ-329, the timers should be overriden when importing the hyd file again.
                 OverWriteModelTimersWithImportTimers(skipImportTimers);
-
-
-                if (!HasEverImportedHydroData || importCoordinateSystem)
-                {
-                    CoordinateSystem = HydroData.Grid == null ? null : HydroData.Grid.CoordinateSystem;
-                }
-
+                
                 SetImportProgress("Importing file paths");
                 AreasRelativeFilePath = HydroData.AreasRelativePath;
                 VolumesRelativeFilePath = HydroData.VolumesRelativePath;
