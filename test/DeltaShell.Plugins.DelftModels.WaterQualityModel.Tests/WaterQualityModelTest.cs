@@ -1551,8 +1551,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Test_When_HydFile_IsImported_OverExisting_HydFile_ButWithDifferent_CoordinateSystem_InfoMessageIsThrown()
         {
             var epsgAmersfoort = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
-            var epsgZ20Par = new OgrCoordinateSystemFactory().CreateFromEPSG(32210);
-
+            
             //Initialize WAQ Model
             var model = new WaterQualityModel();
             Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
@@ -1572,6 +1571,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var differentHydPath = TestHelper.GetTestFilePath(
                 @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DifferentCoordSystem\z20_par.hyd");
             TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(differentHydPath, model),"The coordinate system of the model has been set to");
+        }
+
+        [Test]
+        public void
+            Test_When_HydFile_IsImported_OverExisting_HydFile_WithSame_CoordinateSystem_NoInfoMessageIsThrown()
+        {
+            var epsgAmersfoort = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
+
+            //Initialize WAQ Model
+            var model = new WaterQualityModel();
+            Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
+
+            //Import hyd file
+            var hydPath =
+                TestHelper.GetTestFilePath(
+                    @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
+            var importer = new HydFileImporter();
+            var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
+            Assert.IsNotNull(importedItem);
+
+            //Assert that Coordinate System is now set to Amersfoort/RD
+            Assert.AreEqual(model.CoordinateSystem, epsgAmersfoort);
+
+            //Import a hyd file with the same coordinate system, assert that there is only 1 message thrown which is from the output timers.
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(hydPath, model), "Output timers");
+            TestHelper.AssertLogMessagesCount(() => importer.ImportItem(hydPath, model), 1);
         }
     }
 }
