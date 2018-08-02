@@ -73,6 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
                 if (dataItemsIndex < 0 || outputSettingsIndex < 0) return;
 
+                // state and propertyNames will always be the same length
                 var stateDataItems = state[dataItemsIndex] as IEnumerable<IDataItem>;
                 var stateOutputSettings = state[outputSettingsIndex] as WaterFlowModel1DOutputSettingData;
 

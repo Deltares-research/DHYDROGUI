@@ -102,8 +102,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             var engineParameters = new List<EngineParameter>(); // empty list
 
-            TypeUtils.CallPrivateStaticMethod(typeof(WaterFlowModel1DDataAccessListener),
-                "SyncAggregationOptionsForExistingOutputCoverages", dataItems, engineParameters);
+            Assert.DoesNotThrow(() => 
+                TypeUtils.CallPrivateStaticMethod(typeof(WaterFlowModel1DDataAccessListener),
+                    "SyncAggregationOptionsForExistingOutputCoverages", dataItems, engineParameters));
         }
 
         [Test]
@@ -119,8 +120,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 new EngineParameter(QuantityType.PumpDischarge, ElementSet.Pumps, DataItemRole.Output, QuantityType.PumpDischarge.ToString(), new Unit()) // simulate existing engine parameter
             };
 
-            TypeUtils.CallPrivateStaticMethod(typeof(WaterFlowModel1DDataAccessListener),
-                "SyncAggregationOptionsForExistingOutputCoverages", dataItems, engineParameters);
+            Assert.DoesNotThrow(() =>
+                TypeUtils.CallPrivateStaticMethod(typeof(WaterFlowModel1DDataAccessListener),
+                    "SyncAggregationOptionsForExistingOutputCoverages", dataItems, engineParameters));
         }
 
         [Test]
@@ -141,8 +143,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 new EngineParameter(QuantityType.PumpDischarge, ElementSet.Pumps, DataItemRole.Output, QuantityType.PumpDischarge.ToString(), new Unit()) // simulate existing engine parameter
             };
 
-            TypeUtils.CallPrivateStaticMethod(typeof(WaterFlowModel1DDataAccessListener),
-                "SyncAggregationOptionsForExistingOutputCoverages", dataItems, engineParameters);
+            Assert.DoesNotThrow(() =>
+                TypeUtils.CallPrivateStaticMethod(typeof(WaterFlowModel1DDataAccessListener),
+                    "SyncAggregationOptionsForExistingOutputCoverages", dataItems, engineParameters));
         }
 
     }
