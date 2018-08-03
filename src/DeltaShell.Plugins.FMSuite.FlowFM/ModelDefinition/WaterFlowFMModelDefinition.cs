@@ -73,10 +73,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             get
             {
-                var modelPropertyGroups = ModelPropertySchema.GuiPropertyGroups
-                    .Union(MorphologyModelPropertySchema.GuiPropertyGroups);
-
-                return modelPropertyGroups
+                var modelPropertyGroups =
+                    ModelPropertySchema?.GuiPropertyGroups?
+                        .Union(MorphologyModelPropertySchema.GuiPropertyGroups);
+                    
+                return modelPropertyGroups?
                     .GroupBy(kvp => kvp.Key)
                     .Select(grp => grp.First())
                     .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);

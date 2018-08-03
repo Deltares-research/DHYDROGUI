@@ -44,6 +44,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return new ValidationReport(Resources.WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_Morphology___Sediment_Beta_warning, issues);
         }
 
+        /// <summary>
+        /// Validates if there is at least one Sediment Fraction in the model.
+        /// When Morphology is used in the model, one Sediment Fraction is required.
+        /// </summary>
+        /// <param name="model">The WaterFlowFM model.</param>
+        /// <returns></returns>
         private static IEnumerable<ValidationIssue> ValidateAtLeastOneSedimentFractionInModel(WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
