@@ -161,6 +161,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewBranchScribble.SetState(addNewBranchScribbleCommand, showNetworkTools);
             ButtonInsertNewNode.SetState(insertNewNodeCommand, showNetworkTools);
 
+            // sewer network tools
+            ButtonAddNewPipe.SetState(addNewPipeCommand, showNetworkTools);
+            ButtonInsertManhole.SetState(splitPipeCommand, showNetworkTools);
+
             // crossSection tools
             ButtonAddNewCrossSectionYZ.SetState(addNewCrossSectionYZCommand, showNetworkTools);
             ButtonAddNewCrossSectionZW.SetState(addNewCrossSectionZWCommand, showNetworkTools);
