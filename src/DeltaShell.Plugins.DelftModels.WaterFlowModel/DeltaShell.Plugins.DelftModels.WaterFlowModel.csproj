@@ -248,6 +248,7 @@
     <Compile Include="DataObjects\WaterFlowModel1DLateralSourceData.cs" />
     <Compile Include="WaterFlowModel1D30LegacyLoader.cs" />
     <Compile Include="WaterFlowModel1D350LegacyLoader.cs" />
+    <Compile Include="WaterFlowModel1D352LegacyLoader.cs" />
     <Compile Include="WaterFlowModel1DDataAccessListener.cs" />
     <Compile Include="WaterFlowModel1DDataSet.cs" />
     <Compile Include="WaterFlowModel1DGridDataValueConverter.cs" />
@@ -371,6 +372,7 @@
     <EmbeddedResource Include="FlowWaterLevelTable.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="WaterFlowModel1D.3.5.2.hbm.xml" />
     <EmbeddedResource Include="WaterFlowModel1D.3.5.0.hbm.xml" />
     <EmbeddedResource Include="Roughness\RoughnessNetworkCoverage.3.1.hbm.xml" />
     <EmbeddedResource Include="Roughness\ReverseRoughnessSection.hbm.xml">
@@ -424,7 +426,6 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    
     <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.3.0.40301\build\net40\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.3.0.40301\build\net40\DeltaShell.Framework.targets'))" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

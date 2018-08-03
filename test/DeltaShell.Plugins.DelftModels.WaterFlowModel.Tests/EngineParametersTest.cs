@@ -134,16 +134,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [Test]
         public void AllowedOutputForLateralSource()
         {
-            var engineParameters = EngineParameters.EngineMapping().Where(ep => (ep.Role & DataItemRole.Input) == DataItemRole.Input);
+            var engineParameters = EngineParameters.EngineMapping()
+                .Where(ep => (ep.Role & DataItemRole.Output) == DataItemRole.Output)
+                .ToList();
+
             var lateralSource = new LateralSource();
 
-            Assert.AreEqual(1, engineParameters.Count(ep => ((ep.ElementSet == ElementSet.Laterals) 
+            Assert.AreEqual(4, engineParameters.Count(ep => ((ep.ElementSet == ElementSet.Laterals) 
                 && (EngineParameters.AllowedAsQuantityTypeForFeature(lateralSource, ep)))));
 
-            Assert.IsTrue(
-                EngineParameters.AllowedAsQuantityTypeForFeature(lateralSource,
-                                                           engineParameters.FirstOrDefault(ep => ep.QuantityType == QuantityType.Discharge &&
-                                                                                                 ep.ElementSet == ElementSet.Laterals)));
+            Assert.IsTrue(EngineParameters.AllowedAsQuantityTypeForFeature(lateralSource, engineParameters
+                .FirstOrDefault(ep => ep.QuantityType == QuantityType.ActualDischarge && ep.ElementSet == ElementSet.Laterals)));
+
+            Assert.IsTrue(EngineParameters.AllowedAsQuantityTypeForFeature(lateralSource, engineParameters
+                .FirstOrDefault(ep => ep.QuantityType == QuantityType.DefinedDischarge && ep.ElementSet == ElementSet.Laterals)));
+
+            Assert.IsTrue(EngineParameters.AllowedAsQuantityTypeForFeature(lateralSource, engineParameters
+                .FirstOrDefault(ep => ep.QuantityType == QuantityType.LateralDifference && ep.ElementSet == ElementSet.Laterals)));
+
+            Assert.IsTrue(EngineParameters.AllowedAsQuantityTypeForFeature(lateralSource, engineParameters
+                .FirstOrDefault(ep => ep.QuantityType == QuantityType.WaterLevel && ep.ElementSet == ElementSet.Laterals)));
         }
 
         [Test]

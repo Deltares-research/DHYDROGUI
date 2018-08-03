@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Utils.Collections;
@@ -7,6 +9,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 {
     public class RtcDataAccessListener : DataAccessListenerBase
     {
+        private const string PreviousDischargeAtLateralDataItemTag = "Discharge (l)";
+        private const string ControlGroupsPropertyName = "ControlGroups";
+
         private bool firstRtcModel = true;
 
         public override void OnPreLoad(object entity, object[] loadedState, string[] propertyNames)
@@ -35,10 +40,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         public override void OnPostLoad(object entity, object[] state, string[] propertyNames)
         {
             var rtcModel = entity as IRealTimeControlModel;
-            if (rtcModel != null)
+            if (rtcModel == null) return;
+
+            var propertyNamesList = propertyNames.ToList();
+
+            var controlGroupIndex = propertyNamesList.IndexOf(ControlGroupsPropertyName);
+            if (controlGroupIndex < 0) return;
+
+            // state and propertyNames will always be the same length
+            var stateControlGroups = state[controlGroupIndex] as IEnumerable<ControlGroup>;
+            if (stateControlGroups == null) return;
+
+            foreach (var controlGroup in stateControlGroups)
             {
+                // SOBEK3-115: Existing projects can have ControlGroups with locations at the deprecated output parameter 'Discharge (l)'
+                controlGroup.Inputs.Where(i => i.ParameterName == PreviousDischargeAtLateralDataItemTag).ForEach(i => i.Reset());
+                controlGroup.Outputs.Where(o => o.ParameterName == PreviousDischargeAtLateralDataItemTag).ForEach(o => o.Reset());
+                    
                 // SOBEK3-562: Existing projects can have ControlGroups with locations at inputs/outputs but no underlying dataitem links
-                rtcModel.ControlGroups.ForEach(rtcModel.ResetOrphanedControlGroupInputsAndOutputs);
+                rtcModel.ResetOrphanedControlGroupInputsAndOutputs(controlGroup);
             }
         }
 

@@ -753,29 +753,51 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         # endregion
         
         # region Lateral sources
-
+        
         [Category(LateralSourcesCategoryName)]
-        [Description("Discharge at lateral source.")]
-        [DisplayName(WaterFlowModelParameterNames.LateralDischarge)]
+        [Description("Actual lateral discharge.")]
+        [DisplayName(WaterFlowModelParameterNames.LateralActualDischarge)]
         [PropertyOrder(81)]
         [DefaultValue(typeof(AggregationOptions), "None")]
-        public AggregationOptions LateralSourceDischarge
+        public AggregationOptions LateralActualDischarge
         {
-            get { return data.OutputSettings.GetEngineParameter(QuantityType.Discharge, ElementSet.Laterals, DataItemRole.Output).AggregationOptions; }
-            set { data.OutputSettings.GetEngineParameter(QuantityType.Discharge, ElementSet.Laterals, DataItemRole.Output).AggregationOptions = value; }
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.ActualDischarge, ElementSet.Laterals, DataItemRole.Output).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.ActualDischarge, ElementSet.Laterals, DataItemRole.Output).AggregationOptions = value; }
+        }
+
+        [Category(LateralSourcesCategoryName)]
+        [Description("Defined lateral discharge.")]
+        [DisplayName(WaterFlowModelParameterNames.LateralDefinedDischarge)]
+        [PropertyOrder(82)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions LateralDefinedDischarge
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.DefinedDischarge, ElementSet.Laterals, DataItemRole.Output).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.DefinedDischarge, ElementSet.Laterals, DataItemRole.Output).AggregationOptions = value; }
+        }
+
+        [Category(LateralSourcesCategoryName)]
+        [Description("Lateral difference.")]
+        [DisplayName(WaterFlowModelParameterNames.LateralDifference)]
+        [PropertyOrder(83)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions LateralDifference
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.LateralDifference, ElementSet.Laterals, DataItemRole.Output).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.LateralDifference, ElementSet.Laterals, DataItemRole.Output).AggregationOptions = value; }
         }
 
         [Category(LateralSourcesCategoryName)]
         [Description("Water level at lateral source.")]
         [DisplayName(WaterFlowModelParameterNames.LateralWaterLevel)]
-        [PropertyOrder(82)]
+        [PropertyOrder(84)]
         [DefaultValue(typeof(AggregationOptions), "None")]
         public AggregationOptions LateralSourceWaterLevel
         {
             get { return data.OutputSettings.GetEngineParameter(QuantityType.WaterLevel, ElementSet.Laterals).AggregationOptions; }
             set { data.OutputSettings.GetEngineParameter(QuantityType.WaterLevel, ElementSet.Laterals).AggregationOptions = value; }
         }
-
+        
         # endregion
         
         [Category(WaqOutputCategoryName)]
