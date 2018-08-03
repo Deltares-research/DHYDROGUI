@@ -29,7 +29,7 @@ namespace DelftTools.Hydro.Structures
         {
             var hydroNetwork = network as HydroNetwork;
             if (hydroNetwork == null) return;
-
+ 
             // Setting default properties for pipe's cross section definition
             var defSewerProfile = hydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(d => d.Name.Equals(DefaultProfileDefinitionName));
             if (defSewerProfile == null)
@@ -39,6 +39,7 @@ namespace DelftTools.Hydro.Structures
                 ((CrossSectionStandardShapeRound) ((CrossSectionDefinitionStandard) defSewerProfile).Shape).Diameter = 0.4;
             }
             pipe.SewerProfileDefinition = DefaultSewerProfile;
+            pipe.Length = pipe.Geometry.Length;
 
             // Setting source and target compartment
             if (pipe.Source == null)
@@ -58,7 +59,6 @@ namespace DelftTools.Hydro.Structures
             // Setting default values for pipe properties
             pipe.LevelSource = -2.0;
             pipe.LevelTarget = -2.0;
-            pipe.Length = pipe.Geometry.Length;
             pipe.WaterType = SewerConnectionWaterType.Combined;
 
             lock (network.Branches)

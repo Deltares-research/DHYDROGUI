@@ -3,6 +3,8 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
@@ -62,6 +64,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var model = new WaterFlowFMModel();
             var directChildren = model.GetDirectChildren();
             Assert.NotNull(directChildren.FirstOrDefault(c => c == model.Network));
+        }
+
+        [Test]
+        public void AddingSewerConnectionToNetwork_ShouldGenerateTwoDiscretizationPoints()
+        {
+            var fmModel = new WaterFlowFMModel();
+            var network = fmModel.Network;
+            var discretization = fmModel.NetworkDiscretization;
+            var sewerConnection = new SewerConnection {Length = 100, Geometry = new LineString(new[]{ new Coordinate(0, 0), new Coordinate(0, 100) })};
+
+            network.Branches.Add(sewerConnection);
+
+            var discretizationLocations = discretization.Locations.Values;
+            Assert.AreEqual(2, discretizationLocations.Count(l => l.Branch.Equals(sewerConnection)));
+        }
+
+        [Test]
+        public void RemovingSewerConnectionFromNetwork_ShouldRemoveItsDiscretizationPoints()
+        {
+            var fmModel = new WaterFlowFMModel();
+            var network = fmModel.Network;
+            var discretization = fmModel.NetworkDiscretization;
+            var sewerConnection = new SewerConnection { Length = 100, Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) }) };
+            network.Branches.Add(sewerConnection);
+
+            network.Branches.Remove(sewerConnection);
+            Assert.AreEqual(0, discretization.Locations.Values.Count(l => l.Branch.Equals(sewerConnection)));
         }
     }
 }

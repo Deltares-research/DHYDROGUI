@@ -10,9 +10,11 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Csv.Importer;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
@@ -1212,5 +1214,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         }
 
         #endregion
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void WhenImporting2PipesAnd3ManholesFromGwswFiles_ThenCalculationPointsAreAddedToNetwork()
+        {
+            var originalDir = TestHelper.GetTestFilePath(@"gwswFiles\2Connection3Manholes");
+            var testDir = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(originalDir, testDir);
+
+            try
+            {
+                var gwswImporter = new GwswFileImporter
+                {
+                    FilesToImport =
+                    {
+                        Path.Combine(testDir, "Knooppunt.csv"),
+                        Path.Combine(testDir, "Verbinding.csv")
+                    }
+                };
+
+                var fmModel = new WaterFlowFMModel();
+                gwswImporter.ImportItem(null, fmModel);
+
+                var discretization = fmModel.NetworkDiscretization;
+                Assert.That(discretization.Locations.Values.Count, Is.EqualTo(4));
+
+                var coords = discretization.Geometry.Coordinates;
+                Assert.That(coords[0], Is.EqualTo(new Coordinate(10, 20, double.NaN)));
+                Assert.That(coords[1], Is.EqualTo(new Coordinate(30, 40, double.NaN)));
+                Assert.That(coords[2], Is.EqualTo(new Coordinate(30, 40, double.NaN)));
+                Assert.That(coords[3], Is.EqualTo(new Coordinate(23, 99, double.NaN)));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
+        }
     }
 }

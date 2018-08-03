@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
@@ -15,7 +14,6 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
 using DelftTools.Utils.Editing;
-using DeltaShell.Plugins.FMSuite.Common.Dependency;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
 using log4net;
