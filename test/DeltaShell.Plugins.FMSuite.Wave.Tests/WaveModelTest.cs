@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -283,6 +284,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             waveModel.OuterDomain.GridFileName = newName;
 
             Assert.AreEqual(WaveModel.WavmStoreDataItemTag + newName, dataItem.Tag);
+        }
+
+        [Test]
+        public void NewlyCreatedModelHasReferenceTimeSetToCurrentDate()
+        {
+            var now = DateTime.Now;
+            var model = new WaveModel();
+
+            Assert.AreEqual(now.ToString("yyyy-MM-dd"), model.ModelDefinition.ModelReferenceDateTime.ToString("yyyy-MM-dd"));
         }
     }
 

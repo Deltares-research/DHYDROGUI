@@ -89,9 +89,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
             {
                 var path = directoryInfo.FullName;
                 var propertiesDefinitionFile = Path.Combine(path, dwavePropertiesCsvFileName);
-                ModelSchema =
-                    new ModelSchemaCsvFile().ReadModelSchema<WaveModelPropertyDefinition>(propertiesDefinitionFile,
-                                                                                          "MdwGroup");
+                ModelSchema = new ModelSchemaCsvFile().ReadModelSchema<WaveModelPropertyDefinition>(propertiesDefinitionFile, "MdwGroup");
+
+                // override default reference date property value with current date
+                var referenceDatePropertyDefinition = ModelSchema.ModelDefinitionCategory[KnownWaveCategories.GeneralCategory]?.PropertyDefinitions
+                    .FirstOrDefault(p => p.FilePropertyName == KnownWaveProperties.ReferenceDate);
+                if (referenceDatePropertyDefinition != null)
+                {
+                    referenceDatePropertyDefinition.DefaultValueAsString = DateTime.Now.ToString("yyyy-MM-dd");
+                }
             }
             else
             {
