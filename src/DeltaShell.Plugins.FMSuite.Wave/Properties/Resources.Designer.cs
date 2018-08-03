@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The time step can not be bigger than the time interval..
+        ///   Looks up a localized string similar to The time step can not be greater than the time interval..
         /// </summary>
         public static string WavePropertiesValidator_ValidateThat_TimeStep_Is_Not_Bigger_Than_TimeScale {
             get {
@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The time step should be a integer..
+        ///   Looks up a localized string similar to The time step should be a whole number..
         /// </summary>
         public static string WavePropertiesValidator_ValidateTimeStep {
             get {
@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The time interval should be a integer..
+        ///   Looks up a localized string similar to The time interval should be a whole number..
         /// </summary>
         public static string WavePropertiesValidator_ValidateTScale {
             get {

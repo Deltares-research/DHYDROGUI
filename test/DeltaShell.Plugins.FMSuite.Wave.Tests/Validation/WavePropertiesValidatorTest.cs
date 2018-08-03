@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
     public class WavePropertiesValidatorTest
     {
         [Test]
-        public void GivenAnWaveModel_WhenTScaleAndTimeStepAreIntegersAndDivisors_ThenNoWarningsAndErrorsShouldBeGiven()
+        public void GivenAWaveModel_WhenTScaleAndTimeStepAreIntegersAndDivisors_ThenNoWarningsAndErrorsShouldBeGiven()
         {
             var model = new WaveModel();
             model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.SimulationMode).SetValueAsString("non-stationary");
@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        public void GivenAnWaveModel_WhenTScaleIsNotAnIntegerAndTimeStepNotADivisor_ThenAnErrorAndWarningShouldBeGiven()
+        public void GivenAWaveModel_WhenTScaleIsNotAnIntegerAndTimeStepNotADivisor_ThenAnErrorAndWarningShouldBeGiven()
         {
             var model = new WaveModel();
             model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory,KnownWaveProperties.SimulationMode).SetValueAsString("non-stationary");
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        public void GivenAnWaveModel_WhenTimeStepIsNotAnIntegerAndNotADivisor_ThenAnErrorAndWarningShouldBeGiven()
+        public void GivenAWaveModel_WhenTimeStepIsNotAnIntegerAndNotADivisor_ThenAnErrorAndWarningShouldBeGiven()
         {
             var model = new WaveModel();
             model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.SimulationMode).SetValueAsString("non-stationary");
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        public void GivenAnWaveModel_WhenTimeStepIsBiggerThanTScale_ThenAnErrorShouldBeGiven()
+        public void GivenAWaveModel_WhenTimeStepIsBiggerThanTScale_ThenAnErrorShouldBeGiven()
         {
             var model = new WaveModel();
             model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.SimulationMode).SetValueAsString("non-stationary");
