@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
-using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.Plugins.NetworkEditor;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -243,41 +240,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 NetworkDiscretization.Locations.AddValues(locations.Except(NetworkDiscretization.Locations.GetValues()));
                 NetworkDiscretization.EndEdit();
             }
-        }
-
-        private void LoadNetwork()
-        {
-            if (!File.Exists(NetFilePath)) return;
-            var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(NetFilePath);
-            if (loadedNetwork == null) return;
-            Network = loadedNetwork;
-        }
-
-        private void LoadNetworkAndDiscretisation()
-        {
-            if (!File.Exists(NetFilePath)) return;
-            var loadedNetworkDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(NetFilePath);
-            if (loadedNetworkDiscretisation != null)
-            {
-                NetworkDiscretization = loadedNetworkDiscretisation;
-                Network = (IHydroNetwork)loadedNetworkDiscretisation.Network;
-                return;
-            }
-
-            LoadNetwork();
-
-        }
-
-        private void SaveNetwork()
-        {
-            UGridGlobalMetaData metaData = new UGridGlobalMetaData(Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion);
-
-            UGridToNetworkAdapter.SaveNetwork(network, NetFilePath, metaData);
-        }
-
-        private void SaveNetworkDiscretisation()
-        {
-            UGridToNetworkAdapter.SaveNetworkDiscretisation(NetworkDiscretization, NetFilePath);
         }
     }
 }

@@ -242,7 +242,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        public virtual string MduFilePath { get; protected set; }
+        public virtual string MduFilePath { get; set; }
 
         public MduFile MduFile { get { return mduFile; } }
         internal void SyncModelTimesWithBase()

@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
-using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -165,6 +163,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (path == null) return;
             UnstructuredGridFileHelper.WriteGridToFile(path, grid);
         }
+
+        private void SaveNetwork()
+        {
+            var metaData = new UGridGlobalMetaData(Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion);
+
+            UGridToNetworkAdapter.SaveNetwork(network, NetFilePath, metaData);
+        }
+
+        private void LoadNetwork()
+        {
+            if (!File.Exists(NetFilePath)) return;
+            var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(NetFilePath);
+            if (loadedNetwork == null) return;
+            Network = loadedNetwork;
+        }
+
+        private void SaveNetworkDiscretisation()
+        {
+            UGridToNetworkAdapter.SaveNetworkDiscretisation(NetworkDiscretization, NetFilePath);
+        }
+
+        private void LoadNetworkAndDiscretisation()
+        {
+            if (!File.Exists(NetFilePath)) return;
+            var loadedNetworkDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(NetFilePath);
+            if (loadedNetworkDiscretisation != null)
+            {
+                NetworkDiscretization = loadedNetworkDiscretisation;
+                Network = (IHydroNetwork)loadedNetworkDiscretisation.Network;
+                return;
+            }
+
+            LoadNetwork();
+        }
+
+
         public void Save1D2DLinks()
         {
             UGrid1D2DLinksAdapter.Save1D2DLinks(NetFilePath, Links);
