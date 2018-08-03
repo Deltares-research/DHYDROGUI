@@ -787,6 +787,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             if (data.Equals(HydroData))
             {
                 OverWriteModelTimersWithImportTimers(skipImportTimers, data);
+                OverWriteSegmentFunctions(data);
                 return;
             }
             
@@ -827,12 +828,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 SalinityRelativeFilePath = HydroData.SalinityRelativePath;
                 TemperatureRelativeFilePath = HydroData.TemperatureRelativePath;
                 VerticalDiffusionRelativeFilePath = HydroData.VerticalDiffusionRelativePath;
-                SurfacesRelativeFilePath = HydroData.SurfacesRelativePath;
                 ShearStressesRelativeFilePath = HydroData.ShearStressesRelativePath;
                 AttributesRelativeFilePath = HydroData.AttributesRelativePath;
-                VelocitiesFilePath = HydroData.VelocitiesRelativePath;
-                WidthsFilePath = HydroData.WidthsRelativePath;
-                ChezyCoefficientsFilePath = HydroData.ChezyCoefficientsRelativePath;
+                OverWriteSegmentFunctions(HydroData);
 
                 SetImportProgress("Importing exchanges and layer information");
                 NumberOfHorizontalExchanges = HydroData.NumberOfHorizontalExchanges;
@@ -863,6 +861,50 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
+        private void OverWriteSegmentFunctions(IHydroData data)
+        {
+            SetImportProgress("Sync of segment functions");
+            SurfacesRelativeFilePath = data.SurfacesRelativePath;
+            VelocitiesFilePath = data.VelocitiesRelativePath;
+            WidthsFilePath = data.WidthsRelativePath;
+            ChezyCoefficientsFilePath = data.ChezyCoefficientsRelativePath;
+
+            if (!ProcessCoefficients.Any()) return;
+
+            var procList = new List<string>
+            {
+                "chezy",
+                "velocity",
+                "width",
+                "surf"
+            };
+
+            procList.ForEach( x => UpdateProcessCoeffIfNeeded(x));
+        }
+
+        private void UpdateProcessCoeffIfNeeded(string functionName)
+        {
+            var process = ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower() == functionName);
+            if (process == null || ! HydroData.HasDataFor(functionName)) return;
+            
+            var pathFile = HydroData.GetFilePathFor(functionName);
+            if (process is SegmentFileFunction)
+                ((SegmentFileFunction) process).UrlPath = pathFile;
+            else
+            {
+                var newSegment = WaterQualityFunctionFactory.CreateSegmentFunction(
+                    process.Name,
+                    (double)process.Components[0].DefaultValue,
+                    process.Components[0].Unit.Name,
+                    process.Components[0].Unit.Symbol,
+                    process.Attributes[WaterQualityFunctionFactory.DESCRIPTION_ATTRIBUTE],
+                    pathFile);
+                Log.Info(
+                    string.Format(Resources.WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_as_a_Segment_with_file_path__1_, functionName, pathFile));
+                ProcessCoefficients.Remove(process);
+                ProcessCoefficients.Add(newSegment);
+            }
+        }
         private void OverWriteModelTimersWithImportTimers(bool skipImportTimers, IHydroData dataToOverwrite)
         {
             if (skipImportTimers) return;

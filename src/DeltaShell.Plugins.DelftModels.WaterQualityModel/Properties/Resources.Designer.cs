@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -358,6 +358,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
                 return ResourceManager.GetString("WaterQualityModel_OnInitializeCore_Failed_to_initialize_pre_processor__0_Please_l" +
                         "ook_at_the_List_file_for_more_information__0_List_file_found_in__Project_view___" +
                         "_Output____List_file__0___1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The process coefficient {0} has been updated as a Segment with file path {1}.
+        /// </summary>
+        public static string WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_as_a_Segment_with_file_path__1_ {
+            get {
+                return ResourceManager.GetString("WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been" +
+                        "_updated_as_a_Segment_with_file_path__1_", resourceCulture);
             }
         }
         

@@ -1693,9 +1693,61 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             
             Assert.IsTrue( chezyProcess is SegmentFileFunction);
         }
+
+        #endregion
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void Import_Waq_Model_WithSegmentFiles_OverExistingWaqModel_Update_SegmentFileFunctions()
+        {
+            var zwolleFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
+            zwolleFilePath = TestHelper.CreateLocalCopy(zwolleFilePath);
+
+            //Import hyd file
+            var westernschedlt =
+                TestHelper.GetTestFilePath(
+                    @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
+            westernschedlt = TestHelper.CreateLocalCopy(westernschedlt);
+            Assert.IsTrue(File.Exists(westernschedlt));
+
+            var importer = new HydFileImporter();
+            var westernModel = importer.ImportItem(westernschedlt) as WaterQualityModel;
+            Assert.IsNotNull(westernModel);
+            Assert.IsTrue(string.IsNullOrEmpty(westernModel.ChezyCoefficientsFilePath));
+
+            //Import the substances now.
+            var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
+            subsFilePath = TestHelper.CreateLocalCopy(subsFilePath);
+
+            Assert.IsNotNull(westernModel.SubstanceProcessLibrary);
+            new SubFileImporter().Import(westernModel.SubstanceProcessLibrary, subsFilePath);
+
+            //Check the process has been imported as a segmnent file function
+            var chezyProcess = westernModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals("chezy"));
+            Assert.IsNotNull(chezyProcess);
+
+            //Make sure the chezyprocess IS NOT a segment file function
+            Assert.IsFalse(chezyProcess is SegmentFileFunction);
+
+            //Import the second model on top of the previous one.
+
+            var zwolleModel = importer.ImportItem(zwolleFilePath) as WaterQualityModel;
+            Assert.IsNotNull(zwolleModel);
+            var expectedLogMessage =
+                string.Format(
+                    Resources
+                        .WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_as_a_Segment_with_file_path__1_,
+                    "chezy", string.Empty);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => westernModel.ImportHydroData(zwolleModel.HydroData), expectedLogMessage);
+
+            //Check filepaths, it has been updated.
+            Assert.IsFalse(string.IsNullOrEmpty(westernModel.ChezyCoefficientsFilePath));
+
+            //Check the process has been updated as a segmnent file function
+            chezyProcess = westernModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals("chezy"));
+            Assert.IsNotNull(chezyProcess);
+
+            Assert.IsTrue(chezyProcess is SegmentFileFunction);
+        }
     }
 }
-
-    #endregion
-   
-
