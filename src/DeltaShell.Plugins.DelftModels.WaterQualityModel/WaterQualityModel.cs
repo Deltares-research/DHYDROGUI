@@ -786,7 +786,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             CoordinateSystem = data.Grid?.CoordinateSystem;
             if (data.Equals(HydroData))
             {
-                OverWriteModelTimersWithImportTimers(skipImportTimers);
+                OverWriteModelTimersWithImportTimers(skipImportTimers, data);
                 return;
             }
             
@@ -816,7 +816,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 }
 
                 //As of issue D3DFMIQ-329, the timers should be overriden when importing the hyd file again.
-                OverWriteModelTimersWithImportTimers(skipImportTimers);
+                OverWriteModelTimersWithImportTimers(skipImportTimers, HydroData);
                 
                 SetImportProgress("Importing file paths");
                 AreasRelativeFilePath = HydroData.AreasRelativePath;
@@ -863,20 +863,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
-        private void OverWriteModelTimersWithImportTimers(bool skipImportTimers)
+        private void OverWriteModelTimersWithImportTimers(bool skipImportTimers, IHydroData dataToOverwrite)
         {
             if (skipImportTimers) return;
 
             SetImportProgress("Importing timers");
-            StartTime = HydroData.ConversionStartTime;
-            StopTime = HydroData.ConversionStopTime;
-            TimeStep = HydroData.ConversionTimeStep;
-            ReferenceTime = HydroData.ConversionReferenceTime;
+            StartTime = dataToOverwrite.ConversionStartTime;
+            StopTime = dataToOverwrite.ConversionStopTime;
+            TimeStep = dataToOverwrite.ConversionTimeStep;
+            ReferenceTime = dataToOverwrite.ConversionReferenceTime;
 
             //Sync of time step needs to be explicit.
-            ModelSettings.HisTimeStep = HydroData.ConversionTimeStep;
-            ModelSettings.MapTimeStep = HydroData.ConversionTimeStep;
-            ModelSettings.BalanceTimeStep = HydroData.ConversionTimeStep;
+            ModelSettings.HisTimeStep = dataToOverwrite.ConversionTimeStep;
+            ModelSettings.MapTimeStep = dataToOverwrite.ConversionTimeStep;
+            ModelSettings.BalanceTimeStep = dataToOverwrite.ConversionTimeStep;
             LogSynchronizedTimer("Time Step", TimeStep);
         }
 

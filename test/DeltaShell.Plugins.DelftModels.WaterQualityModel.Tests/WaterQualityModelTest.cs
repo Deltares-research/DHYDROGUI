@@ -1481,6 +1481,45 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             }
         }
 
+
+        [Test]
+        public void Test_When_Importing_HydFile_ChangeTimers_ImportAgainSameHydFile_TimersAreInSync()
+        {
+            var hydPath =
+                TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFile2\westernscheldt01.hyd");
+            hydPath = TestHelper.CreateLocalCopy(hydPath);
+            Assert.IsFalse(string.IsNullOrEmpty(hydPath));
+            Assert.IsTrue(File.Exists(hydPath));
+
+            var expectedStartTime = "2014-01-01 00:00:00";
+            var expectedEndTime = "2014-01-08 00:00:00";
+
+            //Initialize WAQ Model and add it to the project.
+            var model = new WaterQualityModel();
+
+            //Import hyd file
+            var importer = new HydFileImporter();
+            var importedModel = importer.ImportItem(hydPath, model) as WaterQualityModel;
+            Assert.IsNotNull(importedModel);
+
+            //Change timers of the model
+            var customHydroData = importedModel.HydroData as HydFileData;
+            Assert.IsNotNull(customHydroData);
+            customHydroData.ConversionStartTime = DateTime.Now.AddDays(1);
+            customHydroData.ConversionStopTime = DateTime.Now.AddDays(3);
+
+            Assert.AreEqual(expectedStartTime, importedModel.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            Assert.AreEqual(expectedEndTime, importedModel.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
+
+            //Import the same hyd file
+            var reImportedModel = importer.ImportItem(hydPath, importedModel) as WaterQualityModel;
+            Assert.IsNotNull(reImportedModel);
+
+            //Assert timers of hyd file and of project are equal
+            Assert.AreEqual(expectedStartTime, reImportedModel.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            Assert.AreEqual(expectedEndTime, reImportedModel.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
+        }
+
         [Test]
         public void Test_When_HydFile_IsImported_OverExistingHydFile_CoordinateSystem_IsUpdated_ToNewHydFile()
         {
