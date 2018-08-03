@@ -288,6 +288,7 @@
     <Compile Include="IO\BndExtForceFileTest.cs" />
     <Compile Include="IO\CmpFileTest.cs" />
     <Compile Include="IO\DelftIniCategoryExtensionTests.cs" />
+    <Compile Include="IO\DummyTestMdD1D_2_MDU.cs" />
     <Compile Include="IO\Exporters\CmpFileExporterTest.cs" />
     <Compile Include="IO\Exporters\FlowFMNetFileExporterTest.cs" />
     <Compile Include="IO\Exporters\GeometryZipExporterTest.cs" />

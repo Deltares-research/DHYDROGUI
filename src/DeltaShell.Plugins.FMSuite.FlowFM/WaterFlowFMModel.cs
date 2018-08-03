@@ -169,18 +169,409 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public IEventedList<WaterFlowFM1D2DLink> Links { get; set; }
 
+        #region Mdu file
+
+        private readonly MduFile mduFile = new MduFile();
+
+        public string MduSavePath
+        {
+            get { return GetMduPathFromDeltaShellPath(Path.GetDirectoryName(MduFilePath)); }
+        }
+
+        public string HisSavePath
+        {
+            get
+            {
+                if (ModelDefinition == null) return null;
+                if (ModelDefinition.ModelName.Equals(Name))
+                    return HisFilePath;
+                return Name + "_his.nc";
+            }
+        }
+
+        public string MapSavePath
+        {
+            get
+            {
+                if (ModelDefinition == null) return null;
+                if (ModelDefinition.ModelName.Equals(Name))
+                    return MapFilePath;
+                return Name + "_map.nc";
+            }
+        }
+
+        public IEnumerable<KeyValuePair<WaterFlowFMProperty, string>> SubFiles
+        {
+            get
+            {
+                if (ModelDefinition == null) yield break;
+
+                var modelDefinitionName = ModelDefinition.ModelName;
+
+                var modelNameBasedFiles = new Dictionary<string, string>
+                    {
+                    {KnownProperties.NetFile, NetFile.FullExtension},
+                    {KnownProperties.ExtForceFile, ExtForceFile.Extension},
+                    {KnownProperties.BndExtForceFile, ExtForceFile.Extension},
+                    {KnownProperties.LandBoundaryFile, MduFile.LandBoundariesExtension},
+                    {KnownProperties.ThinDamFile, MduFile.ThinDamExtension},
+                    {KnownProperties.FixedWeirFile, MduFile.FixedWeirExtension},
+                    {KnownProperties.StructuresFile, MduFile.StructuresExtension},
+                    {KnownProperties.ObsFile, MduFile.ObsExtension},
+                    {KnownProperties.ObsCrsFile, MduFile.ObsCrossExtension},
+                    {KnownProperties.DryPointsFile, MduFile.DryPointExtension}
+                };
+
+                foreach (var pair in modelNameBasedFiles)
+                {
+                    var property = ModelDefinition.GetModelProperty(pair.Key);
+                    var propertyValue = property.GetValueAsString();
+                    if (pair.Key != KnownProperties.NetFile && pair.Key != KnownProperties.ExtForceFile &&
+                        string.IsNullOrEmpty(propertyValue)) //skip default (empty) paths
+                    {
+                        continue;
+                    }
+                    var currentFileName = Path.GetFileName(propertyValue);
+                    if (modelDefinitionName == null ||
+                        ((modelDefinitionName + pair.Value).Equals(currentFileName, StringComparison.InvariantCultureIgnoreCase) && pair.Key != KnownProperties.NetFile))
+                    {
+                        propertyValue = Name + pair.Value;
+                    }
+                    yield return new KeyValuePair<WaterFlowFMProperty, string>(property, propertyValue);
+                }
+            }
+        }
+
+        public virtual string MduFilePath { get; protected set; }
+
+        public MduFile MduFile { get { return mduFile; } }
+        internal void SyncModelTimesWithBase()
+        {
+            base.StartTime = StartTime;
+            base.StopTime = StopTime;
+            base.TimeStep = TimeStep;
+        }
+
+        private static void FireImportProgressChanged(WaterFlowFMModel model, string currentStepName, int currentStep, int totalSteps)
+        {
+            if (model.ImportProgressChanged == null) return;
+            model.ImportProgressChanged(currentStepName, currentStep, totalSteps);
+        }
+
+        private void OnSwitchTo(string mduPath)
+        {
+            if (MduFilePath == null) // switch from nothing: load
+            {
+                OnLoad(mduPath);
+            }
+            else // else: switch from existing: only change path
+            {
+                MduFilePath = mduPath;
+
+                if (MduFile == null) return;
+                mduFile.Path = mduPath;
+                SwitchFileBasedItems();
+            }
+        }
+
+        private void SwitchFileBasedItems()
+        {
+            foreach (var windField in WindFields.OfType<IFileBased>())
+            {
+                var newPath = Path.Combine(Path.GetDirectoryName(ExtFilePath), Path.GetFileName(windField.Path));
+                windField.SwitchTo(newPath);
+            }
+        }
+
+
+        private void OnAddedToProject(string mduPath)
+        {
+            MduFilePath = mduPath;
+            ExportTo(MduFilePath);
+        }
+
+        private void OnLoad(string mduPath)
+        {
+            LoadStateFromMdu(mduPath);
+
+            LoadNetworkAndDiscretisation();
+
+            LoadLinks();
+
+            ImportSpatialOperationsAfterLoading();
+        }
+
+        private void OnSave()
+        {
+            string modelDir = null;
+            string outputDir = null;
+            if (MduFilePath != MduSavePath)
+            {
+                modelDir = Path.GetDirectoryName(MduFilePath);
+                outputDir = Path.GetDirectoryName(MapFilePath);
+            }
+            if (ExportTo(MduSavePath))
+            {
+                /*Make sure the ModelDirectory gets updated when saving*/
+                ModelDefinition.ModelDirectory = Path.GetDirectoryName(MduSavePath);
+            }
+            if (modelDir != null && Directory.Exists(modelDir))
+            {
+                Directory.Delete(modelDir, true);
+            }
+            if (outputDir != null && Directory.Exists(outputDir))
+            {
+                Directory.Delete(outputDir, true);
+            }
+        }
+
+        private string GetMduPathFromDeltaShellPath(string path)
+        {
+            var directoryName = path != null
+                ? Path.GetDirectoryName(path) ?? ""
+                : "";
+
+            // dsproj_data/<model name>/<model name>.mdu
+            return Path.Combine(directoryName, Name, Name + ".mdu");
+        }
+
+        private void RenameSubFilesIfApplicable()
+        {
+            foreach (var subFile in SubFiles)
+            {
+                var waterFlowFMProperty = subFile.Key;
+
+                if (waterFlowFMProperty.GetValueAsString().Equals(subFile.Value)) continue;
+
+                if (waterFlowFMProperty.Equals(ModelDefinition.GetModelProperty(KnownProperties.NetFile)))
+                {
+                    var oldPath = NetFilePath;
+                    waterFlowFMProperty.SetValueAsString(subFile.Value);
+                    var newPath = NetFilePath;
+
+                    if (!File.Exists(oldPath) ||
+                        String.Equals(Path.GetFullPath(oldPath), Path.GetFullPath(newPath),
+                            StringComparison.CurrentCultureIgnoreCase)) continue;
+
+                    File.Copy(oldPath, newPath, true);
+                    File.Delete(oldPath);
+                }
+                else
+                {
+                    waterFlowFMProperty.SetValueAsString(subFile.Value);
+                }
+            }
+
+            ModelDefinition.ModelName = Name;
+        }
+        #endregion
+
+        public string ExtFilePath
+        {
+            get
+            {
+                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.ExtForceFile))
+                    return MduFileHelper.GetSubfilePath(MduFilePath,
+                        ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile));
+                return null;
+            }
+        }
+
+        public string BndExtFilePath
+        {
+            get
+            {
+                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.BndExtForceFile))
+                    return MduFileHelper.GetSubfilePath(MduFilePath,
+                        ModelDefinition.GetModelProperty(KnownProperties.BndExtForceFile));
+                return null;
+            }
+        }
+
+        public string NetFilePath
+        {
+            get
+            {
+                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.NetFile))
+                    return MduFileHelper.GetSubfilePath(MduFilePath,
+                        ModelDefinition.GetModelProperty(KnownProperties.NetFile));
+                return null;
+            }
+        }
+
+        private string MapFilePath
+        {
+            get
+            {
+                return !String.IsNullOrEmpty(MduFilePath)
+                    ? Path.Combine(Path.GetDirectoryName(MduFilePath), ModelDefinition.RelativeMapFilePath)
+                    : null;
+            }
+        }
+
+        public string MorFilePath
+        {
+            get
+            {
+                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.MorFile))
+                    return MduFileHelper.GetSubfilePath(MduFilePath,
+                        ModelDefinition.GetModelProperty(KnownProperties.MorFile));
+                return null;
+            }
+        }
+
+        public string SedFilePath
+        {
+            get
+            {
+                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.SedFile))
+                    return MduFileHelper.GetSubfilePath(MduFilePath,
+                        ModelDefinition.GetModelProperty(KnownProperties.SedFile));
+                return null;
+            }
+        }
+
+        //Do not remove, is used by python code
+        public string ComFilePath
+        {
+            get
+            {
+                return !String.IsNullOrEmpty(MduFilePath)
+                    ? Path.Combine(WorkingDirectory, ModelDefinition.RelativeComFilePath)
+                    : null;
+            }
+        }
+
+        private string HisFilePath
+        {
+            get
+            {
+                return !String.IsNullOrEmpty(MduFilePath)
+                    ? Path.Combine(Path.GetDirectoryName(MduFilePath), ModelDefinition.RelativeHisFilePath)
+                    : null;
+            }
+        }
+
+        public bool WriteHisFile
+        {
+            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.WriteHisFile).Value; }
+            private set
+            {
+                // empty, but just used for event bubbling
+            }
+        }
+
+        public bool SpecifyHisStart
+        {
+            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyHisStart).Value; }
+            private set
+            {
+                // empty, but just used for event bubbling
+            }
+        }
+
+        public bool SpecifyHisStop
+        {
+            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyHisStop).Value; }
+            private set
+            {
+                // empty, but just used for event bubbling
+            }
+        }
+
+        public bool WriteMapFile
+        {
+            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.WriteMapFile).Value; }
+            private set
+            {
+                // empty, but just used for event bubbling
+            }
+        }
+
+        public bool SpecifyMapStart
+        {
+            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyMapStart).Value; }
+            private set
+            {
+                // empty, but just used for event bubbling
+            }
+        }
+
+        public bool SpecifyMapStop
+        {
+            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyMapStop).Value; }
+            private set
+            {
+                // empty, but just used for event bubbling
+            }
+        }
+
+        public bool WriteRstFile
+        {
+            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value; }
+            private set
+            {
+                // empty, but just used for event bubbling
+            }
+        }
+
+        public bool SpecifyRstStart
+        {
+            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStart).Value; }
+            private set
+            {
+                // empty, but just used for event bubbling
+            }
+        }
+
+        public bool SpecifyRstStop
+        {
+            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStop).Value; }
+            private set
+            {
+                // empty, but just used for event bubbling
+            }
+        }
+
+        public bool SpecifyWaqOutputInterval
+        {
+            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputInterval).Value; }
+            private set
+            {
+                // empty, but just used for event bubbling
+            }
+        }
+
+        public bool SpecifyWaqOutputStartTime
+        {
+            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputStartTime).Value; }
+            private set
+            {
+                // empty, but just used for event bubbling
+            }
+        }
+        public bool SpecifyWaqOutputStopTime
+        {
+            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputStopTime).Value; }
+            private set
+            {
+                // empty, but just used for event bubbling
+            }
+        }
+
+        public object WaveModel
+        {
+            // cannot actually return anything, because it's a dynamic enum
+            get { return null; }
+            private set
+            {
+                // empty, but just used for event bubbling
+            }
+        }
+
         private void RefreshMappings()
         {
             Links1D2DHelper.SetIndexes1D2DLinks(Links, NetworkDiscretization, Grid);
-        }
-
-        private void LoadLinks()
-        {
-            if (!File.Exists(NetFilePath)) return;
-            var links = UGrid1D2DLinksAdapter.Load1D2DLinks(NetFilePath);
-            if (NetworkDiscretization == null || Grid == null) return;
-            Links1D2DHelper.SetGeometry1D2DLinks(links, NetworkDiscretization.Locations, Grid.Cells);
-            Links = links;
         }
 
         public override IBasicModelInterface BMIEngine
@@ -1169,6 +1560,128 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             WindFields = ModelDefinition.WindFields;
         }
 
+        #region Output
+
+        public string OutputSnappedFeaturesPath
+        {
+            get
+            {
+                var outputDirectory = ExplicitWorkingDirectory;
+                if (outputDirectory == null)
+                {
+                    //We might still be working in the temp folder.
+                    outputDirectory = WorkingDirectory;
+                }
+
+                return Path.Combine(outputDirectory, DirectoryName, ModelDefinition.OutputDirectory, SnappedFeaturesDirectoryName);
+            }
+        }
+
+        public TimeSpan OutputTimeStep
+        {
+            get { return (TimeSpan)ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value; }
+            set { ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = value; }
+        }
+
+        public UnstructuredGridCellCoverage OutputWaterLevel
+        {
+            get
+            {
+                if (OutputMapFileStore != null)
+                {
+                    return OutputMapFileStore.Functions.OfType<UnstructuredGridCellCoverage>()
+                        .FirstOrDefault(f => f.Components[0].Name.EndsWith("s1"));
+                }
+                return null;
+            }
+        }
+
+        public virtual FMMapFileFunctionStore OutputMapFileStore
+        {
+            get { return outputMapFileStore; }
+            protected set
+            {
+                outputMapFileStore = value;
+            }
+        }
+
+        public virtual FMHisFileFunctionStore OutputHisFileStore { get; protected set; }
+        private string WaqHydFilePath { get; set; }
+
+        public string DelwaqHydFolderName
+        {
+            get { return "DFM_DELWAQ_" + Name; }
+        }
+
+        protected virtual void ReconnectOutputFiles(string outputDirectory)
+        {
+            ReconnectOutputFiles(Path.Combine(outputDirectory, ModelDefinition.RelativeMapFilePath),
+                Path.Combine(outputDirectory, ModelDefinition.RelativeHisFilePath), Path.Combine(outputDirectory, DelwaqHydFolderName));
+        }
+
+        private void ReconnectOutputFiles(string mapFilePath, string hisFilePath, string waqFolderPath, bool switchTo = false)
+        {
+            var existsMapFile = File.Exists(mapFilePath);
+            var existsHisFile = File.Exists(hisFilePath);
+            var existsWaqFolder = Directory.Exists(waqFolderPath);
+
+            if (!existsMapFile && !existsHisFile && !existsWaqFolder) return;
+
+            FireImportProgressChanged(this, "Reading output files - Reading Map file", 1, 2);
+            BeginEdit(new DefaultEditAction("Reconnect output files"));
+
+            // deal with issue that kernel doesn't understand any coordinate systems other than RD & WGS84 :
+            if (existsMapFile)
+            {
+                ReportProgressText("Reading map file");
+                var cs = UnstructuredGridFileHelper.GetCoordinateSystem(mapFilePath);
+
+                // update map file coordinate system:
+                if (CoordinateSystem != null && cs != CoordinateSystem)
+                    NetFile.WriteCoordinateSystem(mapFilePath, CoordinateSystem);
+                if (switchTo && OutputMapFileStore != null)
+                {
+                    OutputMapFileStore.Path = mapFilePath;
+                }
+                else
+                {
+                    OutputMapFileStore = new FMMapFileFunctionStore(this);
+                    // don't change this to a property setter, because the timing is of great importance.
+                    // elsewise, there will be no subscription to the read and Path triggers the Read().
+                    OutputMapFileStore.Path = mapFilePath;
+                }
+            }
+
+            if (existsHisFile)
+            {
+                ReportProgressText("Reading his file");
+                FireImportProgressChanged(this, "Reading output files - Reading His file", 1, 2);
+                if (switchTo && OutputHisFileStore != null)
+                {
+
+                    OutputHisFileStore.Path = hisFilePath;
+                }
+                else
+                {
+                    OutputHisFileStore = new FMHisFileFunctionStore(hisFilePath, CoordinateSystem,
+                        Area.ObservationPoints,
+                        Area.ObservationCrossSections,
+                        Area.Weirs.Where(w => w.WeirFormula is GeneralStructureWeirFormula),
+                        Area.LeveeBreaches);
+                }
+            }
+
+            if (existsWaqFolder)
+            {
+                WaqHydFilePath = waqFolderPath;
+            }
+
+            OutputIsEmpty = false;
+
+            EndEdit();
+        }
+        #endregion
+
         public void Dispose()
         {
             disposing = true;
@@ -1592,523 +2105,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #endregion
 
-        #region Mdu file
-
-        private readonly MduFile mduFile = new MduFile();
-
-        public string MduSavePath
-        {
-            get { return GetMduPathFromDeltaShellPath(Path.GetDirectoryName(MduFilePath)); }
-        }
-
-        public string HisSavePath
-        {
-            get
-            {
-                if (ModelDefinition == null) return null;
-                if (ModelDefinition.ModelName.Equals(Name))
-                    return HisFilePath;
-                return Name + "_his.nc";
-            }
-        }
-
-        public string MapSavePath
-        {
-            get
-            {
-                if (ModelDefinition == null) return null;
-                if (ModelDefinition.ModelName.Equals(Name))
-                    return MapFilePath;
-                return Name + "_map.nc";
-            }
-        }
-
-        public IEnumerable<KeyValuePair<WaterFlowFMProperty, string>> SubFiles
-        {
-            get
-            {
-                if (ModelDefinition == null) yield break;
-
-                var modelDefinitionName = ModelDefinition.ModelName;
-
-                var modelNameBasedFiles = new Dictionary<string, string>
-                    {
-                    {KnownProperties.NetFile, NetFile.FullExtension},
-                    {KnownProperties.ExtForceFile, ExtForceFile.Extension},
-                    {KnownProperties.BndExtForceFile, ExtForceFile.Extension},
-                    {KnownProperties.LandBoundaryFile, MduFile.LandBoundariesExtension},
-                    {KnownProperties.ThinDamFile, MduFile.ThinDamExtension},
-                    {KnownProperties.FixedWeirFile, MduFile.FixedWeirExtension},
-                    {KnownProperties.StructuresFile, MduFile.StructuresExtension},
-                    {KnownProperties.ObsFile, MduFile.ObsExtension},
-                    {KnownProperties.ObsCrsFile, MduFile.ObsCrossExtension},
-                    {KnownProperties.DryPointsFile, MduFile.DryPointExtension}
-                };
-
-                foreach (var pair in modelNameBasedFiles)
-                {
-                    var property = ModelDefinition.GetModelProperty(pair.Key);
-                    var propertyValue = property.GetValueAsString();
-                    if (pair.Key != KnownProperties.NetFile && pair.Key != KnownProperties.ExtForceFile &&
-                        string.IsNullOrEmpty(propertyValue)) //skip default (empty) paths
-                    {
-                        continue;
-                    }
-                    var currentFileName = Path.GetFileName(propertyValue);
-                    if (modelDefinitionName == null ||
-                        ((modelDefinitionName + pair.Value).Equals(currentFileName, StringComparison.InvariantCultureIgnoreCase) && pair.Key != KnownProperties.NetFile))
-                    {
-                        propertyValue = Name + pair.Value;
-                    }
-                    yield return new KeyValuePair<WaterFlowFMProperty, string>(property, propertyValue);
-                }
-            }
-        }
-
-        public virtual string MduFilePath { get; protected set; }
-
-        public MduFile MduFile { get { return mduFile; } }
-
-        public string ExtFilePath
-        {
-            get
-            {
-                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.ExtForceFile))
-                    return MduFileHelper.GetSubfilePath(MduFilePath,
-                        ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile));
-                return null;
-            }
-        }
-
-        public string BndExtFilePath
-        {
-            get
-            {
-                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.BndExtForceFile))
-                    return MduFileHelper.GetSubfilePath(MduFilePath,
-                        ModelDefinition.GetModelProperty(KnownProperties.BndExtForceFile));
-                return null;
-            }
-        }
-
-        public string NetFilePath
-        {
-            get
-            {
-                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.NetFile))
-                    return MduFileHelper.GetSubfilePath(MduFilePath,
-                        ModelDefinition.GetModelProperty(KnownProperties.NetFile));
-                return null;
-            }
-        }
-
-        private string MapFilePath
-        {
-            get
-            {
-                return !String.IsNullOrEmpty(MduFilePath)
-                    ? Path.Combine(Path.GetDirectoryName(MduFilePath), ModelDefinition.RelativeMapFilePath)
-                    : null;
-            }
-        }
-
-        public string MorFilePath
-        {
-            get
-            {
-                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.MorFile))
-                    return MduFileHelper.GetSubfilePath(MduFilePath,
-                        ModelDefinition.GetModelProperty(KnownProperties.MorFile));
-                return null;
-            }
-        }
-
-        public string SedFilePath
-        {
-            get
-            {
-                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.SedFile))
-                    return MduFileHelper.GetSubfilePath(MduFilePath,
-                        ModelDefinition.GetModelProperty(KnownProperties.SedFile));
-                return null;
-            }
-        }
-
-        //Do not remove, is used by python code
-        public string ComFilePath
-        {
-            get
-            {
-                return !String.IsNullOrEmpty(MduFilePath)
-                    ? Path.Combine(WorkingDirectory, ModelDefinition.RelativeComFilePath)
-                    : null;
-            }
-        }
-
-        private string HisFilePath
-        {
-            get
-            {
-                return !String.IsNullOrEmpty(MduFilePath)
-                    ? Path.Combine(Path.GetDirectoryName(MduFilePath), ModelDefinition.RelativeHisFilePath)
-                    : null;
-            }
-        }
-
-        public bool WriteHisFile
-        {
-            get { return (bool) ModelDefinition.GetModelProperty(GuiProperties.WriteHisFile).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
-        }
-
-        public bool SpecifyHisStart
-        {
-            get { return (bool) ModelDefinition.GetModelProperty(GuiProperties.SpecifyHisStart).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
-        }
-
-        public bool SpecifyHisStop
-        {
-            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyHisStop).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
-        }
-
-        public bool WriteMapFile
-        {
-            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.WriteMapFile).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
-        }
-
-        public bool SpecifyMapStart
-        {
-            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyMapStart).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
-        }
-
-        public bool SpecifyMapStop
-        {
-            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyMapStop).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
-        }
-
-        public bool WriteRstFile
-        {
-            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
-        }
-
-        public bool SpecifyRstStart
-        {
-            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStart).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
-        }
-
-        public bool SpecifyRstStop
-        {
-            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStop).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
-        }
-
-        public bool SpecifyWaqOutputInterval
-        {
-            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputInterval).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
-        }
-
-        public bool SpecifyWaqOutputStartTime
-        {
-            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputStartTime).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
-        }
-        public bool SpecifyWaqOutputStopTime
-        {
-            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputStopTime).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
-        }
-
-        public object WaveModel
-        {
-            // cannot actually return anything, because it's a dynamic enum
-            get { return null; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
-        }
-
-        public ImportProgressChangedDelegate ImportProgressChanged { get; set; }
-        
-        private void LoadModelFromMdu(string mduFilePath)
-        {
-            MduFilePath = mduFilePath;
-            var mduFileDir = Path.GetDirectoryName(mduFilePath);
-            Name = Path.GetFileNameWithoutExtension(mduFilePath);
-            ModelDefinition = new WaterFlowFMModelDefinition(mduFileDir, Name);
-            
-            // intialize model definition from mdu file if it exists
-            if (File.Exists(mduFilePath))
-            {
-                isLoading = true;
-                mduFile.Read(mduFilePath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, (name, current, total) => FireImportProgressChanged(this, "Reading mdu - " + name, current, total));
-                isLoading = false;
-                SyncModelTimesWithBase();
-            }
-
-            var netFileProperty = ModelDefinition.GetModelProperty(KnownProperties.NetFile);
-            if (String.IsNullOrEmpty(netFileProperty.GetValueAsString()))
-            {
-                netFileProperty.Value = Name + NetFile.FullExtension;
-            }
-
-            FireImportProgressChanged(this, "Loading restart", 2, TotalImportSteps);
-            LoadRestartInfo(mduFilePath);
-
-            // sync the heat flux model, because events are off during reading
-            HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
-        }
-        
-        internal void SyncModelTimesWithBase()
-        {
-            base.StartTime = StartTime;
-            base.StopTime = StopTime;
-            base.TimeStep = TimeStep;
-        }
-
-        private static void FireImportProgressChanged(WaterFlowFMModel model, string currentStepName, int currentStep, int totalSteps)
-        {
-            if (model.ImportProgressChanged == null) return;
-            model.ImportProgressChanged(currentStepName, currentStep, totalSteps);
-        }
-
-        public virtual bool ExportTo(string mduPath, bool switchTo = true, bool writeExtForcings = true, bool writeFeatures=true)
-        {
-            var dirName = Path.GetDirectoryName(mduPath);
-            if (!Directory.Exists(dirName))
-                Directory.CreateDirectory(dirName);
-
-            // make sure on save / export, restart file + mdu are up to date and could be ran standalone with correct info
-            if (switchTo)
-            {
-                SaveRestartInfo(mduPath);
-            }
-            InitializeRestart(dirName);
-
-            if (switchTo)
-            {
-                RenameSubFilesIfApplicable();
-            }
-            
-            if (writeExtForcings)
-            {
-                var spatVarSedPropNames =
-                    SedimentFractions.Where(sf => sf.CurrentSedimentType != null).SelectMany(
-                        sf =>
-                            sf.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>()
-                                .Where(p => p.IsSpatiallyVarying)).Select(p => p.SpatiallyVaryingName).ToList();
-                spatVarSedPropNames.AddRange(SedimentFractions.Where(sf => sf.CurrentFormulaType != null).SelectMany(
-                        sf =>
-                            sf.CurrentFormulaType.Properties.OfType<ISpatiallyVaryingSedimentProperty>()
-                                .Where(p => p.IsSpatiallyVarying)).Select(p => p.SpatiallyVaryingName).ToList());
-                ModelDefinition.SelectSpatialOperations(DataItems, TracerDefinitions, spatVarSedPropNames) ;
-                ModelDefinition.Bathymetry = Bathymetry;
-            }
-
-            WriteMorSedFilesIfNeeded(mduPath);
-
-            mduFile.Write(mduPath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, switchTo, writeExtForcings, writeFeatures, DisableFlowNodeRenumbering);
-
-            if (Grid != null)
-            {
-                if (MduFilePath == null) MduFilePath = mduPath;
-                SaveGrid();
-            }
-
-            if (Network != null)
-            {
-                if (Network.Nodes != null && Network.Nodes.Count > 0)
-                {
-                    SaveNetwork();
-
-                    if (NetworkDiscretization != null && NetworkDiscretization.Locations.Values.Count > 0)
-                    {
-                        SaveNetworkDiscretisation();
-                    }
-                }
-            }
-
-            if (Links != null)
-            {
-                if(Links.Count > 0)
-                {
-                    Save1D2DLinks();
-                }
-            }
-
-
-
-            if (switchTo)
-            {
-                MduFilePath = mduPath;
-                SaveOutput();
-            }
-            return true;
-        }
-
-        private void WriteMorSedFilesIfNeeded(string mduPath)
-        {
-            if (!UseMorSed) return;
-
-            var morPath = Path.ChangeExtension(mduPath, "mor");
-            MorphologyFile.Save(morPath, ModelDefinition);
-
-            var sedPath = Path.ChangeExtension(mduPath, "sed");
-            SedimentFile.Save(sedPath, this);
-        }
-
-        private void OnSwitchTo(string mduPath)
-        {
-            if (MduFilePath == null) // switch from nothing: load
-            {
-                OnLoad(mduPath);
-            }
-            else // else: switch from existing: only change path
-            {
-                MduFilePath = mduPath;
-                
-                if (MduFile == null) return;
-                mduFile.Path = mduPath;
-                SwitchFileBasedItems();
-            }
-        }
-
-        private void SwitchFileBasedItems()
-        {
-            foreach (var windField in WindFields.OfType<IFileBased>())
-            {
-                var newPath = Path.Combine(Path.GetDirectoryName(ExtFilePath), Path.GetFileName(windField.Path));
-                windField.SwitchTo(newPath);
-            }
-        }
-
-        private void OnLoad(string mduPath)
-        {
-            LoadStateFromMdu(mduPath);
-            
-            LoadNetworkAndDiscretisation();
-
-            LoadLinks();
-
-            ImportSpatialOperationsAfterLoading();
-        }
-
-        private void OnAddedToProject(string mduPath)
-        {
-            MduFilePath = mduPath;
-            ExportTo(MduFilePath);
-        }
-
-        private void OnSave()
-        {
-            string modelDir = null;
-            string outputDir = null;
-            if (MduFilePath != MduSavePath)
-            {
-                modelDir = Path.GetDirectoryName(MduFilePath);
-                outputDir = Path.GetDirectoryName(MapFilePath);
-            }
-            if( ExportTo(MduSavePath))
-            {
-                /*Make sure the ModelDirectory gets updated when saving*/
-                ModelDefinition.ModelDirectory = Path.GetDirectoryName(MduSavePath);
-            }
-            if (modelDir != null && Directory.Exists(modelDir))
-            {
-                Directory.Delete(modelDir, true);
-            }
-            if (outputDir != null && Directory.Exists(outputDir))
-            {
-                Directory.Delete(outputDir, true);
-            }
-        }
-
-        private string GetMduPathFromDeltaShellPath(string path)
-        {
-            var directoryName = path != null
-                ? Path.GetDirectoryName(path) ?? ""
-                : "";
-
-            // dsproj_data/<model name>/<model name>.mdu
-            return Path.Combine(directoryName, Name, Name + ".mdu");
-        }
-
-        private void RenameSubFilesIfApplicable()
-        {
-            foreach (var subFile in SubFiles) 
-            {
-                var waterFlowFMProperty = subFile.Key;
-                
-                if (waterFlowFMProperty.GetValueAsString().Equals(subFile.Value)) continue;
-                
-                if (waterFlowFMProperty.Equals(ModelDefinition.GetModelProperty(KnownProperties.NetFile)))
-                {
-                    var oldPath = NetFilePath;
-                    waterFlowFMProperty.SetValueAsString(subFile.Value);
-                    var newPath = NetFilePath;
-
-                    if (!File.Exists(oldPath) ||
-                        String.Equals(Path.GetFullPath(oldPath), Path.GetFullPath(newPath),
-                            StringComparison.CurrentCultureIgnoreCase)) continue;
-                    
-                    File.Copy(oldPath, newPath, true);
-                    File.Delete(oldPath);
-                }
-                else
-                {
-                    waterFlowFMProperty.SetValueAsString(subFile.Value);
-                }
-            }
-
-            ModelDefinition.ModelName = Name;
-        }
-
-        #endregion
-
         #region IFileBased
 
         // todo: transactional?
@@ -2214,174 +2210,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private const int TotalImportSteps = 10;
 
-        #endregion
-
-        #region Output
-
-        public string OutputSnappedFeaturesPath
-        {
-            get
-            {
-                var outputDirectory = ExplicitWorkingDirectory;
-                if (outputDirectory == null)
-                {
-                    //We might still be working in the temp folder.
-                    outputDirectory = WorkingDirectory;
-                }
-
-                return Path.Combine(outputDirectory, DirectoryName, ModelDefinition.OutputDirectory, SnappedFeaturesDirectoryName);
-            }
-        }
-
-        public TimeSpan OutputTimeStep
-        {
-            get { return (TimeSpan)ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value; }
-            set { ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = value; }
-        }
-
-        public UnstructuredGridCellCoverage OutputWaterLevel
-        {
-            get
-            {
-                if (OutputMapFileStore != null)
-                {
-                    return OutputMapFileStore.Functions.OfType<UnstructuredGridCellCoverage>()
-                        .FirstOrDefault(f => f.Components[0].Name.EndsWith("s1"));
-                }
-                return null;
-            }
-        }
-
-        public virtual FMMapFileFunctionStore OutputMapFileStore
-        {
-            get { return outputMapFileStore; }
-            protected set
-            {
-                outputMapFileStore = value;
-            }
-        }
-
-        
-        public virtual FMHisFileFunctionStore OutputHisFileStore { get; protected set; }
-        private string WaqHydFilePath { get; set; }
-
-        private void SaveOutput()
-        {
-            var oldMapFilePath = OutputMapFileStore == null ? null : OutputMapFileStore.Path;
-            var oldHisFilePath = OutputHisFileStore == null ? null : OutputHisFileStore.Path;
-
-            if (oldMapFilePath != null && Path.GetFullPath(oldMapFilePath).ToLower() != Path.GetFullPath(MapFilePath).ToLower())
-            {
-                var directory = Path.GetDirectoryName(MapFilePath);
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-                File.Copy(oldMapFilePath, MapFilePath, true);
-            }
-            else if (oldMapFilePath == null && File.Exists(MapFilePath))
-            {
-                File.Delete(MapFilePath);
-            }
-
-            if (oldHisFilePath != null && Path.GetFullPath(oldHisFilePath).ToLower() != Path.GetFullPath(HisFilePath).ToLower())
-            {
-                var directory = Path.GetDirectoryName(HisFilePath);
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-                File.Copy(oldHisFilePath, HisFilePath, true);
-            }
-            else if (oldHisFilePath == null && File.Exists(HisFilePath))
-            {
-                File.Delete(HisFilePath);
-            }
-
-            // copy the complete delwaq output folder
-            string waqOutputDir = Path.Combine(Path.GetDirectoryName(MduFilePath), DelwaqHydFolderName);
-            if(WaqHydFilePath != null && WaqHydFilePath != waqOutputDir)
-            {
-                // delete the old delwaq files, they have been recreated
-                FileUtils.DeleteIfExists(waqOutputDir);
-                FileUtils.CopyDirectory(WaqHydFilePath, waqOutputDir);
-            }
-
-            ReconnectOutputFiles(MapFilePath, HisFilePath, waqOutputDir, switchTo: true);
-        }
-
-        public string DelwaqHydFolderName
-        {
-            get { return "DFM_DELWAQ_" + Name; }
-        }
-
-        protected virtual void ReconnectOutputFiles(string outputDirectory)
-        {
-            ReconnectOutputFiles(Path.Combine(outputDirectory, ModelDefinition.RelativeMapFilePath),
-                Path.Combine(outputDirectory, ModelDefinition.RelativeHisFilePath), Path.Combine(outputDirectory, DelwaqHydFolderName));
-        }
-
-        private void ReconnectOutputFiles(string mapFilePath, string hisFilePath, string waqFolderPath, bool switchTo = false)
-        {
-            var existsMapFile = File.Exists(mapFilePath);
-            var existsHisFile = File.Exists(hisFilePath);
-            var existsWaqFolder = Directory.Exists(waqFolderPath);
-
-            if (!existsMapFile && !existsHisFile && !existsWaqFolder) return;
-
-            FireImportProgressChanged(this, "Reading output files - Reading Map file", 1, 2);
-            BeginEdit(new DefaultEditAction("Reconnect output files"));
-
-            // deal with issue that kernel doesn't understand any coordinate systems other than RD & WGS84 :
-            if (existsMapFile)
-            {
-                ReportProgressText("Reading map file");
-                var cs = UnstructuredGridFileHelper.GetCoordinateSystem(mapFilePath);
-
-                // update map file coordinate system:
-                if (CoordinateSystem != null && cs != CoordinateSystem)
-                    NetFile.WriteCoordinateSystem(mapFilePath, CoordinateSystem);
-                if (switchTo && OutputMapFileStore != null)
-                {
-                    OutputMapFileStore.Path = mapFilePath;
-                }
-                else
-                {
-                    OutputMapFileStore = new FMMapFileFunctionStore(this);
-                    // don't change this to a property setter, because the timing is of great importance.
-                    // elsewise, there will be no subscription to the read and Path triggers the Read().
-                    OutputMapFileStore.Path = mapFilePath;
-                }
-            }
-
-            if (existsHisFile)
-            {
-                ReportProgressText("Reading his file");
-                FireImportProgressChanged(this, "Reading output files - Reading His file", 1, 2);
-                if (switchTo && OutputHisFileStore != null)
-                {
-
-                    OutputHisFileStore.Path = hisFilePath;
-                }
-                else
-                {
-                    OutputHisFileStore = new FMHisFileFunctionStore(hisFilePath, CoordinateSystem,
-                        Area.ObservationPoints,
-                        Area.ObservationCrossSections,
-                        Area.Weirs.Where( w => w.WeirFormula is GeneralStructureWeirFormula),
-                        Area.LeveeBreaches);
-                }
-            }
-
-            if (existsWaqFolder)
-            {
-                WaqHydFilePath = waqFolderPath;
-            }
-            
-            OutputIsEmpty = false;
-
-            EndEdit();
-        }
         #endregion
 
         #region Coupling
@@ -2906,39 +2734,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             ReconnectOutputFiles(outputPath);
             ReadDiaFile(outputPath);
-        }
-
-        private void ReadDiaFile(string outputDirectory)
-        {
-            ReportProgressText("Reading dia file");
-            var diaFileName = string.Format("{0}.dia", Name);
-
-            var diaFilePath = Path.Combine(outputDirectory, diaFileName);
-            if (File.Exists(diaFilePath))
-            {
-                try
-                {
-                    var logDataItem = DataItems.FirstOrDefault(di => di.Tag == DiaFileDataItemTag);
-                    if (logDataItem == null)
-                    {
-                        // add logfile dataitem if not exists
-                        var textDocument = new TextDocument(true) { Name = diaFileName };
-                        logDataItem = new DataItem(textDocument, DataItemRole.Output, DiaFileDataItemTag);
-                        DataItems.Add(logDataItem);
-                    }
-
-                    var log = File.ReadAllText(diaFilePath);
-                    ((TextDocument)logDataItem.Value).Content = log;
-                }
-                catch (Exception ex)
-                {
-                    Log.ErrorFormat(Resources.WaterFlowFMModel_ReadDiaFile_Error_reading_log_file___0____1_, diaFileName, ex.Message);
-                }
-            }
-            else
-            {
-                Log.WarnFormat(Resources.WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_, diaFileName, diaFilePath);
-            }
         }
 
         public virtual ValidationReport Validate()

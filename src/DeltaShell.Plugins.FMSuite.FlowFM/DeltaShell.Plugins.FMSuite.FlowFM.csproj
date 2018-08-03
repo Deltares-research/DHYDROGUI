@@ -285,6 +285,7 @@
     <Compile Include="WaterFlowFM1D2DLink.cs" />
     <Compile Include="WaterFlowFMDataAccessListener.cs" />
     <Compile Include="WaterFlowFMFeatureValueConverter.cs" />
+    <Compile Include="WaterFlowFMModel.IO.cs" />
     <Compile Include="WaterFlowFMModel.Restart.cs" />
     <Compile Include="WaterFlowFMModel.cs" />
     <Compile Include="ModelDefinition\WaterFlowFMModelDefinition.cs" />
