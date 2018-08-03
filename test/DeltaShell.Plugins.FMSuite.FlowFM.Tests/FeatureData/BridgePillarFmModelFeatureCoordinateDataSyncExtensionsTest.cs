@@ -32,8 +32,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             Assert.AreEqual(-999, data.DataColumns[0].ValueList[0]);
             Assert.AreEqual(-999, data.DataColumns[0].ValueList[1]);
 
-            Assert.AreEqual(-999, data.DataColumns[1].ValueList[0]);
-            Assert.AreEqual(-999, data.DataColumns[1].ValueList[1]);
+            Assert.AreEqual(1, data.DataColumns[1].ValueList[0]);
+            Assert.AreEqual(1, data.DataColumns[1].ValueList[1]);
         }
     }
 }

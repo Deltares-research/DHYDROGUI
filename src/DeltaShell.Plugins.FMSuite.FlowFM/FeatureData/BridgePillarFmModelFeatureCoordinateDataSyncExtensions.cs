@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         private static IEnumerable<IDataColumn> DataColumns()
         {
             yield return new DataColumn<double>(DiameterColumnName){DefaultValue = -999};
-            yield return new DataColumn<double>(DragcoefficientColumnName){DefaultValue = -999};
+            yield return new DataColumn<double>(DragcoefficientColumnName){DefaultValue = 1};
         }
     }
 }
