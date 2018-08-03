@@ -116,6 +116,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     {"horizontal-surfaces-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.SurfacesRelativePath = value)},
                     {"shear-stresses-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.ShearStressesRelativePath = value)},
                     {"attributes-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.AttributesRelativePath = value)},
+                    {"velocities-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.VelocitiesRelativePath = value)},
+                    {"widths-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.WidthsRelativePath = value)},
+                    {"chezy-coefficients-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.ChezyCoefficientsRelativePath = value)},
+
                 };
         }
 

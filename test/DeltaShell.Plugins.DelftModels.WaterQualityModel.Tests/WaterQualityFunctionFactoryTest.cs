@@ -37,5 +37,37 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.AreEqual("Bytes/m^2", function.Components[0].Unit.Symbol);
             Assert.AreEqual("with description", function.Attributes[WaterQualityFunctionFactory.DESCRIPTION_ATTRIBUTE]);
         }
+
+        [Test]
+        public void CreateSegmentFunction_Test()
+        {
+            // setup
+            var name = "testName";
+            var defaultValue = 3.5;
+            var componentName = "testComponent";
+            var unitName = "m/s";
+            var description = "testDescription";
+            var urlPath = @"test\url";
+
+            // call
+            var function = WaterQualityFunctionFactory.CreateSegmentFunction(
+                name,
+                defaultValue,
+                componentName,
+                unitName, 
+                description, 
+                urlPath);
+
+            // assert
+            Assert.IsNotNull(function);
+            Assert.AreEqual(name, function.Name);
+            Assert.AreEqual(defaultValue, function.Components[0].DefaultValue);
+            Assert.AreEqual(componentName, function.Components[0].Name);
+            Assert.AreEqual(unitName, function.Components[0].Unit.Name);
+            Assert.AreEqual(unitName, function.Components[0].Unit.Symbol);
+            Assert.AreEqual(description, function.Attributes[WaterQualityFunctionFactory.DESCRIPTION_ATTRIBUTE]);
+            Assert.AreEqual(urlPath, function.UrlPath);
+
+        }
     }
 }

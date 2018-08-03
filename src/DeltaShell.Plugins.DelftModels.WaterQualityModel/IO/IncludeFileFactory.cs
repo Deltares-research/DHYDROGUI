@@ -565,7 +565,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         
         public static string CreateParametersInclude(WaqInitializationSettings initializationSettings)
         {
-            using (StringWriter writer = new StringWriter(new StringBuilder()))
+            using (var writer = new StringWriter(new StringBuilder()))
             {
                 if (initializationSettings.SurfacesFile != null)
                 {

@@ -1107,6 +1107,37 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
         #endregion Block 9
 
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void Import_Waq_Model_WithSegmentFiles_Create_SegmentFileFunctions()
+        {
+            var testFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
+            testFilePath = TestHelper.CreateLocalCopy(testFilePath);
+
+            //Import the second model on top of waqmodel.
+            var importer = new HydFileImporter();
+            var waqModel = importer.ImportItem(testFilePath) as WaterQualityModel;
+            Assert.IsNotNull(waqModel);
+
+            //Import the substances now.
+            var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
+            subsFilePath = TestHelper.CreateLocalCopy(subsFilePath);
+
+            Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
+            new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
+
+            //Check for the CHEZY seg function in the include.
+            var initSettings = new WaqInitializationSettings
+            {
+                ProcessCoefficients = waqModel.ProcessCoefficients,
+            };
+            var text = IncludeFileFactory.CreateSegfunctionsInclude(initSettings);
+            Assert.IsFalse(string.IsNullOrEmpty(text));
+
+            var expectedText = "SEG_FUNCTIONS\r\n'CHEZY'\r\nALL\r\nBINARY_FILE";
+            Assert.IsTrue(text.Contains(expectedText));
+        }
+
         private static UnstructuredGrid CreateTwoCellStaggeredGrid()
         {
             // setup

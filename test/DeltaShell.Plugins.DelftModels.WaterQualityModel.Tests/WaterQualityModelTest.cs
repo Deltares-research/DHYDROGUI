@@ -592,7 +592,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             // 1st import:
             var hydroData = CreateHydFileStubWithRelativePathOnFunction(functionName, "lalala.data");
 
-            WaterQualityModel model = new WaterQualityModel();
+            var model = new WaterQualityModel();
             model.ImportHydroData(hydroData);
 
             var subFilePath = TestHelper.GetTestFilePath(@"IO\03d_Tewor2003.sub");
@@ -622,7 +622,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             // 1st import:
             var hydroData = CreateHydFileStubWithRelativePathOnFunction(functionName, "lalala.data");
 
-            WaterQualityModel model = new WaterQualityModel();
+            var model = new WaterQualityModel();
             model.ImportHydroData(hydroData);
 
             var subFilePath = TestHelper.GetTestFilePath(@"IO\03d_Tewor2003.sub");
@@ -1597,6 +1597,62 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             //Import a hyd file with the same coordinate system, assert that there is only 1 message thrown which is from the output timers.
             TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(hydPath, model), "Output timers");
             TestHelper.AssertLogMessagesCount(() => importer.ImportItem(hydPath, model), 1);
+        }
+
+        [Test]
+        [TestCase("chezy", true)]
+        [TestCase("velocity", true)]
+        [TestCase("width", true)]
+        [TestCase("surf", true)]
+        [TestCase("salinity", false)]
+        public void Test_IsSegmentFunction_ReturnsExpected(string functionName, bool expected)
+        {
+            var model = new WaterQualityModel();
+            Assert.IsNotNull(model);
+
+            //Import hyd file
+            var hydPath =
+                TestHelper.GetTestFilePath(
+                    @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
+            var importer = new HydFileImporter();
+            var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
+            Assert.IsNotNull(importedItem);
+
+            Assert.IsNotNull(model.HydroData);
+
+            Assert.AreEqual(expected, model.IsSegmentFunction(functionName));
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void Import_Waq_Model_WithSegmentFiles_Create_SegmentFileFunctions()
+        {
+            var testFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
+            testFilePath = TestHelper.CreateLocalCopy(testFilePath);
+
+            //Import the second model on top of waqmodel.
+            var importer = new HydFileImporter();
+            var waqModel = importer.ImportItem(testFilePath) as WaterQualityModel;
+            Assert.IsNotNull(waqModel);
+
+            //Check filepaths
+            Assert.IsFalse(string.IsNullOrEmpty(waqModel.SurfacesRelativeFilePath));
+            Assert.IsFalse(string.IsNullOrEmpty(waqModel.VelocitiesFilePath));
+            Assert.IsFalse(string.IsNullOrEmpty(waqModel.WidthsFilePath));
+            Assert.IsFalse(string.IsNullOrEmpty(waqModel.ChezyCoefficientsFilePath));
+
+            //Import the substances now.
+            var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
+            subsFilePath = TestHelper.CreateLocalCopy(subsFilePath);
+
+            Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
+            new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
+
+            //Check the process has been imported as a segmnent file function
+            var chezyProcess = waqModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals("chezy"));
+            Assert.IsNotNull(chezyProcess);
+            
+            Assert.IsTrue( chezyProcess is SegmentFileFunction);
         }
     }
 }

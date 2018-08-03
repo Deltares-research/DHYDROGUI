@@ -519,6 +519,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         public virtual string LengthsRelativeFilePath { get; protected set; }
 
         /// <summary>
+        /// Gets or sets the velocities file path.
+        /// <see cref="IHydroData.GetVelocitiesFilePath"/>
+        /// </summary>
+        /// <value>
+        /// The velocities file path.
+        /// </value>
+        public virtual string VelocitiesFilePath { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the widths file path.
+        /// <see cref="IHydroData.GetWidthsFilePath"/>
+        /// </summary>
+        /// <value>
+        /// The widths file path.
+        /// </value>
+        public virtual string WidthsFilePath { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the chezy coefficients file path.
+        /// <see cref="IHydroData.GetChezyCoefficientsFilePath"/>
+        /// </summary>
+        /// <value>
+        /// The chezy coefficients file path.
+        /// </value>
+        public virtual string ChezyCoefficientsFilePath { get; protected set; }
+
+
+        /// <summary>
         /// The vertical diffusion file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.vdf
@@ -768,15 +796,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             var schematizationRemainsUnchanged = data.HasSameSchematization(HydroData);
 
-
-            HydroData = data;
-
-            BeginEdit(new DefaultEditAction("Importing hydrodynamics data"));
-
-            importingHydroData = true;
-            
             try
             {
+                BeginEdit(new DefaultEditAction("Importing hydrodynamics data"));
+                HydroData = data;
+
+                importingHydroData = true;
+
                 SetImportProgress("Importing grid");
                 ModelType = HydroData.HydroDynamicModelType;
                 LayerType = HydroData.LayerType;
@@ -804,6 +830,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 SurfacesRelativeFilePath = HydroData.SurfacesRelativePath;
                 ShearStressesRelativeFilePath = HydroData.ShearStressesRelativePath;
                 AttributesRelativeFilePath = HydroData.AttributesRelativePath;
+                VelocitiesFilePath = HydroData.VelocitiesRelativePath;
+                WidthsFilePath = HydroData.WidthsRelativePath;
+                ChezyCoefficientsFilePath = HydroData.ChezyCoefficientsRelativePath;
 
                 SetImportProgress("Importing exchanges and layer information");
                 NumberOfHorizontalExchanges = HydroData.NumberOfHorizontalExchanges;
@@ -853,20 +882,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         private void ResolveBoundaryImport(IEnumerable<WaterQualityBoundary> importedBoundaries)
         {
-            List<WaterQualityBoundary> newBoundaries = new List<WaterQualityBoundary>();
-            foreach (var waterQualityBoundary in importedBoundaries)
+            var newBoundaries = new List<WaterQualityBoundary>();
+            if( importedBoundaries != null)
             {
-                // find an already loaded boundary
-                var existingBoundary = Boundaries.FirstOrDefault(b => b.Name == waterQualityBoundary.Name);
-
-                if (existingBoundary != null)
+                foreach (var waterQualityBoundary in importedBoundaries)
                 {
-                    // copy the location aliases
-                    // TODO: extend this list if there is more to be mapped
-                    waterQualityBoundary.LocationAliases = existingBoundary.LocationAliases;
-                }
+                    // find an already loaded boundary
+                    var existingBoundary = Boundaries.FirstOrDefault(b => b.Name == waterQualityBoundary.Name);
 
-                newBoundaries.Add(waterQualityBoundary);
+                    if (existingBoundary != null)
+                    {
+                        // copy the location aliases
+                        // TODO: extend this list if there is more to be mapped
+                        waterQualityBoundary.LocationAliases = existingBoundary.LocationAliases;
+                    }
+
+                    newBoundaries.Add(waterQualityBoundary);
+                }
             }
 
             Boundaries.Clear();
@@ -922,6 +954,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             if (HydroData != null)
             {
                 return HydroData.HasDataFor(functionName);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Determines whether [is segment function] [the specified function name].
+        /// </summary>
+        /// <param name="functionName">Name of the function.</param>
+        /// <returns>
+        ///   <c>true</c> if [is segment function] [the specified function name]; otherwise, <c>false</c>.
+        /// </returns>
+        public virtual bool IsSegmentFunction(string functionName)
+        {
+            if (HydroData != null)
+            {
+                return HydroData.IsSegmentFunction(functionName);
             }
             return false;
         }

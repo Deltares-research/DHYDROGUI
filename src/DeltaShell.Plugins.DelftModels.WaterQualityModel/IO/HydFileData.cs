@@ -17,6 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     public class HydFileData : Unique<long>, IHydroData, IEquatable<HydFileData>
     {
         private readonly IDictionary<string, Func<string>> delwaqDataToFilePathMapping;
+        private readonly IDictionary<string, Func<string>> delwaqSegmentsFilePathMapping;
         private LayerType layerType;
         private FileInfo path;
         private FileSystemWatcher fileWatcher;
@@ -32,7 +33,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 {"temp", () => TemperatureRelativePath },
                 {"tau", () => ShearStressesRelativePath },
                 {"tauflow", () => ShearStressesRelativePath },
-                // TODO: For SOBEK hyd file: chezy, velocity and width
+            };
+
+            delwaqSegmentsFilePathMapping = new Dictionary<string, Func<string>>
+            {
+                {"chezy", () => ChezyCoefficientsRelativePath},
+                {"velocity", () => VelocitiesRelativePath},
+                {"width", () => WidthsRelativePath},
+                {"surf", () => SurfacesRelativePath},
             };
 
             VolumesRelativePath = string.Empty;
@@ -46,6 +54,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             SurfacesRelativePath = string.Empty;
             ShearStressesRelativePath = string.Empty;
             AttributesRelativePath = string.Empty;
+            VelocitiesRelativePath = string.Empty;
+            WidthsRelativePath = string.Empty;
+            ChezyCoefficientsRelativePath = string.Empty;
 
             fileWatcher = new FileSystemWatcher
                 {
@@ -213,8 +224,39 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// </summary>
         public string AttributesRelativePath { get; set; }
 
+        /// <summary>
+        /// Gets the velocities file path.Relative filepath from <see cref="Path"/>.
+        /// </summary>
+        /// <value>
+        /// The velocities relative file path (with respect to hydraulic data location). Extension .dat.
+        /// </value>
+        public string VelocitiesRelativePath { get; set; }
+
+        /// <summary>
+        /// Gets the widths file path. Relative filepath from <see cref="Path"/>.
+        /// </summary>
+        /// <value>
+        /// The widths relative file path (with respect to hydraulic data location). Extension .dat.
+        /// </value>
+        public string WidthsRelativePath { get; set; }
+
+        /// <summary>
+        /// Gets the chezy coefficients file path. Relative filepath from <see cref="Path"/>.
+        /// </summary>
+        /// <value>
+        /// The chezy coefficients relative file path (with respect to hydraulic data location). Extension .dat.
+        /// </value>
+        public string ChezyCoefficientsRelativePath { get; set; }
+
         #endregion
 
+        /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>
+        /// true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.
+        /// </returns>
         public bool Equals(HydFileData other)
         {
             if (ReferenceEquals(null, other))
@@ -244,6 +286,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 hfd => hfd.SurfacesRelativePath,
                 hfd => hfd.ShearStressesRelativePath,
                 hfd => hfd.AttributesRelativePath,
+                hfd => hfd.VelocitiesRelativePath,
+                hfd => hfd.WidthsRelativePath,
+                hfd => hfd.ChezyCoefficientsRelativePath,
             };
             return pathsToCheck.All(pathGetter => IsFileEqualWithOtherHydFile(other, pathGetter));
         }
@@ -256,6 +301,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         public IDictionary<WaterQualityBoundary, int[]> GetBoundaryNodeIds()
         {
             return BoundaryNodeIds;
+        }
+
+        public bool IsSegmentFunction(string functionName)
+        {
+            var name = functionName.ToLower();
+            return delwaqSegmentsFilePathMapping.ContainsKey(name);
         }
 
         public bool HasDataFor(string functionName)
@@ -335,13 +386,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private string GetFilePathForFunctionName(string functionName)
         {
-            if (!string.IsNullOrEmpty(functionName))
+            if (string.IsNullOrEmpty(functionName)) return null;
+
+            var name = functionName.ToLower();
+            if (delwaqDataToFilePathMapping.ContainsKey(name))
             {
-                var name = functionName.ToLower();
-                if (delwaqDataToFilePathMapping.ContainsKey(name))
-                {
-                    return delwaqDataToFilePathMapping[name]();
-                }
+                return delwaqDataToFilePathMapping[name]();
+            }
+
+            if (delwaqSegmentsFilePathMapping.ContainsKey(name))
+            {
+                return delwaqSegmentsFilePathMapping[name]();
             }
 
             return null;
@@ -349,22 +404,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private bool IsFileEqualWithOtherHydFile(HydFileData other, Func<HydFileData, string> getRelativePath)
         {
-            bool isEqual = false;
-            var filePath = System.IO.Path.Combine(Path.DirectoryName, getRelativePath(this));
-            var otherFilePath = System.IO.Path.Combine(other.Path.DirectoryName, getRelativePath(other));
+            var filePath = System.IO.Path.Combine(Path?.DirectoryName ?? string.Empty, getRelativePath(this));
+            var otherFilePath = System.IO.Path.Combine(other.Path?.DirectoryName ?? string.Empty, getRelativePath(other));
             if (File.Exists(filePath) && File.Exists(otherFilePath))
             {
-                isEqual = FileUtils.PathsAreEqual(filePath, otherFilePath);
-                if (isEqual)
-                {
-                    isEqual = FileUtils.FilesAreEqual(filePath, otherFilePath);
-                }
+                return FileUtils.PathsAreEqual(filePath, otherFilePath)
+                       && FileUtils.FilesAreEqual(filePath, otherFilePath);
             }
-            else if (!File.Exists(filePath) && !File.Exists(otherFilePath))
-            {
-                isEqual = true;
-            }
-            return isEqual;
+
+            return !File.Exists(filePath)
+                   && !File.Exists(otherFilePath);
         }
     }
 }

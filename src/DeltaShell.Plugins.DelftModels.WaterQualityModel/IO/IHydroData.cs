@@ -100,6 +100,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// </summary>
         string AttributesRelativePath { get; }
 
+        /// <summary>
+        /// Gets the velocities file path.
+        /// </summary>
+        /// <value>
+        /// The velocities relative file path (with respect to hydraulic data location). Extension .dat.
+        /// </value>
+        string VelocitiesRelativePath { get; }
+
+        /// <summary>
+        /// Gets the widths file path.
+        /// </summary>
+        /// <value>
+        /// The widths relative file path (with respect to hydraulic data location). Extension .dat.
+        /// </value>
+        string WidthsRelativePath { get; }
+
+        /// <summary>
+        /// Gets the chezy coefficients file path.
+        /// </summary>
+        /// <value>
+        /// The chezy coefficients relative file path (with respect to hydraulic data location). Extension .dat.
+        /// </value>
+        string ChezyCoefficientsRelativePath { get; }
+
         #endregion File references
 
         #region Meta data
@@ -154,6 +178,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <param name="functionName">Name of the function.</param>
         /// <returns>True if data is available, false otherwise.</returns>
         bool HasDataFor(string functionName);
+
+        /// <summary>
+        /// Determines whether [is segment function] [the specified function name].
+        /// </summary>
+        /// <param name="functionName">Name of the function.</param>
+        /// <returns>
+        ///   <c>true</c> if [is segment function] [the specified function name]; otherwise, <c>false</c>.
+        /// </returns>
+        bool IsSegmentFunction(string functionName);
 
         /// <summary>
         /// Gets the file path for a given function when available in the hydro data.

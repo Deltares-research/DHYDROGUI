@@ -295,15 +295,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
 
             if (functionWrapper.Function.IsSegmentFile())
             {
-                var sfFunction = functionWrapper.Function as SegmentFileFunction;
                    //Create dialog asking for the file location.
                    var openFileDialog = new OpenFileDialog();
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                   var filePath = openFileDialog.FileName;
-                    sfFunction.UrlPath = filePath;
-                    UpdateTableView();
-                }
+                if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+
+                var filePath = openFileDialog.FileName;
+
+                var fileFunction = functionWrapper.Function as SegmentFileFunction;
+                if( fileFunction != null) fileFunction.UrlPath = filePath;
+
+                UpdateTableView();
                 return;
             }
 

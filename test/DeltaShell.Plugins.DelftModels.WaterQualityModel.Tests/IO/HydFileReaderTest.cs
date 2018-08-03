@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
@@ -377,6 +378,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             data.Path = new FileInfo(path);
 
             Assert.AreEqual(path, data.ToString());
+        }
+
+        [Test]
+        public void Test_HydFileReader_SegmentProperties_AreSet()
+        {
+            var testPath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
+            Assert.IsTrue(File.Exists(testPath));
+            testPath = TestHelper.CreateLocalCopy(testPath);
+            Assert.IsTrue(File.Exists(testPath));
+
+            var data = HydFileReader.ReadAll(new FileInfo(testPath));
+            Assert.IsNotNull(data);
+
+            Assert.IsFalse(string.IsNullOrEmpty(data.SurfacesRelativePath));
+            Assert.IsFalse(string.IsNullOrEmpty(data.VelocitiesRelativePath));
+            Assert.IsFalse(string.IsNullOrEmpty(data.WidthsRelativePath));
+            Assert.IsFalse(string.IsNullOrEmpty(data.ChezyCoefficientsRelativePath));
         }
     }
 }
