@@ -13,6 +13,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
     public class WavePropertiesValidatorTest
     {
         [Test]
+        public void GivenAnWaveModel_WhenTScaleAndTimeStepAreIntegersAndDivisors_ThenNoWarningsAndErrorsShouldBeGiven()
+        {
+            var model = new WaveModel();
+            model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.SimulationMode).SetValueAsString("non-stationary");
+            model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeScale).SetValueAsString("60");
+            model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeStep).SetValueAsString("10");
+            model.TimePointData.WindDataType = InputFieldDataType.Constant;
+            model.TimePointData.WindSpeedConstant = 10;
+
+            var validationReport = WavePropertiesValidator.Validate(model);
+
+            Assert.AreEqual(0, validationReport.GetAllIssuesRecursive().Count);
+
+        }
+
+        [Test]
         public void GivenAnWaveModel_WhenTScaleIsNotAnIntegerAndTimeStepNotADivisor_ThenAnErrorAndWarningShouldBeGiven()
         {
             var model = new WaveModel();
