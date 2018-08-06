@@ -3603,6 +3603,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 case WaterFlowModel1DOutputFileConstants.FileNames.StructuresFile:
                     features = Network.Structures.Except(Network.CompositeBranchStructures.Where(cbs => cbs.Structures.Count < 2));
                     break;
+                case WaterFlowModel1DOutputFileConstants.FileNames.PumpsFile:
+                    features = Network.Pumps;
+                    break;
+                case WaterFlowModel1DOutputFileConstants.FileNames.RetentionsFile:
+                    features = Network.Retentions;
+                    break;
             }
 
             coverage.Clear();
