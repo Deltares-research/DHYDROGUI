@@ -180,15 +180,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         bool HasDataFor(string functionName);
 
         /// <summary>
-        /// Determines whether [is segment function] [the specified function name].
-        /// </summary>
-        /// <param name="functionName">Name of the function.</param>
-        /// <returns>
-        ///   <c>true</c> if [is segment function] [the specified function name]; otherwise, <c>false</c>.
-        /// </returns>
-        bool IsSegmentFunction(string functionName);
-
-        /// <summary>
         /// Gets the file path for a given function when available in the hydro data.
         /// </summary>
         /// <param name="functionName">Name of the funcion.</param>

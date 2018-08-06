@@ -87,7 +87,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 Unit = new Unit(componentUnitName, componentUnitName)
             };
 
-            function.UrlPath = urlPath;
             function.Components.Add(variable);
 
             return function;
@@ -141,7 +140,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// <param name="description">The description as found in the process library.</param>
         public static FunctionFromHydroDynamics CreateFunctionFromHydroDynamics(string name, double defaultValue, string componentName, string componentUnitName, string description, string url=null)
         {
-            var function = new FunctionFromHydroDynamics{ Name = name };
+            var function = new FunctionFromHydroDynamics{ Name = name, FilePath = url};
             function.Attributes.Add(DESCRIPTION_ATTRIBUTE, description);
             var variable = new Variable<double>
             {

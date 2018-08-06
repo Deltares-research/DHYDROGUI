@@ -1651,20 +1651,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             //Import hyd file
             var hydPath =
-                TestHelper.GetTestFilePath(
-                    @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
+                TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
             var importer = new HydFileImporter();
             var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
             Assert.IsNotNull(importedItem);
 
             Assert.IsNotNull(model.HydroData);
 
-            Assert.AreEqual(expected, model.IsSegmentFunction(functionName));
+            Assert.AreEqual(expected, model.HasDataInHydroDynamics(functionName));
         }
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void Import_Waq_Model_WithSegmentFiles_Create_SegmentFileFunctions()
+        public void Import_Waq_Model_WithSegmentFiles_Creates_FunctionFromHydroDynamics()
         {
             var testFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
             testFilePath = TestHelper.CreateLocalCopy(testFilePath);
@@ -1691,7 +1690,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var chezyProcess = waqModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals("chezy"));
             Assert.IsNotNull(chezyProcess);
             
-            Assert.IsTrue( chezyProcess is SegmentFileFunction);
+            Assert.IsTrue( chezyProcess is FunctionFromHydroDynamics);
         }
 
         #endregion
@@ -1726,8 +1725,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var chezyProcess = westernModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals("chezy"));
             Assert.IsNotNull(chezyProcess);
 
-            //Make sure the chezyprocess IS NOT a segment file function
+            //Make sure the chezyprocess IS NOT a segment file function or FromHydroDynamics
             Assert.IsFalse(chezyProcess is SegmentFileFunction);
+            Assert.IsFalse(chezyProcess is FunctionFromHydroDynamics);
 
             //Import the second model on top of the previous one.
 
@@ -1736,18 +1736,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var expectedLogMessage =
                 string.Format(
                     Resources
-                        .WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_as_a_Segment_with_file_path__1_,
-                    "chezy", string.Empty);
+                        .WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_with_Hydrodynamic_data_from_file_path__1_,
+                    "CHEZY", string.Empty);
             TestHelper.AssertAtLeastOneLogMessagesContains(() => westernModel.ImportHydroData(zwolleModel.HydroData), expectedLogMessage);
 
             //Check filepaths, it has been updated.
             Assert.IsFalse(string.IsNullOrEmpty(westernModel.ChezyCoefficientsFilePath));
 
-            //Check the process has been updated as a segmnent file function
+            //Check the process has been updated as a 'FunctionFromHydroDynamics' file function
             chezyProcess = westernModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals("chezy"));
             Assert.IsNotNull(chezyProcess);
 
-            Assert.IsTrue(chezyProcess is SegmentFileFunction);
+            Assert.IsTrue(chezyProcess is FunctionFromHydroDynamics);
         }
     }
 }

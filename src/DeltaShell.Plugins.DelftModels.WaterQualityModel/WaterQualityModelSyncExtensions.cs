@@ -561,14 +561,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             if (action == NotifyCollectionChangeAction.Add && waterQualityModel.HasDataInHydroDynamics(name))
             {
-                if (waterQualityModel.IsSegmentFunction(name))
-                {
-                    var segmentFunction = WaterQualityFunctionFactory.CreateSegmentFunction(name, defaultValue, unit, unit, description, string.Empty);
-                    segmentFunction.UrlPath = waterQualityModel.GetFilePathFromHydroDynamics(segmentFunction);
-                    waterQualityModel.ProcessCoefficients.Add(segmentFunction);
-                    return;
-                }
-
                 var functionFromHydroData = WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics(name, defaultValue, unit, unit, description);
                 functionFromHydroData.FilePath = waterQualityModel.GetFilePathFromHydroDynamics(functionFromHydroData);
                 waterQualityModel.ProcessCoefficients.Add(functionFromHydroData);

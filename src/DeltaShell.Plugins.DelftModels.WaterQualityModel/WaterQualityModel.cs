@@ -871,28 +871,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             if (!ProcessCoefficients.Any()) return;
 
-            var procList = new List<string>
-            {
-                "chezy",
-                "velocity",
-                "width",
-                "surf"
-            };
-
-            procList.ForEach( x => UpdateProcessCoeffIfNeeded(x));
+            ProcessCoefficients
+                .Where(pc => HydroData.HasDataFor(pc.Name)).ToList()/* Keep the previous value if it has not been overwritten. */
+                .ForEach(UpdateProcessCoeffIfNeeded);
         }
 
-        private void UpdateProcessCoeffIfNeeded(string functionName)
+        private void UpdateProcessCoeffIfNeeded(IFunction process)
         {
-            var process = ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower() == functionName);
-            if (process == null || ! HydroData.HasDataFor(functionName)) return;
-            
-            var pathFile = HydroData.GetFilePathFor(functionName);
-            if (process is SegmentFileFunction)
-                ((SegmentFileFunction) process).UrlPath = pathFile;
+            var pathFile = HydroData.GetFilePathFor(process.Name);
+            if (string.IsNullOrEmpty(pathFile)) return;
+            if (process is FunctionFromHydroDynamics)
+                ((FunctionFromHydroDynamics) process).FilePath = pathFile;
             else
             {
-                var newSegment = WaterQualityFunctionFactory.CreateSegmentFunction(
+                var newSegment = WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics(
                     process.Name,
                     (double)process.Components[0].DefaultValue,
                     process.Components[0].Unit.Name,
@@ -900,7 +892,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     process.Attributes[WaterQualityFunctionFactory.DESCRIPTION_ATTRIBUTE],
                     pathFile);
                 Log.Info(
-                    string.Format(Resources.WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_as_a_Segment_with_file_path__1_, functionName, pathFile));
+                    string.Format(Resources.WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_with_Hydrodynamic_data_from_file_path__1_,
+                    process.Name,
+                    pathFile));
                 ProcessCoefficients.Remove(process);
                 ProcessCoefficients.Add(newSegment);
             }
@@ -993,27 +987,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// <returns>True if there is data defined in the hydro dynamics, false otherwise.</returns>
         public virtual bool HasDataInHydroDynamics(string functionName)
         {
-            if (HydroData != null)
-            {
-                return HydroData.HasDataFor(functionName);
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Determines whether [is segment function] [the specified function name].
-        /// </summary>
-        /// <param name="functionName">Name of the function.</param>
-        /// <returns>
-        ///   <c>true</c> if [is segment function] [the specified function name]; otherwise, <c>false</c>.
-        /// </returns>
-        public virtual bool IsSegmentFunction(string functionName)
-        {
-            if (HydroData != null)
-            {
-                return HydroData.IsSegmentFunction(functionName);
-            }
-            return false;
+            return HydroData != null && HydroData.HasDataFor(functionName);
         }
 
         /// <summary>

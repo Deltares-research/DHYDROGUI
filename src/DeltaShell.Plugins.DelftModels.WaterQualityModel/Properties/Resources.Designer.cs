@@ -362,12 +362,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The process coefficient {0} has been updated as a Segment with file path {1}.
+        ///   Looks up a localized string similar to The process coefficient {0} has been updated with Hydrodynamic data from file path {1}.
         /// </summary>
-        public static string WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_as_a_Segment_with_file_path__1_ {
+        public static string WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_with_Hydrodynamic_data_from_file_path__1_ {
             get {
                 return ResourceManager.GetString("WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been" +
-                        "_updated_as_a_Segment_with_file_path__1_", resourceCulture);
+                        "_updated_with_Hydrodynamic_data_from_file_path__1_", resourceCulture);
             }
         }
         

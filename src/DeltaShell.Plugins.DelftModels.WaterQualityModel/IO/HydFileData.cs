@@ -17,7 +17,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     public class HydFileData : Unique<long>, IHydroData, IEquatable<HydFileData>
     {
         private readonly IDictionary<string, Func<string>> delwaqDataToFilePathMapping;
-        private readonly IDictionary<string, Func<string>> delwaqSegmentsFilePathMapping;
         private LayerType layerType;
         private FileInfo path;
         private FileSystemWatcher fileWatcher;
@@ -33,10 +32,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 {"temp", () => TemperatureRelativePath },
                 {"tau", () => ShearStressesRelativePath },
                 {"tauflow", () => ShearStressesRelativePath },
-            };
-
-            delwaqSegmentsFilePathMapping = new Dictionary<string, Func<string>>
-            {
                 {"chezy", () => ChezyCoefficientsRelativePath},
                 {"velocity", () => VelocitiesRelativePath},
                 {"width", () => WidthsRelativePath},
@@ -303,12 +298,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             return BoundaryNodeIds;
         }
 
-        public bool IsSegmentFunction(string functionName)
-        {
-            var name = functionName.ToLower();
-            return delwaqSegmentsFilePathMapping.ContainsKey(name);
-        }
-
         public bool HasDataFor(string functionName)
         {
             return !string.IsNullOrWhiteSpace(GetFilePathForFunctionName(functionName));
@@ -389,17 +378,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             if (string.IsNullOrEmpty(functionName)) return null;
 
             var name = functionName.ToLower();
-            if (delwaqDataToFilePathMapping.ContainsKey(name))
-            {
-                return delwaqDataToFilePathMapping[name]();
-            }
-
-            if (delwaqSegmentsFilePathMapping.ContainsKey(name))
-            {
-                return delwaqSegmentsFilePathMapping[name]();
-            }
-
-            return null;
+            return delwaqDataToFilePathMapping.ContainsKey(name) 
+                ? delwaqDataToFilePathMapping[name]() 
+                : null;
         }
 
         private bool IsFileEqualWithOtherHydFile(HydFileData other, Func<HydFileData, string> getRelativePath)
