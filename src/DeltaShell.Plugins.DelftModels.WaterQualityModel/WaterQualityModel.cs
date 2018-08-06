@@ -739,7 +739,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 if (existingGridCoordinateSystemString == newCoordinateSystemString) return;
 
                 Grid.CoordinateSystem = value;
-                Log.Info(string.Format(Resources.WaterQualityModel_CoordinateSystem_The_coordinate_system_of_the_model_has_been_set_to__0_, CoordinateSystem));
                 OnInputPropertyChanged(this, new PropertyChangedEventArgs("CoordinateSystem"));
             }
         }
@@ -783,6 +782,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
 
             //As per issue D3DFMIQ-318, we should override the coordinate system with the imported one. 
+            if (CoordinateSystem != null && CoordinateSystem != data.Grid?.CoordinateSystem )
+            {
+                Log.Info(string.Format(Resources.WaterQualityModel_CoordinateSystem_The_coordinate_system_of_the_model_has_been_set_to__0_, data.Grid?.CoordinateSystem));
+            }
             CoordinateSystem = data.Grid?.CoordinateSystem;
             if (data.Equals(HydroData))
             {
