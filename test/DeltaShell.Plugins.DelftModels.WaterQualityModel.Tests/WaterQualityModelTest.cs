@@ -1680,7 +1680,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.IsFalse(string.IsNullOrEmpty(waqModel.ChezyCoefficientsFilePath));
 
             //Import the substances now.
-            var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
+            var subsFilePath = TestHelper.GetTestFilePath(@"substances\02b_Oxygen_bod_sediment.sub");
             subsFilePath = TestHelper.CreateLocalCopy(subsFilePath);
 
             Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
@@ -1697,57 +1697,113 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void Import_Waq_Model_WithSegmentFiles_OverExistingWaqModel_Update_SegmentFileFunctions()
+        [Category(TestCategory.DataAccess)]
+        public void Import_Waq_Model_WithFromHydroFileFunctions_OverExistingWaqModel_Update_To_New_FromHydroFileFunctions()
         {
-            var zwolleFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
-            zwolleFilePath = TestHelper.CreateLocalCopy(zwolleFilePath);
+            //Files
+            var hydroFilePath = TestHelper.GetTestFilePath(@"sobek-basic\sobek.hyd");
+            Assert.IsTrue(File.Exists(hydroFilePath));
 
-            //Import hyd file
-            var westernschedlt =
-                TestHelper.GetTestFilePath(
-                    @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
-            westernschedlt = TestHelper.CreateLocalCopy(westernschedlt);
-            Assert.IsTrue(File.Exists(westernschedlt));
+            var newFilePath = TestHelper.GetTestFilePath(@"sobek-basic\sobek-newFunction.hyd");
+            Assert.IsTrue(File.Exists(newFilePath));
 
-            var importer = new HydFileImporter();
-            var westernModel = importer.ImportItem(westernschedlt) as WaterQualityModel;
-            Assert.IsNotNull(westernModel);
-            Assert.IsTrue(string.IsNullOrEmpty(westernModel.ChezyCoefficientsFilePath));
+            var subsFilePath = TestHelper.GetTestFilePath(@"substances\\02b_Oxygen_bod_sediment.sub");
+            Assert.IsTrue(File.Exists(subsFilePath));
 
-            //Import the substances now.
-            var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
-            subsFilePath = TestHelper.CreateLocalCopy(subsFilePath);
-
-            Assert.IsNotNull(westernModel.SubstanceProcessLibrary);
-            new SubFileImporter().Import(westernModel.SubstanceProcessLibrary, subsFilePath);
-
-            //Check the process has been imported as a segmnent file function
-            var chezyProcess = westernModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals("chezy"));
-            Assert.IsNotNull(chezyProcess);
-
-            //Make sure the chezyprocess IS NOT a segment file function or FromHydroDynamics
-            Assert.IsFalse(chezyProcess is SegmentFileFunction);
-            Assert.IsFalse(chezyProcess is FunctionFromHydroDynamics);
-
-            //Import the second model on top of the previous one.
-
-            var zwolleModel = importer.ImportItem(zwolleFilePath) as WaterQualityModel;
-            Assert.IsNotNull(zwolleModel);
+            var fromFilePath = string.Format(Resources.WaterQualityModel_UpdateProcessCoeffIfNeeded_With_Hydrodynamic_data_from_file_path___0_, string.Empty);
             var expectedLogMessage =
                 string.Format(
-                    Resources
-                        .WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_with_Hydrodynamic_data_from_file_path__1_,
-                    "CHEZY", string.Empty);
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => westernModel.ImportHydroData(zwolleModel.HydroData), expectedLogMessage);
+                    Resources.WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_to_type__1____2_,
+                    "CHEZY",
+                    Resources.WaterQualityModel_UpdateProcessCoeffIfNeeded_Function_from_HydroDynamics,
+                    fromFilePath);
+            
+            ImportHydFilesAndCheckExpectedProcessCoefficient(hydroFilePath, false, subsFilePath, newFilePath, false, expectedLogMessage);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.DataAccess)]
+        public void Import_Waq_Model_WithFromHydroFileFunctions_OverExistingWaqModel_Update_To_ConstantFunctions()
+        {
+            //Files
+            var hydroFilePath = TestHelper.GetTestFilePath(@"sobek-basic\sobek.hyd");
+            Assert.IsTrue(File.Exists(hydroFilePath));
+
+            var constantFilePath = TestHelper.GetTestFilePath(@"sobek-basic\sobek-constantFunction.hyd");
+            Assert.IsTrue(File.Exists(constantFilePath));
+
+            var subsFilePath = TestHelper.GetTestFilePath(@"substances\02b_Oxygen_bod_sediment.sub");
+            Assert.IsTrue(File.Exists(subsFilePath));
+
+            var expectedLogMessage =
+                string.Format(
+                    Resources.WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_to_type__1____2_,
+                    "CHEZY",
+                    Resources.WaterQualityModel_UpdateProcessCoeffIfNeeded_Constant_Function, string.Empty);
+
+            ImportHydFilesAndCheckExpectedProcessCoefficient(hydroFilePath, false, subsFilePath, constantFilePath , true, expectedLogMessage);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.DataAccess)]
+        public void Import_Waq_Model_WithConstantFunctions_OverExistingWaqModel_Update_To_FromHydroFileFunctions()
+        {
+            //Files
+            var hydroFilePath = TestHelper.GetTestFilePath(@"sobek-basic\sobek.hyd");
+            Assert.IsTrue(File.Exists(hydroFilePath));
+
+            var constantFilePath = TestHelper.GetTestFilePath(@"sobek-basic\sobek-constantFunction.hyd");
+            Assert.IsTrue(File.Exists(constantFilePath));
+
+            var subsFilePath = TestHelper.GetTestFilePath(@"substances\\02b_Oxygen_bod_sediment.sub");
+            Assert.IsTrue(File.Exists(subsFilePath));
+
+            //Import the second model on top of the previous one.
+            var fromFilePath = string.Format(Resources.WaterQualityModel_UpdateProcessCoeffIfNeeded_With_Hydrodynamic_data_from_file_path___0_, string.Empty);
+            var expectedLogMessage =
+                string.Format(
+                    Resources.WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_to_type__1____2_,
+                    "CHEZY",
+                    Resources.WaterQualityModel_UpdateProcessCoeffIfNeeded_Function_from_HydroDynamics, fromFilePath);
+
+            ImportHydFilesAndCheckExpectedProcessCoefficient(constantFilePath, true, subsFilePath, hydroFilePath, false, expectedLogMessage);
+
+        }
+
+        private static void ImportHydFilesAndCheckExpectedProcessCoefficient(string firstFilePath, bool firstIsConstant, string subsFilePath, string secondFilePath, bool secondIsConstant, string expectedLogMessage)
+        {
+            var importer = new HydFileImporter();
+            var firstModel = importer.ImportItem(firstFilePath) as WaterQualityModel;
+            Assert.IsNotNull(firstModel);
+            Assert.AreEqual(firstIsConstant, string.IsNullOrEmpty(firstModel.ChezyCoefficientsFilePath));
+
+            //Import the substances now.
+            Assert.IsNotNull(firstModel.SubstanceProcessLibrary);
+            new SubFileImporter().Import(firstModel.SubstanceProcessLibrary, subsFilePath);
+
+            //Check the process has been imported as a expected.
+            var chezyProcess = firstModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals("chezy"));
+            Assert.IsNotNull(chezyProcess);
+            Assert.AreEqual(!firstIsConstant, chezyProcess is FunctionFromHydroDynamics);
+            Assert.AreEqual(firstIsConstant, chezyProcess.IsConst());
+
+            //Impot second model
+            WaterQualityModel secondModel = null;
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => secondModel = importer.ImportItem(secondFilePath, firstModel) as WaterQualityModel, expectedLogMessage);
+            Assert.IsNotNull(secondModel);
 
             //Check filepaths, it has been updated.
-            Assert.IsFalse(string.IsNullOrEmpty(westernModel.ChezyCoefficientsFilePath));
+            Assert.AreEqual(secondIsConstant, string.IsNullOrEmpty(secondModel.ChezyCoefficientsFilePath));
 
-            //Check the process has been updated as a 'FunctionFromHydroDynamics' file function
-            chezyProcess = westernModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals("chezy"));
+            //Check the process has been updated as a 'FuncctionFromHydroDynamics' function
+            chezyProcess = secondModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals("chezy"));
             Assert.IsNotNull(chezyProcess);
 
-            Assert.IsTrue(chezyProcess is FunctionFromHydroDynamics);
+            Assert.AreEqual(!secondIsConstant, chezyProcess is FunctionFromHydroDynamics);
+            Assert.AreEqual(secondIsConstant, chezyProcess.IsConst());
         }
     }
 }

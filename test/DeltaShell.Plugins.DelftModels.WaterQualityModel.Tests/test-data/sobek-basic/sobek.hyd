@@ -1,0 +1,39 @@
+file-created-by  Deltares, SOBEKSIM Version 5.00.019.40979:40980, Jul 17 2015, 11:41:03
+file-creation-date  2015-07-17, 11:53:11                                        
+task                        full-coupling
+geometry                    unstructured
+horizontal-aggregation      no
+reference-time              '20070115010000'
+hydrodynamic-start-time     '20070115010000'
+hydrodynamic-stop-time      '20070117010000'
+hydrodynamic-timestep       '00000000010000'
+conversion-ref-time         '20070115010000'
+conversion-start-time       '20070115010000'
+conversion-stop-time        '20070117010000'
+conversion-timestep         '00000000010000'
+grid-cells-first-direction                     551
+grid-cells-second-direction                      1
+number-hydrodynamic-layers                       1
+number-horizontal-exchanges                    588
+number-water-quality-segments-per-layer        551
+number-water-quality-layers                      1
+hydrodynamic-file           'sobek'
+aggregation-file            none
+boundaries-file             'sobek.bnd'
+waqgeom-file                'sobek_waqgeom.nc'
+volumes-file                'volume.dat'
+areas-file                  'area.dat'
+flows-file                  'flow.dat'
+pointers-file               'sobek.poi'
+lengths-file                'length.dat'
+horizontal-surfaces-file    'surface.dat'
+velocities-file             'velocity.dat'
+widths-file                 'width.dat'
+chezy-coefficients-file     'chezy.dat'
+attributes-file             'sobek.atr'
+hydrodynamic-layers
+       1.000000
+end-hydrodynamic-layers
+water-quality-layers   
+       1.000000
+end-water-quality-layers
