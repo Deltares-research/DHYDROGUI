@@ -186,7 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to WindSpeed is zero whereas quadruple is true..
+        ///   Looks up a localized string similar to Wind speed should be greater than zero when the option of quadruplets is activated..
         /// </summary>
         public static string WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_ {
             get {
