@@ -32,19 +32,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 issues.Add(new ValidationIssue(model, ValidationSeverity.Error, Resources.WavePropertiesValidator_ValidateThat_TimeStep_Is_Not_Bigger_Than_TimeScale));
             }
 
-            if ((tScale % timeStep) != 0 && timeStepProperty.IsEnabled(model.ModelDefinition.Properties) &&
+            if ((tScale % timeStep) >= 1e-10 && timeStepProperty.IsEnabled(model.ModelDefinition.Properties) &&
                 tScaleProperty.IsEnabled(model.ModelDefinition.Properties))
             {
                 issues.Add(new ValidationIssue(model, ValidationSeverity.Error, Resources.WavePropertiesValidator_ValidateDivisor));
             }
             
-            if ((tScale % 1) != 0 && timeStepProperty.IsEnabled(model.ModelDefinition.Properties) &&
+            if ((tScale % 1) >= 1e-10 && timeStepProperty.IsEnabled(model.ModelDefinition.Properties) &&
                 tScaleProperty.IsEnabled(model.ModelDefinition.Properties))
             {
                 issues.Add(new ValidationIssue(model, ValidationSeverity.Warning, Resources.WavePropertiesValidator_ValidateTScale));
             }
 
-            if ((timeStep % 1) != 0 && timeStepProperty.IsEnabled(model.ModelDefinition.Properties) &&
+            if ((timeStep % 1) >= 1e-10 && timeStepProperty.IsEnabled(model.ModelDefinition.Properties) &&
                 tScaleProperty.IsEnabled(model.ModelDefinition.Properties))
             {
                 issues.Add(new ValidationIssue(model, ValidationSeverity.Warning, Resources.WavePropertiesValidator_ValidateTimeStep));
