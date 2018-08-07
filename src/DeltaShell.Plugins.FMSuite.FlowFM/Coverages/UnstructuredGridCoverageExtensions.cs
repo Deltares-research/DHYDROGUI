@@ -9,6 +9,7 @@ using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 ﻿using NetTopologySuite.Extensions.Grids;
 ﻿using SharpMap.Api;
+using SharpMap.Api.ECModule;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
 {
@@ -119,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                 {
                     FunctionHelper.SetValuesRaw(locationIndexVariable, Enumerable.Range(0, count));
                 }
-                using (var api = new RemoteGeometryApi())
+                using (var api = new RemoteECModuleApi())
                 {
                     var targetX = newLocations.Select(p => p.X).ToArray();
                     var targetY = newLocations.Select(p => p.Y).ToArray();
