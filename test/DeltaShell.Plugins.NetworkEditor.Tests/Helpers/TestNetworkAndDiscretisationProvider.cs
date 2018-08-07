@@ -1,4 +1,5 @@
 ﻿using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.Grid;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
@@ -161,6 +162,34 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 5) { Name = "point_5" });
 
             return networkDiscretisation;
+        }
+
+        public static HydroNetwork CreateSimpleSewerNetwork(string pipeName)
+        {
+            var network = new HydroNetwork();
+
+            var manhole1 = new Manhole("manhole1") { Geometry = new Point(0, 0), Network = network };
+            var manhole2 = new Manhole("manhole2") { Geometry = new Point(0, 100), Network = network };
+            manhole1.Compartments.Add(new Compartment("cmp1"));
+            manhole2.Compartments.Add(new Compartment("cmp2"));
+            network.Nodes.Add(manhole1);
+            network.Nodes.Add(manhole2);
+
+            var pipe1 = new Pipe
+            {
+                Name = pipeName,
+                Network = network,
+                SourceCompartment = manhole1.GetCompartmentByName("cmp1"),
+                TargetCompartment = manhole2.GetCompartmentByName("cmp2"),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(0, 100)
+                })
+            };
+
+            network.Branches.Add(pipe1);
+            return network;
         }
     }
 }

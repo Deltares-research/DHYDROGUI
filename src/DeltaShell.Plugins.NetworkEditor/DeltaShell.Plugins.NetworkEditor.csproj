@@ -173,6 +173,7 @@
     <Compile Include="ImportExportCsv\CsvImporterHelper.cs" />
     <Compile Include="ImportExportCsv\CustomEnumCsvConverter.cs" />
     <Compile Include="ImportExportCsv\CrossSectionCsvData.cs" />
+    <Compile Include="IO\BranchTypeFile.cs" />
     <Compile Include="MapLayers\AreaLayer.cs" />
     <Compile Include="MapLayers\AreaLayerStyles.cs" />
     <Compile Include="MapLayers\CustomRenderers\LeveeBreachRenderer.cs" />
@@ -385,9 +386,7 @@
   <ItemGroup>
     <None Include="Resources\guide.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="IO\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Resources\KolkMap.png" />
   </ItemGroup>

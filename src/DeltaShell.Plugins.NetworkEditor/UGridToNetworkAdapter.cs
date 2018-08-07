@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.NetworkEditor.IO;
 using GeoAPI.Extensions.Coverages;
 using log4net;
 using NetTopologySuite.Extensions.Features;
@@ -59,6 +61,9 @@ namespace DeltaShell.Plugins.NetworkEditor
                         networkUGridDataModel.BranchOrderNumbers);
 
                     uGridNetwork.WriteNetworkGeometry(networkUGridDataModel.GeopointsX, networkUGridDataModel.GeopointsY);
+                    
+                    var directoryName = Path.GetDirectoryName(netFilePath);
+                    if(directoryName != null) BranchTypeFile.Write(network.Branches, Path.Combine(directoryName, "branchGui.csv"));
                 }
             }
             catch (Exception ex)

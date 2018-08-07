@@ -4,7 +4,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.NetworkEditor.IO;
 using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
 
