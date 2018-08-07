@@ -86,8 +86,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         public void CheckWavePropertiesWithFlowModel(double windSpeed, bool quadruplets, InputFieldDataType windType, bool warningAlert  )
         {
             var model = new WaveModel();
-            var reportMessage = "WindSpeed is zero whereas quadruple is true.";
-            var reportSeverity = ValidationSeverity.Warning;
+            var reportMessage = Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_;
+            var reportSeverity = ValidationSeverity.Error;
             
             /* Assigning variables */
             model.TimePointData.WindSpeedConstant = windSpeed;

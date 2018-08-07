@@ -129,6 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory,
                 KnownWaveProperties.COMFile).Value = "file.txt";
             waveModel.GetFlowComFilePath = () => "";
+            waveModel.TimePointData.WindSpeedConstant = 2;
             var fmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
             Assert.NotNull(fmModel);
 
