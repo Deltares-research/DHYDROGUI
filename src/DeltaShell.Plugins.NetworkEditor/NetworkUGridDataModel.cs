@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
+using DeltaShell.Plugins.NetworkEditor.IO;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -138,7 +139,7 @@ namespace DeltaShell.Plugins.NetworkEditor
             }
         }
 
-        public static IHydroNetwork ReconstructHydroNetwork(NetworkUGridDataModel dataModel)
+        public static IHydroNetwork ReconstructHydroNetwork(NetworkUGridDataModel dataModel, Dictionary<string,int> branchTypes = null)
         {
             var network = new HydroNetwork
             {
@@ -148,11 +149,11 @@ namespace DeltaShell.Plugins.NetworkEditor
 
             var nodes = ConstructHydroNodes(network, dataModel.NodesX, dataModel.NodesY, dataModel.NodesNames, dataModel.NodesDescriptions);
 
-            var branches = ConstructNetworkChannels(network, nodes, dataModel.SourceNodeIds, dataModel.TargedNodesIds,
+            var branches = ConstructNetworkBranches(network, nodes, dataModel.SourceNodeIds, dataModel.TargedNodesIds,
                 dataModel.BranchLengths,
                 dataModel.NumberOfBranchGeometryPoints, dataModel.BranchNames, dataModel.BranchDescriptions, 
                 dataModel.GeopointsX, dataModel.GeopointsY, 
-                dataModel.BranchOrderNumbers);
+                dataModel.BranchOrderNumbers, branchTypes);
 
             network.Nodes.AddRange(nodes);
             network.Branches.AddRange(branches);
@@ -164,7 +165,7 @@ namespace DeltaShell.Plugins.NetworkEditor
         {
             var nodes = new List<IHydroNode>();
 
-            int numberOfNodes = nodesX.Length;
+            var numberOfNodes = nodesX.Length;
             if (numberOfNodes <= 0)
             {
                 return nodes;
@@ -177,7 +178,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                 throw new InvalidOperationException(string.Format("The arrays are not the same length"));
             }
 
-            for (int i = 0; i < numberOfNodes; ++i)
+            for (var i = 0; i < numberOfNodes; ++i)
             {
                 var node = new HydroNode
                 {
@@ -192,15 +193,15 @@ namespace DeltaShell.Plugins.NetworkEditor
             return nodes;
         }
 
-        private static List<IChannel> ConstructNetworkChannels(INetwork parentNetwork, List<IHydroNode> nodes, int[] sourceNodes, int[] targetNodes,
-            double[] branchLengths, int[] branchGeometryPoints, string[] branchNames, string[] branchDescriptions, double[] geometryPointsX, double[] geometryPointsY, int[] branchOrderNumbers)
+        private static List<IBranch> ConstructNetworkBranches(INetwork parentNetwork, List<IHydroNode> nodes, int[] sourceNodes, int[] targetNodes,
+            double[] branchLengths, int[] branchGeometryPoints, string[] branchNames, string[] branchDescriptions, double[] geometryPointsX, double[] geometryPointsY, int[] branchOrderNumbers, Dictionary<string,int> branchTypes)
         {
-            var channels = new List<IChannel>();
+            var branches = new List<IBranch>();
             int numberOfChannels = sourceNodes.Length;
 
             if (numberOfChannels <= 0)
             {
-                return channels;
+                return branches;
             }
 
             if (numberOfChannels != targetNodes.Length
@@ -209,49 +210,69 @@ namespace DeltaShell.Plugins.NetworkEditor
                 || numberOfChannels != branchGeometryPoints.Length
                 || numberOfChannels != branchDescriptions.Length)
             {
-                throw new InvalidOperationException(string.Format("The arrays are not the same length"));
+                throw new InvalidOperationException("The arrays are not the same length");
             }
 
-            int totalNumberOfGeometryPoints = branchGeometryPoints.Sum();
+            var totalNumberOfGeometryPoints = branchGeometryPoints.Sum();
 
             if (totalNumberOfGeometryPoints != geometryPointsX.Length
                 || totalNumberOfGeometryPoints != geometryPointsY.Length)
             {
-                throw new InvalidOperationException(string.Format("Mismatch in the geometry point array lenghts"));
+                throw new InvalidOperationException("Mismatch in the geometry point array lenghts");
             }
 
-            Coordinate[] geometryCoordinates = new Coordinate[totalNumberOfGeometryPoints];
+            var geometryCoordinates = new Coordinate[totalNumberOfGeometryPoints];
 
-            for (int j = 0; j < totalNumberOfGeometryPoints; ++j)
+            for (var j = 0; j < totalNumberOfGeometryPoints; ++j)
             {
                 geometryCoordinates[j] = new Coordinate(geometryPointsX[j], geometryPointsY[j]);
             }
 
-            int geoPointsIndex = 0;
-            for (int i = 0; i < numberOfChannels; ++i)
+            var geoPointsIndex = 0;
+            for (var i = 0; i < numberOfChannels; ++i)
             {
-                int sourceNodeIndex = sourceNodes[i];
-                int targetNodeIndex = targetNodes[i];
-                int numberOfBranchGeometryPoints = branchGeometryPoints[i];
+                var sourceNodeIndex = sourceNodes[i];
+                var targetNodeIndex = targetNodes[i];
+                var numberOfBranchGeometryPoints = branchGeometryPoints[i];
 
-                Coordinate[] coordinates = geometryCoordinates.Skip(geoPointsIndex).Take(numberOfBranchGeometryPoints).ToArray();
+                var coordinates = geometryCoordinates.Skip(geoPointsIndex).Take(numberOfBranchGeometryPoints).ToArray();
                 geoPointsIndex += numberOfBranchGeometryPoints;
 
-                var channel = new Channel
-                {
-                    Network = parentNetwork,
-                    Name = branchNames[i] == "" ? null : branchNames[i],
-                    Description = branchDescriptions[i] == "" ? null : branchDescriptions[i],
-                    Source = nodes[sourceNodeIndex],
-                    Target = nodes[targetNodeIndex],
-                    Geometry = new LineString(coordinates),
-                    OrderNumber = branchOrderNumbers[i]
-                };
+                var branchName = branchNames[i];
+                var branch = CreateBranch(branchTypes[branchName]);
 
-                channels.Add(channel);
+                branch.Network = parentNetwork;
+                branch.Name = branchNames[i] == "" ? null : branchNames[i];
+                branch.Description = branchDescriptions[i] == "" ? null : branchDescriptions[i];
+                branch.Source = nodes[sourceNodeIndex];
+                branch.Target = nodes[targetNodeIndex];
+                branch.Geometry = new LineString(coordinates);
+                branch.OrderNumber = branchOrderNumbers[i];
+
+                if (!branch.IsLengthCustom)
+                {
+                    branch.IsLengthCustom = !branch.Length.IsEqualTo(branchLengths[i], 0.001);
+                }
+                if (branch.IsLengthCustom) branch.Length = branchLengths[i];
+
+                branches.Add(branch);
             }
 
-            return channels;
+            return branches;
+        }
+
+        private static IBranch CreateBranch(int branchType)
+        {
+            var type = (BranchFile.BranchTypes) branchType;
+            switch (type)
+            {
+                case BranchFile.BranchTypes.SewerConnection:
+                    return new SewerConnection();
+                case BranchFile.BranchTypes.Pipe:
+                    return new Pipe();
+                default:
+                    return new Channel();
+            }
         }
     }
 }

@@ -15,6 +15,8 @@ namespace DeltaShell.Plugins.NetworkEditor
         private static readonly ILog Log = LogManager.GetLogger(typeof(UGridToNetworkAdapter));
         private const string IO_NETCDF_NETWORK_ID = "IoNetCdfNetworkId";
 
+        public const string BranchGuiFileName = "branches.gui";
+
         public static void SaveNetwork(IHydroNetwork network, string netFilePath, UGridGlobalMetaData metaData)
         {
             var networkUGridDataModel = new NetworkUGridDataModel(network);
@@ -62,8 +64,8 @@ namespace DeltaShell.Plugins.NetworkEditor
 
                     uGridNetwork.WriteNetworkGeometry(networkUGridDataModel.GeopointsX, networkUGridDataModel.GeopointsY);
                     
-                    var directoryName = Path.GetDirectoryName(netFilePath);
-                    if(directoryName != null) BranchTypeFile.Write(network.Branches, Path.Combine(directoryName, "branchGui.csv"));
+                    var branchesFilePath = GetBranchesFilePath(netFilePath);
+                    if(branchesFilePath != null) BranchFile.Write(network.Branches, branchesFilePath);
                 }
             }
             catch (Exception ex)
@@ -72,12 +74,21 @@ namespace DeltaShell.Plugins.NetworkEditor
             }
         }
 
+        private static string GetBranchesFilePath(string netFilePath)
+        {
+            var directoryName = Path.GetDirectoryName(netFilePath);
+            return directoryName != null ? Path.Combine(directoryName, BranchGuiFileName) : null;
+        }
+
         private static IHydroNetwork LoadNetwork(string netFilePath, Func<int[], int> func)
         {
             try
             {
                 using (var uGridNetwork = new UGridNetwork(netFilePath))
                 {
+                    var brancheTypePath = GetBranchesFilePath(netFilePath);
+                    var branchTypes = BranchFile.Read(brancheTypePath);
+
                     // Open the file to load the network. There can be multiple networks stored in the NetCDF file
                     uGridNetwork.Initialize();
 
@@ -98,7 +109,7 @@ namespace DeltaShell.Plugins.NetworkEditor
 
                     var networkUGridDataModel = LoadNetworkUGridDataModel(uGridNetwork, networkId);
 
-                    var network = NetworkUGridDataModel.ReconstructHydroNetwork(networkUGridDataModel);
+                    var network = NetworkUGridDataModel.ReconstructHydroNetwork(networkUGridDataModel, branchTypes);
                     return network;
                 }
             }

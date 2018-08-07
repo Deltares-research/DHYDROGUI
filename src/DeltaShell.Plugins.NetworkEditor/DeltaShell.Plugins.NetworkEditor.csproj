@@ -173,7 +173,7 @@
     <Compile Include="ImportExportCsv\CsvImporterHelper.cs" />
     <Compile Include="ImportExportCsv\CustomEnumCsvConverter.cs" />
     <Compile Include="ImportExportCsv\CrossSectionCsvData.cs" />
-    <Compile Include="IO\BranchTypeFile.cs" />
+    <Compile Include="IO\BranchFile.cs" />
     <Compile Include="MapLayers\AreaLayer.cs" />
     <Compile Include="MapLayers\AreaLayerStyles.cs" />
     <Compile Include="MapLayers\CustomRenderers\LeveeBreachRenderer.cs" />

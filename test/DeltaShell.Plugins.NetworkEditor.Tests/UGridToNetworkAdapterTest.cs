@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             testDirectory = FileUtils.CreateTempDirectory();
             netFilePath = Path.Combine(testDirectory, "myNetFile.nc");
-            branchGuiFilePath = Path.Combine(testDirectory, "branchGui.csv");
+            branchGuiFilePath = Path.Combine(testDirectory, UGridToNetworkAdapter.BranchGuiFileName);
         }
 
         [TearDown]
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             // Check file content
             var fileContent = File.ReadAllLines(branchGuiFilePath);
             Assert.That(fileContent[0], Is.EqualTo("BranchId;Type"));
-            Assert.That(fileContent[1], Is.EqualTo(pipeName + ";Pipe"));
+            Assert.That(fileContent[1], Is.EqualTo(pipeName + ";3"));
         }
     }
 }

@@ -4,6 +4,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.IO;
 using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
@@ -12,14 +13,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
     [TestFixture]
     [Category(TestCategory.DataAccess)]
-    public class BranchTypeFileTest
+    public class BranchFileTest
     {
         private string filePath;
 
         [SetUp]
         public void Setup()
         {
-            filePath = Path.Combine(FileUtils.CreateTempDirectory(), "branchGui.csv");
+            filePath = Path.Combine(FileUtils.CreateTempDirectory(), UGridToNetworkAdapter.BranchGuiFileName);
         }
 
         [TearDown]
@@ -36,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 new SewerConnection("sc_1"), new SewerConnection("sc_2")
             };
             
-            BranchTypeFile.Write(sewerConnections, filePath);
+            BranchFile.Write(sewerConnections, filePath);
             CheckBranchTypeFileContent(sewerConnections);
         }
 
@@ -48,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 new Pipe { Name = "pipe_1" }, new Pipe { Name = "pipe_2" }
             };
 
-            BranchTypeFile.Write(pipes, filePath);
+            BranchFile.Write(pipes, filePath);
             CheckBranchTypeFileContent(pipes);
         }
 
@@ -60,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 new Channel { Name = "channel_1" }, new Channel { Name = "channel_2" }
             };
 
-            BranchTypeFile.Write(channels, filePath);
+            BranchFile.Write(channels, filePath);
             CheckBranchTypeFileContent(channels);
         }
 
@@ -72,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 new Channel { Name = "myChannel" }, new Pipe { Name = "myPipe" }, new SewerConnection("mySewerConnection")
             };
 
-            BranchTypeFile.Write(branches, filePath);
+            BranchFile.Write(branches, filePath);
             CheckBranchTypeFileContent(branches);
         }
 
@@ -83,13 +84,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 new Channel { Name = "myChannel" }, new Pipe { Name = "myPipe" }, new SewerConnection("mySewerConnection")
             };
-            BranchTypeFile.Write(branches, filePath);
-            var branchToTypeDict = BranchTypeFile.Read(filePath);
+            BranchFile.Write(branches, filePath);
+            var branchToTypeDict = BranchFile.Read(filePath);
 
             Assert.That(branchToTypeDict.Count, Is.EqualTo(3));
-            Assert.That(branchToTypeDict["myChannel"], Is.EqualTo(typeof(Channel).Name));
-            Assert.That(branchToTypeDict["myPipe"], Is.EqualTo(typeof(Pipe).Name));
-            Assert.That(branchToTypeDict["mySewerConnection"], Is.EqualTo(typeof(SewerConnection).Name));
+            Assert.That(branchToTypeDict["myChannel"], Is.EqualTo((int)BranchFile.BranchTypes.Channel));
+            Assert.That(branchToTypeDict["myPipe"], Is.EqualTo((int)BranchFile.BranchTypes.Pipe));
+            Assert.That(branchToTypeDict["mySewerConnection"], Is.EqualTo((int)BranchFile.BranchTypes.SewerConnection));
         }
 
 
@@ -104,7 +105,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         private static void CheckDataContent(string[] fileContent, List<IBranch> branches)
         {
             for (var n = 0; n < branches.Count; n++)
-                Assert.That(fileContent[n+1], Is.EqualTo(branches[n].Name + ";" + branches[n].GetType().Name));
+                Assert.That(fileContent[n+1], Is.EqualTo(branches[n].Name + ";" + GetBranchType(branches[n])));
+        }
+
+        private static int GetBranchType(IBranch branch)
+        {
+            if (branch is IChannel)
+            {
+                return (int)BranchFile.BranchTypes.Channel;
+            }
+            if (branch is IPipe)
+            {
+                return (int)BranchFile.BranchTypes.Pipe;
+            }
+            if (branch is ISewerConnection)
+            {
+                return (int)BranchFile.BranchTypes.SewerConnection;
+            }
+
+            return (int)BranchFile.BranchTypes.Unkown;
         }
 
         private static void CheckHeaderLine(string[] fileContent)

@@ -1,135 +1,108 @@
 ﻿using System.IO;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
-using GeoAPI.Extensions.Coverages;
-using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
     [TestFixture]
+    [Category(TestCategory.Integration)]
     public class UGridToNetworkAdapterIntegrationTest
     {
-        private const string UGRID_TEST_FOLDER = @"ugrid\";
-        
-        [Test]
-        [TestCase(true, "simple_network_testFile.nc")]
-        [TestCase(false, "save_load_network_testFile.nc")]
-        [Category(TestCategory.DataAccess)]
-        public void SaveAndLoadNetworkTest(bool useSimpleNetwork, string netFilePath)
+        private string testDirectory;
+        private string netFilePath;
+
+        [SetUp]
+        public void Setup()
         {
-            var testFilePath =
-            TestHelper.GetTestFilePath(UGRID_TEST_FOLDER + netFilePath);
-            var testFolderPath = Path.GetDirectoryName(testFilePath);
-            FileUtils.CreateDirectoryIfNotExists(testFolderPath);
-            FileUtils.DeleteIfExists(testFilePath);
-            try
-            {
-                var networkDiscretisation = useSimpleNetwork 
-                    ? TestNetworkAndDiscretisationProvider.CreateSimpleNetworkAndDiscretisation() 
-                    : TestNetworkAndDiscretisationProvider.CreateNetworkAndDiscretisation();
-                var storedNetwork = (IHydroNetwork)networkDiscretisation.Network;
+            testDirectory = FileUtils.CreateTempDirectory();
+            netFilePath = Path.Combine(testDirectory, "myNetFile.nc");
+        }
 
-                UGridGlobalMetaData metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
-                UGridToNetworkAdapter.SaveNetwork(storedNetwork, testFilePath, metaData);
-
-                var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(testFilePath);
-
-                // Spaces in names are replaced by underscores while storing the network object. Do the same action for the network which is not stored.
-                ReplaceSpacesInStrings(storedNetwork);
-                ReplacesSpacesInStrings(networkDiscretisation);
-
-                HydroNetworkTestHelper.CompareAndAssertNetworks(storedNetwork, loadedNetwork);
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(testFilePath);
-            }
+        [TearDown]
+        public void TearDown()
+        {
+            FileUtils.DeleteIfExists(testDirectory);
         }
 
         [Test]
-        [TestCase(true, "simple_network_and_discretisation_testFile.nc")]
-        [TestCase(false, "save_load_network_and_discretisation_testFile.nc")]
-        [Category(TestCategory.DataAccess)]
-        public void SaveAndLoadNetworkAndDiscretisationTest(bool useSimpleNetwork, string netFilePath)
+        [TestCase(true)]
+        [TestCase(false)]
+        public void SaveAndLoadNetworkTest(bool useSimpleNetwork)
         {
-            var testFilePath =
-                TestHelper.GetTestFilePath(UGRID_TEST_FOLDER + netFilePath);
-            var testFolderPath = Path.GetDirectoryName(testFilePath);
-            FileUtils.CreateDirectoryIfNotExists(testFolderPath);
-            FileUtils.DeleteIfExists(testFilePath);
-            try
-            {
-                var networkDiscretisation = useSimpleNetwork
-                    ? TestNetworkAndDiscretisationProvider.CreateSimpleNetworkAndDiscretisation()
-                    : TestNetworkAndDiscretisationProvider.CreateNetworkAndDiscretisation();
-                var storedNetwork = (IHydroNetwork)networkDiscretisation.Network;
+            var networkDiscretisation = useSimpleNetwork 
+                ? TestNetworkAndDiscretisationProvider.CreateSimpleNetworkAndDiscretisation() 
+                : TestNetworkAndDiscretisationProvider.CreateNetworkAndDiscretisation();
+            var storedNetwork = (IHydroNetwork)networkDiscretisation.Network;
 
-                UGridGlobalMetaData metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
-                UGridToNetworkAdapter.SaveNetwork(storedNetwork, testFilePath, metaData);
-                UGridToNetworkAdapter.SaveNetworkDiscretisation(networkDiscretisation, testFilePath);
+            var metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
+            UGridToNetworkAdapter.SaveNetwork(storedNetwork, netFilePath, metaData);
 
-                var loadedDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(testFilePath);
-                Assert.NotNull(loadedDiscretisation);
-
-                var loadedNetwork = (IHydroNetwork) loadedDiscretisation.Network;
-                
-                // Spaces in names are replaced by underscores while storing the network object. Do the same action for the network which is not stored.
-                ReplaceSpacesInStrings(storedNetwork);
-                ReplacesSpacesInStrings(networkDiscretisation);
-
-                HydroNetworkTestHelper.CompareAndAssertNetworks(storedNetwork, loadedNetwork);
-                HydroNetworkTestHelper.CompareAndAssertDiscretisations(networkDiscretisation, loadedDiscretisation);
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(testFilePath);
-            }
+            var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(netFilePath);
+            HydroNetworkTestHelper.CompareAndAssertNetworks(storedNetwork, loadedNetwork);
         }
 
-        private void ReplacesSpacesInStrings(IDiscretization discretization)
+        [Test]
+        public void SaveAndLoadNetwork_WithCustomizedLengthBranchTest()
         {
-            if (discretization.Name != null)
-            {
-                discretization.Name = discretization.Name.Trim().Replace(" ", "_");
-            }
+            var networkDiscretisation = TestNetworkAndDiscretisationProvider.CreateSimpleNetworkAndDiscretisation();
+            var storedNetwork = (IHydroNetwork)networkDiscretisation.Network;
 
-            if (discretization.Network != null)
-            {
-                ReplaceSpacesInStrings(discretization.Network);
-            }
+            var customizedBranch = storedNetwork.Branches.First();
+            customizedBranch.IsLengthCustom = true;
+            var length = customizedBranch.Length + 1000;
+            customizedBranch.Length = length;
+
+            Assert.That(customizedBranch.Length, Is.EqualTo(length));
+
+            var metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
+            UGridToNetworkAdapter.SaveNetwork(storedNetwork, netFilePath, metaData);
+            var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(netFilePath);
+
+            var loadedCustomizedBranch = loadedNetwork.Branches.First();
+            Assert.That(loadedCustomizedBranch.Length, Is.EqualTo(length));
         }
 
-        private void ReplaceSpacesInStrings(INetwork network)
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void SaveAndLoadNetworkAndDiscretisationTest(bool useSimpleNetwork)
         {
-            network.Name = network.Name.Trim().Replace(" ", "_");
+            var networkDiscretisation = useSimpleNetwork
+                ? TestNetworkAndDiscretisationProvider.CreateSimpleNetworkAndDiscretisation()
+                : TestNetworkAndDiscretisationProvider.CreateNetworkAndDiscretisation();
+            var storedNetwork = (IHydroNetwork)networkDiscretisation.Network;
 
-            foreach (var node in network.Nodes)
-            {
-                if (node.Name != null)
-                {
-                    node.Name = node.Name.Trim().Replace(" ", "_");
-                }
-                if (node.Description != null)
-                {
-                    node.Description = node.Description.Trim().Replace(" ", "_");
-                }
-            }
+            var metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
+            UGridToNetworkAdapter.SaveNetwork(storedNetwork, netFilePath, metaData);
+            UGridToNetworkAdapter.SaveNetworkDiscretisation(networkDiscretisation, netFilePath);
 
-            foreach (var branch in network.Branches)
-            {
-                if (branch.Name != null)
-                {
-                    branch.Name = branch.Name.Trim().Replace(" ", "_");
-                }
-                if (branch.Description != null)
-                {
-                    branch.Description = branch.Description.Trim().Replace(" ", "_");
-                }
-            }
+            var loadedDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(netFilePath);
+            Assert.NotNull(loadedDiscretisation);
+
+            var loadedNetwork = (IHydroNetwork) loadedDiscretisation.Network;
+
+            HydroNetworkTestHelper.CompareAndAssertNetworks(storedNetwork, loadedNetwork);
+            HydroNetworkTestHelper.CompareAndAssertDiscretisations(networkDiscretisation, loadedDiscretisation);
+        }
+
+        [Test]
+        [Ignore]
+        public void GivenSimpleSewerNetwork_WhenSavingAndLoadingNetwork_ThenTheNetworkIsUnchanged()
+        {
+            const string pipeName = "myPipe";
+            var sewerNetwork = TestNetworkAndDiscretisationProvider.CreateSimpleSewerNetwork(pipeName);
+
+            var metaData = new UGridGlobalMetaData(sewerNetwork.Name, "PluginName", "PluginVersion");
+            UGridToNetworkAdapter.SaveNetwork(sewerNetwork, netFilePath, metaData);
+            var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(netFilePath);
+
+            Assert.That(loadedNetwork.Pipes.Count(), Is.EqualTo(1));
+            Assert.That(loadedNetwork.Manholes.Count(), Is.EqualTo(2), "Work in progress: still work to be done for retention file writer to be able to distinguish between types of nodes");
         }
     }
 }

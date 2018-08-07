@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
@@ -46,11 +45,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public int WriteNetworkNodes(double[] nodesX, double[] nodesY, string[] nodesids, string[] nodeslongNames)
         {
             if (!Initialized || !NetworkReadyForWriting) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-
-            // replace spaces by underscores in the branch names/ids
-            nodesids = nodesids.ReplaceSpacesInString();
-            nodeslongNames = nodeslongNames.ReplaceSpacesInString();
-
+            
             int numberOfNodes;
             if (GetNumberOfNetworkNodes(networkIdForWriting, out numberOfNodes) != GridApiDataSet.GridConstants.NOERR)
             {
@@ -105,10 +100,6 @@ namespace DeltaShell.NGHS.IO.Grid
             int[] nbranchgeometrypoints, string[] branchIds, string[] branchLongnames, int[] branchOrderNumbers)
         {
             if (!Initialized || !NetworkReadyForWriting) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-
-            // replace spaces by underscores in the branch names/ids
-            branchIds = branchIds.ReplaceSpacesInString();
-            branchLongnames = branchLongnames.ReplaceSpacesInString();
 
             int numberOfBranches;
             if (GetNumberOfNetworkBranches(networkIdForWriting, out numberOfBranches) != GridApiDataSet.GridConstants.NOERR)
