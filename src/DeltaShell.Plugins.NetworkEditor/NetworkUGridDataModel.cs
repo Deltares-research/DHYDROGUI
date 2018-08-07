@@ -239,7 +239,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                 geoPointsIndex += numberOfBranchGeometryPoints;
 
                 var branchName = branchNames[i];
-                var branch = CreateBranch(branchTypes[branchName]);
+                var branch = branchTypes == null ? new Channel() : CreateBranch(branchTypes[branchName]);
 
                 branch.Network = parentNetwork;
                 branch.Name = branchNames[i] == "" ? null : branchNames[i];

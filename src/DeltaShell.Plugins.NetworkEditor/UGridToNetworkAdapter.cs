@@ -29,7 +29,6 @@ namespace DeltaShell.Plugins.NetworkEditor
                     uGridNetwork.Initialize();
 
                     int networkId;
-                    
                     uGridNetwork.CreateNetworkInFile(
                         networkUGridDataModel.NumberOfNodes,
                         networkUGridDataModel.NumberOfBranches,
@@ -86,8 +85,8 @@ namespace DeltaShell.Plugins.NetworkEditor
             {
                 using (var uGridNetwork = new UGridNetwork(netFilePath))
                 {
-                    var brancheTypePath = GetBranchesFilePath(netFilePath);
-                    var branchTypes = BranchFile.Read(brancheTypePath);
+                    var brancheTypeFilePath = GetBranchesFilePath(netFilePath);
+                    var branchTypes = File.Exists(brancheTypeFilePath) ? BranchFile.Read(brancheTypeFilePath) : null;
 
                     // Open the file to load the network. There can be multiple networks stored in the NetCDF file
                     uGridNetwork.Initialize();
