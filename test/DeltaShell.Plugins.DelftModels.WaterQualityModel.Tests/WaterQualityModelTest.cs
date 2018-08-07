@@ -1609,7 +1609,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             //Import a hyd file with a different coordinate system
             var differentHydPath = TestHelper.GetTestFilePath(
                 @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DifferentCoordSystem\z20_par.hyd");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(differentHydPath, model),"The coordinate system of the model has been set to");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(differentHydPath, model), $"The coordinate system of the model: {model.Name} has been set to");
+        }
+
+        [Test]
+        public void
+            Test_When_HydFile_IsImported_OverExisting_HydFile_ButWithEmpty_CoordinateSystem_InfoMessageIsThrown()
+        {
+            var epsgAmersfoort = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
+
+            //Initialize WAQ Model
+            var model = new WaterQualityModel();
+            Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
+
+            //Import hyd file
+            var hydPath =
+                TestHelper.GetTestFilePath(
+                    @"WaterQualityDataFiles\ImportHydFileForCoordSystem\ImportHydFileEmptyCS\westernscheldt01.hyd");
+            var importer = new HydFileImporter();
+            var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
+            Assert.IsNotNull(importedItem);
+
+            //Assert that Coordinate System is now set to Amersfoort/RD
+            Assert.AreEqual(model.CoordinateSystem, epsgAmersfoort);
+
+            //Import a hyd file with an empty coordinate system
+            var hydPathEmptyCs = TestHelper.GetTestFilePath(
+                @"WaterQualityDataFiles\ImportHydFileForCoordSystem\ImportHydFileEmptyCS\FlowFM.hyd");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(hydPathEmptyCs, model), $"The coordinate system of the model: {model.Name} has been set to <empty>");
         }
 
         [Test]
