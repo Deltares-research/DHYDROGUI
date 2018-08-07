@@ -67,17 +67,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
-        public void VerifyChangingDispersionFormulationTypeCachesF3AndF4Values()
+        public void mytestf1dmetpomp()
         {
+            //Setup network
+            //needs 2 nodes, branch, computational nodes, crosssection, pump and 2 boundary conditions
+
             var network = new HydroNetwork();
-            
+
             // add nodes and branches
-            IHydroNode node1 = new HydroNode { Name = "node1", Network = network };
-            IHydroNode node2 = new HydroNode { Name = "node2", Network = network };
-            
+            IHydroNode node1 = new HydroNode { Name = "node1", Network = network, Geometry = new Point(0,0)};
+            IHydroNode node2 = new HydroNode { Name = "node2", Network = network, Geometry = new Point(100, 0) };
+
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
-            
+
             var branch = new Channel("branch1", node1, node2, 100.0);
             var vertices = new List<Coordinate>
                                {
@@ -85,73 +88,71 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                                    new Coordinate(100, 0)
                                };
             branch.Geometry = GeometryFactory.CreateLineString(vertices.ToArray());
+            var yzCoordinates = new List<Coordinate>
+            {
+                new Coordinate(0.0, 1.0),
+                new Coordinate(1.0, 0.0),
+                new Coordinate(2.0, 0.0),
+                new Coordinate(3.0, 1.0),
+            };
+
+            
+            var cs = CrossSectionHelper.AddXYZCrossSectionFromYZCoordinates(branch, 50.0, yzCoordinates,"mycs");
+
+            var compositeBranchStructure = new CompositeBranchStructure
+            {
+                Network = network,
+                Geometry = new Point(5, 0),
+                Chainage = 5,
+            };
+
+            NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, branch, 20.0);
+            HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, new Pump());
+
             network.Branches.Add(branch);
+            WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
             
             // add discretization
             Discretization networkDiscretization = WaterFlowModel1DTestHelper.GetNetworkDiscretization(network);
-
+            
             // setup 1d flow waterFlowModel1D
-            using (var waterFlowModel1D = new WaterFlowModel1D {Network = network, NetworkDiscretization = networkDiscretization})
+            using (var waterFlowModel1D = new WaterFlowModel1D { Network = network, NetworkDiscretization = networkDiscretization })
             {
-                waterFlowModel1D.UseSalt = true;
-                waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic;
-                var startOfBranch = new NetworkLocation(branch, 0.0);
-                var endOfBranch = new NetworkLocation(branch, 100.0);
-
-                // Action: Set values. 
-                var dispersionCoverage = waterFlowModel1D.DispersionCoverage;
-                dispersionCoverage[startOfBranch] = 4.0;
-                dispersionCoverage[endOfBranch] = 1.0;
-
-                var dispersionF3Coverage = waterFlowModel1D.DispersionF3Coverage;
-                dispersionF3Coverage[startOfBranch] = 2.0;
-                dispersionF3Coverage[endOfBranch] = 3.0;
-
-                var dispersionF4Coverage = waterFlowModel1D.DispersionF4Coverage;
-                dispersionF4Coverage[startOfBranch] = 5.0;
-                dispersionF4Coverage[endOfBranch] = 7.0;
-
-                // Verify: Get values. 
-                var f1Values = waterFlowModel1D.DispersionCoverage.Components.FirstOrDefault();
-                Assert.That(f1Values, Is.Not.Null);
-                Assert.That(f1Values.Values.Count, Is.EqualTo(2));
-                Assert.That(f1Values.Values[0], Is.EqualTo(4));
-                Assert.That(f1Values.Values[1], Is.EqualTo(1));
-                var f3Values = waterFlowModel1D.DispersionF3Coverage.Components.FirstOrDefault();
-                Assert.That(f3Values, Is.Not.Null);
-
-                var f4Values = waterFlowModel1D.DispersionF4Coverage.Components.FirstOrDefault();
-                Assert.That(f4Values, Is.Not.Null);
+                waterFlowModel1D.StopTime = waterFlowModel1D.StartTime.AddHours(1);
                 
-                // Action: Unset dispersion formulation type TH. 
-                waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.Constant;
 
-                // Verify: F1 is still there, F3 and F4 are null. 
-                var dispersionCoefficient = waterFlowModel1D.DispersionCoverage.Components.FirstOrDefault();
-                Assert.That(dispersionCoefficient, Is.Not.Null);
-                Assert.That(dispersionCoefficient.Values.Count, Is.EqualTo(2));
-                Assert.That(dispersionCoefficient.Values[0], Is.EqualTo(4));
-                Assert.That(dispersionCoefficient.Values[1], Is.EqualTo(1));
-                Assert.That(waterFlowModel1D.DispersionF3Coverage, Is.Null);
-                Assert.That(waterFlowModel1D.DispersionF4Coverage, Is.Null);
+                // set boundary conditions
+                var boundaryConditionInflow = waterFlowModel1D.BoundaryConditions.First(bc => bc.Feature == node1);
+                boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+                boundaryConditionInflow.Data[waterFlowModel1D.StartTime] = 1000.0;
+                boundaryConditionInflow.Data[waterFlowModel1D.StartTime.AddHours(1)] = 500.0;
+                boundaryConditionInflow.Data.Arguments[0].ExtrapolationType = ExtrapolationType.Constant;
 
-                // Action: Set dispersion to Savenije
-                waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic;
-                
-                // Verify: F1 is still there, F3 and F4 contain cached values. 
-                f1Values = waterFlowModel1D.DispersionCoverage.Components.FirstOrDefault();
-                Assert.That(f1Values, Is.Not.Null);
-                Assert.That(f1Values.Values.Count, Is.EqualTo(2));
-                Assert.That(f1Values.Values[0], Is.EqualTo(4));
-                Assert.That(f1Values.Values[1], Is.EqualTo(1));
-                f3Values = waterFlowModel1D.DispersionF3Coverage.Components.FirstOrDefault();
-                Assert.That(f3Values, Is.Not.Null);
-                Assert.That(f3Values.Values[0], Is.EqualTo(2));   // Cached value
-                Assert.That(f3Values.Values[1], Is.EqualTo(3));   // Cached value 
-                f4Values = waterFlowModel1D.DispersionF4Coverage.Components.FirstOrDefault();
-                Assert.That(f4Values, Is.Not.Null);
-                Assert.That(f4Values.Values[0], Is.EqualTo(5));   // Cached value
-                Assert.That(f4Values.Values[1], Is.EqualTo(7));   // Cached value 
+                var boundaryConditionOutflow = waterFlowModel1D.BoundaryConditions.First(bc => bc.Feature == node2);
+                boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+                boundaryConditionOutflow.WaterLevel = 0;
+
+                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.SuctionSideLevel, ElementSet.Pumps).AggregationOptions = AggregationOptions.Current;
+
+                RunModel(waterFlowModel1D);
+
+                if (waterFlowModel1D.Status == ActivityStatus.Failed)
+                {
+                    Assert.Fail("Model run has failed");
+                }
+                var outputPumpSuctionsideDataItem = waterFlowModel1D.DataItems.FirstOrDefault(
+                    di => di.Name == "Suction side (p)"
+                          && (di.Role & DataItemRole.Output) == DataItemRole.Output
+                          && di.Value is IFunction
+                          && ((IFunction)di.Value).Store is WaterFlowModel1DNetCdfFunctionStore);
+                Assert.IsNotNull(outputPumpSuctionsideDataItem);
+                var outputPumpSuctionSideFeatureCoverage = outputPumpSuctionsideDataItem.Value as FeatureCoverage;
+                Assert.IsNotNull(outputPumpSuctionSideFeatureCoverage);
+                var values = outputPumpSuctionSideFeatureCoverage.Components[0].GetValues<double>();
+                Assert.That(values.Count, Is.EqualTo(2));
+                Assert.That(values[0], Is.EqualTo(0.001).Within(0.001));
+                Assert.That(values[1], Is.EqualTo(55938.6928).Within(0.0001));
+
             }
         }
 
