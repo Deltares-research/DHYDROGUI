@@ -28,7 +28,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             var localPath = WaveTestHelper.CreateLocalCopy(mdwPath);
             var model = new WaveModel(localPath) { CoordinateSystem = UTM16CS };
 
-            var provider = new WaveModelMapLayerProvider();
+            var provider = new WaveModelMapLayerProvider
+            {
+                GetWaveModels = () => new []{model}
+            };
+
             var modelLayer = (ModelGroupLayer)MapLayerProviderHelper.CreateLayersRecursive(model, null, new[] { provider });
             modelLayer.Layers.ForEach(l => l.Visible = true);
 
