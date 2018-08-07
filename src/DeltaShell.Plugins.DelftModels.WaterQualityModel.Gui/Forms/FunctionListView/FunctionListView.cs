@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.Editors;
 using DelftTools.Functions;
@@ -87,6 +86,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         private ITableViewColumn defaultValueColumn;
         private ITableViewColumn segmentFunctionColumn;
 
+        /// <summary>
+        /// Initializes the table view.
+        /// </summary>
         private void InitializeTableView()
         {
             tableView.AutoGenerateColumns = false;
@@ -94,7 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
             tableView.AllowDeleteRow = false;
             tableView.EditButtons = false;
             tableView.RowHeight += 2;
-
+            
             tableView.AddColumn(namePropertyName, Resources.FunctionListView_InitializeTableView_Name);
             tableView.AddColumn(descriptionPropertyName, Resources.FunctionListView_InitializeTableView_Description);
             tableView.AddColumn(functionTypePropertyName, Resources.FunctionListView_InitializeTableView_Function_type);
@@ -107,6 +109,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
             tableView.AddColumn(editPropertyName, Resources.FunctionListView_InitializeTableView_Edit);
 
             tableView.GetColumnByName(editPropertyName).Editor = new ButtonTypeEditor { ButtonClickAction = OpenViewForFunction };
+            
+            //Execute BestFitColumns to make the columns always readable and add a scrollbar if not.
+            tableView.BestFitColumns();
 
             tableView.ReadOnlyCellFilter = ReadOnlyCellFilter;
 
