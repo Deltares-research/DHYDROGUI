@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
 {
     public static class BranchFile
     {
-        private static bool includesHeader = true;
+        private const bool IncludesHeader = true;
 
         public enum BranchTypes
         {
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
             // Write csv file
             using (var streamWriter = new StreamWriter(filePath))
             {
-                var csvString = CommonCsvWriter.WriteToString(dataTable, includesHeader, false, ';');
+                var csvString = CommonCsvWriter.WriteToString(dataTable, IncludesHeader, false, ';');
                 streamWriter.Write(csvString);
             }
         }
