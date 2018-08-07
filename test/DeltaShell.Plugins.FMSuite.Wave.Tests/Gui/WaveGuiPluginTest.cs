@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         [Category(TestCategory.Integration)]
         public void DoubleClickingOutputItemProjectShouldEnableMapLayer()
         {
-            var mdwPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"outputMapView\project\Waves\Waves.mdw"));
+            var mdwPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"outputMapView\Waves.mdw"));
 
             using (var gui = new DeltaShellGui())
             {
