@@ -790,7 +790,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             if (data.Equals(HydroData))
             {
                 OverWriteModelTimersWithImportTimers(skipImportTimers, data);
-                OverwriteProcessCoefficients(data);
+                OverWriteSegmentFunctions(data);
                 return;
             }
             
@@ -828,9 +828,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 FlowsRelativeFilePath = HydroData.FlowsRelativePath;
                 PointersRelativeFilePath = HydroData.PointersRelativePath;
                 LengthsRelativeFilePath = HydroData.LengthsRelativePath;
+                SalinityRelativeFilePath = HydroData.SalinityRelativePath;
+                TemperatureRelativeFilePath = HydroData.TemperatureRelativePath;
                 VerticalDiffusionRelativeFilePath = HydroData.VerticalDiffusionRelativePath;
+                ShearStressesRelativeFilePath = HydroData.ShearStressesRelativePath;
                 AttributesRelativeFilePath = HydroData.AttributesRelativePath;
-                OverwriteProcessCoefficients(HydroData);
+                OverWriteSegmentFunctions(HydroData);
 
                 SetImportProgress("Importing exchanges and layer information");
                 NumberOfHorizontalExchanges = HydroData.NumberOfHorizontalExchanges;
@@ -861,78 +864,44 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
-        private void OverwriteProcessCoefficients(IHydroData data)
+        private void OverWriteSegmentFunctions(IHydroData data)
         {
-            SetImportProgress("Sync of process coefficients");
-
-            /* DELFT3DFM-1505 overwrite with latest HydFile content.*/
+            SetImportProgress("Sync of segment functions");
             SurfacesRelativeFilePath = data.SurfacesRelativePath;
             VelocitiesFilePath = data.VelocitiesRelativePath;
             WidthsFilePath = data.WidthsRelativePath;
             ChezyCoefficientsFilePath = data.ChezyCoefficientsRelativePath;
-            SalinityRelativeFilePath = HydroData.SalinityRelativePath;
-            TemperatureRelativeFilePath = HydroData.TemperatureRelativePath;
-            ShearStressesRelativeFilePath = HydroData.ShearStressesRelativePath;
 
             if (!ProcessCoefficients.Any()) return;
 
             ProcessCoefficients
-                .Where(pc => 
-                    pc is FunctionFromHydroDynamics
-                    || HydroData.HasDataFor(pc.Name)).ToList()/* Keep the previous value if it has not been overwritten. */
+                .Where(pc => HydroData.HasDataFor(pc.Name)).ToList()/* Keep the previous value if it has not been overwritten. */
                 .ForEach(UpdateProcessCoeffIfNeeded);
         }
 
         private void UpdateProcessCoeffIfNeeded(IFunction process)
         {
-            //Values that will be reused.
-            var functionName = process.Name;
-            var defaultValue = (double)process.Components[0].DefaultValue;
-            var unitName = process.Components[0].Unit.Name;
-            var unitSymbol = process.Components[0].Unit.Symbol;
-            var description = process.Attributes[WaterQualityFunctionFactory.DESCRIPTION_ATTRIBUTE];
-
-            //Get the new file path
-            var filePath = string.Empty;
-            try
-            {
-                filePath = HydroData.GetFilePathFor(functionName);
-            }
-            catch (Exception)
-            {
-                //Catch just to avoid throwing an exception. we go on with the logic.
-            }
-
-            //If it is again a function type FromHydroDynamic, then just update the FilePath;
-            var pathIsEmpty = string.IsNullOrEmpty(filePath);
-            if (process.IsConst() && pathIsEmpty)
-            {
-                return; //It was a constant, and still is.
-            }
-
-            if (process.IsFromHydroDynamics() && !pathIsEmpty)
-            {
-                ((FunctionFromHydroDynamics) process).FilePath = filePath;
-            }
+            var pathFile = HydroData.GetFilePathFor(process.Name);
+            if (string.IsNullOrEmpty(pathFile)) return;
+            if (process is FunctionFromHydroDynamics)
+                ((FunctionFromHydroDynamics) process).FilePath = pathFile;
             else
             {
-                var newFunction = pathIsEmpty
-                    /* If there is no path, then we have to create a Function type Constant. */
-                    ? WaterQualityFunctionFactory.CreateConst(functionName, defaultValue, unitName, unitSymbol, description)
-                    /* Else we have to create a new FromHydroDynamics Function. */
-                    : WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics(functionName, defaultValue, unitName, unitSymbol, description, filePath);
-
+                var newSegment = WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics(
+                    process.Name,
+                    (double)process.Components[0].DefaultValue,
+                    process.Components[0].Unit.Name,
+                    process.Components[0].Unit.Symbol,
+                    process.Attributes[WaterQualityFunctionFactory.DESCRIPTION_ATTRIBUTE],
+                    pathFile);
+                Log.Info(
+                    string.Format(Resources.WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_with_Hydrodynamic_data_from_file_path__1_,
+                    process.Name,
+                    pathFile));
                 ProcessCoefficients.Remove(process);
-                ProcessCoefficients.Add(newFunction);
+                ProcessCoefficients.Add(newSegment);
             }
-
-            var fromFilePath = string.Format(Resources.WaterQualityModel_UpdateProcessCoeffIfNeeded_With_Hydrodynamic_data_from_file_path___0_, filePath);
-            Log.Info(string.Format(Resources.WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_to_type__1____2_, 
-                functionName,
-                pathIsEmpty ? Resources.WaterQualityModel_UpdateProcessCoeffIfNeeded_Constant_Function : Resources.WaterQualityModel_UpdateProcessCoeffIfNeeded_Function_from_HydroDynamics,
-                pathIsEmpty ? string.Empty : fromFilePath));
         }
-
         private void OverWriteModelTimersWithImportTimers(bool skipImportTimers, IHydroData dataToOverwrite)
         {
             if (skipImportTimers) return;

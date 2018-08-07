@@ -626,16 +626,7 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
   <data name="WaterQualityModel_CoordinateSystem_The_coordinate_system_of_the_model_has_been_set_to__0_" xml:space="preserve">
     <value>The coordinate system of the model has been set to {0}</value>
   </data>
-  <data name="WaterQualityModel_UpdateProcessCoeffIfNeeded_With_Hydrodynamic_data_from_file_path___0_" xml:space="preserve">
-    <value>With Hydrodynamic data from file path: {0}</value>
-  </data>
-  <data name="WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_to_type__1____2_" xml:space="preserve">
-    <value>The process coefficient {0} has been updated to type {1}. {2}</value>
-  </data>
-  <data name="WaterQualityModel_UpdateProcessCoeffIfNeeded_Function_from_HydroDynamics" xml:space="preserve">
-    <value>Function from HydroDynamics</value>
-  </data>
-  <data name="WaterQualityModel_UpdateProcessCoeffIfNeeded_Constant_Function" xml:space="preserve">
-    <value>Constant Function</value>
+  <data name="WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_with_Hydrodynamic_data_from_file_path__1_" xml:space="preserve">
+    <value>The process coefficient {0} has been updated with Hydrodynamic data from file path {1}</value>
   </data>
 </root>
