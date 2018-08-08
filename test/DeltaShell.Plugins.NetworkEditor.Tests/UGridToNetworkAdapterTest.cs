@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GivenSimpleSewerNewtwork_WhenSavingNetwork_ThenBranchTypeFileIsCorrectlyWritten()
+        public void GivenSimpleSewerNetwork_WhenSavingNetwork_ThenBranchTypeFileIsCorrectlyWritten()
         {
             const string pipeName = "myPipe";
             var sewerNetwork = TestNetworkAndDiscretisationProvider.CreateSimpleSewerNetwork(pipeName);

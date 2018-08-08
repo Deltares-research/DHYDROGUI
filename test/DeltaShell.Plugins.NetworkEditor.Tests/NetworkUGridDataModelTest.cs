@@ -36,6 +36,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             };
             network.Branches.Add(branch1);
 
+            //      * (3, 4)
+            //     /
+            //    /
+            //   /
+            //  /
+            // * (0, 0)
+
             return network;
         }
         
@@ -61,7 +68,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             Assert.AreEqual(new[] {5}, networkDataModel.BranchLengths);
 
             Assert.AreEqual(2, networkDataModel.NumberOfGeometryPoints);
-            Assert.AreEqual(new[] {2}, networkDataModel.NumberOfBranchGeometryPoints);
+            Assert.AreEqual(new[] {2}, networkDataModel.NumberOfGeometryPointsPerBranch);
 
             Assert.AreEqual(new[] { "my Branch 1" }, networkDataModel.BranchNames);
             Assert.AreEqual(new[] { "Branch 1 Description" }, networkDataModel.BranchDescriptions);
@@ -236,7 +243,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             Assert.That(networkDataModel.TargedNodesIds.Length, Is.EqualTo(2));
             Assert.That(networkDataModel.BranchLengths, Is.EqualTo(new[] { 0, 0 }));
             Assert.That(networkDataModel.NumberOfGeometryPoints, Is.EqualTo(4));
-            Assert.That(networkDataModel.NumberOfBranchGeometryPoints, Is.EqualTo(new[] { 2, 2 }));
+            Assert.That(networkDataModel.NumberOfGeometryPointsPerBranch, Is.EqualTo(new[] { 2, 2 }));
             Assert.That(networkDataModel.BranchNames, Is.EqualTo(new[] { "mySewerConnection1", "mySewerConnection2" }));
             Assert.That(networkDataModel.GeopointsX, Is.EqualTo(geopointsX));
             Assert.That(networkDataModel.GeopointsY, Is.EqualTo(new[] { 10.0, 15.0, 8.0, 10.0 }));

@@ -140,6 +140,8 @@
     <Compile Include="CunetteCrossSectionDefinitionGenerator.cs" />
     <Compile Include="DefaultCrossSectionDefinitionGenerator.cs" />
     <Compile Include="EggCrossSectionDefinitionGenerator.cs" />
+    <Compile Include="IO\WaterFlowFMModelFactory.cs" />
+    <Compile Include="IO\WaterFlowFMModelReaderData.cs" />
     <Compile Include="IO\Importers\GisToFeature2DImporter.cs" />
     <Compile Include="IO\Importers\GwswAttribute.cs" />
     <Compile Include="IO\Importers\GwswAttributeType.cs" />
@@ -147,6 +149,7 @@
     <Compile Include="IO\Importers\GwswElementExtensions.cs" />
     <Compile Include="IO\UGrid1D2DLinksAdapter.cs" />
     <Compile Include="IO\Links1D2DHelper.cs" />
+    <Compile Include="IO\WaterFlowFMModelReader.cs" />
     <Compile Include="IO\WaterFlowFMModelWriter.cs" />
     <Compile Include="RectangleCrossSectionDefinitionGenerator.cs" />
     <Compile Include="SewerManholeGenerator.cs" />

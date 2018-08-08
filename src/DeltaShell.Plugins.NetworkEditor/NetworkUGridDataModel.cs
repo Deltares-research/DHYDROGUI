@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.NetworkEditor
         public int[] SourceNodeIds = new int[0];
         public int[] TargedNodesIds = new int[0];
         public double[] BranchLengths = new double[0];
-        public int[] NumberOfBranchGeometryPoints = new int[0];
+        public int[] NumberOfGeometryPointsPerBranch = new int[0];
         public int[] BranchOrderNumbers = new int[0];
         public string[] BranchNames = new string[0];
         public string[] BranchDescriptions = new string[0];
@@ -55,14 +55,17 @@ namespace DeltaShell.Plugins.NetworkEditor
             TargedNodesIds = targetNodes;
 
             BranchLengths = branchLengths;
-            NumberOfBranchGeometryPoints = branchGeometryPoints;
+            NumberOfGeometryPointsPerBranch = branchGeometryPoints;
             BranchNames = branchNames;
             BranchDescriptions = branchDescriptions;
-
             BranchOrderNumbers = branchOrderNumbers;
 
             GeopointsX = geometryPointsX;
             GeopointsY = geometryPointsY;
+
+            NumberOfNodes = nodesNames.Length;
+            NumberOfBranches = branchNames.Length;
+            NumberOfGeometryPoints = branchGeometryPoints.Sum();
         }
 
         private void SetNetworkData(IHydroNetwork network)
@@ -115,7 +118,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                 BranchLengths = network.Branches.Select(b => b.Length).ToArray();
 
                 NumberOfGeometryPoints = network.Branches.Sum(b => b.Geometry.Coordinates.Length);
-                NumberOfBranchGeometryPoints = network.Branches.Select(b => b.Geometry?.Coordinates?.Length ?? 0).ToArray();
+                NumberOfGeometryPointsPerBranch = network.Branches.Select(b => b.Geometry?.Coordinates?.Length ?? 0).ToArray();
 
                 BranchNames = network.Branches.Select(b => b.Name).ToArray();
                 BranchDescriptions = network.Branches.Select(b => b.Description).ToArray();
@@ -152,7 +155,7 @@ namespace DeltaShell.Plugins.NetworkEditor
 
             var branches = ConstructNetworkBranches(network, nodes, dataModel.SourceNodeIds, dataModel.TargedNodesIds,
                 dataModel.BranchLengths,
-                dataModel.NumberOfBranchGeometryPoints, dataModel.BranchNames, dataModel.BranchDescriptions, 
+                dataModel.NumberOfGeometryPointsPerBranch, dataModel.BranchNames, dataModel.BranchDescriptions, 
                 dataModel.GeopointsX, dataModel.GeopointsY, 
                 dataModel.BranchOrderNumbers, branchProperties);
 

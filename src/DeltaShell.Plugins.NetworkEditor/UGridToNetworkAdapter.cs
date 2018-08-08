@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                     uGridNetwork.WriteNetworkBranches(networkUGridDataModel.SourceNodeIds,
                         networkUGridDataModel.TargedNodesIds,
                         networkUGridDataModel.BranchLengths,
-                        networkUGridDataModel.NumberOfBranchGeometryPoints,
+                        networkUGridDataModel.NumberOfGeometryPointsPerBranch,
                         networkUGridDataModel.BranchNames,
                         networkUGridDataModel.BranchDescriptions,
                         networkUGridDataModel.BranchOrderNumbers);
@@ -119,6 +119,51 @@ namespace DeltaShell.Plugins.NetworkEditor
             }
         }
 
+        public static NetworkUGridDataModel ReadUGridFile(string netFilePath)
+        {
+            Func<int[], int> func = networkIds => networkIds[0];
+
+            return ReadUGridFile(netFilePath, func);
+        }
+
+        private static NetworkUGridDataModel ReadUGridFile(string netFilePath, Func<int[], int> func)
+        {
+            try
+            {
+                using (var uGridNetwork = new UGridNetwork(netFilePath))
+                {
+                    var brancheTypePath = GetBranchesFilePath(netFilePath);
+                    var branchTypes = BranchFile.Read(brancheTypePath);
+
+                    // Open the file to load the network. There can be multiple networks stored in the NetCDF file
+                    uGridNetwork.Initialize();
+
+                    if (uGridNetwork.GetDataSetConvention() != GridApiDataSet.DataSetConventions.CONV_UGRID)
+                    {
+                        return null;
+                    }
+
+                    int numberOfNetworks = uGridNetwork.GetNumberOfNetworks();
+
+                    if (numberOfNetworks < 1)
+                    {
+                        return null;
+                    }
+
+                    var networkIds = uGridNetwork.GetNetworkIds();
+                    int networkId = func(networkIds);
+
+                    return LoadNetworkUGridDataModel(uGridNetwork, networkId);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                return null;
+            }
+        }
+
+        [Obsolete]
         public static IHydroNetwork LoadNetwork(string netFilePath)
         {
             Func<int[], int> func = networkIds => networkIds[0];

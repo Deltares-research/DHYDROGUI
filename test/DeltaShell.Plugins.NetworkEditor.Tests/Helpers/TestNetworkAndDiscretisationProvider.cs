@@ -13,17 +13,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
     {
         public static IDiscretization CreateNetworkAndDiscretisation()
         {
-            var network = new HydroNetwork() { Name = GridApiDataSet.DataSetNames.Network };
-            var hydroNode1 = new HydroNode() { Name = "my Node 1", Description = "node 1 description", Geometry = new Point(-187.96667, 720.81667), Network = network };
+            var network = new HydroNetwork { Name = GridApiDataSet.DataSetNames.Network };
+            var hydroNode1 = new HydroNode { Name = "my Node 1", Description = "node 1 description", Geometry = new Point(-187.96667, 720.81667), Network = network };
             network.Nodes.Add(hydroNode1);
-            var hydroNode2 = new HydroNode() { Name = "my Node 2", Description = "node 2 description", Geometry = new Point(2195.7333, 708.71667), Network = network };
+            var hydroNode2 = new HydroNode { Name = "my Node 2", Description = "node 2 description", Geometry = new Point(2195.7333, 708.71667), Network = network };
             network.Nodes.Add(hydroNode2);
-            var hydroNode3 = new HydroNode() { Name = "my Node 3", Description = "node 3 description", Geometry = new Point(4071.4928, 690.94861), Network = network };
+            var hydroNode3 = new HydroNode { Name = "my Node 3", Description = "node 3 description", Geometry = new Point(4071.4928, 690.94861), Network = network };
             network.Nodes.Add(hydroNode3);
-            var hydroNode4 = new HydroNode() { Name = "my Node  4", Description = "node 4 description", Geometry = new Point(3445.4246, 1540.1838), Network = network };
+            var hydroNode4 = new HydroNode { Name = "my Node  4", Description = "node 4 description", Geometry = new Point(3445.4246, 1540.1838), Network = network };
             network.Nodes.Add(hydroNode4);
 
-            var branch1 = new Branch()
+            var branch1 = new Branch
             {
                 Name = "my Branch 1",
                 Description = "branch 1 description",
@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             };
             network.Branches.Add(branch1);
 
-            var branch2 = new Branch()
+            var branch2 = new Branch
             {
                 Name = "my Branch 2",
                 Description = "branch 2 description",
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             };
             network.Branches.Add(branch2);
 
-            var branch3 = new Branch()
+            var branch3 = new Branch
             {
                 Name = "my Branch 3",
                 Description = "branch 3 description",
@@ -123,14 +123,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
 
         public static IDiscretization CreateSimpleNetworkAndDiscretisation()
         {
-            var network = new HydroNetwork() { Name = GridApiDataSet.DataSetNames.Network };
-            var hydroNode1 = new HydroNode() { Name = "my Node1", Geometry = new Point(1, 4), Network = network };
+            var network = new HydroNetwork { Name = GridApiDataSet.DataSetNames.Network };
+            var hydroNode1 = new HydroNode { Name = "my Node1", Geometry = new Point(1, 4), Network = network, Description = "my node 1 description" };
             network.Nodes.Add(hydroNode1);
-            var hydroNode2 = new HydroNode() { Name = "myNode2", Geometry = new Point(5, 1), Network = network };
+            var hydroNode2 = new HydroNode { Name = "myNode2", Geometry = new Point(5, 1), Network = network, Description = "my node 2 description" };
             network.Nodes.Add(hydroNode2);
-            var branch1 = new Branch()
+            var branch1 = new Branch
             {
                 Name = "my Branch 1",
+                Description = "my branch description",
                 Network = network,
                 Source = hydroNode1,
                 Target = hydroNode2,

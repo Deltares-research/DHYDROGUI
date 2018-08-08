@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
@@ -61,9 +60,6 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                discretisationPointIds.ReplaceSpacesInString();
-                discretisationPointLongnames.ReplaceSpacesInString();
-
                 const int startIndex = 0;
                 var numberOfEdgeNodes = 0;
 
@@ -73,8 +69,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
                 Marshal.Copy(branchIdx, 0, branchIdxPtr, numberOfDiscretisationPoints);
                 Marshal.Copy(offset, 0, offsetPtr, numberOfDiscretisationPoints);
-                GridWrapper.interop_charinfo[] idInfo = new GridWrapper.interop_charinfo[numberOfDiscretisationPoints];
-                for (int i = 0; i < numberOfDiscretisationPoints; i++)
+                var idInfo = new GridWrapper.interop_charinfo[numberOfDiscretisationPoints];
+                for (var i = 0; i < numberOfDiscretisationPoints; i++)
                 {
                     string tmpString;
                     tmpString = discretisationPointIds[i] ?? string.Empty;

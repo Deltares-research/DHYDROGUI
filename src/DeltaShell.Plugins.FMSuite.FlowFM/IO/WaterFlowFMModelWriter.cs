@@ -16,6 +16,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var metaData = new UGridGlobalMetaData(model.Name, "1.1", "2.1"); // last two arguments should be retrieved from the FlowFMApplicationPlugin
             UGridToNetworkAdapter.SaveNetwork(model.Network, ugridPath, metaData);
+            
+            //write PropertiesPerBranch separate
             UGridToNetworkAdapter.SaveNetworkDiscretisation(model.NetworkDiscretization, ugridPath);
         }
     }
