@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                         new SedimentProperty<double>("CDryB", 500, 0, true, 10000, true, "kg/m³", "Dry bed density", false),
                         
                         // Should these be in TransportFormula? (-3)
-                        new SedimentProperty<double>("SalMax", 0, 0, false, 391, true, "ppt", "Salinity for saline settling velocity", false),
+                        new SedimentProperty<double>("SalMax", 31, 0.01, false, 391, true, "ppt", "Salinity for saline settling velocity", false),
                         new SedimentProperty<double>("WS0", 0.00025, 0, true, 1, true, "m/s", "Settling velocity fresh water", false),
                         new SedimentProperty<double>("WSM", 0.00025, 0, true, 1, true, "m/s", "Settling velocity saline water", false),
                     }
