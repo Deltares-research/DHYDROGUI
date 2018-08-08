@@ -185,7 +185,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
                 {
                     new Coordinate(0, 0),
                     new Coordinate(0, 100)
-                })
+                }),
+                WaterType = SewerConnectionWaterType.DryWater
             };
 
             network.Branches.Add(pipe1);

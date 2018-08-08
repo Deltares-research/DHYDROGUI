@@ -1,74 +1,69 @@
 ﻿using System.Collections.Generic;
-using System.Data;
-using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Csv;
+using DelftTools.Utils;
+using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.NetworkEditor.IO
 {
     public static class BranchFile
     {
-        private const bool IncludesHeader = true;
+        public static class KnownPropertyNames
+        {
+            public const string Name = "Name";
+            public const string BranchType = "BranchType";
+            public const string WaterType = "WaterType";
+        }
 
         public enum BranchTypes
         {
             Unkown = 0, Channel = 1, SewerConnection = 2, Pipe = 3
         }
 
-        private static int GetBranchType(IBranch branch)
+        private static string GetBranchType(IBranch branch)
         {
+            var value = BranchTypes.Unkown;
             if (branch is IChannel)
             {
-                return (int)BranchTypes.Channel;
+                value = BranchTypes.Channel;
             }
-            if (branch is IPipe)
+            else if (branch is IPipe)
             {
-                return (int)BranchTypes.Pipe;
+                value = BranchTypes.Pipe;
             }
-            if (branch is ISewerConnection)
+            else if (branch is ISewerConnection)
             {
-                return (int)BranchTypes.SewerConnection;
+                value = BranchTypes.SewerConnection;
             }
 
-            return (int)BranchTypes.Unkown;
+            return ((int)value).ToString();
         }
 
         public static void Write(IEnumerable<IBranch> branches, string filePath)
         {
-            var dataTable = CreateDataTable();
-            
-            // Create rows
+            var categories = new List<DelftIniCategory>();
             foreach (var branch in branches)
             {
-                dataTable.Rows.Add(branch.Name, GetBranchType(branch));
+                var iniCategory = new DelftIniCategory("Branch");
+                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Name, branch.Name, string.Empty));
+                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.BranchType, GetBranchType(branch), string.Empty));
+
+                var sewerConnection = branch as ISewerConnection;
+                var waterType = sewerConnection?.WaterType ?? SewerConnectionWaterType.None;
+                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.WaterType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(waterType), string.Empty));
+                categories.Add(iniCategory);
             }
 
-            // Write csv file
-            using (var streamWriter = new StreamWriter(filePath))
-            {
-                var csvString = CommonCsvWriter.WriteToString(dataTable, IncludesHeader, false, ';');
-                streamWriter.Write(csvString);
-            }
+            // write branch file
+            new DelftIniWriter().WriteDelftIniFile(categories, filePath, false);
         }
 
-        public static Dictionary<string, int> Read(string filePath)
+        public static List<DelftIniCategory> Read(string filePath)
         {
-            var fileContent = File.ReadAllLines(filePath).ToList();
-            fileContent.RemoveAt(0);
-
-            return fileContent.Select(line => line.Split(';'))
-                .ToDictionary(lineContent => lineContent[0], lineContent => int.Parse(lineContent[1]));
-        }
-
-        private static DataTable CreateDataTable()
-        {
-            var dataTable = new DataTable();
-            dataTable.Columns.Add("BranchId", typeof(string));
-            dataTable.Columns.Add("Type", typeof(string));
-            return dataTable;
+            return new DelftIniReader().ReadDelftIniFile(filePath).ToList();
         }
     }
 }

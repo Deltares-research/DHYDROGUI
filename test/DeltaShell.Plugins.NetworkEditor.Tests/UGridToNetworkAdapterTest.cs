@@ -1,7 +1,9 @@
 ﻿using System.IO;
+using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.NetworkEditor.IO;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
 using NUnit.Framework;
 
@@ -43,9 +45,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             Assert.IsTrue(File.Exists(branchGuiFilePath));
 
             // Check file content
-            var fileContent = File.ReadAllLines(branchGuiFilePath);
-            Assert.That(fileContent[0], Is.EqualTo("BranchId;Type"));
-            Assert.That(fileContent[1], Is.EqualTo(pipeName + ";3"));
+            var iniCategories = BranchFile.Read(branchGuiFilePath);
+            Assert.That(iniCategories.Count, Is.EqualTo(1));
+            var branchInfo = iniCategories.First();
+
+            Assert.That(branchInfo.GetPropertyValue(BranchFile.KnownPropertyNames.Name), Is.EqualTo(pipeName));
+            Assert.That(branchInfo.GetPropertyValue(BranchFile.KnownPropertyNames.BranchType), Is.EqualTo("3"));
+            Assert.That(branchInfo.GetPropertyValue(BranchFile.KnownPropertyNames.WaterType), Is.EqualTo("DWA"));
         }
     }
 }

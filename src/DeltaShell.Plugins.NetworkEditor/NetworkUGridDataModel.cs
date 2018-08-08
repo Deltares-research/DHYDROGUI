@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.NetworkEditor.IO;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Networks;
@@ -139,7 +140,7 @@ namespace DeltaShell.Plugins.NetworkEditor
             }
         }
 
-        public static IHydroNetwork ReconstructHydroNetwork(NetworkUGridDataModel dataModel, Dictionary<string,int> branchTypes = null)
+        public static IHydroNetwork ReconstructHydroNetwork(NetworkUGridDataModel dataModel, List<DelftIniCategory> branchProperties = null)
         {
             var network = new HydroNetwork
             {
@@ -153,7 +154,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                 dataModel.BranchLengths,
                 dataModel.NumberOfBranchGeometryPoints, dataModel.BranchNames, dataModel.BranchDescriptions, 
                 dataModel.GeopointsX, dataModel.GeopointsY, 
-                dataModel.BranchOrderNumbers, branchTypes);
+                dataModel.BranchOrderNumbers, branchProperties);
 
             network.Nodes.AddRange(nodes);
             network.Branches.AddRange(branches);
@@ -194,7 +195,7 @@ namespace DeltaShell.Plugins.NetworkEditor
         }
 
         private static List<IBranch> ConstructNetworkBranches(INetwork parentNetwork, List<IHydroNode> nodes, int[] sourceNodes, int[] targetNodes,
-            double[] branchLengths, int[] branchGeometryPoints, string[] branchNames, string[] branchDescriptions, double[] geometryPointsX, double[] geometryPointsY, int[] branchOrderNumbers, Dictionary<string,int> branchTypes)
+            double[] branchLengths, int[] branchGeometryPoints, string[] branchNames, string[] branchDescriptions, double[] geometryPointsX, double[] geometryPointsY, int[] branchOrderNumbers, List<DelftIniCategory> branchProperties)
         {
             var branches = new List<IBranch>();
             int numberOfChannels = sourceNodes.Length;
@@ -238,8 +239,14 @@ namespace DeltaShell.Plugins.NetworkEditor
                 var coordinates = geometryCoordinates.Skip(geoPointsIndex).Take(numberOfBranchGeometryPoints).ToArray();
                 geoPointsIndex += numberOfBranchGeometryPoints;
 
+                IBranch branch;
                 var branchName = branchNames[i];
-                var branch = branchTypes == null ? new Channel() : CreateBranch(branchTypes[branchName]);
+                if(branchProperties == null) branch = new Channel();
+                else
+                {
+                    var branchIniCategory = branchProperties.FirstOrDefault(bp => bp.GetPropertyValue(BranchFile.KnownPropertyNames.Name).Equals(branchName));
+                    branch = CreateBranch(branchIniCategory);
+                }
 
                 branch.Network = parentNetwork;
                 branch.Name = branchNames[i] == "" ? null : branchNames[i];
@@ -261,9 +268,10 @@ namespace DeltaShell.Plugins.NetworkEditor
             return branches;
         }
 
-        private static IBranch CreateBranch(int branchType)
+        private static IBranch CreateBranch(IDelftIniCategory branchCategory)
         {
-            var type = (BranchFile.BranchTypes) branchType;
+            var branchTypeNumber = int.Parse(branchCategory.GetPropertyValue(BranchFile.KnownPropertyNames.BranchType));
+            var type = (BranchFile.BranchTypes) branchTypeNumber;
             switch (type)
             {
                 case BranchFile.BranchTypes.SewerConnection:

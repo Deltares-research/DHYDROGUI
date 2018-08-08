@@ -3,6 +3,7 @@ using System.IO;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.IO;
@@ -36,8 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 new SewerConnection("sc_1"), new SewerConnection("sc_2")
             };
-            
-            BranchFile.Write(sewerConnections, filePath);
+
             CheckBranchTypeFileContent(sewerConnections);
         }
 
@@ -47,6 +47,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var pipes = new List<IBranch>
             {
                 new Pipe { Name = "pipe_1" }, new Pipe { Name = "pipe_2" }
+            };
+
+            BranchFile.Write(pipes, filePath);
+            CheckBranchTypeFileContent(pipes);
+        }
+
+        [Test]
+        public void GivenSewerConnections_WhenWritingBranchTypeFile_ThenWaterTypeIsWrittenToBranchFile()
+        {
+            var pipes = new List<IBranch>
+            {
+                new Pipe { Name = "pipe_1", WaterType = SewerConnectionWaterType.Combined },
+                new SewerConnection { Name = "sc_1", WaterType = SewerConnectionWaterType.DryWater },
+                new Pipe { Name = "pipe_2", WaterType = SewerConnectionWaterType.None },
+                new SewerConnection { Name = "sc_2", WaterType = SewerConnectionWaterType.StormWater },
+                new Channel { Name = "channel_1" }
             };
 
             BranchFile.Write(pipes, filePath);
@@ -77,58 +93,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             CheckBranchTypeFileContent(branches);
         }
 
-        [Test]
-        public void GivenBranchTypeFile_WhenReadingFile_ThenCorrectLookupDictionaryIsReturned()
-        {
-            var branches = new List<IBranch>
-            {
-                new Channel { Name = "myChannel" }, new Pipe { Name = "myPipe" }, new SewerConnection("mySewerConnection")
-            };
-            BranchFile.Write(branches, filePath);
-            var branchToTypeDict = BranchFile.Read(filePath);
-
-            Assert.That(branchToTypeDict.Count, Is.EqualTo(3));
-            Assert.That(branchToTypeDict["myChannel"], Is.EqualTo((int)BranchFile.BranchTypes.Channel));
-            Assert.That(branchToTypeDict["myPipe"], Is.EqualTo((int)BranchFile.BranchTypes.Pipe));
-            Assert.That(branchToTypeDict["mySewerConnection"], Is.EqualTo((int)BranchFile.BranchTypes.SewerConnection));
-        }
-
-
         private void CheckBranchTypeFileContent(List<IBranch> branches)
         {
-            var fileContent = File.ReadAllLines(filePath);
-            Assert.That(fileContent.Length, Is.EqualTo(branches.Count + 1));
-            CheckHeaderLine(fileContent);
-            CheckDataContent(fileContent, branches);
+            BranchFile.Write(branches, filePath);
+            var iniCategories = BranchFile.Read(filePath);
+            for (var n = 0; n < iniCategories.Count; n++)
+            {
+                Assert.That(iniCategories[n].GetPropertyValue(BranchFile.KnownPropertyNames.Name), Is.EqualTo(branches[n].Name));
+                Assert.That(iniCategories[n].GetPropertyValue(BranchFile.KnownPropertyNames.BranchType), Is.EqualTo(GetBranchType(branches[n])));
+                Assert.That(iniCategories[n].GetPropertyValue(BranchFile.KnownPropertyNames.WaterType), Is.EqualTo(GetWaterTypeDescription(branches[n])));
+            }
         }
 
-        private static void CheckDataContent(string[] fileContent, List<IBranch> branches)
+        private static string GetWaterTypeDescription(IBranch branch)
         {
-            for (var n = 0; n < branches.Count; n++)
-                Assert.That(fileContent[n+1], Is.EqualTo(branches[n].Name + ";" + GetBranchType(branches[n])));
+            var sewerConnection = branch as ISewerConnection;
+            var waterType = sewerConnection?.WaterType ?? SewerConnectionWaterType.None;
+            return EnumDescriptionAttributeTypeConverter.GetEnumDescription(waterType);
         }
 
-        private static int GetBranchType(IBranch branch)
+        private static string GetBranchType(IBranch branch)
         {
+            var value = BranchFile.BranchTypes.Unkown;
             if (branch is IChannel)
             {
-                return (int)BranchFile.BranchTypes.Channel;
+                value = BranchFile.BranchTypes.Channel;
             }
             if (branch is IPipe)
             {
-                return (int)BranchFile.BranchTypes.Pipe;
+                value = BranchFile.BranchTypes.Pipe;
             }
             if (branch is ISewerConnection)
             {
-                return (int)BranchFile.BranchTypes.SewerConnection;
+                value = BranchFile.BranchTypes.SewerConnection;
             }
 
-            return (int)BranchFile.BranchTypes.Unkown;
-        }
-
-        private static void CheckHeaderLine(string[] fileContent)
-        {
-            Assert.That(fileContent[0], Is.EqualTo("BranchId;Type"));
+            return ((int)value).ToString();
         }
     }
 }
