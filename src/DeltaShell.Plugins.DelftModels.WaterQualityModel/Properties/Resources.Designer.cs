@@ -341,16 +341,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The coordinate system of the model: {0} has been set to &lt;empty&gt;.
-        /// </summary>
-        public static string WaterQualityModel_ImportHydroData_The_coordinate_system_of_the_model___0__has_been_set_to__empty_ {
-            get {
-                return ResourceManager.GetString("WaterQualityModel_ImportHydroData_The_coordinate_system_of_the_model___0__has_bee" +
-                        "n_set_to__empty_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Output timers ({0}) have been synchronized to match the Simulation {0} ({1})..
         /// </summary>
         public static string WaterQualityModel_LogSynchronizedTimer_Output_timers___0___have_been_synchronized_to_match_the_Simulation__0____1___ {

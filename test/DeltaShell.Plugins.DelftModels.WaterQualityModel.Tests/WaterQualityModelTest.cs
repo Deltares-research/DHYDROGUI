@@ -1590,7 +1590,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Test_When_HydFile_IsImported_OverExisting_HydFile_ButWithDifferent_CoordinateSystem_InfoMessageIsThrown()
         {
             var epsgAmersfoort = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
-            
+            var epsgZ20Par = new OgrCoordinateSystemFactory().CreateFromEPSG(32210);
+
             //Initialize WAQ Model
             var model = new WaterQualityModel();
             Assert.AreNotEqual(model.CoordinateSystem, epsgAmersfoort);
@@ -1609,7 +1610,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             //Import a hyd file with a different coordinate system
             var differentHydPath = TestHelper.GetTestFilePath(
                 @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DifferentCoordSystem\z20_par.hyd");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(differentHydPath, model), $"The coordinate system of the model: {model.Name} has been set to");
+            
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => importer.ImportItem(differentHydPath, model), 
+                string.Format(Resources.WaterQualityModel_ImportHydroData_The_coordinate_system_of_the_model___0__has_been_set_to__1_, 
+                    model.Name, 
+                    epsgZ20Par));
         }
 
         [Test]
@@ -1636,7 +1642,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             //Import a hyd file with an empty coordinate system
             var hydPathEmptyCs = TestHelper.GetTestFilePath(
                 @"WaterQualityDataFiles\ImportHydFileForCoordSystem\ImportHydFileEmptyCS\FlowFM.hyd");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(hydPathEmptyCs, model), $"The coordinate system of the model: {model.Name} has been set to <empty>");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(hydPathEmptyCs, model), string.Format(Resources.WaterQualityModel_ImportHydroData_The_coordinate_system_of_the_model___0__has_been_set_to__1_, model.Name, "<empty>"));
         }
 
         [Test]
