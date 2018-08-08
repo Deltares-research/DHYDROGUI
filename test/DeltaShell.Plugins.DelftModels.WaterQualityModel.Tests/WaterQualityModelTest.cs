@@ -647,9 +647,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             // the salinity function is still a constant, because the user specified as such
             var replacedFunction = FindFunctionInModel(functionName, model);
             Assert.IsNotNull(replacedFunction);
-            Assert.AreEqual(constantFunction,
+            //https://issuetracker.deltares.nl/browse/DELFT3DFM-1505 Hyd file leads, so it will be overwritten.
+            Assert.AreNotEqual(constantFunction,
                 replacedFunction); // the function should not be replaced, because it is the same
-            Assert.IsTrue(replacedFunction.IsConst());
+            Assert.IsFalse(replacedFunction.IsConst());
+            Assert.IsTrue(replacedFunction.IsFromHydroDynamics());
         }
 
         private static IFunction FindFunctionInModel(string functionName, WaterQualityModel model)
@@ -674,6 +676,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var firstFunction = FindFunctionInModel(functionName, model);
             Assert.IsNotNull(firstFunction);
             Assert.IsTrue(firstFunction.IsConst());
+            Assert.IsFalse(firstFunction.IsFromHydroDynamics());
 
             var hydroData2 = CreateHydFileStubWithRelativePathOnFunction(functionName, "lalala.data");
 
@@ -683,8 +686,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             // the salinity function is now changed to a constant, because there was no data left
             var replacedFunction = FindFunctionInModel(functionName, model);
             Assert.IsNotNull(replacedFunction);
-            Assert.AreEqual(firstFunction, replacedFunction); // should be the same, because it hasn't changed
-            Assert.IsTrue(replacedFunction.IsConst());
+            //https://issuetracker.deltares.nl/browse/DELFT3DFM-1505 Hyd file leads, so it will be overwritten.
+            Assert.AreNotEqual(firstFunction, replacedFunction); 
+            Assert.IsFalse(replacedFunction.IsConst());
+            Assert.IsTrue(replacedFunction.IsFromHydroDynamics());
         }
 
         /// <summary>
@@ -1699,7 +1704,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void Import_Waq_Model_WithSegmentFiles_Creates_FunctionFromHydroDynamics()
         {
             var testFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
-            testFilePath = TestHelper.CreateLocalCopy(testFilePath);
 
             //Import the second model on top of waqmodel.
             var importer = new HydFileImporter();
@@ -1733,13 +1737,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void Import_Waq_Model_WithSegmentFiles_OverExistingWaqModel_Update_SegmentFileFunctions()
         {
             var zwolleFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
-            zwolleFilePath = TestHelper.CreateLocalCopy(zwolleFilePath);
-
             //Import hyd file
             var westernschedlt =
                 TestHelper.GetTestFilePath(
                     @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
-            westernschedlt = TestHelper.CreateLocalCopy(westernschedlt);
             Assert.IsTrue(File.Exists(westernschedlt));
 
             var importer = new HydFileImporter();
@@ -1749,8 +1750,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             //Import the substances now.
             var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
-            subsFilePath = TestHelper.CreateLocalCopy(subsFilePath);
-
             Assert.IsNotNull(westernModel.SubstanceProcessLibrary);
             new SubFileImporter().Import(westernModel.SubstanceProcessLibrary, subsFilePath);
 
@@ -1769,8 +1768,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var expectedLogMessage =
                 string.Format(
                     Resources
-                        .WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_with_Hydrodynamic_data_from_file_path__1_,
-                    "CHEZY", string.Empty);
+                        .WaterQualityModel_HandleNewHydroDynamicsFunctionDataSet_The_process_coefficient__0__has_been_updated_with_the_latest_Hydrodynamic_data_file_,
+                    "CHEZY");
             TestHelper.AssertAtLeastOneLogMessagesContains(() => westernModel.ImportHydroData(zwolleModel.HydroData), expectedLogMessage);
 
             //Check filepaths, it has been updated.

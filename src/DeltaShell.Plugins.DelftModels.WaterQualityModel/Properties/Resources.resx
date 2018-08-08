@@ -623,10 +623,10 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
   <data name="SubFileImporter_Import_Sub_file_successfully_imported_from___0_" xml:space="preserve">
     <value>Sub file successfully imported from: {0}</value>
   </data>
-  <data name="WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_with_Hydrodynamic_data_from_file_path__1_" xml:space="preserve">
-    <value>The process coefficient {0} has been updated with Hydrodynamic data from file path {1}</value>
-  </data>
   <data name="WaterQualityModel_ImportHydroData_The_coordinate_system_of_the_model___0__has_been_set_to__1_" xml:space="preserve">
     <value>The coordinate system of the model: {0} has been set to {1}</value>
+  </data>
+  <data name="WaterQualityModel_HandleNewHydroDynamicsFunctionDataSet_The_process_coefficient__0__has_been_updated_with_the_latest_Hydrodynamic_data_file_" xml:space="preserve">
+    <value>The process coefficient {0} has been updated with the latest Hydrodynamic data file.</value>
   </data>
 </root>

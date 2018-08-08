@@ -1112,7 +1112,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void Import_Waq_Model_WithSegmentFiles_Create_SegmentFileFunctions()
         {
             var testFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
-            testFilePath = TestHelper.CreateLocalCopy(testFilePath);
+            var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
 
             //Import the second model on top of waqmodel.
             var importer = new HydFileImporter();
@@ -1120,9 +1120,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.IsNotNull(waqModel);
 
             //Import the substances now.
-            var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
-            subsFilePath = TestHelper.CreateLocalCopy(subsFilePath);
-
             Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
             new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
 

@@ -108,6 +108,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private string verticalDiffusionRelativeFilePath;
         private IEventedList<WaterQualityObservationPoint> observationPoints;
         private IEventedList<WaterQualityLoad> loads;
+        private string surfacesRelativeFilePath;
+        private string chezyCoefficientsFilePath;
+        private string widthsFilePath;
+        private string velocitiesFilePath;
 
         #endregion
 
@@ -525,7 +529,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// <value>
         /// The velocities file path.
         /// </value>
-        public virtual string VelocitiesFilePath { get; protected set; }
+        public virtual string VelocitiesFilePath
+        {
+            get { return velocitiesFilePath; }
+            protected set
+            {
+                velocitiesFilePath = value;
+                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), "Velocity");
+            }
+        }
 
         /// <summary>
         /// Gets or sets the widths file path.
@@ -534,7 +546,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// <value>
         /// The widths file path.
         /// </value>
-        public virtual string WidthsFilePath { get; protected set; }
+        public virtual string WidthsFilePath
+        {
+            get { return widthsFilePath; }
+            protected set
+            {
+                widthsFilePath = value;
+                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), "Width");
+            }
+        }
 
         /// <summary>
         /// Gets or sets the chezy coefficients file path.
@@ -543,7 +563,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// <value>
         /// The chezy coefficients file path.
         /// </value>
-        public virtual string ChezyCoefficientsFilePath { get; protected set; }
+        public virtual string ChezyCoefficientsFilePath
+        {
+            get { return chezyCoefficientsFilePath; }
+            protected set
+            {
+                chezyCoefficientsFilePath = value;
+                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), "Chezy");
+            }
+        }
 
 
         /// <summary>
@@ -572,7 +600,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// *.srf
         /// <see cref="IHydroData.GetSurfacesRelativeFilePath"/>
         /// </summary>
-        public virtual string SurfacesRelativeFilePath { get; protected set; }
+        public virtual string SurfacesRelativeFilePath
+        {
+            get { return surfacesRelativeFilePath; }
+            protected set
+            {
+                surfacesRelativeFilePath = value;
+                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), "Surf");
+            }
+        }
 
         /// <summary>
         /// The salinity file can be found in the *.hyd-file and
@@ -836,10 +872,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 FlowsRelativeFilePath = HydroData.FlowsRelativePath;
                 PointersRelativeFilePath = HydroData.PointersRelativePath;
                 LengthsRelativeFilePath = HydroData.LengthsRelativePath;
-                SalinityRelativeFilePath = HydroData.SalinityRelativePath;
-                TemperatureRelativeFilePath = HydroData.TemperatureRelativePath;
                 VerticalDiffusionRelativeFilePath = HydroData.VerticalDiffusionRelativePath;
-                ShearStressesRelativeFilePath = HydroData.ShearStressesRelativePath;
                 AttributesRelativeFilePath = HydroData.AttributesRelativePath;
                 OverWriteSegmentFunctions(HydroData);
 
@@ -879,37 +912,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             VelocitiesFilePath = data.VelocitiesRelativePath;
             WidthsFilePath = data.WidthsRelativePath;
             ChezyCoefficientsFilePath = data.ChezyCoefficientsRelativePath;
-
-            if (!ProcessCoefficients.Any()) return;
-
-            ProcessCoefficients
-                .Where(pc => HydroData.HasDataFor(pc.Name)).ToList()/* Keep the previous value if it has not been overwritten. */
-                .ForEach(UpdateProcessCoeffIfNeeded);
+            SalinityRelativeFilePath = HydroData.SalinityRelativePath;
+            TemperatureRelativeFilePath = HydroData.TemperatureRelativePath;
+            ShearStressesRelativeFilePath = HydroData.ShearStressesRelativePath;
         }
 
-        private void UpdateProcessCoeffIfNeeded(IFunction process)
-        {
-            var pathFile = HydroData.GetFilePathFor(process.Name);
-            if (string.IsNullOrEmpty(pathFile)) return;
-            if (process is FunctionFromHydroDynamics)
-                ((FunctionFromHydroDynamics) process).FilePath = pathFile;
-            else
-            {
-                var newSegment = WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics(
-                    process.Name,
-                    (double)process.Components[0].DefaultValue,
-                    process.Components[0].Unit.Name,
-                    process.Components[0].Unit.Symbol,
-                    process.Attributes[WaterQualityFunctionFactory.DESCRIPTION_ATTRIBUTE],
-                    pathFile);
-                Log.Info(
-                    string.Format(Resources.WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_with_Hydrodynamic_data_from_file_path__1_,
-                    process.Name,
-                    pathFile));
-                ProcessCoefficients.Remove(process);
-                ProcessCoefficients.Add(newSegment);
-            }
-        }
         private void OverWriteModelTimersWithImportTimers(bool skipImportTimers, IHydroData dataToOverwrite)
         {
             if (skipImportTimers) return;
@@ -1707,7 +1714,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         private void HandleNewHydroDynamicsFunctionDataSet(IDataItemSet functionCollection, string functionName)
         {
-            var dataItem = functionCollection.DataItems.FirstOrDefault(p => p.Name == functionName);
+            var dataItem = functionCollection.DataItems.FirstOrDefault(p => p.Name.ToLowerInvariant() == functionName.ToLowerInvariant());
             if (dataItem == null || SubstanceProcessLibrary == null) return;
 
             var function = GetFunctionForDataItem(dataItem);
@@ -1716,11 +1723,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             var isFromHydroDynamics = function.IsFromHydroDynamics();
 
             IFunctionTypeCreator creator;
-            if (hasDataInHydroDynamics && !HasEverImportedHydroData) // if there is data and it is the first time, automatically set it to from hydrodynamics. 
+            if (hasDataInHydroDynamics ) // if there is data and it is the first time, automatically set it to from hydrodynamics. 
             {
                 creator = FunctionTypeCreatorFactory.CreateFunctionFromHydroDynamicsCreator(HasDataInHydroDynamics, GetFilePathFromHydroDynamics);
             }
-            else if (!hasDataInHydroDynamics && isFromHydroDynamics) // if there is no data in the hydrodynamics, but it is set as such, set it back to constant
+            else if (isFromHydroDynamics) // if there is no data in the hydrodynamics, but it is set as such, set it back to constant
             {
                 creator = FunctionTypeCreatorFactory.CreateConstantCreator();
             }
@@ -1730,6 +1737,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
 
             FunctionTypeCreator.ReplaceFunctionUsingCreator(functionCollection.AsEventedList<IFunction>(), function, creator, this);
+            Log.InfoFormat(Resources.WaterQualityModel_HandleNewHydroDynamicsFunctionDataSet_The_process_coefficient__0__has_been_updated_with_the_latest_Hydrodynamic_data_file_,
+                    function.Name);
         }
 
         private IFunction GetFunctionForDataItem(IDataItem dataItem)

@@ -20,22 +20,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private LayerType layerType;
         private FileInfo path;
         private FileSystemWatcher fileWatcher;
-        
+
+        private readonly string SalinityName = "salinity";
+        private readonly string TemperatureName = "temp";
+        private readonly string TauName = "tau";
+        private readonly string TauFlowName = "tauflow";
+        private readonly string ChezyName = "chezy";
+        private readonly string VelocityName = "velocity";
+        private readonly string WidthName = "width";
+        private readonly string SurfName = "surf";
+
         public HydFileData()
         {
             HydrodynamicLayerThicknesses = new double[0];
             NumberOfHydrodynamicLayersPerWaqSegmentLayer = new int[0];
 
+            
             delwaqDataToFilePathMapping = new Dictionary<string, Func<string>>
             {
-                {"salinity", () => SalinityRelativePath },
-                {"temp", () => TemperatureRelativePath },
-                {"tau", () => ShearStressesRelativePath },
-                {"tauflow", () => ShearStressesRelativePath },
-                {"chezy", () => ChezyCoefficientsRelativePath},
-                {"velocity", () => VelocitiesRelativePath},
-                {"width", () => WidthsRelativePath},
-                {"surf", () => SurfacesRelativePath},
+                {SalinityName, () => SalinityRelativePath },
+                {TemperatureName, () => TemperatureRelativePath },
+                {TauName, () => ShearStressesRelativePath },
+                {TauFlowName, () => ShearStressesRelativePath },
+                {ChezyName, () => ChezyCoefficientsRelativePath},
+                {VelocityName, () => VelocitiesRelativePath},
+                {WidthName, () => WidthsRelativePath},
+                {SurfName, () => SurfacesRelativePath},
             };
 
             VolumesRelativePath = string.Empty;

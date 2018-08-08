@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -331,6 +331,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The process coefficient {0} has been updated with the latest Hydrodynamic data file..
+        /// </summary>
+        public static string WaterQualityModel_HandleNewHydroDynamicsFunctionDataSet_The_process_coefficient__0__has_been_updated_with_the_latest_Hydrodynamic_data_file_ {
+            get {
+                return ResourceManager.GetString("WaterQualityModel_HandleNewHydroDynamicsFunctionDataSet_The_process_coefficient__" +
+                        "0__has_been_updated_with_the_latest_Hydrodynamic_data_file_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The coordinate system of the model: {0} has been set to {1}.
         /// </summary>
         public static string WaterQualityModel_ImportHydroData_The_coordinate_system_of_the_model___0__has_been_set_to__1_ {
@@ -358,16 +368,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
                 return ResourceManager.GetString("WaterQualityModel_OnInitializeCore_Failed_to_initialize_pre_processor__0_Please_l" +
                         "ook_at_the_List_file_for_more_information__0_List_file_found_in__Project_view___" +
                         "_Output____List_file__0___1_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The process coefficient {0} has been updated with Hydrodynamic data from file path {1}.
-        /// </summary>
-        public static string WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been_updated_with_Hydrodynamic_data_from_file_path__1_ {
-            get {
-                return ResourceManager.GetString("WaterQualityModel_UpdateProcessCoeffIfNeeded_The_process_coefficient__0__has_been" +
-                        "_updated_with_Hydrodynamic_data_from_file_path__1_", resourceCulture);
             }
         }
         
