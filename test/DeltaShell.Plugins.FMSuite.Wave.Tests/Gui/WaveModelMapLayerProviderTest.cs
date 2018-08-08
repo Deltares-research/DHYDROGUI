@@ -33,8 +33,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         {
             using (var gui = new DeltaShellGui())
             {
-                var waveGuiPlugin = new WaveGuiPlugin() { Gui = gui };
                 gui.Plugins.Add(new SharpMapGisGuiPlugin { Gui = gui });
+                var waveGuiPlugin = new WaveGuiPlugin() { Gui = gui };         
                 gui.Plugins.Add(waveGuiPlugin);
 
                 var modelOne = new WaveModel();
