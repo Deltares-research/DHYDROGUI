@@ -67,7 +67,93 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
-        public void mytestf1dmetpomp()
+        public void GivenRentionWhenConnectingToOutputThenCorrectPumpFeatureIsAdded()
+        {
+            //Setup network
+            //needs 2 nodes, branch, computational nodes, crosssection, retention and 2 boundary conditions
+
+            var network = new HydroNetwork();
+
+            // add nodes and branches
+            IHydroNode node1 = new HydroNode { Name = "node1", Network = network, Geometry = new Point(0, 0) };
+            IHydroNode node2 = new HydroNode { Name = "node2", Network = network, Geometry = new Point(100, 0) };
+
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node2);
+
+            var branch = new Channel("branch1", node1, node2, 100.0);
+            var vertices = new List<Coordinate>
+                               {
+                                   new Coordinate(0, 0),
+                                   new Coordinate(100, 0)
+                               };
+            branch.Geometry = GeometryFactory.CreateLineString(vertices.ToArray());
+            var yzCoordinates = new List<Coordinate>
+            {
+                new Coordinate(0.0, 1.0),
+                new Coordinate(1.0, 0.0),
+                new Coordinate(2.0, 0.0),
+                new Coordinate(3.0, 1.0),
+            };
+
+            CrossSectionHelper.AddXYZCrossSectionFromYZCoordinates(branch, 50.0, yzCoordinates, "mycs");
+
+            var compositeBranchStructure = new CompositeBranchStructure
+            {
+                Network = network,
+                Geometry = new Point(5, 0),
+                Chainage = 5,
+            };
+
+            NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, branch, 20.0);
+            var retention = new Retention()
+            {
+                Name = "1",
+                LongName = "retentionlongname",
+                Branch = branch,
+                Chainage = compositeBranchStructure.Chainage,
+                Type = RetentionType.Reservoir,
+                UseTable = false,
+                BedLevel = 1,
+                StorageArea = 10,
+                StreetLevel = 2,
+                StreetStorageArea = 100
+            };
+
+            var pump = new Pump();
+            HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, pump);
+
+            NetworkHelper.AddBranchFeatureToBranch(retention, branch, 20.0);
+            network.Branches.Add(branch);
+            WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
+
+            // add discretization
+            Discretization networkDiscretization = WaterFlowModel1DTestHelper.GetNetworkDiscretization(network);
+
+            // setup 1d flow waterFlowModel1D
+            using (var waterFlowModel1D = new WaterFlowModel1D { Network = network, NetworkDiscretization = networkDiscretization })
+            {
+                waterFlowModel1D.StopTime = waterFlowModel1D.StartTime.AddHours(1);
+
+                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.WaterLevel, ElementSet.Retentions).AggregationOptions = AggregationOptions.Current;
+
+                RunModel(waterFlowModel1D);
+
+                var outputRetentionDataItem = waterFlowModel1D.DataItems.FirstOrDefault(
+                    di => di.Name == "Water level (rt)"
+                          && (di.Role & DataItemRole.Output) == DataItemRole.Output
+                          && di.Value is IFunction
+                          && ((IFunction)di.Value).Store is WaterFlowModel1DNetCdfFunctionStore);
+                Assert.IsNotNull(outputRetentionDataItem);
+                var outputRetentionFeatureCoverage = outputRetentionDataItem.Value as FeatureCoverage;
+                Assert.IsNotNull(outputRetentionFeatureCoverage);
+                Assert.That(outputRetentionFeatureCoverage.Features.Count, Is.EqualTo(1));
+                Assert.That(outputRetentionFeatureCoverage.Features[0], Is.EqualTo(retention));
+            }
+        }
+
+        [Test]
+        public void GivenPumpWhenConnectingToOutputThenCorrectPumpFeatureIsAdded()
         {
             //Setup network
             //needs 2 nodes, branch, computational nodes, crosssection, pump and 2 boundary conditions
@@ -95,9 +181,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 new Coordinate(2.0, 0.0),
                 new Coordinate(3.0, 1.0),
             };
-
             
-            var cs = CrossSectionHelper.AddXYZCrossSectionFromYZCoordinates(branch, 50.0, yzCoordinates,"mycs");
+            CrossSectionHelper.AddXYZCrossSectionFromYZCoordinates(branch, 50.0, yzCoordinates,"mycs");
 
             var compositeBranchStructure = new CompositeBranchStructure
             {
@@ -107,8 +192,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             };
 
             NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, branch, 20.0);
-            HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, new Pump());
-
+            var pump = new Pump();
+            HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, pump);
+           
             network.Branches.Add(branch);
             WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
             
@@ -136,10 +222,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 RunModel(waterFlowModel1D);
 
-                if (waterFlowModel1D.Status == ActivityStatus.Failed)
-                {
-                    Assert.Fail("Model run has failed");
-                }
                 var outputPumpSuctionsideDataItem = waterFlowModel1D.DataItems.FirstOrDefault(
                     di => di.Name == "Suction side (p)"
                           && (di.Role & DataItemRole.Output) == DataItemRole.Output
@@ -148,11 +230,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 Assert.IsNotNull(outputPumpSuctionsideDataItem);
                 var outputPumpSuctionSideFeatureCoverage = outputPumpSuctionsideDataItem.Value as FeatureCoverage;
                 Assert.IsNotNull(outputPumpSuctionSideFeatureCoverage);
-                var values = outputPumpSuctionSideFeatureCoverage.Components[0].GetValues<double>();
-                Assert.That(values.Count, Is.EqualTo(2));
-                Assert.That(values[0], Is.EqualTo(0.001).Within(0.001));
-                Assert.That(values[1], Is.EqualTo(55938.6928).Within(0.0001));
-
+                Assert.That(outputPumpSuctionSideFeatureCoverage.Features.Count, Is.EqualTo(1));
+                Assert.That(outputPumpSuctionSideFeatureCoverage.Features[0], Is.EqualTo(pump));
             }
         }
 
