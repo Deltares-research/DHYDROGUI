@@ -119,11 +119,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 value = BranchFile.BranchTypes.Channel;
             }
-            if (branch is IPipe)
+            else if (branch is IPipe)
             {
                 value = BranchFile.BranchTypes.Pipe;
             }
-            if (branch is ISewerConnection)
+            else if (branch is ISewerConnection)
             {
                 value = BranchFile.BranchTypes.SewerConnection;
             }
