@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using DelftTools.Functions.Filters;
+﻿using DelftTools.Functions.Filters;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
@@ -9,6 +7,8 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
+using System;
+using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -287,6 +287,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             grid = (UnstructuredGrid)TypeUtils.GetField(store, "grid");
             Assert.That(grid.CoordinateSystem, Is.Not.Null);
             Assert.That(grid.CoordinateSystem.AuthorityCode, Is.EqualTo(4326));
+        }
+
+        [Test]
+        public void Test_GivenAThreeDimensionalVariable_CorrectAmountOfValuesIsGiven()
+        {
+            var store = new FMMapFileFunctionStore(null)
+            {
+                Path = TestHelper.GetTestFilePath("output_mapfiles\\my_map.nc")
+            };
+            var function = (UnstructuredGridCellCoverage)store.Functions.FirstOrDefault( f => f.Components[0].Name == "mesh2d_sxtot");
+
+            var filterTime = function.Time.Values.FirstOrDefault();
+            var filter = new VariableValueFilter<DateTime>(function.Time, filterTime);
+            try
+            {
+                var filteredValues = function.GetValues(filter);
+                if (function.Components[0].ValueType == typeof(double))
+                {
+                    Assert.That(filteredValues.Cast<double>().ToArray().Length, Is.EqualTo(551));
+                }
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Something went wrong sizing shape and object of mesh2d_sxtot (we cannot render in OpenGL!): " + e.Message);
+            }
         }
     }
 }
