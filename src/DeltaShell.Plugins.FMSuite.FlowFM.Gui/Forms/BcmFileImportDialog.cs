@@ -10,6 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
     {
         public override DelftDialogResult ShowModal()
         {
+            openFileDialog.FileName = string.Empty;
             openFileDialog.DefaultExt = BcmFile.Extension;
             openFileDialog.Filter = new BcmFileImporter().FileFilter;
             if (openFileDialog.ShowDialog() != DialogResult.OK)

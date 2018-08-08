@@ -47,6 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         public virtual DelftDialogResult ShowModal()
         {
+            openFileDialog.FileName = string.Empty;
             openFileDialog.Filter = new BcFileImporter().FileFilter;
             if (openFileDialog.ShowDialog() != DialogResult.OK)
             {
