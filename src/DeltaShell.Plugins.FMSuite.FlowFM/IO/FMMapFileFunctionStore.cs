@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private const string SeaWaterXVelocityStandardName = "sea_water_x_velocity";
         private const string SeaWaterYVelocityStandardName = "sea_water_y_velocity";
         
-        private const string SedindexAttributeName = "SedIndex";
+        private const string SedIndexAttributeName = "SedIndex";
         #endregion
 
         private static readonly ILog log = LogManager.GetLogger(typeof(FMMapFileFunctionStore));
@@ -178,12 +178,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var coverage = Functions.FirstOrDefault(f => f.Components.Contains(function));
 
-            if (coverage == null || !coverage.Attributes.ContainsKey(SedindexAttributeName))
+            if (coverage == null || !coverage.Attributes.ContainsKey(SedIndexAttributeName))
             {
                 return variableValuesCount;
             }
 
-            var netcdfVariableDimensionLength = 0;
+            var netcdfVariableDimensionLength = 1;
 
             using (ReconnectToMapFile())
             {
@@ -231,14 +231,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 coverage = Functions.FirstOrDefault(f => f == function);
 
-                if (coverage == null || !coverage.Attributes.ContainsKey(SedindexAttributeName))
+                if (coverage == null || !coverage.Attributes.ContainsKey(SedIndexAttributeName))
                 {
                     return;
                 }
             }
             else
             {
-                if (!coverage.Attributes.ContainsKey(SedindexAttributeName))
+                if (!coverage.Attributes.ContainsKey(SedIndexAttributeName))
                 {
                     return;
                 }
@@ -259,7 +259,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             var sedIndex = 0;
-            if(!Int32.TryParse(coverage.Attributes[SedindexAttributeName], out sedIndex))
+            if(!Int32.TryParse(coverage.Attributes[SedIndexAttributeName], out sedIndex))
             {
                 throw new Exception("Sediment Index is not of integer type");
             }
@@ -305,7 +305,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         // is coverage
                         //check if there are multidimensional sedimentnames
                         var indexOfSedimentToRender = string.Empty;
-                        if (coverage.Attributes.TryGetValue(SedindexAttributeName, out indexOfSedimentToRender))
+                        if (coverage.Attributes.TryGetValue(SedIndexAttributeName, out indexOfSedimentToRender))
                         {
                             var nIndex = -1;
                             if (int.TryParse(indexOfSedimentToRender, out nIndex))
@@ -322,7 +322,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     // is component
                     //check if there are multidimensional sedimentnames
                     var indexOfSedimentToRender = string.Empty;
-                    if (coverage.Attributes.TryGetValue(SedindexAttributeName, out indexOfSedimentToRender))
+                    if (coverage.Attributes.TryGetValue(SedIndexAttributeName, out indexOfSedimentToRender))
                     {
                         var nIndex = -1;
                         if (int.TryParse(indexOfSedimentToRender, out nIndex))
@@ -621,7 +621,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     InitializeCoverage(sedCoverage, secondDimensionName, netCdfVariableName, unitSymbol,
                         timeDependentVariable.ReferenceDate, new[]
                         {
-                            new Tuple<string, string>(SedindexAttributeName, index.ToString()),
+                            new Tuple<string, string>(SedIndexAttributeName, index.ToString()),
                         });
                 }
                 yield return sedCoverage;
