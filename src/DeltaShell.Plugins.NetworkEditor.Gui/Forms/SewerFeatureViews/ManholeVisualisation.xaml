@@ -6,11 +6,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews"
              xmlns:crossSections="clr-namespace:DelftTools.Hydro.CrossSections;assembly=DelftTools.Hydro"
+             xmlns:hydro="clr-namespace:DelftTools.Hydro;assembly=DelftTools.Hydro"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              SizeChanged="ManholeVisualisation_OnSizeChanged">
     <UserControl.DataContext>
-        <local:ManholeVisualisationViewModel x:Name="ViewModel" x:FieldModifier="internal"/>
+        <local:ManholeVisualisationViewModel x:Name="ViewModel" />
     </UserControl.DataContext>
     <UserControl.Resources>
         <ResourceDictionary Source="NetworkStructureBrushes.xaml"/>
@@ -44,10 +45,23 @@
                 <DataTemplate DataType="{x:Type local:PipeShape}">
                     <DataTemplate.Resources>
                         <Style x:Key="PipeStyle" TargetType="Shape">
-                            <Setter Property="Fill" Value="LightSlateGray"/>
                             <Setter Property="Stroke" Value="Black" />
                             <Setter Property="StrokeThickness" Value="2" />
                             <Setter Property="Opacity" Value="0.5"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Pipe.WaterType}" Value="{x:Static hydro:SewerConnectionWaterType.Combined}">
+                                    <Setter Property="Fill" Value="{StaticResource PipeBrushCombined}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Pipe.WaterType}" Value="{x:Static hydro:SewerConnectionWaterType.DryWater}">
+                                    <Setter Property="Fill" Value="{StaticResource PipeBrushDryWater}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Pipe.WaterType}" Value="{x:Static hydro:SewerConnectionWaterType.StormWater}">
+                                    <Setter Property="Fill" Value="{StaticResource PipeBrushStormWater}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Pipe.WaterType}" Value="{x:Static hydro:SewerConnectionWaterType.None}">
+                                    <Setter Property="Fill" Value="{StaticResource PipeBrushNone}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
                         </Style>
                         <Style x:Key="PipeStyling" TargetType="ContentControl">
                             <Setter Property="ContentTemplate">
