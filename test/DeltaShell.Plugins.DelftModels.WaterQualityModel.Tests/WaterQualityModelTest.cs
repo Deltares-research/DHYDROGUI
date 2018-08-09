@@ -1538,6 +1538,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var hydPath =
                 TestHelper.GetTestFilePath(
                     @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
+            Assert.IsTrue(File.Exists(hydPath));
             var importer = new HydFileImporter();
             var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
             Assert.IsNotNull(importedItem);
@@ -1573,6 +1574,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var hydPath =
                 TestHelper.GetTestFilePath(
                     @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
+            Assert.IsTrue(File.Exists(hydPath));
             var importer = new HydFileImporter();
             var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
             Assert.IsNotNull(importedItem);
@@ -1605,6 +1607,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var hydPath =
                 TestHelper.GetTestFilePath(
                     @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
+            Assert.IsTrue(File.Exists(hydPath));
             var importer = new HydFileImporter();
             var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
             Assert.IsNotNull(importedItem);
@@ -1637,6 +1640,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var hydPath =
                 TestHelper.GetTestFilePath(
                     @"WaterQualityDataFiles\ImportHydFileForCoordSystem\ImportHydFileEmptyCS\westernscheldt01.hyd");
+            Assert.IsTrue(File.Exists(hydPath));
             var importer = new HydFileImporter();
             var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
             Assert.IsNotNull(importedItem);
@@ -1664,6 +1668,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var hydPath =
                 TestHelper.GetTestFilePath(
                     @"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
+            Assert.IsTrue(File.Exists(hydPath));
             var importer = new HydFileImporter();
             var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
             Assert.IsNotNull(importedItem);
@@ -1690,6 +1695,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             //Import hyd file
             var hydPath =
                 TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
+            Assert.IsTrue(File.Exists(hydPath));
             var importer = new HydFileImporter();
             var importedItem = importer.ImportItem(hydPath, model) as WaterQualityModel;
             Assert.IsNotNull(importedItem);
@@ -1704,6 +1710,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void Import_Waq_Model_WithSegmentFiles_Creates_FunctionFromHydroDynamics()
         {
             var testFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
+            Assert.IsTrue(File.Exists(testFilePath));
 
             //Import the second model on top of waqmodel.
             var importer = new HydFileImporter();
@@ -1737,6 +1744,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void Import_Waq_Model_WithSegmentFiles_OverExistingWaqModel_Update_SegmentFileFunctions()
         {
             var zwolleFilePath = TestHelper.GetTestFilePath(@"Zwolle\sobek.hyd");
+            Assert.IsTrue(File.Exists(zwolleFilePath));
+
             //Import hyd file
             var westernschedlt =
                 TestHelper.GetTestFilePath(
