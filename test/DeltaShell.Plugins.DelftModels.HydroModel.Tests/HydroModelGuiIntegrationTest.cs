@@ -545,11 +545,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             project.RootFolder.Add(hydroModel);
 
             var mainWindow = (MainWindow)gui.MainWindow;
-
+                
             // wait until gui starts
-            mainWindow.Loaded += delegate
+            Action mainWindowShown = delegate
             {
-                /* get the wave model */
+               /* get the wave model */
                 var waveModel = hydroModel.Activities.OfType<WaveModel>().FirstOrDefault();
                 Assert.NotNull(waveModel);
                 Assert.That(waveModel.Name, Is.StringContaining("Waves"));
@@ -562,7 +562,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Assert.IsNotNull(targetWaveModel);
                 Assert.That(targetWaveModel.Name, Is.StringContaining("te0"));
             };
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
+
+
         }
     }
 }
