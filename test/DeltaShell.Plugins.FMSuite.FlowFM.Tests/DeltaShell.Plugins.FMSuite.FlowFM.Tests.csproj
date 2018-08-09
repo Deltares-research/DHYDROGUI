@@ -346,7 +346,6 @@
     <Compile Include="WaterFlowFMModelRestartIntegrationTest.cs" />
     <Compile Include="WaterFlowFMModelTracersTest.cs" />
     <Compile Include="WaterFlowFMResourcesTest.cs" />
-    <Compile Include="WaterFlowFMRunCompareTest.cs" />
     <Compile Include="WaterFlowFMModelDefinitionTest.cs" />
     <Compile Include="WaterFlowFMSaveLoadTest.cs" />
     <Compile Include="WaterFlowFMModelTest.cs" />
