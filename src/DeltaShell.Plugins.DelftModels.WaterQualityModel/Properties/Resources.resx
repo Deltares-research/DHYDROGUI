@@ -629,4 +629,10 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
   <data name="WaterQualityModel_HandleNewHydroDynamicsFunctionDataSet_The_process_coefficient__0__has_been_updated_with_the_latest_Hydrodynamic_data_file_" xml:space="preserve">
     <value>The process coefficient {0} has been updated with the latest Hydrodynamic data file.</value>
   </data>
+  <data name="WaqValidationRulesExtension_ConstantProcessWithinRuleLimits_No_rules_found_for__0__" xml:space="preserve">
+    <value>No rules found for {0}.</value>
+  </data>
+  <data name="WaterQualityModelValidator_ValidateProcessCoefficients_Process_coefficient__0___value___1___does_not_fulfill_the_rule__2_" xml:space="preserve">
+    <value>Process coefficient {0} (value: {1}) does not fulfill the rule {2}</value>
+  </data>
 </root>

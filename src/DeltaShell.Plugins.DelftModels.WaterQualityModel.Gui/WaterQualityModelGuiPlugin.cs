@@ -60,8 +60,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
     [Extension(typeof(IPlugin))]
     public class WaterQualityModelGuiPlugin : GuiPlugin, ISpatialOperationProviderPlugin
     {
-        private static readonly Cursor AddObservationPointCursor = MapCursors.CreateArrowOverlayCuror(DelftModels.WaterQualityModel.Properties.Resources.Observation);
-        private static readonly Cursor AddLoadCursor = MapCursors.CreateArrowOverlayCuror(DelftModels.WaterQualityModel.Properties.Resources.weight);
+        private static readonly Cursor AddObservationPointCursor = MapCursors.CreateArrowOverlayCuror(WaqResources.Observation);
+        private static readonly Cursor AddLoadCursor = MapCursors.CreateArrowOverlayCuror(WaqResources.weight);
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterQualityModelGuiPlugin));
 
         private bool showingSyncMessage;

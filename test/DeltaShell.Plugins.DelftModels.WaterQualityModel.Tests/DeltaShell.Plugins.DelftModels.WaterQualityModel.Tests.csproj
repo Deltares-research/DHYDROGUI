@@ -86,6 +86,7 @@
     <Compile Include="IO\InputFileExporterTest.cs" />
     <Compile Include="IO\LazyMapFileFunctionStoreTest.cs" />
     <Compile Include="IO\MultiDimentionalArrayAdapterTest.cs" />
+    <Compile Include="IO\WaqValidationRulesExtensionTest.cs" />
     <Compile Include="IO\WaterQualityObservationAreaImporterTest.cs" />
     <Compile Include="NHibernate\WaterQualityModelNHibernateIntegrationTest.cs" />
     <Compile Include="ObservationAreas\OverwriteLabelOperationTest.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="SubstanceProcessLibraryTestHelper.cs" />
     <Compile Include="Utils\PointToGridCellMapperTest.cs" />
     <Compile Include="Utils\WaterQualityUtilsTest.cs" />
+    <Compile Include="WaqProcessesRulesTest.cs" />
     <Compile Include="WaterQualityFunctionFactoryTest.cs" />
     <Compile Include="WaterQualityModelIntegrationTest.cs" />
     <Compile Include="WaterQualityModelPluginGuiTest.cs" />
@@ -322,6 +324,10 @@
       <Project>{9f94f7fe-c79c-4e32-b3dc-a11c01b79349}</Project>
       <Name>DelftTools.Hydro</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
+      <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
+      <Name>DeltaShell.NGHS.IO</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.csproj">
       <Project>{0D371464-C886-433D-912D-84A3EF0ADE01}</Project>

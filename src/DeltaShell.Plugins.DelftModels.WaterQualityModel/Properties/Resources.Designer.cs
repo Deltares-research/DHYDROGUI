@@ -295,6 +295,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No rules found for {0}..
+        /// </summary>
+        public static string WaqValidationRulesExtension_ConstantProcessWithinRuleLimits_No_rules_found_for__0__ {
+            get {
+                return ResourceManager.GetString("WaqValidationRulesExtension_ConstantProcessWithinRuleLimits_No_rules_found_for__0" +
+                        "__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to - Constant.
         /// </summary>
         public static string WaterQualityBoundaryData_Constant_post_fix {
@@ -463,6 +473,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
                 return ResourceManager.GetString("WaterQualityModelValidator_CheckTimers_Timers_for__0__are_not_equal_to_the_simula" +
                         "tion_period_of_the_model___1____2____Please_verify_that_they_overlap_with_the_si" +
                         "mulation_period_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Process coefficient {0} (value: {1}) does not fulfill the rule {2}.
+        /// </summary>
+        public static string WaterQualityModelValidator_ValidateProcessCoefficients_Process_coefficient__0___value___1___does_not_fulfill_the_rule__2_ {
+            get {
+                return ResourceManager.GetString("WaterQualityModelValidator_ValidateProcessCoefficients_Process_coefficient__0___v" +
+                        "alue___1___does_not_fulfill_the_rule__2_", resourceCulture);
             }
         }
         

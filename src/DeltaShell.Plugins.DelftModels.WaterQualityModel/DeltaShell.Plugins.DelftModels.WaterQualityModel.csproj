@@ -77,6 +77,8 @@
     <Compile Include="IO\InputFileExporter.cs" />
     <Compile Include="IO\BloomSpeFileReader.cs" />
     <Compile Include="IO\MapFileMetaData.cs" />
+    <Compile Include="IO\WaqProcessesRules.cs" />
+    <Compile Include="IO\WaqValidationRulesExtension.cs" />
     <Compile Include="IO\WaterQualityObservationAreaImporter.cs" />
     <Compile Include="IO\LazyMapFileFunctionStore.cs" />
     <Compile Include="IO\MultiDimentionalArrayAdapter.cs" />
@@ -154,6 +156,9 @@
     <Compile Include="WaterQualityModelValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="DWAQ_allowed_values.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="plct\plct_eco.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

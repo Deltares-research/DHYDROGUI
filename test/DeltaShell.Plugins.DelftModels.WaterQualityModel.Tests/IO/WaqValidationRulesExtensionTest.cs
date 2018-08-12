@@ -1,0 +1,336 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Functions;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
+using NUnit.Framework;
+
+namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
+{
+    [TestFixture]
+    public class WaqValidationRulesExtensionTest
+    {
+        [Test]
+        public void Test_ConstantProcessWithinRuleLimits_Passes_When_No_Rules_Given()
+        {
+            var parameterName = "testParameter";
+            var parameter =
+                WaterQualityFunctionFactory.CreateConst(parameterName, 0.0, string.Empty, string.Empty, string.Empty,
+                    string.Empty);
+            Assert.IsNotNull(parameter);
+
+            var reasonList = new List<string>();
+            var result = parameter.IsWithinRulesLimits(null, null, out reasonList);
+            Assert.IsTrue(result);
+            var expectedReason = string.Format(Resources.WaqValidationRulesExtension_ConstantProcessWithinRuleLimits_No_rules_found_for__0__, parameter.Name);
+            Assert.IsTrue(reasonList.Contains(expectedReason));
+        }
+
+        [Test]
+        public void Test_ConstantProcessWithinRuleLimits_Passes_When_No_Rules_Found()
+        {
+            var parameterName = "testParameter";
+            var parameter =
+                WaterQualityFunctionFactory.CreateConst(parameterName, 0.0, string.Empty, string.Empty, string.Empty,
+                    string.Empty);
+            Assert.IsNotNull(parameter);
+
+            var reasonList = new List<string>();
+            var result = parameter.IsWithinRulesLimits(new List<WaqProcessValidationRule>(), null, out reasonList);
+            Assert.IsTrue(result);
+            var expectedReason = string.Format(Resources.WaqValidationRulesExtension_ConstantProcessWithinRuleLimits_No_rules_found_for__0__, parameter.Name);
+            Assert.IsTrue(reasonList.Contains(expectedReason));
+        }
+
+        [Test]
+        [TestCase(0, false)]
+        [TestCase(2, true)]
+        [TestCase(4, true)]
+        [TestCase(5, true)]
+        [TestCase(6, false)]
+        public void Test_ConstantProcessWithinRuleLimits_Passes_When_No_Dependency_AndWithinLimits(double value, bool expectedResult)
+        {
+            var parameterName = "testParameter";
+            var parameter =
+                WaterQualityFunctionFactory.CreateConst(parameterName, value, string.Empty, string.Empty, string.Empty,
+                    string.Empty);
+            Assert.IsNotNull(parameter);
+
+            var reasonList = new List<string>();
+            //Define a basic rule.
+            var maxValue = 5;
+            var minValue = 2;
+            var rule = new WaqProcessValidationRule()
+            {
+                MaxValue = maxValue.ToString(),
+                MinValue = minValue.ToString(),
+                ParameterName = parameterName,
+                ValueType = typeof(double)
+            };
+
+            //Verify first the limits are satisfied
+            if (expectedResult)
+            {
+                Assert.IsTrue(minValue <= value);
+                Assert.IsTrue(value <= maxValue);
+            }
+
+            var waqProcessValidationRules = new List<WaqProcessValidationRule>();
+            waqProcessValidationRules.Add(rule);
+            //Check the rule with the parameter. 
+            var result = parameter.IsWithinRulesLimits(waqProcessValidationRules, null, out reasonList);
+            Assert.AreEqual(expectedResult, result);
+
+            if(!expectedResult)
+            {
+                var expectedReason = GetWaqProcessValidationRuleAsString(rule);
+                Assert.IsTrue(reasonList.Contains(expectedReason));
+            }
+        }
+
+        [Test]
+        [TestCase(3, typeof(int), true)]
+        [TestCase(3.5, typeof(int), false)]
+        [TestCase(3, typeof(double), true)]
+        [TestCase(3.5, typeof(double), true)]
+        public void Test_ConstantProcessWithinRuleLimits_Fails_When_TheType_IsNot_Correct(double value, Type valueType, bool expectedResult)
+        {
+            var parameterName = "testParameter";
+            var parameter =
+                WaterQualityFunctionFactory.CreateConst(parameterName, value, string.Empty, string.Empty, string.Empty,
+                    string.Empty);
+            Assert.IsNotNull(parameter);
+
+            var reasonList = new List<string>();
+            //Define a basic rule.
+            var maxValue = 5;
+            var minValue = 0;
+            var rule = new WaqProcessValidationRule()
+            {
+                MaxValue = maxValue.ToString(),
+                MinValue = minValue.ToString(),
+                ParameterName = parameterName,
+                ValueType = valueType
+            };
+
+            //Verify first the limits are satisfied
+            Assert.IsTrue( minValue <= value );
+            Assert.IsTrue( value <= maxValue);
+
+            var waqProcessValidationRules = new List<WaqProcessValidationRule>();
+            waqProcessValidationRules.Add(rule);
+
+            //Check the rule with the parameter. 
+            var result = parameter.IsWithinRulesLimits(waqProcessValidationRules, null, out reasonList);
+            Assert.AreEqual(expectedResult, result);
+
+            if (!expectedResult)
+            {
+                var expectedReason = GetWaqProcessValidationRuleAsString(rule);
+                Assert.IsTrue(reasonList.Contains(expectedReason));
+            }
+        }
+
+        [Test]
+        public void Test_WithinRuleLimits_If_No_Dependencies_MultipleRules_CanApply()
+        {
+            var parameterName = "testParameter";
+            var value = 3.5;
+            var parameter =
+                WaterQualityFunctionFactory.CreateConst(parameterName, value, string.Empty, string.Empty, string.Empty,
+                    string.Empty);
+            Assert.IsNotNull(parameter);
+
+            var reasonList = new List<string>();
+            //Define a basic rule.
+            var rule1MaxValue = 4;
+            var rule1MinValue = 0;
+            var ruleMustBeInt = new WaqProcessValidationRule()
+            {
+                MaxValue = rule1MaxValue.ToString(),
+                MinValue = rule1MinValue.ToString(),
+                ParameterName = parameterName,
+                ValueType = typeof(int)
+            };
+
+            //Verify first the rule limits are satisfied, but the type is not.
+            Assert.IsTrue(rule1MinValue <= value);
+            Assert.IsTrue(value <= rule1MaxValue);
+            Assert.AreNotEqual(value.GetType(), ruleMustBeInt.ValueType);
+
+            var rule2MaxValue = 8;
+            var rule2MinValue = 5;
+            var ruleMustBeGreaterThan5 = new WaqProcessValidationRule()
+            {
+                MaxValue = rule2MaxValue.ToString(),
+                MinValue = rule2MinValue.ToString(),
+                ParameterName = parameterName,
+                ValueType = typeof(double)
+            };
+
+            //Verify first the rule limits are not satisfied, but the type is.
+            Assert.IsFalse(rule2MinValue <= value);
+            Assert.AreEqual(value.GetType(), ruleMustBeGreaterThan5.ValueType);
+
+            //Add the rules.
+            var waqProcessValidationRules = new List<WaqProcessValidationRule>();
+            waqProcessValidationRules.Add(ruleMustBeInt);
+            waqProcessValidationRules.Add(ruleMustBeGreaterThan5);
+
+            //Check the rule with the parameter. 
+            var result = parameter.IsWithinRulesLimits(waqProcessValidationRules, null, out reasonList);
+            Assert.IsFalse(result);
+
+            var expectedReason = GetWaqProcessValidationRuleAsString(ruleMustBeInt);
+            Assert.IsTrue(reasonList.Count == 2);
+            Assert.IsTrue(reasonList.Contains(expectedReason));
+        }
+
+        [Test]
+        public void Test_WithinRuleLimits_DependencyRule_DoesNot_Apply_If_Is_Not_Met()
+        {
+            var parameterName = "testParameter";
+            var dependencyName = "dependencyName";
+            var value = 3;
+            var parameter =
+                WaterQualityFunctionFactory.CreateConst(parameterName, value, string.Empty, string.Empty, string.Empty,
+                    string.Empty);
+            Assert.IsNotNull(parameter);
+
+            var reasonList = new List<string>();
+            //Define a basic rule.
+            var maxValue = 8;
+            var minValue = 5;
+            var rule = new WaqProcessValidationRule()
+            {
+                MaxValue = maxValue.ToString(),
+                MinValue = minValue.ToString(),
+                ParameterName = parameterName,
+                ValueType = typeof(double),
+                Dependency = dependencyName
+            };
+
+            //Verify our parameter does not met the rule requirements:
+            Assert.IsFalse(minValue <= value);
+
+            var waqProcessValidationRules = new List<WaqProcessValidationRule>();
+            waqProcessValidationRules.Add(rule);
+
+            //Check the rule with the parameter and the dependency, it will pass because the dependency won´t be found. 
+            var result = parameter.IsWithinRulesLimits(waqProcessValidationRules, null, out reasonList);
+            Assert.IsTrue(result);
+            Assert.IsFalse(reasonList.Any());
+        }
+
+        [Test]
+        [TestCase("dependencyName = 3", 3.0, false)]
+        [TestCase("dependencyName = 3", 1.0, true)] /*rule does not apply because dependency has a value of 1*/
+        public void Test_WithinRuleLimits_DependencyRule_Applies_If_Is_Met(string dependencyRule, double dependencyValue, bool expectedResult)
+        {
+            var parameterName = "testParameter";
+            var dependencyName = "dependencyName";
+            var value = 3;
+            var parameter =
+                WaterQualityFunctionFactory.CreateConst(parameterName, value, string.Empty, string.Empty, string.Empty,
+                    string.Empty);
+            Assert.IsNotNull(parameter);
+
+            var dependencyParam =
+                WaterQualityFunctionFactory.CreateConst(dependencyName, dependencyValue, string.Empty, string.Empty, string.Empty,
+                    string.Empty);
+            Assert.IsNotNull(dependencyParam);
+            Assert.IsTrue(dependencyRule.Contains(dependencyName));
+
+            var reasonList = new List<string>();
+            //Define a basic rule.
+            var maxValue = 8;
+            var minValue = 5;
+            var rule = new WaqProcessValidationRule()
+            {
+                MaxValue = maxValue.ToString(),
+                MinValue = minValue.ToString(),
+                ParameterName = parameterName,
+                ValueType = typeof(double),
+                Dependency = dependencyRule
+            };
+
+            //Verify our parameter does not met the rule requirements:
+            Assert.IsFalse(minValue <= value);
+
+            var waqProcessValidationRules = new List<WaqProcessValidationRule>();
+            waqProcessValidationRules.Add(rule);
+
+            //Check the rule with the parameter and the dependency, it will pass because the dependency won´t be found. 
+            var result = parameter.IsWithinRulesLimits(waqProcessValidationRules, new List<IFunction>{dependencyParam}, out reasonList);
+            Assert.AreEqual(expectedResult, result);
+            Assert.AreEqual(!expectedResult, reasonList.Any());
+        }
+
+        [Test]
+        public void Test_WithinRuleLimits_Only_OneRule_Applies_If_Dependency_Is_Met()
+        {
+            var parameterName = "testParameter";
+            var dependencyName = "dependencyName";
+            var value = 3.5;
+            var parameter =
+                WaterQualityFunctionFactory.CreateConst(parameterName, value, string.Empty, string.Empty, string.Empty,
+                    string.Empty);
+            Assert.IsNotNull(parameter);
+
+            var dependencyParam =
+                WaterQualityFunctionFactory.CreateConst(dependencyName, 3.0, string.Empty, string.Empty, string.Empty,
+                    string.Empty);
+            Assert.IsNotNull(dependencyParam);
+
+            var reasonList = new List<string>();
+            //Define a basic rule.
+            var maxValue1 = 8;
+            var minValue1 = 5;
+            var rule1 = new WaqProcessValidationRule()
+            {
+                MaxValue = maxValue1.ToString(),
+                MinValue = minValue1.ToString(),
+                ParameterName = parameterName,
+                ValueType = typeof(double),
+                Dependency = "dependencyName = 3"
+            };
+            //Verify our parameter does not met the rule requirements:
+            Assert.IsFalse(minValue1 <= value);
+            Assert.AreEqual(rule1.ValueType, value.GetType());
+
+            var maxValue2 = 4;
+            var minValue2 = 3;
+            var rule2 = new WaqProcessValidationRule()
+            {
+                MaxValue = maxValue2.ToString(),
+                MinValue = minValue2.ToString(),
+                ParameterName = parameterName,
+                ValueType = typeof(int),
+                Dependency = "dependencyName = 3"
+            };
+            Assert.IsTrue(minValue2 <= value);
+            Assert.IsTrue(value <= maxValue2);
+            Assert.AreNotEqual(rule2.ValueType, value.GetType());
+
+
+            var waqProcessValidationRules = new List<WaqProcessValidationRule>();
+            waqProcessValidationRules.Add(rule1);
+            waqProcessValidationRules.Add(rule2);
+
+            //Check the rule with the parameter and the dependency, it will pass because the dependency won´t be found. 
+            var result = parameter.IsWithinRulesLimits(waqProcessValidationRules, new List<IFunction> { dependencyParam }, out reasonList);
+            Assert.IsFalse(result);
+            Assert.IsTrue(reasonList.Count == 1);
+        }
+
+        private static string GetWaqProcessValidationRuleAsString( WaqProcessValidationRule rule)
+        {
+            var type = $"Type: '{(rule.ValueType == null || rule.ValueType == typeof(double) ? "Double" : "Int")}'.";
+            var minValue = string.IsNullOrEmpty(rule.MinValue) ? string.Empty : $"Min value: {rule.MinValue}. ";
+            var maxValue = string.IsNullOrEmpty(rule.MaxValue) ? string.Empty : $"Max value: {rule.MaxValue}. ";
+            var dependency = string.IsNullOrEmpty(rule.Dependency) ? string.Empty : $"With dependency: {rule.Dependency}. ";
+            return string.Concat(type, minValue, maxValue, dependency);
+        }
+    }
+}

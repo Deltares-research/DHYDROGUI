@@ -156,7 +156,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             enableMarkOutputOutOfSync = true;
         }
 
-        # region Public properties
+        #region Public properties
+
+        private IList<WaqProcessValidationRule> _waqProcessesRules;
+
+        public virtual IList<WaqProcessValidationRule> WaqProcessesRules
+        {
+            get
+            {
+                InitializeWaqProcessesRules();
+                return _waqProcessesRules;
+            }
+        }
+
+        private void InitializeWaqProcessesRules()
+        {
+            if (_waqProcessesRules != null && _waqProcessesRules.Any()) return;
+
+
+
+            //Get the file locaiton
+            var assembly = typeof(WaterQualityModel).Assembly;
+            var assemblyLocation = assembly.Location;
+            var directoryInfo = new FileInfo(assemblyLocation).Directory;
+
+            if (directoryInfo == null) return;
+            //Initialize it.
+            _waqProcessesRules = new WaqProcessesRules().ReadValidationCsv(directoryInfo.FullName);
+        }
 
         public override string KernelVersions
         {

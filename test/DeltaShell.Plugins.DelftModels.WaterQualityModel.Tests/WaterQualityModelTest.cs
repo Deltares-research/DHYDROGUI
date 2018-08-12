@@ -1759,6 +1759,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             //Import the substances now.
             var subsFilePath = TestHelper.GetTestFilePath(@"Zwolle\substances\02b_Oxygen_bod_sediment.sub");
+            Assert.IsTrue(File.Exists(subsFilePath));
             Assert.IsNotNull(westernModel.SubstanceProcessLibrary);
             new SubFileImporter().Import(westernModel.SubstanceProcessLibrary, subsFilePath);
 
@@ -1789,6 +1790,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.IsNotNull(chezyProcess);
 
             Assert.IsTrue(chezyProcess is FunctionFromHydroDynamics);
+        }
+
+        [Test]
+        public void WaterQualityModel_WaqProcessesRules_IsInitialized()
+        {
+            var waqModel = new WaterQualityModel();
+            Assert.IsNotNull(waqModel.WaqProcessesRules);
+            Assert.IsTrue(waqModel.WaqProcessesRules.Any());
         }
     }
 }
