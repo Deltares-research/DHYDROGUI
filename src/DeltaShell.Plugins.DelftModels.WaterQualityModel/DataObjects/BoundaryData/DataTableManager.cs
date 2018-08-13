@@ -217,7 +217,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryD
         /// <param name="tableContents">The table contents.</param>
         /// <param name="dataTableFilePath">The data table file path.</param>
         /// <returns></returns>
-        private TextDocumentFromFile WriteTableContentsToNewTextDocumentFromFile(string tableContents, string dataTableFilePath)
+        private static TextDocumentFromFile WriteTableContentsToNewTextDocumentFromFile(string tableContents, string dataTableFilePath)
         {
             File.WriteAllText(dataTableFilePath, tableContents);
 
