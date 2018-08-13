@@ -80,6 +80,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File &apos;{0}&apos; already exists within the database. The file that is being imported will be renamed to &apos;{1}&apos;. Note that your results may be affected by the new import.
+        /// </summary>
+        public static string DataTableManager_WriteTableContentsToNewTextDocumentFromFile_File___0___already_exists_within_the_database__The_file_that_is_being_imported_will_be_renamed_to___1____Note_that_your_results_may_be_affected_by_the_new_import {
+            get {
+                return ResourceManager.GetString("DataTableManager_WriteTableContentsToNewTextDocumentFromFile_File___0___already_e" +
+                        "xists_within_the_database__The_file_that_is_being_imported_will_be_renamed_to___" +
+                        "1____Note_that_your_results_may_be_affected_by_the_new_import", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap hydFile {
