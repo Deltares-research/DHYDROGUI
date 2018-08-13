@@ -9,10 +9,12 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
     public class SignalShapeTests
     {
         private GraphControl graphControl;
+        private SignalShape shape;
 
         [SetUp]
         public void SetUp()
         {
+            shape = new SignalShape();
             graphControl = new GraphControl();
             graphControl.AddLibrary(typeof(SignalShape).Module.FullyQualifiedName);
         }
@@ -22,6 +24,12 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
         {
             var signalShape = new SignalShape();
             Assert.IsNotNull(signalShape);
+        }
+
+        [Test]
+        public void GetThumbnail()
+        {
+            Assert.That(shape.GetThumbnail(), Is.Null);
         }
 
         [Test]

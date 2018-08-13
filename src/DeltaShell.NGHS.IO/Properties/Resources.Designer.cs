@@ -10,8 +10,9 @@
 
 namespace DeltaShell.NGHS.IO.Properties {
     using System;
-    
-    
+    using System.Diagnostics.CodeAnalysis;
+
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -29,6 +30,7 @@ namespace DeltaShell.NGHS.IO.Properties {
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [ExcludeFromCodeCoverage]
         internal Resources() {
         }
         
@@ -50,6 +52,7 @@ namespace DeltaShell.NGHS.IO.Properties {
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
         public static global::System.Globalization.CultureInfo Culture {
             get {
@@ -81,6 +84,7 @@ namespace DeltaShell.NGHS.IO.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t get the network ids.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static string AGrid_Couldn_t_get_the_network_ids {
             get {
                 return ResourceManager.GetString("AGrid_Couldn_t_get_the_network_ids", resourceCulture);
@@ -90,6 +94,7 @@ namespace DeltaShell.NGHS.IO.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t get the number of networks.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static string AGrid_Couldn_t_get_the_number_of_networks {
             get {
                 return ResourceManager.GetString("AGrid_Couldn_t_get_the_number_of_networks", resourceCulture);
@@ -108,6 +113,7 @@ namespace DeltaShell.NGHS.IO.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t get coordinate system code because of err nr : .
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static string AGrid_Initialize_Couldn_t_get_coordinate_system_code_because_of_err_nr___ {
             get {
                 return ResourceManager.GetString("AGrid_Initialize_Couldn_t_get_coordinate_system_code_because_of_err_nr___", resourceCulture);
@@ -131,10 +137,11 @@ namespace DeltaShell.NGHS.IO.Properties {
                 return ResourceManager.GetString("AGrid_ThrowIfError__because_of_error_number___0_", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Level: {0}. message = {1}.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static string GridApi_Initialize_Level_0__Message_1_ {
             get {
                 return ResourceManager.GetString("GridApi_Initialize_Level_0__Message_1_", resourceCulture);
@@ -144,6 +151,7 @@ namespace DeltaShell.NGHS.IO.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Progress: {0:P2}. message = {1}.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static string GridApi_Initialize_Progress_0_Message_1_ {
             get {
                 return ResourceManager.GetString("GridApi_Initialize_Progress_0_Message_1_", resourceCulture);

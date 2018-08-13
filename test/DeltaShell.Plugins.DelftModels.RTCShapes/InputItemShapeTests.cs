@@ -1,6 +1,8 @@
-﻿using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
+﻿using System.Drawing;
+using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using Netron.GraphLib.UI;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
 {
@@ -8,10 +10,12 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
     public class InputItemShapeTests
     {
         private GraphControl graphControl;
+        private InputItemShape shape;
 
         [SetUp]
         public void SetUp()
         {
+            shape = new InputItemShape();
             graphControl = new GraphControl();
             graphControl.AddLibrary(typeof(RuleShape).Module.FullyQualifiedName);
         }
@@ -21,6 +25,21 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
         {
             var inputItemShape = new InputItemShape();
             Assert.IsNotNull(inputItemShape);
+            Assert.That(shape.GradientStartColor, Is.EqualTo(Color.LemonChiffon));
+            Assert.That(shape.GradientEndColor, Is.EqualTo(Color.White));
+    }
+
+        [Test]
+        public void GetThumbNail()
+        {
+            Assert.That(shape.GetThumbnail(), Is.TypeOf(typeof(Bitmap)));
+        }
+
+        [Test]
+        public void Paint()
+        {
+            shape.Expect()
+            Assert.That(shape.GetThumbnail(), Is.TypeOf(typeof(Bitmap)));
         }
     }
 }

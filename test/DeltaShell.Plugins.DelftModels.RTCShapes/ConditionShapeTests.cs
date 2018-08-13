@@ -1,17 +1,31 @@
-﻿using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
+using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using Netron.GraphLib.UI;
 using NUnit.Framework;
+using Rhino.Mocks;
+using Rhino.Mocks.Impl;
 
 namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
 {
     [TestFixture]
-    public class ConditionShapeTests
+    public class ConditionShapeTests : ConditionShape
     {
         private GraphControl graphControl;
+        private ConditionShape shape;
+        private Graphics graphic;
+        private ConditionBase condition;
 
         [SetUp]
         public void SetUp()
         {
+            condition = new DirectionalCondition();
+            graphic = MockRepository.GenerateMock<Graphics>();
+         //  shape = MockRepository.GeneratePartialMock<ConditionShape>();
+            shape = new ConditionShape();
             graphControl = new GraphControl();
             graphControl.AddLibrary(typeof(RuleShape).Module.FullyQualifiedName);
         }
@@ -21,6 +35,56 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
         {
             var conditionShape = new ConditionShape();
             Assert.IsNotNull(conditionShape);
+        }
+
+        [Test]
+        public void GivenConditionShapeWhenGettingThumbNailThenVerifyIfTypeIsOfBitMap()
+        {
+            Assert.That(shape.GetThumbnail(), Is.TypeOf(typeof(Bitmap)));
+        }
+
+        [Test]
+        public void GivenConditionShapeWhenDisablingInputConnectionsThenNewConnectionsFromLeftAndTopNodeAreNotAllowed()
+        {
+            shape.DisableInputConnections();
+            var connector = shape.Connectors[0];
+            Assert.That(connector.AllowNewConnectionsTo, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void GivenConditionShapeWhenEnablingInputConnectionsThenNewConnectionsFromLeftAndTopNodeAreAllowed()
+        {
+            shape.EnableInputConnections();
+            var connector = shape.Connectors[0];
+            Assert.That(connector.AllowNewConnectionsTo, Is.EqualTo(true));
+        }
+
+        [Test] public void GivenResizableConditionShapeWhenDrawingTheShapeThenShapeGetsRecalculated()
+        {
+            shape.AutoResize = true;
+            shape.Paint(graphic);
+        }
+
+        [Test]
+        public void GivenNonResizableConditionShapeWhenDrawingTheShapeThenShapeIsNotRecalculated()
+        {
+            shape.AutoResize = false;
+            shape.Paint(graphic);
+         }
+
+        [Test]
+        public void Image()
+        {
+            shape.Image = new Bitmap(2, 2);
+            shape.Paint(graphic);
+        }
+
+        [Test]
+        public void Description()
+        {
+            shape.GetDescriptionDelegate = condition.GetDescription;
+            shape.Paint(graphic);
+
         }
     }
 }

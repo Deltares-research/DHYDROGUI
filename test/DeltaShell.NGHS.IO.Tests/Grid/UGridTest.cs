@@ -357,6 +357,22 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 Assert.That(uGrid.GetMeshName(1), Is.EqualTo("mesh2d"));
             }
         }
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void TestCallNameOfMeshGridNotValid()
+        {
+            var testFilePath =
+                TestHelper.GetTestFilePath(UGRID_TEST_FILE);
+            var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
+            UGrid uGrid;
+            uGrid = null;
+       Assert.That(uGrid.GetMeshName(1), Is.EqualTo("mesh2d"));
+            //using (var uGrid = new UGrid(localCopyOfTestFile))
+            //{
+
+            //    Assert.That(uGrid.GetMeshName(1), Is.EqualTo("mesh2d"));
+            //}
+        }
         
         [Test]
         [Category(TestCategory.DataAccess)]
