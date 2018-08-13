@@ -2,7 +2,6 @@
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using Netron.GraphLib.UI;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
 {
@@ -32,13 +31,6 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
         [Test]
         public void GetThumbNail()
         {
-            Assert.That(shape.GetThumbnail(), Is.TypeOf(typeof(Bitmap)));
-        }
-
-        [Test]
-        public void Paint()
-        {
-            shape.Expect()
             Assert.That(shape.GetThumbnail(), Is.TypeOf(typeof(Bitmap)));
         }
     }
