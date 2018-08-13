@@ -301,6 +301,60 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(!expectedResult, reasonList.Any());
         }
 
+        [Test]
+        public void Test_WithinRuleLimits_Passes_With_MultipleRules_If_DependencyRule_Is_Met_Succesfully()
+        {
+            var parameterName = "testParameter";
+            var dependencyName = "dependencyName";
+            var value = 3;
+            var parameter =
+                WaterQualityFunctionFactory.CreateConst(parameterName, value, string.Empty, string.Empty, string.Empty,
+                    string.Empty);
+            Assert.IsNotNull(parameter);
+
+            var dependencyValue = 1;
+            var dependencyParam =
+                WaterQualityFunctionFactory.CreateConst(dependencyName, dependencyValue, string.Empty, string.Empty, string.Empty,
+                    string.Empty);
+            Assert.IsNotNull(dependencyParam);
+
+            var reasonList = new List<string>();
+            //Define a basic rule.
+            var maxValue1 = double.PositiveInfinity;
+            var minValue1 = double.NegativeInfinity;
+            var rule1 = new WaqProcessValidationRule()
+            {
+                MaxValue = maxValue1.ToString(),
+                MinValue = minValue1.ToString(),
+                ParameterName = parameterName,
+                ValueType = typeof(double),
+                Dependency = $"{dependencyName} = {dependencyValue}"
+            };
+
+            var maxValue2 = double.PositiveInfinity;
+            var minValue2 = double.PositiveInfinity;
+            var rule2 = new WaqProcessValidationRule()
+            {
+                MaxValue = maxValue2.ToString(),
+                MinValue = minValue2.ToString(),
+                ParameterName = parameterName,
+                ValueType = typeof(double),
+                Dependency = $"{dependencyName} = {dependencyValue}"
+            };
+
+            //Verify our parameter DOES NOT meet these rule requirements:
+            Assert.IsFalse(minValue2 <= value);
+
+            var waqProcessValidationRules = new List<WaqProcessValidationRule>();
+            waqProcessValidationRules.Add(rule1);
+            waqProcessValidationRules.Add(rule2);
+
+            //Check the rule with the parameter and the dependency, it will pass because the dependency won´t be found. 
+            var result = parameter.IsWithinRulesLimits(waqProcessValidationRules, new List<IFunction> { dependencyParam }, out reasonList);
+            Assert.IsTrue(result);
+            Assert.IsFalse(reasonList.Any());
+        }
+
         [Test]       
         public void Test_WithinRuleLimits_DependencyRule_DoesNotApply_If_DependencyParam_Contains_No_Values()
         {

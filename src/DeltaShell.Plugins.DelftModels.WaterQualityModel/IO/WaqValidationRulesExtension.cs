@@ -32,27 +32,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 return true; /* We do not want to show a warning for ALL parameters without rules. */
             }
 
-            /*First try to find if there is any rule with dependencies.*/
             foreach (var rule in rules)
             {
-                var validRule = true;
-                var dependencyRuleApplies = false;
+                /*First evaluate the dependency, if it applies, then we skip the rest.*/
                 if (!string.IsNullOrEmpty(rule.Dependency))
                 {
-                    dependencyRuleApplies = rule.HasParameterDependency(parameterList);
-                    /* If there is a dependency that is not met then it should not be evaluated.. */
-                    if (!dependencyRuleApplies) continue;
+                    var dependencyRuleApplies = rule.HasParameterDependency(parameterList);
+                    if (!dependencyRuleApplies) continue; /* If there is a dependency that is not met then it should not be evaluated.. */
+
+                    reasonList.Clear();
+                    if (parameter.ValidateRuleParameter(rule)) return true;
+
+                    reasonList.Add(rule.GetWaqProcessValidationRuleAsString());
+                    return false;
                 }
 
                 if (!parameter.ValidateRuleParameter(rule))
-                {
-                    if( dependencyRuleApplies) reasonList.Clear();
-
                     reasonList.Add(rule.GetWaqProcessValidationRuleAsString());
-                    validRule = false;
-                }
-                /* If the dependency rule applies we do not look any further. */
-                if (dependencyRuleApplies) return validRule;
             }
 
             return !reasonList.Any();
