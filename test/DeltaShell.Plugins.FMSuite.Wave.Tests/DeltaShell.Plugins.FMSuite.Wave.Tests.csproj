@@ -203,6 +203,7 @@
     <Compile Include="Gui\WaveObstacleListViewTest.cs" />
     <Compile Include="Gui\WaveTimePointEditorTest.cs" />
     <Compile Include="IO\BcwFileTest.cs" />
+    <Compile Include="IO\Exporters\WaveModelFileExporterTest.cs" />
     <Compile Include="IO\Importers\WaveGridFileImporterTests.cs" />
     <Compile Include="IO\MdwFileTest.cs" />
     <Compile Include="IO\Sp2FileTest.cs" />
