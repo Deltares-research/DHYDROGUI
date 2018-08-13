@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             if (rules == null || !rules.Any())
             {
-                yield return new ValidationIssue(processCoefficients, ValidationSeverity.Warning, "No process coefficient rules have been loaded. Therefore they cannot be validated.");
+                yield return new ValidationIssue(processCoefficients, ValidationSeverity.Warning, Resources.WaterQualityModelValidator_ValidateProcessCoefficients_No_process_coefficient_rules_have_been_loaded__Therefore_they_cannot_be_validated_);
                 yield break;
             }
 
@@ -95,9 +95,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             {
                 if (!library.Parameters.Any(p => p.Name.ToLowerInvariant().Equals(parameter.Name.ToLowerInvariant())))
                 {
+                    //This code will never be hit because when you remove it from the library, it also removes it from the Parameter list. But just in case we keep it handled.
+                    var message = string.Format(Resources.WaterQualityModelValidator_ValidateProcessCoefficients_The_Substance_library_does_not_contain_the_given_parameter__0__, parameter.Name);
                     yield return new ValidationIssue(
                         processCoefficients,
-                        ValidationSeverity.Warning, $"The Substance library does not contain the given parameter {parameter.Name}.");
+                        ValidationSeverity.Warning, message);
                 }
                 else 
                 {

@@ -44,8 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     if (!dependencyRuleApplies) continue;
                 }
 
-                if (!parameter.ValidateParameterValueType(rule)
-                    || !parameter.ValidateRuleParameter(rule))
+                if (!parameter.ValidateRuleParameter(rule))
                 {
                     if( dependencyRuleApplies) reasonList.Clear();
 
@@ -71,11 +70,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             var dependencyName = fields[0].Trim().ToLowerInvariant();
             var dependencyValue = fields[1].Trim();
 
-            var dependency = parameterList.FirstOrDefault(p => p.Name.ToLowerInvariant().Equals(dependencyName));
-
+            var dependency = parameterList?.FirstOrDefault(p => p.Name.ToLowerInvariant().Equals(dependencyName));
+            
             double allowedValue;
             double parameterValue;
-            if (!double.TryParse(dependencyValue, out allowedValue)
+            if ( dependency == null
+                || !double.TryParse(dependencyValue, out allowedValue)
                 || !dependency.GetParameterValue(out parameterValue)) return false;
 
             //If the values were retrieved then we can check whether the rule applies or not.
@@ -92,9 +92,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             return true;
         }
 
-        private static bool ValidateParameterValueType(this IFunction parameter, WaqProcessValidationRule rule)
+        private static bool ValidateParameterValueType(this IFunction parameter, WaqProcessValidationRule rule, out double parameterValue)
         {
-            double parameterValue;
             if (!parameter.GetParameterValue(out parameterValue) 
                 || double.IsNaN(parameterValue)) return false;
 
@@ -107,7 +106,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private static bool ValidateRuleParameter(this IFunction parameter, WaqProcessValidationRule rule)
         {
             double parameterValue;
-            if (!parameter.GetParameterValue(out parameterValue)) return false;
+            if (!parameter.ValidateParameterValueType(rule, out parameterValue)) return false;
             var ruleMin = rule.MinValue;
             var ruleMax = rule.MaxValue;
 

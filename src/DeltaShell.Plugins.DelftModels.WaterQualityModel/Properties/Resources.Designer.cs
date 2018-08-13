@@ -477,12 +477,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No process coefficient rules have been loaded. Therefore they cannot be validated..
+        /// </summary>
+        public static string WaterQualityModelValidator_ValidateProcessCoefficients_No_process_coefficient_rules_have_been_loaded__Therefore_they_cannot_be_validated_ {
+            get {
+                return ResourceManager.GetString("WaterQualityModelValidator_ValidateProcessCoefficients_No_process_coefficient_rul" +
+                        "es_have_been_loaded__Therefore_they_cannot_be_validated_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Process coefficient {0} (value: {1}) does not fulfill the rule {2}.
         /// </summary>
         public static string WaterQualityModelValidator_ValidateProcessCoefficients_Process_coefficient__0___value___1___does_not_fulfill_the_rule__2_ {
             get {
                 return ResourceManager.GetString("WaterQualityModelValidator_ValidateProcessCoefficients_Process_coefficient__0___v" +
                         "alue___1___does_not_fulfill_the_rule__2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Substance library does not contain the given parameter {0}..
+        /// </summary>
+        public static string WaterQualityModelValidator_ValidateProcessCoefficients_The_Substance_library_does_not_contain_the_given_parameter__0__ {
+            get {
+                return ResourceManager.GetString("WaterQualityModelValidator_ValidateProcessCoefficients_The_Substance_library_does" +
+                        "_not_contain_the_given_parameter__0__", resourceCulture);
             }
         }
         

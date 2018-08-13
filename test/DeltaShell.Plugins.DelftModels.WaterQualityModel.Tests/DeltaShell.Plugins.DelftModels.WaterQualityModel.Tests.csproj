@@ -86,6 +86,7 @@
     <Compile Include="IO\InputFileExporterTest.cs" />
     <Compile Include="IO\LazyMapFileFunctionStoreTest.cs" />
     <Compile Include="IO\MultiDimentionalArrayAdapterTest.cs" />
+    <Compile Include="IO\WaqProcessValidationRuleTest.cs" />
     <Compile Include="IO\WaqValidationRulesExtensionTest.cs" />
     <Compile Include="IO\WaterQualityObservationAreaImporterTest.cs" />
     <Compile Include="NHibernate\WaterQualityModelNHibernateIntegrationTest.cs" />

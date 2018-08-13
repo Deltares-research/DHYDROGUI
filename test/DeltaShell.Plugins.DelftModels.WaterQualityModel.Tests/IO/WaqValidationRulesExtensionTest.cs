@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using NUnit.Framework;
@@ -41,6 +42,38 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.IsTrue(result);
             var expectedReason = string.Format(Resources.WaqValidationRulesExtension_ConstantProcessWithinRuleLimits_No_rules_found_for__0__, parameter.Name);
             Assert.IsTrue(reasonList.Contains(expectedReason));
+        }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        public void Test_HasParameterDependency_ReturnsFalse_IfStringIsNullOrEmpty(string dependency)
+        {
+            var rule = new WaqProcessValidationRule()
+            {
+                MaxValue = "2",
+                MinValue = "5",
+                ParameterName = "parameterName",
+                ValueType = typeof(double),
+                Dependency = dependency
+            };
+
+            Assert.IsFalse((bool) TypeUtils.CallPrivateStaticMethod(typeof(WaqValidationRulesExtension), "HasParameterDependency", rule, null));
+        }
+
+        [Test]
+        public void Test_HasParameterDependency_ReturnsFalse_IfDependencyDoesNotExist()
+        {
+            var rule = new WaqProcessValidationRule()
+            {
+                MaxValue = "2",
+                MinValue = "5",
+                ParameterName = "parameterName",
+                ValueType = typeof(double),
+                Dependency = "ValidDependencyLine = 1"
+            };
+            //Parameter list does not exist, so it cannot be found.
+            Assert.IsFalse((bool)TypeUtils.CallPrivateStaticMethod(typeof(WaqValidationRulesExtension), "HasParameterDependency", rule, null));
         }
 
         [Test]
@@ -226,6 +259,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         [TestCase("dependencyName = 3", 3.0, false)]
         [TestCase("dependencyName = 3", 1.0, true)] /*rule does not apply because dependency has a value of 1*/
+        [TestCase("dependencyName = notValidValue", 1.0, true)] /*rule does not apply because dependency has a value of 1*/
         public void Test_WithinRuleLimits_DependencyRule_Applies_If_Is_Met(string dependencyRule, double dependencyValue, bool expectedResult)
         {
             var parameterName = "testParameter";
@@ -265,6 +299,44 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var result = parameter.IsWithinRulesLimits(waqProcessValidationRules, new List<IFunction>{dependencyParam}, out reasonList);
             Assert.AreEqual(expectedResult, result);
             Assert.AreEqual(!expectedResult, reasonList.Any());
+        }
+
+        [Test]       
+        public void Test_WithinRuleLimits_DependencyRule_DoesNotApply_If_DependencyParam_Contains_No_Values()
+        {
+            var parameterName = "testParameter";
+            var dependencyName = "dependencyName";
+            var value = 3;
+            var parameter =
+                WaterQualityFunctionFactory.CreateConst(parameterName, value, string.Empty, string.Empty, string.Empty,
+                    string.Empty);
+            Assert.IsNotNull(parameter);
+
+            var dependencyParam = new Function(dependencyName);
+
+            var reasonList = new List<string>();
+            //Define a basic rule.
+            var maxValue = 8;
+            var minValue = 5;
+            var rule = new WaqProcessValidationRule()
+            {
+                MaxValue = maxValue.ToString(),
+                MinValue = minValue.ToString(),
+                ParameterName = parameterName,
+                ValueType = typeof(double),
+                Dependency = $"{dependencyName} = 3.0"
+            };
+
+            //Verify our parameter does not met the rule requirements:
+            Assert.IsFalse(minValue <= value);
+
+            var waqProcessValidationRules = new List<WaqProcessValidationRule>();
+            waqProcessValidationRules.Add(rule);
+
+            //Rule will be ignored because the dependency was not met.
+            var result = parameter.IsWithinRulesLimits(waqProcessValidationRules, new List<IFunction> { dependencyParam }, out reasonList);
+            Assert.IsTrue(result);
+            Assert.IsFalse(reasonList.Any());
         }
 
         [Test]
@@ -322,6 +394,122 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var result = parameter.IsWithinRulesLimits(waqProcessValidationRules, new List<IFunction> { dependencyParam }, out reasonList);
             Assert.IsFalse(result);
             Assert.IsTrue(reasonList.Count == 1);
+        }
+
+        [Test]
+        public void Test_WithinRuleLimits_Fails_If_Value_IsNan()
+        {
+            var parameterName = "testParameter";
+            var value = double.NaN;
+            var parameter =
+                WaterQualityFunctionFactory.CreateConst(parameterName, value, string.Empty, string.Empty, string.Empty,
+                    string.Empty);
+            Assert.IsNotNull(parameter);
+
+            var reasonList = new List<string>();
+            //Define a basic rule.
+            var maxValue = 8;
+            var minValue = 0;
+            var rule = new WaqProcessValidationRule()
+            {
+                MaxValue = maxValue.ToString(),
+                MinValue = minValue.ToString(),
+                ParameterName = parameterName,
+                ValueType = typeof(double),
+            };
+            
+            Assert.AreEqual(rule.ValueType, value.GetType());
+
+            var waqProcessValidationRules = new List<WaqProcessValidationRule>();
+            waqProcessValidationRules.Add(rule);
+
+            //Check the rule with the parameter and the dependency, it will pass because the dependency won´t be found. 
+            var result = parameter.IsWithinRulesLimits(waqProcessValidationRules, new List<IFunction>(), out reasonList);
+            Assert.IsFalse(result);
+            Assert.IsTrue(reasonList.Count == 1);
+        }
+
+        [Test]
+        [TestCase("[1:3]", "[7:9]", 4, false)]
+        [TestCase("[1:3]", "[7:9]", 3, true)]
+        [TestCase("[1:3]", "[7:9]", 8, true)]
+        [TestCase("[1:3]", "[7:9]", 10, false)]
+        [TestCase("[1:3]", "[7:9]", 0, false)]
+        [TestCase("3", "[7:9]", 3, false)] //The range has preference.
+        [TestCase("3", "[7:9]", 8, true)]
+        [TestCase("3", "[7:9:11]", 8, false)] //Limit is not correct
+        [TestCase("3", "[7:]", 8, false)] //Limit is not correct
+        public void Test_WithinRuleLimits_Checks_For_Range_Rules(string ruleMin, string ruleMax, double paramValue,
+            bool expectedResult)
+        {
+            var parameterName = "testParameter";
+            var parameter =
+                WaterQualityFunctionFactory.CreateConst(parameterName, paramValue, string.Empty, string.Empty,
+                    string.Empty,
+                    string.Empty);
+            Assert.IsNotNull(parameter);
+
+            var reasonList = new List<string>();
+            //Define a basic rule.
+            var rule = new WaqProcessValidationRule()
+            {
+                MaxValue = ruleMax,
+                MinValue = ruleMin,
+                ParameterName = parameterName,
+                ValueType = typeof(double)
+            };
+
+            var waqProcessValidationRules = new List<WaqProcessValidationRule>();
+            waqProcessValidationRules.Add(rule);
+
+            //Check the rule with the parameter. 
+            var result = parameter.IsWithinRulesLimits(waqProcessValidationRules, null, out reasonList);
+            Assert.AreEqual(expectedResult, result);
+
+            if (!expectedResult)
+            {
+                var expectedReason = GetWaqProcessValidationRuleAsString(rule);
+                Assert.IsTrue(reasonList.Contains(expectedReason));
+            }
+        }
+
+        [Test]
+        [TestCase("inf", "5", -4, true)]
+        [TestCase("inf", "5", 6, false)]
+        [TestCase("0", "inf", 99999, true)]
+        [TestCase("0", "inf", -4, false)]
+        public void Test_WithinRuleLimits_Considers_Infinity_Rules(string ruleMin, string ruleMax, double paramValue,
+            bool expectedResult)
+        {
+            var parameterName = "testParameter";
+            var parameter =
+                WaterQualityFunctionFactory.CreateConst(parameterName, paramValue, string.Empty, string.Empty,
+                    string.Empty,
+                    string.Empty);
+            Assert.IsNotNull(parameter);
+
+            var reasonList = new List<string>();
+            //Define a basic rule.
+            var rule = new WaqProcessValidationRule()
+            {
+                MaxValue = ruleMax,
+                MinValue = ruleMin,
+                ParameterName = parameterName,
+                ValueType = typeof(double)
+            };
+
+            var waqProcessValidationRules = new List<WaqProcessValidationRule>();
+            waqProcessValidationRules.Add(rule);
+
+            //Check the rule with the parameter. 
+            var result = parameter.IsWithinRulesLimits(waqProcessValidationRules, null, out reasonList);
+            Assert.AreEqual(expectedResult, result);
+
+            if (!expectedResult)
+            {
+                var expectedReason = GetWaqProcessValidationRuleAsString(rule);
+                Assert.IsTrue(reasonList.Contains(expectedReason));
+            }
         }
 
         private static string GetWaqProcessValidationRuleAsString( WaqProcessValidationRule rule)

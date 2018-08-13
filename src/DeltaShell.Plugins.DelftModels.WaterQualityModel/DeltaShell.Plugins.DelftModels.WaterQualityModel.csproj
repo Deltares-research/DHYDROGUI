@@ -78,6 +78,7 @@
     <Compile Include="IO\BloomSpeFileReader.cs" />
     <Compile Include="IO\MapFileMetaData.cs" />
     <Compile Include="IO\WaqProcessesRules.cs" />
+    <Compile Include="IO\WaqProcessValidationRule.cs" />
     <Compile Include="IO\WaqValidationRulesExtension.cs" />
     <Compile Include="IO\WaterQualityObservationAreaImporter.cs" />
     <Compile Include="IO\LazyMapFileFunctionStore.cs" />
