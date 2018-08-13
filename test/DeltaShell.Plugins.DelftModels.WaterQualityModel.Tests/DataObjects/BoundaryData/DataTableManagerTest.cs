@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
                     "CreateNewDataTable should create folder if it doesn't exist yet.");
                 var dataTables = manager.DataTables.ToArray();
                 Assert.AreEqual(1, dataTables.Length);
-                Assert.AreEqual("A(1)", dataTables[0].Name);
+                Assert.AreEqual("A", dataTables[0].Name);
 
                 Assert.IsFalse(dataTables[0].DataFile.ReadOnly);
                 Assert.IsTrue(dataTables[0].DataFile.IsOpen);

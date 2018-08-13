@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -103,46 +102,48 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryD
         /// <see cref="FolderPath"/> not set to a valid folder-path.</exception>
         /// <exception cref="System.ArgumentException">
         /// When a file already exists with the given filename.</exception>
-        public virtual void CreateNewDataTable(string name, string tableContents, string useforFullFilename, string useforContents, bool createNewFileNamesIfExists = false)
+        public virtual void CreateNewDataTable(string name, string tableContents, string useforFullFilename,
+            string useforContents, bool createNewFileNamesIfExists = false)
         {
             if (string.IsNullOrWhiteSpace(FolderPath))
             {
-                throw new InvalidOperationException("Requires FolderPath to be set to a valid filepath before calling CreateNewDataTable.");
+                throw new InvalidOperationException(
+                    "Requires FolderPath to be set to a valid filepath before calling CreateNewDataTable.");
             }
+
             FileUtils.CreateDirectoryIfNotExists(FolderPath);
 
             var filename = $"{name}.tbl";
             var dataTableFilePath = Path.Combine(FolderPath, filename);
             var dataTableFilePathAlreadyExists = File.Exists(dataTableFilePath);
+
             var dataTableFile = WriteTableContentsToNewTextDocumentFromFile(tableContents, dataTableFilePath);
             var useforFile = WriteTableContentsToNewTextDocumentFromFile(useforContents, useforFullFilename);
             var existingFileName = Path.GetFileName(dataTableFilePath);
-            
-            var filter = string.Concat($"{name}"+"({0})");
-            var uniqueName = NamingHelper.GetUniqueName(filter, dataTables, typeof(DataTable));
 
+            var filter = string.Concat($"{name}" + "({0})");
             //We only need the unique name if the file does not yet exist. Else we just use the name passed to the method.
-            if (!dataTableFilePathAlreadyExists)
-            {
-                uniqueName = name;
-            }
+            var uniqueName = dataTableFilePathAlreadyExists
+                ? NamingHelper.GetUniqueName(filter, dataTables, typeof(DataTable))
+                : name;
 
             var newTable = new DataTable
             {
-                Name = uniqueName, 
-                DataFile = dataTableFile, 
+                Name = uniqueName,
+                DataFile = dataTableFile,
                 SubstanceUseforFile = useforFile
             };
-            
-            dataTables.Add(newTable);
 
             //We only throw the warning when the dataTable filePath already exists 
             if (dataTableFilePathAlreadyExists)
             {
                 log.Warn(string.Format(
-                    Resources.DataTableManager_WriteTableContentsToNewTextDocumentFromFile_File___0___already_exists_within_the_database__The_file_that_is_being_imported_will_be_renamed_to___1____Note_that_your_results_may_be_affected_by_the_new_import,
+                    Resources
+                        .DataTableManager_WriteTableContentsToNewTextDocumentFromFile_File___0___already_exists_within_the_database__The_file_that_is_being_imported_will_be_renamed_to___1____Note_that_your_results_may_be_affected_by_the_new_import,
                     existingFileName, uniqueName));
             }
+
+            dataTables.Add(newTable);
         }
 
         /// <summary>
