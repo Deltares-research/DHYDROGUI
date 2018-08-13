@@ -110,7 +110,8 @@ namespace DeltaShell.Plugins.NetworkEditor
 
             for (var i = 0; i < numberOfNodes; ++i)
             {
-                var compartmentProperties = propertiesPerCompartment.FirstOrDefault(p => p.CompartmentId.Equals(nodesNames[i]));
+                INode node = null;
+                var compartmentProperties = propertiesPerCompartment?.FirstOrDefault(p => p.CompartmentId.Equals(nodesNames[i]));
                 if (compartmentProperties != null)
                 {
                     var existingManhole = (Manhole) network.Manholes.FirstOrDefault(m => m.Name.Equals(compartmentProperties.ManholeId));
@@ -121,33 +122,20 @@ namespace DeltaShell.Plugins.NetworkEditor
                         ManholeLength = Math.Sqrt(compartmentProperties.Area),
                         ManholeWidth = Math.Sqrt(compartmentProperties.Area)
                     };
-                    if (existingManhole != null)
-                    {
-                        existingManhole.Compartments.Add(compartment);
-                    }
-                    else
-                    {
-                        var manhole = new Manhole(compartmentProperties.ManholeId)
-                        {
-                            Description = nodesDescriptions[i] == "" ? null : nodesDescriptions[i],
-                            Compartments = new EventedList<Compartment> { compartment },
-                            Geometry = new Point(nodesX[i], nodesY[i]),
-                            Network = network
-                        };
-                        nodes.Add(manhole);
-                    }
+
+                    if (existingManhole != null) existingManhole.Compartments.Add(compartment);
+                    else node = new Manhole(compartmentProperties.ManholeId) { Compartments = new EventedList<Compartment> { compartment } };
                 }
                 else
                 {
-                    var node = new HydroNode
-                    {
-                        Name = nodesNames[i] == "" ? null : nodesNames[i],
-                        Description = nodesDescriptions[i] == "" ? null : nodesDescriptions[i],
-                        Geometry = new Point(nodesX[i], nodesY[i]),
-                        Network = network
-                    };
-                    nodes.Add(node);
+                    node = new HydroNode { Name = nodesNames[i] == "" ? null : nodesNames[i] };
                 }
+
+                if (node == null) continue;
+                node.Description = nodesDescriptions[i] == "" ? null : nodesDescriptions[i];
+                node.Geometry = new Point(nodesX[i], nodesY[i]);
+                node.Network = network;
+                nodes.Add(node);
             }
 
             return nodes;
@@ -234,7 +222,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                 case BranchFile.BranchType.SewerConnection:
                     return new SewerConnection { WaterType = branchProperties.WaterType };
                 case BranchFile.BranchType.Pipe:
-                    return new Pipe { WaterType = branchProperties.WaterType }; ;
+                    return new Pipe { WaterType = branchProperties.WaterType, Material = branchProperties.Material}; ;
                 default:
                     return new Channel();
             }

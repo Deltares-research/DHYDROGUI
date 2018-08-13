@@ -16,6 +16,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
             public const string Name = "Name";
             public const string BranchType = "BranchType";
             public const string WaterType = "WaterType";
+            public const string Material = "Material";
         }
 
         public enum BranchType
@@ -54,6 +55,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
                 var sewerConnection = branch as ISewerConnection;
                 var waterType = sewerConnection?.WaterType ?? SewerConnectionWaterType.None;
                 iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.WaterType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(waterType), string.Empty));
+
+                var pipe = branch as Pipe;
+                var material = pipe?.Material ?? SewerProfileMapping.SewerProfileMaterial.Unknown;
+                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Material, EnumDescriptionAttributeTypeConverter.GetEnumDescription(material), string.Empty));
+
                 categories.Add(iniCategory);
             }
 
@@ -71,6 +77,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
                 branchProperties.Name = category.GetPropertyValue(KnownPropertyNames.Name);
                 branchProperties.BranchType = (BranchType) int.Parse(category.GetPropertyValue(KnownPropertyNames.BranchType));
                 branchProperties.WaterType = EnumerableExtensions.GetValueFromDescription<SewerConnectionWaterType>(category.GetPropertyValue(KnownPropertyNames.WaterType));
+                branchProperties.Material = EnumerableExtensions.GetValueFromDescription<SewerProfileMapping.SewerProfileMaterial>(category.GetPropertyValue(KnownPropertyNames.Material));
                 propertiesPerBranch.Add(branchProperties);
             }
 
@@ -82,6 +89,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
             public string Name;
             public BranchType BranchType;
             public SewerConnectionWaterType WaterType;
+            public SewerProfileMapping.SewerProfileMaterial Material;
         }
     }
 }

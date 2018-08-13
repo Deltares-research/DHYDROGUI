@@ -17,10 +17,11 @@ namespace DelftTools.Hydro.Structures
 
         public enum SewerProfileMaterial
         {
+            [Description("Unknown")] Unknown,
             [Description("BET")] Concrete,
             [Description("GIJ")] CastIron,
             [Description("GRE")] StoneWare,
-            [Description("HPE")] Hdpe,
+            [Description("HDP")] Hdpe,
             [Description("MSW")] Masonry,
             [Description("PIJ")] SheetMetal,
             [Description("HPE")] Polyester,
