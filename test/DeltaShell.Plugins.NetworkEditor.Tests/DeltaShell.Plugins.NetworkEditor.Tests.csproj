@@ -262,6 +262,8 @@
     <Compile Include="Import\Wizard\ImportNetworkCoverageFromGisWizardDialogTest.cs" />
     <Compile Include="Import\CrossSectionZWFromCsvFileImporterTest.cs" />
     <Compile Include="Import\Wizard\CrossSectionCsvImportWizardDialogTest.cs" />
+    <Compile Include="IO\BranchFileTest.cs" />
+    <Compile Include="IO\RetentionFileTest.cs" />
     <Compile Include="MapLayers\CustomRenderers\DiffuseLateralSourceRendererTest.cs" />
     <Compile Include="Forms\CaseAnalysis\CoverageAnalysisViewTest.cs" />
     <Compile Include="Forms\CaseAnalysis\NetworkCoverageOperationsTest.cs" />
@@ -339,7 +341,6 @@
     <Compile Include="NetworkEditorPluginTest.cs" />
     <Compile Include="NetworkEditorTestHelper.cs" />
     <Compile Include="NetworkUGridDataModelTest.cs" />
-    <Compile Include="UGridToNetworkAdapterTest.cs" />
     <Compile Include="TestNetwork\FeatureDataTreeView\FeatureDataTreeViewTest.cs" />
     <Compile Include="Forms\GridProperties\CrossSectionPropertiesTest.cs" />
     <Compile Include="Forms\NetworkSideView\BedLevelNetworkCoverageBuilderTest.cs" />

@@ -715,7 +715,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region read logic
 
-        public void Read(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, Action<string,int,int> reportProgress = null)
+
+        public void Read(string filePath, ref WaterFlowFMModelDefinition modelDefinition, Action<string, int, int> reportProgress = null)
         {
             if (reportProgress == null) reportProgress = (name, current, total) => { };
             var totalSteps = 5;
@@ -726,53 +727,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             reportProgress("Reading morphology properties", 2, totalSteps);
             MorphologyFile.Read(filePath, modelDefinition);
 
-            reportProgress("Reading area features", 3, totalSteps);
-            ReadAreaFeatures(filePath, modelDefinition, hydroArea);
-
-            //fix for fixed weirs
-            
-            foreach (var fixedWeir in hydroArea.FixedWeirs)
-            {
-                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir>() {Feature = fixedWeir};
-                var scheme = modelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
-                modelFeatureCoordinateData.UpdateDataColumns(scheme);
-
-                var difference = Math.Abs(modelFeatureCoordinateData.DataColumns.Count - fixedWeir.Attributes.Count);
-
-                if (modelFeatureCoordinateData.DataColumns.Count < fixedWeir.Attributes.Count)
-                {
-                    Log.Warn($"Based on the Fixed Weir Scheme {scheme}, there are too many column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been ignored");
-                }
-
-                if (modelFeatureCoordinateData.DataColumns.Count > fixedWeir.Attributes.Count)
-                {
-                    Log.Warn($"Based on the Fixed Weir Scheme {scheme}, there are not enough column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been generated using default values");
-                }
-
-                for (var index = 0; index < modelFeatureCoordinateData.DataColumns.Count; index++)
-                {
-                    if (index < fixedWeir.Attributes.Count)
-                    {
-                        var dataColumn = modelFeatureCoordinateData.DataColumns[index];
-                        var attributeWithListOfLoadedData =
-                            fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] as
-                                GeometryPointsSyncedList<double>;
-                        LoadAttributeIntoDataColumn(attributeWithListOfLoadedData, dataColumn);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                allFixedWeirsAndCorrespondingProperties.Add(modelFeatureCoordinateData);
-            }
-
-            foreach (var fixedWeir in hydroArea.FixedWeirs)
-            {
-                fixedWeir.Attributes.Clear(); //To Do during last step of cleaning. Turn this on. 
-            }
-           
-            reportProgress("Reading external forcings file", 4, totalSteps);
+            reportProgress("Reading external forcings file", 3, totalSteps);
             var extForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.ExtForceFile);
             if (extForceFileProperty != null)
             {
@@ -786,7 +741,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
 
-            reportProgress("Reading boundary external forcings file", 5, totalSteps);
+            reportProgress("Reading boundary external forcings file", 4, totalSteps);
             var bndExtForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile);
             if (bndExtForceFileProperty != null)
             {
@@ -799,7 +754,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
 
-            hydroArea.Embankments.AddRange(modelDefinition.Embankments);
+        }
+
+        public void Read(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, Action<string,int,int> reportProgress = null)
+        {
+            if (reportProgress == null) reportProgress = (name, current, total) => { };
+            var totalSteps = 5;
+
+            Read(filePath, ref modelDefinition, reportProgress);
+
+            reportProgress("Reading area features", 5, totalSteps);
+            ReadAreaFeatures(filePath, modelDefinition, hydroArea, allFixedWeirsAndCorrespondingProperties);
         }
 
         private void LoadAttributeIntoDataColumn(GeometryPointsSyncedList<double> attributeWithListOfLoadedData, IDataColumn dataColumn)
@@ -1034,7 +999,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             features.AddRange(readFeatures);
         }
 
-        private void ReadAreaFeatures(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea)
+        private void ReadAreaFeatures(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties)
         {
             ReadFeatures(filePath, modelDefinition, KnownProperties.LandBoundaryFile, hydroArea.LandBoundaries,
                 ref landBoundariesFile, LandBoundariesExtension);
@@ -1094,6 +1059,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     Log.WarnFormat(Resources.MduFile_ReadAreaFeatures_Multiple_enclosures_added_to_the_model__Validate_or_run_will_fail_if_more_than_one_enclosure_is_present_);
                 }
             }
+
+            //fix for fixed weirs
+
+            foreach (var fixedWeir in hydroArea.FixedWeirs)
+            {
+                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir>() { Feature = fixedWeir };
+                var scheme = modelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
+                modelFeatureCoordinateData.UpdateDataColumns(scheme);
+
+                var difference = Math.Abs(modelFeatureCoordinateData.DataColumns.Count - fixedWeir.Attributes.Count);
+
+                if (modelFeatureCoordinateData.DataColumns.Count < fixedWeir.Attributes.Count)
+                {
+                    Log.Warn($"Based on the Fixed Weir Scheme {scheme}, there are too many column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been ignored");
+                }
+
+                if (modelFeatureCoordinateData.DataColumns.Count > fixedWeir.Attributes.Count)
+                {
+                    Log.Warn($"Based on the Fixed Weir Scheme {scheme}, there are not enough column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been generated using default values");
+                }
+
+                for (var index = 0; index < modelFeatureCoordinateData.DataColumns.Count; index++)
+                {
+                    if (index < fixedWeir.Attributes.Count)
+                    {
+                        var dataColumn = modelFeatureCoordinateData.DataColumns[index];
+                        var attributeWithListOfLoadedData =
+                            fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] as
+                                GeometryPointsSyncedList<double>;
+                        LoadAttributeIntoDataColumn(attributeWithListOfLoadedData, dataColumn);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                allFixedWeirsAndCorrespondingProperties.Add(modelFeatureCoordinateData);
+            }
+
+            foreach (var fixedWeir in hydroArea.FixedWeirs)
+            {
+                fixedWeir.Attributes.Clear(); //To Do during last step of cleaning. Turn this on. 
+            }
+
+            hydroArea.Embankments.AddRange(modelDefinition.Embankments);
         }
 
         private void ReadDryPointsAndDryAreas(string mduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea)

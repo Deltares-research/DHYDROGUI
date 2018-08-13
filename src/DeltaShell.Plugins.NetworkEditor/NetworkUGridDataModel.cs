@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
-using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.NetworkEditor.IO;
 using GeoAPI.Extensions.CoordinateSystems;
-using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor
 {
@@ -140,149 +135,6 @@ namespace DeltaShell.Plugins.NetworkEditor
 
                 GeopointsX = nonSewerConnections.SelectMany(b => b.Geometry.Coordinates.Select(c => c.X)).Concat(compartmentXCoordinates).ToArray();
                 GeopointsY = nonSewerConnections.SelectMany(b => b.Geometry.Coordinates.Select(c => c.Y)).Concat(compartmentYCoordinates).ToArray();
-            }
-        }
-
-        public static IHydroNetwork ReconstructHydroNetwork(NetworkUGridDataModel dataModel, List<DelftIniCategory> branchProperties = null)
-        {
-            var network = new HydroNetwork
-            {
-                Name = dataModel.Name,
-                CoordinateSystem = dataModel.CoordinateSystem
-            };
-
-            var nodes = ConstructHydroNodes(network, dataModel.NodesX, dataModel.NodesY, dataModel.NodesNames, dataModel.NodesDescriptions);
-
-            var branches = ConstructNetworkBranches(network, nodes, dataModel.SourceNodeIds, dataModel.TargedNodesIds,
-                dataModel.BranchLengths,
-                dataModel.NumberOfGeometryPointsPerBranch, dataModel.BranchNames, dataModel.BranchDescriptions, 
-                dataModel.GeopointsX, dataModel.GeopointsY, 
-                dataModel.BranchOrderNumbers, branchProperties);
-
-            network.Nodes.AddRange(nodes);
-            network.Branches.AddRange(branches);
-
-            return network;
-        }
-
-        private static List<IHydroNode> ConstructHydroNodes(IHydroNetwork network, double[] nodesX, double[] nodesY, string[] nodesNames, string[] nodesDescriptions)
-        {
-            var nodes = new List<IHydroNode>();
-
-            var numberOfNodes = nodesX.Length;
-            if (numberOfNodes <= 0)
-            {
-                return nodes;
-            }
-
-            if (nodesX.Length != nodesY.Length
-                || nodesX.Length != nodesNames.Length
-                || nodesX.Length != nodesDescriptions.Length)
-            {
-                throw new InvalidOperationException(string.Format("The arrays are not the same length"));
-            }
-
-            for (var i = 0; i < numberOfNodes; ++i)
-            {
-                var node = new HydroNode
-                {
-                    Network = network,
-                    Name = nodesNames[i] == "" ? null : nodesNames[i],
-                    Description = nodesDescriptions[i] == "" ? null : nodesDescriptions[i],
-                    Geometry = new Point(nodesX[i], nodesY[i])
-                };
-                nodes.Add(node);
-            }
-
-            return nodes;
-        }
-
-        private static List<IBranch> ConstructNetworkBranches(INetwork parentNetwork, List<IHydroNode> nodes, int[] sourceNodes, int[] targetNodes,
-            double[] branchLengths, int[] branchGeometryPoints, string[] branchNames, string[] branchDescriptions, double[] geometryPointsX, double[] geometryPointsY, int[] branchOrderNumbers, List<DelftIniCategory> branchProperties)
-        {
-            var branches = new List<IBranch>();
-            int numberOfChannels = sourceNodes.Length;
-
-            if (numberOfChannels <= 0)
-            {
-                return branches;
-            }
-
-            if (numberOfChannels != targetNodes.Length
-                || numberOfChannels != branchLengths.Length
-                || numberOfChannels != branchNames.Length
-                || numberOfChannels != branchGeometryPoints.Length
-                || numberOfChannels != branchDescriptions.Length)
-            {
-                throw new InvalidOperationException("The arrays are not the same length");
-            }
-
-            var totalNumberOfGeometryPoints = branchGeometryPoints.Sum();
-
-            if (totalNumberOfGeometryPoints != geometryPointsX.Length
-                || totalNumberOfGeometryPoints != geometryPointsY.Length)
-            {
-                throw new InvalidOperationException("Mismatch in the geometry point array lenghts");
-            }
-
-            var geometryCoordinates = new Coordinate[totalNumberOfGeometryPoints];
-
-            for (var j = 0; j < totalNumberOfGeometryPoints; ++j)
-            {
-                geometryCoordinates[j] = new Coordinate(geometryPointsX[j], geometryPointsY[j]);
-            }
-
-            var geoPointsIndex = 0;
-            for (var i = 0; i < numberOfChannels; ++i)
-            {
-                var sourceNodeIndex = sourceNodes[i];
-                var targetNodeIndex = targetNodes[i];
-                var numberOfBranchGeometryPoints = branchGeometryPoints[i];
-
-                var coordinates = geometryCoordinates.Skip(geoPointsIndex).Take(numberOfBranchGeometryPoints).ToArray();
-                geoPointsIndex += numberOfBranchGeometryPoints;
-
-                IBranch branch;
-                var branchName = branchNames[i];
-                if(branchProperties == null) branch = new Channel();
-                else
-                {
-                    var branchIniCategory = branchProperties.FirstOrDefault(bp => bp.GetPropertyValue(BranchFile.KnownPropertyNames.Name).Equals(branchName));
-                    branch = CreateBranch(branchIniCategory);
-                }
-
-                branch.Network = parentNetwork;
-                branch.Name = branchNames[i] == "" ? null : branchNames[i];
-                branch.Description = branchDescriptions[i] == "" ? null : branchDescriptions[i];
-                branch.Source = nodes[sourceNodeIndex];
-                branch.Target = nodes[targetNodeIndex];
-                branch.Geometry = new LineString(coordinates);
-                branch.OrderNumber = branchOrderNumbers[i];
-
-                if (!branch.IsLengthCustom)
-                {
-                    branch.IsLengthCustom = !branch.Length.IsEqualTo(branchLengths[i], 0.001);
-                }
-                if (branch.IsLengthCustom) branch.Length = branchLengths[i];
-
-                branches.Add(branch);
-            }
-
-            return branches;
-        }
-
-        private static IBranch CreateBranch(IDelftIniCategory branchCategory)
-        {
-            var branchTypeNumber = int.Parse(branchCategory.GetPropertyValue(BranchFile.KnownPropertyNames.BranchType));
-            var type = (BranchFile.BranchTypes) branchTypeNumber;
-            switch (type)
-            {
-                case BranchFile.BranchTypes.SewerConnection:
-                    return new SewerConnection();
-                case BranchFile.BranchTypes.Pipe:
-                    return new Pipe();
-                default:
-                    return new Channel();
             }
         }
     }

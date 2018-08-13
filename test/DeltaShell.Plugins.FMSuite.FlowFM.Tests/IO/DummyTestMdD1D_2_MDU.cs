@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void Show_Generate_File()
         {
             var path = TestHelper.GetTestFilePath(@"alex\output_net.nc");
-            var network = UGridToNetworkAdapter.LoadNetwork(path);
+            var network = NetworkDiscretisationFactory.CreateHydroNetwork(UGridToNetworkAdapter.ReadNetworkDataModelFromUGrid(path));
 
             var mapView = new MapView();
             mapView.Map.Layers.Add(MapLayerProviderHelper.CreateLayersRecursive(network, null, new List<IMapLayerProvider> { new NetworkEditorMapLayerProvider() }));
@@ -79,8 +79,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Application.DoEvents();
             }
             WindowsFormsTestHelper.ShowModal(mapView);
-
-
         }
 
         [TestCase("YourNetCdfFilePathGoesHere")]

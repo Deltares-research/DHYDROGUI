@@ -89,7 +89,7 @@ namespace DeltaShell.NGHS.IO
         /// <exception cref="PathTooLongException">The specified path, file name, or both exceed the system-defined maximum length. For example, on Windows-based platforms, paths must not exceed 248 characters, and file names must not exceed 260 characters.</exception>
         /// <exception cref="IOException">path includes an incorrect or invalid syntax for file name, directory name, or volume label syntax.</exception>
         /// <exception cref="SecurityException">The caller does not have the required permission.</exception>
-        protected void OpenOutputFile(string filePath)
+        protected void OpenOutputFile(string filePath, bool append = false)
         {
             storedCurrentCulture = Thread.CurrentThread.CurrentCulture;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
@@ -99,9 +99,23 @@ namespace DeltaShell.NGHS.IO
             {
                 Directory.CreateDirectory(directory);
             }
-            writer = new StreamWriter(OutputFilePath);
+            LineNumber = append && File.Exists(filePath) ? GetNumberOfLines(filePath) : 0;
+            writer = new StreamWriter(OutputFilePath, append);
             fileContentHasStarted = false;
-            LineNumber = 0;
+        }
+
+        private int GetNumberOfLines(string filePath)
+        {
+            var counter = 0;
+            using (var file = new StreamReader(filePath))
+            {
+                while (file.ReadLine() != null)
+                {
+                    counter++;
+                }
+            }
+
+            return counter;
         }
 
         protected void CloseOutputFile()

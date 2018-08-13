@@ -174,7 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void LoadNetwork()
         {
             if (!File.Exists(NetFilePath)) return;
-            var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(NetFilePath);
+            var loadedNetwork = NetworkDiscretisationFactory.CreateHydroNetwork(UGridToNetworkAdapter.ReadNetworkDataModelFromUGrid(NetFilePath));
             if (loadedNetwork == null) return;
             Network = loadedNetwork;
         }

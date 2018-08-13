@@ -18,25 +18,25 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
             public const string WaterType = "WaterType";
         }
 
-        public enum BranchTypes
+        public enum BranchType
         {
             Unkown = 0, Channel = 1, SewerConnection = 2, Pipe = 3
         }
 
         private static string GetBranchType(IBranch branch)
         {
-            var value = BranchTypes.Unkown;
+            var value = BranchType.Unkown;
             if (branch is IChannel)
             {
-                value = BranchTypes.Channel;
+                value = BranchType.Channel;
             }
             else if (branch is IPipe)
             {
-                value = BranchTypes.Pipe;
+                value = BranchType.Pipe;
             }
             else if (branch is ISewerConnection)
             {
-                value = BranchTypes.SewerConnection;
+                value = BranchType.SewerConnection;
             }
 
             return ((int)value).ToString();
@@ -61,9 +61,27 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
             new DelftIniWriter().WriteDelftIniFile(categories, filePath, false);
         }
 
-        public static List<DelftIniCategory> Read(string filePath)
+        public static IList<BranchProperties> Read(string filePath)
         {
-            return new DelftIniReader().ReadDelftIniFile(filePath).ToList();
+            var propertiesPerBranch = new List<BranchProperties>();
+            var categories = new DelftIniReader().ReadDelftIniFile(filePath).ToList();
+            foreach (var category in categories)
+            {
+                var branchProperties = new BranchProperties();
+                branchProperties.Name = category.GetPropertyValue(KnownPropertyNames.Name);
+                branchProperties.BranchType = (BranchType) int.Parse(category.GetPropertyValue(KnownPropertyNames.BranchType));
+                branchProperties.WaterType = EnumerableExtensions.GetValueFromDescription<SewerConnectionWaterType>(category.GetPropertyValue(KnownPropertyNames.WaterType));
+                propertiesPerBranch.Add(branchProperties);
+            }
+
+            return propertiesPerBranch;
+        }
+
+        public class BranchProperties
+        {
+            public string Name;
+            public BranchType BranchType;
+            public SewerConnectionWaterType WaterType;
         }
     }
 }

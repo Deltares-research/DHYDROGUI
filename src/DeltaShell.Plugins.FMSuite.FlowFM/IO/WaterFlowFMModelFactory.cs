@@ -6,14 +6,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     {
         public static WaterFlowFMModel CreateModelFromReaderData(WaterFlowFMModelReaderData fmReaderData)
         {
-            var flowFmModel = new WaterFlowFMModel();
-            CreateNetwork(fmReaderData, flowFmModel);
-            return flowFmModel;
+            var fmModel = new WaterFlowFMModel();
+            CreateNetworkAndDiscretization(fmReaderData, fmModel);
+            return fmModel;
         }
 
-        private static void CreateNetwork(WaterFlowFMModelReaderData fmReaderData, WaterFlowFMModel flowFmModel)
+        private static void CreateNetworkAndDiscretization(WaterFlowFMModelReaderData fmReaderData, IWaterFlowFMModel fmModel)
         {
-            flowFmModel.Network = NetworkUGridDataModel.ReconstructHydroNetwork(fmReaderData.NetworkDataModel, fmReaderData.PropertiesPerBranch);
+            fmModel.Network = NetworkDiscretisationFactory.CreateHydroNetwork(fmReaderData.NetworkDataModel, fmReaderData.PropertiesPerBranch, fmReaderData.PropertiesPerCompartment);
+            fmModel.NetworkDiscretization = NetworkDiscretisationFactory.CreateNetworkDiscretisation(fmModel.Network, fmReaderData.NetworkDiscretisationDataModel);
         }
     }
 }

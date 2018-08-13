@@ -5,9 +5,9 @@ namespace DeltaShell.NGHS.IO.FileWriters
 {
     public class IniFileWriter : DelftIniWriter
     {
-        public void WriteIniFile(IEnumerable<DelftIniCategory> categories, string iniFile, bool writeComments = false)
+        public void WriteIniFile(IEnumerable<DelftIniCategory> categories, string iniFile, bool writeComments = false, bool append = false)
         {
-            OpenOutputFile(iniFile);
+            OpenOutputFile(iniFile, append);
             try
             {
                 foreach (var category in categories)
@@ -25,6 +25,5 @@ namespace DeltaShell.NGHS.IO.FileWriters
                 CloseOutputFile();
             }            
         }
-
     }
 }

@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             Assert.AreEqual(5, dataModel.NumberOfDiscretisationPoints);
             Assert.AreEqual(4, dataModel.NumberOfMeshEdges);
             Assert.AreEqual(new[] {0, 0, 0, 0, 0}, dataModel.BranchIdx);
-            Assert.AreEqual(new[] {0, 1, 2, 3, 5}, dataModel.Offset);
+            Assert.AreEqual(new[] {0, 1, 2, 3, 5}, dataModel.Offsets);
             Assert.AreEqual(new[] { "point_01", "my Branch 1_1.000", "point_03", "point_04", "point_05" }, dataModel.DiscretisationPointIds);
             Assert.AreEqual(new[] { "point_01_description", "branch_01_description", "point_03_description", "point_04_description", "point_05_description" }, dataModel.DiscretisationPointDescriptions);
         }
@@ -111,12 +111,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             var dataModel = new NetworkDiscretisationUGridDataModel(discretisation);
 
-            var reconstructedDiscretisation = NetworkDiscretisationUGridDataModel.ReconstructNetworkDiscretisation(network, dataModel.Name, dataModel.BranchIdx, dataModel.Offset, dataModel.DiscretisationPointIds, dataModel.DiscretisationPointDescriptions);
+            var reconstructedDiscretisation = NetworkDiscretisationFactory.CreateNetworkDiscretisation(network, dataModel);
 
             Assert.AreEqual(discretisation.Name, reconstructedDiscretisation.Name);
 
-            HydroNetworkTestHelper.CompareAndAssertNetworks(discretisation.Network, reconstructedDiscretisation.Network);
-            HydroNetworkTestHelper.CompareAndAssertDiscretisations(discretisation, reconstructedDiscretisation);
+            HydroNetworkTestHelper.CompareNetworks(discretisation.Network, reconstructedDiscretisation.Network);
+            HydroNetworkTestHelper.CompareDiscretisations(discretisation, reconstructedDiscretisation);
         }
     }
 }

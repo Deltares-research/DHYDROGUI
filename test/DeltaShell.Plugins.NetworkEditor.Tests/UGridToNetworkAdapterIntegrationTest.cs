@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             var metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
             UGridToNetworkAdapter.SaveNetwork(storedNetwork, netFilePath, metaData);
 
-            var networkUGridDataModel = UGridToNetworkAdapter.ReadUGridFile(netFilePath);
+            var networkUGridDataModel = UGridToNetworkAdapter.ReadNetworkDataModelFromUGrid(netFilePath);
             CompareAndAssertNetworkAndNetworkUGridDataModel(storedNetwork, networkUGridDataModel);
         }
 
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             var metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
             UGridToNetworkAdapter.SaveNetwork(storedNetwork, netFilePath, metaData);
-            var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(netFilePath);
+            var loadedNetwork = NetworkDiscretisationFactory.CreateHydroNetwork(UGridToNetworkAdapter.ReadNetworkDataModelFromUGrid(netFilePath));
 
             var loadedCustomizedBranch = loadedNetwork.Branches.First();
             Assert.That(loadedCustomizedBranch.Length, Is.EqualTo(length));
@@ -89,8 +89,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             var loadedNetwork = (IHydroNetwork) loadedDiscretisation.Network;
 
-            HydroNetworkTestHelper.CompareAndAssertNetworks(storedNetwork, loadedNetwork);
-            HydroNetworkTestHelper.CompareAndAssertDiscretisations(networkDiscretisation, loadedDiscretisation);
+            HydroNetworkTestHelper.CompareNetworks(storedNetwork, loadedNetwork);
+            HydroNetworkTestHelper.CompareDiscretisations(networkDiscretisation, loadedDiscretisation);
         }
 
         [Test]
@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             var metaData = new UGridGlobalMetaData(sewerNetwork.Name, "PluginName", "PluginVersion");
             UGridToNetworkAdapter.SaveNetwork(sewerNetwork, netFilePath, metaData);
-            var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(netFilePath);
+            var loadedNetwork = NetworkDiscretisationFactory.CreateHydroNetwork(UGridToNetworkAdapter.ReadNetworkDataModelFromUGrid(netFilePath));
 
             Assert.That(loadedNetwork.Pipes.Count(), Is.EqualTo(1));
             Assert.That(loadedNetwork.Manholes.Count(), Is.EqualTo(2), "Work in progress: still work to be done for retention file writer to be able to distinguish between types of nodes");

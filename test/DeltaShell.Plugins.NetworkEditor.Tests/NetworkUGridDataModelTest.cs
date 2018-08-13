@@ -127,8 +127,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             var networkDataModel = new NetworkUGridDataModel(network);
 
-            var reconstructedNetwork = NetworkUGridDataModel.ReconstructHydroNetwork(networkDataModel);
-            HydroNetworkTestHelper.CompareAndAssertNetworks(network, reconstructedNetwork);
+            var reconstructedNetwork = NetworkDiscretisationFactory.CreateHydroNetwork(networkDataModel);
+            HydroNetworkTestHelper.CompareNetworks(network, reconstructedNetwork);
             Assert.AreEqual(network.Name, reconstructedNetwork.Name);
             Assert.AreEqual(network.CoordinateSystem, reconstructedNetwork.CoordinateSystem);
 
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 var node = network.Nodes[i];
                 var reconstructedNode = reconstructedNetwork.Nodes[i];
 
-                HydroNetworkTestHelper.CompareAndAssertNodes(node, reconstructedNode);
+                HydroNetworkTestHelper.CompareNodes(node, reconstructedNode);
 
                 Assert.AreEqual(node.Network, network);
                 Assert.AreEqual(reconstructedNode.Network, reconstructedNetwork);
@@ -174,7 +174,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 var branch = network.Branches[i];
                 var reconstructedBranch = reconstructedNetwork.Branches[i];
 
-                HydroNetworkTestHelper.CompareAndAssertBranches(branch, reconstructedBranch);
+                HydroNetworkTestHelper.CompareBranches(branch, reconstructedBranch);
 
                 Assert.AreEqual(branch.Source.Network, network);
                 Assert.AreEqual(branch.Target.Network, network);

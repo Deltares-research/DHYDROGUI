@@ -1,4 +1,6 @@
-﻿using DelftTools.Hydro;
+﻿using System.Linq;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -8,41 +10,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
 {
     public static class HydroNetworkTestHelper
     {
-        public static void CompareAndAssertNodes(INode primaryNode, INode secondaryNode)
-        {
-            Assert.AreEqual(primaryNode.Name, secondaryNode.Name);
-            Assert.AreEqual(primaryNode.Geometry.Coordinate.X, secondaryNode.Geometry.Coordinate.X);
-            Assert.AreEqual(primaryNode.Geometry.Coordinate.Y, secondaryNode.Geometry.Coordinate.Y);
-            Assert.AreEqual(primaryNode.Name, secondaryNode.Name);
-            Assert.AreEqual(primaryNode.Description, secondaryNode.Description);
-        }
-
-        public static void CompareAndAssertBranches(IBranch primaryBranch, IBranch secondaryBranch)
-        {
-            Assert.AreEqual(primaryBranch.Name, secondaryBranch.Name);
-            Assert.AreEqual(primaryBranch.Description, secondaryBranch.Description);
-            Assert.AreEqual(primaryBranch.Length, secondaryBranch.Length);
-
-            // Compare nodes
-            CompareAndAssertNodes(primaryBranch.Source, secondaryBranch.Source);
-            CompareAndAssertNodes(primaryBranch.Target, secondaryBranch.Target);
-
-            // Compare geometries
-            CompareAndAssertGeometry(primaryBranch.Geometry, secondaryBranch.Geometry);
-        }
-
-        private static void CompareAndAssertGeometry(IGeometry primaryGeometry, IGeometry secondaryGeometry)
-        {
-            Assert.AreEqual(primaryGeometry.Coordinates.Length, secondaryGeometry.Coordinates.Length);
-
-            for (int i = 0; i < primaryGeometry.Coordinates.Length; i++)
-            {
-                Assert.AreEqual(primaryGeometry.Coordinates[i].X, secondaryGeometry.Coordinates[i].X);
-                Assert.AreEqual(primaryGeometry.Coordinates[i].Y, secondaryGeometry.Coordinates[i].Y);
-            }
-        }
-
-        public static void CompareAndAssertNetworks(INetwork primaryNetwork, INetwork secondaryNetwork)
+        public static void CompareNetworks(INetwork primaryNetwork, INetwork secondaryNetwork)
         {
             Assert.AreEqual(primaryNetwork.Name, secondaryNetwork.Name);
             Assert.AreEqual(primaryNetwork.CoordinateSystem, secondaryNetwork.CoordinateSystem);
@@ -56,30 +24,117 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             Assert.AreEqual(primaryBranches.Count, secondaryBranches.Count);
 
             // loop over the nodes and assert each item
-            for (int i = 0; i < primaryNodes.Count; ++i)
+            for (var i = 0; i < primaryNodes.Count; ++i)
             {
                 var primaryNode = primaryNodes[i];
                 var secondaryNode = secondaryNodes[i];
 
-                CompareAndAssertNodes(primaryNode, secondaryNode);
+                CompareNodes(primaryNode, secondaryNode);
             }
 
             // loop over the branches and assert each item
-            for (int i = 0; i < primaryBranches.Count; ++i)
+            for (var i = 0; i < primaryBranches.Count; ++i)
             {
                 var primaryBranch = primaryBranches[i];
                 var secondaryBranch = secondaryBranches[i];
 
-                CompareAndAssertBranches(primaryBranch, secondaryBranch);
+                CompareBranches(primaryBranch, secondaryBranch);
             }
         }
 
-        public static void CompareAndAssertDiscretisations(IDiscretization primaryDiscretisation, IDiscretization secondaryDiscretisation)
+        public static void CompareNetworks(IHydroNetwork primaryNetwork, IHydroNetwork secondaryNetwork)
+        {
+            CompareNetworks((INetwork)primaryNetwork, secondaryNetwork);
+
+            var primaryManholes = primaryNetwork.Manholes.ToList();
+            var secondaryManholes = secondaryNetwork.Manholes.ToList();
+            var primaryPipes = primaryNetwork.Pipes.ToList();
+            var secondaryPipes = secondaryNetwork.Pipes.ToList();
+
+            Assert.AreEqual(primaryManholes.Count, secondaryManholes.Count);
+            Assert.AreEqual(primaryPipes.Count, secondaryPipes.Count);
+
+            // loop over the manholes and assert each item
+            for (var i = 0; i < primaryManholes.Count; ++i)
+            {
+                var primaryManhole = primaryManholes[i];
+                var secondaryManhole = secondaryManholes[i];
+
+                CompareManholes(primaryManhole, secondaryManhole);
+            }
+
+            // loop over the pipes and assert each item
+            for (var i = 0; i < primaryPipes.Count; ++i)
+            {
+                var primaryPipe = (Pipe)primaryPipes[i];
+                var secondaryPipe = (Pipe)secondaryPipes[i];
+
+                ComparePipes(primaryPipe, secondaryPipe);
+            }
+        }
+
+        public static void CompareNodes(INode primaryNode, INode secondaryNode)
+        {
+            Assert.AreEqual(primaryNode.Name, secondaryNode.Name);
+            Assert.AreEqual(primaryNode.Geometry.Coordinate.X, secondaryNode.Geometry.Coordinate.X);
+            Assert.AreEqual(primaryNode.Geometry.Coordinate.Y, secondaryNode.Geometry.Coordinate.Y);
+            Assert.AreEqual(primaryNode.Description, secondaryNode.Description);
+        }
+
+        private static void CompareManholes(IManhole primaryManhole, IManhole secondaryManhole)
+        {
+            Assert.AreEqual(primaryManhole.Compartments.Count, secondaryManhole.Compartments.Count);
+            foreach (var primaryCompartment in primaryManhole.Compartments)
+            {
+                var secondaryCompartment = secondaryManhole.Compartments.FirstOrDefault(c => c.Name.Equals(primaryCompartment.Name));
+                Assert.IsNotNull(secondaryCompartment);
+                Assert.That(primaryCompartment.BottomLevel, Is.EqualTo(secondaryCompartment.BottomLevel));
+                Assert.That(primaryCompartment.SurfaceLevel, Is.EqualTo(secondaryCompartment.SurfaceLevel));
+                Assert.That(primaryCompartment.ManholeLength, Is.EqualTo(secondaryCompartment.ManholeLength));
+                Assert.That(primaryCompartment.ManholeWidth, Is.EqualTo(secondaryCompartment.ManholeWidth));
+                Assert.That(primaryCompartment.ParentManhole.Name, Is.EqualTo(secondaryCompartment.ParentManhole.Name));
+            }
+        }
+
+        public static void CompareBranches(IBranch primaryBranch, IBranch secondaryBranch)
+        {
+            Assert.AreEqual(primaryBranch.Name, secondaryBranch.Name);
+            Assert.AreEqual(primaryBranch.Description, secondaryBranch.Description);
+            Assert.AreEqual(primaryBranch.Length, secondaryBranch.Length);
+
+            // Compare nodes
+            CompareNodes(primaryBranch.Source, secondaryBranch.Source);
+            CompareNodes(primaryBranch.Target, secondaryBranch.Target);
+
+            // Compare geometries
+            CompareGeometries(primaryBranch.Geometry, secondaryBranch.Geometry);
+        }
+
+        private static void ComparePipes(Pipe primaryPipe, Pipe secondaryPipe)
+        {
+            //Assert.That(primaryPipe.Material, Is.EqualTo(secondaryPipe.Material)); // To be implemented
+            Assert.That(primaryPipe.PipeRoughness, Is.EqualTo(secondaryPipe.PipeRoughness));
+            Assert.That(primaryPipe.PipeRoughnessType, Is.EqualTo(secondaryPipe.PipeRoughnessType));
+            //Assert.That(primaryPipe.SewerProfileDefinition.Shape.Type, Is.EqualTo(secondaryPipe.SewerProfileDefinition.Shape.Type)); // To add when we can write/read cross section definitions
+        }
+
+        private static void CompareGeometries(IGeometry primaryGeometry, IGeometry secondaryGeometry)
+        {
+            Assert.AreEqual(primaryGeometry.Coordinates.Length, secondaryGeometry.Coordinates.Length);
+
+            for (int i = 0; i < primaryGeometry.Coordinates.Length; i++)
+            {
+                Assert.AreEqual(primaryGeometry.Coordinates[i].X, secondaryGeometry.Coordinates[i].X);
+                Assert.AreEqual(primaryGeometry.Coordinates[i].Y, secondaryGeometry.Coordinates[i].Y);
+            }
+        }
+
+        public static void CompareDiscretisations(IDiscretization primaryDiscretisation, IDiscretization secondaryDiscretisation)
         {
             Assert.AreEqual(primaryDiscretisation.Name, secondaryDiscretisation.Name);
             Assert.AreEqual(primaryDiscretisation.Locations.Values.Count, secondaryDiscretisation.Locations.Values.Count);
 
-            CompareAndAssertNetworks(primaryDiscretisation.Network, secondaryDiscretisation.Network);
+            CompareNetworks(primaryDiscretisation.Network, secondaryDiscretisation.Network);
 
             for (int i = 0; i < primaryDiscretisation.Locations.Values.Count; i++)
             {
@@ -89,7 +144,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
                 Assert.AreEqual(primaryLocation.Chainage, secondaryLocation.Chainage);
                 Assert.AreEqual(primaryLocation.Name, secondaryLocation.Name);
                 Assert.AreEqual(primaryLocation.Description, secondaryLocation.Description);
-                CompareAndAssertBranches(primaryLocation.Branch, secondaryLocation.Branch);
+                CompareBranches(primaryLocation.Branch, secondaryLocation.Branch);
             }
         }
     }
