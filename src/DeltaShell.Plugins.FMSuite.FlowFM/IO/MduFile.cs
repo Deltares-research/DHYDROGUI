@@ -127,9 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public BndExtForceFile BoundaryExternalForcingsFile { get; private set; }
 
         #region write logic
-
-        public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
-        bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false)
+        public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition)
         {
             var targetDir = System.IO.Path.GetDirectoryName(targetMduFilePath);
             if (targetDir != string.Empty && !Directory.Exists(targetDir))
@@ -147,7 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 var targetFile = MduFileHelper.GetSubfilePath(targetMduFilePath,
                     modelDefinition.GetModelProperty(KnownProperties.NetFile));
-                
+
                 if (sourceFile != null)
                 {
                     if (File.Exists(sourceFile) && targetFile != null)
@@ -163,21 +161,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             File.Copy(fullSourcePath, fullTargetPath, true);
                         }
                     }
-                    
-                    // write the bathymetry in the net file.
-                    IList<ISpatialOperation> bathymetryOperations;
-                    if (modelDefinition.SpatialOperations.TryGetValue(
-                        WaterFlowFMModelDefinition.BathymetryDataItemName, out bathymetryOperations) && File.Exists(targetFile))
-                    {
-                        if (bathymetryOperations.Any(so => !(so is ISpatialOperationSet)))
-                        {
-                            WriteBathymetry(modelDefinition, targetFile);
-                        }
-                    }
-
-                    // if needed, adjust coordinate system in netfile
-                    if (File.Exists(targetFile) && !IsNetfileCoordinateSystemUpToDate(modelDefinition, targetFile))
-                        UnstructuredGridFileHelper.SetCoordinateSystem(targetFile, modelDefinition.CoordinateSystem);
                 }
 
                 // copy along any mdu-referenced files that are *not* yet supported/written in the UI:
@@ -226,6 +209,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
                 }
             }
+        }
+
+        public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
+        bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false)
+        {
+            var targetDir = System.IO.Path.GetDirectoryName(targetMduFilePath);
+            if (targetDir != string.Empty && !Directory.Exists(targetDir))
+            {
+                throw new Exception("Non existing directory in file path: " + targetMduFilePath);
+            }
+
+            var substitutedPaths = new Dictionary<string, System.Tuple<string, string>>();
+
+            Write(targetMduFilePath,modelDefinition);
+            // copy netfile
+            if (Path != null)
+            {
+                var sourceFile = MduFileHelper.GetSubfilePath(Path,
+                    modelDefinition.GetModelProperty(KnownProperties.NetFile));
+
+                var targetFile = MduFileHelper.GetSubfilePath(targetMduFilePath,
+                    modelDefinition.GetModelProperty(KnownProperties.NetFile));
+                
+                if (sourceFile != null)
+                {
+                    // write the bathymetry in the net file.
+                    IList<ISpatialOperation> bathymetryOperations;
+                    if (modelDefinition.SpatialOperations.TryGetValue(
+                        WaterFlowFMModelDefinition.BathymetryDataItemName, out bathymetryOperations) && File.Exists(targetFile))
+                    {
+                        if (bathymetryOperations.Any(so => !(so is ISpatialOperationSet)))
+                        {
+                            BathymetryFileWriter.Write(targetFile, modelDefinition);
+                        }
+                    }
+
+                    // if needed, adjust coordinate system in netfile
+                    if (File.Exists(targetFile) && !IsNetfileCoordinateSystemUpToDate(modelDefinition, targetFile))
+                        UnstructuredGridFileHelper.SetCoordinateSystem(targetFile, modelDefinition.CoordinateSystem);
+                }
+            }
 
             if (switchTo)
                 Path = targetMduFilePath;
@@ -233,7 +257,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (writeFeatures)
             {
                 WriteAreaFeatures(targetMduFilePath, modelDefinition, hydroArea, allFixedWeirsAndCorrespondingProperties);
-
             }
 
             // write external forcings (ExtForceFile.Write() will check if indeed the file is written)
@@ -416,23 +439,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
             return propertiesByGroup;
-        }
-
-        public void WriteBathymetry(WaterFlowFMModelDefinition modelDefinition, string path)
-        {
-            var bedLevelTypeProperty = modelDefinition.Properties.FirstOrDefault(p =>
-                    p.PropertyDefinition != null &&
-                    p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
-
-            if (bedLevelTypeProperty == null)
-            {
-                Log.WarnFormat("Cannot determine Bed level location, z-values will not be exported");
-                return;
-            }
-
-            var location = (UnstructuredGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
-            var values = modelDefinition.Bathymetry.Components[0].GetValues<double>().ToArray();
-            UnstructuredGridFileHelper.WriteZValues(path, location, values);
         }
 
         private void WriteMorphologySediment(string mduFilePath, IEnumerable<WaterFlowFMProperty> modelDefinition)

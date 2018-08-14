@@ -48,6 +48,7 @@ geometry,StructureFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"File *.ini conta
 geometry,VertplizFile,,,,FileName,,,,TRUE,,,,,,"Vertical layering file *_vlay.pliz with rows x, y, Z, first Z, nr of layers, second Z, layer type"
 geometry,ProflocFile,,,,FileName,,,,TRUE,,,,,,"Channel profile location file *_proflocation.xyz with rows x, y, z, profile number ref"
 geometry,ProfdefFile,,,,FileName,,,,TRUE,,,,,,"Channel profile definition file *_profdefinition.def with definition for all profile numbers"
+geometry,NodeFile,,,,FileName,,,,TRUE,,,,,,"Node file that describes data for compartments in a sewer network *.ini"
 geometry,ProfdefxyzFile,,,,FileName,,,,TRUE,,,,,,"Channel profile definition file _profdefinition.def with definition for all profile numbers"
 geometry,Uniformwidth1D,,,Default 1D channel width,Double,2,,,TRUE,,,,,,"Uniform width for channel profiles not specified by profloc"
 geometry,ManholeFile,,,,FileName,,,,TRUE,,,,,,"File *.ini containing manholes"

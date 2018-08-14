@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             return false;
         }
 
-        private bool ExportGrid(string path, UnstructuredGrid grid)
+        private bool ExportGrid(string filePath, UnstructuredGrid grid)
         {
             if (grid == null || grid.IsEmpty)
             {
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             {
                 try
                 {
-                    NetFile.Write(path,grid);
+                    NetFile.Write(filePath, grid);
                 }
                 catch (Exception e)
                 {
@@ -77,17 +77,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
             var model = GetModelForGrid(grid);
 
-            if (path != model.NetFilePath)
+            if (filePath != model.NetFilePath)
             {
                 if (File.Exists(model.NetFilePath))
                 {
-                    File.Copy(model.NetFilePath, path, true);
+                    File.Copy(model.NetFilePath, filePath, true);
                 }
                 else
                 {
                     try
                     {
-                        NetFile.Write(path,grid);
+                        NetFile.Write(filePath, grid);
                     }
                     catch (Exception e)
                     {
@@ -97,9 +97,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 }
             }
 
-            if (!grid.IsEmpty && model.MduFile != null)
+            if (!grid.IsEmpty)
             {
-                model.MduFile.WriteBathymetry(model.ModelDefinition, path);
+                BathymetryFileWriter.Write(filePath, model.ModelDefinition);
             }
 
             return true;

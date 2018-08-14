@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.NetworkEditor;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -107,41 +110,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     switch (e.Action)
                     {
                         case NotifyCollectionChangeAction.Remove:
-                            // remove all child data items
-                            var dataItemsToRemove = new List<IDataItem>();
-                            var networkDataItem = GetDataItemByValue(Network);
-
-                            if (networkDataItem != null) // TODO: temporary fix while we do not have a DataItem for Network in FM Model
                             {
-                                dataItemsToRemove.AddRange(networkDataItem.Children);
+                                // remove all child data items
+                                var dataItemsToRemove = new List<IDataItem>();
+                                var networkDataItem = GetDataItemByValue(Network);
 
-                                foreach (var dataItem in dataItemsToRemove)
+                                if (networkDataItem != null) // TODO: temporary fix while we do not have a DataItem for Network in FM Model
                                 {
-                                    dataItem.Unlink();
-                                    dataItem.LinkedBy.ToArray().ForEach(di => di.Unlink());
-                                    networkDataItem.Children.Remove(dataItem);
+                                    foreach (var dataItem in networkDataItem.Children)
+                                    {
+                                        dataItemsToRemove.Add(dataItem);
+                                    }
+
+                                    foreach (var dataItem in dataItemsToRemove)
+                                    {
+                                        dataItem.Unlink();
+                                        dataItem.LinkedBy.ToArray().ForEach(di => di.Unlink());
+                                        networkDataItem.Children.Remove(dataItem);
+                                    }
                                 }
+                            }
+                            break;
+                        case NotifyCollectionChangeAction.Add:
+                            {
+
                             }
                             break;
                     }
 
                     ClearOutput();
-                }
-            }
-            else if (Equals(sender, Network.Branches) && e.Item is ISewerConnection)
-            {
-                var sewerConnection = e.Item as SewerConnection;
-                var calculationLocations = new List<NetworkLocation>();
-                if (sewerConnection != null)
-                {
-                    switch (e.Action)
-                    {
-                        case NotifyCollectionChangeAction.Add:
-                            calculationLocations.Add(new NetworkLocation(sewerConnection, 0.0));
-                            calculationLocations.Add(new NetworkLocation(sewerConnection, sewerConnection.Length));
-                            NetworkDiscretization.Locations.AddValues(calculationLocations);
-                            break;
-                    }
                 }
             }
 
@@ -240,6 +237,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 NetworkDiscretization.Locations.AddValues(locations.Except(NetworkDiscretization.Locations.GetValues()));
                 NetworkDiscretization.EndEdit();
             }
+        }
+
+        private void LoadNetwork()
+        {
+            if (!File.Exists(NetFilePath)) return;
+            var loadedNetwork = NetworkDiscretisationFactory.CreateHydroNetwork(UGridToNetworkAdapter.ReadNetworkDataModelFromUGrid(NetFilePath));
+            if (loadedNetwork == null) return;
+            Network = loadedNetwork;
+        }
+
+        private void LoadNetworkAndDiscretisation()
+        {
+            if (!File.Exists(NetFilePath)) return;
+            var loadedNetworkDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(NetFilePath);
+            if (loadedNetworkDiscretisation != null)
+            {
+                NetworkDiscretization = loadedNetworkDiscretisation;
+                Network = (IHydroNetwork)loadedNetworkDiscretisation.Network;
+                return;
+            }
+
+            LoadNetwork();
+
+        }
+
+        private void SaveNetwork()
+        {
+            UGridGlobalMetaData metaData = new UGridGlobalMetaData(Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion);
+
+            UGridToNetworkAdapter.SaveNetwork(network, NetFilePath, metaData);
+        }
+
+        private void SaveNetworkDiscretisation()
+        {
+            UGridToNetworkAdapter.SaveNetworkDiscretisation(NetworkDiscretization, NetFilePath);
         }
     }
 }

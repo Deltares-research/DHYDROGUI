@@ -306,6 +306,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                             StringComparison.InvariantCultureIgnoreCase));
         }
 
+        public void SetModelProperty(string propertyName, string value)
+        {
+            GetModelProperty(propertyName).SetValueAsString(value);
+        }
+
         public WaterFlowFMModelDefinition(string modelDir, string modelName) : this()
         {
             ModelDirectory = modelDir;

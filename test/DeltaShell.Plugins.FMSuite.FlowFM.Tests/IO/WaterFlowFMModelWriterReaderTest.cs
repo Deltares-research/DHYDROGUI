@@ -1,13 +1,9 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.NetworkEditor;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
-using GeoAPI.Extensions.Coverages;
-using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -46,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             //action write
             WaterFlowFMModelWriter.Write(model);
 
-            var ugridPath = Path.Combine(tempDirectory, model.Name + "_net.nc");
+            var ugridPath = Path.Combine(tempDirectory, model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).GetValueAsString());
             Assert.True(File.Exists(ugridPath)); //UGrid file
 
             var retrievedFmModel = WaterFlowFMModelReader.Read(model.MduFilePath);

@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
@@ -88,9 +85,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                     return false;
                 }
                 File.Copy(model.NetFilePath, targetNetFilePath, true);
-
-                if(model.MduFile != null)
-                    model.MduFile.WriteBathymetry(model.ModelDefinition, targetGeomFilePath);
+                
+                BathymetryFileWriter.Write(targetGeomFilePath, model.ModelDefinition);
                 
                 Directory.SetCurrentDirectory(targetDirectory);
                 ZipFileUtils.Create(filePath,

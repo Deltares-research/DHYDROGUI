@@ -39,7 +39,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             readerData.NetworkDataModel = UGridToNetworkAdapter.ReadNetworkDataModelFromUGrid(netFilePath);
 
             // Read nodes file
-            var nodeFilePath = UGridToNetworkAdapter.GetFilePathToLocationInSameDirectory(netFilePath, UGridToNetworkAdapter.NodeFileName);
+            var nodeFileProperty = readerData.ModelDefinition.GetModelProperty(KnownProperties.NodeFile);
+            var nodeFilePath = UGridToNetworkAdapter.GetFilePathToLocationInSameDirectory(netFilePath, nodeFileProperty.GetValueAsString());
             if (File.Exists(nodeFilePath)) readerData.PropertiesPerCompartment = NodeFile.Read(nodeFilePath);
 
             // Read branches file (GUI properties only)
