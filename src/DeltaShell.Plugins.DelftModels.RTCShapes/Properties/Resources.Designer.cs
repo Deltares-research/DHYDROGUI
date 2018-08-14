@@ -8,6 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace DeltaShell.Plugins.DelftModels.RTCShapes.Properties {
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
@@ -24,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Properties {
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
-        
+        [ExcludeFromCodeCoverage]
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Resources() {
         }
@@ -47,6 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Properties {
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
         internal static global::System.Globalization.CultureInfo Culture {
             get {

@@ -8,6 +8,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
@@ -161,6 +162,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Assert.IsNotNull(layer); //asssert it got injected               
                 Assert.AreEqual(1, layer.CustomRenderers.Count);
                 Assert.AreEqual(typeof(EnclosureRenderer), layer.CustomRenderers[0].GetType());
+            }
+        }
+
+        [Test]
+        public void CheckFMBridgePillarLayerIsCreated()
+        {
+            var model = new WaterFlowFMModel();
+
+            using (var gui = new DeltaShellGui())
+            {
+                var app = gui.Application;
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+
+                var networkEditorGuiPlugin = new NetworkEditorGuiPlugin();
+                gui.Plugins.Add(networkEditorGuiPlugin);
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+
+                gui.Run();
+
+                var project = app.Project;
+                project.RootFolder.Add(model);
+
+                //Create a new layer
+                var result = networkEditorGuiPlugin.MapLayerProvider.CanCreateLayerFor(model.Area.BridgePillars, model.Area);
+                Assert.IsTrue(result);
+                Assert.IsNotNull(model.Area);
+                var layer = networkEditorGuiPlugin.MapLayerProvider.CreateLayer(model.Area.BridgePillars, model.Area);
+
+                Assert.IsNotNull(layer); //assert it got injected 
+                Assert.AreEqual(typeof(BridgePillar), layer.DataSource.FeatureType);
             }
         }
 

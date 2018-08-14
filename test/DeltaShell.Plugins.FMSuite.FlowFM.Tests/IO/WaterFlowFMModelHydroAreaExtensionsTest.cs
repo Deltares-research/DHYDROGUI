@@ -51,6 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             CheckIfRemoveDuplicateFeaturesWorks<Pump2D>();
             CheckIfRemoveDuplicateFeaturesWorks<Weir2D>();
             CheckIfRemoveDuplicateFeaturesWorks<Gate2D>();
+            CheckIfRemoveDuplicateFeaturesWorks<BridgePillar>();
         }
 
         [Test]
@@ -65,6 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<Pump2D>();
             RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<Weir2D>();
             RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<Gate2D>();
+            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<BridgePillar>();
         }
 
         [Test]
@@ -88,6 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             CheckIfUpdateGroupNameGivesTheDesiredResult<FixedWeir>(groupName, expectedGroupName);
             CheckIfUpdateGroupNameGivesTheDesiredResult<GroupableFeature2DPoint>(groupName, expectedGroupName);
             CheckIfUpdateGroupNameGivesTheDesiredResult<ObservationCrossSection2D>(groupName, expectedGroupName);
+            CheckIfUpdateGroupNameGivesTheDesiredResult<BridgePillar>(groupName, expectedGroupName);
         }
 
         [Test]

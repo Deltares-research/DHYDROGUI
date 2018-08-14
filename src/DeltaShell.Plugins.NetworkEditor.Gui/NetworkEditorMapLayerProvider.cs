@@ -69,16 +69,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || data is IEventedList<GroupableFeature2D> //area2d features & boundaries
                    || data is IEventedList<LandBoundary2D>
                    || data is IEventedList<ThinDam2D>
-                   || data is IEventedList<ObservationCrossSection2D> 
+                   || data is IEventedList<ObservationCrossSection2D>
                    || (data is IEventedList<Feature2DPoint> && parentObject is HydroArea) //obs points
                    || (data is IEventedList<GroupableFeature2DPoint> && parentObject is HydroArea) //obs points
                    || (data is IEventedList<GroupableFeature2DPolygon> && parentObject is HydroArea) // dry area & enclosures
                    || (data is IEventedList<GroupablePointFeature> && parentObject is HydroArea) // dry points, 
                    || (data is IEventedList<FixedWeir> && parentObject is HydroArea) //fixed weirs
+                   || (data is IEventedList<Embankment> && parentObject is HydroArea)
+                   || (data is IEventedList<BridgePillar> && parentObject is HydroArea)
                    || (data is IEventedList<LeveeBreach> && parentObject is HydroArea) //levee breach
                    || (data is IEventedList<Gully> && parentObject is HydroArea) //gullies
-                   || (data is IEventedList<RoofArea> && parentObject is HydroArea) //roofareas
-                   || (data is IEventedList<Embankment> && parentObject is HydroArea);
+                   || (data is IEventedList<RoofArea> && parentObject is HydroArea); //roofareas;
         }
 
         public IEnumerable<object> ChildLayerObjects(object data)
@@ -150,6 +151,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     yield return area2D.Gullies;
                     yield return area2D.Embankments;
                     yield return area2D.Enclosures;
+                    yield return area2D.BridgePillars;
                 }
 
             }
@@ -630,6 +632,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     Style = AreaLayerStyles.FixedWeirStyle,
                     DataSource =
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.FixedWeirs, "FixedWeir", modelName,
+                            area2DParent.CoordinateSystem)
+                };
+            }
+
+            var bridgePillars = data as IEventedList<BridgePillar>;
+            if (bridgePillars != null && area2DParent != null && Equals(bridgePillars, area2DParent.BridgePillars))
+            {
+                return new VectorLayer(HydroArea.BridgePillarsPluralName)
+                {
+                    NameIsReadOnly = true,
+                    FeatureEditor = new Feature2DEditor(area2DParent),
+                    Style = AreaLayerStyles.BridgePillarStyle,
+                    DataSource =
+                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.BridgePillars, "BridgePillar", modelName,
                             area2DParent.CoordinateSystem)
                 };
             }

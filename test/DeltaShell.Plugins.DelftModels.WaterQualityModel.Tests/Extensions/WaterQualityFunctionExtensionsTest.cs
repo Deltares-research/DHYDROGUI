@@ -81,6 +81,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
+        public void Test_IsSegmentFile()
+        {
+            var function = WaterQualityFunctionFactory.CreateSegmentFunction("a", 1.0, "a", "a", "a", string.Empty);
+
+            Assert.IsFalse(function.IsConst());
+            Assert.IsFalse(function.IsTimeSeries());
+            Assert.IsFalse(function.IsNetworkCoverage());
+            Assert.IsFalse(function.IsUnstructuredGridCellCoverage());
+            Assert.IsFalse(function.IsFromHydroDynamics());
+            Assert.IsTrue(function.IsSegmentFile());
+        }
+
+        [Test]
         [Category(TestCategory.Performance)]
         public void ClearCoverageForTimeIndependent()
         {

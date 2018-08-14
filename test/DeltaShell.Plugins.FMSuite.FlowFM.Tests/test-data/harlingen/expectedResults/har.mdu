@@ -1,11 +1,11 @@
-# Generated on 01/04/2018 15:58:40
-# Deltares, FM-Suite DFlowFM Model Version 1.4.0.38999, DFlow FM Version 1.1.267.53713
+# Generated on 2018-08-10 15:25:53
+# Deltares, D-Flow FM user interface version 1.4.7.40404, D-Flow FM kernel version 1.2.0.53941M
 
 [model]
 Program           = D-Flow FM
-Version           = 1.1.267.53713
+Version           = 1.2.0.53941M
 MDUFormatVersion  = 1.02
-GuiVersion        = 1.4.0.38999
+GuiVersion        = 1.4.7.40404
 AutoStart         = 0                   # Autostart simulation after loading MDU or not (0=no, 1=autostart, 2=autostartstop).
 
 [geometry]
@@ -17,6 +17,7 @@ WaterLevIniFile   =                     # Initial water levels sample file *.xyz
 LandBoundaryFile  = Harlingen_haven.ldb # Only for plotting
 ThinDamFile       = thindam_thd.pli     # *_thd.pli, Polyline(s) for tracing thin dams.
 FixedWeirFile     = fixedweir_fxw.pli   # *._fxw.pli, Polyline(s) x,y,z, z = fixed weir top levels
+PillarFile        =
 StructureFile     =
 VertplizFile      =
 ProflocFile       =                     # *_proflocation.xyz)    x,y,z, z = profile refnumber
@@ -157,7 +158,7 @@ RestartDateTime   = 20080109            # Restart time (YYYYMMDDHHMMSS)
 
 [external forcing]
 ExtForceFile      = 001.ext             # *.ext
-ExtForceFileNew   =
+ExtForceFileNew   = 001_bnd.ext
 
 [trachytopes]
 TrtRou            = N

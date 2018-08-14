@@ -9,8 +9,17 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Core;
+using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
-
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
+using DeltaShell.Plugins.NetCDF;
+using DeltaShell.Plugins.NetworkEditor;
+using DeltaShell.Plugins.Scripting;
+using DeltaShell.Plugins.SharpMapGis;
+using DeltaShell.Plugins.Toolbox;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -59,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
                 FileUtils.DeleteIfExists(path);
             }
         }
-        
+
         [Test]
         public void CreateNewTableTest()
         {
@@ -69,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
 
             try
             {
-                var manager = new DataTableManager { FolderPath = path };
+                var manager = new DataTableManager {FolderPath = path};
 
                 // call
                 manager.CreateNewDataTable("A", "Table contents", "B.usefors", "Usefor contents");
@@ -96,40 +105,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
                 Assert.AreEqual("Table contents", File.ReadAllText(dataTableFilePath));
 
                 var useforFilePath = Path.Combine(path, "B.usefors");
-                Assert.IsTrue(File.Exists(useforFilePath));
+                Assert.IsFalse(File.Exists(useforFilePath));
                 Assert.AreEqual("Usefor contents", File.ReadAllText(useforFilePath));
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(path);
-            }
-        }
-
-        [Test]
-        public void CreateNewDataTable_DataTableAlreadyExists_ThrowArgumentException()
-        {
-            // setup
-            var path = TestHelper.GetCurrentMethodName();
-            FileUtils.DeleteIfExists(path);
-            Directory.CreateDirectory(path);
-
-            try
-            {
-                var manager = new DataTableManager { FolderPath = path };
-
-                manager.CreateNewDataTable("A", "1", "B.usefors", "2");
-
-                // call
-                TestDelegate call = () => manager.CreateNewDataTable("A", "3", "C.usefors", "4");
-
-                // assert
-                var exception = Assert.Throws<ArgumentException>(call);
-                var fullFilePath = Path.GetFullPath(manager.DataTables.First().DataFile.Path);
-                var expectedMessage = string.Format("A datatable named 'A' already exists within the manager at path: {0}",
-                    fullFilePath);
-                Assert.AreEqual(expectedMessage, exception.Message);
-
-                Assert.IsFalse(File.Exists(Path.Combine(Path.GetDirectoryName(fullFilePath), "C.usefors")));
             }
             finally
             {
@@ -147,7 +124,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
 
             try
             {
-                var manager = new DataTableManager { FolderPath = path };
+                var manager = new DataTableManager {FolderPath = path};
 
                 manager.CreateNewDataTable("A", "1", "B.usefors", "2");
 
@@ -155,41 +132,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
                 manager.CreateNewDataTable("A", "3", "C.usefors", "4", true);
 
                 // assert
-                
+
                 var fullFilePath = Path.GetFullPath(manager.DataTables.First().DataFile.Path);
-                Assert.IsTrue(File.Exists(Path.Combine(Path.GetDirectoryName(fullFilePath), "C.usefors")));
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(path);
-            }
-        }
-
-        [Test]
-        public void CreateNewDataTable_SubstanceUseforFileAlreadyExists_ThrowArgumentException()
-        {
-            // setup
-            var path = TestHelper.GetCurrentMethodName();
-            FileUtils.DeleteIfExists(path);
-            Directory.CreateDirectory(path);
-
-            try
-            {
-                var manager = new DataTableManager { FolderPath = path };
-
-                manager.CreateNewDataTable("A", "1", "B.usefors", "2");
-
-                // call
-                TestDelegate call = () => manager.CreateNewDataTable("B", "3", "B.usefors", "4");
-
-                // assert
-                var exception = Assert.Throws<ArgumentException>(call);
-                var fullFilePath = Path.GetFullPath(manager.DataTables.First().SubstanceUseforFile.Path);
-                var expectedMessage = string.Format("The substance usefor file 'B.usefors' already exists within the manager at path: {0}",
-                    fullFilePath);
-                Assert.AreEqual(expectedMessage, exception.Message);
-
-                Assert.IsFalse(File.Exists(Path.Combine(Path.GetDirectoryName(fullFilePath), "B.tbl")));
+                Assert.IsFalse(File.Exists(Path.Combine(Path.GetDirectoryName(fullFilePath), "C.usefors")));
             }
             finally
             {
@@ -208,7 +153,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
 
             // assert
             var exception = Assert.Throws<InvalidOperationException>(call);
-            Assert.AreEqual("Requires FolderPath to be set to a valid filepath before calling CreateNewDataTable.", exception.Message);
+            Assert.AreEqual("Requires FolderPath to be set to a valid filepath before calling CreateNewDataTable.",
+                exception.Message);
         }
 
         [Test]
@@ -220,19 +166,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
 
             try
             {
-                var manager = new DataTableManager { FolderPath = path };
+                var manager = new DataTableManager {FolderPath = path};
                 manager.CreateNewDataTable("A", "Table contents", "B.usefors", "Usefor contents");
 
-                Assert.IsTrue(Directory.Exists(path), "CreateNewDataTable should create folder if it doesn't exist yet.");
+                Assert.IsTrue(Directory.Exists(path),
+                    "CreateNewDataTable should create folder if it doesn't exist yet.");
 
                 var dataTableFilePath = Path.Combine(path, "A.tbl");
                 Assert.IsTrue(File.Exists(dataTableFilePath));
 
                 var useforFilePath = Path.Combine(path, "B.usefors");
-                Assert.IsTrue(File.Exists(useforFilePath));
+                Assert.IsFalse(File.Exists(useforFilePath));
 
                 // call
-                var list = (IList<DataTable>)manager.DataTables;
+                var list = (IList<DataTable>) manager.DataTables;
                 list.Remove(list[0]);
 
                 // assert
@@ -264,21 +211,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
             mocks.ReplayAll();
 
             var dataTable1 = new DataTable
-                {
-                    Name = "Test dataset",
-                    IsEnabled = true,
-                    DataFile = dataFile1,
-                    SubstanceUseforFile = substanceUseforFile1
-                };
+            {
+                Name = "Test dataset",
+                IsEnabled = true,
+                DataFile = dataFile1,
+                SubstanceUseforFile = substanceUseforFile1
+            };
             var dataTable2 = new DataTable
-                {
-                    Name = "Test dataset2",
-                    IsEnabled = false,
-                    DataFile = dataFile2,
-                    SubstanceUseforFile = substanceUseforFile2
-                };
+            {
+                Name = "Test dataset2",
+                IsEnabled = false,
+                DataFile = dataFile2,
+                SubstanceUseforFile = substanceUseforFile2
+            };
 
-            var dataTables = new EventedList<DataTable> { dataTable1, dataTable2};
+            var dataTables = new EventedList<DataTable> {dataTable1, dataTable2};
 
             TypeUtils.SetField(dataTableManager, "dataTables", dataTables);
 
@@ -303,7 +250,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
 
             try
             {
-                var dataTableManager = new DataTableManager { FolderPath = path };
+                var dataTableManager = new DataTableManager {FolderPath = path};
 
                 dataTableManager.CreateNewDataTable("A", "B", "C.d", "E");
                 dataTableManager.CreateNewDataTable("F", "G", "H.i", "J");
@@ -334,13 +281,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
                 FileUtils.DeleteIfExists(path);
             }
         }
-        
+
         [Test]
         public void MigrateTo_NoFolderSet_DoNotCreateFolderAtTargetDestination()
         {
             // setup
             var manager = new DataTableManager();
-            Assert.IsNull(manager.FolderPath,"Test precondition: FolderPath should not be set.");
+            Assert.IsNull(manager.FolderPath, "Test precondition: FolderPath should not be set.");
 
             var path = Path.Combine(Directory.GetCurrentDirectory(), "test");
             FileUtils.DeleteIfExists(path);
@@ -432,7 +379,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
                 Assert.IsTrue(dataTables[0].DataFile.IsOpen);
 
                 Assert.IsTrue(File.Exists(dataTables[0].SubstanceUseforFile.Path));
-                Assert.AreEqual(path, Path.GetDirectoryName(dataTables[0].SubstanceUseforFile.Path));
                 Assert.AreEqual(useforsContents, File.ReadAllText(dataTables[0].SubstanceUseforFile.Path));
                 Assert.AreEqual(useforsContents, dataTables[0].SubstanceUseforFile.Content);
                 Assert.IsTrue(dataTables[0].SubstanceUseforFile.IsOpen);
@@ -452,7 +398,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
 
             try
             {
-                var manager = new DataTableManager { FolderPath = path };
+                var manager = new DataTableManager {FolderPath = path};
                 manager.CreateNewDataTable("A", "Table contents", "B.usefors", "Usefor contents");
                 manager.CreateNewDataTable("C", "More table contents", "D.usefors", "More usefor contents");
 
@@ -469,6 +415,135 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
             finally
             {
                 FileUtils.DeleteIfExists(path);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void Test_CreateNewDataTable_WithSameName_Twice_DataRow_Is_StillCreated_And_WarningMessage_IsThrown()
+        {
+            const string bacteriaCopy = "bacteria(1)";
+
+            using (var app = new DeltaShellApplication())
+            {
+                var waqPlugin = new WaterQualityModelApplicationPlugin();
+
+                app.Plugins.Add(waqPlugin);
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetCdfApplicationPlugin());
+                app.Plugins.Add(new ScriptingApplicationPlugin());
+                app.Plugins.Add(new ToolboxApplicationPlugin());
+
+                app.Run();
+
+                // Initialize Project by saving it.
+                var tempDirectory = FileUtils.CreateTempDirectory();
+                app.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
+
+                //Initialize WAQ Model and add it to the project.
+                var model = new WaterQualityModel();
+                app.Project.RootFolder.Items.Add(model);
+
+                app.SaveProject();
+                
+                //Import hyd file
+                var hydPath =
+                    TestHelper.GetTestFilePath(
+                        @"WaterQualityDataFiles\ImportHydFile\westernscheldt01.hyd");
+                var hydImporter = new HydFileImporter();
+                var importedItem = hydImporter.ImportItem(hydPath, model) as WaterQualityModel;
+                Assert.IsNotNull(importedItem);
+
+                //import CSV file
+                var csvPath = TestHelper.GetTestFilePath(
+                    @"WaterQualityDataFiles\ImportHydFile\bacteria.csv");
+                var csvImporter = new DataTableImporter();
+                var dataTableManager = new DataTableManager {FolderPath = tempDirectory};
+
+                var csvFile = csvImporter.ImportItem(csvPath, dataTableManager);
+                Assert.IsNotNull(csvFile);
+
+                //Assert rowname now is bacteria1
+                Assert.AreEqual("bacteria", dataTableManager.DataTables.Select(table => table.Name).Last());
+
+                //Import CSV file again and assert that only one warning message is thrown
+                TestHelper.AssertLogMessageIsGenerated(() => csvImporter.ImportItem(csvPath, dataTableManager), string.Format(
+                    Resources.DataTableManager_WriteTableContentsToNewTextDocumentFromFile_File___0___already_exists_within_the_database__The_file_that_is_being_imported_will_be_renamed_to___1____Note_that_your_results_may_be_affected_by_the_new_import,
+                    "bacteria.tbl", bacteriaCopy));
+                
+                //Assert rowname has been incremented by one and is now bacteria2
+                Assert.AreEqual(bacteriaCopy, dataTableManager.DataTables.Select(table => table.Name).Last());
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void Test_CreateNewDataTable_ImportDifferentFile_ThenImportFirstFileAgain_DataRow_Is_StillCreated_And_WarningMessage_IsThrown()
+        {
+            const string bacteriaCopy = "bacteria(1)";
+
+            using (var app = new DeltaShellApplication())
+            {
+                var waqPlugin = new WaterQualityModelApplicationPlugin();
+
+                app.Plugins.Add(waqPlugin);
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetCdfApplicationPlugin());
+                app.Plugins.Add(new ScriptingApplicationPlugin());
+                app.Plugins.Add(new ToolboxApplicationPlugin());
+
+                app.Run();
+
+                // Initialize Project by saving it.
+                var tempDirectory = FileUtils.CreateTempDirectory();
+                app.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
+
+                //Initialize WAQ Model and add it to the project.
+                var model = new WaterQualityModel();
+                app.Project.RootFolder.Items.Add(model);
+
+                app.SaveProject();
+
+                //Import hyd file
+                var hydPath =
+                    TestHelper.GetTestFilePath(
+                        @"WaterQualityDataFiles\ImportHydFile\westernscheldt01.hyd");
+                var hydImporter = new HydFileImporter();
+                var importedItem = hydImporter.ImportItem(hydPath, model) as WaterQualityModel;
+                Assert.IsNotNull(importedItem);
+
+                //import CSV file
+                var csvPath = TestHelper.GetTestFilePath(
+                    @"WaterQualityDataFiles\ImportHydFile\bacteria.csv");
+                var csvImporter = new DataTableImporter();
+                var dataTableManager = new DataTableManager { FolderPath = tempDirectory };
+
+                var csvFile = csvImporter.ImportItem(csvPath, dataTableManager);
+                Assert.IsNotNull(csvFile);
+
+                //Assert rowname now is bacteria
+                Assert.AreEqual("bacteria", dataTableManager.DataTables.Select(table => table.Name).Last());
+
+                //Import a different csv file
+                var diffCsvPath = TestHelper.GetTestFilePath(
+                    @"WaterQualityDataFiles\ImportHydFile\bacteria2.csv");
+
+                var diffCsvFile = csvImporter.ImportItem(diffCsvPath, dataTableManager);
+                Assert.IsNotNull(diffCsvFile);
+
+                //Import CSV file again and assert that only one warning message is thrown
+                TestHelper.AssertLogMessageIsGenerated(() => csvImporter.ImportItem(csvPath, dataTableManager), string.Format(
+                    Resources.DataTableManager_WriteTableContentsToNewTextDocumentFromFile_File___0___already_exists_within_the_database__The_file_that_is_being_imported_will_be_renamed_to___1____Note_that_your_results_may_be_affected_by_the_new_import,
+                    "bacteria.tbl", bacteriaCopy));
+
+                //Assert rowname has been incremented by one and is now bacteria2
+                Assert.AreEqual(bacteriaCopy, dataTableManager.DataTables.Select(table => table.Name).Last());
             }
         }
     }

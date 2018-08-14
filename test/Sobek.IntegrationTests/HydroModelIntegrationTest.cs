@@ -17,6 +17,7 @@ using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.UndoRedo;
+using DeltaShell.Core;
 using DeltaShell.Core.Services;
 using DeltaShell.Dimr;
 using DeltaShell.Gui;
@@ -81,6 +82,103 @@ namespace Sobek.IntegrationTests
             factory.AddPlugin(new NetCdfApplicationPlugin());
 
             TestHelper.SetDeltaresLicenseToEnvironmentVariable();
+        }
+
+        [Test]
+        [Category(TestCategory.Slow)]
+        [Category(TestCategory.Integration)]
+        public void TestDataItemsForFlow1DModelsWithDeprecatedOutputParametersAreRemoved_DischargeAtLaterals()
+        {
+            // SOBEK3-115: Output for Laterals has now changed from 'Discharge' to 'Actual Discharge', 'Defined Discharge', and 'Lateral Difference'
+            var testDataPath = TestHelper.GetTestFilePath(@"BackwardsCompatibility");
+            var testDir = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(testDataPath, testDir);
+
+            try
+            {
+                var testProjPath = Path.Combine(testDir, "OldLateralDischargeOutput_WithRtc.dsproj");
+                Assert.True(File.Exists(testProjPath));
+
+                using (var app = new DeltaShellApplication())
+                {
+                    app.Plugins.Add(new CommonToolsApplicationPlugin());
+                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                    app.Plugins.Add(new FlowFMApplicationPlugin());
+                    app.Plugins.Add(new HydroModelApplicationPlugin());
+                    app.Plugins.Add(new NetCdfApplicationPlugin());
+                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                    app.Plugins.Add(new RainfallRunoffApplicationPlugin());
+                    app.Plugins.Add(new RealTimeControlApplicationPlugin());
+                    app.Plugins.Add(new SobekImportApplicationPlugin());
+                    app.Plugins.Add(new ScriptingApplicationPlugin());
+                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                    app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
+                    app.Plugins.Add(new WaterQualityModelApplicationPlugin());
+
+                    app.Run();
+
+                    app.OpenProject(testProjPath);
+
+                    var flow1DModel = app.Project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowModel1D>().FirstOrDefault();
+                    Assert.NotNull(flow1DModel);
+
+                    const string previousDischargeAtLateralDataItemTag = "Discharge (l)";
+                    Assert.True(flow1DModel.DataItems.All(di => di.Tag != previousDischargeAtLateralDataItemTag));
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.Slow)]
+        [Category(TestCategory.Integration)]
+        public void TestControlGroupsWithLocationsAtDeprecatedOutputParametersAreReset_DischargeAtLaterals()
+        {
+            // SOBEK3-115: Existing projects can have ControlGroups with locations at the deprecated output parameter 'Discharge (l)'
+            var testDataPath = TestHelper.GetTestFilePath(@"BackwardsCompatibility");
+            var testDir = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(testDataPath, testDir);
+
+            try
+            {
+                var testProjPath = Path.Combine(testDir, "OldLateralDischargeOutput_WithRtc.dsproj");
+                Assert.True(File.Exists(testProjPath));
+
+                using (var app = new DeltaShellApplication())
+                {
+                    app.Plugins.Add(new CommonToolsApplicationPlugin());
+                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                    app.Plugins.Add(new FlowFMApplicationPlugin());
+                    app.Plugins.Add(new HydroModelApplicationPlugin());
+                    app.Plugins.Add(new NetCdfApplicationPlugin());
+                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                    app.Plugins.Add(new RainfallRunoffApplicationPlugin());
+                    app.Plugins.Add(new RealTimeControlApplicationPlugin());
+                    app.Plugins.Add(new SobekImportApplicationPlugin());
+                    app.Plugins.Add(new ScriptingApplicationPlugin());
+                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                    app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
+                    app.Plugins.Add(new WaterQualityModelApplicationPlugin());
+
+                    app.Run();
+                    
+                    app.OpenProject(testProjPath);
+
+                    var rtcModel = app.Project.RootFolder.GetAllModelsRecursive().OfType<RealTimeControlModel>().FirstOrDefault();
+                    Assert.NotNull(rtcModel);
+
+                    const string previousDischargeAtLateralDataItemTag = "Discharge (l)";
+                    Assert.True(rtcModel.ControlGroups.All(cg => cg.Inputs.All(i => i.ParameterName != previousDischargeAtLateralDataItemTag)));
+                    Assert.True(rtcModel.ControlGroups.All(cg => cg.Outputs.All(o => o.ParameterName != previousDischargeAtLateralDataItemTag)));
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
         }
 
         [Test]

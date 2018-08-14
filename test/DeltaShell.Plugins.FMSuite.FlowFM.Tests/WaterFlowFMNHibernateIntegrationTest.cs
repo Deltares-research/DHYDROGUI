@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Core;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
@@ -10,7 +13,9 @@ using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation;
 using DeltaShell.Plugins.FMSuite.Wave;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
@@ -33,6 +38,184 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     [TestFixture]
     public class WaterFlowFMNHibernateIntegrationTest
     {
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void Save_FlowFM_Model_With_BridgePillars_Pillars_Are_Exported()
+        {
+            using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+            {
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Run();
+
+                var bridgepillarsDsproj = "bridgePillars.dsproj";
+                app.SaveProjectAs(bridgepillarsDsproj); // save to initialize file repository..
+
+                var model = new WaterFlowFMModel();
+                app.Project.RootFolder.Add(model);
+
+                var pillar = new BridgePillar()
+                {
+                    Name = "BridgePillar2Test",
+                    Geometry =
+                        new LineString(new[]
+                        {
+                            new Coordinate(20.0, 60.0, 0),
+                            new Coordinate(140.0, 8.0, 1.0),
+                            new Coordinate(180.0, 4.0, 2.0),
+                            new Coordinate(260.0, 0.0, 3.0)
+                        }),
+                };
+
+                model.Area.BridgePillars.Add(pillar);
+
+                /* Set data model */
+                var modelFeatureCoordinateDatas = model.BridgePillarsDataModel;
+                modelFeatureCoordinateDatas.Clear();
+                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar>() { Feature = pillar };
+                modelFeatureCoordinateData.UpdateDataColumns();
+                //Diameters
+                modelFeatureCoordinateData.DataColumns[0].ValueList = new List<double> { 1.0, 2.5, 5.0, 10.0 };
+                //DragCoefficient
+                modelFeatureCoordinateData.DataColumns[1].ValueList = new List<double> { 10.0, 5.0, 2.5, 1.0 };
+
+                modelFeatureCoordinateDatas.Add(modelFeatureCoordinateData);
+                MduFile.SetBridgePillarAttributes(model.Area.BridgePillars, modelFeatureCoordinateDatas);
+                /* Done only for testing purposes. 
+                 * Please do not attempt to do this without the supervision of another adult. */
+                TypeUtils.SetPrivatePropertyValue(model, "BridgePillarsDataModel", modelFeatureCoordinateDatas);
+
+                app.SaveProjectAs(bridgepillarsDsproj);
+                Assert.IsNotNull(model.MduFile.Path);
+
+                var pillarFile = model.MduFile.Path.Replace(".mdu", ".pliz");
+                Assert.IsTrue(File.Exists(pillarFile));
+                 /*Check file contents*/
+                var readLines = File.ReadAllLines(pillarFile);
+                var expectedLines = new List<string>
+                {
+                    $"{pillar.Name}",
+                    "    4    4",
+                    "2.000000000000000E+001  6.000000000000000E+001  1.000000000000000E+000  1.000000000000000E+001",
+                    "1.400000000000000E+002  8.000000000000000E+000  2.500000000000000E+000  5.000000000000000E+000",
+                    "1.800000000000000E+002  4.000000000000000E+000  5.000000000000000E+000  2.500000000000000E+000",
+                    "2.600000000000000E+002  0.000000000000000E+000  1.000000000000000E+001  1.000000000000000E+000"
+                };
+
+                var idx = 0;
+                foreach (var textLine in readLines)
+                {
+                    var expectedLine = expectedLines[idx];
+                    Assert.AreEqual(expectedLine, textLine);
+                    idx++;
+                }
+            }
+        }
+
+        [Test]
+        public void Load_FlowFM_Model_With_BridgePillars_Pillar_Is_Imported()
+        {
+            using (var app = new DeltaShellApplication())
+            {
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Run();
+
+                var path = TestHelper.GetTestFilePath(@"ImportProjectWithBridgePillars\ProjectWithBridgePillars.dsproj");
+                path = TestHelper.CreateLocalCopy(path);
+                Assert.IsTrue(File.Exists(path));
+                app.OpenProject(path);
+
+                var loadedModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+
+                Assert.IsNotNull(loadedModel);
+                Assert.IsTrue(loadedModel.Area.BridgePillars.Any());
+                Assert.IsNotNull(loadedModel.BridgePillarsDataModel);
+                Assert.IsTrue(loadedModel.BridgePillarsDataModel.Any());
+                Assert.IsTrue(loadedModel.BridgePillarsDataModel[0].DataColumns[0].ValueList[0].Equals(-599.0));
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void SaveAndLoad_FlowFM_Model_With_BridgePillars_Pillars()
+        {
+            using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+            {
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Run();
+
+                var bridgepillarsDsproj = "bridgePillars.dsproj";
+                app.SaveProjectAs(bridgepillarsDsproj); // save to initialize file repository..
+                //create model and set the pillar
+                var model = new WaterFlowFMModel();
+                app.Project.RootFolder.Add(model);
+
+                var pillar = new BridgePillar()
+                {
+                    Name = "BridgePillar2Test",
+                    Geometry =
+                        new LineString(new[]
+                        {
+                            new Coordinate(20.0, 60.0, 0),
+                            new Coordinate(140.0, 8.0, 1.0),
+                            new Coordinate(180.0, 4.0, 2.0),
+                            new Coordinate(260.0, 0.0, 3.0)
+                        }),
+                };
+                
+                /* Set data model */
+                var modelFeatureCoordinateDatas = model.BridgePillarsDataModel;
+                modelFeatureCoordinateDatas.Clear();
+                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar>() { Feature = pillar };
+                modelFeatureCoordinateData.UpdateDataColumns();
+                //Diameters
+                var diameterValues = new List<double> { 1.0, 2.5, 5.0, 10.0 };
+                modelFeatureCoordinateData.DataColumns[0].ValueList = diameterValues;
+                //DragCoefficient
+                var dragCoeffValues = new List<double> { 10.0, 5.0, 2.5, 1.0 };
+                modelFeatureCoordinateData.DataColumns[1].ValueList = dragCoeffValues;
+
+                modelFeatureCoordinateDatas.Add(modelFeatureCoordinateData);
+                MduFile.SetBridgePillarAttributes(model.Area.BridgePillars, modelFeatureCoordinateDatas);
+
+                model.Area.BridgePillars.Add(pillar);
+
+                /* Done only for testing purposes. 
+                 * Please do not attempt to do this without the supervision of another adult. */
+                TypeUtils.SetPrivatePropertyValue(model, "BridgePillarsDataModel", modelFeatureCoordinateDatas);
+
+                //Check the Save & Loads works as expected.
+                app.SaveProjectAs(bridgepillarsDsproj);
+                app.CloseProject();
+                app.OpenProject(bridgepillarsDsproj);
+
+                var loadedModel = app.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
+                Assert.IsNotNull(loadedModel);
+                Assert.IsNotNull(loadedModel.Area);
+                Assert.IsNotNull(loadedModel.Area.BridgePillars);
+                Assert.IsTrue(loadedModel.Area.BridgePillars.Any(bp => bp.Name.Equals(pillar.Name)));
+                Assert.IsTrue(loadedModel.BridgePillarsDataModel.Any());
+                /* Check contents of the Bridge Pillar */
+                var loadedBpDataModel = loadedModel.BridgePillarsDataModel[0];
+                Assert.AreEqual(new List<double> { 1.0, 2.5, 5.0, 10.0 }, loadedBpDataModel.DataColumns[0].ValueList);
+                Assert.AreEqual(new List<double> { 10.0, 5.0, 2.5, 1.0 }, loadedBpDataModel.DataColumns[1].ValueList);
+            }
+        }
+
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]

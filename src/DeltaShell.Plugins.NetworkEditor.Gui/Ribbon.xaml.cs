@@ -80,6 +80,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addRoofAreaCommand = new MapToolCommand(HydroRegionEditorMapTool.RoofAreaToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addGullyCommand = new MapToolCommand(HydroRegionEditorMapTool.GullyToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addEnclosure2dCommand = new MapToolCommand(HydroRegionEditorMapTool.EnclosureToolName) { LayerType = typeof(AreaLayer) };
+        private ICommand addBridgePillarCommand = new MapToolCommand(HydroRegionEditorMapTool.BridgePillarToolName) {LayerType = typeof(AreaLayer)};
 
         public Ribbon()
         {
@@ -140,6 +141,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return openCaseAnalysisCommand;
                 yield return addNewEmbankmentCommand;
                 yield return addEnclosure2dCommand;
+                yield return addBridgePillarCommand;
             }
         }
 
@@ -214,6 +216,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewRoofArea.SetState(addRoofAreaCommand, showArea2DTools);
             ButtonAddNewGully.SetState(addGullyCommand, showArea2DTools);
             ButtonAddNewEnclosure2D.SetState(addEnclosure2dCommand, showArea2DTools);
+            ButtonAddBridgePillar.SetState(addBridgePillarCommand, showArea2DTools);
 
             ButtonAddNewLink.SetState(addNewLinkCommand, regions.Count > 0);
             
@@ -609,6 +612,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewEnclosure_Click(object sender, RoutedEventArgs e)
         {
             addEnclosure2dCommand.Execute();
+            ValidateItems();
+        }
+
+        private void ButtonAddBridgePillar_Click(object sender, RoutedEventArgs e)
+        {
+            addBridgePillarCommand.Execute();
             ValidateItems();
         }
 

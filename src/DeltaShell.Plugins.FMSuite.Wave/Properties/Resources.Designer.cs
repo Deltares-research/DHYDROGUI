@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -141,6 +141,42 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The time step should be a divisor of the time interval..
+        /// </summary>
+        public static string WavePropertiesValidator_ValidateDivisor {
+            get {
+                return ResourceManager.GetString("WavePropertiesValidator_ValidateDivisor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The time step can not be greater than the time interval..
+        /// </summary>
+        public static string WavePropertiesValidator_ValidateThat_TimeStep_Is_Not_Bigger_Than_TimeScale {
+            get {
+                return ResourceManager.GetString("WavePropertiesValidator_ValidateThat_TimeStep_Is_Not_Bigger_Than_TimeScale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The time step should be a whole number..
+        /// </summary>
+        public static string WavePropertiesValidator_ValidateTimeStep {
+            get {
+                return ResourceManager.GetString("WavePropertiesValidator_ValidateTimeStep", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The time interval should be a whole number..
+        /// </summary>
+        public static string WavePropertiesValidator_ValidateTScale {
+            get {
+                return ResourceManager.GetString("WavePropertiesValidator_ValidateTScale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Domain: {0}.
         /// </summary>
         public static string WavePropertiesValidator_ValidateWindSpeedAndQuadruple_Domain___0_ {
@@ -150,7 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to WindSpeed is zero whereas quadruple is true..
+        ///   Looks up a localized string similar to Wind speed should be greater than zero when the option of quadruplets is activated..
         /// </summary>
         public static string WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_ {
             get {

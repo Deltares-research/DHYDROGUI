@@ -33,6 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
     [Extension(typeof(IPlugin))]
     public class WaveGuiPlugin : GuiPlugin
     {
+        private WaveModelMapLayerProvider mapLayerProvider;
 
         public override string Name
         {
@@ -388,7 +389,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
         public override IMapLayerProvider MapLayerProvider
         {
-            get { return new WaveModelMapLayerProvider(); }
+            get
+            {
+                return mapLayerProvider ?? (mapLayerProvider = new WaveModelMapLayerProvider
+                {
+                    GetWaveModels = () => Gui?.Application?.GetAllModelsInProject().OfType<WaveModel>() ?? Enumerable.Empty<WaveModel>()
+                });
+            }
         }
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()

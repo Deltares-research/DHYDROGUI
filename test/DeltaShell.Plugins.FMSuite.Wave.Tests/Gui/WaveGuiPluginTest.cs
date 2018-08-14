@@ -1,17 +1,23 @@
-﻿using System;
-using DelftTools.Shell.Core.Workflow;
-using NUnit.Framework;
-using Rhino.Mocks;
-using System.Reflection;
-using DelftTools.Controls;
+﻿using DelftTools.Controls;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
+using DelftTools.TestUtils;
+using DeltaShell.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
+using NUnit.Framework;
+using Rhino.Mocks;
 using SharpMap;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
 {
@@ -94,6 +100,94 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             }
 
             fieldInfo.SetValue(obj, value);
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Integration)]
+        public void DoubleClickingOutputItemProjectShouldEnableMapLayer()
+        {
+            var mdwPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"outputMapView\Waves.mdw"));
+
+            using (var gui = new DeltaShellGui())
+            {
+                var guiPlugin = new WaveGuiPlugin();
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());               
+                gui.Plugins.Add(guiPlugin);
+
+                gui.Run();
+
+                // reimport model 
+                for (int i = 0; i < 2; i++)
+                {
+                    var model = new WaveModel(mdwPath);
+
+                    gui.Application.Project.RootFolder.Add(model);
+
+                    ActivityRunner.RunActivity(model);
+                    Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+
+                    //open mapview
+                    DoubleClickOutputItemAndAssertLayerIsOn(model, gui, guiPlugin, "hsign");
+
+                    // close all views:
+                    gui.DocumentViews.Clear();
+                    Assert.AreEqual(0, gui.DocumentViews.Count);
+
+                    gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView));
+
+                    // try with already open view:
+                    DoubleClickOutputItemAndAssertLayerIsOn(model, gui, guiPlugin, "depth");
+
+                    gui.DocumentViews.Clear();
+
+                    gui.CommandHandler.DeleteProjectItem(model);
+                }
+            }
+        }
+
+        private static void DoubleClickOutputItemAndAssertLayerIsOn(WaveModel model, IGui gui, GuiPlugin guiPlugin, string itemName)
+        {
+            var wavmFileFunctionStoreNodePresenter = new WavmFileFunctionStoreNodePresenter(){GuiPlugin = guiPlugin};
+            var wavmFileFunctionStore = model.WavmFunctionStores.FirstOrDefault();
+            Assert.NotNull(wavmFileFunctionStore);
+
+            var outputItem =
+                wavmFileFunctionStoreNodePresenter.GetChildNodeObjects(wavmFileFunctionStore, null)
+                    .OfType<IDataItem>().FirstOrDefault(di => di.Name == itemName);
+            Assert.NotNull(outputItem);
+                        
+            //double click
+            gui.Selection = outputItem;
+            gui.CommandHandler.OpenViewForSelection(typeof(ProjectItemMapView));
+            Assert.AreEqual(1, gui.DocumentViews.Count);
+
+            var activeMapView = WaveGuiPlugin.ActiveMapView;
+            Assert.NotNull(activeMapView);
+
+            var visibleLayerNames = new List<string>
+            {
+                "Boundaries",
+                "Boundary Conditions",
+                "Boundary from sp2",
+                "Obstacles",
+                "Observation Points",
+                "Observation Cross-Sections",
+                "Grid (Grid_001)",
+                "Bathymetry (Outer)",
+                itemName
+            };
+
+            var allLayers = activeMapView.Map.GetAllLayers(false);
+
+            var coverageLayer = allLayers.FirstOrDefault(l => l.Name == itemName);
+            Assert.IsNotNull(coverageLayer);
+
+            var otherLayers = allLayers.Where(l => !visibleLayerNames.Contains(l.Name));
+            Assert.NotNull(otherLayers);
+
+            Assert.IsTrue(coverageLayer.Visible);
+            Assert.IsFalse(otherLayers.Any(l=>l.Visible));
         }
     }
 }

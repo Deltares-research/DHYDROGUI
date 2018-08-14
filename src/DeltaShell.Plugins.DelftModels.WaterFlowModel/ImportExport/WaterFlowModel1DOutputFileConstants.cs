@@ -65,13 +65,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             public const string StructureWaterLevelAtCrest = "structure_water_level_at_crest";
             public const string StructureWaterLevelDown = "structure_water_level_down";
             public const string StructureWaterLevelUp = "structure_water_level_up";
-            public const string PumpSuctionSide = "suction_side";
-            public const string PumpDeliverySide = "delivery_side";
+            public const string PumpSuctionSide = "suction_side_level";
+            public const string PumpDeliverySide = "delivery_side_level";
             public const string PumpHead = "pump_head";
-            public const string PumpStage = "pump_stage";
+            public const string PumpStage = "actual_pump_stage";
             public const string PumpReductionFactor = "reduction_factor";
             public const string PumpCapacity = "pump_capacity";
-            public const string PumpDischarge = "discharge";
+            public const string PumpDischarge = "pump_discharge";
             public const string WaterBalance2D1DIn = "water_balance_2d1d_in";
             public const string WaterBalance2D1DOut = "water_balance_2d1d_out";
             public const string WaterBalance2D1DTotal = "water_balance_2d1d_total";
@@ -85,7 +85,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             public const string WaterBalanceStorage = "water_balance_storage";
             public const string WaterBalanceVolume = "water_balance_volume";
             public const string WaterTemperature = "water_temperature";
-
+            public const string LateralActualDischarge = "actual_lateral_discharge";
+            public const string LateralDefinedDischarge = "defined_lateral_discharge";
+            public const string LateralDifference = "lateral_difference";
+            public const string LateralWaterLevel = "water_level_at_lateral";
             public const string EffectiveBackRad = "effective_background_radiation";
             public const string HeatlossForcedConv = "heatloss_forced_convection";
             public const string HeatlossForcedEvap = "heatloss_forced_evaporation";

@@ -87,6 +87,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public const string GullyToolName = "Gully tool";
         public const string EmbankmentToolName = "Embankment tool";
         public const string EnclosureToolName = "Enclosure tool";
+        public const string BridgePillarToolName = "Bridge pillar tool";
 
 
         private static readonly ILog log = LogManager.GetLogger(typeof (HydroRegionEditorMapTool));
@@ -312,6 +313,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             AddMapTool(new Feature2DLineTool(HydroArea.RoofAreaName, RoofAreaToolName, Resources.Roof));
             AddMapTool(new Feature2DPointTool(HydroArea.GullyName, GullyToolName, Resources.Gully));
             AddMapTool(new SingleFeature2DLineTool(HydroArea.EnclosureName, EnclosureToolName, Resources.enclosure) { CloseLine = true });
+            AddMapTool(new Feature2DLineTool(HydroArea.BridgePillarsPluralName, BridgePillarToolName, Resources.BridgeSmall));
 
             var addInterpolatedCrossSectionTool = new NewPointFeatureTool(FeatureTypeLayerFilter<CrossSection>, AddInterpolatedCrossSectionToolName) { Cursor = AddInterpolatedCrossSectionToolCursor };
             AddMapTool(addInterpolatedCrossSectionTool);

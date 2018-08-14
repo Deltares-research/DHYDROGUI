@@ -16,15 +16,6 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
                       "Signal for Rules.")]
     public class SignalShape : ShapeBase
     {
-        //public Color GradientStartColor { get; set; }
-        //public Color GradientEndColor { get; set; }
-
-        //public SignalShape()
-        //{
-        //    GradientStartColor = Color.LemonChiffon;
-        //    GradientEndColor = Color.White;
-        //}
-
         protected override void Initialize()
         {
             Rectangle = new RectangleF(0, 0, 60, 40);

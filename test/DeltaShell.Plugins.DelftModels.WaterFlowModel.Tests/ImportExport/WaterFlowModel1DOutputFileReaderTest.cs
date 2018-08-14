@@ -13,8 +13,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         [TestCase("gridpoints.nc", 27, "branch1_0.000", "branch2_150.000", 5,
                   "water_level", "Gridpoint water level", "m", "water_total_width", "Gridpoint water total width", "m")]
 
-        [TestCase("laterals.nc", 2, "LateralSource1", "LateralSource2", 2,
-                  "water_discharge", "Lateral Discharge", "m3/s", "water_level", "Lateral water level", "m3/s")]
+        [TestCase("laterals.nc", 2, "LateralSource1", "LateralSource2", 4,
+                  "actual_lateral_discharge", "Actual lateral discharge", "m3 s-1", "water_level_at_lateral", "Water level at lateral", "m")]
 
         [TestCase("observations.nc", 3, "observationPoint1", "observationPoint3", 4,
                   "water_level", "Observed water level", "m", "velocity", "Observed water velocity", "m/s")]
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         }
 
         [TestCase("gridpoints.nc", 0.1, 0.1, 0.1459562376, 0.1000000146)]
-        [TestCase("laterals.nc", 5.0, 3.0, 5.0, 3.0)]
+        [TestCase("laterals.nc", 0.0, 0.0, 0.0, 0.0)]
         [TestCase("observations.nc", 0.1, 0.1, 0.1459562376, 0.1459562376)]
         [TestCase("reachsegments.nc", 1.0, 0.1, 1.0000000733, 0.0995589744)]
 
@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
 
         
         [TestCase("gridpoints.nc", 0.1, 0.1000002364)]
-        [TestCase("laterals.nc", 5.0, 3.0)]
+        [TestCase("laterals.nc", 0.0, 0.0)]
         [TestCase("observations.nc", 0.1, 0.1459562376)]
         [TestCase("reachsegments.nc", 1.0, 0.0995589744)]
 

@@ -74,26 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         private List<IObservationPoint> observationPointsMappingToModelApi;
         private List<ILateralSource> lateralSourcesMappingToModelApi;
         private List<IRetention> retentionMappingToModelApi;
-
-
-        // Hidden engine parameters for pumps. One output parameter (in the GUI, and in the 1dmd) controls a number of data items / coverages.  
-        private readonly EngineParameter[] pumpEngineParameters = new[]
-                    {
-                        new EngineParameter(QuantityType.Discharge, ElementSet.Pumps, DataItemRole.Output,
-                            WaterFlowModelParameterNames.PumpDischarge, CreateUnit(WaterFlowModel1DDataSet.UnitIds.CubicMeterPerSecond)),
-                        new EngineParameter(QuantityType.PumpSuctionSide, ElementSet.Pumps, DataItemRole.Output,
-                            WaterFlowModelParameterNames.PumpSuctionSide,CreateUnit(WaterFlowModel1DDataSet.UnitIds.Meter)),
-                        new EngineParameter(QuantityType.PumpDeliverySide, ElementSet.Pumps, DataItemRole.Output,
-                            WaterFlowModelParameterNames.PumpDeliverySide,CreateUnit(WaterFlowModel1DDataSet.UnitIds.Meter)),
-                        new EngineParameter(QuantityType.PumpHead, ElementSet.Pumps, DataItemRole.Output,
-                            WaterFlowModelParameterNames.PumpHead,CreateUnit(WaterFlowModel1DDataSet.UnitIds.Meter)),
-                        new EngineParameter(QuantityType.PumpStage, ElementSet.Pumps, DataItemRole.Output,
-                            WaterFlowModelParameterNames.PumpStage,CreateUnit(WaterFlowModel1DDataSet.UnitIds.Meter)),
-                        new EngineParameter(QuantityType.PumpReductionFactor, ElementSet.Pumps, DataItemRole.Output,
-                            WaterFlowModelParameterNames.PumpReductionFactor,CreateUnit(WaterFlowModel1DDataSet.UnitIds.None)),
-                        new EngineParameter(QuantityType.PumpCapacity, ElementSet.Pumps, DataItemRole.Output,
-                            WaterFlowModelParameterNames.PumpCapacity,CreateUnit(WaterFlowModel1DDataSet.UnitIds.CubicMeterPerSecond)),
-                    };
+        private List<IPump> pumpMappingToModelApi;
         
         private bool useMorphology;
         private bool additionalMorphologyOutput;
@@ -1346,21 +1327,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 var isFiniteVolumeGrid = engineParameter.Name == WaterFlowModelParameterNames.FiniteVolumeGridType;
                 var expectedRole = isFiniteVolumeGrid ? DataItemRole.None : DataItemRole.Output;
 
-                // Another exception: PumpResults has one EngineParameter, but should have several data items (one for each output
-                // parameter. 
-                if (engineParameter.ElementSet == ElementSet.Pumps && engineParameter.QuantityType == QuantityType.PumpResults)
-                {
-                    foreach (var pumpEngineParameter in pumpEngineParameters)
-                    {
-                        pumpEngineParameter.AggregationOptions = engineParameter.AggregationOptions;
-                        AddOrRemoveOutputCoverages(pumpEngineParameter, expectedRole); 
-                    }
-                }
-                else
-                {
-                    AddOrRemoveOutputCoverages(engineParameter, expectedRole); 
-                }
-                
+                AddOrRemoveOutputCoverages(engineParameter, expectedRole); 
             }
 
             MarkOutputOutOfSync();
@@ -2182,11 +2149,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 }
                 else if (modelApiParameter.ElementSet == ElementSet.Pumps)
                 {
-                    foreach (var pumpEngineParameter in pumpEngineParameters)
-                    {
-                        var coverage = (IFeatureCoverage)GetDataItemValueByTag(pumpEngineParameter.Name);
-                        AddFeaturesToFeatureCoverage(coverage, Network.Pumps.ToList(), times);
-                    }
+                    var coverage = (IFeatureCoverage)GetDataItemValueByTag(modelApiParameter.Name);
+                    AddFeaturesToFeatureCoverage(coverage, pumpMappingToModelApi, times);                    
                 }
             }
         }
@@ -3639,6 +3603,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 case WaterFlowModel1DOutputFileConstants.FileNames.StructuresFile:
                     features = Network.Structures.Except(Network.CompositeBranchStructures.Where(cbs => cbs.Structures.Count < 2));
                     break;
+                case WaterFlowModel1DOutputFileConstants.FileNames.PumpsFile:
+                    features = Network.Pumps;
+                    break;
+                case WaterFlowModel1DOutputFileConstants.FileNames.RetentionsFile:
+                    features = Network.Retentions;
+                    break;
             }
 
             coverage.Clear();
@@ -3772,6 +3742,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 observationPointsMappingToModelApi = Network.ObservationPoints.ToList();
                 lateralSourcesMappingToModelApi = Network.LateralSources.ToList();
                 retentionMappingToModelApi = Network.Retentions.ToList();
+                pumpMappingToModelApi = Network.Pumps.ToList();
 
                 // Determine output times:
                 var gridPointOutputTimes1 = new List<DateTime>();

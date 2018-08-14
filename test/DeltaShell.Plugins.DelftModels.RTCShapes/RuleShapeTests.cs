@@ -9,10 +9,12 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
     public class RuleShapeTests
     {
         private GraphControl graphControl;
+        private RuleShape shape;
 
         [SetUp]
         public void SetUp()
         {
+            shape = new RuleShape();
             graphControl = new GraphControl();
             graphControl.AddLibrary(typeof(RuleShape).Module.FullyQualifiedName);
         }
@@ -32,6 +34,12 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
             var shapeColor = Color.WhiteSmoke;
             Assert.AreEqual(rectangle, ruleShape.Rectangle);
             Assert.AreEqual(shapeColor, ruleShape.ShapeColor);
+        }
+
+        [Test]
+        public void GetThumbNail()
+        {
+            Assert.That(shape.GetThumbnail(), Is.TypeOf(typeof(Bitmap)));
         }
     }
 }

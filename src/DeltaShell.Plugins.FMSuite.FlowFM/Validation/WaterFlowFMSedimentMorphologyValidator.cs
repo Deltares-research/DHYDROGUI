@@ -29,6 +29,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             if(!model.UseMorSed) return new ValidationReport("Sediment & Morphology", Enumerable.Empty<ValidationIssue>());
 
             var issues = new List<ValidationIssue>();
+
+            issues.AddRange(ValidateAtLeastOneSedimentFractionInModel(model));
+
             issues.AddRange(model.SedimentFractions.Select(sedimentFraction => ValidateSedimentName(sedimentFraction.Name)).Where(issue => issue != null));
 
             issues.AddRange(ValidateInitialSedimentThicknessOfSedimentFractionsInModel(model));
@@ -39,6 +42,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 string.Format(Resources.WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_________Morphology_is_beta_version_________0_You_are_using_morphology___sediment_in_this_model__Please_be_aware_this_feature_is_in_beta_, Environment.NewLine)));
             
             return new ValidationReport(Resources.WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_Morphology___Sediment_Beta_warning, issues);
+        }
+
+        /// <summary>
+        /// Validates if there is at least one Sediment Fraction in the model.
+        /// When Morphology is used in the model, one Sediment Fraction is required.
+        /// </summary>
+        /// <param name="model">The WaterFlowFM model.</param>
+        /// <returns></returns>
+        private static IEnumerable<ValidationIssue> ValidateAtLeastOneSedimentFractionInModel(WaterFlowFMModel model)
+        {
+            var issues = new List<ValidationIssue>();
+
+            if (model.SedimentFractions != null && model.SedimentFractions.Any()) return issues;
+
+            issues.Add(new ValidationIssue(WaterFlowFMModelDefinition.GetTabName(KnownProperties.SedFile, fmModel:model),
+                ValidationSeverity.Error,
+                Resources
+                    .WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology,
+                model));
+
+            return issues;
         }
 
         private static IEnumerable<ValidationIssue> ValidateInitialSedimentThicknessOfSedimentFractionsInModel(WaterFlowFMModel model)

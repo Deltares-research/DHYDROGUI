@@ -71,6 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.FunctionL
                 Expect.Call(functionCreator.TransformToFunctionType(new Function())).IgnoreArguments().Return(new Function("New function")).Repeat.Any();
                 Expect.Call(functionCreator.GetDefaultValueForFunction(new Function())).IgnoreArguments().Return(3.0).Repeat.Any();
                 Expect.Call(functionCreator.GetUnitForFunction(new Function())).IgnoreArguments().Return("mg/L").Repeat.Any();
+                Expect.Call(functionCreator.GetUrlForFunction(new Function())).IgnoreArguments().Return(string.Empty).Repeat.Any();
                 Expect.Call(functionCreator.IsAllowed(new Function())).IgnoreArguments().Return(false).Repeat.Any();
                 mockRep.ReplayAll();
 

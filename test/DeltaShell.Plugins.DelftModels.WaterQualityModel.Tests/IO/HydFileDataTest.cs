@@ -53,6 +53,59 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(string.Empty, data.VerticalDiffusionRelativePath);
             Assert.AreEqual(string.Empty, data.SurfacesRelativePath);
             Assert.AreEqual(string.Empty, data.ShearStressesRelativePath);
+            Assert.AreEqual(string.Empty, data.VelocitiesRelativePath);
+            Assert.AreEqual(string.Empty, data.WidthsRelativePath);
+            Assert.AreEqual(string.Empty, data.ChezyCoefficientsRelativePath);
+        }
+
+        [Test]
+        public void HydFileData_Equals_ReturnsTrue_If_Nothing_Changed()
+        {
+            var modelOne = new HydFileData();
+            var modelTwo = new HydFileData();
+
+            Assert.AreEqual(modelOne, modelTwo);
+        }
+
+        [Test]
+        public void HydFileData_Equals_ReturnsFalse_If_PathsToChange_Differ()
+        {
+            var modelOne = new HydFileData();
+            var modelTwo = new HydFileData();
+
+            var testFile = TestHelper.GetTestFilePath(@"TestSegFunctionFiles\segFileB.vol");
+            testFile = TestHelper.CreateLocalCopySingleFile(testFile);
+            Assert.IsTrue(File.Exists(testFile));
+
+            var funcsArray = new Func<HydFileData, string , string>[]
+            {
+                (hfd, val) => hfd.VolumesRelativePath = val,
+                (hfd, val) => hfd.AreasRelativePath = val,
+                (hfd, val) => hfd.FlowsRelativePath = val,
+                (hfd, val) => hfd.PointersRelativePath = val,
+                (hfd, val) => hfd.LengthsRelativePath = val,
+                (hfd, val) => hfd.SalinityRelativePath = val,
+                (hfd, val) => hfd.TemperatureRelativePath = val,
+                (hfd, val) => hfd.VerticalDiffusionRelativePath = val,
+                (hfd, val) => hfd.SurfacesRelativePath = val,
+                (hfd, val) => hfd.ShearStressesRelativePath = val,
+                (hfd, val) => hfd.AttributesRelativePath = val,
+                (hfd, val) => hfd.VelocitiesRelativePath = val,
+                (hfd, val) => hfd.WidthsRelativePath = val,
+                (hfd, val) => hfd.ChezyCoefficientsRelativePath = val,
+            };
+
+            foreach (var func in funcsArray)
+            {
+                //Overwrite the property value
+                func.Invoke(modelOne, testFile);
+                Assert.AreNotEqual(modelOne, modelTwo);
+                
+                //Restore it so there will only be one different.
+                func.Invoke(modelOne, string.Empty);
+            }
+
+            Assert.AreEqual(modelOne, modelTwo);
         }
 
         [Test]

@@ -12,7 +12,6 @@ namespace DelftTools.Hydro
     [Entity]
     public class HydroArea : RegionBase, IHydroRegion
     {
-
         public const string LandBoundariesPluralName = "Land Boundaries";
         public const string DryPointsPluralName = "Dry Points";
         public const string DryAreasPluralName = "Dry Areas";
@@ -28,6 +27,7 @@ namespace DelftTools.Hydro
         public const string EnclosureName = "Enclosure";
         public const string RoofAreaName = "Roof Areas";
         public const string GullyName = "Gullies";
+        public const string BridgePillarsPluralName = "Bridge Pillars";
 
         public HydroArea()
         {
@@ -51,6 +51,7 @@ namespace DelftTools.Hydro
             DredgingLocations = new EventedList<GroupableFeature2D>();
             Embankments = new EventedList<Embankment>();
             Enclosures = new EventedList<GroupableFeature2DPolygon>();
+            BridgePillars = new EventedList<BridgePillar>();
 
             Pumps = new EventedList<Pump2D>();
             Weirs = new EventedList<Weir2D>();
@@ -72,6 +73,7 @@ namespace DelftTools.Hydro
         public virtual IEventedList<GroupableFeature2D> DredgingLocations { get; protected set; }
         public virtual IEventedList<Embankment> Embankments { get; protected set; }
         public virtual IEventedList<GroupableFeature2DPolygon> Enclosures { get; protected set; }
+        public virtual IEventedList<BridgePillar> BridgePillars { get; protected set; }
 
         public virtual IEventedList<Pump2D> Pumps { get; protected set; }
         public virtual IEventedList<Weir2D> Weirs { get; protected set; }
@@ -168,6 +170,10 @@ namespace DelftTools.Hydro
             foreach (var gully in Gullies)
             {
                 yield return gully;
+            }
+            foreach (var bridgePillar in BridgePillars)
+            {
+                yield return bridgePillar;
             }
         }
 

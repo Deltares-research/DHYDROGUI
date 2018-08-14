@@ -12,6 +12,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -19,6 +20,7 @@ using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
@@ -504,18 +506,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             foreach (var expectedResultsFilePath in Directory.GetFiles(expectedResultsDir))
             {
                 var generatedResultsFilePath = Path.Combine(saveToDir, Path.GetFileName(expectedResultsFilePath));
-                var expectedResultsContent = File.ReadAllLines(expectedResultsFilePath);
-                var generatedResultsContent = File.ReadAllLines(generatedResultsFilePath);
-                var startIndex = generatedResultsFilePath.EndsWith(".mdu") ? 8 : 0; // skip date/program/version lines
-
-                Assert.AreEqual(expectedResultsContent.Length, generatedResultsContent.Length,
-                                    "Length of generated file " + generatedResultsFilePath + " differs from expected result");
-                for (int i = startIndex; i < expectedResultsContent.Length; i++)
-                {
-                    Assert.AreEqual(expectedResultsContent[i], generatedResultsContent[i],
-                                    "Line " + (i + 1) + " of generated file " + generatedResultsFilePath +
-                                    " differs from expected result");
-                }
+                var skipNLines = generatedResultsFilePath.EndsWith(".mdu") ? 8 : 0; // skip date/program/version lines
+                var expectedResultsContent = File.ReadAllLines(expectedResultsFilePath).Skip(skipNLines);
+                var generatedResultsContent = File.ReadAllLines(generatedResultsFilePath).Skip(skipNLines);
+                
+                Assert.IsNotNull(generatedResultsContent);
+                Assert.IsNotNull(expectedResultsContent);
+                expectedResultsContent.ForEach(er =>
+                    Assert.IsTrue(generatedResultsContent.Contains(er), $"Expected {er} in File {Path.GetFileName(expectedResultsFilePath)} but not found.")
+                );
             }
         }
 
@@ -1421,5 +1420,70 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(meteoDataComponents[2].Name, Is.EqualTo(cloudCoverage));
             Assert.That(meteoDataComponents[3].Name, Is.EqualTo(solarRadiation));
         }
+
+        [TestCase(KnownProperties.SedFile,"Sediment")]
+        [TestCase(KnownProperties.morphology,"Morphology")]
+
+        public void Test_GetTabName_WithValidKeysAndModel_ExpectedTabNamesAreGiven(string key, string expectedName)
+        {
+            var tabName = string.Empty;
+            Assert.DoesNotThrow(() =>
+                {
+                    TestHelper.AssertLogMessagesCount(
+                        () => tabName = WaterFlowFMModelDefinition.GetTabName(key, fmModel:new WaterFlowFMModel()), 0);
+                }
+            );
+            Assert.NotNull(tabName);
+            Assert.AreEqual(tabName, expectedName);
+        }
+
+        [Test]
+        public void Test_GetTabName_WithValidSedimentKeyAndWithoutModel_EmptyStringIsGivenAndNoLogMessages()
+        {
+            var key = KnownProperties.SedFile;
+            var expectedName = string.Empty;
+            string tabName = "Not Empty";
+
+            Assert.DoesNotThrow(() =>
+                {
+                    TestHelper.AssertLogMessagesCount(
+                        () => tabName = WaterFlowFMModelDefinition.GetTabName(key), 0);
+                }
+            );
+
+            Assert.NotNull(tabName);
+            Assert.AreEqual(tabName, expectedName);
+        }
+
+        [Test]
+        public void Test_GetTabName_WithInvalidKey_LogErrorIsGivenAndNoExceptionThrown()
+        {
+            var key = "invalid";
+            var message = "non-existent file";
+            var expectedMessage = String.Format(
+                Resources.WaterFlowFMModelDefinition_GetTabName_Invalid_gui_group_id_for___0___in_the_scheme_of_dflowfmmorpropertiescsv___1_,
+                message,
+                key);
+
+            var expectedName = string.Empty;
+            string tabName = "Not Empty";
+
+            Assert.DoesNotThrow(() =>
+            {
+                TestHelper.AssertAtLeastOneLogMessagesContains(
+                    () => tabName = WaterFlowFMModelDefinition.GetTabName(key, message),
+                    expectedMessage);
+            });
+
+            Assert.NotNull(tabName);
+            Assert.AreEqual(tabName, expectedName);
+        }
+
+        [Test]
+        public void Test_GuiPropertyGroups_GetUniqueGuiPropertyGroupsFromModelAndMorphologyPropertyGroups()
+        {
+            Dictionary<string, ModelPropertyGroup> dummyVar;
+            Assert.DoesNotThrow(() => dummyVar = WaterFlowFMModelDefinition.GuiPropertyGroups );
+         }
     }
 }

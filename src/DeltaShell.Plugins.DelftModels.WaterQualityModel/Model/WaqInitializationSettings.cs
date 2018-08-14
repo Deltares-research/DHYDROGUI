@@ -94,6 +94,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
         public string VerticalDiffusionFile { get; set; }
 
+        public string VelocitiesFile { get; set; }
+
+        public string WidthsFile { get; set; }
+
+        public string ChezyCoefficientsFile { get; set; }
+
         public IDictionary<WaterQualityBoundary, int[]> BoundaryNodeIds { get; set; }
         public IDictionary<WaterQualityLoad, int> LoadAndIds { get; set; }
         public IDictionary<string, IList<int>> OutputLocations { get; set; }

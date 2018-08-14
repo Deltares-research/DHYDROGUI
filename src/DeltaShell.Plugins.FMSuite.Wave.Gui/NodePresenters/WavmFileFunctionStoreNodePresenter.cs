@@ -22,8 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
         public override IEnumerable GetChildNodeObjects(WavmFileFunctionStore parent, ITreeNode node)
         {
-            var model =
-                Gui.Application.Project.RootFolder.Models.OfType<WaveModel>()
+            var model = Gui.Application.GetAllModelsInProject().OfType<WaveModel>()
                     .FirstOrDefault(m => m.WavmFunctionStores.Contains(parent));
             if (model == null)
             {
@@ -37,8 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
         private IDataItem WrapIntoOutputItem(object o, WavmFileFunctionStore parent, string tag)
         {
-            var model =
-                Gui.Application.Project.RootFolder.Models.OfType<WaveModel>()
+            var model = Gui.Application.GetAllModelsInProject().OfType<WaveModel>()
                     .FirstOrDefault(m => m.WavmFunctionStores.Contains(parent));
 
             var subTag = tag;
@@ -51,21 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
                 }
             }
 
-            var existingItem = DataItems.FirstOrDefault(di => Equals(di.Tag, subTag) && Equals(di.Owner, model));
-            if (existingItem == null)
-            {
-                var newItem = new DataItem(o, DataItemRole.Output) { Tag = subTag, Owner = model };
-                DataItems.Add(newItem);
-                return newItem;
-            }
-
-            if (!ReferenceEquals(existingItem.Value, o))
-            {
-                existingItem.Value = o;
-            }
-            return existingItem;
+            return new DataItem(o, DataItemRole.Output) { Tag = subTag, Owner = model };
         }
-
-        private static readonly IList<DataItem> DataItems = new List<DataItem>();
     }
 }

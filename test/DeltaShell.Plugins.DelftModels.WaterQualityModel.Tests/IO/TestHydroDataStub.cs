@@ -34,6 +34,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         private string surfacesPath;
         private string shearStressesPath;
         private string attributesPath;
+        private string velocitiesRelativePath;
+        private string widthsRelativePath;
+        private string chezyCoefficientsRelativePath;
         private int numberOfHydrodynamicLayers;
         private int numberOfWaqSegmentLayers;
         private double[] hydrodynamicLayerThicknesses;
@@ -42,6 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         private Dictionary<WaterQualityBoundary, int[]> boundaryNodeIds;
 
         private IDictionary<string, Func<string>> delwaqDataToFilePathMapping;
+        
 
         public TestHydroDataStub()
         {
@@ -65,6 +69,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             verticalDiffusionPath = "";
             surfacesPath = "";
             shearStressesPath = "";
+            velocitiesRelativePath = "";
+            widthsRelativePath = "";
+            chezyCoefficientsRelativePath = "";
 
             numberOfHydrodynamicLayers = 1;
             hydrodynamicLayerThicknesses = new[] { 1.0 };
@@ -115,6 +122,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             verticalDiffusionPath = hydFileData.VerticalDiffusionRelativePath;
             surfacesPath = hydFileData.SurfacesRelativePath;
             shearStressesPath = hydFileData.ShearStressesRelativePath;
+            velocitiesRelativePath = hydFileData.VelocitiesRelativePath;
+            widthsRelativePath = hydFileData.WidthsRelativePath;
+            chezyCoefficientsRelativePath = hydFileData.ChezyCoefficientsRelativePath;
 
             numberOfHydrodynamicLayers = hydFileData.NumberOfHydrodynamicLayers == 0 ? 1 : hydFileData.NumberOfHydrodynamicLayers;
             hydrodynamicLayerThicknesses = hydFileData.HydrodynamicLayerThicknesses.Length == 0 ? new[] { 1.0d } : hydFileData.HydrodynamicLayerThicknesses;
@@ -240,6 +250,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             }
         }
 
+        public string VelocitiesRelativePath
+        {
+            get { return velocitiesRelativePath; }
+        }
+
+        public string WidthsRelativePath
+        {
+            get { return widthsRelativePath; }
+        }
+
+        public string ChezyCoefficientsRelativePath
+        {
+            get { return chezyCoefficientsRelativePath; }
+        }
+
         public HydroDynamicModelType HydroDynamicModelType
         {
             get { return ModelType; }
@@ -308,6 +333,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 return HasDataForInjection(functionName);
 
             return !string.IsNullOrWhiteSpace(GetFilePathForFunctionName(functionName));
+        }
+
+        public bool IsSegmentFunction(string functionName)
+        {
+            return false;
         }
 
         private string GetFilePathForFunctionName(string functionName)

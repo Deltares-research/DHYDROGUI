@@ -75,9 +75,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// <param name="componentName">Name of the component</param>
         /// <param name="componentUnitName">Unit name/symbol of the component</param>
         /// <param name="description">The description as found in the process library</param>
-        public static SegmentFileFunction CreateSegmentFunction(string name, double defaultValue, string componentName, string componentUnitName, string description, string url)
+        /// <param name="urlPath">The URL path.</param>
+        public static SegmentFileFunction CreateSegmentFunction(string name, double defaultValue, string componentName, string componentUnitName, string description, string urlPath)
         {
-            var function = new SegmentFileFunction { Name = name, UrlPath = url};
+            var function = new SegmentFileFunction { Name = name, UrlPath = urlPath };
             function.Attributes.Add(DESCRIPTION_ATTRIBUTE, description);
             var variable = new Variable<double>
             {
@@ -139,7 +140,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// <param name="description">The description as found in the process library.</param>
         public static FunctionFromHydroDynamics CreateFunctionFromHydroDynamics(string name, double defaultValue, string componentName, string componentUnitName, string description, string url=null)
         {
-            var function = new FunctionFromHydroDynamics{ Name = name };
+            var function = new FunctionFromHydroDynamics{ Name = name, FilePath = url};
             function.Attributes.Add(DESCRIPTION_ATTRIBUTE, description);
             var variable = new Variable<double>
             {

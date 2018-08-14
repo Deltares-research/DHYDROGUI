@@ -99,13 +99,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sobek.IntegrationTests", "t
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SobekCompare.Tests", "test\SobekCompare.Tests\SobekCompare.Tests.csproj", "{7D616846-9306-4DA5-8E18-F5AF1F0CC654}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{50E8E118-87E9-4192-BA8D-C2AD216AE415}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils", "test\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.csproj", "{E6D98011-3562-4EE6-961C-19C47139DFE8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Plugins.DeveloperTools", "src\DeltaShell.Plugins.DeveloperTools\DeltaShell.Plugins.DeveloperTools.csproj", "{9F9C21B9-7DE6-4E4C-9923-2982729681F5}"
@@ -119,6 +112,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Dimr.Gui", "src\DeltaShell.Dimr.Gui\DeltaShell.Dimr.Gui.csproj", "{52847CB2-6A62-4B5A-8302-67198745D073}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Dimr.Tests", "test\DeltaShell.Dimr.Tests\DeltaShell.Dimr.Tests.csproj", "{F5E4F533-E9BB-4656-AB51-CCDE96EA57A5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A1202D16-3679-4040-9815-2045996FBF00}"
+	ProjectSection(SolutionItems) = preProject
+		CodeCoverage.runsettings = CodeCoverage.runsettings
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

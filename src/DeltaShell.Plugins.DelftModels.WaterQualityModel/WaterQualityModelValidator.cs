@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Utils;
@@ -10,6 +11,7 @@ using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
@@ -19,6 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 {
     public class WaterQualityModelValidator : IValidator<WaterQualityModel, WaterQualityModel>
     {
+        private WaqProcessesRules ProcessesRules;
         public ValidationReport Validate(WaterQualityModel model, WaterQualityModel target = null)
         {
             return new ValidationReport("Water Quality Model", new []
@@ -28,6 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     new ValidationReport("Simulation timer", ValidateSimulationTimer(model)),
                     new ValidationReport("Output timers", ValidateOutputTimers(model, model.ModelSettings)),
                     new ValidationReport("Substance process library", ValidateSubstanceProcessLibrary(model.SubstanceProcessLibrary)),
+                    new ValidationReport("Process coefficients", ValidateProcessCoefficients(model.SubstanceProcessLibrary, model.ProcessCoefficients, model.WaqProcessesRules)),
                     new ValidationReport("Loads", ValidateLoads(model)), 
                     new ValidationReport(@"Observation points / areas", ValidateObservationPointsAndAreas(model)), 
                     new ValidationReport("Input restart state", ValidateRestartInput(model)),
@@ -74,6 +78,56 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 yield return new ValidationIssue(substanceProcessLibrary, ValidationSeverity.Error, "At least one substance has to be declared");
             }
         }
+
+        private static IEnumerable<ValidationIssue> ValidateProcessCoefficients(SubstanceProcessLibrary library, IList<IFunction> processCoefficients, IList<WaqProcessValidationRule> rules)
+        {
+            if (library == null || processCoefficients == null) yield break;
+
+            if (rules == null || !rules.Any())
+            {
+                yield return new ValidationIssue(processCoefficients, ValidationSeverity.Warning, Resources.WaterQualityModelValidator_ValidateProcessCoefficients_No_process_coefficient_rules_have_been_loaded__Therefore_they_cannot_be_validated_);
+                yield break;
+            }
+
+            var constantParemeter = processCoefficients.Where( pc => pc.IsConst());
+            var reasonList = new List<string>();
+            foreach (var parameter in constantParemeter)
+            {
+                if (!library.Parameters.Any(p => p.Name.ToLowerInvariant().Equals(parameter.Name.ToLowerInvariant())))
+                {
+                    //This code will never be hit because when you remove it from the library, it also removes it from the Parameter list. But just in case we keep it handled.
+                    var message = string.Format(Resources.WaterQualityModelValidator_ValidateProcessCoefficients_The_Substance_library_does_not_contain_the_given_parameter__0__, parameter.Name);
+                    yield return new ValidationIssue(
+                        processCoefficients,
+                        ValidationSeverity.Warning, message);
+                }
+                else 
+                {
+                    var parameterRules = rules.Where(pr => GetWaqRulesParameterAndProcessInLibrary(pr, parameter.Name, library.Processes)).ToList();
+                    if (parameter.IsWithinRulesLimits(parameterRules, processCoefficients, out reasonList)) continue;
+
+                    var parameterValue = double.NaN;
+                    /* The parameter value SHOULD ONLY be stored in the first component. */
+                    if (parameter.Components != null && parameter.Components.Any())
+                        parameterValue = (double)parameter.Components[0].DefaultValue;
+
+                    foreach (var reason in reasonList)
+                    {
+                        var message = string.Format(Resources.WaterQualityModelValidator_ValidateProcessCoefficients_Process_coefficient__0___value___1___does_not_fulfill_the_rule__2_, parameter.Name, parameterValue, reason);
+                        yield return new ValidationIssue(parameter, ValidationSeverity.Warning, message);
+                    }
+                }
+            }
+        }
+
+        private static bool GetWaqRulesParameterAndProcessInLibrary(WaqProcessValidationRule rule, string parameterName, IList<WaterQualityProcess> processes)
+        {
+            var parameterInRule = rule.ParameterName.ToLowerInvariant().Equals(parameterName.ToLower());
+            var processInLibrary = processes.Any(p => p.Name.ToLowerInvariant().Equals(rule.ProcessName.ToLower()));
+
+            return parameterInRule && processInLibrary;
+        }
+
 
         /// <summary>
         /// Check whether one of the output timers of <paramref name="model"/> is invalid

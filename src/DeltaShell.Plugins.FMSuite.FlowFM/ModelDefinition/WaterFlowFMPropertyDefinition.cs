@@ -40,6 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string MapFile__Obsolete = "mapfile";
         public const string HisFile__Obsolete = "hisfile";
         public const string FixedWeirFile = "fixedweirfile";
+        public const string BridgePillarFile = "pillarfile";
         public const string FixedWeirScheme = "fixedweirscheme";
         public const string LeveeBreachFile = "leveebreachfile";
         public const string StructuresFile = "structurefile";

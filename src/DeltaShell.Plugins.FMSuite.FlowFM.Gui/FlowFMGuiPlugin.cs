@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Resources;
@@ -59,6 +58,7 @@ using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 using LdbFile = SharpMap.Extensions.Data.Providers.LdbFile;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
+using BridgePillar = DelftTools.Hydro.Structures.BridgePillar;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
@@ -137,6 +137,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 GetViewName = (v,o) => $"{o?.Feature.ToString()} data",
                 GetViewData = o => FlowModels.SelectMany(fm => fm.FixedWeirsProperties).FirstOrDefault(p => Equals(p.Feature, o)),
                 AdditionalDataCheck = o => FlowModels.Any(m => m.FixedWeirsProperties.Any(d => ReferenceEquals(d.Feature, o)))
+            };
+
+            yield return new ViewInfo<BridgePillar, IModelFeatureCoordinateData, ModelFeatureCoordinateDataView>
+            {
+                Description = "Data for feature",
+                GetViewName = (v, o) => $"{o?.Feature.ToString()} data",
+                GetViewData = o => FlowModels.SelectMany(fm => fm.BridgePillarsDataModel).FirstOrDefault(p => Equals(p.Feature, o)),
+                AdditionalDataCheck = o => FlowModels.Any(m => m.BridgePillarsDataModel.Any(d => ReferenceEquals(d.Feature, o)))
             };
 
             yield return new ViewInfo<FileBasedFeatureCoverage, CoverageView>
@@ -502,6 +510,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<IGate, Feature2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<SourceAndSink, Feature2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<BoundaryConditionSet, Feature2D>>();
+            yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<BridgePillar, BridgePillar>>();
 
             yield return GetFeature2DImportDialogViewInfo<PointFileImporterExporter>();
             yield return GetFeature2DImportDialogViewInfo<PolFileImporterExporter>();

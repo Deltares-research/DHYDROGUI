@@ -55,49 +55,49 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                                         new Unit("cubic meter per second", "m³/s")),
                     new EngineParameter(QuantityType.NegativeDepth, ElementSet.GridpointsOnBranches, DataItemRole.Output,
                                         WaterFlowModelParameterNames.SimulationInfoNegativeDepthDisplayName,
-                                        new Unit("", "")),
+                                        new Unit(string.Empty, string.Empty)),
                     new EngineParameter(QuantityType.NoIteration, ElementSet.GridpointsOnBranches, DataItemRole.Output,
                                         WaterFlowModelParameterNames.SimulationInfoNumberOfIterationsDisplayName,
-                                        new Unit("", "")),
+                                        new Unit(string.Empty, string.Empty)),
                     new EngineParameter(QuantityType.Temperature, ElementSet.GridpointsOnBranches, DataItemRole.Output,
                                         WaterFlowModelParameterNames.LocationTemperature,
-                                        new Unit("", "")),
+                                        new Unit(string.Empty, string.Empty)),
                                         new EngineParameter(QuantityType.TotalHeatFlux, ElementSet.GridpointsOnBranches, DataItemRole.Output,
                                         WaterFlowModelParameterNames.LocationTotalHeatFlux,
-                                        new Unit("", "")),
+                                        new Unit(string.Empty, string.Empty)),
                     new EngineParameter(QuantityType.RadFluxClearSky, ElementSet.GridpointsOnBranches, DataItemRole.Output,
                                         WaterFlowModelParameterNames.LocationRadFluxClearSky,
-                                        new Unit("", "")),
+                                        new Unit(string.Empty, string.Empty)),
                     new EngineParameter(QuantityType.HeatLossConv, ElementSet.GridpointsOnBranches, DataItemRole.Output,
                                         WaterFlowModelParameterNames.LocationHeatLossConv,
-                                        new Unit("", "")),
+                                        new Unit(string.Empty, string.Empty)),
                     new EngineParameter(QuantityType.NetSolarRad, ElementSet.GridpointsOnBranches, DataItemRole.Output,
                                         WaterFlowModelParameterNames.LocationNetSolarRad,
-                                        new Unit("", "")),
+                                        new Unit(string.Empty, string.Empty)),
                     new EngineParameter(QuantityType.EffectiveBackRad, ElementSet.GridpointsOnBranches, DataItemRole.Output,
                                         WaterFlowModelParameterNames.LocationEffectiveBackRad,
-                                        new Unit("", "")),
+                                        new Unit(string.Empty, string.Empty)),
                     new EngineParameter(QuantityType.HeatLossEvap, ElementSet.GridpointsOnBranches, DataItemRole.Output,
                                         WaterFlowModelParameterNames.LocationHeatLossEvap,
-                                        new Unit("", "")),
+                                        new Unit(string.Empty, string.Empty)),
                     new EngineParameter(QuantityType.HeatLossForcedEvap, ElementSet.GridpointsOnBranches, DataItemRole.Output,
                                         WaterFlowModelParameterNames.LocationHeatLossForcedEvap,
-                                        new Unit("", "")),
+                                        new Unit(string.Empty, string.Empty)),
                     new EngineParameter(QuantityType.HeatLossFreeEvap, ElementSet.GridpointsOnBranches, DataItemRole.Output,
                                         WaterFlowModelParameterNames.LocationHeatLossFreeEvap,
-                                        new Unit("", "")),
+                                        new Unit(string.Empty, string.Empty)),
                     new EngineParameter(QuantityType.HeatLossForcedConv, ElementSet.GridpointsOnBranches, DataItemRole.Output,
                                         WaterFlowModelParameterNames.LocationHeatLossForcedConv,
-                                        new Unit("", "")),
+                                        new Unit(string.Empty, string.Empty)),
                     new EngineParameter(QuantityType.HeatLossFreeConv, ElementSet.GridpointsOnBranches, DataItemRole.Output,
                                         WaterFlowModelParameterNames.LocationHeatLossFreeConv,
-                                        new Unit("", "")),
+                                        new Unit(string.Empty, string.Empty)),
 
 
                     // Roughness section 'Main' at gridpoints
                     new EngineParameter(QuantityType.TimeStepEstimation, ElementSet.ReachSegElmSet, DataItemRole.Output,
                                         WaterFlowModelParameterNames.SimulationInfoTimeStepEstimationDisplayName,
-                                        new Unit("", "")),
+                                        new Unit(string.Empty, string.Empty)),
                     new EngineParameter(QuantityType.DischargeMain, ElementSet.ReachSegElmSet, DataItemRole.Output,
                                         WaterFlowModelParameterNames.MainChannel +
                                         WaterFlowModelParameterNames.SubSectionDischarge,
@@ -184,10 +184,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                                         new Unit("", "m^1/2*s^-1")),
                     new EngineParameter(QuantityType.WaterLevelGradient, ElementSet.ReachSegElmSet, DataItemRole.Output,
                                         WaterFlowModelParameterNames.BranchWaterLevelGradient,
-                                        new Unit("", "")),
+                                        new Unit(string.Empty, string.Empty)),
                     new EngineParameter(QuantityType.Froude, ElementSet.ReachSegElmSet, DataItemRole.Output,
                                         WaterFlowModelParameterNames.BranchFroudeNumber,
-                                        new Unit("", "")),
+                                        new Unit(string.Empty, string.Empty)),
 
                     // Structures (not pumps)
                     new EngineParameter(QuantityType.Discharge, ElementSet.Structures, DataItemRole.Output,
@@ -218,7 +218,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                     new EngineParameter(QuantityType.ValveOpening, ElementSet.Structures,
                                         DataItemRole.Output | DataItemRole.Input,
                                         WaterFlowModelParameterNames.StructureValveOpening, 
-                                        new Unit("", "")),
+                                        new Unit(string.Empty, string.Empty)),
                     new EngineParameter(QuantityType.WaterlevelUp, ElementSet.Structures, DataItemRole.Output,
                                         WaterFlowModelParameterNames.StructureWaterlevelUp,
                                         new Unit("meter above reference level", "m AD")),
@@ -239,9 +239,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                                         new Unit("cubic meter per second", "m³/s")),
           
                     // Pumps
-                    new EngineParameter(QuantityType.PumpResults, ElementSet.Pumps, DataItemRole.Output,
-                                        WaterFlowModelParameterNames.PumpOutput,
-                                        new Unit("", "")),
+                    new EngineParameter(QuantityType.SuctionSideLevel, ElementSet.Pumps, DataItemRole.Output,
+                                        WaterFlowModelParameterNames.PumpSuctionSide,
+                                        new Unit("meter above reference level", "m AD")),
+
+                    new EngineParameter(QuantityType.DeliverySideLevel, ElementSet.Pumps, DataItemRole.Output,
+                                        WaterFlowModelParameterNames.PumpDeliverySide,
+                                        new Unit("meter above reference level", "m AD")),
+
+                    new EngineParameter(QuantityType.PumpHead, ElementSet.Pumps, DataItemRole.Output,
+                                        WaterFlowModelParameterNames.PumpHead,
+                                        new Unit("meter", "m")),
+
+                    new EngineParameter(QuantityType.ActualPumpStage, ElementSet.Pumps, DataItemRole.Output,
+                                        WaterFlowModelParameterNames.PumpStage,
+                                        new Unit(string.Empty, string.Empty)),
+
+                    new EngineParameter(QuantityType.PumpCapacity, ElementSet.Pumps, DataItemRole.Output,
+                                        WaterFlowModelParameterNames.PumpCapacity,
+                                        new Unit("cubic meter per second", "m³/s")),
+
+                    new EngineParameter(QuantityType.ReductionFactor, ElementSet.Pumps, DataItemRole.Output,
+                                        WaterFlowModelParameterNames.PumpReductionFactor,
+                                        new Unit(string.Empty, string.Empty)),
+
+                    new EngineParameter(QuantityType.PumpDischarge, ElementSet.Pumps, DataItemRole.Output,
+                                        WaterFlowModelParameterNames.PumpDischarge,
+                                        new Unit("cubic meter per second", "m³/s")),
 
                     // Observation points
                     new EngineParameter(QuantityType.WaterLevel, ElementSet.Observations, DataItemRole.Output,
@@ -269,13 +293,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                                         WaterFlowModelParameterNames.ObservationPointTemperature,
                                         new Unit("parts per thousand", "ppt")),
                     // Laterals
-                    new EngineParameter(QuantityType.Discharge, ElementSet.Laterals,
-                                        DataItemRole.Input,
+                    // Deprecated - do not remove! (backwards compatibility)
+                    new EngineParameter(QuantityType.Discharge, ElementSet.Laterals, DataItemRole.Input,
                                         WaterFlowModelParameterNames.LateralDischarge,
                                         new Unit("cubic meter per second", "m³/s")),
-                    new EngineParameter(QuantityType.Discharge, ElementSet.Laterals,
-                                        DataItemRole.Output,
+                    // Deprecated - do not remove! (backwards compatibility)
+                    new EngineParameter(QuantityType.Discharge, ElementSet.Laterals, DataItemRole.Output,
                                         WaterFlowModelParameterNames.LateralDischarge,
+                                        new Unit("cubic meter per second", "m³/s")),
+
+                    new EngineParameter(QuantityType.ActualDischarge, ElementSet.Laterals, DataItemRole.Output | DataItemRole.Input,
+                                        WaterFlowModelParameterNames.LateralActualDischarge,
+                                        new Unit("cubic meter per second", "m³/s")),
+                    new EngineParameter(QuantityType.DefinedDischarge, ElementSet.Laterals, DataItemRole.Output,
+                                        WaterFlowModelParameterNames.LateralDefinedDischarge,
+                                        new Unit("cubic meter per second", "m³/s")),
+                    new EngineParameter(QuantityType.LateralDifference, ElementSet.Laterals, DataItemRole.Output,
+                                        WaterFlowModelParameterNames.LateralDifference,
                                         new Unit("cubic meter per second", "m³/s")),
                     new EngineParameter(QuantityType.WaterLevel, ElementSet.Laterals, DataItemRole.Output,
                                         WaterFlowModelParameterNames.LateralWaterLevel,
@@ -394,6 +428,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                     (engineParameter.QuantityType == QuantityType.GateLowerEdgeLevel) ||
                     (engineParameter.QuantityType == QuantityType.GateOpeningHeight) ||
                     (engineParameter.QuantityType == QuantityType.ValveOpening))
+                {
+                    return false;
+                }
+            }
+            if (feature is ILateralSource)
+            {
+                // filter out deprecated Discharge on Laterals
+                if (engineParameter.QuantityType == QuantityType.Discharge)
                 {
                     return false;
                 }
@@ -575,14 +617,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             if (qt == QuantityType.PressureDifference && es == ElementSet.Structures) return FunctionAttributes.StandardNames.StructurePressureDifference;
             if (qt == QuantityType.WaterLevelAtCrest && es == ElementSet.Structures) return FunctionAttributes.StandardNames.StructureWaterLevelAtCrest;
             if (qt == QuantityType.Setpoint && es == ElementSet.Structures) return FunctionAttributes.StandardNames.StructureSetPoint;
-            if (qt == QuantityType.Discharge && es == ElementSet.Pumps) return "nonstandard_pump_discharge";
-            if (qt == QuantityType.PumpSuctionSide && es == ElementSet.Pumps) return "nonstandard_pump_suction_side";
-            if (qt == QuantityType.PumpDeliverySide && es == ElementSet.Pumps) return "nonstandard_pump_delivery_side";
+            if (qt == QuantityType.SuctionSideLevel && es == ElementSet.Pumps) return "nonstandard_pump_suction_side";
+            if (qt == QuantityType.DeliverySideLevel && es == ElementSet.Pumps) return "nonstandard_pump_delivery_side";
             if (qt == QuantityType.PumpHead && es == ElementSet.Pumps) return "nonstandard_pump_head";
-            if (qt == QuantityType.PumpStage && es == ElementSet.Pumps) return "nonstandard_pump_stage";
+            if (qt == QuantityType.ActualPumpStage && es == ElementSet.Pumps) return "nonstandard_pump_stage";
             if (qt == QuantityType.PumpCapacity && es == ElementSet.Pumps) return "nonstandard_pump_capacity";
-            if (qt == QuantityType.PumpReductionFactor && es == ElementSet.Pumps) return "nonstandard_pump_reduction_factor";
-            if (qt == QuantityType.PumpResults && es == ElementSet.Pumps) return "nonstandard_pump_results";
+            if (qt == QuantityType.ReductionFactor && es == ElementSet.Pumps) return "nonstandard_pump_reduction_factor";
+            if (qt == QuantityType.PumpDischarge && es == ElementSet.Pumps) return "nonstandard_pump_discharge";
             if (qt == QuantityType.WaterLevel && es == ElementSet.Observations) return FunctionAttributes.StandardNames.WaterLevel;
             if (qt == QuantityType.WaterDepth && es == ElementSet.Observations) return FunctionAttributes.StandardNames.WaterDepth;
             if (qt == QuantityType.Discharge && es == ElementSet.Observations) return FunctionAttributes.StandardNames.WaterDischarge;
@@ -596,6 +637,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             if (qt == QuantityType.NoIteration && es == ElementSet.GridpointsOnBranches) return "nonstandard_no_iteration";
             if (qt == QuantityType.TimeStepEstimation && es == ElementSet.ReachSegElmSet) return "nonstandard_timestep_estimation";
             if (qt == QuantityType.Discharge && es == ElementSet.Laterals) return FunctionAttributes.StandardNames.WaterDischarge;
+            if (qt == QuantityType.ActualDischarge && es == ElementSet.Laterals) return "nonstandard_lateral_actual_discharge";
+            if (qt == QuantityType.DefinedDischarge && es == ElementSet.Laterals) return "nonstandard_lateral_defined_discharge";
+            if (qt == QuantityType.LateralDifference && es == ElementSet.Laterals) return "nonstandard_lateral_difference";
             if (qt == QuantityType.WaterLevel && es == ElementSet.Laterals) return FunctionAttributes.StandardNames.WaterLevel;
             if (qt == QuantityType.FiniteGridType && es == ElementSet.FiniteVolumeGridOnGridPoints) return "nonstandard_finite_grid_type";
             if (qt == QuantityType.Discharge && es == ElementSet.FiniteVolumeGridOnGridPoints) return FunctionAttributes.StandardNames.WaterDischarge;

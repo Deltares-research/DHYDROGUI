@@ -470,6 +470,9 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="GwswElementExtensions_GetAttributeFromList_Attribute__0__was_not_found_for_element__1__of_type__2__" xml:space="preserve">
     <value>Attribute {0} was not found for element {1} of type {2}.</value>
   </data>
+  <data name="Could_not_export_data_for_SourceAndSink___0___no_Function_was_found" xml:space="preserve">
+    <value>Could not export data for SourceAndSink: {0}, no Function was found</value>
+  </data>
   <data name="ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_" xml:space="preserve">
     <value>Unsupported quantity type: {0}, in the .ext file {1} detected. It will not be imported.</value>
   </data>
@@ -488,6 +491,9 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness" xml:space="preserve">
     <value>At least one sediment fraction should have a positive thickness</value>
   </data>
+  <data name="WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology" xml:space="preserve">
+    <value>At least one sediment fraction is required when using morphology.</value>
+  </data>
   <data name="lines" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\lines.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -502,5 +508,14 @@ Manhole with unique id '{4}' is not imported.</value>
   </data>
   <data name="SourceAndSinkImportExtensions_GenerateFunctionFromAttributes_There_were_less_columns_in_the___tim_file_for__0__than_expected" xml:space="preserve">
     <value>There were less columns in the *.tim file for {0} than expected</value>
+  </data>
+  <data name="MduFile_Read_Based_on_the_Bridge_Pillar_file__0___there_are_too_many_column_s__defined_for__1___The_last__2__column_s__have_been_ignored" xml:space="preserve">
+    <value>Based on the Bridge Pillar file {0}, there are too many column(s) defined for {1}. The last {2} column(s) have been ignored</value>
+  </data>
+  <data name="MduFile_Read_Based_on_the_Bridge_Pillar_file__0___there_are_not_enough_column_s__defined_for__1___The_last__2__column_s__have_been_generated_using_default_values" xml:space="preserve">
+    <value>Based on the Bridge Pillar file {0}, there are not enough column(s) defined for {1}. The last {2} column(s) have been generated using default values</value>
+  </data>
+  <data name="WaterFlowFMModelDefinition_GetTabName_Invalid_gui_group_id_for___0___in_the_scheme_of_dflowfmmorpropertiescsv___1_" xml:space="preserve">
+    <value>Invalid gui group id for {0} in the scheme of dflowfm-mor-properties.csv: '{1}'</value>
   </data>
 </root>

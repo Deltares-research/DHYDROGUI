@@ -162,7 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         {
             var lineGeomery = new LineString(new Coordinate[]
             {
-                new Coordinate(0,0),
+                new Coordinate(2,0),
                 new Coordinate(10,10),
                 new Coordinate(10, 0),
                 new Coordinate(0, 0)
@@ -186,6 +186,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 
             lineGeomery = new LineString(new Coordinate[]
             {
+                new Coordinate(0,0),
+                new Coordinate(10, 10),
+                new Coordinate(10, 0),
+                new Coordinate(0, 0)
+            });
+
+            ((INotifyPropertyChanged)feature).Raise(f => f.PropertyChanged += null, feature, new PropertyChangedEventArgs(nameof(feature.Geometry)));
+
+            Assert.AreEqual(4, dataColumn.ValueList.Count);
+            Assert.AreEqual(1, dataColumn.ValueList[0]);
+            Assert.AreEqual(2, dataColumn.ValueList[1]);
+            Assert.AreEqual(3, dataColumn.ValueList[2]);
+            Assert.AreEqual(4, dataColumn.ValueList[3]);
+
+            lineGeomery = new LineString(new Coordinate[]
+            {
                 new Coordinate(10, 10),
                 new Coordinate(10, 0),
             });
@@ -194,6 +210,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 
             Assert.AreEqual(2, dataColumn.ValueList.Count);
             Assert.AreEqual(2, dataColumn.ValueList[0]);
+            Assert.AreEqual(3, dataColumn.ValueList[1]);
+
+            lineGeomery = new LineString(new Coordinate[]
+            {
+                new Coordinate(10, 10),
+                new Coordinate(10, 0),
+                new Coordinate(0, 0)
+            });
+
+            ((INotifyPropertyChanged)feature).Raise(f => f.PropertyChanged += null, feature, new PropertyChangedEventArgs(nameof(feature.Geometry)));
+
+            Assert.AreEqual(3, dataColumn.ValueList.Count);
+            Assert.AreEqual(2, dataColumn.ValueList[0]);
+            Assert.AreEqual(3, dataColumn.ValueList[1]);
+            Assert.AreEqual(0, dataColumn.ValueList[2]);
+
+            lineGeomery = new LineString(new Coordinate[]
+            {
+                new Coordinate(0,0),
+                new Coordinate(10, 10),
+                new Coordinate(10, 0),
+                new Coordinate(0, 0)
+            });
+
+            ((INotifyPropertyChanged)feature).Raise(f => f.PropertyChanged += null, feature, new PropertyChangedEventArgs(nameof(feature.Geometry)));
+
+            Assert.AreEqual(4, dataColumn.ValueList.Count);
+            Assert.AreEqual(0, dataColumn.ValueList[0]);
+            Assert.AreEqual(2, dataColumn.ValueList[1]);
+            Assert.AreEqual(3, dataColumn.ValueList[2]);
+            Assert.AreEqual(0, dataColumn.ValueList[3]);
+
 
             mocks.VerifyAll();
         }

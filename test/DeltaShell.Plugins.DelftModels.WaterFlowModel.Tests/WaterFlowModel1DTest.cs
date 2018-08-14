@@ -67,17 +67,186 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
+        public void GivenFmModelWhenConnectingToOutputThenCorrectRetentionFeatureIsAdded()
+        {
+            //Setup network
+            //needs 2 nodes, branch, computational nodes, crosssection, retention and 2 boundary conditions
+
+            var network = new HydroNetwork();
+
+            // add nodes and branches
+            IHydroNode node1 = new HydroNode { Name = "node1", Network = network, Geometry = new Point(0, 0) };
+            IHydroNode node2 = new HydroNode { Name = "node2", Network = network, Geometry = new Point(100, 0) };
+
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node2);
+
+            var branch = new Channel("branch1", node1, node2, 100.0);
+            var vertices = new List<Coordinate>
+                               {
+                                   new Coordinate(0, 0),
+                                   new Coordinate(100, 0)
+                               };
+            branch.Geometry = GeometryFactory.CreateLineString(vertices.ToArray());
+            var yzCoordinates = new List<Coordinate>
+            {
+                new Coordinate(0.0, 1.0),
+                new Coordinate(1.0, 0.0),
+                new Coordinate(2.0, 0.0),
+                new Coordinate(3.0, 1.0),
+            };
+
+            CrossSectionHelper.AddXYZCrossSectionFromYZCoordinates(branch, 50.0, yzCoordinates, "mycs");
+
+            var compositeBranchStructure = new CompositeBranchStructure
+            {
+                Network = network,
+                Geometry = new Point(5, 0),
+                Chainage = 5,
+            };
+
+            NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, branch, 20.0);
+            var retention = new Retention()
+            {
+                Name = "1",
+                LongName = "retentionlongname",
+                Branch = branch,
+                Chainage = compositeBranchStructure.Chainage,
+                Type = RetentionType.Reservoir,
+                UseTable = false,
+                BedLevel = 1,
+                StorageArea = 10,
+                StreetLevel = 2,
+                StreetStorageArea = 100
+            };
+
+            var pump = new Pump();
+            HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, pump);
+
+            NetworkHelper.AddBranchFeatureToBranch(retention, branch, 20.0);
+            network.Branches.Add(branch);
+            WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
+
+            // add discretization
+            Discretization networkDiscretization = WaterFlowModel1DTestHelper.GetNetworkDiscretization(network);
+
+            // setup 1d flow waterFlowModel1D
+            using (var waterFlowModel1D = new WaterFlowModel1D { Network = network, NetworkDiscretization = networkDiscretization })
+            {
+                waterFlowModel1D.StopTime = waterFlowModel1D.StartTime.AddHours(1);
+
+                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.WaterLevel, ElementSet.Retentions).AggregationOptions = AggregationOptions.Current;
+
+                RunModel(waterFlowModel1D);
+
+                var outputRetentionDataItem = waterFlowModel1D.DataItems.FirstOrDefault(
+                    di => di.Name == "Water level (rt)"
+                          && (di.Role & DataItemRole.Output) == DataItemRole.Output
+                          && di.Value is IFunction
+                          && ((IFunction)di.Value).Store is WaterFlowModel1DNetCdfFunctionStore);
+                Assert.IsNotNull(outputRetentionDataItem);
+                var outputRetentionFeatureCoverage = outputRetentionDataItem.Value as FeatureCoverage;
+                Assert.IsNotNull(outputRetentionFeatureCoverage);
+                Assert.That(outputRetentionFeatureCoverage.Features.Count, Is.EqualTo(1));
+                Assert.That(outputRetentionFeatureCoverage.Features[0], Is.EqualTo(retention));
+            }
+        }
+
+        [Test]
+        public void GivenFmModelWhenConnectingToOutputThenCorrectPumpFeatureIsAdded()
+        {
+            //Setup network
+            //needs 2 nodes, branch, computational nodes, crosssection, pump and 2 boundary conditions
+
+            var network = new HydroNetwork();
+
+            // add nodes and branches
+            IHydroNode node1 = new HydroNode { Name = "node1", Network = network, Geometry = new Point(0,0)};
+            IHydroNode node2 = new HydroNode { Name = "node2", Network = network, Geometry = new Point(100, 0) };
+
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node2);
+
+            var branch = new Channel("branch1", node1, node2, 100.0);
+            var vertices = new List<Coordinate>
+                               {
+                                   new Coordinate(0, 0),
+                                   new Coordinate(100, 0)
+                               };
+            branch.Geometry = GeometryFactory.CreateLineString(vertices.ToArray());
+            var yzCoordinates = new List<Coordinate>
+            {
+                new Coordinate(0.0, 1.0),
+                new Coordinate(1.0, 0.0),
+                new Coordinate(2.0, 0.0),
+                new Coordinate(3.0, 1.0),
+            };
+            
+            CrossSectionHelper.AddXYZCrossSectionFromYZCoordinates(branch, 50.0, yzCoordinates,"mycs");
+
+            var compositeBranchStructure = new CompositeBranchStructure
+            {
+                Network = network,
+                Geometry = new Point(5, 0),
+                Chainage = 5,
+            };
+
+            NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, branch, 20.0);
+            var pump = new Pump();
+            HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, pump);
+           
+            network.Branches.Add(branch);
+            WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
+            
+            // add discretization
+            Discretization networkDiscretization = WaterFlowModel1DTestHelper.GetNetworkDiscretization(network);
+            
+            // setup 1d flow waterFlowModel1D
+            using (var waterFlowModel1D = new WaterFlowModel1D { Network = network, NetworkDiscretization = networkDiscretization })
+            {
+                waterFlowModel1D.StopTime = waterFlowModel1D.StartTime.AddHours(1);
+                
+
+                // set boundary conditions
+                var boundaryConditionInflow = waterFlowModel1D.BoundaryConditions.First(bc => bc.Feature == node1);
+                boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;
+                boundaryConditionInflow.Data[waterFlowModel1D.StartTime] = 1000.0;
+                boundaryConditionInflow.Data[waterFlowModel1D.StartTime.AddHours(1)] = 500.0;
+                boundaryConditionInflow.Data.Arguments[0].ExtrapolationType = ExtrapolationType.Constant;
+
+                var boundaryConditionOutflow = waterFlowModel1D.BoundaryConditions.First(bc => bc.Feature == node2);
+                boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+                boundaryConditionOutflow.WaterLevel = 0;
+
+                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.SuctionSideLevel, ElementSet.Pumps).AggregationOptions = AggregationOptions.Current;
+
+                RunModel(waterFlowModel1D);
+
+                var outputPumpSuctionsideDataItem = waterFlowModel1D.DataItems.FirstOrDefault(
+                    di => di.Name == "Suction side (p)"
+                          && (di.Role & DataItemRole.Output) == DataItemRole.Output
+                          && di.Value is IFunction
+                          && ((IFunction)di.Value).Store is WaterFlowModel1DNetCdfFunctionStore);
+                Assert.IsNotNull(outputPumpSuctionsideDataItem);
+                var outputPumpSuctionSideFeatureCoverage = outputPumpSuctionsideDataItem.Value as FeatureCoverage;
+                Assert.IsNotNull(outputPumpSuctionSideFeatureCoverage);
+                Assert.That(outputPumpSuctionSideFeatureCoverage.Features.Count, Is.EqualTo(1));
+                Assert.That(outputPumpSuctionSideFeatureCoverage.Features[0], Is.EqualTo(pump));
+            }
+        }
+
+        [Test]
         public void VerifyChangingDispersionFormulationTypeCachesF3AndF4Values()
         {
             var network = new HydroNetwork();
-            
+
             // add nodes and branches
             IHydroNode node1 = new HydroNode { Name = "node1", Network = network };
             IHydroNode node2 = new HydroNode { Name = "node2", Network = network };
-            
+
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
-            
+
             var branch = new Channel("branch1", node1, node2, 100.0);
             var vertices = new List<Coordinate>
                                {
@@ -86,12 +255,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                                };
             branch.Geometry = GeometryFactory.CreateLineString(vertices.ToArray());
             network.Branches.Add(branch);
-            
+
             // add discretization
             Discretization networkDiscretization = WaterFlowModel1DTestHelper.GetNetworkDiscretization(network);
 
             // setup 1d flow waterFlowModel1D
-            using (var waterFlowModel1D = new WaterFlowModel1D {Network = network, NetworkDiscretization = networkDiscretization})
+            using (var waterFlowModel1D = new WaterFlowModel1D { Network = network, NetworkDiscretization = networkDiscretization })
             {
                 waterFlowModel1D.UseSalt = true;
                 waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic;
@@ -122,7 +291,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 var f4Values = waterFlowModel1D.DispersionF4Coverage.Components.FirstOrDefault();
                 Assert.That(f4Values, Is.Not.Null);
-                
+
                 // Action: Unset dispersion formulation type TH. 
                 waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.Constant;
 
@@ -137,7 +306,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 // Action: Set dispersion to Savenije
                 waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic;
-                
+
                 // Verify: F1 is still there, F3 and F4 contain cached values. 
                 f1Values = waterFlowModel1D.DispersionCoverage.Components.FirstOrDefault();
                 Assert.That(f1Values, Is.Not.Null);
@@ -680,7 +849,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             {
 
                 //enable discharge output at laterals
-                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.Discharge, ElementSet.Laterals, DataItemRole.Output).AggregationOptions
+                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.ActualDischarge, ElementSet.Laterals, DataItemRole.Output).AggregationOptions
                     = AggregationOptions.Current;
 
                 //set a nice output timestep
@@ -709,7 +878,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 RunModel(waterFlowModel1D);
 
-                var dischargeAtLateral = waterFlowModel1D.OutputFunctions.OfType<FeatureCoverage>().First(c => c.Name == WaterFlowModelParameterNames.LateralDischarge);
+                var dischargeAtLateral = waterFlowModel1D.OutputFunctions.OfType<FeatureCoverage>().First(c => c.Name == WaterFlowModelParameterNames.LateralActualDischarge);
                 foreach (var value in dischargeAtLateral.Components[0].Values.OfType<double>().Skip(1))
                 //not the first timestep
                 {
@@ -727,7 +896,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
             {
                 //enable discharge output at laterals
-                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.Discharge, ElementSet.Laterals, DataItemRole.Output).AggregationOptions
+                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.ActualDischarge, ElementSet.Laterals, DataItemRole.Output).AggregationOptions
                     = AggregationOptions.Current;
 
                 //set a nice output timestep
@@ -749,7 +918,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 RunModel(waterFlowModel1D);
 
-                var dischargeAtLateral = waterFlowModel1D.OutputFunctions.OfType<FeatureCoverage>().First(c => c.Name == WaterFlowModelParameterNames.LateralDischarge);
+                var dischargeAtLateral = waterFlowModel1D.OutputFunctions.OfType<FeatureCoverage>().First(c => c.Name == WaterFlowModelParameterNames.LateralActualDischarge);
                 foreach (var value in dischargeAtLateral.Components[0].Values.OfType<double>().Skip(1))
                 //not the first timestep
                 {
@@ -824,7 +993,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             {
 
                 //enable discharge output at laterals
-                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.Discharge, ElementSet.Laterals, DataItemRole.Output).AggregationOptions
+                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.ActualDischarge, ElementSet.Laterals, DataItemRole.Output).AggregationOptions
                     = AggregationOptions.Current;
 
                 //set a nice output timestep
@@ -844,7 +1013,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 RunModel(waterFlowModel1D);
 
-                var dischargeAtLateral = waterFlowModel1D.OutputFunctions.OfType<FeatureCoverage>().First(c => c.Name == WaterFlowModelParameterNames.LateralDischarge);
+                var dischargeAtLateral = waterFlowModel1D.OutputFunctions.OfType<FeatureCoverage>().First(c => c.Name == WaterFlowModelParameterNames.LateralActualDischarge);
                 foreach (var value in dischargeAtLateral.Components[0].Values.OfType<double>().Skip(1))
                 //not the first timestep
                 {
@@ -1089,7 +1258,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 waterFlowModel1D.InitialConditions.DefaultValue = 0.1;
 
                 waterFlowModel1D.OutputSettings.StructureOutputTimeStep = new TimeSpan(0, 0, 1);
-                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.Discharge, ElementSet.Laterals,DataItemRole.Output).
+                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.ActualDischarge, ElementSet.Laterals,DataItemRole.Output).
                     AggregationOptions = AggregationOptions.Current;
 
                 RunModel(waterFlowModel1D);
@@ -1097,7 +1266,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 var lateralDischargeCoverage =
                     (FeatureCoverage)
                     waterFlowModel1D.OutputFunctions.First(
-                        c => c.Name.StartsWith(WaterFlowModelParameterNames.LateralDischarge));
+                        c => c.Name.StartsWith(WaterFlowModelParameterNames.LateralActualDischarge));
                 //check the 2nd timestep should be equal to what is set on the lateral..
                 Assert.AreEqual(branch1Discharge,
                                 lateralDischargeCoverage[startTime.AddSeconds(1), lateralSourceOnBranch1]);
@@ -1149,7 +1318,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 waterFlowModel1D.InitialConditions.DefaultValue = 0.1;
 
                 waterFlowModel1D.OutputSettings.StructureOutputTimeStep = new TimeSpan(0, 0, 1);
-                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.Discharge, ElementSet.Laterals, DataItemRole.Output).
+                waterFlowModel1D.OutputSettings.GetEngineParameter(QuantityType.ActualDischarge, ElementSet.Laterals, DataItemRole.Output).
                     AggregationOptions = AggregationOptions.Current;
 
                 RunModel(waterFlowModel1D);
@@ -1157,7 +1326,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 var lateralDischargeCoverage =
                     (FeatureCoverage)
                     waterFlowModel1D.OutputFunctions.First(
-                        c => c.Name.StartsWith(WaterFlowModelParameterNames.LateralDischarge));
+                        c => c.Name.StartsWith(WaterFlowModelParameterNames.LateralActualDischarge));
                 //check the 2nd timestep, should be equal to what is set on the lateral
                 Assert.AreEqual(branch1Discharge,
                                 lateralDischargeCoverage[startTime.AddSeconds(1), lateralSourceOnBranch1]);
@@ -3376,17 +3545,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             valueAtChainage52 = 0.3 * valueAtChainage45 + 0.7 * valueAtChainage55;
             Assert.AreEqual(valueAtChainage52, dischargeAtObservationPoint[0], 0.00001d);
-        }
-
-        [Test]
-        public void SetPumpOutputAddsSeveralDataItems()
-        {
-            // When setting the output parameter for Pumps to current, this should lead to approx 6 new coverages, packaged in data items. 
-            var model = new WaterFlowModel1D("model");
-            int dataItemsCount = model.DataItems.Count; 
-            model.OutputSettings.GetEngineParameter(QuantityType.PumpResults, ElementSet.Pumps).AggregationOptions = AggregationOptions.Current;
-            int newDataItemsCount = model.DataItems.Count; 
-            Assert.That(newDataItemsCount >= dataItemsCount + 2);  // At least two extra data items, so the test is robust against kernel changes. 
         }
 
         [Test]

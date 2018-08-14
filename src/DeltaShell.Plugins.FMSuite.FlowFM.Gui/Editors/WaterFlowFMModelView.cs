@@ -17,6 +17,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Layers;
 
@@ -145,7 +146,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
                     generatedEditor = DataEditorGeneratorSwf.GenerateView(objectDescription);
 
-                    tabPageSediment = new TabPage("Sediment");
+                    var sedimentTabName =WaterFlowFMModelDefinition.GetTabName(KnownProperties.SedFile, fmModel:data);
+                    tabPageSediment = new TabPage(sedimentTabName);
                     tabPageSediment.Controls.Add(
                         new ElementHost
                         {
@@ -153,10 +155,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                             Dock = DockStyle.Fill,
                         });
 
+                    var morphologyTabName = WaterFlowFMModelDefinition.GetTabName(KnownProperties.morphology, "morphology");
                     tabPageMorphology = generatedEditor.Controls.OfType<TabControl>()
                         .First()
                         .TabPages.OfType<TabPage>()
-                        .FirstOrDefault(p => p.Text == "Morphology");
+                        .FirstOrDefault(p => p.Text == morphologyTabName);
 
                     tabPanelContainer = generatedEditor.Controls.OfType<TabControl>().FirstOrDefault();
                     if (tabPanelContainer != null)
@@ -169,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                         {
                             tabPanelContainer.Controls.Remove(tabPageSediment);
                         }
-                        else if(tabPageSediment != null && !tabPanelContainer.TabPages.OfType<TabPage>().Any(p => p.Text == "Sediment"))
+                        else if(tabPageSediment != null && !tabPanelContainer.TabPages.OfType<TabPage>().Any(p => p.Text == sedimentTabName))
                         {
 
                             var indexOfMorphologyTab = tabPageMorphology != null ? tabPanelContainer.TabPages.IndexOf(tabPageMorphology) : -1;

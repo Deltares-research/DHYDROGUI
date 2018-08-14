@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -502,6 +502,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileDidNotSucceedBecauseFileAlrea" +
                         "dyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Based on the Bridge Pillar file {0}, there are not enough column(s) defined for {1}. The last {2} column(s) have been generated using default values.
+        /// </summary>
+        public static string MduFile_Read_Based_on_the_Bridge_Pillar_file__0___there_are_not_enough_column_s__defined_for__1___The_last__2__column_s__have_been_generated_using_default_values {
+            get {
+                return ResourceManager.GetString("MduFile_Read_Based_on_the_Bridge_Pillar_file__0___there_are_not_enough_column_s__" +
+                        "defined_for__1___The_last__2__column_s__have_been_generated_using_default_values" +
+                        "", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Based on the Bridge Pillar file {0}, there are too many column(s) defined for {1}. The last {2} column(s) have been ignored.
+        /// </summary>
+        public static string MduFile_Read_Based_on_the_Bridge_Pillar_file__0___there_are_too_many_column_s__defined_for__1___The_last__2__column_s__have_been_ignored {
+            get {
+                return ResourceManager.GetString("MduFile_Read_Based_on_the_Bridge_Pillar_file__0___there_are_too_many_column_s__de" +
+                        "fined_for__1___The_last__2__column_s__have_been_ignored", resourceCulture);
             }
         }
         
@@ -1163,6 +1184,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid gui group id for {0} in the scheme of dflowfm-mor-properties.csv: &apos;{1}&apos;.
+        /// </summary>
+        public static string WaterFlowFMModelDefinition_GetTabName_Invalid_gui_group_id_for___0___in_the_scheme_of_dflowfmmorpropertiescsv___1_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelDefinition_GetTabName_Invalid_gui_group_id_for___0___in_the_schem" +
+                        "e_of_dflowfmmorpropertiescsv___1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Duplication of spatial operations for {0}. Please verify the model after saving..
         /// </summary>
         public static string WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_ {
@@ -1252,6 +1283,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowFMModelNetworkValidator_GetCrossSectionValidationIssues_No_CrossSection_" +
                         "defined__all_channels_will_be_using_the_default_values_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At least one sediment fraction is required when using morphology..
+        /// </summary>
+        public static string WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology {
+            get {
+                return ResourceManager.GetString("WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_" +
+                        "At_least_one_sediment_fraction_is_required_when_using_morphology", resourceCulture);
             }
         }
         

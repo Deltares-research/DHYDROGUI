@@ -10,7 +10,47 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
     {
         public static ValidationReport Validate(WaveModel model)
         {
-            return new ValidationReport(Resources.WavePropertiesValidator_Validate_Waves_Model_Properties, new List<ValidationReport>{ValidateWindSpeedAndQuadruple(model)});
+            return new ValidationReport(Resources.WavePropertiesValidator_Validate_Waves_Model_Properties, new List<ValidationReport>{ ValidateTimeStepTimeInterval(model),ValidateWindSpeedAndQuadruple(model)});
+        }
+
+        private static ValidationReport ValidateTimeStepTimeInterval(WaveModel model)
+        {
+           var timeStepProperty = model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory,
+                KnownWaveProperties.TimeStep);
+            var timeStep = (double)timeStepProperty.Value;
+            
+
+            var tScaleProperty = model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory,
+                    KnownWaveProperties.TimeScale);
+            var tScale = (double)tScaleProperty.Value;
+                
+            var issues = new List<ValidationIssue>();
+
+            if (timeStep > tScale && timeStepProperty.IsEnabled(model.ModelDefinition.Properties) &&
+                tScaleProperty.IsEnabled(model.ModelDefinition.Properties))
+            {
+                issues.Add(new ValidationIssue(model, ValidationSeverity.Error, Resources.WavePropertiesValidator_ValidateThat_TimeStep_Is_Not_Bigger_Than_TimeScale));
+            }
+
+            if ((tScale % timeStep) >= 1e-10 && timeStepProperty.IsEnabled(model.ModelDefinition.Properties) &&
+                tScaleProperty.IsEnabled(model.ModelDefinition.Properties))
+            {
+                issues.Add(new ValidationIssue(model, ValidationSeverity.Error, Resources.WavePropertiesValidator_ValidateDivisor));
+            }
+            
+            if ((tScale % 1) >= 1e-10 && timeStepProperty.IsEnabled(model.ModelDefinition.Properties) &&
+                tScaleProperty.IsEnabled(model.ModelDefinition.Properties))
+            {
+                issues.Add(new ValidationIssue(model, ValidationSeverity.Warning, Resources.WavePropertiesValidator_ValidateTScale));
+            }
+
+            if ((timeStep % 1) >= 1e-10 && timeStepProperty.IsEnabled(model.ModelDefinition.Properties) &&
+                tScaleProperty.IsEnabled(model.ModelDefinition.Properties))
+            {
+                issues.Add(new ValidationIssue(model, ValidationSeverity.Warning, Resources.WavePropertiesValidator_ValidateTimeStep));
+            }
+
+            return new ValidationReport(KnownWaveCategories.GeneralCategory, issues);
         }
 
         private static ValidationReport ValidateWindSpeedAndQuadruple(WaveModel waveModel)
@@ -31,10 +71,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             var issues = new List<ValidationIssue>();
             if (windConstantSelected && quadrupleSelected && (Math.Abs(windSpeedValue) <= double.Epsilon) )
             {
-                issues.Add(new ValidationIssue(waveModel, ValidationSeverity.Warning, Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_));
+                issues.Add(new ValidationIssue(waveModel, ValidationSeverity.Error, Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_));
             }
 
-            return new ValidationReport(string.Format(Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_Domain___0_, waveModel), issues); 
+            return new ValidationReport(KnownWaveCategories.ProcessesCategory, issues); 
         }
     }
 }

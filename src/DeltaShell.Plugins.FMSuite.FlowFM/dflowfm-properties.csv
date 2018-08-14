@@ -9,19 +9,15 @@ physics,Physical Parameters,,,,,,,,,,,,,,
 wind,Wind,,,,,,,,,,,,,,
 numerics,Numerical Parameters,,,,,,,,,,,,,,
 output,Output Parameters,,,,,,,,,,,,,,
-#sediment,Sediment Parameters,,,,,,,,,,,,,,
 #trachytopes,Trachytopes,,,,,,,,,,,,,,
 advanced,Advanced,,,,,,,,,,,,,,
 misc,Miscellaneous,,,,,,,,,,,,,,
-sediment,Sediment,,,,,,,,,,,,,,
-morphology,Morphology,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,
 MduGroups,(order determines order in written mdu file),,,,,,,,,,,,,,
 model,,,,,,,,,,,,,,,
 geometry,,,,,,,,,,,,,,,
 numerics,,,,,,,,,,,,,,,
 physics,,,,,,,,,,,,,,,
-#sediment,,,,,,,,,,,,,,,
 wind,,,,,,,,,,,,,,,
 waves,,,,,,,,,,,,,,,
 time,,,,,,,,,,,,,,,
@@ -44,6 +40,7 @@ geometry,WaterLevIniFile,,,,FileName,,,,TRUE,,,,,,Initial water levels sample fi
 geometry,LandBoundaryFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Land boundaries file *.ldb, used for visualization"
 geometry,ThinDamFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Polyline file *_thd.pli, containing thin dams"
 geometry,FixedWeirFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Polyline file *_fxw.pliz, containing fixed weirs with rows x, y, crest level, left ground level, right ground level"
+geometry,PillarFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Polyline file *.pliz, containing bridge pillars with rows x, y, drag coefficient and diameter"
 geometry,StructureFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"File *.ini containing list of structures (pumps, weirs, gates and general structures)"
 geometry,VertplizFile,,,,FileName,,,,TRUE,,,,,,"Vertical layering file *_vlay.pliz with rows x, y, Z, first Z, nr of layers, second Z, layer type"
 geometry,ProflocFile,,,,FileName,,,,TRUE,,,,,,"Channel profile location file *_proflocation.xyz with rows x, y, z, profile number ref"

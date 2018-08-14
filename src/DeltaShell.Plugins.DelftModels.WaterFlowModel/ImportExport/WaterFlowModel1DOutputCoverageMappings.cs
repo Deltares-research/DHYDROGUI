@@ -76,8 +76,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             new LookupTable(WaterFlowModel1DOutputFileConstants.FileNames.LateralsFile, new Dictionary<string, string>()
             {
              // {[variable name in file],                                                               [existing coverage tag]}
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterDischarge,                      WaterFlowModelParameterNames.LateralDischarge},
-                {WaterFlowModel1DOutputFileConstants.VariableNames.WaterLevel,                          WaterFlowModelParameterNames.LateralWaterLevel},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.LateralActualDischarge,              WaterFlowModelParameterNames.LateralActualDischarge},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.LateralDefinedDischarge,             WaterFlowModelParameterNames.LateralDefinedDischarge},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.LateralDifference,                   WaterFlowModelParameterNames.LateralDifference},
+                {WaterFlowModel1DOutputFileConstants.VariableNames.LateralWaterLevel,                   WaterFlowModelParameterNames.LateralWaterLevel},
             }),
 
             new LookupTable(WaterFlowModel1DOutputFileConstants.FileNames.ObservationsFile, new Dictionary<string, string>()

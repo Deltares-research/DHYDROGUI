@@ -554,16 +554,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         private static void UpdateProcessCoefficients(WaterQualityModel waterQualityModel, WaterQualityParameter parameter, NotifyCollectionChangeAction action)
         {
-            if (action == NotifyCollectionChangeAction.Add && waterQualityModel.HasDataInHydroDynamics(parameter.Name))
+            var name = parameter.Name;
+            var defaultValue = parameter.DefaultValue;
+            var unit = parameter.Unit;
+            var description = parameter.Description;
+
+            if (action == NotifyCollectionChangeAction.Add && waterQualityModel.HasDataInHydroDynamics(name))
             {
-                var functionFromHydroData = WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics(parameter.Name, parameter.DefaultValue, parameter.Unit, parameter.Unit, parameter.Description);
+                var functionFromHydroData = WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics(name, defaultValue, unit, unit, description);
                 functionFromHydroData.FilePath = waterQualityModel.GetFilePathFromHydroDynamics(functionFromHydroData);
                 waterQualityModel.ProcessCoefficients.Add(functionFromHydroData);
             }
             else
             {
-                UpdateFunctionCollection(action, waterQualityModel.ProcessCoefficients, parameter.Name,
-                parameter.DefaultValue, parameter.Unit, parameter.Description);
+                UpdateFunctionCollection(action, waterQualityModel.ProcessCoefficients, name,
+                defaultValue, unit, description);
             }
         }
 

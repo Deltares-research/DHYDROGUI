@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ReadWriteReadCmpTest()
         {
             var cmpFile = new CmpFile();
-            var cmpPath = TestHelper.GetTestFilePath(@"harlingen\071_03_0001.cmp");
+            var cmpPath = TestHelper.GetTestFilePath(@"harlingen\FilesUsingOldFormat\071_03_0001.cmp");
             var cmpPathExport = "017_03_0001_export.cmp";
             var harmonicComponents = cmpFile.Read(cmpPath);
             cmpFile.Write(cmpPathExport, harmonicComponents);

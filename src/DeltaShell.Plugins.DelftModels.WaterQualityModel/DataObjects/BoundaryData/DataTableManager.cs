@@ -9,6 +9,8 @@ using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData
 {
@@ -18,6 +20,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryD
     /// </summary>
     public class DataTableManager : Unique<long>, INameable, IItemContainer
     {
+
+        /// <summary>
+        /// The log
+        /// </summary>
+        private static readonly ILog log = LogManager.GetLogger(typeof(DataTableManager));
+
         private IEventedList<DataTable> dataTables;
         /// <summary>
         /// Flag to keep track if executing <see cref="MoveDataTable"/> or not.
@@ -28,26 +36,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryD
         {
             DataTables = new EventedList<DataTable>();
             Name = "Data Table Manager";
-        }
-
-        private void DataTablesOnCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
-        {
-            if (movingDataTables || !Equals(sender, dataTables))
-            {
-                return;
-            }
-
-            var dataTable = (DataTable)e.Item;
-            if (e.Action == NotifyCollectionChangeAction.Remove)
-            {
-                dataTable.DataFile.Delete();
-                dataTable.SubstanceUseforFile.Delete();
-
-                if (!DataTables.Any())
-                {
-                    FileUtils.DeleteIfExists(FolderPath);
-                }
-            }
         }
 
         public virtual string Name { get; set; }
@@ -114,59 +102,46 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryD
         /// <see cref="FolderPath"/> not set to a valid folder-path.</exception>
         /// <exception cref="System.ArgumentException">
         /// When a file already exists with the given filename.</exception>
-        public virtual void CreateNewDataTable(string name, string tableContents, string useforFullFilename, string useforContents, bool createNewFileNamesIfExists = false)
+        public virtual void CreateNewDataTable(string name, string tableContents, string useforFullFilename,
+            string useforContents, bool createNewFileNamesIfExists = false)
         {
             if (string.IsNullOrWhiteSpace(FolderPath))
             {
-                throw new InvalidOperationException("Requires FolderPath to be set to a valid filepath before calling CreateNewDataTable.");
+                throw new InvalidOperationException(
+                    "Requires FolderPath to be set to a valid filepath before calling CreateNewDataTable.");
             }
+
             FileUtils.CreateDirectoryIfNotExists(FolderPath);
 
-            var dataTableFilePath = Path.Combine(FolderPath, string.Format("{0}.tbl", name));
-            if (File.Exists(dataTableFilePath))
-            {
-                if (createNewFileNamesIfExists)
-                {
-                    dataTableFilePath = FileUtils.GetUniqueFileName(dataTableFilePath);
-                }
-                else
-                {
-                    var message = string.Format(
-                        "A datatable named '{0}' already exists within the manager at path: {1}",
-                        name, Path.GetFullPath(dataTableFilePath));
-                    throw new ArgumentException(message);
-                }
-            }
+            var filename = $"{name}.tbl";
+            var dataTableFilePath = Path.Combine(FolderPath, filename);
+            var dataTableFilePathAlreadyExists = File.Exists(dataTableFilePath);
 
-            var useforFilePath = Path.Combine(FolderPath, useforFullFilename);
-            if (File.Exists(useforFilePath))
-            {
-                if (createNewFileNamesIfExists)
-                {
-                    useforFilePath = FileUtils.GetUniqueFileName(useforFullFilename);
-                }
-                else
-                {
-                    var message = string.Format("The substance usefor file '{0}' already exists within the manager at path: {1}",
-                    useforFullFilename, Path.GetFullPath(useforFilePath));
-                    throw new ArgumentException(message);
-                }
-            }
+            var dataTableFile = WriteTableContentsToNewTextDocumentFromFile(tableContents, dataTableFilePath);
+            var useforFile = WriteTableContentsToNewTextDocumentFromFile(useforContents, useforFullFilename);
+            var existingFileName = Path.GetFileName(dataTableFilePath);
 
-            File.WriteAllText(dataTableFilePath, tableContents);
-            var dataTableFile = new TextDocumentFromFile();
-            dataTableFile.Open(dataTableFilePath);
-
-            File.WriteAllText(useforFilePath, useforContents);
-            var useforFile = new TextDocumentFromFile();
-            useforFile.Open(useforFilePath);
+            var filter = string.Concat($"{name}" + "({0})");
+            //We only need the unique name if the file does not yet exist. Else we just use the name passed to the method.
+            var uniqueName = dataTableFilePathAlreadyExists
+                ? NamingHelper.GetUniqueName(filter, dataTables, typeof(DataTable))
+                : name;
 
             var newTable = new DataTable
             {
-                Name = name, 
-                DataFile = dataTableFile, 
+                Name = uniqueName,
+                DataFile = dataTableFile,
                 SubstanceUseforFile = useforFile
             };
+
+            //We only throw the warning when the dataTable filePath already exists 
+            if (dataTableFilePathAlreadyExists)
+            {
+                log.Warn(string.Format(
+                    Resources
+                        .DataTableManager_WriteTableContentsToNewTextDocumentFromFile_File___0___already_exists_within_the_database__The_file_that_is_being_imported_will_be_renamed_to___1____Note_that_your_results_may_be_affected_by_the_new_import,
+                    existingFileName, uniqueName));
+            }
 
             dataTables.Add(newTable);
         }
@@ -209,6 +184,46 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryD
                 yield return dataTable.DataFile;
                 yield return dataTable.SubstanceUseforFile;
             }
+        }
+
+        /// <summary>
+        /// Datas the tables on collection changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="NotifyCollectionChangingEventArgs"/> instance containing the event data.</param>
+        private void DataTablesOnCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            if (movingDataTables || !Equals(sender, dataTables))
+            {
+                return;
+            }
+
+            var dataTable = (DataTable)e.Item;
+            if (e.Action == NotifyCollectionChangeAction.Remove)
+            {
+                dataTable.DataFile.Delete();
+                dataTable.SubstanceUseforFile.Delete();
+
+                if (!DataTables.Any())
+                {
+                    FileUtils.DeleteIfExists(FolderPath);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Writes the table contents to new text document from file.
+        /// </summary>
+        /// <param name="tableContents">The table contents.</param>
+        /// <param name="dataTableFilePath">The data table file path.</param>
+        /// <returns></returns>
+        private static TextDocumentFromFile WriteTableContentsToNewTextDocumentFromFile(string tableContents, string dataTableFilePath)
+        {
+            File.WriteAllText(dataTableFilePath, tableContents);
+
+            var dataTableFile = new TextDocumentFromFile();
+            dataTableFile.Open(dataTableFilePath);
+            return dataTableFile;
         }
     }
 }

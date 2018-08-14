@@ -62,9 +62,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         private static ModelSchema<WaterFlowFMPropertyDefinition> MorphologyModelPropertySchema { get; set; }
         private static ModelSchema<WaterFlowFMPropertyDefinition> ModelPropertySchema { get; set; }
         public IEventedList<WaterFlowFMProperty> Properties { get; private set; }
+
+        /// <summary>
+        /// Gets the GUI property groups from the default properties file and the Morphology properties file.
+        /// </summary>
+        /// <value>
+        /// The GUI property groups.
+        /// </value>
         public static Dictionary<string, ModelPropertyGroup> GuiPropertyGroups
         {
-            get { return ModelPropertySchema.GuiPropertyGroups; }
+            get
+            {
+                var modelPropertyGroups =
+                    ModelPropertySchema?.GuiPropertyGroups?
+                        .Union(MorphologyModelPropertySchema.GuiPropertyGroups);
+                    
+                return modelPropertyGroups?
+                    .GroupBy(kvp => kvp.Key)
+                    .Select(grp => grp.First())
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
         }
         public string ModelDirectory { get; set; }
         public string ModelName { get; set; }
@@ -376,7 +393,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             var property = Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName == propertyName);
             var fileName = property != null ? (string) property.Value : defaultName;
 
-            return Path.Combine(OutputDirectory, string.IsNullOrEmpty(fileName) ? defaultName : fileName);
+            return Path.Combine(OutputDirectory, String.IsNullOrEmpty(fileName) ? defaultName : fileName);
         }
 
         public string RelativeComFilePath
@@ -882,6 +899,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 };
             }
             return operation;
+        }
+
+        /// <summary>
+        /// Gets the name of the tab.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="messageKey">The message key.</param>
+        /// <param name="fmModel">The fm model.</param>
+        /// <returns></returns>
+        public static string GetTabName(string key, string messageKey = null, WaterFlowFMModel fmModel = null)
+        {
+            if (key == KnownProperties.SedFile)
+            {
+                if (fmModel == null) return String.Empty;
+
+                var useSedFileFlowFmProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.SedFile);
+                var guiSedimentGroupId = String.IsNullOrEmpty(useSedFileFlowFmProperty.PropertyDefinition.FileCategoryName)
+                    ? "sediment"
+                    : useSedFileFlowFmProperty.PropertyDefinition.FileCategoryName;
+
+                key = guiSedimentGroupId;
+                messageKey = "sediment file";
+    }
+
+            if (GuiPropertyGroups.ContainsKey(key)) return GuiPropertyGroups[key].Name;
+
+            Log.ErrorFormat(
+                Resources.WaterFlowFMModelDefinition_GetTabName_Invalid_gui_group_id_for___0___in_the_scheme_of_dflowfmmorpropertiescsv___1_, messageKey, key);
+
+            return String.Empty;
         }
     }
 }

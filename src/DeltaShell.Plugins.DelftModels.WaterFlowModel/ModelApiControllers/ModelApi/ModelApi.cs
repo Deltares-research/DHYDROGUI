@@ -97,8 +97,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
         TH_F3 = 61, // Thatcher-Harleman coefficient F3
         TH_F4 = 62, // Thatcher-Harleman coefficient F4
         Density = 63, // Density salt
-        LateralDefined = 64, // Defined lateral discharge
-        LateralDifference = 65, // difference between realised and defined lateral discharge
         EnergyLevels = 66, // energy levels on reach segments
         BalBoundariesIn = 67,
         BalBoundariesOut = 68,
@@ -119,12 +117,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
         Bal2d1dOut = 83,
         Bal2d1dTot = 84,
         LateralAtNodes = 85,
-        PumpResults = 86,
-        PumpSuctionSide = 87,
-        PumpDeliverySide = 88,
+        PumpDischarge = 86,
+        SuctionSideLevel = 87,
+        DeliverySideLevel = 88,
         PumpHead = 89,
-        PumpStage = 90,
-        PumpReductionFactor = 91,
+        ActualPumpStage = 90,
+        ReductionFactor = 91,
         Temperature = 92,
         TotalHeatFlux = 93,
         RadFluxClearSky = 94,
@@ -135,7 +133,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
         HeatLossForcedEvap = 99,
         HeatLossFreeEvap = 100,
         HeatLossForcedConv = 101,
-        HeatLossFreeConv = 102
+        HeatLossFreeConv = 102,
+        ActualDischarge = 110, // Actual lateral discharge
+        DefinedDischarge = 111, // Defined lateral discharge
+        LateralDifference = 112, // difference between Actual and Defined lateral discharge
     }
 
     // The ElementSets supported by ModelApi; always chaeck with availablity of QuantityType per ElementSet!

@@ -108,6 +108,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private string verticalDiffusionRelativeFilePath;
         private IEventedList<WaterQualityObservationPoint> observationPoints;
         private IEventedList<WaterQualityLoad> loads;
+        private string surfacesRelativeFilePath;
+        private string chezyCoefficientsFilePath;
+        private string widthsFilePath;
+        private string velocitiesFilePath;
 
         #endregion
 
@@ -152,7 +156,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             enableMarkOutputOutOfSync = true;
         }
 
-        # region Public properties
+        #region Public properties
+
+        private IList<WaqProcessValidationRule> _waqProcessesRules;
+
+        public virtual IList<WaqProcessValidationRule> WaqProcessesRules
+        {
+            get
+            {
+                InitializeWaqProcessesRules();
+                return _waqProcessesRules;
+            }
+        }
+
+        private void InitializeWaqProcessesRules()
+        {
+            if (_waqProcessesRules != null && _waqProcessesRules.Any()) return;
+
+
+
+            //Get the file locaiton
+            var assembly = typeof(WaterQualityModel).Assembly;
+            var assemblyLocation = assembly.Location;
+            var directoryInfo = new FileInfo(assemblyLocation).Directory;
+
+            if (directoryInfo == null) return;
+            //Initialize it.
+            _waqProcessesRules = new WaqProcessesRules().ReadValidationCsv(directoryInfo.FullName);
+        }
 
         public override string KernelVersions
         {
@@ -519,6 +550,58 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         public virtual string LengthsRelativeFilePath { get; protected set; }
 
         /// <summary>
+        /// Gets or sets the velocities file path.
+        /// <see cref="IHydroData.GetVelocitiesFilePath"/>
+        /// </summary>
+        /// <value>
+        /// The velocities file path.
+        /// </value>
+        public virtual string VelocitiesFilePath
+        {
+            get { return velocitiesFilePath; }
+            protected set
+            {
+                velocitiesFilePath = value;
+                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), "Velocity");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the widths file path.
+        /// <see cref="IHydroData.GetWidthsFilePath"/>
+        /// </summary>
+        /// <value>
+        /// The widths file path.
+        /// </value>
+        public virtual string WidthsFilePath
+        {
+            get { return widthsFilePath; }
+            protected set
+            {
+                widthsFilePath = value;
+                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), "Width");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the chezy coefficients file path.
+        /// <see cref="IHydroData.GetChezyCoefficientsFilePath"/>
+        /// </summary>
+        /// <value>
+        /// The chezy coefficients file path.
+        /// </value>
+        public virtual string ChezyCoefficientsFilePath
+        {
+            get { return chezyCoefficientsFilePath; }
+            protected set
+            {
+                chezyCoefficientsFilePath = value;
+                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), "Chezy");
+            }
+        }
+
+
+        /// <summary>
         /// The vertical diffusion file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.vdf
@@ -544,7 +627,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// *.srf
         /// <see cref="IHydroData.GetSurfacesRelativeFilePath"/>
         /// </summary>
-        public virtual string SurfacesRelativeFilePath { get; protected set; }
+        public virtual string SurfacesRelativeFilePath
+        {
+            get { return surfacesRelativeFilePath; }
+            protected set
+            {
+                surfacesRelativeFilePath = value;
+                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), "Surf");
+            }
+        }
 
         /// <summary>
         /// The salinity file can be found in the *.hyd-file and
@@ -711,6 +802,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 if (existingGridCoordinateSystemString == newCoordinateSystemString) return;
 
                 Grid.CoordinateSystem = value;
+
                 OnInputPropertyChanged(this, new PropertyChangedEventArgs("CoordinateSystem"));
             }
         }
@@ -753,22 +845,39 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 throw new ArgumentNullException("data", "No hydrodynamics data was specified.");
             }
 
+            //As per issue D3DFMIQ-318, we should override the coordinate system with the imported one. 
+            var coordinateSystemChanges = CoordinateSystem != data.Grid?.CoordinateSystem;
+            CoordinateSystem = data.Grid?.CoordinateSystem;
+            if (coordinateSystemChanges)
+            {
+                Log.Info(
+                    string.Format(Resources.WaterQualityModel_ImportHydroData_The_coordinate_system_of_the_model___0__has_been_set_to__1_, 
+                        Name, 
+                        data.Grid?.CoordinateSystem == null 
+                            ? "<empty>" 
+                            : data.Grid.CoordinateSystem.ToString()));
+            }
+            
             if (data.Equals(HydroData))
+            {
+                OverWriteModelTimersWithImportTimers(skipImportTimers, data);
+                OverWriteSegmentFunctions(data);
                 return;
-
+            }
+            
             HasHydroDataImported = false;
 
             enableMarkOutputOutOfSync = markOutputOutOfSync;
 
             var schematizationRemainsUnchanged = data.HasSameSchematization(HydroData);
-            HydroData = data;
-
-            BeginEdit(new DefaultEditAction("Importing hydrodynamics data"));
-
-            importingHydroData = true;
 
             try
             {
+                BeginEdit(new DefaultEditAction("Importing hydrodynamics data"));
+                HydroData = data;
+
+                importingHydroData = true;
+
                 SetImportProgress("Importing grid");
                 ModelType = HydroData.HydroDynamicModelType;
                 LayerType = HydroData.LayerType;
@@ -781,39 +890,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     ClearOutput();
                 }
 
-                // import settings that should not be overridden by re-importing the hyd file
-                if (!skipImportTimers)
-                {
-                    SetImportProgress("Importing timers");
-                    StartTime = HydroData.ConversionStartTime;
-                    StopTime = HydroData.ConversionStopTime;
-                    TimeStep = HydroData.ConversionTimeStep;
-                    ReferenceTime = HydroData.ConversionReferenceTime;
-
-                    //Sync of time step needs to be explicit.
-                    ModelSettings.HisTimeStep = HydroData.ConversionTimeStep;
-                    ModelSettings.MapTimeStep = HydroData.ConversionTimeStep;
-                    ModelSettings.BalanceTimeStep = HydroData.ConversionTimeStep;
-                    LogSynchronizedTimer("Time Step", TimeStep);
-                }
-
-                if (!HasEverImportedHydroData || importCoordinateSystem)
-                {
-                    CoordinateSystem = HydroData.Grid == null ? null : HydroData.Grid.CoordinateSystem;
-                }
-
+                //As of issue D3DFMIQ-329, the timers should be overriden when importing the hyd file again.
+                OverWriteModelTimersWithImportTimers(skipImportTimers, HydroData);
+                
                 SetImportProgress("Importing file paths");
                 AreasRelativeFilePath = HydroData.AreasRelativePath;
                 VolumesRelativeFilePath = HydroData.VolumesRelativePath;
                 FlowsRelativeFilePath = HydroData.FlowsRelativePath;
                 PointersRelativeFilePath = HydroData.PointersRelativePath;
                 LengthsRelativeFilePath = HydroData.LengthsRelativePath;
-                SalinityRelativeFilePath = HydroData.SalinityRelativePath;
-                TemperatureRelativeFilePath = HydroData.TemperatureRelativePath;
                 VerticalDiffusionRelativeFilePath = HydroData.VerticalDiffusionRelativePath;
-                SurfacesRelativeFilePath = HydroData.SurfacesRelativePath;
-                ShearStressesRelativeFilePath = HydroData.ShearStressesRelativePath;
                 AttributesRelativeFilePath = HydroData.AttributesRelativePath;
+                OverWriteSegmentFunctions(HydroData);
 
                 SetImportProgress("Importing exchanges and layer information");
                 NumberOfHorizontalExchanges = HydroData.NumberOfHorizontalExchanges;
@@ -844,22 +932,54 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
+        private void OverWriteSegmentFunctions(IHydroData data)
+        {
+            SetImportProgress("Sync of segment functions");
+            SurfacesRelativeFilePath = data.SurfacesRelativePath;
+            VelocitiesFilePath = data.VelocitiesRelativePath;
+            WidthsFilePath = data.WidthsRelativePath;
+            ChezyCoefficientsFilePath = data.ChezyCoefficientsRelativePath;
+            SalinityRelativeFilePath = HydroData.SalinityRelativePath;
+            TemperatureRelativeFilePath = HydroData.TemperatureRelativePath;
+            ShearStressesRelativeFilePath = HydroData.ShearStressesRelativePath;
+        }
+
+        private void OverWriteModelTimersWithImportTimers(bool skipImportTimers, IHydroData dataToOverwrite)
+        {
+            if (skipImportTimers) return;
+
+            SetImportProgress("Importing timers");
+            StartTime = dataToOverwrite.ConversionStartTime;
+            StopTime = dataToOverwrite.ConversionStopTime;
+            TimeStep = dataToOverwrite.ConversionTimeStep;
+            ReferenceTime = dataToOverwrite.ConversionReferenceTime;
+
+            //Sync of time step needs to be explicit.
+            ModelSettings.HisTimeStep = dataToOverwrite.ConversionTimeStep;
+            ModelSettings.MapTimeStep = dataToOverwrite.ConversionTimeStep;
+            ModelSettings.BalanceTimeStep = dataToOverwrite.ConversionTimeStep;
+            LogSynchronizedTimer("Time Step", TimeStep);
+        }
+
         private void ResolveBoundaryImport(IEnumerable<WaterQualityBoundary> importedBoundaries)
         {
-            List<WaterQualityBoundary> newBoundaries = new List<WaterQualityBoundary>();
-            foreach (var waterQualityBoundary in importedBoundaries)
+            var newBoundaries = new List<WaterQualityBoundary>();
+            if( importedBoundaries != null)
             {
-                // find an already loaded boundary
-                var existingBoundary = Boundaries.FirstOrDefault(b => b.Name == waterQualityBoundary.Name);
-
-                if (existingBoundary != null)
+                foreach (var waterQualityBoundary in importedBoundaries)
                 {
-                    // copy the location aliases
-                    // TODO: extend this list if there is more to be mapped
-                    waterQualityBoundary.LocationAliases = existingBoundary.LocationAliases;
-                }
+                    // find an already loaded boundary
+                    var existingBoundary = Boundaries.FirstOrDefault(b => b.Name == waterQualityBoundary.Name);
 
-                newBoundaries.Add(waterQualityBoundary);
+                    if (existingBoundary != null)
+                    {
+                        // copy the location aliases
+                        // TODO: extend this list if there is more to be mapped
+                        waterQualityBoundary.LocationAliases = existingBoundary.LocationAliases;
+                    }
+
+                    newBoundaries.Add(waterQualityBoundary);
+                }
             }
 
             Boundaries.Clear();
@@ -912,11 +1032,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// <returns>True if there is data defined in the hydro dynamics, false otherwise.</returns>
         public virtual bool HasDataInHydroDynamics(string functionName)
         {
-            if (HydroData != null)
-            {
-                return HydroData.HasDataFor(functionName);
-            }
-            return false;
+            return HydroData != null && HydroData.HasDataFor(functionName);
         }
 
         /// <summary>
@@ -1625,7 +1741,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         private void HandleNewHydroDynamicsFunctionDataSet(IDataItemSet functionCollection, string functionName)
         {
-            var dataItem = functionCollection.DataItems.FirstOrDefault(p => p.Name == functionName);
+            var dataItem = functionCollection.DataItems.FirstOrDefault(p => p.Name.ToLowerInvariant() == functionName.ToLowerInvariant());
             if (dataItem == null || SubstanceProcessLibrary == null) return;
 
             var function = GetFunctionForDataItem(dataItem);
@@ -1634,11 +1750,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             var isFromHydroDynamics = function.IsFromHydroDynamics();
 
             IFunctionTypeCreator creator;
-            if (hasDataInHydroDynamics && !HasEverImportedHydroData) // if there is data and it is the first time, automatically set it to from hydrodynamics. 
+            if (hasDataInHydroDynamics ) // if there is data and it is the first time, automatically set it to from hydrodynamics. 
             {
                 creator = FunctionTypeCreatorFactory.CreateFunctionFromHydroDynamicsCreator(HasDataInHydroDynamics, GetFilePathFromHydroDynamics);
             }
-            else if (!hasDataInHydroDynamics && isFromHydroDynamics) // if there is no data in the hydrodynamics, but it is set as such, set it back to constant
+            else if (isFromHydroDynamics) // if there is no data in the hydrodynamics, but it is set as such, set it back to constant
             {
                 creator = FunctionTypeCreatorFactory.CreateConstantCreator();
             }
@@ -1648,6 +1764,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
 
             FunctionTypeCreator.ReplaceFunctionUsingCreator(functionCollection.AsEventedList<IFunction>(), function, creator, this);
+            Log.InfoFormat(Resources.WaterQualityModel_HandleNewHydroDynamicsFunctionDataSet_The_process_coefficient__0__has_been_updated_with_the_latest_Hydrodynamic_data_file_,
+                    function.Name);
         }
 
         private IFunction GetFunctionForDataItem(IDataItem dataItem)

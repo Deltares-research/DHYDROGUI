@@ -345,15 +345,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             Assert.AreEqual(Enum.GetName(typeof(AggregationOptions), AggregationOptions.Current), openingHeightProperty.Value);
         }
 
-        [Test]
-        public void TestModelDefinitionFileWriter_ResultsPumps()
+        [TestCase(QuantityType.SuctionSideLevel)]
+        [TestCase(QuantityType.DeliverySideLevel)]
+        [TestCase(QuantityType.PumpHead)]
+        [TestCase(QuantityType.ActualPumpStage)]
+        [TestCase(QuantityType.PumpCapacity)]
+        [TestCase(QuantityType.ReductionFactor)]
+        [TestCase(QuantityType.PumpDischarge)]
+        public void TestModelDefinitionFileWriter_ResultsPumps(QuantityType quantityType)
         {
             var waterFlowModel1D = new WaterFlowModel1D();
 
-            var pumpResultsEngineParameter = waterFlowModel1D.OutputSettings.EngineParameters.FirstOrDefault(
-                ep => ep.ElementSet == ElementSet.Pumps && ep.QuantityType == QuantityType.PumpResults);
-            Assert.NotNull(pumpResultsEngineParameter);
-            pumpResultsEngineParameter.AggregationOptions = AggregationOptions.Current;
+            var pumpDischargeEngineParameter = waterFlowModel1D.OutputSettings.EngineParameters.FirstOrDefault(
+                ep => ep.ElementSet == ElementSet.Pumps && ep.QuantityType == quantityType);
+            Assert.NotNull(pumpDischargeEngineParameter);
+            pumpDischargeEngineParameter.AggregationOptions = AggregationOptions.Current;
 
             // Write Md1d File
             var targetPath = Path.Combine(Environment.CurrentDirectory, FileWriterTestHelper.RelativeTargetDirectory);
@@ -369,8 +375,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             Assert.NotNull(content);
 
             // Check values are present in category
-            var pumpResultsProperty = content.Properties.First(p => p.Name == QuantityType.PumpResults.ToString());
-            Assert.AreEqual(Enum.GetName(typeof(AggregationOptions), AggregationOptions.Current), pumpResultsProperty.Value);
+            var pumpDischargeProperty = content.Properties.First(p => p.Name == quantityType.ToString());
+            Assert.AreEqual(Enum.GetName(typeof(AggregationOptions), AggregationOptions.Current), pumpDischargeProperty.Value);
         }
 
         [Test]
@@ -942,7 +948,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             };
             var listLatSources = new List<string>()
             {
-                "Discharge", "WaterLevel"
+                "ActualDischarge", "DefinedDischarge", "LateralDifference", "WaterLevel"
             };
             var listVolumeGrid = new List<string>()
             {

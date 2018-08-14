@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using DelftTools.Shell.Gui;
@@ -67,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 }
                 else
                 {
-                    var ownerWaveModel = WaveModels.FirstOrDefault(w => w.GetAllItemsRecursive().Contains(discreteGrid));
+                    var ownerWaveModel = GetWaveModels?.Invoke().FirstOrDefault(w => w.GetAllItemsRecursive().Contains(discreteGrid));
                     coordinateSystem = ownerWaveModel == null ? null : ownerWaveModel.CoordinateSystem;
                 }
 
@@ -252,13 +253,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             var model = data as WaveModel;
             if (model != null)
             {
-                WaveSnappedFeaturesGroupLayerData snappedData;
-                if (!modelToSnappedFeatureData.TryGetValue(model, out snappedData))
-                {
-                    snappedData = new WaveSnappedFeaturesGroupLayerData(model);
-                    modelToSnappedFeatureData.Add(model, snappedData);
-                }
-                yield return snappedData;
+                yield return new WaveSnappedFeaturesGroupLayerData(model);
                 yield return model.BoundaryConditions;
                 yield return model.Boundaries;
                 yield return model.Sp2Boundaries;
@@ -287,7 +282,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             var store = data as WavmFileFunctionStore;
             if (store != null)
             {
-                var waveModel = WaveModels.FirstOrDefault(m => m.WavmFunctionStores.Contains(store));
+                var waveModel = GetWaveModels?.Invoke().FirstOrDefault(m => m.WavmFunctionStores.Contains(store));
                 if (waveModel == null)
                 {
                     yield return store.Grid;
@@ -297,12 +292,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             }
         }
 
-        private IEnumerable<WaveModel> WaveModels
-        {
-            get { return modelToSnappedFeatureData.Keys; }
-        }
-
-        private static readonly EnumerableConditionalWeakTable<WaveModel, WaveSnappedFeaturesGroupLayerData> modelToSnappedFeatureData =
-            new EnumerableConditionalWeakTable<WaveModel, WaveSnappedFeaturesGroupLayerData>();
+        public Func<IEnumerable<WaveModel>> GetWaveModels { get; set; }
     }
 }

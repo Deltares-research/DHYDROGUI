@@ -3,15 +3,21 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
@@ -42,68 +48,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(coverage);
         }
 
-        /*
-         * These are non-functional tests. It tests a dflowfm.exe that is not even used in the application. 
-         * I think these should either
-         * - be removed
-         * - adapted: import, run1, export, import, run2. Compare run1 and run2. Run should be done with the regular
-         *   runner, not dflowfm.exe. 
-         */
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
-        [Category(TestCategory.WorkInProgress)] 
-        /* 
-            moving this test to WIP since we already have a good coverage of tests on the Harlingen model 
-            see WaterFlowFMModelDefinitionTest.ReadAndWriteModelDefinitionHarlingenModel
-            (as the comment above says, these tests need to be reworked...)
-        */
-        public void ModelImportExportTestHarlingen()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-            var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
-            var localMduDir = Path.GetDirectoryName(localMduFilePath);
-
-            var exportDir = "export";
-            ImportExportRun(localMduFilePath, ref exportDir);
-            
-            var ncHisFile = Path.Combine(localMduDir, "DFM_OUTPUT_har/001_his.nc");
-            var ncHisFileExported = Path.Combine(localMduDir, exportDir + "/DFM_OUTPUT_har/001_his.nc");
-            AssertTimeseriesAreEqual("waterlevel", ncHisFile, ncHisFileExported, 1e-02);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
-        public void ModelImportExportTestSquareGridWithWaq()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"square_waq\square.mdu");
-            var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
-            var localMduDir = Path.GetDirectoryName(localMduFilePath);
-
-            var exportDir = "export";
-            ImportExportRun(localMduFilePath, ref exportDir);
-
-            var waqFolder = Path.Combine(localMduDir, "DFM_DELWAQ_square");
-            var waqFolderExported = Path.Combine(localMduDir, exportDir, "DFM_DELWAQ_square");
-            Assert.IsTrue(Directory.Exists(waqFolder));
-            Assert.IsTrue(Directory.Exists(waqFolderExported));
-            Assert.IsTrue(Directory.EnumerateFiles(waqFolderExported).Any());
-
-
-            Assert.IsTrue(File.Exists(Path.Combine(waqFolderExported, "square.are")));
-            Assert.IsTrue(File.Exists(Path.Combine(waqFolderExported, "square.bnd")));
-            Assert.IsTrue(File.Exists(Path.Combine(waqFolderExported, "square.flo")));
-            Assert.IsTrue(File.Exists(Path.Combine(waqFolderExported, "square.hyd")));
-            Assert.IsTrue(File.Exists(Path.Combine(waqFolderExported, "square.len")));
-            Assert.IsTrue(File.Exists(Path.Combine(waqFolderExported, "square.poi")));
-            Assert.IsTrue(File.Exists(Path.Combine(waqFolderExported, "square.srf")));
-            Assert.IsTrue(File.Exists(Path.Combine(waqFolderExported, "square.tau")));
-            Assert.IsTrue(File.Exists(Path.Combine(waqFolderExported, "square.vol")));
-            Assert.IsTrue(File.Exists(Path.Combine(waqFolderExported, "square_waqgeom.nc")));
-        }
-
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
@@ -116,45 +60,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var model = new WaterFlowFMModel(localMduFilePath);
 
             Assert.IsNotNull(model);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
-        public void ModelImportExportTestIvoorkust()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"mdu_ivoorkust\ivk.mdu");
-            var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
-            var localMduDir = Path.GetDirectoryName(localMduFilePath);
-
-            string exportDir = "export";
-            ImportExportRun(localMduFilePath, ref exportDir);
-            
-            var ncHisFile = Path.Combine(localMduDir, "DFM_OUTPUT_ivk/ivk_his.nc");
-            var ncHisFileExported = Path.Combine(localMduDir, exportDir + "/DFM_OUTPUT_ivk/ivk_his.nc");
-            AssertTimeseriesAreEqual("waterlevel", ncHisFile, ncHisFileExported, 1e-03);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
-        public void ModelImportExportTestPensioenModel()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"data\pensioen\pensioen.mdu");
-            var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
-            var localMduDir = Path.GetDirectoryName(localMduFilePath);
-
-            string exportDir = "export";
-            ImportExportRun(localMduFilePath, ref exportDir);
-
-            var ncHisFile = Path.Combine(localMduDir, "DFM_OUTPUT_pensioen/pensioen_his.nc");
-            var ncHisFileExported = Path.Combine(localMduDir, exportDir + "/DFM_OUTPUT_pensioen/pensioen_his.nc");
-
-            // Problem in dflowfm.exe with OpenMP (i.e. when OMP_NUM_THREADS != 1)
-            // causes numerical differences for win32 version. Does not occur for win64
-            // or when OMP_NUM_THREADS=1. Currently being worked on, until solved, I've
-            // put 1e-03 below:
-            AssertTimeseriesAreEqual("waterlevel", ncHisFile, ncHisFileExported, 1e-02);
         }
 
         [Test]
@@ -325,6 +230,86 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Integration)]
+        public void Test_Export_WaterFlowFmModel_WithPillarBridges()
+        {
+            var tempDir = FileUtils.CreateTempDirectory();
+            var exportPath = Path.Combine(tempDir, "testBridgePillars.mdu");
+            exportPath = TestHelper.CreateLocalCopy(exportPath);
+            FileUtils.DeleteIfExists(exportPath);
+            try
+            {
+                var fmModel = new WaterFlowFMModel();
+
+                #region Set Pillar and DataModel
+
+                var pillar = new BridgePillar()
+                {
+                    Name = "BridgePillarTest",
+                    Geometry =
+                        new LineString(new[]
+                        {
+                            new Coordinate(20.0, 60.0, 0),
+                            new Coordinate(140.0, 8.0, 1.0),
+                            new Coordinate(180.0, 4.0, 2.0),
+                            new Coordinate(260.0, 0.0, 3.0)
+                        }),
+                };
+
+                /* Set data model */
+                var modelFeatureCoordinateDatas = fmModel.BridgePillarsDataModel;
+                modelFeatureCoordinateDatas.Clear();
+                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar>() { Feature = pillar };
+                modelFeatureCoordinateData.UpdateDataColumns();
+                //Diameters
+                modelFeatureCoordinateData.DataColumns[0].ValueList = new List<double> { 1.0, 2.5, 5.0, 10.0 };
+                //DragCoefficient
+                modelFeatureCoordinateData.DataColumns[1].ValueList = new List<double> { 10.0, 5.0, 2.5, 1.0 };
+
+                modelFeatureCoordinateDatas.Add(modelFeatureCoordinateData);
+                MduFile.SetBridgePillarAttributes(fmModel.Area.BridgePillars, modelFeatureCoordinateDatas);
+                /* Done only for testing purposes. 
+                 * Please do not attempt to do this without the supervision of another adult. */
+                TypeUtils.SetPrivatePropertyValue(fmModel, "BridgePillarsDataModel", modelFeatureCoordinateDatas);
+
+                #endregion
+                fmModel.Area.BridgePillars.Add(pillar);
+                Assert.IsTrue(fmModel.ExportTo(exportPath));
+                Assert.IsTrue(File.Exists(exportPath));
+
+                var bridgeFile = exportPath.Replace(".mdu",".pliz");
+                Assert.IsTrue(File.Exists(bridgeFile));
+
+                //Check contents of the file
+                var readLines = File.ReadAllLines(bridgeFile);
+                var expectedLines = new List<string>
+                {
+                    "BridgePillarTest",
+                    "    4    4",
+                    "2.000000000000000E+001  6.000000000000000E+001  1.000000000000000E+000  1.000000000000000E+001",
+                    "1.400000000000000E+002  8.000000000000000E+000  2.500000000000000E+000  5.000000000000000E+000",
+                    "1.800000000000000E+002  4.000000000000000E+000  5.000000000000000E+000  2.500000000000000E+000",
+                    "2.600000000000000E+002  0.000000000000000E+000  1.000000000000000E+001  1.000000000000000E+000"
+                };
+
+                var idx = 0;
+                foreach (var textLine in readLines)
+                {
+                    var expectedLine = expectedLines[idx];
+                    Assert.AreEqual(expectedLine, textLine);
+                    idx++;
+                }
+
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(exportPath);
+            }
+        }
+
+
         private static WaterFlowFMModel GetWaterFlowFmModelWithMeteoData(bool useSolarRadiation)
         {
             var fmModel = new WaterFlowFMModel();
@@ -365,39 +350,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
 
             return fmModel;
-        }
-
-
-        private static void ImportExportRun(string mduFilePath, ref string exportDir)
-        {
-            Assert.IsTrue(File.Exists(mduFilePath));
-            
-            var localMduDir = Path.GetDirectoryName(mduFilePath);
-            var model = new WaterFlowFMModel(mduFilePath);
-            var exportMduPath = Path.Combine(localMduDir, exportDir);
-
-            try
-            {
-                if (Directory.Exists(exportMduPath))
-                    Directory.Delete(exportMduPath, true);
-            }
-            catch (IOException)
-            {
-                // failed to delete.. sometimes happens on build server, let's retry once:
-                exportMduPath += "2";
-                exportDir += "2";
-                if (Directory.Exists(exportMduPath))
-                    Directory.Delete(exportMduPath, true);
-            }
-
-            Directory.CreateDirectory(exportMduPath);
-            
-            var exportedMduFile = Path.Combine(exportMduPath, Path.GetFileName(mduFilePath));
-            model.ExportTo(exportedMduFile, false);
-
-            // run
-            RunUnstruc(mduFilePath);
-            RunUnstruc(exportedMduFile);
         }
 
         private void AssertTimeseriesAreEqual(string variableName, string ncFileNameLeft, string ncFileNameRight, double minimumAbsError)
@@ -459,29 +411,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             }
             return data;
-        }
-
-        private static void RunUnstruc(string localMduFile)
-        {
-            var unstrucBatchScript = TestHelper.GetTestFilePath(@"unstruc\dflowfm.bat");
-            var process = new Process
-            {
-                StartInfo =
-                {
-                    FileName = unstrucBatchScript,
-                    Arguments = Path.GetDirectoryName(unstrucBatchScript) + " "
-                                + Path.GetDirectoryName(localMduFile) + " "
-                                + Path.GetFileName(localMduFile),
-                    WindowStyle = ProcessWindowStyle.Hidden
-
-                }
-            };
-            process.Start();
-            if (!process.WaitForExit(240000)) // 4 min. tops
-            {
-                Process.GetProcessesByName("dflowfm").ForEach(p => p.Kill());
-                throw new InvalidOperationException("Took longer than 4 minutes!!");
-            }
         }
     }
 }

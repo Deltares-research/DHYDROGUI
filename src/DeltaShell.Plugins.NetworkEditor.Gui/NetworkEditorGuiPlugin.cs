@@ -57,6 +57,7 @@ using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 using PropertyInfo = DelftTools.Shell.Gui.PropertyInfo;
 using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
+using BridgePillar = DelftTools.Hydro.Structures.BridgePillar;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui
 {
@@ -370,7 +371,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.Gullies);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.Embankments);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.Enclosures);
-
+            yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.BridgePillars);
             yield return new ViewInfo<IManhole, ManholeView>();
             yield return new ViewInfo<IPipe, PipeView>();
             yield return new ViewInfo<LeveeBreach, LeveeBreachView>();
@@ -737,6 +738,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new FeatureProjectTreeViewNodePresenter<Weir2D>(HydroArea.WeirsPluralName, Properties.Resources.Weir) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<Gate2D>(HydroArea.GatesPluralName, Properties.Resources.Gate) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<Embankment>(HydroArea.EmbankmentsPluralName, Properties.Resources.Embankment) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<BridgePillar>(HydroArea.BridgePillarsPluralName, Properties.Resources.BridgeSmall) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<RoofArea>(HydroArea.RoofAreaName, Properties.Resources.Roof) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<Gully>(HydroArea.GullyName, Properties.Resources.Gully) { GuiPlugin = this };
         }

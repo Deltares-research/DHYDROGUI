@@ -100,6 +100,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// </summary>
         string AttributesRelativePath { get; }
 
+        /// <summary>
+        /// Gets the velocities file path.
+        /// </summary>
+        /// <value>
+        /// The velocities relative file path (with respect to hydraulic data location). Extension .dat.
+        /// </value>
+        string VelocitiesRelativePath { get; }
+
+        /// <summary>
+        /// Gets the widths file path.
+        /// </summary>
+        /// <value>
+        /// The widths relative file path (with respect to hydraulic data location). Extension .dat.
+        /// </value>
+        string WidthsRelativePath { get; }
+
+        /// <summary>
+        /// Gets the chezy coefficients file path.
+        /// </summary>
+        /// <value>
+        /// The chezy coefficients relative file path (with respect to hydraulic data location). Extension .dat.
+        /// </value>
+        string ChezyCoefficientsRelativePath { get; }
+
         #endregion File references
 
         #region Meta data

@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private const string SeaWaterXVelocityStandardName = "sea_water_x_velocity";
         private const string SeaWaterYVelocityStandardName = "sea_water_y_velocity";
         
-        private const string SedindexAttributeName = "SedIndex";
+        private const string SedIndexAttributeName = "SedIndex";
         #endregion
 
         private static readonly ILog log = LogManager.GetLogger(typeof(FMMapFileFunctionStore));
@@ -167,13 +167,82 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             
         }
 
+        protected override int GetVariableValuesCount(IVariable function, IVariableFilter[] filters)
+        {
+            var variableValuesCount = base.GetVariableValuesCount(function, filters);
+            
+            if (function.IsIndependent)
+            {
+                return variableValuesCount;
+            }
+
+            var coverage = Functions.FirstOrDefault(f => f.Components.Contains(function));
+
+            if (coverage == null || !coverage.Attributes.ContainsKey(SedIndexAttributeName))
+            {
+                return variableValuesCount;
+            }
+
+            var netcdfVariableDimensionLength = 1;
+
+            using (ReconnectToMapFile())
+            {
+                var netcdfVariable = netCdfFile.GetVariableByName(function.Components[0].Attributes[NcNameAttribute]);
+                if (netcdfVariable == null) throw new Exception("Missing NetCdf name");
+
+                var dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
+                var dimensionNames = dimensions.Select(d => netCdfFile.GetDimensionName(d)).ToList();
+
+                var sedSusVarIndex = dimensionNames.IndexOf(NSedSusName);
+                var sedTotVarIndex = dimensionNames.IndexOf(NSedTotName);
+
+                if ((sedSusVarIndex != -1 || sedTotVarIndex != -1) && dimensions.Count != 3)
+                {
+                    throw new Exception("Number of expected dimensions was 3");
+                }
+
+                if (sedSusVarIndex >= 0)
+                {
+                    netcdfVariableDimensionLength = netCdfFile.GetDimensionLength(NSedSusName);
+                }
+                else if (sedTotVarIndex >= 0)
+                {
+                    netcdfVariableDimensionLength = netCdfFile.GetDimensionLength(NSedTotName);
+                }
+                else return variableValuesCount;
+            }
+
+            return variableValuesCount / netcdfVariableDimensionLength;
+        }
+
+
+
         protected override void GetShapeAndOrigin(IVariable function, IVariableFilter[] filters, out int[] shape,
             out int[] origin, out int[] stride)
         {
             base.GetShapeAndOrigin(function, filters, out shape, out origin, out stride);
-
-            if (function.Arguments.Count <= 1 || !function.Arguments[1].Attributes.ContainsKey(SedindexAttributeName))
+            
+            if (function.IsIndependent)
                 return;
+            
+            var coverage = Functions.FirstOrDefault(f => f.Components.Contains(function));
+
+            if (coverage == null)
+            {
+                coverage = Functions.FirstOrDefault(f => f == function);
+
+                if (coverage == null || !coverage.Attributes.ContainsKey(SedIndexAttributeName))
+                {
+                    return;
+                }
+            }
+            else
+            {
+                if (!coverage.Attributes.ContainsKey(SedIndexAttributeName))
+                {
+                    return;
+                }
+            }
 
             var netcdfVariable = netCdfFile.GetVariableByName(function.Components[0].Attributes[NcNameAttribute]);
             if (netcdfVariable == null) throw new Exception("Missing NetCdf name");
@@ -190,7 +259,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             var sedIndex = 0;
-            if(!Int32.TryParse(function.Arguments[1].Attributes[SedindexAttributeName], out sedIndex))
+            if(!Int32.TryParse(coverage.Attributes[SedIndexAttributeName], out sedIndex))
             {
                 throw new Exception("Sediment Index is not of integer type");
             }
@@ -213,13 +282,57 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 stride = InsertItem(stride, dimensionIndex, sedStride);
             }
         }
-
+        
         protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(IVariable function, IVariableFilter[] filters)
         {
             if (function.Attributes[NcUseVariableSizeAttribute] == "false") // has no explicit variable (for example nFlowElem, which is only a dimension)
             {
                 int size = GetSize(function);
                 return new MultiDimensionalArray<T>(Enumerable.Range(0, size).Cast<T>().ToList(), new[] { size });
+            }
+            
+            //if this is a component find the coverage in Functions and apply filter
+            if (!function.IsIndependent)
+            {
+                // is component or coverage
+                var coverage = Functions.FirstOrDefault(f => f.Components.Contains(function)); // check if function is component
+                if (coverage == null)
+                {
+                    coverage = Functions.FirstOrDefault(f => f == function);//check if function is coverage
+
+                    if (coverage != null)
+                    {
+                        // is coverage
+                        //check if there are multidimensional sedimentnames
+                        var indexOfSedimentToRender = string.Empty;
+                        if (coverage.Attributes.TryGetValue(SedIndexAttributeName, out indexOfSedimentToRender))
+                        {
+                            var nIndex = -1;
+                            if (int.TryParse(indexOfSedimentToRender, out nIndex))
+                            {
+                                var filter = new VariableIndexFilter(function.Components[0], 0);
+                                Array.Resize(ref filters, filters.Length + 1);
+                                filters[filters.Length - 1] = filter;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // is component
+                    //check if there are multidimensional sedimentnames
+                    var indexOfSedimentToRender = string.Empty;
+                    if (coverage.Attributes.TryGetValue(SedIndexAttributeName, out indexOfSedimentToRender))
+                    {
+                        var nIndex = -1;
+                        if (int.TryParse(indexOfSedimentToRender, out nIndex))
+                        {
+                            var filter = new VariableIndexFilter(function, 0);
+                            Array.Resize(ref filters, filters.Length + 1);
+                            filters[filters.Length - 1] = filter;
+                        }
+                    }
+                }             
             }
 
             return base.GetVariableValuesCore<T>(function, filters);
@@ -391,7 +504,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 foreach (var secondDimensionAdditionalAttribute in secondDimensionAdditionalAttributes)
                 {
                     if (string.IsNullOrEmpty(secondDimensionAdditionalAttribute.Item1)) continue;
-                    secondDimension.Attributes[secondDimensionAdditionalAttribute.Item1] = secondDimensionAdditionalAttribute.Item2;
+                    coverage.Attributes[secondDimensionAdditionalAttribute.Item1] = secondDimensionAdditionalAttribute.Item2;
                 }
             }
 
@@ -508,7 +621,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     InitializeCoverage(sedCoverage, secondDimensionName, netCdfVariableName, unitSymbol,
                         timeDependentVariable.ReferenceDate, new[]
                         {
-                            new Tuple<string, string>(SedindexAttributeName, index.ToString()),
+                            new Tuple<string, string>(SedIndexAttributeName, index.ToString()),
                         });
                 }
                 yield return sedCoverage;

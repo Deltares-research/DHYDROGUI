@@ -170,7 +170,7 @@ namespace DeltaShell.Plugins.Fews.Tests.Queries
             //enable staggered output coverage
             model.OutputSettings.GetEngineParameter(QuantityType.Discharge, ElementSet.ReachSegElmSet).
                 AggregationOptions = AggregationOptions.None;
-            model.OutputSettings.GetEngineParameter(QuantityType.Discharge, ElementSet.Laterals).
+            model.OutputSettings.GetEngineParameter(QuantityType.ActualDischarge, ElementSet.Laterals).
                 AggregationOptions = AggregationOptions.Current;
 
             model.UseSalt = false;
@@ -182,11 +182,11 @@ namespace DeltaShell.Plugins.Fews.Tests.Queries
             IEnumerable<AggregationResult> results = context.GetAll();
 
             var resultsOnDischarge = results.Where(qr => qr.ParameterId == FunctionAttributes.StandardNames.WaterDischarge).ToList();
-            Assert.AreEqual(3, resultsOnDischarge.Count);
+            Assert.AreEqual(2, resultsOnDischarge.Count);
 
-            var firstResult = resultsOnDischarge.First();
-            Assert.AreEqual("LateralSource", firstResult.LocationType);
-            Assert.AreEqual(FunctionAttributes.AggregationTypes.None, firstResult.AggregationType);
+            var lastResult = resultsOnDischarge.Last();
+            Assert.AreEqual("LateralSource", lastResult.LocationType);
+            Assert.AreEqual(FunctionAttributes.AggregationTypes.None, lastResult.AggregationType);
         }
 
         [Test]
@@ -198,7 +198,7 @@ namespace DeltaShell.Plugins.Fews.Tests.Queries
             var project = new Project();
             project.RootFolder.Add(model);
             var context = new ExtendedQueryContext(project);
-            model.OutputSettings.GetEngineParameter(QuantityType.Discharge, ElementSet.Laterals).
+            model.OutputSettings.GetEngineParameter(QuantityType.ActualDischarge, ElementSet.Laterals).
                AggregationOptions = AggregationOptions.Current;
 
             model.Initialize();

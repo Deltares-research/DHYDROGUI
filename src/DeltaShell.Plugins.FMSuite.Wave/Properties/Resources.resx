@@ -125,7 +125,19 @@
     <value>Waves Model Properties</value>
   </data>
   <data name="WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_" xml:space="preserve">
-    <value>WindSpeed is zero whereas quadruple is true.</value>
+    <value>Wind speed should be greater than zero when the option of quadruplets is activated.</value>
+  </data>
+  <data name="WavePropertiesValidator_ValidateThat_TimeStep_Is_Not_Bigger_Than_TimeScale" xml:space="preserve">
+    <value>The time step can not be greater than the time interval.</value>
+  </data>
+  <data name="WavePropertiesValidator_ValidateDivisor" xml:space="preserve">
+    <value>The time step should be a divisor of the time interval.</value>
+  </data>
+  <data name="WavePropertiesValidator_ValidateTimeStep" xml:space="preserve">
+    <value>The time step should be a whole number.</value>
+  </data>
+  <data name="WavePropertiesValidator_ValidateTScale" xml:space="preserve">
+    <value>The time interval should be a whole number.</value>
   </data>
   <data name="WavePropertiesValidator_ValidateWindSpeedAndQuadruple_Domain___0_" xml:space="preserve">
     <value>Domain: {0}</value>

@@ -71,6 +71,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 AreasFile = Path.Combine(hydFileRoot, waterQualityModel.AreasRelativeFilePath),
                 FlowsFile = Path.Combine(hydFileRoot, waterQualityModel.FlowsRelativeFilePath),
                 LengthsFile = Path.Combine(hydFileRoot, waterQualityModel.LengthsRelativeFilePath),
+                VelocitiesFile = Path.Combine(hydFileRoot, waterQualityModel.VelocitiesFilePath),
+                WidthsFile = Path.Combine(hydFileRoot, waterQualityModel.WidthsFilePath),
+                ChezyCoefficientsFile = Path.Combine(hydFileRoot, waterQualityModel.ChezyCoefficientsFilePath),
 
                 ModelWorkDirectory = waterQualityModel.ModelSettings.WorkDirectory,
                 BoundaryDataManager = waterQualityModel.BoundaryDataManager,

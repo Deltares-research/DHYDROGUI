@@ -75,11 +75,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         protected override void Export(IEnumerable<TFeat> features, string path)
         {
-            foreach (var feature in features)
-            {
-                features.OfType<FixedWeir>().ForEach(f => BeforeExportActionDelegate?.Invoke(features, feature));
-            }
-            
+            BeforeExportActionDelegate?.Invoke(features);
+
             if (Path.GetExtension(path) == ".pli")
             {
                 var writer = new PliFile<TFeat>
@@ -98,11 +95,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 };
                 writer.Write(path, features);
             }
-            foreach (var feature in features)
-            {
-                features.OfType<FixedWeir>().ForEach(f => AfterExportActionDelegate?.Invoke(features, feature));
-            }
 
+            AfterExportActionDelegate?.Invoke(features);
         }
 
         public Func<TFeat,TParent> CreateFromFeature { get; set; }

@@ -220,6 +220,18 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             }
         }
 
+        public static VectorStyle BridgePillarStyle
+        {
+            get
+            {
+                return new VectorStyle
+                {
+                    Line = new Pen(Color.LightSeaGreen, 3f),
+                    GeometryType = typeof(ILineString)
+                };
+            }
+        }
+
         public static VectorStyle RoofAreaStyle
         {
             get

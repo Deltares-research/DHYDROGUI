@@ -1,10 +1,5 @@
 /*.suo
 /*.user
-.nuget/*.suo
-.nuget/*.user
-.nuget/bin
-.nuget/obj
-.nuget/packages
 /_ReSharper.Caches
 /bin
 lib/*.suo
@@ -3513,11 +3508,6 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/tutorial09_newbc/*.user
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/tutorial09_newbc/bin
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/tutorial09_newbc/obj
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/tutorial09_newbc/packages
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/unstruc/*.suo
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/unstruc/*.user
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/unstruc/bin
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/unstruc/obj
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/unstruc/packages
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/venice_pilot_22ott2013/*.suo
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/venice_pilot_22ott2013/*.user
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/venice_pilot_22ott2013/bin

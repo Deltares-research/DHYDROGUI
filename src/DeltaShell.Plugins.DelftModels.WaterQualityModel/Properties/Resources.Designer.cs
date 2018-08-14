@@ -80,6 +80,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File &apos;{0}&apos; already exists within the database. The file that is being imported will be renamed to &apos;{1}&apos;. Note that your results may be affected by the new import.
+        /// </summary>
+        public static string DataTableManager_WriteTableContentsToNewTextDocumentFromFile_File___0___already_exists_within_the_database__The_file_that_is_being_imported_will_be_renamed_to___1____Note_that_your_results_may_be_affected_by_the_new_import {
+            get {
+                return ResourceManager.GetString("DataTableManager_WriteTableContentsToNewTextDocumentFromFile_File___0___already_e" +
+                        "xists_within_the_database__The_file_that_is_being_imported_will_be_renamed_to___" +
+                        "1____Note_that_your_results_may_be_affected_by_the_new_import", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap hydFile {
@@ -295,6 +306,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No rules found for {0}..
+        /// </summary>
+        public static string WaqValidationRulesExtension_ConstantProcessWithinRuleLimits_No_rules_found_for__0__ {
+            get {
+                return ResourceManager.GetString("WaqValidationRulesExtension_ConstantProcessWithinRuleLimits_No_rules_found_for__0" +
+                        "__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to - Constant.
         /// </summary>
         public static string WaterQualityBoundaryData_Constant_post_fix {
@@ -327,6 +348,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         public static string WaterQualityBoundaryData_Time_series_post_fix {
             get {
                 return ResourceManager.GetString("WaterQualityBoundaryData_Time_series_post_fix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The process coefficient {0} has been updated with the latest Hydrodynamic data file..
+        /// </summary>
+        public static string WaterQualityModel_HandleNewHydroDynamicsFunctionDataSet_The_process_coefficient__0__has_been_updated_with_the_latest_Hydrodynamic_data_file_ {
+            get {
+                return ResourceManager.GetString("WaterQualityModel_HandleNewHydroDynamicsFunctionDataSet_The_process_coefficient__" +
+                        "0__has_been_updated_with_the_latest_Hydrodynamic_data_file_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The coordinate system of the model: {0} has been set to {1}.
+        /// </summary>
+        public static string WaterQualityModel_ImportHydroData_The_coordinate_system_of_the_model___0__has_been_set_to__1_ {
+            get {
+                return ResourceManager.GetString("WaterQualityModel_ImportHydroData_The_coordinate_system_of_the_model___0__has_bee" +
+                        "n_set_to__1_", resourceCulture);
             }
         }
         
@@ -443,6 +484,36 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
                 return ResourceManager.GetString("WaterQualityModelValidator_CheckTimers_Timers_for__0__are_not_equal_to_the_simula" +
                         "tion_period_of_the_model___1____2____Please_verify_that_they_overlap_with_the_si" +
                         "mulation_period_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No process coefficient rules have been loaded. Therefore they cannot be validated..
+        /// </summary>
+        public static string WaterQualityModelValidator_ValidateProcessCoefficients_No_process_coefficient_rules_have_been_loaded__Therefore_they_cannot_be_validated_ {
+            get {
+                return ResourceManager.GetString("WaterQualityModelValidator_ValidateProcessCoefficients_No_process_coefficient_rul" +
+                        "es_have_been_loaded__Therefore_they_cannot_be_validated_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Process coefficient {0} (value: {1}) does not fulfill the rule {2}.
+        /// </summary>
+        public static string WaterQualityModelValidator_ValidateProcessCoefficients_Process_coefficient__0___value___1___does_not_fulfill_the_rule__2_ {
+            get {
+                return ResourceManager.GetString("WaterQualityModelValidator_ValidateProcessCoefficients_Process_coefficient__0___v" +
+                        "alue___1___does_not_fulfill_the_rule__2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Substance library does not contain the given parameter {0}..
+        /// </summary>
+        public static string WaterQualityModelValidator_ValidateProcessCoefficients_The_Substance_library_does_not_contain_the_given_parameter__0__ {
+            get {
+                return ResourceManager.GetString("WaterQualityModelValidator_ValidateProcessCoefficients_The_Substance_library_does" +
+                        "_not_contain_the_given_parameter__0__", resourceCulture);
             }
         }
         

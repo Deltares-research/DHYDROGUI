@@ -1,0 +1,7 @@
+timeBlock,location,substance,value
+2014-01-01 00:00:00,SeaBoundary01,Salinity,32
+2014-02-01 00:00:00,SeaBoundary01,Salinity,32
+2014-01-01 00:00:00,RiverBoundary01,Salinity,0.1
+2014-02-01 00:00:00,RiverBoundary01,Salinity,0.1
+2014-01-01 00:00:00,SourceSink01,EColi,1000000
+2014-02-01 00:00:00,SourceSink01,EColi,1000000
