@@ -89,9 +89,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 yield break;
             }
 
-            var constantParemeter = processCoefficients.Where( pc => pc.IsConst());
+            var constantParameter = processCoefficients.Where( pc => pc.IsConst());
             var reasonList = new List<string>();
-            foreach (var parameter in constantParemeter)
+            foreach (var parameter in constantParameter)
             {
                 if (!library.Parameters.Any(p => p.Name.ToLowerInvariant().Equals(parameter.Name.ToLowerInvariant())))
                 {

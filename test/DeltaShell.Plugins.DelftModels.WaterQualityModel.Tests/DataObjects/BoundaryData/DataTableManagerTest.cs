@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
@@ -182,7 +181,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
                 manager.CreateNewDataTable("A", "3", "C.usefors", "4", true);
 
                 // assert
-
                 var fullFilePath = Path.GetFullPath(manager.DataTables.First().DataFile.Path);
                 Assert.IsTrue(File.Exists(Path.Combine(Path.GetDirectoryName(fullFilePath), "C.usefors")));
             }

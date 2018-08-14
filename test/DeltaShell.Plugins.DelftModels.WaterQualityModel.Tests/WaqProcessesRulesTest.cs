@@ -22,6 +22,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
+        public void TestReadValidationCsv_FileNotFound_DoesNotThrow()
+        {
+            var validationCsv = new WaqProcessesRules();
+            Assert.DoesNotThrow( () => validationCsv.ReadValidationCsv(null));
+        }
+
+        [Test]
+        public void TestReadValidationCsv_FileNotFound_Logs_ErrorMessage()
+        {
+            var validationCsv = new WaqProcessesRules();
+            var expectedMssg = string.Empty;
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => validationCsv.ReadValidationCsv(null), expectedMssg);
+        }
+
+        [Test]
         [TestCase("dummyDouble", typeof(double))]
         [TestCase("DummyInt", typeof(int))]
         [TestCase("dummyUnknown", typeof(double))]

@@ -306,6 +306,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File {0} not found in the path {1}. No validations will be done for the coefficients..
+        /// </summary>
+        public static string WaqProcessesRules_ReadValidationCsv_File__0__not_found_in_the_path__1___No_validations_will_be_done_for_the_coefficients_ {
+            get {
+                return ResourceManager.GetString("WaqProcessesRules_ReadValidationCsv_File__0__not_found_in_the_path__1___No_valida" +
+                        "tions_will_be_done_for_the_coefficients_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No rules found for {0}..
         /// </summary>
         public static string WaqValidationRulesExtension_ConstantProcessWithinRuleLimits_No_rules_found_for__0__ {

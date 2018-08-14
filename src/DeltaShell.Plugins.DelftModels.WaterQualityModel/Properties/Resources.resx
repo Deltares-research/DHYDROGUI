@@ -644,4 +644,7 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
   <data name="DataTableManager_WriteTableContentsToNewTextDocumentFromFile_File___0___already_exists_within_the_database__The_file_that_is_being_imported_will_be_renamed_to___1____Note_that_your_results_may_be_affected_by_the_new_import" xml:space="preserve">
     <value>File '{0}' already exists within the database. The file that is being imported will be renamed to '{1}'. Note that your results may be affected by the new import</value>
   </data>
+  <data name="WaqProcessesRules_ReadValidationCsv_File__0__not_found_in_the_path__1___No_validations_will_be_done_for_the_coefficients_" xml:space="preserve">
+    <value>File {0} not found in the path {1}. No validations will be done for the coefficients.</value>
+  </data>
 </root>

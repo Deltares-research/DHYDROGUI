@@ -174,8 +174,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             if (_waqProcessesRules != null && _waqProcessesRules.Any()) return;
 
 
-
-            //Get the file locaiton
+            //Get the file location
             var assembly = typeof(WaterQualityModel).Assembly;
             var assemblyLocation = assembly.Location;
             var directoryInfo = new FileInfo(assemblyLocation).Directory;
