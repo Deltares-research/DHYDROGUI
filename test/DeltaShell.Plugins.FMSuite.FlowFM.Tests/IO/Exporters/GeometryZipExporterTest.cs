@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [Test]
         public void TestWriteZValuesToNetFile()
         {
-            var netFilePath = TestHelper.GetTestFilePath(@"harlingen\fm_003_net.nc");
+            var netFilePath = TestHelper.GetTestFilePath(@"harlingen\FilesUsingOldFormat\fm_003_net.nc");
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
 
             using (var gridApi = GridApiFactory.CreateNew())
