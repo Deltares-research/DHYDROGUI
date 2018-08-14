@@ -110,35 +110,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     switch (e.Action)
                     {
                         case NotifyCollectionChangeAction.Remove:
-                            {
-                                // remove all child data items
-                                var dataItemsToRemove = new List<IDataItem>();
-                                var networkDataItem = GetDataItemByValue(Network);
+                            // remove all child data items
+                            var dataItemsToRemove = new List<IDataItem>();
+                            var networkDataItem = GetDataItemByValue(Network);
 
-                                if (networkDataItem != null) // TODO: temporary fix while we do not have a DataItem for Network in FM Model
+                            if (networkDataItem != null) // TODO: temporary fix while we do not have a DataItem for Network in FM Model
+                            {
+                                dataItemsToRemove.AddRange(networkDataItem.Children);
+
+                                foreach (var dataItem in dataItemsToRemove)
                                 {
-                                    foreach (var dataItem in networkDataItem.Children)
-                                    {
-                                        dataItemsToRemove.Add(dataItem);
-                                    }
-
-                                    foreach (var dataItem in dataItemsToRemove)
-                                    {
-                                        dataItem.Unlink();
-                                        dataItem.LinkedBy.ToArray().ForEach(di => di.Unlink());
-                                        networkDataItem.Children.Remove(dataItem);
-                                    }
+                                    dataItem.Unlink();
+                                    dataItem.LinkedBy.ToArray().ForEach(di => di.Unlink());
+                                    networkDataItem.Children.Remove(dataItem);
                                 }
-                            }
-                            break;
-                        case NotifyCollectionChangeAction.Add:
-                            {
-
                             }
                             break;
                     }
 
                     ClearOutput();
+                }
+            }
+            else if (Equals(sender, Network.Branches) && e.Item is ISewerConnection)
+            {
+                var sewerConnection = e.Item as SewerConnection;
+                var calculationLocations = new List<NetworkLocation>();
+                if (sewerConnection != null)
+                {
+                    switch (e.Action)
+                    {
+                        case NotifyCollectionChangeAction.Add:
+                            calculationLocations.Add(new NetworkLocation(sewerConnection, 0.0));
+                            calculationLocations.Add(new NetworkLocation(sewerConnection, sewerConnection.Length));
+                            NetworkDiscretization.Locations.AddValues(calculationLocations);
+                            break;
+                    }
                 }
             }
 

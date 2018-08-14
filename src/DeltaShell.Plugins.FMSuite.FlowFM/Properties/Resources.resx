@@ -334,9 +334,6 @@ Change this group name and save the project again to write these features to a s
     <value>File at location '{0}' is referenced in structures file '{1}', but does not exist.
 File import of structures file '{1}' has failed.</value>
   </data>
-  <data name="Could_not_export_data_for_SourceAndSink___0___no_Function_was_found" xml:space="preserve">
-    <value>Could not export data for SourceAndSink: {0}, no Function was found</value>
-  </data>
   <data name="TimFileExporter_Export_Failed_to_export_data_to__0____1_" xml:space="preserve">
     <value>Failed to export data to {0}: {1}</value>
   </data>

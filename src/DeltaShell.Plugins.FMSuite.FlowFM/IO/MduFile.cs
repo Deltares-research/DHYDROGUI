@@ -144,30 +144,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var substitutedPaths = new Dictionary<string, System.Tuple<string, string>>();
 
             // copy netfile
-            if (Path != null)
+            Path = targetMduFilePath;
+            var sourceFile = MduFileHelper.GetSubfilePath(Path,
+                modelDefinition.GetModelProperty(KnownProperties.NetFile));
+
+            var targetFile = MduFileHelper.GetSubfilePath(targetMduFilePath,
+                modelDefinition.GetModelProperty(KnownProperties.NetFile));
+
+            if (sourceFile != null)
             {
-                var sourceFile = MduFileHelper.GetSubfilePath(Path,
-                    modelDefinition.GetModelProperty(KnownProperties.NetFile));
-
-                var targetFile = MduFileHelper.GetSubfilePath(targetMduFilePath,
-                    modelDefinition.GetModelProperty(KnownProperties.NetFile));
-
-                if (sourceFile != null)
+                if (File.Exists(sourceFile) && targetFile != null)
                 {
-                    if (File.Exists(sourceFile) && targetFile != null)
+                    var targetNcDir = System.IO.Path.GetDirectoryName(targetFile);
+                    Directory.CreateDirectory(targetNcDir);
+
+                    var fullSourcePath = string.IsNullOrEmpty(sourceFile) ? string.Empty : System.IO.Path.GetFullPath(sourceFile);
+                    var fullTargetPath = string.IsNullOrEmpty(targetFile) ? string.Empty : System.IO.Path.GetFullPath(targetFile);
+
+                    if (fullSourcePath.ToLower() != fullTargetPath.ToLower())
                     {
-                        var targetNcDir = System.IO.Path.GetDirectoryName(targetFile);
-                        Directory.CreateDirectory(targetNcDir);
-
-                        var fullSourcePath = string.IsNullOrEmpty(sourceFile) ? string.Empty : System.IO.Path.GetFullPath(sourceFile);
-                        var fullTargetPath = string.IsNullOrEmpty(targetFile) ? string.Empty : System.IO.Path.GetFullPath(targetFile);
-
-                        if (fullSourcePath.ToLower() != fullTargetPath.ToLower())
-                        {
-                            File.Copy(fullSourcePath, fullTargetPath, true);
-                        }
+                        File.Copy(fullSourcePath, fullTargetPath, true);
                     }
                 }
+                
 
                 // copy along any mdu-referenced files that are *not* yet supported/written in the UI:
                 // (for example: partition file, manhole file, profloc/profdef files, etc..)
@@ -215,6 +214,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
                 }
             }
+
+            modelDefinition.SetMduTimePropertiesFromGuiProperties();
+            var isPartOf1D2DModel = (bool)modelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
+            // write at the end in case of updated file paths
+            WriteProperties(targetMduFilePath, modelDefinition.Properties);
         }
 
         public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
@@ -369,7 +373,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return nameProjectedCS;
         }
 
-        public void WriteProperties(string filePath, IEnumerable<WaterFlowFMProperty> modelDefinition, bool writeExtForcings, bool writeFeatures, bool writePartionFile = true, bool useNetCDFMapFormat = false, bool disableFlowNodeRenumbering = false)
+        public void WriteProperties(string filePath, IEnumerable<WaterFlowFMProperty> modelDefinition, bool writeExtForcings = true, bool writeFeatures = true, bool writePartionFile = true, bool useNetCDFMapFormat = false, bool disableFlowNodeRenumbering = false)
         {
             WriteMorphologySediment(filePath, modelDefinition);
 
