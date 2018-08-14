@@ -20,10 +20,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryD
     /// </summary>
     public class DataTableManager : Unique<long>, INameable, IItemContainer
     {
-
-        /// <summary>
-        /// The log
-        /// </summary>
         private static readonly ILog log = LogManager.GetLogger(typeof(DataTableManager));
 
         private IEventedList<DataTable> dataTables;
@@ -102,46 +98,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryD
         /// <see cref="FolderPath"/> not set to a valid folder-path.</exception>
         /// <exception cref="System.ArgumentException">
         /// When a file already exists with the given filename.</exception>
-        public virtual void CreateNewDataTable(string name, string tableContents, string useforFullFilename,
-            string useforContents, bool createNewFileNamesIfExists = false)
+        public virtual void CreateNewDataTable(string name, string tableContents, string useforFullFilename, string useforContents, bool createNewFileNamesIfExists = false)
         {
             if (string.IsNullOrWhiteSpace(FolderPath))
             {
-                throw new InvalidOperationException(
-                    "Requires FolderPath to be set to a valid filepath before calling CreateNewDataTable.");
+                throw new InvalidOperationException("Requires FolderPath to be set to a valid filepath before calling CreateNewDataTable.");
             }
 
             FileUtils.CreateDirectoryIfNotExists(FolderPath);
 
-            var filename = $"{name}.tbl";
-            var dataTableFilePath = Path.Combine(FolderPath, filename);
-            var dataTableFilePathAlreadyExists = File.Exists(dataTableFilePath);
-
-            var dataTableFile = WriteTableContentsToNewTextDocumentFromFile(tableContents, dataTableFilePath);
-            var useforFile = WriteTableContentsToNewTextDocumentFromFile(useforContents, useforFullFilename);
-            var existingFileName = Path.GetFileName(dataTableFilePath);
-
-            var filter = string.Concat($"{name}" + "({0})");
-            //We only need the unique name if the file does not yet exist. Else we just use the name passed to the method.
-            var uniqueName = dataTableFilePathAlreadyExists
-                ? NamingHelper.GetUniqueName(filter, dataTables, typeof(DataTable))
-                : name;
+            var dataTableFilePath = GetFilePath($"{name}.tbl", createNewFileNamesIfExists);
+            var useforFilePath = GetFilePath(useforFullFilename, createNewFileNamesIfExists);
 
             var newTable = new DataTable
             {
-                Name = uniqueName,
-                DataFile = dataTableFile,
-                SubstanceUseforFile = useforFile
+                Name = GetUniqueName(name, dataTableFilePath),
+                DataFile = OpenTextDocument(tableContents, dataTableFilePath),
+                SubstanceUseforFile = OpenTextDocument(useforContents, useforFilePath)
             };
-
-            //We only throw the warning when the dataTable filePath already exists 
-            if (dataTableFilePathAlreadyExists)
-            {
-                log.Warn(string.Format(
-                    Resources
-                        .DataTableManager_WriteTableContentsToNewTextDocumentFromFile_File___0___already_exists_within_the_database__The_file_that_is_being_imported_will_be_renamed_to___1____Note_that_your_results_may_be_affected_by_the_new_import,
-                    existingFileName, uniqueName));
-            }
 
             dataTables.Add(newTable);
         }
@@ -211,19 +185,39 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryD
             }
         }
 
-        /// <summary>
-        /// Writes the table contents to new text document from file.
-        /// </summary>
-        /// <param name="tableContents">The table contents.</param>
-        /// <param name="dataTableFilePath">The data table file path.</param>
-        /// <returns></returns>
-        private static TextDocumentFromFile WriteTableContentsToNewTextDocumentFromFile(string tableContents, string dataTableFilePath)
+        private string GetUniqueName(string name, string dataTableFilePath)
         {
-            File.WriteAllText(dataTableFilePath, tableContents);
+            //We only need the unique name if the file does not yet exist. Else we just use the name passed to the method.
+            var filter = string.Concat($"{name}" + "({0})");
+            if (!File.Exists(dataTableFilePath)) return name;
 
-            var dataTableFile = new TextDocumentFromFile();
-            dataTableFile.Open(dataTableFilePath);
-            return dataTableFile;
+            var uniqueName = NamingHelper.GetUniqueName(filter, dataTables, typeof(DataTable));
+            log.Warn(string.Format(
+                Resources
+                    .DataTableManager_WriteTableContentsToNewTextDocumentFromFile_File___0___already_exists_within_the_database__The_file_that_is_being_imported_will_be_renamed_to___1____Note_that_your_results_may_be_affected_by_the_new_import,
+                name, uniqueName));
+
+            return uniqueName;
+        }
+
+        private static TextDocumentFromFile OpenTextDocument(string useforContents, string useforFilePath)
+        {
+            var useforFile = new TextDocumentFromFile();
+            File.WriteAllText(useforFilePath, useforContents);
+            useforFile.Open(useforFilePath);
+            return useforFile;
+        }
+
+        private string GetFilePath(string useforFullFilename, bool createNewFileNamesIfExists)
+        {
+            var useforFilePath = Path.Combine(FolderPath, useforFullFilename);
+            if (!File.Exists(useforFilePath)) return useforFilePath;
+
+            if (createNewFileNamesIfExists)
+            {
+                useforFilePath = FileUtils.GetUniqueFileName(useforFullFilename);
+            }
+            return useforFilePath;
         }
     }
 }
