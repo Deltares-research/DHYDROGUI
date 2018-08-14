@@ -186,6 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             ActivityRunner.RunActivity(model);
 
+            outputFunction = model.OutputHisFileStore.Functions.First();
             outputFolder.ChildItems.OfType<object>().ToList();
 
             Console.WriteLine("After run:");
