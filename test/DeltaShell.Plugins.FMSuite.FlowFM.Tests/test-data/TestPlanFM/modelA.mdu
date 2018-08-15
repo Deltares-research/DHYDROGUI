@@ -20,3 +20,15 @@ UnifFrictCoef     = 0.023
 
 [group_A]
 parameterA        = A
+
+[trachytopes]
+TrtRou            =
+TrtDef            = 
+TrtL              = trachytopes.arl
+DtTrt             = 
+TrtMxR            = 
+
+[calibration]
+UseCalibration    = 1
+DefinitionFile    = calibration.cld
+AreaFile          = calibration.cld

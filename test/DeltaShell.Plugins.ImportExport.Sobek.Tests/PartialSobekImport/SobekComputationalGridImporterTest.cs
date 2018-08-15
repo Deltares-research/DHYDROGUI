@@ -9,7 +9,8 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 {
     [TestFixture]
-    public class SobekComputationalGridImporterTest
+    public class 
+        SobekComputationalGridImporterTest
     {
         [Test]
         [Category(TestCategory.DataAccess)]

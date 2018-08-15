@@ -1110,6 +1110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Check that group name gives a relative path from the mdu folder
             Assert.That(fmModel.Area.DryAreas.FirstOrDefault().GroupName, Is.EqualTo(@"MyDryAreas_dry.pol"));
+            
         }
 
         [Test]
