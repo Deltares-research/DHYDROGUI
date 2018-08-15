@@ -351,7 +351,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             try
             {
                 WriteLine("# Generated on " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                WriteLine("# Deltares, D-Flow FM user interface version " + FMSuiteFlowModelVersion + ", D-Flow FM kernel version " + FMDllVersion);
+                WriteLine("# Deltares,Delft3D FM 2018 Suite Version " + FMSuiteFlowModelVersion + ", D-Flow FM Version " + FMDllVersion);
                 SetValueToPropertyIfExists(modelDefinition, KnownProperties.Version, FMDllVersion);
                 SetValueToPropertyIfExists(modelDefinition, KnownProperties.GuiVersion, FMSuiteFlowModelVersion);
                 var propertiesByGroup = modelDefinition.Where(p => p.PropertyDefinition.FileCategoryName != "GUIOnly"
