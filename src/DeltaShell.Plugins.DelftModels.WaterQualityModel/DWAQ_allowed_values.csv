@@ -5,7 +5,7 @@
 #Process,parameter, minimum value, maximum value, type (int/double), dependency value
 REAROXY,SWITCH,1,2,int,
 REARCO2,SWITCH,1,2,int,
-REAROXY,SWREAR,[5:7],[9:13],int,
+REAROXY,SWREAR,[0:7],[9:13],int,
 BURIAL,SWSEDIMENT,0,1,double,
 MACDIS01,SWDISSM01,1,2,double,
 MACDIS02,SWDISSM02,1,2,double,

@@ -130,6 +130,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     });
 
             InitializeInputDataItems();
+            InitializeWaqProcessesRules();
 
             HydrodynamicLayerThicknesses = null;
             NumberOfHydrodynamicLayersPerWaqLayer = null;
@@ -164,16 +165,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             get
             {
-                InitializeWaqProcessesRules();
                 return _waqProcessesRules;
             }
         }
 
         private void InitializeWaqProcessesRules()
         {
-            if (_waqProcessesRules != null && _waqProcessesRules.Any()) return;
-
-
             //Get the file location
             var assembly = typeof(WaterQualityModel).Assembly;
             var assemblyLocation = assembly.Location;

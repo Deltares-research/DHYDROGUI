@@ -7,6 +7,7 @@ using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
@@ -79,13 +80,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
-        private static IEnumerable<ValidationIssue> ValidateProcessCoefficients(SubstanceProcessLibrary library, IList<IFunction> processCoefficients, IList<WaqProcessValidationRule> rules)
+        private static IEnumerable<ValidationIssue> ValidateProcessCoefficients(SubstanceProcessLibrary library, IEventedList<IFunction> processCoefficients, IList<WaqProcessValidationRule> rules)
         {
             if (library == null || processCoefficients == null) yield break;
 
             if (rules == null || !rules.Any())
             {
-                yield return new ValidationIssue(processCoefficients, ValidationSeverity.Warning, Resources.WaterQualityModelValidator_ValidateProcessCoefficients_No_process_coefficient_rules_have_been_loaded__Therefore_they_cannot_be_validated_);
+                var message = Resources.WaterQualityModelValidator_ValidateProcessCoefficients_No_process_coefficient_rules_have_been_loaded__Therefore_they_cannot_be_validated_;
+                yield return new ValidationIssue(processCoefficients, ValidationSeverity.Warning, message, new WaterQualityFunctionDataWrapper(processCoefficients));
                 yield break;
             }
 
@@ -97,9 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 {
                     //This code will never be hit because when you remove it from the library, it also removes it from the Parameter list. But just in case we keep it handled.
                     var message = string.Format(Resources.WaterQualityModelValidator_ValidateProcessCoefficients_The_Substance_library_does_not_contain_the_given_parameter__0__, parameter.Name);
-                    yield return new ValidationIssue(
-                        processCoefficients,
-                        ValidationSeverity.Warning, message);
+                    yield return new ValidationIssue(parameter, ValidationSeverity.Warning, message, new WaterQualityFunctionDataWrapper(processCoefficients));
                 }
                 else 
                 {
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     foreach (var reason in reasonList)
                     {
                         var message = string.Format(Resources.WaterQualityModelValidator_ValidateProcessCoefficients_Process_coefficient__0___value___1___does_not_fulfill_the_rule__2_, parameter.Name, parameterValue, reason);
-                        yield return new ValidationIssue(parameter, ValidationSeverity.Warning, message);
+                        yield return new ValidationIssue(parameter, ValidationSeverity.Warning, message, new WaterQualityFunctionDataWrapper(processCoefficients));
                     }
                 }
             }
