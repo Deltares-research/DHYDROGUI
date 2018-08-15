@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
@@ -173,21 +174,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
-            var outputFunction = model.OutputHisFileStore.Functions.First();
+            var outputFunction = model.OutputHisFileStore.Functions.FirstOrDefault();
             
             var nodePresenter = new WaterFlowFMModelNodePresenter(null);
-            var outputFolder = nodePresenter.GetChildNodeObjects(model, null).OfType<TreeFolder>().Last();
+            var outputFolder = nodePresenter.GetChildNodeObjects(model, null).OfType<TreeFolder>().LastOrDefault();
 
-            // ask first time before run
+            // ask first time before run; dataitems are filled with output functions
             outputFolder.ChildItems.OfType<object>().ToList();
 
             Console.WriteLine("Before run:");
             int before = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
 
             ActivityRunner.RunActivity(model);
+            Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
-            outputFunction = model.OutputHisFileStore.Functions.First();
+            //dataitems are filled with new output functions
             outputFolder.ChildItems.OfType<object>().ToList();
+
+            var di = outputFolder.ChildItems.OfType<IDataItem>().ToList().FirstOrDefault(d => d.Tag == outputFunction.Name);
+            Assert.That(di.Value, Is.Not.EqualTo(outputFunction));
+
+            Assert.That(TestReferenceHelper.FindEventSubscriptions(outputFunction, true), Is.EqualTo(before-4));// check if old events of dataitem are removed.
+
+            //Filestore was closed and re-openen, so we need to retrieve a new output function.
+            outputFunction = model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Name == outputFunction.Name);
+            Assert.That(di.Value, Is.EqualTo(outputFunction));
 
             Console.WriteLine("After run:");
             var after = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
