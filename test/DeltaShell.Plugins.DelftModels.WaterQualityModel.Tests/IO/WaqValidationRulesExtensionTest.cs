@@ -117,8 +117,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             if(!expectedResult)
             {
-                var expectedReason = GetWaqProcessValidationRuleAsString(rule);
-                Assert.IsTrue(reasonList.Contains(expectedReason));
+                var expectedReason = GetWaqProcessValidationRuleAsString(parameterName, value);
+                Assert.IsTrue(reasonList.Any(r => r.Contains(expectedReason)));
             }
         }
 
@@ -160,8 +160,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             if (!expectedResult)
             {
-                var expectedReason = GetWaqProcessValidationRuleAsString(rule);
-                Assert.IsTrue(reasonList.Contains(expectedReason));
+                var expectedReason = GetWaqProcessValidationRuleAsString(parameterName, value);
+                Assert.IsTrue(reasonList.Any( r => r.Contains(expectedReason)));
             }
         }
 
@@ -215,9 +215,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var result = parameter.IsWithinRulesLimits(waqProcessValidationRules, null, out reasonList);
             Assert.IsFalse(result);
 
-            var expectedReason = GetWaqProcessValidationRuleAsString(ruleMustBeInt);
+            var expectedReason = GetWaqProcessValidationRuleAsString(parameterName, value);
             Assert.IsTrue(reasonList.Count == 2);
-            Assert.IsTrue(reasonList.Contains(expectedReason));
+            Assert.IsTrue(reasonList.Any(r => r.Contains(expectedReason)));
         }
 
         [Test]
@@ -522,8 +522,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             if (!expectedResult)
             {
-                var expectedReason = GetWaqProcessValidationRuleAsString(rule);
-                Assert.IsTrue(reasonList.Contains(expectedReason));
+                var expectedReason = GetWaqProcessValidationRuleAsString(parameterName, paramValue);
+                Assert.IsTrue(reasonList.Any(r => r.Contains(expectedReason)));
             }
         }
 
@@ -561,18 +561,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             if (!expectedResult)
             {
-                var expectedReason = GetWaqProcessValidationRuleAsString(rule);
-                Assert.IsTrue(reasonList.Contains(expectedReason));
+                var expectedReason = GetWaqProcessValidationRuleAsString(parameterName, paramValue);
+                Assert.IsTrue(reasonList.Any(r => r.Contains(expectedReason)));
             }
         }
 
-        private static string GetWaqProcessValidationRuleAsString( WaqProcessValidationRule rule)
+        private static string GetWaqProcessValidationRuleAsString(string paramName, double value)
         {
-            var type = $"Type: '{(rule.ValueType == null || rule.ValueType == typeof(double) ? "Double" : "Int")}'.";
-            var minValue = string.IsNullOrEmpty(rule.MinValue) ? string.Empty : $"Min value: {rule.MinValue}. ";
-            var maxValue = string.IsNullOrEmpty(rule.MaxValue) ? string.Empty : $"Max value: {rule.MaxValue}. ";
-            var dependency = string.IsNullOrEmpty(rule.Dependency) ? string.Empty : $"With dependency: {rule.Dependency}. ";
-            return string.Concat(type, minValue, maxValue, dependency);
+            var message = Resources.WaqValidationRulesExtension_GetWaqProcessValidationRuleAsString_Process_coefficient__0___value__1____2__3__;
+            message = message.Replace(".", string.Empty); //small trick.
+            var expectedMssg = string.Format(message, paramName, value, string.Empty, string.Empty);
+            return expectedMssg;
         }
     }
 }

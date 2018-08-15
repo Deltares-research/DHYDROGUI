@@ -106,15 +106,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     var parameterRules = rules.Where(pr => GetWaqRulesParameterAndProcessInLibrary(pr, parameter.Name, library.Processes)).ToList();
                     if (parameter.IsWithinRulesLimits(parameterRules, processCoefficients, out reasonList)) continue;
 
-                    var parameterValue = double.NaN;
-                    /* The parameter value SHOULD ONLY be stored in the first component. */
-                    if (parameter.Components != null && parameter.Components.Any())
-                        parameterValue = (double)parameter.Components[0].DefaultValue;
-
                     foreach (var reason in reasonList)
                     {
-                        var message = string.Format(Resources.WaterQualityModelValidator_ValidateProcessCoefficients_Process_coefficient__0___value___1___does_not_fulfill_the_rule__2_, parameter.Name, parameterValue, reason);
-                        yield return new ValidationIssue(parameter, ValidationSeverity.Warning, message, new WaterQualityFunctionDataWrapper(processCoefficients));
+                        yield return new ValidationIssue(parameter, ValidationSeverity.Warning, reason, new WaterQualityFunctionDataWrapper(processCoefficients));
                     }
                 }
             }
