@@ -505,11 +505,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var expectedResultsDir = Path.Combine(mduDir, "expectedResults");
             foreach (var expectedResultsFilePath in Directory.GetFiles(expectedResultsDir))
             {
-                //work-around. Don't check WaterLevel.bc file, since this one is too big and delaying the test.
-                if (expectedResultsFilePath.Contains("WaterLevel")) 
-                {
-                    continue;
-                }
                 var generatedResultsFilePath = Path.Combine(saveToDir, Path.GetFileName(expectedResultsFilePath));
                 var skipNLines = generatedResultsFilePath.EndsWith(".mdu") ? 8 : 0; // skip date/program/version lines
                 var expectedResultsContent = File.ReadAllLines(expectedResultsFilePath).Skip(skipNLines);
@@ -517,9 +512,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 
                 Assert.IsNotNull(generatedResultsContent);
                 Assert.IsNotNull(expectedResultsContent);
-                expectedResultsContent.ForEach(er =>
-                    Assert.IsTrue(generatedResultsContent.Contains(er), $"Expected {er} in File {Path.GetFileName(expectedResultsFilePath)} but not found.")
-                );
+                
+                var expected = expectedResultsContent.ToList();
+                var generated = generatedResultsContent.ToList();
+
+                // Added first check if the strings are the same at the same index, because the contain method is not efficient for big files with a lot of lines.  
+                if (expected.Count == generated.Count)
+                {
+                    for (int i = 0; i < expected.Count; i++)
+                    {
+                        if (expected[i] == generated[i])
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            expectedResultsContent.ForEach(er =>
+                                Assert.IsTrue(generatedResultsContent.Contains(er),
+                                    $"Expected {er} in File {Path.GetFileName(expectedResultsFilePath)} but not found."));
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    expectedResultsContent.ForEach(er =>
+                        Assert.IsTrue(generatedResultsContent.Contains(er),
+                            $"Expected {er} in File {Path.GetFileName(expectedResultsFilePath)} but not found."));
+
+                }
             }
         }
 
