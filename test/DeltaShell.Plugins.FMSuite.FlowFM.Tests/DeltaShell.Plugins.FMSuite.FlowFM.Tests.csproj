@@ -349,7 +349,7 @@
     <Compile Include="WaterFlowFMModelDefinitionTest.cs" />
     <Compile Include="WaterFlowFMSaveLoadTest.cs" />
     <Compile Include="WaterFlowFMModelTest.cs" />
-    <Compile Include="WaterFlowFMModelSaveAsToDirectoryTest.cs" />
+    <Compile Include="WaterFlowFmModelDirectoryStructureTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj">
