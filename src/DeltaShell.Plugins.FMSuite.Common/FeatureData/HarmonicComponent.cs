@@ -243,6 +243,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 {"5MS12", 3.05293902249921},
                 {"3MNKS12", 3.06260218387000},
                 {"4M2S12", 3.07066974871733},
+                {"N4", 0.9927338},
             };
 
         private readonly string name;
