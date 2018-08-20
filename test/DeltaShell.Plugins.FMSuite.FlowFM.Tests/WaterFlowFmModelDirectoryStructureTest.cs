@@ -51,8 +51,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         private const string ModelName = "FlowFM1";
         private const string ProjectName = "Project1";
 
-        private const string WindFileName = "windfield.apwxwy";
-        private const string GridFileName = "windfield.grd";
+        private const string WindFileName = "meteo.apwxwy";
+        private const string GridFileName = "meteo.grd";
 
         private static string testDataDirPath;
 
