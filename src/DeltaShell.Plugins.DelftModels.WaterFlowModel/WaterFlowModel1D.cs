@@ -45,6 +45,7 @@ using NetTopologySuite.Extensions.Actions;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Features.Generic;
+using SharpMap.CoordinateSystems.Transformations;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 {
@@ -1819,8 +1820,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             if (sender == Network && e.PropertyName == "CoordinateSystem")
             {
                 UpdateCoordinateSystemInOutputFeatureCoverages();
+                Network.UpdateGeodeticDistancesOfChannels();
             }
         }
+
+        
 
         /// <summary>
         /// - Synchronize the boundary condition in the model with the IsBoundary property of the Nodes. Since this property

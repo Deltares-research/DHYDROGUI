@@ -5,8 +5,10 @@ using System.Linq;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Networks;
 using log4net;
+using SharpMap.CoordinateSystems.Transformations;
 
 namespace DelftTools.Hydro
 {
@@ -14,7 +16,17 @@ namespace DelftTools.Hydro
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroNetworkExtensions));
 
-        /// <summary>
+        public static void UpdateGeodeticDistancesOfChannels(this IHydroNetwork network)
+        {
+            if (network.CoordinateSystem == null)
+            {
+                network.Channels.ForEach(c => c.GeodeticLength = 0);
+                return;
+            }
+            network.Channels.ForEach(c => c.GeodeticLength = GeodeticDistance.Length(network.CoordinateSystem, c.Geometry));
+        }
+
+
         /// Ensure that all <see cref="ICompositeBranchStructure"/> have a unique name
         /// </summary>
         /// <param name="network">Network to check</param>
