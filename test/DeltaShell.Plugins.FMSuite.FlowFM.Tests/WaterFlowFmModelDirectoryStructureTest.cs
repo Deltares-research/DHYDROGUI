@@ -26,6 +26,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.Collections;
 using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
@@ -80,6 +82,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         private static string dflowfmDirPath;
 
         private static string mduFileName;
+
+        private const string NoordzeeModelProjectDirName = "NoordzeeModel";
+        private const string TrachytopesModelProjectDirName = "TrachytopesModel";
 
         [TestFixtureSetUp]
         public void Setup()
@@ -144,8 +149,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             try
             {
-                CopyTestDataToTemp();
-                CopyTrachytopeDataToTemp();
+                CopyFourierAndCalibrationFilesToTemp();
+                CopyTrachytopeFilesToTemp();
 
                 using (var app = GetConfiguredApplication())
                 {
@@ -215,7 +220,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             try
             {
-                CopyTestDataToTemp();
+                CopyFourierAndCalibrationFilesToTemp();
 
                 using (var app = GetConfiguredApplication())
                 {
@@ -285,8 +290,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             try
             {
-                CopyTestDataToTemp();
-                CopyWindDataToTemp();
+                CopyFourierAndCalibrationFilesToTemp();
+                CopyWindFilesToTemp();
 
                 using (var app = GetConfiguredApplication())
                 {
@@ -373,8 +378,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             try
             {
-                CopyTestDataToTemp();
-                CopyTrachytopeDataToTemp();
+                CopyFourierAndCalibrationFilesToTemp();
+                CopyTrachytopeFilesToTemp();
 
                 using (var app = GetConfiguredApplication())
                 {
@@ -397,9 +402,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                         app.SaveProjectAs(projectFilePath);
 
-                        app.SaveProject();
-
                         app.RunActivity(model);
+
+                        Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
                         AssertProjectFileAndFolderExist();
                         AssertModelDirectoryExists();
@@ -475,7 +480,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             try
             {
-                CopyTestDataToTemp();
+                CopyFourierAndCalibrationFilesToTemp();
 
                 using (var app = GetConfiguredApplication())
                 {
@@ -500,9 +505,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                         app.SaveProjectAs(projectFilePath);
 
-                        app.SaveProject();
-
                         app.RunActivity(model);
+
+                        Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
                         AssertProjectFileAndFolderExist();
                         AssertModelDirectoryExists();
@@ -579,8 +584,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             try
             {
-                CopyTestDataToTemp();
-                CopyWindDataToTemp();
+                CopyFourierAndCalibrationFilesToTemp();
+                CopyWindFilesToTemp();
 
                 using (var app = GetConfiguredApplication())
                 {
@@ -598,15 +603,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     using (var model = new WaterFlowFMModel(tempMduFilePath))
                     {
                         AdjustSettingsOutputParameters(model);
-
                         UpdateBedLevel(model);
                         AddModelToProject(model, app);
 
                         app.SaveProjectAs(projectFilePath);
 
-                        app.SaveProject();
-
                         app.RunActivity(model);
+
+                        Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
                         AssertProjectFileAndFolderExist();
                         AssertModelDirectoryExists();
@@ -667,8 +671,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             try
             {
-                CopyTestDataToTemp();
-                CopyTrachytopeDataToTemp();
+                CopyFourierAndCalibrationFilesToTemp();
+                CopyTrachytopeFilesToTemp();
 
                 using (var app = GetConfiguredApplication())
                 {
@@ -749,7 +753,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             try
             {
-                CopyTestDataToTemp();
+                CopyFourierAndCalibrationFilesToTemp();
 
                 using (var app = GetConfiguredApplication())
                 {
@@ -832,8 +836,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             try
             {
-                CopyTestDataToTemp();
-                CopyWindDataToTemp();
+                CopyFourierAndCalibrationFilesToTemp();
+                CopyWindFilesToTemp();
 
                 using (var app = GetConfiguredApplication())
                 {
@@ -883,6 +887,86 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
+        [TestCase(TrachytopesModelProjectDirName)]
+        [TestCase(NoordzeeModelProjectDirName)]
+        //5.1 & 5.2
+        public void GivenAnFMModelWithInputAndOutput_WhenOpeningTheProject_ThenDirectoryStructureShouldBeMigratedToNewVersion(string projectFolder)
+        {
+            FileUtils.CreateDirectoryIfNotExists(workDirPath);
+
+            var expectedFileExtensions_Output = new List<string>
+            {
+                ".out",
+                ".dia",
+                ".nc",
+                ".txt",
+                ".tek",
+                "_rst.nc",
+                "_his.nc",
+                "_map.nc"
+            };
+
+            var expectedFileExtensions_DFM_OUTPUT_Waq = new List<string>
+            {
+                ".are",
+                ".atr",
+                ".bnd",
+                ".flo",
+                ".hyd",
+                ".len",
+                ".poi",
+                ".srf",
+                ".srfold",
+                ".tau",
+                ".vol",
+                "_waqgeom.nc",
+                ".sal",
+                ".tem",
+                ".vdf"
+            };
+
+            var expectedFileExtensions_Snapped = new List<string>
+            {
+                ".shp",
+                ".dbf",
+                ".shx"
+            };
+
+            try
+            {
+                CopyProjectToWorkDir(projectFolder);
+
+                using (var app = GetConfiguredApplication())
+                {
+                    app.OpenProject(projectFilePath);
+
+                    AssertProjectFileAndFolderExist();
+                    AssertModelDirectoryExists();
+                    AssertInputDirectoryExists();
+                    AssertOutputDirectoryExists();
+                    AssertDfmOutputWaqDirectoryExists();
+                    AssertSnappedDirectoryExists();
+
+                    var directoriesInOutputFolder = Directory.GetDirectories(outputDirPath);
+                    Assert.AreEqual(2, directoriesInOutputFolder.Length,
+                        $"The number of folders in '{OutputDirName}' is not as expected.");
+
+                    AssertFilesExtensionsExistInDirectory(expectedFileExtensions_Output, outputDirPath,
+                        OutputDirName);
+                    AssertFilesExtensionsExistInDirectory(expectedFileExtensions_DFM_OUTPUT_Waq,
+                        dfm_Output_WaqDirPath, Dfm_Output_WaqDirName);
+                    AssertFilesExtensionsExistInDirectory(expectedFileExtensions_Snapped, snappedDirPath,
+                        SnappedDirName);
+
+                    app.CloseProject();
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(workDirPath);
+            }
+        }
+
         private DeltaShellApplication GetConfiguredApplication()
         {
             var app = new DeltaShellApplication();
@@ -924,23 +1008,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue(File.Exists(targetFilePath));
         }
 
-        private static void CopyTestDataToTemp()
+        private static void CopyFourierAndCalibrationFilesToTemp()
         {
             CopyTestDataFileToTemp("fourier.fou");
             CopyTestDataFileToTemp("calibration.cll");
             CopyTestDataFileToTemp("calibration.cld");
         }
 
-        private static void CopyWindDataToTemp()
+        private static void CopyWindFilesToTemp()
         {
             CopyTestDataFileToTemp(WindFileName);
             CopyTestDataFileToTemp(GridFileName);
         }
 
-        private static void CopyTrachytopeDataToTemp()
+        private static void CopyTrachytopeFilesToTemp()
         {
             CopyTestDataFileToTemp("trachytopes.arl");
             CopyTestDataFileToTemp("trachytopes.ttd");
+        }
+
+        private static void CopyProjectToWorkDir(string folderName)
+        {
+            var sourceFilePath = Path.Combine(testDataDirPath, folderName);
+
+            var sourceDirectory = new DirectoryInfo(sourceFilePath);
+
+            sourceDirectory.GetFiles().ForEach(f =>
+            {
+                var targetFilePath = Path.Combine(workDirPath, f.Name);
+                FileUtils.CopyFile(f.FullName, targetFilePath);
+            });
+            sourceDirectory.GetDirectories().ForEach(d =>
+            {
+                var targetDirPath = Path.Combine(workDirPath, d.Name);
+                FileUtils.CopyDirectory(d.FullName, targetDirPath);
+            });
         }
 
         private UnstructuredGrid CreateNewGrid(int width, int length)
@@ -1165,7 +1267,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 sw.WriteLine("FouFile           = fourier.fou");
                 sw.WriteLine("");
                 sw.WriteLine("[calibration]");
-                sw.WriteLine("UseCalibration    = 1");
                 sw.WriteLine("DefinitionFile    = calibration.cld");
                 sw.WriteLine("AreaFile          = calibration.cll");
                 sw.WriteLine("");
@@ -1177,12 +1278,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             using (StreamWriter sw = File.AppendText(tempMduFilePath))
             {
                 sw.WriteLine("[trachytopes]");
-                sw.WriteLine("TrtRou            = Y");
                 sw.WriteLine("TrtDef            = trachytopes.ttd");
                 sw.WriteLine("TrtL              = trachytopes.arl");
-                sw.WriteLine("TrtDt             = 60");
-                sw.WriteLine("DtTrt             = 60");
-                sw.WriteLine("TrtMxR            = 100");
             }
         }
 
