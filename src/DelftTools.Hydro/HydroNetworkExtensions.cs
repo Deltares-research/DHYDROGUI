@@ -20,7 +20,7 @@ namespace DelftTools.Hydro
         {
             if (network.CoordinateSystem == null)
             {
-                network.Channels.ForEach(c => c.GeodeticLength = 0);
+                network.Channels.ForEach(c => c.GeodeticLength = double.NaN);
                 return;
             }
             network.Channels.ForEach(c => c.GeodeticLength = GeodeticDistance.Length(network.CoordinateSystem, c.Geometry));
