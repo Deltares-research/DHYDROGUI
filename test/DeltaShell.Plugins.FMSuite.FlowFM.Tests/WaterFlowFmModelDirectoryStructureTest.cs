@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             modelDirName = ModelName;
             modelDirPath = Path.Combine(projectDirPath, modelDirName);
             mduFileName = ModelName + ".mdu";
-
+           
             inputDirPath = Path.Combine(modelDirPath, InputDirName);
             outputDirPath = Path.Combine(modelDirPath, OutputDirName);
             dfm_Output_WaqDirPath = Path.Combine(outputDirPath, Dfm_Output_WaqDirName);
@@ -967,6 +967,116 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
+        [Test] 
+        //6.1
+        public void GivenAnFMModelWithTrachytopes_WhenCustomDirectoryIsAddedInMdu_ThenOutputIsPlacedInCustomFolder()
+        {
+            CreateTestDirectories();
+
+            var expectedFileExtensions_Output = new List<string>
+            {
+                ".out",
+                ".dia",
+                ".nc",
+                ".txt",
+                ".tek",
+                "_rst.nc",
+                "_his.nc",
+                "_map.nc"
+            };
+
+            var expectedFileExtensions_DFM_OUTPUT_Waq = new List<string>
+            {
+                ".are",
+                ".atr",
+                ".bnd",
+                ".flo",
+                ".hyd",
+                ".len",
+                ".poi",
+                ".srf",
+                ".srfold",
+                ".tau",
+                ".vol",
+                "_waqgeom.nc",
+                ".sal",
+                ".tem",
+                ".vdf"
+            };
+
+            var expectedFileExtensions_Snapped = new List<string>
+            {
+                ".shp",
+                ".dbf",
+                ".shx"
+            };
+
+            try
+            {
+                CopyFourierAndCalibrationFilesToTemp();
+                CopyTrachytopeFilesToTemp();
+
+                using (var app = GetConfiguredApplication())
+                {
+                    using (var model = new WaterFlowFMModel())
+                    {
+                        AddFeaturesToModel(model);
+                        EnableSalinityAndTemperature(model);
+                        model.ExportTo(tempMduFilePath);
+                        model.ReloadGrid(true, true);
+                    }
+
+                    SimulateUserAddingReferencesInMduFile();
+                    SimulateUserAddingTrachytopesInMduFile();
+
+                    using (var model = new WaterFlowFMModel(tempMduFilePath))
+                    {
+                        AdjustSettingsOutputParameters(model);
+                        UpdateBedLevel(model);
+                        AddModelToProject(model, app);
+
+                        app.SaveProjectAs(projectFilePath);
+
+                        var customOutputDirName = "CustomOutput";
+                        var CustomOutputDirPath = Path.Combine(projectDirPath, customOutputDirName);
+                        ChangeOutputDirectoryInMdu(model, CustomOutputDirPath);
+
+                        app.SaveProject();
+
+                        app.RunActivity(model);
+
+                        AssertProjectFileAndFolderExist();
+                        AssertModelDirectoryExists();
+                        
+                        Assert.IsFalse(Directory.Exists(outputDirPath));
+
+                        dfm_Output_WaqDirPath = Path.Combine(CustomOutputDirPath, Dfm_Output_WaqDirName);
+                        Assert.IsTrue(Directory.Exists(dfm_Output_WaqDirPath));
+
+                        snappedDirPath = Path.Combine(CustomOutputDirPath, SnappedDirName);                       
+                        Assert.IsTrue(Directory.Exists(snappedDirPath));
+
+                        var directoriesInOutputFolder = Directory.GetDirectories(CustomOutputDirPath);
+                        Assert.AreEqual(2, directoriesInOutputFolder.Length,
+                            $"The number of folders in '{customOutputDirName}' is not as expected.");
+
+                        AssertFilesExtensionsExistInDirectory(expectedFileExtensions_Output, CustomOutputDirPath,
+                            customOutputDirName);
+                        AssertFilesExtensionsExistInDirectory(expectedFileExtensions_DFM_OUTPUT_Waq,
+                            dfm_Output_WaqDirPath, Dfm_Output_WaqDirName);
+                        AssertFilesExtensionsExistInDirectory(expectedFileExtensions_Snapped, snappedDirPath,
+                            SnappedDirName);
+
+                        app.CloseProject();
+                    }
+                }
+            }
+            finally
+            {
+                DeleteTestDirectories();
+            }
+        }
+
         private DeltaShellApplication GetConfiguredApplication()
         {
             var app = new DeltaShellApplication();
@@ -1281,6 +1391,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 sw.WriteLine("TrtDef            = trachytopes.ttd");
                 sw.WriteLine("TrtL              = trachytopes.arl");
             }
+        }
+
+        private void ChangeOutputDirectoryInMdu(WaterFlowFMModel model, string path)
+        {
+            var mduFilePath = model.MduFilePath;
+            FileUtils.CreateDirectoryIfNotExists(path);
+            Assert.IsTrue(Directory.Exists(path));
+            model.ModelDefinition.GetModelProperty("OutputDir").Value = path;
         }
 
         private void AdjustSettingsOutputParameters(WaterFlowFMModel model)
