@@ -4,9 +4,13 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Properties;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
 using Rhino.Mocks;
+using SharpMap;
+using SharpMap.Converters.WellKnownText;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DelftTools.Hydro.Tests
 {
@@ -14,6 +18,48 @@ namespace DelftTools.Hydro.Tests
     public class HydroNetworkExtensionsTest
     {
         private const int BuildServerFactor = 3;
+
+        [Test]
+        public void
+            GivenNetworkWithCoordinateSystemWhenUpdateGeodeticDistancesOfChannelsIsCalledThenGeodeticDistanceOfChannelsIsSet()
+        {
+            var mocks = new MockRepository();
+            var network = mocks.StrictMock<IHydroNetwork>();
+            var channel = new Channel() {Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")};
+            network.Expect(n => n.CoordinateSystem).Return(new OgrCoordinateSystemFactory().CreateFromEPSG(28992))
+                .Repeat.Twice(); // Amersfoort / RD New
+            network.Expect(n => n.Channels).Return(new EventedList<IChannel> {channel}).Repeat.Once();
+            mocks.ReplayAll();
+            if (Map.CoordinateSystemFactory == null)
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+
+            Assert.That(channel.Length, Is.EqualTo(100).Within(0.1));
+
+            network.UpdateGeodeticDistancesOfChannels();
+
+            Assert.That(channel.Length, Is.Not.EqualTo(100).Within(0.1));
+            mocks.VerifyAll();
+        }
+
+        [Test]
+        public void GivenNetworkWithoutCoordinateSystemWhenUpdateGeodeticDistancesOfChannelsIsCalledThenGeodeticDistanceOfChannelsIsCleared()
+        {
+            var mocks = new MockRepository();
+            var network = mocks.StrictMock<IHydroNetwork>();
+            var channel = new Channel() { Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)") , GeodeticLength = 150};
+            network.Expect(n => n.CoordinateSystem).Return(null).Repeat.Once();
+            network.Expect(n => n.Channels).Return(new EventedList<IChannel> { channel }).Repeat.Once();
+            mocks.ReplayAll();
+
+            Assert.That(channel.Length, Is.EqualTo(150).Within(0.1));
+
+            network.UpdateGeodeticDistancesOfChannels();
+
+            Assert.That(channel.Length, Is.EqualTo(100).Within(0.1));
+            Assert.That(channel.GeodeticLength, Is.NaN);
+
+            mocks.VerifyAll();
+        }
 
         [Test]
         public void TestEnsureCompositeBranchStructureNamesAreUnique()

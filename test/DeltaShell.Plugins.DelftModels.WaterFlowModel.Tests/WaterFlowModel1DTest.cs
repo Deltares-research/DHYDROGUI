@@ -37,6 +37,7 @@ using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
+using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpTestsEx;
 using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
@@ -3861,5 +3862,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             Assert.IsTrue(flowModel.RoughnessSections.OfType<ReverseRoughnessSection>()
                                    .All(rs => rs.UseNormalRoughness == true));
         }
+
+        [Test]
+        public void TestNetworkCoordinateSystemPropertyChangedAndGeodeticLengthsOfBranchesAreUpdated()
+        {
+            using (var flowModel = new WaterFlowModel1D())
+            {
+                var network = new HydroNetwork();
+                var node1 = new HydroNode();
+                var node2 = new HydroNode();
+                var branch1 = new Channel(node1, node2)
+                {
+                    Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(100, 0) })
+                };
+                network.Nodes.AddRange(new[] { node1, node2 });
+                flowModel.Network = network;
+                network.Branches.Add(branch1);
+                Assert.That(branch1.GeodeticLength, Is.NaN);
+                Assert.That(branch1.Length, Is.EqualTo(100).Within(0.1));
+                if (Map.CoordinateSystemFactory == null)
+                    Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+                flowModel.Network.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
+                Assert.That(branch1.GeodeticLength, Is.Not.NaN);
+                Assert.That(branch1.Length, Is.EqualTo(branch1.GeodeticLength).Within(0.1));
+                flowModel.Network.CoordinateSystem = null;
+                Assert.That(branch1.GeodeticLength, Is.NaN);
+                Assert.That(branch1.Length, Is.EqualTo(100).Within(0.1));
+            }
+        }
+
     }
 }

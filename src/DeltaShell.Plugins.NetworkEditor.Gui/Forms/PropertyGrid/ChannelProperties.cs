@@ -105,10 +105,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisibleValidationMethod]
         public bool IsVisible(string propertyName)
         {
-            if (propertyName == "GeodeticLength" )
+            if (propertyName == nameof(data.GeodeticLength) )
             {
-                //check double + double.epsilon!
-                return data.GeodeticLength  > 0; 
+                return !double.IsNaN(data.GeodeticLength); 
             }
             return true;
         }

@@ -14,6 +14,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
     public class ChannelPropertiesTest
     {
         [Test]
+        public void GeodeticLengthVisibility()
+        {
+            var channel = new Channel() {GeodeticLength = 150 };
+            var channelProperties = new ChannelProperties { Data = channel };
+            Assert.That(DelftTools.Utils.ComponentModel.DynamicVisibleAttribute.IsDynamicVisible(channelProperties, nameof(channel.GeodeticLength)), Is.True);
+            Assert.That(channelProperties.IsVisible(nameof(channel.GeodeticLength)), Is.True);
+            channel.GeodeticLength = double.NaN;
+            Assert.That(DelftTools.Utils.ComponentModel.DynamicVisibleAttribute.IsDynamicVisible(channelProperties, nameof(channel.GeodeticLength)), Is.False);
+            Assert.That(channelProperties.IsVisible(nameof(channel.GeodeticLength)), Is.False);
+            channel.GeodeticLength = 0;
+            Assert.That(DelftTools.Utils.ComponentModel.DynamicVisibleAttribute.IsDynamicVisible(channelProperties, nameof(channel.GeodeticLength)), Is.True);
+            Assert.That(channelProperties.IsVisible(nameof(channel.GeodeticLength)), Is.True);
+        }
+
+        [Test]
         public void NumberOfStructures()
         {
             var network = new HydroNetwork();
