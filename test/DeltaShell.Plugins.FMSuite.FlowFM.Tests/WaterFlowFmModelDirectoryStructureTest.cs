@@ -545,6 +545,92 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         //2.3
+        public void GivenAnFMModelWithWind_WhenRun_ThenWorkDirIsCreatedInTemp()
+        {
+            CreateTestDirectories();
+
+            var expectedFileExtensions = new List<string>
+            {
+                ".out",
+                ".dia",
+                ".nc",
+                ".txt",
+                ".tek",
+                "_rst.nc",
+                "_his.nc",
+                "_map.nc",
+                ".are",
+                ".atr",
+                ".bnd",
+                ".flo",
+                ".hyd",
+                ".len",
+                ".poi",
+                ".srf",
+                ".srfold",
+                ".tau",
+                ".vol",
+                "_waqgeom.nc",
+                ".sal",
+                ".tem",
+                ".vdf",
+                ".shp",
+                ".dbf",
+                ".shx"
+            };
+
+            try
+            {
+                CopyFourierAndCalibrationFilesToTemp();
+                CopyWindFilesToTemp();
+
+                using (var app = GetConfiguredApplication())
+                {
+                    using (var model = new WaterFlowFMModel())
+                    {
+                        AddFeaturesToModel(model);
+                        AddWindToModel(model);
+                        EnableSalinityAndTemperature(model);
+                        model.ExportTo(tempMduFilePath);
+                        model.ReloadGrid(true, true);
+                    }
+
+                    SimulateUserAddingReferencesInMduFile();
+
+                    using (var model = new WaterFlowFMModel(tempMduFilePath))
+                    {
+                        AdjustSettingsOutputParameters(model);
+                        UpdateBedLevel(model);
+                        AddModelToProject(model, app);
+
+                        app.SaveProjectAs(projectFilePath);
+
+                        model.ValidateBeforeRun = true;
+                        var report = model.Validate();
+                        Assert.AreEqual(0, report.AllErrors.Count(), "There are errors in the model after importing the MDU file");
+                        app.RunActivity(model);
+                        Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+
+                        var workDirName = "WorkDir";
+                        var workDirPath = Path.Combine(Path.GetTempPath(), workDirName);
+
+                        Assert.IsTrue(Directory.Exists(workDirPath),
+                            Message_MissingFileOrFolderName("folder", workDirName, "Temp"));
+
+                        AssertFilesExtensionsExistInDirectory(expectedFileExtensions, workDirPath, workDirName);
+
+                        app.CloseProject();
+                    }
+                }
+            }
+            finally
+            {
+                DeleteTestDirectories();
+            }
+        }
+
+        [Test]
+        //2.4
         public void GivenAnFMModelWithWind_WhenRun_ThenOutputFolderWithCorrectFilesAreGiven()
         {
             CreateTestDirectories();
@@ -1411,7 +1497,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         private void ChangeOutputDirectoryInMdu(WaterFlowFMModel model, string path)
         {
-            var mduFilePath = model.MduFilePath;
             FileUtils.CreateDirectoryIfNotExists(path);
             Assert.IsTrue(Directory.Exists(path));
             model.ModelDefinition.GetModelProperty("OutputDir").Value = path;
