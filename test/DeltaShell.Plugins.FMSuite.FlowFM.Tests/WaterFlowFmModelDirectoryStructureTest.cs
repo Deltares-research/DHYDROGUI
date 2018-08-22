@@ -402,8 +402,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                         app.SaveProjectAs(projectFilePath);
 
+                        model.ValidateBeforeRun = true;
+                        var report = model.Validate();
+                        Assert.AreEqual(0, report.AllErrors.Count(), "There are errors in the model after importing the MDU file");
                         app.RunActivity(model);
-
                         Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
                         AssertProjectFileAndFolderExist();
@@ -505,8 +507,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                         app.SaveProjectAs(projectFilePath);
 
-                        app.RunActivity(model);
-
+                        model.ValidateBeforeRun = true;
+                        var report = model.Validate();
+                        Assert.AreEqual(0, report.AllErrors.Count(), "There are errors in the model after importing the MDU file");
+                        app.RunActivity(model);                       
                         Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
                         AssertProjectFileAndFolderExist();
@@ -608,10 +612,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                         app.SaveProjectAs(projectFilePath);
 
+                        model.ValidateBeforeRun = true;
+                        var report = model.Validate();
+                        Assert.AreEqual(0, report.AllErrors.Count(), "There are errors in the model after importing the MDU file");
                         app.RunActivity(model);
-
                         Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-
+                        
                         AssertProjectFileAndFolderExist();
                         AssertModelDirectoryExists();
                         AssertInputDirectoryExists();
@@ -1289,12 +1295,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             };
 
             flowBoundaryCondition.AddPoint(0);
+            flowBoundaryCondition.PointData[0].Arguments[0].SetValues(new[] { model.StartTime, model.StopTime });
+            flowBoundaryCondition.PointData[0][model.StartTime] = 0.5;
+            flowBoundaryCondition.PointData[0][model.StopTime] = 0.6;
 
-            var timeSeries = flowBoundaryCondition.GetDataAtPoint(0);
-            timeSeries[model.StartTime] = 0.5;
-            timeSeries[model.StopTime] = 0.5;
-
-            model.Boundaries.Add(feature);
             var set = new BoundaryConditionSet { Feature = feature };
             set.BoundaryConditions.Add(flowBoundaryCondition);
             model.BoundaryConditionSets.Add(set);
@@ -1327,6 +1331,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         private static void EnableMorphology(WaterFlowFMModel model)
         {
             model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            var cellsValue = ((int)UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
+            model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(cellsValue);
         }
 
         private void AddMorphologyBoundaryConditionToModel(WaterFlowFMModel model)
@@ -1337,22 +1343,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Geometry = new LineString(new[] { new Coordinate(1, 0), new Coordinate(0, 1) })
             };
 
-            var morphologyBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLoadTransport, 
+            var morphologyBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed, 
                 BoundaryConditionDataType.TimeSeries)
             {
                 Feature = feature,
                 SedimentFractionNames = new List<string> { "SedimentFraction1" }
             };
 
-            morphologyBoundaryCondition.AddPoint(0);
+           morphologyBoundaryCondition.AddPoint(0);
+           morphologyBoundaryCondition.PointData[0].Arguments[0].SetValues(new[] { model.StartTime, model.StopTime });
+           morphologyBoundaryCondition.PointData[0][model.StartTime] = 0.5;
+           morphologyBoundaryCondition.PointData[0][model.StopTime] = 0.6;
 
-            var timeSeries = morphologyBoundaryCondition.GetDataAtPoint(0);
-            timeSeries[model.StartTime] = 0.5;
-            timeSeries[model.StopTime] = 0.5;
+            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
+                BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = feature,
+            };
 
-            model.Boundaries.Add(feature);
+            flowBoundaryCondition.AddPoint(0);
+            flowBoundaryCondition.PointData[0].Arguments[0].SetValues(new[] { model.StartTime, model.StopTime });
+            flowBoundaryCondition.PointData[0][model.StartTime] = 0.5;
+            flowBoundaryCondition.PointData[0][model.StopTime] = 0.6;
+            
             var set = new BoundaryConditionSet { Feature = feature };
+            set.BoundaryConditions.Add(flowBoundaryCondition);
             set.BoundaryConditions.Add(morphologyBoundaryCondition);
+
             model.BoundaryConditionSets.Add(set);
         }
 
