@@ -158,12 +158,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         AddFeaturesToModel(model);
                         EnableSalinityAndTemperature(model);
+                        SimulateUserAddingTrachytopesInMduFile(model);
                         model.ExportTo(tempMduFilePath);
                         model.ReloadGrid(true, true);
                     }
 
                     SimulateUserAddingReferencesInMduFile();
-                    SimulateUserAddingTrachytopesInMduFile();
+                    
 
                     using (var model = new WaterFlowFMModel(tempMduFilePath))
                     {
@@ -387,13 +388,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         AddFeaturesToModel(model);
                         EnableSalinityAndTemperature(model);
+                        SimulateUserAddingTrachytopesInMduFile(model);
                         model.ExportTo(tempMduFilePath);
                         model.ReloadGrid(true, true);
                     }
 
                     SimulateUserAddingReferencesInMduFile();
-                    SimulateUserAddingTrachytopesInMduFile();
-
+                    
                     using (var model = new WaterFlowFMModel(tempMduFilePath))
                     {
                         AdjustSettingsOutputParameters(model);
@@ -686,13 +687,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         AddFeaturesToModel(model);
                         EnableSalinityAndTemperature(model);
+                        SimulateUserAddingTrachytopesInMduFile(model);
                         model.ExportTo(tempMduFilePath);
                         model.ReloadGrid(true, true);
                     }
 
                     SimulateUserAddingReferencesInMduFile();
-                    SimulateUserAddingTrachytopesInMduFile();
-
+                    
                     using (var model = new WaterFlowFMModel(tempMduFilePath))
                     {
                         AdjustSettingsOutputParameters(model);
@@ -1028,13 +1029,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         AddFeaturesToModel(model);
                         EnableSalinityAndTemperature(model);
+                        SimulateUserAddingTrachytopesInMduFile(model);
                         model.ExportTo(tempMduFilePath);
                         model.ReloadGrid(true, true);
                     }
 
                     SimulateUserAddingReferencesInMduFile();
-                    SimulateUserAddingTrachytopesInMduFile();
-
+                    
                     using (var model = new WaterFlowFMModel(tempMduFilePath))
                     {
                         AdjustSettingsOutputParameters(model);
@@ -1400,14 +1401,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
-        private static void SimulateUserAddingTrachytopesInMduFile()
+        private static void SimulateUserAddingTrachytopesInMduFile(WaterFlowFMModel model)
         {
-            using (StreamWriter sw = File.AppendText(tempMduFilePath))
-            {
-                sw.WriteLine("[trachytopes]");
-                sw.WriteLine("TrtDef            = trachytopes.ttd");
-                sw.WriteLine("TrtL              = trachytopes.arl");
-            }
+            model.ModelDefinition.GetModelProperty(KnownProperties.TrtRou).SetValueAsString("Y");
+            model.ModelDefinition.GetModelProperty(KnownProperties.TrtDef).SetValueAsString("trachytopes.ttd");
+            model.ModelDefinition.GetModelProperty(KnownProperties.TrtL).SetValueAsString("trachytopes.arl");
+            model.ModelDefinition.GetModelProperty(KnownProperties.DtTrt).SetValueAsString("300");
         }
 
         private void ChangeOutputDirectoryInMdu(WaterFlowFMModel model, string path)
