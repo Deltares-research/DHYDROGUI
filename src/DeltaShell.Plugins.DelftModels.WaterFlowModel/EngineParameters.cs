@@ -293,15 +293,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                                         WaterFlowModelParameterNames.ObservationPointTemperature,
                                         new Unit("parts per thousand", "ppt")),
                     // Laterals
-                    // Deprecated - do not remove! (backwards compatibility)
-                    new EngineParameter(QuantityType.Discharge, ElementSet.Laterals, DataItemRole.Input,
-                                        WaterFlowModelParameterNames.LateralDischarge,
-                                        new Unit("cubic meter per second", "m³/s")),
-                    // Deprecated - do not remove! (backwards compatibility)
-                    new EngineParameter(QuantityType.Discharge, ElementSet.Laterals, DataItemRole.Output,
-                                        WaterFlowModelParameterNames.LateralDischarge,
-                                        new Unit("cubic meter per second", "m³/s")),
-
                     new EngineParameter(QuantityType.ActualDischarge, ElementSet.Laterals, DataItemRole.Output | DataItemRole.Input,
                                         WaterFlowModelParameterNames.LateralActualDischarge,
                                         new Unit("cubic meter per second", "m³/s")),
@@ -432,14 +423,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                     return false;
                 }
             }
-            if (feature is ILateralSource)
-            {
-                // filter out deprecated Discharge on Laterals
-                if (engineParameter.QuantityType == QuantityType.Discharge)
-                {
-                    return false;
-                }
-            }
+
             return true;
         }
 
