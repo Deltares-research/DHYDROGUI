@@ -988,9 +988,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                         model.ClearOutput();
                         
-                        //Save added to the test plan, otherwise the output is only deleted in the working directory.
-                        app.SaveProject();
-
                         AssertProjectFileAndFolderExist();
                         AssertModelDirectoryExists();
 
@@ -1050,15 +1047,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                         model.ClearOutput();
 
-                        //Save added to the test plan, otherwise the output are only deleted in the working directory.
-                        app.SaveProject();
-
                         app.CloseProject();
 
                         app.OpenProject(projectFilePath);
                         
-                        app.SaveProjectAs(projectFilePath);
-
                         AssertProjectFileAndFolderExist();
                         AssertModelDirectoryExists();
 
