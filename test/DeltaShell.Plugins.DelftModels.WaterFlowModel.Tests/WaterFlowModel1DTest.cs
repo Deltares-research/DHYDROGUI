@@ -1105,7 +1105,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         {
             using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
             {
-                var networkCoordinateSystemRDNew = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
+                if (Map.CoordinateSystemFactory == null)
+                {
+                    Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+                }
+
+                var networkCoordinateSystemRDNew = Map.CoordinateSystemFactory.CreateFromEPSG(28992);
+
                 waterFlowModel1D.Network.CoordinateSystem = networkCoordinateSystemRDNew;
                 waterFlowModel1D.Network.Branches.First().BranchFeatures.Add(new ObservationPoint() {Name = "myObservationPoint"});
                 RunModel(waterFlowModel1D);
@@ -1120,6 +1126,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 Assert.IsNotNull(outputWaterLevelDataItem);
                 var outputWaterLevelFeatureCoverage = outputWaterLevelDataItem.Value as FeatureCoverage;
                 Assert.IsNotNull(outputWaterLevelFeatureCoverage);
+
                 Assert.IsTrue(outputWaterLevelFeatureCoverage.CoordinateSystem.EqualsTo(networkCoordinateSystemRDNew));
                 var networkCoordinateSystemRDOld = new OgrCoordinateSystemFactory().CreateFromEPSG(28991);
                 waterFlowModel1D.Network.CoordinateSystem = networkCoordinateSystemRDOld;
@@ -1134,7 +1141,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             // Use a valid network for the calculation
             using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
             {
-
                 // Adjust the boundary conditions so that a constant H resides on a node that is connected to multiple branches
                 waterFlowModel1D.BoundaryConditions[1].DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
@@ -23,7 +24,19 @@ namespace DelftTools.Hydro
                 network.Channels.ForEach(c => c.GeodeticLength = double.NaN);
                 return;
             }
-            network.Channels.ForEach(c => c.GeodeticLength = GeodeticDistance.Length(network.CoordinateSystem, c.Geometry));
+
+            var geodeticDistance = new GeodeticDistance(network.CoordinateSystem);
+
+            network.Channels.ForEach(c =>
+            {
+                var distance = 0.0;
+
+                for (int index = 1; index < c.Geometry.Coordinates.Length; ++index)
+                    distance += geodeticDistance.Distance(c.Geometry.Coordinates[index - 1],
+                        c.Geometry.Coordinates[index]);
+
+                c.GeodeticLength = distance;
+            });
         }
 
 

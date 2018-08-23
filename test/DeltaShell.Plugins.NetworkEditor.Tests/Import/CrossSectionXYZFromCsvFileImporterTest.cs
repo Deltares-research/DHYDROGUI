@@ -39,7 +39,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
             var importer = new CrossSectionXYZFromCsvFileImporter {FilePath = path};
             importer.ImportItem(null, HydroNetwork);
             var crossSections = HydroNetwork.CrossSections.ToList();
-
             Assert.AreEqual(3, crossSections.Count);
 
             var chainages = HydroNetwork.CrossSections.Select(cs => cs.Chainage).Distinct().ToList();
