@@ -7,6 +7,7 @@ using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 using Point = NetTopologySuite.Geometries.Point;
+using DelftTools.Utils.ComponentModel;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
 {
@@ -14,17 +15,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
     public class ChannelPropertiesTest
     {
         [Test]
-        public void GeodeticLengthVisibility()
+        public void GivenChannelWithDifferentGeodeticLength_ThenPropertyVisibilityIsEitherShownOrNot()
         {
             var channel = new Channel() {GeodeticLength = 150 };
             var channelProperties = new ChannelProperties { Data = channel };
-            Assert.That(DelftTools.Utils.ComponentModel.DynamicVisibleAttribute.IsDynamicVisible(channelProperties, nameof(channel.GeodeticLength)), Is.True);
+            Assert.That(DynamicVisibleAttribute.IsDynamicVisible(channelProperties, nameof(channel.GeodeticLength)), Is.True);
             Assert.That(channelProperties.IsVisible(nameof(channel.GeodeticLength)), Is.True);
+
             channel.GeodeticLength = double.NaN;
-            Assert.That(DelftTools.Utils.ComponentModel.DynamicVisibleAttribute.IsDynamicVisible(channelProperties, nameof(channel.GeodeticLength)), Is.False);
+            Assert.That(DynamicVisibleAttribute.IsDynamicVisible(channelProperties, nameof(channel.GeodeticLength)), Is.False);
             Assert.That(channelProperties.IsVisible(nameof(channel.GeodeticLength)), Is.False);
+
             channel.GeodeticLength = 0;
-            Assert.That(DelftTools.Utils.ComponentModel.DynamicVisibleAttribute.IsDynamicVisible(channelProperties, nameof(channel.GeodeticLength)), Is.True);
+            Assert.That(DynamicVisibleAttribute.IsDynamicVisible(channelProperties, nameof(channel.GeodeticLength)), Is.True);
             Assert.That(channelProperties.IsVisible(nameof(channel.GeodeticLength)), Is.True);
         }
 

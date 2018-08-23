@@ -3864,7 +3864,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
-        public void TestNetworkCoordinateSystemPropertyChangedAndGeodeticLengthsOfBranchesAreUpdated()
+        public void GivenNetworkWithRdNewCoordinateSystem_WhenCoordinateSystemIsSetToNull_ThenGeodeticLengthsOfBranchesAreUpdated()
         {
             using (var flowModel = new WaterFlowModel1D())
             {
@@ -3882,7 +3882,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 Assert.That(branch1.Length, Is.EqualTo(100).Within(0.1));
                 if (Map.CoordinateSystemFactory == null)
                     Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
-                flowModel.Network.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
+                var rdNewCoordinateSystem = 28992;
+                flowModel.Network.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(rdNewCoordinateSystem);
                 Assert.That(branch1.GeodeticLength, Is.Not.NaN);
                 Assert.That(branch1.Length, Is.EqualTo(branch1.GeodeticLength).Within(0.1));
                 flowModel.Network.CoordinateSystem = null;
