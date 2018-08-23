@@ -13,7 +13,6 @@ using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Geometries;
@@ -29,12 +28,13 @@ using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 using TimeSpan = System.TimeSpan;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
+namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
     [ExcludeFromCodeCoverage]
     [Ignore]
@@ -1396,7 +1396,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         private static LandBoundary2D CreateLandBoundary()
         {
-            return WaterFlowFMMduFileTestHelper.GetNewLandBoundary2D("Boundaries", "LandBoundary");
+            return new LandBoundary2D
+            {
+                GroupName = "Boundaries",
+                Name = "LandBoundary",
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100), new Coordinate(50, 50) })
+            };
         }
 
         private GroupableFeature2DPolygon CreateDryArea()
@@ -1418,7 +1423,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         private GroupablePointFeature CreateDryPoints()
         {
-            return WaterFlowFMMduFileTestHelper.GetNewGroupablePointFeature("DryPoints");
+            return new GroupablePointFeature
+            {
+                GroupName = "DryPoints",
+                Geometry = new Point(new Coordinate(0, 100))
+            };
         }
 
         private GroupableFeature2DPoint CreateObservationPoint()
