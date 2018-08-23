@@ -28,6 +28,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections;
+using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
@@ -49,6 +50,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         private const string SnappedDirName = "snapped";
         private const string Dfm_Output_WaqDirName = "DFM_OUTPUT_WAQ";
         private const string DflowfmDirName = "dflowfm";
+        private const string ExportDimrDirName = "exported_dimr";
+        private const string ExportDimrFileName = "dimr.xml";
 
         private const string ModelName = "FlowFM1";
         private const string ProjectName = "Project1";
@@ -80,6 +83,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         private static string dfm_Output_WaqDirPath;
         private static string snappedDirPath;
         private static string dflowfmDirPath;
+
+        private static string exportDimrDirPath;
+        private static string exportDimrFilePath;
 
         private static string mduFileName;
 
@@ -113,7 +119,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             outputDirPath = Path.Combine(modelDirPath, OutputDirName);
             dfm_Output_WaqDirPath = Path.Combine(outputDirPath, Dfm_Output_WaqDirName);
             snappedDirPath = Path.Combine(outputDirPath, SnappedDirName);
-            dflowfmDirPath = Path.Combine(projectDirPath, DflowfmDirName);
+
+            exportDimrDirPath = Path.Combine(projectDirPath, ExportDimrDirName);
+            exportDimrFilePath = Path.Combine(exportDimrDirPath, ExportDimrFileName);
+            dflowfmDirPath = Path.Combine(exportDimrDirPath, DflowfmDirName);
 
             tempMduFilePath = Path.Combine(tempDirPath, mduFileName);
             tempProjectFilePath = Path.Combine(tempDirPath, projectFileName);
@@ -701,14 +710,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         //3.1
-        public void GivenAnFMModelWithTrachytopes_WhenExported_ThenCorrectFoldersAndFilesAreGiven()
+        public void GivenAnFMModelWithTrachytopes_WhenDimrExported_ThenCorrectFoldersAndFilesAreGiven()
         {
             CreateTestDirectories();
 
             var expectedFileExtensions = new List<string>
             {
                 ".mdu",
-                ".meta",
                 "_net.nc",
                 ".pol",
                 ".pli",
@@ -754,20 +762,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                         app.SaveProjectAs(projectFilePath);
 
-                        model.ExportTo(exportMduFilePath);
-
                         AssertProjectFileAndFolderExist();
 
-                        AssertDflowfmDirectoryExists();
+                        FileUtils.CreateDirectoryIfNotExists(exportDimrDirPath);
+                        Assert.IsTrue(Directory.Exists(exportDimrDirPath));
+
+                        var exporter = new DHydroConfigXmlExporter();
+                        exporter.Export(model, exportDimrFilePath);
+
+                        Assert.IsTrue(File.Exists(exportDimrFilePath));
 
                         var expectedFileCount = 1;
 
-                        var actualFileCount = Directory.GetFiles(projectDirPath, $"*{expectedExtension}").Length;
+                        var actualFileCount = Directory.GetFiles(exportDimrDirPath, $"*{expectedExtension}").Length;
 
                         Assert.AreEqual(expectedFileCount, actualFileCount,
                             Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
-                                actualFileCount, projectDirPath));
+                                actualFileCount, exportDimrDirPath));
 
+                        AssertDflowfmDirectoryExists();
                         AssertFilesExtensionsExistInDirectory(expectedFileExtensions, dflowfmDirPath, DflowfmDirName);
 
                         app.CloseProject();
@@ -781,15 +794,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        //3.2, discuss this with PO or Quality Owner
-        public void GivenAnFMModelWithMorphology_WhenExported_ThenCorrectFoldersAndFilesAreGiven()
+        //3.2
+        public void GivenAnFMModelWithMorphology_WhenDimrExported_ThenCorrectFoldersAndFilesAreGiven()
         {
             CreateTestDirectories();
 
             var expectedFileExtensions = new List<string>
             {
                 ".mdu",
-                ".meta",
                 "_net.nc",
                 ".pol",
                 ".pli",
@@ -837,20 +849,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                         app.SaveProjectAs(projectFilePath);
 
-                        model.ExportTo(exportMduFilePath);
-
                         AssertProjectFileAndFolderExist();
 
-                        AssertDflowfmDirectoryExists();
+                        FileUtils.CreateDirectoryIfNotExists(exportDimrDirPath);
+                        Assert.IsTrue(Directory.Exists(exportDimrDirPath));
+
+                        var exporter = new DHydroConfigXmlExporter();
+                        exporter.Export(model, exportDimrFilePath);
+
+                        Assert.IsTrue(File.Exists(exportDimrFilePath));
 
                         var expectedFileCount = 1;
 
-                        var actualFileCount = Directory.GetFiles(projectDirPath, $"*{expectedExtension}").Length;
+                        var actualFileCount = Directory.GetFiles(exportDimrDirPath, $"*{expectedExtension}").Length;
 
                         Assert.AreEqual(expectedFileCount, actualFileCount,
                             Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
-                                actualFileCount, projectDirPath));
+                                actualFileCount, exportDimrDirPath));
 
+                        AssertDflowfmDirectoryExists();
                         AssertFilesExtensionsExistInDirectory(expectedFileExtensions, dflowfmDirPath, DflowfmDirName);
 
                         app.CloseProject();
@@ -865,15 +882,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        //3.3, discuss this with PO or Quality Owner
-        public void GivenAnFMModelWithWind_WhenExported_ThenCorrectFoldersAndFilesAreGiven()
+        //3.3
+        public void GivenAnFMModelWithWind_WhenDimrExported_ThenCorrectFoldersAndFilesAreGiven()
         {
             CreateTestDirectories();
 
             var expectedFileExtensions = new List<string>
             {
                 ".mdu",
-                ".meta",
                 "_net.nc",
                 ".pol",
                 ".pli",
@@ -919,20 +935,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                         app.SaveProjectAs(projectFilePath);
 
-                        model.ExportTo(exportMduFilePath);
-
                         AssertProjectFileAndFolderExist();
 
-                        AssertDflowfmDirectoryExists();
+                        FileUtils.CreateDirectoryIfNotExists(exportDimrDirPath);
+                        Assert.IsTrue(Directory.Exists(exportDimrDirPath));
+
+                        var exporter = new DHydroConfigXmlExporter();
+                        exporter.Export(model, exportDimrFilePath);
+
+                        Assert.IsTrue(File.Exists(exportDimrFilePath));
 
                         var expectedFileCount = 1;
 
-                        var actualFileCount = Directory.GetFiles(projectDirPath, $"*{expectedExtension}").Length;
+                        var actualFileCount = Directory.GetFiles(exportDimrDirPath, $"*{expectedExtension}").Length;
 
                         Assert.AreEqual(expectedFileCount, actualFileCount,
                             Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
-                                actualFileCount, projectDirPath));
+                                actualFileCount, exportDimrDirPath));
 
+                        AssertDflowfmDirectoryExists();
                         AssertFilesExtensionsExistInDirectory(expectedFileExtensions, dflowfmDirPath, DflowfmDirName);
 
                         app.CloseProject();
