@@ -1227,10 +1227,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                         app.RunActivity(model);
 
+                        // Save added to the test plan, otherwise the output is only in the working directory.
+                        app.SaveProject();
+                        
                         AssertProjectFileAndFolderExist();
                         AssertModelDirectoryExists();
                         
                         Assert.IsFalse(Directory.Exists(outputDirPath));
+                        Assert.IsTrue(Directory.Exists(CustomOutputDirPath));
 
                         dfm_Output_WaqDirPath = Path.Combine(CustomOutputDirPath, Dfm_Output_WaqDirName);
                         Assert.IsTrue(Directory.Exists(dfm_Output_WaqDirPath));
