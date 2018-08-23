@@ -335,11 +335,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         //2.1
-        public void GivenAnFMModelWithTrachytopes_WhenRun_ThenOutputFolderWithCorrectFilesAreGiven()
+        public void GivenAnFMModelWithTrachytopes_WhenRun_ThenWorkDirIsCreatedInTemp()
         {
             CreateTestDirectories();
 
-            var expectedFileExtensions_Output = new List<string>
+            var expectedFileExtensions = new List<string>
             {
                 ".out",
                 ".dia",
@@ -348,11 +348,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ".tek",
                 "_rst.nc",
                 "_his.nc",
-                "_map.nc"
-            };
-
-            var expectedFileExtensions_DFM_OUTPUT_Waq = new List<string>
-            {
+                "_map.nc",
                 ".are",
                 ".atr",
                 ".bnd",
@@ -367,11 +363,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 "_waqgeom.nc",
                 ".sal",
                 ".tem",
-                ".vdf"
-            };
-
-            var expectedFileExtensions_Snapped = new List<string>
-            {
+                ".vdf",
                 ".shp",
                 ".dbf",
                 ".shx"
@@ -409,23 +401,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         app.RunActivity(model);
                         Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
-                        AssertProjectFileAndFolderExist();
-                        AssertModelDirectoryExists();
+                        var workDirName = "WorkDir";
+                        var workDirPath = Path.Combine(Path.GetTempPath(), workDirName);
 
-                        AssertOutputDirectoryExists();
-                        AssertDfmOutputWaqDirectoryExists();
-                        AssertSnappedDirectoryExists();
+                        Assert.IsTrue(Directory.Exists(workDirPath),
+                            Message_MissingFileOrFolderName("folder", workDirName, "Temp"));
 
-                        var directoriesInOutputFolder = Directory.GetDirectories(outputDirPath);
-                        Assert.AreEqual(2, directoriesInOutputFolder.Length,
-                            $"The number of folders in '{OutputDirName}' is not as expected.");
-
-                        AssertFilesExtensionsExistInDirectory(expectedFileExtensions_Output, outputDirPath,
-                            OutputDirName);
-                        AssertFilesExtensionsExistInDirectory(expectedFileExtensions_DFM_OUTPUT_Waq,
-                            dfm_Output_WaqDirPath, Dfm_Output_WaqDirName);
-                        AssertFilesExtensionsExistInDirectory(expectedFileExtensions_Snapped, snappedDirPath,
-                            SnappedDirName);
+                        AssertFilesExtensionsExistInDirectory(expectedFileExtensions, workDirPath, workDirName);
 
                         app.CloseProject();
                     }
@@ -439,11 +421,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         //2.2
-        public void GivenAnFMModelWithMorphology_WhenRun_ThenOutputFolderWithCorrectFilesAreGiven()
+        public void GivenAnFMModelWithMorphology_WhenRun_ThenWorkDirIsCreatedInTemp()
         {
             CreateTestDirectories();
 
-            var expectedFileExtensions_Output = new List<string>
+            var expectedFileExtensions = new List<string>
             {
                 ".out",
                 ".dia",
@@ -452,11 +434,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ".tek",
                 "_rst.nc",
                 "_his.nc",
-                "_map.nc"
-            };
-
-            var expectedFileExtensions_DFM_OUTPUT_Waq = new List<string>
-            {
+                "_map.nc",
                 ".are",
                 ".atr",
                 ".bnd",
@@ -471,11 +449,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 "_waqgeom.nc",
                 ".sal",
                 ".tem",
-                ".vdf"
-            };
-
-            var expectedFileExtensions_Snapped = new List<string>
-            {
+                ".vdf",
                 ".shp",
                 ".dbf",
                 ".shx"
@@ -511,26 +485,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         model.ValidateBeforeRun = true;
                         var report = model.Validate();
                         Assert.AreEqual(0, report.AllErrors.Count(), "There are errors in the model after importing the MDU file");
-                        app.RunActivity(model);                       
+                        app.RunActivity(model);
                         Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
-                        AssertProjectFileAndFolderExist();
-                        AssertModelDirectoryExists();
+                        var workDirName = "WorkDir";
+                        var workDirPath = Path.Combine(Path.GetTempPath(), workDirName);
 
-                        AssertOutputDirectoryExists();
-                        AssertDfmOutputWaqDirectoryExists();
-                        AssertSnappedDirectoryExists();
+                        Assert.IsTrue(Directory.Exists(workDirPath),
+                            Message_MissingFileOrFolderName("folder", workDirName, "Temp"));
 
-                        var directoriesInOutputFolder = Directory.GetDirectories(outputDirPath);
-                        Assert.AreEqual(2, directoriesInOutputFolder.Length,
-                            $"The number of folders in '{OutputDirName}' is not as expected.");
-
-                        AssertFilesExtensionsExistInDirectory(expectedFileExtensions_Output, outputDirPath,
-                            OutputDirName);
-                        AssertFilesExtensionsExistInDirectory(expectedFileExtensions_DFM_OUTPUT_Waq,
-                            dfm_Output_WaqDirPath, Dfm_Output_WaqDirName);
-                        AssertFilesExtensionsExistInDirectory(expectedFileExtensions_Snapped, snappedDirPath,
-                            SnappedDirName);
+                        AssertFilesExtensionsExistInDirectory(expectedFileExtensions, workDirPath, workDirName);
 
                         app.CloseProject();
                     }
@@ -631,7 +595,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         //2.4
-        public void GivenAnFMModelWithWind_WhenRun_ThenOutputFolderWithCorrectFilesAreGiven()
+        public void GivenAnFMModelWithWind_WhenRunAndSaved_ThenOutputFolderWithCorrectFilesAreGiven()
         {
             CreateTestDirectories();
 
@@ -705,6 +669,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         app.RunActivity(model);
                         Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
                         
+                        app.SaveProject();
+
                         AssertProjectFileAndFolderExist();
                         AssertModelDirectoryExists();
                         AssertInputDirectoryExists();
