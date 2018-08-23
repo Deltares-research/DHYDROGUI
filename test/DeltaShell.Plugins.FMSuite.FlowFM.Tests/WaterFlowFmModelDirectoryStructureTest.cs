@@ -946,6 +946,137 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
+        //4.1
+        public void GivenAnFMModelWithTrachytopesThatRunsAndSaves_WhenUserClearsOutput_ThenOutputFolderShouldBePresentButEmpty()
+        {
+            CreateTestDirectories();
+            
+            try
+            {
+                CopyFourierAndCalibrationFilesToTemp();
+                CopyTrachytopeFilesToTemp();
+
+                using (var app = GetConfiguredApplication())
+                {
+                    using (var model = new WaterFlowFMModel())
+                    {
+                        AddFeaturesToModel(model);
+                        EnableSalinityAndTemperature(model);
+                        SimulateUserAddingTrachytopesInMduFile(model);
+                        model.ExportTo(tempMduFilePath);
+                        model.ReloadGrid(true, true);
+                    }
+
+                    SimulateUserAddingReferencesInMduFile();
+
+                    using (var model = new WaterFlowFMModel(tempMduFilePath))
+                    {
+                        AdjustSettingsOutputParameters(model);
+                        UpdateBedLevel(model);
+                        AddModelToProject(model, app);
+
+                        app.SaveProjectAs(projectFilePath);
+
+                        model.ValidateBeforeRun = true;
+                        var report = model.Validate();
+                        Assert.AreEqual(0, report.AllErrors.Count(), "There are errors in the model after importing the MDU file");
+                        app.RunActivity(model);
+                        Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+
+                        // Save added to the test plan, otherwise the output is only in the working directory.
+                        app.SaveProject();
+
+                        model.ClearOutput();
+                        
+                        //Save added to the test plan, otherwise the output is only deleted in the working directory.
+                        app.SaveProject();
+
+                        AssertProjectFileAndFolderExist();
+                        AssertModelDirectoryExists();
+
+                        AssertOutputDirectoryExists();
+                        Assert.IsEmpty(outputDirPath);
+                       
+                        app.CloseProject();
+                    }
+                }
+            }
+            finally
+            {
+                DeleteTestDirectories();
+            }
+        }
+
+        //4.2
+        public void GivenAnFMModelWithTrachytopesThatRunsAndSaves_WhenUserClearsOutputAndReopensTheProject_ThenOpeningShouldNotGiveAnyErrorsAndOutputFolderShouldBePresentButEmpty()
+        {
+            CreateTestDirectories();
+
+            try
+            {
+                CopyFourierAndCalibrationFilesToTemp();
+                CopyTrachytopeFilesToTemp();
+
+                using (var app = GetConfiguredApplication())
+                {
+                    using (var model = new WaterFlowFMModel())
+                    {
+                        AddFeaturesToModel(model);
+                        EnableSalinityAndTemperature(model);
+                        SimulateUserAddingTrachytopesInMduFile(model);
+                        model.ExportTo(tempMduFilePath);
+                        model.ReloadGrid(true, true);
+                    }
+
+                    SimulateUserAddingReferencesInMduFile();
+
+                    using (var model = new WaterFlowFMModel(tempMduFilePath))
+                    {
+                        AdjustSettingsOutputParameters(model);
+                        UpdateBedLevel(model);
+                        AddModelToProject(model, app);
+
+                        app.SaveProjectAs(projectFilePath);
+
+                        model.ValidateBeforeRun = true;
+                        var report = model.Validate();
+                        Assert.AreEqual(0, report.AllErrors.Count(),
+                            "There are errors in the model after importing the MDU file");
+                        app.RunActivity(model);
+                        Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+
+                        // Save added to the test plan, otherwise the output is only in the working directory.
+                        app.SaveProject();
+
+                        model.ClearOutput();
+
+                        //Save added to the test plan, otherwise the output are only deleted in the working directory.
+                        app.SaveProject();
+
+                        app.CloseProject();
+
+                        app.OpenProject(projectFilePath);
+                        
+                        app.SaveProjectAs(projectFilePath);
+
+                        AssertProjectFileAndFolderExist();
+                        AssertModelDirectoryExists();
+
+                        AssertOutputDirectoryExists();
+                        Assert.IsEmpty(outputDirPath);
+
+                        app.CloseProject();
+                    }
+                }
+            }
+            finally
+            {
+                DeleteTestDirectories();
+            }
+        }
+
+
+
         [TestCase(TrachytopesModelProjectDirName)]
         [TestCase(NoordzeeModelProjectDirName)]
         //5.1 & 5.2
