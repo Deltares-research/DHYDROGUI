@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         private static string testDataDirPath;
 
-        private static string workDirPath;
+        private static string destinationDirPath;
         private static string tempDirPath;
 
         private static string projectDirName;
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             testDataDirPath = Path.Combine(TestHelper.GetDataDir(), TestDataDirName);
 
             // Create work directory in Temp
-            workDirPath = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
+            destinationDirPath = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
 
             // Create extra directory to copy testdata to so that workdirectory is not "contaminated" with other files.
             tempDirPath = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
@@ -107,9 +107,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Set the rest of the expected paths
             projectFileName = ProjectName + ProjectFileExtension;
-            projectFilePath = Path.Combine(workDirPath, projectFileName);
+            projectFilePath = Path.Combine(destinationDirPath, projectFileName);
             projectDirName = ProjectName + ProjectDirExtension;
-            projectDirPath = Path.Combine(workDirPath, projectDirName);
+            projectDirPath = Path.Combine(destinationDirPath, projectDirName);
 
             modelDirName = ModelName;
             modelDirPath = Path.Combine(projectDirPath, modelDirName);
@@ -967,6 +967,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
+        [Test]
         //4.1
         public void GivenAnFMModelWithTrachytopesThatRunsAndSaves_WhenUserClearsOutput_ThenOutputFolderShouldBePresentButEmpty()
         {
@@ -1025,6 +1026,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
+        [Test]
         //4.2
         public void GivenAnFMModelWithTrachytopesThatRunsAndSaves_WhenUserClearsOutputAndReopensTheProject_ThenOpeningShouldNotGiveAnyErrorsAndOutputFolderShouldBePresentButEmpty()
         {
@@ -1095,7 +1097,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         //5.1 & 5.2
         public void GivenAnFMModelWithInputAndOutput_WhenOpeningTheProject_ThenDirectoryStructureShouldBeMigratedToNewVersion(string projectFolder)
         {
-            FileUtils.CreateDirectoryIfNotExists(workDirPath);
+            FileUtils.CreateDirectoryIfNotExists(destinationDirPath);
 
             var expectedFileExtensions_Output = new List<string>
             {
@@ -1137,7 +1139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             try
             {
-                CopyProjectToWorkDir(projectFolder);
+                CopyProjectToDestinationDir(projectFolder);
 
                 using (var app = GetConfiguredApplication())
                 {
@@ -1166,7 +1168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
             finally
             {
-                FileUtils.DeleteIfExists(workDirPath);
+                FileUtils.DeleteIfExists(destinationDirPath);
             }
         }
 
@@ -1344,7 +1346,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             CopyTestDataFileToTemp("trachytopes.ttd");
         }
 
-        private static void CopyProjectToWorkDir(string folderName)
+        private static void CopyProjectToDestinationDir(string folderName)
         {
             var sourceFilePath = Path.Combine(testDataDirPath, folderName);
 
@@ -1352,12 +1354,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             sourceDirectory.GetFiles().ForEach(f =>
             {
-                var targetFilePath = Path.Combine(workDirPath, f.Name);
+                var targetFilePath = Path.Combine(destinationDirPath, f.Name);
                 FileUtils.CopyFile(f.FullName, targetFilePath);
             });
             sourceDirectory.GetDirectories().ForEach(d =>
             {
-                var targetDirPath = Path.Combine(workDirPath, d.Name);
+                var targetDirPath = Path.Combine(destinationDirPath, d.Name);
                 FileUtils.CopyDirectory(d.FullName, targetDirPath);
             });
         }
@@ -1647,19 +1649,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         private void AssertProjectFileAndFolderExist()
         {
-            var subDirectories = Directory.GetDirectories(workDirPath);
+            var subDirectories = Directory.GetDirectories(destinationDirPath);
             Assert.NotNull(subDirectories);
             Assert.AreEqual(1, subDirectories.Length, "There should only be one folder: the project (.dsproj_data) folder.");
 
-            var subFiles = Directory.GetFiles(workDirPath);
+            var subFiles = Directory.GetFiles(destinationDirPath);
             Assert.NotNull(subFiles);
             Assert.AreEqual(1, subFiles.Length, "There should only be one file: the project (.dsproj) file.");
 
             var expectedCount = 1;
 
             // Get all files/folders with the project extension
-            var actualFileCount = Directory.GetFiles(workDirPath, $"*{ProjectFileExtension}").Length;
-            var actualFolderCount = Directory.GetDirectories(workDirPath, $"*{ProjectDirExtension}").Length;
+            var actualFileCount = Directory.GetFiles(destinationDirPath, $"*{ProjectFileExtension}").Length;
+            var actualFolderCount = Directory.GetDirectories(destinationDirPath, $"*{ProjectDirExtension}").Length;
 
             Assert.AreEqual(expectedCount, actualFileCount,
                 Message_WrongNumberOfFilesOrFolders(expectedCount, "files", ProjectFileExtension, actualFileCount,
@@ -1725,13 +1727,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         private static void CreateTestDirectories()
         {
-            FileUtils.CreateDirectoryIfNotExists(workDirPath);
+            FileUtils.CreateDirectoryIfNotExists(destinationDirPath);
             FileUtils.CreateDirectoryIfNotExists(tempDirPath);
         }
 
         private static void DeleteTestDirectories()
         {
-            FileUtils.DeleteIfExists(workDirPath);
+            FileUtils.DeleteIfExists(destinationDirPath);
             FileUtils.DeleteIfExists(tempDirPath);
         }
 
