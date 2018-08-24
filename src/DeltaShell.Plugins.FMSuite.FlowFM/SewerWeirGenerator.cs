@@ -3,8 +3,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using GeoAPI.Extensions.Networks;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -13,46 +11,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         private static ILog Log = LogManager.GetLogger(typeof(SewerWeirGenerator));
 
-        public INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network, object importHelper = null)
+        public ISewerFeature Generate(GwswElement gwswElement)
         {
-            return gwswElement.IsValidGwswSewerConnection() 
-                ? CreateWeirFromGwswSewerConnection(gwswElement, network) 
-                : CreateWeirFromGwswStructure(gwswElement, network);
+            var weir = CreateNewWeir(gwswElement);
+            return weir;
         }
 
-        private static INetworkFeature CreateWeirFromGwswStructure(GwswElement gwswElement, IHydroNetwork network)
+        private Weir CreateNewWeir(GwswElement gwswElement)
         {
-            if (network == null)
+            var uniqueIdKey = gwswElement.IsValidGwswSewerConnection()
+                ? SewerConnectionMapping.PropertyKeys.UniqueId
+                : SewerStructureMapping.PropertyKeys.UniqueId;
+
+            var weirIdAttribute = gwswElement.GetAttributeFromList(uniqueIdKey);
+            var weirId = weirIdAttribute.GetValidStringValue();
+
+            if (gwswElement.IsValidGwswSewerConnection())
             {
-                Log.ErrorFormat(Resources.SewerWeirGenerator_CreateWeirFromGwswStructure_Weir_s__cannot_be_created_without_a_network_defined_);
-                return null;
+                var gwswConnectionWeir = new GwswConnectionWeir(weirId);
+                AddConnectionAttributesToWeir(gwswConnectionWeir, gwswElement);
+                return gwswConnectionWeir;
             }
 
-            var structureNameAttribute = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.UniqueId);
-            if (!structureNameAttribute.IsValidAttribute()) return null;
-            var structureName = structureNameAttribute.ValueAsString;
-
-            var weirFound = network.BranchFeatures.OfType<Weir>()
-                .FirstOrDefault(p => p.Name.Equals(structureName));
-            if (weirFound == null)
-            {
-                weirFound = new Weir(structureName);
-                var auxSewerConnection = new SewerConnection(structureName)
-                {
-                    Network = network
-                };
-                network.Branches.Add(auxSewerConnection);
-                auxSewerConnection.AddStructureToBranch(weirFound);
-            }
-
-            ExtendWeirAttributes(weirFound, gwswElement);
-
-            return weirFound;
+            var gwswStructureWeir = new GwswStructureWeir(weirId);
+            AddStructureAttributesToWeir(gwswStructureWeir, gwswElement);
+            return gwswStructureWeir;
         }
-
-        private static void ExtendWeirAttributes(IWeir weir, GwswElement gwswElement)
+        
+        private static void AddStructureAttributesToWeir(IWeir weir, GwswElement gwswElement)
         {
-            var auxDouble = 0.0;
+            double auxDouble;
             //Add Attributes
             var crestWidth = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.CrestWidth);
             if (crestWidth.TryGetValueAsDouble(out auxDouble))
@@ -69,19 +57,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if(weirFormula != null) weirFormula.DischargeCoefficient = auxDouble;
             }
         }
-
-        private static INetworkFeature CreateWeirFromGwswSewerConnection(GwswElement gwswElement, IHydroNetwork network)
+        
+        private static void AddConnectionAttributesToWeir(GwswConnectionWeir weir, GwswElement gwswElement)
         {
-            var sewerConnection = (SewerConnection)new SewerConnectionGenerator().Generate(gwswElement, network);
-            AddAttributesToSewerConnection(sewerConnection, gwswElement);
-            return sewerConnection;
-        }
+            var nodeIdStartAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SourceCompartmentId);
+            weir.SourceCompartmentId = nodeIdStartAttribute.GetValidStringValue();
 
-        private static void AddAttributesToSewerConnection(ISewerConnection sewerConnection, GwswElement gwswElement)
-        {
-            var sewerWeir = FindOrCreateWeir(sewerConnection);
+            var nodeIdEndAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.TargetCompartmentId);
+            weir.TargetCompartmentId = nodeIdEndAttribute.GetValidStringValue();
 
-            //Add Attributes
             var flowDirection = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.FlowDirection);
             if (flowDirection.IsValidAttribute())
             {
@@ -89,22 +73,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 switch (directionValue)
                 {
                     case SewerConnectionMapping.FlowDirection.Open:
-                        sewerWeir.FlowDirection = FlowDirection.Both;
+                        weir.FlowDirection = FlowDirection.Both;
                         break;
                     case SewerConnectionMapping.FlowDirection.Closed:
-                        sewerWeir.FlowDirection = FlowDirection.None;
+                        weir.FlowDirection = FlowDirection.None;
                         break;
                     case SewerConnectionMapping.FlowDirection.FromStartToEnd:
-                        sewerWeir.FlowDirection = FlowDirection.Positive;
+                        weir.FlowDirection = FlowDirection.Positive;
                         break;
                     case SewerConnectionMapping.FlowDirection.FromEndToStart:
-                        sewerWeir.FlowDirection = FlowDirection.Negative;
+                        weir.FlowDirection = FlowDirection.Negative;
                         break;
                 }
             }
-
-            if (!sewerConnection.BranchFeatures.Contains(sewerWeir))
-                sewerConnection.AddStructureToBranch(sewerWeir);
         }
 
         private static Weir FindOrCreateWeir(ISewerConnection sewerConnection)

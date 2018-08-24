@@ -130,5 +130,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
             return null;
         }
+
+        public override string ToString()
+        {
+            return Key;
+        }
     }
 }

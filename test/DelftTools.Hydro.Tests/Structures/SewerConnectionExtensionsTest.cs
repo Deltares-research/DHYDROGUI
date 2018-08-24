@@ -1,5 +1,4 @@
 ﻿using DelftTools.Hydro.Structures;
-using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -22,7 +21,7 @@ namespace DelftTools.Hydro.Tests.Structures
         [TestCase(5, 5, 5, 5, 5, 5, 0)]
         public void WhenAddingStructureToBranch_AddStructureInMiddleOfBranch(double point1X, double point1Y, double point2X, double point2Y, double expectedX, double expectedY, double chainage)
         {
-            var sc = new SewerConnection(new Node("1") { Geometry = new Point(point1X, point1Y) }, new Node("2") { Geometry = new Point(point2X, point2Y) });
+            var sc = new SewerConnection(new Manhole("1") { Geometry = new Point(point1X, point1Y) }, new Manhole("2") { Geometry = new Point(point2X, point2Y) });
             
             var structure = mocks.DynamicMock<IStructure1D>();
             structure.Expect(s => s.Branch).Return(sc);

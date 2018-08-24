@@ -192,6 +192,9 @@
     <Compile Include="GroupableFeatureExtensions.cs" />
     <Compile Include="GroupablePointFeature.cs" />
     <Compile Include="Gully.cs" />
+    <Compile Include="GwswPointOutletCompartment.cs" />
+    <Compile Include="Structures\GwswConnectionOrifice.cs" />
+    <Compile Include="Structures\GwswConnectionPump.cs" />
     <Compile Include="HydroNetwork351LegacyLoader.cs" />
     <Compile Include="HydroNetworkExtensions.cs" />
     <Compile Include="IGroupableFeature.cs" />
@@ -203,7 +206,12 @@
     <Compile Include="SewerConnectionExtensionMethods.cs" />
     <Compile Include="SewerConnectionSpecialConnectionType.cs" />
     <Compile Include="SewerConnectionWaterType.cs" />
+    <Compile Include="Structures\GwswStructureOutletCompartment.cs" />
+    <Compile Include="Structures\GwswStructurePump.cs" />
+    <Compile Include="Structures\GwswStructureWeir.cs" />
+    <Compile Include="Structures\ICompartment.cs" />
     <Compile Include="Structures\ICompositeNetworkPointFeature.cs" />
+    <Compile Include="Structures\IOrifice.cs" />
     <Compile Include="Structures\LeveeBreach.cs" />
     <Compile Include="Structures\LeveeBreachFormula\LeveeBreachGrowthFormula.cs" />
     <Compile Include="Structures\IManhole.cs" />
@@ -304,6 +312,7 @@
     <Compile Include="Structures\PumpControlDirection.cs" />
     <Compile Include="Structures\LeveeBreachFormula\UserDefinedBreach.cs" />
     <Compile Include="Structures\LeveeBreachFormula\VerheijVdKnaap2002Breach.cs" />
+    <Compile Include="Structures\GwswConnectionWeir.cs" />
     <Compile Include="Structures\SewerFactory.cs" />
     <Compile Include="Structures\SewerProfileMapping.cs" />
     <Compile Include="Structures\Weir.cs" />

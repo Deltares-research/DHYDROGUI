@@ -214,6 +214,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ISewerFeatureTest.cs" />
     <Compile Include="Api\Grid1d2dTest.cs" />
     <Compile Include="Api\FlexibleMeshModelDllTest.cs" />
     <Compile Include="Api\GridHelperTest.cs" />
@@ -346,7 +347,6 @@
     <Compile Include="SewerConnectionGeneratorTest.cs" />
     <Compile Include="SewerConnectionOrificeGeneratorTest.cs" />
     <Compile Include="SewerConnectionPipeGeneratorTest.cs" />
-    <Compile Include="SewerManholeGeneratorTest.cs" />
     <Compile Include="SewerCrossSectionDefinitionGeneratorTest.cs" />
     <Compile Include="SewerFeatureFactoryTest.cs" />
     <Compile Include="SewerFeatureFactoryTestHelper.cs" />
@@ -444,6 +444,10 @@
       <Project>{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}</Project>
       <Name>DeltaShell.Plugins.NetworkEditor</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DelftTools.Hydro.Tests\DelftTools.Hydro.Tests.csproj">
+      <Project>{49CD81DC-63D2-4A23-818E-ADE790E1D9D8}</Project>
+      <Name>DelftTools.Hydro.Tests</Name>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common.Tests\DeltaShell.Plugins.FMSuite.Common.Tests.csproj">
       <Project>{7EC5B8E8-E326-4C4C-9D9B-E70388F0E4CA}</Project>

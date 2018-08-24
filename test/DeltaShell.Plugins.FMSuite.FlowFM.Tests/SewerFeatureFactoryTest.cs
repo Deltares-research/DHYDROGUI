@@ -3,25 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DelftTools.TestUtils;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using GeoAPI.Extensions.Networks;
-using NetTopologySuite.Extensions.Networks;
+using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
     [TestFixture]
-    public class SewerFeatureFactoryTest: SewerFeatureFactoryTestHelper
+    public class SewerFeatureFactoryTest : SewerFeatureFactoryTestHelper
     {
-        [Test]
-        public void SewerFeatureFactory_AddStructureToBranch()
-        {
-            //SewerFeatureFactory.AddStructureToBranch();
-        }
-
         [Test]
         public void SewerFeatureGetsAllHydrObjects()
         {
@@ -56,58 +48,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void NotKnownSewerFeaturesDoNotInstantiate(SewerFeatureType type)
         {
             /* When the above features are added to the object model they can remove from this test. */
-            var nodeGwswElement = new GwswElement
+            var gwswElement = new GwswElement
             {
                 ElementTypeName = type.ToString()
             };
 
             try
             {
-                var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);
-                Assert.IsNull(element);
+                var sewerEntity = CreateSewerFeature<ISewerFeature>(gwswElement);
+                Assert.IsNull(sewerEntity);
             }
             catch (Exception e)
             {
                 Assert.Fail("There was a problem while instantiating. {0}", e.Message);
             }
         }
-
-        [Test]
-        public void SewerFeatureFactoryDoesNotGenerateStructuresAndLogsErrorWithoutNetwork()
-        {
-            var structureGwswElement = new GwswElement
-            {
-                ElementTypeName = SewerFeatureType.Structure.ToString(),
-                GwswAttributeList = new List<GwswAttribute>
-                {
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Pump), string.Empty)
-                }
-            };
-            var expectedMsg = String.Format(Resources
-                .SewerPumpGenerator_CreatePumpFromGwswStructure_Pump_s__cannot_be_created_without_a_network_previously_defined_);
-
-            var createdElement = new Branch() as INetworkFeature;
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => createdElement = SewerFeatureFactory.CreateInstance(structureGwswElement), expectedMsg);
-            Assert.IsNull(createdElement);
-        }
-
-        [Test]
-        public void SewerFeatureFactoryReturnsNullStructuresWhenNotGivingNameForStructure()
-        {
-            var structureGwswElement = new GwswElement
-            {
-                ElementTypeName = SewerFeatureType.Structure.ToString(),
-                GwswAttributeList = new List<GwswAttribute>
-                {
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Pump), string.Empty)
-                }
-            };
-
-            var network = new HydroNetwork();
-            var createdElement = SewerFeatureFactory.CreateInstance(structureGwswElement, network);
-            Assert.IsNull(createdElement);
-        }
-
+        
         [Test]
         [TestCase(SewerStructureMapping.StructureType.Crest)]
         [TestCase(SewerStructureMapping.StructureType.Orifice)]
@@ -116,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void SewerFeatureFactoryReturnsStructuresWhenGivingNameForStructure(SewerStructureMapping.StructureType structureType)
         {
             var structureId = "structure123";
-            var structurePumpGwswElement = new GwswElement
+            var structureGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Structure.ToString(),
                 GwswAttributeList = new List<GwswAttribute>
@@ -127,15 +83,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             };
 
             var network = new HydroNetwork();
-            var createdElement = SewerFeatureFactory.CreateInstance(structurePumpGwswElement, network);
+            var createdElement = CreateSewerFeature<ISewerFeature>(structureGwswElement, network);
             Assert.IsNotNull(createdElement);
         }
 
         [Test]
-        [TestCase(SewerStructureMapping.StructureType.Crest, false, true, true)]
+        [TestCase(SewerStructureMapping.StructureType.Crest, false, true, true)] // Fails for now
         [TestCase(SewerStructureMapping.StructureType.Orifice, false, true, false)]
         [TestCase(SewerStructureMapping.StructureType.Outlet, true, false, false)]
-        [TestCase(SewerStructureMapping.StructureType.Pump, false, true, true)]
+        [TestCase(SewerStructureMapping.StructureType.Pump, false, true, true)] // Fails for now
         public void SewerFeatureFactoryCreatesStructureAndSewerConnectionIfNeitherExists(SewerStructureMapping.StructureType structureType, bool isNode, bool isBranch, bool isStructure)
         {
             var structureId = "structure123";
@@ -149,10 +105,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
 
+            var createdSewerEntity = CreateSewerFeature<ISewerFeature>(structureGwswElement);
+            Assert.IsNotNull(createdSewerEntity);
+
             var network = new HydroNetwork();
-            var createdElement = SewerFeatureFactory.CreateInstance(structureGwswElement, network);
-            Assert.IsNotNull(createdElement);
-            
+            createdSewerEntity.AddToHydroNetwork(network);
             if (isNode)
             {
                 Assert.IsTrue(network.Nodes.Any());
@@ -176,92 +133,257 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void SewerFeatureFactoryGeneratesManholesWhenGivingABatchOfCompartiments()
+        public void GivenThreeCompartmentGwswElements_WhenGeneratingCompartments_ThenManholesAreCreatedCorrectly()
         {
             //define a few compartiments with different manholes
             #region creating GwswElements
-            var manholeOne = "manholeOne";
-            var manholeTwo = "maholeTwo";
-            var dbl = 0.0;
-            var str = string.Empty;
+            const string manholeOneName = "manholeOne";
+            const string manholeTwoName = "maholeTwo";
+            const double defaultDoubleValue = 0.0;
+            var defaultStringValue = string.Empty;
+
             //Node one
-            var nodeOneCoordX = 0.0;
-            var nodeOneCoordY = 10.0;
-            var nodeOneName = "nodeOne";
-            var nodeOne = GetNodeGwswElement(nodeOneName, manholeOne, str, nodeOneCoordX, nodeOneCoordY, dbl, dbl, str, dbl, dbl, dbl);
+            const double nodeOneCoordX = 0.0;
+            const double nodeOneCoordY = 10.0;
+            const string compartmentOneName = "CompartmentOne";
+            var nodeOne = GetNodeGwswElement(compartmentOneName, manholeOneName, defaultStringValue, nodeOneCoordX, nodeOneCoordY, defaultDoubleValue, defaultDoubleValue, defaultStringValue, defaultDoubleValue, defaultDoubleValue, defaultDoubleValue);
+
             //Node two
-            var nodeTwoCoordX = 10.0;
-            var nodeTwoCoordY = 20.0;
-            var nodeTwoName = "nodeTwo";
-            var nodeTwo = GetNodeGwswElement(nodeTwoName, manholeOne, str, nodeTwoCoordX, nodeTwoCoordY, dbl, dbl, str, dbl, dbl, dbl);
+            const double nodeTwoCoordX = 10.0;
+            const double nodeTwoCoordY = 20.0;
+            const string compartmentTwoName = "CompartmentTwo";
+            var nodeTwo = GetNodeGwswElement(compartmentTwoName, manholeOneName, defaultStringValue, nodeTwoCoordX, nodeTwoCoordY, defaultDoubleValue, defaultDoubleValue, defaultStringValue, defaultDoubleValue, defaultDoubleValue, defaultDoubleValue);
+
             //Node three
-            var nodeThreeCoordX = 10.0;
-            var nodeThreeCoordY = 20.0;
-            var nodeThreeName = "nodeThree";
-            var nodeThree = GetNodeGwswElement(nodeThreeName, manholeTwo, str, nodeTwoCoordX, nodeTwoCoordY, dbl, dbl, str, dbl, dbl, dbl);
+            const double nodeThreeCoordX = 10.0;
+            const double nodeThreeCoordY = 20.0;
+            const string compartmentThreeName = "CompartmentThree";
+            var nodeThree = GetNodeGwswElement(compartmentThreeName, manholeTwoName, defaultStringValue, nodeTwoCoordX, nodeTwoCoordY, defaultDoubleValue, defaultDoubleValue, defaultStringValue, defaultDoubleValue, defaultDoubleValue, defaultDoubleValue);
             #endregion
+
             //generate all instances
-            var listOfElements = new List<GwswElement> {nodeOne, nodeTwo, nodeThree};
-            var features = SewerFeatureFactory.CreateMultipleInstances(listOfElements, new HydroNetwork());
-            Assert.IsNotNull(features);
-
-            var listOfManholes = features.OfType<Manhole>().Distinct().ToList(); 
-            Assert.IsNotNull(listOfManholes);
-            Assert.AreEqual(2, listOfManholes.Count);
-
-            //check compartiments exist
-            var compartimentList = listOfManholes.SelectMany(m => m.Compartments).ToList();
-            Assert.IsTrue(compartimentList.Any( c => c.Name.Equals(nodeOneName)));
-            Assert.IsTrue(compartimentList.Any(c => c.Name.Equals(nodeTwoName)));
-            Assert.IsTrue(compartimentList.Any(c => c.Name.Equals(nodeThreeName)));
-            Assert.AreEqual(listOfElements.Count, compartimentList.Count);
+            var network = new HydroNetwork();
+            var gwswElements = new List<GwswElement> { nodeOne, nodeTwo, nodeThree };
+            var generatedSewerFeatures = SewerFeatureFactory.CreateSewerEntities(gwswElements, network);
+            generatedSewerFeatures.ForEach(sf => sf.AddToHydroNetwork(network));
 
             //check manholes and their geometries
-            Assert.IsTrue(listOfManholes.Any( m => m.Name.Equals(manholeOne)));
-            var mOne = listOfManholes.First(m => m.Name.Equals(manholeOne));
-            var avgX = (nodeOneCoordX + nodeTwoCoordX) / 2;
-            var avgY = (nodeOneCoordY + nodeTwoCoordY) / 2;
-            Assert.AreEqual(avgX, mOne.XCoordinate);
-            Assert.AreEqual(avgY, mOne.YCoordinate);
+            var manholeWithTwoCompartments = network.Manholes.FirstOrDefault(m => m.Name == manholeOneName) as Manhole;
+            Assert.IsNotNull(manholeWithTwoCompartments);
+            const double averageX = (nodeOneCoordX + nodeTwoCoordX) / 2;
+            const double averageY = (nodeOneCoordY + nodeTwoCoordY) / 2;
+            Assert.That(manholeWithTwoCompartments.XCoordinate, Is.EqualTo(averageX));
+            Assert.That(manholeWithTwoCompartments.YCoordinate, Is.EqualTo(averageY));
 
-            Assert.IsTrue(listOfManholes.Any(m => m.Name.Equals(manholeTwo)));
-            var mTwo = listOfManholes.First(m => m.Name.Equals(manholeTwo));
-            Assert.AreEqual(nodeThreeCoordX, mTwo.XCoordinate);
-            Assert.AreEqual(nodeThreeCoordY, mTwo.YCoordinate);
+            var manholeTwo = network.Manholes.FirstOrDefault(m => m.Name == manholeTwoName) as Manhole;
+            Assert.IsNotNull(manholeTwo);
+            Assert.That(manholeTwo.XCoordinate, Is.EqualTo(nodeThreeCoordX));
+            Assert.That(manholeTwo.YCoordinate, Is.EqualTo(nodeThreeCoordY));
+        }
+
+        [Test]
+        public void GivenThreeCompartmentGwswElements_WhenGeneratingCompartments_ThenThreeCompartmentsAreCreated()
+        {
+            //define a few compartiments with different manholes
+            #region creating GwswElements
+            const string manholeOneName = "manholeOne";
+            const string manholeTwoName = "maholeTwo";
+            const double defaultDoubleValue = 0.0;
+            var defaultStringValue = string.Empty;
+
+            //Node one
+            const double nodeOneCoordX = 0.0;
+            const double nodeOneCoordY = 10.0;
+            const string nodeOneName = "nodeOne";
+            var nodeOne = GetNodeGwswElement(nodeOneName, manholeOneName, defaultStringValue, nodeOneCoordX, nodeOneCoordY, defaultDoubleValue, defaultDoubleValue, defaultStringValue, defaultDoubleValue, defaultDoubleValue, defaultDoubleValue);
+
+            //Node two
+            const double nodeTwoCoordX = 10.0;
+            const double nodeTwoCoordY = 20.0;
+            const string nodeTwoName = "nodeTwo";
+            var nodeTwo = GetNodeGwswElement(nodeTwoName, manholeOneName, defaultStringValue, nodeTwoCoordX, nodeTwoCoordY, defaultDoubleValue, defaultDoubleValue, defaultStringValue, defaultDoubleValue, defaultDoubleValue, defaultDoubleValue);
+
+            //Node three
+            const string nodeThreeName = "nodeThree";
+            var nodeThree = GetNodeGwswElement(nodeThreeName, manholeTwoName, defaultStringValue, nodeTwoCoordX, nodeTwoCoordY, defaultDoubleValue, defaultDoubleValue, defaultStringValue, defaultDoubleValue, defaultDoubleValue, defaultDoubleValue);
+            #endregion
+
+            //generate all instances
+            var gwswElements = new List<GwswElement> {nodeOne, nodeTwo, nodeThree};
+            var generatedSewerFeatures = SewerFeatureFactory.CreateSewerEntities(gwswElements, new HydroNetwork());
+            Assert.IsNotEmpty(generatedSewerFeatures);
+
+            var generatedCompartments = generatedSewerFeatures.OfType<Compartment>().Distinct().ToList(); 
+            Assert.IsNotNull(generatedCompartments);
+            Assert.That(generatedCompartments.Count, Is.EqualTo(3));
+
+            //check compartiments exist
+            Assert.IsTrue(generatedCompartments.Any(c => c.Name.Equals(nodeOneName)));
+            Assert.IsTrue(generatedCompartments.Any(c => c.Name.Equals(nodeTwoName)));
+            Assert.IsTrue(generatedCompartments.Any(c => c.Name.Equals(nodeThreeName)));
         }
 
         [Test]
         public void SewerFeatureFactoryGeneratesManholesWhenGivingABatchOfCompartimentsWithoutManholeId()
         {
-            //define a few compartiments with different manholes
             #region creating GwswElements
-            var dbl = 0.0;
-            var str = string.Empty;
-            //Node one
-            var nodeOneCoordX = 0.0;
-            var nodeOneCoordY = 10.0;
-            var nodeOneName = "nodeOne";
-            var nodeOne = GetNodeGwswElement(nodeOneName, str, str, nodeOneCoordX, nodeOneCoordY, dbl, dbl, str, dbl, dbl, dbl);
-            //Node two
-            var nodeTwoCoordX = 10.0;
-            var nodeTwoCoordY = 20.0;
-            var nodeTwoName = "nodeTwo";
-            var nodeTwo = GetNodeGwswElement(nodeTwoName, str, str, nodeTwoCoordX, nodeTwoCoordY, dbl, dbl, str, dbl, dbl, dbl);
-            #endregion
-            //generate all instances
-            var listOfElements = new List<GwswElement> { nodeOne, nodeTwo };
-            var features = SewerFeatureFactory.CreateMultipleInstances(listOfElements, null);
-            Assert.IsNotNull(features);
+            //define two compartment gwsw elements
+            var defaultDoubleValue = 0.0;
+            var defaultStringValue = string.Empty;
 
-            var listOfManholes = features.OfType<Manhole>().ToList();
-            Assert.IsNotNull(listOfManholes);
-            Assert.IsTrue(listOfManholes.Any());
-            Assert.AreEqual(listOfElements.Count, listOfManholes.Count);
+            //Node one
+            const double nodeOneCoordX = 0.0;
+            const double nodeOneCoordY = 10.0;
+            const string nodeOneName = "nodeOne";
+            var nodeGwswElement1 = GetNodeGwswElement(nodeOneName, defaultStringValue, defaultStringValue, nodeOneCoordX, nodeOneCoordY, defaultDoubleValue, defaultDoubleValue, defaultStringValue, defaultDoubleValue, defaultDoubleValue, defaultDoubleValue);
+
+            //Node two
+            const double nodeTwoCoordX = 10.0;
+            const double nodeTwoCoordY = 20.0;
+            const string nodeTwoName = "nodeTwo";
+            var nodeGwswElement2 = GetNodeGwswElement(nodeTwoName, defaultStringValue, defaultStringValue, nodeTwoCoordX, nodeTwoCoordY, defaultDoubleValue, defaultDoubleValue, defaultStringValue, defaultDoubleValue, defaultDoubleValue, defaultDoubleValue);
+            #endregion
+
+            //generate all instances
+            var gwswElements = new List<GwswElement> { nodeGwswElement1, nodeGwswElement2 };
+            var generatedSewerFeatures = SewerFeatureFactory.CreateSewerEntities(gwswElements);
+            Assert.IsNotEmpty(generatedSewerFeatures);
+
+            var generatedCompartments = generatedSewerFeatures.OfType<Compartment>().ToList();
+            Assert.IsNotEmpty(generatedCompartments);
+            Assert.That(generatedCompartments.Count, Is.EqualTo(gwswElements.Count));
 
             //check compartiments exist
-            var compartimentList = listOfManholes.SelectMany(m => m.Compartments).ToList();
-            Assert.IsTrue(compartimentList.Any(c => c.Name.Equals(nodeOneName)));
-            Assert.IsTrue(compartimentList.Any(c => c.Name.Equals(nodeTwoName)));
+            Assert.IsTrue(generatedCompartments.Any(c => c.Name.Equals(nodeOneName)));
+            Assert.IsTrue(generatedCompartments.Any(c => c.Name.Equals(nodeTwoName)));
+        }
+
+        [Test]
+        public void GivenNodeAndOutletGwswElement_WhenGeneratingOutlet_ThenSurfaceWaterLevelOfOutletCompartmentHasBeenAssigned()
+        {
+            #region create outlet gwsw element
+            const string compartmentName1 = "cmp1";
+            const double surfaceWaterLevel = 15.0;
+            var structureType = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Outlet);
+
+            const double defaultDouble = 0.0;
+            var outletGwswElement = GetStructureGwswElement(compartmentName1, structureType, defaultDouble, defaultDouble,
+                defaultDouble, defaultDouble, defaultDouble, surfaceWaterLevel);
+            #endregion
+
+            #region create node gwsw element
+            const double manholeLength = 7.0;
+            const double manholeWidth = 7.0;
+            const CompartmentShape compartmentShape = CompartmentShape.Square;
+            const double floodableArea = 45.67;
+            const double bottomLevel = 0.01;
+            const double surfaceLevel = 2.75;
+
+            var network = TestNetworkAndDiscretisationProvider.CreateSimpleSewerNetwork("myPipe");
+            var pipe = network.Pipes.FirstOrDefault();
+            Assert.IsNotNull(pipe);
+            var sourceCompartment = pipe.SourceCompartment;
+            sourceCompartment.ManholeLength = manholeLength;
+            sourceCompartment.ManholeWidth = manholeWidth;
+            sourceCompartment.Shape = compartmentShape;
+            sourceCompartment.BottomLevel = bottomLevel;
+            sourceCompartment.SurfaceLevel = surfaceLevel;
+            sourceCompartment.FloodableArea = floodableArea;
+            var sourceCompartmentGeometry = sourceCompartment.Geometry;
+
+            #endregion
+
+            var outletCompartment = CreateSewerFeature<OutletCompartment>(outletGwswElement, network);
+            Assert.IsNotNull(outletCompartment);
+            Assert.That(outletCompartment.SurfaceWaterLevel, Is.EqualTo(surfaceWaterLevel));
+        }
+
+        [Test]
+        public void GivenNodeAndOutletGwswElement_WhenGeneratingOutletAndAddingToNetwork_ThenExistingCompartmentIsReplacedByOutletCompartment()
+        {
+            #region create outlet gwsw element
+            const string compartmentName1 = "cmp1";
+            const double surfaceWaterLevel = 15.0;
+            var structureType = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Outlet);
+
+            const double defaultDouble = 0.0;
+            var structureGwswElement = GetStructureGwswElement(compartmentName1, structureType, defaultDouble, defaultDouble,
+                defaultDouble, defaultDouble, defaultDouble, surfaceWaterLevel);
+            #endregion
+
+            #region create network
+            const double manholeLength = 7.0;
+            const double manholeWidth = 7.0;
+            const CompartmentShape compartmentShape = CompartmentShape.Square;
+            const double floodableArea = 45.67;
+            const double bottomLevel = 0.01;
+            const double surfaceLevel = 2.75;
+
+            var network = TestNetworkAndDiscretisationProvider.CreateSimpleSewerNetwork("myPipe");
+            var pipe = network.Pipes.FirstOrDefault();
+            Assert.IsNotNull(pipe);
+            var sourceCompartment = pipe.SourceCompartment;
+            sourceCompartment.ManholeLength = manholeLength;
+            sourceCompartment.ManholeWidth = manholeWidth;
+            sourceCompartment.Shape = compartmentShape;
+            sourceCompartment.BottomLevel = bottomLevel;
+            sourceCompartment.SurfaceLevel = surfaceLevel;
+            sourceCompartment.FloodableArea = floodableArea;
+            var sourceCompartmentGeometry = sourceCompartment.Geometry;
+
+            #endregion
+
+            var outletCompartment = CreateSewerFeature<GwswStructureOutletCompartment>(structureGwswElement, network);
+            outletCompartment.AddToHydroNetwork(network);
+
+            // Check new outlet compartment properties
+            Assert.IsNotNull(outletCompartment);
+            Assert.That(outletCompartment.ManholeLength, Is.EqualTo(manholeLength));
+            Assert.That(outletCompartment.ManholeWidth, Is.EqualTo(manholeWidth));
+            Assert.That(outletCompartment.Shape, Is.EqualTo(compartmentShape));
+            Assert.That(outletCompartment.BottomLevel, Is.EqualTo(bottomLevel));
+            Assert.That(outletCompartment.SurfaceLevel, Is.EqualTo(surfaceLevel));
+            Assert.That(outletCompartment.FloodableArea, Is.EqualTo(floodableArea));
+            Assert.That(outletCompartment.Geometry.Coordinate.X, Is.EqualTo(sourceCompartmentGeometry.Coordinate.X));
+            Assert.That(outletCompartment.Geometry.Coordinate.Y, Is.EqualTo(sourceCompartmentGeometry.Coordinate.Y));
+            Assert.That(outletCompartment.SurfaceWaterLevel, Is.EqualTo(surfaceWaterLevel));
+
+            // Add the outlet sewer entity to the network
+            var networkSourceCompartment = network.Pipes.FirstOrDefault()?.SourceCompartment as OutletCompartment;
+            Assert.IsNotNull(networkSourceCompartment);
+        }
+
+        [Test]
+        [TestCase("GSL", true)]
+        [TestCase("ITR", true)]
+        [TestCase("OPL", true)]
+        [TestCase("OVS", false)]
+        [TestCase("DRL", false)]
+        [TestCase("PMP", false)]
+        public void CreatePipeWhenGivingPipeIndicatorAttributeFromFactory(string typeOfConnection, bool isPipe)
+        {
+            var pipeId = "123";
+            var startNode = "node001";
+            var endNode = "node002";
+            var pipeGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Connection.ToString(),
+                GwswAttributeList = new List<GwswAttribute>
+                {
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeId, isPipe ? pipeId : string.Empty, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, typeOfConnection, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.SourceCompartmentId, startNode, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.TargetCompartmentId, endNode, string.Empty)
+                }
+            };
+            var network = new HydroNetwork();
+
+            var createdPipe = CreateSewerFeature<Pipe>(pipeGwswElement, network);
+            if (isPipe)
+            {
+                Assert.NotNull(createdPipe);
+                Assert.AreEqual(pipeId, createdPipe.PipeId);
+            }
         }
     }
 }

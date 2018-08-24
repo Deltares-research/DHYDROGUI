@@ -134,9 +134,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             else if (Equals(sender, Network.Branches) && e.Item is ISewerConnection)
             {
                 var sewerConnection = e.Item as SewerConnection;
-                var calculationLocations = new List<NetworkLocation>();
-                if (sewerConnection != null)
+                if (sewerConnection != null && sewerConnection.Length > 0)
                 {
+                    var calculationLocations = new List<NetworkLocation>();
                     switch (e.Action)
                     {
                         case NotifyCollectionChangeAction.Add:

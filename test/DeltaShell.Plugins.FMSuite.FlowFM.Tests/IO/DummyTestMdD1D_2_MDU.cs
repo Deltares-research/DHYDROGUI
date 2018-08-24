@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Gui;
 using DeltaShell.NGHS.IO.FileReaders.Network;
 using DeltaShell.NGHS.IO.Grid;
@@ -15,6 +16,8 @@ using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.Wave;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
 using DeltaShell.Plugins.NetCDF;
@@ -126,6 +129,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }
+        }
+
+        [Test]
+        public void GenerateFMFilesForJanNoort_Waardenburg()
+        {
+            var pathRead = TestHelper.GetTestFilePath(@"alex\Waardenburg\");
+            var pathWrite = Path.Combine(FileUtils.CreateTempDirectory(), "Waardenburg.mdu");
+            var model = new WaterFlowFMModel {MduFilePath = pathWrite};
+
+            var gwswImporter = new GwswFileImporter {CsvDelimeter = ';'};
+            gwswImporter.LoadFeatureFiles(Path.GetDirectoryName(pathRead));
+            gwswImporter.ImportItem(null, model);
+
+            //write
+            WaterFlowFMModelWriter.Write(model);
+        }
+
+        [Test]
+        public void GenerateFMFilesForJanNoort_DeWaal()
+        {
+
         }
     }
 }

@@ -12,7 +12,7 @@ using NetTopologySuite.Geometries;
 namespace DelftTools.Hydro.Structures
 {
     [Entity]
-    public class Manhole : Node, IManhole, ICompositeNetworkPointFeature
+    public class Manhole : Node, IManhole, ICompositeNetworkPointFeature, ISewerFeature
     {
         private IEventedList<Compartment> compartments;
 
@@ -81,7 +81,7 @@ namespace DelftTools.Hydro.Structures
         public IEnumerable<IFeature> GetPointFeatures()
         {
             var branchFeatures = this.InternalStructures();
-            var outletCompartments = compartments.Where(c => c.IsOutletCompartment());
+            var outletCompartments = compartments.Where(c => c is OutletCompartment);
 
             var features = new List<IFeature>();
             features.AddRange(branchFeatures);
@@ -109,8 +109,30 @@ namespace DelftTools.Hydro.Structures
                         oldParentManhole.Compartments.Remove(compartment);
                     }
                     compartment.ParentManhole = this;
+                    UpdateGeometry();
                     break;
             }
+        }
+
+        private void UpdateGeometry()
+        {
+            var compartmentsPresentWithoutGeometry = compartments.Any(c => c.Geometry == null);
+            if (compartmentsPresentWithoutGeometry)
+                CopyGeometryToCompartments();
+            else
+                SetGeometryToAverageOfItsCompartments();
+        }
+
+        private void SetGeometryToAverageOfItsCompartments()
+        {
+            var averageXCoordinate = compartments.Select(c => c.Geometry.Coordinate.X).Average();
+            var averageYCoordinate = compartments.Select(c => c.Geometry.Coordinate.Y).Average();
+            Geometry = new Point(averageXCoordinate, averageYCoordinate);
+        }
+
+        private void CopyGeometryToCompartments()
+        {
+            compartments.ForEach(c => c.Geometry = Geometry);
         }
 
         #region IHydroNetworkFeature
@@ -140,7 +162,16 @@ namespace DelftTools.Hydro.Structures
 
         public virtual IHydroNetwork HydroNetwork { get { return (IHydroNetwork)network; } }
         public virtual string LongName { get; set; }
-        
+
+        #endregion
+
+        #region Network is visiting us
+
+        public void AddToHydroNetwork(IHydroNetwork hydroNetwork)
+        {
+            throw new System.NotImplementedException();
+        }
+
         #endregion
     }
 }

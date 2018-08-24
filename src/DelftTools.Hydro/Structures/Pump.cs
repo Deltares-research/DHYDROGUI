@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Feature;
 
 namespace DelftTools.Hydro.Structures
@@ -64,7 +65,7 @@ namespace DelftTools.Hydro.Structures
         }
 
         [DisplayName("Positive direction")]
-        [FeatureAttribute(Order = 5,ExportName = "PosDir")]
+        [FeatureAttribute(Order = 5, ExportName = "PosDir")]
         public virtual bool DirectionIsPositive { get; set; }
 
         [FeatureAttribute(Order = 6)]
@@ -92,11 +93,11 @@ namespace DelftTools.Hydro.Structures
         public virtual double StopDelivery { get; set; }
 
         [DisplayName("Switch-on suction")]
-        [FeatureAttribute(Order = 9,ExportName = "OnSuction")]
+        [FeatureAttribute(Order = 9, ExportName = "OnSuction")]
         public virtual double StartSuction { get; set; }
 
         [DisplayName("Switch-off suction")]
-        [FeatureAttribute(Order = 10,ExportName = "OffSuction")]
+        [FeatureAttribute(Order = 10, ExportName = "OffSuction")]
         public virtual double StopSuction { get; set; }
 
         [DisplayName("Control on")]
@@ -133,7 +134,7 @@ namespace DelftTools.Hydro.Structures
         public override void CopyFrom(object source)
         {
             base.CopyFrom(source);
-            var pump = ((Pump) source);
+            var pump = (Pump) source;
 
             Attributes = (IFeatureAttributeCollection) pump.Attributes.Clone();
             Capacity = pump.Capacity;
@@ -155,6 +156,12 @@ namespace DelftTools.Hydro.Structures
         public override StructureType GetStructureType()
         {
             return StructureType.Pump;
+        }
+
+        public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork)
+        {
+            // We will never add a Pump object to a network with this method.
+            // Only GwswConnectionPump or GwswStructurePump objects.
         }
     }
 }

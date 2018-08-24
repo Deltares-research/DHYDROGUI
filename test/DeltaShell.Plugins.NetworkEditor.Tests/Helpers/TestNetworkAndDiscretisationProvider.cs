@@ -167,12 +167,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
 
         public static HydroNetwork CreateSimpleSewerNetwork(string pipeName)
         {
+            const string sourceCompartmentName = "cmp1";
+            const string targetCompartmentName = "cmp2";
+
             var network = new HydroNetwork();
 
             var manhole1 = new Manhole("manhole1") { Geometry = new Point(0, 0), Network = network };
             var manhole2 = new Manhole("manhole2") { Geometry = new Point(0, 100), Network = network };
-            manhole1.Compartments.Add(new Compartment("cmp1"));
-            manhole2.Compartments.Add(new Compartment("cmp2"));
+            manhole1.Compartments.Add(new Compartment(sourceCompartmentName));
+            manhole2.Compartments.Add(new Compartment(targetCompartmentName));
             network.Nodes.Add(manhole1);
             network.Nodes.Add(manhole2);
 
@@ -180,8 +183,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             {
                 Name = pipeName,
                 Network = network,
-                SourceCompartment = manhole1.GetCompartmentByName("cmp1"),
-                TargetCompartment = manhole2.GetCompartmentByName("cmp2"),
+                SourceCompartment = manhole1.GetCompartmentByName(sourceCompartmentName),
+                TargetCompartment = manhole2.GetCompartmentByName(targetCompartmentName),
                 Geometry = new LineString(new[]
                 {
                     new Coordinate(0, 0),

@@ -1,10 +1,14 @@
-﻿using DelftTools.Utils.Aop;
+﻿using System.Linq;
+using DelftTools.Utils.Aop;
+using log4net;
 
 namespace DelftTools.Hydro.Structures
 {
     [Entity]
-    public class Orifice : Gate
+    public class Orifice : Gate, IOrifice
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(Orifice));
+
         public Orifice() : this("Orifice")
         {
             
@@ -18,5 +22,55 @@ namespace DelftTools.Hydro.Structures
         public double BottomLevel { get; set; }
         public double ContractionCoefficent { get; set; }
         public double MaxDischarge { get; set; }
+
+        public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork)
+        {
+            var orifice = hydroNetwork.Orifices.FirstOrDefault(o => o.Name == Name);
+            if (orifice != null)
+            {
+                CopyPropertyValuesToExistingOrifice(orifice);
+                return;
+            }
+
+            var sewerConnection = hydroNetwork.SewerConnections.FirstOrDefault(sc => sc.Name == Name);
+            if (sewerConnection == null)
+            {
+                AddNewOrificeSewerConnectionToNetwork(hydroNetwork);
+            }
+            else
+            {
+                AddOrificeToSewerConnection(sewerConnection);
+            }
+        }
+
+        private void AddOrificeToSewerConnection(ISewerConnection sewerConnection)
+        {
+            if (sewerConnection.BranchFeatures.Count > 0)
+            {
+                RemoveExistingBranchFeatures(sewerConnection);
+            }
+            sewerConnection.BranchFeatures.Add(this);
+        }
+
+        private void RemoveExistingBranchFeatures(ISewerConnection sewerConnection)
+        {
+            var branchFeature = sewerConnection.BranchFeatures[0];
+            Log.Warn($"Overwriting branchfeature with name '{branchFeature.Name}' and type '{branchFeature.GetType()}' in sewer connection '{sewerConnection.Name}' with orifice '{Name}'");
+            sewerConnection.BranchFeatures.Clear();
+        }
+
+        private void AddNewOrificeSewerConnectionToNetwork(IHydroNetwork hydroNetwork)
+        {
+            ISewerConnection sewerConnection = new SewerConnection(Name);
+            sewerConnection.BranchFeatures.Add(this);
+            sewerConnection.AddToHydroNetwork(hydroNetwork);
+        }
+
+        private void CopyPropertyValuesToExistingOrifice(IOrifice orifice)
+        {
+            orifice.BottomLevel = BottomLevel;
+            orifice.ContractionCoefficent = ContractionCoefficent;
+            orifice.MaxDischarge = MaxDischarge;
+        }
     }
 }

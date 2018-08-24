@@ -14,7 +14,7 @@ namespace DelftTools.Hydro.Structures
         UserDefined
     }
 
-    public interface IWeir : IStructure1D
+    public interface IWeir : IStructure1D, ISewerFeature
     {
         string Name { get; set; }
         string LongName { get; set; }

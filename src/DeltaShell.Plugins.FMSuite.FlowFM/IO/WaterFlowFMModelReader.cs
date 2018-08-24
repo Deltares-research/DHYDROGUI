@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             // read MDU file
             var flowFmModelDefinition = new WaterFlowFMModelDefinition(mduPath, modelName);
             var mduFile = new MduFile();
-            mduFile.Read(mduPath, ref flowFmModelDefinition);
+            //mduFile.Read(mduPath, flowFmModelDefinition);
             readerData.ModelDefinition = flowFmModelDefinition;
 
 

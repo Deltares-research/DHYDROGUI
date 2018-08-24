@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         private double GetPipeWidth()
         {
-            var shape = Pipe?.SewerProfileDefinition?.Shape;
+            var shape = Pipe?.CrossSectionDefinition?.Shape;
             if (shape == null) return 0;
             var rectangleShape = shape as CrossSectionStandardShapeWidthHeightBase;
             if (rectangleShape != null)
@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         private double GetPipeHeight()
         {
-            var shape = Pipe?.SewerProfileDefinition?.Shape;
+            var shape = Pipe?.CrossSectionDefinition?.Shape;
             if (shape == null) return 0;
             var rectangleShape = shape as CrossSectionStandardShapeWidthHeightBase;
             if (rectangleShape != null)

@@ -2,38 +2,46 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    public class ArchCrossSectionDefinitionGenerator : ASewerCrossSectionDefinitionGenerator
+    public class ArchCrossSectionShapeGenerator : ASewerCrossSectionShapeGenerator
     {
-        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network, object importHelper = null)
+        public override ISewerFeature Generate(GwswElement gwswElement)
         {
-            if (!gwswElement.IsValidGwswSewerProfile()) return null;
+            var archShape = CreateArchShapeFromGwsw(gwswElement);
+            return archShape;
+        }
+
+        private ISewerFeature CreateArchShapeFromGwsw(GwswElement gwswElement)
+        {
+            var shapeName = GetCrossSectionShapeName(gwswElement);
 
             double height;
             double width;
-            CrossSectionStandardShapeArch csArchShape;
             var widthAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileWidth);
             var heightAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileHeight);
             if (widthAttribute.TryGetValueAsDouble(out width) && heightAttribute.TryGetValueAsDouble(out height))
             {
                 var arcHeight = height / 1000; /*Conversion from millimeters to meters*/
-                csArchShape = new CrossSectionStandardShapeArch
+                return new CrossSectionStandardShapeArch
                 {
+                    Name = shapeName,
                     Width = width / 1000, /*Conversion from millimeters to meters*/
                     Height = arcHeight,
                     ArcHeight = arcHeight
                 };
             }
-            else
-            {
-                csArchShape = CrossSectionStandardShapeArch.CreateDefault();
-                MessageForMissingValues(gwswElement, "width and/or height");
-            }
-            AddCrossSectionDefinitionToNetwork(gwswElement, csArchShape, network);
-            return null;
+
+            MessageForMissingValues(gwswElement, "width and/or height");
+            return GetDefaultArchShape(shapeName);
+        }
+
+        private static ISewerFeature GetDefaultArchShape(string name)
+        {
+            var defaultArch = CrossSectionStandardShapeArch.CreateDefault();
+            defaultArch.Name = name;
+            return defaultArch;
         }
     }
 }

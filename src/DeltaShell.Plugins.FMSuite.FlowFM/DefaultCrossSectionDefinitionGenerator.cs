@@ -1,22 +1,19 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    class DefaultCrossSectionDefinitionGenerator : ASewerCrossSectionDefinitionGenerator
+    class DefaultCrossSectionShapeGenerator : ASewerCrossSectionShapeGenerator
     {
-        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network, object importHelper = null)
+        public override ISewerFeature Generate(GwswElement gwswElement)
         {
-            if (!gwswElement.IsValidGwswSewerProfile()) return null;
             MessageForDefaultProfile(gwswElement);
-            var csRoundShape = new CrossSectionStandardShapeRound
+            return new CrossSectionStandardShapeRound
             {
+                Name = GetCrossSectionShapeName(gwswElement),
                 Diameter = 0.4
             };
-            AddCrossSectionDefinitionToNetwork(gwswElement, csRoundShape, network);
-            return null;
         }
     }
 }

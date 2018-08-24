@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
@@ -30,13 +28,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 ElementTypeName = type.ToString()
             };
-            GenerateCrossSectionDefinitionAndCheckForNull<CircleCrossSectionDefinitionGenerator>(profileGwswElement);
-            GenerateCrossSectionDefinitionAndCheckForNull<RectangleCrossSectionDefinitionGenerator>(profileGwswElement);
-            GenerateCrossSectionDefinitionAndCheckForNull<EggCrossSectionDefinitionGenerator>(profileGwswElement);
-            GenerateCrossSectionDefinitionAndCheckForNull<TrapezoidCrossSectionDefinitionGenerator>(profileGwswElement);
-            GenerateCrossSectionDefinitionAndCheckForNull<ArchCrossSectionDefinitionGenerator>(profileGwswElement);
-            GenerateCrossSectionDefinitionAndCheckForNull<CunetteCrossSectionDefinitionGenerator>(profileGwswElement);
-            GenerateCrossSectionDefinitionAndCheckForNull<DefaultCrossSectionDefinitionGenerator>(profileGwswElement);
+            GenerateCrossSectionDefinitionAndCheckForNull<CircleCrossSectionShapeGenerator>(profileGwswElement);
+            GenerateCrossSectionDefinitionAndCheckForNull<RectangleCrossSectionShapeGenerator>(profileGwswElement);
+            GenerateCrossSectionDefinitionAndCheckForNull<EggCrossSectionShapeGenerator>(profileGwswElement);
+            GenerateCrossSectionDefinitionAndCheckForNull<TrapezoidCrossSectionShapeGenerator>(profileGwswElement);
+            GenerateCrossSectionDefinitionAndCheckForNull<ArchCrossSectionShapeGenerator>(profileGwswElement);
+            GenerateCrossSectionDefinitionAndCheckForNull<CunetteCrossSectionShapeGenerator>(profileGwswElement);
+            GenerateCrossSectionDefinitionAndCheckForNull<DefaultCrossSectionShapeGenerator>(profileGwswElement);
         }
 
         #region Circle sewer profile shape
@@ -63,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileMaterial, materialString, string.Empty)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<CircleCrossSectionDefinitionGenerator, CrossSectionStandardShapeRound>(profileGwswElement, expectedDiameter);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<CircleCrossSectionShapeGenerator, CrossSectionStandardShapeRound>(profileGwswElement, ProfileId, expectedDiameter);
         }
 
         [Test]
@@ -78,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
             TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => GenerateCrossSectionDefinitionAndCheckShapeProperties<CircleCrossSectionDefinitionGenerator, CrossSectionStandardShapeRound>(profileGwswElement, 0.160d),
+                () => GenerateCrossSectionDefinitionAndCheckShapeProperties<CircleCrossSectionShapeGenerator, CrossSectionStandardShapeRound>(profileGwswElement, ProfileId, 0.160d),
                 "Sewer profile 'PRO1' is missing its width. Default profile property values are used for this profile.");
         }
 
@@ -99,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileHeight, "1200", string.Empty, TypeDouble)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<RectangleCrossSectionDefinitionGenerator, CrossSectionStandardShapeRectangle>(profileGwswElement, 2.0, 1.2);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<RectangleCrossSectionShapeGenerator, CrossSectionStandardShapeRectangle>(profileGwswElement, ProfileId, 2.0, 1.2);
         }
 
         [TestCase(SewerProfileMapping.PropertyKeys.SewerProfileWidth)]
@@ -117,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
             TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => GenerateCrossSectionDefinitionAndCheckShapeProperties<RectangleCrossSectionDefinitionGenerator, CrossSectionStandardShapeRectangle>(profileGwswElement, 1.0, 1.0),
+                () => GenerateCrossSectionDefinitionAndCheckShapeProperties<RectangleCrossSectionShapeGenerator, CrossSectionStandardShapeRectangle>(profileGwswElement, ProfileId, 1.0, 1.0),
                 "Sewer profile 'PRO1' is missing its width and/or height. Default profile property values are used for this profile.");
         }
 
@@ -137,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileWidth, "250", string.Empty, TypeDouble)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<EggCrossSectionDefinitionGenerator, CrossSectionStandardShapeEgg>(profileGwswElement, 0.25, 0.375);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<EggCrossSectionShapeGenerator, CrossSectionStandardShapeEgg>(profileGwswElement, ProfileId, 0.25, 0.375);
         }
 
         [Test]
@@ -152,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
             TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => GenerateCrossSectionDefinitionAndCheckShapeProperties<EggCrossSectionDefinitionGenerator, CrossSectionStandardShapeEgg>(profileGwswElement, 2.0, 3.0),
+                () => GenerateCrossSectionDefinitionAndCheckShapeProperties<EggCrossSectionShapeGenerator, CrossSectionStandardShapeEgg>(profileGwswElement, ProfileId, 2.0, 3.0),
                 "Sewer profile 'PRO1' is missing its width. Default profile property values are used for this profile.");
         }
 
@@ -169,7 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileHeight, "375", string.Empty, TypeDouble)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<EggCrossSectionDefinitionGenerator, CrossSectionStandardShapeEgg>(profileGwswElement, 0.25, 0.375);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<EggCrossSectionShapeGenerator, CrossSectionStandardShapeEgg>(profileGwswElement, ProfileId, 0.25, 0.375);
         }
 
         [Test]
@@ -186,8 +184,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
 
-            var generator = new EggCrossSectionDefinitionGenerator();
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => generator.Generate(profileGwswElement, new HydroNetwork(), null), 
+            var generator = new EggCrossSectionShapeGenerator();
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => generator.Generate(profileGwswElement), 
                 "The width and height of sewer profile 'PRO1' are not in the right proportion (2:3). Width is now 250 mm and height is now 375 mm.");
         }
 
@@ -204,7 +202,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileHeight, "375", string.Empty, TypeDouble)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<EggCrossSectionDefinitionGenerator, CrossSectionStandardShapeEgg>(profileGwswElement, 0.25, 0.375);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<EggCrossSectionShapeGenerator, CrossSectionStandardShapeEgg>(profileGwswElement, ProfileId, 0.25, 0.375);
         }
 
         #endregion
@@ -223,7 +221,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileWidth, "2000", string.Empty, TypeDouble)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<CunetteCrossSectionDefinitionGenerator, CrossSectionStandardShapeCunette>(profileGwswElement, 2.0, 1.268);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<CunetteCrossSectionShapeGenerator, CrossSectionStandardShapeCunette>(profileGwswElement, ProfileId, 2.0, 1.268);
         }
 
         [Test]
@@ -239,7 +237,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileHeight, "1268", string.Empty, TypeDouble)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<CunetteCrossSectionDefinitionGenerator, CrossSectionStandardShapeCunette>(profileGwswElement, 2.0, 1.268);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<CunetteCrossSectionShapeGenerator, CrossSectionStandardShapeCunette>(profileGwswElement, ProfileId, 2.0, 1.268);
         }
 
         [Test]
@@ -254,7 +252,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
             TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => GenerateCrossSectionDefinitionAndCheckShapeProperties<CunetteCrossSectionDefinitionGenerator, CrossSectionStandardShapeCunette>(profileGwswElement, 1.0, 0.634),
+                () => GenerateCrossSectionDefinitionAndCheckShapeProperties<CunetteCrossSectionShapeGenerator, CrossSectionStandardShapeCunette>(profileGwswElement, ProfileId, 1.0, 0.634),
                 "Sewer profile 'PRO1' is missing its width. Default profile property values are used for this profile.");
         }
 
@@ -272,8 +270,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
 
-            var cunetteGenerator = new CunetteCrossSectionDefinitionGenerator();
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => cunetteGenerator.Generate(profileGwswElement, new HydroNetwork()),
+            var cunetteGenerator = new CunetteCrossSectionShapeGenerator();
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => cunetteGenerator.Generate(profileGwswElement),
                 "The width and height of sewer profile 'PRO1' are not in the right proportion (1:0.634). Width is now 250 mm and height is now 158.5 mm.");
         }
 
@@ -290,7 +288,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileHeight, "400", string.Empty, TypeDouble)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<CunetteCrossSectionDefinitionGenerator, CrossSectionStandardShapeCunette>(profileGwswElement, 0.25, 0.1585);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<CunetteCrossSectionShapeGenerator, CrossSectionStandardShapeCunette>(profileGwswElement, ProfileId, 0.25, 0.1585);
         }
 
         #endregion
@@ -311,7 +309,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
 
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<ArchCrossSectionDefinitionGenerator, CrossSectionStandardShapeArch>(profileGwswElement, 1.2, 2.5, 2.5);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<ArchCrossSectionShapeGenerator, CrossSectionStandardShapeArch>(profileGwswElement, ProfileId, 1.2, 2.5, 2.5);
         }
 
         [TestCase(SewerProfileMapping.PropertyKeys.SewerProfileWidth)]
@@ -328,7 +326,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
             TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => GenerateCrossSectionDefinitionAndCheckShapeProperties<ArchCrossSectionDefinitionGenerator, CrossSectionStandardShapeArch>(profileGwswElement, 1.0, 2.0, 1.0),
+                () => GenerateCrossSectionDefinitionAndCheckShapeProperties<ArchCrossSectionShapeGenerator, CrossSectionStandardShapeArch>(profileGwswElement, ProfileId, 1.0, 2.0, 1.0),
                 "Sewer profile 'PRO1' is missing its width and/or height. Default profile property values are used for this profile.");
         }
 
@@ -352,7 +350,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.Slope2, slope2, string.Empty, TypeDouble)
                 }
             };
-            GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionDefinitionGenerator, CrossSectionStandardShapeTrapezium>(profileGwswElement, 1.0, 2.0, 2.0);
+            GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionShapeGenerator, CrossSectionStandardShapeTrapezium>(profileGwswElement, ProfileId, 1.0, 2.0, 2.0);
         }
 
         [TestCase(SewerProfileMapping.PropertyKeys.Slope1)]
@@ -370,7 +368,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(slopeKey, "2", string.Empty, TypeDouble)
                 }
             };
-            GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionDefinitionGenerator, CrossSectionStandardShapeTrapezium>(profileGwswElement, 1.0, 2.0, 2.0);
+            GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionShapeGenerator, CrossSectionStandardShapeTrapezium>(profileGwswElement, ProfileId, 1.0, 2.0, 2.0);
 
         }
 
@@ -389,7 +387,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
             TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionDefinitionGenerator, CrossSectionStandardShapeTrapezium>(profileGwswElement, 10.0, 2.0, 20.0),
+                () => GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionShapeGenerator, CrossSectionStandardShapeTrapezium>(profileGwswElement, ProfileId, 10.0, 2.0, 20.0),
                 "Sewer profile 'PRO1' is missing its width, height and/or slope. Default profile property values are used for this profile.");
         }
 
@@ -408,7 +406,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
             TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionDefinitionGenerator, CrossSectionStandardShapeTrapezium>(profileGwswElement, 10.0, 2.0, 20.0),
+                () => GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionShapeGenerator, CrossSectionStandardShapeTrapezium>(profileGwswElement, ProfileId, 10.0, 2.0, 20.0),
                 "Sewer profile 'PRO1' is missing its width, height and/or slope. Default profile property values are used for this profile.");
         }
 
@@ -426,7 +424,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
             TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionDefinitionGenerator, CrossSectionStandardShapeTrapezium>(profileGwswElement, 10.0, 2.0, 20.0),
+                () => GenerateTrapezoidCrossSectionAndCheckShapeProperties<TrapezoidCrossSectionShapeGenerator, CrossSectionStandardShapeTrapezium>(profileGwswElement, ProfileId, 10.0, 2.0, 20.0),
                 "Sewer profile 'PRO1' is missing its width, height and/or slope. Default profile property values are used for this profile.");
         }
 
@@ -446,7 +444,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileWidth, "3000", "400", TypeDouble)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<DefaultCrossSectionDefinitionGenerator, CrossSectionStandardShapeRound>(profileGwswElement, 0.4);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<DefaultCrossSectionShapeGenerator, CrossSectionStandardShapeRound>(profileGwswElement, ProfileId, 0.4);
         }
 
         [Test]
@@ -460,53 +458,55 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId, string.Empty)
                 }
             };
-            var defaultGenerator = new DefaultCrossSectionDefinitionGenerator();
+            var defaultGenerator = new DefaultCrossSectionShapeGenerator();
             var expectedMessage =
                 "Shape was not defined for sewer profile 'PRO1' in 'Profiel.csv'. A default round profile with diameter of 400 mm is used for this profile.";
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => defaultGenerator.Generate(profileGwswElement, new HydroNetwork()), expectedMessage);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => defaultGenerator.Generate(profileGwswElement), expectedMessage);
         }
 
         #endregion
 
         #region Test helpers
 
-        private static void GenerateCrossSectionDefinitionAndCheckForNull<T>(GwswElement gwswElement) where T : ASewerCrossSectionDefinitionGenerator, new()
+        private static void GenerateCrossSectionDefinitionAndCheckForNull<T>(GwswElement gwswElement) where T : ASewerCrossSectionShapeGenerator, new()
         {
             var generator = new T();
             var network = new HydroNetwork();
-            generator.Generate(gwswElement, network);
+            generator.Generate(gwswElement);
             Assert.IsEmpty(network.SharedCrossSectionDefinitions);
         }
 
-        private void GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(GwswElement gwswElement, double expectedWidth)
-            where TGenerator : ASewerCrossSectionDefinitionGenerator, new()
+        private void GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(GwswElement gwswElement, string expectedName, double expectedWidth)
+            where TGenerator : ASewerCrossSectionShapeGenerator, new()
             where TShape : CrossSectionStandardShapeBase, new()
         {
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(gwswElement, expectedWidth, double.NaN, double.NaN, double.NaN, double.NaN);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(gwswElement, expectedName, expectedWidth, double.NaN, double.NaN, double.NaN, double.NaN);
         }
 
-        private void GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(GwswElement gwswElement, double expectedWidth, double expectedHeight, double expectedArcHeight = double.NaN)
-            where TGenerator : ASewerCrossSectionDefinitionGenerator, new()
+        private void GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(GwswElement gwswElement, string expectedName, double expectedWidth, double expectedHeight, double expectedArcHeight = double.NaN)
+            where TGenerator : ASewerCrossSectionShapeGenerator, new()
             where TShape : CrossSectionStandardShapeBase, new()
         {
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(gwswElement, expectedWidth, expectedHeight, expectedArcHeight, double.NaN, double.NaN);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(gwswElement, expectedName, expectedWidth, expectedHeight, expectedArcHeight, double.NaN, double.NaN);
         }
 
-        private void GenerateTrapezoidCrossSectionAndCheckShapeProperties<TGenerator, TShape>(GwswElement gwswElement, double expectedBottomWidth, double expectedSlope, double expectedMaxFlowWidth)
-            where TGenerator : ASewerCrossSectionDefinitionGenerator, new()
+        private void GenerateTrapezoidCrossSectionAndCheckShapeProperties<TGenerator, TShape>(GwswElement gwswElement, string expectedName, double expectedBottomWidth, double expectedSlope, double expectedMaxFlowWidth)
+            where TGenerator : ASewerCrossSectionShapeGenerator, new()
             where TShape : CrossSectionStandardShapeBase, new()
         {
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(gwswElement, expectedBottomWidth, double.NaN, double.NaN, expectedSlope, expectedMaxFlowWidth);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(gwswElement, expectedName, expectedBottomWidth, double.NaN, double.NaN, expectedSlope, expectedMaxFlowWidth);
         }
 
-        private static void GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(GwswElement gwswElement, double expectedWidth, double expectedHeight, double expectedArcHeight, double expectedSlope, double expectedMaxFlowWidth)
-            where TGenerator : ASewerCrossSectionDefinitionGenerator, new()
+        private static void GenerateCrossSectionDefinitionAndCheckShapeProperties<TGenerator, TShape>(GwswElement gwswElement, string expectedName, double expectedWidth, double expectedHeight, double expectedArcHeight, double expectedSlope, double expectedMaxFlowWidth)
+            where TGenerator : ASewerCrossSectionShapeGenerator, new()
             where TShape : CrossSectionStandardShapeBase, new()
         {
-            var csShape = GenerateValidCrossSectionAndReturnShape<TGenerator>(gwswElement) as TShape;
-            Assert.NotNull(csShape);
+            var createdShape = new TGenerator().Generate(gwswElement) as TShape;
+            Assert.IsNotNull(createdShape);
 
-            var csHeightWidthShape = csShape as CrossSectionStandardShapeWidthHeightBase;
+            Assert.That(createdShape.Name, Is.EqualTo(expectedName));
+
+            var csHeightWidthShape = createdShape as CrossSectionStandardShapeWidthHeightBase;
             if (csHeightWidthShape != null)
             {
                 Assert.That(csHeightWidthShape.Width, Is.EqualTo(expectedWidth));
@@ -515,39 +515,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             if (typeof(TShape) == typeof(CrossSectionStandardShapeRound))
             {
-                var csRoundShape = csShape as CrossSectionStandardShapeRound;
+                var csRoundShape = createdShape as CrossSectionStandardShapeRound;
                 Assert.NotNull(csRoundShape);
                 Assert.That(csRoundShape.Diameter, Is.EqualTo(expectedWidth));
             }
             else if (typeof(TShape) == typeof(CrossSectionStandardShapeArch))
             {
-                var csArchShape = csShape as CrossSectionStandardShapeArch;
+                var csArchShape = createdShape as CrossSectionStandardShapeArch;
                 Assert.NotNull(csArchShape);
                 Assert.That(csArchShape.ArcHeight, Is.EqualTo(expectedArcHeight));
             }
             else if (typeof(TShape) == typeof(CrossSectionStandardShapeTrapezium))
             {
-                var csTrapezoidShape = csShape as CrossSectionStandardShapeTrapezium;
+                var csTrapezoidShape = createdShape as CrossSectionStandardShapeTrapezium;
                 Assert.NotNull(csTrapezoidShape);
                 Assert.That(csTrapezoidShape.BottomWidthB, Is.EqualTo(expectedWidth));
                 Assert.That(csTrapezoidShape.Slope, Is.EqualTo(expectedSlope));
                 Assert.That(csTrapezoidShape.MaximumFlowWidth, Is.EqualTo(expectedMaxFlowWidth));
             }
-        }
-
-        private static ICrossSectionStandardShape GenerateValidCrossSectionAndReturnShape<TGenerator>(GwswElement gwswElement)
-            where TGenerator : ASewerCrossSectionDefinitionGenerator, new()
-        {
-            var generator = new TGenerator();
-            var network = new HydroNetwork();
-            generator.Generate(gwswElement, network);
-            Assert.IsNotEmpty(network.SharedCrossSectionDefinitions);
-
-            var csDefinition = network.SharedCrossSectionDefinitions.FirstOrDefault() as CrossSectionDefinitionStandard;
-            Assert.NotNull(csDefinition);
-            Assert.That(csDefinition.Name, Is.EqualTo(ProfileId));
-
-            return csDefinition.Shape;
         }
 
         #endregion

@@ -65,6 +65,7 @@
     <Compile Include="Helpers\CrossSectionValidatorTest.cs" />
     <Compile Include="Helpers\HydroNetworkHelperTest.cs" />
     <Compile Include="Helpers\StandardCrossSectionsFactoryTest.cs" />
+    <Compile Include="Helpers\TestSewerNetworkProvider.cs" />
     <Compile Include="Helpers\ThreadingHelperTest.cs" />
     <Compile Include="HydroAreaTest.cs" />
     <Compile Include="HydroNetwork351LegacyLoaderTest.cs" />

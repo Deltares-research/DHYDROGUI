@@ -42,21 +42,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void GivenGwswElementWithoutIdDefined_WhenCreatingSewerProfile_ThenNullValueIsReturned()
-        {
-            var sewerProfileGwswElement = new GwswElement
-            {
-                ElementTypeName = SewerFeatureType.Crosssection.ToString(),
-                GwswAttributeList = new List<GwswAttribute>
-                {
-                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, "UnrecognizedShape", "RND")
-                }
-            };
-
-            Assert.IsNull(SewerFeatureFactory.CreateInstance(sewerProfileGwswElement));
-        }
-
-        [Test]
         public void GivenGwswElementWithUnrecognizedShapeDefined_WhenCreatingSewerProfile_ThenDefaultProfileIsReturned()
         {
             var expectedProfileId = "MyProfile";
@@ -69,7 +54,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, "UnrecognizedShape", "RND")
                 }
             };
-            CreateProfileAndCheckForDefaultShape(sewerProfileGwswElement, expectedProfileId);
+            
+            var shape = CreateSewerFeature<CrossSectionStandardShapeRound>(sewerProfileGwswElement);
+            Assert.IsNotNull(shape);
+            Assert.That(shape.Diameter, Is.EqualTo(0.4));
         }
 
         [Test]
@@ -84,7 +72,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, expectedProfileId, string.Empty)
                 }
             };
-            CreateProfileAndCheckForDefaultShape(sewerProfileGwswElement, expectedProfileId);
+
+            var shape = CreateSewerFeature<CrossSectionStandardShapeRound>(sewerProfileGwswElement);
+            Assert.IsNotNull(shape);
+            Assert.That(shape.Diameter, Is.EqualTo(0.4));
         }
 
         [Test]
@@ -166,83 +157,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         private static void CreateProfileAndCheckProperties(GwswElement profileGwswElement, string expectedProfileId,
             double expectedWidth, double expectedHeight, double expectedSlope)
         {
-            var network = new HydroNetwork();
-            var element = SewerFeatureFactory.CreateInstance(profileGwswElement, network);
-            var loadedProfile = element as CrossSection;
-            Assert.Null(loadedProfile);
-
-            // Check that the correct cross section has been added to the network
-            Assert.IsNotEmpty(network.SharedCrossSectionDefinitions);
-            var csDefinition = network.SharedCrossSectionDefinitions.FirstOrDefault() as CrossSectionDefinitionStandard;
-            Assert.NotNull(csDefinition);
-            Assert.That(csDefinition.Name, Is.EqualTo(expectedProfileId));
-
+            //var element = SewerFeatureFactory.CreateSewerEntities(new List<GwswElement>{ profileGwswElement });
+            var createdShape = CreateSewerFeature<CrossSectionStandardShapeBase>(profileGwswElement);
+            Assert.IsNotNull(createdShape);
+            
             // Check shape and its properties
-            var shapeType = csDefinition.Shape.Type;
-            if (shapeType == CrossSectionStandardShapeType.Round)
+            var shapeType = createdShape.Type;
+            switch (shapeType)
             {
-                var csShape = csDefinition.Shape as CrossSectionStandardShapeRound;
-                Assert.NotNull(csShape);
-                Assert.That(Math.Abs(csShape.Diameter - expectedWidth) < 0.0001);
+                case CrossSectionStandardShapeType.Round:
+                {
+                    var csShape = createdShape as CrossSectionStandardShapeRound;
+                    Assert.NotNull(csShape);
+                    Assert.That(Math.Abs(csShape.Diameter - expectedWidth) < 0.0001);
+                    break;
+                }
+                case CrossSectionStandardShapeType.Egg:
+                case CrossSectionStandardShapeType.Rectangle:
+                case CrossSectionStandardShapeType.Cunette:
+                    CheckWidthHeightBasedShapeProperties(createdShape, expectedWidth, expectedHeight);
+                    break;
+                case CrossSectionStandardShapeType.Arch:
+                {
+                    var csShape = createdShape as CrossSectionStandardShapeArch;
+                    Assert.NotNull(csShape);
+                    Assert.That(Math.Abs(csShape.Width - expectedWidth) < 0.0001);
+                    Assert.That(Math.Abs(csShape.Height - expectedHeight) < 0.0001);
+                    Assert.That(Math.Abs(csShape.ArcHeight - expectedHeight) < 0.0001);
+                    break;
+                }
+                case CrossSectionStandardShapeType.Trapezium:
+                {
+                    var csShape = createdShape as CrossSectionStandardShapeTrapezium;
+                    Assert.NotNull(csShape);
+                    Assert.That(Math.Abs(csShape.BottomWidthB - expectedWidth) < 0.0001);
+                    Assert.That(Math.Abs(csShape.MaximumFlowWidth - expectedHeight) < 0.0001);
+                    Assert.That(Math.Abs(csShape.Slope - expectedSlope) < 0.0001);
+                    break;
+                }
             }
-            else if(shapeType == CrossSectionStandardShapeType.Egg)
-            {
-                CheckWidthHeightBasedShapeProperties<CrossSectionStandardShapeEgg>(csDefinition, expectedWidth,expectedHeight);
-            }
-            else if (shapeType == CrossSectionStandardShapeType.Rectangle)
-            {
-                CheckWidthHeightBasedShapeProperties<CrossSectionStandardShapeRectangle>(csDefinition, expectedWidth, expectedHeight);
-            }
-            else if (shapeType == CrossSectionStandardShapeType.Cunette)
-            {
-                CheckWidthHeightBasedShapeProperties<CrossSectionStandardShapeCunette>(csDefinition, expectedWidth, expectedHeight);
-            }
-            else if (shapeType == CrossSectionStandardShapeType.Arch)
-            {
-                var csShape = csDefinition.Shape as CrossSectionStandardShapeArch;
-                Assert.NotNull(csShape);
-                Assert.That(Math.Abs(csShape.Width - expectedWidth) < 0.0001);
-                Assert.That(Math.Abs(csShape.Height - expectedHeight) < 0.0001);
-                Assert.That(Math.Abs(csShape.ArcHeight - expectedHeight) < 0.0001);
-            }
-            else if (shapeType == CrossSectionStandardShapeType.Trapezium)
-            {
-                var csShape = csDefinition.Shape as CrossSectionStandardShapeTrapezium;
-                Assert.NotNull(csShape);
-                Assert.That(Math.Abs(csShape.BottomWidthB - expectedWidth) < 0.0001);
-                Assert.That(Math.Abs(csShape.MaximumFlowWidth - expectedHeight) < 0.0001);
-                Assert.That(Math.Abs(csShape.Slope - expectedSlope) < 0.0001);
-            }
-        }
-
-        private static void CreateProfileAndCheckForDefaultShape(GwswElement sewerProfileGwswElement, string expectedProfileId)
-        {
-            var network = new HydroNetwork();
-            var loadedProfile = SewerFeatureFactory.CreateInstance(sewerProfileGwswElement, network);
-            Assert.Null(loadedProfile);
-
-            // Check that the correct cross section has been added to the network
-            Assert.IsNotEmpty(network.SharedCrossSectionDefinitions);
-            var csDefinition = network.SharedCrossSectionDefinitions.FirstOrDefault() as CrossSectionDefinitionStandard;
-            Assert.NotNull(csDefinition);
-            Assert.That(csDefinition.Name, Is.EqualTo(expectedProfileId));
-
-            // get cross section shape and check diameter
-            var csShape = csDefinition.Shape as CrossSectionStandardShapeRound;
-            Assert.NotNull(csShape);
-            Assert.That(csShape.Diameter, Is.EqualTo(0.4));
         }
 
         private static void CreateProfileAndCheckForLogMessage(GwswElement sewerProfileGwswElement, string expectedMessage)
         {
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => SewerFeatureFactory.CreateInstance(sewerProfileGwswElement),
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => SewerFeatureFactory.CreateSewerEntities(new List<GwswElement>{ sewerProfileGwswElement }),
                 expectedMessage);
         }
 
-        private static void CheckWidthHeightBasedShapeProperties<TShape>(CrossSectionDefinitionStandard csDefinition, double expectedWidth, double expectedHeight) 
-            where TShape : CrossSectionStandardShapeWidthHeightBase
+        private static void CheckWidthHeightBasedShapeProperties(CrossSectionStandardShapeBase shape, double expectedWidth, double expectedHeight)
         {
-            var csShape = csDefinition.Shape as TShape;
+            var csShape = shape as CrossSectionStandardShapeWidthHeightBase;
             Assert.NotNull(csShape);
             Assert.That(Math.Abs(csShape.Width - expectedWidth) < 0.0001);
             Assert.That(Math.Abs(csShape.Height - expectedHeight) < 0.0001);

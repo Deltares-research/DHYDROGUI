@@ -1,46 +1,24 @@
 ﻿using System;
-using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using GeoAPI.Extensions.Networks;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    public abstract class ASewerCrossSectionDefinitionGenerator : ISewerNetworkFeatureGenerator
+    public abstract class ASewerCrossSectionShapeGenerator : ISewerNetworkFeatureGenerator
     {
-        private static ILog Log = LogManager.GetLogger(typeof(ASewerCrossSectionDefinitionGenerator));
-        public abstract INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network, object importHelper = null);
+        private static ILog Log = LogManager.GetLogger(typeof(ASewerCrossSectionShapeGenerator));
+        public abstract ISewerFeature Generate(GwswElement gwswElement);
 
-        protected static void AddCrossSectionDefinitionToNetwork<TShape>(GwswElement gwswElement, TShape csShape, IHydroNetwork network)
-            where TShape : CrossSectionStandardShapeBase
+        protected string GetCrossSectionShapeName(GwswElement gwswElement)
         {
-            var csIdAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileId);
-            var materialAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileMaterial);
-            var material = materialAttribute.GetValueFromDescription<SewerProfileMapping.SewerProfileMaterial>();
-            var csDefinitionName = csIdAttribute.GetValidStringValue();
-
-            var csDefinition = new CrossSectionDefinitionStandard(csShape)
-            {
-                Name = csDefinitionName
-            };
-
-            if (network == null) return;
-            network.SharedCrossSectionDefinitions.RemoveAllWhere(csd => csd.Name == csDefinitionName);
-            network.SharedCrossSectionDefinitions.Add(csDefinition);
-            var pipes = network.Pipes.Where(p => p.SewerProfileDefinition.Name == csDefinitionName);
-            foreach (var p in pipes)
-            {
-                p.SewerProfileDefinition = csDefinition;
-                ((Pipe) p).Material = material;
-            }
+            var nameAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileId);
+            return nameAttribute.GetValidStringValue();
         }
-
+        
         protected void MessageForMissingValues(GwswElement gwswElement, string missingValuesText)
         {
             var id = gwswElement?.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileId)?.ValueAsString;

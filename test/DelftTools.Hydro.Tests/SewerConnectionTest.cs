@@ -192,6 +192,30 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
+        public void GivenSewerConnection_WhenChangingSourceCompartment_ThenSourceCompartmentIdIsEqualSourceCompartmentName()
+        {
+            var compartmentName = "myCompartment";
+            var sewerConnection = new SewerConnection();
+            var compartment = new Compartment(compartmentName);
+
+            Assert.IsNull(sewerConnection.SourceCompartmentName);
+            sewerConnection.SourceCompartment = compartment;
+            Assert.That(sewerConnection.SourceCompartmentName, Is.EqualTo(compartmentName));
+        }
+
+        [Test]
+        public void GivenSewerConnection_WhenChangingTargetCompartment_ThenTargetCompartmentIdIsEqualTargetCompartmentName()
+        {
+            var compartmentName = "myCompartment";
+            var sewerConnection = new SewerConnection();
+            var compartment = new Compartment(compartmentName);
+
+            Assert.IsNull(sewerConnection.TargetCompartmentName);
+            sewerConnection.TargetCompartment = compartment;
+            Assert.That(sewerConnection.TargetCompartmentName, Is.EqualTo(compartmentName));
+        }
+
+        [Test]
         public void SewerConnectionWaterTypeDefaultValueIsNotNull()
         {
             var sewerConnection = new SewerConnection();

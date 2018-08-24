@@ -10,31 +10,45 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
     [TestFixture]
-    public class SewerConnectionOrificeGeneratorTest: SewerFeatureFactoryTestHelper
+    public class SewerConnectionOrificeGeneratorTest : SewerFeatureFactoryTestHelper
     {
         [Test]
-        public void GenerateOrificeFromGwswConnectionElementReturnsValidObject()
+        public void CreateSewerConnectionReturnsObjectWithExpectedValues()
         {
-            var startNode = "node001";
-            var endNode = "node002";
-            var nodeGwswElement = new GwswElement
-            {
-                ElementTypeName = SewerFeatureType.Connection.ToString(),
-                GwswAttributeList = new List<GwswAttribute>
-                {
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Orifice), string.Empty),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode, string.Empty),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode, string.Empty)
-                }
-            };
+            #region Setting expected values
+            var orificeId = "Obj123";
+            var sourceCompartmentId = "cmp001";
+            var targetCompartmentId = "cmp002";
 
-            var network = new HydroNetwork();
-            var connection = new SewerOrificeGenerator().Generate(nodeGwswElement, network) as SewerConnection;
+            var connectionType = SewerConnectionMapping.ConnectionType.Orifice;
+            var connectionTypeString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(connectionType);
 
-            Assert.NotNull(connection);
+            var levelStart = 2.0;
+            var levelEnd = 2.5;
+            var length = 5.0;
 
-            var orifice = connection.BranchFeatures.FirstOrDefault(bf => bf.GetType() == typeof(Orifice));
+            var waterType = SewerConnectionWaterType.DryWater;
+            var waterTypeString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(waterType);
+            #endregion
+
+            //Non value given
+            var nvgString = string.Empty;
+            var nvgDouble = 0.0;
+
+            var connectionGwswElement = GetSewerConnectionGwswElement(orificeId, sourceCompartmentId, targetCompartmentId, connectionTypeString,
+                levelStart, levelEnd, nvgString, length, nvgString, nvgString, waterTypeString, nvgDouble,
+                nvgDouble, nvgDouble, nvgDouble);
+
+            var orifice = new SewerOrificeGenerator().Generate(connectionGwswElement) as GwswConnectionOrifice;
             Assert.IsNotNull(orifice);
+
+            Assert.That(orifice.Name, Is.EqualTo(orificeId));
+            Assert.That(orifice.LevelSource, Is.EqualTo(levelStart));
+            Assert.That(orifice.LevelTarget, Is.EqualTo(levelEnd));
+            Assert.That(orifice.Length, Is.EqualTo(length));
+            Assert.That(orifice.WaterType, Is.EqualTo(waterType));
+            Assert.That(orifice.SourceCompartmentName, Is.EqualTo(sourceCompartmentId));
+            Assert.That(orifice.TargetCompartmentName, Is.EqualTo(targetCompartmentId));
         }
 
         [Test]
@@ -58,81 +72,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             };
 
             var network = new HydroNetwork();
-            //Now createInstance for the pump definition.
+            
             var generator = new SewerOrificeGenerator();
-            var createdElement = generator.Generate(structureOrificeGwswElement, network);
-            Assert.IsNotNull(createdElement);
-
-            var createdPump = createdElement as Orifice;
-            Assert.IsNotNull(createdPump);
-            Assert.AreEqual(orificeId, createdPump.Name);
-            Assert.AreEqual(bottomLevel, createdPump.BottomLevel);
-            Assert.AreEqual(contractionCoef, createdPump.ContractionCoefficent);
-            Assert.AreEqual(maxDischarge, createdPump.MaxDischarge);
-
-        }
-
-        [Test]
-        public void TestCreateOrificeAsStructureThenCreateAsSewerConnectionExtendsValues()
-        {
-            //Create network
-            var network = new HydroNetwork();
-
-            #region GwswElements
-            var structureId = "structure123";
-            var bottomLevel = 30.0;
-            var structureGwswElement = new GwswElement
-            {
-                ElementTypeName = SewerFeatureType.Structure.ToString(),
-                GwswAttributeList = new List<GwswAttribute>
-                {
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, structureId, string.Empty),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Orifice), string.Empty),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
-                }
-            };
-
-            var startNode = "node001";
-            var endNode = "node002";
-            var sewerConnectionGwswElement = new GwswElement
-            {
-                ElementTypeName = SewerFeatureType.Connection.ToString(),
-                GwswAttributeList = new List<GwswAttribute>
-                {
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, structureId, string.Empty),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Orifice), string.Empty),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode, string.Empty),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode, string.Empty)
-                }
-            };
-
-
-            #endregion
-
-            //Generate the Orifice from the Gwsw STRUCTURE
-            var generator = new SewerOrificeGenerator();
-            var structureElement = generator.Generate(structureGwswElement, network);
-            Assert.IsNotNull(structureElement);
-
-            var structureOrifice = structureElement as Orifice;
-            Assert.IsNotNull(structureOrifice);
-            Assert.IsTrue(network.SewerConnections.Any(p => p.Name.Equals(structureId)));
-            Assert.AreEqual(bottomLevel, structureOrifice.BottomLevel, "The given attribute has been overriden with the connection Gwsw element.");
-
-            //Generate the Orifice from the Gwsw SEWER CONNECTION
-            var connection = generator.Generate(sewerConnectionGwswElement, network) as SewerConnection;
-            Assert.IsNotNull(connection);
-
-            var orifice = connection.GetStructuresFromBranchFeatures<Orifice>().FirstOrDefault();
-            Assert.NotNull(orifice);
-
-            Assert.IsTrue(network.SewerConnections.Any(sc => sc.Name.Equals(structureId)));
-
-            var replacedStructure = network.SewerConnections.FirstOrDefault(s => s.Name.Equals(structureElement.Name));
-            Assert.NotNull(replacedStructure);
-            Assert.AreEqual(structureElement, replacedStructure.GetStructuresFromBranchFeatures<Orifice>().FirstOrDefault(), "the attributes from the element do not match");
-
-            Assert.AreEqual(bottomLevel, orifice.BottomLevel, "The given attribute has been overriden with the connection Gwsw element.");
+            var createdOrifice = generator.Generate(structureOrificeGwswElement) as Orifice;
+            Assert.IsNotNull(createdOrifice);
+            Assert.AreEqual(orificeId, createdOrifice.Name);
+            Assert.AreEqual(bottomLevel, createdOrifice.BottomLevel);
+            Assert.AreEqual(contractionCoef, createdOrifice.ContractionCoefficent);
+            Assert.AreEqual(maxDischarge, createdOrifice.MaxDischarge);
         }
 
         [Test]
@@ -154,20 +101,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.MaxDischarge, maxDischarge.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
                 }
             };
-
-            //Create the pump, we know it works because of the previous tests.
-            var network = new HydroNetwork();
-            var orifice = new Orifice();
-            var sewerConnection = new SewerConnection("");
-            sewerConnection.AddStructureToBranch(orifice);
-            network.Branches.Add(sewerConnection);
-            Assert.IsTrue(network.Branches.Contains(sewerConnection));
-            //it should be found under sewerconnections as well
-            Assert.IsTrue(network.SewerConnections.Contains(sewerConnection));
-
-            //Now createInstance for the pump definition.
-            var generator = new SewerOrificeGenerator();
-            var createdElement = generator.Generate(structureOrificeGwswElement, network) as Orifice;
+            
+            var createdElement = new SewerOrificeGenerator().Generate(structureOrificeGwswElement) as Orifice;
             Assert.IsNotNull(createdElement);
 
             var createdOrifice = createdElement;

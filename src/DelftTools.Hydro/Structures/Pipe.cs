@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Properties;
 using DelftTools.Utils.Aop;
@@ -17,7 +18,7 @@ namespace DelftTools.Hydro.Structures
 
         public string PipeId { get; set; }
 
-        public CrossSectionDefinitionStandard SewerProfileDefinition { get; set; } 
+        public CrossSectionDefinitionStandard CrossSectionDefinition { get; set; } 
 
         public SewerProfileMapping.SewerProfileMaterial Material { get; set; }
 
@@ -54,7 +55,13 @@ namespace DelftTools.Hydro.Structures
 
             }
         }
-        
+
+        protected override void AddCrossSectionDefinition(IHydroNetwork hydroNetwork)
+        {
+            if (CrossSectionDefinitionId == null) CrossSectionDefinition = (CrossSectionDefinitionStandard) CrossSectionDefinitionStandard.CreateDefault();
+            else CrossSectionDefinition = hydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(cs => cs.Name == CrossSectionDefinitionId) as CrossSectionDefinitionStandard;
+        }
+
         private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs notifyCollectionChangingEventArgs)
         {
             if (notifyCollectionChangingEventArgs.Action != NotifyCollectionChangeAction.Add) return;

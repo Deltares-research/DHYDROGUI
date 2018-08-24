@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
@@ -12,24 +12,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     public class SewerFeatureFactoryTestHelper
     {
         protected const string TypeDouble = "double";
-
-        private static void CheckManholeNodePropertyValues(Manhole manhole, string manholeId, double xCoordinate, double yCoordinate, int numberOfCompartments)
+        
+        protected void CheckCompartmentPropertyValues(Compartment compartment, string uniqueId, string manholeId, double manholeLength, double manholeWidth, CompartmentShape shape, double floodableArea, double bottomLevel, double surfaceLevel)
         {
-            Assert.That(manhole.Name, Is.EqualTo(manholeId));
-            Assert.That(manhole.XCoordinate, Is.EqualTo(xCoordinate));
-            Assert.That(manhole.YCoordinate, Is.EqualTo(yCoordinate));
-            Assert.That(manhole.Geometry, Is.EqualTo(new Point(xCoordinate, yCoordinate)));
-            Assert.NotNull(manhole.Compartments);
-            Assert.That(manhole.Compartments.Count, Is.EqualTo(numberOfCompartments));
-        }
-
-        protected void CheckCompartmentAndManholePropertyValues(Compartment compartment, string uniqueId, string manholeId, double manholeLength, double manholeWidth, CompartmentShape shape, double floodableArea, double bottomLevel, double surfaceLevel, double xCoordinate, double yCoordinate, int numberOfParentManholeCompartments)
-        {
-            Assert.NotNull(compartment.ParentManhole);
+            Assert.NotNull(compartment.ParentManholeName);
             
-            /*A compartment is not (directly) responsible of setting the coordinates.*/
-            CheckManholeNodePropertyValues(compartment.ParentManhole, manholeId, xCoordinate, yCoordinate, numberOfParentManholeCompartments);
-
             Assert.That(compartment.Name, Is.EqualTo(uniqueId));
             Assert.That(compartment.ManholeLength, Is.EqualTo(manholeLength / 1000.0)); //mm -> m
             Assert.That(compartment.ManholeWidth, Is.EqualTo(manholeWidth / 1000.0)); //mm -> m
@@ -98,15 +85,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GwswAttributeList = new List<GwswAttribute>
                     {
                         GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.UniqueId, uniqueId, string.Empty),
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode, string.Empty),
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode, string.Empty),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.SourceCompartmentId, startNode, string.Empty),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.TargetCompartmentId, endNode, string.Empty),
                         GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, sewerConnectionTypeString, string.Empty),
                         GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.LevelStart, startLevel.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
                         GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.LevelEnd, endLevel.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
                         GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.Length, length.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
                         GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.FlowDirection, flowDirectionString, string.Empty),
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.CrossSectionDef, crossSectionDef, string.Empty),
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeIndicator, pipeIndicator, string.Empty),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.CrossSectionDefinitionId, crossSectionDef, string.Empty),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeId, pipeIndicator, string.Empty),
                         GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.WaterType, sewerConnectionWaterType, string.Empty),
                         GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.InletLossStart, inletLossStart.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
                         GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.InletLossEnd, inletLossEnd.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
@@ -199,6 +186,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 AttributeType = GwswAttributeType.TryGetParsedValueType(columnName, typeField, definition, fileName, lineNumber),
                 DefaultValue = defaultValue
             };
+        }
+
+        protected static T CreateSewerFeature<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : class, ISewerFeature
+        {
+            var sewerEntities = SewerFeatureFactory.CreateSewerEntities(new List<GwswElement> { gwswElement }, network);
+            var sewerEntity = sewerEntities.FirstOrDefault() as T;
+            return sewerEntity;
+        }
+
+        protected static void AddSewerFeatureToNetwork(ISewerFeature sewerFeature, HydroNetwork network)
+        {
+            sewerFeature.AddToHydroNetwork(network);
         }
     }
 }

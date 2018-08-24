@@ -2,36 +2,44 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    public class RectangleCrossSectionDefinitionGenerator : ASewerCrossSectionDefinitionGenerator
+    public class RectangleCrossSectionShapeGenerator : ASewerCrossSectionShapeGenerator
     {
-        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network, object importHelper = null)
+        public override ISewerFeature Generate(GwswElement gwswElement)
         {
-            if (!gwswElement.IsValidGwswSewerProfile()) return null;
-            
+            var rectangleShape = CreateRectangleShapeFromGwsw(gwswElement);
+            return rectangleShape;
+        }
+
+        private ISewerFeature CreateRectangleShapeFromGwsw(GwswElement gwswElement)
+        {
+            var shapeName = GetCrossSectionShapeName(gwswElement);
+
             double height;
             double width;
-            CrossSectionStandardShapeRectangle csRectangleShape;
             var widthAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileWidth);
             var heightAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileHeight);
             if (widthAttribute.TryGetValueAsDouble(out width) && heightAttribute.TryGetValueAsDouble(out height))
             {
-                csRectangleShape = new CrossSectionStandardShapeRectangle
+                return new CrossSectionStandardShapeRectangle
                 {
+                    Name = shapeName,
                     Width = width / 1000, /*Conversion from millimeters to meters*/
                     Height = height / 1000 /*Conversion from millimeters to meters*/
                 };
             }
-            else
-            {
-                csRectangleShape = CrossSectionStandardShapeRectangle.CreateDefault();
-                MessageForMissingValues(gwswElement, "width and/or height");
-            }
-            AddCrossSectionDefinitionToNetwork(gwswElement, csRectangleShape, network);
-            return null;
+
+            MessageForMissingValues(gwswElement, "width and/or height");
+            return GetDefaultRectangleShape(shapeName);
+        }
+
+        private static ISewerFeature GetDefaultRectangleShape(string name)
+        {
+            var defaultArch = CrossSectionStandardShapeRectangle.CreateDefault();
+            defaultArch.Name = name;
+            return defaultArch;
         }
     }
 }

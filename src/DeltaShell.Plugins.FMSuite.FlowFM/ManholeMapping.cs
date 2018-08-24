@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public enum NodeType
         {
-            [Description("CMP")] Compartiment,
+            [Description("CMP")] Compartment,
             [Description("ITP")] InfiltrationPoint /*Should be created as a pipe*/,
             [Description("INS")] InspectionPoint /*Should be created as a pipe*/,
             [Description("PMP")] Pump /*Should be created as a pipe*/,

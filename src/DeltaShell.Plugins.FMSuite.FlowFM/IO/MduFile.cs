@@ -83,15 +83,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static readonly Dictionary<string, string> MduFilePropertyDescriptionDictionary = new Dictionary<string, string>
         {
-            {KnownProperties.DryPointsFile, "DryPointsFile"},
-            {KnownProperties.EnclosureFile, "EnclosureFile"},
-            {KnownProperties.LandBoundaryFile, "LandBoundaryFile"},
-            {KnownProperties.ThinDamFile, "ThinDamFile"},
-            {KnownProperties.FixedWeirFile, "FixedWeirFile"},
-            {KnownProperties.BridgePillarFile, "PillarFile"},
-            {KnownProperties.StructuresFile, "StructureFile"},
-            {KnownProperties.ObsFile, "ObsFile"},
-            {KnownProperties.ObsCrsFile, "CrsFile"},
+            { KnownProperties.DryPointsFile, "DryPointsFile" },
+            { KnownProperties.EnclosureFile, "EnclosureFile" },
+            { KnownProperties.LandBoundaryFile, "LandBoundaryFile" },
+            { KnownProperties.ThinDamFile, "ThinDamFile" },
+            { KnownProperties.FixedWeirFile, "FixedWeirFile" },
+            { KnownProperties.BridgePillarFile, "PillarFile" },
+            { KnownProperties.StructuresFile, "StructureFile" },
+            { KnownProperties.ObsFile, "ObsFile" },
+            { KnownProperties.ObsCrsFile, "CrsFile" },
         };
 
         public MduFile()
@@ -133,7 +133,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region write logic
 
-        public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition)
+        public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
+        bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false)
         {
             var targetDir = System.IO.Path.GetDirectoryName(targetMduFilePath);
             if (targetDir != string.Empty && !Directory.Exists(targetDir))
@@ -144,29 +145,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var substitutedPaths = new Dictionary<string, System.Tuple<string, string>>();
 
             // copy netfile
-            Path = targetMduFilePath;
-            var sourceFile = MduFileHelper.GetSubfilePath(Path,
-                modelDefinition.GetModelProperty(KnownProperties.NetFile));
-
-            var targetFile = MduFileHelper.GetSubfilePath(targetMduFilePath,
-                modelDefinition.GetModelProperty(KnownProperties.NetFile));
-
-            if (sourceFile != null)
+            if (Path != null)
             {
-                if (File.Exists(sourceFile) && targetFile != null)
+                var sourceFile = MduFileHelper.GetSubfilePath(Path,
+                    modelDefinition.GetModelProperty(KnownProperties.NetFile));
+
+                var targetFile = MduFileHelper.GetSubfilePath(targetMduFilePath,
+                    modelDefinition.GetModelProperty(KnownProperties.NetFile));
+
+                if (sourceFile != null)
                 {
-                    var targetNcDir = System.IO.Path.GetDirectoryName(targetFile);
-                    Directory.CreateDirectory(targetNcDir);
-
-                    var fullSourcePath = string.IsNullOrEmpty(sourceFile) ? string.Empty : System.IO.Path.GetFullPath(sourceFile);
-                    var fullTargetPath = string.IsNullOrEmpty(targetFile) ? string.Empty : System.IO.Path.GetFullPath(targetFile);
-
-                    if (fullSourcePath.ToLower() != fullTargetPath.ToLower())
+                    if (File.Exists(sourceFile) && targetFile != null)
                     {
-                        File.Copy(fullSourcePath, fullTargetPath, true);
+                        var targetNcDir = System.IO.Path.GetDirectoryName(targetFile);
+                        Directory.CreateDirectory(targetNcDir);
+
+                        var fullSourcePath = string.IsNullOrEmpty(sourceFile) ? string.Empty : System.IO.Path.GetFullPath(sourceFile);
+                        var fullTargetPath = string.IsNullOrEmpty(targetFile) ? string.Empty : System.IO.Path.GetFullPath(targetFile);
+
+                        if (fullSourcePath.ToLower() != fullTargetPath.ToLower())
+                        {
+                            File.Copy(fullSourcePath, fullTargetPath, true);
+                        }
                     }
+
+                    // write the bathymetry in the net file.
+                    IList<ISpatialOperation> bathymetryOperations;
+                    if (modelDefinition.SpatialOperations.TryGetValue(
+                        WaterFlowFMModelDefinition.BathymetryDataItemName, out bathymetryOperations) && File.Exists(targetFile))
+                    {
+                        if (bathymetryOperations.Any(so => !(so is ISpatialOperationSet)))
+                        {
+                            WriteBathymetry(modelDefinition, targetFile);
+                        }
+                    }
+
+                    // if needed, adjust coordinate system in netfile
+                    if (File.Exists(targetFile) && !IsNetfileCoordinateSystemUpToDate(modelDefinition, targetFile))
+                        UnstructuredGridFileHelper.SetCoordinateSystem(targetFile, modelDefinition.CoordinateSystem);
                 }
-                
 
                 // copy along any mdu-referenced files that are *not* yet supported/written in the UI:
                 // (for example: partition file, manhole file, profloc/profdef files, etc..)
@@ -212,52 +229,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             File.Copy(absoluteSourcePath, absoluteTargetPath, true);
                         }
                     }
-                }
-            }
-
-            modelDefinition.SetMduTimePropertiesFromGuiProperties();
-            var isPartOf1D2DModel = (bool)modelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
-            // write at the end in case of updated file paths
-            WriteProperties(targetMduFilePath, modelDefinition.Properties);
-        }
-
-        public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
-            bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false)
-        {
-            var targetDir = System.IO.Path.GetDirectoryName(targetMduFilePath);
-            if (targetDir != string.Empty && !Directory.Exists(targetDir))
-            {
-                throw new Exception("Non existing directory in file path: " + targetMduFilePath);
-            }
-
-            var substitutedPaths = new Dictionary<string, System.Tuple<string, string>>();
-
-            Write(targetMduFilePath, modelDefinition);
-            // copy netfile
-            if (Path != null)
-            {
-                var sourceFile = MduFileHelper.GetSubfilePath(Path,
-                    modelDefinition.GetModelProperty(KnownProperties.NetFile));
-
-                var targetFile = MduFileHelper.GetSubfilePath(targetMduFilePath,
-                    modelDefinition.GetModelProperty(KnownProperties.NetFile));
-
-                if (sourceFile != null)
-                {
-                    // write the bathymetry in the net file.
-                    IList<ISpatialOperation> bathymetryOperations;
-                    if (modelDefinition.SpatialOperations.TryGetValue(
-                            WaterFlowFMModelDefinition.BathymetryDataItemName, out bathymetryOperations) && File.Exists(targetFile))
-                    {
-                        if (bathymetryOperations.Any(so => !(so is ISpatialOperationSet)))
-                        {
-                            BathymetryFileWriter.Write(targetFile, modelDefinition);
-                        }
-                    }
-
-                    // if needed, adjust coordinate system in netfile
-                    if (File.Exists(targetFile) && !IsNetfileCoordinateSystemUpToDate(modelDefinition, targetFile))
-                        UnstructuredGridFileHelper.SetCoordinateSystem(targetFile, modelDefinition.CoordinateSystem);
                 }
             }
 
@@ -310,7 +281,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     {
                         BoundaryExternalForcingsFile = new BndExtForceFile();
                     }
-
                     BoundaryExternalForcingsFile.Write(bndExtForceFilePath, modelDefinition);
                 }
                 else if (!modelDefinition.BoundaryConditions.Any())
@@ -320,7 +290,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             modelDefinition.SetMduTimePropertiesFromGuiProperties();
-            var isPartOf1D2DModel = (bool) modelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
+            var isPartOf1D2DModel = (bool)modelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
             // write at the end in case of updated file paths
             WriteProperties(targetMduFilePath, modelDefinition.Properties, writeExtForcings, writeFeatures, useNetCDFMapFormat: isPartOf1D2DModel, disableFlowNodeRenumbering: disableFlowNodeRenumbering);
 
@@ -373,7 +343,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return nameProjectedCS;
         }
 
-        public void WriteProperties(string filePath, IEnumerable<WaterFlowFMProperty> modelDefinition, bool writeExtForcings = true, bool writeFeatures = true, bool writePartionFile = true, bool useNetCDFMapFormat = false, bool disableFlowNodeRenumbering = false)
+        public void WriteProperties(string filePath, IEnumerable<WaterFlowFMProperty> modelDefinition, bool writeExtForcings, bool writeFeatures, bool writePartionFile = true, bool useNetCDFMapFormat = false, bool disableFlowNodeRenumbering = false)
         {
             WriteMorphologySediment(filePath, modelDefinition);
 
@@ -381,13 +351,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             try
             {
                 WriteLine("# Generated on " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                WriteLine("# Deltares, D-Flow FM user interface version " + FMSuiteFlowModelVersion + ", D-Flow FM kernel version " + FMDllVersion);
+                WriteLine("# Deltares,Delft3D FM 2018 Suite Version " + FMSuiteFlowModelVersion + ", D-Flow FM Version " + FMDllVersion);
                 SetValueToPropertyIfExists(modelDefinition, KnownProperties.Version, FMDllVersion);
                 SetValueToPropertyIfExists(modelDefinition, KnownProperties.GuiVersion, FMSuiteFlowModelVersion);
                 var propertiesByGroup = modelDefinition.Where(p => p.PropertyDefinition.FileCategoryName != "GUIOnly"
-                                                                   && p.PropertyDefinition.FileCategoryName != MorphologyFile.MorphologyUnknownProperty /*Remove morphology unknown properties*/
-                                                                   && p.PropertyDefinition.FileCategoryName != SedimentFile.SedimentUnknownProperty) /*Remove sediment unknown properties that should be located on the sediment file*/
-                    .GroupBy(p => p.PropertyDefinition.FileCategoryName);
+                                                                    && p.PropertyDefinition.FileCategoryName != MorphologyFile.MorphologyUnknownProperty /*Remove morphology unknown properties*/
+                                                                    && p.PropertyDefinition.FileCategoryName != SedimentFile.SedimentUnknownProperty)/*Remove sediment unknown properties that should be located on the sediment file*/
+                                                        .GroupBy(p => p.PropertyDefinition.FileCategoryName);
 
                 propertiesByGroup = RemoveMorAndSedPropertiesIfNeeded(propertiesByGroup, modelDefinition, writeExtForcings, writeFeatures);
 
@@ -449,8 +419,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     propertiesByGroup = propertiesByGroup.Where(p => !p.Key.Equals(KnownProperties.sediment));
                 }
             }
-
             return propertiesByGroup;
+        }
+
+        public void WriteBathymetry(WaterFlowFMModelDefinition modelDefinition, string path)
+        {
+            var bedLevelTypeProperty = modelDefinition.Properties.FirstOrDefault(p =>
+                    p.PropertyDefinition != null &&
+                    p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
+
+            if (bedLevelTypeProperty == null)
+            {
+                Log.WarnFormat("Cannot determine Bed level location, z-values will not be exported");
+                return;
+            }
+
+            var location = (UnstructuredGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
+            var values = modelDefinition.Bathymetry.Components[0].GetValues<double>().ToArray();
+            UnstructuredGridFileHelper.WriteZValues(path, location, values);
         }
 
         private void WriteMorphologySediment(string mduFilePath, IEnumerable<WaterFlowFMProperty> modelDefinition)
@@ -480,7 +466,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 return string.Empty;
             }
-
             if (!writeFeatures &&
                 (propertyName == KnownProperties.DryPointsFile || propertyName == KnownProperties.LandBoundaryFile ||
                  propertyName == KnownProperties.ThinDamFile || propertyName == KnownProperties.FixedWeirFile || propertyName == KnownProperties.BridgePillarFile ||
@@ -488,7 +473,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 return string.Empty;
             }
-
             return prop.GetValueAsString();
         }
 
@@ -515,9 +499,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     var fileName = FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(targetMduFilePath), filePath, true);
                     var fileNameWithoutExtension = string.IsNullOrEmpty(extension) ? fileName : fileName.Replace(extension, string.Empty);
                     var groupFeatures = grouping.FirstOrDefault(g => g.Key.ToLowerInvariant().Equals(fileName.ToLowerInvariant())
-                                                                     || g.Key.ToLowerInvariant().Equals(fileNameWithoutExtension.ToLowerInvariant())
-                                                                     || !string.IsNullOrEmpty(extension)
-                                                                     && g.Key.ToLowerInvariant().Replace(System.IO.Path.GetExtension(extension), string.Empty).Equals(fileNameWithoutExtension.ToLowerInvariant()));
+                        || g.Key.ToLowerInvariant().Equals(fileNameWithoutExtension.ToLowerInvariant())
+                        || !string.IsNullOrEmpty(extension)
+                            && g.Key.ToLowerInvariant().Replace(System.IO.Path.GetExtension(extension), string.Empty).Equals(fileNameWithoutExtension.ToLowerInvariant()));
                     var featuresToWrite = grouping.Count > 0 && groupFeatures != null
                         ? groupFeatures.Cast<TFeat>().ToList()
                         : features;
@@ -555,8 +539,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 var currentStringValue = waterFlowFMProperty.GetValueAsString();
                 waterFlowFMProperty.SetValueAsString(currentStringValue + " " + string.Join(" ", writeToRelativeFilePaths.Select(f => System.IO.Path.HasExtension(f)
-                                                         ? f
-                                                         : string.Concat(f, extension))));
+                                                                 ? f
+                                                                 : string.Concat(f, extension))));
             }
         }
 
@@ -590,7 +574,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         var fileNameWithoutExtension = fileName.Replace(DryPointExtension, string.Empty);
                         var groupFeatures = GetAllGroupadFeaturesFromFile<GroupablePointFeature>(dryPointsPerGroup, fileName, fileNameWithoutExtension);
                         var featuresToWrite = dryPoints.Count > 0 && groupFeatures != null ? groupFeatures : dryPoints;
-                        dryPointFile.Write(featuresFilePath, featuresToWrite.Select(p => new PointValue {X = p.X, Y = p.Y, Value = 0}));
+                        dryPointFile.Write(featuresFilePath, featuresToWrite.Select(p => new PointValue { X = p.X, Y = p.Y, Value = 0 }));
                     }
                     else if (featuresFilePath.EndsWith(DryAreaExtension))
                     {
@@ -615,9 +599,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var fixedWeirFile = fileWriter as PlizFile<FixedWeir>;
             if (fixedWeirFile != null)
             {
-                fixedWeirFile.CreateDelegate = delegate(List<Coordinate> points, string name)
+                fixedWeirFile.CreateDelegate = delegate (List<Coordinate> points, string name)
                 {
-                    var feature = new FixedWeir {Name = name, Geometry = PlizFile<FixedWeir>.CreatePolyLineGeometry(points)};
+                    var feature = new FixedWeir { Name = name, Geometry = PlizFile<FixedWeir>.CreatePolyLineGeometry(points) };
                     feature.InitializeAttributes();
                     return feature;
                 };
@@ -626,7 +610,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var bridgePillarFile = fileWriter as PlizFile<BridgePillar>;
             if (bridgePillarFile != null)
             {
-                bridgePillarFile.CreateDelegate = delegate(List<Coordinate> points, string name) { return CreateDelegateBridgePillar(name, points); };
+                bridgePillarFile.CreateDelegate = delegate (List<Coordinate> points, string name)
+                {
+                    return CreateDelegateBridgePillar(name, points);
+                };
             }
 
             var structuresFileWriter = fileWriter as StructuresFile;
@@ -634,15 +621,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 structuresFileWriter.StructureSchema = modelDefinition.StructureSchema;
                 structuresFileWriter.ReferenceDate =
-                    (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+                    (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
             }
-
             return fileWriter;
         }
 
         internal static BridgePillar CreateDelegateBridgePillar(string name, List<Coordinate> points)
         {
-            var feature = new BridgePillar {Name = name};
+            var feature = new BridgePillar { Name = name };
             feature.Geometry = PlizFile<BridgePillar>.CreatePolyLineGeometry(points);
             feature.InitializeAttributes();
             return feature;
@@ -681,7 +667,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                     for (var i = 0; i < dataColumnWithData.Count; ++i)
                     {
-                        syncedList[i] = (double) dataColumnWithData[i];
+                        syncedList[i] = (double)dataColumnWithData[i];
                     }
                 }
             }
@@ -705,7 +691,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.ObsCrsFile, hydroArea.ObservationCrossSections.ToList(),
                 ref obsCrsFile, ObsCrossExtension, ObsCrossAlternativeExtension);
 
-            var structures = hydroArea.Pumps.Cast<IStructure>().Concat(hydroArea.Weirs).Concat(hydroArea.Gates).Concat(hydroArea.LeveeBreaches).ToList();
+            var structures = hydroArea.Pumps.Cast<IStructure>().Concat(hydroArea.Weirs).Concat(hydroArea.Gates).ToList();
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.StructuresFile, structures,
                 ref structuresFile, StructuresExtension);
@@ -751,45 +737,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region read logic
 
-        public void Read(string filePath, ref WaterFlowFMModelDefinition modelDefinition, Action<string, int, int> reportProgress = null)
-        {
-            if (reportProgress == null) reportProgress = (name, current, total) => { };
-            var totalSteps = 5;
-
-            reportProgress("Reading properties", 1, totalSteps);
-            ReadProperties(filePath, modelDefinition);
-
-            reportProgress("Reading morphology properties", 2, totalSteps);
-            MorphologyFile.Read(filePath, modelDefinition);
-
-            reportProgress("Reading external forcings file", 3, totalSteps);
-            var extForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.ExtForceFile);
-            if (extForceFileProperty != null)
-            {
-                var forceFilePath = MduFileHelper.GetSubfilePath(filePath,
-                    modelDefinition.GetModelProperty(KnownProperties.ExtForceFile));
-
-                if (forceFilePath != null && File.Exists(forceFilePath))
-                {
-                    ExternalForcingsFile = new ExtForceFile();
-                    ExternalForcingsFile.Read(forceFilePath, modelDefinition);
-                }
-            }
-
-            reportProgress("Reading boundary external forcings file", 4, totalSteps);
-            var bndExtForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile);
-            if (bndExtForceFileProperty != null)
-            {
-                var forceFilePath = MduFileHelper.GetSubfilePath(filePath, bndExtForceFileProperty);
-
-                if (forceFilePath != null && File.Exists(forceFilePath))
-                {
-                    BoundaryExternalForcingsFile = new BndExtForceFile();
-                    BoundaryExternalForcingsFile.Read(forceFilePath, modelDefinition);
-                }
-            }
-        }
-
         public void Read(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, Action<string, int, int> reportProgress = null, IList<ModelFeatureCoordinateData<BridgePillar>> allBridgePillarsAndCorrespondingProperties = null)
         {
             if (reportProgress == null) reportProgress = (name, current, total) => { };
@@ -802,13 +749,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             MorphologyFile.Read(filePath, modelDefinition);
 
             reportProgress("Reading area features", 3, totalSteps);
-            ReadAreaFeatures(filePath, modelDefinition, hydroArea, allFixedWeirsAndCorrespondingProperties);
+            ReadAreaFeatures(filePath, modelDefinition, hydroArea);
 
             //fix for fixed weirs
 
             foreach (var fixedWeir in hydroArea.FixedWeirs)
             {
-                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir>() {Feature = fixedWeir};
+                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir>() { Feature = fixedWeir };
                 var scheme = modelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
                 modelFeatureCoordinateData.UpdateDataColumns(scheme);
 
@@ -847,7 +794,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         break;
                     }
                 }
-
                 allFixedWeirsAndCorrespondingProperties.Add(modelFeatureCoordinateData);
             }
 
@@ -861,7 +807,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 foreach (var bridgePillar in hydroArea.BridgePillars)
                 {
                     var modelFeatureCoordinateData =
-                        new ModelFeatureCoordinateData<BridgePillar>() {Feature = bridgePillar};
+                        new ModelFeatureCoordinateData<BridgePillar>() { Feature = bridgePillar };
 
                     var bpFile = modelDefinition.GetModelProperty(KnownProperties.BridgePillarFile).GetValueAsString();
                     modelFeatureCoordinateData.UpdateDataColumns();
@@ -931,7 +877,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             Path = filePath;
             OpenInputFile(filePath);
-            IgnoreCommentLines(new[] {"# Generated on", "# Generated by", "# Deltares, "});
+            IgnoreCommentLines(new[] { "# Generated on", "# Generated by", "# Deltares, " });
             try
             {
                 string currentGroupName = null;
@@ -939,7 +885,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 bool readNextLine = true;
                 while (line != null)
                 {
-                    line = line.Trim().Replace("\0", " "); // some mdu files contain null characters (generated by interactor GUI)
+                    line = line.Trim().Replace("\0", " ");  // some mdu files contain null characters (generated by interactor GUI)
                     if (line.StartsWith("["))
                     {
                         // group line
@@ -948,7 +894,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         {
                             throw new FormatException(String.Format("Invalid group on line {0} in file {1}", LineNumber, filePath));
                         }
-
                         currentGroupName = line.Substring(1, endIndex - 1).Trim();
                         if (currentGroupName.ToLower().Equals("structure"))
                         {
@@ -970,23 +915,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         {
                             mduPropertyName = "DtTrt";
                         }
-
                         if (mduPropertyLowerCase.Equals("botlevuni"))
                         {
                             mduPropertyName = "BedLevUni";
                         }
-
                         if (mduPropertyLowerCase.Equals("botlevtype"))
                         {
                             mduPropertyName = "BedLevType";
                         }
-
                         if (mduPropertyLowerCase.Equals("hdam"))
                         {
                             line = GetNextLine();
                             continue;
                         }
-
                         mduPropertyLowerCase = mduPropertyName.ToLower();
 
                         string mduPropertyValue = fields[1].Trim();
@@ -996,7 +937,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             Log.Warn(string.Format("Obsolete Fixed Weir Scheme {0} detected and it will be corrected to the default Numerical Scheme.", mduPropertyValue));
                             mduPropertyValue = "6";
                         }
-
                         GetPropertyComment(line, mduPropertyName, fields.Length > 2, false);
 
                         if (!definition.ContainsProperty(mduPropertyLowerCase))
@@ -1006,7 +946,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             {
                                 mduComment = mduComments[mduPropertyName];
                             }
-
                             // create definition for unknown property:
                             var propDef =
                                 WaterFlowFMProperty.CreatePropertyDefinitionForUnknownProperty(currentGroupName,
@@ -1014,7 +953,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                             definition.AddProperty(new WaterFlowFMProperty(propDef, mduPropertyValue));
                         }
-
                         if (!string.IsNullOrEmpty(mduPropertyValue))
                         {
                             var property = definition.GetModelProperty(mduPropertyLowerCase);
@@ -1033,6 +971,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
 
                     readNextLine = true; //Reset it if needed.
+
                 }
             }
             finally
@@ -1059,11 +998,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 int commentStart = line.IndexOf('#');
                 if (commentStart > 0)
                 {
+
                     mduComments[mduPropertyName] = isMultipleLine
                         ? (mduComments.ContainsKey(mduPropertyName)
-                              ? mduComments[mduPropertyName]
-                              : "#")
-                          + line.Substring(commentStart + 1)
+                            ? mduComments[mduPropertyName]
+                            : "#")
+                            + line.Substring(commentStart + 1)
                         : line.Substring(commentStart);
                 }
             }
@@ -1071,7 +1011,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static string[] GetPropertyLine(string line, out string mduPropertyName, out string mduPropertyLowerCase)
         {
-            string[] fields = line.Split(new[] {'=', '#'});
+            string[] fields = line.Split(new[] { '=', '#' });
             mduPropertyName = fields[0].Trim();
 
             mduPropertyLowerCase = mduPropertyName.ToLower();
@@ -1131,7 +1071,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (fileReader is StructuresFile)
                 {
                     var structuresFile = fileReader as StructuresFile;
-                    featuresToAdd = (IList<TFeat>) structuresFile.CopyFileAndRead(featuresFilePath, replacedFilePaths[featuresFilePath]);
+                    featuresToAdd = (IList<TFeat>)structuresFile.CopyFileAndRead(featuresFilePath, replacedFilePaths[featuresFilePath]);
                 }
                 else
                 {
@@ -1151,7 +1091,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                            featurePathName.Replace(extension, String.Empty).Trim().Equals(mduPathName);
                     });
                 }
-
                 readFeatures.AddRange(featuresToAdd);
             }
 
@@ -1160,7 +1099,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             features.AddRange(readFeatures);
         }
 
-        private void ReadAreaFeatures(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties)
+        private void ReadAreaFeatures(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea)
         {
             ReadFeatures(filePath, modelDefinition, KnownProperties.LandBoundaryFile, hydroArea.LandBoundaries,
                 ref landBoundariesFile, LandBoundariesExtension);
@@ -1180,19 +1119,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 if (structure is Pump2D)
                 {
-                    hydroArea.Pumps.Add((Pump2D) structure);
+                    hydroArea.Pumps.Add((Pump2D)structure);
                 }
                 else if (structure is Weir2D)
                 {
-                    hydroArea.Weirs.Add((Weir2D) structure);
+                    hydroArea.Weirs.Add((Weir2D)structure);
                 }
                 else if (structure is Gate2D)
                 {
-                    hydroArea.Gates.Add((Gate2D) structure);
-                }
-                else if (structure is LeveeBreach)
-                {
-                    hydroArea.LeveeBreaches.Add((LeveeBreach) structure);
+                    hydroArea.Gates.Add((Gate2D)structure);
                 }
                 else
                 {
@@ -1222,52 +1157,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     Log.WarnFormat(Resources.MduFile_ReadAreaFeatures_Multiple_enclosures_added_to_the_model__Validate_or_run_will_fail_if_more_than_one_enclosure_is_present_);
                 }
             }
-
-            //fix for fixed weirs
-
-            foreach (var fixedWeir in hydroArea.FixedWeirs)
-            {
-                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir>() {Feature = fixedWeir};
-                var scheme = modelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
-                modelFeatureCoordinateData.UpdateDataColumns(scheme);
-
-                var difference = Math.Abs(modelFeatureCoordinateData.DataColumns.Count - fixedWeir.Attributes.Count);
-
-                if (modelFeatureCoordinateData.DataColumns.Count < fixedWeir.Attributes.Count)
-                {
-                    Log.Warn($"Based on the Fixed Weir Scheme {scheme}, there are too many column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been ignored");
-                }
-
-                if (modelFeatureCoordinateData.DataColumns.Count > fixedWeir.Attributes.Count)
-                {
-                    Log.Warn($"Based on the Fixed Weir Scheme {scheme}, there are not enough column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been generated using default values");
-                }
-
-                for (var index = 0; index < modelFeatureCoordinateData.DataColumns.Count; index++)
-                {
-                    if (index < fixedWeir.Attributes.Count)
-                    {
-                        var dataColumn = modelFeatureCoordinateData.DataColumns[index];
-                        var attributeWithListOfLoadedData =
-                            fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] as
-                                GeometryPointsSyncedList<double>;
-                        LoadAttributeIntoDataColumn(attributeWithListOfLoadedData, dataColumn);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                allFixedWeirsAndCorrespondingProperties.Add(modelFeatureCoordinateData);
-            }
-
-            foreach (var fixedWeir in hydroArea.FixedWeirs)
-            {
-                fixedWeir.Attributes.Clear(); //To Do during last step of cleaning. Turn this on. 
-            }
-
-            hydroArea.Embankments.AddRange(modelDefinition.Embankments);
         }
 
         private void ReadDryPointsAndDryAreas(string mduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea)
@@ -1348,7 +1237,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 Log.WarnFormat(Resources.MduFile_RemoveNonExistentFilePaths_, filePath, mduFilePath,
                     MduFilePropertyDescriptionDictionary[propertyKey], modelDefinition.ModelName);
             }
-
             featureFilePaths.RemoveAllWhere(gn => gn == null || nonExistentFilePaths.Contains(gn));
         }
 
@@ -1366,7 +1254,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var fileReader = new StructuresFile
                 {
                     StructureSchema = modelDefinition.StructureSchema,
-                    ReferenceDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value
+                    ReferenceDate = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value
                 };
                 var featuresToAdd = fileReader.ReadStructures2D(structureFilePath).ToList();
                 var referencesToNonExistentFilesExist = false;
@@ -1382,7 +1270,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 });
                 if (referencesToNonExistentFilesExist) structureFilesWithBadReferences.Add(structureFilePath);
             }
-
             featureFilePaths.RemoveAllWhere(gn => structureFilesWithBadReferences.Contains(gn));
         }
 
@@ -1428,7 +1315,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     featureGroupNames[i] = newFilePath;
                 }
             }
-
             featureGroupNames.RemoveAllWhere(fp => fp == null);
             modelDefinition.GetModelProperty(propertyKey).SetValueAsString(string.Join(" ", featureGroupNames.Select(fp => FileUtils.GetRelativePath(mduDirectory, fp, true))));
         }
@@ -1488,7 +1374,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                     for (var i = 0; i < dataColumnWithData.Count; ++i)
                     {
-                        syncedList[i] = (double) dataColumnWithData[i];
+                        syncedList[i] = (double)dataColumnWithData[i];
                     }
                 }
             }

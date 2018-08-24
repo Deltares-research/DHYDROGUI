@@ -8,8 +8,6 @@ using System.Linq;
 using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
-using DelftTools.Utils;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
@@ -31,11 +29,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         private CsvSettings csvSettings;
 
+        private class GwswImportManager
+        {
+            private int totalAmountOfImportSteps;
+            private int currentImportStep;
+            public int AmountOfImportStepsPerFile;
+
+            public void CalculateTotalAmountOfImportSteps(IList<string> filesToImport)
+            {
+                var amountOfFiles = filesToImport.Count;
+                totalAmountOfImportSteps = amountOfFiles * AmountOfImportStepsPerFile + 1;
+            }
+
+            public void ReportProgress(string message)
+            {
+                currentImportStep++;
+                new GwswFileImporter().SetProgress(message, currentImportStep, totalAmountOfImportSteps);
+            }
+
+            public void JumpImportStepsForNextFile()
+            {
+                currentImportStep += AmountOfImportStepsPerFile;
+            }
+        }
+
         public GwswFileImporter()
         {
             FilesToImport = new List<string>();
             GwswAttributesDefinition = new EventedList<GwswAttributeType>();
             GwswDefaultFeatures = new Dictionary<string, List<string>>();
+            importManager = new GwswImportManager();
             CsvDelimeter = ';'; //Default value, can be changed.
             LoadDefinitionFile();
         }
@@ -56,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 return null;
             }
 
-            if( !String.IsNullOrEmpty(path) ) FilesToImport = new EventedList<string>{path};
+            if( !string.IsNullOrEmpty(path) ) FilesToImport = new EventedList<string>{path};
 
             Log.Info(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_);
 
@@ -64,54 +87,71 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var network = fmModel?.Network;
 
             network?.BeginEdit(new DefaultEditAction("Importing GWSW database"));
-            var importedFeatureElements = new List<INetworkFeature>();
 
             try
             {
-                var subSteps = network != null ? 3 : 2;
-                var totalSteps = FilesToImport.Count * subSteps; /*1. Import Gwsw Element, 2. Import INetworkFeature, 3.Add to Network.*/
-                foreach (var filePath in FilesToImport)
-                {
-                    var fileStep = FilesToImport.IndexOf(filePath) * subSteps;
-                    if (!File.Exists(filePath))
-                    {
-                        Log.ErrorFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Could_not_find_file__0__, filePath);
-                        continue;
-                    }
-
-                    //Get the file content as a list of Gwsw Elements
-                    SetProgress($"Importing file {filePath}", fileStep, totalSteps);
-                    var elementList = ImportGwswElementList(filePath);
-                    if (!elementList.Any()) continue;
-
-                    fileStep++;
-                    SetProgress($"Importing file {Path.GetFileName(filePath)}", fileStep, totalSteps);
-                    var elementsCreated = SewerFeatureFactory.CreateMultipleInstances(elementList, network).ToList();
-                    Log.InfoFormat(Resources.GwswFileImporterBase_ImportItem_File__0__imported__1__features_, filePath, elementsCreated.Count);
-
-                    SewerFeatureType elementType;
-                    var elementTypeName = elementList.FirstOrDefault()?.ElementTypeName;
-                    if (Enum.TryParse(elementTypeName, out elementType))
-                    {
-                        fileStep++;
-                        SetProgress($"Importing file {filePath}", fileStep, totalSteps);
-                        InsertFeatures(elementsCreated, network, elementType);
-                    }
-
-                    if (elementsCreated.Any())
-                    {
-                        importedFeatureElements.AddRange(elementsCreated);
-                    }
-                }
+                var importedFeatureElements = ImportGwswDatabaseToNetwork(network);
+                return importedFeatureElements;
             }
             finally
             {
                 network?.EndEdit();
             }
-            
+        }
+
+        private GwswImportManager importManager { get; set; }
+        
+        private IList<ISewerFeature> ImportGwswDatabaseToNetwork(IHydroNetwork network)
+        {
+            InitializeImportManager();
+
+            var importedFeatureElements = new List<ISewerFeature>();
+            foreach (var filePath in FilesToImport)
+            {
+                if (!File.Exists(filePath))
+                {
+                    Log.ErrorFormat(
+                        Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Could_not_find_file__0__, filePath);
+                    importManager.JumpImportStepsForNextFile();
+                    continue;
+                }
+
+                ReportProgress($"Importing file {filePath}");
+                var gwswElements = ImportGwswElementList(filePath);
+
+                ReportProgress("Generating network features");
+                var createdSewerEntities = SewerFeatureFactory.CreateSewerEntities(gwswElements, network);
+                
+                importedFeatureElements.AddRange(createdSewerEntities);
+                Log.InfoFormat(
+                    Resources.GwswFileImporterBase_ImportItem_File__0__imported__1__features_
+                    , filePath, createdSewerEntities.Count);
+            }
+
+            if (network != null)
+            {
+                ReportProgress("Adding features to network");
+                AddSewerFeaturesToNetwork(importedFeatureElements, network);
+            }
+
             return importedFeatureElements;
         }
 
+        private static void AddSewerFeaturesToNetwork(List<ISewerFeature> importedFeatureElements, IHydroNetwork network)
+        {
+            importedFeatureElements.ForEach(e => e.AddToHydroNetwork(network));
+        }
+
+        private void InitializeImportManager()
+        {
+            importManager.AmountOfImportStepsPerFile = 2;
+            importManager.CalculateTotalAmountOfImportSteps(FilesToImport);
+        }
+
+        private void ReportProgress(string message)
+        {
+            importManager.ReportProgress(message);
+        }
 
         /// <summary>
         /// Loads the feature files from a directory.
@@ -194,12 +234,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         private bool IsColumnMappingCorrect(string path, DataTable importedDataTable)
         {
             var result = true;
-            var headerLineFile = "";
-            using (StreamReader reader = new StreamReader(path))
+            string headerLineFile;
+            using (var reader = new StreamReader(path))
             {
-                headerLineFile = reader.ReadLine() ?? "";
+                headerLineFile = reader.ReadLine() ?? string.Empty;
             }
-            var headersFile = headerLineFile.Split(CsvDelimeter);
+            var headersFile = headerLineFile.Split(CsvDelimeter).Distinct().ToArray();
             var fileAttributes = GwswAttributesDefinition.Where(at => at.FileName.Equals(Path.GetFileName(Path.GetFileName(path)))).ToList();
             for (var columnIndex = 0; columnIndex < importedDataTable.Columns.Count; columnIndex++)
             {
@@ -544,44 +584,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 FieldToColumnMapping = fileColumnMapping,
             };
             return mapping;
-        }
-
-        private void InsertFeatures(IEnumerable<INetworkFeature> features, IHydroNetwork network, SewerFeatureType type)
-        {
-            if (network == null) return;
-            switch (type)
-            {
-                case SewerFeatureType.Connection:
-                    var branches = network.Branches;
-                    InsertStructures(features, branches);
-                    break;
-                case SewerFeatureType.Node:
-                    var nodes = network.Nodes;
-                    InsertStructures(features, nodes);
-                    break;
-            }
-        }
-
-        [InvokeRequired]
-        private static void InsertStructures<TFeat>(IEnumerable<INetworkFeature> features, IEventedList<TFeat> list) where TFeat : INameable
-        {
-            foreach (var feature in features.Where(s => s is TFeat))
-            {
-                var replaced = false;
-                for (var i = 0; i < list.Count; ++i)
-                {
-                    if (list[i].Name == feature.Name)
-                    {
-                        list[i] = (TFeat)feature;
-                        replaced = true;
-                        break;
-                    }
-                }
-                if (!replaced)
-                {
-                    list.Add((TFeat)feature);
-                }
-            }
         }
     }
 }

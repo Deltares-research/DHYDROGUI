@@ -2,7 +2,7 @@ using DelftTools.Functions;
 
 namespace DelftTools.Hydro.Structures
 {
-    public interface IPump : IStructure1D
+    public interface IPump : IStructure1D, ISewerFeature
     {
         string Name { get; set; }
         string LongName { get; set; }

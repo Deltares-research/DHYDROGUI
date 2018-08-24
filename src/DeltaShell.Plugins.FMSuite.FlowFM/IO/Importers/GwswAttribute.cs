@@ -42,5 +42,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             return doubleString.Replace(',', '.');
         }
+
+        public override string ToString()
+        {
+            return GwswAttributeType.Key + ": " + valueAsString;
+        }
     }
 }

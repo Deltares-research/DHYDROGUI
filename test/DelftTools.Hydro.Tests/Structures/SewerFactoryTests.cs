@@ -17,8 +17,8 @@ namespace DelftTools.Hydro.Tests.Structures
             var network = new HydroNetwork();
             var retrievedPipe = AddPipeToNetworkAndReturn(network);
 
-            Assert.IsNotNull(retrievedPipe.SewerProfileDefinition);
-            var profile = retrievedPipe.SewerProfileDefinition;
+            Assert.IsNotNull(retrievedPipe.CrossSectionDefinition);
+            var profile = retrievedPipe.CrossSectionDefinition;
 
             Assert.AreEqual(CrossSectionType.Standard ,profile.CrossSectionType);
 
@@ -28,7 +28,7 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.That(csRoundShape.Type, Is.EqualTo(CrossSectionStandardShapeType.Round));
 
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(1));
-            Assert.AreSame(retrievedPipe.SewerProfileDefinition, network.SharedCrossSectionDefinitions.First());
+            Assert.AreSame(retrievedPipe.CrossSectionDefinition, network.SharedCrossSectionDefinitions.First());
         }
 
         [Test]

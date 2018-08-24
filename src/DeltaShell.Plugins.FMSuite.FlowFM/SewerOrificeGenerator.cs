@@ -1,90 +1,84 @@
-using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using GeoAPI.Extensions.Networks;
-using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public class SewerOrificeGenerator : ISewerNetworkFeatureGenerator
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SewerOrificeGenerator));
-
-        public INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network, object importHelper = null)
+        public ISewerFeature Generate(GwswElement gwswElement)
         {
-            return gwswElement.IsValidGwswSewerConnection()
-                ? CreateOrificeFromGwswSewerConnection(gwswElement, network)
-                : CreateOrificeFromGwswStructure(gwswElement, network);
+            var orifice = CreateNewOrifice(gwswElement);
+            return orifice;
         }
 
-        private static INetworkFeature CreateOrificeFromGwswStructure(GwswElement gwswElement, IHydroNetwork network)
+        private static Orifice CreateNewOrifice(GwswElement gwswElement)
         {
-            if (network == null)
+            var uniqueIdKey = gwswElement.IsValidGwswSewerConnection() 
+                ? SewerConnectionMapping.PropertyKeys.UniqueId 
+                : SewerStructureMapping.PropertyKeys.UniqueId;
+
+            var orificeIdAttribute = gwswElement.GetAttributeFromList(uniqueIdKey);
+            var orificeId = orificeIdAttribute.GetValidStringValue();
+
+            if (gwswElement.IsValidGwswSewerConnection())
             {
-                // log
-                Log.ErrorFormat($"Orifices cannot be created without a network defined");
-                return null;
+                var gwswConnectionOrifice = new GwswConnectionOrifice(orificeId);
+                AddSewerConnectionAttributesToOrifice(gwswConnectionOrifice, gwswElement);
+                return gwswConnectionOrifice;
             }
 
-            var structureNameAttribute = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.UniqueId);
-            if (!structureNameAttribute.IsValidAttribute()) return null;
-
-            var structureName = structureNameAttribute.ValueAsString;
-            var orificeFound = network.BranchFeatures.OfType<Orifice>().FirstOrDefault(bf => bf.Name.Equals(structureName));
-            if (orificeFound == null)
-            {
-                orificeFound = new Orifice(structureName);
-                var auxSewerConnection = new SewerConnection(structureName)
-                {
-                    Network = network,
-                };
-
-                network.Branches.Add(auxSewerConnection);
-                auxSewerConnection.AddStructureToBranch(orificeFound);
-            }
-
-            ExtendOrificeAttributes(orificeFound, gwswElement);
-            return orificeFound;
-        }
-        
-        private static INetworkFeature CreateOrificeFromGwswSewerConnection(GwswElement gwswElement, IHydroNetwork network)
-        {
-            var sewerConnection = (SewerConnection) new SewerConnectionGenerator().Generate(gwswElement, network);
-            AddAttributesToSewerConnection(sewerConnection, gwswElement);
-            return sewerConnection;
+            var gwswStructureOrifice = new Orifice(orificeId);
+            AddStructureAttributesToOrifice(gwswStructureOrifice, gwswElement);
+            return gwswStructureOrifice;
         }
 
-        private static void AddAttributesToSewerConnection(ISewerConnection sewerConnection, GwswElement gwswElement)
+        private static void AddSewerConnectionAttributesToOrifice(GwswConnectionOrifice orifice, GwswElement gwswElement)
         {
-            var orifice = FindOrCreateOrifice(sewerConnection);
-            
-            // Do we need some creation logic here? See SewerPumpGenerator or SewerWeirGenerator
-            if (!sewerConnection.BranchFeatures.Contains(orifice))
-                sewerConnection.AddStructureToBranch(orifice);
+            if (!gwswElement.IsValidGwswSewerConnection()) return;
+
+            var nodeIdStartAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SourceCompartmentId);
+            orifice.SourceCompartmentName = nodeIdStartAttribute.GetValidStringValue();
+
+            var nodeIdEndAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.TargetCompartmentId);
+            orifice.TargetCompartmentName = nodeIdEndAttribute.GetValidStringValue();
+
+            double auxDouble;
+
+            var levelStart = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.LevelStart);
+            if (levelStart.TryGetValueAsDouble(out auxDouble))
+                orifice.LevelSource = auxDouble;
+
+            var levelEnd = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.LevelEnd);
+            if (levelEnd.TryGetValueAsDouble(out auxDouble))
+                orifice.LevelTarget = auxDouble;
+
+            var length = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Length);
+            if (length.TryGetValueAsDouble(out auxDouble))
+                orifice.Length = auxDouble;
+
+            var waterType = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.WaterType);
+            if (waterType.IsValidAttribute())
+                orifice.WaterType = waterType.GetValueFromDescription<SewerConnectionWaterType>();
         }
 
-        private static Orifice FindOrCreateOrifice(ISewerConnection sewerConnection)
+        private static void AddStructureAttributesToOrifice(IOrifice orifice, GwswElement gwswElement)
         {
-            var structureFound = sewerConnection.BranchFeatures.OfType<Orifice>().FirstOrDefault(bf => bf.Name.Equals(sewerConnection.Name));
-            return structureFound ?? new Orifice(sewerConnection.Name);
-        }
+            if (!gwswElement.IsValidGwswStructure()) return;
 
-        private static void ExtendOrificeAttributes(Orifice orificeFound, GwswElement gwswElement)
-        {
             double auxDouble;
             //Add Attributes
             var bottomLevel = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.BottomLevel);
             if (bottomLevel.TryGetValueAsDouble(out auxDouble))
-                orificeFound.BottomLevel = auxDouble;
+                orifice.BottomLevel = auxDouble;
 
             var contractionCoefficient = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.ContractionCoefficient);
             if (contractionCoefficient.TryGetValueAsDouble(out auxDouble))
-                orificeFound.ContractionCoefficent = auxDouble;
+                orifice.ContractionCoefficent = auxDouble;
 
             var maxDischarge = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.MaxDischarge);
             if (maxDischarge.TryGetValueAsDouble(out auxDouble))
-                orificeFound.MaxDischarge = auxDouble;
+                orifice.MaxDischarge = auxDouble;
         }
 
     }

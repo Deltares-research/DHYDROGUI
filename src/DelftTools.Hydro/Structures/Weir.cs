@@ -261,5 +261,11 @@ namespace DelftTools.Hydro.Structures
             if (weirFormula is GeneralStructureWeirFormula) return StructureType.GeneralStructure;
             return StructureType.Unknown;
         }
+
+        public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork)
+        {
+            // We will never add a Weir object to a network with this method.
+            // Only GwswConnectionWeir or GwswStructureWeir objects.
+        }
     }
 }

@@ -11,23 +11,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     {
         public static void Write(WaterFlowFMModel model, bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true)
         {
-            PrepareModelDefinitionForWriting(model);
-            WriteMduFile(model);
+            //TODO: Refactor MduFile class such that outcommented code her can be used for writing the Mdu file and other files that are now written in that class 
+            //PrepareModelDefinitionForWriting(model);
+            //WriteMduFile(model);
+
+            var mduFile = new MduFile();
+            mduFile.Write(model.MduFilePath, model.ModelDefinition, model.Area, model.FixedWeirsProperties, switchTo, writeExtForcings, writeFeatures, model.DisableFlowNodeRenumbering);
             WriteUGridFile(model);
             WriteMorSedFilesIfNeeded(model);
         }
 
-        private static void PrepareModelDefinitionForWriting(IWaterFlowFMModel model)
-        {
-            if (model.Network.Manholes.Any())
-                model.ModelDefinition.SetModelProperty(KnownProperties.NodeFile, "nodeFile.ini");
-        }
+        //private static void PrepareModelDefinitionForWriting(IWaterFlowFMModel model)
+        //{
+        //    if (model.Network.Manholes.Any())
+        //        model.ModelDefinition.SetModelProperty(KnownProperties.NodeFile, "nodeFile.ini");
+        //}
 
-        private static void WriteMduFile(WaterFlowFMModel model)
-        {
-            var mduFile = new MduFile();
-            mduFile.Write(model.MduFilePath, model.ModelDefinition);
-        }
+        //private static void WriteMduFile(WaterFlowFMModel model)
+        //{
+        //    var mduFile = new MduFile();
+        //    mduFile.Write(model.MduFilePath, model.ModelDefinition);
+        //}
 
         private static void WriteMorSedFilesIfNeeded(WaterFlowFMModel model)
         {

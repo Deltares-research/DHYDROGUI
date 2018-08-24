@@ -145,12 +145,6 @@ namespace DelftTools.Hydro.Helpers
             return (IChannel)newBranch;
         }
 
-        public static IChannel SplitChannelAtNodeInternal(INetwork network, IChannel branch, INode node)
-        {
-            var newBranch = NetworkHelper.SplitBranchAtNode(network, branch, node);
-            return (IChannel)newBranch;
-        }
-
         /// <summary>
         /// Returns the number of networklocation in a coverage for a branch
         /// </summary>
@@ -482,6 +476,7 @@ namespace DelftTools.Hydro.Helpers
         /// </summary>
         /// <param name="region"></param>
         /// <param name="feature"></param>
+        /// <param name="checkIfNewNameIsNeeded"></param>
         public static string GetUniqueFeatureName(IHydroRegion region, IFeature feature, bool checkIfNewNameIsNeeded = false)
         {
             //return feature.GetEntityType().Name;
@@ -659,7 +654,7 @@ namespace DelftTools.Hydro.Helpers
         /// <param name="numberOfBranches"></param>
         /// <param name="generateIDs"></param>
         /// <returns></returns>
-        public static IHydroNetwork GetSnakeHydroNetwork(int numberOfBranches,bool generateIDs)
+        public static IHydroNetwork GetSnakeHydroNetwork(int numberOfBranches, bool generateIDs)
         {
             IList<Point> points = new List<Point>();
             // create a random network by moving constantly right
@@ -680,7 +675,25 @@ namespace DelftTools.Hydro.Helpers
             }
             return GetSnakeHydroNetwork(generateIDs, points.ToArray());
         }
-        
+
+        public static string CreateUniqueCompartmentNameInNetwork(IHydroNetwork network)
+        {
+            var compartments = new List<Compartment>();
+            if (network != null)
+                compartments = network.Manholes.SelectMany(m => m.Compartments).ToList();
+
+            return NetworkHelper.GetUniqueName("Compartment{0:D2}", compartments, "Compartment");
+        }
+
+        public static string GetUniqueManholeIdInNetwork(IHydroNetwork network)
+        {
+            var manholes = new List<IManhole>();
+            if (network != null)
+                manholes = network.Manholes.ToList();
+
+            return NetworkHelper.GetUniqueName("Manhole{0:D2}", manholes, "Manhole");
+        }
+
         private static double DegreeToRadian(double angle)
         {
             return Math.PI * angle / 180.0;

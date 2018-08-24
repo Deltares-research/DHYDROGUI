@@ -5,6 +5,9 @@ namespace DelftTools.Hydro.Structures
     public interface IPipe : ISewerConnection
     {
         string PipeId { get; set; }
-        CrossSectionDefinitionStandard SewerProfileDefinition { get; set; }
+
+        string CrossSectionDefinitionId { get; set; }
+
+        CrossSectionDefinitionStandard CrossSectionDefinition { get; set; }
     }
 }

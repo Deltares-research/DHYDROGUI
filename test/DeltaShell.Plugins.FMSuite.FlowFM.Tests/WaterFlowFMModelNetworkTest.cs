@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Tests.Helpers;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using GeoAPI.Geometries;
@@ -17,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var model = new WaterFlowFMModel(); // empty model
             Assert.That(model.Network.HydroNodes.Count(), Is.EqualTo(0));
-            Assert.That(model.Network.Branches.Count(), Is.EqualTo(0));
+            Assert.That(model.Network.Branches.Count, Is.EqualTo(0));
             Assert.That(model.Network.Name, Is.EqualTo("Network"));
             
             //check eventing
@@ -63,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var model = new WaterFlowFMModel();
             var directChildren = model.GetDirectChildren();
-            Assert.NotNull(directChildren.FirstOrDefault(c => c == model.Network));
+            Assert.IsNotNull(directChildren.FirstOrDefault(c => c == model.Network));
         }
 
         [Test]
@@ -77,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             network.Branches.Add(sewerConnection);
 
             var discretizationLocations = discretization.Locations.Values;
-            Assert.AreEqual(2, discretizationLocations.Count(l => l.Branch.Equals(sewerConnection)));
+            Assert.That(discretizationLocations.Count(l => l.Branch.Equals(sewerConnection)), Is.EqualTo(2));
         }
 
         [Test]
@@ -87,10 +89,54 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var network = fmModel.Network;
             var discretization = fmModel.NetworkDiscretization;
             var sewerConnection = new SewerConnection { Length = 100, Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) }) };
-            network.Branches.Add(sewerConnection);
 
+            network.Branches.Add(sewerConnection);
             network.Branches.Remove(sewerConnection);
-            Assert.AreEqual(0, discretization.Locations.Values.Count(l => l.Branch.Equals(sewerConnection)));
+
+            var discretizationLocations = discretization.Locations.Values;
+            Assert.That(discretizationLocations.Count(l => l.Branch.Equals(sewerConnection)), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void GivenFmModel_WhenAddingSewerConnectionWithZeroLength_ThenNoDiscretisationPointsHaveBeenAddedToTheModelNetwork()
+        {
+            var fmModel = new WaterFlowFMModel();
+            var network = fmModel.Network;
+            var sewerConnection = new SewerConnection("mySewerConnection")
+            {
+                Length = 0
+            };
+
+            sewerConnection.AddToHydroNetwork(network);
+            Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
+
+            var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
+            Assert.That(discretizationLocations.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void GivenFmModel_WhenAddingOrificeAndThenOneWithLength_ThenDiscretisationPointsHaveBeenAddedToTheModelNetwork()
+        {
+            var fmModel = new WaterFlowFMModel { Network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEach() };
+
+            var orificeName = "myOrifice";
+            var orifice = new Orifice(orificeName);
+            var connectionOrifice = new GwswConnectionOrifice(orificeName)
+            {
+                Length = 22.3,
+                SourceCompartmentName = TestSewerNetworkProvider.SourceCompartmentName,
+                TargetCompartmentName = TestSewerNetworkProvider.TargetCompartmentName
+            };
+
+            orifice.AddToHydroNetwork(fmModel.Network);
+            Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
+            
+            var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
+            Assert.That(discretizationLocations.Count, Is.EqualTo(0));
+
+            connectionOrifice.AddToHydroNetwork(fmModel.Network);
+            Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
+            Assert.That(discretizationLocations.Count, Is.EqualTo(2));
         }
     }
 }

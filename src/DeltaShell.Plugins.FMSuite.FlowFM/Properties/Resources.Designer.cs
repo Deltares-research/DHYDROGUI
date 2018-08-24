@@ -690,12 +690,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} in line {1} does not have a name and has been created as {2}.
+        ///   Looks up a localized string similar to {0} in line {1} does not have a name and will be added to the network with a unique default name..
         /// </summary>
-        public static string SewerCompartmentGenerator_FindOrGetNewCompartment__0__in_line__1__does_not_have_a_name_and_has_been_created_as__2_ {
+        public static string SewerCompartmentGenerator_FindOrGetNewCompartment__0__in_line__1__does_not_have_a_name_and_will_be_added_to_the_network_with_a_unique_name {
             get {
                 return ResourceManager.GetString("SewerCompartmentGenerator_FindOrGetNewCompartment__0__in_line__1__does_not_have_a" +
-                        "_name_and_has_been_created_as__2_", resourceCulture);
+                        "_name_and_will_be_added_to_the_network_with_a_unique_name", resourceCulture);
             }
         }
         

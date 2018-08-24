@@ -2,31 +2,43 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    class EggCrossSectionDefinitionGenerator : ASewerCrossSectionDefinitionGenerator
+    class EggCrossSectionShapeGenerator : ASewerCrossSectionShapeGenerator
     {
-        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network, object importHelper)
+        public override ISewerFeature Generate(GwswElement gwswElement)
         {
-            if (!gwswElement.IsValidGwswSewerProfile()) return null;
+            var eggShape = CreateEggShapeFromGwsw(gwswElement);
+            return eggShape;
+        }
+
+        private ISewerFeature CreateEggShapeFromGwsw(GwswElement gwswElement)
+        {
+            var shapeName = GetCrossSectionShapeName(gwswElement);
 
             double width;
-            CrossSectionStandardShapeEgg csEggShape;
             var widthAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileWidth);
             if (widthAttribute.TryGetValueAsDouble(out width))
             {
-                csEggShape = new CrossSectionStandardShapeEgg { Width = width / 1000 /*Conversion from millimeters to meters*/};
+                var csEggShape = new CrossSectionStandardShapeEgg
+                {
+                    Name = shapeName,
+                    Width = width / 1000 /*Conversion from millimeters to meters*/
+                };
                 LogMessageInCaseSewerShapeWidthHeightAreNotInCorrectProportion(gwswElement, width, 1.5, "(2:3)", csEggShape);
+                return csEggShape;
             }
-            else
-            {
-                csEggShape = CrossSectionStandardShapeEgg.CreateDefault();
-                MessageForMissingValues(gwswElement, "width");
-            }
-            AddCrossSectionDefinitionToNetwork(gwswElement, csEggShape, network);
-            return null;
+
+            MessageForMissingValues(gwswElement, "width");
+            return GetDefaultEggShape(shapeName);
+        }
+
+        private static ISewerFeature GetDefaultEggShape(string name)
+        {
+            var defaultTrapezoid = CrossSectionStandardShapeEgg.CreateDefault();
+            defaultTrapezoid.Name = name;
+            return defaultTrapezoid;
         }
     }
 }

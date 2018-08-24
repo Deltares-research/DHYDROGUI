@@ -6,6 +6,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public enum ConnectionType
         {
+            [Description("Unknown")] Unknown,
             [Description("DRL")] Orifice,
             [Description("GSL")] ClosedConnection /*Should be created as a pipe*/,
             [Description("ITR")] InfiltrationPipe /*Should be created as a pipe*/,
@@ -25,14 +26,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public static class PropertyKeys
         {
             public const string UniqueId = "UNIQUE_ID";
-            public const string NodeUniqueIdStart = "NODE_UNIQUE_ID_START";
-            public const string NodeUniqueIdEnd = "NODE_UNIQUE_ID_END";
+            public const string SourceCompartmentId = "NODE_UNIQUE_ID_START";
+            public const string TargetCompartmentId = "NODE_UNIQUE_ID_END";
             public const string PipeType = "PIPE_TYPE";
             public const string LevelStart = "LEVEL_START";
             public const string LevelEnd = "LEVEL_END";
             public const string Length = "LENGTH";
-            public const string CrossSectionDef = "CROSS_SECTION_DEF";
-            public const string PipeIndicator = "PIPE_INDICATOR";
+            public const string CrossSectionDefinitionId = "CROSS_SECTION_DEF";
+            public const string PipeId = "PIPE_INDICATOR";
             public const string WaterType = "WATER_TYPE";
             public const string InletLossStart = "INLETLOSS_START";
             public const string OutletLossStart = "OUTLETLOSS_START";

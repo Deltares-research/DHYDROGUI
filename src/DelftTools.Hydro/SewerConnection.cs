@@ -6,6 +6,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
@@ -30,24 +31,24 @@ namespace DelftTools.Hydro
         {
         }
 
-        public SewerConnection(INode fromNode, INode toNode)
-            : this("sewerConnection", fromNode, toNode, 0)
+        public SewerConnection(IManhole sourceManhole, IManhole targetManhole)
+            : this("sewerConnection", sourceManhole, targetManhole, 0)
         {
         }
 
-        public SewerConnection(INode fromNode, INode toNode, double length)
-            : this("sewerConnection", fromNode, toNode, length)
+        public SewerConnection(IManhole sourceManhole, IManhole targetManhole, double length)
+            : this("sewerConnection", sourceManhole, targetManhole, length)
         {
         }
 
-        public SewerConnection(string name, INode fromNode, INode toNode, double length) :
-            base(name, fromNode, toNode, length)
+        public SewerConnection(string name, IManhole sourceManhole, IManhole targetManhole, double length) :
+            base(name, sourceManhole, targetManhole, length)
         {
-            if (fromNode?.Geometry == null || toNode?.Geometry == null) return;
+            if (sourceManhole?.Geometry == null || targetManhole?.Geometry == null) return;
 
-            if (fromNode.Geometry.IsValid && toNode.Geometry.IsValid)
+            if (sourceManhole.Geometry.IsValid && targetManhole.Geometry.IsValid)
             {
-                Geometry = new LineString(new[] { fromNode.Geometry.Coordinate, toNode.Geometry.Coordinate });
+                Geometry = new LineString(new[] { sourceManhole.Geometry.Coordinate, targetManhole.Geometry.Coordinate });
             }
         }
 
@@ -67,6 +68,7 @@ namespace DelftTools.Hydro
             {
                 sourceCompartment = value;
                 UpdateSource(sourceCompartment);
+                UpdateSourceCompartmentId();
             }
         }
 
@@ -77,6 +79,7 @@ namespace DelftTools.Hydro
             {
                 targetCompartment = value;
                 UpdateTarget(targetCompartment);
+                UpdateTargetCompartmentId();
             }
         }
 
@@ -90,21 +93,22 @@ namespace DelftTools.Hydro
             get { return branchFeatures; }
             set
             {
-                if (branchFeatures != null)
-                {
-                    branchFeatures.CollectionChanging -= BranchFeaturesOnCollectionChanging;
-                }
+                if (branchFeatures != null) branchFeatures.CollectionChanging -= BranchFeaturesOnCollectionChanging;
+                AddBranchFeatureWhenEmpty(value);
+                if (branchFeatures != null) branchFeatures.CollectionChanging += BranchFeaturesOnCollectionChanging;
+            }
+        }
 
-                //For the sewer connection we only allow one branch feature per sewer connection
-                if (value != null && value.Count <= 1)
-                {
-                    branchFeatures = value;
-                    branchFeatures.CollectionChanging += BranchFeaturesOnCollectionChanging;
-                }
-                else
-                {
-                    Log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, this.Name);
-                }
+        private void AddBranchFeatureWhenEmpty(IEventedList<IBranchFeature> value)
+        {
+            //For the sewer connection we only allow one branch feature per sewer connection
+            if (value != null && value.Count <= 1)
+            {
+                branchFeatures = value;
+            }
+            else
+            {
+                Log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, this.Name);
             }
         }
 
@@ -126,6 +130,16 @@ namespace DelftTools.Hydro
             {
                 Source = parent;
             }
+        }
+
+        private void UpdateSourceCompartmentId()
+        {
+            if(sourceCompartment != null) SourceCompartmentName = sourceCompartment.Name;
+        }
+
+        private void UpdateTargetCompartmentId()
+        {
+            if(targetCompartment != null) TargetCompartmentName = targetCompartment.Name;
         }
 
         private SewerConnectionSpecialConnectionType GetConnectionType()
@@ -182,6 +196,67 @@ namespace DelftTools.Hydro
 
         public virtual IHydroNetwork HydroNetwork { get { return (IHydroNetwork) Network; } }
         public virtual string LongName { get; set; }
+
+        #endregion
+
+
+        #region Network is visiting us
+        
+        public void AddToHydroNetwork(IHydroNetwork hydroNetwork)
+        {
+            hydroNetwork.Branches.RemoveAllWhere(sc => sc.Name == Name && sc is SewerConnection);
+
+            var sourceManhole = hydroNetwork.Manholes.FirstOrDefault(m => m.ContainsCompartmentWithName(SourceCompartmentName));
+            var targetManhole = hydroNetwork.Manholes.FirstOrDefault(m => m.ContainsCompartmentWithName(TargetCompartmentName));
+
+            ConnectSourceCompartment(sourceManhole);
+            ConnectTargetCompartment(targetManhole);
+            UpdateGeometry(sourceManhole, targetManhole);
+            AddCrossSectionDefinition(hydroNetwork);
+            hydroNetwork.Branches.Add(this);
+        }
+
+        protected virtual void AddCrossSectionDefinition(IHydroNetwork hydroNetwork)
+        {
+        }
+
+        private void UpdateGeometry(IManhole sourceManhole, IManhole targetManhole)
+        {
+            if (sourceManhole != null && targetManhole != null)
+            {
+                Geometry = new LineString(new[] {sourceManhole.Geometry.Coordinate, targetManhole.Geometry.Coordinate});
+            }
+            else if (sourceManhole != null)
+            {
+                Geometry = new LineString(new[] {sourceManhole.Geometry.Coordinate, sourceManhole.Geometry.Coordinate});
+            }
+            else if (targetManhole != null)
+            {
+                Geometry = new LineString(new[] {targetManhole.Geometry.Coordinate, targetManhole.Geometry.Coordinate});
+            }
+            else
+            {
+                Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(0, 0)});
+            }
+        }
+
+        private void ConnectSourceCompartment(IManhole manhole)
+        {
+            if(manhole == null) return;
+            var sourceCompartmentToAdd = manhole.GetCompartmentByName(SourceCompartmentName);
+            SourceCompartment = sourceCompartmentToAdd;
+        }
+
+        private void ConnectTargetCompartment(IManhole manhole)
+        {
+            if (manhole == null) return;
+            var targetCompartmentToAdd = manhole.GetCompartmentByName(TargetCompartmentName);
+            TargetCompartment = targetCompartmentToAdd;
+        }
+
+        public string SourceCompartmentName { get; set; }
+        public string TargetCompartmentName { get; set; }
+        public string CrossSectionDefinitionId { get; set; }
 
         #endregion
     }

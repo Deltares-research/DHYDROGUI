@@ -13,7 +13,6 @@ using DelftTools.Utils.Csv.Importer;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NUnit.Framework;
 
@@ -544,53 +543,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         }
 
         [Test]
-        public void ImportFile_WithLoadedDefinition_GivingFilePath_LoadsIt()
+        public void GivenConnectionGwswFile_WhenImportingItsSewerFeatures_ThenFeaturesOfDifferentTypesAreImported()
         {
             var importer = new GwswFileImporter();
 
             Assert.IsTrue(importer.GwswAttributesDefinition != null && importer.GwswAttributesDefinition.Any());
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
-            var importedFeatures = importer.ImportItem(filePath);
-            Assert.IsNotNull(importedFeatures);
 
-            var featuresAsConnections = importedFeatures as List<INetworkFeature>;
-            Assert.IsNotNull(featuresAsConnections);
-            Assert.IsTrue(featuresAsConnections.Any( f => f is ISewerConnection));
-            Assert.IsFalse(featuresAsConnections.Any(f => f is Manhole));
+            var importedFeatures = importer.ImportItem(filePath) as List<ISewerFeature>;
+            Assert.IsNotNull(importedFeatures);
+            Assert.IsTrue(importedFeatures.Any( f => f is IPipe));
+            Assert.IsTrue(importedFeatures.Any( f => f is GwswConnectionWeir));
+            Assert.IsTrue(importedFeatures.Any( f => f is GwswConnectionPump));
+            Assert.IsTrue(importedFeatures.Any( f => f is GwswConnectionOrifice));
         }
 
-        [Test]
-        public void ImportFile_WithLoadedDefinition_NotGivingFilePath_LoadsDefinitionFeaturesList()
+        [TestCase("")]
+        [TestCase(null)]
+        public void ImportFile_WithLoadedDefinition_GivingEmptyStringAsPath_LoadsDefinitionFeaturesList(string importFilePath)
         {
             var definitionPath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             var importer = new GwswFileImporter();
             importer.LoadFeatureFiles(Path.GetDirectoryName(definitionPath));
-
             Assert.IsTrue(importer.GwswAttributesDefinition != null && importer.GwswAttributesDefinition.Any());
-            var importedFeatures = importer.ImportItem(null);
+
+            var importedFeatures = importer.ImportItem(importFilePath) as List<ISewerFeature>;
             Assert.IsNotNull(importedFeatures);
-
-            var featuresAsConnections = importedFeatures as List<INetworkFeature>;
-            Assert.IsNotNull(featuresAsConnections);
-            Assert.IsTrue(featuresAsConnections.Any(f => f is ISewerConnection));
-            Assert.IsTrue(featuresAsConnections.Any(f => f is Manhole));
-        }
-
-        [Test]
-        public void ImportFile_WithLoadedDefinition_GivingEmptyStringAsPath_LoadsDefinitionFeaturesList()
-        {
-            var definitionPath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
-            var importer = new GwswFileImporter();
-            importer.LoadFeatureFiles(Path.GetDirectoryName(definitionPath));
-
-            Assert.IsTrue(importer.GwswAttributesDefinition != null && importer.GwswAttributesDefinition.Any());
-            var importedFeatures = importer.ImportItem(string.Empty);
-            Assert.IsNotNull(importedFeatures);
-
-            var featuresAsConnections = importedFeatures as List<INetworkFeature>;
-            Assert.IsNotNull(featuresAsConnections);
-            Assert.IsTrue(featuresAsConnections.Any(f => f is ISewerConnection));
-            Assert.IsTrue(featuresAsConnections.Any(f => f is Manhole));
+            Assert.IsTrue(importedFeatures.Any(f => f is ISewerConnection));
+            Assert.IsTrue(importedFeatures.Any(f => f is ICompartment));
         }
 
         private static IHydroNetwork ImportFromDefinitionFileAndCheckFeatures(string testFilePath)
@@ -642,16 +622,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsFalse(network.SharedCrossSectionDefinitions.Any());
             Assert.IsFalse(network.Pumps.Any());
 
-            var gwswImporter = new GwswFileImporter();
+            var gwswImporter = new GwswFileImporter {CsvDelimeter = ';'};
             var filePath = GetFileAndCreateLocalCopy(testFilePath);
             try
             {
                 //Definition file is 'comma' separated, but the features are 'semicolon', so we need to change the delimeter.
                 TestHelper.AssertIsFasterThan(maximumImportingTimeInMs, () =>
                 {
-                    gwswImporter.CsvDelimeter = ';';
                     gwswImporter.LoadFeatureFiles(Path.GetDirectoryName(filePath));
-                    gwswImporter.ImportItem(null, model);
+                    var test = gwswImporter.ImportItem(null, model);
                 });
                 
             }
@@ -670,31 +649,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         public void TestImportFromDefinitionFileAndCheckGwswUseCaseImportsAllSewerConnectionsCorrectly()
         {
             var network = ImportFromDefinitionFileAndCheckFeatures(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
-            var numberOfSewerConnectionsInGwsw = 97;
             Assert.IsNotNull(network);
             Assert.IsNotNull(network.SewerConnections);
 
-            var repeadedSewerConnections = network.SewerConnections.GroupBy(x => x).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
-            Assert.IsEmpty(repeadedSewerConnections, string.Format("Repeated compartments entries. {0}", String.Concat(repeadedSewerConnections.Select(cmp => cmp.Name + " "))));
-
-            var sewerConnectionsWithoutPlaceholders = network.SewerConnections.Where(sc => sc.Source != null && sc.Target != null).ToList();
-            Assert.AreEqual(numberOfSewerConnectionsInGwsw, sewerConnectionsWithoutPlaceholders.Count);
-
-            //CheckPipes
-            var numberOfPipes = 81;
-            Assert.AreEqual(numberOfPipes, network.Pipes.Count(), "Not all pipes were found.");
-
-            //CheckPumps
-            var numberOfPumps = 8;
-            Assert.AreEqual(numberOfPumps, network.Pumps.Count(), "Not all pumps were found.");
-
-            //CheckOrifices
-            var numberOfOrifices = 2;
-            Assert.AreEqual(numberOfOrifices, sewerConnectionsWithoutPlaceholders.Count(sc => (sc as SewerConnection).IsOrifice()), "Not all orifices were found.");
-
-            //Check sewer profiles
-            var expectedNumberOfSewerProfiles = 41;
-            Assert.AreEqual(expectedNumberOfSewerProfiles, network.SharedCrossSectionDefinitions.Count);
+            var expectedNumberOfPipes = 81;
+            var expectedNumberOfPumps = 8;
+            var expectedNumberOfOrifices = 2;
+            var expectedNumberOfCrossSections = 41;
+            
+            Assert.That(network.Pipes.Count(), Is.EqualTo(expectedNumberOfPipes)
+                , "Not all pipes have been imported correctly.");
+            Assert.That(network.Pumps.Count(), Is.EqualTo(expectedNumberOfPumps)
+                , "Not all pumps have been imported correctly.");
+            Assert.That(network.Orifices.Count(), Is.EqualTo(expectedNumberOfOrifices)
+                , "Not all orifices have been imported correctly.");
+            Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(expectedNumberOfCrossSections)
+                , "Not all cross sections have been imported correctly.");
         }
 
         [Test]
@@ -722,7 +692,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             //CheckOutlets
             var numberOfOutlets = 4;
-            Assert.AreEqual(numberOfOutlets, compartments.Count(cmp => cmp.IsOutletCompartment()), "Not all outlets were found.");
+            Assert.AreEqual(numberOfOutlets, compartments.Count(cmp => cmp is OutletCompartment), "Not all outlets were found.");
         }
 
         [Test]
@@ -832,96 +802,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 }
             }
         }
-
-
-        [Test]
-        public void TestImportSewerConnectionsFromGwswWithMappingSucceeds()
-        {
-            //Load Sewer Connections.
-            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
-            var model = new WaterFlowFMModel();
-            var network = model.Network;
-            Assert.IsFalse(network.Pipes.Any());
-
-            var gwswImporter = new GwswFileImporter();
-            gwswImporter.CsvDelimeter = ';';
-            var importedItems = gwswImporter.ImportItem(filePath, model);
-            Assert.IsNotNull(importedItems);
-            Assert.IsTrue(network.SewerConnections.Any());
-
-            //There should be some pipes.
-            Assert.IsTrue(network.Pipes.Any());
-
-            var importedSewerItems = importedItems as List<INetworkFeature>;
-            Assert.IsNotNull(importedSewerItems);
-            importedSewerItems.ToList().ForEach(sc => Assert.IsNotNull(sc as SewerConnection));
-
-            //Check imported list has been added to the network pipes.
-            Assert.AreEqual(importedSewerItems, network.SewerConnections.ToList());
-        }
-
+        
         [Test]
         public void TestImportSewerConnectionFromFileAssignsNodesWhenTheyExist()
         {
-            //Create network
+            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
             var model = new WaterFlowFMModel();
             var network = model.Network;
 
-            /*We know these two nodes are referred in the test data*/
-            var startNodeName = "man001";
-            var startCompartmentName = "put9";
-            var startNode = new Manhole(startNodeName);
-            var startCompartment = new Compartment(startCompartmentName);
-            startNode.Compartments.Add(startCompartment);
-            network.Nodes.Add(startNode);
-
-            var endNodeName = "man001";
-            var endCompartmentName = "put8";
-            var endNode = new Manhole(endNodeName);
-            var endCompartment = new Compartment(endCompartmentName);
-            endNode.Compartments.Add(endCompartment);
-            network.Nodes.Add(endNode);
-
-            var gwswImporter = new GwswFileImporter();
-            //Load pipes.
-            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
-            gwswImporter.CsvDelimeter = ';';
-            var importedConnections = gwswImporter.ImportItem(filePath, model);
-            Assert.IsNotNull(importedConnections);
-
-            Assert.IsTrue(network.SewerConnections.Any());
-            Assert.IsFalse(network.SewerConnections.Any(p => p.Source == null), "Source node has not been created during import process.");
-            Assert.IsFalse(network.SewerConnections.Any(p => p.Target == null), "Target node has not been created during import process.");
-
-            Assert.IsTrue(network.SewerConnections.Any(p => p.Source.Equals(startNode) && p.Target.Equals(endNode)));
-        }
-
-        [Test]
-        public void TestImportPipesFromFileCreatesNodesWhenTheyDoNotExist()
-        {
-            //Create network
-            var model = new WaterFlowFMModel();
-            var network = model.Network;
+            #region Create network
 
             /*We know these two nodes are referred in the test data*/
-            var expectedStartNodeName = "put9";
-            var expectedEndNodeName = "put8";
+            var sourceManholeName = "man001";
+            var sourceCompartmentName = "put9";
+            var sourceManhole = new Manhole(sourceManholeName);
+            var sourceCompartment = new Compartment(sourceCompartmentName);
+            sourceManhole.Compartments.Add(sourceCompartment);
+            network.Nodes.Add(sourceManhole);
 
-            var gwswImporter = new GwswFileImporter();
-            //Load pipes.
-            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
-            gwswImporter.CsvDelimeter = ';';
-            var importedPipes = gwswImporter.ImportItem(filePath, model);
-            Assert.IsNotNull(importedPipes);
+            var targetManholeName = "man001";
+            var targetCompartmentName = "put8";
+            var targetManhole = new Manhole(targetManholeName);
+            var targetCompartment = new Compartment(targetCompartmentName);
+            targetManhole.Compartments.Add(targetCompartment);
+            network.Nodes.Add(targetManhole);
 
-            Assert.IsTrue(network.Pipes.Any());
-            Assert.IsFalse(network.Pipes.Any(p => p.Source == null), "Source node has not been created during import process.");
-            Assert.IsFalse(network.Pipes.Any(p => p.Target == null), "Target node has not been created during import process.");
-            Assert.IsTrue(network.Pipes.Any(p => p.SourceCompartment.Name.Equals(expectedStartNodeName) && p.TargetCompartment.Name.Equals(expectedEndNodeName)));
+            #endregion
 
-            //Checking manhole name is stored as id
-            Assert.IsTrue(network.Manholes.Any(n => n.ContainsCompartmentWithName(expectedStartNodeName)));
-            Assert.IsTrue(network.Manholes.Any(n => n.ContainsCompartmentWithName(expectedEndNodeName)));
+            var gwswImporter = new GwswFileImporter {CsvDelimeter = ';'};
+            var importedConnections = gwswImporter.ImportItem(filePath, model) as List<ISewerFeature>;
+            Assert.That(importedConnections, Is.Not.Empty);
+            Assert.IsTrue(network.SewerConnections.Any(p => p.Source.Equals(sourceManhole) && p.Target.Equals(targetManhole)));
         }
 
         [Test]
@@ -955,7 +866,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 var replacedStructure = network.Structures.FirstOrDefault(s => s.Name.Equals(structure.Name));
                 Assert.AreEqual(structure, replacedStructure, "the attributes from the element do not match");
             }
-
         }
 
         [Test]
@@ -965,12 +875,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var model = new WaterFlowFMModel();
             var network = model.Network;
 
-            var gwswImporter = new GwswFileImporter();
             //Load structures.
+            var gwswImporter = new GwswFileImporter();
             var structuresPath = GetFileAndCreateLocalCopy(@"gwswFiles\Kunstwerk.csv");
             gwswImporter.CsvDelimeter = ';';
-            var importedStructures = gwswImporter.ImportItem(structuresPath, model);
-            Assert.IsNotNull(importedStructures);
+            var importedStructures = gwswImporter.ImportItem(structuresPath, model) as List<ISewerFeature>;
+            Assert.That(importedStructures, Is.Not.Empty);
 
             //Check placeholders have been created.
             Assert.IsTrue(network.Manholes.Any());
@@ -980,8 +890,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             // Now Load connections.
             var compartmentsPath = GetFileAndCreateLocalCopy(@"gwswFiles\Knooppunt.csv");
-            var importedCompartments = gwswImporter.ImportItem(compartmentsPath, model);
-            Assert.IsNotNull(importedCompartments);
+            var importedCompartments = gwswImporter.ImportItem(compartmentsPath, model) as List<ISewerFeature>;
+            Assert.That(importedCompartments, Is.Not.Empty);
 
             foreach (var compartment in outletCompartments)
             {
@@ -993,7 +903,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 var extendedOutlet = manhole.GetCompartmentByName(outlet.Name) as OutletCompartment;
                 Assert.IsNotNull(extendedOutlet);
 
-                Assert.AreEqual(outlet.SurfaceWaterLevel, extendedOutlet.SurfaceWaterLevel, "the attributes from the element do not match");
+                Assert.That(extendedOutlet.SurfaceWaterLevel, Is.EqualTo(outlet.SurfaceWaterLevel),
+                    $"the SurfaceWaterLevel of compartment {compartment.Name} was changed after importing the connection.");
             }
         }
 
@@ -1008,8 +919,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             //Load sewer profiles
             gwswImporter.CsvDelimeter = ';';
             var sewerProfilesPath = GetFileAndCreateLocalCopy(@"gwswFiles\Profiel.csv");
-            var importedProfiles = gwswImporter.ImportItem(sewerProfilesPath, model) as List<INetworkFeature>;
-            Assert.IsEmpty(importedProfiles);
+            var importedProfiles = gwswImporter.ImportItem(sewerProfilesPath, model) as List<ISewerFeature>;
+            Assert.IsNotEmpty(importedProfiles);
 
             //Check that sewer profiles have been put into the network
             var numberOfLinesInFile = File.ReadAllLines(sewerProfilesPath).Length - 1;
@@ -1017,18 +928,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             // Now Load connections.
             var connectionsPath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
-            var importedConnections = gwswImporter.ImportItem(connectionsPath, model) as List<INetworkFeature>;
+            var importedConnections = gwswImporter.ImportItem(connectionsPath, model) as List<ISewerFeature>;
             Assert.IsNotNull(importedConnections);
 
             var pipes = network.Branches.OfType<Pipe>().ToList();
             Assert.IsTrue(pipes.Any());
-            pipes.ForEach(p => Assert.NotNull(p.SewerProfileDefinition));
+            pipes.ForEach(p => Assert.NotNull(p.CrossSectionDefinition));
 
-            // Check for each pipe that its SewerProfileDefinition is equal to one of the sewer profiles in
+            // Check for each pipe that its CrossSectionDefinition is equal to one of the sewer profiles in
             // the SharedCrossSectionDefinitions of the network
             pipes.ForEach(p =>
             {
-                var pipeCsDefinition = p.SewerProfileDefinition;
+                var pipeCsDefinition = p.CrossSectionDefinition;
                 var sharedCsDefinition = network.SharedCrossSectionDefinitions.FirstOrDefault(csd => csd.Name == pipeCsDefinition.Name);
                 Assert.NotNull(sharedCsDefinition);
                 Assert.That(pipeCsDefinition.Width, Is.EqualTo(sharedCsDefinition.Width));
@@ -1051,62 +962,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             const string csdName = "PRO2";
             const string csdNameForAddedProfile = "PRO6";
-
-            //Create network
+            
             var model = new WaterFlowFMModel();
             var network = model.Network;
 
-            var gwswImporter = new GwswFileImporter();
             //Load connections
-            gwswImporter.CsvDelimeter = ';';
-            var connectionsPath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
-            var importedConnections = gwswImporter.ImportItem(connectionsPath, model) as List<INetworkFeature>;
+            var gwswImporter = new GwswFileImporter {CsvDelimeter = ';'};
+            var connectionsFilePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
+            var importedConnections = gwswImporter.ImportItem(connectionsFilePath, model) as List<ISewerFeature>;
             Assert.IsNotNull(importedConnections);
-
-            // Retrieve one profile to later compare to the same one after loading the sewer profiles
-            var csDefinitionBefore = (CrossSectionDefinitionStandard)network.SharedCrossSectionDefinitions.FirstOrDefault(crossSectionDefinition => crossSectionDefinition.Name == csdName);
-            Assert.NotNull(csDefinitionBefore);
-            var csShapeBefore = (CrossSectionStandardShapeWidthHeightBase)csDefinitionBefore.Shape;
-            Assert.NotNull(csShapeBefore);
-            var amountOfProfilesBefore = network.SharedCrossSectionDefinitions.Count;
-            Assert.That(network.SharedCrossSectionDefinitions.Count(cs => cs.Name == csdNameForAddedProfile), Is.EqualTo(0));
+            Assert.IsNotEmpty(importedConnections);
 
             // Check the sewer profiles in the network
-            var sewerProfileShapeBefore = (CrossSectionStandardShapeWidthHeightBase)network.Pipes.Select(p => p.SewerProfileDefinition).FirstOrDefault(d => d.Name == csdName)?.Shape;
-            Assert.NotNull(sewerProfileShapeBefore);
+            var sewerProfileShapeBefore = network.Pipes.FirstOrDefault(p => p.CrossSectionDefinitionId == csdName);
+            Assert.IsNotNull(sewerProfileShapeBefore);
 
-            // Now Load sewer profiles
+            // Load sewer profiles
             var sewerProfilesPath = GetFileAndCreateLocalCopy(@"gwswFiles\Profiel.csv");
-            var importedProfiles = gwswImporter.ImportItem(sewerProfilesPath, model) as List<INetworkFeature>;
-            Assert.IsEmpty(importedProfiles);
+            var importedProfiles = gwswImporter.ImportItem(sewerProfilesPath, model) as List<ISewerFeature>;
+            Assert.IsNotEmpty(importedProfiles);
 
             //Check that sewer profiles have been put into the network
             var numberOfLinesInFile = File.ReadAllLines(sewerProfilesPath).Length - 1;
-            var networkCsDefinitions = network.SharedCrossSectionDefinitions;
-            Assert.That(networkCsDefinitions.Count, Is.EqualTo(numberOfLinesInFile));
-
-            //Get the same profile as before loading the profiles
-            var sharedCsDefinitions = network.SharedCrossSectionDefinitions;
-            var testProfileAfter = sharedCsDefinitions.FirstOrDefault(crossSectionDefinition => crossSectionDefinition.Name == csdName);
-            Assert.NotNull(testProfileAfter);
-            var csShapeAfter = (CrossSectionStandardShapeWidthHeightBase)((CrossSectionDefinitionStandard)testProfileAfter).Shape;
-            Assert.NotNull(csShapeAfter);
-            Assert.That(sharedCsDefinitions.Count >= amountOfProfilesBefore);
-            Assert.That(sharedCsDefinitions.Count(cs => cs.Name == csdNameForAddedProfile), Is.EqualTo(1));
+            Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(numberOfLinesInFile));
 
             // Check the sewer profiles in the network
-            var sewerProfileShapeAfter = (CrossSectionStandardShapeWidthHeightBase)network.Pipes.Select(p => p.SewerProfileDefinition).FirstOrDefault(d => d.Name == csdName)?.Shape;
-            Assert.NotNull(sewerProfileShapeAfter);
-
-            // Compare properties of shapes found in SharedCrossSectionDefinitions
-            Assert.AreNotEqual(csShapeAfter.Width, csShapeBefore.Width);
-            Assert.AreNotEqual(csShapeAfter.Height, csShapeBefore.Height);
-            Assert.AreNotEqual(csShapeAfter.Type, csShapeBefore.Type);
-
-            // Compare properties of shapes found in SharedCrossSectionDefinitions
-            Assert.AreNotEqual(sewerProfileShapeAfter.Width, sewerProfileShapeBefore.Width);
-            Assert.AreNotEqual(sewerProfileShapeAfter.Height, sewerProfileShapeBefore.Height);
-            Assert.AreNotEqual(sewerProfileShapeAfter.Type, sewerProfileShapeBefore.Type);
+            var sewerProfileShapeAfter = (CrossSectionStandardShapeWidthHeightBase)network.Pipes.Select(p => p.CrossSectionDefinition).FirstOrDefault(d => d.Name == csdName)?.Shape;
+            Assert.IsNotNull(sewerProfileShapeAfter);
         }
 
         [Test]
@@ -1175,42 +1057,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             //Load manholeNodes
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Knooppunt.csv");
             var gwswImporter = new GwswFileImporter();
-            var networkFeatures = gwswImporter.ImportItem(filePath) as IEnumerable<INetworkFeature>;
-            Assert.IsNotNull(networkFeatures);
+            var importedFeatures = gwswImporter.ImportItem(filePath) as List<ISewerFeature>;
+            Assert.IsNotNull(importedFeatures);
+            Assert.IsNotEmpty(importedFeatures);
 
             var fileAsStringList = File.ReadAllLines(filePath);
             var expectedElements = fileAsStringList.Length - 1; // we should not include the header
-
-            var listElements = networkFeatures.ToList();
-            Assert.IsNotNull(listElements);
-            Assert.That(listElements.Count, Is.EqualTo(expectedElements));
-            listElements.ForEach(el => Assert.IsTrue(el is INode));
+            
+            Assert.That(importedFeatures.Count, Is.EqualTo(expectedElements));
+            importedFeatures.ForEach(el => Assert.IsTrue(el is ICompartment));
         }
 
         [Test]
         public void WhenImportingCompartmentsFromGwswFilesWithTargetHydroNetwork_ThenNetworkIsCorrectlyFilledWithManholes()
         {
-            //Load GWSW definition
+            var expectedManholeCount = 76;
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Knooppunt.csv");
             var model = new WaterFlowFMModel();
             var network = model.Network;
-            Assert.IsFalse(network.Manholes.Any());
 
-            //Load compartments and fill the network with corresponding manholes
             var gwswImporter = new GwswFileImporter();
             var importedManholes = gwswImporter.ImportItem(filePath, model);
             Assert.IsNotNull(importedManholes);
             Assert.IsNotEmpty(network.Manholes);
 
             // Check that the amount of manholes in the network are as expected (no duplicates or whatsoever)
-            var importedCompartmentsList = importedManholes as List<INetworkFeature>;
-            Assert.NotNull(importedCompartmentsList);
-            var expectedManholeCount = importedCompartmentsList.OfType<Manhole>().Select(c => c.Name).Distinct().Count();
+            var importedCompartments = importedManholes as List<ISewerFeature>;
+            Assert.IsNotNull(importedCompartments);
+            Assert.IsNotEmpty(importedCompartments);
             Assert.That(network.Manholes.Count(), Is.EqualTo(expectedManholeCount));
 
             // Check that amount of compartments in the network are the same as were imported by the importer
             var totalCompartmentsInNetwork = network.Manholes.Sum(m => m.Compartments.Count);
-            Assert.That(totalCompartmentsInNetwork, Is.EqualTo(importedCompartmentsList.Count));
+            Assert.That(totalCompartmentsInNetwork, Is.EqualTo(importedCompartments.Count));
         }
 
         #endregion

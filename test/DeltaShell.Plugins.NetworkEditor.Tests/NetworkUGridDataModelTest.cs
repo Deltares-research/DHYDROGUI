@@ -186,12 +186,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
         #region Test helpers
 
-        private static NetworkUGridDataModel GetNetworkUGridDataModel(int numberOfCompartments1)
+        private static NetworkUGridDataModel GetNetworkUGridDataModel(int numberOfCompartments)
         {
             var network = new HydroNetwork {Name = "my Network"};
 
             var manhole1 = new Manhole("myManhole1") { Geometry = new Point(10, 10) };
-            for (var i = 0; i < numberOfCompartments1; i++)
+            for (var i = 0; i < numberOfCompartments; i++)
             {
                 manhole1.Compartments.Add(new Compartment("cmp" + (i+1)));
             }

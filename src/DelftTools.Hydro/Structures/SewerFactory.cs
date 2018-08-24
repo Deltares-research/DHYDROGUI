@@ -38,7 +38,7 @@ namespace DelftTools.Hydro.Structures
                 hydroNetwork.SharedCrossSectionDefinitions.Add(defSewerProfile);
                 ((CrossSectionStandardShapeRound) ((CrossSectionDefinitionStandard) defSewerProfile).Shape).Diameter = 0.4;
             }
-            pipe.SewerProfileDefinition = DefaultSewerProfile;
+            pipe.CrossSectionDefinition = DefaultSewerProfile;
             pipe.Length = pipe.Geometry.Length;
 
             // Setting source and target compartment
@@ -109,7 +109,7 @@ namespace DelftTools.Hydro.Structures
                 ParentManhole = parentManhole,
                 ManholeWidth = 1,
                 BottomLevel = 0,
-                SurfaceLevel = 1,
+                SurfaceLevel = 1
             }; 
             parentManhole.Compartments.Add(newCompartment);
             return newCompartment;

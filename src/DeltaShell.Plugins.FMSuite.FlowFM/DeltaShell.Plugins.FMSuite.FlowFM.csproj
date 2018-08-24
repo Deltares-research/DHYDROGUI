@@ -139,7 +139,7 @@
     <Compile Include="FeatureData\DataColumnsNameComparer.cs" />
     <Compile Include="ArchCrossSectionDefinitionGenerator.cs" />
     <Compile Include="CircleCrossSectionDefinitionGenerator.cs" />
-    <Compile Include="CunetteCrossSectionDefinitionGenerator.cs" />
+    <Compile Include="CunetteCrossSectionShapeGenerator.cs" />
     <Compile Include="DefaultCrossSectionDefinitionGenerator.cs" />
     <Compile Include="EggCrossSectionDefinitionGenerator.cs" />
     <Compile Include="IO\BathymetryFileWriter.cs" />
@@ -154,9 +154,10 @@
     <Compile Include="IO\Links1D2DHelper.cs" />
     <Compile Include="IO\WaterFlowFMModelReader.cs" />
     <Compile Include="IO\WaterFlowFMModelWriter.cs" />
+    <Compile Include="ASewerCompartmentGenerator.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="RectangleCrossSectionDefinitionGenerator.cs" />
-    <Compile Include="SewerManholeGenerator.cs" />
+    <Compile Include="SewerNetworkHelper.cs" />
     <Compile Include="SewerOrificeGenerator.cs" />
     <Compile Include="EmbankmentGenerator.cs" />
     <Compile Include="EmbankmentMerger.cs" />
@@ -266,7 +267,7 @@
     <Compile Include="IO\SedMorDelftIniReader.cs" />
     <Compile Include="IO\SedMorDelftIniWriter.cs" />
     <Compile Include="SewerCompartmentGenerator.cs" />
-    <Compile Include="SewerCompartmentOutletGenerator.cs" />
+    <Compile Include="SewerOutletCompartmentGenerator.cs" />
     <Compile Include="SewerConnectionGenerator.cs" />
     <Compile Include="SewerConnectionMapping.cs" />
     <Compile Include="SewerConnectionPipeGenerator.cs" />
