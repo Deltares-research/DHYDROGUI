@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro;
+﻿using System;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core;
@@ -1286,6 +1287,82 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
+        [Test]
+        // 7
+        public void GivenAnFMModelWithTrachytopesAfterARun_WhenSavingItAndRenamingItAndSavingItAgain_OnlyFolderNameOfModelIsChangedAndTheMDUFileName()
+        {
+            CreateTestDirectories();
+            
+            try
+            {
+                CopyFourierAndCalibrationFilesToTemp();
+                CopyTrachytopeFilesToTemp();
+
+                using (var app = GetConfiguredApplication())
+                {
+                    using (var model = new WaterFlowFMModel())
+                    {
+                        AddFeaturesToModel(model);
+                        EnableSalinityAndTemperature(model);
+                        SimulateUserAddingTrachytopesInMduFile(model);
+                        model.ExportTo(tempMduFilePath);
+                        model.ReloadGrid(true, true);
+                    }
+
+                    SimulateUserAddingReferencesInMduFile();
+
+                    using (var model = new WaterFlowFMModel(tempMduFilePath))
+                    {
+                        AdjustSettingsOutputParameters(model);
+                        UpdateBedLevel(model);
+                        AddModelToProject(model, app);
+
+                        app.SaveProjectAs(projectFilePath);
+
+                        model.ValidateBeforeRun = true;
+                        var report = model.Validate();
+                        Assert.AreEqual(0, report.AllErrors.Count(), "There are errors in the model after importing the MDU file");
+                        app.RunActivity(model);
+                        Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+
+                        app.SaveProject();
+
+                        var projectFolderBeforeRename = new System.Collections.Generic.Dictionary<string, Tuple<string[], string[]>>();
+                        GetDirectoryStructure(Path.Combine(projectFilePath, modelDirPath) , ".", ref projectFolderBeforeRename, ignoreFileExtension:"mdu");
+                        
+
+                        //Rename
+                        model.Name = "FlowFM2";
+                        
+                        app.SaveProject();
+
+                        AssertProjectFileAndFolderExist();
+
+                        //MDU file name check
+                        var newModelDirPath = Path.Combine(projectDirPath, "FlowFM2");
+                        Assert.IsTrue(Directory.Exists(newModelDirPath),
+                            Message_MissingFileOrFolderName("folder", "FlowFM2", projectDirName));
+                        Assert.IsFalse(Directory.Exists(modelDirPath),
+                            Message_MissingFileOrFolderName("folder", "FlowFM2", projectDirName));
+                        var newInputDirPath = Path.Combine(newModelDirPath, InputDirName);
+                        var newMduFileNameWithoutExtension = Path.GetFileNameWithoutExtension(Directory.GetFiles(newInputDirPath, $"*{".mdu"}")[0]);
+                        Assert.AreEqual("FlowFM2", newMduFileNameWithoutExtension);
+                        
+                        var projectFolderAfterRename = new System.Collections.Generic.Dictionary<string, Tuple<string[], string[]>>();
+                        GetDirectoryStructure(Path.Combine(projectFilePath, newModelDirPath), ".", ref projectFolderAfterRename, ignoreFileExtension: "mdu");
+
+                        AssertEqualDirectoryStructure(".", ref projectFolderBeforeRename, ref projectFolderAfterRename);
+
+                        app.CloseProject();
+                    }
+                }
+            }
+            finally
+            {
+                DeleteTestDirectories();
+            }
+        }
+
         private DeltaShellApplication GetConfiguredApplication()
         {
             var app = new DeltaShellApplication();
@@ -1701,7 +1778,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private void AssertSnappedDirectoryExists()
         {
-            Assert.IsTrue(Directory.Exists(outputDirPath),
+            Assert.IsTrue(Directory.Exists(snappedDirPath),
                 Message_MissingFileOrFolderName("folder", SnappedDirName, OutputDirName));
         }
 
@@ -1744,6 +1821,74 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             FileUtils.DeleteIfExists(destinationDirPath);
             FileUtils.DeleteIfExists(tempDirPath);
+        }
+
+        private static void GetDirectoryStructure(
+            string basePath, string relativePath,
+            ref System.Collections.Generic.Dictionary<string, System.Tuple<string[], string[]>> structure,
+            string ignoreFileExtension = "")
+        {
+            var currentPath = Path.Combine(basePath, relativePath);
+
+             // Get relevant data
+            var files = Directory.GetFiles(currentPath);
+            var subdirs = Directory.GetDirectories(currentPath);
+
+            var filesList = new List<string>();
+
+            // Format relevant data
+            for (var i = 0; i < files.Length; i++)
+            {
+                files[i] = Path.GetFileName(files[i]);
+                if (ignoreFileExtension == "" || !files[i].Contains(ignoreFileExtension))
+                    filesList.Add(files[i]);
+            }
+
+            files = filesList.ToArray();
+
+            System.Array.Sort(files, StringComparer.InvariantCultureIgnoreCase);
+
+            for (var i = 0; i < subdirs.Length; i++)
+                subdirs[i] = Path.Combine(relativePath, new DirectoryInfo(subdirs[i]).Name);
+            System.Array.Sort(subdirs, StringComparer.InvariantCultureIgnoreCase);
+
+            // Add to structure
+            structure.Add(relativePath, new Tuple<string[], string[]>(files, subdirs));
+
+            foreach (var s in subdirs)
+                GetDirectoryStructure(basePath, s, ref structure);
+        }
+
+        private void AssertEqualDirectoryStructure(string curDir,
+            ref System.Collections.Generic.Dictionary<string, System.Tuple<string[], string[]>> sourceDirStructure,
+            ref System.Collections.Generic.Dictionary<string, System.Tuple<string[], string[]>> targetDirStructure)
+        {
+            //First check if the number of files/directories are the same
+            Assert.AreEqual(sourceDirStructure[curDir].Item1.Length, targetDirStructure[curDir].Item1.Length, $"The number of files in source and target {curDir} do not correspond.");
+            Assert.AreEqual(sourceDirStructure[curDir].Item2.Length, targetDirStructure[curDir].Item2.Length, $"The number of subfolders in source and target {curDir} do not correspond.");
+            
+            //If the number of files are correct, then check the names of them.
+            for (var i = 0; i < targetDirStructure[curDir].Item1.Length; i++)
+            {
+                // Compare strings: source > target -> source is missing a file, else target missing a file.
+                var assertMsg = string.Compare(sourceDirStructure[curDir].Item1[i], targetDirStructure[curDir].Item1[i], StringComparison.InvariantCultureIgnoreCase) > 0 ? $"File {targetDirStructure[curDir].Item1[i]} does not exist in source {curDir}." : $"File {sourceDirStructure[curDir].Item1[i]} does not exist in target {curDir}.";
+                Assert.AreEqual(sourceDirStructure[curDir].Item1[i],
+                                targetDirStructure[curDir].Item1[i],
+                                assertMsg);
+            }
+
+            // If the number of directories are correct, then check the names of them.
+            for (var i = 0; i < sourceDirStructure[curDir].Item2.Length; i++)
+            {
+                var assertMsg = string.Compare(sourceDirStructure[curDir].Item2[i], targetDirStructure[curDir].Item2[i], StringComparison.InvariantCultureIgnoreCase) > 0 ? $"Folder {targetDirStructure[curDir].Item2[i]} does not exist in source {curDir}." : $"Folder {sourceDirStructure[curDir].Item2[i]} does not exist in target {curDir}.";
+                Assert.AreEqual(sourceDirStructure[curDir].Item2[i],
+                                targetDirStructure[curDir].Item2[i],
+                                assertMsg);
+            }
+
+            // Continue the process for the subfolders.
+            foreach (var s in sourceDirStructure[curDir].Item2)
+                AssertEqualDirectoryStructure(s, ref sourceDirStructure, ref targetDirStructure);
         }
 
         [TestFixtureTearDown]
