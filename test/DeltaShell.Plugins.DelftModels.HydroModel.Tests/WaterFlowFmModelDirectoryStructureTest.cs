@@ -1363,6 +1363,79 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
+        [Test]
+        //8.1
+        public void GivenAnFMModelWithTrachytopes_WhenRunAndProjectSavedAsInAnotherDirectory_ThenInputFolderWithCorrectFilesAreGiven()
+        {
+            CreateTestDirectories();
+            
+            try
+            {
+                CopyFourierAndCalibrationFilesToTemp();
+                CopyTrachytopeFilesToTemp();
+
+                using (var app = GetConfiguredApplication())
+                {
+                    using (var model = new WaterFlowFMModel())
+                    {
+                        AddFeaturesToModel(model);
+                        EnableSalinityAndTemperature(model);
+                        SimulateUserAddingTrachytopesInMduFile(model);
+                        model.ExportTo(tempMduFilePath);
+                        model.ReloadGrid(true, true);
+                    }
+
+                    SimulateUserAddingReferencesInMduFile();
+
+
+                    using (var model = new WaterFlowFMModel(tempMduFilePath))
+                    {
+                        AdjustSettingsOutputParameters(model);
+                        UpdateBedLevel(model);
+                        AddModelToProject(model, app);
+
+                        app.SaveProjectAs(projectFilePath);
+
+                        model.ValidateBeforeRun = true;
+                        var report = model.Validate();
+                        Assert.AreEqual(0, report.AllErrors.Count(), "There are errors in the model after importing the MDU file");
+                        app.RunActivity(model);
+                        Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+
+                        app.SaveProject();
+
+                        AssertProjectFileAndFolderExist();
+                        AssertModelDirectoryExists();
+                        AssertInputDirectoryExists();
+                        
+                        var projectDirStructureBeforeSaveAs = new System.Collections.Generic.Dictionary<string, Tuple<string[], string[]>>();
+                        GetDirectoryStructure(projectFilePath, ".", ref projectDirStructureBeforeSaveAs);
+
+                        var newSaveAsDestinationDirPath = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
+                        var newSaveAsProjectFilePath = Path.Combine(newSaveAsDestinationDirPath, projectFileName);
+
+                        app.SaveProjectAs(newSaveAsProjectFilePath);
+
+                        var projectDirStructureAfterSaveAs = new System.Collections.Generic.Dictionary<string, Tuple<string[], string[]>>();
+                        GetDirectoryStructure(projectFilePath, ".", ref projectDirStructureAfterSaveAs);
+
+                        var newDirStructureAfterSaveAs = new System.Collections.Generic.Dictionary<string, Tuple<string[], string[]>>();
+                        GetDirectoryStructure(newSaveAsProjectFilePath, ".", ref newDirStructureAfterSaveAs);
+
+                        // Since we asserted that everything is correct before we started, if the structure is the same, it should still be correct after.
+                        AssertEqualDirectoryStructure(".", ref projectDirStructureBeforeSaveAs, ref projectDirStructureAfterSaveAs);
+                        AssertEqualDirectoryStructure(".", ref projectDirStructureAfterSaveAs, ref newDirStructureAfterSaveAs);
+
+                        app.CloseProject();
+                    }
+                }
+            }
+            finally
+            {
+                DeleteTestDirectories();
+            }
+        }
+
         private DeltaShellApplication GetConfiguredApplication()
         {
             var app = new DeltaShellApplication();
