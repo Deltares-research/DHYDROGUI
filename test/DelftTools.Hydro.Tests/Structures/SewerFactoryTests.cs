@@ -41,7 +41,7 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.AreEqual(-2.0, retrievedPipe.LevelTarget);
             Assert.AreEqual(retrievedPipe.Geometry.Length, retrievedPipe.Length);
             Assert.That(retrievedPipe.WaterType, Is.EqualTo(SewerConnectionWaterType.Combined));
-            Assert.That(retrievedPipe.Material, Is.EqualTo(SewerProfileMapping.SewerProfileMaterial.Concrete));
+            Assert.That(retrievedPipe.Material, Is.EqualTo(SewerProfileMapping.SewerProfileMaterial.Unknown));
             Assert.That(retrievedPipe.PipeRoughness, Is.EqualTo(0.003));
         }
 

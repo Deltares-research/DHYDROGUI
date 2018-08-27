@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void GetAllAvailableSnappedFeaturesLayers()
         {
-            var expectedNumberOfLayers = 16;
+            var expectedNumberOfLayers = 17;
 
             using (var gui = new DeltaShellGui())
             {
@@ -64,13 +64,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 var snappedLayer = modelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.GridSnappedFeaturesLayerName) as GroupLayer;
                 Assert.IsNotNull(snappedLayer);
-                Assert.AreEqual(expectedNumberOfLayers, snappedLayer.Layers.Count);
+                Assert.That(snappedLayer.Layers.Count, Is.EqualTo(expectedNumberOfLayers));
 
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.ObsPoint, "Observation points (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.ThinDams, "Thin dams (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.FixedWeir, "Fixed weirs (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.LeveeBreach, "Levee breaches (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.ObsPoint, "Dry points (snapped)"));
+                Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.RoofArea, "Roof Areas (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.ObsCrossSection, "Dry areas (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.ObsCrossSection, "Enclosure (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.Pump, "Pumps (snapped)"));
