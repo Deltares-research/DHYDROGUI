@@ -6,7 +6,7 @@ using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    public abstract class ASewerCompartmentGenerator : ISewerNetworkFeatureGenerator
+    public abstract class ASewerCompartmentGenerator : ISewerFeatureGenerator
     {
         private static ILog Log = LogManager.GetLogger(typeof(ASewerCompartmentGenerator));
 

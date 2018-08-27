@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    public class SewerPumpGenerator : ISewerNetworkFeatureGenerator
+    public class SewerPumpGenerator : ISewerFeatureGenerator
     {
         public ISewerFeature Generate(GwswElement gwswElement)
         {

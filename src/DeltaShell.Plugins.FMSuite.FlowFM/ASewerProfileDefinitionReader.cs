@@ -8,7 +8,7 @@ using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    public abstract class ASewerCrossSectionShapeGenerator : ISewerNetworkFeatureGenerator
+    public abstract class ASewerCrossSectionShapeGenerator : ISewerFeatureGenerator
     {
         private static ILog Log = LogManager.GetLogger(typeof(ASewerCrossSectionShapeGenerator));
         public abstract ISewerFeature Generate(GwswElement gwswElement);

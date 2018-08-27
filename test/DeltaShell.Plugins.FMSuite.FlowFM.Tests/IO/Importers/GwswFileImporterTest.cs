@@ -630,9 +630,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 TestHelper.AssertIsFasterThan(maximumImportingTimeInMs, () =>
                 {
                     gwswImporter.LoadFeatureFiles(Path.GetDirectoryName(filePath));
-                    var test = gwswImporter.ImportItem(null, model);
+                    gwswImporter.ImportItem(null, model);
                 });
-                
             }
             catch (Exception e)
             {
@@ -643,6 +642,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsTrue(network.SharedCrossSectionDefinitions.Any());
             Assert.IsTrue(network.Pipes.Any()); //There are some pipes defined within the verbinding.csv
             Assert.IsTrue(network.Pumps.Any()); //There are some pumps defined within the verbinding.csv
+        }
+
+        [Test]
+        public void GivenWswsDatabase_WhenImporting_ThenTheRightAmountOfSewerFeaturesArePresentInTheResultingNetwork()
+        {
+            var testFilePath = @"gwswFiles\GWSW_DidactischStelsel\GWSW.hydx_Definitie_DM.csv";
+            var model = new WaterFlowFMModel();
+
+            var gwswImporter = new GwswFileImporter { CsvDelimeter = ';' };
+            var filePath = GetFileAndCreateLocalCopy(testFilePath);
+            try
+            {
+                gwswImporter.LoadFeatureFiles(Path.GetDirectoryName(filePath));
+                gwswImporter.ImportItem(null, model);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("While importing an exception was thrown {0}", e.Message);
+            }
+
+            var network = model.Network;
+            Assert.That(network.Manholes.Count(), Is.EqualTo(76));
+            Assert.That(network.OutletCompartments.Count(), Is.EqualTo(4));
+            Assert.That(network.SewerConnections.Count(), Is.EqualTo(97));
+            Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(41));
+
+            Assert.That(network.Pumps.Count(), Is.EqualTo(8));
+            Assert.That(network.Weirs.Count(), Is.EqualTo(6));
+            Assert.That(network.Orifices.Count(), Is.EqualTo(2));
+
+            Assert.That(network.SewerConnections.Count(sc => sc.BranchFeatures.Count >= 2 && sc.BranchFeatures[1] is IPump), Is.EqualTo(8));
+            Assert.That(network.SewerConnections.Count(sc => sc.BranchFeatures.Count >= 2 && sc.BranchFeatures[1] is IWeir), Is.EqualTo(6));
+            Assert.That(network.SewerConnections.Count(sc => sc.BranchFeatures.Count >= 2 && sc.BranchFeatures[1] is IOrifice), Is.EqualTo(2));
         }
 
         [Test]

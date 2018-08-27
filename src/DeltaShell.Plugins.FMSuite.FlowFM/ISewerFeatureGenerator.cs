@@ -3,7 +3,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    public interface ISewerNetworkFeatureGenerator
+    public interface ISewerFeatureGenerator
     {
         ISewerFeature Generate(GwswElement gwswElement);
     }

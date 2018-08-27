@@ -25,14 +25,19 @@ namespace DelftTools.Hydro.Structures
 
         public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork)
         {
+            var sewerConnection = hydroNetwork.SewerConnections.FirstOrDefault(
+                sc => sc.BranchFeatures.Count >= 2
+                      && sc.BranchFeatures[1].Name == Name
+                      && sc.BranchFeatures[1] is IOrifice);
             var orifice = hydroNetwork.Orifices.FirstOrDefault(o => o.Name == Name);
             if (orifice != null)
             {
                 CopyPropertyValuesToExistingOrifice(orifice);
+                sewerConnection?.UpdateBranchFeatureGeometries();
                 return;
             }
 
-            var sewerConnection = hydroNetwork.SewerConnections.FirstOrDefault(sc => sc.Name == Name);
+            sewerConnection = hydroNetwork.SewerConnections.FirstOrDefault(sc => sc.Name == Name);
             if (sewerConnection == null)
             {
                 AddNewOrificeSewerConnectionToNetwork(hydroNetwork);
@@ -43,13 +48,13 @@ namespace DelftTools.Hydro.Structures
             }
         }
 
-        private void AddOrificeToSewerConnection(ISewerConnection sewerConnection)
+        protected void AddOrificeToSewerConnection(ISewerConnection sewerConnection)
         {
             if (sewerConnection.BranchFeatures.Count > 0)
             {
                 RemoveExistingBranchFeatures(sewerConnection);
             }
-            sewerConnection.BranchFeatures.Add(this);
+            sewerConnection.AddStructureToBranch(this);
         }
 
         private void RemoveExistingBranchFeatures(ISewerConnection sewerConnection)
@@ -62,7 +67,7 @@ namespace DelftTools.Hydro.Structures
         private void AddNewOrificeSewerConnectionToNetwork(IHydroNetwork hydroNetwork)
         {
             ISewerConnection sewerConnection = new SewerConnection(Name);
-            sewerConnection.BranchFeatures.Add(this);
+            sewerConnection.AddStructureToBranch(this);
             sewerConnection.AddToHydroNetwork(hydroNetwork);
         }
 

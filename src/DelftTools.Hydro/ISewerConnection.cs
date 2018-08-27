@@ -19,5 +19,6 @@ namespace DelftTools.Hydro
         string SourceCompartmentName { get; set; }
 
         string TargetCompartmentName { get; set; }
+        void UpdateBranchFeatureGeometries();
     }
 }

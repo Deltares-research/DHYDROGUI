@@ -1,8 +1,6 @@
 ﻿using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
-using DelftTools.Utils.Collections.Generic;
-using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Geometries;
 
 namespace DelftTools.Hydro.Tests.Helpers
@@ -74,9 +72,9 @@ namespace DelftTools.Hydro.Tests.Helpers
                 LevelTarget = 0.0,
                 WaterType = SewerConnectionWaterType.None,
                 SourceCompartmentName = SourceCompartmentName,
-                TargetCompartmentName = TargetCompartmentName,
-                BranchFeatures = new EventedList<IBranchFeature> { orifice }
+                TargetCompartmentName = TargetCompartmentName
             };
+            sewerConnection.AddStructureToBranch(orifice);
 
             network.Branches.Add(sewerConnection);
             network.Nodes.Add(sourceManhole);
@@ -109,9 +107,9 @@ namespace DelftTools.Hydro.Tests.Helpers
             var sewerConnection = new SewerConnection(PumpName)
             {
                 SourceCompartment = sourceCompartment,
-                TargetCompartment = targetCompartment,
-                BranchFeatures = new EventedList<IBranchFeature> { pump }
+                TargetCompartment = targetCompartment
             };
+            sewerConnection.AddStructureToBranch(pump);
 
             network.Branches.Add(sewerConnection);
             network.Nodes.Add(sourceManhole);
@@ -145,9 +143,9 @@ namespace DelftTools.Hydro.Tests.Helpers
             var sewerConnection = new SewerConnection(WeirName)
             {
                 SourceCompartment = sourceCompartment,
-                TargetCompartment = targetCompartment,
-                BranchFeatures = new EventedList<IBranchFeature> { weir }
+                TargetCompartment = targetCompartment
             };
+            sewerConnection.AddStructureToBranch(weir);
 
             network.Branches.Add(sewerConnection);
             network.Nodes.Add(sourceManhole);

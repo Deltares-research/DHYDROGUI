@@ -4,7 +4,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    public class SewerOrificeGenerator : ISewerNetworkFeatureGenerator
+    public class SewerOrificeGenerator : ISewerFeatureGenerator
     {
         public ISewerFeature Generate(GwswElement gwswElement)
         {

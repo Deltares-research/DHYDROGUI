@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
@@ -256,6 +257,24 @@ namespace DelftTools.Hydro
 
         public string SourceCompartmentName { get; set; }
         public string TargetCompartmentName { get; set; }
+        public void UpdateBranchFeatureGeometries()
+        {
+            if (SourceCompartment != null || TargetCompartment != null)
+                BranchFeatures.ForEach(bf => bf.Geometry = GetBranchFeatureGeometry());
+        }
+
+        private Point GetBranchFeatureGeometry()
+        {
+            var sewerConnectionCoordinates = new List<Coordinate>
+            {
+                SourceCompartment.Geometry.Coordinate,
+                TargetCompartment.Geometry.Coordinate
+            };
+            var averageX = sewerConnectionCoordinates.Select(sc => sc.X).Average();
+            var averageY = sewerConnectionCoordinates.Select(sc => sc.Y).Average();
+            return new Point(averageX, averageY);
+        }
+
         public string CrossSectionDefinitionId { get; set; }
 
         #endregion

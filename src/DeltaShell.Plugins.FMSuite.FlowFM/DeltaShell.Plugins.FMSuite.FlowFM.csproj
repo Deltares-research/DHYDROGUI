@@ -238,7 +238,7 @@
     <Compile Include="IO\StructuresListType.cs" />
     <Compile Include="IO\Exporters\WaterFlowFMFileExporter.cs" />
     <Compile Include="IO\Importers\WaterFlowFMFileImporter.cs" />
-    <Compile Include="ISewerNetworkFeatureGenerator.cs" />
+    <Compile Include="ISewerFeatureGenerator.cs" />
     <Compile Include="IWaterFlowFMModel.cs" />
     <Compile Include="IO\WaterFlowFMModelHydroAreaExtensions.cs" />
     <Compile Include="Layers\FMOutputSnappedFeaturesGroupLayerData.cs" />

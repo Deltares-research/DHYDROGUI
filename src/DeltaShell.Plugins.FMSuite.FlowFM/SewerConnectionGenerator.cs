@@ -4,7 +4,7 @@ using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    public class SewerConnectionGenerator : ISewerNetworkFeatureGenerator
+    public class SewerConnectionGenerator : ISewerFeatureGenerator
     {
         public virtual ISewerFeature Generate(GwswElement gwswElement)
         {

@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace DelftTools.Hydro.Structures
+﻿namespace DelftTools.Hydro.Structures
 {
     public class GwswConnectionPump : Pump
     {
@@ -11,26 +9,8 @@ namespace DelftTools.Hydro.Structures
         public string SourceCompartmentId { get; set; }
 
         public string TargetCompartmentId { get; set; }
-
-        public override void AddToHydroNetwork(IHydroNetwork hydroNetwork)
-        {
-            base.AddToHydroNetwork(hydroNetwork);
-            var pump = hydroNetwork.SewerConnections.FirstOrDefault(
-                sc => sc.BranchFeatures.Count == 1
-                      && sc.BranchFeatures[0].Name == Name
-                      && sc.BranchFeatures[0] is IPump)?.BranchFeatures.FirstOrDefault() as IPump;
-
-            if (pump != null)
-            {
-                CopyPropertyValuesToExistingPump(pump);
-                return;
-            }
-
-            var sewerConnection = GetNewSewerConnectionWithPump();
-            sewerConnection.AddToHydroNetwork(hydroNetwork);
-        }
-
-        private ISewerConnection GetNewSewerConnectionWithPump()
+        
+        protected override ISewerConnection GetNewSewerConnectionWithPump()
         {
             var sewerConnection = new SewerConnection(Name)
             {
@@ -38,11 +18,11 @@ namespace DelftTools.Hydro.Structures
                 TargetCompartmentName = TargetCompartmentId
             };
             
-            sewerConnection.BranchFeatures.Add(this);
+            sewerConnection.AddStructureToBranch(this);
             return sewerConnection;
         }
 
-        private void CopyPropertyValuesToExistingPump(IPump pump)
+        protected override void CopyPropertyValuesToExistingPump(IPump pump)
         {
             pump.DirectionIsPositive = DirectionIsPositive;
         }

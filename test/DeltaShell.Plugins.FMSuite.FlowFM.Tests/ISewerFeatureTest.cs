@@ -5,7 +5,6 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Hydro.Tests.Helpers;
-using DelftTools.TestUtils;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
@@ -294,16 +293,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(network.Orifices.Count(), Is.EqualTo(1));
 
             var sewerConnection = new SewerConnection(orificeName);
-            sewerConnection.BranchFeatures.Add(new Orifice("MyOrifice"));
+            sewerConnection.AddStructureToBranch(new Orifice("MyOrifice"));
             AddSewerFeatureToNetwork(sewerConnection, network);
             Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
             Assert.That(network.Orifices.Count(), Is.EqualTo(1));
-
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => AddSewerFeatureToNetwork(orifice, network), "Overwriting");
-            Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
-            Assert.That(network.Orifices.Count(), Is.EqualTo(1));
-            Assert.That(sewerConnection.BranchFeatures[0].Name, Is.EqualTo(orificeName));
-
         }
 
         [Test]
@@ -405,9 +398,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(sewerConnection.WaterType, Is.EqualTo(sewerConnectionWaterType));
 
             var branchFeatures = sewerConnection.BranchFeatures;
-            Assert.That(branchFeatures.Count, Is.EqualTo(1));
+            Assert.That(branchFeatures.Count, Is.EqualTo(2));
 
-            var orificeInNetwork = branchFeatures.FirstOrDefault() as Orifice;
+            var orificeInNetwork = branchFeatures.FirstOrDefault(bf => bf is Orifice) as Orifice;
             Assert.IsNotNull(orificeInNetwork);
             Assert.That(orificeInNetwork.Name, Is.EqualTo(orificeName));
         }
@@ -437,9 +430,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNull(sewerConnection.TargetCompartmentName);
 
             var branchFeatures = sewerConnection.BranchFeatures;
-            Assert.That(branchFeatures.Count, Is.EqualTo(1));
+            Assert.That(branchFeatures.Count, Is.EqualTo(2));
 
-            var orificeInNetwork = branchFeatures.FirstOrDefault() as Orifice;
+            var orificeInNetwork = branchFeatures.FirstOrDefault(bf => bf is Orifice) as Orifice;
             Assert.IsNotNull(orificeInNetwork);
             Assert.That(orificeInNetwork.Name, Is.EqualTo(orificeName));
             Assert.That(orificeInNetwork.BottomLevel, Is.EqualTo(bottomLevel));
@@ -477,9 +470,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(sewerConnectionInNetwork.TargetCompartmentName, Is.EqualTo(targetCompartmentName));
             
             var sewerConnectionBranchFeatures = sewerConnectionInNetwork.BranchFeatures;
-            Assert.That(sewerConnectionBranchFeatures.Count, Is.EqualTo(1));
+            Assert.That(sewerConnectionBranchFeatures.Count, Is.EqualTo(2));
 
-            var orificeInNetwork = sewerConnectionBranchFeatures.FirstOrDefault() as Orifice;
+            var orificeInNetwork = sewerConnectionBranchFeatures.FirstOrDefault(bf => bf is Orifice) as Orifice;
             Assert.IsNotNull(orificeInNetwork);
             Assert.That(orificeInNetwork.Name, Is.EqualTo(orificeName));
             Assert.That(orificeInNetwork.BottomLevel, Is.EqualTo(bottomLevel));
@@ -525,9 +518,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(sewerConnection.WaterType, Is.EqualTo(sewerConnectionWaterType));
 
             var branchFeatures = sewerConnection.BranchFeatures;
-            Assert.That(branchFeatures.Count, Is.EqualTo(1));
+            Assert.That(branchFeatures.Count, Is.EqualTo(2));
 
-            var orifice = branchFeatures.FirstOrDefault() as Orifice;
+            var orifice = branchFeatures.FirstOrDefault(bf => bf is Orifice) as Orifice;
             Assert.IsNotNull(orifice);
             Assert.That(orifice.Name, Is.EqualTo(orificeName));
         }
@@ -585,7 +578,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(network.Orifices.Count(), Is.EqualTo(1));
 
             var sewerConnection = new SewerConnection(orificeName);
-            sewerConnection.BranchFeatures.Add(new Orifice("newOrifice"));
+            sewerConnection.AddStructureToBranch(new Orifice("newOrifice"));
 
             AddSewerFeatureToNetwork(sewerConnection, network);
             Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
@@ -672,7 +665,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(sewerConnection.LevelSource, Is.EqualTo(80.1).Within(0.01));
 
             var mySewerConnection = new SewerConnection(orificeName);
-            mySewerConnection.BranchFeatures.Add(new Orifice("newOrifice"));
+            mySewerConnection.AddStructureToBranch(new Orifice("newOrifice"));
             AddSewerFeatureToNetwork(mySewerConnection, network);
             sewerConnection = network.SewerConnections.FirstOrDefault();
             Assert.IsNotNull(sewerConnection);
@@ -735,9 +728,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(sewerConnectionInNetwork.TargetCompartmentName, Is.EqualTo(targetCompartmentName));
 
             var sewerConnectionBranchFeatures = sewerConnectionInNetwork.BranchFeatures;
-            Assert.That(sewerConnectionBranchFeatures.Count, Is.EqualTo(1));
+            Assert.That(sewerConnectionBranchFeatures.Count, Is.EqualTo(2));
 
-            var pump = sewerConnectionBranchFeatures.FirstOrDefault() as Pump;
+            var pump = sewerConnectionBranchFeatures.FirstOrDefault(bf => bf is Pump) as Pump;
             Assert.IsNotNull(pump);
             Assert.That(pump.Name, Is.EqualTo(pumpName));
             Assert.IsTrue(pump.DirectionIsPositive);
@@ -773,9 +766,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNull(sewerConnection.TargetCompartmentName);
 
             var branchFeatures = sewerConnection.BranchFeatures;
-            Assert.That(branchFeatures.Count, Is.EqualTo(1));
+            Assert.That(branchFeatures.Count, Is.EqualTo(2));
 
-            var pump = branchFeatures.FirstOrDefault() as Pump;
+            var pump = branchFeatures.FirstOrDefault(bf => bf is Pump) as Pump;
             Assert.IsNotNull(pump);
             Assert.That(pump.Name, Is.EqualTo(pumpName));
             Assert.That(pump.Capacity, Is.EqualTo(capacity));
@@ -819,9 +812,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var branchFeatures = sewerConnection.BranchFeatures;
             Assert.IsNotNull(branchFeatures);
-            Assert.That(branchFeatures.Count, Is.EqualTo(1));
+            Assert.That(branchFeatures.Count, Is.EqualTo(2));
 
-            var pump = branchFeatures.FirstOrDefault() as IPump;
+            var pump = branchFeatures.FirstOrDefault(bf => bf is Pump) as IPump;
             Assert.IsNotNull(pump);
             Assert.That(pump.Name, Is.EqualTo(pumpName));
             Assert.That(pump.Capacity, Is.EqualTo(capacity));
@@ -858,9 +851,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var branchFeatures = sewerConnection.BranchFeatures;
             Assert.IsNotNull(branchFeatures);
-            Assert.That(branchFeatures.Count, Is.EqualTo(1));
+            Assert.That(branchFeatures.Count, Is.EqualTo(2));
 
-            var pump = branchFeatures.FirstOrDefault() as IPump;
+            var pump = branchFeatures.FirstOrDefault(bf => bf is Pump) as IPump;
             Assert.IsNotNull(pump);
             Assert.That(pump.Name, Is.EqualTo(pumpName));
             Assert.IsTrue(pump.DirectionIsPositive);
@@ -897,9 +890,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(sewerConnection.TargetCompartmentName, Is.EqualTo(targetCompartmentName));
 
             var branchFeatures = sewerConnection.BranchFeatures;
-            Assert.That(branchFeatures.Count, Is.EqualTo(1));
+            Assert.That(branchFeatures.Count, Is.EqualTo(2));
 
-            var weir = branchFeatures.FirstOrDefault() as Weir;
+            var weir = branchFeatures.FirstOrDefault(bf => bf is Weir) as Weir;
             Assert.IsNotNull(weir);
             Assert.That(weir.Name, Is.EqualTo(weirName));
             Assert.That(weir.FlowDirection, Is.EqualTo(flowDirection));
@@ -932,9 +925,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(sewerConnection.Name, Is.EqualTo(weirName));
 
             var branchFeatures = sewerConnection.BranchFeatures;
-            Assert.That(branchFeatures.Count, Is.EqualTo(1));
+            Assert.That(branchFeatures.Count, Is.EqualTo(2));
 
-            var weir = branchFeatures.FirstOrDefault() as Weir;
+            var weir = branchFeatures.FirstOrDefault(bf => bf is Weir) as Weir;
             Assert.IsNotNull(weir);
             Assert.That(weir.Name, Is.EqualTo(weirName));
             Assert.That(weir.CrestWidth, Is.EqualTo(crestWidth));
@@ -972,9 +965,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(sewerConnection.TargetCompartmentName, Is.EqualTo(targetCompartmentName));
 
             var branchFeatures = sewerConnection.BranchFeatures;
-            Assert.That(branchFeatures.Count, Is.EqualTo(1));
+            Assert.That(branchFeatures.Count, Is.EqualTo(2));
 
-            var weir = branchFeatures.FirstOrDefault() as Weir;
+            var weir = branchFeatures.FirstOrDefault(bf => bf is Weir) as Weir;
             Assert.IsNotNull(weir);
             Assert.That(weir.Name, Is.EqualTo(weirName));
             Assert.That(weir.FlowDirection, Is.EqualTo(flowDirection));
@@ -1007,9 +1000,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(sewerConnection.Name, Is.EqualTo(weirName));
 
             var branchFeatures = sewerConnection.BranchFeatures;
-            Assert.That(branchFeatures.Count, Is.EqualTo(1));
+            Assert.That(branchFeatures.Count, Is.EqualTo(2));
 
-            var weir = branchFeatures.FirstOrDefault() as Weir;
+            var weir = branchFeatures.FirstOrDefault(bf => bf is Weir) as Weir;
             Assert.IsNotNull(weir);
             Assert.That(weir.Name, Is.EqualTo(weirName));
             Assert.That(weir.CrestWidth, Is.EqualTo(crestWidth));

@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace DelftTools.Hydro.Structures
 {
@@ -160,8 +163,32 @@ namespace DelftTools.Hydro.Structures
 
         public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork)
         {
-            // We will never add a Pump object to a network with this method.
-            // Only GwswConnectionPump or GwswStructurePump objects.
+            var sewerConnection = hydroNetwork.SewerConnections.FirstOrDefault(
+                sc => sc.BranchFeatures.Count >= 2
+                      && sc.BranchFeatures[1].Name == Name
+                      && sc.BranchFeatures[1] is IPump);
+            var pump = sewerConnection?.BranchFeatures.FirstOrDefault(bf => bf is IPump) as IPump;
+
+            if (pump != null)
+            {
+                CopyPropertyValuesToExistingPump(pump);
+            }
+            else
+            {
+                sewerConnection = GetNewSewerConnectionWithPump();
+                sewerConnection.AddToHydroNetwork(hydroNetwork);
+            }
+
+            sewerConnection.UpdateBranchFeatureGeometries();
+        }
+
+        protected virtual ISewerConnection GetNewSewerConnectionWithPump()
+        {
+            return null;
+        }
+
+        protected virtual void CopyPropertyValuesToExistingPump(IPump pump)
+        {
         }
     }
 }

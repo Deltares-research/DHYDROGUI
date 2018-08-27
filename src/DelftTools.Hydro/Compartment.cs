@@ -2,13 +2,11 @@
 using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net;
-using NetTopologySuite.Geometries;
 
 namespace DelftTools.Hydro
 {
@@ -25,7 +23,6 @@ namespace DelftTools.Hydro
         public Compartment(string name)
         {
             Name = name;
-            //Geometry = new Point(0.0, 0.0);
         }
 
         

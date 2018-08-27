@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Aop;
@@ -264,8 +265,32 @@ namespace DelftTools.Hydro.Structures
 
         public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork)
         {
-            // We will never add a Weir object to a network with this method.
-            // Only GwswConnectionWeir or GwswStructureWeir objects.
+            var sewerConnection = hydroNetwork.SewerConnections.FirstOrDefault(
+                sc => sc.BranchFeatures.Any()
+                      && sc.BranchFeatures[1].Name == Name
+                      && sc.BranchFeatures[1] is IWeir);
+            var weir = sewerConnection?.BranchFeatures.FirstOrDefault(bf => bf is IWeir) as IWeir;
+
+            if (weir != null)
+            {
+                CopyPropertyValuesToExistingWeir(weir);
+            }
+            else
+            {
+                sewerConnection = GetNewSewerConnectionWithWeir();
+                sewerConnection.AddToHydroNetwork(hydroNetwork);
+            }
+
+            sewerConnection.UpdateBranchFeatureGeometries();
+        }
+
+        protected virtual ISewerConnection GetNewSewerConnectionWithWeir()
+        {
+            return null;
+        }
+
+        protected virtual void CopyPropertyValuesToExistingWeir(IWeir weir)
+        {
         }
     }
 }

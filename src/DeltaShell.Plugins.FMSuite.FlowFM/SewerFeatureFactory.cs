@@ -93,12 +93,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #endregion
 
-        private static ISewerNetworkFeatureGenerator GetSewerNetworkFeatureGenerator(GwswElement gwswElement)
+        private static ISewerFeatureGenerator GetSewerNetworkFeatureGenerator(GwswElement gwswElement)
         {
             SewerFeatureType elementType;
             if (!Enum.TryParse(gwswElement?.ElementTypeName, out elementType)) return null;
 
-            ISewerNetworkFeatureGenerator generator;
+            ISewerFeatureGenerator generator;
             switch (elementType)
             {
                 case SewerFeatureType.Node:
@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return generator;
         }
 
-        private static ISewerNetworkFeatureGenerator GetCrossSectionGenerator(this GwswElement gwswElement)
+        private static ISewerFeatureGenerator GetCrossSectionGenerator(this GwswElement gwswElement)
         {
             if (!gwswElement.IsValidGwswSewerProfile()) return null;
 
@@ -145,7 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private static ISewerNetworkFeatureGenerator GetSewerStructureGenerator(this GwswElement gwswElement)
+        private static ISewerFeatureGenerator GetSewerStructureGenerator(this GwswElement gwswElement)
         {
             var structureTypeAttribute = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.StructureType);
             if (!structureTypeAttribute.IsValidAttribute()) return null;
@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return compartmentGenerator;
         }
 
-        private static ISewerNetworkFeatureGenerator GetSewerConnectionGenerator(this GwswElement gwswElement)
+        private static ISewerFeatureGenerator GetSewerConnectionGenerator(this GwswElement gwswElement)
         {
             var sewerTypeAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.PipeType);
             var basicGenerator = new SewerConnectionGenerator();

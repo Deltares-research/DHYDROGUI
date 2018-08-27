@@ -19,9 +19,9 @@ namespace DelftTools.Hydro.Structures
         public override void AddToHydroNetwork(IHydroNetwork hydroNetwork)
         {
             var sewerConnection = hydroNetwork.SewerConnections.FirstOrDefault(
-                sc => sc.BranchFeatures.Count == 1
-                      && sc.BranchFeatures[0].Name == Name
-                      && sc.BranchFeatures[0] is IOrifice);
+                sc => sc.BranchFeatures.Count >= 2
+                      && sc.BranchFeatures[1].Name == Name
+                      && sc.BranchFeatures[1] is IOrifice);
             if (sewerConnection != null)
             {
                 CopyGwswConnectionOrificeSewerConnectionPropertyValuesToExistingSewerConnection(sewerConnection);
@@ -29,6 +29,7 @@ namespace DelftTools.Hydro.Structures
                 {
                     ConnectToCompartments(sewerConnection, hydroNetwork);
                 }
+                sewerConnection.UpdateBranchFeatureGeometries();
                 return;
             }
 
@@ -59,26 +60,10 @@ namespace DelftTools.Hydro.Structures
         private void AddNewOrificeSewerConnectionToNetwork(IHydroNetwork hydroNetwork)
         {
             var sewerConnection = GetNewSewerConnectionWithOrifice();
-            sewerConnection.BranchFeatures.Add(this);
+            sewerConnection.AddStructureToBranch(this);
             sewerConnection.AddToHydroNetwork(hydroNetwork);
         }
-
-        private void AddOrificeToSewerConnection(ISewerConnection sewerConnection)
-        {
-            if (sewerConnection.BranchFeatures.Count > 0)
-            {
-                RemoveExistingBranchFeatures(sewerConnection);
-            }
-            sewerConnection.BranchFeatures.Add(this);
-        }
-
-        private void RemoveExistingBranchFeatures(ISewerConnection sewerConnection)
-        {
-            var branchFeature = sewerConnection.BranchFeatures[0];
-            Log.Warn($"Overwriting branchfeature with name '{branchFeature.Name}' and type '{branchFeature.GetType()}' in sewer connection '{sewerConnection.Name}' with orifice '{Name}'");
-            sewerConnection.BranchFeatures.Clear();
-        }
-
+        
         private SewerConnection GetNewSewerConnectionWithOrifice()
         {
             var sewerConnection = new SewerConnection(Name)

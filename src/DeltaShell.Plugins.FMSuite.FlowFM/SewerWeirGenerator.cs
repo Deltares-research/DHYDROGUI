@@ -7,7 +7,7 @@ using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    public class SewerWeirGenerator : ISewerNetworkFeatureGenerator
+    public class SewerWeirGenerator : ISewerFeatureGenerator
     {
         private static ILog Log = LogManager.GetLogger(typeof(SewerWeirGenerator));
 
