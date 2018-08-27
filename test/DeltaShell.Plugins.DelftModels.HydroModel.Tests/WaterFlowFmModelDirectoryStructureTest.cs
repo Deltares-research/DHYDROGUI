@@ -1936,31 +1936,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             ref System.Collections.Generic.Dictionary<string, System.Tuple<string[], string[]>> sourceDirStructure,
             ref System.Collections.Generic.Dictionary<string, System.Tuple<string[], string[]>> targetDirStructure)
         {
+            var sourceDirFiles = sourceDirStructure[curDir].Item1;
+            var sourceDirSubDirectories = sourceDirStructure[curDir].Item2;
+
+            var targetDirFiles = targetDirStructure[curDir].Item1;
+            var targetDirSubDirectories = targetDirStructure[curDir].Item2;
+
+
             //First check if the number of files/directories are the same
-            Assert.AreEqual(sourceDirStructure[curDir].Item1.Length, targetDirStructure[curDir].Item1.Length, $"The number of files in source and target {curDir} do not correspond.");
-            Assert.AreEqual(sourceDirStructure[curDir].Item2.Length, targetDirStructure[curDir].Item2.Length, $"The number of subfolders in source and target {curDir} do not correspond.");
+            Assert.AreEqual(sourceDirFiles.Length, targetDirFiles.Length, $"The number of files in source and target {curDir} do not correspond.");
+            Assert.AreEqual(sourceDirSubDirectories.Length, targetDirSubDirectories.Length, $"The number of subfolders in source and target {curDir} do not correspond.");
             
             //If the number of files are correct, then check the names of them.
-            for (var i = 0; i < targetDirStructure[curDir].Item1.Length; i++)
+            for (var i = 0; i < targetDirFiles.Length; i++)
             {
                 // Compare strings: source > target -> source is missing a file, else target missing a file.
-                var assertMsg = string.Compare(sourceDirStructure[curDir].Item1[i], targetDirStructure[curDir].Item1[i], StringComparison.InvariantCultureIgnoreCase) > 0 ? $"File {targetDirStructure[curDir].Item1[i]} does not exist in source {curDir}." : $"File {sourceDirStructure[curDir].Item1[i]} does not exist in target {curDir}.";
-                Assert.AreEqual(sourceDirStructure[curDir].Item1[i],
-                                targetDirStructure[curDir].Item1[i],
-                                assertMsg);
+                var assertMsg = string.Compare(sourceDirFiles[i], targetDirFiles[i], StringComparison.InvariantCultureIgnoreCase) > 0 ? $"File {targetDirFiles[i]} does not exist in source {curDir}." : $"File {sourceDirFiles[i]} does not exist in target {curDir}.";
+                Assert.AreEqual(sourceDirFiles[i], targetDirFiles[i], assertMsg);
             }
 
             // If the number of directories are correct, then check the names of them.
-            for (var i = 0; i < sourceDirStructure[curDir].Item2.Length; i++)
+            for (var i = 0; i < sourceDirSubDirectories.Length; i++)
             {
-                var assertMsg = string.Compare(sourceDirStructure[curDir].Item2[i], targetDirStructure[curDir].Item2[i], StringComparison.InvariantCultureIgnoreCase) > 0 ? $"Folder {targetDirStructure[curDir].Item2[i]} does not exist in source {curDir}." : $"Folder {sourceDirStructure[curDir].Item2[i]} does not exist in target {curDir}.";
-                Assert.AreEqual(sourceDirStructure[curDir].Item2[i],
-                                targetDirStructure[curDir].Item2[i],
-                                assertMsg);
+                var assertMsg = string.Compare(sourceDirSubDirectories[i], targetDirSubDirectories[i], StringComparison.InvariantCultureIgnoreCase) > 0 ? $"Folder {targetDirSubDirectories[i]} does not exist in source {curDir}." : $"Folder {sourceDirSubDirectories[i]} does not exist in target {curDir}.";
+                Assert.AreEqual(sourceDirSubDirectories[i], targetDirSubDirectories[i], assertMsg);
             }
 
             // Continue the process for the subfolders.
-            foreach (var s in sourceDirStructure[curDir].Item2)
+            foreach (var s in sourceDirSubDirectories)
                 AssertEqualDirectoryStructure(s, ref sourceDirStructure, ref targetDirStructure);
         }
 
