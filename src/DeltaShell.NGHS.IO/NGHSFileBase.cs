@@ -82,6 +82,7 @@ namespace DeltaShell.NGHS.IO
         /// Opens the file writer to a given destination.
         /// </summary>
         /// <param name="filePath">File path to write to.</param>
+        /// <param name="append">Flag to determine if you want to append data to the file or if you want to overwrite the file.</param>
         /// <exception cref="UnauthorizedAccessException">Access is denied</exception>
         /// <exception cref="ArgumentException"><paramref name="filePath"/> is an empty string ("") or contains the name of a system device (com1, com2, and so on).</exception>
         /// <exception cref="ArgumentNullException"><paramref name="filePath"/> is null.</exception>

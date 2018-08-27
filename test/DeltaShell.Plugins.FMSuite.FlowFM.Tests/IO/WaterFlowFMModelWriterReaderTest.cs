@@ -30,14 +30,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenOnePipeTwoManholes_WhenWritingAndReading_ThenNetworksAreTheSame()
         {
             var pipeName = "myPipe";
-            var mduPath = Path.Combine(tempDirectory, "MyModel.mdu");
+            var mduPath = Path.Combine(tempDirectory, "FlowFM.mdu");
             var model = new WaterFlowFMModel
             {
                 MduFilePath = mduPath
             };
 
-            var geometry1 = new LineString(new[]{ new Coordinate(0, 0), new Coordinate(0, 100) });
-            SewerFactory.SetDefaultSettingPipeAndAddToNetwork(model.Network, new Pipe { Name = pipeName, Geometry = geometry1, Material = SewerProfileMapping.SewerProfileMaterial.Polyester});
+            var geometry = new LineString(new[]{ new Coordinate(0, 0), new Coordinate(0, 100) });
+            SewerFactory.SetDefaultSettingPipeAndAddToNetwork(model.Network, new Pipe { Name = pipeName, Geometry = geometry, Material = SewerProfileMapping.SewerProfileMaterial.Polyester});
 
             //action write
             WaterFlowFMModelWriter.Write(model);

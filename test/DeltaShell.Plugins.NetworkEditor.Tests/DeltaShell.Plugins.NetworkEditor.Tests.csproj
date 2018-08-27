@@ -265,7 +265,7 @@
     <Compile Include="Import\CrossSectionZWFromCsvFileImporterTest.cs" />
     <Compile Include="Import\Wizard\CrossSectionCsvImportWizardDialogTest.cs" />
     <Compile Include="IO\BranchFileTest.cs" />
-    <Compile Include="IO\RetentionFileTest.cs" />
+    <Compile Include="IO\NodeFileTest.cs" />
     <Compile Include="MapLayers\CustomRenderers\DiffuseLateralSourceRendererTest.cs" />
     <Compile Include="Forms\CaseAnalysis\CoverageAnalysisViewTest.cs" />
     <Compile Include="Forms\CaseAnalysis\NetworkCoverageOperationsTest.cs" />

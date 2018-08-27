@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
 {
     [TestFixture]
-    public class RetentionFileTest
+    public class NodeFileTest
     {
         private string filePath;
 

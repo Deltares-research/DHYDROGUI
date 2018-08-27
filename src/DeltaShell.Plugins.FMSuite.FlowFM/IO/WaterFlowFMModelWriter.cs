@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public static void Write(WaterFlowFMModel model, bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true)
         {
             //TODO: Refactor MduFile class such that outcommented code her can be used for writing the Mdu file and other files that are now written in that class 
-            //PrepareModelDefinitionForWriting(model);
+            PrepareModelDefinitionForWriting(model);
             //WriteMduFile(model);
 
             var mduFile = new MduFile();
@@ -21,11 +21,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WriteMorSedFilesIfNeeded(model);
         }
 
-        //private static void PrepareModelDefinitionForWriting(IWaterFlowFMModel model)
-        //{
-        //    if (model.Network.Manholes.Any())
-        //        model.ModelDefinition.SetModelProperty(KnownProperties.NodeFile, "nodeFile.ini");
-        //}
+        private static void PrepareModelDefinitionForWriting(IWaterFlowFMModel model)
+        {
+            if (model.Network.Manholes.Any())
+                model.ModelDefinition.SetModelProperty(KnownProperties.NodeFile, "nodeFile.ini");
+        }
 
         //private static void WriteMduFile(WaterFlowFMModel model)
         //{
