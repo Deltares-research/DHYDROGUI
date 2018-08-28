@@ -8,30 +8,37 @@
     </id>
     <discriminator column="type" type="string"/>
     <subclass name="CrossSectionStandardShapeArch" discriminator-value="arch">
+      <property name="Name" />
       <property name="Width" />
       <property name="Height" />
       <property name="ArcHeight" />
     </subclass>
     <subclass name="CrossSectionStandardShapeCunette" discriminator-value="cunette">
+      <property name="Name" />
       <property name="Width" />
       <property name="Height" />
     </subclass>
     <subclass name="CrossSectionStandardShapeEgg" discriminator-value="egg">
+      <property name="Name" />
       <property name="Width" />
       <property name="Height" />
     </subclass>
     <subclass name="CrossSectionStandardShapeElliptical" discriminator-value="elliptical">
+      <property name="Name" />
       <property name="Width" />
       <property name="Height" />
     </subclass>
     <subclass name="CrossSectionStandardShapeRectangle" discriminator-value="rectangle">
+      <property name="Name" />
       <property name="Width" />
       <property name="Height" />
     </subclass>
     <subclass name="CrossSectionStandardShapeRound" discriminator-value="round">
+      <property name="Name" />
       <property name="Diameter" />
     </subclass>
     <subclass name="CrossSectionStandardShapeSteelCunette" discriminator-value="steelcunette">
+      <property name="Name" />
       <property name="Height" />
       <property name="RadiusR" />
       <property name="RadiusR1" />
@@ -41,6 +48,7 @@
       <property name="AngleA1" />
     </subclass>
     <subclass name="CrossSectionStandardShapeTrapezium" discriminator-value="trapezium">
+      <property name="Name" />
       <property name="Slope" />
       <property name="BottomWidthB" />
       <property name="MaximumFlowWidth" />

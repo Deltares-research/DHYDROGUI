@@ -248,32 +248,71 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             var shape = (CrossSectionStandardShapeRound)retrieved.Shape;
             Assert.AreEqual(5, shape.Diameter);
         }
+        
+        [Test]
+        public void GivenArchStandardShape_WhenSaveLoadWithNHibernate_ThenPublicPropertiesArePreserved()
+        {
+            var shape = new CrossSectionStandardShapeArch();
+            TestNHibernateSaveLoadFunctionality(shape);
+        }
 
         [Test]
-        public void SaveLoadAllStandardShapes()
+        public void GivenCunetteStandardShape_WhenSaveLoadWithNHibernate_ThenPublicPropertiesArePreserved()
         {
-            var shapes = new object[]
-                             {
-                                 new CrossSectionStandardShapeArch(), 
-                                 new CrossSectionStandardShapeCunette(), 
-                                 //new CrossSectionStandardShapeEgg(), wait for implementation closed branch
-                                 new CrossSectionStandardShapeElliptical(), 
-                                 new CrossSectionStandardShapeRectangle(), 
-                                 //new CrossSectionStandardShapeRound(), wait for implementation closed branch 
-                                 new CrossSectionStandardShapeSteelCunette(),
-                                 new CrossSectionStandardShapeTrapezium()
-                             };
-            foreach (var shape in shapes)
-            {
-                ReflectionTestHelper.FillRandomValuesForValueTypeProperties(shape, "Type", "Slope");
-                
-                var trapezium = shape as CrossSectionStandardShapeTrapezium;
-                if (trapezium != null) { (trapezium).Slope = 35.0; }
+            var shape = new CrossSectionStandardShapeCunette();
+            TestNHibernateSaveLoadFunctionality(shape);
+        }
 
-                var retrievedShape = SaveAndRetrieveObject(shape);
-                ReflectionTestHelper.AssertPublicPropertiesAreEqual(retrievedShape,shape);
-            }    
-            
+        [Test]
+        public void GivenEggStandardShape_WhenSaveLoadWithNHibernate_ThenPublicPropertiesArePreserved()
+        {
+            var shape = new CrossSectionStandardShapeEgg();
+            TestNHibernateSaveLoadFunctionality(shape);
+        }
+
+        [Test]
+        public void GivenEllipticalStandardShape_WhenSaveLoadWithNHibernate_ThenPublicPropertiesArePreserved()
+        {
+            var shape = new CrossSectionStandardShapeElliptical();
+            TestNHibernateSaveLoadFunctionality(shape);
+        }
+
+        [Test]
+        public void GivenRectangleStandardShape_WhenSaveLoadWithNHibernate_ThenPublicPropertiesArePreserved()
+        {
+            var shape = new CrossSectionStandardShapeRectangle();
+            TestNHibernateSaveLoadFunctionality(shape);
+        }
+
+        [Test]
+        public void GivenRoundStandardShape_WhenSaveLoadWithNHibernate_ThenPublicPropertiesArePreserved()
+        {
+            var shape = new CrossSectionStandardShapeRound();
+            TestNHibernateSaveLoadFunctionality(shape);
+        }
+
+        [Test]
+        public void GivenSteelCunetteStandardShape_WhenSaveLoadWithNHibernate_ThenPublicPropertiesArePreserved()
+        {
+            var shape = new CrossSectionStandardShapeSteelCunette();
+            TestNHibernateSaveLoadFunctionality(shape);
+        }
+
+        [Test]
+        public void GivenTrapeziumStandardShape_WhenSaveLoadWithNHibernate_ThenPublicPropertiesArePreserved()
+        {
+            var shape = new CrossSectionStandardShapeTrapezium
+            {
+                Slope = 35.0
+            };
+            TestNHibernateSaveLoadFunctionality(shape);
+        }
+
+        private void TestNHibernateSaveLoadFunctionality(CrossSectionStandardShapeBase shape)
+        {
+            ReflectionTestHelper.FillRandomValuesForValueTypeProperties(shape, "Type", "Slope");
+            var retrievedShape = SaveAndRetrieveObject(shape);
+            ReflectionTestHelper.AssertPublicPropertiesAreEqual(retrievedShape, shape);
         }
     }
 }
