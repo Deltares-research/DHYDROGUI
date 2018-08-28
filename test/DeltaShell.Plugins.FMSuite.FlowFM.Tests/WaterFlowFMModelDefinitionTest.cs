@@ -979,25 +979,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(HeatFluxModelType.None, waterFlowFMModel.HeatFluxModelType);
             Assert.IsFalse((bool)waterFlowFMModel.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value);
         }
-
-
-        [Test]
-        public void SwitchUseTemperatureShouldChangeHeatFluxModelType()
-        {
-            var waterFlowFMModel = new WaterFlowFMModel();
-
-            Assert.AreEqual(HeatFluxModelType.None, waterFlowFMModel.HeatFluxModelType);
-            Assert.IsFalse((bool) waterFlowFMModel.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value);
-
-            waterFlowFMModel.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value = true;
-
-            Assert.AreEqual(HeatFluxModelType.TransportOnly, waterFlowFMModel.HeatFluxModelType);
-
-            waterFlowFMModel.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value = false;
-
-            Assert.AreEqual(HeatFluxModelType.None, waterFlowFMModel.HeatFluxModelType);
-        }
-
+        
         [Test]
         [TestCase(MapFormatType.NetCdf, true, false, MapFormatType.Ugrid)]
         [TestCase(MapFormatType.NetCdf, false, false, MapFormatType.NetCdf)]
