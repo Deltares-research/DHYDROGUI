@@ -54,8 +54,8 @@ namespace DelftTools.Hydro.Tests.Forms
             network.Nodes.Add(node2);
             network.Nodes.Add(node3);
 
-            var branch1 = new Channel("branch1", node1, node2, 100.0) { Geometry = new WKTReader().Read("LINESTRING (0 0, 100 0)") };
-            var branch2 = new Channel("branch2", node1, node2, 200.0) { Geometry = new WKTReader().Read("LINESTRING (0 10, 100 10)") };
+            var branch1 = new Channel("branch1", node1, node2) { Geometry = new WKTReader().Read("LINESTRING (0 0, 100 0)") };
+            var branch2 = new Channel("branch2", node1, node2) { Geometry = new WKTReader().Read("LINESTRING (0 10, 100 10)") };
             network.Branches.Add(branch1);
             network.Branches.Add(branch2);
 

@@ -16,6 +16,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpTestsEx;
 using Control = System.Windows.Controls.Control;
@@ -114,9 +115,9 @@ namespace Sobek.IntegrationTests
                     // model
                     // model (clone)
 
-                    var node1 = new HydroNode("n1");
-                    var node2 = new HydroNode("n2");
-                    var branch1 = new Channel("branch1", node1, node2, 100);
+                    var node1 = new HydroNode("n1") { Geometry = new Point(0, 0) };
+                    var node2 = new HydroNode("n2") { Geometry = new Point(100, 0) };
+                    var branch1 = new Channel("branch1", node1, node2) {Geometry = new LineString(new [] {node1.Geometry.Coordinate,node2.Geometry.Coordinate})};
                     var network = new HydroNetwork { Branches = { branch1 }, Nodes = { node1, node2 } };
                     var model = new WaterFlowModel1D { Name = "model", Network = network };
                     model.BoundaryConditions[0].DataType = WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries;

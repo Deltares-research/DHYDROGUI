@@ -254,11 +254,11 @@ namespace Sobek.IntegrationTests
                         flow1DModel.Network.Nodes.Add(node1);
                         flow1DModel.Network.Nodes.Add(node2);
                         flow1DModel.Network.Nodes.Add(node3);
-                        var branch1 = new Channel("branch1", node1, node2, 100.0)
+                        var branch1 = new Channel("branch1", node1, node2)
                         {
                             Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")
                         };
-                        var branch2 = new Channel("branch2", node2, node3, 200.0)
+                        var branch2 = new Channel("branch2", node2, node3)
                         {
                             Geometry = GeometryFromWKT.Parse("LINESTRING (100 0, 100 200)")
                         };

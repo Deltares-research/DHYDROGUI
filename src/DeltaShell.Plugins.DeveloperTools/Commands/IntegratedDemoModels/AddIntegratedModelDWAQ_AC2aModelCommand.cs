@@ -106,22 +106,22 @@ namespace DeltaShell.Plugins.DeveloperTools.Commands.IntegratedDemoModels
             const string sobekBranchTypeAttribute = "Sobek type";
             const string surfaceWaterTypeAttribute = "Surface water type";
 
-            var branch1 = new Channel(node1, node8, 294.33)
+            var branch1 = new Channel(node1, node8)
                 {
                     Name = Channel1Name,
                     Geometry = new LineString(new[] { node1.Geometry.Coordinate, node8.Geometry.Coordinate })
                 };
-            var branch2 = new Channel(node3, node21, 294.33)
+            var branch2 = new Channel(node3, node21)
                 {
                     Name = Channel2Name,
                     Geometry = new LineString(new[] {node3.Geometry.Coordinate, node21.Geometry.Coordinate})
                 };
-            var branch3 = new Channel(node8, node3, 294.33)
+            var branch3 = new Channel(node8, node3)
                 {
                     Name = Channel3Name,
                     Geometry = new LineString(new[] {node8.Geometry.Coordinate, node3.Geometry.Coordinate})
                 };
-            var branch4 = new Channel(node9, node8, 294.33)
+            var branch4 = new Channel(node9, node8)
                 {
                     Name = Channel4Name,
                     Geometry = new LineString(new[] {node9.Geometry.Coordinate, node8.Geometry.Coordinate})

@@ -143,7 +143,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
         public void CheckLateralSourceGeometryAfterChangingLength()
         {
             var network = new HydroNetwork();
-            var branch1 = new Channel(new HydroNode("n1"), new HydroNode("n1"), 100)
+            var branch1 = new Channel(new HydroNode("n1"), new HydroNode("n1"))
                               {
                                   Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")
                               };

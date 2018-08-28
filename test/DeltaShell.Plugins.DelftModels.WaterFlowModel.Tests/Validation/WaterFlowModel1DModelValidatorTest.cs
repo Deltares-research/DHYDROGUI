@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             var node = new HydroNode { Name = "node", Network = network };
             network.Nodes.Add(node);
 
-            var branch = new Channel("branch", node, node, 100.0);
+            var branch = new Channel("branch", node, node);
             network.Branches.Add(branch);
 
             var model = new WaterFlowModel1D { Network = network };
@@ -179,7 +179,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             network.Nodes.Add(rightNode);
             network.Nodes.Add(centerNode);
             
-            var leftBranch = new Channel("branch1", leftNode, centerNode, 100.0);
+            var leftBranch = new Channel("branch1", leftNode, centerNode);
             var vertices = new List<Coordinate>
                                {
                                    new Coordinate(0, 0),
@@ -190,7 +190,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
 
             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(leftBranch, CrossSectionDefinitionYZ.CreateDefault(), 50.0);
             
-            var rightBranch = new Channel("branch2", rightNode, centerNode, 100.0);
+            var rightBranch = new Channel("branch2", rightNode, centerNode);
             var vertices2 = new List<Coordinate>
                                {
                                    new Coordinate(200, 0),
@@ -244,7 +244,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             network.Nodes.Add(leftNode);
             network.Nodes.Add(rightNode);
 
-            var branch = new Channel("branch1", leftNode, rightNode, 100.0);
+            var branch = new Channel("branch1", leftNode, rightNode);
             var vertices = new List<Coordinate>
                                {
                                    new Coordinate(0, 0),
@@ -757,7 +757,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
                     node4.Geometry = new Point(200.0, 0.0);
                     network.Nodes.Add(node4);
 
-                    var branch3 = new Channel("branch3", network.Nodes[1], node4, 100.0);
+                    var branch3 = new Channel("branch3", network.Nodes[1], node4);
 
                     branch3.Geometry = new LineString(new[]
                                                             {
@@ -933,7 +933,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             INode node2 = new HydroNode {Name = "Node2", Network = network, Geometry = new Point(100.0, 0.0)};
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
-            branch = new Channel("branch1", node1, node2, 100.0)
+            branch = new Channel("branch1", node1, node2)
             {
                 Geometry = new LineString(new[]
                 {
@@ -1192,7 +1192,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
 
-            var branch = new Channel("branch", node1, node2, 100.0);
+            var branch = new Channel("branch", node1, node2);
             network.Branches.Add(branch);
 
             var model = new WaterFlowModel1D { Network = network };
@@ -1402,7 +1402,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
 
-            var branch = new Channel("branch", node1, node2, 100.0);
+            var branch = new Channel("branch", node1, node2);
             network.Branches.Add(branch);
 
             var model = new WaterFlowModel1D
@@ -1455,7 +1455,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
 
-            var branch = new Channel("branch", node1, node2, 100.0);
+            var branch = new Channel("branch", node1, node2);
             network.Branches.Add(branch);
 
             var model = new WaterFlowModel1D

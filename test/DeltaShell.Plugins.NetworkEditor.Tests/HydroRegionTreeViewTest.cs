@@ -450,7 +450,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             var nodes = new List<ITreeNode>();
             var cs1 = new CrossSection(new CrossSectionDefinitionXYZ("100")){Chainage = 100};
             var cs2 = new CrossSection(new CrossSectionDefinitionXYZ("200")){Chainage = 200};
-            var channel = new Channel("channel", null, null, 500);
+            var channel = new Channel();
             childNode1.Tag = cs1;
             childNode2.Tag = cs2;
 

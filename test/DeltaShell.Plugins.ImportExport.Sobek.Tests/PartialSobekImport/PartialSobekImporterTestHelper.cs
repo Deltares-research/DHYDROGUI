@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             var node1 = new HydroNode { Name = "node1", Geometry = new Point(0, 0) };
             var node2 = new HydroNode { Name = "node2", Geometry = new Point(0, 100) };
 
-            var channel = new Channel("TestChannel", node1, node2, 100.0) { Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) }) };
+            var channel = new Channel("TestChannel", node1, node2) { Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) }) };
 
             hydroNetwork.Branches.Add(channel);
             hydroNetwork.Nodes.AddRange(new[] { node1, node2 });

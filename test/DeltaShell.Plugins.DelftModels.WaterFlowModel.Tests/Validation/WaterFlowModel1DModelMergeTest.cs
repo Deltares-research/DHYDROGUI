@@ -410,7 +410,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
            
             network.Nodes.Add(node3);
             
-            var branch2 = new Channel("SourceBranch2", branch1.Target, node3, 100);
+            var branch2 = new Channel("SourceBranch2", branch1.Target, node3);
             var vertices = new List<Coordinate>
             {
                 new Coordinate(branch1.Target.Geometry.Coordinate.X, 0),
@@ -633,7 +633,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             IHydroNode node3 = new HydroNode { Name = "node3", Network = network, Geometry = new Point(new Coordinate(250, 0)) };
 
             network.Nodes.Add(node3);
-            var channel = new Channel("channel", node2, node3, 250 - 100);
+            var channel = new Channel("channel", node2, node3);
             var vertices = new List<Coordinate>
             {
                 new Coordinate(100, 0),
@@ -660,7 +660,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             IHydroNode node3 = new HydroNode { Name = "node3", Network = network, Geometry = new Point(new Coordinate(250, 0)) };
 
             network.Nodes.Add(node3);
-            var channel = new Channel("channel", node2, node3, 250 - 100);
+            var channel = new Channel("channel", node2, node3);
             var vertices = new List<Coordinate>
             {
                 new Coordinate(100, 0),

@@ -73,8 +73,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             network.Nodes.Add(node2);
             network.Nodes.Add(node3);
 
-            var branch1 = new Channel("branch1", node1, node2, 100.0) { Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)") };
-            var branch2 = new Channel("branch2", node2, node3, 200.0) { Geometry = GeometryFromWKT.Parse("LINESTRING (100 0, 300 0)") };
+            var branch1 = new Channel("branch1", node1, node2) { Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)") };
+            var branch2 = new Channel("branch2", node2, node3) { Geometry = GeometryFromWKT.Parse("LINESTRING (100 0, 300 0)") };
             
             network.Branches.Add(branch1);
             network.Branches.Add(branch2);
@@ -92,8 +92,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             network.Nodes.Add(node2);
             network.Nodes.Add(node3);
 
-            var branch1 = new Channel("branch1", node1, node2, 100.0) { Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)") };
-            var branch2 = new Channel("branch2", node2, node3, 200.0) { Geometry = GeometryFromWKT.Parse("LINESTRING (100 0, 300 0)") };
+            var branch1 = new Channel("branch1", node1, node2) { Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)") };
+            var branch2 = new Channel("branch2", node2, node3) { Geometry = GeometryFromWKT.Parse("LINESTRING (100 0, 300 0)") };
             network.Branches.Add(branch1);
             network.Branches.Add(branch2);
             return network;
