@@ -198,6 +198,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             var bedLevelCoverage = BedLevelNetworkCoverageBuilder.BuildBedLevelCoverage(routeCoverage);
 
             // update branch geometry
+            branch1.IsLengthCustom = false;
             branch1.Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 15 0)");
             
             // asserts
