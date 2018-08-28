@@ -177,7 +177,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 {GuiProperties.StartTime.ToLower(), OnTimePropertyChanged},
                 {KnownProperties.RefDate.ToLower(), OnTimePropertyChanged},
                 {KnownProperties.Temperature.ToLower(), OnTemperaturePropertyChanged},
-                {GuiProperties.UseTemperature.ToLower(), OnUseTemperaturePropertyChanged},
                 {GuiProperties.UseMorSed.ToLower(), OnMorphologySedimentPropertyChanged},
                 {GuiProperties.WriteSnappedFeatures.ToLower(), OnWriteSnappedFeaturesPropertyChanged},
             };
@@ -255,23 +254,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             HeatFluxModel.Type = (HeatFluxModelType) ((int) temperatureProp.Value);
             useTemperatureProp.Value = HeatFluxModel.Type != HeatFluxModelType.None;
         }
-
-        private void OnUseTemperaturePropertyChanged(WaterFlowFMProperty useTemperatureProp)
-        {
-            var temperatureProp = GetModelProperty(KnownProperties.Temperature);
-            var useTemperature = (bool)useTemperatureProp.Value;
-            if (useTemperature)
-            {
-                temperatureProp.SetValueAsString("1");
-                HeatFluxModel.Type = HeatFluxModelType.TransportOnly;
-            }
-            else
-            {
-                temperatureProp.SetValueAsString("0");
-                HeatFluxModel.Type = HeatFluxModelType.None;
-            }
-        }
-
+        
         public readonly List<string> KnownWriteOutputSnappedFeatures = new List<string>()
         {
             KnownProperties.Wrishp_crs,
