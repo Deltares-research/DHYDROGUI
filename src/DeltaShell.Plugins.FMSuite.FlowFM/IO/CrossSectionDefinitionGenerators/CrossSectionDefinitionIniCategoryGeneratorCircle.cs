@@ -10,16 +10,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.CrossSectionDefinitionGenerators
     {
         public override DelftIniCategory GenerateIniCategory(CrossSectionDefinitionStandard crossSectionDefinition)
         {
-            var crossSectionStandardShape = crossSectionDefinition.Shape as CrossSectionStandardShapeCircle;
-            if(crossSectionStandardShape == null) throw new Exception();
+            var crossSectionShape = crossSectionDefinition.Shape as CrossSectionStandardShapeCircle;
+            if(crossSectionShape == null) throw new Exception();
 
             return base.GenerateIniCategory(crossSectionDefinition);
         }
 
         protected override void AddMeasurementsProperties(ICrossSectionStandardShape crossSectionShape)
         {
-            var cricleShape = crossSectionShape as CrossSectionStandardShapeCircle;
-            iniCategory.AddProperty(DefinitionRegion.Diameter.Key, $"{cricleShape.Diameter:0.00}");
+            var circleShape = crossSectionShape as CrossSectionStandardShapeCircle;
+            iniCategory.AddProperty(DefinitionRegion.Diameter.Key, $"{circleShape.Diameter:0.00}");
         }
     }
 }

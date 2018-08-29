@@ -214,9 +214,15 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorArchTest.cs" />
+    <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorEggTest.cs" />
+    <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorEllipticalTest.cs" />
     <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorRectangleTest.cs" />
     <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorCircleTest.cs" />
+    <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorSteelCunetteTest.cs" />
     <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorTestHelper.cs" />
+    <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorCunetteTest.cs" />
+    <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorTrapeziumTest.cs" />
     <Compile Include="IO\CrossSectionDefinitionIniCategoryGeneratorFactoryTest.cs" />
     <Compile Include="IO\Exporters\FmCrossSectionDefinitionExporterTest.cs" />
     <Compile Include="ISewerFeatureTest.cs" />

@@ -42,21 +42,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         public void GivenCircleCrossSectionDefinition_WhenGeneratingIniCategory_ThenIniCategoryHasCorrectDiameterProperty()
         {
             var iniCategory = GenerateCircleDelftIniCategory();
-
-            var expectedDiameterValue = $"{CrossSectionDiameter:0.00}";
-            var diameterValue = iniCategory.GetPropertyValue(DefinitionRegion.Diameter.Key);
-            Assert.That(diameterValue, Is.EqualTo(expectedDiameterValue));
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.Diameter.Key, $"{CrossSectionDiameter:0.00}");
         }
 
         [Test]
         public void GivenCircleCrossSectionDefinition_WhenGeneratingIniCategory_ThenIniCategoryHasCorrectStandardProperties()
         {
             var iniCategory = GenerateCircleDelftIniCategory();
-
-            var closedValue = iniCategory.GetPropertyValue(DefinitionRegion.Closed.Key);
-            var groundLayerUsedValue = iniCategory.GetPropertyValue(DefinitionRegion.GroundlayerUsed.Key);
-            Assert.That(closedValue, Is.EqualTo("1"));
-            Assert.That(groundLayerUsedValue, Is.EqualTo("0"));
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.Closed.Key, "1");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.GroundlayerUsed.Key, "0");
         }
 
         [Test]
