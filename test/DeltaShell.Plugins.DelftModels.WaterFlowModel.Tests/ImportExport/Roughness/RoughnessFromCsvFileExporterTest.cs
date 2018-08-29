@@ -1,12 +1,18 @@
-﻿using DelftTools.Hydro;
+﻿using System;
+using System.IO;
+using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Roughness
 {
@@ -147,6 +153,65 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             Assert.AreEqual(22.0, (double)functionsOfH[2.0, 101.0], 1.0e-6);
             Assert.AreEqual(24.0, (double)functionsOfH[3.0, 101.0], 1.0e-6);
             Assert.AreEqual(25.0, (double)functionsOfH[2.0, 111.0], 1.0e-6);
+        }
+
+        [Test]
+        public void GivenRoughnessFromCsvFileExporterObjectWhenCallingCategoryThenCategoryShouldBeGeneral()
+        {
+            var exporter = new RoughnessFromCsvFileExporter();
+            Assert.That(exporter.Category, Is.EqualTo("General"));
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "RoughnessFromCsvFileExporter can only export items of type RoughnessSections")]
+        public void GivenANullObjectToExportedWhenExportingRoughnessFromCsvFileThenExceptionShouldBeThrown()
+        {
+            var exporter = new RoughnessFromCsvFileExporter();
+            exporter.Export(null, string.Empty);
+
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void GivenARoughnessSectionWithIllegalExportPathWhenExportingRoughnessFromCsvFileThenArgumentExceptionShouldBeThrown()
+        {
+            var mocks = new MockRepository();
+            var network = mocks.StrictMultiMock<INetwork>(typeof(INotifyCollectionChanged));
+            network.Expect(n => n.Branches).Return(new EventedList<IBranch>()).Repeat.Any();
+            network.Expect(n => n.CoordinateSystem).Return(null).Repeat.Any();
+            ((INotifyCollectionChanged) network).Expect(n => n.CollectionChanged += null).IgnoreArguments().Repeat.Any();
+            mocks.ReplayAll();
+            
+            var exporter = new RoughnessFromCsvFileExporter();
+            var roughnessSection = new RoughnessSection(new CrossSectionSectionType(), network);
+            exporter.Export(roughnessSection, string.Empty);
+            mocks.VerifyAll();
+        }
+
+        [Test]
+        public void GivenARoughnessSectionWithALegalExportPathWhenExportingRoughnessFromCsvFileThenExportIsSucces()
+        {
+            var mocks = new MockRepository();
+            var network = mocks.StrictMultiMock<INetwork>(typeof(INotifyCollectionChanged));
+            network.Expect(n => n.Branches).Return(new EventedList<IBranch>()).Repeat.Any();
+            network.Expect(n => n.CoordinateSystem).Return(null).Repeat.Any();
+            ((INotifyCollectionChanged)network).Expect(n => n.CollectionChanged += null).IgnoreArguments().Repeat.Any();
+            mocks.ReplayAll();
+
+            var exporter = new RoughnessFromCsvFileExporter();
+            var roughnessSection = new RoughnessSection(new CrossSectionSectionType(), network);
+            var exportDir = FileUtils.CreateTempDirectory();
+            FileUtils.CreateDirectoryIfNotExists(exportDir);
+            try
+            {
+                Assert.That(exporter.Export(roughnessSection, Path.Combine(exportDir, "myFile.csv")), Is.True);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(exportDir); 
+            }
+            
+            mocks.VerifyAll();
         }
 
         private static void ExportDemoModelWithFunctionOfQAndFunctionOfH(out WaterFlowModel1D model, out IBranch branch0, out IBranch branch1, out string path)
