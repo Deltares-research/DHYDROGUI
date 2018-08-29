@@ -66,7 +66,7 @@ namespace DelftTools.Hydro.Tests.CrossSections
         [Test]
         public void GivenCrossSectionDefinitionWithShapeWithoutWidth_WhenGettingProfileWidth_ThenReturnNaN()
         {
-            var csDef = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRound());
+            var csDef = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle());
             Assert.That(csDef.GetProfileWidth(), Is.EqualTo(double.NaN));
         }
 
@@ -105,7 +105,7 @@ namespace DelftTools.Hydro.Tests.CrossSections
         [Test]
         public void GivenCrossSectionDefinitionWithShapeWithoutHeight_WhenGettingProfileHeight_ThenReturnNaN()
         {
-            var csDef = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRound());
+            var csDef = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle());
             Assert.That(csDef.GetProfileHeight(), Is.EqualTo(double.NaN));
         }
 
@@ -320,7 +320,7 @@ namespace DelftTools.Hydro.Tests.CrossSections
 
         private static CrossSectionDefinitionStandard GetCsDefRoundShape()
         {
-            var csDef = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRound
+            var csDef = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle
             {
                 Diameter = WidthValue
             });

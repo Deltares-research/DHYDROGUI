@@ -214,6 +214,9 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorRoundTest.cs" />
+    <Compile Include="IO\CrossSectionDefinitionIniCategoryGeneratorFactoryTest.cs" />
+    <Compile Include="IO\Exporters\FmCrossSectionDefinitionExporterTest.cs" />
     <Compile Include="ISewerFeatureTest.cs" />
     <Compile Include="Api\Grid1d2dTest.cs" />
     <Compile Include="Api\FlexibleMeshModelDllTest.cs" />

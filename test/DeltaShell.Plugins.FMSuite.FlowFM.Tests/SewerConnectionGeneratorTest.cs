@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
-using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
 
@@ -104,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
             var network = new HydroNetwork();
-            var sewerConnection = CreateSewerFeature<ISewerFeature>(connectionGwswElement, network);
+            var sewerConnection = CreateSewerFeature<ISewerFeature>(connectionGwswElement);
             Assert.IsNotNull(sewerConnection);
             Assert.AreEqual(expectedType, sewerConnection.GetType(), "Created Sewer Connection is not of the expected type.");
         }

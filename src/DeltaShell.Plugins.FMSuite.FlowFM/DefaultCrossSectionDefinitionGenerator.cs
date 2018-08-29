@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public override ISewerFeature Generate(GwswElement gwswElement)
         {
             MessageForDefaultProfile(gwswElement);
-            return new CrossSectionStandardShapeRound
+            return new CrossSectionStandardShapeCircle
             {
                 Name = GetCrossSectionShapeName(gwswElement),
                 Diameter = 0.4

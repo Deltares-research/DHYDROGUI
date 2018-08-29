@@ -145,8 +145,8 @@ namespace DeltaShell.NGHS.IO.TestUtils
             var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, chainage);
             var crossSectionDefinitionStandard = crossSection.Definition as CrossSectionDefinitionStandard;
             if (crossSectionDefinitionStandard == null) return;
-            crossSectionDefinitionStandard.ShapeType = CrossSectionStandardShapeType.Round;
-            var crossSectionDefinitionCircleShape = crossSectionDefinitionStandard.Shape as CrossSectionStandardShapeRound;
+            crossSectionDefinitionStandard.ShapeType = CrossSectionStandardShapeType.Circle;
+            var crossSectionDefinitionCircleShape = crossSectionDefinitionStandard.Shape as CrossSectionStandardShapeCircle;
             if (crossSectionDefinitionCircleShape == null) return;
             crossSectionDefinitionCircleShape.Diameter = diameter;
         }

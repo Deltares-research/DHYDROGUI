@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         public void RunWithCrossSectionStandard()
         {
             var crossSectionStandardRectangle = new CrossSectionStandardShapeRectangle();
-            new CrossSectionStandardShapeRound{Diameter = 4.0};
+            new CrossSectionStandardShapeCircle{Diameter = 4.0};
             var crossSection = new CrossSection(new CrossSectionDefinitionStandard(crossSectionStandardRectangle));
             crossSection.Name = "Crsdef";
             var flowModel1D = GetModelWithBranchFeature(crossSection);

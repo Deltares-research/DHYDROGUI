@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             };
 
             var network = new HydroNetwork();
-            var createdElement = CreateSewerFeature<ISewerFeature>(structureGwswElement, network);
+            var createdElement = CreateSewerFeature<ISewerFeature>(structureGwswElement);
             Assert.IsNotNull(createdElement);
         }
 
@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             //generate all instances
             var network = new HydroNetwork();
             var gwswElements = new List<GwswElement> { nodeOne, nodeTwo, nodeThree };
-            var generatedSewerFeatures = SewerFeatureFactory.CreateSewerEntities(gwswElements, network);
+            var generatedSewerFeatures = SewerFeatureFactory.CreateSewerEntities(gwswElements);
             generatedSewerFeatures.ForEach(sf => sf.AddToHydroNetwork(network));
 
             //check manholes and their geometries
@@ -210,7 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             //generate all instances
             var gwswElements = new List<GwswElement> {nodeOne, nodeTwo, nodeThree};
-            var generatedSewerFeatures = SewerFeatureFactory.CreateSewerEntities(gwswElements, new HydroNetwork());
+            var generatedSewerFeatures = SewerFeatureFactory.CreateSewerEntities(gwswElements);
             Assert.IsNotEmpty(generatedSewerFeatures);
 
             var generatedCompartments = generatedSewerFeatures.OfType<Compartment>().Distinct().ToList(); 
@@ -293,7 +293,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             #endregion
 
-            var outletCompartment = CreateSewerFeature<OutletCompartment>(outletGwswElement, network);
+            var outletCompartment = CreateSewerFeature<OutletCompartment>(outletGwswElement);
             Assert.IsNotNull(outletCompartment);
             Assert.That(outletCompartment.SurfaceWaterLevel, Is.EqualTo(surfaceWaterLevel));
         }
@@ -333,7 +333,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             #endregion
 
-            var outletCompartment = CreateSewerFeature<GwswStructureOutletCompartment>(structureGwswElement, network);
+            var outletCompartment = CreateSewerFeature<GwswStructureOutletCompartment>(structureGwswElement);
             outletCompartment.AddToHydroNetwork(network);
 
             // Check new outlet compartment properties
@@ -376,13 +376,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.TargetCompartmentId, endNode, string.Empty)
                 }
             };
-            var network = new HydroNetwork();
 
-            var createdPipe = CreateSewerFeature<Pipe>(pipeGwswElement, network);
+            var createdPipe = CreateSewerFeature<Pipe>(pipeGwswElement);
             if (isPipe)
             {
-                Assert.NotNull(createdPipe);
-                Assert.AreEqual(pipeId, createdPipe.PipeId);
+                Assert.IsNotNull(createdPipe);
+                Assert.That(createdPipe.PipeId, Is.EqualTo(pipeId));
             }
         }
     }

@@ -108,6 +108,7 @@ namespace DelftTools.Hydro.Structures
                     {
                         oldParentManhole.Compartments.Remove(compartment);
                     }
+
                     compartment.ParentManhole = this;
                     UpdateGeometry();
                     break;
@@ -137,13 +138,22 @@ namespace DelftTools.Hydro.Structures
 
         #region IHydroNetworkFeature
 
-        public virtual IHydroRegion Region { get { return HydroNetwork; } }
+        public virtual IHydroRegion Region
+        {
+            get { return HydroNetwork; }
+        }
 
         public virtual IEventedList<HydroLink> Links { get; set; }
 
-        public virtual bool CanBeLinkSource { get { return false; } }
+        public virtual bool CanBeLinkSource
+        {
+            get { return false; }
+        }
 
-        public virtual bool CanBeLinkTarget { get { return !IsConnectedToMultipleBranches; } }
+        public virtual bool CanBeLinkTarget
+        {
+            get { return !IsConnectedToMultipleBranches; }
+        }
 
         public virtual HydroLink LinkTo(IHydroObject target)
         {
@@ -160,7 +170,11 @@ namespace DelftTools.Hydro.Structures
             return Region.CanLinkTo(this, target);
         }
 
-        public virtual IHydroNetwork HydroNetwork { get { return (IHydroNetwork)network; } }
+        public virtual IHydroNetwork HydroNetwork
+        {
+            get { return (IHydroNetwork) network; }
+        }
+
         public virtual string LongName { get; set; }
 
         #endregion

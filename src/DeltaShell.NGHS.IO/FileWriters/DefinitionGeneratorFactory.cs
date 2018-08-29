@@ -73,7 +73,7 @@ namespace DeltaShell.NGHS.IO.FileWriters
         {
             switch (shapeType)
             {
-                case CrossSectionStandardShapeType.Round:
+                case CrossSectionStandardShapeType.Circle:
                     return new DefinitionGeneratorCrossSectionDefinitionCircle();
                 case CrossSectionStandardShapeType.Elliptical:
                     return new DefinitionGeneratorCrossSectionDefinitionElliptical();

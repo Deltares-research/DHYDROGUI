@@ -6,7 +6,7 @@ namespace DelftTools.Hydro.Structures
 {
     public interface IManhole : INode, IHydroNetworkFeature
     {
-        IEventedList<Compartment> Compartments { get; set; }
+        IEventedList<Compartment> Compartments { get; }
         Compartment GetCompartmentByName(string compartmentName);
         bool ContainsCompartmentWithName(string compartmentName);
     }

@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileMaterial, materialString, string.Empty)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<CircleCrossSectionShapeGenerator, CrossSectionStandardShapeRound>(profileGwswElement, ProfileId, expectedDiameter);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<CircleCrossSectionShapeGenerator, CrossSectionStandardShapeCircle>(profileGwswElement, ProfileId, expectedDiameter);
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
             TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => GenerateCrossSectionDefinitionAndCheckShapeProperties<CircleCrossSectionShapeGenerator, CrossSectionStandardShapeRound>(profileGwswElement, ProfileId, 0.160d),
+                () => GenerateCrossSectionDefinitionAndCheckShapeProperties<CircleCrossSectionShapeGenerator, CrossSectionStandardShapeCircle>(profileGwswElement, ProfileId, 0.160d),
                 "Sewer profile 'PRO1' is missing its width. Default profile property values are used for this profile.");
         }
 
@@ -444,7 +444,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileWidth, "3000", "400", TypeDouble)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<DefaultCrossSectionShapeGenerator, CrossSectionStandardShapeRound>(profileGwswElement, ProfileId, 0.4);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<DefaultCrossSectionShapeGenerator, CrossSectionStandardShapeCircle>(profileGwswElement, ProfileId, 0.4);
         }
 
         [Test]
@@ -513,9 +513,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.That(csHeightWidthShape.Height, Is.EqualTo(expectedHeight));
             }
 
-            if (typeof(TShape) == typeof(CrossSectionStandardShapeRound))
+            if (typeof(TShape) == typeof(CrossSectionStandardShapeCircle))
             {
-                var csRoundShape = createdShape as CrossSectionStandardShapeRound;
+                var csRoundShape = createdShape as CrossSectionStandardShapeCircle;
                 Assert.NotNull(csRoundShape);
                 Assert.That(csRoundShape.Diameter, Is.EqualTo(expectedWidth));
             }

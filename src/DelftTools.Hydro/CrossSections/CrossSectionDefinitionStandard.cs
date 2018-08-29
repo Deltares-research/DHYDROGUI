@@ -120,8 +120,8 @@ namespace DelftTools.Hydro.CrossSections
                 case CrossSectionStandardShapeType.Rectangle:
                     return CrossSectionStandardShapeRectangle.CreateDefault();
                 // TODO: Re-enable once Enclosed branches are supported
-                case CrossSectionStandardShapeType.Round: 
-                    return CrossSectionStandardShapeRound.CreateDefault();
+                case CrossSectionStandardShapeType.Circle: 
+                    return CrossSectionStandardShapeCircle.CreateDefault();
                 case CrossSectionStandardShapeType.Arch:
                     return CrossSectionStandardShapeArch.CreateDefault();
                 case CrossSectionStandardShapeType.Cunette:

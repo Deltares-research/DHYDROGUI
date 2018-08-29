@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             try
             {
                 InitializeImportManager();
-                var importedFeatureElements = ImportGwswDatabaseToNetwork(network);
+                var importedFeatureElements = ImportGwswDatabaseToNetwork();
                 if (network != null)
                 {
                     ReportProgress("Adding features to network");
@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         private GwswImportManager ImportManager { get; }
         
-        private IList<ISewerFeature> ImportGwswDatabaseToNetwork(IHydroNetwork network)
+        private IList<ISewerFeature> ImportGwswDatabaseToNetwork()
         {
             var importedFeatureElements = new List<ISewerFeature>();
             foreach (var filePath in FilesToImport)
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 var gwswElements = ImportGwswElementList(filePath);
 
                 ReportProgress("Generating network features");
-                var createdSewerEntities = SewerFeatureFactory.CreateSewerEntities(gwswElements, network);
+                var createdSewerEntities = SewerFeatureFactory.CreateSewerEntities(gwswElements);
                 
                 importedFeatureElements.AddRange(createdSewerEntities);
                 Log.InfoFormat(Resources.GwswFileImporterBase_ImportItem_File__0__imported__1__features_, filePath, createdSewerEntities.Count);

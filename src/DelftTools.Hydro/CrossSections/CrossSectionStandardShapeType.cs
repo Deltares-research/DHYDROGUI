@@ -22,7 +22,7 @@
         Trapezium,
         
         Egg,// not in use -> only closed branches
-        Round, //not in use -> only closed branches
+        Circle, //not in use -> only closed branches
 
     }
 }

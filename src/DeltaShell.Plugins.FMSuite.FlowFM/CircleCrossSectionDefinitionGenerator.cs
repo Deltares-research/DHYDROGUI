@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return roundShape;
         }
 
-        private CrossSectionStandardShapeRound CreateRoundShapeFromGwsw(GwswElement gwswElement)
+        private CrossSectionStandardShapeCircle CreateRoundShapeFromGwsw(GwswElement gwswElement)
         {
             var shapeName = GetCrossSectionShapeName(gwswElement);
 
@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var multiplier = 1.0;
                 var pvcStringId = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Polyvinylchlorid);
                 if (materialAttribute.IsValidAttribute() && materialAttribute.ValueAsString.Equals(pvcStringId)) multiplier = 16.0 / 17.0;
-                return new CrossSectionStandardShapeRound
+                return new CrossSectionStandardShapeCircle
                 {
                     Name = shapeName,
                     Diameter = multiplier * width / 1000 /*Conversion from millimeters to meters*/
@@ -37,9 +37,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return GetDefaultRoundShape(shapeName);
         }
 
-        private static CrossSectionStandardShapeRound GetDefaultRoundShape(string name)
+        private static CrossSectionStandardShapeCircle GetDefaultRoundShape(string name)
         {
-            var defaultCircle = CrossSectionStandardShapeRound.CreateDefault();
+            var defaultCircle = CrossSectionStandardShapeCircle.CreateDefault();
             defaultCircle.Name = name;
             return defaultCircle;
         }

@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCr
         {
             get
             {
-                return bindingSourceShape.DataSource as CrossSectionStandardShapeRound;
+                return bindingSourceShape.DataSource as CrossSectionStandardShapeCircle;
             }
             set
             {

@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
             
-            var shape = CreateSewerFeature<CrossSectionStandardShapeRound>(sewerProfileGwswElement);
+            var shape = CreateSewerFeature<CrossSectionStandardShapeCircle>(sewerProfileGwswElement);
             Assert.IsNotNull(shape);
             Assert.That(shape.Diameter, Is.EqualTo(0.4));
         }
@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
 
-            var shape = CreateSewerFeature<CrossSectionStandardShapeRound>(sewerProfileGwswElement);
+            var shape = CreateSewerFeature<CrossSectionStandardShapeCircle>(sewerProfileGwswElement);
             Assert.IsNotNull(shape);
             Assert.That(shape.Diameter, Is.EqualTo(0.4));
         }
@@ -165,9 +165,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var shapeType = createdShape.Type;
             switch (shapeType)
             {
-                case CrossSectionStandardShapeType.Round:
+                case CrossSectionStandardShapeType.Circle:
                 {
-                    var csShape = createdShape as CrossSectionStandardShapeRound;
+                    var csShape = createdShape as CrossSectionStandardShapeCircle;
                     Assert.NotNull(csShape);
                     Assert.That(Math.Abs(csShape.Diameter - expectedWidth) < 0.0001);
                     break;

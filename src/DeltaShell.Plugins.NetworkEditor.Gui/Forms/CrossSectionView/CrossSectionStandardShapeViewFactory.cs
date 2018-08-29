@@ -23,10 +23,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                                };
 
 
-                case CrossSectionStandardShapeType.Round: //wait for implemnetation closed branches
+                case CrossSectionStandardShapeType.Circle: //wait for implemnetation closed branches
                     return new CrossSectionStandardShapeRoundView
                                {
-                                   Data = (CrossSectionStandardShapeRound) standardShape
+                                   Data = (CrossSectionStandardShapeCircle) standardShape
                                };
 
                 case CrossSectionStandardShapeType.Trapezium:

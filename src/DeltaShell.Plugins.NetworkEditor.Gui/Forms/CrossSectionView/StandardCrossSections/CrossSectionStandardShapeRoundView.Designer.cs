@@ -55,7 +55,7 @@
             // 
             // bindingSourceShape
             // 
-            this.bindingSourceShape.DataSource = typeof(DelftTools.Hydro.CrossSections.StandardShapes.CrossSectionStandardShapeRound);
+            this.bindingSourceShape.DataSource = typeof(DelftTools.Hydro.CrossSections.StandardShapes.CrossSectionStandardShapeCircle);
             // 
             // label2
             // 

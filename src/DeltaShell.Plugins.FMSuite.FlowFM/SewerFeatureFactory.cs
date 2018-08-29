@@ -17,15 +17,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         #region Creators
 
         /// <summary>
-        /// Generate multiple sewer network features from a list of GwswElements. Additionally use an existent HydroNetwork to find elements
-        /// already present on it or add auxiliar ones such as structures or profiles.
+        /// Generate multiple sewer features from a list of GwswElements.
         /// </summary>
         /// <param name="gwswElements">List of GwswElements.</param>
-        /// <param name="network">HydroNetwork</param>
         /// <returns>IList of ISewerFeature objects that have been created from objects in gwswElements.<param name="gwswElements"/></returns>
-        public static IList<ISewerFeature> CreateSewerEntities(IList<GwswElement> gwswElements, IHydroNetwork network = null)
+        public static IList<ISewerFeature> CreateSewerEntities(IList<GwswElement> gwswElements)
         {
-            var createdNetworkFeatures = new List<ISewerFeature>();
+            var createdSewerFeatures = new List<ISewerFeature>();
             var elementTypesList = new List<KeyValuePair<SewerFeatureType, GwswElement>>();
 
             foreach (var gwswElement in gwswElements)
@@ -40,29 +38,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var nodeTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Node).Select(k => k.Value).ToList();
             if (nodeTypes.Any())
             {
-                createdNetworkFeatures.AddRange(nodeTypes.Select(CreateSewerNetworkEntity));
+                createdSewerFeatures.AddRange(nodeTypes.Select(CreateSewerFeature));
             }
             
             // Cross section types
             var crossSectionTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Crosssection).Select(k => k.Value).ToList();
             if (crossSectionTypes.Any())
             {
-                createdNetworkFeatures.AddRange(crossSectionTypes.Select(CreateSewerNetworkEntity));
+                createdSewerFeatures.AddRange(crossSectionTypes.Select(CreateSewerFeature));
             }
 
             // Connection types
             var connectionTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Connection).Select(k => k.Value).ToList();
             if (connectionTypes.Any())
             {
-                var connectionNetworkFeatures = connectionTypes.Select(CreateSewerNetworkEntity);
-                createdNetworkFeatures.AddRange(connectionNetworkFeatures);
+                var connectionSewerFeatures = connectionTypes.Select(CreateSewerFeature);
+                createdSewerFeatures.AddRange(connectionSewerFeatures);
             }
             
             // Structure types 
             var structureTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Structure).Select(k => k.Value).ToList();
             if (structureTypes.Any())
             {
-                var structureFeatures = structureTypes.Select(CreateSewerNetworkEntity).ToList();
+                var structureFeatures = structureTypes.Select(CreateSewerFeature).ToList();
                 var pointFeatures = structureFeatures.OfType<IStructure1D>();
 
                 foreach (var pointFeature in pointFeatures)
@@ -75,25 +73,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                 }
                 
-                createdNetworkFeatures.AddRange(structureFeatures);
+                createdSewerFeatures.AddRange(structureFeatures);
             }
-            return createdNetworkFeatures;
+            return createdSewerFeatures;
         }
 
         /// <summary>
-        /// Generates a single Network Feature out of a GwswElement.
+        /// Generates a single sewer feature out of a GwswElement.
         /// </summary>
         /// <param name="gwswElement">Collection of attributes and values extracted from a Csv Element.</param>
-        /// <returns>Single Network Feature representing the <param name="gwswElement"/> given as a parameter.</returns>
-        private static ISewerFeature CreateSewerNetworkEntity(GwswElement gwswElement)
+        /// <returns>Single sewer feature representing the <param name="gwswElement"/> given as a parameter.</returns>
+        private static ISewerFeature CreateSewerFeature(GwswElement gwswElement)
         {
-            var generator = GetSewerNetworkFeatureGenerator(gwswElement);
+            var generator = GetSewerFeatureGenerator(gwswElement);
             return generator?.Generate(gwswElement);
         }
 
         #endregion
 
-        private static ISewerFeatureGenerator GetSewerNetworkFeatureGenerator(GwswElement gwswElement)
+        private static ISewerFeatureGenerator GetSewerFeatureGenerator(GwswElement gwswElement)
         {
             SewerFeatureType elementType;
             if (!Enum.TryParse(gwswElement?.ElementTypeName, out elementType)) return null;

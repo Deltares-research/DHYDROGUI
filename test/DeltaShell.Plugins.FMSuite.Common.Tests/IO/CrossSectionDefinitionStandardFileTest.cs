@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void GivenCsDefinitionStandardRound_WhenWriting_ThenFileIsInRightFormat()
         {
             var csDefinitions = new List<CrossSectionDefinitionStandard> {
-                new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRound { Diameter = 0.45 })
+                new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle { Diameter = 0.45 })
                 {
                     Name = "myCrossSectionDefinition",
                 }

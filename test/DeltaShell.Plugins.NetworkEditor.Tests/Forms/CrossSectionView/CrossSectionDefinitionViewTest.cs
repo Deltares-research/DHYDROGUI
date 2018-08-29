@@ -584,7 +584,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         //[Test] wait for implementation closed branch
         //public void ShowWithStandardCrossSection()
         //{
-        //    var circle = new CrossSectionStandardShapeRound {Diameter = 10.0};
+        //    var circle = new CrossSectionStandardShapeCircle {Diameter = 10.0};
         //    var crossSectionDefinitionStandard = new CrossSectionDefinitionStandard(circle);
 
         //    var crossSectionView = new CrossSectionDefinitionView();

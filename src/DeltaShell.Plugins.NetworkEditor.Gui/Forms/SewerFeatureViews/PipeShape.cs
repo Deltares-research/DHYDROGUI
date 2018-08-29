@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 return rectangleShape.Width;
             }
 
-            var roundShape = shape as CrossSectionStandardShapeRound;
+            var roundShape = shape as CrossSectionStandardShapeCircle;
             if (roundShape != null)
             {
                 return roundShape.Diameter;
@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 return rectangleShape.Height;
             }
 
-            var roundShape = shape as CrossSectionStandardShapeRound;
+            var roundShape = shape as CrossSectionStandardShapeCircle;
             if (roundShape != null)
             {
                 return roundShape.Diameter;

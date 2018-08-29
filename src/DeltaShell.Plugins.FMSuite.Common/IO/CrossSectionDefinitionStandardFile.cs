@@ -20,8 +20,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
                 switch (csDefinition.ShapeType)
                 {
-                    case CrossSectionStandardShapeType.Round:
-                        var csShapeRound = csDefinition.Shape as CrossSectionStandardShapeRound;
+                    case CrossSectionStandardShapeType.Circle:
+                        var csShapeRound = csDefinition.Shape as CrossSectionStandardShapeCircle;
                         if (csShapeRound != null) definitionCategory.AddProperty("Diameter", $"{csShapeRound.Diameter:0.00#}");
                         break;
                     case CrossSectionStandardShapeType.Rectangle:

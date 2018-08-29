@@ -185,7 +185,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             switch (propertyName)
             {
                 case "CrossSectionDiameter":
-                    return shape is CrossSectionStandardShapeRound;
+                    return shape is CrossSectionStandardShapeCircle;
                 case "CrossSectionWidth":
                 case "CrossSectionHeight":
                     return shape is CrossSectionStandardShapeWidthHeightBase || shape is CrossSectionStandardShapeArch;

@@ -197,7 +197,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
 
             var diameter = category.ReadProperty<double>(DefinitionRegion.Diameter.Key);
             
-            var shape = new CrossSectionStandardShapeRound{ Diameter = diameter};
+            var shape = new CrossSectionStandardShapeCircle{ Diameter = diameter};
             var crossSectionDefinition = new CrossSectionDefinitionStandard(shape);
             SetCommonCrossSectionDefinitionsProperties(crossSectionDefinition, category);
 

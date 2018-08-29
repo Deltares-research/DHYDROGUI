@@ -13,7 +13,7 @@ namespace DelftTools.Hydro.Structures
     public static class SewerFactory
     {
         private const string DefaultProfileDefinitionName = "Default Sewer Profile";
-        private static readonly CrossSectionDefinitionStandard DefaultSewerProfile = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRound { Diameter = 0.4 })
+        private static readonly CrossSectionDefinitionStandard DefaultSewerProfile = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle { Diameter = 0.4 })
         {
             Name = DefaultProfileDefinitionName
         };
@@ -36,7 +36,7 @@ namespace DelftTools.Hydro.Structures
             {
                 defSewerProfile = DefaultSewerProfile;
                 hydroNetwork.SharedCrossSectionDefinitions.Add(defSewerProfile);
-                ((CrossSectionStandardShapeRound) ((CrossSectionDefinitionStandard) defSewerProfile).Shape).Diameter = 0.4;
+                ((CrossSectionStandardShapeCircle) ((CrossSectionDefinitionStandard) defSewerProfile).Shape).Diameter = 0.4;
             }
             pipe.CrossSectionDefinition = DefaultSewerProfile;
             pipe.Length = pipe.Geometry.Length;

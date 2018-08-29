@@ -85,6 +85,12 @@ namespace DeltaShell.NGHS.IO.Helpers
             AddProperty(name, valuesString, comment);
         }
 
+        public void AddProperty(string name, IEnumerable<string> values, string comment = null)
+        {
+            var valuesString = string.Join(" ", values);
+            AddProperty(name, valuesString, comment);
+        }
+
         public void AddProperty(string name, int value, string comment = null)
         {
             AddProperty(name, value.ToString(CultureInfo.InvariantCulture), comment);

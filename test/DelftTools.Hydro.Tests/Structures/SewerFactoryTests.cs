@@ -22,10 +22,10 @@ namespace DelftTools.Hydro.Tests.Structures
 
             Assert.AreEqual(CrossSectionType.Standard ,profile.CrossSectionType);
 
-            var csRoundShape = profile.Shape as CrossSectionStandardShapeRound;
+            var csRoundShape = profile.Shape as CrossSectionStandardShapeCircle;
             Assert.IsNotNull(csRoundShape);
             Assert.That(csRoundShape.Diameter, Is.EqualTo(0.4));
-            Assert.That(csRoundShape.Type, Is.EqualTo(CrossSectionStandardShapeType.Round));
+            Assert.That(csRoundShape.Type, Is.EqualTo(CrossSectionStandardShapeType.Circle));
 
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(1));
             Assert.AreSame(retrievedPipe.CrossSectionDefinition, network.SharedCrossSectionDefinitions.First());

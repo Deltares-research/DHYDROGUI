@@ -188,9 +188,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             };
         }
 
-        protected static T CreateSewerFeature<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : class, ISewerFeature
+        protected static T CreateSewerFeature<T>(GwswElement gwswElement) where T : class, ISewerFeature
         {
-            var sewerEntities = SewerFeatureFactory.CreateSewerEntities(new List<GwswElement> { gwswElement }, network);
+            var sewerEntities = SewerFeatureFactory.CreateSewerEntities(new List<GwswElement> { gwswElement });
             var sewerEntity = sewerEntities.FirstOrDefault() as T;
             return sewerEntity;
         }

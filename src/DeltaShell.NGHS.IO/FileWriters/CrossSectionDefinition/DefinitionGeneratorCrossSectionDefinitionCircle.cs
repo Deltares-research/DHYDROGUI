@@ -17,9 +17,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         {
             var standardDefinition = crossSectionDefinition as CrossSectionDefinitionStandard;
             if (standardDefinition == null) return IniCategory;
-            if (standardDefinition.ShapeType != CrossSectionStandardShapeType.Round) return IniCategory;
+            if (standardDefinition.ShapeType != CrossSectionStandardShapeType.Circle) return IniCategory;
             AddCommonRegionElements(crossSectionDefinition);
-            var shapeCircle = standardDefinition.Shape as CrossSectionStandardShapeRound;
+            var shapeCircle = standardDefinition.Shape as CrossSectionStandardShapeCircle;
             if (shapeCircle == null) return IniCategory;
             IniCategory.AddProperty(DefinitionRegion.Diameter.Key, shapeCircle.Diameter, DefinitionRegion.Diameter.Description, DefinitionRegion.Diameter.Format);
             GenerateTabulatedProfile(ConverStandardToZw(standardDefinition));

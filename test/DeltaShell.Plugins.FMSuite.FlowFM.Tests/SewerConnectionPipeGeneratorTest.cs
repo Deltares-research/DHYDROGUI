@@ -56,7 +56,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.TargetCompartmentId, targetCompartmentId, string.Empty)
                 }
             };
-            var network = new HydroNetwork();
 
             var element = new SewerConnectionPipeGenerator().Generate(pipeGwswElement);
             Assert.IsTrue(element is Pipe);

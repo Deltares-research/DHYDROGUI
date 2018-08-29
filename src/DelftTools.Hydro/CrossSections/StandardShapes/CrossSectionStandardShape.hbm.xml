@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
                    namespace="DelftTools.Hydro.CrossSections.StandardShapes"
                    assembly="DelftTools.Hydro">
@@ -33,7 +33,7 @@
       <property name="Width" />
       <property name="Height" />
     </subclass>
-    <subclass name="CrossSectionStandardShapeRound" discriminator-value="round">
+    <subclass name="CrossSectionStandardShapeCircle" discriminator-value="round">
       <property name="Name" />
       <property name="Diameter" />
     </subclass>

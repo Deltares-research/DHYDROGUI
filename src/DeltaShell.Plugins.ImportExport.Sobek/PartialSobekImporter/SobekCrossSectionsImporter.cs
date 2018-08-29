@@ -345,7 +345,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return GetCrossSectionDefinitionZW(sobekCrossSectionDefinition);
             }
 
-            var crossSectionStandardShapeRound = new CrossSectionStandardShapeRound
+            var crossSectionStandardShapeRound = new CrossSectionStandardShapeCircle
                                                      {
                                                          Diameter = sobekCrossSectionDefinition.Radius
                                                      };

@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers
             crossSectionDefinitionZW.ShiftLevel(standardDefinition.LevelShift);
             crossSectionDefinitionZW.AddSection(standardDefinition.Sections[0].SectionType, crossSectionDefinitionZW.Width);
             
-            //var isClosed = (standardDefinition.ShapeType == CrossSectionStandardShapeType.Round || standardDefinition.ShapeType == CrossSectionStandardShapeType.Egg);
+            //var isClosed = (standardDefinition.ShapeType == CrossSectionStandardShapeType.Circle || standardDefinition.ShapeType == CrossSectionStandardShapeType.Egg);
             //Wait for implementation closed branches
 
             const bool isClosed = false;

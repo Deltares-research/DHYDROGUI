@@ -1021,7 +1021,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenEmptyHydroNetwork_WhenAddingACrossSectionStandardShape_ThenItIsAddedToTheSharedCrossSectionDefinitions()
         {
             var network = new HydroNetwork();
-            var roundShape = new CrossSectionStandardShapeRound
+            var roundShape = new CrossSectionStandardShapeCircle
             {
                 Name = "myShape"
             };
@@ -1039,11 +1039,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var network = new HydroNetwork();
             var csDefinitionName = "myShape";
-            var roundShape1 = new CrossSectionStandardShapeRound { Name = csDefinitionName };
+            var roundShape1 = new CrossSectionStandardShapeCircle { Name = csDefinitionName };
             AddSewerFeatureToNetwork(roundShape1, network);
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(1));
 
-            var roundShape2 = new CrossSectionStandardShapeRound { Name = csDefinitionName };
+            var roundShape2 = new CrossSectionStandardShapeCircle { Name = csDefinitionName };
             AddSewerFeatureToNetwork(roundShape2, network);
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(1));
 
@@ -1065,7 +1065,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             AddSewerFeatureToNetwork(pipe3, network);
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(0));
 
-            var roundShape = new CrossSectionStandardShapeRound
+            var roundShape = new CrossSectionStandardShapeCircle
             {
                 Name = crossSectionDefinitionName
             };
@@ -1087,7 +1087,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             AddSewerFeatureToNetwork(pipe1, network);
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(0));
 
-            var roundShape = new CrossSectionStandardShapeRound
+            var roundShape = new CrossSectionStandardShapeCircle
             {
                 Name = crossSectionDefinitionName,
                 Diameter = 0.4
@@ -1098,13 +1098,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var csDefinition = pipe1.CrossSectionDefinition;
             Assert.That(csDefinition.Name, Is.EqualTo(crossSectionDefinitionName));
 
-            var csShape = csDefinition.Shape as CrossSectionStandardShapeRound;
+            var csShape = csDefinition.Shape as CrossSectionStandardShapeCircle;
             Assert.IsNotNull(csShape);
             Assert.That(csShape.Name, Is.EqualTo(crossSectionDefinitionName));
             Assert.That(csShape.Diameter, Is.EqualTo(0.4));
 
             var networkCsDefinition = network.SharedCrossSectionDefinitions.FirstOrDefault() as CrossSectionDefinitionStandard;
-            var csShapeInNetwork = networkCsDefinition.Shape as CrossSectionStandardShapeRound;
+            var csShapeInNetwork = networkCsDefinition.Shape as CrossSectionStandardShapeCircle;
             csShapeInNetwork.Diameter = 3.3;
 
             Assert.That(csShape.Diameter, Is.EqualTo(3.3));

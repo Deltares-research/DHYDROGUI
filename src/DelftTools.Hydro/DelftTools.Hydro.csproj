@@ -166,7 +166,7 @@
     <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeEgg.cs" />
     <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeElliptical.cs" />
     <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeRectangle.cs" />
-    <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeRound.cs" />
+    <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeCircle.cs" />
     <Compile Include="CrossSections\CrossSectionStandardShapeType.cs" />
     <Compile Include="CrossSections\CrossSectionZWExtensions.cs" />
     <Compile Include="CrossSections\CrossSectionSectionType.cs" />

@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             #endregion
 
             var network = new HydroNetwork();
-            var outletCompartment = CreateSewerFeature<OutletCompartment>(nodeGwswElement, network);
+            var outletCompartment = CreateSewerFeature<OutletCompartment>(nodeGwswElement);
             Assert.IsNotNull(outletCompartment);
             
             CheckCompartmentPropertyValues(outletCompartment, uniqueId, manholeId, nodeLength, nodeWidth, nodeShape, floodableArea, bottomLevel, surfaceLevel);
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 defaultDouble, defaultDouble, defaultDouble, surfaceWaterLevel);
 
             var network = new HydroNetwork();
-            var outletCompartment = CreateSewerFeature<OutletCompartment>(structureGwswElement, network);
+            var outletCompartment = CreateSewerFeature<OutletCompartment>(structureGwswElement);
             Assert.IsNotNull(outletCompartment);
             Assert.That(outletCompartment.SurfaceWaterLevel, Is.EqualTo(surfaceWaterLevel));
         }

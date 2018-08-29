@@ -231,7 +231,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void SaveLoadCrossSectionStandard()
         {
-            var crossSectionStandardShapeRound = new CrossSectionStandardShapeRound
+            var crossSectionStandardShapeRound = new CrossSectionStandardShapeCircle
                                                      {
                                                          Diameter = 5
                                                      };
@@ -244,8 +244,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             Assert.IsNotNull(retrieved);
             Assert.AreEqual(2, retrieved.LevelShift);
             ICrossSectionStandardShape crossSectionStandardShape = retrieved.Shape;
-            Assert.IsTrue(crossSectionStandardShape is CrossSectionStandardShapeRound);
-            var shape = (CrossSectionStandardShapeRound)retrieved.Shape;
+            Assert.IsTrue(crossSectionStandardShape is CrossSectionStandardShapeCircle);
+            var shape = (CrossSectionStandardShapeCircle)retrieved.Shape;
             Assert.AreEqual(5, shape.Diameter);
         }
         
@@ -287,7 +287,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void GivenRoundStandardShape_WhenSaveLoadWithNHibernate_ThenPublicPropertiesArePreserved()
         {
-            var shape = new CrossSectionStandardShapeRound();
+            var shape = new CrossSectionStandardShapeCircle();
             TestNHibernateSaveLoadFunctionality(shape);
         }
 

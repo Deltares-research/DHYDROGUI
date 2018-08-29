@@ -7,7 +7,7 @@ namespace DelftTools.Hydro.CrossSections.Extensions
     {
         public static double GetProfileDiameter(this CrossSectionDefinitionStandard csDefinition)
         {
-            return csDefinition.GetPropertyValue<CrossSectionStandardShapeRound>(shape => shape.Diameter, 3);
+            return csDefinition.GetPropertyValue<CrossSectionStandardShapeCircle>(shape => shape.Diameter, 3);
         }
 
         public static double GetProfileWidth(this CrossSectionDefinitionStandard csDefinition)
