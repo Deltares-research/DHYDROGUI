@@ -151,7 +151,7 @@
     <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorElliptical.cs" />
     <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorSteelCunette.cs" />
     <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorTrapezium.cs" />
-    <Compile Include="IO\CrossSectionDefinitionGenerators\ICrossSectionDefinitionIniCategoryGenerator.cs" />
+    <Compile Include="IO\CrossSectionDefinitionGenerators\ACrossSectionDefinitionIniCategoryGenerator.cs" />
     <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorFactory.cs" />
     <Compile Include="IO\Exporters\FmCrossSectionDefinitionExporter.cs" />
     <Compile Include="IO\WaterFlowFMModelFactory.cs" />
