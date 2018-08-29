@@ -70,44 +70,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(string.Empty, sourceAndSink), expectedLogMessage);
         }
 
-        [TestCase(true, true, true, true, true)]
-        [TestCase(false, true, true, true, true)]
-        [TestCase(true, false, true, true, true)]
-        [TestCase(true, true, false, true, true)]
-        [TestCase(true, true, true, false, true)]
-        [TestCase(true, true, true, true, false)]
-        [TestCase(false, false, true, true, true)]
-        [TestCase(false, true, false, true, true)]
-        [TestCase(false, true, true, false, true)]
-        [TestCase(false, true, true, true, false)]
-        [TestCase(true, false, false, true, true)]
-        [TestCase(true, false, true, false, true)]
-        [TestCase(true, false, true, true, false)]
-        [TestCase(true, true, false, false, true)]
-        [TestCase(true, true, false, true, false)]
-        [TestCase(true, true, true, false, false)]
-        [TestCase(false, false, false, true, true)]
-        [TestCase(false, false, true, false, true)]
-        [TestCase(false, false, true, true, false)]
-        [TestCase(false, true, false, false, true)]
-        [TestCase(false, true, false, true, false)]
-        [TestCase(false, true, true, false, false)]
-        [TestCase(true, false, false, false, true)]
-        [TestCase(true, false, false, true, false)]
-        [TestCase(true, false, true, false, false)]
-        [TestCase(true, true, false, false, false)]
-        [TestCase(false, false, false, false, true)]
-        [TestCase(false, false, false, true, false)]
-        [TestCase(false, false, true, false, false)]
-        [TestCase(false, true, false, false, false)]
-        [TestCase(true, false, false, false, false)]
-        [TestCase(false, false, false, false, false)]
-        public void TestImportItem_SourceAndSinks(bool useSalinity, bool useTemperature, bool useSedimentMorphology, bool useSecondaryFlow, bool useTracers)
+        [TestCase(true, HeatFluxModelType.TransportOnly, true, true, true)]
+        [TestCase(false, HeatFluxModelType.TransportOnly, true, true, true)]
+        [TestCase(true, HeatFluxModelType.None, true, true, true)]
+        [TestCase(true, HeatFluxModelType.TransportOnly, false, true, true)]
+        [TestCase(true, HeatFluxModelType.TransportOnly, true, false, true)]
+        [TestCase(true, HeatFluxModelType.TransportOnly, true, true, false)]
+        [TestCase(false, HeatFluxModelType.None, true, true, true)]
+        [TestCase(false, HeatFluxModelType.TransportOnly, false, true, true)]
+        [TestCase(false, HeatFluxModelType.TransportOnly, true, false, true)]
+        [TestCase(false, HeatFluxModelType.TransportOnly, true, true, false)]
+        [TestCase(true, HeatFluxModelType.None, false, true, true)]
+        [TestCase(true, HeatFluxModelType.None, true, false, true)]
+        [TestCase(true, HeatFluxModelType.None, true, true, false)]
+        [TestCase(true, HeatFluxModelType.TransportOnly, false, false, true)]
+        [TestCase(true, HeatFluxModelType.TransportOnly, false, true, false)]
+        [TestCase(true, HeatFluxModelType.TransportOnly, true, false, false)]
+        [TestCase(false, HeatFluxModelType.None, false, true, true)]
+        [TestCase(false, HeatFluxModelType.None, true, false, true)]
+        [TestCase(false, HeatFluxModelType.None, true, true, false)]
+        [TestCase(false, HeatFluxModelType.TransportOnly, false, false, true)]
+        [TestCase(false, HeatFluxModelType.TransportOnly, false, true, false)]
+        [TestCase(false, HeatFluxModelType.TransportOnly, true, false, false)]
+        [TestCase(true, HeatFluxModelType.None, false, false, true)]
+        [TestCase(true, HeatFluxModelType.None, false, true, false)]
+        [TestCase(true, HeatFluxModelType.None, true, false, false)]
+        [TestCase(true, HeatFluxModelType.TransportOnly, false, false, false)]
+        [TestCase(false, HeatFluxModelType.None, false, false, true)]
+        [TestCase(false, HeatFluxModelType.None, false, true, false)]
+        [TestCase(false, HeatFluxModelType.None, true, false, false)]
+        [TestCase(false, HeatFluxModelType.TransportOnly, false, false, false)]
+        [TestCase(true, HeatFluxModelType.None, false, false, false)]
+        [TestCase(false, HeatFluxModelType.None, false, false, false)]
+        public void TestImportItem_SourceAndSinks(bool useSalinity, HeatFluxModelType temperature, bool useSedimentMorphology, bool useSecondaryFlow, bool useTracers)
         {
             var testFilePath = TestHelper.GetTestFilePath(@"timFiles\10Columns10Values.tim");
-
+            var useTemperature = (temperature != HeatFluxModelType.None);
             // setup
-            var fmModel = SetupFMModelWithSourceAndSink(useSalinity, useTemperature, useSedimentMorphology, useSecondaryFlow, useTracers);
+            var fmModel = SetupFMModelWithSourceAndSink(useSalinity, temperature, useSedimentMorphology, useSecondaryFlow, useTracers);
             var sourceAndSink = fmModel.SourcesAndSinks.FirstOrDefault();
             Assert.NotNull(sourceAndSink);
             
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             ValidateImportedSourceAndSinkFunction(sourceAndSink.Function, useSalinity, useTemperature, useSecondaryFlow);
         }
 
-        private WaterFlowFMModel SetupFMModelWithSourceAndSink(bool useSalinity, bool useTemperature, bool useSedimentMorphology, bool useSecondaryFlow, bool useTracers)
+        private WaterFlowFMModel SetupFMModelWithSourceAndSink(bool useSalinity, HeatFluxModelType temperature, bool useSedimentMorphology, bool useSecondaryFlow, bool useTracers)
         {
             var expectedNumberOfComponents = 4; // Discharge, Salinity, Tmeperature, SecondaryFlow
             var fmModel = new WaterFlowFMModel();
@@ -143,8 +143,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var salinityProperty = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
             salinityProperty.Value = useSalinity;
 
-            var tempertureProperty = modelDefinition.GetModelProperty(GuiProperties.UseTemperature);
-            tempertureProperty.Value = useTemperature;
+            var tempertureProperty = modelDefinition.GetModelProperty(KnownProperties.Temperature);
+            tempertureProperty.SetValueAsString(((int)temperature).ToString());
+
 
             var sedimentMorphologyProperty = modelDefinition.GetModelProperty(GuiProperties.UseMorSed);
             sedimentMorphologyProperty.Value = useSedimentMorphology;

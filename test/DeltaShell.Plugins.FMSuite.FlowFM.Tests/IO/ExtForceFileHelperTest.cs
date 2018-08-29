@@ -64,11 +64,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             expectedError);
         }
 
-        [TestCase(false, false, "NoSalinityOrTemperature.tim")]
-        [TestCase(true, false, "SalinityOnly.tim")]
-        [TestCase(false, true, "TemperatureOnly.tim")]
-        [TestCase(true, true, "BothSalinityAndTemperature.tim")]
-        public void TestWriteSourceAndSinkData(bool useSalinity, bool useTemperature, string fileName)
+        [TestCase(false, HeatFluxModelType.None, "NoSalinityOrTemperature.tim")]
+        [TestCase(true, HeatFluxModelType.None, "SalinityOnly.tim")]
+        [TestCase(false, HeatFluxModelType.TransportOnly, "TemperatureOnly.tim")]
+        [TestCase(true, HeatFluxModelType.TransportOnly, "BothSalinityAndTemperature.tim")]
+        public void TestWriteSourceAndSinkData(bool useSalinity, HeatFluxModelType temperature, string fileName)
         {
             var expectedFile = TestHelper.GetTestFilePath(@"timFiles\" + fileName);
 
@@ -89,9 +89,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.NotNull(useSalinityProperty);
             useSalinityProperty.Value = useSalinity;
 
-            var useTemperatureProperty = modelDefinition.GetModelProperty(GuiProperties.UseTemperature);
-            Assert.NotNull(useTemperatureProperty);
-            useTemperatureProperty.Value = useTemperature;
+            var temperatureProperty = modelDefinition.GetModelProperty(KnownProperties.Temperature) ;
+            Assert.NotNull(temperatureProperty);
+            temperatureProperty.SetValueAsString(((int)temperature).ToString());
 
             var function = sourceAndSink.Function;
 

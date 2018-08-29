@@ -250,9 +250,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         private void OnTemperaturePropertyChanged(WaterFlowFMProperty temperatureProp)
         {
-            var useTemperatureProp = GetModelProperty(GuiProperties.UseTemperature);
             HeatFluxModel.Type = (HeatFluxModelType) ((int) temperatureProp.Value);
-            useTemperatureProp.Value = HeatFluxModel.Type != HeatFluxModelType.None;
         }
         
         public readonly List<string> KnownWriteOutputSnappedFeatures = new List<string>()
@@ -688,9 +686,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public void UpdateHeatFluxModel()
         {
             HeatFluxModel.Type = (HeatFluxModelType) ((int) GetModelProperty(KnownProperties.Temperature).Value);
-            handlingPropertyChanged = true;
-            GetModelProperty(GuiProperties.UseTemperature).Value = (HeatFluxModel.Type != HeatFluxModelType.None);
-            handlingPropertyChanged = false;
         }
 
         public void SelectSpatialOperations(IEventedList<IDataItem> dataItems, IEnumerable<string> tracerDefinitions, IEnumerable<string> spatiallyVaryingSedimentDefinitions = null)

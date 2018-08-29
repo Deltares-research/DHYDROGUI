@@ -1638,7 +1638,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static void EnableSalinityAndTemperature(WaterFlowFMModel model)
         {
             model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = true;
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value = true;
+            model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString(((int)HeatFluxModelType.TransportOnly).ToString());
         }
 
         private void AddFlowBoundaryConditionToModel(WaterFlowFMModel model)

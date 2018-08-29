@@ -170,7 +170,6 @@ GUIOnly,StartTime,timeframe,,Start Time,DateTime,,,,FALSE,,,,,,Begin of simulati
 GUIOnly,StopTime,timeframe,,Stop Time,DateTime,,,,FALSE,,,,,,End of simulation period
 GUIOnly,PartOf1D2DModel,processes,,Is part of a 1D2D Integrated Model,0|1,0,0,1,FALSE,,FALSE,,,,Is part of a 1D2D Integrated Model
 physics,Temperature,processes,,Temperature:None|Transport only|Excess temperature|Composite model,0|1|3|5,0,0,5,FALSE,,,,,,"Include temperature (0: no, 1: only transport, 3: excess model of D3D, 5: composite (ocean) model)"
-GUIOnly,UseTemperature,processes,,TemperatureBoolean,0|1,0,0,1,FALSE,,FALSE,,,,Include temperature
 GUIOnly,UseMorSed,processes,,Sediment/Morphology [Beta],0|1,0,0,1,FALSE,PartOf1D2DModel=0,,,,,Include Sediment/Morphology [Beta version]
 GUIOnly,WriteSnappedFeatures,output,Output,Write Snapped Features,0|1,0,,,FALSE,,,,,,Write generated output snapped features
 output,Wrishp_crs,,,Write shape file for cross section,0|1,0,,,FALSE,,,,,,Write shape file for cross section

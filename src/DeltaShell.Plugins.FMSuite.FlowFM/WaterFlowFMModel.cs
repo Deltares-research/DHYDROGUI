@@ -240,11 +240,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public bool UseTemperature
         {
-            get { return (bool) ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling                
-            }
+            get { return (HeatFluxModelType)ModelDefinition.GetModelProperty(KnownProperties.Temperature).Value != HeatFluxModelType.None; }
         }
 
         public bool UseMorSed
@@ -1030,9 +1026,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Temperature,
-                    StringComparison.InvariantCultureIgnoreCase) ||
-                         prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.UseTemperature,
-                             StringComparison.InvariantCultureIgnoreCase))
+                    StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching heat flux model"));
                     HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;

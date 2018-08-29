@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var model = new WaterFlowFMModel();
             //Enable Salinity and Temperature checkboxes
             var salinityProperty = model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity);
-            var temperatureProperty = model.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature);
+            var temperatureProperty = model.ModelDefinition.GetModelProperty(KnownProperties.Temperature);
             //Create a grid
             model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
             model.UseRestart = true;
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             //Validate model
             var report = model.Validate(model);
             salinityProperty.Value = true;
-            temperatureProperty.Value = true;
+            temperatureProperty.SetValueAsString("1");
 
             Assert.AreEqual(0,
                 report.GetAllIssuesRecursive()

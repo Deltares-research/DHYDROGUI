@@ -965,19 +965,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("1");
             Assert.AreEqual(HeatFluxModelType.TransportOnly, waterFlowFMModel.HeatFluxModelType);
-            Assert.IsTrue((bool) waterFlowFMModel.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value);
-
+            
             waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("3");
             Assert.AreEqual(HeatFluxModelType.ExcessTemperature, waterFlowFMModel.HeatFluxModelType);
-            Assert.IsTrue((bool)waterFlowFMModel.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value);
-
+            
             waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("5");
             Assert.AreEqual(HeatFluxModelType.Composite, waterFlowFMModel.HeatFluxModelType);
-            Assert.IsTrue((bool)waterFlowFMModel.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value);
-
+            
             waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("0");
             Assert.AreEqual(HeatFluxModelType.None, waterFlowFMModel.HeatFluxModelType);
-            Assert.IsFalse((bool)waterFlowFMModel.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value);
         }
         
         [Test]
