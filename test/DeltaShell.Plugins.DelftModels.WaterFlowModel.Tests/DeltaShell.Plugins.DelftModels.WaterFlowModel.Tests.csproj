@@ -257,7 +257,7 @@
     <Compile Include="Validation\WaterFlowModel1DModelMergeTest.cs" />
     <Compile Include="Validation\WaterFlowModel1DModelMergeValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowModel1DOutFileValidatorTest.cs" />
-    <Compile Include="WaterFlowMdel1D30LegacyLoaderTest.cs" />
+    <Compile Include="WaterFlowModel1D30LegacyLoaderTest.cs" />
     <Compile Include="WaterFlowModel1DBoundaryNodeDataPropertiesTest.cs" />
     <Compile Include="WaterFlowModel1DBoundaryNodeDataTest.cs" />
     <Compile Include="WaterFlowModel1DConveyanceCalculatorTest.cs" />
