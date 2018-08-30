@@ -26,7 +26,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                 case CrossSectionStandardShapeType.Trapezium:
                     return new DefinitionGeneratorCrossSectionDefinitionTrapezium();
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(shapeType), shapeType, string.Empty);
+                    throw new NotImplementedException();
             }
         }
     }

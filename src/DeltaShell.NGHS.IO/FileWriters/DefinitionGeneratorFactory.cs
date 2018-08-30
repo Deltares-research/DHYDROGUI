@@ -71,19 +71,7 @@ namespace DeltaShell.NGHS.IO.FileWriters
         private static DefinitionGeneratorCrossSectionDefinition DefinitionGeneratorCrossSectionDefinition(ICrossSectionDefinition crossSectionDefinition)
         {
             var standardCrossSectionDefinition = crossSectionDefinition as CrossSectionDefinitionStandard;
-            if (standardCrossSectionDefinition != null)
-            {
-                try
-                {
-                    return DefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(standardCrossSectionDefinition.ShapeType);
-                }
-                catch (Exception)
-                {
-                    Log.DebugFormat("A shape type has been used that has not been implemented in DefinitionIniCategoryGeneratorFactory.");
-                }
-            }
-
-            return null;
+            return standardCrossSectionDefinition != null ? DefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(standardCrossSectionDefinition.ShapeType) : null;
         }
 
         private static DefinitionGeneratorCrossSectionDefinition GetDefinitionGeneratorCrossSectionStandard(CrossSectionStandardShapeType shapeType)
