@@ -119,7 +119,8 @@
     <Compile Include="FileReaders\CrossSectionDefinitionFileReaderTest.cs" />
     <Compile Include="FileReaders\LocationFileReaderTest.cs" />
     <Compile Include="FileReaders\NetworkAndGridReaderTest.cs" />
-    <Compile Include="FileWriters\CrossSectionDefinitionFileWritersTest.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\CrossSectionDefinitionFileWritersTest.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\CrossSectionDefinitionIniCategoryGeneratorFactoryTest.cs" />
     <Compile Include="FileWriters\IniFileWriterTest.cs" />
     <Compile Include="FileWriters\LocationFileWritersTest.cs" />
     <Compile Include="FileWriters\NetworkAndGridWriterTest.cs" />

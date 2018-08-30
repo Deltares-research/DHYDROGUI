@@ -1,3 +1,4 @@
+using System;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.FileReaders.Definition;
@@ -5,11 +6,14 @@ using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using GeoAPI.Extensions.Networks;
+using log4net;
 
 namespace DeltaShell.NGHS.IO.FileWriters
 {
     public static class DefinitionGeneratorFactory
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(DefinitionGeneratorFactory));
+
         public static IDefinitionReader GetDefinitionReaderCrossSection(string type)
         {
             switch (type)
@@ -58,15 +62,28 @@ namespace DeltaShell.NGHS.IO.FileWriters
                     definitionGeneratorCrossSectionDefinition = new DefinitionGeneratorCrossSectionDefinitionZw();
                     break;
                 case CrossSectionType.Standard:
-                    var standardCrossSectionDefinition = crossSectionDefinition as CrossSectionDefinitionStandard;
-                    if (standardCrossSectionDefinition != null)
-                    {
-                        definitionGeneratorCrossSectionDefinition =
-                            GetDefinitionGeneratorCrossSectionStandard(standardCrossSectionDefinition.ShapeType);
-                    }
+                    definitionGeneratorCrossSectionDefinition = DefinitionGeneratorCrossSectionDefinition(crossSectionDefinition);
                     break;
             }
             return definitionGeneratorCrossSectionDefinition;
+        }
+
+        private static DefinitionGeneratorCrossSectionDefinition DefinitionGeneratorCrossSectionDefinition(ICrossSectionDefinition crossSectionDefinition)
+        {
+            var standardCrossSectionDefinition = crossSectionDefinition as CrossSectionDefinitionStandard;
+            if (standardCrossSectionDefinition != null)
+            {
+                try
+                {
+                    return DefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(standardCrossSectionDefinition.ShapeType);
+                }
+                catch (Exception)
+                {
+                    Log.DebugFormat("A shape type has been used that has not been implemented in DefinitionIniCategoryGeneratorFactory.");
+                }
+            }
+
+            return null;
         }
 
         private static DefinitionGeneratorCrossSectionDefinition GetDefinitionGeneratorCrossSectionStandard(CrossSectionStandardShapeType shapeType)

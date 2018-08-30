@@ -143,16 +143,6 @@
     <Compile Include="DefaultCrossSectionDefinitionGenerator.cs" />
     <Compile Include="EggCrossSectionDefinitionGenerator.cs" />
     <Compile Include="IO\BathymetryFileWriter.cs" />
-    <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorArch.cs" />
-    <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorCunette.cs" />
-    <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitioniniCategoryGeneratorEgg.cs" />
-    <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorRectangle.cs" />
-    <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorCircle.cs" />
-    <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorElliptical.cs" />
-    <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorSteelCunette.cs" />
-    <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorTrapezium.cs" />
-    <Compile Include="IO\CrossSectionDefinitionGenerators\ACrossSectionDefinitionIniCategoryGenerator.cs" />
-    <Compile Include="IO\CrossSectionDefinitionGenerators\CrossSectionDefinitionIniCategoryGeneratorFactory.cs" />
     <Compile Include="IO\Exporters\FmCrossSectionDefinitionWriter.cs" />
     <Compile Include="IO\WaterFlowFMModelFactory.cs" />
     <Compile Include="IO\WaterFlowFMModelReaderData.cs" />

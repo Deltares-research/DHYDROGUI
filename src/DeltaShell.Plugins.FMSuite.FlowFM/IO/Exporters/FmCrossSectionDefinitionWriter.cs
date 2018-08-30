@@ -6,7 +6,6 @@ using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.CrossSectionDefinitionGenerators;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 {
@@ -33,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                     ? ((CrossSectionDefinitionProxy)crossSectionDefinition).InnerDefinition
                     : crossSectionDefinition;
 
-                var iniCategoryGenerator = CrossSectionDefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(crossSectionDefinition);
+                var iniCategoryGenerator = DefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(crossSectionDefinition);
 
                 if (definitionGeneratorCrossSectionDefinition == null) continue;
 
