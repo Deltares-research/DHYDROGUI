@@ -19,8 +19,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.CrossSectionDefinitionGenerators
         protected override void AddMeasurementsProperties(ICrossSectionStandardShape crossSectionShape)
         {
             var rectangleShape = crossSectionShape as CrossSectionStandardShapeRectangle;
-            iniCategory.AddProperty(DefinitionRegion.RectangleWidth.Key, $"{rectangleShape.Width:0.00}");
-            iniCategory.AddProperty(DefinitionRegion.RectangleHeight.Key, $"{rectangleShape.Height:0.00}");
+            iniCategory.AddProperty(DefinitionPropertySettings.RectangleWidth.Key, $"{rectangleShape.Width:0.00}");
+            iniCategory.AddProperty(DefinitionPropertySettings.RectangleHeight.Key, $"{rectangleShape.Height:0.00}");
         }
     }
 }

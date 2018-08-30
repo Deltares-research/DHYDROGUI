@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         public void GiveArchCrossSectionDefinition_WhenGeneratingIniCategory_ThenIniCategoryHasTheCorrectName()
         {
             var iniCategory = GenerateArchDelftIniCategory();
-            Assert.That(iniCategory.Name, Is.EqualTo(DefinitionRegion.Header));
+            Assert.That(iniCategory.Name, Is.EqualTo(DefinitionPropertySettings.Header));
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         {
             var iniCategory = GenerateArchDelftIniCategory();
 
-            var shapeTypeValue = iniCategory.GetPropertyValue(DefinitionRegion.DefinitionType.Key);
+            var shapeTypeValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.That(shapeTypeValue, Is.EqualTo("Arch"));
         }
 
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         {
             var iniCategory = GenerateArchDelftIniCategory();
 
-            var idValue = iniCategory.GetPropertyValue(DefinitionRegion.Id.Key);
+            var idValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.That(idValue, Is.EqualTo(CrossSectionName));
         }
 
@@ -45,17 +45,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         {
             var iniCategory = GenerateArchDelftIniCategory();
 
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.ArchCrossSectionWidth.Key, $"{CrossSectionWidth:0.00}");
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.ArchCrossSectionHeight.Key, $"{CrossSectionHeight:0.00}");
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.ArchHeight.Key, $"{CrossSectionArcHeight:0.00}");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.ArchCrossSectionWidth.Key, $"{CrossSectionWidth:0.00}");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.ArchCrossSectionHeight.Key, $"{CrossSectionHeight:0.00}");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.ArchHeight.Key, $"{CrossSectionArcHeight:0.00}");
         }
 
         [Test]
         public void GivenArchCrossSectionDefinition_WhenGeneratingIniCategory_ThenIniCategoryHasCorrectStandardProperties()
         {
             var iniCategory = GenerateArchDelftIniCategory();
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.Closed.Key, "1");
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.GroundlayerUsed.Key, "0");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.Closed.Key, "1");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.GroundlayerUsed.Key, "0");
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         {
             var iniCategory = GenerateArchDelftIniCategory();
 
-            var closedValue = iniCategory.GetPropertyValue(DefinitionRegion.RoughnessNames.Key);
+            var closedValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.RoughnessNames.Key);
             Assert.That(closedValue, Is.EqualTo("Main Second"));
         }
 

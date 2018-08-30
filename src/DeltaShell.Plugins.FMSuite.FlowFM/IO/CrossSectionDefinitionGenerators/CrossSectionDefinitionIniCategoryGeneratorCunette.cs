@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.CrossSectionDefinitionGenerators
         protected override void AddMeasurementsProperties(ICrossSectionStandardShape crossSectionShape)
         {
             var cunetteShape = crossSectionShape as CrossSectionStandardShapeCunette;
-            iniCategory.AddProperty(DefinitionRegion.CunetteWidth.Key, $"{cunetteShape.Width:0.00}");
+            iniCategory.AddProperty(DefinitionPropertySettings.CunetteWidth.Key, $"{cunetteShape.Width:0.00}");
         }
     }
 }

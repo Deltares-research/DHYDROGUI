@@ -318,6 +318,21 @@ namespace DelftTools.Hydro.Helpers
             crossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(-10.0, DefaultCrossSectionWidth / 3, 0);
         }
 
+        public static CrossSectionDefinitionZW ConverStandardToZw(this CrossSectionDefinitionStandard standardDefinition)
+        {
+            var crossSectionDefinitionZw = standardDefinition.Shape.GetTabulatedDefinition();
+
+            crossSectionDefinitionZw.ShiftLevel(standardDefinition.LevelShift);
+            var section = standardDefinition.Sections.FirstOrDefault();
+            crossSectionDefinitionZw.Sections.Add(new CrossSectionSection
+            {
+                SectionType = section == null ? new CrossSectionSectionType { Name = CrossSectionDefinition.MainSectionName } : section.SectionType,
+                MinY = 0,
+                MaxY = crossSectionDefinitionZw.Width / 2
+            });
+            return crossSectionDefinitionZw;
+        }
+
         /// <summary>
         /// Update the envelope. This is not by default updates by NTS because modifying geometries is not done.
         /// </summary>

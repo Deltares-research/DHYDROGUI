@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
 
             IList<ICrossSectionDefinition> crossSectionDefinitions = new List<ICrossSectionDefinition>();
-            foreach (var csdDefinitionCategory in csdCategories.Where(category => category.Name == DefinitionRegion.Header))
+            foreach (var csdDefinitionCategory in csdCategories.Where(category => category.Name == DefinitionPropertySettings.Header))
             {
                 try
                 {

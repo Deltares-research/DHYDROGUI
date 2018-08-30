@@ -23,26 +23,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.CrossSectionDefinitionGenerators
 
         private void InitializeIniCategory()
         {
-            iniCategory = new DelftIniCategory(DefinitionRegion.Header);
+            iniCategory = new DelftIniCategory(DefinitionPropertySettings.Header);
         }
 
         private void AddStandardProperties(CrossSectionDefinitionStandard crossSectionDefinition)
         {
-            iniCategory.AddProperty(DefinitionRegion.Id.Key, crossSectionDefinition.Shape.Name);
-            iniCategory.AddProperty(DefinitionRegion.DefinitionType.Key, crossSectionDefinition.ShapeType.ToString());
+            iniCategory.AddProperty(DefinitionPropertySettings.Id.Key, crossSectionDefinition.Shape.Name);
+            iniCategory.AddProperty(DefinitionPropertySettings.DefinitionType.Key, crossSectionDefinition.ShapeType.ToString());
         }
 
         protected abstract void AddMeasurementsProperties(ICrossSectionStandardShape crossSectionShape);
 
         private void AddStandardProperties()
         {
-            iniCategory.AddProperty(DefinitionRegion.Closed.Key, "1");
-            iniCategory.AddProperty(DefinitionRegion.GroundlayerUsed.Key, "0");
+            iniCategory.AddProperty(DefinitionPropertySettings.Closed.Key, "1");
+            iniCategory.AddProperty(DefinitionPropertySettings.GroundlayerUsed.Key, "0");
         }
 
         private void AddRoughnessNamesProperty(CrossSectionDefinitionStandard crossSectionDefinition)
         {
-            iniCategory.AddProperty(DefinitionRegion.RoughnessNames.Key, crossSectionDefinition.Sections.Select(s => s.SectionType.Name));
+            iniCategory.AddProperty(DefinitionPropertySettings.RoughnessNames.Key, crossSectionDefinition.Sections.Select(s => s.SectionType.Name));
         }
     }
 }

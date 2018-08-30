@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
 
             IList<ICrossSectionDefinition> crossSectionDefinitions = new List<ICrossSectionDefinition>();
-            foreach (var csdDefinitionCategory in csdCategories.Where(category => category.Name == DefinitionRegion.Header))
+            foreach (var csdDefinitionCategory in csdCategories.Where(category => category.Name == DefinitionPropertySettings.Header))
             {
                 try
                 {
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         public static ICrossSectionDefinition ReadCSDDefinition(IDelftIniCategory csdDefinitionCategory, WaterFlowModel1D crossSectionSectionTypes)
         {
-            var typeProperty = csdDefinitionCategory.Properties.First(p => p.Name == DefinitionRegion.DefinitionType.Key);
+            var typeProperty = csdDefinitionCategory.Properties.First(p => p.Name == DefinitionPropertySettings.DefinitionType.Key);
             var definitionReader = DefinitionGeneratorFactory.GetDefinitionReaderCrossSection(typeProperty.Value);
             if (definitionReader == null)
             {
@@ -122,11 +122,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             if (readCrossSectionDefinition.CrossSectionType == CrossSectionType.YZ || readCrossSectionDefinition.CrossSectionType == CrossSectionType.GeometryBased)
             {
-                var roughnessNames = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionRegion.RoughnessNames.Key,true,';');
+                var roughnessNames = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.RoughnessNames.Key,true,';');
                 if (roughnessNames.Count < 0 )
                     throw new FileReadingException("reading error");
 
-                var roughnessPositions = csdDefinitionCategory.ReadPropertiesToListOfType<double>(DefinitionRegion.RoughnessPositions.Key);
+                var roughnessPositions = csdDefinitionCategory.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.RoughnessPositions.Key);
                 if (roughnessPositions.Count < 0)
                     throw new FileReadingException("reading error");
 
@@ -155,9 +155,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 var floodPlain1CrossSectionSectionType = GetCrossSectionSectionType(CrossSectionDefinitionZW.Floodplain1SectionTypeName, model.Network);
                 var floodPlain2CrossSectionSectionType = GetCrossSectionSectionType(CrossSectionDefinitionZW.Floodplain2SectionTypeName, model.Network);
 
-                var mainSectionWidth = csdDefinitionCategory.ReadProperty<double>(DefinitionRegion.Main.Key);
-                var floodPlain1Width = csdDefinitionCategory.ReadProperty<double>(DefinitionRegion.FloodPlain1.Key,true);
-                var flowWidths = csdDefinitionCategory.ReadPropertiesToListOfType<double>(DefinitionRegion.FlowWidths.Key);
+                var mainSectionWidth = csdDefinitionCategory.ReadProperty<double>(DefinitionPropertySettings.Main.Key);
+                var floodPlain1Width = csdDefinitionCategory.ReadProperty<double>(DefinitionPropertySettings.FloodPlain1.Key,true);
+                var flowWidths = csdDefinitionCategory.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.FlowWidths.Key);
             
                 var floodPlain2Width = flowWidths.Max() - mainSectionWidth - floodPlain1Width; //FloodPlain2 is defined as max(FlowWidth) - Main - Floodplain1
 
@@ -171,7 +171,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             
             if (readCrossSectionDefinition.CrossSectionType == CrossSectionType.Standard)
             {
-                var roughnessNames = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionRegion.RoughnessNames.Key, true,';');
+                var roughnessNames = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.RoughnessNames.Key, true,';');
                 if (roughnessNames == null ) return;
                 
                 if (roughnessNames.Count != 1)

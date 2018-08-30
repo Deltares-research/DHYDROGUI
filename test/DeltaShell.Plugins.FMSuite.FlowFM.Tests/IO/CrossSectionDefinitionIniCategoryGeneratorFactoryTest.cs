@@ -10,56 +10,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void GivenRoundShape_WhenGettingIniCategoryGenerator_ThenItIsOfTheCorrectType()
         {
-            var generator = CrossSectionDefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType.Circle);
+            var generator = CrossSectionDefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(CrossSectionStandardShapeType.Circle);
             Assert.IsTrue(generator is CrossSectionDefinitionIniCategoryGeneratorCircle);
         }
 
         [Test]
         public void GivenEllipticalShape_WhenGettingIniCategoryGenerator_ThenItIsOfTheCorrectType()
         {
-            var generator = CrossSectionDefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType.Elliptical);
+            var generator = CrossSectionDefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(CrossSectionStandardShapeType.Elliptical);
             Assert.IsTrue(generator is CrossSectionDefinitionIniCategoryGeneratorElliptical);
         }
 
         [Test]
         public void GivenRectangleShape_WhenGettingIniCategoryGenerator_ThenItIsOfTheCorrectType()
         {
-            var generator = CrossSectionDefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType.Rectangle);
+            var generator = CrossSectionDefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(CrossSectionStandardShapeType.Rectangle);
             Assert.IsTrue(generator is CrossSectionDefinitionIniCategoryGeneratorRectangle);
         }
 
         [Test]
         public void GivenEggShape_WhenGettingIniCategoryGenerator_ThenItIsOfTheCorrectType()
         {
-            var generator = CrossSectionDefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType.Egg);
+            var generator = CrossSectionDefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(CrossSectionStandardShapeType.Egg);
             Assert.IsTrue(generator is CrossSectionDefinitionIniCategoryGeneratorEgg);
         }
 
         [Test]
         public void GivenArchShape_WhenGettingIniCategoryGenerator_ThenItIsOfTheCorrectType()
         {
-            var generator = CrossSectionDefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType.Arch);
+            var generator = CrossSectionDefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(CrossSectionStandardShapeType.Arch);
             Assert.IsTrue(generator is CrossSectionDefinitionIniCategoryGeneratorArch);
         }
 
         [Test]
         public void GivenCunetteShape_WhenGettingIniCategoryGenerator_ThenItIsOfTheCorrectType()
         {
-            var generator = CrossSectionDefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType.Cunette);
+            var generator = CrossSectionDefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(CrossSectionStandardShapeType.Cunette);
             Assert.IsTrue(generator is CrossSectionDefinitionIniCategoryGeneratorCunette);
         }
 
         [Test]
         public void GivenSteelCunetteShape_WhenGettingIniCategoryGenerator_ThenItIsOfTheCorrectType()
         {
-            var generator = CrossSectionDefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType.SteelCunette);
+            var generator = CrossSectionDefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(CrossSectionStandardShapeType.SteelCunette);
             Assert.IsTrue(generator is CrossSectionDefinitionIniCategoryGeneratorSteelCunette);
         }
 
         [Test]
         public void GivenTrapeziumShape_WhenGettingIniCategoryGenerator_ThenItIsOfTheCorrectType()
         {
-            var generator = CrossSectionDefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType.Trapezium);
+            var generator = CrossSectionDefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(CrossSectionStandardShapeType.Trapezium);
             Assert.IsTrue(generator is CrossSectionDefinitionIniCategoryGeneratorTrapezium);
         }
     }

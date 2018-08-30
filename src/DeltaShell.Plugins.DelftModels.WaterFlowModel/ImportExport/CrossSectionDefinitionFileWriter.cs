@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                         definitionRegion = AddGroundLayer(definitionRegion, crossSection.Definition.Name, waterFlowModel1D.Network);
                         break;
                 }
-                if (sharedCrossSections.Contains(definition)) definitionRegion.AddProperty(DefinitionRegion.IsShared.Key, 1, DefinitionRegion.IsShared.Description);
+                if (sharedCrossSections.Contains(definition)) definitionRegion.AddProperty(DefinitionPropertySettings.IsShared.Key, 1, DefinitionPropertySettings.IsShared.Description);
                 categories.Add(definitionRegion);
                 processedCsDefinitions.Add(csDefinitionId);
             }
@@ -80,8 +80,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 groundlayer = structure.GroundLayerThickness;
             }
             
-            iniCategory.AddProperty(DefinitionRegion.GroundlayerUsed.Key, groundlayerUsed, DefinitionRegion.GroundlayerUsed.Description);
-            iniCategory.AddProperty(DefinitionRegion.Groundlayer.Key, groundlayer, DefinitionRegion.Groundlayer.Description, DefinitionRegion.Groundlayer.Format);
+            iniCategory.AddProperty(DefinitionPropertySettings.GroundlayerUsed.Key, groundlayerUsed, DefinitionPropertySettings.GroundlayerUsed.Description);
+            iniCategory.AddProperty(DefinitionPropertySettings.Groundlayer.Key, groundlayer, DefinitionPropertySettings.Groundlayer.Description, DefinitionPropertySettings.Groundlayer.Format);
             return iniCategory;
         }
 
@@ -118,9 +118,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 frictionNames.Add(roughnessSection.Name);
             }
 
-            iniCategory.AddProperty(DefinitionRegion.SectionCount.Key, sectionCount, DefinitionRegion.SectionCount.Description);
-            iniCategory.AddProperty(DefinitionRegion.RoughnessNames.Key, string.Join(";", frictionNames), DefinitionRegion.RoughnessNames.Description);
-            iniCategory.AddProperty(DefinitionRegion.RoughnessPositions.Key, roughnessPositions, DefinitionRegion.RoughnessPositions.Description, DefinitionRegion.RoughnessPositions.Format);
+            iniCategory.AddProperty(DefinitionPropertySettings.SectionCount.Key, sectionCount, DefinitionPropertySettings.SectionCount.Description);
+            iniCategory.AddProperty(DefinitionPropertySettings.RoughnessNames.Key, string.Join(";", frictionNames), DefinitionPropertySettings.RoughnessNames.Description);
+            iniCategory.AddProperty(DefinitionPropertySettings.RoughnessPositions.Key, roughnessPositions, DefinitionPropertySettings.RoughnessPositions.Description, DefinitionPropertySettings.RoughnessPositions.Format);
             return iniCategory;
         }
 

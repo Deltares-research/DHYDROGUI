@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         public void GiveEggCrossSectionDefinition_WhenGeneratingIniCategory_ThenIniCategoryHasTheCorrectName()
         {
             var iniCategory = GenerateEggDelftIniCategory();
-            Assert.That(iniCategory.Name, Is.EqualTo(DefinitionRegion.Header));
+            Assert.That(iniCategory.Name, Is.EqualTo(DefinitionPropertySettings.Header));
         }
 
         [Test]
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         {
             var iniCategory = GenerateEggDelftIniCategory();
 
-            var shapeTypeValue = iniCategory.GetPropertyValue(DefinitionRegion.DefinitionType.Key);
+            var shapeTypeValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.That(shapeTypeValue, Is.EqualTo("Egg"));
         }
 
@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         {
             var iniCategory = GenerateEggDelftIniCategory();
 
-            var idValue = iniCategory.GetPropertyValue(DefinitionRegion.Id.Key);
+            var idValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.That(idValue, Is.EqualTo(CrossSectionName));
         }
 
@@ -42,15 +42,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         public void GivenEggCrossSectionDefinition_WhenGeneratingIniCategory_ThenIniCategoryHasCorrectMeasurementProperties()
         {
             var iniCategory = GenerateEggDelftIniCategory();
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.EggWidth.Key, $"{CrossSectionWidth:0.00}");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.EggWidth.Key, $"{CrossSectionWidth:0.00}");
         }
 
         [Test]
         public void GivenEggCrossSectionDefinition_WhenGeneratingIniCategory_ThenIniCategoryHasCorrectStandardProperties()
         {
             var iniCategory = GenerateEggDelftIniCategory();
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.Closed.Key, "1");
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.GroundlayerUsed.Key, "0");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.Closed.Key, "1");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.GroundlayerUsed.Key, "0");
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         {
             var iniCategory = GenerateEggDelftIniCategory();
 
-            var closedValue = iniCategory.GetPropertyValue(DefinitionRegion.RoughnessNames.Key);
+            var closedValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.RoughnessNames.Key);
             Assert.That(closedValue, Is.EqualTo("Main Second"));
         }
 

@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.CrossSectionDefinitionGenerators
         protected override void AddMeasurementsProperties(ICrossSectionStandardShape crossSectionShape)
         {
             var circleShape = crossSectionShape as CrossSectionStandardShapeCircle;
-            iniCategory.AddProperty(DefinitionRegion.Diameter.Key, $"{circleShape.Diameter:0.00}");
+            iniCategory.AddProperty(DefinitionPropertySettings.Diameter.Key, $"{circleShape.Diameter:0.00}");
         }
     }
 }

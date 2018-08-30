@@ -19,13 +19,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.CrossSectionDefinitionGenerators
         protected override void AddMeasurementsProperties(ICrossSectionStandardShape crossSectionShape)
         {
             var steelCunetteShape = crossSectionShape as CrossSectionStandardShapeSteelCunette;
-            iniCategory.AddProperty(DefinitionRegion.SteelCunetteHeight.Key, $"{steelCunetteShape.Height:0.00}");
-            iniCategory.AddProperty(DefinitionRegion.SteelCunetteA.Key, $"{steelCunetteShape.AngleA:0.00}");
-            iniCategory.AddProperty(DefinitionRegion.SteelCunetteA1.Key, $"{steelCunetteShape.AngleA1:0.00}");
-            iniCategory.AddProperty(DefinitionRegion.SteelCunetteR.Key, $"{steelCunetteShape.RadiusR:0.00}");
-            iniCategory.AddProperty(DefinitionRegion.SteelCunetteR1.Key, $"{steelCunetteShape.RadiusR1:0.00}");
-            iniCategory.AddProperty(DefinitionRegion.SteelCunetteR2.Key, $"{steelCunetteShape.RadiusR2:0.00}");
-            iniCategory.AddProperty(DefinitionRegion.SteelCunetteR3.Key, $"{steelCunetteShape.RadiusR3:0.00}");
+            iniCategory.AddProperty(DefinitionPropertySettings.SteelCunetteHeight.Key, $"{steelCunetteShape.Height:0.00}");
+            iniCategory.AddProperty(DefinitionPropertySettings.SteelCunetteA.Key, $"{steelCunetteShape.AngleA:0.00}");
+            iniCategory.AddProperty(DefinitionPropertySettings.SteelCunetteA1.Key, $"{steelCunetteShape.AngleA1:0.00}");
+            iniCategory.AddProperty(DefinitionPropertySettings.SteelCunetteR.Key, $"{steelCunetteShape.RadiusR:0.00}");
+            iniCategory.AddProperty(DefinitionPropertySettings.SteelCunetteR1.Key, $"{steelCunetteShape.RadiusR1:0.00}");
+            iniCategory.AddProperty(DefinitionPropertySettings.SteelCunetteR2.Key, $"{steelCunetteShape.RadiusR2:0.00}");
+            iniCategory.AddProperty(DefinitionPropertySettings.SteelCunetteR3.Key, $"{steelCunetteShape.RadiusR3:0.00}");
         }
     }
 }

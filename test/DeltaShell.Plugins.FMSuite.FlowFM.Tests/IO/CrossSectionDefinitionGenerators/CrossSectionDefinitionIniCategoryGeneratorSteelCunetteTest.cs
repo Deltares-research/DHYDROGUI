@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         public void GiveSteelCunetteCrossSectionDefinition_WhenGeneratingIniCategory_ThenIniCategoryHasTheCorrectName()
         {
             var iniCategory = GenerateSteelCunetteDelftIniCategory();
-            Assert.That(iniCategory.Name, Is.EqualTo(DefinitionRegion.Header));
+            Assert.That(iniCategory.Name, Is.EqualTo(DefinitionPropertySettings.Header));
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         {
             var iniCategory = GenerateSteelCunetteDelftIniCategory();
 
-            var shapeTypeValue = iniCategory.GetPropertyValue(DefinitionRegion.DefinitionType.Key);
+            var shapeTypeValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.That(shapeTypeValue, Is.EqualTo("SteelCunette"));
         }
 
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         {
             var iniCategory = GenerateSteelCunetteDelftIniCategory();
 
-            var idValue = iniCategory.GetPropertyValue(DefinitionRegion.Id.Key);
+            var idValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.That(idValue, Is.EqualTo(CrossSectionName));
         }
 
@@ -49,21 +49,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         {
             var iniCategory = GenerateSteelCunetteDelftIniCategory();
 
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.SteelCunetteHeight.Key, $"{CrossSectionHeight:0.00}");
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.SteelCunetteA.Key, $"{AngleA:0.00}");
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.SteelCunetteA1.Key, $"{AngleA1:0.00}");
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.SteelCunetteR.Key, $"{RadiusR:0.00}");
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.SteelCunetteR1.Key, $"{RadiusR1:0.00}");
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.SteelCunetteR2.Key, $"{RadiusR2:0.00}");
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.SteelCunetteR3.Key, $"{RadiusR3:0.00}");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.SteelCunetteHeight.Key, $"{CrossSectionHeight:0.00}");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.SteelCunetteA.Key, $"{AngleA:0.00}");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.SteelCunetteA1.Key, $"{AngleA1:0.00}");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.SteelCunetteR.Key, $"{RadiusR:0.00}");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.SteelCunetteR1.Key, $"{RadiusR1:0.00}");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.SteelCunetteR2.Key, $"{RadiusR2:0.00}");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.SteelCunetteR3.Key, $"{RadiusR3:0.00}");
         }
 
         [Test]
         public void GivenSteelCunetteCrossSectionDefinition_WhenGeneratingIniCategory_ThenIniCategoryHasCorrectStandardProperties()
         {
             var iniCategory = GenerateSteelCunetteDelftIniCategory();
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.Closed.Key, "1");
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.GroundlayerUsed.Key, "0");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.Closed.Key, "1");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.GroundlayerUsed.Key, "0");
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         {
             var iniCategory = GenerateSteelCunetteDelftIniCategory();
 
-            var closedValue = iniCategory.GetPropertyValue(DefinitionRegion.RoughnessNames.Key);
+            var closedValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.RoughnessNames.Key);
             Assert.That(closedValue, Is.EqualTo("Main Second"));
         }
 

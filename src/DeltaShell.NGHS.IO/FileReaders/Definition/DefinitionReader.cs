@@ -24,8 +24,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
 
         protected void SetCommonCrossSectionDefinitionsProperties(ICrossSectionDefinition crossSectionDefinition, IDelftIniCategory category)
         {
-            crossSectionDefinition.Name = category.ReadProperty<string>(DefinitionRegion.Id.Key);
-            crossSectionDefinition.Thalweg = category.ReadProperty<double>(DefinitionRegion.Thalweg.Key);
+            crossSectionDefinition.Name = category.ReadProperty<string>(DefinitionPropertySettings.Id.Key);
+            crossSectionDefinition.Thalweg = category.ReadProperty<double>(DefinitionPropertySettings.Thalweg.Key);
         }
 
         protected void SetCommonStructureDefinitionsProperties(IStructure1D structureDefinition, IDelftIniCategory category)
@@ -42,11 +42,11 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
             var crossSectionDefinition = new CrossSectionDefinitionYZ();
             SetCommonCrossSectionDefinitionsProperties(crossSectionDefinition,category);
             
-            var yList = category.ReadPropertiesToListOfType<double>(DefinitionRegion.YValues.Key);
-            var zList = category.ReadPropertiesToListOfType<double>(DefinitionRegion.ZValues.Key);
-            var deltaZList = category.ReadPropertiesToListOfType<double>(DefinitionRegion.DeltaZStorage.Key);
+            var yList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.YValues.Key);
+            var zList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.ZValues.Key);
+            var deltaZList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.DeltaZStorage.Key);
             
-            var yzCount = category.ReadProperty<int>(DefinitionRegion.YZCount.Key);
+            var yzCount = category.ReadProperty<int>(DefinitionPropertySettings.YZCount.Key);
 
             if (yzCount == yList.Count && yList.Count != zList.Count && zList.Count != deltaZList.Count)
             {
@@ -72,13 +72,13 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
             var crossSectionDefinition = new CrossSectionDefinitionXYZ();
             SetCommonCrossSectionDefinitionsProperties(crossSectionDefinition, category);
 
-            var xCoorList = category.ReadPropertiesToListOfType<double>(DefinitionRegion.XCoors.Key);
-            var yCoorList = category.ReadPropertiesToListOfType<double>(DefinitionRegion.YCoors.Key);
-            var zCoorList = category.ReadPropertiesToListOfType<double>(DefinitionRegion.ZCoors.Key);
+            var xCoorList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.XCoors.Key);
+            var yCoorList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.YCoors.Key);
+            var zCoorList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.ZCoors.Key);
             
-            var deltaZList = category.ReadPropertiesToListOfType<double>(DefinitionRegion.DeltaZStorage.Key);
+            var deltaZList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.DeltaZStorage.Key);
 
-            var xyzCount = category.ReadProperty<int>(DefinitionRegion.XYZCount.Key);
+            var xyzCount = category.ReadProperty<int>(DefinitionPropertySettings.XYZCount.Key);
 
             if (xyzCount != deltaZList.Count || xyzCount != xCoorList.Count || xyzCount != yCoorList.Count ||
                 xyzCount != zCoorList.Count)
@@ -112,10 +112,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
             var crossSectionDefinition = new CrossSectionDefinitionZW();
             SetCommonCrossSectionDefinitionsProperties(crossSectionDefinition, category);
 
-            var numLevels = category.ReadProperty<int>(DefinitionRegion.NumLevels.Key);
-            var levels = category.ReadPropertiesToListOfType<double>(DefinitionRegion.Levels.Key);
-            var flowWidths = category.ReadPropertiesToListOfType<double>(DefinitionRegion.FlowWidths.Key);
-            var totalWidths = category.ReadPropertiesToListOfType<double>(DefinitionRegion.TotalWidths.Key);
+            var numLevels = category.ReadProperty<int>(DefinitionPropertySettings.NumLevels.Key);
+            var levels = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.Levels.Key);
+            var flowWidths = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.FlowWidths.Key);
+            var totalWidths = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.TotalWidths.Key);
 
             if (numLevels == levels.Count
                 && numLevels == flowWidths.Count
@@ -137,10 +137,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
                 throw new FileReadingException(errorMessage);
             }
             // summer dike
-            var crestLevel = category.ReadProperty<double>(DefinitionRegion.CrestSummerdike.Key);
-            var flowArea = category.ReadProperty<double>(DefinitionRegion.FlowAreaSummerdike.Key);
-            var totalArea = category.ReadProperty<double>(DefinitionRegion.TotalAreaSummerdike.Key);
-            var baseLevel = category.ReadProperty<double>(DefinitionRegion.BaseLevelSummerdike.Key);
+            var crestLevel = category.ReadProperty<double>(DefinitionPropertySettings.CrestSummerdike.Key);
+            var flowArea = category.ReadProperty<double>(DefinitionPropertySettings.FlowAreaSummerdike.Key);
+            var totalArea = category.ReadProperty<double>(DefinitionPropertySettings.TotalAreaSummerdike.Key);
+            var baseLevel = category.ReadProperty<double>(DefinitionPropertySettings.BaseLevelSummerdike.Key);
             
             if (Math.Abs(flowArea) > double.Epsilon && Math.Abs(totalArea) > double.Epsilon)//(flowArea and totalArea are larger than 0, so you can do something with this
             {
@@ -163,9 +163,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
         public override ICrossSectionDefinition ReadCrossSectionDefinition(IDelftIniCategory category)
         {
             
-            var width = category.ReadProperty<double>(DefinitionRegion.RectangleWidth.Key);
-            var height = category.ReadProperty<double>(DefinitionRegion.RectangleHeight.Key);
-            //var closed = category.ReadProperty<int>(DefinitionRegion.Closed.Key); // NO CLUE!!
+            var width = category.ReadProperty<double>(DefinitionPropertySettings.RectangleWidth.Key);
+            var height = category.ReadProperty<double>(DefinitionPropertySettings.RectangleHeight.Key);
+            //var closed = category.ReadProperty<int>(DefinitionPropertySettings.Closed.Key); // NO CLUE!!
             
             var shape = new CrossSectionStandardShapeRectangle {Height = height, Width = width};
             var crossSectionDefinition = new CrossSectionDefinitionStandard(shape);
@@ -180,8 +180,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
         public override ICrossSectionDefinition ReadCrossSectionDefinition(IDelftIniCategory category)
         {
 
-            var width = category.ReadProperty<double>(DefinitionRegion.EllipseWidth.Key);
-            var height = category.ReadProperty<double>(DefinitionRegion.EllipseHeight.Key);
+            var width = category.ReadProperty<double>(DefinitionPropertySettings.EllipseWidth.Key);
+            var height = category.ReadProperty<double>(DefinitionPropertySettings.EllipseHeight.Key);
             
             var shape = new CrossSectionStandardShapeElliptical{ Height = height, Width = width  };
             var crossSectionDefinition = new CrossSectionDefinitionStandard(shape);
@@ -195,7 +195,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
         public override ICrossSectionDefinition ReadCrossSectionDefinition(IDelftIniCategory category)
         {
 
-            var diameter = category.ReadProperty<double>(DefinitionRegion.Diameter.Key);
+            var diameter = category.ReadProperty<double>(DefinitionPropertySettings.Diameter.Key);
             
             var shape = new CrossSectionStandardShapeCircle{ Diameter = diameter};
             var crossSectionDefinition = new CrossSectionDefinitionStandard(shape);
@@ -209,7 +209,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
         public override ICrossSectionDefinition ReadCrossSectionDefinition(IDelftIniCategory category)
         {
 
-            var width = category.ReadProperty<double>(DefinitionRegion.EggWidth.Key);
+            var width = category.ReadProperty<double>(DefinitionPropertySettings.EggWidth.Key);
 
             var shape = new CrossSectionStandardShapeEgg { Width = width };
             var crossSectionDefinition = new CrossSectionDefinitionStandard(shape);
@@ -223,9 +223,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
         public override ICrossSectionDefinition ReadCrossSectionDefinition(IDelftIniCategory category)
         {
 
-            var archHeight = category.ReadProperty<double>(DefinitionRegion.ArchHeight.Key);
-            var height = category.ReadProperty<double>(DefinitionRegion.ArchCrossSectionHeight.Key);
-            var width = category.ReadProperty<double>(DefinitionRegion.ArchCrossSectionWidth.Key);
+            var archHeight = category.ReadProperty<double>(DefinitionPropertySettings.ArchHeight.Key);
+            var height = category.ReadProperty<double>(DefinitionPropertySettings.ArchCrossSectionHeight.Key);
+            var width = category.ReadProperty<double>(DefinitionPropertySettings.ArchCrossSectionWidth.Key);
 
             var shape = new CrossSectionStandardShapeArch { ArcHeight = archHeight, Width = width, Height = height};
             var crossSectionDefinition = new CrossSectionDefinitionStandard(shape);
@@ -238,7 +238,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
     {
         public override ICrossSectionDefinition ReadCrossSectionDefinition(IDelftIniCategory category)
         {
-            var width = category.ReadProperty<double>(DefinitionRegion.CunetteWidth.Key);
+            var width = category.ReadProperty<double>(DefinitionPropertySettings.CunetteWidth.Key);
 
             var shape = new CrossSectionStandardShapeCunette{ Width = width };
             var crossSectionDefinition = new CrossSectionDefinitionStandard(shape);
@@ -251,14 +251,14 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
         public override ICrossSectionDefinition ReadCrossSectionDefinition(IDelftIniCategory category)
         {
 
-            var height = category.ReadProperty<double>(DefinitionRegion.SteelCunetteHeight.Key);
-            var radiusR = category.ReadProperty<double>(DefinitionRegion.SteelCunetteR.Key);
-            var radiusR1 = category.ReadProperty<double>(DefinitionRegion.SteelCunetteR1.Key);
-            var radiusR2 = category.ReadProperty<double>(DefinitionRegion.SteelCunetteR2.Key);
-            var radiusR3 = category.ReadProperty<double>(DefinitionRegion.SteelCunetteR3.Key);
+            var height = category.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteHeight.Key);
+            var radiusR = category.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteR.Key);
+            var radiusR1 = category.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteR1.Key);
+            var radiusR2 = category.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteR2.Key);
+            var radiusR3 = category.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteR3.Key);
             
-            var angleA = category.ReadProperty<double>(DefinitionRegion.SteelCunetteA.Key);
-            var angleA1 = category.ReadProperty<double>(DefinitionRegion.SteelCunetteA1.Key);
+            var angleA = category.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteA.Key);
+            var angleA1 = category.ReadProperty<double>(DefinitionPropertySettings.SteelCunetteA1.Key);
             
             var shape = new CrossSectionStandardShapeSteelCunette {Height = height, 
                 RadiusR = radiusR,
@@ -278,9 +278,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
         public override ICrossSectionDefinition ReadCrossSectionDefinition(IDelftIniCategory category)
         {
 
-            var slope = category.ReadProperty<double>(DefinitionRegion.Slope.Key);
-            var bottomWidth = category.ReadProperty<double>(DefinitionRegion.BottomWidth.Key);
-            var maximumFlowWidth = category.ReadProperty<double>(DefinitionRegion.MaximumFlowWidth.Key);
+            var slope = category.ReadProperty<double>(DefinitionPropertySettings.Slope.Key);
+            var bottomWidth = category.ReadProperty<double>(DefinitionPropertySettings.BottomWidth.Key);
+            var maximumFlowWidth = category.ReadProperty<double>(DefinitionPropertySettings.MaximumFlowWidth.Key);
 
             var shape = new CrossSectionStandardShapeTrapezium { Slope = slope, BottomWidthB = bottomWidth, MaximumFlowWidth = maximumFlowWidth };
             var crossSectionDefinition = new CrossSectionDefinitionStandard(shape);
@@ -293,9 +293,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
         public override IStructure1D ReadStructureDefinition(IDelftIniCategory category)
         {
 
-            var slope = category.ReadProperty<double>(DefinitionRegion.Slope.Key);
-            var bottomWidth = category.ReadProperty<double>(DefinitionRegion.BottomWidth.Key);
-            var maximumFlowWidth = category.ReadProperty<double>(DefinitionRegion.MaximumFlowWidth.Key);
+            var slope = category.ReadProperty<double>(DefinitionPropertySettings.Slope.Key);
+            var bottomWidth = category.ReadProperty<double>(DefinitionPropertySettings.BottomWidth.Key);
+            var maximumFlowWidth = category.ReadProperty<double>(DefinitionPropertySettings.MaximumFlowWidth.Key);
 
             var shape = new CrossSectionStandardShapeTrapezium { Slope = slope, BottomWidthB = bottomWidth, MaximumFlowWidth = maximumFlowWidth };
             var structureDefinition = new Weir();

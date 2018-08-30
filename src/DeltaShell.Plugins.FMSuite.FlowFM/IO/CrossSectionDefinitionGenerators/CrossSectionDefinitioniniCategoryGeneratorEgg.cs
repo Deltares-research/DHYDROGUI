@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.CrossSectionDefinitionGenerators
         protected override void AddMeasurementsProperties(ICrossSectionStandardShape crossSectionShape)
         {
             var eggShape = crossSectionShape as CrossSectionStandardShapeEgg;
-            iniCategory.AddProperty(DefinitionRegion.EggWidth.Key, $"{eggShape.Width:0.00}");
+            iniCategory.AddProperty(DefinitionPropertySettings.EggWidth.Key, $"{eggShape.Width:0.00}");
         }
     }
 }

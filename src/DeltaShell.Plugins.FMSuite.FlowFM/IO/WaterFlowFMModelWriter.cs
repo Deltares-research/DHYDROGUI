@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.IO;
@@ -15,7 +17,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             PrepareModelDefinitionForWriting(model);
             WriteMorSedFilesIfNeeded(model);
             WriteMduFile(model, switchTo, writeExtForcings, writeFeatures);
+            WriteCrossSectionDefinitions(model.Network);
             WriteUGridFile(model);
+        }
+
+        private static void WriteCrossSectionDefinitions(IHydroNetwork network)
+        {
+            FmCrossSectionDefinitionWriter.WriteFile("dummy"/*Needs to be filled with ModelDefinition property!*/, network);
         }
 
         private static void PrepareModelDefinitionForWriting(IWaterFlowFMModel model)

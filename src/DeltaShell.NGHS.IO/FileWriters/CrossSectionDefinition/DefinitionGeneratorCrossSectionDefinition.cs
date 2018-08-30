@@ -13,22 +13,22 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             BinFileForLevelTables = binaryWriter;
         }
 
-        protected DelftIniCategory IniCategory { get; private set; }
+        protected DelftIniCategory IniCategory { get; }
         private readonly string definitiontype;
 
         protected DefinitionGeneratorCrossSectionDefinition(string definitiontype)
         {
             this.definitiontype = definitiontype;
-            IniCategory = new DelftIniCategory(DefinitionRegion.Header);
+            IniCategory = new DelftIniCategory(DefinitionPropertySettings.Header);
         }
 
         public abstract DelftIniCategory CreateDefinitionRegion(ICrossSectionDefinition crossSectionDefinition);
 
-        protected virtual void AddCommonRegionElements(ICrossSectionDefinition crossSectionDefinition)
+        protected virtual void AddCommonProperties(ICrossSectionDefinition crossSectionDefinition)
         {
-            IniCategory.AddProperty(DefinitionRegion.Id.Key, crossSectionDefinition.Name, DefinitionRegion.Id.Description);
-            IniCategory.AddProperty(DefinitionRegion.DefinitionType.Key, definitiontype, DefinitionRegion.DefinitionType.Description);
-            IniCategory.AddProperty(DefinitionRegion.Thalweg.Key, crossSectionDefinition.Thalweg, DefinitionRegion.Thalweg.Description, DefinitionRegion.Thalweg.Format);
+            IniCategory.AddProperty(DefinitionPropertySettings.Id, crossSectionDefinition.Name);
+            IniCategory.AddProperty(DefinitionPropertySettings.DefinitionType, definitiontype);
+            IniCategory.AddProperty(DefinitionPropertySettings.Thalweg, crossSectionDefinition.Thalweg);
         }
     }
 }

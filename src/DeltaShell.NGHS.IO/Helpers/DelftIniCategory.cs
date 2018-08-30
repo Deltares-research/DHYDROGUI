@@ -102,6 +102,26 @@ namespace DeltaShell.NGHS.IO.Helpers
             Properties.Add(new DelftIniProperty { Name = name, Value = coordinateAsIniValue, Comment = comment ?? "" });
         }
 
+        public void AddProperty(ConfigurationSetting propertyConfiguration, string value)
+        {
+            AddProperty(propertyConfiguration.Key, value, propertyConfiguration.Description);
+        }
+
+        public void AddProperty(ConfigurationSetting propertyConfiguration, int value)
+        {
+            AddProperty(propertyConfiguration.Key, value, propertyConfiguration.Description);
+        }
+
+        public void AddProperty(ConfigurationSetting propertyConfiguration, double value)
+        {
+            AddProperty(propertyConfiguration.Key, value, propertyConfiguration.Description, propertyConfiguration.Format);
+        }
+
+        public void AddProperty(ConfigurationSetting propertyConfiguration, IEnumerable<double> values)
+        {
+            AddProperty(propertyConfiguration.Key, values, propertyConfiguration.Description, propertyConfiguration.Format);
+        }
+
         public void SetProperty(string name, string value, string comment = null)
         {
             var prop = Properties.FirstOrDefault(p => p.Name == name);

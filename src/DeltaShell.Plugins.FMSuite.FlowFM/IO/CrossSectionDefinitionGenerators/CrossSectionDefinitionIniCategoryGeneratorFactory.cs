@@ -5,7 +5,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.CrossSectionDefinitionGenerators
 {
     public static class CrossSectionDefinitionIniCategoryGeneratorFactory
     {
-        public static ACrossSectionDefinitionIniCategoryGenerator GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType shapeType)
+        public static ACrossSectionDefinitionIniCategoryGenerator GetIniCategoryGenerator(CrossSectionStandardShapeType shapeType)
         {
             switch (shapeType)
             {

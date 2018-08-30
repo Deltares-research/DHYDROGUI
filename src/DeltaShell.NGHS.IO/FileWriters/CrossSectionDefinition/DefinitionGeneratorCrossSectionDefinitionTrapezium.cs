@@ -1,30 +1,30 @@
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DeltaShell.NGHS.IO.FileWriters.Location;
-using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
-    public class
-        DefinitionGeneratorCrossSectionDefinitionTrapezium : DefinitionGeneratorCrossSectionDefinitionStandard
+    public class DefinitionGeneratorCrossSectionDefinitionTrapezium : DefinitionGeneratorCrossSectionDefinitionStandard
     {
-        public DefinitionGeneratorCrossSectionDefinitionTrapezium()
-            : base(CrossSectionRegion.CrossSectionDefinitionType.Trapezium)
+        public DefinitionGeneratorCrossSectionDefinitionTrapezium() : base(CrossSectionRegion.CrossSectionDefinitionType.Trapezium)
         {
+            GenerateProfileProperties = false;
         }
 
-        public override DelftIniCategory CreateDefinitionRegion(ICrossSectionDefinition crossSectionDefinition)
+        protected override bool HasCorrectCrossSectionShape(CrossSectionDefinitionStandard standardDefinition)
         {
-            var standardDefinition = crossSectionDefinition as CrossSectionDefinitionStandard;
-            if (standardDefinition == null) return IniCategory;
-            if (standardDefinition.ShapeType != CrossSectionStandardShapeType.Trapezium) return IniCategory;
-            AddCommonRegionElements(crossSectionDefinition);
-            var shapeTrapezium = standardDefinition.Shape as CrossSectionStandardShapeTrapezium;
-            if (shapeTrapezium == null) return IniCategory;
-            IniCategory.AddProperty(DefinitionRegion.Slope.Key, shapeTrapezium.Slope, DefinitionRegion.Slope.Description, DefinitionRegion.Slope.Format);
-            IniCategory.AddProperty(DefinitionRegion.MaximumFlowWidth.Key, shapeTrapezium.MaximumFlowWidth, DefinitionRegion.MaximumFlowWidth.Description, DefinitionRegion.MaximumFlowWidth.Format);
-            IniCategory.AddProperty(DefinitionRegion.BottomWidth.Key, shapeTrapezium.BottomWidthB, DefinitionRegion.BottomWidth.Description, DefinitionRegion.BottomWidth.Format);
-            return IniCategory;
+            var trapeziumShape = standardDefinition.Shape as CrossSectionStandardShapeTrapezium;
+            return trapeziumShape != null;
+        }
+
+        protected override void AddShapeMeasurementProperties(ICrossSectionStandardShape shape)
+        {
+            var trapeziumShape = shape as CrossSectionStandardShapeTrapezium;
+            if (trapeziumShape == null) return;
+
+            IniCategory.AddProperty(DefinitionPropertySettings.Slope, trapeziumShape.Slope);
+            IniCategory.AddProperty(DefinitionPropertySettings.MaximumFlowWidth, trapeziumShape.MaximumFlowWidth);
+            IniCategory.AddProperty(DefinitionPropertySettings.BottomWidth, trapeziumShape.BottomWidthB);
         }
     }
 }

@@ -19,8 +19,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.CrossSectionDefinitionGenerators
         protected override void AddMeasurementsProperties(ICrossSectionStandardShape crossSectionShape)
         {
             var ellipticalShape = crossSectionShape as CrossSectionStandardShapeElliptical;
-            iniCategory.AddProperty(DefinitionRegion.EllipseWidth.Key, $"{ellipticalShape.Width:0.00}");
-            iniCategory.AddProperty(DefinitionRegion.EllipseHeight.Key, $"{ellipticalShape.Height:0.00}");
+            iniCategory.AddProperty(DefinitionPropertySettings.EllipseWidth.Key, $"{ellipticalShape.Width:0.00}");
+            iniCategory.AddProperty(DefinitionPropertySettings.EllipseHeight.Key, $"{ellipticalShape.Height:0.00}");
         }
     }
 }

@@ -19,9 +19,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.CrossSectionDefinitionGenerators
         protected override void AddMeasurementsProperties(ICrossSectionStandardShape crossSectionShape)
         {
             var trapeziumShape = crossSectionShape as CrossSectionStandardShapeTrapezium;
-            iniCategory.AddProperty(DefinitionRegion.Slope.Key, $"{trapeziumShape.Slope:0.00}");
-            iniCategory.AddProperty(DefinitionRegion.BottomWidth.Key, $"{trapeziumShape.BottomWidthB:0.00}");
-            iniCategory.AddProperty(DefinitionRegion.MaximumFlowWidth.Key, $"{trapeziumShape.MaximumFlowWidth:0.00}");
+            iniCategory.AddProperty(DefinitionPropertySettings.Slope.Key, $"{trapeziumShape.Slope:0.00}");
+            iniCategory.AddProperty(DefinitionPropertySettings.BottomWidth.Key, $"{trapeziumShape.BottomWidthB:0.00}");
+            iniCategory.AddProperty(DefinitionPropertySettings.MaximumFlowWidth.Key, $"{trapeziumShape.MaximumFlowWidth:0.00}");
         }
     }
 }

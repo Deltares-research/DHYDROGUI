@@ -14,7 +14,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 
         public override DelftIniCategory CreateDefinitionRegion(ICrossSectionDefinition crossSectionDefinition)
         {
-            AddCommonRegionElements(crossSectionDefinition);
+            AddCommonProperties(crossSectionDefinition);
             
             AddCoordinates(crossSectionDefinition);
 
@@ -25,7 +25,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             if (xyzCrossSectionDefinition == null) return IniCategory;
 
             var deltaZStorage = xyzCrossSectionDefinition.XYZDataTable.Select(row => row.DeltaZStorage);
-            IniCategory.AddProperty(DefinitionRegion.DeltaZStorage.Key, deltaZStorage, DefinitionRegion.DeltaZStorage.Description, DefinitionRegion.DeltaZStorage.Format);
+            IniCategory.AddProperty(DefinitionPropertySettings.DeltaZStorage, deltaZStorage);
 
             return IniCategory;
         }
@@ -36,16 +36,16 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             if (crossSectionDefinitionXyz == null) return;
 
             var xyzCount = crossSectionDefinitionXyz.Geometry.Coordinates.ToList().Count;
-            IniCategory.AddProperty(DefinitionRegion.XYZCount.Key, xyzCount, DefinitionRegion.XYZCount.Description);
+            IniCategory.AddProperty(DefinitionPropertySettings.XYZCount, xyzCount);
 
             var xCoordinates = crossSectionDefinitionXyz.Geometry.Coordinates.Select(c => c.X);
-            IniCategory.AddProperty(DefinitionRegion.XCoors.Key, xCoordinates, DefinitionRegion.XCoors.Description, DefinitionRegion.XCoors.Format);
+            IniCategory.AddProperty(DefinitionPropertySettings.XCoors, xCoordinates);
 
             var yCoordinates = crossSectionDefinitionXyz.Geometry.Coordinates.Select(c => c.Y);
-            IniCategory.AddProperty(DefinitionRegion.YCoors.Key, yCoordinates, DefinitionRegion.YCoors.Description, DefinitionRegion.YCoors.Format);
+            IniCategory.AddProperty(DefinitionPropertySettings.YCoors, yCoordinates);
 
             var zCoordinates = crossSectionDefinitionXyz.Geometry.Coordinates.Select(c => c.Z);
-            IniCategory.AddProperty(DefinitionRegion.ZCoors.Key, zCoordinates, DefinitionRegion.ZCoors.Description, DefinitionRegion.ZCoors.Format);
+            IniCategory.AddProperty(DefinitionPropertySettings.ZCoors, zCoordinates);
         }
 
     }

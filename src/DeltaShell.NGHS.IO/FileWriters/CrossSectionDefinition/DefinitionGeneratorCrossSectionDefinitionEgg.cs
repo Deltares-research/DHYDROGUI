@@ -1,29 +1,28 @@
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DeltaShell.NGHS.IO.FileWriters.Location;
-using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
-    public class
-        DefinitionGeneratorCrossSectionDefinitionEgg : DefinitionGeneratorCrossSectionDefinitionStandard
+    public class DefinitionGeneratorCrossSectionDefinitionEgg : DefinitionGeneratorCrossSectionDefinitionStandard
     {
-        public DefinitionGeneratorCrossSectionDefinitionEgg()
-            : base(CrossSectionRegion.CrossSectionDefinitionType.Egg)
+        public DefinitionGeneratorCrossSectionDefinitionEgg() : base(CrossSectionRegion.CrossSectionDefinitionType.Egg)
         {
+            GenerateProfileProperties = true;
         }
 
-        public override DelftIniCategory CreateDefinitionRegion(ICrossSectionDefinition crossSectionDefinition)
+        protected override bool HasCorrectCrossSectionShape(CrossSectionDefinitionStandard standardDefinition)
         {
-            var standardDefinition = crossSectionDefinition as CrossSectionDefinitionStandard;
-            if (standardDefinition == null) return IniCategory;
-            if (standardDefinition.ShapeType != CrossSectionStandardShapeType.Egg) return IniCategory;
-            AddCommonRegionElements(crossSectionDefinition);
-            var shapeEgg = standardDefinition.Shape as CrossSectionStandardShapeEgg;
-            if (shapeEgg == null) return IniCategory;
-            IniCategory.AddProperty(DefinitionRegion.EggWidth.Key, shapeEgg.Width, DefinitionRegion.EggWidth.Description, DefinitionRegion.EggWidth.Format);
-            GenerateTabulatedProfile(ConverStandardToZw(standardDefinition));
-            return IniCategory;
+            var eggShape = standardDefinition.Shape as CrossSectionStandardShapeEgg;
+            return eggShape != null;
+        }
+
+        protected override void AddShapeMeasurementProperties(ICrossSectionStandardShape shape)
+        {
+            var eggShape = shape as CrossSectionStandardShapeEgg;
+            if (eggShape == null) return;
+
+            IniCategory.AddProperty(DefinitionPropertySettings.EggWidth, eggShape.Width);
         }
     }
 }

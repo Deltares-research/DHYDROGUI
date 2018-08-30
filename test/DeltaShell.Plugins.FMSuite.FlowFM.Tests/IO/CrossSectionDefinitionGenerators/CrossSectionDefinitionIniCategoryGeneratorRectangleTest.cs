@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         public void GiveRectangleCrossSectionDefinition_WhenGeneratingIniCategory_ThenIniCategoryHasTheCorrectName()
         {
             var iniCategory = GenerateRectangleDelftIniCategory();
-            Assert.That(iniCategory.Name, Is.EqualTo(DefinitionRegion.Header));
+            Assert.That(iniCategory.Name, Is.EqualTo(DefinitionPropertySettings.Header));
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         {
             var iniCategory = GenerateRectangleDelftIniCategory();
 
-            var shapeTypeValue = iniCategory.GetPropertyValue(DefinitionRegion.DefinitionType.Key);
+            var shapeTypeValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.That(shapeTypeValue, Is.EqualTo("Rectangle"));
         }
 
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         {
             var iniCategory = GenerateRectangleDelftIniCategory();
 
-            var idValue = iniCategory.GetPropertyValue(DefinitionRegion.Id.Key);
+            var idValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.That(idValue, Is.EqualTo(CrossSectionName));
         }
 
@@ -46,8 +46,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
             var expectedHeightValue = $"{CrossSectionHeight:0.00}";
             var iniCategory = GenerateRectangleDelftIniCategory();
 
-            var widthValue = iniCategory.GetPropertyValue(DefinitionRegion.RectangleWidth.Key);
-            var heightValue = iniCategory.GetPropertyValue(DefinitionRegion.RectangleHeight.Key);
+            var widthValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.RectangleWidth.Key);
+            var heightValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.RectangleHeight.Key);
             Assert.That(widthValue, Is.EqualTo(expectedWidthValue));
             Assert.That(heightValue, Is.EqualTo(expectedHeightValue));
         }
@@ -57,8 +57,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         {
             var iniCategory = GenerateRectangleDelftIniCategory();
 
-            var closedValue = iniCategory.GetPropertyValue(DefinitionRegion.Closed.Key);
-            var groundLayerUsedValue = iniCategory.GetPropertyValue(DefinitionRegion.GroundlayerUsed.Key);
+            var closedValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.Closed.Key);
+            var groundLayerUsedValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.GroundlayerUsed.Key);
             Assert.That(closedValue, Is.EqualTo("1"));
             Assert.That(groundLayerUsedValue, Is.EqualTo("0"));
         }
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         {
             var iniCategory = GenerateRectangleDelftIniCategory();
 
-            var closedValue = iniCategory.GetPropertyValue(DefinitionRegion.RoughnessNames.Key);
+            var closedValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.RoughnessNames.Key);
             Assert.That(closedValue, Is.EqualTo("Main Second"));
         }
 

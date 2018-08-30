@@ -20,7 +20,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 
         public override DelftIniCategory CreateDefinitionRegion(ICrossSectionDefinition crossSectionDefinition)
         {
-            AddCommonRegionElements(crossSectionDefinition);
+            AddCommonProperties(crossSectionDefinition);
             
             var crossSectionDefinitionZw = crossSectionDefinition as CrossSectionDefinitionZW;
             if (crossSectionDefinitionZw == null) return IniCategory;
@@ -29,24 +29,24 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 
             var sortedData = crossSectionDefinitionZw.ZWDataTable.OrderBy(hfsw => hfsw.Z);
             var totalWidths = sortedData.Select(r => r.Width).ToList();
-            IniCategory.AddProperty(DefinitionRegion.TotalWidths.Key, totalWidths, DefinitionRegion.TotalWidths.Description, DefinitionRegion.TotalWidths.Format);
+            IniCategory.AddProperty(DefinitionPropertySettings.TotalWidths, totalWidths);
 
             var summerDike = crossSectionDefinitionZw.SummerDike;
-            IniCategory.AddProperty(DefinitionRegion.CrestSummerdike.Key, summerDike.CrestLevel, DefinitionRegion.CrestSummerdike.Description, DefinitionRegion.CrestSummerdike.Format);
-            IniCategory.AddProperty(DefinitionRegion.FlowAreaSummerdike.Key, summerDike.FloodSurface, DefinitionRegion.FlowAreaSummerdike.Description, DefinitionRegion.FlowAreaSummerdike.Format);
-            IniCategory.AddProperty(DefinitionRegion.TotalAreaSummerdike.Key, summerDike.TotalSurface, DefinitionRegion.TotalAreaSummerdike.Description, DefinitionRegion.TotalAreaSummerdike.Format);
-            IniCategory.AddProperty(DefinitionRegion.BaseLevelSummerdike.Key, summerDike.FloodPlainLevel, DefinitionRegion.BaseLevelSummerdike.Description, DefinitionRegion.BaseLevelSummerdike.Format);
+            IniCategory.AddProperty(DefinitionPropertySettings.CrestSummerdike, summerDike.CrestLevel);
+            IniCategory.AddProperty(DefinitionPropertySettings.FlowAreaSummerdike, summerDike.FloodSurface);
+            IniCategory.AddProperty(DefinitionPropertySettings.TotalAreaSummerdike, summerDike.TotalSurface);
+            IniCategory.AddProperty(DefinitionPropertySettings.BaseLevelSummerdike, summerDike.FloodPlainLevel);
 
             if (crossSectionDefinitionZw.Sections.Count > 0)
             {
-                IniCategory.AddProperty(DefinitionRegion.Main.Key, crossSectionDefinitionZw.GetSectionWidth(CrossSectionDefinitionZW.MainSectionName), DefinitionRegion.Main.Description, DefinitionRegion.Main.Format);
-                IniCategory.AddProperty(DefinitionRegion.FloodPlain1.Key, crossSectionDefinitionZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain1SectionTypeName), DefinitionRegion.FloodPlain1.Description, DefinitionRegion.FloodPlain1.Format);    
-                IniCategory.AddProperty(DefinitionRegion.FloodPlain2.Key, crossSectionDefinitionZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain2SectionTypeName), DefinitionRegion.FloodPlain2.Description, DefinitionRegion.FloodPlain2.Format);    
+                IniCategory.AddProperty(DefinitionPropertySettings.Main, crossSectionDefinitionZw.GetSectionWidth(DelftTools.Hydro.CrossSections.CrossSectionDefinition.MainSectionName));
+                IniCategory.AddProperty(DefinitionPropertySettings.FloodPlain1, crossSectionDefinitionZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain1SectionTypeName));
+                IniCategory.AddProperty(DefinitionPropertySettings.FloodPlain2, crossSectionDefinitionZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain2SectionTypeName));
             }
             else // crossSectionDefinition came from a Culvert or Bridge
             {
                 var largestTotalWidth = totalWidths.Max();
-                IniCategory.AddProperty(DefinitionRegion.Main.Key, largestTotalWidth, DefinitionRegion.Main.Description, DefinitionRegion.Main.Format);
+                IniCategory.AddProperty(DefinitionPropertySettings.Main, largestTotalWidth);
             }
             
             return IniCategory;
@@ -57,8 +57,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             var sortedData = crossSectionDefinitionZw.ZWDataTable.OrderBy(hfsw => hfsw.Z).ToArray();
 
             var levels = sortedData.Select(r => r.Z).ToList();
-            IniCategory.AddProperty(DefinitionRegion.NumLevels.Key, levels.Count, DefinitionRegion.NumLevels.Description);
-            IniCategory.AddProperty(DefinitionRegion.Levels.Key, levels, DefinitionRegion.Levels.Description, DefinitionRegion.Levels.Format);
+            IniCategory.AddProperty(DefinitionPropertySettings.NumLevels, levels.Count);
+            IniCategory.AddProperty(DefinitionPropertySettings.Levels, levels);
             if (BinFileForLevelTables != null)
             {
                 double[] levelsAsDoubles = sortedData.Select(r => r.Z).ToArray();
@@ -75,7 +75,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             }
 
             var flowWidth = sortedData.Select(r => r.Width - r.StorageWidth);
-            IniCategory.AddProperty(DefinitionRegion.FlowWidths.Key, flowWidth, DefinitionRegion.FlowWidths.Description, DefinitionRegion.FlowWidths.Format);
+            IniCategory.AddProperty(DefinitionPropertySettings.FlowWidths, flowWidth);
         }
 
         private static byte[] DoublesToBytes(double[] valuesAsDoubles)

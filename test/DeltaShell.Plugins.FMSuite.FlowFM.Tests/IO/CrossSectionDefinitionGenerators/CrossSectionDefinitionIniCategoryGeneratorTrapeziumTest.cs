@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         public void GiveTrapeziumCrossSectionDefinition_WhenGeneratingIniCategory_ThenIniCategoryHasTheCorrectName()
         {
             var iniCategory = GenerateTrapeziumDelftIniCategory();
-            Assert.That(iniCategory.Name, Is.EqualTo(DefinitionRegion.Header));
+            Assert.That(iniCategory.Name, Is.EqualTo(DefinitionPropertySettings.Header));
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         {
             var iniCategory = GenerateTrapeziumDelftIniCategory();
 
-            var shapeTypeValue = iniCategory.GetPropertyValue(DefinitionRegion.DefinitionType.Key);
+            var shapeTypeValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.That(shapeTypeValue, Is.EqualTo("Trapezium"));
         }
 
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         {
             var iniCategory = GenerateTrapeziumDelftIniCategory();
 
-            var idValue = iniCategory.GetPropertyValue(DefinitionRegion.Id.Key);
+            var idValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.That(idValue, Is.EqualTo(CrossSectionName));
         }
 
@@ -44,17 +44,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         public void GivenTrapeziumCrossSectionDefinition_WhenGeneratingIniCategory_ThenIniCategoryHasCorrectMeasurementProperties()
         {
             var iniCategory = GenerateTrapeziumDelftIniCategory();
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.Slope.Key, $"{CrossSectionSlope:0.00}");
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.BottomWidth.Key, $"{CrossSectionBottomWidthB:0.00}");
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.MaximumFlowWidth.Key, $"{CrossSectionMaximumFlowWidth:0.00}");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.Slope.Key, $"{CrossSectionSlope:0.00}");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.BottomWidth.Key, $"{CrossSectionBottomWidthB:0.00}");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.MaximumFlowWidth.Key, $"{CrossSectionMaximumFlowWidth:0.00}");
         }
 
         [Test]
         public void GivenTrapeziumCrossSectionDefinition_WhenGeneratingIniCategory_ThenIniCategoryHasCorrectStandardProperties()
         {
             var iniCategory = GenerateTrapeziumDelftIniCategory();
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.Closed.Key, "1");
-            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionRegion.GroundlayerUsed.Key, "0");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.Closed.Key, "1");
+            CheckIfValueWithGivenKeyHasExpectedValue(iniCategory, DefinitionPropertySettings.GroundlayerUsed.Key, "0");
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.CrossSectionDefinitionGener
         {
             var iniCategory = GenerateTrapeziumDelftIniCategory();
 
-            var closedValue = iniCategory.GetPropertyValue(DefinitionRegion.RoughnessNames.Key);
+            var closedValue = iniCategory.GetPropertyValue(DefinitionPropertySettings.RoughnessNames.Key);
             Assert.That(closedValue, Is.EqualTo("Main Second"));
         }
 

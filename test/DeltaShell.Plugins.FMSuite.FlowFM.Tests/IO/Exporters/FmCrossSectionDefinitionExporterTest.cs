@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Utils.IO;
@@ -22,11 +23,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenArrayOfCrossSectionDefinitions_WhenExporting_ThenIniFileIsWritten()
+        public void GivenArrayOfCrossSectionDefinitions_WhenWritingToFile_ThenIniFileIsWritten()
         {
             var filePath = Path.Combine(FileUtils.CreateTempDirectory(), "crsdef.ini");
-            var crossSectionDefinitions = new[] { new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle())};
-            FmCrossSectionDefinitionExporter.Export(filePath, crossSectionDefinitions);
+            var network = new HydroNetwork();
+            network.SharedCrossSectionDefinitions.Add(new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle()));
+            FmCrossSectionDefinitionWriter.WriteFile(filePath, network);
 
             Assert.That(File.Exists(filePath));
         }
