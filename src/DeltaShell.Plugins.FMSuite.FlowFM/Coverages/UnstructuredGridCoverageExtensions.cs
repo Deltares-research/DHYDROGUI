@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                 {
                     FunctionHelper.SetValuesRaw(locationIndexVariable, Enumerable.Range(0, count));
                 }
-                
+
                 for (int i = 0; i < pointClouds.Count; ++i)
                 {
                     var keyValuePair = pointClouds.ElementAt(i);
@@ -130,17 +130,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                     if (interpolating)
                     {
                         using (var api = new RemoteECModuleApi())
+                        using (var mesh = new DisposableMeshGeometry(grid))
                         {
-                            using (var meshGeom = new DisposableMeshGeometry(coverage.Grid))
-                            {
-                                var targetZ = api.Triangulation(
-                                    points.PointValues.OfType<PointValue>().ToList(),
-                                    meshGeom,
-                                    coverage.GetLocationTypeForCoverage());
+                            var projectionType = grid.CoordinateSystem == null ||
+                                                 !grid.CoordinateSystem.IsGeographic
+                                ? ProjectionType.Cartesian
+                                : ProjectionType.Spherical;
 
-                                coverage.Components[i].Values.Clear();
-                                FunctionHelper.SetValuesRaw<double>(coverage.Components[i], targetZ);
+                            var targetZ = api.Triangulation(points.PointValues, mesh, coverage.GetLocationTypeForCoverage(), projectionType);
+
+                            var unstructuredGridFlowLinkCoverage = coverage as UnstructuredGridFlowLinkCoverage;
+                            if (unstructuredGridFlowLinkCoverage != null)
+                            {
+                                targetZ = grid.FlowLinks.Count != 0
+                                    ? grid.ReOrderResultsForFlowLinks(targetZ)
+                                    : new double[0];
                             }
+
+                            coverage.Components[i].Values.Clear();
+                            FunctionHelper.SetValuesRaw<double>(coverage.Components[i], targetZ);
                         }
                     }
                     else
