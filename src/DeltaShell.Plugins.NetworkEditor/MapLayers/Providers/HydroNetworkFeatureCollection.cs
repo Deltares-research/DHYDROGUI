@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;

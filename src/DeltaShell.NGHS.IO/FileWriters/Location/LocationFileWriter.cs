@@ -3,6 +3,7 @@ using System.IO;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;

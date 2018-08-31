@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using DelftTools.Controls;
 using DelftTools.Controls.Wpf.Extensions;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using Image = System.Drawing.Image;
 

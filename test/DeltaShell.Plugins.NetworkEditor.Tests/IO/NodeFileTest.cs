@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.NetworkEditor.IO;
 using NUnit.Framework;

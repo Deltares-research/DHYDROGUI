@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils;
 using DelftTools.Utils.Data;
 using GeoAPI.Geometries;

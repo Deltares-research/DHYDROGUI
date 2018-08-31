@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;

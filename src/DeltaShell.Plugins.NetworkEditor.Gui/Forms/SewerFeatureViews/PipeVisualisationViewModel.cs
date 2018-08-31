@@ -1,12 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;

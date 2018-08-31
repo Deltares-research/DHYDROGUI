@@ -5,6 +5,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.TestUtils;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews

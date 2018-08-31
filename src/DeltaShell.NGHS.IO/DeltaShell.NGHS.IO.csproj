@@ -138,7 +138,7 @@
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionYz.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionZw.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionPropertySettings.cs" />
-    <Compile Include="FileWriters\DefinitionGeneratorFactory.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorFactory.cs" />
     <Compile Include="FileWriters\FileWritingException.cs" />
     <Compile Include="FileWriters\General\GeneralRegion.cs" />
     <Compile Include="FileWriters\General\GeneralRegionGenerator.cs" />

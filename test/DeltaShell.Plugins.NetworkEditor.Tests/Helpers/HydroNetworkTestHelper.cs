@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;

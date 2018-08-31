@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.NGHS.IO.Grid;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;

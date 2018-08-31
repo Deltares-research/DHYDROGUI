@@ -192,40 +192,41 @@
     <Compile Include="GroupableFeatureExtensions.cs" />
     <Compile Include="GroupablePointFeature.cs" />
     <Compile Include="Gully.cs" />
-    <Compile Include="GwswPointOutletCompartment.cs" />
-    <Compile Include="Structures\GwswConnectionOrifice.cs" />
-    <Compile Include="Structures\GwswConnectionPump.cs" />
+    <Compile Include="SewerFeatures\GwswPointOutletCompartment.cs" />
+    <Compile Include="SewerFeatures\GwswConnectionOrifice.cs" />
+    <Compile Include="SewerFeatures\GwswConnectionPump.cs" />
     <Compile Include="HydroNetwork351LegacyLoader.cs" />
     <Compile Include="HydroNetworkExtensions.cs" />
     <Compile Include="IGroupableFeature.cs" />
     <Compile Include="IPointFeature.cs" />
-    <Compile Include="ISewerConnection.cs" />
-    <Compile Include="Compartment.cs" />
-    <Compile Include="OutletCompartment.cs" />
+    <Compile Include="SewerFeatures\ISewerConnection.cs" />
+    <Compile Include="SewerFeatures\Compartment.cs" />
+    <Compile Include="SewerFeatures\ISewerFeature.cs" />
+    <Compile Include="SewerFeatures\OutletCompartment.cs" />
     <Compile Include="RoofArea.cs" />
     <Compile Include="SewerConnectionExtensionMethods.cs" />
     <Compile Include="SewerConnectionSpecialConnectionType.cs" />
     <Compile Include="SewerConnectionWaterType.cs" />
-    <Compile Include="Structures\GwswStructureOutletCompartment.cs" />
-    <Compile Include="Structures\GwswStructurePump.cs" />
-    <Compile Include="Structures\GwswStructureWeir.cs" />
+    <Compile Include="SewerFeatures\GwswStructureOutletCompartment.cs" />
+    <Compile Include="SewerFeatures\GwswStructurePump.cs" />
+    <Compile Include="SewerFeatures\GwswStructureWeir.cs" />
     <Compile Include="Structures\ICompartment.cs" />
     <Compile Include="Structures\ICompositeNetworkPointFeature.cs" />
-    <Compile Include="Structures\IOrifice.cs" />
+    <Compile Include="SewerFeatures\IOrifice.cs" />
     <Compile Include="Structures\LeveeBreach.cs" />
     <Compile Include="Structures\LeveeBreachFormula\LeveeBreachGrowthFormula.cs" />
     <Compile Include="Structures\IManhole.cs" />
     <Compile Include="Structures\LeveeBreachFormula\LeveeBreachSettings.cs" />
     <Compile Include="Structures\LeveeBreachFormula\UserDefinedBreachConversionHelper.cs" />
-    <Compile Include="Structures\Manhole.cs" />
+    <Compile Include="SewerFeatures\Manhole.cs" />
     <Compile Include="IStructure.cs" />
     <Compile Include="NameableFeatureComparer.cs" />
     <Compile Include="Structures\ManholeExtensions.cs" />
     <Compile Include="Structures\LeveeBreachFormula\BreachGrowthSetting.cs" />
     <Compile Include="Structures\NetworkFeatureType.cs" />
-    <Compile Include="Structures\Orifice.cs" />
-    <Compile Include="Structures\Pipe.cs" />
-    <Compile Include="SewerConnection.cs" />
+    <Compile Include="SewerFeatures\Orifice.cs" />
+    <Compile Include="SewerFeatures\Pipe.cs" />
+    <Compile Include="SewerFeatures\SewerConnection.cs" />
     <Compile Include="Structures\BridgePillar.cs" />
     <Compile Include="Structures\FixedWeir.cs" />
     <Compile Include="Friction.cs" />
@@ -270,7 +271,7 @@
     <Compile Include="IHydroNetwork.cs" />
     <Compile Include="IHydroNetworkFeature.cs" />
     <Compile Include="IHydroNode.cs" />
-    <Compile Include="Structures\IPipe.cs" />
+    <Compile Include="SewerFeatures\IPipe.cs" />
     <Compile Include="IStructure1D.cs" />
     <Compile Include="LateralSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -312,7 +313,7 @@
     <Compile Include="Structures\PumpControlDirection.cs" />
     <Compile Include="Structures\LeveeBreachFormula\UserDefinedBreach.cs" />
     <Compile Include="Structures\LeveeBreachFormula\VerheijVdKnaap2002Breach.cs" />
-    <Compile Include="Structures\GwswConnectionWeir.cs" />
+    <Compile Include="SewerFeatures\GwswConnectionWeir.cs" />
     <Compile Include="Structures\SewerFactory.cs" />
     <Compile Include="Structures\SewerProfileMapping.cs" />
     <Compile Include="Structures\Weir.cs" />
@@ -538,6 +539,7 @@
   <ItemGroup>
     <EmbeddedResource Include="HydroNetwork.3.5.1.hbm.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

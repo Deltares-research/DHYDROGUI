@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Editing;

@@ -1,4 +1,5 @@
 ﻿using System;
+using DelftTools.Hydro.SewerFeatures;
 
 namespace DelftTools.Hydro.Structures
 {

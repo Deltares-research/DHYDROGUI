@@ -1,8 +1,8 @@
-﻿using DelftTools.Hydro;
-using DeltaShell.NGHS.IO;
+﻿using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Helpers;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro.SewerFeatures;
 
 namespace DeltaShell.Plugins.NetworkEditor.IO
 {

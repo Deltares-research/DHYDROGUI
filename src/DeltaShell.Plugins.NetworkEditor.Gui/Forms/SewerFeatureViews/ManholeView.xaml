@@ -7,6 +7,7 @@
              xmlns:local="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews"
              xmlns:hydro="clr-namespace:DelftTools.Hydro;assembly=DelftTools.Hydro"
              xmlns:structures="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
+             xmlns:sewerFeatures="clr-namespace:DelftTools.Hydro.SewerFeatures;assembly=DelftTools.Hydro"
              mc:Ignorable="d" 
              d:DesignHeight="1000" d:DesignWidth="1000" >
     <UserControl.DataContext>
@@ -152,7 +153,7 @@
 
             <ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding SelectedItem}" x:Name="ContentControl" VerticalContentAlignment="Top">
                 <ContentControl.Resources>
-                    <DataTemplate DataType="{x:Type hydro:Compartment}">
+                    <DataTemplate DataType="{x:Type sewerFeatures:Compartment}">
                         <local:CompartmentView Compartment="{Binding Content, ElementName=ContentControl}"/>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type structures:Weir}">
@@ -162,10 +163,10 @@
                     <DataTemplate DataType="{x:Type structures:Pump}">
                         <local:ShapeEditView Source="{Binding Content, ElementName=ContentControl}"/>
                     </DataTemplate>
-                    <DataTemplate DataType="{x:Type structures:Orifice}">
+                    <DataTemplate DataType="{x:Type sewerFeatures:Orifice}">
                         <local:ShapeEditView Source="{Binding Content, ElementName=ContentControl}"/>
                     </DataTemplate>
-                    <DataTemplate DataType="{x:Type structures:Pipe}">
+                    <DataTemplate DataType="{x:Type sewerFeatures:Pipe}">
                         <Rectangle Fill="Blue" Width="32" Height="32"/>
                     </DataTemplate>
                 </ContentControl.Resources>

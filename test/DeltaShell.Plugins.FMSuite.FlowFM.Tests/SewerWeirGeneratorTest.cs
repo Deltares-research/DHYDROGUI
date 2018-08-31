@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;

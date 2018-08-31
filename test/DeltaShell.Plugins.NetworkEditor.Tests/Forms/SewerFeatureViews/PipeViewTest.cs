@@ -1,5 +1,4 @@
-﻿using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+﻿using DelftTools.Hydro.SewerFeatures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews;
 using NUnit.Framework;

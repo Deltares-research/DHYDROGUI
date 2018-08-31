@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:gui="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui"
              xmlns:structures="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
+             xmlns:sewerFeatures="clr-namespace:DelftTools.Hydro.SewerFeatures;assembly=DelftTools.Hydro"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
@@ -49,7 +50,7 @@
                     </Grid>
                 </DataTemplate>
 
-                <DataTemplate DataType="{x:Type structures:Orifice}">
+                <DataTemplate DataType="{x:Type sewerFeatures:Orifice}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>

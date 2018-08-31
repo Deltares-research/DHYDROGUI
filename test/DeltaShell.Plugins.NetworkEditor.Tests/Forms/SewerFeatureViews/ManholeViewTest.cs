@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews;

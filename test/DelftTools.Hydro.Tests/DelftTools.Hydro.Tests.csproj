@@ -38,7 +38,7 @@
   <ItemGroup>
     <Compile Include="CatchmentTest.cs" />
     <Compile Include="ChannelTest.cs" />
-    <Compile Include="CompartmentTest.cs" />
+    <Compile Include="SewerFeatures\CompartmentTest.cs" />
     <Compile Include="CrossSectionBranchFeatureTest.cs" />
     <Compile Include="CrossSectionDefinitionExtensionsTest.cs" />
     <Compile Include="CrossSectionDefinitionProxyTest.cs" />
@@ -76,11 +76,11 @@
     <Compile Include="HydroTimeSeriesFactoryTest.cs" />
     <Compile Include="LateralSourceTest.cs" />
     <Compile Include="PipeTest.cs" />
-    <Compile Include="SewerConnectionOrificeTest.cs" />
+    <Compile Include="SewerFeatures\SewerConnectionOrificeTest.cs" />
     <Compile Include="Structures\LeveeBreachFormula\UserDefinedBreachConversionHelper.cs" />
     <Compile Include="Structures\LeveeBreachTest.cs" />
     <Compile Include="Structures\ManholeExtensionsTest.cs" />
-    <Compile Include="Structures\ManholeTest.cs" />
+    <Compile Include="SewerFeatures\ManholeTest.cs" />
     <Compile Include="NameableFeatureComparerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunoffBoundaryTest.cs" />
@@ -90,7 +90,7 @@
     <Compile Include="Structures\CulvertTest.cs" />
     <Compile Include="Structures\GateTest.cs" />
     <Compile Include="Structures\PumpTest.cs" />
-    <Compile Include="SewerConnectionTest.cs" />
+    <Compile Include="SewerFeatures\SewerConnectionTest.cs" />
     <Compile Include="Structures\SewerConnectionExtensionsTest.cs" />
     <Compile Include="Structures\SewerFactoryTests.cs" />
     <Compile Include="Structures\WeirFormula\FreeFormWeirFormulaTest.cs" />
@@ -204,6 +204,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

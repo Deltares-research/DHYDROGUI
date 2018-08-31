@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;

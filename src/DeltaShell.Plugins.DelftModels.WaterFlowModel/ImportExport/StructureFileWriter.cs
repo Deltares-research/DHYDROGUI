@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters;
+using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;

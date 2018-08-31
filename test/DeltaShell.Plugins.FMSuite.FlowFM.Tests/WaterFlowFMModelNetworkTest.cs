@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Tests.Helpers;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;

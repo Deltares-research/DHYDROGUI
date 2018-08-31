@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;

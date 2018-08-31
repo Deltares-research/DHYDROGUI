@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.NetworkEditor.Gui.Commands;

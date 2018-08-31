@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;

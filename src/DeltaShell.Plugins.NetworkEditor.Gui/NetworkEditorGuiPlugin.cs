@@ -9,6 +9,7 @@ using DelftTools.Controls.Swf;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;

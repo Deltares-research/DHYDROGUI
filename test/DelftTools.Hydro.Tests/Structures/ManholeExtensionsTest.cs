@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using NUnit.Framework;
 

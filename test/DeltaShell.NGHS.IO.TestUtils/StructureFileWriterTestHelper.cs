@@ -7,6 +7,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters;
+using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;

@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.SewerFeatures;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using DelftTools.Hydro.Tests.TestObjects;
 using DelftTools.Utils.Reflection;
-using GeoAPI.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
 

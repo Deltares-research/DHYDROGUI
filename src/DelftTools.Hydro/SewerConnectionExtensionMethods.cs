@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using NetTopologySuite.Geometries;
 

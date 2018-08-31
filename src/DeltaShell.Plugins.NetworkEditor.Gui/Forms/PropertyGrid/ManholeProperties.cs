@@ -1,8 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Linq;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;

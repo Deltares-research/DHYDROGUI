@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 using DelftTools.Controls;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.SewerFeatures;
 using Image = System.Drawing.Image;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews

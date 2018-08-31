@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;

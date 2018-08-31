@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {

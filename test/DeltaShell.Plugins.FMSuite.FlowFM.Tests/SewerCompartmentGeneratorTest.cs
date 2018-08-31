@@ -1,5 +1,5 @@
 ﻿using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;

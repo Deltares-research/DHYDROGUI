@@ -1,6 +1,6 @@
 using System;
 using DelftTools.Hydro.CrossSections.StandardShapes;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Aop;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews

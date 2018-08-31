@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;

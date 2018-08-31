@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro.Structures;
+﻿using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;

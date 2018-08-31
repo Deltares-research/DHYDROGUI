@@ -7,6 +7,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters;
+using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;

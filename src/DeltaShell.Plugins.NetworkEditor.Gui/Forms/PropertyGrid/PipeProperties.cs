@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using DelftTools.Hydro.CrossSections.Extensions;
 using DelftTools.Hydro.CrossSections.StandardShapes;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;

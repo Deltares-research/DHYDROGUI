@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;

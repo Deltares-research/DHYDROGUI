@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;

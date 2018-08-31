@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;

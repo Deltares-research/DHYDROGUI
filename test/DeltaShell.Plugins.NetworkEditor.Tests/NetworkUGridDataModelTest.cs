@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
 using GeoAPI.Geometries;

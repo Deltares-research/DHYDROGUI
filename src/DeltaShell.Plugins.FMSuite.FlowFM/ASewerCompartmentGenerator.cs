@@ -1,4 +1,5 @@
 ﻿using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;

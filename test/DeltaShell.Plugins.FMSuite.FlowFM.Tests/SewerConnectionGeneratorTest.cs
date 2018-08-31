@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
