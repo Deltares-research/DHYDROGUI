@@ -40,7 +40,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         private void AddCrossSectionStandardProperties()
         {
             IniCategory.AddProperty(DefinitionPropertySettings.Closed, 1);
-            IniCategory.AddProperty(DefinitionPropertySettings.GroundlayerUsed, 0);
         }
 
         private void AddTabulatedProfileProperties(CrossSectionDefinitionStandard standardDefinition)

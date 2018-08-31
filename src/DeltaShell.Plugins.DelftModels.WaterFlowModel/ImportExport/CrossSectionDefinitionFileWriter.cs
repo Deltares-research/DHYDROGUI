@@ -10,7 +10,6 @@ using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
-using NetTopologySuite.Extensions.Networks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
@@ -72,17 +71,31 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             int groundlayerUsed = 0; // default value
             double groundlayer = 0.0;  // default value
-            var structure = network.Structures.FirstOrDefault(s =>  (s is ICulvert && ((ICulvert)s).CrossSectionDefinition.Name == crossSectionDefinitionName) ||
-                                                                    (s is IBridge && ((IBridge)s).CrossSectionDefinition !=null && ((IBridge)s).CrossSectionDefinition.Name == crossSectionDefinitionName)) as IGroundLayer;
+            var structure = network.Structures.FirstOrDefault(s =>  IsCulvertWithRightName(s, crossSectionDefinitionName) || 
+                                                                    IsBridgeWithRightName(s, crossSectionDefinitionName)) as IGroundLayer;
             if (structure != null)
             {
                 groundlayerUsed = Convert.ToInt32(structure.GroundLayerEnabled);
                 groundlayer = structure.GroundLayerThickness;
             }
             
-            iniCategory.AddProperty(DefinitionPropertySettings.GroundlayerUsed.Key, groundlayerUsed, DefinitionPropertySettings.GroundlayerUsed.Description);
-            iniCategory.AddProperty(DefinitionPropertySettings.Groundlayer.Key, groundlayer, DefinitionPropertySettings.Groundlayer.Description, DefinitionPropertySettings.Groundlayer.Format);
+            iniCategory.AddProperty(DefinitionPropertySettings.GroundlayerUsed, groundlayerUsed);
+            iniCategory.AddProperty(DefinitionPropertySettings.Groundlayer, groundlayer);
             return iniCategory;
+        }
+
+        private static bool IsBridgeWithRightName(IStructure1D structure, string crossSectionDefinitionName)
+        {
+            var bridge = structure as IBridge;
+            return bridge?.CrossSectionDefinition != null 
+                   && bridge.CrossSectionDefinition.Name == crossSectionDefinitionName;
+        }
+
+        private static bool IsCulvertWithRightName(IStructure1D structure, string crossSectionDefinitionName)
+        {
+            var culvert = structure as ICulvert;
+            return culvert?.CrossSectionDefinition != null
+                   && culvert.CrossSectionDefinition.Name == crossSectionDefinitionName;
         }
 
         private static DelftIniCategory AddRoughnessDataToFileContent(DelftIniCategory iniCategory, ICrossSection crossSection, IList<RoughnessSection> roughnessSections, bool useReverseRoughness)
@@ -118,16 +131,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 frictionNames.Add(roughnessSection.Name);
             }
 
-            iniCategory.AddProperty(DefinitionPropertySettings.SectionCount.Key, sectionCount, DefinitionPropertySettings.SectionCount.Description);
-            iniCategory.AddProperty(DefinitionPropertySettings.RoughnessNames.Key, string.Join(";", frictionNames), DefinitionPropertySettings.RoughnessNames.Description);
-            iniCategory.AddProperty(DefinitionPropertySettings.RoughnessPositions.Key, roughnessPositions, DefinitionPropertySettings.RoughnessPositions.Description, DefinitionPropertySettings.RoughnessPositions.Format);
+            iniCategory.AddProperty(DefinitionPropertySettings.SectionCount, sectionCount);
+            iniCategory.AddProperty(DefinitionPropertySettings.RoughnessNames, string.Join(";", frictionNames));
+            iniCategory.AddProperty(DefinitionPropertySettings.RoughnessPositions, roughnessPositions);
             return iniCategory;
-        }
-
-        private static double GetNegativeFrictionValue(IList<RoughnessSection> roughnessSections, RoughnessSection roughnessSection, ICrossSection crossSection)
-        {
-            var reverseRoughnessSection = roughnessSections.GetApplicableReverseRoughnessSection(roughnessSection);
-            return reverseRoughnessSection.RoughnessNetworkCoverage.EvaluateRoughnessValue(crossSection.ToNetworkLocation());
         }
 
         private static RoughnessSection GetRoughnessSection(IList<RoughnessSection> roughnessSections, CrossSectionSection crossSectionSection)
