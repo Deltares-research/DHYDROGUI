@@ -1,6 +1,7 @@
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -24,7 +25,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var csEggShape = new CrossSectionStandardShapeEgg
                 {
                     Name = shapeName,
-                    Width = width / 1000 /*Conversion from millimeters to meters*/
+                    Width = width / 1000, /*Conversion from millimeters to meters*/
+                    MaterialName = GetMaterialValue(gwswElement)
                 };
                 LogMessageInCaseSewerShapeWidthHeightAreNotInCorrectProportion(gwswElement, width, 1.5, "(2:3)", csEggShape);
                 return csEggShape;
@@ -36,9 +38,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static ISewerFeature GetDefaultEggShape(string name)
         {
-            var defaultTrapezoid = CrossSectionStandardShapeEgg.CreateDefault();
-            defaultTrapezoid.Name = name;
-            return defaultTrapezoid;
+            var defaultEgg = CrossSectionStandardShapeEgg.CreateDefault();
+            defaultEgg.Name = name;
+            defaultEgg.MaterialName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Unknown);
+            return defaultEgg;
         }
     }
 }

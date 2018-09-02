@@ -1,6 +1,7 @@
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -27,7 +28,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     Name = shapeName,
                     Width = width / 1000, /*Conversion from millimeters to meters*/
-                    Height = height / 1000 /*Conversion from millimeters to meters*/
+                    Height = height / 1000, /*Conversion from millimeters to meters*/
+                    MaterialName = GetMaterialValue(gwswElement)
                 };
             }
 
@@ -37,9 +39,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static ISewerFeature GetDefaultRectangleShape(string name)
         {
-            var defaultArch = CrossSectionStandardShapeRectangle.CreateDefault();
-            defaultArch.Name = name;
-            return defaultArch;
+            var defaultRectangle = CrossSectionStandardShapeRectangle.CreateDefault();
+            defaultRectangle.Name = name;
+            defaultRectangle.MaterialName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Unknown);
+            return defaultRectangle;
         }
     }
 }

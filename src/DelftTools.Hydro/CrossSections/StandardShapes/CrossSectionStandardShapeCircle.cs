@@ -9,9 +9,9 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
         public static CrossSectionStandardShapeCircle CreateDefault()
         {
             return new CrossSectionStandardShapeCircle
-                       {
-                           Diameter = 0.160d
-                       };
+            {
+                Diameter = 0.160d
+            };
         }
 
         public override CrossSectionStandardShapeType Type

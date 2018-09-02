@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 case SewerProfileMapping.SewerProfileType.Trapezoid:
                     return new TrapezoidCrossSectionShapeGenerator();
                 default:
-                    return new DefaultCrossSectionShapeGenerator();
+                    throw new NotImplementedException();
             }
         }
 

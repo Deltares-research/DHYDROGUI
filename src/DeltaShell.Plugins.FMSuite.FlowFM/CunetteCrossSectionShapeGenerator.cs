@@ -1,6 +1,7 @@
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -24,7 +25,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var csCunetteShape = new CrossSectionStandardShapeCunette
                 {
                     Name = shapeName,
-                    Width = width / 1000 /*Conversion from millimeters to meters*/
+                    Width = width / 1000, /*Conversion from millimeters to meters*/
+                    MaterialName = GetMaterialValue(gwswElement)
                 };
                 LogMessageInCaseSewerShapeWidthHeightAreNotInCorrectProportion(gwswElement, width, 0.634, "(1:0.634)", csCunetteShape);
                 return csCunetteShape;
@@ -36,9 +38,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static ISewerFeature GetDefaultCunetteShape(string name)
         {
-            var defaultTrapezoid = CrossSectionStandardShapeCunette.CreateDefault();
-            defaultTrapezoid.Name = name;
-            return defaultTrapezoid;
+            var defaultCunette = CrossSectionStandardShapeCunette.CreateDefault();
+            defaultCunette.Name = name;
+            defaultCunette.MaterialName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Unknown);
+            return defaultCunette;
         }
     }
 }

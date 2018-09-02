@@ -19,8 +19,7 @@ namespace DelftTools.Hydro.SewerFeatures
 
         public string PipeId { get; set; }
 
-        public CrossSectionDefinitionStandard CrossSectionDefinition { get; set; } 
-
+        public CrossSectionDefinitionStandard CrossSectionDefinition { get; set; }
         public SewerProfileMapping.SewerProfileMaterial Material { get; set; }
 
         public double PipeRoughness { get; set; } = 0.003;

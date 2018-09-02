@@ -2,6 +2,7 @@
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
@@ -46,6 +47,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Log.WarnFormat(
                 "The width and height of sewer profile '{0}' are not in the right proportion {1}. Width is now {2} mm and height is now {3} mm.",
                 id, proportionString, width, csHeight);
+        }
+
+        protected static string GetMaterialValue(GwswElement gwswElement)
+        {
+            var materialAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileMaterial);
+            var materialValue = materialAttribute == null
+                ? EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Unknown)
+                : materialAttribute.GetValidStringValue();
+            return materialValue;
         }
     }
 }

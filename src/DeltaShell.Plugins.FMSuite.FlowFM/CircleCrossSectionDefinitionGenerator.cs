@@ -21,26 +21,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             double width;
             var widthAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileWidth);
             var materialAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileMaterial);
+            var materialValue = materialAttribute.GetValidStringValue();
             if (widthAttribute.TryGetValueAsDouble(out width))
             {
-                var multiplier = 1.0;
-                var pvcStringId = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Polyvinylchlorid);
-                if (materialAttribute.IsValidAttribute() && materialAttribute.ValueAsString.Equals(pvcStringId)) multiplier = 16.0 / 17.0;
+                var multiplier = CalculateDiameterMultiplier(materialValue);
                 return new CrossSectionStandardShapeCircle
                 {
                     Name = shapeName,
-                    Diameter = multiplier * width / 1000 /*Conversion from millimeters to meters*/
+                    Diameter = multiplier * width / 1000, /*Conversion from millimeters to meters*/
+                    MaterialName = materialValue
                 };
             }
 
             MessageForMissingValues(gwswElement, "width");
-            return GetDefaultRoundShape(shapeName);
+            return GetDefaultCircleShape(shapeName);
         }
 
-        private static CrossSectionStandardShapeCircle GetDefaultRoundShape(string name)
+        private static double CalculateDiameterMultiplier(string materialValue)
+        {
+            var pvcDescription = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Polyvinylchlorid);
+            return materialValue == pvcDescription
+                ? 16.0 / 17.0 
+                : 1.0;
+        }
+
+        private static CrossSectionStandardShapeCircle GetDefaultCircleShape(string name)
         {
             var defaultCircle = CrossSectionStandardShapeCircle.CreateDefault();
             defaultCircle.Name = name;
+            defaultCircle.MaterialName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Unknown);
             return defaultCircle;
         }
     }

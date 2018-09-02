@@ -1129,6 +1129,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     hydroArea.Gates.Add((Gate2D)structure);
                 }
+                else if(structure is LeveeBreach)
+                {
+                    hydroArea.LeveeBreaches.Add((LeveeBreach)structure);
+                }
                 else
                 {
                     throw new NotImplementedException();

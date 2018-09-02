@@ -1,5 +1,7 @@
 ﻿using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
+using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -12,7 +14,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return new CrossSectionStandardShapeCircle
             {
                 Name = GetCrossSectionShapeName(gwswElement),
-                Diameter = 0.4
+                Diameter = 0.4,
+                MaterialName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Concrete)
             };
         }
     }

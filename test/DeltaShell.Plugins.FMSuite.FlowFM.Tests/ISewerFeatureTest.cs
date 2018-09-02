@@ -6,6 +6,7 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Hydro.Tests.Helpers;
+using DelftTools.Utils;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
@@ -1056,8 +1057,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void GivenPipes_WhenAddingShapeWithSameCsDefinitionId_ThenShapeIsAddedToAllCorrectPipes()
         {
-            var network = new HydroNetwork();
             var crossSectionDefinitionName = "myCsDefinition";
+            var materialType = SewerProfileMapping.SewerProfileMaterial.CastIron;
+
+            var network = new HydroNetwork();
             var pipe1 = new Pipe { Name = "myPipe1", CrossSectionDefinitionId = crossSectionDefinitionName };
             var pipe2 = new Pipe { Name = "myPipe2", CrossSectionDefinitionId = crossSectionDefinitionName };
             var pipe3 = new Pipe { Name = "myPipe3", CrossSectionDefinitionId = "otherId" };
@@ -1068,36 +1071,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var roundShape = new CrossSectionStandardShapeCircle
             {
-                Name = crossSectionDefinitionName
+                Name = crossSectionDefinitionName,
+                MaterialName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(materialType)
             };
             AddSewerFeatureToNetwork(roundShape, network);
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(1));
+
             Assert.That(pipe1.CrossSectionDefinition.Shape, Is.EqualTo(roundShape));
             Assert.That(pipe1.CrossSectionDefinition.Name, Is.EqualTo(crossSectionDefinitionName));
+            Assert.That(pipe1.Material, Is.EqualTo(materialType));
+
             Assert.That(pipe2.CrossSectionDefinition.Shape, Is.EqualTo(roundShape));
             Assert.That(pipe2.CrossSectionDefinition.Name, Is.EqualTo(crossSectionDefinitionName));
+            Assert.That(pipe2.Material, Is.EqualTo(materialType));
+
             Assert.IsNull(pipe3.CrossSectionDefinition);
         }
 
         [Test]
         public void GivenPipe_WhenAddingShapeWithSameCsDefinitionId_ThenShapeIsAddedPipeAndToSharedCrossSectionDefinitions()
         {
-            var network = new HydroNetwork();
             var crossSectionDefinitionName = "myCsDefinition";
+            var materialType = SewerProfileMapping.SewerProfileMaterial.SheetMetal;
+
+            var network = new HydroNetwork();
             var pipe1 = new Pipe { Name = "myPipe1", CrossSectionDefinitionId = crossSectionDefinitionName };
             AddSewerFeatureToNetwork(pipe1, network);
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(0));
 
-            var roundShape = new CrossSectionStandardShapeCircle
+            var circleShape = new CrossSectionStandardShapeCircle
             {
                 Name = crossSectionDefinitionName,
-                Diameter = 0.4
+                Diameter = 0.4,
+                MaterialName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(materialType)
             };
-            AddSewerFeatureToNetwork(roundShape, network);
+            AddSewerFeatureToNetwork(circleShape, network);
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(1));
 
             var csDefinition = pipe1.CrossSectionDefinition;
             Assert.That(csDefinition.Name, Is.EqualTo(crossSectionDefinitionName));
+            Assert.That(pipe1.Material, Is.EqualTo(materialType));
 
             var csShape = csDefinition.Shape as CrossSectionStandardShapeCircle;
             Assert.IsNotNull(csShape);

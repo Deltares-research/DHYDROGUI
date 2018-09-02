@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using DelftTools.Hydro.Structures;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Data;
@@ -12,6 +16,9 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
     public abstract class CrossSectionStandardShapeBase : Unique<long>, ICrossSectionStandardShape
     {
         public virtual string Name { get; set; }
+
+        public virtual string MaterialName { get; set; }
+
         public abstract CrossSectionStandardShapeType Type { get; }
         
         public virtual IEnumerable<Coordinate> Profile
@@ -37,7 +44,11 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
                 Name = Name
             };
             var pipesWithSameCrossSectionDefinitionId = network.Pipes.Where(p => p.CrossSectionDefinitionId == Name);
-            pipesWithSameCrossSectionDefinitionId.ForEach(p => p.CrossSectionDefinition = crossSectionDefinitionToAdd);
+            pipesWithSameCrossSectionDefinitionId.ForEach(p =>
+            {
+                p.CrossSectionDefinition = crossSectionDefinitionToAdd;
+                p.Material = (SewerProfileMapping.SewerProfileMaterial)EnumDescriptionAttributeTypeConverter.GetEnumValue<SewerProfileMapping.SewerProfileMaterial>(MaterialName);
+            });
             
             network.SharedCrossSectionDefinitions.RemoveAllWhere(d => d.Name == Name);
             network.SharedCrossSectionDefinitions.Add(crossSectionDefinitionToAdd);
