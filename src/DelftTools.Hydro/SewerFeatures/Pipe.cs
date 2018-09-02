@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -59,7 +60,12 @@ namespace DelftTools.Hydro.SewerFeatures
         protected override void AddCrossSectionDefinition(IHydroNetwork hydroNetwork)
         {
             if (CrossSectionDefinitionId == null) CrossSectionDefinition = (CrossSectionDefinitionStandard) CrossSectionDefinitionStandard.CreateDefault();
-            else CrossSectionDefinition = hydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(cs => cs.Name == CrossSectionDefinitionId) as CrossSectionDefinitionStandard;
+            else
+            {
+                CrossSectionDefinition = hydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(cs => cs.Name == CrossSectionDefinitionId) as CrossSectionDefinitionStandard;
+                if (CrossSectionDefinition != null)
+                    Material = (SewerProfileMapping.SewerProfileMaterial) EnumDescriptionAttributeTypeConverter.GetEnumValue<SewerProfileMapping.SewerProfileMaterial>(CrossSectionDefinition.Shape.MaterialName);
+            }
         }
 
         private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs notifyCollectionChangingEventArgs)

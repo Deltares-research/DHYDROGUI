@@ -337,6 +337,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var sharedDefinitionInNetwork = network.SharedCrossSectionDefinitions.FirstOrDefault();
             Assert.IsNotNull(pipeInNetwork);
             Assert.That(pipeInNetwork.CrossSectionDefinition, Is.EqualTo(sharedDefinitionInNetwork));
+            Assert.That(pipeInNetwork.Material, Is.EqualTo(SewerProfileMapping.SewerProfileMaterial.Concrete));
         }
 
         [Test]

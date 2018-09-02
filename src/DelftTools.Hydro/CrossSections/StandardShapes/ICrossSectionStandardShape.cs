@@ -12,5 +12,6 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
         CrossSectionStandardShapeType Type { get; }
         IEnumerable<Coordinate> Profile { get; }
         CrossSectionDefinitionZW GetTabulatedDefinition();
+        string MaterialName { get; set; }
     }
 }

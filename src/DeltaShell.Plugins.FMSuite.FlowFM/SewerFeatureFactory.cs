@@ -272,7 +272,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (gwswElement == null) return false;
 
-            var featureType = GetEnumValueFromValue<SewerFeatureType>(gwswElement.ElementTypeName);
+            var featureType = GetEnumValueFromDescription<SewerFeatureType>(gwswElement.ElementTypeName);
             var isNodeGwswElement = featureType == SewerFeatureType.Node;
             if (isNodeGwswElement) return true;
 
@@ -284,14 +284,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             else
             {
-                var structureType = GetEnumValueFromValue<SewerStructureMapping.StructureType>(structureTypeAttribute.ValueAsString);
+                var structureType = GetEnumValueFromDescription<SewerStructureMapping.StructureType>(structureTypeAttribute.ValueAsString);
                 isOutletGwswElement = featureType == SewerFeatureType.Structure && structureType == SewerStructureMapping.StructureType.Outlet;
             }
 
             return isOutletGwswElement;
         }
 
-        private static TEnum GetEnumValueFromValue<TEnum>(string valueAsString)
+        private static TEnum GetEnumValueFromDescription<TEnum>(string valueAsString)
         {
             return (TEnum) EnumDescriptionAttributeTypeConverter.GetEnumValue<TEnum>(valueAsString);
         }
