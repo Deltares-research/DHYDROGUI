@@ -10,6 +10,7 @@ using DelftTools.Controls.Swf.TreeViewControls;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 using NetTopologySuite.Extensions.Grids;
@@ -56,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             {
                 ContextMenuDataGetter = o => o as CurvilinearGrid
             };
-            var spatialOperationCoverageTreeShortcut = new SpatialOperationCoverageTreeShortcut<WaveModel, WaveModelView>(parentNodeData.Bathymetry.Name,
+            var spatialOperationCoverageTreeShortcut = new SpatialOperationCoverageTreeShortcut<WaveModel, WpfSettingsView>(parentNodeData.Bathymetry.Name,
                 BathymetryImage, model, parentNodeData.Bathymetry, "Domain")
             {
                 ContextMenuDataGetter = o =>

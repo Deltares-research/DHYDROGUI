@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             Assert.Greater(objectDescription.FieldDescriptions.Count, 65);
             string bedLevelTooltip = objectDescription.FieldDescriptions.First(f => f.Name == "Bedlevuni").ToolTip;
-            Assert.AreEqual("Mdu name: Bedlevuni\r\nDescription:\r\n\tUniform bed level used at missing z values if BedlevType > 2\r\n", bedLevelTooltip);
+            Assert.AreEqual("Mdu name: Bedlevuni\r\nDescription:\r\nUniform bed level used at missing z values if BedlevType > 2\r\n", bedLevelTooltip);
         }
     }
 }

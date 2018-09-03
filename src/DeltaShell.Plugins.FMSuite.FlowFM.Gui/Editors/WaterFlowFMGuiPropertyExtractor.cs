@@ -50,8 +50,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             Func<object, bool> isVisible = null;
             if (Model != null)
             {
-                isEnabled = o => prop.IsEnabled(((WaterFlowFMModel) o).ModelDefinition.Properties.ToList());
-                isVisible = o => prop.IsVisible(((WaterFlowFMModel) o).ModelDefinition.Properties.ToList());
+                isEnabled = o => prop.IsEnabled(((WaterFlowFMModel) o)?.ModelDefinition.Properties.ToList());
+                isVisible = o => prop.IsVisible(((WaterFlowFMModel) o)?.ModelDefinition.Properties.ToList());
             }
 
             var label = string.IsNullOrEmpty(prop.PropertyDefinition.Caption)
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     validRangeText.Append(Environment.NewLine);
                 }
             }
-            return string.Format("Mdu name: {0}{3}Description:{3}\t{1}{3}{2}",
+            return string.Format("Mdu name: {0}{3}Description:{3}{1}{3}{2}",
                                  prop.PropertyDefinition.MduPropertyName,
                                  prop.PropertyDefinition.Description,
                                  validRangeText, Environment.NewLine);

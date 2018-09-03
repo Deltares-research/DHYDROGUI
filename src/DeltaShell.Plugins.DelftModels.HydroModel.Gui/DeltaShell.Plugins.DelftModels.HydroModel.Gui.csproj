@@ -170,6 +170,19 @@
       <DependentUpon>MergeModelValidationView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ProjectExplorer\HydroModelTreeViewNodePresenter.cs" />
+    <Compile Include="Forms\SettingsWpf\SettingsTemplateSelector.cs" />
+    <Compile Include="Forms\SettingsWpf\WindowsFormsHostHelper.xaml.cs">
+      <DependentUpon>WindowsFormsHostHelper.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SettingsWpf\WpfEnumConverter.cs" />
+    <Compile Include="Forms\SettingsWpf\WpfGuiCategory.cs" />
+    <Compile Include="Forms\SettingsWpf\WpfGuiProperty.cs" />
+    <Compile Include="Forms\SettingsWpf\WpfGuiSubCategory.cs" />
+    <Compile Include="Forms\SettingsWpf\WpfImageConverter.cs" />
+    <Compile Include="Forms\SettingsWpf\WpfSettingsView.xaml.cs">
+      <DependentUpon>WpfSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SettingsWpf\WpfSettingsViewModel.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="ViewModels\TimeDependentModelBaseViewModel.cs" />
     <Compile Include="Views\HydroModelTimeSettingsView.xaml.cs">
@@ -252,6 +265,14 @@
     <None Include="Resources\validation.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Forms\SettingsWpf\WindowsFormsHostHelper.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\SettingsWpf\WpfSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\HydroModelTimeSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

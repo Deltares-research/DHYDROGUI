@@ -252,6 +252,7 @@
       <DependentUpon>WaterFlowFMModelView.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\BoundaryGeometryPreviewWindowsFormsHostMap.cs" />
+    <Compile Include="Editors\WaterFlowFmSettingsHelper.cs" />
     <Compile Include="FlowFMGuiPlugin.cs" />
     <Compile Include="FlowFMMapViewDecorator.cs" />
     <Compile Include="Forms\BcmFileExportDialog.cs">
@@ -382,6 +383,10 @@
       <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
       <Name>DeltaShell.NGHS.IO</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj">
+      <Project>{67C4F55D-2CF5-424D-91A3-A68365AC1C9C}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.HydroModel.Gui</Name>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj">
       <Project>{56F47238-4ADC-4F56-BC27-BF1A0476D85C}</Project>

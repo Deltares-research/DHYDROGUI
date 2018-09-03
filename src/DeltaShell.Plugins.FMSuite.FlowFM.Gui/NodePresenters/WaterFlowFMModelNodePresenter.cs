@@ -15,6 +15,7 @@ using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
+using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
@@ -95,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             yield return model.GetDataItemByValue(model.Area);
             yield return new FlowFMTreeShortcut("Grid", UnstrucIcon, model, model.Grid);
             yield return
-                new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WaterFlowFMModelView>("Bed Level",
+                new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>("Bed Level",
                     Resources.unstrucWater, model, model.Bathymetry, "General")
                 {
                     ContextMenuDataGetter = o => ((WaterFlowFMModel)o).Bathymetry
@@ -122,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             yield return model.GetDataItemByValue(model.RestartInput);
             string tabText = "Initial Conditions";
             yield return
-                new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WaterFlowFMModelView>(
+                new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>(
                     WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Resources.waterLayers, model,
                     model.InitialWaterLevel, tabText)
                 {
@@ -131,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             if (model.UseSalinity)
             {
                 yield return
-                    new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WaterFlowFMModelView>(
+                    new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>(
                         WaterFlowFMModelDefinition.InitialSalinityDataItemName, Resources.salt, model,
                         model.InitialSalinity.Coverages[0], tabText)
                     {
@@ -141,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             if (model.HeatFluxModelType != HeatFluxModelType.None)
             {
                 yield return
-                    new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WaterFlowFMModelView>(
+                    new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>(
                         WaterFlowFMModelDefinition.InitialTemperatureDataItemName, Resources.thermometer, model,
                         model.InitialTemperature, tabText)
                     {
@@ -151,7 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             
             foreach (var tracer in model.InitialTracers)
             {
-                var treeShortCut = new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WaterFlowFMModelView>(
+                var treeShortCut = new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>(
                     tracer.Name, Resources.pipette, model, tracer,
                     tabText)
                 {
@@ -165,7 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 tabText = "Sediment";
                 foreach (var fraction in model.InitialFractions)
                 {
-                    var treeShortCut = new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WaterFlowFMModelView>(
+                    var treeShortCut = new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>(
                         fraction.Name, Resources.pipette, model, fraction,
                         tabText)
                     {
@@ -180,19 +181,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         private static IEnumerable<object> GetPhysicalSubItems(WaterFlowFMModel model)
         {
             yield return
-                new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WaterFlowFMModelView>(
+                new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>(
                     WaterFlowFMModelDefinition.RoughnessDataItemName, Resources.Roughness, model, model.Roughness,
                     "Physical Parameters")
                 {
                     ContextMenuDataGetter = o => ((WaterFlowFMModel) o).Roughness
                 };
             yield return
-                new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WaterFlowFMModelView>(
+                new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>(
                     WaterFlowFMModelDefinition.ViscosityDataItemName, Resources.tube, model, model.Viscosity,
                     "Physical Parameters") {ContextMenuDataGetter = o => ((WaterFlowFMModel) o).Viscosity};
 
             yield return
-                new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WaterFlowFMModelView>(
+                new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>(
                     WaterFlowFMModelDefinition.DiffusivityDataItemName, Resources.drop, model, model.Diffusivity,
                     "Physical Parameters") {ContextMenuDataGetter = o => ((WaterFlowFMModel) o).Diffusivity};
             
@@ -276,6 +277,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             if (model != null)
             {
                 var contextMenu = new ContextMenuStrip();
+                contextMenu.Items.Add(CreateWpfSettingsMenuItem(model));
                 if (model.CoordinateSystem != null)
                 {
                     contextMenu.Items.Add(FMMenuItemHelper.CreateResetCoordinateSystemItem(model));
@@ -292,6 +294,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                     return flowMenu;
             }
             return menu;
+        }
+
+        private ClonableToolStripMenuItem CreateWpfSettingsMenuItem(WaterFlowFMModel model)
+        {
+            var item = new ClonableToolStripMenuItem
+            {
+                Text = "FM Settings",
+                Tag = model,
+            };
+            item.Click += OnSettingsClicked;
+            return item;
         }
 
         private ClonableToolStripMenuItem CreateValidationMenuItem(WaterFlowFMModel model)
@@ -316,6 +329,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             };
             item.Click += OnFileStructureClicked;
             return item;
+        }
+
+        private void OnSettingsClicked(object sender, EventArgs args)
+        {
+            var model = (WaterFlowFMModel)((ToolStripItem)sender).Tag;
+            Gui.DocumentViewsResolver.OpenViewForData(model, typeof(WpfSettingsView));
         }
 
         private void OnValidateClicked(object sender, EventArgs args)

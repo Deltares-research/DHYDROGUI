@@ -191,6 +191,7 @@
     <Compile Include="Common\IO\DelftIniReaderTest.cs" />
     <Compile Include="Common\IO\GridFileReaderTest.cs" />
     <Compile Include="FunctionArgumentSyncerTest.cs" />
+    <Compile Include="Gui\Editors\WaveModelViewWPFTest.cs" />
     <Compile Include="Gui\WaveBoundaryTimeSelectionDialogTest.cs" />
     <Compile Include="Gui\WaveGuiPluginTest.cs" />
     <Compile Include="Gui\WaveMeteoDataEditorTest.cs" />
@@ -237,6 +238,10 @@
       <Name>DeltaShell.NGHS.IO</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj">
+      <Project>{67C4F55D-2CF5-424D-91A3-A68365AC1C9C}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.HydroModel.Gui</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj">
       <Project>{7f3d15d6-3425-47a6-afd4-9b6e054ee8be}</Project>
       <Name>DeltaShell.Plugins.FMSuite.Common.Gui</Name>
@@ -277,6 +282,7 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

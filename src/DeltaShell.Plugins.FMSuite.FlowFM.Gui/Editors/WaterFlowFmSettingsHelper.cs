@@ -1,0 +1,167 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
+using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui;
+using DelftTools.Utils.Collections;
+using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons;
+
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
+{
+    public class WaterFlowFmSettingsHelper
+    {
+        /// <summary>
+        /// Gets the WPF GUI categories <seealso cref="WpfGuiCategory"/>.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="gui">The GUI.</param>
+        /// <returns></returns>
+        public static ObservableCollection<WpfGuiCategory> GetWpfGuiCategories(WaterFlowFMModel model, IGui gui)
+        {
+            var wpfGuiCategories = new List<WpfGuiCategory>();
+            if (model != null)
+            {
+                wpfGuiCategories = GetWaterFlowFmSettings(model)?.FieldDescriptions
+                    .GroupBy(fd => fd.Category)
+                    .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList())).ToList();
+                wpfGuiCategories?.SelectMany(gp => gp.Properties).Distinct().ForEach(p => p.GetModel = () => model);
+                if (wpfGuiCategories == null) return null;
+                SetFlowFmExtraSettings(model, gui, wpfGuiCategories);
+            }
+            return new ObservableCollection<WpfGuiCategory>(wpfGuiCategories);
+        }
+
+        private static ObjectUIDescription GetWaterFlowFmSettings(WaterFlowFMModel model)
+        {
+            //Extract the UiDescription
+            var groupsToSkip = new List<string>(0);
+            var waterFlowFmGuiPropertyExtractor = new WaterFlowFMGuiPropertyExtractor(model);
+            var uiProperties = waterFlowFmGuiPropertyExtractor.ExtractObjectDescription(groupsToSkip);
+            return ExtendedUiProperties(model, uiProperties);
+        }
+
+        private static void SetFlowFmExtraSettings(IModel model, IGui gui, IList<WpfGuiCategory> wpfCategories)
+        {
+            if (!(model is WaterFlowFMModel)) return;
+
+            var fmModel = model as WaterFlowFMModel;
+            //General settings
+            var generalCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("general"));
+            if (generalCategory != null)
+            {
+                var depthlayers = new WpfGuiProperty(new FieldUIDescription(d => fmModel.DepthLayerDefinition?.Description, null, o => true, o => true)
+                {
+                    Category = "General",
+                    ToolTip = EditDepthLayersHelper.ToolTip,
+                    Label = EditDepthLayersHelper.Label,
+                    ValueType = typeof(string),
+                    HasMaxValue = false,
+                    HasMinValue = false,
+                });
+
+                depthlayers.CustomCommand.ButtonFunction = (o) => EditDepthLayersHelper.ButtonAction(o);
+                depthlayers.CustomCommand.ButtonImage = EditDepthLayersHelper.ButtonImage;
+                generalCategory.AddWpfGuiProperty(depthlayers);
+
+                //Gui Coordinate
+                var coordSys = new WpfGuiProperty(new FieldUIDescription(d => SetCoordinateSystemButton.CoordinateSystemName(fmModel), null)
+                {
+                    Category = "General",
+                    ToolTip = SetCoordinateSystemButton.ToolTip,
+                    Label = SetCoordinateSystemButton.Label,
+                    ValueType = typeof(string),
+                    HasMaxValue = false,
+                    HasMinValue = false,
+                });
+
+                coordSys.CustomCommand.ButtonFunction =
+                    (o) => SetCoordinateSystemButton.ButtonAction(o, gui, WaterFlowFMModel.IsValidCoordinateSystem);
+                coordSys.CustomCommand.ButtonImage = SetCoordinateSystemButton.ButtonImage;
+                generalCategory.AddWpfGuiProperty(coordSys);
+            }
+
+            var icCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("initial conditions"));
+            if (icCategory != null)
+            {
+                var coverageLayers = new WpfGuiProperty(new FieldUIDescription(d => EditCoverageLayersHelper.DepthLayersToString(model), null, o => true, o => true)
+                {
+                    Category = "Initial Conditions",
+                    SubCategory = "Salinity",
+                    ToolTip = EditCoverageLayersHelper.ToolTip,
+                    Label = EditCoverageLayersHelper.Label,
+                    ValueType = typeof(string),
+                    HasMaxValue = false,
+                    HasMinValue = false,
+                });
+                coverageLayers.CustomCommand.ButtonFunction = (o) => EditCoverageLayersHelper.ButtonAction(o);
+                coverageLayers.CustomCommand.ButtonImage = EditCoverageLayersHelper.ButtonImage;
+
+                icCategory.AddWpfGuiProperty(coverageLayers);
+            }
+
+            //Add more settings
+            //Use the FieldUIDescription to generate the getters and the enable / disable functions.
+            Func<object, bool> isEnabledFunc = o => true;
+            Func<object, bool> isVisibleFunc = o => (o is WaterFlowFMModel) && (o as WaterFlowFMModel).UseMorSed;
+            var fieldUi = new FieldUIDescription(null, null, isEnabledFunc, isVisibleFunc);
+            var fieldUiDescriptions = new List<FieldUIDescription>();
+            fieldUiDescriptions.Add(fieldUi);
+
+            var sedimentCategory = new WpfGuiCategory("Sediment", fieldUiDescriptions)
+            {
+                CategoryVisibility = () => fmModel.UseMorSed,
+            };
+            var morphologyCategory = wpfCategories.FirstOrDefault(wCat => wCat.CategoryName.ToLower() == "morphology");
+            if( morphologyCategory != null) morphologyCategory.CategoryVisibility = () => fmModel.UseMorSed;
+
+            var sedProperty = sedimentCategory.Properties?.FirstOrDefault();
+            if (sedProperty == null) return;
+
+            sedProperty.CustomControl = new SedimentFractionsEditor(fmModel.SedimentFractions, fmModel.SedimentOverallProperties);
+            sedProperty.GetModel = () => fmModel;
+            wpfCategories.Add(sedimentCategory);
+        }
+
+        /*Extraced from WaterFlowFMModelView.cs */
+        private static ObjectUIDescription ExtendedUiProperties(WaterFlowFMModel data, ObjectUIDescription objectDescription)
+        {
+            if (data == null) return objectDescription;
+
+            objectDescription.FieldDescriptions
+                // add to begin:
+                = objectDescription.FieldDescriptions
+                    // add to end:
+                    .Concat(new[]
+                    {
+                        new FieldUIDescription(d => data, null)
+                        {
+                            Category = "Toolboxes",
+                            CustomControlHelper = new FMToolboxesPanel(),
+                        },
+                        new FieldUIDescription(d => data.TracerDefinitions, null)
+                        {
+                            Category = "Processes",
+                            SubCategory = "Tracers",
+                            CustomControlHelper = new EditTracersControlHelper(),
+                        },
+                    }).ToList();
+
+            objectDescription.FieldDescriptions.First(f => f.Name == "StopTime").ValidationMethod =
+                (m, t) =>
+                    ((WaterFlowFMModel) m).StartTime < (DateTime) t
+                        ? ""
+                        : "Start time must be smaller than stop time";
+
+            objectDescription.FieldDescriptions.First(f => f.Name == "AngLat").VisibilityMethod =
+                o => (data.CoordinateSystem == null || !data.CoordinateSystem.IsGeographic);
+
+            objectDescription.FieldDescriptions.First(f => f.Name == "AngLon").VisibilityMethod =
+                o => (data.CoordinateSystem == null || !data.CoordinateSystem.IsGeographic);
+            return objectDescription;
+        }
+    }
+}

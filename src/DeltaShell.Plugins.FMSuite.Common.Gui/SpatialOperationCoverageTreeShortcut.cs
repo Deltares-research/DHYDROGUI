@@ -12,7 +12,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
 {
     public class SpatialOperationCoverageTreeShortcut<TModel, TModelView> : TreeShortcut<TModel, TModelView>
         where TModel : IModel
-        where TModelView : ITabbedModelView
     {
         private ICoverage Coverage { get; set; }
 

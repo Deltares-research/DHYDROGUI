@@ -249,6 +249,7 @@
     <Compile Include="Gui\CustomRenderers\EnclosureRendererTest.cs" />
     <Compile Include="Gui\DataImportPointsListBoxTest.cs" />
     <Compile Include="Gui\Editors\BoundaryConditionExtensionsTest.cs" />
+    <Compile Include="Gui\Editors\WaterFlowFMModelViewWPFTest.cs" />
     <Compile Include="Gui\FlowBoundaryConditionDataViewTest.cs" />
     <Compile Include="Gui\FlowFMGuiPluginTest.cs" />
     <Compile Include="Gui\FMFileBasedTreeViewTest.cs" />
@@ -365,6 +366,10 @@
       <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
       <Name>DeltaShell.NGHS.IO</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj">
+      <Project>{67C4F55D-2CF5-424D-91A3-A68365AC1C9C}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.HydroModel.Gui</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.csproj">
       <Project>{A2D91FEB-C4D5-401A-AF97-ED0072899423}</Project>

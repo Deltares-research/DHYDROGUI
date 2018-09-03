@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using DelftTools.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Data;
@@ -14,7 +15,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
 
     public class TreeShortcut<TModel,TModelView> : Unique<long>, IProjectItem, IProjectItemOwned
         where TModel : IModel
-        where TModelView : ITabbedModelView
     {
         public TModel Model { get; private set; }
 
@@ -56,11 +56,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
             SubItems = subItems ?? new object[0];
         }
 
-        public void NavigateToInView(TModelView modelView)
+        public void NavigateToInView(IView modelView)
         {
-            if (CanSwitchToTab)
+            if (CanSwitchToTab && modelView != null)
             {
-                modelView.SwitchToTab(TabText);
+                modelView.EnsureVisible(TabText);
             }
         }
 

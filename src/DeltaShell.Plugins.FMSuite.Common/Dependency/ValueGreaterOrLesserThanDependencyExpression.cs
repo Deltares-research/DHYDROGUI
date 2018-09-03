@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                 {
                     var dependencyPropertyName = GetDependencyPropertyName(evaluatedProperty, dependencyExpression);
                     var dependencyProperty =
-                        properties.FirstOrDefault(
+                        properties?.FirstOrDefault(
                             p =>
                             p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
                                                                          StringComparison.InvariantCultureIgnoreCase));

@@ -3,13 +3,12 @@ using System.Linq;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
     public static class WaterFlowFmModelValidationExtensions
     {
-        public static ValidationReport Validate(this WaterFlowFMModel model, WaterFlowFMModel target = null)
+        public static ValidationReport Validate(this WaterFlowFMModel model)
         {
             var validationReports = new[]
             {
