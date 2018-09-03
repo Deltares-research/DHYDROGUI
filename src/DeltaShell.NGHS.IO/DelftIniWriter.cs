@@ -43,6 +43,7 @@ namespace DeltaShell.NGHS.IO
                     {
                         WriteProperty(property, writeComment);
                     }
+                    WriteLine(string.Empty);
                 }
             }
             finally
