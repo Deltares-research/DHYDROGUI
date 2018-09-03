@@ -12,30 +12,36 @@
       <property name="Width" />
       <property name="Height" />
       <property name="ArcHeight" />
+      <property name="MaterialName" />
     </subclass>
     <subclass name="CrossSectionStandardShapeCunette" discriminator-value="cunette">
       <property name="Name" />
       <property name="Width" />
       <property name="Height" />
+      <property name="MaterialName" />
     </subclass>
     <subclass name="CrossSectionStandardShapeEgg" discriminator-value="egg">
       <property name="Name" />
       <property name="Width" />
       <property name="Height" />
+      <property name="MaterialName" />
     </subclass>
     <subclass name="CrossSectionStandardShapeElliptical" discriminator-value="elliptical">
       <property name="Name" />
       <property name="Width" />
       <property name="Height" />
+      <property name="MaterialName" />
     </subclass>
     <subclass name="CrossSectionStandardShapeRectangle" discriminator-value="rectangle">
       <property name="Name" />
       <property name="Width" />
       <property name="Height" />
+      <property name="MaterialName" />
     </subclass>
     <subclass name="CrossSectionStandardShapeCircle" discriminator-value="round">
       <property name="Name" />
       <property name="Diameter" />
+      <property name="MaterialName" />
     </subclass>
     <subclass name="CrossSectionStandardShapeSteelCunette" discriminator-value="steelcunette">
       <property name="Name" />
@@ -46,12 +52,14 @@
       <property name="RadiusR3" />
       <property name="AngleA" />
       <property name="AngleA1" />
+      <property name="MaterialName" />
     </subclass>
     <subclass name="CrossSectionStandardShapeTrapezium" discriminator-value="trapezium">
       <property name="Name" />
       <property name="Slope" />
       <property name="BottomWidthB" />
       <property name="MaximumFlowWidth" />
+      <property name="MaterialName" />
     </subclass>
   </class>
 </hibernate-mapping>
