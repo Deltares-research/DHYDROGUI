@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO
@@ -36,19 +37,26 @@ namespace DeltaShell.NGHS.IO
             OpenOutputFile(iniFile);
             try
             {
-                foreach (var category in categories)
+                var delftIniCategories = categories.ToList();
+                for (var n = 0; n < delftIniCategories.Count; n++)
                 {
+                    var category = delftIniCategories[n];
                     WriteLine("[" + category.Name + "]");
-                    foreach (var property in category.Properties)
-                    {
-                        WriteProperty(property, writeComment);
-                    }
-                    WriteLine(string.Empty);
+                    WriteProperties(writeComment, category);
+                    if(n != delftIniCategories.Count - 1) WriteLine(string.Empty);
                 }
             }
             finally
             {
                 CloseOutputFile();
+            }
+        }
+
+        private void WriteProperties(bool writeComment, IDelftIniCategory category)
+        {
+            foreach (var property in category.Properties)
+            {
+                WriteProperty(property, writeComment);
             }
         }
 

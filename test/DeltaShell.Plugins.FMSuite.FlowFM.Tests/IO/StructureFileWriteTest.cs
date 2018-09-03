@@ -116,6 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 "    neg_contrcoeffreegate = 21.000              # Negative flow contraction coefficient (-)" + Environment.NewLine +
                 "    extraresistance       = 22.000              # Extra resistance (-)" + Environment.NewLine +
                 "    gatedoorheight        = 11.000              # Gate opening height (m)" + Environment.NewLine +
+                Environment.NewLine +
                 "[structure]" + Environment.NewLine +
                 "    type                  = weir                # Type of structure" + Environment.NewLine +
                 "    id                    = weir02              # Name of the structure" + Environment.NewLine +

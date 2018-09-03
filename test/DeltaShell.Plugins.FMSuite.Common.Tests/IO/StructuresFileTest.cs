@@ -395,7 +395,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Test]
         public void ReadThrowsForInvalidFilePath()
         {
-            var structureFile = new StructuresFile() { StructureSchema = new StructureSchema<ModelPropertyDefinition>() };
+            var structureFile = new StructuresFile { StructureSchema = new StructureSchema<ModelPropertyDefinition>() };
             Assert.Throws<FileNotFoundException>(() => structureFile.ReadStructures2D("I do not exist").ToList());
         }
 
@@ -540,6 +540,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 "    id                    = pump1               # Name of the structure" + Environment.NewLine +
                 "    polylinefile          = pump1.pli           # *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
                 "    capacity              = 3                   # Pump capacity (in [m3/s])" + Environment.NewLine +
+                Environment.NewLine +
                 "[structure]" + Environment.NewLine +
                 "    type                  = weir                # Type of structure" + Environment.NewLine +
                 "    id                    = weir1               # Name of the structure" + Environment.NewLine +
@@ -547,6 +548,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 "    crest_level           = 2                   # Weir crest height (in [m])" + Environment.NewLine +
                 "    crest_width           = 25                  # Weir crest width (in [m])" + Environment.NewLine +
                 "    lat_contr_coeff       = 0.7                 # Lateral contraction coefficient" + Environment.NewLine +
+                Environment.NewLine +
                 "[structure]" + Environment.NewLine +
                 "    type                  = gate                # Type of structure" + Environment.NewLine +
                 "    id                    = gate1               # Name of the structure" + Environment.NewLine +
@@ -559,8 +561,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             foreach (var expectedFileName in expectedFileNames)
             {
-                var filePath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(exportFilePath, expectedFileName);
-                Assert.IsTrue(File.Exists(filePath), String.Format("File '{0}' expected to exist.", filePath));
+                var filePath = NGHSFileBase.GetOtherFilePathInSameDirectory(exportFilePath, expectedFileName);
+                Assert.IsTrue(File.Exists(filePath), $"File '{filePath}' expected to exist.");
                 File.Delete(filePath);
             }
 
@@ -665,36 +667,31 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 "[structure]" + Environment.NewLine +
                 "    type                  = pump                # Type of structure" + Environment.NewLine +
                 "    id                    = pump1               # Name of the structure" + Environment.NewLine +
-                "    polylinefile          = pump1.pli           # *.pli; Polyline geometry definition for 2D structure" +
-                Environment.NewLine +
+                "    polylinefile          = pump1.pli           # *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
                 "    capacity              = pump1_capacity.tim  # Pump capacity (in [m3/s])" + Environment.NewLine +
+                Environment.NewLine +
                 "[structure]" + Environment.NewLine +
                 "    type                  = weir                # Type of structure" + Environment.NewLine +
                 "    id                    = weir1               # Name of the structure" + Environment.NewLine +
-                "    polylinefile          = weir1.pli           # *.pli; Polyline geometry definition for 2D structure" +
-                Environment.NewLine +
+                "    polylinefile          = weir1.pli           # *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
                 "    crest_level           = weir1_crest_level.tim# Weir crest height (in [m])" + Environment.NewLine +
-                "    lat_contr_coeff       = 0.7                 # Lateral contraction coefficient" +
+                "    lat_contr_coeff       = 0.7                 # Lateral contraction coefficient" + Environment.NewLine +
                 Environment.NewLine +
                 "[structure]" + Environment.NewLine +
                 "    type                  = gate                # Type of structure" + Environment.NewLine +
                 "    id                    = gate1               # Name of the structure" + Environment.NewLine +
-                "    polylinefile          = gate1.pli           # *.pli; Polyline geometry definition for 2D structure" +
-                Environment.NewLine +
-                "    sill_level            = gate1_sill_level.tim# Gate sill level (in [m])" +
-                Environment.NewLine +
-                "    lower_edge_level      = gate1_lower_edge_level.tim# Gate lower edge level (in [m])" +
-                Environment.NewLine +
+                "    polylinefile          = gate1.pli           # *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
+                "    sill_level            = gate1_sill_level.tim# Gate sill level (in [m])" + Environment.NewLine +
+                "    lower_edge_level      = gate1_lower_edge_level.tim# Gate lower edge level (in [m])" + Environment.NewLine +
                 "    opening_width         = gate1_opening_width.tim# Gate opening width (in [m])" + Environment.NewLine +
                 "    door_height           = 3                   # Gate door height (in [m])" + Environment.NewLine +
-                "    horizontal_opening_direction= symmetric           # Horizontal direction of the opening doors" +
-                Environment.NewLine +
+                "    horizontal_opening_direction= symmetric           # Horizontal direction of the opening doors" + Environment.NewLine +
                 "    sill_width            = 15.5                # Gate sill width (in [m])" + Environment.NewLine, fileContents);
 
             foreach (var expectedFileName in expectedFileNames)
             {
-                var filePath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(exportFilePath, expectedFileName);
-                Assert.IsTrue(File.Exists(filePath), String.Format("File '{0}' expected to exist.", filePath));
+                var filePath = NGHSFileBase.GetOtherFilePathInSameDirectory(exportFilePath, expectedFileName);
+                Assert.IsTrue(File.Exists(filePath), $"File '{filePath}' expected to exist.");
                 File.Delete(filePath);
             }
 

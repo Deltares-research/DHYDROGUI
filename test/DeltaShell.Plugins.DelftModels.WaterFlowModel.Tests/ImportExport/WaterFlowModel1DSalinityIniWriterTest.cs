@@ -33,20 +33,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             WaterFlowModel1DSalinityIniWriter.WriteFile(targetPath, DispersionFormulationType.KuijperVanRijnPrismatic, "Test");
 
             var expectedText = "[NumericalOptions]\r\n" + 
-                               "    teta                  = 1.0000000e+000      \r\n" +
-                               "    tidalPeriod           = 1.2417000e+001      \r\n" +
-                               "    advectionScheme       = vanLeer-2           \r\n" +
-                               "    c3                    = 1.0                 \r\n" +
-                               "    c4                    = 1.0                 \r\n" +
-                               "    c5                    = 0.5                 \r\n" +
-                               "    c6                    = 1.0                 \r\n" +
-                               "    c7                    = 0.0                 \r\n" +
-                               "    c8                    = 1.0                 \r\n" +
-                               "    c9                    = 0.0                 \r\n" +
-                               "    c10                   = 0.5                 \r\n" +
-                               "    c11                   = 0.0                 \r\n" + 
-                               "[Mouth]\r\n" +
-                               "    nodeId                = Test                # Estuary mouth node id\r\n";
+                               "    teta                  = 1.0000000e+000      " + Environment.NewLine +
+                               "    tidalPeriod           = 1.2417000e+001      " + Environment.NewLine +
+                               "    advectionScheme       = vanLeer-2           " + Environment.NewLine +
+                               "    c3                    = 1.0                 " + Environment.NewLine +
+                               "    c4                    = 1.0                 " + Environment.NewLine +
+                               "    c5                    = 0.5                 " + Environment.NewLine +
+                               "    c6                    = 1.0                 " + Environment.NewLine +
+                               "    c7                    = 0.0                 " + Environment.NewLine +
+                               "    c8                    = 1.0                 " + Environment.NewLine +
+                               "    c9                    = 0.0                 " + Environment.NewLine +
+                               "    c10                   = 0.5                 " + Environment.NewLine +
+                               "    c11                   = 0.0                 " + Environment.NewLine +
+                               Environment.NewLine + 
+                               "[Mouth]" + Environment.NewLine +
+                               "    nodeId                = Test                # Estuary mouth node id" + Environment.NewLine;
 
             Assert.AreEqual(expectedText, File.ReadAllText(targetPath));
         }
