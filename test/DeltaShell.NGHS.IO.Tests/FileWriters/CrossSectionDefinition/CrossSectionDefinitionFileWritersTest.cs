@@ -423,7 +423,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(9, content.Properties.Count);
+            Assert.AreEqual(7, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection1", idValue);
 
@@ -442,7 +442,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             CheckCrossSectionStandardPropertyValues(content);
 
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(9, content.Properties.Count);
+            Assert.AreEqual(7, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection2", idValue);
 
@@ -479,7 +479,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(11, content.Properties.Count);
+            Assert.AreEqual(10, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection1", idValue);
 
@@ -507,7 +507,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual("0.00000 15.64345 30.90170 45.39905 58.77853 70.71068 80.90170 89.10065 95.10565 98.76883 100.00000 98.76883 95.10565 89.10065 80.90170 70.71068 58.77853 45.39905 30.90170 15.64345 0.00000", flowWidthsValue);
 
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(11, content.Properties.Count);
+            Assert.AreEqual(10, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection2", idValue);
 
@@ -555,7 +555,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(10, content.Properties.Count);
+            Assert.AreEqual(9, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection1", idValue);
 
@@ -580,7 +580,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual("0.00000 15.64345 30.90170 45.39905 58.77853 70.71068 80.90170 89.10065 95.10565 98.76883 100.00000 98.76883 95.10565 89.10065 80.90170 70.71068 58.77853 45.39905 30.90170 15.64345 0.00000", flowWidthsValue);
 
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(10, content.Properties.Count);
+            Assert.AreEqual(9, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection2", idValue);
 
@@ -624,7 +624,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(10, content.Properties.Count);
+            Assert.AreEqual(9, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection1", idValue);
 
@@ -649,7 +649,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual("0.00000 15.64345 30.90170 45.39905 58.77853 70.71068 80.90170 89.10065 95.10565 98.76883 100.00000 98.76883 95.10565 89.10065 80.90170 70.71068 58.77853 45.39905 30.90170 15.64345 0.00000", flowWidthsValue);
 
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(10, content.Properties.Count);
+            Assert.AreEqual(9, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection2", idValue);
 
@@ -693,7 +693,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(12, content.Properties.Count);
+            Assert.AreEqual(11, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection1", idValue);
 
@@ -724,7 +724,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual("100.00000 100.00000 99.54302 98.15934 95.80879 92.41764 87.86549 81.95911 74.37658 64.52970 51.12648 29.68802 0.00000", flowWidthsValue);
 
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(12, content.Properties.Count);
+            Assert.AreEqual(11, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection2", idValue);
 
@@ -758,10 +758,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
         private static void CheckCrossSectionStandardPropertyValues(DelftIniCategory category)
         {
             var closedValue = category.GetPropertyValue(DefinitionPropertySettings.Closed.Key);
-            var groundLayerUsedValue = category.GetPropertyValue(DefinitionPropertySettings.GroundlayerUsed.Key);
-
             Assert.That(closedValue, Is.EqualTo("1"));
-            Assert.That(groundLayerUsedValue, Is.EqualTo("0"));
         }
 
         [Test]
@@ -783,7 +780,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(10, content.Properties.Count);
+            Assert.AreEqual(9, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection1", idValue);
 
@@ -808,7 +805,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual("0.00000 34.96651 49.26545 60.11059 69.14659 77.01293 84.03869 90.42003 96.28517 99.99314 99.91216 99.73978 99.47551 99.11862 98.66811 98.12268 97.48076 96.74040 95.89933 94.95489 93.90394 92.74287 91.46748 90.07293 88.55357 86.90286 85.11316 83.17550 81.07928 78.81183 76.35791 73.69890 70.81169 67.66708 64.22727 60.44189 56.24120 51.52372 46.13118 39.79005 31.94028 20.94959 0.20000 0.00000", flowWidthsValue);
 
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(10, content.Properties.Count);
+            Assert.AreEqual(9, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection2", idValue);
 
@@ -852,7 +849,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(16, content.Properties.Count);
+            Assert.AreEqual(15, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection1", idValue);
 
@@ -895,7 +892,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual("0.00000 161.71136 161.72253 161.62029 161.40447 161.07469 160.63040 160.07081 159.39496 158.60163 157.68942 156.65664 155.50137 154.22141 152.81425 151.27705 149.60662 147.79938 145.85130 143.75786 141.51397 139.11393 136.55130 133.81883 130.90829 127.81030 124.51418 121.00761 117.27638 113.30388 109.07061 104.55337 99.72429 94.54935 88.98636 82.98193 76.46678 69.34817 61.49703 52.72393 42.72984 30.49107 0.00000", flowWidthsValue);
 
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(16, content.Properties.Count);
+            Assert.AreEqual(15, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection2", idValue);
 
@@ -957,7 +954,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(9, content.Properties.Count);
+            Assert.AreEqual(8, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection1", idValue);
 
@@ -979,7 +976,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             CheckCrossSectionStandardPropertyValues(content);
 
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(9, content.Properties.Count);
+            Assert.AreEqual(8, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection2", idValue);
 
