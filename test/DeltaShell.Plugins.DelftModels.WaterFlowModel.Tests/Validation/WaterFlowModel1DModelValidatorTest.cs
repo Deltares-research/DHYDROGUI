@@ -49,6 +49,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
                                         "Target and source node of branch 'branch' have the same id, 'node'. Circular branch?"));
         }
 
+
+        [Test]
+        public void NetworkWithoutCoordinateSystemShouldGiveWarningAboutDefaultMapProjection()
+        {
+            var network = new HydroNetwork { CoordinateSystem = null };
+
+            var model = new WaterFlowModel1D { Network = network };
+
+            Assert.IsTrue(ContainsWarning(new WaterFlowModel1DModelValidator().Validate(model),
+                "No Coordinate System selected for Network. Default map projection will be used for distance calculations."));
+        }
+
         [Test]
         public void GeographicalCoordinateSystemShouldGiveError()
         {
