@@ -10,12 +10,38 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
+using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.FMSuite.Common.IO;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 {
     [TestFixture]
     public class TimFileExporterTest
     {
+        private TimFileExporter exporter;
+        private string tempDir;
+
+        [TestFixtureSetUp]
+        public void SetupFixture()
+        {
+            tempDir = FileUtils.CreateTempDirectory();
+        }
+
+        [TestFixtureTearDown]
+        public void TeardownFixture()
+        {
+            FileUtils.DeleteIfExists(tempDir);
+        }
+
+        [SetUp]
+        public void Setup()
+        {
+            exporter = new TimFileExporter();
+        }
+
         [TestCase(false, HeatFluxModelType.None, false, false, false, "00000.tim")]
         [TestCase(false, HeatFluxModelType.None, false, false, true, "00001.tim")]
         [TestCase(false, HeatFluxModelType.None, false, true, false, "00010.tim")]
@@ -48,13 +74,223 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [TestCase(true, HeatFluxModelType.TransportOnly, true, false, true, "11101.tim")]
         [TestCase(true, HeatFluxModelType.TransportOnly, true, true, false, "11110.tim")]
         [TestCase(true, HeatFluxModelType.TransportOnly, true, true, true, "11111.tim")]
-
+        [Category(TestCategory.DataAccess)]
         public void TestExport_SourceAndSinks(bool useSalinity, HeatFluxModelType temperature, bool useMorSed, bool useSecFlow, bool tracersPresent, string fileName)
         {
             var expectedFile = TestHelper.GetTestFilePath(@"timFiles\" + fileName);
             
             // setup
             var sourceAndSink = new SourceAndSink();
+            var fmModel = ConstructSourceAndSinkFlowFMModel(sourceAndSink, useSalinity, temperature, useMorSed, useSecFlow, tracersPresent);
+
+            // do the export
+            var exportedFile = Path.Combine(tempDir, fileName);
+            FileUtils.DeleteIfExists(exportedFile);
+            exporter.GetModelForSourceAndSink = input => fmModel;
+
+            exporter.Export(sourceAndSink, exportedFile);
+
+            // check results
+            Assert.IsTrue(FileUtils.FilesAreEqual(expectedFile, exportedFile));
+
+            // final cleanup
+            FileUtils.DeleteIfExists(exportedFile);
+        }
+
+        private static void AddVariableWithRange(SourceAndSink ss, string name, int n1, int n2, int n3)
+        {
+            var function = ss.Function;
+            var variable = function.Components.FirstOrDefault(c => c.Name == name);
+            Assert.NotNull(variable);
+            variable.Values.Clear();
+            variable.Values.AddRange(new List<double> {n1, n2, n3});
+        }
+
+
+        [Test]
+        public void TestExport_SourceAndSinks_WithMissingFunction()
+        {
+            // setup
+            var sourceAndSink = new SourceAndSink() { Data = null };
+            var fmModel = new WaterFlowFMModel();
+            fmModel.SourcesAndSinks.Add(sourceAndSink);
+
+            // do the export
+            exporter.GetModelForSourceAndSink = sink => fmModel;
+
+            Assert.IsFalse(exporter.Export(sourceAndSink, string.Empty));
+            // check results
+            var expectedLogMessage = string.Format(Resources.Could_not_export_data_for_SourceAndSink___0___no_Function_was_found, sourceAndSink.Name);
+            TestHelper.AssertAtLeastOneLogMessagesContains(()=> exporter.Export(sourceAndSink, string.Empty), expectedLogMessage);
+        }
+
+        [Test]
+        public void GivenAnTimFileExporterAndAnIBoundaryConditionWithDataTypeTimeSeriesWhenExportIsCalledWithThisItemAndAnyPathThenTrueIsReturned()
+        {
+            var path = Path.Combine(tempDir, "myFile.tmp");
+
+            var mocks = new MockRepository();
+
+            // Set up conditions for test
+            var itemMock = mocks.DynamicMock<IBoundaryCondition>();
+            var functionMock = mocks.DynamicMock<IFunction>();
+
+            itemMock.Expect(n => n.DataType).Return(BoundaryConditionDataType.TimeSeries).Repeat.Any();
+            itemMock.Expect(n => n.GetDataAtPoint(Arg<int>.Is.Anything)).Return(functionMock).Repeat.Any();
+
+            // Mocks to make the TimFile.Write work
+            // Suggested fix dependency injection of TimFile and mock.
+            var firstMock = mocks.DynamicMock<IVariable<DateTime>>();
+
+            functionMock.Expect(n => n.Arguments).Return(null)
+                .WhenCalled(x => x.ReturnValue = new EventedList<IVariable> {firstMock}).Repeat.Any();
+            functionMock.Expect(n => n.Components).Return(null)
+                .WhenCalled(x => x.ReturnValue = new EventedList<IVariable>()).Repeat.Any();
+
+            var emptyValues = new MultiDimensionalArray<DateTime>();
+            firstMock.Expect(n => n.Values).Return(emptyValues).Repeat.Any();
+            
+            mocks.ReplayAll();
+
+            try
+            {
+                Assert.That(exporter.Export(itemMock, path), Is.True);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(path);
+            }
+            mocks.VerifyAll();
+        }
+
+        [TestCase(false, HeatFluxModelType.None, false, false, false)]
+        public void GivenAnTimFileExporterAndASourceAndSinkItemWhenExportIsCalledWithThisItemAndAnyPathThenTrueIsReturned(bool useSalinity, HeatFluxModelType temperature, bool useMorSed, bool useSecFlow, bool tracersPresent)
+        {
+            var path = Path.Combine(tempDir, "myFile.tmp");
+
+            // Construct complete fmModel / SourceAndSink due to use of static methods
+            var sourceAndSink = new SourceAndSink();
+            var fmModel = ConstructSourceAndSinkFlowFMModel(sourceAndSink, useSalinity, temperature, useMorSed, useSecFlow, tracersPresent);
+
+            this.exporter.GetModelForSourceAndSink = input => fmModel;
+            
+            try
+            {
+                Assert.That(exporter.Export(sourceAndSink, path), Is.True);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(path);
+            }
+        }
+
+        [Test]
+        public void GivenAnTimFileExporterAndAnItemWhichIsNotAIBoundaryConditionSourceAndSinkOrHeatFluxModelWhenExportIsCalledWithThisItemAndAnyStringThenFalseIsReturned()
+        {
+            Assert.That(exporter.Export(null, Arg<string>.Is.Anything), Is.False);
+        }
+
+        [Test]
+        public void GivenAnTimFileExporterWhenExporterIsCalledWithAHeatFluxModelThenTrueIsReturned()
+        {
+            var path = Path.Combine(tempDir, "myFile.tmp");
+
+            var heatFluxModel = new HeatFluxModel
+            {
+                Type = HeatFluxModelType.Composite
+            };
+
+            var fmModel = new WaterFlowFMModel();
+            exporter.GetModelForHeatFluxModel = input => fmModel;
+            
+            try
+            {
+                Assert.That(exporter.Export(heatFluxModel, path), Is.True);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(path);
+            }
+        }
+
+        [Test]
+        public void GivenAnExporterWithAnItemWhichWillCauseAnExceptionInTheWriterWhenExportIsCalledWithThisItemAndAnyPathThenAnErrorIsLoggedAndFalseIsReturned()
+        {
+            var path = Path.Combine(tempDir, "myFile.tmp");
+
+            var mocks = new MockRepository();
+
+            // Set up conditions for test
+            var itemMock = mocks.DynamicMock<IBoundaryCondition>();
+            var functionMock = mocks.DynamicMock<IFunction>();
+
+            itemMock.Expect(n => n.DataType).Return(BoundaryConditionDataType.TimeSeries).Repeat.Any();
+            itemMock.Expect(n => n.GetDataAtPoint(Arg<int>.Is.Anything)).Return(functionMock).Repeat.Any();
+
+            mocks.ReplayAll();
+
+            try
+            {
+                Assert.That(exporter.Export(itemMock, path), Is.False);
+
+                var expectedLogMessage =
+                    Resources.TimFileExporter_Export_Failed_to_export_data_to__0____1_.Split('{')[0];
+                TestHelper.AssertAtLeastOneLogMessagesContains(()=> exporter.Export(itemMock, Arg<string>.Is.Anything), expectedLogMessage);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(path);
+            }
+        }
+
+        [Test]
+        public void GivenAnTimFileExporterWhenCategoryIsCalledThenGeneralIsReturned()
+        {
+            Assert.That(exporter.Category, Is.EqualTo("General"));
+        }
+
+        [Test]
+        public void GivenAnTimFileExporterWhenNameIsCalledThenTheNameIsReturned()
+        {
+            const string expectedValue = "Time series to .tim file";
+            Assert.That(exporter.Name, Is.EqualTo(expectedValue));
+        }
+
+        [Test]
+        public void GivenAnTimFileExporterWhenSourceTypesIsCalledThenTheCorrectSourceTypesAreReturned()
+        {
+            Assert.That(exporter.SourceTypes().Count(), Is.EqualTo(2));
+            Assert.That(exporter.SourceTypes().Contains(typeof(SourceAndSink)));
+            Assert.That(exporter.SourceTypes().Contains(typeof(HeatFluxModel)));
+        }
+
+        [Test]
+        public void GivenAnTimFileExporterWhenFileFilterIsCalledThenTheCorrectFileFilterIsReturned()
+        {
+            const string expectedValue = "Time series file|*.tim";
+            Assert.That(exporter.FileFilter, Is.EqualTo(expectedValue));
+        }
+
+        [Test]
+        public void GivenAnTimFileExporterWhenCanExportIsCalledWithAnyObjectThenTrueIsReturned()
+        {
+            Assert.That(exporter.CanExportFor(Arg<object>.Is.Anything), Is.True);
+        }
+
+        [Test]
+        public void GivenAnTimFileExporterWhenForcingTypesIsCalledThenTheCorrectForcingTypesAreReturned()
+        {
+            Assert.That(exporter.ForcingTypes.Count(), Is.EqualTo(1));
+            Assert.That(exporter.ForcingTypes.Contains(BoundaryConditionDataType.TimeSeries));
+        }
+
+        private static WaterFlowFMModel ConstructSourceAndSinkFlowFMModel(SourceAndSink sourceAndSink, 
+                                                                          bool useSalinity, 
+                                                                          HeatFluxModelType temperature, 
+                                                                          bool useMorSed, 
+                                                                          bool useSecFlow, 
+                                                                          bool tracersPresent)
+        {
             var fmModel = new WaterFlowFMModel();
             fmModel.SourcesAndSinks.Add(sourceAndSink);
 
@@ -111,49 +347,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 AddVariableWithRange(sourceAndSink, "Tracer_2", 66, 77, 88);
             }
 
-            // do the export
-            var exportedFile = Path.Combine(FileUtils.CreateTempDirectory(), fileName);
-            FileUtils.DeleteIfExists(exportedFile);
-            var exporter = new TimFileExporter()
-            {
-                GetModelForSourceAndSink = input => fmModel
-            };
-            exporter.Export(sourceAndSink, exportedFile);
-
-            // check results
-            Assert.IsTrue(FileUtils.FilesAreEqual(expectedFile, exportedFile));
-
-            // final cleanup
-            FileUtils.DeleteIfExists(exportedFile);
-        }
-
-        private static void AddVariableWithRange(SourceAndSink ss, string name, int n1, int n2, int n3)
-        {
-            var function = ss.Function;
-            var variable = function.Components.FirstOrDefault(c => c.Name == name);
-            Assert.NotNull(variable);
-            variable.Values.Clear();
-            variable.Values.AddRange(new List<double> {n1, n2, n3});
-        }
-
-
-        [Test]
-        public void TestExport_SourceAndSinks_WithMissingFunction()
-        {
-            // setup
-            var sourceAndSink = new SourceAndSink() { Data = null };
-            var fmModel = new WaterFlowFMModel();
-            fmModel.SourcesAndSinks.Add(sourceAndSink);
-
-            // do the export
-            var exporter = new TimFileExporter()
-            {
-                GetModelForSourceAndSink = input => fmModel
-            };
-            Assert.IsFalse(exporter.Export(sourceAndSink, string.Empty));
-            // check results
-            var expectedLogMessage = string.Format(Resources.Could_not_export_data_for_SourceAndSink___0___no_Function_was_found, sourceAndSink.Name);
-            TestHelper.AssertAtLeastOneLogMessagesContains(()=> exporter.Export(sourceAndSink, string.Empty), expectedLogMessage);
+            return fmModel;
         }
     }
 }

@@ -287,6 +287,7 @@
     <Compile Include="IO\Exporters\FlowFMNetFileExporterTest.cs" />
     <Compile Include="IO\Exporters\GeometryZipExporterTest.cs" />
     <Compile Include="IO\Exporters\ImportedNetFileXyzExporterTest.cs" />
+    <Compile Include="IO\Exporters\QhFileExporterTest.cs" />
     <Compile Include="IO\Exporters\TimFileExporterTest.cs" />
     <Compile Include="IO\ExtForceFileHelperTest.cs" />
     <Compile Include="IO\ExtForceFileTest.cs" />
