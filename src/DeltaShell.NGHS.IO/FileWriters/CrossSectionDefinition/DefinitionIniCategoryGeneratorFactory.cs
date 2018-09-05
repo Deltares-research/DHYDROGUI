@@ -5,6 +5,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
     public static class DefinitionIniCategoryGeneratorFactory
     {
+        public static DefinitionGeneratorCrossSectionDefinition GetIniCategoryGenerator(ICrossSectionDefinition crossSectionDefinition)
+        {
+            var standardCrossSectionDefinition = crossSectionDefinition as CrossSectionDefinitionStandard;
+            return standardCrossSectionDefinition != null ? GetIniCategoryGenerator(standardCrossSectionDefinition.ShapeType) : null;
+        }
+
         public static DefinitionGeneratorCrossSectionDefinitionStandard GetIniCategoryGenerator(CrossSectionStandardShapeType shapeType)
         {
             switch (shapeType)

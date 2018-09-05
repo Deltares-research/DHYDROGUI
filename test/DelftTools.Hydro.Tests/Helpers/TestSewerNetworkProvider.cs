@@ -85,6 +85,39 @@ namespace DelftTools.Hydro.Tests.Helpers
             return network;
         }
 
+        public static HydroNetwork CreateSewerNetwork_TwoManholesWithOneCompartmentEachAndOnePipeWithACrossSection()
+        {
+            var network = new HydroNetwork();
+
+            var targetManhole = new Manhole(TargetManholeId);
+            var targetCompartment = new Compartment(TargetCompartmentName) { SurfaceLevel = 0.0, Geometry = TargetCompartmentGeometry };
+            targetManhole.Compartments.Add(targetCompartment);
+
+            var sourceManhole = new Manhole(SourceManholeId);
+            var sourceCompartment = new Compartment(SourceCompartmentName) { SurfaceLevel = 0.0, Geometry = SourceCompartmentGeometry };
+            sourceManhole.Compartments.Add(sourceCompartment);
+
+            var crossSectionDefinition = new CrossSectionDefinitionStandard(CrossSectionStandardShapeArch.CreateDefault());
+            
+            var pipe = new Pipe
+            {
+                Name = "myPipe",
+                SourceCompartment = sourceCompartment,
+                TargetCompartment = targetCompartment,
+                SourceCompartmentName = SourceCompartmentName,
+                TargetCompartmentName = TargetCompartmentName,
+                LevelSource = 0.0,
+                LevelTarget = 0.0,
+                WaterType = SewerConnectionWaterType.DryWater,
+                CrossSectionDefinition = crossSectionDefinition
+            };
+
+            network.Branches.Add(pipe);
+            network.Nodes.Add(sourceManhole);
+            network.Nodes.Add(targetManhole);
+            return network;
+        }
+
         public static HydroNetwork CreateSewerNetwork_TwoManholesWithOneCompartmentEachAndOnePump()
         {
             var network = new HydroNetwork();

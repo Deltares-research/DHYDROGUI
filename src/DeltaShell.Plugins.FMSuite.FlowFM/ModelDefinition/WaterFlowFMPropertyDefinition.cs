@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string ObsFile = "obsfile";
         public const string OutDir = "outputdir";
         public const string PartitionFile = "partitionfile";
-        public const string ProfdefFile = "profdeffile";
+        public const string CrossDefFile = "crossdeffile";
         public const string ProflocFile = "proflocfile";
         public const string RestartFile = "restartfile";
         public const string RstInterval = "rstinterval";

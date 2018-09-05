@@ -1,6 +1,11 @@
 ﻿using System.IO;
+using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Tests.Helpers;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -38,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             var geometry = new LineString(new[]{ new Coordinate(0, 0), new Coordinate(0, 100) });
-            SewerFactory.SetDefaultSettingPipeAndAddToNetwork(model.Network, new Pipe { Name = pipeName, Geometry = geometry, Material = SewerProfileMapping.SewerProfileMaterial.Polyester});
+            SewerFactory.AddDefaultPipeToNetwork(new Pipe { Name = pipeName, Geometry = geometry, Material = SewerProfileMapping.SewerProfileMaterial.Polyester}, model.Network);
 
             //action write
             WaterFlowFMModelWriter.Write(model);
@@ -51,6 +56,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             
             HydroNetworkTestHelper.CompareNetworks(model.Network, retrievedNetwork);
             HydroNetworkTestHelper.CompareDiscretisations(model.NetworkDiscretization, retrievedFmModel.NetworkDiscretization);
+        }
+
+        [Test]
+        public void GivenFmModel_WhenWritingFmModel_ThenCorrectFilesAreWritten()
+        {
+            var mduFilePath = Path.Combine(tempDirectory, "myFmModel.mdu");
+            var fmModel = new WaterFlowFMModel(mduFilePath)
+            {
+                Network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEachAndOnePipeWithACrossSection()
+            };
+
+            WaterFlowFMModelWriter.Write(fmModel);
         }
     }
 }

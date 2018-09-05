@@ -60,16 +60,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                     definitionGeneratorCrossSectionDefinition = new DefinitionGeneratorCrossSectionDefinitionZw();
                     break;
                 case CrossSectionType.Standard:
-                    definitionGeneratorCrossSectionDefinition = GetDefinitionGeneratorCrossSectionDefinition(crossSectionDefinition);
+                    definitionGeneratorCrossSectionDefinition = DefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(crossSectionDefinition);
                     break;
             }
             return definitionGeneratorCrossSectionDefinition;
-        }
-
-        private static DefinitionGeneratorCrossSectionDefinition GetDefinitionGeneratorCrossSectionDefinition(ICrossSectionDefinition crossSectionDefinition)
-        {
-            var standardCrossSectionDefinition = crossSectionDefinition as CrossSectionDefinitionStandard;
-            return standardCrossSectionDefinition != null ? DefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(standardCrossSectionDefinition.ShapeType) : null;
         }
 
         public static IDefinitionGeneratorLocation GetDefinitionGeneratorLocation(IBranchFeature branchFeature)

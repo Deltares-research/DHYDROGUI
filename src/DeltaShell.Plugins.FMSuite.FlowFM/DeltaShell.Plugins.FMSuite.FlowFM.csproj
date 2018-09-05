@@ -158,7 +158,6 @@
     <Compile Include="ASewerCompartmentGenerator.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="RectangleCrossSectionDefinitionGenerator.cs" />
-    <Compile Include="SewerNetworkHelper.cs" />
     <Compile Include="SewerOrificeGenerator.cs" />
     <Compile Include="EmbankmentGenerator.cs" />
     <Compile Include="EmbankmentMerger.cs" />

@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     case CrossSectionType.GeometryBased:
                     case CrossSectionType.YZ:
                         //add roughness
-                        definitionRegion = AddRoughnessDataToFileContent(definitionRegion, crossSection, waterFlowModel1D.RoughnessSections, waterFlowModel1D.UseReverseRoughness);
+                        definitionRegion = AddRoughnessDataToFileContent(definitionRegion, crossSection, waterFlowModel1D.RoughnessSections);
                         break;
                     case CrossSectionType.ZW:
                     case CrossSectionType.Standard:
@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                    && culvert.CrossSectionDefinition.Name == crossSectionDefinitionName;
         }
 
-        private static DelftIniCategory AddRoughnessDataToFileContent(DelftIniCategory iniCategory, ICrossSection crossSection, IList<RoughnessSection> roughnessSections, bool useReverseRoughness)
+        private static DelftIniCategory AddRoughnessDataToFileContent(DelftIniCategory iniCategory, ICrossSection crossSection, IList<RoughnessSection> roughnessSections)
         {
             var sectionSections = crossSection.Definition.Sections as IList<CrossSectionSection>;
             if (sectionSections.Count == 0)
