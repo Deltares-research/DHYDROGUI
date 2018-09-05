@@ -1,6 +1,7 @@
 ﻿using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Helpers;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro.SewerFeatures;
 
@@ -8,7 +9,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
 {
     public static class NodeFile
     {
-        public static void Write(IList<Compartment> compartments, string filePath)
+        public static void Write(IEnumerable<Compartment> compartments, string filePath)
         {
             var categories = new List<DelftIniCategory>();
             foreach (var compartment in compartments)
@@ -19,9 +20,9 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
                 iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.NodeId, compartment.Name, string.Empty));
                 iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.ManholeId, compartment.ParentManhole.Name, string.Empty));
                 iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.UseTable, "0", string.Empty));
-                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.BedLevel, $"{compartment.BottomLevel:0.000}", string.Empty));
-                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Area, $"{compartment.ManholeLength * compartment.ManholeWidth:0.0000}", string.Empty));
-                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StreetLevel, $"{compartment.SurfaceLevel:0.000}", string.Empty));
+                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.BedLevel, string.Format(CultureInfo.InvariantCulture, "{0:0.000}", compartment.BottomLevel), string.Empty));
+                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Area, string.Format(CultureInfo.InvariantCulture, "{0:0.0000}", compartment.ManholeLength * compartment.ManholeWidth), string.Empty));
+                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StreetLevel, string.Format(CultureInfo.InvariantCulture, "{0:0.000}", compartment.SurfaceLevel), string.Empty));
                 iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StorageType, "Reservoir", string.Empty));
                 iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StreetStorageArea, "100.00", string.Empty));
                 categories.Add(iniCategory);
@@ -41,14 +42,19 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
                 {
                     CompartmentId = category.GetPropertyValue(KnownPropertyNames.NodeId),
                     ManholeId = category.GetPropertyValue(KnownPropertyNames.ManholeId),
-                    BottomLevel = double.Parse(category.GetPropertyValue(KnownPropertyNames.BedLevel)),
-                    Area = double.Parse(category.GetPropertyValue(KnownPropertyNames.Area)),
-                    StreetLevel = double.Parse(category.GetPropertyValue(KnownPropertyNames.StreetLevel))
+                    BottomLevel = GetPropertyValueAsDouble(KnownPropertyNames.BedLevel, category),
+                    Area = GetPropertyValueAsDouble(KnownPropertyNames.Area, category),
+                    StreetLevel = GetPropertyValueAsDouble(KnownPropertyNames.StreetLevel, category)
                 };
                 propertiesPerCompartment.Add(compartmentProperties);
             }
 
             return propertiesPerCompartment;
+        }
+
+        private static double GetPropertyValueAsDouble(string propertyName, IDelftIniCategory category)
+        {
+            return double.Parse(category.GetPropertyValue(propertyName), CultureInfo.InvariantCulture);
         }
 
         public static class KnownPropertyNames
