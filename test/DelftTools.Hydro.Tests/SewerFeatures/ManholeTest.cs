@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -14,19 +15,95 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
 
         private EventedList<Compartment> GetCompartmentList()
         {
-            Compartment compartment1 = new Compartment(compartmentName1);
-            Compartment compartment2 = new Compartment(CompartmentName2);
+            var compartment1 = new Compartment(compartmentName1);
+            var compartment2 = new Compartment(CompartmentName2);
             return new EventedList<Compartment> {compartment1, compartment2};
         }
 
+        #region Manhole geometry
+
         [Test]
-        public void GivenManholeWithTwoCompartmentsWithAGeometry_WhenGettingTheGeometry_ThenDefaultCoordinateIsReturned()
+        public void GivenManholeWithTwoCompartmentsWithoutGeometry_WhenGettingTheGeometry_ThenDefaultCoordinateIsReturned()
         {
             var manhole = new Manhole("myManhole")
             {
                 Compartments = GetCompartmentList()
             };
             Assert.IsTrue(manhole.Geometry.IsValid);
+        }
+
+        [Test]
+        public void GivenManholeWithoutCompartments_WhenGettingGeometry_ThenDefaultGeometryIsReturned()
+        {
+            var manhole = new Manhole("myManhole");
+            Assert.IsTrue(manhole.Geometry.IsValid);
+            Assert.That(manhole.Geometry, Is.EqualTo(new Point(0, 0)));
+        }
+
+        [Test]
+        public void GivenManhole_WhenSettingCompartmentsWithGeometries_ThenGeometryIsEqualToAverageGeometryOfCompartments()
+        {
+            var compartmentGeometry1 = new Point(2.0, 3.0);
+            var compartmentGeometry2 = new Point(-1.0, -3.0);
+            var manhole = new Manhole("myManhole")
+            {
+                Compartments = new EventedList<Compartment>
+                {
+                    new Compartment { Geometry = compartmentGeometry1 },
+                    new Compartment { Geometry = compartmentGeometry2 },
+                }
+            };
+
+            var averageX = (compartmentGeometry1.X + compartmentGeometry2.X) / 2;
+            var averageY = (compartmentGeometry1.Y + compartmentGeometry2.Y) / 2;
+            var expectedGeometry = new Point(averageX, averageY);
+
+            Assert.That(manhole.Geometry, Is.EqualTo(expectedGeometry));
+            manhole.Compartments.ForEach(c => Assert.That(c.Geometry, Is.EqualTo(expectedGeometry)));
+        }
+
+        [Test]
+        public void GivenManhole_WhenAddingCompartmentWithGeometry_ThenManholeGeometryIsEqualToCompartmentGeometry()
+        {
+            var compartmentGeometry = new Point(2.0, 3.0);
+            var manhole = new Manhole("myManhole");
+            manhole.Compartments.Add(new Compartment { Geometry = compartmentGeometry });
+
+            Assert.That(manhole.Geometry, Is.EqualTo(compartmentGeometry));
+            manhole.Compartments.ForEach(c => Assert.That(c.Geometry, Is.EqualTo(compartmentGeometry)));
+        }
+
+        [Test]
+        public void GivenManholeWithOneCompartment_WhenAddingCompartmentWithGeometry_ThenGeometryIsEqualToAverageGeometryOfCompartments()
+        {
+            var compartmentGeometry1 = new Point(2.0, 3.0);
+            var compartmentGeometry2 = new Point(-1.0, -3.0);
+            var manhole = new Manhole("myManhole")
+            {
+                Compartments = new EventedList<Compartment> { new Compartment { Geometry = compartmentGeometry1 } }
+            };
+
+            manhole.Compartments.Add(new Compartment { Geometry = compartmentGeometry2 });
+            var averageX = (compartmentGeometry1.X + compartmentGeometry2.X) / 2;
+            var averageY = (compartmentGeometry1.Y + compartmentGeometry2.Y) / 2;
+            var expectedGeometry = new Point(averageX, averageY);
+
+            Assert.That(manhole.Geometry, Is.EqualTo(expectedGeometry));
+            manhole.Compartments.ForEach(c => Assert.That(c.Geometry, Is.EqualTo(expectedGeometry)));
+        }
+
+        [Test]
+        public void GivenManholeWithOneCompartment_WhenAddingCompartmentWithoutGeometry_ThenGeometryIsEqualToOriginalGeometry()
+        {
+            var compartmentGeometry = new Point(2.0, 3.0);
+            var manhole = new Manhole("myManhole")
+            {
+                Compartments = new EventedList<Compartment> { new Compartment { Geometry = compartmentGeometry } }
+            };
+
+            manhole.Compartments.Add(new Compartment { Geometry = null });
+            Assert.That(manhole.Geometry, Is.EqualTo(compartmentGeometry));
+            manhole.Compartments.ForEach(c => Assert.That(c.Geometry, Is.EqualTo(compartmentGeometry)));
         }
 
         [Test]
@@ -42,6 +119,8 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             var manhole = new Manhole("myManhole");
             Assert.IsNotNull(manhole.YCoordinate);
         }
+
+        #endregion
 
         [Test]
         public void GivenManhole_WhenInstatiatingWithCompartment_ThenCompartmentHasManholeAsParentManhole()
@@ -70,30 +149,14 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
         }
 
         [Test]
-        public void GivenManholeWithoutCompartments_WhenGettingGeometry_ThenDefaultGeometryIsReturned()
-        {
-            var manhole = new Manhole("myManhole");
-            Assert.IsTrue(manhole.Geometry.IsValid);
-            Assert.That(manhole.Geometry, Is.EqualTo(new Point(0, 0)));
-        }
-
-        [Test]
-        public void GivenManhole_WhenGettingGeometry_ThenDefaultGeometryIsReturned()
-        {
-            var defaultCoordinate = new Point(0, 0);
-            var manhole = new Manhole("myManhole");
-            Assert.That(manhole.Geometry, Is.EqualTo(defaultCoordinate));
-        }
-
-        [Test]
         public void GivenManholeWithCompartment_WhenGettingCompartmentByName_ThenCompartmentIsReturned()
         {
             var manhole = new Manhole("myManhole")
             {
                 Compartments = GetCompartmentList()
             };
-            Assert.NotNull(manhole.GetCompartmentByName(compartmentName1));
-            Assert.NotNull(manhole.GetCompartmentByName(CompartmentName2));
+            Assert.IsNotNull(manhole.GetCompartmentByName(compartmentName1));
+            Assert.IsNotNull(manhole.GetCompartmentByName(CompartmentName2));
         }
 
         [Test]

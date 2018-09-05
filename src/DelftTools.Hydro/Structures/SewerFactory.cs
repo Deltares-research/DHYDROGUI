@@ -26,54 +26,71 @@ namespace DelftTools.Hydro.Structures
             { typeof(Weir), CreateWeirConnection }
         };
 
-        public static void SetDefaultSettingPipeAndAddToNetwork(INetwork network, IPipe pipe)
+        public static void AddDefaultPipeToNetwork(IPipe pipe, INetwork network)
         {
             var hydroNetwork = network as HydroNetwork;
             if (hydroNetwork == null) return;
- 
-            // Setting default properties for pipe's cross section definition
-            var defSewerProfile = hydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(d => d.Name.Equals(DefaultProfileDefinitionName));
-            if (defSewerProfile == null)
-            {
-                defSewerProfile = DefaultSewerProfile;
-                hydroNetwork.SharedCrossSectionDefinitions.Add(defSewerProfile);
-                ((CrossSectionStandardShapeCircle) ((CrossSectionDefinitionStandard) defSewerProfile).Shape).Diameter = 0.4;
-            }
-            pipe.CrossSectionDefinition = DefaultSewerProfile;
-            pipe.Length = pipe.Geometry.Length;
 
-            // Setting source and target compartment
-            if (pipe.Source == null)
-            {
-                var manhole = GetExistingOrNewManholeFromNetwork(hydroNetwork, pipe.Geometry.Coordinates.First());
-                pipe.Source = manhole;
-                pipe.SourceCompartment = manhole.Compartments.FirstOrDefault();
-            }
-
-            if (pipe.Target == null)
-            {
-                var manhole = GetExistingOrNewManholeFromNetwork(hydroNetwork, pipe.Geometry.Coordinates.Last());
-                pipe.Target = manhole;
-                pipe.TargetCompartment = manhole.Compartments.FirstOrDefault();
-            }
-
-            // Setting default values for pipe properties
-            pipe.LevelSource = -2.0;
-            pipe.LevelTarget = -2.0;
-            pipe.WaterType = SewerConnectionWaterType.Combined;
+            SetPipeProperties(pipe, hydroNetwork);
+            AddDefaultSewerProfileToNetwork(hydroNetwork);
 
             lock (network.Branches)
                 network.Branches.Add(pipe);
             BranchOrderHelper.SetOrderForBranch(network, pipe);
         }
 
+        private static void AddDefaultSewerProfileToNetwork(HydroNetwork hydroNetwork)
+        {
+            var crossSectionDefinitionAlreadyPresentInNetwork = hydroNetwork.SharedCrossSectionDefinitions.Any(d => d.Name == DefaultProfileDefinitionName);
+            if (!crossSectionDefinitionAlreadyPresentInNetwork)
+            {
+                hydroNetwork.SharedCrossSectionDefinitions.Add(DefaultSewerProfile);
+            }
+        }
+
+        private static void SetPipeProperties(IPipe pipe, HydroNetwork hydroNetwork)
+        {
+            SetPipePhysicalProperties(pipe, hydroNetwork);
+            SetPipeDefaultValues(pipe);
+        }
+
+        private static void SetPipePhysicalProperties(IPipe pipe, HydroNetwork hydroNetwork)
+        {
+            pipe.Length = pipe.Geometry.Length;
+            SetSource(pipe, hydroNetwork);
+            SetTarget(pipe, hydroNetwork);
+        }
+
+        private static void SetTarget(IPipe pipe, HydroNetwork hydroNetwork)
+        {
+            if (pipe.Target == null)
+            {
+                var manhole = GetExistingOrNewManholeFromNetwork(hydroNetwork, pipe.Geometry.Coordinates.Last());
+                pipe.Target = manhole;
+            }
+        }
+
+        private static void SetSource(IPipe pipe, HydroNetwork hydroNetwork)
+        {
+            if (pipe.Source == null)
+            {
+                var manhole = GetExistingOrNewManholeFromNetwork(hydroNetwork, pipe.Geometry.Coordinates.First());
+                pipe.Source = manhole;
+            }
+        }
+
+        private static void SetPipeDefaultValues(IPipe pipe)
+        {
+            pipe.LevelSource = -2.0;
+            pipe.LevelTarget = -2.0;
+            pipe.WaterType = SewerConnectionWaterType.Combined;
+            pipe.Material = SewerProfileMapping.SewerProfileMaterial.Concrete;
+            pipe.CrossSectionDefinition = DefaultSewerProfile;
+        }
+
         private static IManhole GetExistingOrNewManholeFromNetwork(IHydroNetwork network, Coordinate coordinate)
         {
-            var existingManhole = network.Manholes.FirstOrDefault(n =>
-            {
-                if (n.Geometry.Coordinate.X.IsEqualTo(coordinate.X) && n.Geometry.Coordinate.Y.IsEqualTo(coordinate.Y)) return true;
-                return false;
-            });
+            var existingManhole = network.Manholes.FirstOrDefault(n => n.Geometry.Coordinate.X.IsEqualTo(coordinate.X) && n.Geometry.Coordinate.Y.IsEqualTo(coordinate.Y));
             return existingManhole ?? CreateDefaultManholeAndAddToNetwork(network, coordinate);
         }
 

@@ -11,41 +11,37 @@ namespace DelftTools.Hydro.Tests.Structures
         [Test]
         public void NetworkWithManholeAndConnections_ReturnOnlyInternalConnections()
         {
-            var manhole = new Manhole("manhole 1");
-            var manhole2 = new Manhole("manhole 2");
-            var network = new HydroNetwork();
-
-            manhole.Network = network;
-            manhole2.Network = network;
-            network.Nodes.Add(manhole);
-            network.Nodes.Add(manhole2);
-
+            var sourceManhole = new Manhole("manhole 1");
+            var targetManhole = new Manhole("manhole 2");
             const string compartment1Name = "cmp1_1";
             const string compartment2Name = "cmp1_2";
             const string compartment3Name = "cmp2_1";
+
+            var network = new HydroNetwork();
+            network.Nodes.Add(sourceManhole);
+            network.Nodes.Add(targetManhole);
+
+            SewerFactory.CreateNewCompartmentAndAddToManhole(network, sourceManhole, compartment1Name);
+            SewerFactory.CreateNewCompartmentAndAddToManhole(network, sourceManhole, compartment2Name);
+            SewerFactory.CreateNewCompartmentAndAddToManhole(network, targetManhole, compartment3Name);
             var pipe = new Pipe
             {
-                Source = manhole,
-                Target = manhole2,
-                TargetCompartment = manhole2.GetCompartmentByName(compartment3Name),
-                SourceCompartment = manhole.GetCompartmentByName(compartment2Name)
+                Source = sourceManhole,
+                Target = targetManhole
             };
 
             network.Branches.Add(pipe);
-            
-            SewerFactory.CreateNewCompartmentAndAddToManhole(network, manhole, compartment1Name);
-            SewerFactory.CreateNewCompartmentAndAddToManhole(network, manhole, compartment2Name);
-            SewerFactory.CreateNewCompartmentAndAddToManhole(network, manhole2, compartment3Name);
-            Assert.AreEqual(2, manhole.Compartments.Count);
-            Assert.AreEqual(1, manhole2.Compartments.Count);
 
-            var internalConnection = SewerFactory.CreateNewInternalConnection(manhole);
-            internalConnection.SourceCompartment = manhole.GetCompartmentByName(compartment1Name);
-            internalConnection.TargetCompartment = manhole.GetCompartmentByName(compartment1Name);
+            Assert.AreEqual(2, sourceManhole.Compartments.Count);
+            Assert.AreEqual(1, targetManhole.Compartments.Count);
+
+            var internalConnection = SewerFactory.CreateNewInternalConnection(sourceManhole);
+            internalConnection.SourceCompartment = sourceManhole.GetCompartmentByName(compartment1Name);
+            internalConnection.TargetCompartment = sourceManhole.GetCompartmentByName(compartment1Name);
 
             network.Branches.Add(internalConnection);
 
-            var connectionsInManhole = manhole.InternalConnections().ToList();
+            var connectionsInManhole = sourceManhole.InternalConnections().ToList();
             Assert.AreEqual(1, connectionsInManhole.Count);
             Assert.AreEqual(internalConnection, connectionsInManhole[0]);
         }
@@ -53,7 +49,8 @@ namespace DelftTools.Hydro.Tests.Structures
         [Test]
         public void ManholeWithInternalStructures_GetStructuresWithoutComposite()
         {
-            var manhole = new Manhole("manhole 1");
+            var manhole = new Manhole("myManhole");
+            manhole.Compartments.Add(new Compartment());
             var network = new HydroNetwork();
             manhole.Network = network;
             var internalConnection = SewerFactory.CreateConnectionWithStructure<Pump>(manhole);

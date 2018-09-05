@@ -164,4 +164,10 @@
   <data name="HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_following_Branch_features_have_been_renamed_" xml:space="preserve">
     <value>Branch feature names must be unique, the following Branch features have been renamed:</value>
   </data>
+  <data name="SewerConnection_TargetCompartment_We_cannot_add_compartment_as_source" xml:space="preserve">
+    <value>We cannot add compartment {0} as source of sewer connection {1}, because it has no parent manhole.</value>
+  </data>
+  <data name="SewerConnection_TargetCompartment_We_cannot_add_compartment_as_target" xml:space="preserve">
+    <value>We cannot add compartment {0} as target of sewer connection {1}, because it has no parent manhole.</value>
+  </data>
 </root>

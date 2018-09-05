@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
         public override void Add(IFeature feature)
         {
-            SewerFactory.SetDefaultSettingPipeAndAddToNetwork(Network, (IPipe)feature);
+            SewerFactory.AddDefaultPipeToNetwork((IPipe)feature, Network);
         }
     }
 }

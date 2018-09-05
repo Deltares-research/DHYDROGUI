@@ -18,8 +18,8 @@ namespace DelftTools.Hydro.SewerFeatures
 
         public Manhole(string manholeId) : base(manholeId)
         {
-            Geometry = new Point(0, 0);
             Compartments = new EventedList<Compartment>();
+            Geometry = new Point(0, 0);
         }
 
         /// <summary>
@@ -59,6 +59,7 @@ namespace DelftTools.Hydro.SewerFeatures
                 }
 
                 compartments = value;
+                UpdateGeometry();
 
                 if (compartments != null)
                 {
@@ -117,6 +118,8 @@ namespace DelftTools.Hydro.SewerFeatures
 
         private void UpdateGeometry()
         {
+            if(!compartments.Any()) return;
+
             var compartmentsPresentWithoutGeometry = compartments.Any(c => c.Geometry == null);
             if (compartmentsPresentWithoutGeometry)
                 CopyGeometryToCompartments();
@@ -131,9 +134,14 @@ namespace DelftTools.Hydro.SewerFeatures
             Geometry = new Point(averageXCoordinate, averageYCoordinate);
         }
 
+        protected override void OnGeometryChanged()
+        {
+            CopyGeometryToCompartments();
+        }
+
         private void CopyGeometryToCompartments()
         {
-            compartments.ForEach(c => c.Geometry = Geometry);
+            compartments?.ForEach(c => c.Geometry = Geometry);
         }
 
         #region IHydroNetworkFeature

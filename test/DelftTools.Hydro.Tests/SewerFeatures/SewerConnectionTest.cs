@@ -23,82 +23,6 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
         }
 
         [Test]
-        public void CreateSewerConnectionWithGivenManholesGetsValidGeometry()
-        {
-            var sourcePoint = new Point(1, 3);
-            var targetPoint = new Point(10, 7);
-
-            var compartmentOne = new Compartment("compartmentOne");
-            var sourceManhole = new Manhole("sourceManhole")
-            {
-                Compartments = new EventedList<Compartment> {compartmentOne},
-                Geometry = sourcePoint
-            };
-
-            var compartmentTwo = new Compartment("compartmentTwo");
-            var targetManhole = new Manhole("targetManhole")
-            {
-                Compartments = new EventedList<Compartment> { compartmentTwo },
-                Geometry = targetPoint
-            };
-
-            var sewerConnection = new SewerConnection(sourceManhole, targetManhole);
-            Assert.IsNotNull(sewerConnection);
-
-            Assert.IsNotNull(sewerConnection.Geometry);
-            Assert.IsTrue(sewerConnection.Geometry.IsValid);
-            Assert.IsTrue(sewerConnection.Geometry.Coordinates.Any());
-            Assert.IsTrue(sewerConnection.Geometry.Coordinates.Contains(sourcePoint.Coordinate));
-            Assert.IsTrue(sewerConnection.Geometry.Coordinates.Contains(targetPoint.Coordinate));
-        }
-
-        [Test]
-        public void CreateSewerConnectionWithEmptyManholesGetsGeometry()
-        {
-            //This test relies on maholes getting a default geometry when being created.
-            var sewerConnection = new SewerConnection(new Manhole("sourceManhole"), new Manhole("targetManhole"));
-            Assert.IsNotNull(sewerConnection);
-
-            Assert.IsNotNull(sewerConnection.Geometry);
-            Assert.IsTrue(sewerConnection.Geometry.Coordinates.Any());
-        }
-
-        [Test]
-        public void SewerConnectionGeometryGetsRefreshedWhenManholesGeometryChanges()
-        {
-            //This test relies on maholes getting a default geometry when being created.
-            var sourcePoint = new Point(1, 3);
-            var targetPoint = new Point(10, 7);
-
-            var sourceManhole = new Manhole("sourceManhole"){Geometry = sourcePoint};
-            var targetManhole = new Manhole("targetManhole"){Geometry = targetPoint};
-
-            var sewerConnection = new SewerConnection(sourceManhole, targetManhole);
-            Assert.IsNotNull(sewerConnection);
-
-            var connectionGeom = sewerConnection.Geometry;
-            var firstLength = connectionGeom.Length;
-            Assert.IsNotNull(connectionGeom);
-            Assert.IsTrue(connectionGeom.IsValid);
-            Assert.IsTrue(connectionGeom.Coordinates.Any());
-            Assert.IsTrue(connectionGeom.Coordinates.Contains(sourcePoint.Coordinate));
-            Assert.IsTrue(connectionGeom.Coordinates.Contains(targetPoint.Coordinate));
-
-            //Change geometry now.
-            var newSourceCoordinate = new Coordinate(30, 30);
-            GeometryHelper.MoveCoordinate(sourceManhole.Geometry, 0, newSourceCoordinate.X - sourcePoint.X, newSourceCoordinate.Y - sourcePoint.Y);
-
-            Assert.IsNotNull(connectionGeom);
-            Assert.IsTrue(connectionGeom.IsValid);
-            Assert.IsTrue(connectionGeom.Coordinates.Any());
-
-            Assert.IsTrue(connectionGeom.Coordinates.Contains(targetPoint.Coordinate));
-            Assert.IsTrue(connectionGeom.Coordinates.Contains(newSourceCoordinate));
-
-            Assert.AreNotEqual(firstLength, connectionGeom.Length);
-        }
-
-        [Test]
         public void CreateSewerConnectionGivingName()
         {
             var nameSewer = "TestSewer";
@@ -106,40 +30,7 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             Assert.IsNotNull(sewerConnection);
             Assert.AreEqual(nameSewer, sewerConnection.Name);
         }
-
-        [Test]
-        public void CreateSewerConnectionGivingSourceManholeTargetManholeAndLength()
-        {
-            var sourceManhole = new Manhole("manholSource");
-            var targetManhole = new Manhole("manholTarget");
-
-            var length = 0.0;
-            var sewerConnection = new SewerConnection(sourceManhole, targetManhole, length);
-            Assert.IsNotNull(sewerConnection);
-
-            Assert.AreEqual(sourceManhole, sewerConnection.Source);
-            Assert.AreEqual(targetManhole, sewerConnection.Target);
-            Assert.AreEqual(length, sewerConnection.Length);
-        }
-
-        [Test]
-        public void CreateSewerConnectionGivingNameSourceManholeTargetManholeAndLength()
-        {
-            var nameSewer = "TestSewer";
-
-            var sourceManhole = new Manhole("manholSource");
-            var targetManhole = new Manhole("manholTarget");
-
-            var length = 0.0;
-            var sewerConnection = new SewerConnection(nameSewer, sourceManhole, targetManhole, length);
-
-            Assert.IsNotNull(sewerConnection);
-            Assert.AreEqual(nameSewer, sewerConnection.Name);
-            Assert.AreEqual(sourceManhole, sewerConnection.Source);
-            Assert.AreEqual(targetManhole, sewerConnection.Target);
-            Assert.AreEqual(length, sewerConnection.Length);
-        }
-
+        
         [Test]
         public void CreateSimpleSewerConnectionCreatesEmptyEnumerableBranchFeaturesList()
         {
@@ -154,66 +45,6 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             var sewerConnection = new SewerConnection();
             Assert.IsNotNull(sewerConnection.BranchFeatures);
             Assert.IsFalse(sewerConnection.IsPipe());
-        }
-
-        [Test]
-        public void ChangingSourceCompartmentChangesSourceTest()
-        {
-            var manholeTest = new Manhole("manholeTest");
-            var compartmentTest = new Compartment("compartmentTest");
-            manholeTest.Compartments.Add(compartmentTest);
-
-            var sewerConnection = new SewerConnection();
-            
-            Assert.IsNull(sewerConnection.Source);
-            Assert.IsNull(sewerConnection.SourceCompartment);
-
-            sewerConnection.SourceCompartment = compartmentTest;
-
-            Assert.AreEqual(compartmentTest, sewerConnection.SourceCompartment);
-            Assert.AreEqual(manholeTest, sewerConnection.Source);
-        }
-
-        [Test]
-        public void ChangingTargetCompartmentChangesTargetTest()
-        {
-            var manholeTest = new Manhole("manholeTest");
-            var compartmentTest = new Compartment("compartmentTest");
-            manholeTest.Compartments.Add(compartmentTest);
-
-            var sewerConnection = new SewerConnection();
-
-            Assert.IsNull(sewerConnection.Target);
-            Assert.IsNull(sewerConnection.TargetCompartment);
-
-            sewerConnection.TargetCompartment = compartmentTest;
-
-            Assert.AreEqual(compartmentTest, sewerConnection.TargetCompartment);
-            Assert.AreEqual(manholeTest, sewerConnection.Target);
-        }
-
-        [Test]
-        public void GivenSewerConnection_WhenChangingSourceCompartment_ThenSourceCompartmentIdIsEqualSourceCompartmentName()
-        {
-            var compartmentName = "myCompartment";
-            var sewerConnection = new SewerConnection();
-            var compartment = new Compartment(compartmentName);
-
-            Assert.IsNull(sewerConnection.SourceCompartmentName);
-            sewerConnection.SourceCompartment = compartment;
-            Assert.That(sewerConnection.SourceCompartmentName, Is.EqualTo(compartmentName));
-        }
-
-        [Test]
-        public void GivenSewerConnection_WhenChangingTargetCompartment_ThenTargetCompartmentIdIsEqualTargetCompartmentName()
-        {
-            var compartmentName = "myCompartment";
-            var sewerConnection = new SewerConnection();
-            var compartment = new Compartment(compartmentName);
-
-            Assert.IsNull(sewerConnection.TargetCompartmentName);
-            sewerConnection.TargetCompartment = compartment;
-            Assert.That(sewerConnection.TargetCompartmentName, Is.EqualTo(compartmentName));
         }
 
         [Test]
@@ -233,11 +64,9 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
 
             var network = new HydroNetwork();
             NetworkHelper.AddChannelToHydroNetwork(network, sewerConnection);
-
-            #region Features
+            
             var featureOne = new Pump();
             Assert.IsNotNull(featureOne);
-            #endregion
 
             Assert.AreEqual(0, sewerConnection.BranchFeatures.Count);
 
@@ -252,6 +81,28 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
         public void SewerConnectionBranchFeaturesDoesNotAcceptMoreThanOneFeature()
         {
             var sewerConnection = GetSewerConnectionWithSourceAndTarget();
+            sewerConnection.Network = new HydroNetwork();
+            Assert.That(sewerConnection.BranchFeatures.Count, Is.EqualTo(0));
+
+            var pump1 = new Pump();
+            var pump2 = new Pump();
+
+            //Add one feature.
+            sewerConnection.BranchFeatures.Add(pump1);
+            Assert.That(sewerConnection.BranchFeatures.Count, Is.EqualTo(1));
+            Assert.That(sewerConnection.BranchFeatures.First(), Is.EqualTo(pump1));
+
+            //Try to add a second one, but the feature should still be the first one.
+            var expectedLogMessage = $"Sewer connection {sewerConnection.Name} does not accept more than one branch feature";
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => sewerConnection.BranchFeatures.Add(pump2), expectedLogMessage);
+            Assert.That(sewerConnection.BranchFeatures.Count, Is.EqualTo(1));
+            Assert.That(sewerConnection.BranchFeatures.First(), Is.EqualTo(pump1));
+        }
+
+        [Test]
+        public void SewerConnectionBranchFeaturesDoesNotAcceptToAddMoreThanFeatureToFeatureBranches()
+        {
+            var sewerConnection = GetSewerConnectionWithSourceAndTarget();
             Assert.IsNotNull(sewerConnection);
 
             var network = new HydroNetwork();
@@ -263,23 +114,26 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
 
             var featureTwo = new Pump();
             Assert.IsNotNull(featureTwo);
-
-            var featureThree = new Pump();
-            Assert.IsNotNull(featureThree);
             #endregion
 
             Assert.AreEqual(0, sewerConnection.BranchFeatures.Count);
-
-            //Add one feature.
-            sewerConnection.BranchFeatures.Add(featureOne);
-            Assert.AreEqual(1, sewerConnection.BranchFeatures.Count);
-            Assert.AreEqual(featureOne, sewerConnection.BranchFeatures.First());
-
-            //Try to add a second one, but the feature should still be the first one.
             var expectedLogMessage = string.Format("Sewer connection {0} does not accept more than one branch feature", sewerConnection.Name);
+
+            //Add one composite feature.
+            var compositeStructure = sewerConnection.AddStructureToBranch(featureOne);
+
+            //Try to add an extra feature to the branch feature itself.
             TestHelper.AssertAtLeastOneLogMessagesContains(() => sewerConnection.BranchFeatures.Add(featureTwo), expectedLogMessage);
-            Assert.AreEqual(1, sewerConnection.BranchFeatures.Count);
-            Assert.AreEqual(featureOne, sewerConnection.BranchFeatures.First());
+            Assert.AreEqual(2/*CompositeStructure, and Structure on it*/, sewerConnection.BranchFeatures.Count);
+            Assert.AreEqual(compositeStructure, sewerConnection.BranchFeatures.First());
+            Assert.AreEqual(featureOne, sewerConnection.BranchFeatures.Last());
+
+            var foundComposite = sewerConnection.BranchFeatures.First() as CompositeBranchStructure;
+            Assert.IsNotNull(foundComposite);
+            Assert.IsTrue(foundComposite.Structures.Count.Equals(1));
+            Assert.IsTrue(foundComposite.Structures.Contains(featureOne));
+
+            Assert.AreEqual(featureOne, sewerConnection.GetStructuresFromBranchFeatures<Pump>().First());
         }
 
         [Test]
@@ -316,7 +170,7 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
         }
 
         [Test]
-        public void SewerConnectionBranchFeaturesAcceptsNewFeautureIfPreviousIsRemoved()
+        public void SewerConnectionBranchFeaturesAcceptsNewFeatureIfPreviousIsRemoved()
         {
             var sewerConnection = GetSewerConnectionWithSourceAndTarget();
             Assert.IsNotNull(sewerConnection);
@@ -383,77 +237,32 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
         }
 
         [Test]
-        public void SewerConnectionBranchFeaturesDoesNotAcceptToAddMoreThanFeatureToFeatureBranches()
-        {
-            var sewerConnection = GetSewerConnectionWithSourceAndTarget();
-            Assert.IsNotNull(sewerConnection);
-
-            var network = new HydroNetwork();
-            sewerConnection.Network = network;
-
-            #region Features
-            var featureOne = new Pump();
-            Assert.IsNotNull(featureOne);
-
-            var featureTwo = new Pump();
-            Assert.IsNotNull(featureTwo);
-            #endregion
-
-            Assert.AreEqual(0, sewerConnection.BranchFeatures.Count);
-            var expectedLogMessage = string.Format("Sewer connection {0} does not accept more than one branch feature", sewerConnection.Name);
-
-            //Add one composite feature.
-            var compositeStructure = sewerConnection.AddStructureToBranch(featureOne);
-
-            //Try to add an extra feature to the branch feature itself.
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => sewerConnection.BranchFeatures.Add(featureTwo), expectedLogMessage);
-            Assert.AreEqual(2/*CompositeStructure, and Structure on it*/, sewerConnection.BranchFeatures.Count);
-            Assert.AreEqual(compositeStructure, sewerConnection.BranchFeatures.First());
-            Assert.AreEqual(featureOne, sewerConnection.BranchFeatures.Last());
-
-            var foundComposite = sewerConnection.BranchFeatures.First() as CompositeBranchStructure;
-            Assert.IsNotNull(foundComposite);
-            Assert.IsTrue(foundComposite.Structures.Count.Equals(1));
-            Assert.IsTrue(foundComposite.Structures.Contains(featureOne));
-
-            Assert.AreEqual(featureOne, sewerConnection.GetStructuresFromBranchFeatures<Pump>().First());
-        }
-
-        [Test]
         public void SewerConnectionBranchFeaturesDoesNotAcceptAFeatureBranchCompositeStructureWithMoreThanOneStructure()
         {
             var sewerConnection = GetSewerConnectionWithSourceAndTarget();
-            Assert.IsNotNull(sewerConnection);
+            sewerConnection.Network = new HydroNetwork();
 
-            var network = new HydroNetwork();
-            sewerConnection.Network = network;
+            var pump1 = new Pump();
+            var pump2 = new Pump();
 
-            #region Features
-            var featureOne = new Pump();
-            Assert.IsNotNull(featureOne);
-
-            var featureThree = new Pump();
-            Assert.IsNotNull(featureThree);
-            #endregion
-
-            Assert.AreEqual(0, sewerConnection.BranchFeatures.Count);
-            var expectedLogMessage = string.Format("Sewer connection {0} does not accept more than one branch feature", sewerConnection.Name);
+            Assert.That(sewerConnection.BranchFeatures.Count, Is.EqualTo(0));
+            var expectedLogMessage = $"Sewer connection {sewerConnection.Name} does not accept more than one branch feature";
 
             //Add one composite feature.
-            var compositeStructure = sewerConnection.AddStructureToBranch(featureOne);
+            var compositeStructure = sewerConnection.AddStructureToBranch(pump1);
 
             //Try to add a feature to the composite instead, it should still fail.
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => sewerConnection.AddStructureToBranch(featureThree), expectedLogMessage);
-            Assert.AreEqual(2/*CompositeStructure, and Structure on it*/, sewerConnection.BranchFeatures.Count);
-            Assert.AreEqual(compositeStructure, sewerConnection.BranchFeatures.First());
-            Assert.AreEqual(featureOne, sewerConnection.BranchFeatures.Last());
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => sewerConnection.AddStructureToBranch(pump2), expectedLogMessage);
+            Assert.That(sewerConnection.BranchFeatures.Count, Is.EqualTo(2)); /*CompositeStructure, and Structure on it*/
+            Assert.That(sewerConnection.BranchFeatures.First(), Is.EqualTo(compositeStructure));
+            Assert.That(sewerConnection.BranchFeatures.Last(), Is.EqualTo(pump1));
 
             var foundComposite = sewerConnection.BranchFeatures.First() as CompositeBranchStructure;
             Assert.IsNotNull(foundComposite);
-            Assert.IsTrue(foundComposite.Structures.Count.Equals(1));
-            Assert.IsTrue(foundComposite.Structures.Contains(featureOne));
+            Assert.That(foundComposite.Structures.Count, Is.EqualTo(1));
+            Assert.That(foundComposite.Structures.Contains(pump1));
 
-            Assert.AreEqual(featureOne, sewerConnection.GetStructuresFromBranchFeatures<Pump>().First());
+            Assert.That(sewerConnection.GetStructuresFromBranchFeatures<Pump>().First(), Is.EqualTo(pump1));
         }
 
         [Test]
@@ -519,27 +328,289 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             Assert.IsTrue(sewerConnection.BranchFeatures.Contains(featureOne));
         }
 
+        #region Adding source and target
+
+        [Test]
+        public void ChangingSourceCompartmentChangesSourceTest()
+        {
+            var manhole = new Manhole("manholeTest");
+            var compartment = new Compartment("compartmentTest");
+            manhole.Compartments.Add(compartment);
+
+            var sewerConnection = new SewerConnection();
+            
+            Assert.IsNull(sewerConnection.Source);
+            Assert.IsNull(sewerConnection.SourceCompartment);
+
+            sewerConnection.SourceCompartment = compartment;
+
+            Assert.That(sewerConnection.SourceCompartment, Is.EqualTo(compartment));
+            Assert.That(sewerConnection.Source, Is.EqualTo(manhole));
+        }
+
+        [Test]
+        public void ChangingTargetCompartmentChangesTargetTest()
+        {
+            var manhole = new Manhole("manholeTest");
+            var compartment = new Compartment("compartmentTest");
+            manhole.Compartments.Add(compartment);
+
+            var sewerConnection = new SewerConnection();
+
+            Assert.IsNull(sewerConnection.Target);
+            Assert.IsNull(sewerConnection.TargetCompartment);
+
+            sewerConnection.TargetCompartment = compartment;
+
+            Assert.That(sewerConnection.TargetCompartment, Is.EqualTo(compartment));
+            Assert.That(sewerConnection.Target, Is.EqualTo(manhole));
+        }
+
+        [Test]
+        public void GivenSewerConnection_WhenAddingSourceCompartmentWithoutParentManhole_ThenSourceCompartmentIsNotAdded()
+        {
+            var compartment = new Compartment("compartmentTest") { ParentManhole = null };
+            var sewerConnection = new SewerConnection {SourceCompartment = compartment};
+
+            Assert.IsNull(sewerConnection.SourceCompartment);
+            Assert.IsNull(sewerConnection.SourceCompartmentName);
+        }
+
+        [Test]
+        public void GivenSewerConnection_WhenAddingTargetCompartmentWithoutParentManhole_ThenTargetCompartmentIsNotAdded()
+        {
+            var compartment = new Compartment("compartmentTest") { ParentManhole = null };
+            var sewerConnection = new SewerConnection { TargetCompartment = compartment };
+
+            Assert.IsNull(sewerConnection.TargetCompartment);
+            Assert.IsNull(sewerConnection.TargetCompartmentName);
+        }
+
+        [Test]
+        public void GivenSewerConnection_WhenAddingSourceCompartmentWithoutParentManhole_ThenLogMessageIsGiven()
+        {
+            var compartment = new Compartment("SourceCompartment") { ParentManhole = null };
+            var sewerConnection = new SewerConnection("mySewerConnection");
+
+            var expectedLogMessage = 
+                $"We cannot add compartment {compartment.Name} as source of sewer connection {sewerConnection.Name}, because it has no parent manhole.";
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => sewerConnection.SourceCompartment = compartment, expectedLogMessage);
+        }
+
+        [Test]
+        public void GivenSewerConnection_WhenAddingTargetCompartmentWithoutParentManhole_ThenLogMessageIsGiven()
+        {
+            var compartment = new Compartment("TargetCompartment") { ParentManhole = null };
+            var sewerConnection = new SewerConnection("mySewerConnection");
+
+            var expectedLogMessage =
+                $"We cannot add compartment {compartment.Name} as target of sewer connection {sewerConnection.Name}, because it has no parent manhole.";
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => sewerConnection.TargetCompartment = compartment, expectedLogMessage);
+        }
+
+        [Test]
+        public void GivenSewerConnection_WhenChangingSourceCompartment_ThenSourceCompartmentIdIsEqualToSourceCompartmentName()
+        {
+            var compartmentName = "myCompartment";
+            var sewerConnection = new SewerConnection();
+            var compartment = new Compartment(compartmentName) { ParentManhole = new Manhole("myManhole") };
+            
+            sewerConnection.SourceCompartment = compartment;
+            Assert.That(sewerConnection.SourceCompartmentName, Is.EqualTo(compartmentName));
+        }
+
+        [Test]
+        public void GivenSewerConnection_WhenChangingTargetCompartment_ThenTargetCompartmentIdIsEqualTargetCompartmentName()
+        {
+            var compartmentName = "myCompartment";
+            var sewerConnection = new SewerConnection();
+            var compartment = new Compartment(compartmentName) { ParentManhole = new Manhole("myManhole") };
+            
+            sewerConnection.TargetCompartment = compartment;
+            Assert.That(sewerConnection.TargetCompartmentName, Is.EqualTo(compartmentName));
+        }
+
+        [Test]
+        public void GivenSewerConnection_WhenAddingManholeAsSource_ThenTheFirstCompartmentIsTheSourceCompartment()
+        {
+            var sourceGeometry = new Point(0, 10);
+
+            var sourceCompartment1 = new Compartment { Geometry = sourceGeometry };
+            var sourceCompartment2 = new Compartment { Geometry = sourceGeometry };
+            var sourceManhole = new Manhole("SourceManhole")
+            {
+                Compartments = new EventedList<Compartment> { sourceCompartment1, sourceCompartment2 }
+            };
+
+            var sewerConnection = new SewerConnection {Source = sourceManhole};
+            Assert.That(sewerConnection.SourceCompartment, Is.EqualTo(sourceCompartment1));
+        }
+
+        [Test]
+        public void GivenSewerConnection_WhenAddingManholeAsTarget_ThenTheFirstCompartmentIsTheTargetCompartment()
+        {
+            var targetGeometry = new Point(0, 10);
+
+            var targetCompartment1 = new Compartment { Geometry = targetGeometry };
+            var targetCompartment2 = new Compartment { Geometry = targetGeometry };
+            var targetManhole = new Manhole("TargetManhole")
+            {
+                Compartments = new EventedList<Compartment> { targetCompartment1, targetCompartment2 }
+            };
+
+            var sewerConnection = new SewerConnection {Target = targetManhole};
+            Assert.That(sewerConnection.TargetCompartment, Is.EqualTo(targetCompartment1));
+        }
+
+        #endregion
+
+        #region SewerConnection geometry
+
+        [Test]
+        public void GivenSewerConnection_WhenAddingSourceManholeAndTargetManhole_ThenSewerConnectionGeometryDependsOnSourceAndTarget()
+        {
+            var sourceGeometry = new Point(0, 10);
+            var targetGeometry = new Point(20, 30);
+
+            var sourceCompartment = new Compartment { Geometry = sourceGeometry};
+            var sourceManhole = new Manhole("SourceManhole")
+            {
+                Compartments = new EventedList<Compartment> { sourceCompartment }
+            };
+            var targetCompartment = new Compartment { Geometry = targetGeometry };
+            var targetManhole = new Manhole("TargetManhole")
+            {
+                Compartments = new EventedList<Compartment> { targetCompartment }
+            };
+            var sewerConnection = new SewerConnection("mySewerConnection")
+            {
+                Source = sourceManhole,
+                Target = targetManhole
+            };
+
+            Assert.That(sewerConnection.SourceCompartment, Is.EqualTo(sourceCompartment));
+            Assert.That(sewerConnection.TargetCompartment, Is.EqualTo(targetCompartment));
+
+            var expectedGeometry = new LineString(new[] {sourceGeometry.Coordinate, targetGeometry.Coordinate});
+            Assert.That(sewerConnection.Geometry, Is.EqualTo(expectedGeometry));
+        }
+
+        [Test]
+        public void GivenSewerConnection_WhenAddingSourceManholeWithoutCompartment_ThenSourceHasNotBeenAddedToSewerConnection()
+        {
+            var sewerConnection = new SewerConnection {Source = new Manhole("myManhole") { Compartments = new EventedList<Compartment>()}};
+            Assert.IsNull(sewerConnection.Source);
+        }
+
+        [Test]
+        public void GivenSewerConnection_WhenAddingTargetManholeWithoutCompartment_ThenTargetHasNotBeenAddedToSewerConnection()
+        {
+            var sewerConnection = new SewerConnection { Target = new Manhole("myManhole") { Compartments = new EventedList<Compartment>() } };
+            Assert.IsNull(sewerConnection.Target);
+        }
+
+        [Test]
+        public void GivenSewerConnection_WhenAddingSourceCompartmentAndTargetCompartment_ThenPipeGeometryIsSetToCompartmentGeometries()
+        {
+            var sourceGeometry = new Point(0, 10);
+            var targetGeometry = new Point(20, 30);
+
+            var sourceCompartment = new Compartment("SourceCompartment")
+            {
+                Geometry = sourceGeometry
+            };
+            var targetCompartment = new Compartment("TargetCompartment")
+            {
+                Geometry = targetGeometry
+            };
+            var sourceManhole = new Manhole("SourceManhole")
+            {
+                Compartments = new EventedList<Compartment> { sourceCompartment }
+            };
+            var targetManhole = new Manhole("TargetManhole")
+            {
+                Compartments = new EventedList<Compartment> { targetCompartment }
+            };
+
+            var sewerConnection = new SewerConnection("mySewerConnection")
+            {
+                SourceCompartment = sourceCompartment
+            };
+            Assert.That(sewerConnection.Source, Is.EqualTo(sourceManhole));
+            Assert.IsNull(sewerConnection.Geometry);
+
+            var expectedGeometry = new LineString(new[] {sourceManhole.Geometry.Coordinate, targetManhole.Geometry.Coordinate});
+            sewerConnection.TargetCompartment = targetCompartment;
+            Assert.That(sewerConnection.Target, Is.EqualTo(targetManhole));
+            Assert.That(sewerConnection.Geometry, Is.EqualTo(expectedGeometry));
+        }
+
+        [Test]
+        public void SewerConnectionGeometryGetsRefreshedWhenManholesGeometryChanges()
+        {
+            //This test relies on maholes getting a default geometry when being created.
+            var sourceGeometry = new Point(1, 3);
+            var targetGeometry = new Point(10, 7);
+
+            var sourceCompartment = new Compartment { Geometry = sourceGeometry};
+            var targetCompartment = new Compartment { Geometry = targetGeometry};
+            var sourceManhole = new Manhole("sourceManhole") {Compartments = new EventedList<Compartment> {sourceCompartment}};
+            var targetManhole = new Manhole("targetManhole") {Compartments = new EventedList<Compartment> {targetCompartment}};
+
+            var sewerConnection = new SewerConnection
+            {
+                SourceCompartment = sourceCompartment,
+                TargetCompartment = targetCompartment
+            };
+
+            var connectionGeometry = sewerConnection.Geometry;
+            var connectionLength = connectionGeometry.Length;
+            Assert.IsNotNull(connectionGeometry);
+            Assert.IsTrue(connectionGeometry.IsValid);
+            Assert.IsTrue(connectionGeometry.Coordinates.Any());
+            Assert.IsTrue(connectionGeometry.Coordinates.Contains(sourceGeometry.Coordinate));
+            Assert.IsTrue(connectionGeometry.Coordinates.Contains(targetGeometry.Coordinate));
+
+            //Change geometry now.
+            var newSourceGeometry = new Coordinate(30, 30);
+            var deltaX = newSourceGeometry.X - sourceGeometry.X;
+            var deltaY = newSourceGeometry.Y - sourceGeometry.Y;
+            GeometryHelper.MoveCoordinate(sourceManhole.Geometry, 0, deltaX, deltaY);
+
+            Assert.IsNotNull(connectionGeometry);
+            Assert.IsTrue(connectionGeometry.IsValid);
+            Assert.IsTrue(connectionGeometry.Coordinates.Any());
+            Assert.IsTrue(connectionGeometry.Coordinates.Contains(targetGeometry.Coordinate));
+            Assert.IsTrue(connectionGeometry.Coordinates.Contains(newSourceGeometry));
+
+            Assert.That(sourceCompartment.Geometry, Is.EqualTo(sourceManhole.Geometry));
+
+            Assert.AreNotEqual(connectionLength, connectionGeometry.Length);
+        }
+
+        #endregion
+
         #region Helpers
 
         private SewerConnection GetSewerConnectionWithSourceAndTarget()
         {
-            var compartmentOne = new Compartment("compartmentOne");
+            var compartmentOne = new Compartment("compartmentOne") { Geometry = new Point(1, 3) };
             var sourceManhole = new Manhole("sourceManhole")
             {
-                Compartments = new EventedList<Compartment> {compartmentOne},
-                Geometry = new Point(1, 3)
+                Compartments = new EventedList<Compartment> {compartmentOne}
             };
 
-            var compartmentTwo = new Compartment("compartmentTwo");
+            var compartmentTwo = new Compartment("compartmentTwo") {Geometry = new Point(10, 7)};
             var targetManhole = new Manhole("targetManhole")
             {
-                Compartments = new EventedList<Compartment> {compartmentTwo},
-                Geometry = new Point(10, 7)
+                Compartments = new EventedList<Compartment> {compartmentTwo}
             };
 
-            var sewerConnection = new SewerConnection();
-            sewerConnection.SourceCompartment = compartmentOne;
-            sewerConnection.TargetCompartment = compartmentTwo;
+            var sewerConnection = new SewerConnection
+            {
+                SourceCompartment = compartmentOne,
+                TargetCompartment = compartmentTwo
+            };
 
             Assert.AreEqual(compartmentOne, sewerConnection.SourceCompartment);
             Assert.AreEqual(compartmentTwo, sewerConnection.TargetCompartment);

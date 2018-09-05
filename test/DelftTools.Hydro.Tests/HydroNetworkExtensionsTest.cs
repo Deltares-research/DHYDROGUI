@@ -61,7 +61,7 @@ namespace DelftTools.Hydro.Tests
             // Make unique and check messages
             TestHelper.AssertAtLeastOneLogMessagesContains(
                 () => network.MakeNamesUnique<ICompositeBranchStructure>(),
-                Resources.HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_following_Branch_features_have_been_renamed_);
+                "Branch feature names must be unique, the following Branch features have been renamed:");
 
             Assert.IsTrue(network.CompositeBranchStructures.Select(cbs => cbs.Name).HasUniqueValues());
         }

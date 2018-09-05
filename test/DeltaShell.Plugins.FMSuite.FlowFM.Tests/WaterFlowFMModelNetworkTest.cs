@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void GivenFmModel_WhenAddingOrificeAndThenOneWithLength_ThenDiscretisationPointsHaveBeenAddedToTheModelNetwork()
+        public void GivenFmModel_WhenAddingOrificeWithoutLengthAndThenOneWithLength_ThenDiscretisationPointsHaveBeenAddedToTheModelNetwork()
         {
             var fmModel = new WaterFlowFMModel { Network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEach() };
 

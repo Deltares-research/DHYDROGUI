@@ -24,11 +24,12 @@ namespace DelftTools.Hydro.SewerFeatures
                       && sc.BranchFeatures[1] is IOrifice);
             if (sewerConnection != null)
             {
-                CopyGwswConnectionOrificeSewerConnectionPropertyValuesToExistingSewerConnection(sewerConnection);
                 if (sewerConnection.SourceCompartment == null || sewerConnection.TargetCompartment == null)
                 {
                     ConnectToCompartments(sewerConnection, hydroNetwork);
                 }
+                CopyGwswConnectionOrificeSewerConnectionPropertyValuesToExistingSewerConnection(sewerConnection);
+                sewerConnection.AddToHydroNetwork(hydroNetwork);
                 sewerConnection.UpdateBranchFeatureGeometries();
                 return;
             }
@@ -48,7 +49,6 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             hydroNetwork.Branches.Remove(sewerConnection);
             SetSourceAndTargetCompartmentNames(sewerConnection);
-            sewerConnection.AddToHydroNetwork(hydroNetwork);
         }
 
         private void SetSourceAndTargetCompartmentNames(ISewerConnection sewerConnection)

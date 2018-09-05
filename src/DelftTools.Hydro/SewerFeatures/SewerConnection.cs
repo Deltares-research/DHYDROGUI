@@ -20,41 +20,21 @@ namespace DelftTools.Hydro.SewerFeatures
         private static readonly ILog Log = LogManager.GetLogger(typeof(SewerConnection));
 
         protected IEventedList<IBranchFeature> branchFeatures;
+        private INode source;
+        private INode target;
         private Compartment sourceCompartment;
         private Compartment targetCompartment;
 
-        public SewerConnection() : this(null, null)
+        public SewerConnection() : this(string.Empty)
         {
         }
 
         public SewerConnection(string name)
-            : this(name, null, null, 0)
+            : base(name, null, null, 0)
         {
-        }
-
-        public SewerConnection(IManhole sourceManhole, IManhole targetManhole)
-            : this("sewerConnection", sourceManhole, targetManhole, 0)
-        {
-        }
-
-        public SewerConnection(IManhole sourceManhole, IManhole targetManhole, double length)
-            : this("sewerConnection", sourceManhole, targetManhole, length)
-        {
-        }
-
-        public SewerConnection(string name, IManhole sourceManhole, IManhole targetManhole, double length) :
-            base(name, sourceManhole, targetManhole, length)
-        {
-            if (sourceManhole?.Geometry == null || targetManhole?.Geometry == null) return;
-
-            if (sourceManhole.Geometry.IsValid && targetManhole.Geometry.IsValid)
-            {
-                Geometry = new LineString(new[] { sourceManhole.Geometry.Coordinate, targetManhole.Geometry.Coordinate });
-            }
         }
 
         public double LevelSource { get; set; }
-
         public double LevelTarget { get; set; }
         
         public SewerConnectionWaterType WaterType { get; set; }
@@ -62,14 +42,80 @@ namespace DelftTools.Hydro.SewerFeatures
         // This property is used in the NetworkLayerStyleFactory, do not remove :)
         public SewerConnectionSpecialConnectionType SpecialConnectionType { get { return GetConnectionType(); } }
 
+        #region Source and Target
+
+        public override INode Source
+        {
+            get { return source; }
+            set
+            {
+                var manhole = value as Manhole;
+                if(manhole == null || !manhole.Compartments.Any() || source == value) return;
+
+                BeforeSetSource();
+                source = value;
+                SourceCompartment = manhole.Compartments.FirstOrDefault();
+                AfterSetSource();
+            }
+        }
+
+        [EditAction]
+        private void BeforeSetSource()
+        {
+            source?.OutgoingBranches.Remove(this);
+        }
+
+        [EditAction]
+        private void AfterSetSource()
+        {
+            source?.OutgoingBranches.Add(this);
+        }
+
+        public override INode Target
+        {
+            get { return target; }
+            set
+            {
+                var manhole = value as Manhole;
+                if (manhole == null || !manhole.Compartments.Any() || target == value) return;
+
+                BeforeTargetSet();
+                target = value;
+                TargetCompartment = manhole.Compartments.FirstOrDefault();
+                AfterTargetSet();
+            }
+        }
+
+        [EditAction]
+        private void BeforeTargetSet()
+        {
+            target?.IncomingBranches.Remove(this);
+        }
+
+        [EditAction]
+        private void AfterTargetSet()
+        {
+            target?.IncomingBranches.Add(this);
+        }
+
+        #endregion
+
         public Compartment SourceCompartment
         {
             get { return sourceCompartment; }
             set
             {
+                if (value.ParentManhole == null)
+                {
+                    Log.WarnFormat(Resources.SewerConnection_TargetCompartment_We_cannot_add_compartment_as_source
+                        , value.Name, Name);
+                    return;
+                }
+
                 sourceCompartment = value;
                 UpdateSource(sourceCompartment);
                 UpdateSourceCompartmentId();
+                UpdateGeometry();
             }
         }
 
@@ -78,9 +124,25 @@ namespace DelftTools.Hydro.SewerFeatures
             get { return targetCompartment; }
             set
             {
+                if (value.ParentManhole == null)
+                {
+                    Log.WarnFormat(Resources.SewerConnection_TargetCompartment_We_cannot_add_compartment_as_target
+                        , value.Name, Name);
+                    return;
+                }
+
                 targetCompartment = value;
                 UpdateTarget(targetCompartment);
                 UpdateTargetCompartmentId();
+                UpdateGeometry();
+            }
+        }
+
+        private void UpdateGeometry()
+        {
+            if (Source != null && Target != null)
+            {
+                Geometry = new LineString(new[] { Source.Geometry.Coordinate, Target.Geometry.Coordinate });
             }
         }
 
@@ -212,33 +274,12 @@ namespace DelftTools.Hydro.SewerFeatures
 
             ConnectSourceCompartment(sourceManhole);
             ConnectTargetCompartment(targetManhole);
-            UpdateGeometry(sourceManhole, targetManhole);
             AddCrossSectionDefinition(hydroNetwork);
             hydroNetwork.Branches.Add(this);
         }
 
         protected virtual void AddCrossSectionDefinition(IHydroNetwork hydroNetwork)
         {
-        }
-
-        private void UpdateGeometry(IManhole sourceManhole, IManhole targetManhole)
-        {
-            if (sourceManhole != null && targetManhole != null)
-            {
-                Geometry = new LineString(new[] {sourceManhole.Geometry.Coordinate, targetManhole.Geometry.Coordinate});
-            }
-            else if (sourceManhole != null)
-            {
-                Geometry = new LineString(new[] {sourceManhole.Geometry.Coordinate, sourceManhole.Geometry.Coordinate});
-            }
-            else if (targetManhole != null)
-            {
-                Geometry = new LineString(new[] {targetManhole.Geometry.Coordinate, targetManhole.Geometry.Coordinate});
-            }
-            else
-            {
-                Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(0, 0)});
-            }
         }
 
         private void ConnectSourceCompartment(IManhole manhole)
