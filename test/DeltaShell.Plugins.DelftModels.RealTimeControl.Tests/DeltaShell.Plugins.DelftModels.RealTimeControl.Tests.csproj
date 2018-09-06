@@ -251,6 +251,7 @@
     <Compile Include="RealTimeControlModel_ModelRunsTest.cs" />
     <Compile Include="RealTimeControlTestHelperTest.cs" />
     <Compile Include="RealTimeControlUserInterfaceIntegrationTests.cs" />
+    <Compile Include="TestClassSetup.cs" />
     <Compile Include="TimeConditionTest.cs" />
     <Compile Include="UndoRedoRealTimeControlTest.cs" />
     <Compile Include="Validation\ControlGroupValidatorTest.cs" />

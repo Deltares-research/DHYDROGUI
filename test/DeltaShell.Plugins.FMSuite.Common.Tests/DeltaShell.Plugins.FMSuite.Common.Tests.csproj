@@ -109,6 +109,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dependency\AndOperatorExpressionTest.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="ModelSchema\ModelPropertyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StructuresTestHelper.cs" />
+    <Compile Include="TestClassSetup.cs" />
     <Compile Include="TestModelProperty.cs" />
     <Compile Include="TestModelPropertyDefinition.cs" />
     <Compile Include="Toolboxes\ScriptCommandTest.cs" />

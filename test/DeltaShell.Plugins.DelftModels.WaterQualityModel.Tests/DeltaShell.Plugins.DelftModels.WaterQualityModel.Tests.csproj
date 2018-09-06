@@ -124,6 +124,7 @@
     <Compile Include="NHibernate\WaterQualityModelSaveLoadTest.cs" />
     <Compile Include="ObservationAreas\SetLabelOperationTest.cs" />
     <Compile Include="Ribbon\WaterQualityRibbonTest.cs" />
+    <Compile Include="TestClassSetup.cs" />
     <Compile Include="Utils\FunctionTypeCreatorFactoryTest.cs" />
     <Compile Include="DataObjects\Model\WaterQualityObservationVariableOutputTest.cs" />
     <Compile Include="Forms\WaterQualityModel1DWizard\SubstanceProcessLibraryWizardPageTest.cs" />

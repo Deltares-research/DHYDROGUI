@@ -210,6 +210,7 @@
     <Compile Include="NHibernate\NHibernateHydroRegionTestBase.cs" />
     <Compile Include="NHibernate\NHibernateNetCdfFunctionStoreTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestClassSetup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -39,6 +39,7 @@
     <Compile Include="HydroNetworkNHibernateTest.cs" />
     <Compile Include="PluginPortabilityTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestClassSetup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DelftTools.Functions">
@@ -138,6 +139,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

@@ -329,6 +329,7 @@
     <Compile Include="NetworkEditorMapLayerProviderTest.cs" />
     <Compile Include="NetworkEditorPluginTest.cs" />
     <Compile Include="NetworkEditorTestHelper.cs" />
+    <Compile Include="TestClassSetup.cs" />
     <Compile Include="TestNetwork\FeatureDataTreeView\FeatureDataTreeViewTest.cs" />
     <Compile Include="Forms\GridProperties\CrossSectionPropertiesTest.cs" />
     <Compile Include="Forms\NetworkSideView\BedLevelNetworkCoverageBuilderTest.cs" />

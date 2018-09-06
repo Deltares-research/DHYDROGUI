@@ -84,6 +84,7 @@
     <Compile Include="Structures\WeirFormula\FreeFormWeirFormulaTest.cs" />
     <Compile Include="Structures\WeirFormula\GeneralStructureWeirFormulaTest.cs" />
     <Compile Include="Structures\WeirTest.cs" />
+    <Compile Include="TestClassSetup.cs" />
     <Compile Include="TestObjects\TestCrossSectionDefinition.cs" />
     <Compile Include="UndoRedoCrossSectionDataTableTest.cs" />
     <Compile Include="WasteWaterTreatmentPlantTest.cs" />
@@ -182,6 +183,7 @@
       <HintPath>..\..\packages\ValidationAspects.dll.2.1.0.0\lib\net35\ValidationAspects.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
