@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -62,10 +61,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private static void AddConnectionAttributesToWeir(GwswConnectionWeir weir, GwswElement gwswElement)
         {
             var nodeIdStartAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SourceCompartmentId);
-            weir.SourceCompartmentId = nodeIdStartAttribute.GetValidStringValue();
+            weir.SourceCompartmentName = nodeIdStartAttribute.GetValidStringValue();
 
             var nodeIdEndAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.TargetCompartmentId);
-            weir.TargetCompartmentId = nodeIdEndAttribute.GetValidStringValue();
+            weir.TargetCompartmentName = nodeIdEndAttribute.GetValidStringValue();
+
+            double auxDouble;
+            var length = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Length);
+            if (length.TryGetValueAsDouble(out auxDouble))
+                weir.Length = auxDouble;
 
             var flowDirection = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.FlowDirection);
             if (flowDirection.IsValidAttribute())
@@ -87,12 +91,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         break;
                 }
             }
-        }
-
-        private static Weir FindOrCreateWeir(ISewerConnection sewerConnection)
-        {
-            var structureFound = sewerConnection.BranchFeatures.OfType<Weir>().FirstOrDefault(bf => bf.Name.Equals(sewerConnection.Name));
-            return structureFound ?? new Weir(sewerConnection.Name);
         }
     }
 }

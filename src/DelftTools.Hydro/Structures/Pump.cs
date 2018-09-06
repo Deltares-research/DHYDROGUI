@@ -1,14 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Feature;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 
 namespace DelftTools.Hydro.Structures
 {
@@ -172,14 +168,16 @@ namespace DelftTools.Hydro.Structures
 
             if (pump != null)
             {
+                hydroNetwork.Branches.Remove(sewerConnection);
                 CopyPropertyValuesToExistingPump(pump);
+                SetSewerConnectionProperties(sewerConnection);
             }
             else
             {
                 sewerConnection = GetNewSewerConnectionWithPump();
-                sewerConnection.AddToHydroNetwork(hydroNetwork);
             }
 
+            sewerConnection.AddToHydroNetwork(hydroNetwork);
             sewerConnection.UpdateBranchFeatureGeometries();
         }
 
@@ -189,6 +187,10 @@ namespace DelftTools.Hydro.Structures
         }
 
         protected virtual void CopyPropertyValuesToExistingPump(IPump pump)
+        {
+        }
+
+        protected virtual void SetSewerConnectionProperties(ISewerConnection sewerConnection)
         {
         }
     }

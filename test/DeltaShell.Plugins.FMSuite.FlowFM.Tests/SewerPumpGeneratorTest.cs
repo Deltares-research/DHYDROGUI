@@ -19,6 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var sourceCompartmentName = "cmp001";
             var targetCompartmentName = "cmp002";
+            var length = 4.1;
             var pumpGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
@@ -26,14 +27,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Pump), string.Empty),
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.SourceCompartmentId, sourceCompartmentName, string.Empty),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.TargetCompartmentId, targetCompartmentName, string.Empty)
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.TargetCompartmentId, targetCompartmentName, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.Length, length.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble)
                 }
             };
             
             var createdPump = new SewerPumpGenerator().Generate(pumpGwswElement) as GwswConnectionPump;
             Assert.IsNotNull(createdPump);
-            Assert.That(createdPump.SourceCompartmentId, Is.EqualTo(sourceCompartmentName));
-            Assert.That(createdPump.TargetCompartmentId, Is.EqualTo(targetCompartmentName));
+            Assert.That(createdPump.SourceCompartmentName, Is.EqualTo(sourceCompartmentName));
+            Assert.That(createdPump.TargetCompartmentName, Is.EqualTo(targetCompartmentName));
+            Assert.That(createdPump.Length, Is.EqualTo(length));
         }
 
         [Test]

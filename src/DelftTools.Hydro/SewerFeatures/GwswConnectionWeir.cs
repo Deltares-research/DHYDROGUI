@@ -8,25 +8,29 @@ namespace DelftTools.Hydro.SewerFeatures
         {
         }
 
-        public string SourceCompartmentId { get; set; }
+        public string SourceCompartmentName { get; set; }
 
-        public string TargetCompartmentId { get; set; }
+        public string TargetCompartmentName { get; set; }
 
         protected override ISewerConnection GetNewSewerConnectionWithWeir()
         {
-            var sewerConnection = new SewerConnection(Name)
-            {
-                SourceCompartmentName = SourceCompartmentId,
-                TargetCompartmentName = TargetCompartmentId
-            };
-
+            var sewerConnection = new SewerConnection(Name);
+            SetSewerConnectionProperties(sewerConnection);
             sewerConnection.AddStructureToBranch(this);
+
             return sewerConnection;
         }
 
         protected override void CopyPropertyValuesToExistingWeir(IWeir weir)
         {
             weir.FlowDirection = FlowDirection;
+        }
+
+        protected override void SetSewerConnectionProperties(ISewerConnection sewerConnection)
+        {
+            sewerConnection.Length = Length;
+            sewerConnection.SourceCompartmentName = SourceCompartmentName;
+            sewerConnection.TargetCompartmentName = TargetCompartmentName;
         }
     }
 }

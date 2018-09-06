@@ -142,6 +142,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             gwswImporter.LoadFeatureFiles(Path.GetDirectoryName(pathRead));
             gwswImporter.ImportItem(null, model);
 
+            var sewerConnections = model.Network.SewerConnections;
+            var discretizationLocations = model.NetworkDiscretization.Locations.Values;
+            var errorMessages = new List<string>();
+            foreach (var sewerConnection in sewerConnections)
+            {
+                var numberOfCalculationPointsForSewerConnection = discretizationLocations.Count(dl => dl.Branch.Equals(sewerConnection));
+                if (numberOfCalculationPointsForSewerConnection != 2)
+                    errorMessages.Add($"There are {numberOfCalculationPointsForSewerConnection} calculation points for sewer connection {sewerConnection.Name}. There should be 2 of them!");
+            }
+
+            Assert.IsEmpty(errorMessages, string.Join("\r\n", errorMessages));
+
+
             //write
             WaterFlowFMModelWriter.Write(model);
         }

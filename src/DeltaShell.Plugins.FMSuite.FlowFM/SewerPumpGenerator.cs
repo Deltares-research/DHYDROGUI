@@ -39,10 +39,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private static void AddSewerConnectionAttributesToPump(GwswConnectionPump pump, GwswElement gwswElement)
         {
             var sourceCompartmentAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SourceCompartmentId);
-            pump.SourceCompartmentId = sourceCompartmentAttribute.GetValidStringValue();
+            pump.SourceCompartmentName = sourceCompartmentAttribute.GetValidStringValue();
 
             var targetCompartmentAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.TargetCompartmentId);
-            pump.TargetCompartmentId= targetCompartmentAttribute.GetValidStringValue();
+            pump.TargetCompartmentName= targetCompartmentAttribute.GetValidStringValue();
+
+            double auxDouble;
+            var length = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Length);
+            if (length.TryGetValueAsDouble(out auxDouble))
+                pump.Length = auxDouble;
 
             var flowDirection = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.FlowDirection);
             if (flowDirection.IsValidAttribute())

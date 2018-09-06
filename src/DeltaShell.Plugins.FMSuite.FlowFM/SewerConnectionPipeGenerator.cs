@@ -1,6 +1,4 @@
-﻿using DelftTools.Hydro;
-using DelftTools.Hydro.SewerFeatures;
-using DelftTools.Hydro.Structures;
+﻿using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM

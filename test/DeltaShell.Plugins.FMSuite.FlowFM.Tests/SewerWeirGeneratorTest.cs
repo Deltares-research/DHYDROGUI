@@ -21,6 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var connectionTypeString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Crest);
 
+            var length = 3.2;
             var connectionGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
@@ -29,15 +30,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.UniqueId, WeirName, string.Empty),
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, connectionTypeString, string.Empty),
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.SourceCompartmentId, SourceCompartmentName, string.Empty),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.TargetCompartmentId, TargetCompartmentName, string.Empty)
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.TargetCompartmentId, TargetCompartmentName, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.Length, length.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble)
                 }
             };
             
             var weir = new SewerWeirGenerator().Generate(connectionGwswElement) as GwswConnectionWeir;
             Assert.IsNotNull(weir);
             Assert.That(weir.Name, Is.EqualTo(WeirName));
-            Assert.That(weir.SourceCompartmentId, Is.EqualTo(SourceCompartmentName));
-            Assert.That(weir.TargetCompartmentId, Is.EqualTo(TargetCompartmentName));
+            Assert.That(weir.SourceCompartmentName, Is.EqualTo(SourceCompartmentName));
+            Assert.That(weir.TargetCompartmentName, Is.EqualTo(TargetCompartmentName));
+            Assert.That(weir.Length, Is.EqualTo(length));
         }
 
         [Test]
@@ -49,7 +52,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var crestWidth = 3.0;
             var crestLevel = 2.7;
             var dischargeCoefficient = 0.9;
-
             var structureGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Structure.ToString(),
@@ -62,6 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.DischargeCoefficient, dischargeCoefficient.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble)
                 }
             };
+
 
             #endregion
 

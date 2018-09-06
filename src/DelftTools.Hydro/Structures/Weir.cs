@@ -274,14 +274,16 @@ namespace DelftTools.Hydro.Structures
 
             if (weir != null)
             {
+                hydroNetwork.Branches.Remove(sewerConnection);
                 CopyPropertyValuesToExistingWeir(weir);
+                SetSewerConnectionProperties(sewerConnection);
             }
             else
             {
                 sewerConnection = GetNewSewerConnectionWithWeir();
-                sewerConnection.AddToHydroNetwork(hydroNetwork);
             }
 
+            sewerConnection.AddToHydroNetwork(hydroNetwork);
             sewerConnection.UpdateBranchFeatureGeometries();
         }
 
@@ -291,6 +293,10 @@ namespace DelftTools.Hydro.Structures
         }
 
         protected virtual void CopyPropertyValuesToExistingWeir(IWeir weir)
+        {
+        }
+
+        protected virtual void SetSewerConnectionProperties(ISewerConnection sewerConnection)
         {
         }
     }

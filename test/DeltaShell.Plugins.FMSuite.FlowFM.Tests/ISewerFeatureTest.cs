@@ -149,6 +149,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        public void GivenFmModel_WhenAddingSewerConnectionWithZeroLength_ThenNoDiscretisationPointsHaveBeenAddedToTheModelNetwork()
+        {
+            var fmModel = new WaterFlowFMModel();
+            var network = fmModel.Network;
+            var sewerConnection = new SewerConnection("mySewerConnection")
+            {
+                Length = 0
+            };
+
+            sewerConnection.AddToHydroNetwork(network);
+            Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
+
+            var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
+            Assert.That(discretizationLocations.Count, Is.EqualTo(0));
+        }
+
+        [Test]
         public void GivenSewerNetworkWithTwoManholes_WhenAddingSewerConnectionToNetwork_ThenCoordinatesAreSet()
         {
             var network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEach();
@@ -529,6 +546,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        public void GivenFmModel_WhenAddingConnectionOrificeAndThenStructureOrifice_ThenDiscretisationPointsHaveBeenAddedToTheModelNetwork()
+        {
+            var fmModel = new WaterFlowFMModel { Network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEach() };
+
+            var orificeName = "myOrifice";
+            var structureOrifice = new Orifice(orificeName);
+            var connectionOrifice = new GwswConnectionOrifice(orificeName)
+            {
+                Length = 22.3,
+                SourceCompartmentName = TestSewerNetworkProvider.SourceCompartmentName,
+                TargetCompartmentName = TestSewerNetworkProvider.TargetCompartmentName
+            };
+
+            connectionOrifice.AddToHydroNetwork(fmModel.Network);
+            Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
+
+            var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
+            Assert.That(discretizationLocations.Count, Is.EqualTo(2));
+
+            structureOrifice.AddToHydroNetwork(fmModel.Network);
+            Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
+            Assert.That(discretizationLocations.Count, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void GivenFmModel_WhenAddingStructureOrificeAndThenConnectionOrifice_ThenDiscretisationPointsHaveBeenAddedToTheModelNetwork()
+        {
+            var fmModel = new WaterFlowFMModel { Network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEach() };
+
+            var orificeName = "myOrifice";
+            var structureOrifice = new Orifice(orificeName);
+            var connectionOrifice = new GwswConnectionOrifice(orificeName)
+            {
+                Length = 22.3,
+                SourceCompartmentName = TestSewerNetworkProvider.SourceCompartmentName,
+                TargetCompartmentName = TestSewerNetworkProvider.TargetCompartmentName
+            };
+
+            structureOrifice.AddToHydroNetwork(fmModel.Network);
+            Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
+
+            var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
+            Assert.That(discretizationLocations.Count, Is.EqualTo(0));
+
+            connectionOrifice.AddToHydroNetwork(fmModel.Network);
+            Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
+            Assert.That(discretizationLocations.Count, Is.EqualTo(2));
+        }
+
+        [Test]
         public void AddingGwswConnectionOrificeToNetworkSequence1()
         {
             var network = new HydroNetwork();
@@ -716,8 +783,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var pumpToAdd = new GwswConnectionPump(pumpName)
             {
                 DirectionIsPositive = true,
-                SourceCompartmentId = sourceCompartmentName,
-                TargetCompartmentId = targetCompartmentName
+                SourceCompartmentName = sourceCompartmentName,
+                TargetCompartmentName = targetCompartmentName
             };
             AddSewerFeatureToNetwork(pumpToAdd, network);
             Assert.That(network.SewerConnections.Count, Is.EqualTo(1));
@@ -839,8 +906,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var pumpToAdd = new GwswConnectionPump(pumpName)
             {
                 DirectionIsPositive = true,
-                SourceCompartmentId = sourceCompartmentName,
-                TargetCompartmentId = targetCompartmentName
+                SourceCompartmentName = sourceCompartmentName,
+                TargetCompartmentName = targetCompartmentName
             };
 
             AddSewerFeatureToNetwork(pumpToAdd, network);
@@ -862,6 +929,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue(pump.DirectionIsPositive);
         }
 
+        [Test]
+        public void GivenFmModel_WhenAddingConnectionPumpAndThenStructurePump_ThenDiscretisationPointsHaveBeenAddedToTheModelNetwork()
+        {
+            var fmModel = new WaterFlowFMModel { Network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEach() };
+
+            var pumpName = "myPump";
+            var structurePump = new GwswStructurePump(pumpName);
+            var connectionPump = new GwswConnectionPump(pumpName)
+            {
+                Length = 22.3,
+                SourceCompartmentName = TestSewerNetworkProvider.SourceCompartmentName,
+                TargetCompartmentName = TestSewerNetworkProvider.TargetCompartmentName
+            };
+
+            connectionPump.AddToHydroNetwork(fmModel.Network);
+            Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
+
+            var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
+            Assert.That(discretizationLocations.Count, Is.EqualTo(2));
+
+            structurePump.AddToHydroNetwork(fmModel.Network);
+            Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
+            Assert.That(discretizationLocations.Count, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void GivenFmModel_WhenAddingStructurePumpAndThenConnectionPump_ThenDiscretisationPointsHaveBeenAddedToTheModelNetwork()
+        {
+            var fmModel = new WaterFlowFMModel { Network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEach() };
+
+            var pumpName = "myPump";
+            var structurePump = new GwswStructurePump(pumpName);
+            var connectionPump = new GwswConnectionPump(pumpName)
+            {
+                Length = 22.3,
+                SourceCompartmentName = TestSewerNetworkProvider.SourceCompartmentName,
+                TargetCompartmentName = TestSewerNetworkProvider.TargetCompartmentName
+            };
+
+            structurePump.AddToHydroNetwork(fmModel.Network);
+            Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
+
+            var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
+            Assert.That(discretizationLocations.Count, Is.EqualTo(0));
+
+            connectionPump.AddToHydroNetwork(fmModel.Network);
+            Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
+            Assert.That(discretizationLocations.Count, Is.EqualTo(2));
+        }
+
         #endregion
 
         #region Weir
@@ -878,8 +995,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var weirToAdd = new GwswConnectionWeir(weirName)
             {
                 FlowDirection = flowDirection,
-                SourceCompartmentId = sourceCompartmentName,
-                TargetCompartmentId = targetCompartmentName
+                SourceCompartmentName = sourceCompartmentName,
+                TargetCompartmentName = targetCompartmentName
             };
             AddSewerFeatureToNetwork(weirToAdd, network);
             Assert.That(network.SewerConnections.Count, Is.EqualTo(1));
@@ -953,8 +1070,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var weirToAdd = new GwswConnectionWeir(weirName)
             {
                 FlowDirection = flowDirection,
-                SourceCompartmentId = sourceCompartmentName,
-                TargetCompartmentId = targetCompartmentName
+                SourceCompartmentName = sourceCompartmentName,
+                TargetCompartmentName = targetCompartmentName
             };
             AddSewerFeatureToNetwork(weirToAdd, network);
             Assert.That(network.SewerConnections.Count, Is.EqualTo(1));
@@ -1016,6 +1133,55 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(weirFormula.DischargeCoefficient, Is.EqualTo(dischargeCoefficient));
         }
 
+        [Test]
+        public void GivenFmModel_WhenAddingConnectionWeirAndThenStructureWeir_ThenDiscretisationPointsHaveBeenAddedToTheModelNetwork()
+        {
+            var fmModel = new WaterFlowFMModel { Network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEach() };
+
+            var weirName = "myWeir";
+            var structureWeir = new GwswStructureWeir(weirName);
+            var connectionWeir = new GwswConnectionWeir(weirName)
+            {
+                Length = 22.3,
+                SourceCompartmentName = TestSewerNetworkProvider.SourceCompartmentName,
+                TargetCompartmentName = TestSewerNetworkProvider.TargetCompartmentName
+            };
+
+            connectionWeir.AddToHydroNetwork(fmModel.Network);
+            Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
+
+            var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
+            Assert.That(discretizationLocations.Count, Is.EqualTo(2));
+
+            structureWeir.AddToHydroNetwork(fmModel.Network);
+            Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
+            Assert.That(discretizationLocations.Count, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void GivenFmModel_WhenAddingStructureWeirAndThenConnectionWeir_ThenDiscretisationPointsHaveBeenAddedToTheModelNetwork()
+        {
+            var fmModel = new WaterFlowFMModel { Network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEach() };
+
+            var weirName = "myWeir";
+            var structureWeir = new GwswStructureWeir(weirName);
+            var connectionWeir = new GwswConnectionWeir(weirName)
+            {
+                Length = 22.3,
+                SourceCompartmentName = TestSewerNetworkProvider.SourceCompartmentName,
+                TargetCompartmentName = TestSewerNetworkProvider.TargetCompartmentName
+            };
+
+            structureWeir.AddToHydroNetwork(fmModel.Network);
+            Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
+
+            var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
+            Assert.That(discretizationLocations.Count, Is.EqualTo(0));
+
+            connectionWeir.AddToHydroNetwork(fmModel.Network);
+            Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
+            Assert.That(discretizationLocations.Count, Is.EqualTo(2));
+        }
         #endregion
 
         #region CrossSectionStandardShapeBase
