@@ -11,7 +11,6 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
 using DeltaShell.Plugins.NetworkEditor;
 using log4net;
-using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {

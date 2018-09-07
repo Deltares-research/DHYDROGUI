@@ -55,7 +55,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             var networkDiscretisation = TestNetworkAndDiscretisationProvider.CreateSimpleNetworkAndDiscretisation();
             var storedNetwork = (IHydroNetwork) networkDiscretisation.Network;
-            var networkDataModel = new NetworkUGridDataModel(storedNetwork);
 
             var customizedBranch = storedNetwork.Branches.First();
             customizedBranch.IsLengthCustom = true;
@@ -65,6 +64,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             Assert.That(customizedBranch.Length, Is.EqualTo(length));
 
             var metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
+            var networkDataModel = new NetworkUGridDataModel(storedNetwork);
             UGridToNetworkAdapter.SaveNetwork(netFilePath, networkDataModel, metaData);
             var loadedNetwork = NetworkDiscretisationFactory.CreateHydroNetwork(UGridToNetworkAdapter.ReadNetworkDataModelFromUGrid(netFilePath));
 

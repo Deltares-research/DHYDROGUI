@@ -11,24 +11,29 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
     {
         public static void Write(IEnumerable<Compartment> compartments, string filePath)
         {
-            var categories = new List<DelftIniCategory>();
-            foreach (var compartment in compartments)
-            {
-                var iniCategory = new DelftIniCategory("Retention");
-                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Id, compartment.Name, string.Empty));
-                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Name, compartment.ParentManhole.Name, string.Empty));
-                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.NodeId, compartment.Name, string.Empty));
-                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.ManholeId, compartment.ParentManhole.Name, string.Empty));
-                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.UseTable, "0", string.Empty));
-                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.BedLevel, string.Format(CultureInfo.InvariantCulture, "{0:0.000}", compartment.BottomLevel), string.Empty));
-                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Area, string.Format(CultureInfo.InvariantCulture, "{0:0.0000}", compartment.ManholeLength * compartment.ManholeWidth), string.Empty));
-                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StreetLevel, string.Format(CultureInfo.InvariantCulture, "{0:0.000}", compartment.SurfaceLevel), string.Empty));
-                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StorageType, "Reservoir", string.Empty));
-                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StreetStorageArea, "100.00", string.Empty));
-                categories.Add(iniCategory);
-            }
-            
+            var categories = compartments.Select(CreateCompartmentIniCategory).ToList();
             new DelftIniWriter().WriteDelftIniFile(categories, filePath, false);
+        }
+
+        private static DelftIniCategory CreateCompartmentIniCategory(Compartment compartment)
+        {
+            var iniCategory = new DelftIniCategory("Retention");
+            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Id, compartment.Name, string.Empty));
+            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Name, compartment.ParentManhole.Name, string.Empty));
+            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.NodeId, compartment.Name, string.Empty));
+            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.ManholeId, compartment.ParentManhole.Name, string.Empty));
+            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.UseTable, "0", string.Empty));
+            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.BedLevel, GetValueAsStringWithFormat(compartment.BottomLevel, "{0:0.000}"), string.Empty));
+            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Area, GetValueAsStringWithFormat(compartment.ManholeLength * compartment.ManholeWidth, "{0:0.0000}"), string.Empty));
+            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StreetLevel, GetValueAsStringWithFormat(compartment.SurfaceLevel, "{0:0.000}"), string.Empty));
+            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StorageType, "Reservoir", string.Empty));
+            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StreetStorageArea, "100.00", string.Empty));
+            return iniCategory;
+        }
+
+        private static string GetValueAsStringWithFormat(double value, string format)
+        {
+            return string.Format(CultureInfo.InvariantCulture, format, value);
         }
 
         public static List<CompartmentProperties> Read(string filePath)
