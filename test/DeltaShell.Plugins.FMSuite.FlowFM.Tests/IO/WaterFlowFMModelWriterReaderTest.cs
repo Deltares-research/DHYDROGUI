@@ -1,11 +1,7 @@
 ﻿using System.IO;
-using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Tests.Helpers;
-using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
