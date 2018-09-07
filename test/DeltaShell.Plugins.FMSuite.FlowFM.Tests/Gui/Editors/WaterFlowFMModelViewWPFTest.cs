@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
     {
 
         [Test]
-        [Category("Build.WPF")]
+        [Category(TestCategory.WindowsForms)]
         public void Test_WaterFlowFMModelViewWPF()
         {
             var fmModel = new WaterFlowFMModel();
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
         }
 
         [Test]
-        [Category("Build.WPF")]
+        [Category(TestCategory.WindowsForms)]
         public void Test_WaterFlowFMModelViewWPF_AddExtras_Category_Sediment()
         {
             var fmModel = new WaterFlowFMModel();
@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
         }
 
         [Test]
-        [Category("Build.WPF")]
+        [Category(TestCategory.WindowsForms)]
         public void Test_WaterFlowFMModelViewWPF_AddExtras_SubCategory_Tracers()
         {
             var fmModel = new WaterFlowFMModel();
@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
         }
 
         [Test]
-        [Category("Build.WPF")]
+        [Category(TestCategory.WindowsForms)]
         public void Test_WaterFlowFMModelViewWPF_AddExtras_Property()
         {
             var fmModel = new WaterFlowFMModel();
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
         }
 
         [Test]
-        [Category("Build.WPF")]
+        [Category(TestCategory.WindowsForms)]
         public void Test_IsEnabled_WaterFlowFMModelViewWPF()
         {
             var fmModel = new WaterFlowFMModel();
@@ -169,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
         }
 
         [Test]
-        [Category("Build.WPF")]
+        [Category(TestCategory.WindowsForms)]
         public void Test_IsVisible_WaterFlowFMModelViewWPF()
         {
             var fmModel = new WaterFlowFMModel();

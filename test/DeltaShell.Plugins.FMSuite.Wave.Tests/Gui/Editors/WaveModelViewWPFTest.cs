@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors
     public class WaveModelViewWPFTest
     {
         [Test]
-        [Category("Build.WPF")]
+        [Category(TestCategory.WindowsForms)]
         public void Test_WaterFlowFMModelViewWPF()
         {
             var waveModel = new WaveModel();
