@@ -143,6 +143,7 @@
     <Compile Include="DefaultCrossSectionDefinitionGenerator.cs" />
     <Compile Include="EggCrossSectionDefinitionGenerator.cs" />
     <Compile Include="IO\BathymetryFileWriter.cs" />
+    <Compile Include="IO\CrossSectionLocationWriter.cs" />
     <Compile Include="IO\Exporters\FmCrossSectionDefinitionWriter.cs" />
     <Compile Include="IO\WaterFlowFMModelFactory.cs" />
     <Compile Include="IO\WaterFlowFMModelReaderData.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="IO\WaterFlowFMModelReader.cs" />
     <Compile Include="IO\WaterFlowFMModelWriter.cs" />
     <Compile Include="ASewerCompartmentGenerator.cs" />
+    <Compile Include="IO\WaterFlowFMModelWriterData.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="RectangleCrossSectionDefinitionGenerator.cs" />
     <Compile Include="SewerOrificeGenerator.cs" />

@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string OutDir = "outputdir";
         public const string PartitionFile = "partitionfile";
         public const string CrossDefFile = "crossdeffile";
-        public const string ProflocFile = "proflocfile";
+        public const string CrossLocFile = "crosslocfile";
         public const string RestartFile = "restartfile";
         public const string RstInterval = "rstinterval";
         public const string StatsInterVal = "statsinterval";

@@ -11,13 +11,14 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
 using DeltaShell.Plugins.NetworkEditor;
 using log4net;
+using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
     public static class WaterFlowModel1DFileWriter
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowModel1DFileWriter));
-        
+
         public static void Write(string targetModelFile, WaterFlowModel1D waterFlowModel1D)
         {
             FileUtils.DeleteIfExists(targetModelFile);
@@ -35,10 +36,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             #region Write network and computational grid in ugrid
 
-            UGridGlobalMetaData metaData = new UGridGlobalMetaData("NetworkGeneratedInWaterFlowModel1D", Properties.Resources.WaterFlowModel1DApplicationPlugin_DisplayName_D_Flow1D_Plugin, typeof(WaterFlowModel1D).Assembly.GetName().Version.ToString());
+            var network = waterFlowModel1D.Network;
+            var metaData = new UGridGlobalMetaData("NetworkGeneratedInWaterFlowModel1D", Properties.Resources.WaterFlowModel1DApplicationPlugin_DisplayName_D_Flow1D_Plugin, typeof(WaterFlowModel1D).Assembly.GetName().Version.ToString());
+            var discretisationDataModel = new NetworkDiscretisationUGridDataModel(waterFlowModel1D.NetworkDiscretization);
+            var networkDataModel = new NetworkUGridDataModel(network);
 
-            UGridToNetworkAdapter.SaveNetwork(waterFlowModel1D.Network, fileName.NetCdf, metaData);
-            UGridToNetworkAdapter.SaveNetworkDiscretisation(waterFlowModel1D.NetworkDiscretization, fileName.NetCdf);
+            UGridToNetworkAdapter.SaveNetwork(fileName.NetCdf, networkDataModel, metaData);
+            UGridToNetworkAdapter.SaveNetworkDiscretisation(discretisationDataModel, fileName.NetCdf);
 
             #endregion
 

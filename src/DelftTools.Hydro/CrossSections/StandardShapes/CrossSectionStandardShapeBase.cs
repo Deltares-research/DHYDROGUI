@@ -43,7 +43,7 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
             {
                 Name = Name
             };
-            var pipesWithSameCrossSectionDefinitionId = network.Pipes.Where(p => p.CrossSectionDefinitionId == Name);
+            var pipesWithSameCrossSectionDefinitionId = network.Pipes.Where(p => p.CrossSectionDefinitionName == Name);
             pipesWithSameCrossSectionDefinitionId.ForEach(p =>
             {
                 p.CrossSectionDefinition = crossSectionDefinitionToAdd;

@@ -11,16 +11,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public static class WaterFlowFMModelWriter
     {
+
         // TODO: get rid of the optional parameters. Solve in a different way.
         public static void Write(WaterFlowFMModel model, bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true)
         {
+            var writerData = CreateWriterData(model);
+
             PrepareModelDefinitionForWriting(model);
             WriteMorSedFilesIfNeeded(model);
             WriteMduFile(model, switchTo, writeExtForcings, writeFeatures);
             WriteCrossSectionDefinitions(model);
+            WriteCrossSectionLocation(model);
             WriteNodeFile(model);
             WriteBranchesGuiFile(model);
-            WriteUGridFile(model);
+            WriteUGridFile(writerData);
+        }
+
+        private static WaterFlowFMModelWriterData CreateWriterData(WaterFlowFMModel model)
+        {
+            return new WaterFlowFMModelWriterData
+            {
+                ModelName = model.Name,
+                FilePaths = new WaterFlowFMModelWriterData.FileNames
+                {
+                    NetFilePath = model.NetFilePath,
+                },
+                NetworkDataModel = new NetworkUGridDataModel(model.Network),
+                NetworkDiscretisationDataModel = new NetworkDiscretisationUGridDataModel(model.NetworkDiscretization)
+            };
         }
 
         private static void PrepareModelDefinitionForWriting(IWaterFlowFMModel model)
@@ -30,6 +48,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 model.ModelDefinition.SetModelProperty(KnownProperties.NodeFile, "nodeFile.ini");
             if (network.CrossSections.Any() || network.Pipes.Any(p => p.CrossSectionDefinition != null))
                 model.ModelDefinition.SetModelProperty(KnownProperties.CrossDefFile, "crsdef.ini");
+            if (network.CrossSections.Any() || network.Pipes.Any(p => p.CrossSectionDefinition != null))
+                model.ModelDefinition.SetModelProperty(KnownProperties.CrossLocFile, "crsloc.ini");
         }
 
         private static void WriteMorSedFilesIfNeeded(WaterFlowFMModel model)
@@ -58,6 +78,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 FmCrossSectionDefinitionWriter.WriteFile(crosDefFilePath, model);
         }
 
+        private static void WriteCrossSectionLocation(WaterFlowFMModel model)
+        {
+            var crossLocFileName = model.ModelDefinition.GetModelProperty(KnownProperties.CrossLocFile).GetValueAsString();
+            var crossLocFilePath = UGridToNetworkAdapter.GetFilePathToLocationInSameDirectory(model.NetFilePath, crossLocFileName);
+
+            if (crossLocFilePath != null) CrossSectionLocationWriter.WriteFile(crossLocFilePath, model);
+        }
+
         private static void WriteNodeFile(WaterFlowFMModel model)
         {
             var nodeFileProperty = model.ModelDefinition.GetModelProperty(KnownProperties.NodeFile);
@@ -71,13 +99,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (branchesFilePath != null) BranchFile.Write(model.Network.Branches, branchesFilePath);
         }
 
-        private static void WriteUGridFile(WaterFlowFMModel model)
+        private static void WriteUGridFile(WaterFlowFMModelWriterData writerData)
         {
-            var netFilePath = model.NetFilePath;
+            var netFilePath = writerData.FilePaths.NetFilePath;
 
-            var metaData = new UGridGlobalMetaData(model.Name, "1.1", "2.1"); // last two arguments should be retrieved from the FlowFMApplicationPlugin
-            UGridToNetworkAdapter.SaveNetwork(model.Network, netFilePath, metaData);
-            UGridToNetworkAdapter.SaveNetworkDiscretisation(model.NetworkDiscretization, netFilePath);
+            var metaData = new UGridGlobalMetaData(writerData.ModelName, "1.1", "2.1"); // last two arguments should be retrieved from the FlowFMApplicationPlugin
+            UGridToNetworkAdapter.SaveNetwork(netFilePath, writerData.NetworkDataModel, metaData);
+            UGridToNetworkAdapter.SaveNetworkDiscretisation(writerData.NetworkDiscretisationDataModel, netFilePath);
         }
     }
 }

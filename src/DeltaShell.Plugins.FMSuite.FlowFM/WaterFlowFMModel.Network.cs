@@ -271,14 +271,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void SaveNetwork()
         {
-            UGridGlobalMetaData metaData = new UGridGlobalMetaData(Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion);
-
-            UGridToNetworkAdapter.SaveNetwork(network, NetFilePath, metaData);
+            var metaData = new UGridGlobalMetaData(Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion);
+            var networkDataModel = new NetworkUGridDataModel(network);
+            UGridToNetworkAdapter.SaveNetwork(NetFilePath, networkDataModel, metaData);
         }
 
         private void SaveNetworkDiscretisation()
         {
-            UGridToNetworkAdapter.SaveNetworkDiscretisation(NetworkDiscretization, NetFilePath);
+            var networkDiscretizationDataModel = new NetworkDiscretisationUGridDataModel(networkDiscretization);
+            UGridToNetworkAdapter.SaveNetworkDiscretisation(networkDiscretizationDataModel, NetFilePath);
         }
     }
 }

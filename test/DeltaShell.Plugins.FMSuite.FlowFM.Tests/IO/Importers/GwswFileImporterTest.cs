@@ -1007,7 +1007,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsNotEmpty(importedConnections);
 
             // Check the sewer profiles in the network
-            var sewerProfileShapeBefore = network.Pipes.FirstOrDefault(p => p.CrossSectionDefinitionId == csdName);
+            var sewerProfileShapeBefore = network.Pipes.FirstOrDefault(p => p.CrossSectionDefinitionName == csdName);
             Assert.IsNotNull(sewerProfileShapeBefore);
 
             // Load sewer profiles

@@ -316,7 +316,7 @@ namespace DelftTools.Hydro.SewerFeatures
             return new Point(averageX, averageY);
         }
 
-        public string CrossSectionDefinitionId { get; set; }
+        public string CrossSectionDefinitionName { get; set; }
 
         #endregion
     }

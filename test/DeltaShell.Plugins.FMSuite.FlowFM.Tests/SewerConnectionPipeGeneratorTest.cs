@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var sourceLevel = 30;
             var targetLevel = 100;
             var length = 200;
-            var crossSectionDefinitionId = "crossSectionDef001";
+            var crossSectionDefinitionName = "crossSectionDef001";
             var sourceCompartmentId = "cmp001";
             var targetCompartmentId = "cmp002";
             var pipeType = SewerConnectionMapping.ConnectionType.ClosedConnection;
@@ -82,14 +82,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var defaultString = string.Empty;
             var defaultDouble = 0.0;
 
-            var pipeGwswElement = GetSewerConnectionGwswElement(string.Empty, sourceCompartmentId, targetCompartmentId, pipeTypeString, sourceLevel, targetLevel, defaultString, length, crossSectionDefinitionId, defaultString, defaultString, defaultDouble, defaultDouble, defaultDouble, defaultDouble);
+            var pipeGwswElement = GetSewerConnectionGwswElement(string.Empty, sourceCompartmentId, targetCompartmentId, pipeTypeString, sourceLevel, targetLevel, defaultString, length, crossSectionDefinitionName, defaultString, defaultString, defaultDouble, defaultDouble, defaultDouble, defaultDouble);
 
             var createdPipe = new SewerConnectionPipeGenerator().Generate(pipeGwswElement) as IPipe;
             Assert.IsNotNull(createdPipe);
 
             Assert.That(createdPipe.SourceCompartmentName, Is.EqualTo(sourceCompartmentId));
             Assert.That(createdPipe.TargetCompartmentName, Is.EqualTo(targetCompartmentId));
-            Assert.That(createdPipe.CrossSectionDefinitionId, Is.EqualTo(crossSectionDefinitionId));
+            Assert.That(createdPipe.CrossSectionDefinitionName, Is.EqualTo(crossSectionDefinitionName));
 
             Assert.IsNull(createdPipe.SourceCompartment);
             Assert.IsNull(createdPipe.TargetCompartment);
@@ -121,10 +121,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
 
-            var network = new HydroNetwork();
             var createdPipe = new SewerConnectionPipeGenerator().Generate(pipeGwswElement) as IPipe;
             Assert.IsNotNull(createdPipe);
-            Assert.That(createdPipe.CrossSectionDefinitionId, Is.EqualTo(crossSectionDefinitionName));
+            Assert.That(createdPipe.CrossSectionDefinitionName, Is.EqualTo(crossSectionDefinitionName));
             Assert.IsNull(createdPipe.CrossSectionDefinition);
         }
 

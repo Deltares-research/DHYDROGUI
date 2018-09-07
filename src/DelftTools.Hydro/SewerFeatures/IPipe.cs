@@ -7,7 +7,7 @@ namespace DelftTools.Hydro.SewerFeatures
     {
         string PipeId { get; set; }
 
-        string CrossSectionDefinitionId { get; set; }
+        string CrossSectionDefinitionName { get; set; }
 
         CrossSectionDefinitionStandard CrossSectionDefinition { get; set; }
 

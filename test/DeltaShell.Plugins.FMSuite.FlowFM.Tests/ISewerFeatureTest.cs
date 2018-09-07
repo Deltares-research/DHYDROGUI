@@ -342,10 +342,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenNetworkWithSharedCrossSection_WhenAddingPipeToNetwork_ThenSharedCrossSectionIsAddedToSewerConnection()
         {
             var network = TestSewerNetworkProvider.CreateSewerNetwork_OneSharedCrossSection();
-            var csDefinitionId = TestSewerNetworkProvider.crossSectionDefinitionName;
+            var csDefinitionName = TestSewerNetworkProvider.crossSectionDefinitionName;
 
             var pipeName = "mySewerConnection";
-            var pipe = new Pipe {Name = pipeName, CrossSectionDefinitionId = csDefinitionId};
+            var pipe = new Pipe {Name = pipeName, CrossSectionDefinitionName = csDefinitionName};
             AddSewerFeatureToNetwork(pipe, network);
             Assert.That(network.Pipes.Count(), Is.EqualTo(1));
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(1));
@@ -1228,9 +1228,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var materialType = SewerProfileMapping.SewerProfileMaterial.CastIron;
 
             var network = new HydroNetwork();
-            var pipe1 = new Pipe { Name = "myPipe1", CrossSectionDefinitionId = crossSectionDefinitionName };
-            var pipe2 = new Pipe { Name = "myPipe2", CrossSectionDefinitionId = crossSectionDefinitionName };
-            var pipe3 = new Pipe { Name = "myPipe3", CrossSectionDefinitionId = "otherId" };
+            var pipe1 = new Pipe { Name = "myPipe1", CrossSectionDefinitionName = crossSectionDefinitionName };
+            var pipe2 = new Pipe { Name = "myPipe2", CrossSectionDefinitionName = crossSectionDefinitionName };
+            var pipe3 = new Pipe { Name = "myPipe3", CrossSectionDefinitionName = "otherId" };
             AddSewerFeatureToNetwork(pipe1, network);
             AddSewerFeatureToNetwork(pipe2, network);
             AddSewerFeatureToNetwork(pipe3, network);
@@ -1262,7 +1262,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var materialType = SewerProfileMapping.SewerProfileMaterial.SheetMetal;
 
             var network = new HydroNetwork();
-            var pipe1 = new Pipe { Name = "myPipe1", CrossSectionDefinitionId = crossSectionDefinitionName };
+            var pipe1 = new Pipe { Name = "myPipe1", CrossSectionDefinitionName = crossSectionDefinitionName };
             AddSewerFeatureToNetwork(pipe1, network);
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(0));
 

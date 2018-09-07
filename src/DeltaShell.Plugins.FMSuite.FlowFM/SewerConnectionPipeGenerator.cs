@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             newPipe.PipeId = pipeIdAttribute.GetValidStringValue();
 
             var profileDefinitionIdAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.CrossSectionDefinitionId);
-            newPipe.CrossSectionDefinitionId = profileDefinitionIdAttribute.GetValidStringValue();
+            newPipe.CrossSectionDefinitionName = profileDefinitionIdAttribute.GetValidStringValue();
         }
     }
 }

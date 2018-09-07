@@ -17,10 +17,22 @@ namespace DelftTools.Hydro.SewerFeatures
     public class Pipe : SewerConnection, IPipe
     {
         private static ILog Log = LogManager.GetLogger(typeof(Pipe));
+        private CrossSectionDefinitionStandard crossSectionDefinition;
 
         public string PipeId { get; set; }
 
-        public CrossSectionDefinitionStandard CrossSectionDefinition { get; set; }
+        public CrossSectionDefinitionStandard CrossSectionDefinition
+        {
+            get { return crossSectionDefinition; }
+            set
+            {
+                crossSectionDefinition = value;
+
+                if(crossSectionDefinition != null)
+                    CrossSectionDefinitionName = crossSectionDefinition.Name;
+            }
+        }
+
         public SewerProfileMapping.SewerProfileMaterial Material { get; set; }
 
         public double PipeRoughness { get; set; } = 0.003;
@@ -59,10 +71,10 @@ namespace DelftTools.Hydro.SewerFeatures
 
         protected override void AddCrossSectionDefinition(IHydroNetwork hydroNetwork)
         {
-            if (CrossSectionDefinitionId == null) CrossSectionDefinition = (CrossSectionDefinitionStandard) CrossSectionDefinitionStandard.CreateDefault();
+            if (CrossSectionDefinitionName == null) CrossSectionDefinition = (CrossSectionDefinitionStandard) CrossSectionDefinitionStandard.CreateDefault();
             else
             {
-                CrossSectionDefinition = hydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(cs => cs.Name == CrossSectionDefinitionId) as CrossSectionDefinitionStandard;
+                CrossSectionDefinition = hydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(cs => cs.Name == CrossSectionDefinitionName) as CrossSectionDefinitionStandard;
                 if (CrossSectionDefinition != null)
                     Material = (SewerProfileMapping.SewerProfileMaterial) EnumDescriptionAttributeTypeConverter.GetEnumValue<SewerProfileMapping.SewerProfileMaterial>(CrossSectionDefinition.Shape.MaterialName);
             }

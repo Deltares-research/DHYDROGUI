@@ -27,8 +27,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
                 iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StreetStorageArea, "100.00", string.Empty));
                 categories.Add(iniCategory);
             }
-
-            // write retention file
+            
             new DelftIniWriter().WriteDelftIniFile(categories, filePath, false);
         }
 
@@ -57,7 +56,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
             return double.Parse(category.GetPropertyValue(propertyName), CultureInfo.InvariantCulture);
         }
 
-        public static class KnownPropertyNames
+        private static class KnownPropertyNames
         {
             public const string Id = "Id";
             public const string Name = "Name";

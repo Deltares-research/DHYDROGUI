@@ -95,10 +95,6 @@ namespace DeltaShell.Plugins.NetworkEditor
                         var compartmentY = m.Geometry.Coordinate.Y;
                         compartmentsX.Add(compartmentX);
                         compartmentsY.Add(compartmentY);
-                        if (compartmentCoordinateDictionary.ContainsKey(m.Compartments[i].Name))
-                        {
-                            var haha = "lala";
-                        }
                         compartmentCoordinateDictionary.Add(m.Compartments[i].Name, new Coordinate(compartmentX, compartmentY));
                     }
                 });

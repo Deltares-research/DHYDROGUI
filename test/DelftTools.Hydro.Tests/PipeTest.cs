@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
@@ -60,6 +61,19 @@ namespace DelftTools.Hydro.Tests
 
             var expectedLogMessage = string.Format("Pipe {0} does not allow any branch feature on it.", pipe.Name);
             TestHelper.AssertAtLeastOneLogMessagesContains(() => pipe.BranchFeatures = featureList, expectedLogMessage);
+        }
+
+        [Test]
+        public void GivenPipe_WhenSettingCrossSectionDefinition_ThenCrossSectionDefinitionNameIsSetAsWell()
+        {
+            var pipe = new Pipe();
+            var csDefinitionName = "myCrossSectionDefinition";
+            pipe.CrossSectionDefinition = new CrossSectionDefinitionStandard
+            {
+                Name = csDefinitionName
+            };
+
+            Assert.That(pipe.CrossSectionDefinitionName, Is.EqualTo(csDefinitionName));
         }
     }
 }

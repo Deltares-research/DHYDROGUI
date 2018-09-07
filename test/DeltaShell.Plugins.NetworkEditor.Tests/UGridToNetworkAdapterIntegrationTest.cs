@@ -41,9 +41,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 ? TestNetworkAndDiscretisationProvider.CreateSimpleNetworkAndDiscretisation() 
                 : TestNetworkAndDiscretisationProvider.CreateNetworkAndDiscretisation();
             var storedNetwork = (IHydroNetwork)networkDiscretisation.Network;
+            var networkDataModel = new NetworkUGridDataModel(storedNetwork);
 
             var metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
-            UGridToNetworkAdapter.SaveNetwork(storedNetwork, netFilePath, metaData);
+            UGridToNetworkAdapter.SaveNetwork(netFilePath, networkDataModel, metaData);
 
             var networkUGridDataModel = UGridToNetworkAdapter.ReadNetworkDataModelFromUGrid(netFilePath);
             CompareAndAssertNetworkAndNetworkUGridDataModel(storedNetwork, networkUGridDataModel);
@@ -53,7 +54,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         public void SaveAndLoadNetwork_WithCustomizedLengthBranchTest()
         {
             var networkDiscretisation = TestNetworkAndDiscretisationProvider.CreateSimpleNetworkAndDiscretisation();
-            var storedNetwork = (IHydroNetwork)networkDiscretisation.Network;
+            var storedNetwork = (IHydroNetwork) networkDiscretisation.Network;
+            var networkDataModel = new NetworkUGridDataModel(storedNetwork);
 
             var customizedBranch = storedNetwork.Branches.First();
             customizedBranch.IsLengthCustom = true;
@@ -63,7 +65,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             Assert.That(customizedBranch.Length, Is.EqualTo(length));
 
             var metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
-            UGridToNetworkAdapter.SaveNetwork(storedNetwork, netFilePath, metaData);
+            UGridToNetworkAdapter.SaveNetwork(netFilePath, networkDataModel, metaData);
             var loadedNetwork = NetworkDiscretisationFactory.CreateHydroNetwork(UGridToNetworkAdapter.ReadNetworkDataModelFromUGrid(netFilePath));
 
             var loadedCustomizedBranch = loadedNetwork.Branches.First();
@@ -80,9 +82,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 : TestNetworkAndDiscretisationProvider.CreateNetworkAndDiscretisation();
             var storedNetwork = (IHydroNetwork)networkDiscretisation.Network;
 
+            var networkDataModel = new NetworkUGridDataModel(storedNetwork);
+            var discretisationDataModel = new NetworkDiscretisationUGridDataModel(networkDiscretisation);
+
             var metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
-            UGridToNetworkAdapter.SaveNetwork(storedNetwork, netFilePath, metaData);
-            UGridToNetworkAdapter.SaveNetworkDiscretisation(networkDiscretisation, netFilePath);
+            UGridToNetworkAdapter.SaveNetwork(netFilePath, networkDataModel, metaData);
+            UGridToNetworkAdapter.SaveNetworkDiscretisation(discretisationDataModel, netFilePath);
 
             var loadedDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(netFilePath);
             Assert.NotNull(loadedDiscretisation);
@@ -99,9 +104,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             const string pipeName = "myPipe";
             var sewerNetwork = TestNetworkAndDiscretisationProvider.CreateSimpleSewerNetwork(pipeName);
+            var networkDataModel = new NetworkUGridDataModel(sewerNetwork);
 
             var metaData = new UGridGlobalMetaData(sewerNetwork.Name, "PluginName", "PluginVersion");
-            UGridToNetworkAdapter.SaveNetwork(sewerNetwork, netFilePath, metaData);
+            UGridToNetworkAdapter.SaveNetwork(netFilePath, networkDataModel, metaData);
             var loadedNetwork = NetworkDiscretisationFactory.CreateHydroNetwork(UGridToNetworkAdapter.ReadNetworkDataModelFromUGrid(netFilePath));
 
             Assert.That(loadedNetwork.Pipes.Count(), Is.EqualTo(1));

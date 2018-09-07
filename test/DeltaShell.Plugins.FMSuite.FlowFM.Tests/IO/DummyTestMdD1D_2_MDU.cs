@@ -49,6 +49,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var pathWrite = TestHelper.GetTestFilePath(@"alex\output_net.nc"); ;
             var network = new HydroNetwork();
             var discretization = new Discretization { Network = network};
+            var discretisationDataModel = new NetworkDiscretisationUGridDataModel(discretization);
+            var networkDataModel = new NetworkUGridDataModel(network);
             NetworkAndGridReader.ReadFile(pathRead, network, discretization);
 
             var locations = discretization.Locations.Values.ToList();
@@ -60,9 +62,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Console.Write("Branch " + branch.Name + "(" + branch.Length.ToString("N3") + "): [" + locationsOnBranch.Min(l => l.Chainage) + ", " + locationsOnBranch.Max(l => l.Chainage) + "] ");
             }
 
-
-            UGridToNetworkAdapter.SaveNetwork(network, pathWrite, new UGridGlobalMetaData("Test model", "Generated from a script","Alex"));
-            UGridToNetworkAdapter.SaveNetworkDiscretisation(discretization, pathWrite);
+            UGridToNetworkAdapter.SaveNetwork(pathWrite, networkDataModel, new UGridGlobalMetaData("Test model", "Generated from a script", "Alex"));
+            UGridToNetworkAdapter.SaveNetworkDiscretisation(discretisationDataModel, pathWrite);
         }
 
         [Test]

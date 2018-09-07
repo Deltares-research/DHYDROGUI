@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 case CrossSectionType.GeometryBased:
                 case CrossSectionType.YZ:
                     // TODO: add roughness, works differently on an FM model. Look at CrossSectionDefinitionFileWriter for an example.
-                    //iniCategory = AddRoughnessDataToFileContent(iniCategory, crossSection, waterFlowModel1D.RoughnessSections, waterFlowModel1D.UseReverseRoughness);
+                    //iniCategory = AddRoughnessDataToFileContent(iniCategory, crossSection, waterFlowModel1D.RoughnessSections);
                     break;
                 case CrossSectionType.ZW:
                 case CrossSectionType.Standard:

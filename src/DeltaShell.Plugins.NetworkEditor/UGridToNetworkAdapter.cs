@@ -6,17 +6,14 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.NetworkEditor.IO;
 using GeoAPI.Extensions.Coverages;
 using log4net;
-using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.NetworkEditor
 {
     public static class UGridToNetworkAdapter
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(UGridToNetworkAdapter));
-        private const string IO_NETCDF_NETWORK_ID = "IoNetCdfNetworkId";
 
         public const string BranchGuiFileName = "branches.gui";
-        public const string NodeFileName = "node.ini";
 
         public static NetworkUGridDataModel ReadNetworkDataModelFromUGrid(string netFilePath)
         {
@@ -208,10 +205,8 @@ namespace DeltaShell.Plugins.NetworkEditor
             }
         }
 
-        public static void SaveNetwork(IHydroNetwork network, string netFilePath, UGridGlobalMetaData metaData)
+        public static void SaveNetwork(string netFilePath, NetworkUGridDataModel networkDataModel, UGridGlobalMetaData metaData)
         {
-            var networkUGridDataModel = new NetworkUGridDataModel(network);
-            
             try
             {
                 using (var uGridNetwork = new UGridNetwork(netFilePath, metaData, GridApiDataSet.NetcdfOpenMode.nf90_write))
@@ -221,38 +216,25 @@ namespace DeltaShell.Plugins.NetworkEditor
 
                     int networkId;
                     uGridNetwork.CreateNetworkInFile(
-                        networkUGridDataModel.NumberOfNodes,
-                        networkUGridDataModel.NumberOfBranches,
-                        networkUGridDataModel.NumberOfGeometryPoints,
+                        networkDataModel.NumberOfNodes,
+                        networkDataModel.NumberOfBranches,
+                        networkDataModel.NumberOfGeometryPoints,
                         out networkId);
 
-                    if (network.Attributes == null)
-                    {
-                        network.Attributes = new DictionaryFeatureAttributeCollection();
-                    }
-                    if (network.Attributes.Keys.Contains(IO_NETCDF_NETWORK_ID))
-                    {
-                        network.Attributes[IO_NETCDF_NETWORK_ID] = networkId;
-                    }
-                    else
-                    {
-                        network.Attributes.Add(IO_NETCDF_NETWORK_ID, networkId);
-                    }
+                    networkDataModel.NetworkId = networkId;
 
-                    networkUGridDataModel.NetworkId = networkId;
+                    uGridNetwork.WriteNetworkNodes(networkDataModel.NodesX, networkDataModel.NodesY,
+                        networkDataModel.NodesNames, networkDataModel.NodesDescriptions);
 
-                    uGridNetwork.WriteNetworkNodes(networkUGridDataModel.NodesX, networkUGridDataModel.NodesY,
-                        networkUGridDataModel.NodesNames, networkUGridDataModel.NodesDescriptions);
+                    uGridNetwork.WriteNetworkBranches(networkDataModel.SourceNodeIds,
+                        networkDataModel.TargedNodesIds,
+                        networkDataModel.BranchLengths,
+                        networkDataModel.NumberOfGeometryPointsPerBranch,
+                        networkDataModel.BranchNames,
+                        networkDataModel.BranchDescriptions,
+                        networkDataModel.BranchOrderNumbers);
 
-                    uGridNetwork.WriteNetworkBranches(networkUGridDataModel.SourceNodeIds,
-                        networkUGridDataModel.TargedNodesIds,
-                        networkUGridDataModel.BranchLengths,
-                        networkUGridDataModel.NumberOfGeometryPointsPerBranch,
-                        networkUGridDataModel.BranchNames,
-                        networkUGridDataModel.BranchDescriptions,
-                        networkUGridDataModel.BranchOrderNumbers);
-
-                    uGridNetwork.WriteNetworkGeometry(networkUGridDataModel.GeopointsX, networkUGridDataModel.GeopointsY);
+                    uGridNetwork.WriteNetworkGeometry(networkDataModel.GeopointsX, networkDataModel.GeopointsY);
                 }
             }
             catch (Exception ex)
@@ -261,9 +243,8 @@ namespace DeltaShell.Plugins.NetworkEditor
             }
         }
 
-        public static void SaveNetworkDiscretisation(IDiscretization networkDiscretization, string netFilePath)
+        public static void SaveNetworkDiscretisation(NetworkDiscretisationUGridDataModel discretisationDataModel, string netFilePath)
         {
-            var discretisationDataModel = new NetworkDiscretisationUGridDataModel(networkDiscretization);
             try
             {
                 using (var uGridNetworkDiscretisation = new UGridNetworkDiscretisation(netFilePath, GridApiDataSet.NetcdfOpenMode.nf90_write))

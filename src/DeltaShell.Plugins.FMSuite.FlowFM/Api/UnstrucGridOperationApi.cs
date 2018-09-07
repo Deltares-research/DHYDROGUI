@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             KnownProperties.BridgePillarFile,
             KnownProperties.ObsCrsFile, KnownProperties.LandBoundaryFile, KnownProperties.ObsFile,
             KnownProperties.StructuresFile, KnownProperties.PartitionFile, KnownProperties.ManholeFile,
-            KnownProperties.CrossDefFile, KnownProperties.ProflocFile, KnownProperties.RestartFile,
+            KnownProperties.CrossDefFile, KnownProperties.CrossLocFile, KnownProperties.RestartFile,
             KnownProperties.WaterLevIniFile, KnownProperties.TrtRou, KnownProperties.TrtDef, KnownProperties.TrtL
         };
 
