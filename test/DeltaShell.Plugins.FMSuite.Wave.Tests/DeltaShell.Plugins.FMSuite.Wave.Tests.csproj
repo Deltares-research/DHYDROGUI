@@ -191,6 +191,7 @@
     <Compile Include="Common\IO\DelftIniReaderTest.cs" />
     <Compile Include="Common\IO\GridFileReaderTest.cs" />
     <Compile Include="FunctionArgumentSyncerTest.cs" />
+    <Compile Include="Gui\Editors\WaveBoundaryConditionDataViewTest.cs" />
     <Compile Include="Gui\Editors\WaveModelViewWPFTest.cs" />
     <Compile Include="Gui\WaveBoundaryTimeSelectionDialogTest.cs" />
     <Compile Include="Gui\WaveGuiPluginTest.cs" />
