@@ -132,7 +132,7 @@ namespace DelftTools.Hydro.SewerFeatures
             {
                 if (value == null)
                 {
-                    sourceCompartment = null;
+                    targetCompartment = null;
                     return;
                 }
 
