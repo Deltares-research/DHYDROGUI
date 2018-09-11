@@ -670,11 +670,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(41));
 
             Assert.That(network.Pumps.Count(), Is.EqualTo(8));
-            Assert.That(network.Weirs.Count(), Is.EqualTo(6));
+            Assert.That(network.Weirs.Count(), Is.EqualTo(8));
             Assert.That(network.Orifices.Count(), Is.EqualTo(2));
 
             Assert.That(network.SewerConnections.Count(sc => sc.BranchFeatures.Count >= 2 && sc.BranchFeatures[1] is IPump), Is.EqualTo(8));
-            Assert.That(network.SewerConnections.Count(sc => sc.BranchFeatures.Count >= 2 && sc.BranchFeatures[1] is IWeir), Is.EqualTo(6));
+            Assert.That(network.SewerConnections.Count(sc => sc.BranchFeatures.Count >= 2 && sc.BranchFeatures[1] is IWeir), Is.EqualTo(8));
             Assert.That(network.SewerConnections.Count(sc => sc.BranchFeatures.Count >= 2 && sc.BranchFeatures[1] is IOrifice), Is.EqualTo(2));
         }
 
