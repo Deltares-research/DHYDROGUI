@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
 
         private void WriteAndCheckBranchTypeFileContent(List<IBranch> branches)
         {
-            BranchFile.Write(branches, filePath);
+            BranchFile.Write(filePath, branches);
             var propertiesPerBranch = BranchFile.Read(filePath);
             for (var n = 0; n < propertiesPerBranch.Count; n++)
             {

@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
 
             UGridToNetworkAdapter.SaveNetwork(pathWrite, networkDataModel, new UGridGlobalMetaData("Test model", "Generated from a script", "Alex"));
-            UGridToNetworkAdapter.SaveNetworkDiscretisation(discretisationDataModel, pathWrite);
+            UGridToNetworkAdapter.SaveNetworkDiscretisation(pathWrite, discretisationDataModel);
         }
 
         [Test]
@@ -154,8 +154,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
 
             Assert.IsEmpty(errorMessages, string.Join("\r\n", errorMessages));
-
-
+            
             //write
             WaterFlowFMModelWriter.Write(model);
         }

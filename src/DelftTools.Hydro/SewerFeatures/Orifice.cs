@@ -1,12 +1,13 @@
 ﻿using System.Linq;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Aop;
 using log4net;
 
 namespace DelftTools.Hydro.SewerFeatures
 {
     [Entity]
-    public class Orifice : Gate, IOrifice
+    public class Orifice : Weir, IOrifice
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Orifice));
 
@@ -15,16 +16,16 @@ namespace DelftTools.Hydro.SewerFeatures
             
         }
 
-        public Orifice(string name)
+        public Orifice(string name) : base(name)
         {
-            Name = name;
+            WeirFormula = new GatedWeirFormula();
         }
 
         public double BottomLevel { get; set; }
         public double ContractionCoefficent { get; set; }
         public double MaxDischarge { get; set; }
 
-        public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork)
+        public override void AddToHydroNetwork(IHydroNetwork hydroNetwork)
         {
             var sewerConnection = hydroNetwork.SewerConnections.FirstOrDefault(
                 sc => sc.BranchFeatures.Count >= 2
@@ -77,6 +78,11 @@ namespace DelftTools.Hydro.SewerFeatures
             orifice.BottomLevel = BottomLevel;
             orifice.ContractionCoefficent = ContractionCoefficent;
             orifice.MaxDischarge = MaxDischarge;
+        }
+
+        public override StructureType GetStructureType()
+        {
+            return StructureType.Orifice;
         }
     }
 }

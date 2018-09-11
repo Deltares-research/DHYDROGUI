@@ -76,7 +76,7 @@
     <Compile Include="HydroTimeSeriesFactoryTest.cs" />
     <Compile Include="LateralSourceTest.cs" />
     <Compile Include="PipeTest.cs" />
-    <Compile Include="SewerFeatures\SewerConnectionOrificeTest.cs" />
+    <Compile Include="SewerFeatures\OrificeTest.cs" />
     <Compile Include="Structures\LeveeBreachFormula\UserDefinedBreachConversionHelper.cs" />
     <Compile Include="Structures\LeveeBreachTest.cs" />
     <Compile Include="Structures\ManholeExtensionsTest.cs" />

@@ -14,6 +14,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             public string NetFilePath { get; set; }
             public string CrossSectionLocationFilePath { get; set; }
+            public string CrossSectionDefinitionFilePath { get; set; }
+            public string NodeFilePath { get; set; }
+            public string StructuresFilePath { get; set; }
         }
     }
 }

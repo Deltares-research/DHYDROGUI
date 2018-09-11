@@ -1,12 +1,10 @@
 ﻿using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.IntegrationTests
@@ -14,23 +12,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
     [TestFixture]
     public class StructureFileWriterIntegrationTest
     {
-        private IHydroNetwork network;
-
-        [SetUp]
-        public void SetUp()
-        {
-            network = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch();
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-        }
-        
         [Test]
         public void TestStructureFileWriterGivesExpectedResults_CompoundStructureIDs()
         {
-            var flow1Dmodel = new WaterFlowModel1D(){ Network = HydroNetworkHelper.GetSnakeHydroNetwork(1) };
+            var flow1Dmodel = new WaterFlowModel1D { Network = HydroNetworkHelper.GetSnakeHydroNetwork(1) };
             var branch = flow1Dmodel.Network.Channels.First();
 
             var pump = (IPump) new Pump(false);
@@ -54,7 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
             composite2.Structures.Add(weir);
             weir.ParentStructure = composite2;
 
-            StructureFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Structures, flow1Dmodel);
+            StructureFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Structures, flow1Dmodel.Network);
 
             var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures).ToList();
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));

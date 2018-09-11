@@ -7,6 +7,7 @@ using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.FileWriters.Retention;
 using DeltaShell.NGHS.IO.FileWriters.SpatialData;
+using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
 using DeltaShell.Plugins.NetworkEditor;
@@ -30,7 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             ThrowIfFileNotExists(fileName.ObservationPoints, fileName.TargetPath, p => LocationFileWriter.WriteFileObservationPointLocations(p, waterFlowModel1D.Network.ObservationPoints));
             ThrowIfFileNotExists(fileName.LateralDischarge, fileName.TargetPath, p => LocationFileWriter.WriteFileLateralDischargeLocations(p, waterFlowModel1D.Network.LateralSources));
             ThrowIfFileNotExists(fileName.BoundaryLocations, fileName.TargetPath, p => BoundaryLocationFileWriter.WriteFile(p, waterFlowModel1D));
-            ThrowIfFileNotExists(fileName.Structures, fileName.TargetPath, p => StructureFileWriter.WriteFile(p, waterFlowModel1D));
+            ThrowIfFileNotExists(fileName.Structures, fileName.TargetPath, p => StructureFileWriter.WriteFile(p, waterFlowModel1D.Network));
             ThrowIfFileNotExists(fileName.Network, fileName.TargetPath, p => NetworkAndGridWriter.WriteFile(p, waterFlowModel1D.Network, waterFlowModel1D.NetworkDiscretization));
 
             #region Write network and computational grid in ugrid
@@ -41,7 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             var networkDataModel = new NetworkUGridDataModel(network);
 
             UGridToNetworkAdapter.SaveNetwork(fileName.NetCdf, networkDataModel, metaData);
-            UGridToNetworkAdapter.SaveNetworkDiscretisation(discretisationDataModel, fileName.NetCdf);
+            UGridToNetworkAdapter.SaveNetworkDiscretisation(fileName.NetCdf, discretisationDataModel);
 
             #endregion
 

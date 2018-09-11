@@ -12,7 +12,6 @@ namespace DelftTools.Hydro.Structures
     [Entity(FireOnCollectionChange=false)]
     public class Weir : BranchStructure, IWeir
     {
-        private IWeirFormula weirFormula;
         private double crestLevel;
         private double crestWidth;
         private bool canBeTimedependent;
@@ -74,13 +73,13 @@ namespace DelftTools.Hydro.Structures
         {
             get
             {
-                if (weirFormula is GeneralStructureWeirFormula)
+                if (WeirFormula is GeneralStructureWeirFormula)
                 {
-                    return (weirFormula as GeneralStructureWeirFormula).WidthStructureCentre;
+                    return (WeirFormula as GeneralStructureWeirFormula).WidthStructureCentre;
                 }
-                if (weirFormula is FreeFormWeirFormula)
+                if (WeirFormula is FreeFormWeirFormula)
                 {
-                    return (weirFormula as FreeFormWeirFormula).CrestWidth;
+                    return (WeirFormula as FreeFormWeirFormula).CrestWidth;
                 }
                 return crestWidth;
             }
@@ -104,13 +103,13 @@ namespace DelftTools.Hydro.Structures
         {
             get
             {
-                if (weirFormula is GeneralStructureWeirFormula)
+                if (WeirFormula is GeneralStructureWeirFormula)
                 {
-                    return (weirFormula as GeneralStructureWeirFormula).BedLevelStructureCentre;
+                    return (WeirFormula as GeneralStructureWeirFormula).BedLevelStructureCentre;
                 }
-                if (weirFormula is FreeFormWeirFormula)
+                if (WeirFormula is FreeFormWeirFormula)
                 {
-                    return (weirFormula as FreeFormWeirFormula).CrestLevel;
+                    return (WeirFormula as FreeFormWeirFormula).CrestLevel;
                 }
                 return crestLevel;
             }
@@ -126,24 +125,20 @@ namespace DelftTools.Hydro.Structures
         [EditAction]
         private void OnCrestLevelChanged()
         {
-            if (weirFormula is GeneralStructureWeirFormula)
+            if (WeirFormula is GeneralStructureWeirFormula)
             {
-                (weirFormula as GeneralStructureWeirFormula).BedLevelStructureCentre = crestLevel;
+                (WeirFormula as GeneralStructureWeirFormula).BedLevelStructureCentre = crestLevel;
             }
         }
 
-        public virtual IWeirFormula WeirFormula
-        {
-            get { return weirFormula; }
-            set { weirFormula = value; }
-        }
+        public virtual IWeirFormula WeirFormula { get; set; }
         
         [ReadOnly(true)]
         [DisplayName("Formula")]
         [FeatureAttribute(Order = 5)]
         public virtual string FormulaName
         {
-            get { return weirFormula.Name; }
+            get { return WeirFormula.Name; }
         }
         
         /// <summary>
@@ -250,24 +245,24 @@ namespace DelftTools.Hydro.Structures
 
         public virtual bool SpecifyCrestLevelAndWidthOnWeir
         {
-            get { return !(weirFormula is GeneralStructureWeirFormula || weirFormula is FreeFormWeirFormula); }
+            get { return !(WeirFormula is GeneralStructureWeirFormula || WeirFormula is FreeFormWeirFormula); }
         }
 
         public override StructureType GetStructureType()
         {
-            if (weirFormula is FreeFormWeirFormula) return StructureType.UniversalWeir;
-            if (weirFormula is GatedWeirFormula) return StructureType.Orifice;
-            if (weirFormula is PierWeirFormula) return StructureType.AdvancedWeir;
-            if (weirFormula is RiverWeirFormula) return StructureType.RiverWeir;
-            if (weirFormula is SimpleWeirFormula) return StructureType.Weir;
-            if (weirFormula is GeneralStructureWeirFormula) return StructureType.GeneralStructure;
+            if (WeirFormula is FreeFormWeirFormula) return StructureType.UniversalWeir;
+            if (WeirFormula is GatedWeirFormula) return StructureType.Orifice;
+            if (WeirFormula is PierWeirFormula) return StructureType.AdvancedWeir;
+            if (WeirFormula is RiverWeirFormula) return StructureType.RiverWeir;
+            if (WeirFormula is SimpleWeirFormula) return StructureType.Weir;
+            if (WeirFormula is GeneralStructureWeirFormula) return StructureType.GeneralStructure;
             return StructureType.Unknown;
         }
 
         public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork)
         {
             var sewerConnection = hydroNetwork.SewerConnections.FirstOrDefault(
-                sc => sc.BranchFeatures.Any()
+                sc => sc.BranchFeatures.Count >= 2
                       && sc.BranchFeatures[1].Name == Name
                       && sc.BranchFeatures[1] is IWeir);
             var weir = sewerConnection?.BranchFeatures.FirstOrDefault(bf => bf is IWeir) as IWeir;

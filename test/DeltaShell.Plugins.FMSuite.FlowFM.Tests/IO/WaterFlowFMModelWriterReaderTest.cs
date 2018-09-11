@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var mduFilePath = Path.Combine(tempDirectory, "myFmModel.mdu");
             var fmModel = new WaterFlowFMModel(mduFilePath)
             {
-                Network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEachAndOnePipeWithACrossSection()
+                Network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEachAndOneOrifice()
             };
 
             WaterFlowFMModelWriter.Write(fmModel);

@@ -279,7 +279,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void SaveNetworkDiscretisation()
         {
             var networkDiscretizationDataModel = new NetworkDiscretisationUGridDataModel(networkDiscretization);
-            UGridToNetworkAdapter.SaveNetworkDiscretisation(networkDiscretizationDataModel, NetFilePath);
+            UGridToNetworkAdapter.SaveNetworkDiscretisation(NetFilePath, networkDiscretizationDataModel);
         }
     }
 }

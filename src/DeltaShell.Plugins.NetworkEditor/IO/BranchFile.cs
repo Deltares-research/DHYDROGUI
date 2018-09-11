@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
             return ((int)value).ToString();
         }
 
-        public static void Write(IEnumerable<IBranch> branches, string filePath)
+        public static void Write(string filePath, IEnumerable<IBranch> branches)
         {
             var categories = new List<DelftIniCategory>();
             foreach (var branch in branches)

@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             var metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
             UGridToNetworkAdapter.SaveNetwork(netFilePath, networkDataModel, metaData);
-            UGridToNetworkAdapter.SaveNetworkDiscretisation(discretisationDataModel, netFilePath);
+            UGridToNetworkAdapter.SaveNetworkDiscretisation(netFilePath, discretisationDataModel);
 
             var loadedDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(netFilePath);
             Assert.NotNull(loadedDiscretisation);

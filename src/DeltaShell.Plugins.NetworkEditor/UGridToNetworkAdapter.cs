@@ -243,7 +243,7 @@ namespace DeltaShell.Plugins.NetworkEditor
             }
         }
 
-        public static void SaveNetworkDiscretisation(NetworkDiscretisationUGridDataModel discretisationDataModel, string netFilePath)
+        public static void SaveNetworkDiscretisation(string netFilePath, NetworkDiscretisationUGridDataModel discretisationDataModel)
         {
             try
             {

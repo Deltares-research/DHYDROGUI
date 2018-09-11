@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
 {
     public static class NodeFile
     {
-        public static void Write(IEnumerable<Compartment> compartments, string filePath)
+        public static void Write(string filePath, IEnumerable<Compartment> compartments)
         {
             var categories = compartments.Select(CreateCompartmentIniCategory).ToList();
             new DelftIniWriter().WriteDelftIniFile(categories, filePath, false);

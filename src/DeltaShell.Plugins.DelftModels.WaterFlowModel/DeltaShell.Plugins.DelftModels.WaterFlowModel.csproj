@@ -197,7 +197,6 @@
     <Compile Include="ImportExport\Roughness\RoughnessTypeCsvConverter.cs" />
     <Compile Include="ImportExport\SobekToFMExporter.cs" />
     <Compile Include="ImportExport\StructureFileReader.cs" />
-    <Compile Include="ImportExport\StructureFileWriter.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DExporter.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DFileImporter.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DImporterHelper.cs" />

@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         [Test]
         public void WhenWritingRetentionFile_ThenRetentionFileIsExisting()
         {
-            NodeFile.Write(new List<Compartment>(), filePath);
+            NodeFile.Write(filePath, new List<Compartment>());
             Assert.IsTrue(File.Exists(filePath));
         }
 
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
             };
             var compartments = new List<Compartment>{ compartment };
 
-            NodeFile.Write(compartments, filePath);
+            NodeFile.Write(filePath, compartments);
             var propertiesPerCompartment = NodeFile.Read(filePath);
 
             Assert.That(propertiesPerCompartment.Count, Is.EqualTo(1));
