@@ -431,7 +431,7 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
         }
 
         [Test]
-        public void GivenSewerConnection_WhenAddingManholeAsSource_ThenTheFirstCompartmentIsTheSourceCompartment()
+        public void GivenSewerConnection_WhenAddingManholeAsSourceAndNoSourceCompartmentIsDefined_ThenTheFirstCompartmentIsTheSourceCompartment()
         {
             var sourceGeometry = new Point(0, 10);
 
@@ -441,13 +441,31 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             {
                 Compartments = new EventedList<Compartment> { sourceCompartment1, sourceCompartment2 }
             };
+            var sewerConnection = new SewerConnection {SourceCompartment = null};
 
-            var sewerConnection = new SewerConnection {Source = sourceManhole};
+            sewerConnection.Source = sourceManhole;
             Assert.That(sewerConnection.SourceCompartment, Is.EqualTo(sourceCompartment1));
         }
 
         [Test]
-        public void GivenSewerConnection_WhenAddingManholeAsTarget_ThenTheFirstCompartmentIsTheTargetCompartment()
+        public void GivenSewerConnection_WhenAddingManholeAsSourceWithSourceCompartmentDefined_ThenTheSourceCompartmentIsUnchanged()
+        {
+            var sourceGeometry = new Point(0, 10);
+
+            var sourceCompartment1 = new Compartment { Name = "compartment1", Geometry = sourceGeometry };
+            var sourceCompartment2 = new Compartment { Name = "compartment2", Geometry = sourceGeometry };
+            var sourceManhole = new Manhole("SourceManhole")
+            {
+                Compartments = new EventedList<Compartment> { sourceCompartment1, sourceCompartment2 }
+            };
+            var sewerConnection = new SewerConnection { SourceCompartment = sourceCompartment2 };
+
+            sewerConnection.Source = sourceManhole;
+            Assert.That(sewerConnection.SourceCompartment, Is.EqualTo(sourceCompartment2));
+        }
+
+        [Test]
+        public void GivenSewerConnection_WhenAddingManholeAsTargetAndNoTargetCompartmentIsDefined_ThenTheFirstCompartmentIsTheTargetCompartment()
         {
             var targetGeometry = new Point(0, 10);
 
@@ -458,8 +476,26 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
                 Compartments = new EventedList<Compartment> { targetCompartment1, targetCompartment2 }
             };
 
-            var sewerConnection = new SewerConnection {Target = targetManhole};
+            var sewerConnection = new SewerConnection {TargetCompartment = null};
+            sewerConnection.Target = targetManhole;
             Assert.That(sewerConnection.TargetCompartment, Is.EqualTo(targetCompartment1));
+        }
+
+        [Test]
+        public void GivenSewerConnection_WhenAddingManholeAsTargetWithTargetCompartmentDefined_ThenTheTargetCompartmentIsUnchanged()
+        {
+            var targetGeometry = new Point(0, 10);
+
+            var otherCompartment = new Compartment { Name = "compartment1", Geometry = targetGeometry };
+            var targetCompartment = new Compartment { Name = "compartment2", Geometry = targetGeometry };
+            var targetManhole = new Manhole("TargetManhole")
+            {
+                Compartments = new EventedList<Compartment> { otherCompartment, targetCompartment }
+            };
+            var sewerConnection = new SewerConnection { TargetCompartment = targetCompartment };
+
+            sewerConnection.Target = targetManhole;
+            Assert.That(sewerConnection.TargetCompartment, Is.EqualTo(targetCompartment));
         }
 
         #endregion

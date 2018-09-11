@@ -54,7 +54,7 @@ namespace DelftTools.Hydro.SewerFeatures
 
                 BeforeSetSource();
                 source = value;
-                SourceCompartment = manhole.Compartments.FirstOrDefault();
+                if (sourceCompartment == null) SourceCompartment = manhole.Compartments.FirstOrDefault();
                 AfterSetSource();
             }
         }
@@ -81,7 +81,7 @@ namespace DelftTools.Hydro.SewerFeatures
 
                 BeforeTargetSet();
                 target = value;
-                TargetCompartment = manhole.Compartments.FirstOrDefault();
+                if (targetCompartment == null) TargetCompartment = manhole.Compartments.FirstOrDefault();
                 AfterTargetSet();
             }
         }
@@ -105,6 +105,12 @@ namespace DelftTools.Hydro.SewerFeatures
             get { return sourceCompartment; }
             set
             {
+                if (value == null)
+                {
+                    sourceCompartment = null;
+                    return;
+                }
+
                 if (value.ParentManhole == null)
                 {
                     Log.WarnFormat(Resources.SewerConnection_TargetCompartment_We_cannot_add_compartment_as_source
@@ -124,6 +130,12 @@ namespace DelftTools.Hydro.SewerFeatures
             get { return targetCompartment; }
             set
             {
+                if (value == null)
+                {
+                    sourceCompartment = null;
+                    return;
+                }
+
                 if (value.ParentManhole == null)
                 {
                     Log.WarnFormat(Resources.SewerConnection_TargetCompartment_We_cannot_add_compartment_as_target
