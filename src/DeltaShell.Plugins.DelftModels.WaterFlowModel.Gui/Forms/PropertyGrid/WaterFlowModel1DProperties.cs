@@ -63,19 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
             get { return data.StartTime; }
             set { data.StartTime = value; }
         }
-
         [PropertyOrder(3)]
-        [TypeConverter(typeof(DeltaShellTimeSpanWithMilliSecondsConverter))]
-        [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_RunParameters")]
-        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_TimeStep_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_TimeStep_Description")]
-        public TimeSpan TimeStep
-        {
-            get { return data.TimeStep; }
-            set { data.TimeStep = value; }
-        }
-
-        [PropertyOrder(4)]
         [TypeConverter(typeof(DeltaShellDateTimeConverter))]
         [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_RunParameters")]
         [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_StopTime_DisplayName")]
@@ -86,24 +74,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
             set { data.StopTime = value; }
         }
 
-        [PropertyOrder(6)]
+        [PropertyOrder(4)]
+        [TypeConverter(typeof(DeltaShellTimeSpanWithMilliSecondsConverter))]
         [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_RunParameters")]
-        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_UseRestart_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_UseRestart_Description")]
-        public bool UseRestart
+        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_TimeStep_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_TimeStep_Description")]
+        public TimeSpan TimeStep
         {
-            get { return data.UseRestart; }
-            set { data.UseRestart = value; }
-        }
-
-        [PropertyOrder(7)]
-        [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_RunParameters")]
-        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_WriteRestart_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_WriteRestart_Description")]
-        public bool WriteRestart
-        {
-            get { return data.WriteRestart; }
-            set { data.WriteRestart = value; }
+            get { return data.TimeStep; }
+            set { data.TimeStep = value; }
         }
 
         [PropertyOrder(8)]
@@ -251,6 +230,58 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         {
             get { return data.DefaultInitialDepth; }
             set { data.DefaultInitialDepth = value; }
+        }
+        [PropertyOrder(1)]
+        [TypeConverter(typeof(DeltaShellDateTimeConverter))]
+        [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_RestartParameters")]
+        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_RestartStartTime_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_RestartStartTime_Description")]
+        public DateTime RestartStartTime
+        {
+            get { return data.RestartStartTime; }
+            set { data.RestartStartTime = value; }
+        }
+
+        [PropertyOrder(2)]
+        [TypeConverter(typeof(DeltaShellDateTimeConverter))]
+        [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_RestartParameters")]
+        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_RestartStopTime_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_RestartStopTime_Description")]
+        public DateTime RestartStopTime
+        {
+            get { return data.RestartStopTime; }
+            set { data.RestartStopTime = value; }
+        }
+
+        [PropertyOrder(3)]
+        [TypeConverter(typeof(DeltaShellTimeSpanWithMilliSecondsConverter))]
+        [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_RestartParameters")]
+        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_RestartTimeStep_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_RestartTimeStep_Description")]
+        public TimeSpan RestartTimeStep
+        {
+            get { return data.RestartTimeStep; }
+            set { data.RestartTimeStep = value; }
+        }
+
+        [PropertyOrder(4)]
+        [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_RestartParameters")]
+        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_UseRestart_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_UseRestart_Description")]
+        public bool UseRestart
+        {
+            get { return data.UseRestart; }
+            set { data.UseRestart = value; }
+        }
+
+        [PropertyOrder(5)]
+        [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_RestartParameters")]
+        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_WriteRestart_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_WriteRestart_Description")]
+        public bool WriteRestart
+        {
+            get { return data.WriteRestart; }
+            set { data.WriteRestart = value; }
         }
 
         [DynamicReadOnlyValidationMethod]

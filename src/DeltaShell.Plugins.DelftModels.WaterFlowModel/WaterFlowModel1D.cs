@@ -82,7 +82,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
         private readonly bool created;
         private InitialConditionsType initialConditionsType;
-
+        public const string RestartStartTimeName = "restart start time";
+        public const string RestartStopTimeName = "restart stop time";
+        public const string RestartTimeStepName = "restart time step";
         public WaterFlowModel1D()
             : this("Flow1D")
         {
@@ -204,7 +206,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
             enableUglyFewsHack = Environment.GetEnvironmentVariable("UGLY_FEWS_HACK") == "true";
             runner = new DimrRunner(this);
+            AddNewRestartDataItems();
+            
             created = true;
+        }
+
+        private void AddNewRestartDataItems()
+        {
+            var restartProgressStart = new Parameter<DateTime>(RestartStartTimeName) { Value = DateTime.Now.Date };
+            AddDataItem(restartProgressStart, DataItemRole.Input, RestartStartTimeName);
+
+            var restartProgressStop = new Parameter<DateTime>(RestartStopTimeName) { Value = restartProgressStart.Value.AddHours(24) };
+            AddDataItem(restartProgressStop, DataItemRole.Input, RestartStopTimeName);
+            
+            var restartProgressStep = new Parameter<TimeSpan>(RestartTimeStepName) { Value = new TimeSpan(0, 1, 0, 0) }; // 1 hour
+            AddDataItem(restartProgressStep, DataItemRole.Input, RestartTimeStepName);
         }
 
         private void AddDispersionFormulationTypeDataItem()
@@ -605,6 +621,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
         }
 
+        [NoNotifyPropertyChange]
+        public virtual DateTime RestartStartTime
+        {
+            get { return GetDataItemValueByTag<Parameter<DateTime>>(RestartStartTimeName).Value; }
+            set { GetDataItemValueByTag<Parameter<DateTime>>(RestartStartTimeName).Value = value; }
+        }
+
+        [NoNotifyPropertyChange]
+        public virtual DateTime RestartStopTime {
+            get { return GetDataItemValueByTag<Parameter<DateTime>>(RestartStopTimeName).Value; }
+            set { GetDataItemValueByTag<Parameter<DateTime>>(RestartStopTimeName).Value = value; }
+        }
+
+        [NoNotifyPropertyChange]
+        public virtual TimeSpan RestartTimeStep {
+            get { return GetDataItemValueByTag<Parameter<TimeSpan>>(RestartTimeStepName).Value; }
+            set { GetDataItemValueByTag<Parameter<TimeSpan>>(RestartTimeStepName).Value = value; }
+        }
+        
         public virtual Parameter<string> InitialConditionsTypeParameter
         {
             get { return GetDataItemValueByTag<Parameter<string>>(WaterFlowModel1DDataSet.InitialConditionsTypeTag); }

@@ -54,6 +54,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             //Observation points
             var obsPointsGroup = GenerateObservationValues(waterFlowModel1D);
 
+            //Restart Options
+            var restartOptionsValuesGroup = GenerateRestartOptionsValues(waterFlowModel1D);
+
+
             parameterGroups.Add(globalValuesGroup);
             parameterGroups.Add(initialConditionsValuesGroup);
             parameterGroups.Add(timeValuesGroup);
@@ -67,6 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             parameterGroups.Add(temperatureValuesGroup);
             parameterGroups.Add(morphologyValuesGroup);
             parameterGroups.Add(obsPointsGroup);
+            parameterGroups.Add(restartOptionsValuesGroup);
             
             return parameterGroups;
         }
@@ -282,14 +287,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             //TODO: Add UseEnergyHeadStructures ???
 
-            var useRestartParameter = waterFlowModel1D.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.UseRestart.Key);
-            var useRestart = useRestartParameter != null ? Convert.ToBoolean(useRestartParameter.Value) : waterFlowModel1D.UseRestart;
-            simulationOptionsValues.AddProperty(ModelDefinitionsRegion.UseRestart.Key, useRestart ? 1 : 0, ModelDefinitionsRegion.UseRestart.Description);
-
-            var writeRestartParameter = waterFlowModel1D.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.WriteRestart.Key);
-            var writeRestart = writeRestartParameter != null ? Convert.ToBoolean(writeRestartParameter.Value) : waterFlowModel1D.WriteRestart;
-            simulationOptionsValues.AddProperty(ModelDefinitionsRegion.WriteRestart.Key, writeRestart ? 1 : 0, ModelDefinitionsRegion.WriteRestart.Description);
-            
             var useTimers = waterFlowModel1D.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.UseTimers.Key);
             if (useTimers != null)
             {
@@ -556,6 +553,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
             
             return observationValues;
+        }
+        private DelftIniCategory GenerateRestartOptionsValues(WaterFlowModel1D waterFlowModel1D)
+        {
+            DelftIniCategory restartValues = new DelftIniCategory(ModelDefinitionsRegion.RestartHeader);
+            restartValues.AddProperty(ModelDefinitionsRegion.RestartStartTime.Key, waterFlowModel1D.RestartStartTime, ModelDefinitionsRegion.RestartStartTime.Description);
+            restartValues.AddProperty(ModelDefinitionsRegion.RestartStopTime.Key, waterFlowModel1D.RestartStopTime, ModelDefinitionsRegion.RestartStopTime.Description);
+            restartValues.AddProperty(ModelDefinitionsRegion.RestartTimeStep.Key, waterFlowModel1D.RestartTimeStep.TotalSeconds, ModelDefinitionsRegion.RestartTimeStep.Description, ModelDefinitionsRegion.RestartTimeStep.Format);
+
+            var useRestartParameter = waterFlowModel1D.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.UseRestart.Key);
+            var useRestart = useRestartParameter != null ? Convert.ToBoolean(useRestartParameter.Value) : waterFlowModel1D.UseRestart;
+            restartValues.AddProperty(ModelDefinitionsRegion.UseRestart.Key, useRestart ? 1 : 0, ModelDefinitionsRegion.UseRestart.Description);
+
+            var writeRestartParameter = waterFlowModel1D.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.WriteRestart.Key);
+            var writeRestart = writeRestartParameter != null ? Convert.ToBoolean(writeRestartParameter.Value) : waterFlowModel1D.WriteRestart;
+            restartValues.AddProperty(ModelDefinitionsRegion.WriteRestart.Key, writeRestart ? 1 : 0, ModelDefinitionsRegion.WriteRestart.Description);
+
+
+            return restartValues;
         }
 
         private static DelftIniCategory GenerateGlobalValues(WaterFlowModel1D waterFlowModel1D)

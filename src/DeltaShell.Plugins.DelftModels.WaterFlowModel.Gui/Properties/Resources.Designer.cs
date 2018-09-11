@@ -936,6 +936,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Restart parameters.
+        /// </summary>
+        internal static string WaterFlowModel1DProperties_Categories_RestartParameters {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DProperties_Categories_RestartParameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run parameters.
         /// </summary>
         internal static string WaterFlowModel1DProperties_Categories_RunParameters {
@@ -1197,6 +1206,60 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start time for the restart for the model run..
+        /// </summary>
+        internal static string WaterFlowModel1DProperties_RestartStartTime_Description {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DProperties_RestartStartTime_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start time for the restart.
+        /// </summary>
+        internal static string WaterFlowModel1DProperties_RestartStartTime_DisplayName {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DProperties_RestartStartTime_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop time for restart for model run..
+        /// </summary>
+        internal static string WaterFlowModel1DProperties_RestartStopTime_Description {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DProperties_RestartStopTime_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop time for restart.
+        /// </summary>
+        internal static string WaterFlowModel1DProperties_RestartStopTime_DisplayName {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DProperties_RestartStopTime_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart time step interval..
+        /// </summary>
+        internal static string WaterFlowModel1DProperties_RestartTimeStep_Description {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DProperties_RestartTimeStep_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart time step.
+        /// </summary>
+        internal static string WaterFlowModel1DProperties_RestartTimeStep_DisplayName {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DProperties_RestartTimeStep_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Determines whether or not to run the model in a separate process (increases application stability, decreases performance)..
         /// </summary>
         internal static string WaterFlowModel1DProperties_RunInSeparateProcess_Description {
@@ -1215,7 +1278,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reference node.
+        ///   Looks up a localized string similar to Estuary mouth node id (must be a node that is connected to only one channel).
         /// </summary>
         internal static string WaterFlowModel1DProperties_SalinityNode_Description {
             get {
@@ -1224,7 +1287,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reference node.
+        ///   Looks up a localized string similar to Estuary mouth.
         /// </summary>
         internal static string WaterFlowModel1DProperties_SalinityNode_DisplayName {
             get {
