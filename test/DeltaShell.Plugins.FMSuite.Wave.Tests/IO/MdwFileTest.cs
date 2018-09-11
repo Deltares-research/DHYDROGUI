@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -190,6 +192,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             var hs = modelDef.BoundaryConditions[1].GetDataAtPoint(1).Components[0].GetValues<double>();
             Assert.AreEqual(new []{2.0,2.1,1.7},hs);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadModelWithEmptyBcwFileName()
+        {
+            var mdwPath = TestHelper.GetTestFilePath(@"bcwTimeSeriesEmptyFileName\Waves.mdw");
+            var mdwFile = new MdwFile();
+            var modelDef = mdwFile.Load(mdwPath);
+            Assert.That(modelDef.Properties[5].Value, Is.EqualTo(""));
+
+            mdwFile.SaveTo(@"bcwTimeSeriesEmptyFileName\ModelName", modelDef, true);
+            Assert.That(modelDef.Properties[5].Value, Is.EqualTo("ModelName.bcw"));
         }
 
         [Test]
