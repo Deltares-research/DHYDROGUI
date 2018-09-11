@@ -81,17 +81,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             if (networkObjects is IEnumerable<IWeir>)
             {
-                return CreatePointStyle(Properties.Resources.WeirSmall);
+                var weirBitmap = networkObjects is IEnumerable<Orifice> ? Properties.Resources.Gate : Properties.Resources.WeirSmall;
+                return CreatePointStyle(weirBitmap);
             }
 
             if (networkObjects is IEnumerable<OutletCompartment>)
             {
                 return CreatePointStyle(Properties.Resources.Outlet);
-            }
-
-            if (networkObjects is IEnumerable<Orifice>)
-            {
-                return CreatePointStyle(Properties.Resources.Gate);
             }
 
             if (networkObjects is IEnumerable<ICulvert>)
@@ -129,8 +125,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                            };
             }
 
-            var channels = networkObjects as IEnumerable<IChannel>;
-            if (channels != null)
+            if (networkObjects is IEnumerable<IChannel>)
             {
                 return new VectorStyle
                            {
@@ -146,8 +141,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                            };
             }
 
-            var sewerConnections = networkObjects as IEnumerable<ISewerConnection>;
-            if (sewerConnections != null)
+            if (networkObjects is IEnumerable<ISewerConnection>)
             {
                 return new VectorStyle
                 {
@@ -186,8 +180,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
 
 
-            var channels = networkObjects as IEnumerable<IChannel>;
-            if (channels != null)
+            if (networkObjects is IEnumerable<IChannel>)
             {
                 var branchStyle = new VectorStyle
                 {
@@ -227,8 +220,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                            };
             }
 
-            var manholes = networkObjects as IEnumerable<IManhole>;
-            if (manholes != null)
+            if (networkObjects is IEnumerable<IManhole>)
             {
                 var onSingleBranchesStyle = new VectorStyle
                 {
@@ -243,8 +235,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
 
             const int lineWidth = 3;
-            var pipes = networkObjects as IEnumerable<IPipe>;
-            if (pipes != null)
+            if (networkObjects is IEnumerable<IPipe>)
             {
                 var branchStyle = new VectorStyle
                 {
@@ -288,8 +279,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 };
             }
 
-            var sewerConnections = networkObjects as IEnumerable<ISewerConnection>;
-            if (sewerConnections != null)
+            if (networkObjects is IEnumerable<ISewerConnection>)
             {
                 var branchStyle = new VectorStyle
                 {
@@ -331,8 +321,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 };
             }
 
-            var pumps = networkObjects as IEnumerable<IPump>;
-            if (pumps != null)
+            if (networkObjects is IEnumerable<IPump>)
             {
                 var pumpPositiveStyle = CreatePointStyle(Properties.Resources.PumpSmallPositive);
                 var pumpNegativeStyle = CreatePointStyle(Properties.Resources.PumpSmallNegative);
