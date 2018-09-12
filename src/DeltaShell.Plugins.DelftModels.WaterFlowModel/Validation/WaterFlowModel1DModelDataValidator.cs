@@ -28,7 +28,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                                                 WaterFlowModel1DDiscretizationValidator.Validate(flowModel1D.NetworkDiscretization, flowModel1D),
                                                 ValidateRoughness(flowModel1D),
                                                 ValidateExtraResistance(flowModel1D),
-                                                ValidateRestartTimeRangeSettingsDimr(flowModel1D),
                                                 RestartTimeRangeValidator.ValidateRestartTimeRangeSettings(
                                                     flowModel1D.UseSaveStateTimeRange,
                                                     flowModel1D.SaveStateStartTime,
@@ -41,14 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                                                 WaterFlowModel1DTemperatureValidator.Validate(flowModel1D)
                                             });
         }
-
-        private static ValidationReport ValidateRestartTimeRangeSettingsDimr(WaterFlowModel1D model)
-        {
-            var issues = new List<ValidationIssue>();
-            if (!(model.WriteRestart && model.UseSaveStateTimeRange)) return new ValidationReport("Dimr intermediate restart files", issues);
-            issues.Add(new ValidationIssue("Dimr restart files", ValidationSeverity.Error, "Currently, Flow 1D models cannot create intermediate restart files.At the moment, a single restart file may only be written for the final time-step after a complete run."));
-            return new ValidationReport("Dimr intermediate restart files", issues);
-        }
+        
 
         private static ValidationReport ValidateBoundaryConditions(WaterFlowModel1D model)
         {

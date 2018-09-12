@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
@@ -39,7 +40,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             yield return typeof(WaterFlowFMModel);
         }
 
+        [ExcludeFromCodeCoverage]
         public Bitmap Icon { get; private set; }
+
         public bool CanExportFor(object item)
         {
             return true;

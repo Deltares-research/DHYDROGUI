@@ -1,24 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using DelftTools.Hydro.Structures;
+﻿using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Core;
+using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.NetworkEditor;
+using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using SharpMapTestUtils;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -309,6 +314,106 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Integration)]
+        public void GivenAnFMModelWithMorpholy_WhenExporting_ThenOnlyOneSetOfMorphologyFilesIsExported()
+        {
+            var tempDirPath = FileUtils.CreateTempDirectory();
+            var tempProjectFilePath = Path.Combine(tempDirPath, "Project.dsproj");
+            var tempMduFilePath = Path.Combine(tempDirPath, "FlowFM.mdu");
+
+            var exportDirPath = FileUtils.CreateTempDirectory();
+            var exportMduFilePath = Path.Combine(exportDirPath, "exported.mdu");
+
+            try
+            {
+                using (var app = GetConfiguredApplication(tempProjectFilePath))
+                {
+                    using (var model = new WaterFlowFMModel())
+                    {
+                        model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+                        var cellsValue = ((int)UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
+                        model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(cellsValue);
+
+                        model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                        model.SedimentFractions.Add(new SedimentFraction { Name = "Fraction" });
+
+                        model.ExportTo(tempMduFilePath);
+                        model.ReloadGrid(true, true);
+                    }
+
+                    using (var model = new WaterFlowFMModel(tempMduFilePath))
+                    {
+                        TypeUtils.CallPrivateMethod(model, "UpdateBathymetryCoverage", UnstructuredGridFileHelper.BedLevelLocation.Faces);
+
+                        var project = app.Project;
+                        project.RootFolder.Add(model);
+
+                        app.SaveProject();
+
+                        model.ValidateBeforeRun = true;
+                        var report = model.Validate();
+                        Assert.AreEqual(0, report.AllErrors.Count(), "Model has errors in the validation report.");
+                        app.RunActivity(model);
+                        Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+
+                        app.SaveProject();
+
+                        model.ExportTo(exportMduFilePath);
+
+                        var exportDirInfo = new DirectoryInfo(exportDirPath);
+                        var morFiles = exportDirInfo.GetFiles("*.mor");
+                        var sedFiles = exportDirInfo.GetFiles("*.sed");
+
+                        var morFileName = "exported.mor";
+                        var sedFileName = "exported.sed";
+                        
+
+                        Assert.NotNull(morFiles.FirstOrDefault(f => f.Name == morFileName));
+                        Assert.NotNull(sedFiles.FirstOrDefault(f => f.Name == sedFileName));
+
+                        Assert.AreEqual(morFiles.Length, 1, "More then one morphology file after export");
+                        Assert.AreEqual(sedFiles.Length, 1, "More then one sediment file after export");
+
+                        var properties = model.ModelDefinition.Properties;
+
+                        // files referenced in MDU file
+                        var morPropValue = properties.FirstOrDefault(p =>
+                            p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.MorFile,
+                                StringComparison.InvariantCultureIgnoreCase)).GetValueAsString();
+
+                        var sedPropValue = properties.FirstOrDefault(p =>
+                            p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SedFile,
+                                StringComparison.InvariantCultureIgnoreCase)).GetValueAsString();
+
+                        Assert.AreEqual(morFileName, morPropValue);
+                        Assert.AreEqual(sedFileName, sedPropValue);
+
+                        app.CloseProject();
+                    }
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(tempDirPath);
+                FileUtils.DeleteIfExists(exportDirPath);
+            }
+        }
+
+        private DeltaShellApplication GetConfiguredApplication(string savePath)
+        {
+            var app = new DeltaShellApplication();
+            app.IsProjectCreatedInTemporaryDirectory = true;
+            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+            app.Plugins.Add(new CommonToolsApplicationPlugin());
+            app.Plugins.Add(new SharpMapGisApplicationPlugin());
+            app.Plugins.Add(new FlowFMApplicationPlugin());
+            app.Plugins.Add(new NetworkEditorApplicationPlugin());
+            app.Run();
+            app.SaveProjectAs(Path.Combine(savePath));
+            return app;
+        }
 
         private static WaterFlowFMModel GetWaterFlowFmModelWithMeteoData(bool useSolarRadiation)
         {

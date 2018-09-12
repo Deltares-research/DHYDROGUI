@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Layers
             int i = 0;
             foreach (var coord in boundaryGeometry.Coordinates)
             {
-                var hasData = (condition.DataType != BoundaryConditionDataType.SpectrumFromFile &&
+                var hasData = !condition.IsEditing && (condition.DataType != BoundaryConditionDataType.SpectrumFromFile &&
                                condition.GetDataAtPoint(i) != null)
                               || condition.SpectrumFiles.ContainsKey(i);
                 var chainage = indexed.IndexOf(coord);

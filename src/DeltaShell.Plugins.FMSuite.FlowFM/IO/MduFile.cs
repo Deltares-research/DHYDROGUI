@@ -441,11 +441,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void WriteMorphologySediment(string mduFilePath, IEnumerable<WaterFlowFMProperty> modelDefinition)
         {
-            var morFilePath = ReplaceMduExtension(mduFilePath, MorphologyExtension);
-            var sedFilePath = ReplaceMduExtension(mduFilePath, SedimentExtension);
+            var targetMorFilePath = ReplaceMduExtension(mduFilePath, MorphologyExtension);
+            var targetSedFilePath = ReplaceMduExtension(mduFilePath, SedimentExtension);
 
-            SetValueToPropertyIfExists(modelDefinition, KnownProperties.MorFile, System.IO.Path.GetFileName(morFilePath));
-            SetValueToPropertyIfExists(modelDefinition, KnownProperties.SedFile, System.IO.Path.GetFileName(sedFilePath));
+            var morFilePropertyValue = modelDefinition.FirstOrDefault(p =>
+                p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.MorFile,
+                    StringComparison.InvariantCultureIgnoreCase)).GetValueAsString();
+
+            var sedFilePropertyValue = modelDefinition.FirstOrDefault(p =>
+                p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SedFile,
+                    StringComparison.InvariantCultureIgnoreCase)).GetValueAsString();
+
+            var targetDirPath = System.IO.Path.GetDirectoryName(mduFilePath);
+
+            var currentMorFilePath = System.IO.Path.Combine(targetDirPath, morFilePropertyValue);
+            var currentSedFilePath = System.IO.Path.Combine(targetDirPath, sedFilePropertyValue);
+
+            if (currentMorFilePath != targetMorFilePath)
+            {
+                if (morFilePropertyValue != String.Empty) FileUtils.DeleteIfExists(currentMorFilePath);
+                SetValueToPropertyIfExists(modelDefinition, KnownProperties.MorFile, System.IO.Path.GetFileName(targetMorFilePath));
+            }
+
+            if (currentSedFilePath != targetSedFilePath)
+            {
+                if (sedFilePropertyValue != string.Empty) FileUtils.DeleteIfExists(currentSedFilePath);
+                SetValueToPropertyIfExists(modelDefinition, KnownProperties.SedFile, System.IO.Path.GetFileName(targetSedFilePath));
+            }
         }
 
         private static void SetValueToPropertyIfExists(IEnumerable<WaterFlowFMProperty> modelDefinition, string name, string value)

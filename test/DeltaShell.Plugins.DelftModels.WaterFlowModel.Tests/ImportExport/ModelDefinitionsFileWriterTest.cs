@@ -573,8 +573,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             var expectedMomdilution1D = SetModelParameter(waterFlowModel1D, ModelDefinitionsRegion.Momdilution1D.Key);
             var expectedMorphology = SetModelParameter(waterFlowModel1D, ModelDefinitionsRegion.Morphology.Key);
             var expectedTimersOutputFrequency = SetModelParameter(waterFlowModel1D, ModelDefinitionsRegion.TimersOutputFrequency.Key);
-            var expectedUseRestart = SetModelParameter(waterFlowModel1D, ModelDefinitionsRegion.UseRestart.Key);
-            var expectedWriteRestart = SetModelParameter(waterFlowModel1D, ModelDefinitionsRegion.WriteRestart.Key);
             var expectedUseTimers = SetModelParameter(waterFlowModel1D, ModelDefinitionsRegion.UseTimers.Key);
             
             // Write Md1d File
@@ -676,12 +674,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             // TODO: use1d2dcoupling (not implemented yet)
 
             // TODO: UseEnergyHeadStructures (not implemented yet)
-
-            var useRestartProperty = content.Properties.First(p => p.Name == ModelDefinitionsRegion.UseRestart.Key);
-            Assert.AreEqual(Convert.ToBoolean(expectedUseRestart) ? "1" : "0", useRestartProperty.Value);
-
-            var writeRestartProperty = content.Properties.First(p => p.Name == ModelDefinitionsRegion.WriteRestart.Key);
-            Assert.AreEqual(Convert.ToBoolean(expectedWriteRestart) ? "1" : "0", writeRestartProperty.Value);
             
             var useTimersProperty = content.Properties.First(p => p.Name == ModelDefinitionsRegion.UseTimers.Key);
             Assert.AreEqual(Convert.ToBoolean(expectedUseTimers) ? "1" : "0", useTimersProperty.Value);
@@ -696,6 +688,62 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
 
             var writeNetCdfProperty = content.Properties.First(p => p.Name == ModelDefinitionsRegion.WriteNetCDF.Key);
             Assert.AreEqual("1", writeNetCdfProperty.Value);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void TestModelDefinitionFileWriter_RestartOptions(bool useSaveStateTimeRange)
+        {
+            var waterFlowModel1D = new WaterFlowModel1D();
+            waterFlowModel1D.SaveStateStartTime = new DateTime(2015, 12, 1, 12, 0, 0);
+            waterFlowModel1D.SaveStateStopTime = new DateTime(2015, 12, 2, 12, 0, 0);
+
+            var timeStep = new TimeSpan(0, 1, 0, 0);
+            waterFlowModel1D.SaveStateTimeStep = timeStep;
+            waterFlowModel1D.UseSaveStateTimeRange = useSaveStateTimeRange;
+
+            // Retrieve values from Model
+            var expectedUseRestart = SetModelParameter(waterFlowModel1D, ModelDefinitionsRegion.UseRestart.Key);
+            var expectedWriteRestart = SetModelParameter(waterFlowModel1D, ModelDefinitionsRegion.WriteRestart.Key);
+            
+            // Write Md1d File
+            var targetPath = Path.Combine(Environment.CurrentDirectory, FileWriterTestHelper.RelativeTargetDirectory);
+            var modelDefinitionFile = Path.Combine(targetPath, ModelFileNames.ModelDefinitionFilename);
+            ModelDefinitionFileWriter.WriteFile(modelDefinitionFile, waterFlowModel1D);
+
+            // Read Md1d File
+            var delftIniReader = new DelftIniReader();
+            var categories = delftIniReader.ReadDelftIniFile(modelDefinitionFile);
+
+            // Check category is present in file
+            var content = categories.Where(c => c.Name == ModelDefinitionsRegion.RestartHeader).ToList().First();
+            Assert.NotNull(content);
+            
+            var useRestartProperty = content.Properties.First(p => p.Name == ModelDefinitionsRegion.UseRestart.Key);
+            Assert.AreEqual(Convert.ToBoolean(expectedUseRestart) ? "1" : "0", useRestartProperty.Value);
+
+            var writeRestartProperty = content.Properties.First(p => p.Name == ModelDefinitionsRegion.WriteRestart.Key);
+            Assert.AreEqual(Convert.ToBoolean(expectedWriteRestart) ? "1" : "0", writeRestartProperty.Value);
+            if (Convert.ToBoolean(expectedWriteRestart) && waterFlowModel1D.UseSaveStateTimeRange)
+            {
+                var restartStartTime = content.Properties.First(p => p.Name == ModelDefinitionsRegion.RestartStartTime.Key);
+                var formattedExpectedRestartStartTime = waterFlowModel1D.SaveStateStartTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                Assert.AreEqual(formattedExpectedRestartStartTime, restartStartTime.Value);
+
+                var restartStopTime = content.Properties.First(p => p.Name == ModelDefinitionsRegion.RestartStopTime.Key);
+                var formattedExpectedRestartStopTime = waterFlowModel1D.SaveStateStopTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture); 
+                Assert.AreEqual(formattedExpectedRestartStopTime, restartStopTime.Value);
+
+                var restartTimeStep = content.Properties.FirstOrDefault(p => p.Name == ModelDefinitionsRegion.RestartTimeStep.Key);
+                Assert.AreEqual("3600", restartTimeStep.Value);
+
+            }
+            else
+            {
+                Assert.That(content.Properties.FirstOrDefault(p => p.Name == ModelDefinitionsRegion.RestartStartTime.Key), Is.Null);
+                Assert.That(content.Properties.FirstOrDefault(p => p.Name == ModelDefinitionsRegion.RestartStopTime.Key), Is.Null);
+                Assert.That(content.Properties.FirstOrDefault(p => p.Name == ModelDefinitionsRegion.RestartTimeStep.Key), Is.Null);
+            }
         }
 
         [Test]

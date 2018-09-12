@@ -190,7 +190,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         public const string RestartHeader = "Restart";
         public static readonly ConfigurationSetting RestartStartTime = new ConfigurationSetting(key: "RestartStartTime", description: "yyyy-MM-dd HH:mm:ss");
         public static readonly ConfigurationSetting RestartStopTime = new ConfigurationSetting(key: "RestartStopTime", description: "yyyy-MM-dd HH:mm:ss");
-        public static readonly ConfigurationSetting RestartTimeStep = new ConfigurationSetting(key: "RestartTimeStep", description: "in seconds", defaultValue: "0.0");
+        public static readonly ConfigurationSetting RestartTimeStep = new ConfigurationSetting(key: "RestartTimeStep", description: "in seconds");
         public static readonly ConfigurationSetting UseRestart = new ConfigurationSetting(key: "UseRestart", description: "0=false, 1=true");
         public static readonly ConfigurationSetting WriteRestart = new ConfigurationSetting(key: "WriteRestart", description: "0=false, 1=true");
         
