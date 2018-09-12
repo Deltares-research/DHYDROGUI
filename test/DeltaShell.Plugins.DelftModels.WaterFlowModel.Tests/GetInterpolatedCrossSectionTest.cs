@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             network.Nodes.Add(node3);
             network.Nodes.Add(node4);
 
-            branch1 = new Channel("branch1", node1, node2, 100.0)
+            branch1 = new Channel("branch1", node1, node2)
                 {
                     OrderNumber = 0
                 };
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                                };
             branch1.Geometry = GeometryFactory.CreateLineString(vertices.ToArray());
 
-            branch2 = new Channel("branch2", node2, node3, 100.0)
+            branch2 = new Channel("branch2", node2, node3)
                 {
                     OrderNumber = 0
                 };
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                            };
             branch2.Geometry = GeometryFactory.CreateLineString(vertices.ToArray());
 
-            branch3 = new Channel("branch3", node3, node4, 100.0)
+            branch3 = new Channel("branch3", node3, node4)
                 {
                     OrderNumber = 0
                 };
@@ -172,7 +172,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
 
-            branch1 = new Channel("branch1", node1, node2, 100.0)
+            branch1 = new Channel("branch1", node1, node2)
             {
                 OrderNumber = 0
             };

@@ -227,7 +227,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (!useProperty(modelDefinition, KnownProperties.UseSalinity))
                 function.RemoveComponentByName(SourceAndSink.SalinityVariableName);
 
-            if (!useProperty(modelDefinition, GuiProperties.UseTemperature))
+            if ((HeatFluxModelType)(modelDefinition.GetModelProperty(KnownProperties.Temperature).Value) == HeatFluxModelType.None)
                 function.RemoveComponentByName(SourceAndSink.TemperatureVariableName);
 
             if (!useProperty(modelDefinition, GuiProperties.UseMorSed))

@@ -4,13 +4,18 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using Rhino.Mocks;
+using SharpMap;
+using SharpMap.Converters.WellKnownText;
 using SharpMap.Editors.FallOff;
 using SharpMap.Editors.Interactors.Network;
+using SharpMap.Extensions.CoordinateSystems;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
@@ -393,6 +398,52 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             Assert.AreEqual(2, hydroNetwork.Branches.Count);
             Assert.AreEqual(hydroNode3, hydroNetwork.Branches[1].Source);
             Assert.AreEqual(hydroNode2, hydroNetwork.Branches[1].Target);
+        }
+
+        [Test]
+        public void AddBranchWithCoordinateSystem()
+        {
+            var mocks = new MockRepository();
+            var network = mocks.StrictMock<IHydroNetwork>();
+            var channel = new Channel() { Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 50 0)"), GeodeticLength = 150 };
+            network.Expect(n => n.CoordinateSystem).Return(new OgrCoordinateSystemFactory().CreateFromEPSG(28992)).Repeat.Twice(); // Amersfoort / RD New
+            network.Expect(n => n.Branches).PropertyBehavior();
+            network.Branches = new EventedList<IBranch>();
+            network.Expect(n => n.Nodes).Return(new EventedList<INode> {node1, node2}).Repeat.Times(4);
+            var interactor = new ChannelInteractor(null, channel, null, null);
+            interactor.Network = network;
+            channel.Network = network;
+            mocks.ReplayAll();
+            if (Map.CoordinateSystemFactory == null)
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+            Assert.That(channel.GeodeticLength, Is.EqualTo(150).Within(0.1));
+            interactor.Add(channel);
+            Assert.That(channel.GeodeticLength, Is.EqualTo(channel.Length).Within(0.1));
+            Assert.That(channel.GeodeticLength, Is.Not.EqualTo(150).Within(0.1));
+            mocks.VerifyAll();
+        }
+        [Test]
+        public void AddBranchWithoutCoordinateSystem()
+        {
+            var mocks = new MockRepository();
+            var network = mocks.StrictMock<IHydroNetwork>();
+            var channel = new Channel() { Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 50 0)") };
+            network.Expect(n => n.CoordinateSystem).Return(null).Repeat.Once();
+            network.Expect(n => n.Branches).PropertyBehavior();
+            network.Branches = new EventedList<IBranch>();
+            network.Expect(n => n.Nodes).Return(new EventedList<INode> {node1, node2}).Repeat.Times(4);
+            var interactor = new ChannelInteractor(null, channel, null, null);
+            interactor.Network = network;
+            channel.Network = network;
+            mocks.ReplayAll();
+            if (Map.CoordinateSystemFactory == null)
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+            Assert.That(channel.GeodeticLength, Is.NaN);
+            Assert.That(channel.Length, Is.EqualTo(50).Within(0.1));
+            interactor.Add(channel);
+            Assert.That(channel.GeodeticLength, Is.NaN);
+            Assert.That(channel.Length, Is.EqualTo(50).Within(0.1));
+            mocks.VerifyAll();
         }
 
         [Test]

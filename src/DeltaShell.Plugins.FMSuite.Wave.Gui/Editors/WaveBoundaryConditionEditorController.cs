@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             get { yield return WaveBoundaryCondition.WaveProcessName; }
         }
 
-        public ITimeDependentModel Model { get; set; }
+        public WaveModel Model { get; set; }
 
         public override IEnumerable<string> GetVariablesForProcess(string category)
         {

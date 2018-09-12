@@ -48,6 +48,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
 
         private static ValidationReport ValidateCoordinateSystem(IHydroNetwork target)
         {
+            if (target.CoordinateSystem == null)
+            {
+                var issue = new ValidationIssue(target.CoordinateSystem, ValidationSeverity.Warning,
+                    string.Format(
+                        "No Coordinate System selected for Network. Default map projection will be used for distance calculations."), target.CoordinateSystem);
+
+                return new ValidationReport("Coordinate system", new[] { issue });
+            }
+
             if (target.CoordinateSystem != null && target.CoordinateSystem.IsGeographic)
             {
                 var issue = new ValidationIssue(target.CoordinateSystem, ValidationSeverity.Error,
@@ -57,6 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
 
                 return new ValidationReport("Coordinate system", new[] {issue});
             }
+
             return new ValidationReport("Coordinate system", Enumerable.Empty<ValidationIssue>());
         }
 

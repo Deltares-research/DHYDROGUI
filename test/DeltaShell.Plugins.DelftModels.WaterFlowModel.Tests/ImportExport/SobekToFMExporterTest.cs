@@ -62,9 +62,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             var line2 = new LineString(new[] { node3.Geometry.Coordinate, node2.Geometry.Coordinate });
             var line3 = new LineString(new[] { node3.Geometry.Coordinate, node4.Geometry.Coordinate });
 
-            var branch1 = new Channel(node1, node3, line1.Length) { Geometry = line1 };
-            var branch2 = new Channel(node3, node2, line2.Length) { Geometry = line2 };
-            var branch3 = new Channel(node3, node4, line3.Length) { Geometry = line3 };
+            var branch1 = new Channel(node1, node3) { Geometry = line1 };
+            var branch2 = new Channel(node3, node2) { Geometry = line2 };
+            var branch3 = new Channel(node3, node4) { Geometry = line3 };
 
             var mercedes = new HydroNetwork();
             mercedes.Nodes.AddRange(new[] { node1, node2, node3, node4 });

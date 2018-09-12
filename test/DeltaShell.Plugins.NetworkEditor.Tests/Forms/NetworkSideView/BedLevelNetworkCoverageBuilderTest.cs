@@ -33,8 +33,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             network.Nodes.Add(node2);
             network.Nodes.Add(node3);
 
-            var branch1 = new Channel("branch1", node1, node2, 100.0) { Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)") };
-            var branch2 = new Channel("branch2", node2, node3, 200.0) { Geometry = GeometryFromWKT.Parse("LINESTRING (100 0, 300 0)") };
+            var branch1 = new Channel("branch1", node1, node2) { Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)") };
+            var branch2 = new Channel("branch2", node2, node3) { Geometry = GeometryFromWKT.Parse("LINESTRING (100 0, 300 0)") };
             network.Branches.Add(branch1);
             network.Branches.Add(branch2);
             
@@ -186,7 +186,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             // create network
             var node1 = new HydroNode("node1");
             var node2 = new HydroNode("node2");
-            var branch1 = new Channel("branch1", node1, node2, 30.0) { Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 30 0)") };
+            var branch1 = new Channel("branch1", node1, node2) { Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 30 0)") };
             var network = new HydroNetwork { Nodes = { node1, node2 }, Branches = { branch1 } };
             
             // create network coverage with route segmentation
@@ -198,6 +198,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             var bedLevelCoverage = BedLevelNetworkCoverageBuilder.BuildBedLevelCoverage(routeCoverage);
 
             // update branch geometry
+            branch1.IsLengthCustom = false;
             branch1.Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 15 0)");
             
             // asserts

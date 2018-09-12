@@ -1,5 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
+using DelftTools.Controls.Swf.DataEditorGenerator.FromType;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
@@ -89,6 +91,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public string GeometryLength
         {
             get { return string.Format("{0:0.##}", data.Geometry.Length); }
+        }
+
+        [Category("General")]
+        [PropertyOrder(12)]
+        [Description("Length of an ellopsoid channel on the map.")]
+        [DisplayName("Geodetic length")]
+        [DynamicVisible]
+        public string GeodeticLength
+        {
+            get { return string.Format("{0:0.##}", data.GeodeticLength); }
+        }
+        [DynamicVisibleValidationMethod]
+        public bool IsVisible(string propertyName)
+        {
+            if (propertyName == nameof(data.GeodeticLength) )
+            {
+                return !double.IsNaN(data.GeodeticLength); 
+            }
+            return true;
         }
 
         [Category("General")]

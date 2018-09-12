@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
             
-            var channel = new Channel("channel", node1, node2, to-from);
+            var channel = new Channel(node1, node2);
             var vertices = new List<Coordinate>
             {
                 new Coordinate(from, 0),

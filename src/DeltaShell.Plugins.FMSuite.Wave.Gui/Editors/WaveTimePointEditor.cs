@@ -75,8 +75,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
                 tablePanel.Controls.Clear();
                 dataTableView.BestFitColumns();
+                dataTableView.Columns[0].Width = 160;
+                
                 tablePanel.Controls.Add(dataTableView);
-
+                
                 UpdateBindings(data);
 
                 waveMeteoDataEditor1.Data = data != null

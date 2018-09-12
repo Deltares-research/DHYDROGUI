@@ -16,7 +16,7 @@ morphology,MorStt,morphology,General,Spin-up before morphological changes,Double
 morphology,Thresh,morphology,Sediment transport parameters,Threshold sediment thickness,Double,0.05,1e-36,10000,FALSE,,,,,,Threshold sediment thickness for transport and erosion reduction
 morphology,BedUpd,morphology,,Update bathymetry during simulation,0|1,1,,,FALSE,,,,,,Update bed levels during simulation
 morphology,CmpUpd,morphology,,Update bed composition during simulation,0|1,1,,,FALSE,,,,,,Update bed composition during simulation
-morphology,NeuBcMud,morphology,,Neumann boundaries for mud influx,0|1,1,,,FALSE,,,,,,Use Neumann boundary condition for the concentration of mud fractions at inflow boundaries
+morphology,NeuBcMud,morphology,,Neumann boundaries for mud influx,0|1,0,,,FALSE,,,,,,Use Neumann boundary condition for the concentration of mud fractions at inflow boundaries
 morphology,NeuBcSand,morphology,,Neumann boundaries for sand influx,0|1,1,,,FALSE,,,,,,Use Neumann boundary condition for the concentration of sand fractions at inflow boundaries: "equilibrium profile"
 morphology,DensIn,morphology,General,Include sediment concentration on density,1|0,0,,,FALSE,,,,,,Include effect of sediment concentration on fluid density
 

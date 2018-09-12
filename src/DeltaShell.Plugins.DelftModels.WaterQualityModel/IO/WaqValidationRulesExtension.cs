@@ -41,14 +41,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     if (!dependencyRuleApplies) continue; /* If there is a dependency that is not met then it should not be evaluated.. */
 
                     reasonList.Clear();
-                    if (parameter.ValidateRuleParameter(rule)) return true;
-
-                    reasonList.Add(rule.GetWaqProcessValidationRuleAsString());
-                    return false;
+                    return parameter.ValidateRuleParameter(rule, ref reasonList);
                 }
 
-                if (!parameter.ValidateRuleParameter(rule))
-                    reasonList.Add(rule.GetWaqProcessValidationRuleAsString());
+                parameter.ValidateRuleParameter(rule, ref reasonList);
             }
 
             return !reasonList.Any();
@@ -99,23 +95,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             return true;
         }
 
-        private static bool ValidateRuleParameter(this IFunction parameter, WaqProcessValidationRule rule)
+        private static bool ValidateRuleParameter(this IFunction parameter, WaqProcessValidationRule rule, ref List<string> issuesReasons)
         {
             double parameterValue;
-            if (!parameter.ValidateParameterValueType(rule, out parameterValue)) return false;
+
+            if (!parameter.ValidateParameterValueType(rule, out parameterValue))
+            {
+                issuesReasons.Add(parameter.GetWaqProcessValidationRuleAsString(rule, $"should not be a decimal value"));
+                return false;
+            }
             var ruleMin = rule.MinValue;
             var ruleMax = rule.MaxValue;
 
-            if (ruleMin.Contains(":") || ruleMax.Contains(":"))
+            if ( rule.MinValue.Contains(":") 
+                || rule.MaxValue.Contains(":"))
             {
                 /* If the rule contains ranges, we are only interested in one of them being met. */
-                return ruleMin.CheckValueInRange(parameterValue)
-                       || ruleMax.CheckValueInRange(parameterValue);
+                var valueInRange = ruleMin.CheckValueInRange(parameterValue) || ruleMax.CheckValueInRange(parameterValue);
+                if( !valueInRange)
+                    issuesReasons.Add(parameter.GetWaqProcessValidationRuleAsString(rule, $"should be in the range of {rule.MinValue} or {rule.MaxValue}"));
+                return valueInRange;
             }
 
             /* Otherwise both limits need to be met. */
-            return rule.MinValue.ValueIsWithinLimit(parameterValue, true)
+            var validValue = rule.MinValue.ValueIsWithinLimit(parameterValue, true)
                    && rule.MaxValue.ValueIsWithinLimit(parameterValue, false);
+            if( !validValue)
+                issuesReasons.Add(parameter.GetWaqProcessValidationRuleAsString(rule, rule.GetRuleLimitMessage()));
+            return validValue;
         }
 
         private static bool CheckValueInRange(this string rangeString, double value)
@@ -154,13 +161,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 : parameterValue <= value;
         }
 
-        private static string GetWaqProcessValidationRuleAsString(this WaqProcessValidationRule rule)
+        private static string GetWaqProcessValidationRuleAsString(this IFunction parameter, WaqProcessValidationRule rule, string reason)
         {
-            var type = $"Type: '{(rule.ValueType == null || rule.ValueType == typeof(double) ? "Double" : "Int")}'.";
-            var minValue = string.IsNullOrEmpty(rule.MinValue) ? string.Empty : $"Min value: {rule.MinValue}. ";
-            var maxValue = string.IsNullOrEmpty(rule.MaxValue) ? string.Empty : $"Max value: {rule.MaxValue}. ";
-            var dependency = string.IsNullOrEmpty(rule.Dependency) ? string.Empty : $"With dependency: {rule.Dependency}. ";
-            return string.Concat(type, minValue, maxValue, dependency);
+            var dependency = string.IsNullOrEmpty(rule.Dependency) ? string.Empty : $", when {rule.Dependency}.";
+            var paramValue = double.NaN;
+            parameter.GetParameterValue(out paramValue);
+            var message = Resources.WaqValidationRulesExtension_GetWaqProcessValidationRuleAsString_Process_coefficient__0___value__1____2__3__;
+            return string.Format(message, parameter.Name, paramValue, reason, dependency);
+        }
+
+        private static string GetRuleLimitMessage(this WaqProcessValidationRule rule)
+        {
+            var value = double.NaN;
+            var minString = string.Empty;
+            var maxString = string.Empty;
+            if (double.TryParse(rule.MinValue, out value) && !double.IsInfinity(value))
+                minString = $"at least {rule.MinValue}";
+            if (double.TryParse(rule.MaxValue, out value) && !double.IsInfinity(value))
+            {
+                maxString = $"at most {rule.MaxValue}";
+                if (!string.IsNullOrEmpty(minString)) maxString = " and " + maxString;
+            }
+            
+            return $"should be {minString}{maxString}";
         }
     }
 }

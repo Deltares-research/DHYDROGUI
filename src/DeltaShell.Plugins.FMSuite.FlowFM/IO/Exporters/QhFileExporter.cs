@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using DelftTools.Shell.Core;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -51,6 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             get { return "Q-h series series file|*.qh"; }
         }
 
+        [ExcludeFromCodeCoverage]
         public Bitmap Icon { get { return Properties.Resources.TextDocument; } }
         public bool CanExportFor(object item)
         {

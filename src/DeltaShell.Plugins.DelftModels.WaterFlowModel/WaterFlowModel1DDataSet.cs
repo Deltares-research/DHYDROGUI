@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using DelftTools.Functions;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
@@ -98,6 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             return dHydroNamesDictionary;
         }
 
+        [ExcludeFromCodeCoverage] // contains Data Only!
         public class Meteo
         {
             public const double valueLatitudeDefault = 52.00667;

@@ -29,13 +29,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             }
             if (data.PropertyName == WaterFlowFMFileBasedItemFactory.MapFileProperty)
             {
-                return Properties.Resources.unstrucWater;
+                return Resources.unstrucWater;
             }
             if (data.PropertyName == WaterFlowFMFileBasedItemFactory.HisFileProperty)
             {
-                return Properties.Resources.TimeSeries;
+                return Resources.TimeSeries;
             }
-            if (Model != null)
+            if (Model?.ModelDefinition != null)
             {
                 if (MatchProperty(data, KnownProperties.ExtForceFile))
                 {
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 }
                 if (MatchProperty(data, KnownProperties.StructuresFile))
                 {
-                    return Properties.Resources.Pump;       
+                    return Resources.Pump;       
                 }
                 if (MatchProperty(data, KnownProperties.NetFile))
                 {
@@ -108,15 +108,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                     }
                     if (fileExtension == ExtForceQuantNames.TimFileExtension || fileExtension == ExtForceQuantNames.T3DFileExtension)
                     {
-                        return Properties.Resources.BoundaryType_TimeSeries;
+                        return Resources.BoundaryType_TimeSeries;
                     }
                     if (fileExtension == ExtForceQuantNames.CmpFileExtension)
                     {
-                        return Properties.Resources.BoundaryType_Harmonics;
+                        return Resources.BoundaryType_Harmonics;
                     }
                     if (fileExtension == ExtForceQuantNames.QhFileExtension)
                     {
-                        return Properties.Resources.BoundaryType_Qh;
+                        return Resources.BoundaryType_Qh;
                     }
                     if (fileExtension == BcFile.Extension.TrimStart('.'))
                     {
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                     if (fileExtension == "wnd" || fileExtension == "amu" || fileExtension == "amv" ||
                         fileExtension == "amp" || fileExtension == "apwxwy")
                     {
-                        return Properties.Resources.Wind1;
+                        return Resources.Wind1;
                     }
                 }
             }
@@ -138,8 +138,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         private bool MatchProperty(FileBasedModelItem data, string propertyKey)
         {
-            return Model != null && Model.ModelDefinition != null &&
-                   Model.ModelDefinition.GetModelProperty(propertyKey).PropertyDefinition.Caption == data.PropertyName;
+            var modelProperty = Model.ModelDefinition.GetModelProperty(propertyKey);
+            var modelPropertyCaption = modelProperty.PropertyDefinition.Caption;
+
+            return modelPropertyCaption == data.PropertyName;
         }
 
         public override IEnumerable GetChildNodeObjects(FileBasedModelItem parentNodeData, ITreeNode node)

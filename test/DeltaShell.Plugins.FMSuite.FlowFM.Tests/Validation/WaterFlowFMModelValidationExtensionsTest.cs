@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             var model = new WaterFlowFMModel();
 
-            var report = model.Validate(model);
+            var report = model.Validate();
 
             Assert.AreEqual(1,
                 report.GetAllIssuesRecursive()
@@ -75,15 +75,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var model = new WaterFlowFMModel();
             //Enable Salinity and Temperature checkboxes
             var salinityProperty = model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity);
-            var temperatureProperty = model.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature);
+            var temperatureProperty = model.ModelDefinition.GetModelProperty(KnownProperties.Temperature);
             //Create a grid
             model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
             model.UseRestart = true;
 
             //Validate model
-            var report = model.Validate(model);
+            var report = model.Validate();
             salinityProperty.Value = true;
-            temperatureProperty.Value = true;
+            temperatureProperty.SetValueAsString("1");
 
             Assert.AreEqual(0,
                 report.GetAllIssuesRecursive()
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var model = new WaterFlowFMModel();
             model.Area.Pumps.Add(new Pump2D("A", true){ Capacity = -1.2, Branch = null});
 
-            var report = model.Validate(model);
+            var report = model.Validate();
 
             Assert.AreEqual(1,
                             report.GetAllIssuesRecursive()
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             pump.CapacityTimeSeries[new DateTime(2000, 1, 2)] = -1.2;
             model.Area.Pumps.Add(pump);
 
-            var report = model.Validate(model);
+            var report = model.Validate();
 
             var issues = report.GetAllIssuesRecursive();
             Assert.AreEqual(1, issues.Count(i =>
@@ -136,7 +136,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             };
             model.Area.Pumps.Add(pump);
 
-            var report = model.Validate(model);
+            var report = model.Validate();
 
             Assert.AreEqual(1,
                             report.GetAllIssuesRecursive()
@@ -155,7 +155,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             var model = new WaterFlowFMModel {CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(3824)};
 
-            var report = model.Validate(model);
+            var report = model.Validate();
 
             Assert.AreEqual(1,
                 report.GetAllIssuesRecursive()
@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var model = new WaterFlowFMModel { CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(3824) };
             model.ModelDefinition.GetModelProperty(KnownProperties.SolverType).SetValueAsString("7");
 
-            var report = model.Validate(model);
+            var report = model.Validate();
 
             Assert.AreEqual(1,
                 report.GetAllIssuesRecursive()
@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
             model.UseRestart = true;
 
-            var report = model.Validate(model);
+            var report = model.Validate();
             Assert.AreEqual(1, report.ErrorCount);
             Assert.That(report.AllErrors.First(i => i.Severity == ValidationSeverity.Error).Message,
                 Is.EqualTo("Input restart state is empty; cannot restart."));

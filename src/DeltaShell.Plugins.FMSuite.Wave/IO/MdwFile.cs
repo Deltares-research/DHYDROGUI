@@ -66,21 +66,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             var mdwCategories = new List<DelftIniCategory>();
 
             // group properties by mdw category
-            var groupedProperties = modelDefinition.Properties.GroupBy(p => p.PropertyDefinition.FileCategoryName);
-            foreach (var grouping in groupedProperties)
-            {
-                string mdwCategoryName = grouping.Key;
-                if (ExcludedCategories.Contains(mdwCategoryName)) continue;
+            GroupPropertiesByMdwCategory(modelDefinition, mdwCategories);
 
-                var mdwGroup = new DelftIniCategory(mdwCategoryName);
-                foreach (var property in grouping)
-                {
-                    var name = property.PropertyDefinition.FilePropertyName;
-                    var value = property.GetValueAsString();
-                    mdwGroup.AddProperty(name, value);
-                }
-                mdwCategories.Add(mdwGroup);
-            }
             var generalCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory);
 
             // obstacles (.obt + .pol)
@@ -106,8 +93,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory,
                     KnownWaveProperties.TimeSeriesFile)
                     .GetValueAsString();
-            if (tseriesFile == string.Empty) tseriesFile = modelName + ".bcw";
 
+            if (tseriesFile == string.Empty)
+            {
+                tseriesFile = modelName + ".bcw";
+
+                var waveModelPropertyDefinition = new WaveModelPropertyDefinition
+                {
+                    DataType = typeof(string),
+                    FileCategoryName = generalCategory.Name,
+                    FilePropertyName = KnownWaveProperties.TimeSeriesFile,
+                    Category = generalCategory.Name,
+                    DefaultValueAsString = string.Empty,
+                };
+           
+                modelDefinition.SetModelProperty(generalCategory.Name, KnownWaveProperties.TimeSeriesFile, new WaveModelProperty(waveModelPropertyDefinition, tseriesFile) );
+               // GroupPropertiesByMdwCategory(modelDefinition, mdwCategories);
+            }
+            
             CreateBoundaryCategories(modelDefinition.BoundaryConditions, ref mdwCategories);
             SaveBoundaryConditions(modelDefinition, Path.Combine(targetDir, tseriesFile),
                 modelDefinition.ModelReferenceDateTime);
@@ -184,6 +187,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             if (switchTo)
             {
                 MdwFilePath = mdwTargetFilePath;
+            }
+        }
+
+        private static void GroupPropertiesByMdwCategory(WaveModelDefinition modelDefinition, List<DelftIniCategory> mdwCategories)
+        {
+            var groupedProperties = modelDefinition.Properties.GroupBy(p => p.PropertyDefinition.FileCategoryName);
+            foreach (var grouping in groupedProperties)
+            {
+                string mdwCategoryName = grouping.Key;
+                if (ExcludedCategories.Contains(mdwCategoryName)) continue;
+
+                var mdwGroup = new DelftIniCategory(mdwCategoryName);
+                foreach (var property in grouping)
+                {
+                    var name = property.PropertyDefinition.FilePropertyName;
+                    var value = property.GetValueAsString();
+                    mdwGroup.AddProperty(name, value);
+                }
+
+                mdwCategories.Add(mdwGroup);
             }
         }
 

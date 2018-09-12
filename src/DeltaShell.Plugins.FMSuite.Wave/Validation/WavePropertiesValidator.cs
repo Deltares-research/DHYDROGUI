@@ -55,8 +55,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
         private static ValidationReport ValidateWindSpeedAndQuadruple(WaveModel waveModel)
         {
-            var windConstantSelected = waveModel.TimePointData.WindDataType == InputFieldDataType.Constant;
-
             var windSpeedValue = waveModel.TimePointData.WindSpeedConstant;
             bool quadrupleSelected = false;
             try
@@ -69,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             }
             
             var issues = new List<ValidationIssue>();
-            if (windConstantSelected && quadrupleSelected && (Math.Abs(windSpeedValue) <= double.Epsilon) )
+            if (quadrupleSelected && (Math.Abs(windSpeedValue) <= double.Epsilon) )
             {
                 issues.Add(new ValidationIssue(waveModel, ValidationSeverity.Error, Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_));
             }

@@ -31,9 +31,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ReadCmpFileWithUnknownKeyShowsLogMessage()
         {
             var cmpFile = new CmpFile();
-            var cmpPath = TestHelper.GetTestFilePath(@"CmpFileTest\cmpWithUnknownN4Key.cmp");
+            var cmpPath = TestHelper.GetTestFilePath(@"CmpFileTest\cmpWithUnknownN41Key.cmp");
             var returnObjc = new List<HarmonicComponent>();
-            var logMssg = string.Format(Resources.CmpFile_Read_Unknown_key__0__from_file__1___It_will_not_be_imported_, "N4", cmpPath);
+            var logMssg = string.Format(Resources.CmpFile_Read_Unknown_key__0__from_file__1___It_will_not_be_imported_, "N41", cmpPath);
             TestHelper.AssertAtLeastOneLogMessagesContains( () => returnObjc = cmpFile.Read(cmpPath, BoundaryConditionDataType.AstroComponents).ToList(), logMssg);
             Assert.IsTrue(returnObjc.Any());
         }

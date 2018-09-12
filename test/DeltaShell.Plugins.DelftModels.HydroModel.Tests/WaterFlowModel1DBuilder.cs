@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.DeveloperTools.Builders
 
         private static void AddCrossSection(string branchName, HydroNetwork network, IHydroNode previous, IHydroNode hydroNode)
         {
-            var branch = new Channel(branchName, previous, hydroNode, 100.0)
+            var branch = new Channel(branchName, previous, hydroNode)
                 {
                     Geometry = new LineString(new Coordinate[]
                         {
@@ -215,8 +215,8 @@ namespace DeltaShell.Plugins.DeveloperTools.Builders
             network.Nodes.Add(node2);
             network.Nodes.Add(node3);
 
-            var branch1 = new Channel("branch1", node1, node2, 100.0);
-            var branch2 = new Channel("branch2", node2, node3, 150.0);
+            var branch1 = new Channel("branch1", node1, node2);
+            var branch2 = new Channel("branch2", node2, node3);
 
             branch1.Geometry = new LineString(new []
                                                   {

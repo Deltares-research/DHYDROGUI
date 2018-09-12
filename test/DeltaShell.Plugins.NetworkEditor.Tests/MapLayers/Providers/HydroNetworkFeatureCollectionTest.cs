@@ -203,11 +203,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
         public void GivenChannelHydroNetworkFeatureCollection_WhenReplacingChannelInFeatureCollection_ThenTheChannelIsReplacedInTheNetwork()
         {
             var network = new HydroNetwork();
-            network.Branches.Add(new Channel("OriginalChannel", new HydroNode(), new HydroNode(), 2));
+            network.Branches.Add(new Channel("OriginalChannel", new HydroNode(), new HydroNode()));
             var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Channel>(network);
 
             Assert.That(network.Branches.Count, Is.EqualTo(1));
-            hydroNodeFeatureCollection.Features[0] = new Channel("ReplacingChannel", new HydroNode(), new HydroNode(), 2);
+            hydroNodeFeatureCollection.Features[0] = new Channel("ReplacingChannel", new HydroNode(), new HydroNode());
             Assert.That(network.Branches.Count, Is.EqualTo(1));
             Assert.That(network.Branches[0].Name, Is.EqualTo("ReplacingChannel"));
         }

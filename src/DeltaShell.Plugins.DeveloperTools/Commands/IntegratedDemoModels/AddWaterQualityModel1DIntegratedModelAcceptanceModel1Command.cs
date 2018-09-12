@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.DeveloperTools.Commands.IntegratedDemoModels
             hydroNetwork.Nodes.AddRange(new[]{downstreamNode, upstreamNode});
 
             // Define Branches:
-            var branch1 = new Channel(upstreamNode, downstreamNode, brach1Length)
+            var branch1 = new Channel(upstreamNode, downstreamNode)
                 {
                     Name = "1",
                     Geometry = new LineString(new[] { upstreamNode.Geometry.Coordinate, downstreamNode.Geometry.Coordinate })

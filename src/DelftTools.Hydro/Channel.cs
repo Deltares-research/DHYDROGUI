@@ -21,7 +21,12 @@ namespace DelftTools.Hydro
         }
 
         public Channel(INode fromNode, INode toNode)
-            : this("channel", fromNode, toNode, 0)
+            : this("channel", fromNode, toNode, double.NaN)
+        {
+        }
+
+        public Channel(string name, INode fromNode, INode toNode)
+            : this(name, fromNode, toNode, double.NaN)
         {
         }
 

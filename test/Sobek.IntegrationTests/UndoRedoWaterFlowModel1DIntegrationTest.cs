@@ -337,7 +337,7 @@ namespace Sobek.IntegrationTests
                 var node1 = new HydroNode { Name = "node1", Geometry = new Point(0, 0) };
                 var node2 = new HydroNode { Name = "node2", Geometry = new Point(100, 0) };
 
-                var branch1 = new Channel("branch1", node1, node2, 100.0) { Geometry = new LineString(new [] { new Coordinate(0, 0), new Coordinate(100, 0) }) };
+                var branch1 = new Channel("branch1", node1, node2) { Geometry = new LineString(new [] { new Coordinate(0, 0), new Coordinate(100, 0) }) };
 
                 var crs1Definition = new CrossSectionDefinitionXYZ { Name = "crs1def", Geometry = new LineString(new [] { new Coordinate(50, -10, 0), new Coordinate(50, 0, -2), new Coordinate(50, 10, 0) }) };
                 var crs1 = new CrossSection(crs1Definition) { Name = "crs1", Branch = branch1 };
@@ -406,7 +406,7 @@ namespace Sobek.IntegrationTests
                 var node1 = new HydroNode { Name = "node1", Geometry = new Point(0, 0) };
                 var node2 = new HydroNode { Name = "node2", Geometry = new Point(100, 0) };
 
-                var branch1 = new Channel("branch1", node1, node2, 100.0) { Geometry = new LineString(new [] { new Coordinate(0, 0), new Coordinate(100, 0) }) };
+                var branch1 = new Channel("branch1", node1, node2) { Geometry = new LineString(new [] { new Coordinate(0, 0), new Coordinate(100, 0) }) };
 
                 var crs1Definition = new CrossSectionDefinitionXYZ { Name = "crs1def", Geometry = new LineString(new [] { new Coordinate(50, -10, 0), new Coordinate(50, 0, -2), new Coordinate(50, 10, 0) }) };
                 var crs1 = new CrossSection(crs1Definition) { Name = "crs1", Branch = branch1 };
@@ -458,7 +458,7 @@ namespace Sobek.IntegrationTests
                 var node1 = new HydroNode { Name = "node1", Geometry = new Point(0, 0) };
                 var node2 = new HydroNode { Name = "node2", Geometry = new Point(100, 0) };
 
-                var branch1 = new Channel("branch1", node1, node2, 100.0) { Geometry = new LineString(new [] { new Coordinate(0, 0), new Coordinate(100, 0) }) };
+                var branch1 = new Channel("branch1", node1, node2) { Geometry = new LineString(new [] { new Coordinate(0, 0), new Coordinate(100, 0) }) };
 
                 var crs1Definition = new CrossSectionDefinitionXYZ { Name = "crs1def", Geometry = new LineString(new [] { new Coordinate(50, -10, 0), new Coordinate(50, 0, -2), new Coordinate(50, 10, 0) }) };
                 var crs1 = new CrossSection(crs1Definition) { Name = "crs1", Branch = branch1 };

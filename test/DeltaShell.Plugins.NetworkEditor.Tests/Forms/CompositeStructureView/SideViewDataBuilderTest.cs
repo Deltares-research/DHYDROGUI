@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
             
-            var branch = new Channel("branch1", node1, node2, 100.0) { Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)") };
+            var branch = new Channel("branch1", node1, node2) { Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)") };
 
             network.Branches.Add(branch);
             var structure = new CompositeBranchStructure();

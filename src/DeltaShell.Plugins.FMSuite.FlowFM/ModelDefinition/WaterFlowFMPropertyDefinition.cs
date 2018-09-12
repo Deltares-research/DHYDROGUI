@@ -99,6 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string TrtRou = "TrtRou";
         public const string TrtDef = "TrtDef";
         public const string TrtL = "TrtL";
+        public const string DtTrt = "DtTrt";
     }
 
 
@@ -135,8 +136,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string WaqOutputStartTime = "WaqOutputStartTime";
         public const string SpecifyWaqOutputStopTime = "SpecifyWaqOutputStopTime";
         public const string WaqOutputStopTime = "WaqOutputStopTime";
-
-        public const string UseTemperature = "UseTemperature";
         public const string UseMorSed = "UseMorSed";
         public const string PartOf1D2DModel = "PartOf1D2DModel";
         public const string WriteSnappedFeatures = "WriteSnappedFeatures";

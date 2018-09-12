@@ -281,7 +281,7 @@ namespace Sobek.IntegrationTests
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
 
-            var branch1 = new Channel("branch1", node1, node2, 100.0);
+            var branch1 = new Channel("branch1", node1, node2);
             var vertices = new List<Coordinate>
                                {
                                    new Coordinate(0, 0),
@@ -1747,7 +1747,7 @@ namespace Sobek.IntegrationTests
 
             network.Nodes.Add(node3);
 
-            var branch2 = new Channel("branch2", network.Nodes[1], node3, 100.0);
+            var branch2 = new Channel("branch2", network.Nodes[1], node3);
             var vertices = new List<Coordinate>
                                {
                                    new Coordinate(100, 0),

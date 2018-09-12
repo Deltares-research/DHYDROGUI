@@ -594,9 +594,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects
                     return SaltConcentrationConstant;
                 case SaltBoundaryConditionType.TimeDependent:
                     IVariable timeArgument = SaltConcentrationTimeSeries.Arguments[0];
+                    var variableValueFilter = new VariableValueFilter<DateTime>(timeArgument, time);
                     return
-                        SaltConcentrationTimeSeries.Evaluate<double>(new VariableValueFilter<DateTime>(timeArgument,
-                                                                                                       time));
+                        SaltConcentrationTimeSeries.Evaluate<double>(variableValueFilter);
                 default:
                     throw new ArgumentOutOfRangeException("time", "No boundary condition data defined");
             }

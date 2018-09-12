@@ -4,6 +4,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -36,15 +37,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
             var roughnessSections = item as IEnumerable<RoughnessSection>;
             if (roughnessSections == null)
             {
-                roughnessSections = new[] {item as RoughnessSection};
+                var roughnessSection = item as RoughnessSection;
+                if (roughnessSection == null) throw new ArgumentException("RoughnessFromCsvFileExporter can only export items of type RoughnessSections");
+
+                roughnessSections = new[] {roughnessSection};
             }
 
             // set thread to invariant culture and reset when done.
             var oldCulture = Thread.CurrentThread.CurrentCulture;
-            if (roughnessSections == null)
-            {
-                throw new ArgumentException("RoughnessFromCsvFileExporter can only export items of type RoughnessSections");
-            }
             try
             {
                 Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;

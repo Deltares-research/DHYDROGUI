@@ -10,6 +10,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
+using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
@@ -117,6 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             if (model != null)
             {
                 var contextMenu = new ContextMenuStrip();
+                contextMenu.Items.Add(CreateWpfSettingsMenuItem(model));
                 if (model.CoordinateSystem != null)
                 {
                     contextMenu.Items.Add(FMMenuItemHelper.CreateResetCoordinateSystemItem(model));
@@ -134,6 +136,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             return menu;
         }
 
+        private ClonableToolStripMenuItem CreateWpfSettingsMenuItem(WaveModel model)
+        {
+            var item = new ClonableToolStripMenuItem
+            {
+                Text = "Wave Settings",
+                Tag = model,
+            };
+            item.Click += OnSettingsClicked;
+            return item;
+        }
+
         private ClonableToolStripMenuItem CreateValidationMenuItem(WaveModel model)
         {
             var item = new ClonableToolStripMenuItem
@@ -144,6 +157,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             };
             item.Click += OnValidateClicked;
             return item;
+        }
+
+        private void OnSettingsClicked(object sender, EventArgs args)
+        {
+            var model = (WaveModel)((ToolStripItem)sender).Tag;
+            Gui.DocumentViewsResolver.OpenViewForData(model, typeof(WpfSettingsView));
         }
 
         private void OnValidateClicked(object sender, EventArgs args)

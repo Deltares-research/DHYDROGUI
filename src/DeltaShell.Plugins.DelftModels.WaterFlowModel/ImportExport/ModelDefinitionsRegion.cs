@@ -133,8 +133,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         public static readonly ConfigurationSetting TimersOutputFrequency = new ConfigurationSetting(key: "TimersOutputFrequency");
         public static readonly ConfigurationSetting use1d2dcoupling = new ConfigurationSetting(key: "use1d2dcoupling");
         public static readonly ConfigurationSetting UseEnergyHeadStructures = new ConfigurationSetting(key: "UseEnergyHeadStructures");
-        public static readonly ConfigurationSetting UseRestart = new ConfigurationSetting(key: "UseRestart", description: "0=false, 1=true");
-        public static readonly ConfigurationSetting WriteRestart = new ConfigurationSetting(key: "WriteRestart", description: "0=false, 1=true");
         public static readonly ConfigurationSetting UseTimers = new ConfigurationSetting(key: "UseTimers", description: "0=false, 1=true");
         public static readonly ConfigurationSetting Usevariableteta = new ConfigurationSetting(key: "Usevariableteta");
         public static readonly ConfigurationSetting VolumeCheck = new ConfigurationSetting(key: "VolumeCheck");
@@ -188,5 +186,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         public const string ObservationsHeader = "Observations";
         public static readonly ConfigurationSetting InterpolationType = new ConfigurationSetting(key: "InterpolationType", description: "Interpolation type (linear or nearest)");
+
+        public const string RestartHeader = "Restart";
+        public static readonly ConfigurationSetting RestartStartTime = new ConfigurationSetting(key: "RestartStartTime", description: "yyyy-MM-dd HH:mm:ss");
+        public static readonly ConfigurationSetting RestartStopTime = new ConfigurationSetting(key: "RestartStopTime", description: "yyyy-MM-dd HH:mm:ss");
+        public static readonly ConfigurationSetting RestartTimeStep = new ConfigurationSetting(key: "RestartTimeStep", description: "in seconds", defaultValue: "0.0");
+        public static readonly ConfigurationSetting UseRestart = new ConfigurationSetting(key: "UseRestart", description: "0=false, 1=true");
+        public static readonly ConfigurationSetting WriteRestart = new ConfigurationSetting(key: "WriteRestart", description: "0=false, 1=true");
+        
     }
 }

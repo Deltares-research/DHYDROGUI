@@ -56,7 +56,6 @@ namespace Sobek.IntegrationTests
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
                 app.Plugins.Add(new NetCdfApplicationPlugin());
                 app.Run();
 
@@ -125,7 +124,6 @@ namespace Sobek.IntegrationTests
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
                 app.Plugins.Add(new NetCdfApplicationPlugin());
                 app.Run();
 

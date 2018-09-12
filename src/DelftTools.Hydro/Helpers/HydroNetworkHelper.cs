@@ -629,10 +629,9 @@ namespace DelftTools.Hydro.Helpers
                     });
 
                 var branchName = "branch" + i;
-                var branch = new Channel(network.Nodes[i - 1], network.Nodes[i], lineGeometry.Length)
+                var branch = new Channel(branchName, network.Nodes[i - 1], network.Nodes[i])
                     {
-                        Geometry = lineGeometry,
-                        Name = branchName,
+                        Geometry = lineGeometry
                     };
                 //setting id is optional ..needed for netcdf..but fatal for NHibernate (thinks it saved already)
                 if (generateIDs)

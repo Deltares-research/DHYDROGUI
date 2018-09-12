@@ -7,12 +7,31 @@ using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 using Point = NetTopologySuite.Geometries.Point;
+using DelftTools.Utils.ComponentModel;
+using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
 {
     [TestFixture]
     public class ChannelPropertiesTest
     {
+        [Test]
+        public void GivenChannelWithDifferentGeodeticLength_ThenPropertyVisibilityIsEitherShownOrNot()
+        {
+            var channel = new Channel() {GeodeticLength = 150 };
+            var channelProperties = new ChannelProperties { Data = channel };
+            Assert.That(DynamicVisibleAttribute.IsDynamicVisible(channelProperties, nameof(channel.GeodeticLength)), Is.True);
+            Assert.That(channelProperties.IsVisible(nameof(channel.GeodeticLength)), Is.True);
+
+            channel.GeodeticLength = double.NaN;
+            Assert.That(DynamicVisibleAttribute.IsDynamicVisible(channelProperties, nameof(channel.GeodeticLength)), Is.False);
+            Assert.That(channelProperties.IsVisible(nameof(channel.GeodeticLength)), Is.False);
+
+            channel.GeodeticLength = 0;
+            Assert.That(DynamicVisibleAttribute.IsDynamicVisible(channelProperties, nameof(channel.GeodeticLength)), Is.True);
+            Assert.That(channelProperties.IsVisible(nameof(channel.GeodeticLength)), Is.True);
+        }
+
         [Test]
         public void NumberOfStructures()
         {
@@ -24,7 +43,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
 
-            var branch = new Channel("branch1", node1, node2, 100.0);
+            var branch = new Channel("branch1", node1, node2) {Geometry = new LineString(new [] { node1.Geometry.Coordinate, node2.Geometry.Coordinate})};
 
             var weir1 = new Weir { Geometry = new Point(5, 0), OffsetY = 150, CrestWidth = 50, CrestLevel = 8 };
             var weir2 = new Weir { Geometry = new Point(5, 0), OffsetY = 150, CrestWidth = 55, CrestLevel = 10 };

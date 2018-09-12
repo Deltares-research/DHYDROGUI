@@ -1088,6 +1088,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
             Assert.IsTrue(waqModel.SubstanceProcessLibrary.ActiveSubstances.Any());
             #endregion
+
             //Get one of the parameters
             var swoxydem = "swoxydem";
             var swoxyDemParam = waqModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals(swoxydem));
@@ -1100,9 +1101,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var subReport = report.SubReports.FirstOrDefault(sr => sr.Category == categoryName);
 
             Assert.IsNotNull(subReport);
-            Assert.IsTrue(subReport.Issues.Any());
+            Assert.IsFalse(subReport.Issues.Any());
 
-            var expectedMssg = string.Format(Resources.WaterQualityModelValidator_ValidateProcessCoefficients_Process_coefficient__0___value___1___does_not_fulfill_the_rule__2_, swoxyDemParam.Name, invalidValue, string.Empty);
+            var message = Resources.WaqValidationRulesExtension_GetWaqProcessValidationRuleAsString_Process_coefficient__0___value__1____2__3__;
+            message = message.Replace(".", string.Empty); //small trick.
+            var expectedMssg = string.Format(message, swoxyDemParam.Name, invalidValue, string.Empty, string.Empty);
             Assert.IsFalse( subReport.Issues.Any( iss => iss.Severity == ValidationSeverity.Warning && iss.Message.Contains(expectedMssg)));
 
             //Modify the parameter for which we know the validation will fail, let´s use:

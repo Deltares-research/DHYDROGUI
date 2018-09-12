@@ -72,41 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                             i.Severity == ValidationSeverity.Error && i.Message == "Coupled wave model must use COM-file"));
         }
 
-        [Test]
-        /* Units tests created after DELFT3DFM-510 */
-        [TestCase(0.0   , false , InputFieldDataType.TimeVarying, false)]
-        [TestCase(0.0, false, InputFieldDataType.Constant, false)]
-        [TestCase(0.0, true, InputFieldDataType.TimeVarying, false)]
-        [TestCase(0.0, true, InputFieldDataType.Constant, true)]
-        [TestCase(30.0, false, InputFieldDataType.TimeVarying, false)]
-        [TestCase(30.0, false, InputFieldDataType.Constant, false)]
-        [TestCase(30.0, true, InputFieldDataType.TimeVarying, false)]
-        [TestCase(30.0, true, InputFieldDataType.Constant, false)]
-        [Category(TestCategory.Integration)]
-        public void CheckWavePropertiesWithFlowModel(double windSpeed, bool quadruplets, InputFieldDataType windType, bool warningAlert  )
-        {
-            var model = new WaveModel();
-            var reportMessage = Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_;
-            var reportSeverity = ValidationSeverity.Error;
-            
-            /* Assigning variables */
-            model.TimePointData.WindSpeedConstant = windSpeed;
-            model.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.Quadruplets).
-                                            Value = quadruplets;
-            model.TimePointData.WindDataType = windType;
-            
-            /*Test*/
-            var validationReport = new WaveModelValidator().Validate(model);
-            if (warningAlert)
-            {
-                Assert.IsTrue(validationReport.GetAllIssuesRecursive().Any(i => i.Severity == reportSeverity && i.Message == reportMessage));
-            }
-            else
-            {
-                Assert.IsFalse(validationReport.GetAllIssuesRecursive().Any(i => i.Severity == reportSeverity && i.Message == reportMessage));    
-            }
-        }
-
+        
         [Test]
         public void WaveModel_With_OuterDomain_SphericalCoordinates_And_WaveSetupIsTrue_ValidationFails()
         {

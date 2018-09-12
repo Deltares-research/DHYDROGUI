@@ -589,11 +589,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             network.Nodes.Add(node2);
             network.Nodes.Add(node3);
 
-            var branch1 = new Channel("branch1", node1, node2, 100.0)
+            var branch1 = new Channel("branch1", node1, node2)
             {
                 Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")
             };
-            var branch2 = new Channel("branch2", node1, node2, 200.0)
+            var branch2 = new Channel("branch2", node1, node2)
             {
                 Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")
             };

@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
             var node2 = new HydroNode { Name = "node2", Network = network, Geometry = new Point(100.0, 0.0) };
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
-            var channel = new Channel("branch", node1, node2, 100.0)
+            var channel = new Channel("branch", node1, node2)
                 {
                     Geometry = new LineString(new[]
                         {

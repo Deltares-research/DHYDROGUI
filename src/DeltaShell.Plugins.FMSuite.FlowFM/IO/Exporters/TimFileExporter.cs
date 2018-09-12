@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using DelftTools.Functions;
 using DelftTools.Shell.Core;
@@ -99,7 +100,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             get { return "Time series file|*.tim"; }
         }
 
+        [ExcludeFromCodeCoverage]
         public Bitmap Icon { get { return Properties.Resources.TextDocument; } }
+
         public bool CanExportFor(object item)
         {
             return true;

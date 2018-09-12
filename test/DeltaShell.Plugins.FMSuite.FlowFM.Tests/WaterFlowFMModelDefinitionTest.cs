@@ -512,9 +512,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 
                 Assert.IsNotNull(generatedResultsContent);
                 Assert.IsNotNull(expectedResultsContent);
-                expectedResultsContent.ForEach(er =>
-                    Assert.IsTrue(generatedResultsContent.Contains(er), $"Expected {er} in File {Path.GetFileName(expectedResultsFilePath)} but not found.")
-                );
+                
+                var expected = expectedResultsContent.ToList();
+                var generated = generatedResultsContent.ToList();
+
+                // Added first check if the strings are the same at the same index, because the contain method is not efficient for big files with a lot of lines.  
+                if (expected.Count == generated.Count)
+                {
+                    for (int i = 0; i < expected.Count; i++)
+                    {
+                        if (expected[i] == generated[i])
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            expectedResultsContent.ForEach(er =>
+                                Assert.IsTrue(generatedResultsContent.Contains(er),
+                                    $"Expected {er} in File {Path.GetFileName(expectedResultsFilePath)} but not found."));
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    expectedResultsContent.ForEach(er =>
+                        Assert.IsTrue(generatedResultsContent.Contains(er),
+                            $"Expected {er} in File {Path.GetFileName(expectedResultsFilePath)} but not found."));
+
+                }
             }
         }
 
@@ -939,39 +965,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("1");
             Assert.AreEqual(HeatFluxModelType.TransportOnly, waterFlowFMModel.HeatFluxModelType);
-            Assert.IsTrue((bool) waterFlowFMModel.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value);
-
+            
             waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("3");
             Assert.AreEqual(HeatFluxModelType.ExcessTemperature, waterFlowFMModel.HeatFluxModelType);
-            Assert.IsTrue((bool)waterFlowFMModel.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value);
-
+            
             waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("5");
             Assert.AreEqual(HeatFluxModelType.Composite, waterFlowFMModel.HeatFluxModelType);
-            Assert.IsTrue((bool)waterFlowFMModel.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value);
-
+            
             waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("0");
             Assert.AreEqual(HeatFluxModelType.None, waterFlowFMModel.HeatFluxModelType);
-            Assert.IsFalse((bool)waterFlowFMModel.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value);
         }
-
-
-        [Test]
-        public void SwitchUseTemperatureShouldChangeHeatFluxModelType()
-        {
-            var waterFlowFMModel = new WaterFlowFMModel();
-
-            Assert.AreEqual(HeatFluxModelType.None, waterFlowFMModel.HeatFluxModelType);
-            Assert.IsFalse((bool) waterFlowFMModel.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value);
-
-            waterFlowFMModel.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value = true;
-
-            Assert.AreEqual(HeatFluxModelType.TransportOnly, waterFlowFMModel.HeatFluxModelType);
-
-            waterFlowFMModel.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value = false;
-
-            Assert.AreEqual(HeatFluxModelType.None, waterFlowFMModel.HeatFluxModelType);
-        }
-
+        
         [Test]
         [TestCase(MapFormatType.NetCdf, true, false, MapFormatType.Ugrid)]
         [TestCase(MapFormatType.NetCdf, false, false, MapFormatType.NetCdf)]

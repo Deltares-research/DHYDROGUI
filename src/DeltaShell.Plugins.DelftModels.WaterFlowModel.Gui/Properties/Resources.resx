@@ -670,4 +670,25 @@
   <data name="WaterFlowModel1DProperties_TraPath_DisplayName" xml:space="preserve">
     <value>Path of .TRA file</value>
   </data>
+  <data name="WaterFlowModel1DProperties_Categories_RestartParameters" xml:space="preserve">
+    <value>Restart parameters</value>
+  </data>
+  <data name="WaterFlowModel1DProperties_RestartStartTime_Description" xml:space="preserve">
+    <value>Start time for the restart for the model run.</value>
+  </data>
+  <data name="WaterFlowModel1DProperties_RestartStartTime_DisplayName" xml:space="preserve">
+    <value>Start time for the restart</value>
+  </data>
+  <data name="WaterFlowModel1DProperties_RestartStopTime_Description" xml:space="preserve">
+    <value>Stop time for restart for model run.</value>
+  </data>
+  <data name="WaterFlowModel1DProperties_RestartStopTime_DisplayName" xml:space="preserve">
+    <value>Stop time for restart</value>
+  </data>
+  <data name="WaterFlowModel1DProperties_RestartTimeStep_Description" xml:space="preserve">
+    <value>Restart time step interval.</value>
+  </data>
+  <data name="WaterFlowModel1DProperties_RestartTimeStep_DisplayName" xml:space="preserve">
+    <value>Restart time step</value>
+  </data>
 </root>

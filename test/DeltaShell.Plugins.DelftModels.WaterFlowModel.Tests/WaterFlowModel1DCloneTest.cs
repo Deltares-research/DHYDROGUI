@@ -239,7 +239,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             network.Nodes.Add(node3);
             //network.Nodes.Add(node1);
 
-            var branch1 = new Channel("branch1", node1, node2, 100.0);
+            var branch1 = new Channel("branch1", node1, node2);
             var vertices = new List<ICoordinate>
                                 {
                                     new Coordinate(0, 0),
@@ -247,7 +247,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                                 };
             branch1.Geometry = GeometryFactory.CreateLineString(vertices.ToArray());
 
-            var branch2 = new Channel("branch2", node2, node3, 150.0);
+            var branch2 = new Channel("branch2", node2, node3);
             vertices = new List<ICoordinate>
                             {
                                 new Coordinate(100, 0),
@@ -310,7 +310,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
 
-            var branch1 = new Channel("branch1", node1, node2, 100.0);
+            var branch1 = new Channel("branch1", node1, node2);
 
             network.Branches.Add(branch1);
 

@@ -1,0 +1,343 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
+using DelftTools.Controls.Wpf.Commands;
+using Controls = System.Windows.Controls;
+using System.Windows.Input;
+using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties;
+
+namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
+{
+    /// <summary>
+    /// Class which is used to get the Gui Properties to use in the WPF view.
+    /// </summary>
+    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
+    /// <seealso cref="System.ComponentModel.IDataErrorInfo" />
+    public class WpfGuiProperty : INotifyPropertyChanged, IDataErrorInfo
+    {
+        private readonly FieldUIDescription description;
+        private Func<object> _getModel;
+        private ObservableCollection<DoubleWrapper> _valueCollection;
+
+        /// <summary>
+        /// Gets a value indicating whether this instance has custom control.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance has custom control; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasCustomControl
+        {
+            get { return CustomControl != null; }
+        }
+
+        /// <summary>
+        /// Gets or sets the custom control.
+        /// ToDo: This should be removed once all custom controls are migrated into WPF.
+        /// </summary>
+        /// <value>
+        /// The custom control.
+        /// </value>
+        public Controls.UserControl CustomControl { get; set; }
+
+        public CommandHelper CustomCommand { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WpfGuiProperty"/> class.
+        /// </summary>
+        /// <param name="description">The description.</param>
+        public WpfGuiProperty(FieldUIDescription description)
+        {
+            CustomCommand = new CommandHelper(() => OnPropertyChanged("Value"));
+            this.description = description;
+            if (description?.CustomControlHelper != null)
+            {
+                var control = description.CustomControlHelper.CreateControl();
+                var hostHelper = new WindowsFormsHostHelper();
+                hostHelper.HostedControl = control;
+                CustomControl = hostHelper;
+            }
+
+            UpdateValueCollection();
+        }
+
+        private void UpdateValueCollection()
+        {
+            var valueList = new List<DoubleWrapper>();
+            if (ValueType == typeof(IList<double>) && Value is IList<double>)
+            {
+                var collection = Value as IList<double>;
+                valueList = collection.Select(
+                    v => new DoubleWrapper
+                    {
+                        WrapperValue = v,
+                        SetBackValue = wrapperValue =>
+                        {
+                            v = wrapperValue; //Overwrite value with new one.
+                            Value = ValueCollection.Select(vc => vc.WrapperValue).ToList(); //Trigger update.
+                        },
+                    }).ToList();
+            }
+            ValueCollection = new ObservableCollection<DoubleWrapper>(valueList); //Just to avoid a null exception
+        }
+
+        public Type ValueType { get { return description?.ValueType; } }
+        public string Name { get { return description?.Name; } }
+        public string SubCategory { get { return description?.SubCategory; } }
+
+        public string Label { get { return description?.Label; } }
+
+        public string ToolTip
+        {
+            get
+            {
+
+                return description?.ToolTip;
+            }
+        }
+
+        public string UnitSymbol { get { return description?.UnitSymbol; } }
+
+        /// <summary>
+        /// Gets or sets the get model function that will be used later on for 
+        /// retrieving the IsEnabled <seealso cref="IsEnabled"/>and IsVisible <seealso cref="IsVisible"/> properties.
+        /// </summary>
+        /// <value>
+        /// The get model.
+        /// </value>
+        public Func<object> GetModel
+        {
+            get { return _getModel; }
+            set
+            {
+                _getModel = value;
+                CustomCommand.GetModel = _getModel;
+                if (_getModel != null && HasCustomControl)
+                {
+                    UpdateCustomControlData();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the <see cref="System.String"/> with the specified column name.
+        /// </summary>
+        /// <value>
+        /// The <see cref="System.String"/>.
+        /// </value>
+        /// <param name="columnName">Name of the column.</param>
+        /// <returns></returns>
+        public string this[string columnName]
+        {
+            get
+            {
+                if (columnName != "Value" 
+                    ||  string.IsNullOrEmpty(Value.ToString())) return null;
+
+                if (description.HasMinValue || description.HasMaxValue)
+                {
+                    /*ToDo: investigate why properties with doubles do not validate with Error method.
+                     For instance, MaxCourant, value = -5, minValue=0 does not return Validates in the Error getter.
+                     If possible, remove this code and just make a 'return Error;'
+                     */
+                    if (Value is int)
+                    {
+                        return CheckValueWithinBoundaries(Convert.ToDouble((int)Value));
+                    }
+
+                    if (Value is double)
+                    {
+                        return CheckValueWithinBoundaries(Convert.ToDouble((double)Value));
+                    }
+                }
+
+                return Error;
+            }
+        }
+
+        private string CheckValueWithinBoundaries(double valueAsDouble)
+        {
+            if ((description.HasMinValue && valueAsDouble < description.MinValue) 
+                || (description.HasMaxValue && valueAsDouble > description.MaxValue))
+            {
+                {
+                    return string.Format(Resources.WpfGuiProperty_this_This_value_must_be_between__0__and__1_,
+                        description.HasMinValue ? description.MinValue : double.NegativeInfinity,
+                        description.HasMaxValue ? description.MaxValue : double.PositiveInfinity);
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets an error message indicating what is wrong with this object.
+        /// </summary>
+        public string Error {
+            get
+            {
+                var mssg = string.Empty;
+                if (!description.Validate(GetModel.Invoke(), Value, out mssg))
+                    return mssg;
+                return null;
+            }
+        }
+
+        private void UpdateCustomControlData()
+        {
+            if (description?.CustomControlHelper != null)
+            {
+                var control = CustomControl as WindowsFormsHostHelper;
+                var hostedControl = control?.HostedControl;
+                description.CustomControlHelper.SetData(hostedControl, _getModel?.Invoke(), null);
+            }
+        }
+
+        /// <summary>
+        /// Raises the property changed events.
+        /// </summary>
+        public void RaisePropertyChangedEvents()
+        {
+            OnPropertyChanged("IsEnabled");
+            OnPropertyChanged("IsVisible");
+            OnPropertyChanged("IsEditable");
+            OnPropertyChanged("Value");
+            UpdateValueCollection();
+            OnPropertyChanged("ValueCollection");
+        }
+
+        public bool IsEditable
+        {
+            get { return IsEnabled && !CustomCommand.ButtonIsVisible; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is enabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsEnabled
+        {
+            get
+            {
+                if (description == null) return false;
+                var model = GetModel?.Invoke();
+                return description.IsEnabled(model);
+            }
+            set { }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is visible.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is visible; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsVisible
+        {
+            get
+            {
+                if (description == null) return false;
+                var model = GetModel?.Invoke();
+                return description.IsVisible(model);
+            }
+            set { }
+        }
+
+        /// <summary>
+        /// Gets or sets the value collection (When applicable, otherwise it's just an empty list).
+        /// </summary>
+        /// <value>
+        /// The value collection.
+        /// </value>
+        public ObservableCollection<DoubleWrapper> ValueCollection
+        {
+            get { return _valueCollection; }
+            set
+            {
+                _valueCollection = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the value.
+        /// </summary>
+        /// <value>
+        /// The value.
+        /// </value>
+        public object Value
+        {
+            get { return description?.GetValue(GetModel?.Invoke()); }
+            set
+            {
+                var convertedValue = value;
+                if (value is string)
+                {
+                    convertedValue = Convert.ChangeType(value, ValueType);
+                }
+
+                description?.SetValue(GetModel?.Invoke(), convertedValue);
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    public class DoubleWrapper
+    {
+        private double _value;
+        public Action<double> SetBackValue { get; set; }
+
+        public double WrapperValue
+        {
+            get { return _value; }
+            set
+            {
+                _value = value;
+                SetBackValue?.Invoke(_value);
+            }
+        }
+    }
+
+
+    public class CommandHelper
+    {
+        public CommandHelper(Action updateAction)
+        {
+            UpdateAction = updateAction;
+        }
+
+        public ICommand CustomCommand
+        {
+            get { return new RelayCommand(ExecuteAction); }
+        }
+
+        public bool ButtonIsVisible { get { return ButtonFunction != null; } }
+
+        public Bitmap ButtonImage { get; set; }
+
+        private void ExecuteAction(object dummyObject)
+        {
+            var model = GetModel?.Invoke();
+            ButtonFunction?.Invoke(model);
+            UpdateAction?.Invoke();
+        }
+
+        public Func<object> GetModel { get; set; }
+        public Action UpdateAction { get; set; }
+        public Action<object> ButtonFunction { get; set; }
+    }
+
+}

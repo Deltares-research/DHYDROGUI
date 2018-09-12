@@ -1,0 +1,883 @@
+** DEBUG  :            0  0.1000020      NOD(KMAX)
+** DEBUG  :            6  0.7000140      XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+** DEBUG  :            6  9.9999998E-03  XS(NSMAX)
+** DEBUG  :            6  9.9999998E-03  YS(NSMAX)
+** DEBUG  :            6  9.9999998E-03  ZS(NSMAX)
+** DEBUG  :            6  9.9999998E-03  IPSAM
+** DEBUG  :            7  5.0000001E-02  xlan(maxlan)
+** DEBUG  :            7  5.0000001E-02  ylan(maxlan)
+** DEBUG  :            7  5.0000001E-02  zlan(maxlan)
+** DEBUG  :            8  2.5000000E-02  nclan(maxlan)
+** WARNING: TimeSplitInterval invalid, disabling time partitioning of output. Got: 0X
+** INFO   : Read Structure data from noordzee_2d_structures.ini
+** DEBUG  : This is the list of structures that will be processed:
+** WARNING: readMDUFile: [numerics] jaorgsethu=1 was in file, but not used. Check possible typo.
+** WARNING: readMDUFile: [physics] effectspiral=0 was in file, but not used. Check possible typo.
+** WARNING: readMDUFile: [wind] windspeedbreakpoints=0 100 was in file, but not used. Check possible typo.
+** WARNING: readMDUFile: [output] wrishp_enc=0 was in file, but not used. Check possible typo.
+** DEBUG  : unc_read_net_ugrid: net file 'grid_orisize_0_5nm_10nov_Z_BLavg_bathyFix_net.nc' is not UGRID. No problem, will fall back to old format reader.
+** DEBUG  : Opened 'grid_orisize_0_5nm_10nov_Z_BLavg_bathyFix_net.nc' as #         3.
+** DEBUG  :           13  0.7291870      NOD(KMAX)
+** DEBUG  :           54   5.104309      XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+** DEBUG  : Closed NetCDF file 'grid_orisize_0_5nm_10nov_Z_BLavg_bathyFix_net.nc.
+** INFO   : Opened file : obsPoint_0_5nm_07nov2017_obs.xyn
+** INFO   : Closed file : obsPoint_0_5nm_07nov2017_obs.xyn
+** INFO   : Opened file : thinDams_0_5nm_11oct2017_add1nm_thd.pli
+** INFO   : Closed file : thinDams_0_5nm_11oct2017_add1nm_thd.pli
+** INFO   : Initializing flow model geometry...
+** DEBUG  : Opened 'grid_orisize_0_5nm_10nov_Z_BLavg_bathyFix_net.nc' as #         3.
+** WARNING: Domain numbers read from file, but overwriting cell numbering by enforcing findcells.              0
+** DEBUG  :           62  0.9437800      netcell(numpx1)
+** DEBUG  :           72   1.249078      lnn(numl)
+** DEBUG  :           92   2.498156      lne(2,numl)
+** DEBUG  :           97  0.6196070      xz(numc)
+** DEBUG  :          102  0.6196070      yz(numc)
+** DEBUG  :          107  0.6196070      xzw(numc)
+** DEBUG  :          112  0.6196070      yzw(numc)
+** DEBUG  :          117  0.6196070      ba(numc)
+** DEBUG  :          117  7.5209998E-03  sample_coords(NTREEDIM,N)
+** INFO   : Finding crossed flowlinks...
+** INFO   : done
+** INFO   : thin dams with kdtree2, elapsed time:     0.33700    s.
+** DEBUG  :  Renumber flow nodes...
+** DEBUG  :  Sumdiff:  2106404708   Sumdiff renum:  -1429085045
+** DEBUG  :  Bandwidth:     1213109   Bandwidth renum:         2041
+** INFO   : Opened file : A07.ext
+** DEBUG  :          127   1.249078      xe (nx)
+** DEBUG  :          137   1.249078      ye (nx)
+** DEBUG  :          147   1.249078      xyen(2, nx)
+** DEBUG  :          317   21.23433      kce(nx), ke(nx), kez(nx), keu(nx), kes(nx), ketm(nx), kesd(nx), keuxy(nx), ket(nx), ken(nx), ke1d2d(nx), keg(nx), ked(nx), kep(nx), keklep(nx), kegs(nx), kegen(nx), itpez(nx), itpenz(nx), itpeu(nx) , itpenu(nx) , kew(nx), ftpet(nx)
+** DEBUG  :          327   1.249078      ketr(nx,1)
+** DEBUG  :          337   1.249078      kesf(1,nx)
+** INFO   : Opened file : OB_001_orgsize.pli
+** INFO   : Closed file : OB_001_orgsize.pli
+** INFO   : boundary: 'OB_001_orgsize.pli' opened 63 cells.
+** INFO   : waterlevelbnd OB_001_orgsize.pli      63 nr of open bndcells
+** INFO   : Opened file : OB_002_orgsize.pli
+** INFO   : Closed file : OB_002_orgsize.pli
+** INFO   : boundary: 'OB_002_orgsize.pli' opened 315 cells.
+** INFO   : waterlevelbnd OB_002_orgsize.pli     315 nr of open bndcells
+** INFO   : Opened file : OB_003_orgsize.pli
+** INFO   : Closed file : OB_003_orgsize.pli
+** INFO   : boundary: 'OB_003_orgsize.pli' opened 245 cells.
+** INFO   : waterlevelbnd OB_003_orgsize.pli     245 nr of open bndcells
+** DEBUG  :          376   4.961840      nd(ndx), bl(ndx), bai(ndx), kcs(ndx)
+** DEBUG  :          454   2.404732      ln   (2,lnx)
+** DEBUG  :          474   2.404732      lncn (2,lnx)
+** DEBUG  :          493   2.404732      bob  (2,lnx)
+** DEBUG  :          502   1.202366      dx   (  lnx)
+** DEBUG  :          512   1.202366      dxi  (  lnx)
+** DEBUG  :          522   1.202366      wu   (  lnx)
+** DEBUG  :          531   1.202366      wui  (  lnx)
+** DEBUG  :          541   1.202366      kcu  (  lnx)
+** DEBUG  :          551   1.202366      csu  (  lnx)
+** DEBUG  :          560   1.202366      snu  (  lnx)
+** DEBUG  :          570   1.202366      acl  (  lnx)
+** DEBUG  :          579   1.202366      acn  (2,lnx)
+** DEBUG  :          589   1.202366      iadv   (lnx)
+** DEBUG  :          599   1.202366      teta   (lnx)
+** DEBUG  :          608   1.202366      ibot   (lnx)
+** DEBUG  :          637   3.607098      xu(lnx), yu(lnx) , blu(lnx)
+** DEBUG  :          647   1.249078      ln2lne (nex)
+** DEBUG  :          657   1.249078      lne2ln (nex)
+** DEBUG  : addexternalboundarypoints: added 0 bnd points for SOBEK1D-FM2D connections.
+** DEBUG  :          681  0.6291870       cn (numk)
+** DEBUG  :          686  0.6291870      ucnx(numk)
+** DEBUG  :          691  0.6291870      ucny(numk)
+** DEBUG  :          696  0.6291870      ban (numk)
+** INFO   : setbedlevelfromextfile: Using bedlevel as specified in net-file.
+** DEBUG  :          706   1.202366      wcx1(lnx)
+** DEBUG  :          716   1.202366      wcy1(lnx)
+** DEBUG  :          725   1.202366      wcx2(lnx)
+** DEBUG  :          735   1.202366      wcy2(lnx)
+** DEBUG  :          745   1.240460      wcxy (2,ndx)
+** DEBUG  :          764   2.404732      wcL  (2,Lnx)
+** DEBUG  :          769  0.6202300      wc     (ndx)
+** DEBUG  :          779   1.202366      wcnx3(lnx)
+** DEBUG  :          788   1.202366      wcny3(lnx)
+** DEBUG  :          798   1.202366      wcnx4(lnx)
+** DEBUG  :          808   1.202366      wcny4(lnx)
+** DEBUG  :          823   1.887561      wcnxy(3,numk)
+** DEBUG  :          828  0.6291870      jacorner(numk)
+** DEBUG  :          828  4.4969000E-02  cscnw(nrcnw)
+** DEBUG  :          828  4.4969000E-02  sncnw(nrcnw)
+** DEBUG  :          829  4.4969000E-02   kcnw(nrcnw)
+** DEBUG  :          829  8.9938000E-02   nwalcnw(2,nrcnw)
+** DEBUG  :          830  4.4969000E-02   sfcnw(nrcnw)
+** DEBUG  :          835  0.6202300      numlimdt(ndx)
+** DEBUG  :          841  0.7652040      walls(17,nw)
+** DEBUG  :          881   2.452337      banf(mxban)
+** DEBUG  :          900   2.452337      nban(4,mxban)
+** DEBUG  :          920   2.452337      rr(mxban), nr(mxban)
+** DEBUG  :          939   2.452337      banh (mxban)
+** DEBUG  :          959   2.452337      nbanh(4,mxban)
+** INFO   : Done initializing flow model geometry.
+** DEBUG  :          969   1.240460      s0  (ndx) , s1  (ndx)
+** DEBUG  :          979   1.240460      a0  (ndx) , a1  (ndx)
+** DEBUG  :          989   1.240460      hs  (ndx) , s00 (ndx)
+** DEBUG  :          994  0.6202300      cfs (ndx)
+** DEBUG  :          999  0.6202300      kbot (ndx)
+** DEBUG  :         1004  0.6202300      ktop (ndx)
+** DEBUG  :         1009  0.6202300      ktop0(ndx)
+** DEBUG  :         1014  0.6202300      kmxn (ndx)
+** DEBUG  :         1023   1.202366      Lbot (Lnx)
+** DEBUG  :         1033   1.202366      Ltop (Lnx)
+** DEBUG  :         1042   1.202366      kmxL (Lnx)
+** DEBUG  :         1052   1.202366      ustb  (lnx)
+** DEBUG  :         1062   1.202366      ustw  (lnx)
+** DEBUG  :         1067  0.6202300      laydefnr(ndx)
+** DEBUG  :         1072  0.6202300      rho (ndkx)
+** DEBUG  :         1082   1.240460      ucx (ndkx) , ucy (ndkx)
+** DEBUG  :         1086  0.6202300      workx (ndkx)
+** DEBUG  :         1091  0.6202300      worky (ndkx)
+** DEBUG  :         1101   1.202366      work0 (0:max(kmx,1),max(ndx,lnx))
+** DEBUG  :         1111   1.202366      work1 (max(kmx,1),max(ndx,lnx))
+** DEBUG  :         1121   1.240460      uqcx(ndkx) , uqcy(ndkx)
+** DEBUG  :         1131   1.240460      ucxq(ndkx) , ucyq(ndkx)
+** DEBUG  :         1140   1.240460      qin (ndkx) , vih (ndkx)
+** DEBUG  :         1150   1.240460      dvxc(ndkx) , dvyc(ndkx)
+** DEBUG  :         1155  0.6202300      cfli(ndkx)
+** DEBUG  :         1160  0.6202300      squ (ndkx)
+** DEBUG  :         1165  0.6202300      sqi (ndkx)
+** DEBUG  :         1170  0.6202300      sq  (ndkx)
+** DEBUG  :         1175  0.6202300      vol0(ndkx)
+** DEBUG  :         1180  0.6202300      vol1(ndkx)
+** DEBUG  :         1185  0.6202300      volerror(ndkx)
+** DEBUG  :         1195   1.202366      voldhu(ndx)
+** DEBUG  :         1200  0.6202300      tidep (1,ndx)
+** DEBUG  :         1209   1.202366      tidef(Lnx)
+** DEBUG  :         1214  0.6202300      sqa(ndkx)
+** DEBUG  :         1224   1.202366      z0ucur(lnx)
+** DEBUG  :         1233   1.202366      z0urou(lnx)
+** DEBUG  :         1243   1.202366      cfuhi(lnx)
+** DEBUG  :         1248  0.6202300      frcu (lnx)
+** DEBUG  :         1253  0.6202300      frcu_bkp (lnx)
+** DEBUG  :         1258  0.6202300      ifrcutp(lnx)
+** DEBUG  :         1268   1.202366      wdsu  (lnx)
+** DEBUG  :         1273  0.6202300      czs(ndx)
+** DEBUG  :         1278  0.6202300      frculin (lnx)
+** DEBUG  :         1287   1.202366      u0   (lnkx)
+** DEBUG  :         1297   1.202366      u1   (lnkx)
+** DEBUG  :         1306   1.202366      u_to_umain   (lnkx)
+** DEBUG  :         1316   1.202366      q1   (lnkx)
+** DEBUG  :         1326   1.202366      qa   (lnkx)
+** DEBUG  :         1335   1.202366      v    (lnkx)
+** DEBUG  :         1345   1.202366      ucxu (lnkx)
+** DEBUG  :         1354   1.202366      ucyu (lnkx)
+** DEBUG  :         1364   1.202366      hu   (lnkx)
+** DEBUG  :         1374   1.202366      huvli(lnkx)
+** DEBUG  :         1383   1.202366      au   (lnkx)
+** DEBUG  :         1393   1.202366      viu  (lnkx)
+** DEBUG  :         1403   1.202366      vicLu  (lnkx)
+** DEBUG  :         1412   1.202366      cflj (lnkx)
+** DEBUG  :         1422   1.202366      tetaj(lnkx)
+** DEBUG  :         1431   1.202366      suu  (lnkx)
+** DEBUG  :         1441   1.202366      advi (lnkx)
+** DEBUG  :         1451   1.202366      adve (lnkx)
+** DEBUG  :         1460   1.202366      plotlin(max(lnkx,ndkx))
+** DEBUG  :         1465  0.6202300      bb   (ndx )
+** DEBUG  :         1470  0.6202300      dd   (ndx )
+** DEBUG  :         1475  0.6202300      fu   (lnkx)
+** DEBUG  :         1480  0.6202300      ru   (lnkx)
+** DEBUG  :         1490   1.202366      ypar(lnx)
+** DEBUG  :         1499   1.202366      cfwavhi(lnx)
+** DEBUG  :         1509   1.202366      cfhi_vanrijn(lnx)
+** DEBUG  :         1519   1.202366      taubxu(lnx)
+** DEBUG  :         1524  0.6202300      taus  (ndx)
+** DEBUG  :         1529  0.6202300      ktb  (ndx)
+** DEBUG  :         1534  0.6202300      taux_cc  (ndx)
+** DEBUG  :         1538  0.6202300      tauy_cc  (ndx)
+** DEBUG  :         1543  0.6202300      ust_mag  (ndx)
+** DEBUG  :         1548  0.6202300      fwav_mag  (ndx)
+** DEBUG  :         1558   1.202366      ustokes(lnkx)
+** DEBUG  :         1568   1.202366      vstokes(lnkx)
+** DEBUG  :         1577   1.202366      wblt(lnx)
+** INFO   : Finding flow nodes...
+** INFO   : find_flowcells_kdtree: sample/point 91 in cells 109937 and 110705
+** INFO   : find_flowcells_kdtree: sample/point 70 in cells 157392 and 158330
+** INFO   : find_flowcells_kdtree: sample/point 66 in cells 164880 and 165776
+** INFO   : done in      0.50100 sec.
+** INFO   : Could not find flowcell for point #79 (Nieuwpoort). Discarding.
+** INFO   : Could not find flowcell for point #87 (Simrishamn). Discarding.
+** INFO   : Could not find flowcell for point #112 (Kallo). Discarding.
+** INFO   : Could not find flowcell for point #115 (AMRGBNDN). Discarding.
+** INFO   : Could not find flowcell for point #116 (AMRGBVN). Discarding.
+** INFO   : Could not find flowcell for point #117 (ARCN). Discarding.
+** INFO   : Could not find flowcell for point #120 (BELFBNDN). Discarding.
+** INFO   : Could not find flowcell for point #121 (BELFBVN). Discarding.
+** INFO   : Could not find flowcell for point #124 (BORGHRDP). Discarding.
+** INFO   : Could not find flowcell for point #125 (BORGHRJLANKN). Discarding.
+** INFO   : Could not find flowcell for point #128 (CULBBG). Discarding.
+** INFO   : Could not find flowcell for point #130 (DEENPT). Discarding.
+** INFO   : Could not find flowcell for point #135 (DEVTR). Discarding.
+** INFO   : Could not find flowcell for point #136 (DOESBBG). Discarding.
+** INFO   : Could not find flowcell for point #137 (DORDT). Discarding.
+** INFO   : Could not find flowcell for point #138 (DRIELBNDN). Discarding.
+** INFO   : Could not find flowcell for point #139 (DRIELBVN). Discarding.
+** INFO   : Could not find flowcell for point #141 (EIJSDDP). Discarding.
+** INFO   : Could not find flowcell for point #142 (EIJSDGS). Discarding.
+** INFO   : Could not find flowcell for point #143 (ELSLO). Discarding.
+** INFO   : Could not find flowcell for point #148 (GENNP). Discarding.
+** INFO   : Could not find flowcell for point #149 (GOIDSOD). Discarding.
+** INFO   : Could not find flowcell for point #150 (GOUDBG). Discarding.
+** INFO   : Could not find flowcell for point #151 (GRAVBNDN). Discarding.
+** INFO   : Could not find flowcell for point #152 (GRAVBVN). Discarding.
+** INFO   : Could not find flowcell for point #153 (GRAVDHVN). Discarding.
+** INFO   : Could not find flowcell for point #154 (GREVBT). Discarding.
+** INFO   : Could not find flowcell for point #155 (HAGSBNDN). Discarding.
+** INFO   : Could not find flowcell for point #156 (HAGSBVN). Discarding.
+** INFO   : Could not find flowcell for point #160 (HEELBNDN). Discarding.
+** INFO   : Could not find flowcell for point #161 (HEELBVN). Discarding.
+** INFO   : Could not find flowcell for point #162 (HEESBN). Discarding.
+** INFO   : Could not find flowcell for point #163 (HELLVSS). Discarding.
+** INFO   : Could not find flowcell for point #164 (HERWNN). Discarding.
+** INFO   : Could not find flowcell for point #167 (HOUTRND). Discarding.
+** INFO   : Could not find flowcell for point #168 (HOUTRZD). Discarding.
+** INFO   : Could not find flowcell for point #171 (IJSSKP). Discarding.
+** INFO   : Could not find flowcell for point #173 (JAARSVD). Discarding.
+** INFO   : Could not find flowcell for point #175 (KADLN). Discarding.
+** INFO   : Could not find flowcell for point #176 (KAMPBVHVN). Discarding.
+** INFO   : Could not find flowcell for point #177 (KATVR). Discarding.
+** INFO   : Could not find flowcell for point #178 (KEIZVR). Discarding.
+** INFO   : Could not find flowcell for point #179 (KESSL). Discarding.
+** INFO   : Could not find flowcell for point #182 (KRABBGND). Discarding.
+** INFO   : Could not find flowcell for point #183 (KRABBGZD). Discarding.
+** INFO   : Could not find flowcell for point #186 (KRIMPADIJSL). Discarding.
+** INFO   : Could not find flowcell for point #187 (KRIMPADLK). Discarding.
+** INFO   : Could not find flowcell for point #189 (LEMMR). Discarding.
+** INFO   : Could not find flowcell for point #191 (LINNBNDN). Discarding.
+** INFO   : Could not find flowcell for point #192 (LINNBVN). Discarding.
+** INFO   : Could not find flowcell for point #193 (LITHBVN). Discarding.
+** INFO   : Could not find flowcell for point #194 (LITHDP). Discarding.
+** INFO   : Could not find flowcell for point #195 (LOBH). Discarding.
+** INFO   : Could not find flowcell for point #196 (MAASEK). Discarding.
+** INFO   : Could not find flowcell for point #197 (MAASSS). Discarding.
+** INFO   : Could not find flowcell for point #198 (MEGDP). Discarding.
+** INFO   : Could not find flowcell for point #199 (MIDDHNS). Discarding.
+** INFO   : Could not find flowcell for point #200 (MOERDK). Discarding.
+** INFO   : Could not find flowcell for point #201 (MOOK). Discarding.
+** INFO   : Could not find flowcell for point #202 (NEER). Discarding.
+** INFO   : Could not find flowcell for point #204 (NIEUWSTZL). Discarding.
+** INFO   : Could not find flowcell for point #205 (NIJKWT). Discarding.
+** INFO   : Could not find flowcell for point #206 (NIJMGHVN). Discarding.
+** INFO   : Could not find flowcell for point #209 (OIJN). Discarding.
+** INFO   : Could not find flowcell for point #210 (OLST). Discarding.
+** INFO   : Could not find flowcell for point #211 (ORJSZOT). Discarding.
+** INFO   : Could not find flowcell for point #213 (PANNDN). Discarding.
+** INFO   : Could not find flowcell for point #214 (PANNDSKP). Discarding.
+** INFO   : Could not find flowcell for point #217 (RAKND). Discarding.
+** INFO   : Could not find flowcell for point #218 (RAKZD). Discarding.
+** INFO   : Could not find flowcell for point #219 (RAMSPBG). Discarding.
+** INFO   : Could not find flowcell for point #220 (RAVSN). Discarding.
+** INFO   : Could not find flowcell for point #221 (ROERMBNDN). Discarding.
+** INFO   : Could not find flowcell for point #222 (ROERMBVN). Discarding.
+** INFO   : Could not find flowcell for point #225 (ROTTDM). Discarding.
+** INFO   : Could not find flowcell for point #226 (SAMBBNDN). Discarding.
+** INFO   : Could not find flowcell for point #227 (SAMBBVN). Discarding.
+** INFO   : Could not find flowcell for point #228 (SCHELLWDBG). Discarding.
+** INFO   : Could not find flowcell for point #231 (SCHOONHVN). Discarding.
+** INFO   : Could not find flowcell for point #232 (SIMHVN). Discarding.
+** INFO   : Could not find flowcell for point #233 (SINTADWL). Discarding.
+** INFO   : Could not find flowcell for point #234 (SINTPTND). Discarding.
+** INFO   : Could not find flowcell for point #235 (SLAAKDBG). Discarding.
+** INFO   : Could not find flowcell for point #236 (SPIJKNSE). Discarding.
+** INFO   : Could not find flowcell for point #239 (STEVWT). Discarding.
+** INFO   : Could not find flowcell for point #240 (STREEFKK). Discarding.
+** INFO   : Could not find flowcell for point #244 (TIELHVN). Discarding.
+** INFO   : Could not find flowcell for point #245 (TIELWL). Discarding.
+** INFO   : Could not find flowcell for point #246 (VLAARDGN). Discarding.
+** INFO   : Could not find flowcell for point #249 (VURN). Discarding.
+** INFO   : Could not find flowcell for point #250 (WELLDP). Discarding.
+** INFO   : Could not find flowcell for point #251 (WERKDBTN). Discarding.
+** INFO   : Could not find flowcell for point #255 (WIJHE). Discarding.
+** INFO   : Could not find flowcell for point #256 (ZALTBML). Discarding.
+** INFO   : Could not find flowcell for point #257 (ZUTPND). Discarding.
+** DEBUG  :         1587   1.202366      fcori(lnx)
+** INFO   : Start initializing external forcings...
+** INFO   : Opened file : schaar.pli
+** INFO   : Closed file : schaar.pli
+** INFO   : airpressure_windx_windy schaar.pli       1 nr of generalstructure cells
+** INFO   : Opened file : hammen.pli
+** INFO   : Closed file : hammen.pli
+** INFO   : airpressure_windx_windy hammen.pli       1 nr of generalstructure cells
+** INFO   : Opened file : roompot.pli
+** INFO   : Closed file : roompot.pli
+** INFO   : airpressure_windx_windy roompot.pli       2 nr of generalstructure cells
+** DEBUG  :         1587  6.2299999E-03  xbndz(nbndz), ybndz(nbndz), xy2bndz(2,nbndz), zbndz(nbndz), kbndz(n4,nbndz), zbndz0(nbndz), kdz(nbndz)
+** INFO   : External Forcing or Initialising 'frictioncoefficient' from file 'surroundingDomain.pol'.
+** DEBUG  :         1597   1.202366      zh(nx)
+** INFO   : Opened file : surroundingDomain.pol
+** INFO   : Closed file : surroundingDomain.pol
+** INFO   : External Forcing or Initialising 'frictioncoefficient' from file 'frictioncorrection_test30_work46.xyz'.
+** DEBUG  :         1606   1.202366      zh(nx)
+** INFO   : Opened file : frictioncorrection_test30_work46.xyz
+** DEBUG  :         1606  1.1960000E-03  XS(NSMAX),YS(NSMAX),ZS(NSMAX)
+** DEBUG  :         1606  1.1960000E-03  ipsam(NSMAX)
+** DEBUG  :         1606  1.9940000E-03  sample_coords(NTREEDIM,N)
+** INFO   : merged 1 samples in .00 seconds.
+** INFO   : Closed file : frictioncorrection_test30_work46.xyz
+** DEBUG  :         1606 -4.9800001E-02  idum(50*Ns)
+** DEBUG  :         1606  1.7958000E-02  INDX(3,NSM)
+** DEBUG  :         1606  1.1972000E-02  edgeindx(2,NSM)
+** DEBUG  :         1606  1.7958000E-02  triedge(3,NSM)
+** DEBUG  :         1606  3.9619999E-03  xx(numtri), yy(numtri)
+** DEBUG  :         1606  1.9810000E-03  imask(numtri)
+** DEBUG  :         1606  5.9520002E-03  LNtri(2,numedge)
+** DEBUG  :         1606  5.9429999E-03  sample_coords(NTREEDIM,N)
+** INFO   : External Forcing or Initialising 'horizontaleddyviscositycoefficient' from file 'vicouv_inner0_1_outer2000.xyz'.
+** DEBUG  :         1616   1.202366      viusp(lnx)
+** DEBUG  :         1626   1.202366      zh(nx)
+** INFO   : Opened file : vicouv_inner0_1_outer2000.xyz
+** DEBUG  :         1626  2.2090001E-03  XS(NSMAX),YS(NSMAX),ZS(NSMAX)
+** DEBUG  :         1626  2.2090001E-03  ipsam(NSMAX)
+** DEBUG  :         1626  3.6820001E-03  sample_coords(NTREEDIM,N)
+** INFO   : merged 3 samples in .00 seconds.
+** INFO   : Closed file : vicouv_inner0_1_outer2000.xyz
+** DEBUG  :         1625 -9.1899998E-02  idum(50*Ns)
+** DEBUG  :         1625  3.3114001E-02  INDX(3,NSM)
+** DEBUG  :         1625  2.2076000E-02  edgeindx(2,NSM)
+** DEBUG  :         1626  3.3114001E-02  triedge(3,NSM)
+** DEBUG  :         1626  6.2239999E-03  xx(numtri), yy(numtri)
+** DEBUG  :         1626  3.1119999E-03  imask(numtri)
+** DEBUG  :         1626  9.8980004E-03  LNtri(2,numedge)
+** DEBUG  :         1626  9.3360003E-03  sample_coords(NTREEDIM,N)
+** INFO   : External Forcing or Initialising 'airpressure_windx_windy' from file 'meteo.apwxwy'.
+** DEBUG  :         1631  0.6202300      patm(ndx)
+** DEBUG  :         1650   2.404732      wx(lnx), wy(lnx)
+** DEBUG  :         1660   1.240460      ec_pwxwy_x(ndx) , ec_pwxwy_y(ndx)
+** DEBUG  :         1665  0.6202300      kcw(ndx)
+** INFO   : Closed file : A07.ext
+** INFO   : Done initializing external forcings.
+** DEBUG  :         1675   1.202366      klnup(6,lnx)
+** DEBUG  :         1684   1.202366      slnup(6,lnx)
+** DEBUG  :         1689  0.6202300      ij(nodtot)
+** DEBUG  :         1694  0.6202300      nodbr2(nodtot)
+** DEBUG  :         1699  0.6202300      nbrstk(nodtot)
+** DEBUG  :         1704  0.6202300      nodstk(nodtot)
+** DEBUG  :         1709  0.6202300      noel(nodtot)
+** DEBUG  :         1714  0.6202300      noel0(nodtot)
+** DEBUG  :         1719  0.6202300      ia(nodtot)
+** DEBUG  :         1724  0.6202300      row(nodtot)
+** DEBUG  :         1733   1.202366      lv2(lintot)
+** DEBUG  :         1738  0.6202300      jagauss(nodtot)
+** DEBUG  :         1813   2.495869      ccr(0:ijstck)
+** DEBUG  :         1833   2.495869      bbl(0:ijstck)
+** DEBUG  :         1843   1.240460      bbr(nodtot), ddr(nodtot)
+** DEBUG  :         1867   3.101150      d0(nodtot), zkr(nodtot),pk(0:nodtot), apk(nodtot), rk(nodtot)
+** INFO   : nogauss , nocg :         324733        295495
+** DEBUG  :         1998   16.38353      iao(nn+1)
+** DEBUG  :         2054   6.927689      ao(na)
+** DEBUG  :         2196   17.72970      wk(nwk)
+** INFO   : Finding flow nodes...
+** INFO   : find_flowcells_kdtree: sample/point 91 in cells 109937 and 110705
+** INFO   : find_flowcells_kdtree: sample/point 70 in cells 157392 and 158330
+** INFO   : find_flowcells_kdtree: sample/point 66 in cells 164880 and 165776
+** INFO   : done in      0.50100 sec.
+** INFO   : Could not find flowcell for point #79 (Nieuwpoort). Discarding.
+** INFO   : Could not find flowcell for point #87 (Simrishamn). Discarding.
+** INFO   : Could not find flowcell for point #112 (Kallo). Discarding.
+** INFO   : Could not find flowcell for point #115 (AMRGBNDN). Discarding.
+** INFO   : Could not find flowcell for point #116 (AMRGBVN). Discarding.
+** INFO   : Could not find flowcell for point #117 (ARCN). Discarding.
+** INFO   : Could not find flowcell for point #120 (BELFBNDN). Discarding.
+** INFO   : Could not find flowcell for point #121 (BELFBVN). Discarding.
+** INFO   : Could not find flowcell for point #124 (BORGHRDP). Discarding.
+** INFO   : Could not find flowcell for point #125 (BORGHRJLANKN). Discarding.
+** INFO   : Could not find flowcell for point #128 (CULBBG). Discarding.
+** INFO   : Could not find flowcell for point #130 (DEENPT). Discarding.
+** INFO   : Could not find flowcell for point #135 (DEVTR). Discarding.
+** INFO   : Could not find flowcell for point #136 (DOESBBG). Discarding.
+** INFO   : Could not find flowcell for point #137 (DORDT). Discarding.
+** INFO   : Could not find flowcell for point #138 (DRIELBNDN). Discarding.
+** INFO   : Could not find flowcell for point #139 (DRIELBVN). Discarding.
+** INFO   : Could not find flowcell for point #141 (EIJSDDP). Discarding.
+** INFO   : Could not find flowcell for point #142 (EIJSDGS). Discarding.
+** INFO   : Could not find flowcell for point #143 (ELSLO). Discarding.
+** INFO   : Could not find flowcell for point #148 (GENNP). Discarding.
+** INFO   : Could not find flowcell for point #149 (GOIDSOD). Discarding.
+** INFO   : Could not find flowcell for point #150 (GOUDBG). Discarding.
+** INFO   : Could not find flowcell for point #151 (GRAVBNDN). Discarding.
+** INFO   : Could not find flowcell for point #152 (GRAVBVN). Discarding.
+** INFO   : Could not find flowcell for point #153 (GRAVDHVN). Discarding.
+** INFO   : Could not find flowcell for point #154 (GREVBT). Discarding.
+** INFO   : Could not find flowcell for point #155 (HAGSBNDN). Discarding.
+** INFO   : Could not find flowcell for point #156 (HAGSBVN). Discarding.
+** INFO   : Could not find flowcell for point #160 (HEELBNDN). Discarding.
+** INFO   : Could not find flowcell for point #161 (HEELBVN). Discarding.
+** INFO   : Could not find flowcell for point #162 (HEESBN). Discarding.
+** INFO   : Could not find flowcell for point #163 (HELLVSS). Discarding.
+** INFO   : Could not find flowcell for point #164 (HERWNN). Discarding.
+** INFO   : Could not find flowcell for point #167 (HOUTRND). Discarding.
+** INFO   : Could not find flowcell for point #168 (HOUTRZD). Discarding.
+** INFO   : Could not find flowcell for point #171 (IJSSKP). Discarding.
+** INFO   : Could not find flowcell for point #173 (JAARSVD). Discarding.
+** INFO   : Could not find flowcell for point #175 (KADLN). Discarding.
+** INFO   : Could not find flowcell for point #176 (KAMPBVHVN). Discarding.
+** INFO   : Could not find flowcell for point #177 (KATVR). Discarding.
+** INFO   : Could not find flowcell for point #178 (KEIZVR). Discarding.
+** INFO   : Could not find flowcell for point #179 (KESSL). Discarding.
+** INFO   : Could not find flowcell for point #182 (KRABBGND). Discarding.
+** INFO   : Could not find flowcell for point #183 (KRABBGZD). Discarding.
+** INFO   : Could not find flowcell for point #186 (KRIMPADIJSL). Discarding.
+** INFO   : Could not find flowcell for point #187 (KRIMPADLK). Discarding.
+** INFO   : Could not find flowcell for point #189 (LEMMR). Discarding.
+** INFO   : Could not find flowcell for point #191 (LINNBNDN). Discarding.
+** INFO   : Could not find flowcell for point #192 (LINNBVN). Discarding.
+** INFO   : Could not find flowcell for point #193 (LITHBVN). Discarding.
+** INFO   : Could not find flowcell for point #194 (LITHDP). Discarding.
+** INFO   : Could not find flowcell for point #195 (LOBH). Discarding.
+** INFO   : Could not find flowcell for point #196 (MAASEK). Discarding.
+** INFO   : Could not find flowcell for point #197 (MAASSS). Discarding.
+** INFO   : Could not find flowcell for point #198 (MEGDP). Discarding.
+** INFO   : Could not find flowcell for point #199 (MIDDHNS). Discarding.
+** INFO   : Could not find flowcell for point #200 (MOERDK). Discarding.
+** INFO   : Could not find flowcell for point #201 (MOOK). Discarding.
+** INFO   : Could not find flowcell for point #202 (NEER). Discarding.
+** INFO   : Could not find flowcell for point #204 (NIEUWSTZL). Discarding.
+** INFO   : Could not find flowcell for point #205 (NIJKWT). Discarding.
+** INFO   : Could not find flowcell for point #206 (NIJMGHVN). Discarding.
+** INFO   : Could not find flowcell for point #209 (OIJN). Discarding.
+** INFO   : Could not find flowcell for point #210 (OLST). Discarding.
+** INFO   : Could not find flowcell for point #211 (ORJSZOT). Discarding.
+** INFO   : Could not find flowcell for point #213 (PANNDN). Discarding.
+** INFO   : Could not find flowcell for point #214 (PANNDSKP). Discarding.
+** INFO   : Could not find flowcell for point #217 (RAKND). Discarding.
+** INFO   : Could not find flowcell for point #218 (RAKZD). Discarding.
+** INFO   : Could not find flowcell for point #219 (RAMSPBG). Discarding.
+** INFO   : Could not find flowcell for point #220 (RAVSN). Discarding.
+** INFO   : Could not find flowcell for point #221 (ROERMBNDN). Discarding.
+** INFO   : Could not find flowcell for point #222 (ROERMBVN). Discarding.
+** INFO   : Could not find flowcell for point #225 (ROTTDM). Discarding.
+** INFO   : Could not find flowcell for point #226 (SAMBBNDN). Discarding.
+** INFO   : Could not find flowcell for point #227 (SAMBBVN). Discarding.
+** INFO   : Could not find flowcell for point #228 (SCHELLWDBG). Discarding.
+** INFO   : Could not find flowcell for point #231 (SCHOONHVN). Discarding.
+** INFO   : Could not find flowcell for point #232 (SIMHVN). Discarding.
+** INFO   : Could not find flowcell for point #233 (SINTADWL). Discarding.
+** INFO   : Could not find flowcell for point #234 (SINTPTND). Discarding.
+** INFO   : Could not find flowcell for point #235 (SLAAKDBG). Discarding.
+** INFO   : Could not find flowcell for point #236 (SPIJKNSE). Discarding.
+** INFO   : Could not find flowcell for point #239 (STEVWT). Discarding.
+** INFO   : Could not find flowcell for point #240 (STREEFKK). Discarding.
+** INFO   : Could not find flowcell for point #244 (TIELHVN). Discarding.
+** INFO   : Could not find flowcell for point #245 (TIELWL). Discarding.
+** INFO   : Could not find flowcell for point #246 (VLAARDGN). Discarding.
+** INFO   : Could not find flowcell for point #249 (VURN). Discarding.
+** INFO   : Could not find flowcell for point #250 (WELLDP). Discarding.
+** INFO   : Could not find flowcell for point #251 (WERKDBTN). Discarding.
+** INFO   : Could not find flowcell for point #255 (WIJHE). Discarding.
+** INFO   : Could not find flowcell for point #256 (ZALTBML). Discarding.
+** INFO   : Could not find flowcell for point #257 (ZUTPND). Discarding.
+** INFO   : Modelinit finished   at: 15:10:15, 21-08-2018
+** INFO   : ** Model initialization was successful **
+** INFO   : * Active Model definition:
+# Generated on 15:10:15, 21-08-2018
+# Deltares, D-Flow FM Version 1.2.0.53941M, Jul 12 2018, 20:37:00
+# Source:https://svn.oss.deltares.nl/repos/delft3d/trunk/
+
+[model]
+Program                           = D-Flow FM
+Version                           = 1.2.0.53941M
+MDUFormatVersion                  = 1.06                # File format version (do not edit this)
+AutoStart                         = 2                   # Autostart simulation after loading MDU (0: no, 1: autostart, 2: autostartstop)
+ModelSpecific                     =                                                                 # Optional 'model specific ID', to enable certain custom runtime function calls (instead of via MDU name).
+
+[geometry]
+NetFile                           = grid_orisize_0_5nm_10nov_z_blavg_bathyfix_net.nc# Unstructured grid file *_net.nc
+GridEnclosureFile                 =                     # Enclosure file to clip outer parts from the grid *.pol
+BedlevelFile                      =                     # Bedlevels points file e.g. *.xyz, only needed for bedlevtype not equal 3
+DryPointsFile                     =                     # Dry points file *.xyz (third column dummy z values), or dry areas polygon file *.pol (third column 1/-1: inside/outside)
+WaterLevIniFile                   =                     # Initial water levels sample file *.xyz
+LandBoundaryFile                  =                     # Land boundaries file *.ldb, used for visualization
+ThinDamFile                       = thinDams_0_5nm_11oct2017_add1nm_thd.pli# Polyline file *_thd.pli, containing thin dams
+FixedWeirFile                     =                     # Polyline file *_fxw.pliz, containing fixed weirs with rows x, y, crest level, left ground level, right ground level
+PillarFile                        =                     # Polyline file *_pillar.pliz, containing four colums with x, y, diameter and Cd coefficient
+Gulliesfile                       =                     # Polyline file *_gul.pliz, containing lowest bed level along talweg x, y, z level
+Roofsfile                         =                     # Polyline file *_rof.pliz, containing roofgutter heights x, y, z level
+VertplizFile                      =                     # Vertical layering file *_vlay.pliz with rows x, y, Z, first Z, nr of layers, second Z, layer type
+ProflocFile                       =                     # Channel profile location file *_proflocation.xyz with rows x, y, z, profile number ref
+ProfdefFile                       =                     # Channel profile definition file *_profdefinition.def with definition for all profile numbers
+ProfdefxyzFile                    =                     # Channel profile definition file _profdefinition.def with definition for all profile numbers
+Uniformwidth1D                    = 2.                  # Uniform width for channel profiles not specified by profloc
+Uniformheight1D                   = 3.                  # Uniform height for channel profiles not specified by profloc
+StructureFile                     = noordzee_2d_structures.ini# File *.ini containing list of structures (pumps, weirs, gates and general structures)
+ManholeFile                       =                     # File *.ini containing manholes
+PipeFile                          =                     # File *.pliz containing pipe-based 'culverts'
+ShipdefFile                       =                     # File *.shd containing ship definitions
+WaterLevIni                       = 0.                  # Initial water level at missing s0 values
+BedlevUni                         = -5.                 # Uniform bed level used at missing z values if BedlevType > 2
+BedlevType                        = 3                   # Bathymetry specification
+                                                        # 1: at cell centers (from BathymetryFile)
+                                                        # 2: at faces (from BathymetryFile)
+                                                        # 3: at nodes, face levels mean of node values
+                                                        # 4: at nodes, face levels min. of node values
+                                                        # 5: at nodes, face levels max. of node values
+                                                        # 6: at nodes, face levels max. of cell-center values
+Blmeanbelow                       = -999.               # If not -999d0, below this level the cell center bed level is the mean of surrouding net nodes
+Blminabove                        = -999.               # If not -999d0, above this level the cell center bed level is the min. of surrouding net nodes
+PartitionFile                     =                     # Domain partition polygon file *_part.pol for parallel run
+AngLat                            = 0.                  # Angle of latitude S-N (deg), 0: no Coriolis
+AngLon                            = 0.                  # Angle of longitude E-W (deg), 0: Greenwich, used in solar heat flux computation.
+Conveyance2D                      = -1                  # -1: R=HU,0: R=H, 1: R=A/P, 2: K=analytic-1D conv, 3: K=analytic-2D conv
+Slotw2D                           = 0.                  # -
+Sillheightmin                     = 0.                  # Weir treatment only if both sills larger than this value (m)
+Makeorthocenters                  = 0                   # Switch from circumcentres to orthocentres in geominit (i>=1: number of iterations, 0: do not use)
+Dcenterinside                     = 1.                  # Limit cell center (1.0: in cell, 0.0: on c/g)
+Bamin                             = 1.d-6               # Minimum grid cell area, in combination with cut cells
+OpenBoundaryTolerance             = 3.                  # Search tolerance factor between boundary polyline and grid cells, in cell size units
+RenumberFlowNodes                 = 1                   # Renumber the flow nodes (1: yes, 0: no)
+Kmx                               = 0                   # Maximum number of vertical layers
+Layertype                         = 1                   # Vertical layer type (1: all sigma, 2: all z, 3: use VertplizFile)
+Numtopsig                         = 0                   # Number of sigma layers in top of z-layer model
+SigmaGrowthFactor                 = 1.                  # Layer thickness growth factor from bed up
+StretchType                       = 0                   # Type of layer stretching, 0 = uniform, 1 = user defined, 2 = fixed level double exponential
+
+[numerics]
+CFLMax                            = 0.7                 # Maximum Courant number
+Lincontin                         = 0                   # Default 0; Set to 1 for linearizing d(Hu)/dx; link to AdvecType
+AdvecType                         = 33                  # Advection type (0: none, 1: Wenneker, 2: Wenneker q(uio-u), 3: Perot q(uio-u), 4: Perot q(ui-u), 5: Perot q(ui-u) without itself)
+TimeStepType                      = 2                   # Time step handling (0: only transport, 1: transport + velocity update, 2: full implicit step-reduce, 3: step-Jacobi, 4: explicit)
+Icoriolistype                     = 5                   # 0=No, 1=yes, if jsferic then spatially varying, if icoriolistype==6 then constant (anglat)
+Limtyphu                          = 0                   # Limiter type for waterdepth in continuity eqn. (0: none, 1: minmod, 2: van Leer, 3: Kooren, 4: monotone central)
+Limtypmom                         = 4                   # Limiter type for cell center advection velocity (0: none, 1: minmod, 2: van Leer, 3: Kooren, 4: monotone central)
+Limtypsa                          = 4                   # Limiter type for salinity transport (0: none, 1: minmod, 2: van Leer, 3: Kooren, 4: monotone central)
+TransportMethod                   = 1                   # Transport method (0: Herman's method, 1: transport module)
+TransportTimestepping             = 0                   # Timestepping method in Transport module, 0 = global, 1 = local (default)
+Vertadvtypsal                     = 5                   # Vertical advection type for salinity (0: none, 1: upwind explicit, 2: central explicit, 3: upwind implicit, 4: central implicit, 5: central implicit but upwind for neg. stratif., 6: higher order explicit, no Forester)
+Vertadvtyptem                     = 6                   # Vertical advection type for temperature (0: none, 1: upwind explicit, 2: central explicit, 3: upwind implicit, 4: central implicit, 5: central implicit but upwind for neg. stratif., 6: higher order explicit, no Forester)
+Cffacver                          = 0.                  # Factor for including (1-CFL) in HO term vertical   (0d0: no, 1d0: yes)
+Jarhoxu                           = 0                   # Inlcude density gradient in advection term (0: no, 1: yes, 2: Also in barotrop and baroclin pressure term)
+Horadvtypzlayer                   = 0                   # Horizontal advection treatment of z-layers (1: default, 2: sigma-like)
+Zlayeratubybob                    = 0                   # Lowest connected cells governed by bob instead of by bL L/R
+Icgsolver                         = 4                   # Solver type (1: sobekGS_OMP, 2: sobekGS_OMPthreadsafe, 3: sobekGS, 4: sobekGS + Saadilud, 5: parallel/global Saad, 6: parallel/Petsc, 7: parallel/GS)
+Maxdegree                         = 6                   # Maximum degree in Gauss elimination
+Noderivedtypes                    = 0                   # 0=use der. types. , 1 = less, 2 = lesser, 5 = also dealloc der. types
+FixedWeirScheme                   = 0                   # Fixed weir scheme (0: none, 1: compact stencil, 2: whole tile lifted, full subgrid weir + factor)
+FixedWeirContraction              = 1.                  # Fixed weir flow width contraction factor
+Fixedweirfrictscheme              = 1                   # Fixed weir friction scheme (0: friction based on hu, 1: friction based on subgrid weir friction scheme)
+Fixedweirtopwidth                 = 3.                  # Uniform width of the groyne part of fixed weirs
+Fixedweirtopfrictcoef             = -999.               # Uniform friction coefficient of the groyne part of fixed weirs
+Fixedweirtalud                    = 0.25                # Uniform talud slope of fixed weirs
+Izbndpos                          = 0                   # Position of z boundary (0: D3Dflow, 1: on net boundary, 2: on specified polyline)
+Tlfsmo                            = 86400.              # Fourier smoothing time (s) on water level boundaries
+Logprofatubndin                   = 1                   # ubnds inflow: 0=uniform U1, 1 = log U1, 2 = user3D
+Logprofkepsbndin                  = 0                   # inflow: 0=0 keps, 1 = log keps, 2 = user3D
+Slopedrop2D                       = 0.                  # Apply drop losses only if local bed slope > Slopedrop2D, (<=0: no drop losses)
+Drop3D                            = -999.               # Apply droplosses in 3D if z upwind below bob + 2/3 hu*drop3D
+Chkadvd                           = 0.1                 # Check advection terms if depth < chkadvdp, => less setbacks
+Trsh_u1Lb                         = 0.                  # 2D bedfriction in 3D below this threshold (m)
+Epshstem                          = 1.d-3               # Only compute heatflx + evap if depth > epshstem
+Zwsbtol                           = 0.                  # tolerance for zws(kb-1) at bed
+Keepzlayeringatbed                = 1                   #  bedlayerthickness = zlayerthickness at bed 0 or 1
+Teta0                             = 0.55                # Theta of time integration (0.5 < theta < 1)
+Qhrelax                           = 1.d-2               # Relaxation on Q-h open boundaries
+Jbasqbnddownwindhs                = 0                   # Water depth scheme at discharge boundaries (0: original hu, 1: downwind hs)
+cstbnd                            = 0                   # Delft-3D type velocity treatment near boundaries for small coastal models (1: yes, 0: no)
+Maxitverticalforestersal          = 0                   # Forester iterations for salinity (0: no vertical filter for salinity, > 0: max nr of iterations)
+Maxitverticalforestertem          = 0                   # Forester iterations for temperature (0: no vertical filter for temperature, > 0: max nr of iterations)
+Turbulencemodel                   = 3                   # Turbulence model (0: none, 1: constant, 2: algebraic, 3: k-epsilon, 4: k-tau)
+Turbulenceadvection               = 3                   # Turbulence advection (0: none, 3: horizontally explicit and vertically implicit)
+Eddyviscositybedfacmax            = 0.                  # Limit eddy viscosity at bed )
+AntiCreep                         = 0                   # Include anti-creep calculation (0: no, 1: yes)
+Barocterm                         = 2                   # (original = 1, current = 2 )
+Maxwaterleveldiff                 = 0.                  # upper bound (in m) on water level changes (<= 0: no bounds). Run will abort when violated.
+Maxvelocitydiff                   = 0.                  # upper bound (in m/s) on velocity changes (<= 0: no bounds). Run will abort when violated.
+MinTimestepBreak                  = 0.                  # smallest allowed timestep (in s), checked on a sliding average of several timesteps. Run will abort when violated.
+Epshu                             = 1.d-4               # Threshold water depth for wet and dry cells
+SobekDFM_umin                     = 0.                  # Minimal velocity treshold for weir losses in Sobek-DFM coupling.
+SobekDFM_umin_method              = 0                   # Method for minimal velocity treshold for weir losses in Sobek-DFM coupling.
+SobekDFM_Minimal_1d2d_Embankment  = 1.d-2               # Minimal crest height of 1D2D SOBEK-DFM embankments.
+sobekDFM_relax                    = 0.1                 # Relaxation factor for SOBEK-DFM coupling algorithm.
+Vertadvtypmom                     = 3                   # vertical advection for u1: 0: No, 3: Upwind implicit, 4: Central implicit, 5: QUICKEST implicit., 6: centerbased upwind expl
+jaupwindsrc                       = 1                   # 1st-order upwind advection at sources/sinks (1) or higher-order (0)
+jasfer3D                          = 0                   # corrections for spherical coordinates
+vicouv_filter                     = 0.                  # artificial viscosity for filtering (m2/s)
+LocSaltLev                        = 1.                  # salinity level for case of lock exchange
+LocSaltMin                        = 5.                  # minimum salinity for case of lock exchange
+LocSaltMax                        = 10.                 # maximum salinity for case of lock exchange
+Numlimdt_baorg                    = 0                   # if previous numlimdt > Numlimdt_baorg keep original cell area ba in cutcell
+
+[physics]
+UnifFrictCoef                     = 2.8d-2              # Uniform friction coefficient (0: no friction)
+UnifFrictType                     = 1                   # Uniform friction type (0: Chezy, 1: Manning, 2: White-Colebrook, 3: idem, WAQUA style)
+UnifFrictCoef1D                   = 2.3d-2              # Uniform friction coefficient in 1D links (0: no friction)
+UnifFrictCoef1D2D                 = 2.3d-2              # Uniform friction coefficient in 1D links (0: no friction)
+UnifFrictCoefLin                  = 0.                  # Uniform linear friction coefficient for ocean models (m/s) (0: no friction)
+Umodlin                           = 0.                  # Linear friction umod, for ifrctyp=4,5,6
+Vicouv                            = 0.1                 # Uniform horizontal eddy viscosity (m2/s)
+Dicouv                            = 0.1                 # Uniform horizontal eddy diffusivity (m2/s)
+Vicoww                            = 5.d-5               # Uniform vertical eddy viscosity (m2/s)
+Dicoww                            = 5.d-5               # Uniform vertical eddy diffusivity (m2/s)
+Vicwminb                          = 0.                  # Minimum visc in prod and buoyancy term (m2/s)
+Xlozmidov                         = 0.                  # Ozmidov length scale (m), default=0.0, no contribution of internal waves to vertical diffusion
+Smagorinsky                       = 0.2                 # Smagorinsky factor in horizontal turbulence, e.g. 0.15
+Elder                             = 0.                  # Elder factor in horizontal turbulence
+irov                              = 0                   # 0=free slip, 1 = partial slip using wall_ks
+wall_ks                           = 0.                  # Wall roughness type (0: free slip, 1: partial slip using wall_ks)
+Rhomean                           = 1023.               # Average water density (kg/m3)
+Idensform                         = 0                   # Density calulation (0: uniform, 1: Eckard, 2: Unesco, 3: baroclinic case)
+Ag                                = 9.813               # Gravitational acceleration
+TidalForcing                      = 1                   # Tidal forcing, if jsferic=1 (0: no, 1: yes)
+SelfAttractionLoading             = 0                   # Self attraction and loading (0=no, 1=yes, 2=only self attraction)
+ITcap                             = 0.                  # Upper limit on internal tides dissipation (W/m^2)
+Doodsonstart                      = 55.565              # TRIWAQ: 55.565, D3D: 57.555
+Doodsonstop                       = 375.575             # TRIWAQ: 375.575, D3D: 275.555
+Doodsoneps                        = 0.                  # TRIWAQ = 0.0  400 cmps , D3D = 0.03   60 cmps
+VillemonteCD1                     = 1.                  # Calibration coefficient for Villemonte. Default = 1.0.  NB. For Bloemberg data set 0.8 is recommended.
+VillemonteCD2                     = 10.                 # Calibration coefficient for Villemonte. Default = 10.0. NB. For Bloemberg data set 0.8 is recommended.
+Salinity                          = 0                   # Include salinity, (0=no, 1=yes)
+InitialSalinity                   = 0.                  # Uniform initial salinity concentration (ppt)
+Sal0abovezlev                     = -999.               # Vertical level (m) above which salinity is set 0
+DeltaSalinity                     = -999.               # for testcases
+Salimax                           = -999.               # Limit the salinity
+Salimin                           = 0.                  # Limit the salinity
+Backgroundsalinity                = 30.                 # Background salinity for eqn. of state (ppt)
+Backgroundwatertemperature        = 6.                  # Background water temperature for eqn. of state (deg C)
+Temperature                       = 0                   # Include temperature (0: no, 1: only transport, 3: excess model of D3D, 5: composite (ocean) model)
+InitialTemperature                = 6.                  # Uniform initial water temperature (degC)
+Secchidepth                       = 2.5                 # Water clarity parameter (m)
+Stanton                           = 1.3d-3              # Coefficient for convective heat flux, if negative, Ccon = abs(Stanton)*Cdwind
+Dalton                            = 1.3d-3              # Coefficient for evaporative heat flux, if negative, Ceva = abs(Dalton)*Cdwind
+Tempmax                           = -999.               # Limit the temperature
+Tempmin                           = 0.                  # Limit the temperature
+Surftempsmofac                    = 0.                  # Hor . Smoothing factor for surface water in heatflx comp. (0.0-1.0), 0=no
+Soiltempthick                     = 0.1                 # Use soil temperature buffer if > 0, e.g. 0.2 (m)
+Heat_eachstep                     = 1                   # 1=heat each timestep, 0=heat each usertimestep
+SecondaryFlow                     = 0                   # Secondary flow (0: no, 1: yes)
+BetaSpiral                        = 0.                  # Weight factor of the spiral flow intensity on flow dispersion stresses
+Equili                            = 0                   # Equilibrium spiral flow intensity (0: no, 1: yes)
+
+[sediment]
+Sedimentmodelnr                   = 0                   # Sediment model nr, (0=no, 1=Krone, 2=SvR2007, 3=E-H, 4=MorphologyModule)
+Nr_of_sedfractions                = 0                   # Nr of sediment fractions, (specify the next parameters for each fraction)
+MxgrKrone                         = 0                   # Highest fraction index treated by Krone
+Seddenscoupling                   = 0                   # Sed rho coupling (0=no, 1 =yes
+
+[veg]
+Vegetationmodelnr                 = 0                   # Vegetation model nr, (0=no, 1=Baptist DFM)
+Clveg                             = 0.8                 # Stem distance factor, default 0.8 ()
+Cdveg                             = 0.7                 # Stem Cd coefficient , default 0.7 ()
+Cbveg                             = 0.                  # Stem stiffness coefficient , default 0.7 ()
+Rhoveg                            = 0.                  # Stem Rho, if > 0, -> bouyant stick procedure, default 0.0 ()
+Stemheightstd                     = 0.                  # Stem height standard deviation fraction, e.g. 0.1  ()
+Densvegminbap                     = 0.                  # Minimum vegetation density in Baptist formula  (1/m2)
+
+[wind]
+ICdtyp                            = 4                   # Wind drag coefficient type (1=Const; 2=Smith&Banke (2 pts); 3=S&B (3 pts); 4=Charnock 1955, 5=Whang 2005, 6=Wuest 2005, 7=Hersbach 2010 (2 pts)
+Cdbreakpoints                     = 2.5d-2              # Wind drag coefficient break points
+Relativewind                      = 1                   # Wind speed relative to top-layer water speed, 1=yes, 0 = no)
+Rhoair                            = 1.2265              # Air density (kg/m3)
+PavBnd                            = 101330.             # Average air pressure on open boundaries (N/m2) (only applied if > 0)
+Pavini                            = 0.                  # Average air pressure for initial water level correction (N/m2) (only applied if > 0)
+
+[grw]
+groundwater                       = 0                   # 0=No (horizontal) groundwater flow, 1=With groundwater flow
+Infiltrationmodel                 = 0                   # 0=No infiltration, 1=infiltration=interceptionlayer (with grw), 2=infiltration=Infiltrationcapacity, 3=model unsaturated/saturated (with grw) ( )
+Hinterceptionlayer                = 0.                  # Intercept this amount of rain (m)
+UnifInfiltrationCapacity          = 0.                  # Uniform maximum infiltration capacity (m/s)
+Conductivity                      = 0.                  # non dimensionless K conductivity   saturated (m/s), Q = K*A*i (m3/s)
+h_aquiferuni                      = 20.                 # bgrw = bl - h_aquiferuni (m), if negative, bgrw = bgrwuni
+h_unsatini                        = 0.200000002980232   # initial level groundwater is bedlevel - h_unsatini (m), if negative, sgrw = sgrwini
+
+[waves]
+Wavemodelnr                       = 0                   # Wave model nr. (0: none, 1: fetch/depth limited hurdlestive, 2: Young-Verhagen, 3: SWAN, 4: wave group forcing, 5: uniform
+Wavenikuradse                     = 1.d-2               # Wave friction Nikuradse ks coefficient (m), used in Krone-Swart
+Rouwav                            = FR84                # Friction model for wave induced shear stress: FR84 (default) or: MS90, HT91, GM79, DS88, BK67, CJ85, OY88, VR04
+Gammax                            = 1.                  # Maximum wave height/water depth ratio
+uorbfac                           = 0                   # Orbital velocities: 0=D3D style; 1=Guza style
+jahissigwav                       = 1                   # 1: sign wave height on his output; 0: hrms wave height on his output
+hminlw                            = 0.2                 # Cut-off depth for application of wave forces in momentum balance
+
+[time]
+RefDate                           = 20061225            # Reference date (yyyymmdd)
+Tzone                             = 0.                  # Time zone assigned to input time series
+DtUser                            = 600.                # Time interval (s) for external forcing update
+DtNodal                           = 21600.              # Time interval (s) for updating nodal factors in astronomical boundary conditions
+DtMax                             = 120.                # Maximal computation timestep (s)
+Dtfacmax                          = 1.1                 # Max timestep increase factor ( )
+DtInit                            = 30.                 # Initial computation timestep (s)
+Timestepanalysis                  = 0                   # 0=no, 1=see file *.steps
+Autotimestepdiff                  = 0                   # 0 = no, 1 = yes (Time limitation based on explicit diffusive term)
+Tunit                             = M                   # Time unit for start/stop times (D, H, M or S)
+TStart                            = 0.                  # Start time w.r.t. RefDate (in TUnit)
+TStop                             = 10.                 # Stop  time w.r.t. RefDate (in TUnit)
+
+[restart]
+RestartFile                       =                     # Restart netcdf-file, either *_rst.nc or *_map.nc
+RestartDateTime                   = 20180821            # Restart date and time (YYYYMMDDHHMMSS) when restarting from *_map.nc
+
+[external forcing]
+ExtForceFile                      = A07.ext             # Old format for external forcings file *.ext, link with tim/cmp-format boundary conditions specification
+ExtForceFileNew                   = NZ_bnd_cnd_new.ext  # New format for external forcings file *.ext, link with bc-format boundary conditions specification
+Rainfall                          = 0                   # Include rainfall, (0=no, 1=yes)
+
+[trachytopes]
+TrtRou                            = N                   # Include alluvial and vegetation roughness (trachytopes) (Y: yes, N: no)
+TrtDef                            =                     # File (*.ttd) including trachytope definitions
+TrtL                              =                     # File (*.arl) including distribution of trachytope definitions
+DtTrt                             = 60.                 # Trachytope roughness update time interval (s)
+
+[calibration]
+UseCalibration                    = 0                   # Activate calibration factor friction multiplier (1 = yes, 0 = no)
+DefinitionFile                    =                     # File (*.cld) including calibration definitions
+AreaFile                          =                     # File (*.cll) including area distribution of calibration definitions
+
+[output]
+OutputDir                         =                     # Output directory of map-, his-, rst-, dat- and timings-files, default: DFM_OUTPUT_<modelname>. Set to . for current dir.
+FlowGeomFile                      =                     # Flow geometry NetCDF *_flowgeom.nc
+ObsFile                           = obsPoint_0_5nm_07nov2017_obs.xyn# Points file *.xyn with observation stations with rows x, y, station name
+CrsFile                           =                     # Polyline file *_crs.pli defining observation cross sections
+FouFile                           =                     # Fourier analysis input file *.fou
+HisFile                           =                     # HisFile name *_his.nc
+MapFile                           =                     # MapFile name *_map.nc
+HisInterval                       = 600. 0. 600.        # History output times, given as "interval" "start period" "end period" (s)
+XLSInterval                       = 0.                  # Interval (s) between XLS history
+MapInterval                       = 0. 0. 600.          # Map file output, given as "interval" "start period" "end period" (s)
+RstInterval                       = 0. 0. 600.          # Restart file output times, given as "interval" "start period" "end period" (s)
+S1incinterval                     = 0.                  # Interval (m) in incremental file for water levels S1
+WaqInterval                       = 0. 0. 600.          # DELWAQ output times, given as "interval" "start period" "end period" (s)
+StatsInterval                     = -60.                # Screen step output interval in seconds simulation time, if negative in seconds wall clock time
+WriteBalancefile                  = 0                   # Write balance file (1: yes, 0: no)
+TimingsInterval                   = 86400.              # Timings statistics output interval
+TimeSplitInterval                 = 0X                  # Time splitting interval, after which a new output file is started. value+unit, e.g. '1 M', valid units: Y,M,D,h,m,s.
+MapFormat                         = 1                   # Map file format, 1: netCDF, 2: Tecplot, 3: netCFD and Tecplot, 4: NetCDF-UGRID
+Wrihis_balance                    = 1                   # Write mass balance totals to his file (1: yes, 0: no)
+Wrihis_sourcesink                 = 1                   # Write sources-sinks statistics to his file (1=yes, 0=no)
+Wrihis_structure_gen              = 1                   # Write general structure parameters to his file (1: yes, 0: no)
+Wrihis_structure_dam              = 1                   # Write dam parameters to his file (1: yes, 0: no)
+Wrihis_structure_pump             = 1                   # Write pump parameters to his file (1: yes, 0: no)
+Wrihis_structure_gate             = 1                   # Write gate parameters to his file (1: yes, 0: no)
+Wrihis_structure_weir             = 1                   # Write weir parameters to his file (1: yes, 0: no)
+Wrihis_turbulence                 = 1                   # Write k, eps and vicww to his file (1: yes, 0: no)
+Wrihis_wind                       = 1                   # Write wind velocities to his file (1: yes, 0: no)
+Wrihis_rain                       = 1                   # Write precipitation to his file (1: yes, 0: no)
+Wrihis_temperature                = 1                   # Write temperature to his file (1: yes, 0: no)
+Wrihis_waves                      = 1                   # Write wave data to his file (1: yes, 0: no)
+Wrihis_heat_fluxes                = 0                   # Write heat fluxes to his file (1: yes, 0: no)
+Wrihis_salinity                   = 1                   # Write salinity to his file (1: yes, 0: no)
+Wrihis_density                    = 1                   # Write density to his file (1: yes, 0: no)
+Wrihis_waterlevel_s1              = 1                   # Write water level to his file (1: yes, 0: no)
+Wrihis_bedlevel                   = 1                   # Write bed level to his file (1: yes, 0: no)
+Wrihis_waterdepth                 = 0                   # Write waterd epth to his file (1: yes, 0: no)
+Wrihis_velocity_vector            = 1                   # Write velocity vectors to his file (1: yes, 0: no)
+Wrihis_upward_velocity_component  = 0                   # Write upward velocity to his file (1: yes, 0: no)
+Wrihis_sediment                   = 1                   # Write sediment transport to his file (1: yes, 0: no)
+Wrihis_constituents               = 1                   # Write tracers to his file (1: yes, 0: no)
+Wrihis_zcor                       = 1                   # Write vertical coordinates to his file (1: yes, 0: no)
+Wrimap_waterlevel_s0              = 1                   # Write water levels for previous time step to map file (1: yes, 0: no)
+Wrimap_waterlevel_s1              = 1                   # Write water levels to map file (1: yes, 0: no)
+Wrimap_volume1                    = 0                   # Write volumes to map file (1: yes, 0: no)
+Wrimap_velocity_component_u0      = 1                   # Write velocity component for previous time step to map file (1: yes, 0: no)
+Wrimap_velocity_component_u1      = 1                   # Write velocity component to map file (1: yes, 0: no)
+Wrimap_velocity_vector            = 1                   # Write cell-center velocity vectors to map file (1: yes, 0: no)
+Wrimap_velocity_magnitude         = 1                   # Write cell-center velocity vector magnitude to map file (1: yes, 0: no)
+Wrimap_velocity_vectorq           = 0                   # Write cell-center velocity vectors (discharge-based) to map file (1: yes, 0: no)
+Wrimap_upward_velocity_component  = 1                   # Write upward velocity component on cell interfaces (1: yes, 0: no)
+Wrimap_density_rho                = 1                   # Write flow density to map file (1: yes, 0: no)
+Wrimap_horizontal_viscosity_viu   = 1                   # Write horizontal viscosity to map file (1: yes, 0: no)
+Wrimap_horizontal_diffusivity_diu = 1                   # Write horizontal diffusivity to map file (1: yes, 0: no)
+Wrimap_flow_flux_q1               = 1                   # Write flow flux to map file (1: yes, 0: no)
+Wrimap_numlimdt                   = 1                   # Write the number times a cell was Courant limiting to map file (1: yes, 0: no)
+Wrimap_taucurrent                 = 1                   # Write the shear stress to map file (1: yes, 0: no)
+Wrimap_chezy                      = 1                   # Write the chezy roughness to map file (1: yes, 0: no)
+Wrimap_turbulence                 = 1                   # Write vicww, k and eps to map file (1: yes, 0: no)
+Wrimap_wind                       = 1                   # Write wind velocities to map file (1: yes, 0: no)
+Writek_CdWind                     = 1                   # Write wind friction coeffs to tek file (1: yes, 0: no)
+Wrimap_tidal_potential            = 1                   # Write tidal potential to map file (1: yes, 0: no)
+Writepart_domain                  = 1                   # Write partition domain info. for postprocessing
+Wrishp_crs                        = 0                   # Write grid-snapped cross sections to shapefile (1: yes, 0: no)
+Wrishp_obs                        = 0                   # Write grid-snapped observation stations to shapefile (1: yes, 0: no)
+Wrishp_weir                       = 0                   # Write grid-snapped weirs to shapefile (1: yes, 0: no)
+Wrishp_thd                        = 0                   # Write grid-snapped thin dams to shapefile (1: yes, 0: no)
+Wrishp_gate                       = 0                   # Write grid-snapped gates to shapefile (1: yes, 0: no)
+Wrishp_emb                        = 0                   # Write grid-snapped 1d2d embankments to shapefile (1: yes, 0: no)
+Wrishp_fxw                        = 0                   # Write grid-snapped fixed weirs to shapefile (1: yes, 0: no)
+Wrishp_src                        = 0                   # Write grid-snapped source-sinks to shapefile (1: yes, 0: no)
+Wrishp_pump                       = 0                   # Write grid-snapped pumps to shapefile (1: yes, 0: no)
+WriteDFMinterpretedvalues         = 0                   # Write DFMinterpretedvalues (1: yes, 0: no)
+MapOutputTimeVector               =                     # File (*.mpt) containing fixed map output times (s) w.r.t. RefDate
+FullGridOutput                    = 0                   # Full grid output mode (0: compact, 1: full time-varying grid data)
+EulerVelocities                   = 0                   # Euler velocities output (0: GLM, 1: Euler velocities)
+Wrirst_bnd                        = 1                   # Write waterlevel, bedlevel and coordinates of boundaries to restart files
+Wrishp_crs                        = 0                   # Write a shape file for cress sections
+Wrishp_obs                        = 0                   # Write a shape file for observation points
+Wrishp_weir                       = 0                   # Write a shape file for weirs
+Wrishp_thd                        = 0                   # Write a shape file for thin dams
+Wrishp_gate                       = 0                   # Write a shape file for gates
+Wrishp_emb                        = 0                   # Write a shape file for embankments
+Wrishp_fxw                        = 0                   # Write a shape file for fixed weirs
+Wrishp_src                        = 0                   # Write a shape file for sourse-sinks
+Wrishp_pump                       = 0                   # Write a shape file for pumps
+Wrishp_dryarea                    = 0                   # Write a shape file for dry areas
+
+[particles]
+ParticlesFile                     = 
+AddTracer                         = 0                   # add tracer (1) or not (other)
+StartTime                         = 0.                  # starttime (if >0)
+TimeStep                          = 0.                  # time step (>0) or every computational time step
+3Dtype                            = 0                   # 3D type: depth averaged (0) or free surface (1)
+** INFO   : **
+** INFO   : Opened file : DFM_OUTPUT_FlowFM1\FlowFM1_Cdwcoeff.tek
+** INFO   : Closed file : DFM_OUTPUT_FlowFM1\FlowFM1_Cdwcoeff.tek
+** INFO   : Writing initial output to file(s)...
+** DEBUG  : Opened NetCDF file 'DFM_OUTPUT_FlowFM1\FlowFM1_his.nc' as #213.
+** INFO   : Done writing initial output to file(s).
+** INFO   : 
+** INFO   : 
+** INFO   : 
+** INFO   : nr of netnodes         ( )  :                   629187
+** INFO   : nr of netlinks         ( )  :                  1249078
+** INFO   : nr of flownodes        ( )  :                   620230
+** INFO   : nr of openbnd cells    ( )  :                      623
+** INFO   : nr of 1D-flownodes     ( )  :                        0
+** INFO   : model area             (m2) :         0.2546680415E+13
+** INFO   : model volume           (m3) :         0.3166519216E+16
+** INFO   : 
+** INFO   : 
+** INFO   : 
+** INFO   : nr of timesteps        ( )  :            10.0000000000
+** INFO   : average timestep       (s)  :            60.0000000000
+** INFO   : 
+** INFO   : 
+** INFO   : simulation period      (d)  :             0.0069444444
+** INFO   : total computation time (d)  :             0.0004333102
+** INFO   : time modelinit         (d)  :             0.0003161227
+** INFO   : time steps (+ plots)   (d)  :             0.0001171875
+** INFO   : 
+** INFO   : simulation period      (h)  :             0.1666666667
+** INFO   : total computation time (h)  :             0.0103994444
+** INFO   : time modelinit         (h)  :             0.0075869444
+** INFO   : time steps (+ plots)   (h)  :             0.0028125000
+** INFO   : 
+** INFO   : simulation period      (s)  :           600.0000000000
+** INFO   : total computation time (s)  :            37.4380000000
+** INFO   : time modelinit         (s)  :            27.3130000000
+** INFO   : time steps (+ plots)   (s)  :            10.1250000000
+** INFO   : 
+** INFO   : 
+** INFO   : time inistep           (s)  :             4.9900000000
+** INFO   : time setumod           (s)  :             3.0660000000
+** INFO   : time furu              (s)  :             0.1240000000
+** INFO   : time solve             (s)  :             4.6960000000
+** INFO   : time setexternalforc.  (s)  :             0.2270000000
+** INFO   : time setexternalfbnd.  (s)  :             0.1870000000
+** INFO   : time steps             (s)  :             9.9280000000
+** INFO   : fraction solve/steps   ( )  :             0.4730056406
+** INFO   : total/(dnt*ndx)        (s)  :             0.0000016325
+** INFO   : av nr of cont. it s1it ( )  :             0.0000000000
+** INFO   : time transport [s]         :             0.0220000000
+** INFO   : time debug     [s]         :             0.0000000000
+** INFO   : 
+** INFO   : 
+** INFO   : 
+** INFO   : Computation started  at: 15:10:15, 21-08-2018
+** INFO   : Computation finished at: 15:10:25, 21-08-2018
+** INFO   : 
+** INFO   : simulation period      (h)  :             0.1666666667
+** INFO   : total time in timeloop (h)  :             0.0028125000
+** INFO   : MPI    : no.
+** INFO   : OpenMP : yes.         #threads max : 8
+** INFO   : 
+** INFO   : 
+** INFO   : 
+** INFO   : 

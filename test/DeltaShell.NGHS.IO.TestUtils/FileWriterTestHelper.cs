@@ -27,7 +27,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
 
-            var branch = new Channel("branch", node1, node2, 100.0)
+            var branch = new Channel("branch", node1, node2)
             {
                 LongName = string.Empty,
                 OrderNumber = 0,

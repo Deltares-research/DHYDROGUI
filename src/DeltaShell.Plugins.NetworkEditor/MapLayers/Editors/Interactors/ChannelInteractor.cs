@@ -7,6 +7,7 @@ using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
+using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Editors.Interactors.Network;
 using SharpMap.Styles;
 
@@ -16,6 +17,16 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
     {
         public ChannelInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, IEditableObject editableObject) : base(layer, feature, vectorStyle, editableObject)
         {
+        }
+
+        public override void Add(IFeature feature)
+        {
+            if (Network.CoordinateSystem != null)
+            {
+                var channel = (Channel)SourceFeature;
+                channel.GeodeticLength = GeodeticDistance.Length(Network.CoordinateSystem, channel.Geometry);
+            }
+            base.Add(feature);
         }
 
         public override IEnumerable<IFeatureRelationInteractor> GetFeatureRelationInteractors(IFeature feature)

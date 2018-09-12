@@ -120,32 +120,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                 {
                     FunctionHelper.SetValuesRaw(locationIndexVariable, Enumerable.Range(0, count));
                 }
-                using (var api = new RemoteECModuleApi())
+
+                for (int i = 0; i < pointClouds.Count; ++i)
                 {
-                    var targetX = newLocations.Select(p => p.X).ToArray();
-                    var targetY = newLocations.Select(p => p.Y).ToArray();
-                    for (int i = 0; i < pointClouds.Count; ++i)
+                    var keyValuePair = pointClouds.ElementAt(i);
+
+                    var points = keyValuePair.Key;
+                    var interpolating = keyValuePair.Value;
+                    if (interpolating)
                     {
-                        var keyValuePair = pointClouds.ElementAt(i);
-
-                        var points = keyValuePair.Key;
-                        var interpolating = keyValuePair.Value;
-                        if (interpolating)
+                        using (var api = new RemoteECModuleApi())
+                        using (var mesh = new DisposableMeshGeometry(grid))
                         {
-                            var sourceX = points.PointValues.Select(p => p.X).ToArray();
-                            var sourceY = points.PointValues.Select(p => p.Y).ToArray();
-                            var sourceZ = points.PointValues.Select(p => p.Value).ToArray();
+                            var projectionType = grid.CoordinateSystem == null ||
+                                                 !grid.CoordinateSystem.IsGeographic
+                                ? ProjectionType.Cartesian
+                                : ProjectionType.Spherical;
 
-                            var targetZ = api.Triangulate(sourceX, sourceY, sourceZ, targetX, targetY);
+                            var targetZ = api.Triangulation(points.PointValues, mesh, coverage.GetLocationTypeForCoverage(), projectionType);
+
+                            var unstructuredGridFlowLinkCoverage = coverage as UnstructuredGridFlowLinkCoverage;
+                            if (unstructuredGridFlowLinkCoverage != null)
+                            {
+                                targetZ = grid.FlowLinks.Count != 0
+                                    ? grid.ReOrderResultsForFlowLinks(targetZ)
+                                    : new double[0];
+                            }
 
                             coverage.Components[i].Values.Clear();
                             FunctionHelper.SetValuesRaw<double>(coverage.Components[i], targetZ);
                         }
-                        else
-                        {
-                            var value = points.PointValues[0].Value;
-                            FunctionHelper.SetValuesRaw(coverage.Components[i], Enumerable.Repeat(value, count));
-                        }
+                    }
+                    else
+                    {
+                        var value = points.PointValues[0].Value;
+                        FunctionHelper.SetValuesRaw(coverage.Components[i], Enumerable.Repeat(value, count));
                     }
                 }
             }

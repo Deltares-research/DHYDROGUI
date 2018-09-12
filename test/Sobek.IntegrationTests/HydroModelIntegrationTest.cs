@@ -533,7 +533,7 @@ namespace Sobek.IntegrationTests
             rr.Basin.Catchments.Add(c1);
             var startNode = new HydroNode("node1") {Geometry = new Point(0, 0)};
             var endNode = new HydroNode("node2") {Geometry = new Point(1000, 0)};
-            var br = new Channel(startNode, endNode, 1000);
+            var br = new Channel(startNode, endNode) {Geometry = new LineString(new [] { startNode.Geometry.Coordinate,endNode.Geometry.Coordinate})};
             var lat = new LateralSource {Branch = br, Chainage = 500};
             br.BranchFeatures.Add(lat);
             wf.Network.Nodes.AddRange(new[] {startNode, endNode});
@@ -1180,7 +1180,10 @@ namespace Sobek.IntegrationTests
             flow1dModel.Network.Nodes.Add(hydroNode1);
             var hydroNode2 = new HydroNode() { Geometry = new Point(100.0, 0.0) };
             flow1dModel.Network.Nodes.Add(hydroNode2);
-            var branch = new Channel("Branch1", hydroNode1, hydroNode2, 100.0);
+            var branch = new Channel("Branch1", hydroNode1, hydroNode2)
+            {
+                Geometry = new LineString(new[] {hydroNode1.Geometry.Coordinate, hydroNode2.Geometry.Coordinate})
+            };
             flow1dModel.Network.Branches.Add(branch);
 
             var observationPoint = new ObservationPoint()

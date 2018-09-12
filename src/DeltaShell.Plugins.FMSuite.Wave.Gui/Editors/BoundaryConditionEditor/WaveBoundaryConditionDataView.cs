@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using DelftTools.Controls;
+﻿using DelftTools.Controls;
 using DelftTools.Controls.Swf.Table;
 using DelftTools.Functions.Generic;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
@@ -15,6 +8,11 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
+using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
 {
@@ -35,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
         }
 
         private WaveBoundaryCondition boundaryCondition;
-       
+
         public object Data
         {
             get { return boundaryCondition; }
@@ -55,27 +53,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             }
         }
 
-        private DateTime ModelStartTime
+        private DateTime StartTime
         {
-            get { return model != null ? model.StartTime : DateTime.MinValue; }
+            get { return Model != null ? Model.ModelDefinition.ModelReferenceDateTime : DateTime.Today; }
         }
-        private DateTime ModelStopTime
+
+        private DateTime StopTime
         {
-            get { return model != null ? model.StopTime : ModelStartTime.AddDays(1); }
+            get { return StartTime.AddDays(1); }
         }
-        private TimeSpan ModelTimestep
+
+        private TimeSpan Timestep
         {
-            get { return new TimeSpan(0, 1, 0, 0); }
+            get { return new TimeSpan(1, 0, 0, 0); }
         }
 
         public int SelectedPointIndex { get; set; }
 
-        private ITimeDependentModel model;
-        public ITimeDependentModel Model
-        {
-            get { return model; }
-            set { model = value; }
-        }
+        public WaveModel Model { get; set; }
 
         private Func<string, string> importIntoModelDirectory;
         public Func<string, string> ImportIntoModelDirectory
@@ -210,7 +205,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
         {
             var generateDialog = new TimeSeriesGeneratorDialog { ApplyOnAccept = false };
 
-            generateDialog.SetData(null, ModelStartTime, ModelStopTime, ModelTimestep);
+            generateDialog.SetData(null, StartTime, StopTime, Timestep);
 
             generateDialog.ShowDialog(this);
 
@@ -225,7 +220,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             functionView.Data = null;
 
             boundaryCondition.BeginEdit(new DefaultEditAction("Generate/modify timeseries"));
-            
+
             var count = boundaryCondition.Feature.Geometry.Coordinates.Count();
             var boundaryConditionData = boundaryCondition.GetDataAtPoint(SelectedPointIndex);
             switch (supportPointsDialog.SupportPointOperationMode)
@@ -262,7 +257,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
                         if (boundaryCondition.DataPointIndices.Contains(i)) continue;
                         boundaryCondition.AddPoint(i);
                         var function = boundaryCondition.GetDataAtPoint(i);
-                        
+
                         function.BeginEdit(new DefaultEditAction("Generate/modify timeseries"));
                         var argument = function.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
                         if (!generateDialog.Apply(argument))
@@ -282,7 +277,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
                             boundaryCondition.AddPoint(i);
                         }
                         var function = boundaryCondition.GetDataAtPoint(i);
-                        
+
                         function.BeginEdit(new DefaultEditAction("Generate/modify timeseries"));
                         var argument = function.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
                         if (!generateDialog.Apply(argument))

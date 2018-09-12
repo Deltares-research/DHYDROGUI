@@ -5,6 +5,7 @@
   <Directory Id="DeltaShell.Plugins.WaterQualityModel" Name="DeltaShell.Plugins.WaterQualityModel">
     <Component Id="WaterQualityModelPlugin" Guid="F1D6AEB0-9D12-44BD-BEAF-16341DFB84F8">
       <File Id="DeltaShell.Plugins.DelftModels.WaterQualityModel.dll" Source="$(var.waq_plugin_bin)DeltaShell.Plugins.DelftModels.WaterQualityModel.dll" KeyPath="yes"/>
+      <File Id="DWAQ_allowed_values.csv" Source="$(var.waq_plugin_bin)DWAQ_allowed_values.csv"/>
     </Component>
     
     <Directory Name="waq_kernel" Id="delwaq_kernel_folder">

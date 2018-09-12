@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Networks;
 using log4net;
+using SharpMap.CoordinateSystems.Transformations;
 
 namespace DelftTools.Hydro
 {
@@ -14,7 +17,29 @@ namespace DelftTools.Hydro
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroNetworkExtensions));
 
-        /// <summary>
+        public static void UpdateGeodeticDistancesOfChannels(this IHydroNetwork network)
+        {
+            if (network.CoordinateSystem == null)
+            {
+                network.Channels.ForEach(c => c.GeodeticLength = double.NaN);
+                return;
+            }
+
+            var geodeticDistance = new GeodeticDistance(network.CoordinateSystem);
+
+            network.Channels.ForEach(c =>
+            {
+                var distance = 0.0;
+
+                for (int index = 1; index < c.Geometry.Coordinates.Length; ++index)
+                    distance += geodeticDistance.Distance(c.Geometry.Coordinates[index - 1],
+                        c.Geometry.Coordinates[index]);
+
+                c.GeodeticLength = distance;
+            });
+        }
+
+
         /// Ensure that all <see cref="ICompositeBranchStructure"/> have a unique name
         /// </summary>
         /// <param name="network">Network to check</param>

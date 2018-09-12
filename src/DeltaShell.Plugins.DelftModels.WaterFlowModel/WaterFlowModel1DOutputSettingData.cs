@@ -121,7 +121,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// <summary>
         /// Lateral Source parameter names
         /// </summary>        
-        public const string LateralDischarge = "Discharge (l)";
         public const string LateralActualDischarge = "Actual discharge (l)";
         public const string LateralDefinedDischarge = "Defined discharge (l)";
         public const string LateralDifference = "Lateral difference (l)";
@@ -191,14 +190,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
             private set // mapped to NHibernate storage!. 
             {
-                CheckInputAndOutputLateralSources(value, engineParameters);
                 if (IsOutDatedParameterList(value, engineParameters))
                 {
                     FixMissing070Role(value, engineParameters);
                     RemoveNoLongerExistingParametersFrom(value, engineParameters);
                     MergeMissingParametersInto(value, engineParameters);
                 }
-                CheckInAndOutDischarges(value, engineParameters);
                 engineParameters = value;
             } 
         }
@@ -256,31 +253,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             return false;
         }
 
-        private void CheckInAndOutDischarges(IEventedList<EngineParameter> nhValues, IEventedList<EngineParameter> currentParameters)
-        {
-            List<EngineParameter> copyOfNhValues = nhValues.ToList();
-            IEnumerable<EngineParameter> inOutDischarges = copyOfNhValues.Where(nhV =>
-                (nhV.ElementSet == ElementSet.Laterals) &&
-                (nhV.QuantityType == QuantityType.Discharge) &&
-                (nhV.Role == (DataItemRole.Input | DataItemRole.Output)));
-
-            foreach (EngineParameter inOutDischarge in inOutDischarges)
-            {
-                nhValues.Remove(inOutDischarge);
-                EngineParameter inDischarge = currentParameters.First(ep =>
-                                    (ep.ElementSet == ElementSet.Laterals) &&
-                                    (ep.QuantityType == QuantityType.Discharge) &&
-                                    (ep.Role == (DataItemRole.Input)));
-                nhValues.Add(inDischarge);
-                EngineParameter outDischarge = currentParameters.First(ep =>
-                                    (ep.ElementSet == ElementSet.Laterals) &&
-                                    (ep.QuantityType == QuantityType.Discharge) &&
-                                    (ep.Role == (DataItemRole.Output)));
-                outDischarge.AggregationOptions = inOutDischarge.AggregationOptions;
-                nhValues.Add(outDischarge);
-            }
-        }
-
         private static void MergeMissingParametersInto(IEventedList<EngineParameter> nhValues, IEnumerable<EngineParameter> completeList)
         {
             //changes were detected: add missing items
@@ -306,31 +278,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 {
                     nhValues.Remove(parameter);
                 }
-            }
-        }
-
-        private static void CheckInputAndOutputLateralSources(IEventedList<EngineParameter> nhValues, IEnumerable<EngineParameter> completeList)
-        {
-            //changes were detected: remove no longer existing items
-
-            IEnumerable<EngineParameter> inOutDischarges = nhValues.Where(nhV =>
-                nhV.QuantityType == QuantityType.Discharge &&
-                nhV.ElementSet == ElementSet.Laterals &&
-                (nhV.Role == (DataItemRole.Output | DataItemRole.Input))).ToList();
-            foreach (EngineParameter inOutDischarge in inOutDischarges)
-            {
-                nhValues.Remove(inOutDischarge);
-                EngineParameter inDischarge = completeList.First(nhV =>
-                    nhV.QuantityType == QuantityType.Discharge &&
-                    nhV.ElementSet == ElementSet.Laterals &&
-                    nhV.Role == DataItemRole.Input);
-                nhValues.Add(inDischarge);
-                EngineParameter outDischarge = completeList.First(nhV =>
-                    nhV.QuantityType == QuantityType.Discharge &&
-                    nhV.ElementSet == ElementSet.Laterals &&
-                    nhV.Role == DataItemRole.Output);
-                outDischarge.AggregationOptions = inOutDischarge.AggregationOptions;
-                nhValues.Add(outDischarge);
             }
         }
 

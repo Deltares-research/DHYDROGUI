@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -22,6 +23,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
+using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
@@ -105,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new WindItemListNodePresenter {GuiPlugin = this};
             yield return new WindItemNodePresenter {GuiPlugin = this};
             yield return
-                new SpatialOperationCoverageTreeShortcutNodePresenter<WaterFlowFMModel, WaterFlowFMModelView>
+                new SpatialOperationCoverageTreeShortcutNodePresenter<WaterFlowFMModel, WpfSettingsView>
                 {
                     GuiPlugin = this
                 };
@@ -113,15 +115,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
-            yield return new ViewInfo<WaterFlowFMModel, WaterFlowFMModelView>
+            yield return new ViewInfo<WaterFlowFMModel, WpfSettingsView>
             {
-                Description = "Map",
-                CompositeViewType = typeof (ProjectItemMapView),
-                GetCompositeViewData = o => o,
-                GetViewName = (v, o) => o.Name + " (FM model)",
+                Description = "FM Settings",
+                GetViewName = (v, o) => o.Name + _fmModelSettingsSuffix,
+                OnActivateView = (v, o) =>
+                {
+                    Gui.CommandHandler.OpenView(v);
+                },
                 AfterCreate = (v, o) =>
                 {
-                    v.Gui = Gui;
+                    //Set the properties.
+                    var wpfSettingsViewModel = (WpfSettingsViewModel)v.DataContext;
+                    var waterFlowFmModel = (WaterFlowFMModel)v.Data;
+                    wpfSettingsViewModel.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(waterFlowFmModel, Gui);
+                    ((INotifyPropertyChange)waterFlowFmModel.ModelDefinition.Properties).PropertyChanged += (sender, args) =>
+                    {
+                        var property = sender as WaterFlowFMProperty;
+                        if (property != null)
+                        {
+                            wpfSettingsViewModel.UpdatePropertyValue(property.PropertyDefinition.MduPropertyName);
+                }
+            };
                 }
             };
 
@@ -163,34 +178,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 AfterCreate = (v, o) =>
                 {
                     v.Gui = Gui;
-                    v.OnValidate = d => (d as WaterFlowFMModel).Validate(d as WaterFlowFMModel);
+                    v.OnValidate = d => (d as WaterFlowFMModel)?.Validate();
                 }
             };
 
             // Spatial operations
             yield return
                 new ViewInfo
-                    <SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WaterFlowFMModelView>, WaterFlowFMModel,
-                        WaterFlowFMModelView>
+                    <SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>, WaterFlowFMModel,
+                        WpfSettingsView>
                 {
                     Description = "Spatial operation on coverage",
-                    GetViewName = (v, o) => o.Name + " (FM model)",
+                    GetViewName = (v, o) => o.Name + _fmModelSettingsSuffix,
                     GetViewData = o => o.Model,
                     CompositeViewType = typeof(ProjectItemMapView),
                     GetCompositeViewData = o => o.Model,
                     OnActivateView =
                         (v, o) =>
                         {
-                            var treeShortcut =
-                                (SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WaterFlowFMModelView>)o;
+                            var treeShortcut = (SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>)o;
                             treeShortcut.FocusSpatialEditor(Gui);
-                            treeShortcut.NavigateToInView(v);
+                            if (Gui.DocumentViewsResolver.OpenViewForData(treeShortcut.Model, typeof(WpfSettingsView)))
+                            {
+                                var settingsView = Gui.DocumentViews.OfType<WpfSettingsView>()
+                                    .FirstOrDefault(dv => dv.Data.Equals(treeShortcut.Model));
+                                treeShortcut.NavigateToInView(settingsView);
+                            }
                         },
                     AfterCreate = (v, o) =>
                     {
-                        v.Gui = Gui;
                         o.FocusSpatialEditor(Gui);
-                        o.NavigateToInView(v);
+                        //Set the properties.
+                        if(Gui.DocumentViewsResolver.OpenViewForData(o.Model, typeof(WpfSettingsView)))
+                        {
+                            var settingsView = Gui.DocumentViews.OfType<WpfSettingsView>()
+                                .FirstOrDefault(dv => dv.Data.Equals(o.Model));
+                            o.NavigateToInView(settingsView);
+                        }
+                        
                     },
                 };
 
@@ -214,19 +239,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
 
             // 'General'
-            yield return new ViewInfo<FlowFMTreeShortcut, WaterFlowFMModel, WaterFlowFMModelView>
+            yield return new ViewInfo<FlowFMTreeShortcut, WaterFlowFMModel, WpfSettingsView>
             {
-                Description = "FM Model",
-                GetViewName = (v, o) => o.Name + " (FM model)",
+                Description = "FM Settings",
+                GetViewName = (v, o) => o.Name + _fmModelSettingsSuffix,
                 AdditionalDataCheck = o => o.CanSwitchToTab,
                 GetViewData = o => o.Model,
                 CompositeViewType = typeof(ProjectItemMapView),
                 GetCompositeViewData = o => o.Model,
-                OnActivateView = (v, o) => ((FlowFMTreeShortcut)o).NavigateToInView(v),
+                OnActivateView = (v, o) =>
+                {
+                    Gui.CommandHandler.OpenView(v);
+                    var shortCut = ((FlowFMTreeShortcut) o);
+                    if (Gui.DocumentViewsResolver.OpenViewForData(shortCut.Model, typeof(WpfSettingsView)))
+                    {
+                        var settingsView = Gui.DocumentViews.OfType<WpfSettingsView>()
+                            .FirstOrDefault(dv => dv.Data.Equals(shortCut.Model));
+                        shortCut.NavigateToInView(settingsView);
+                    }
+                },
                 AfterCreate = (v, o) =>
                 {
-                    v.Gui = Gui;
-                    o.NavigateToInView(v);
+                    //Set the properties.
+                    if (Gui.DocumentViewsResolver.OpenViewForData(o.Model, typeof(WpfSettingsView)))
+                    {
+                        var settingsView = Gui.DocumentViews.OfType<WpfSettingsView>()
+                            .FirstOrDefault(dv => dv.Data.Equals(o.Model));
+                        o.NavigateToInView(settingsView);
+                }
                 }
             };
 
@@ -258,6 +298,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         paths.Add(landBoundariesFilePath);
                     }
 
+                    //Unless specified otherwise (declared in the FlowFMGuiPlugin constructor), this will execute the following: 
+                    //            RgfGridEditor.OpenGrid(model.NetFilePath, model.Grid == null || model.Grid.IsEmpty, paths);
+                    GridHandler?.Invoke(model.NetFilePath, model.Grid == null || model.Grid.IsEmpty, paths);
+                    var mapView = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault( mv => mv.Data.Equals(model));
+                    ReloadGrid(model, mapView);
                     DialogResult userFeedback = DialogResult.OK;
                     if (model.Grid != null && !model.Grid.IsEmpty)
                     {
@@ -541,7 +586,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             };
         }
 
-        private static void ReloadGrid(WaterFlowFMModel model, WaterFlowFMModelView modelView)
+        private static void ReloadGrid(WaterFlowFMModel model, ProjectItemMapView modelView)
         {
             try
             {
@@ -603,7 +648,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
             finally
             {
-                modelView.Layer?.Map.ZoomToExtents();
+                modelView.MapView?.Map.ZoomToExtents();
                 if (SharpMapGisGuiPlugin.Instance != null)
                 {
                     SharpMapGisGuiPlugin.Instance.Gui.MainWindow.SetWaitCursorOff();
@@ -1002,6 +1047,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         }
 
         private static Func<MapView> getActiveMapViewFunc;
+        private string _fmModelSettingsSuffix= " (FM model settings)";
         
         public static MapView ActiveMapView
         {

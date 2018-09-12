@@ -37,6 +37,7 @@ using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
+using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpTestsEx;
 using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
@@ -81,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
 
-            var branch = new Channel("branch1", node1, node2, 100.0);
+            var branch = new Channel("branch1", node1, node2);
             var vertices = new List<Coordinate>
                                {
                                    new Coordinate(0, 0),
@@ -167,7 +168,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
 
-            var branch = new Channel("branch1", node1, node2, 100.0);
+            var branch = new Channel("branch1", node1, node2);
             var vertices = new List<Coordinate>
                                {
                                    new Coordinate(0, 0),
@@ -247,7 +248,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
 
-            var branch = new Channel("branch1", node1, node2, 100.0);
+            var branch = new Channel("branch1", node1, node2);
             var vertices = new List<Coordinate>
                                {
                                    new Coordinate(0, 0),
@@ -345,7 +346,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             network.Nodes.Add(node2);
             network.Nodes.Add(node3);
 
-            var branch1 = new Channel("branch1", node1, node2, 100.0);
+            var branch1 = new Channel("branch1", node1, node2);
             var vertices = new List<Coordinate>
                                {
                                    startCoordinate,
@@ -353,7 +354,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                                };
             branch1.Geometry = GeometryFactory.CreateLineString(vertices.ToArray());
 
-            var branch2 = new Channel("branch2", node2, node3, 150.0);
+            var branch2 = new Channel("branch2", node2, node3);
             vertices = new List<Coordinate>
                            {
                                    midCoordinate,
@@ -492,7 +493,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
 
-            var branch1 = new Channel("branch1", node1, node2, 100.0);
+            var branch1 = new Channel("branch1", node1, node2);
 
             network.Branches.Add(branch1);
 
@@ -1104,7 +1105,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         {
             using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
             {
-                var networkCoordinateSystemRDNew = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
+                if (Map.CoordinateSystemFactory == null)
+                {
+                    Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+                }
+
+                var networkCoordinateSystemRDNew = Map.CoordinateSystemFactory.CreateFromEPSG(28992);
+
                 waterFlowModel1D.Network.CoordinateSystem = networkCoordinateSystemRDNew;
                 waterFlowModel1D.Network.Branches.First().BranchFeatures.Add(new ObservationPoint() {Name = "myObservationPoint"});
                 RunModel(waterFlowModel1D);
@@ -1119,6 +1126,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 Assert.IsNotNull(outputWaterLevelDataItem);
                 var outputWaterLevelFeatureCoverage = outputWaterLevelDataItem.Value as FeatureCoverage;
                 Assert.IsNotNull(outputWaterLevelFeatureCoverage);
+
                 Assert.IsTrue(outputWaterLevelFeatureCoverage.CoordinateSystem.EqualsTo(networkCoordinateSystemRDNew));
                 var networkCoordinateSystemRDOld = new OgrCoordinateSystemFactory().CreateFromEPSG(28991);
                 waterFlowModel1D.Network.CoordinateSystem = networkCoordinateSystemRDOld;
@@ -1133,7 +1141,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             // Use a valid network for the calculation
             using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
             {
-
                 // Adjust the boundary conditions so that a constant H resides on a node that is connected to multiple branches
                 waterFlowModel1D.BoundaryConditions[1].DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
 
@@ -1896,8 +1903,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             var node1 = new HydroNode();
             var node2 = new HydroNode();
             var node3 = new HydroNode();
-            var branch = new Channel("branch", node1, node2, 100);
-            var branch2 = new Channel("branch", node2, node3, 500);
+            var branch = new Channel("branch", node1, node2);
+            var branch2 = new Channel("branch", node2, node3);
 
             network.Branches.Add(branch);
             network.Branches.Add(branch2);
@@ -3179,7 +3186,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             var node2 = new HydroNode { Name = "Node2", Network = network, Geometry = new Point(branchLength, 0.0) };
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
-            var branch1 = new Channel("branch1", node1, node2, branchLength)
+            var branch1 = new Channel("branch1", node1, node2)
             {
                 Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(branchLength, 0) })
             };
@@ -3290,7 +3297,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             // create network
             var node1 = new HydroNode { Name = "node1", Geometry = new Point(0, 0) };
             var node2 = new HydroNode { Name = "node2", Geometry = new Point(100, 0) };
-            var branch1 = new Channel("branch1", node1, node2, 100.0) { Geometry = new LineString(new Coordinate[] { new Coordinate(0, 0), new Coordinate(100, 0) }) };
+            var branch1 = new Channel("branch1", node1, node2) { Geometry = new LineString(new Coordinate[] { new Coordinate(0, 0), new Coordinate(100, 0) }) };
             var network = new HydroNetwork { Nodes = { node1, node2 }, Branches = { branch1 } };
 
             // create waterFlowModel1D
@@ -3318,7 +3325,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             var weir = new Weir { Name = "weir1", Geometry = new Point(10, 0) };
             var node1 = new HydroNode { Name = "node1", Geometry = new Point(0, 0) };
             var node2 = new HydroNode { Name = "node2", Geometry = new Point(100, 0) };
-            var branch1 = new Channel("branch1", node1, node2, 100.0)
+            var branch1 = new Channel("branch1", node1, node2)
                 {
                     Geometry = new LineString(new Coordinate[] { new Coordinate(0, 0), new Coordinate(100, 0) }),
                     BranchFeatures = { weir }
@@ -3350,7 +3357,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             // link network
             var node1 = new HydroNode { Name = "node1", Geometry = new Point(0, 0) };
             var node2 = new HydroNode { Name = "node2", Geometry = new Point(100, 0) };
-            var branch1 = new Channel("branch1", node1, node2, 100.0) { Geometry = new LineString(new [] { new Coordinate(0, 0), new Coordinate(100, 0) }) };
+            var branch1 = new Channel("branch1", node1, node2) { Geometry = new LineString(new [] { new Coordinate(0, 0), new Coordinate(100, 0) }) };
             var network = new HydroNetwork { Nodes = { node1, node2 }, Branches = { branch1 } };
             var networkDataItem = new DataItem(network);
 
@@ -3421,7 +3428,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
 
-            var branch1 = new Channel("branch1", node1, node2, 100.0);
+            var branch1 = new Channel("branch1", node1, node2);
             var vertices = new List<Coordinate>
                                {
                                    startCoordinate,
@@ -3563,7 +3570,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
 
-            var branch1 = new Channel("branch1", node1, node2, 4550.0);
+            var branch1 = new Channel("branch1", node1, node2);
             var vertices = new List<Coordinate>
                                {
                                    startCoordinate,
@@ -3861,5 +3868,35 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             Assert.IsTrue(flowModel.RoughnessSections.OfType<ReverseRoughnessSection>()
                                    .All(rs => rs.UseNormalRoughness == true));
         }
+
+        [Test]
+        public void GivenNetworkWithRdNewCoordinateSystem_WhenCoordinateSystemIsSetToNull_ThenGeodeticLengthsOfBranchesAreUpdated()
+        {
+            using (var flowModel = new WaterFlowModel1D())
+            {
+                var network = new HydroNetwork();
+                var node1 = new HydroNode();
+                var node2 = new HydroNode();
+                var branch1 = new Channel(node1, node2)
+                {
+                    Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(100, 0) })
+                };
+                network.Nodes.AddRange(new[] { node1, node2 });
+                flowModel.Network = network;
+                network.Branches.Add(branch1);
+                Assert.That(branch1.GeodeticLength, Is.NaN);
+                Assert.That(branch1.Length, Is.EqualTo(100).Within(0.1));
+                if (Map.CoordinateSystemFactory == null)
+                    Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+                var rdNewCoordinateSystem = 28992;
+                flowModel.Network.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(rdNewCoordinateSystem);
+                Assert.That(branch1.GeodeticLength, Is.Not.NaN);
+                Assert.That(branch1.Length, Is.EqualTo(branch1.GeodeticLength).Within(0.1));
+                flowModel.Network.CoordinateSystem = null;
+                Assert.That(branch1.GeodeticLength, Is.NaN);
+                Assert.That(branch1.Length, Is.EqualTo(100).Within(0.1));
+            }
+        }
+
     }
 }

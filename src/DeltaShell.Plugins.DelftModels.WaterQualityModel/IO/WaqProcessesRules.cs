@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using DeltaShell.NGHS.IO;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
@@ -22,7 +23,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <returns></returns>
         public IList<WaqProcessValidationRule> ReadValidationCsv(string directoryPath)
         {
+            directoryPath = string.IsNullOrEmpty(directoryPath) ? string.Empty : directoryPath;
             var filePath = Path.Combine(directoryPath, waqCoefficientValidationsCvFileName);
+            if (!File.Exists(filePath))
+            {
+                var errMssg = Resources.WaqProcessesRules_ReadValidationCsv_File__0__not_found_in_the_path__1___No_validations_will_be_done_for_the_coefficients_;
+                Log.ErrorFormat(errMssg, waqCoefficientValidationsCvFileName, filePath);
+                return new List<WaqProcessValidationRule>();
+            }
+
             OpenInputFile(filePath);
             var rules = new List<WaqProcessValidationRule>();
             try
