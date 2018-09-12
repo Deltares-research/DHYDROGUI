@@ -32,6 +32,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.Wave;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
@@ -400,10 +401,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        [Ignore("Test currently hangs due to new WPF merge and the newly added pop up window when a WaterFlowFMModel is selected, causing an endless loop.")]
         public void Add2D3DIntegratedModelAddFMModelRemoveIntegratedModel()
         {
             var mainWindow = (MainWindow) gui.MainWindow;
+
+            if (!gui.DocumentViewsResolver.DefaultViewTypes.ContainsKey(typeof(WaterFlowFMModel)))
+                gui.DocumentViewsResolver.DefaultViewTypes.Add(typeof(WaterFlowFMModel), typeof(WaterFlowFMFileStructureView));
+
             Action mainWindowShown = delegate
             {
                 var hydroModelBuilder = new HydroModelBuilder();
