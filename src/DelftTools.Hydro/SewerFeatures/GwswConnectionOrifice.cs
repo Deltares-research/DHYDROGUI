@@ -60,7 +60,6 @@ namespace DelftTools.Hydro.SewerFeatures
         private void AddNewOrificeSewerConnectionToNetwork(IHydroNetwork hydroNetwork)
         {
             var sewerConnection = GetNewSewerConnectionWithOrifice();
-            sewerConnection.AddStructureToBranch(this);
             sewerConnection.AddToHydroNetwork(hydroNetwork);
         }
         
@@ -75,6 +74,8 @@ namespace DelftTools.Hydro.SewerFeatures
                 SourceCompartmentName = SourceCompartmentName,
                 TargetCompartmentName = TargetCompartmentName
             };
+            sewerConnection.AddStructureToBranch(this);
+
             return sewerConnection;
         }
 
