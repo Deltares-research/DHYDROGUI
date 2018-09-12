@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Controls;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
@@ -29,6 +31,7 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
@@ -429,6 +432,68 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
         }
 
+        [Test]
+        public void GivenAnIntegratedModelWithFMModelInItWhenOpeningGridInRGFGridAndClosingItThenItShouldNotThowAnException()
+        {
+            var mainWindow = (MainWindow)gui.MainWindow;
+
+            Action mainWindowShown = delegate
+            {
+                var hydroModelBuilder = new HydroModelBuilder();
+                using (var integratedModel = hydroModelBuilder.BuildModel(ModelGroup.FMWaveRtcModels))
+                {
+                    gui.CommandHandler.AddItemToProject(integratedModel);
+                    gui.Selection = integratedModel;
+                    gui.CommandHandler.OpenViewForSelection();
+                    var waterFlowFMModel = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().First();
+                    waterFlowFMModel.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(50, 50, 20, 20);
+                    waterFlowFMModel.ReloadGrid();
+                    gui.Selection = waterFlowFMModel.Grid;
+                    PerformActionWithCancellationThread(60000, () => gui.CommandHandler.OpenViewForSelection());
+                }
+            };
+            WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
+        }
+
+        private static void PerformActionWithCancellationThread(int timeout, Action action)
+        {
+            // Action waits for rgfgrid to close, we do this manually from another thread
+            var cancellationThread = new Thread(() => CloseRgfGrid(timeout));
+            cancellationThread.Start();
+
+            // Invoke action
+            action.Invoke();
+        }
+
+        private static void CloseRgfGrid(int maxTimeout)
+        {
+            Thread.Sleep(500); // Give action time to get started
+            const int millisecondsToSleep = 100;
+
+            // Get active rgfGrid processes (there should only be one)
+            var rgfGridProcesses = Process.GetProcessesByName(RgfGridEditor.MfeAppProcessName);
+            while (!rgfGridProcesses.Any())
+            {
+                Thread.Sleep(millisecondsToSleep);
+                rgfGridProcesses = Process.GetProcessesByName(RgfGridEditor.MfeAppProcessName);
+            }
+
+            foreach (var process in rgfGridProcesses)
+            {
+                var totalTimeWaiting = 0;
+                // attempt to close rgfGrid (may not be successful straight away)
+                while (!process.CloseMainWindow())
+                {
+                    totalTimeWaiting += millisecondsToSleep;
+                    Thread.Sleep(millisecondsToSleep);
+
+                    if (totalTimeWaiting > maxTimeout)
+                    {
+                        return;
+                    }
+                }
+            }
+        }
         private static HydroModel CreateFMRTCModel(out RealTimeControlModel rtc, out WaterFlowFMModel flow, IApplication application)
         {
             flow = new WaterFlowFMModel { Name = "flow" };
