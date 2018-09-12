@@ -1,5 +1,6 @@
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -64,8 +65,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static void AddStructureAttributesToOrifice(IOrifice orifice, GwswElement gwswElement)
         {
-            if (!gwswElement.IsValidGwswStructure()) return;
-
+            var gatedWeirFormula = orifice.WeirFormula as GatedWeirFormula;
+            if (!gwswElement.IsValidGwswStructure() || gatedWeirFormula == null) return;
+            
             double auxDouble;
             //Add Attributes
             var bottomLevel = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.BottomLevel);
@@ -74,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             var contractionCoefficient = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.ContractionCoefficient);
             if (contractionCoefficient.TryGetValueAsDouble(out auxDouble))
-                orifice.ContractionCoefficent = auxDouble;
+                gatedWeirFormula.ContractionCoefficient = auxDouble;
 
             var maxDischarge = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.MaxDischarge);
             if (maxDischarge.TryGetValueAsDouble(out auxDouble))

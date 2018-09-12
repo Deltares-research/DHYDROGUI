@@ -2,6 +2,7 @@
 using System.Globalization;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
@@ -70,15 +71,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
 
-            var network = new HydroNetwork();
-            
             var generator = new SewerOrificeGenerator();
             var createdOrifice = generator.Generate(structureOrificeGwswElement) as Orifice;
             Assert.IsNotNull(createdOrifice);
-            Assert.AreEqual(orificeId, createdOrifice.Name);
-            Assert.AreEqual(bottomLevel, createdOrifice.BottomLevel);
-            Assert.AreEqual(contractionCoef, createdOrifice.ContractionCoefficent);
-            Assert.AreEqual(maxDischarge, createdOrifice.MaxDischarge);
+            Assert.That(createdOrifice.Name, Is.EqualTo(orificeId));
+            Assert.That(createdOrifice.BottomLevel, Is.EqualTo(bottomLevel));
+            Assert.That(((GatedWeirFormula)createdOrifice.WeirFormula).ContractionCoefficient, Is.EqualTo(contractionCoef));
+            Assert.That(createdOrifice.MaxDischarge, Is.EqualTo(maxDischarge));
         }
 
         [Test]
@@ -106,10 +105,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var createdOrifice = createdElement;
             Assert.IsNotNull(createdOrifice);
-            Assert.AreEqual(orificeId, createdOrifice.Name);
-            Assert.AreEqual(bottomLevel, createdOrifice.BottomLevel);
-            Assert.AreEqual(contractionCoef, createdOrifice.ContractionCoefficent);
-            Assert.AreEqual(maxDischarge, createdOrifice.MaxDischarge);
+            Assert.That(createdOrifice.Name, Is.EqualTo(orificeId));
+            Assert.That(createdOrifice.BottomLevel, Is.EqualTo(bottomLevel));
+            Assert.That(((GatedWeirFormula)createdOrifice.WeirFormula).ContractionCoefficient, Is.EqualTo(contractionCoef));
+            Assert.That(createdOrifice.MaxDischarge, Is.EqualTo(maxDischarge));
         }
     }
 }

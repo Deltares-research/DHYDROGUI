@@ -22,7 +22,6 @@ namespace DelftTools.Hydro.SewerFeatures
         }
 
         public double BottomLevel { get; set; }
-        public double ContractionCoefficent { get; set; }
         public double MaxDischarge { get; set; }
 
         public override void AddToHydroNetwork(IHydroNetwork hydroNetwork)
@@ -76,7 +75,7 @@ namespace DelftTools.Hydro.SewerFeatures
         private void CopyPropertyValuesToExistingOrifice(IOrifice orifice)
         {
             orifice.BottomLevel = BottomLevel;
-            orifice.ContractionCoefficent = ContractionCoefficent;
+            ((GatedWeirFormula)orifice.WeirFormula).ContractionCoefficient = ((GatedWeirFormula)WeirFormula).ContractionCoefficient;
             orifice.MaxDischarge = MaxDischarge;
         }
 

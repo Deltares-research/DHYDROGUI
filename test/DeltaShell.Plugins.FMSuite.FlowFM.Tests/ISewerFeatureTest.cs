@@ -437,8 +437,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var orifice = new Orifice(orificeName)
             {
                 BottomLevel = bottomLevel,
-                ContractionCoefficent = contractionCoefficent,
-                MaxDischarge = maxDischarge
+                MaxDischarge = maxDischarge,
+                WeirFormula = new GatedWeirFormula
+                {
+                    ContractionCoefficient = contractionCoefficent
+                }
             };
             AddSewerFeatureToNetwork(orifice, network);
             Assert.That(network.SewerConnections.Count, Is.EqualTo(1));
@@ -456,7 +459,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(orificeInNetwork);
             Assert.That(orificeInNetwork.Name, Is.EqualTo(orificeName));
             Assert.That(orificeInNetwork.BottomLevel, Is.EqualTo(bottomLevel));
-            Assert.That(orificeInNetwork.ContractionCoefficent, Is.EqualTo(contractionCoefficent));
+            Assert.That(((GatedWeirFormula)orificeInNetwork.WeirFormula).ContractionCoefficient, Is.EqualTo(contractionCoefficent));
             Assert.That(orificeInNetwork.MaxDischarge, Is.EqualTo(maxDischarge));
         }
 
@@ -474,8 +477,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var orifice = new Orifice(orificeName)
             {
                 BottomLevel = bottomLevel,
-                ContractionCoefficent = contractionCoefficent,
-                MaxDischarge = maxDischarge
+                MaxDischarge = maxDischarge,
+                WeirFormula = new GatedWeirFormula
+                {
+                    ContractionCoefficient = contractionCoefficent
+                }
             };
 
             AddSewerFeatureToNetwork(orifice, network);
@@ -496,7 +502,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(orificeInNetwork);
             Assert.That(orificeInNetwork.Name, Is.EqualTo(orificeName));
             Assert.That(orificeInNetwork.BottomLevel, Is.EqualTo(bottomLevel));
-            Assert.That(orificeInNetwork.ContractionCoefficent, Is.EqualTo(contractionCoefficent));
+            Assert.That(((GatedWeirFormula)orificeInNetwork.WeirFormula).ContractionCoefficient, Is.EqualTo(contractionCoefficent));
             Assert.That(orificeInNetwork.MaxDischarge, Is.EqualTo(maxDischarge));
         }
 
