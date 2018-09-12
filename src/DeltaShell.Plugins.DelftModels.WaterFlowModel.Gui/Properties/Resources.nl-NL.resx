@@ -564,25 +564,4 @@
   <data name="WaterFlowModel1DGuiPlugin_InitializeComponent_Zoom_to_Feature" xml:space="preserve">
     <value>#Zoom functie</value>
   </data>
-  <data name="WaterFlowModel1DProperties_Categories_RestartParameters" xml:space="preserve">
-    <value>Herstart parameters</value>
-  </data>
-  <data name="WaterFlowModel1DProperties_RestartStartTime_Description" xml:space="preserve">
-    <value>#De begintijd voor herstarten voor het model uitvoeren.</value>
-  </data>
-  <data name="WaterFlowModel1DProperties_RestartStartTime_DisplayName" xml:space="preserve">
-    <value>#Begintijd voor herstarten</value>
-  </data>
-  <data name="WaterFlowModel1DProperties_RestartStopTime_Description" xml:space="preserve">
-    <value>#Stoptijd voor herstarten voor model uitvoeren.</value>
-  </data>
-  <data name="WaterFlowModel1DProperties_RestartStopTime_DisplayName" xml:space="preserve">
-    <value>#Stoptijd voor herstarten</value>
-  </data>
-  <data name="WaterFlowModel1DProperties_RestartTimeStep_Description" xml:space="preserve">
-    <value>#Stap herstart tijdsinterval.</value>
-  </data>
-  <data name="WaterFlowModel1DProperties_RestartTimeStep_DisplayName" xml:space="preserve">
-    <value>Herstart tijdstap</value>
-  </data>
 </root>
