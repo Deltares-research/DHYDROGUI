@@ -11,16 +11,7 @@ namespace DelftTools.Hydro.SewerFeatures
         public string SourceCompartmentName { get; set; }
 
         public string TargetCompartmentName { get; set; }
-
-        protected override ISewerConnection GetNewSewerConnectionWithWeir()
-        {
-            var sewerConnection = new SewerConnection(Name);
-            SetSewerConnectionProperties(sewerConnection);
-            sewerConnection.AddStructureToBranch(this);
-
-            return sewerConnection;
-        }
-
+        
         protected override void CopyPropertyValuesToExistingWeir(IWeir weir)
         {
             weir.FlowDirection = FlowDirection;

@@ -9,13 +9,6 @@ namespace DelftTools.Hydro.SewerFeatures
         {
         }
         
-        protected override ISewerConnection GetNewSewerConnectionWithWeir()
-        {
-            var sewerConnection = new SewerConnection(Name);
-            sewerConnection.AddStructureToBranch(this);
-            return sewerConnection;
-        }
-
         protected override void CopyPropertyValuesToExistingWeir(IWeir weir)
         {
             weir.CrestWidth = CrestWidth;

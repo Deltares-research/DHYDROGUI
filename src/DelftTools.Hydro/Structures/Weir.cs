@@ -6,12 +6,15 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;
+using log4net;
 
 namespace DelftTools.Hydro.Structures
 {
     [Entity(FireOnCollectionChange=false)]
     public class Weir : BranchStructure, IWeir
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(Weir));
+
         private double crestLevel;
         private double crestWidth;
         private bool canBeTimedependent;
@@ -265,34 +268,59 @@ namespace DelftTools.Hydro.Structures
                 sc => sc.BranchFeatures.Count >= 2
                       && sc.BranchFeatures[1].Name == Name
                       && sc.BranchFeatures[1] is IWeir);
-            var weir = sewerConnection?.BranchFeatures.FirstOrDefault(bf => bf is IWeir) as IWeir;
+            var weir = hydroNetwork.Weirs.FirstOrDefault(o => o.Name == Name);
 
             if (weir != null)
             {
                 hydroNetwork.Branches.Remove(sewerConnection);
                 CopyPropertyValuesToExistingWeir(weir);
                 SetSewerConnectionProperties(sewerConnection);
+                sewerConnection?.UpdateBranchFeatureGeometries();
+                sewerConnection?.AddToHydroNetwork(hydroNetwork);
+                return;
+            }
+
+            sewerConnection = hydroNetwork.SewerConnections.FirstOrDefault(sc => sc.Name == Name);
+            if (sewerConnection == null)
+            {
+                AddNewSewerConnectionWithWeirToNetwork(hydroNetwork);
             }
             else
             {
-                sewerConnection = GetNewSewerConnectionWithWeir();
+                AddWeirToSewerConnection(sewerConnection);
             }
-
-            sewerConnection.AddToHydroNetwork(hydroNetwork);
-            sewerConnection.UpdateBranchFeatureGeometries();
-        }
-
-        protected virtual ISewerConnection GetNewSewerConnectionWithWeir()
-        {
-            return null;
         }
 
         protected virtual void CopyPropertyValuesToExistingWeir(IWeir weir)
         {
         }
 
+        private void AddNewSewerConnectionWithWeirToNetwork(IHydroNetwork hydroNetwork)
+        {
+            var sewerConnection = new SewerConnection(Name);
+            SetSewerConnectionProperties(sewerConnection);
+            sewerConnection.AddStructureToBranch(this);
+            sewerConnection.AddToHydroNetwork(hydroNetwork);
+        }
+
         protected virtual void SetSewerConnectionProperties(ISewerConnection sewerConnection)
         {
+        }
+
+        private void AddWeirToSewerConnection(ISewerConnection sewerConnection)
+        {
+            if (sewerConnection.BranchFeatures.Count > 0)
+            {
+                RemoveExistingBranchFeatures(sewerConnection);
+            }
+            sewerConnection.AddStructureToBranch(this);
+        }
+
+        private void RemoveExistingBranchFeatures(ISewerConnection sewerConnection)
+        {
+            var branchFeature = sewerConnection.BranchFeatures[0];
+            Log.Warn($"Overwriting branchfeature with name '{branchFeature.Name}' and type '{branchFeature.GetType()}' in sewer connection '{sewerConnection.Name}' with weir '{Name}'");
+            sewerConnection.BranchFeatures.Clear();
         }
     }
 }
