@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
@@ -561,7 +562,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             {
                 restartValues.AddProperty(ModelDefinitionsRegion.RestartStartTime.Key, waterFlowModel1D.SaveStateStartTime, ModelDefinitionsRegion.RestartStartTime.Description);
                 restartValues.AddProperty(ModelDefinitionsRegion.RestartStopTime.Key, waterFlowModel1D.SaveStateStopTime, ModelDefinitionsRegion.RestartStopTime.Description);
-                restartValues.AddProperty(ModelDefinitionsRegion.RestartTimeStep.Key, waterFlowModel1D.SaveStateTimeStep.TotalSeconds, ModelDefinitionsRegion.RestartTimeStep.Description, ModelDefinitionsRegion.RestartTimeStep.Format);
+                restartValues.AddProperty(ModelDefinitionsRegion.RestartTimeStep.Key, int.Parse(waterFlowModel1D.SaveStateTimeStep.TotalSeconds.ToString(CultureInfo.InvariantCulture)), ModelDefinitionsRegion.RestartTimeStep.Description);
             }
             var useRestartParameter = waterFlowModel1D.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.UseRestart.Key);
             var useRestart = useRestartParameter != null ? Convert.ToBoolean(useRestartParameter.Value) : waterFlowModel1D.UseRestart;
