@@ -202,6 +202,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.VerySlow)]
+        [Category(TestCategory.Integration)]
         public void PartitionHarlingen3Domains()
         {
             const string relativePath = "partition";

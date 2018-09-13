@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Drawing;
 using System.IO;
@@ -112,6 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             get { return "Boundary conditions morphology file|*.bcm"; }
         }
 
+        [ExcludeFromCodeCoverage]
         public Bitmap Icon
         {
             get { return Properties.Resources.TextDocument; }
