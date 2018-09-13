@@ -14,7 +14,7 @@
         </TypeIdentifier>
       </Class>
     </NestedTypes>
-    <AssociationLine Name="RoughnessSections" Type="DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness.RoughnessSection" FixedFromPoint="true" FixedToPoint="true">
+    <AssociationLine Name="RoughnessSections" Type="DelftTools.Roughness.RoughnessSection" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="23.875" Y="21.746" />
         <Point X="23.875" Y="22.121" />
@@ -203,7 +203,7 @@
       <FileName>PhysicalParameters\MeteoFunction.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness.RoughnessSection">
+  <Class Name="DelftTools.Roughness.RoughnessSection">
     <Position X="17" Y="24.5" Width="3.25" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
@@ -212,13 +212,13 @@
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <NestedTypes>
-      <Delegate Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness.RoughnessSection.RoughnessTypeChangedHandler" Collapsed="true">
+      <Delegate Name="DelftTools.Hydro.Roughness.RoughnessSection.RoughnessTypeChangedHandler" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>Roughness\RoughnessSection.cs</NewMemberFileName>
         </TypeIdentifier>
       </Delegate>
     </NestedTypes>
-    <AssociationLine Name="RoughnessNetworkCoverage" Type="DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness.RoughnessNetworkCoverage">
+    <AssociationLine Name="RoughnessNetworkCoverage" Type="DelftTools.Hydro.Roughness.RoughnessNetworkCoverage">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="0.06" Y="0.863" />
       </MemberNameLabel>
@@ -232,7 +232,7 @@
     </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness.RoughnessNetworkCoverage">
+  <Class Name="DelftTools.Hydro.Roughness.RoughnessNetworkCoverage">
     <Position X="17" Y="34" Width="3" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />

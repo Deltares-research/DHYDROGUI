@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness" assembly="DeltaShell.Plugins.DelftModels.WaterFlowModel">
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="DelftTools.Hydro.Roughness" assembly="DelftTools.Hydro">
   <class name="RoughnessSection" table="roughness_section" lazy="false" discriminator-value="roughness_section" >
     <id name="Id" column="id" type="Int64" unsaved-value="0">
       <generator class="increment" />
@@ -7,7 +7,7 @@
     <discriminator column="type" type="string"/>
     
     <many-to-one name="CrossSectionSectionType" class="DelftTools.Hydro.CrossSections.CrossSectionSectionType, DelftTools.Hydro" />
-    <many-to-one name="RoughnessNetworkCoverage" class="DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness.RoughnessNetworkCoverage, DeltaShell.Plugins.DelftModels.WaterFlowModel" cascade="all" />
+    <many-to-one name="RoughnessNetworkCoverage" class="DelftTools.Hydro.Roughness.RoughnessNetworkCoverage, DelftTools.Hydro" cascade="all" />
     
     <many-to-one name="Network"
                  class="GeoAPI.Extensions.Networks.INetwork,GeoAPI.Extensions"
