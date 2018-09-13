@@ -270,8 +270,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
 
 
             var validationResult = new RealTimeControlModelValidator().Validate(model);
-            Assert.AreEqual(1, validationResult.ErrorCount);
-            Assert.That(validationResult.AllErrors.First().Message, Is.StringContaining("Currently, RTC models cannot create intermediate restart files. At the moment, a single restart file may only be written for the final time-step after a complete run."));
+            Assert.AreEqual(0, validationResult.ErrorCount);
             Assert.AreEqual(0, validationResult.WarningCount);
             Assert.AreEqual(0, validationResult.InfoCount);
         }

@@ -124,7 +124,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return xDocument;
         }
 
-        public static XDocument GetRuntimeXml(string xsdPath, ITimeDependentModel timeDependentModel, bool limitMemory, int logLevel)
+        public static XDocument GetRuntimeXml(string xsdPath, RealTimeControlModel realTimeControlModel, bool limitMemory, int logLevel)
         {
             var xmlValidator = new Validator(new List<string> { xsdPath + Path.DirectorySeparatorChar + RtcRuntimeConfigxsd });
 
@@ -132,13 +132,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             if (xDocument.Root != null)
             {
-                xDocument.Root.Add(GetXmlRuntimeFromModel(timeDependentModel));
+                xDocument.Root.Add(GetXmlRuntimeFromModel(realTimeControlModel));
                 xDocument.Root.Add(GetXmlForLimitedMemoryOption(limitMemory));
                 // check if we are running in 'debug' mode (from tests)
                 if (logLevel > 3)
                 {
                     xDocument.Root.Add(GetXmlForLoggingOptions(logLevel));
                 }
+                // check if we want to write restart files
+                if (realTimeControlModel.UseSaveStateTimeRange && realTimeControlModel.WriteRestart)
+                {
+                    xDocument.Root.Add(GetXmlRestartStateFromModel(realTimeControlModel));
+                }
+
             }
 
             xmlValidator.Validate(xDocument);
@@ -395,6 +401,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             return periodElement;
         }
+        private static XElement GetXmlRestartStateFromModel(RealTimeControlModel realTimeControlModel)
+        {
+            var restartStateFromModel = new XElement(Fns + "stateFiles");
+            restartStateFromModel.Add(DateTimeToXElement("startDate", realTimeControlModel.SaveStateStartTime));
+            restartStateFromModel.Add(DateTimeToXElement("endDate", realTimeControlModel.SaveStateStopTime));
+            restartStateFromModel.Add(TimeStepToXml(Fns, realTimeControlModel.SaveStateTimeStep, "stateTimeStep", true));
+            
+            return restartStateFromModel;
+        }
 
         private static XElement GetXmlForLimitedMemoryOption(bool limitMemory)
         {
@@ -411,7 +426,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return loggingElement;
         }
 
-        public static XElement TimeStepToXml(XNamespace xNamespace, TimeSpan timeStep)
+        public static XElement TimeStepToXml(XNamespace xNamespace, TimeSpan timeStep, string timestepName = "timeStep", bool noAttributes = false)
         {
             var units = new[]
                             {
@@ -429,7 +444,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     break;
                 }
             }
-            return new XElement(xNamespace + "timeStep", new XAttribute("unit", unit.unit), new XAttribute("multiplier", seconds / unit.multiplier));
+            if(noAttributes)
+                return new XElement(xNamespace + timestepName, seconds);
+            return new XElement(xNamespace + timestepName, new XAttribute("unit", unit.unit), new XAttribute("multiplier", seconds / unit.multiplier));
         }
 
         public static XElement DateTimeToXElement(string tag, DateTime dateTime)

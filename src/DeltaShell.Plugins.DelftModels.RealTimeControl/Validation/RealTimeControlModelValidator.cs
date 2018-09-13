@@ -18,7 +18,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             var validationReports = new List<ValidationReport>
                 {
                     ValidateRealTimeControlModel(rootObject),
-                    ValidateRestartTimeRangeSettingsDimr(rootObject),
                     RestartTimeRangeValidator.ValidateRestartTimeRangeSettings(rootObject.UseSaveStateTimeRange,
                                                                                rootObject.SaveStateStartTime,
                                                                                rootObject.SaveStateStopTime,
@@ -29,14 +28,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             validationReports.AddRange(rootObject.ControlGroups.Select(cg => new ControlGroupValidator().Validate(rootObject, cg)));
             return new ValidationReport(rootObject.Name + " (Real Time Control)",
                                         validationReports);
-        }
-
-        private ValidationReport ValidateRestartTimeRangeSettingsDimr(RealTimeControlModel model)
-        {
-            var issues = new List<ValidationIssue>();
-            if (!(model.WriteRestart && model.UseSaveStateTimeRange)) return new ValidationReport("Dimr intermediate restart files", issues);
-            issues.Add(new ValidationIssue("Dimr restart files", ValidationSeverity.Error, "Currently, RTC models cannot create intermediate restart files. At the moment, a single restart file may only be written for the final time-step after a complete run."));
-            return new ValidationReport("Dimr intermediate restart files", issues);
         }
 
         private static ValidationReport ValidateRealTimeControlModel(RealTimeControlModel model)
