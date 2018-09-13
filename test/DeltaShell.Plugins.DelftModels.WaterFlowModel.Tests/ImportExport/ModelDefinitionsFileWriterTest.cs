@@ -690,6 +690,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             Assert.AreEqual("1", writeNetCdfProperty.Value);
         }
 
+        [Test]
+        public void TestModelDefinitionFileWriter_SimulationOptions_DontHaveRestartBools()
+        {
+            var waterFlowModel1D = new WaterFlowModel1D();
+            
+            // Write Md1d File
+            var targetPath = Path.Combine(Environment.CurrentDirectory, FileWriterTestHelper.RelativeTargetDirectory);
+            var modelDefinitionFile = Path.Combine(targetPath, ModelFileNames.ModelDefinitionFilename);
+            ModelDefinitionFileWriter.WriteFile(modelDefinitionFile, waterFlowModel1D);
+
+            // Read Md1d File
+            var delftIniReader = new DelftIniReader();
+            var categories = delftIniReader.ReadDelftIniFile(modelDefinitionFile);
+
+            // Check category is present in file
+            var content = categories.Where(c => c.Name == ModelDefinitionsRegion.SimulationOptionsValuesHeader).ToList().First();
+            Assert.NotNull(content);
+            Assert.That(content.Properties.FirstOrDefault(p => p.Name == ModelDefinitionsRegion.UseRestart.Key), Is.Null);
+            Assert.That(content.Properties.FirstOrDefault(p => p.Name == ModelDefinitionsRegion.WriteRestart.Key), Is.Null);
+        }
+
         [TestCase(true)]
         [TestCase(false)]
         public void TestModelDefinitionFileWriter_RestartOptions(bool useSaveStateTimeRange)
@@ -735,7 +756,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
                 Assert.AreEqual(formattedExpectedRestartStopTime, restartStopTime.Value);
 
                 var restartTimeStep = content.Properties.FirstOrDefault(p => p.Name == ModelDefinitionsRegion.RestartTimeStep.Key);
-                Assert.AreEqual("3600", restartTimeStep.Value);
+                Assert.AreEqual(int.Parse(waterFlowModel1D.SaveStateTimeStep.TotalSeconds.ToString(CultureInfo.InvariantCulture)).ToString(), restartTimeStep.Value);
 
             }
             else

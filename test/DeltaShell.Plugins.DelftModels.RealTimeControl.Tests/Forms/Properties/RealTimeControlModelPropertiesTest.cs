@@ -11,7 +11,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
         [Category(TestCategory.WindowsForms)]
         public void ShowProperties()
         {
-            WindowsFormsTestHelper.ShowPropertyGridForObject(new RealTimeControlModelProperties { Data = new RealTimeControlModel() });
+            WindowsFormsTestHelper.ShowPropertyGridForObject(
+                new RealTimeControlModelProperties {Data = new RealTimeControlModel()});
         }
     }
 }

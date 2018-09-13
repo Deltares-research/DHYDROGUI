@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -79,6 +81,82 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             Assert.NotNull(idAttribute, "error in xml: attribute for time series element not found.");
             Assert.AreEqual("id", idAttribute.Name.LocalName, "error in xml: mismatch for first attributes' name.");
             Assert.AreEqual("Undefined", idAttribute.Value, "error in xml: mismatch for first attributes' value.");
+        }
+
+
+        [Test]
+        public void GivenAModelAndAValidPathWhenGetRuntimeXmlIsCalledWithThisModelAndAPathThenTheResultingDocumentContainsRuntimeModel()
+        {
+            var model = new RealTimeControlModel();
+            var xsdPath = DimrApiDataSet.RtcToolsDllPath;
+
+            var resultDocument = RealTimeControlXmlWriter.GetRuntimeXml(xsdPath, model, false, 0);
+
+
+        }
+
+
+        [Test]
+        public void GivenAModelWithUseSaveStateTimeRangeAndWriteRestartFlagsAndAValidXsdPathWhenGetRuntimeXmlIsCalledWithThisModelAndPathThenTheModelContainsValidStateFilesElement()
+        {
+            // Given
+            var model = new RealTimeControlModel();
+            model.UseSaveStateTimeRange = true;
+            model.SaveStateStartTime = DateTime.Today;
+            model.SaveStateStopTime = model.SaveStateStartTime.AddDays(1);
+            model.SaveStateTimeStep = TimeSpan.FromHours(1);
+
+            model.WriteRestart = true;
+
+            var xsdPath = DimrApiDataSet.RtcToolsDllPath; // TODO ask what this is / which one to use
+
+            // When
+            var resultDocument = RealTimeControlXmlWriter.GetRuntimeXml(xsdPath, model, false, 0);
+
+            // Then
+            var ns = (XNamespace) "http://www.wldelft.nl/fews";
+
+            // stateFilesElement
+            var expectedNumberOfStateFilesChildren = 3;
+            var stateFilesElement = resultDocument.Root.Element(ns + "stateFiles");
+            Assert.That(stateFilesElement, Is.Not.Null);
+            Assert.That(stateFilesElement.Descendants().Count(), Is.EqualTo(expectedNumberOfStateFilesChildren));
+
+            // startDate
+            var expectedStartDate = string.Format("{0:0000}-{1:00}-{2:00}",
+                model.SaveStateStartTime.Year,
+                model.SaveStateStartTime.Month,
+                model.SaveStateStartTime.Day);
+            var expectedStartTime = string.Format("{0:00}:{1:00}:{2:00}",
+                model.SaveStateStartTime.Hour,
+                model.SaveStateStartTime.Minute,
+                model.SaveStateStartTime.Second);
+
+            var startDateElement = stateFilesElement.Element(ns + "startDate");
+            Assert.That(startDateElement, Is.Not.Null);
+            Assert.That(startDateElement.Attribute("date")?.Value, Is.EqualTo(expectedStartDate));
+            Assert.That(startDateElement.Attribute("time")?.Value, Is.EqualTo(expectedStartTime));
+
+            // endDate
+            var expectedEndDate = string.Format("{0:0000}-{1:00}-{2:00}",
+                model.SaveStateStartTime.Year,
+                model.SaveStateStartTime.Month,
+                model.SaveStateStartTime.Day);
+            var expectedEndTime = string.Format("{0:00}:{1:00}:{2:00}",
+                model.SaveStateStartTime.Hour,
+                model.SaveStateStartTime.Minute,
+                model.SaveStateStartTime.Second);
+
+            var endDateElement = stateFilesElement.Element(ns + "endDate");
+            Assert.That(endDateElement, Is.Not.Null);
+            Assert.That(startDateElement.Attribute("date")?.Value, Is.EqualTo(expectedEndDate));
+            Assert.That(startDateElement.Attribute("time")?.Value, Is.EqualTo(expectedEndTime));
+
+            // stateTimeStep
+            var expectedTimeStep = ((int)model.SaveStateTimeStep.TotalSeconds).ToString();
+            var stateTimeStepElement = stateFilesElement.Element(ns + "stateTimeStep");
+            Assert.That(stateTimeStepElement, Is.Not.Null);
+            Assert.That(stateTimeStepElement.Value, Is.EqualTo(expectedTimeStep));
         }
     }
 }

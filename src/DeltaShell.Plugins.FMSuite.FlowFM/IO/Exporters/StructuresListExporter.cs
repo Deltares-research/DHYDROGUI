@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             switch (Type)
             {
                 case StructuresListType.Pumps:
-                    return "Pumps to structure file";
+                    return "Pumps to structures file";
                 case StructuresListType.Weirs:
                     return "Weirs to structures file";
                 case StructuresListType.Gates:
@@ -113,6 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         public string FileFilter { get { return "Structures file|*.ini"; } }
 
+        [ExcludeFromCodeCoverage]
         public Bitmap Icon
         {
             get { return Properties.Resources.StructureFeatureSmall; }

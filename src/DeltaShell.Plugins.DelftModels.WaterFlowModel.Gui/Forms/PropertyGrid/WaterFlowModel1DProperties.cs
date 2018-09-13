@@ -256,9 +256,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [DynamicReadOnlyValidationMethod]
         public bool ValidateDynamicAttributes(string propertyName)
         {
-            if (propertyName.Equals("SaveStateStartTime") ||
-                propertyName.Equals("SaveStateStopTime") ||
-                propertyName.Equals("SaveStateTimeStep"))
+            if (propertyName.Equals(nameof(SaveStateStartTime)) ||
+                propertyName.Equals(nameof(SaveStateStopTime)) ||
+                propertyName.Equals(nameof(SaveStateTimeStep)))
             {
                 return !data.UseSaveStateTimeRange;
             }
