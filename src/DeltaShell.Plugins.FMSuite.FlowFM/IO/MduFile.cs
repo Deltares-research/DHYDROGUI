@@ -443,31 +443,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             if (modelDefinition == null) return;
 
+            var targetDirPath = System.IO.Path.GetDirectoryName(mduFilePath);
             var targetMorFilePath = ReplaceMduExtension(mduFilePath, MorphologyExtension);
             var targetSedFilePath = ReplaceMduExtension(mduFilePath, SedimentExtension);
 
-            var morFilePropertyValue = modelDefinition.FirstOrDefault(p =>
+            var morFileProperty = modelDefinition.FirstOrDefault(p =>
                 p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.MorFile,
-                    StringComparison.InvariantCultureIgnoreCase)).GetValueAsString();
+                    StringComparison.InvariantCultureIgnoreCase));
+            var morFilePropValue = morFileProperty != null ? morFileProperty.GetValueAsString() : string.Empty;
 
-            var sedFilePropertyValue = modelDefinition.FirstOrDefault(p =>
+            var sedFileProperty = modelDefinition.FirstOrDefault(p =>
                 p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SedFile,
-                    StringComparison.InvariantCultureIgnoreCase)).GetValueAsString();
+                    StringComparison.InvariantCultureIgnoreCase));
+            var sedFilePropValue = sedFileProperty != null ? sedFileProperty.GetValueAsString() : string.Empty;
 
-            var targetDirPath = System.IO.Path.GetDirectoryName(mduFilePath);
-
-            var currentMorFilePath = System.IO.Path.Combine(targetDirPath, morFilePropertyValue);
-            var currentSedFilePath = System.IO.Path.Combine(targetDirPath, sedFilePropertyValue);
+            var currentMorFilePath = System.IO.Path.Combine(targetDirPath, morFilePropValue);
+            var currentSedFilePath = System.IO.Path.Combine(targetDirPath, sedFilePropValue);
 
             if (currentMorFilePath != targetMorFilePath)
             {
-                if (morFilePropertyValue != String.Empty) FileUtils.DeleteIfExists(currentMorFilePath);
+                if (morFilePropValue != String.Empty) FileUtils.DeleteIfExists(currentMorFilePath);
                 SetValueToPropertyIfExists(modelDefinition, KnownProperties.MorFile, System.IO.Path.GetFileName(targetMorFilePath));
             }
 
             if (currentSedFilePath != targetSedFilePath)
             {
-                if (sedFilePropertyValue != string.Empty) FileUtils.DeleteIfExists(currentSedFilePath);
+                if (sedFilePropValue != string.Empty) FileUtils.DeleteIfExists(currentSedFilePath);
                 SetValueToPropertyIfExists(modelDefinition, KnownProperties.SedFile, System.IO.Path.GetFileName(targetSedFilePath));
             }
         }
