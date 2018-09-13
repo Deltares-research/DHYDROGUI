@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
@@ -148,6 +151,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                 }
             }
+            else if (e.Item is CrossSectionSectionType)
+            {
+                UpdateCrossSectionSectionType(e);
+            }
 
             // check if removed item is used in the child data items
             if (e.Item is IFeature && e.Action == NotifyCollectionChangeAction.Remove)
@@ -176,6 +183,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     childDataItem.Parent.Children.Remove(childDataItem);
                 }
             }
+        }
+
+        private void UpdateCrossSectionSectionType(NotifyCollectionChangingEventArgs e)
+        {
+            var sectionType = (CrossSectionSectionType)e.Item;
+
+            switch (e.Action)
+            {
+                case NotifyCollectionChangeAction.Add:
+                    AddRoughnessSectionToDataItem(sectionType);
+                    break;
+            }
+        }
+
+        private void AddRoughnessSectionToDataItem(CrossSectionSectionType crossSectionSectionType)
+        {
+            var roughnessSection = new RoughnessSection(crossSectionSectionType, Network);
+            AddRoughnessSection(roughnessSection);
+        }
+
+        protected virtual void AddRoughnessSection(RoughnessSection roughnessSection)
+        {
+            var roughness1DDataItem = GetDataItemSetByTag(WaterFlowFMModelDataSet.Roughness1DTag);
+            roughness1DDataItem.ReadOnly = true;
+            roughness1DDataItem.DataItems.Add(new DataItem(roughnessSection));
         }
 
         /// <summary>

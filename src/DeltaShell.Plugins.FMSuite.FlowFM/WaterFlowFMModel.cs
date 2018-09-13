@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using BasicModelInterface;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -62,7 +63,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private readonly DimrRunner runner;
 
         public const string CellsToFeaturesName = "CellsToFeatures";
-        public const string DiaFileDataItemTag = "DiaFile";
 
         public const string IsPartOf1D2DModelPropertyName = "IsPartOf1D2DModel";
         public const string DisableFlowNodeRenumberingPropertyName = "DisableFlowNodeRenumbering";
@@ -73,14 +73,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private bool updatingGroupName;
 
         private IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties;
-        
-        /// <summary>
-        /// Gets the bridge pillars data model.
-        /// </summary>
-        /// <value>
-        /// The bridge pillars data model.
-        /// </value>
-        public IList<ModelFeatureCoordinateData<BridgePillar>> BridgePillarsDataModel { get; private set; }
         private IEventedList<SourceAndSink> sourcesAndSinks;
         private IEventedList<ISedimentFraction> sedimentFractions;
         private IEventedList<BoundaryConditionSet> boundaryConditionSets;
@@ -92,12 +84,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public WaterFlowFMModel() : this(null)
         {
-            // network
             Network = new HydroNetwork { Name = NetworkObjectName };
-            // Computational Grid For network
             NetworkDiscretization = new Discretization { Network = network, Name = DiscretizationObjectName };
-
-            Links = new EventedList<WaterFlowFM1D2DLink>();
 
             ModelDefinition = new WaterFlowFMModelDefinition();
             ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = Name + NetFile.FullExtension;
@@ -108,8 +96,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Grid = new UnstructuredGrid();
             InitializeUnstructuredGridCoverages();
 
+            AddRoughness1DDataItem();
             AddSpatialDataItems();
             RenameSubFilesIfApplicable();
+        }
+
+        private void AddRoughness1DDataItem()
+        {
+            AddDataItemSet(new EventedList<RoughnessSection>(), WaterFlowFMModelDataSet.Roughness1DTag,
+                DataItemRole.Input, WaterFlowFMModelDataSet.Roughness1DTag);
+
+            if (Network == null) return;
+            foreach (var crossSectionSectionType in Network.CrossSectionSectionTypes)
+            {
+                var roughnessSection = new RoughnessSection(crossSectionSectionType, Network);
+                AddRoughnessSection(roughnessSection);
+            }
         }
 
         /// <summary>
@@ -120,7 +122,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             runner = new DimrRunner(this);
             ImportProgressChanged = progressChanged;
 
-            // set default settings
+            InstantiateVariables();
+            tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+
+            // DELFT3DFM-371: Disable Model Inspection
+            // ModelInspection = true;
+            
+            var area = new HydroArea();
+            AddDataItem(area, DataItemRole.Input, WaterFlowFMModelDataSet.HydroAreaTag);
+            areaDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.HydroAreaTag);
+
+            SubscribeToEvents(area);
+
+            // Load mdu model settings
+            if (string.IsNullOrEmpty(mduFilePath)) return;
+            LoadStateFromMdu(mduFilePath);
+
+            FireImportProgressChanged(this, "Reading spatial operations", 9, TotalImportSteps);
+            AddSpatialDataItems();
+            ImportSpatialOperationsAfterCreating();
+        }
+
+        private void SubscribeToEvents(HydroArea area)
+        {
+            ((INotifyCollectionChanged) area).CollectionChanged += HydroAreaCollectionChanged;
+            ((INotifyPropertyChanged) area).PropertyChanged += HydroAreaPropertyChanged;
+            ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => { MarkDirty(); };
+            ((INotifyPropertyChange) this).PropertyChanged += (s, e) => { MarkDirty(); };
+        }
+
+        private void InstantiateVariables()
+        {
             SnapVersion = 0;
             ValidateBeforeRun = true;
             DisableFlowNodeRenumbering = false;
@@ -131,28 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             BridgePillarsDataModel = new List<ModelFeatureCoordinateData<BridgePillar>>();
 
             SedimentOverallProperties = SedimentFractionHelper.GetSedimentationOverAllProperties();
-            tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Links = new EventedList<WaterFlowFM1D2DLink>();
-
-            // DELFT3DFM-371: Disable Model Inspection
-            // ModelInspection = true;
-
-            var area = new HydroArea();
-            AddDataItem(area, DataItemRole.Input, HydroAreaTag);
-            areaDataItem = GetDataItemByTag(HydroAreaTag);
-
-            ((INotifyCollectionChanged) area).CollectionChanged += HydroAreaCollectionChanged;
-            ((INotifyPropertyChanged) area).PropertyChanged += HydroAreaPropertyChanged;
-            ((INotifyPropertyChange) this).PropertyChanged += (s, e) => { MarkDirty(); };
-            ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => { MarkDirty(); };
-
-            // Load mdu model settings
-            if (string.IsNullOrEmpty(mduFilePath)) return;
-            LoadStateFromMdu(mduFilePath);
-
-            FireImportProgressChanged(this, "Reading spatial operations", 9, TotalImportSteps);
-            AddSpatialDataItems();
-            ImportSpatialOperationsAfterCreating();
         }
 
         public WaterFlowFMModelDefinition ModelDefinition
@@ -175,6 +186,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
         }
+
+        public IList<ModelFeatureCoordinateData<BridgePillar>> BridgePillarsDataModel { get; private set; }
 
         public IEventedList<WaterFlowFM1D2DLink> Links { get; set; }
 
@@ -316,7 +329,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             base.OnAfterDataItemsSet();
 
-            var areaDataItem = GetDataItemByTag(HydroAreaTag);
+            var areaDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.HydroAreaTag);
             if (areaDataItem != null)
             {
                 ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
@@ -328,7 +341,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             base.OnBeforeDataItemsSet();
 
-            areaDataItem = GetDataItemByTag(HydroAreaTag);
+            areaDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.HydroAreaTag);
             if (areaDataItem != null)
             {
                 ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
@@ -339,7 +352,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         protected override void OnDataItemLinked(object sender, LinkedUnlinkedEventArgs<IDataItem> e)
         {
             // subscribe to newly linked hydro area:
-            var areaDataItem = GetDataItemByTag(HydroAreaTag);
+            var areaDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.HydroAreaTag);
             if (Equals(e.Target, areaDataItem) && !e.Relinking)
             {
                 ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
@@ -352,7 +365,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         protected override void OnDataItemUnlinking(object sender, LinkingUnlinkingEventArgs<IDataItem> e)
         {
             // unsubscribe from area before unlink
-            areaDataItem = GetDataItemByTag(HydroAreaTag);
+            areaDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.HydroAreaTag);
             if (Equals(e.Target, areaDataItem))
             {
                 ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
@@ -1446,13 +1459,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get
             {
                 if (areaDataItem == null)
-                    areaDataItem = GetDataItemByTag(HydroAreaTag);
+                    areaDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.HydroAreaTag);
 
-                return (HydroArea) GetDataItemValueByTag(HydroAreaTag);
+                return (HydroArea) GetDataItemValueByTag(WaterFlowFMModelDataSet.HydroAreaTag);
             }
             set
             {
-                var areaItem = GetDataItemByTag(HydroAreaTag);
+                var areaItem = GetDataItemByTag(WaterFlowFMModelDataSet.HydroAreaTag);
                 
                 if (areaItem.Value != null) 
                 {
@@ -2224,7 +2237,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             unchecked { dirtyCounter++; } //unchecked is default, but its here to declare intent
         }
         private int dirtyCounter; //tells NHibernate we need to be saved
-        private const string HydroAreaTag = "hydro_area_tag";
         private FMMapFileFunctionStore outputMapFileStore;
         private IEventedList<string> tracerDefinitions;
         private bool isLoading;
@@ -2980,12 +2992,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 try
                 {
-                    var logDataItem = DataItems.FirstOrDefault(di => di.Tag == DiaFileDataItemTag);
+                    var logDataItem = DataItems.FirstOrDefault(di => di.Tag == WaterFlowFMModelDataSet.DiaFileDataItemTag);
                     if (logDataItem == null)
                     {
                         // add logfile dataitem if not exists
                         var textDocument = new TextDocument(true) { Name = diaFileName };
-                        logDataItem = new DataItem(textDocument, DataItemRole.Output, DiaFileDataItemTag);
+                        logDataItem = new DataItem(textDocument, DataItemRole.Output, WaterFlowFMModelDataSet.DiaFileDataItemTag);
                         DataItems.Add(logDataItem);
                     }
 
@@ -3094,7 +3106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         protected override void OnInitialize()
         {
             previousProgress = 0;
-            DataItems.RemoveAllWhere(di => di.Tag == DiaFileDataItemTag);
+            DataItems.RemoveAllWhere(di => di.Tag == WaterFlowFMModelDataSet.DiaFileDataItemTag);
 
             var mduPath = Path.Combine(WorkingDirectory, Path.GetFileName(MduFilePath));
 

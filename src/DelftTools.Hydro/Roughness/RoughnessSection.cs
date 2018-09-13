@@ -30,7 +30,7 @@ namespace DelftTools.Hydro.Roughness
         private static readonly ILog Log = LogManager.GetLogger(typeof(RoughnessSection));
         private readonly Stack<IEditAction> editActions = new Stack<IEditAction>();
         //cannot use a dictionary because hashcode is cached. Once a location is set, when the chainage changes the location is no longer found
-        private readonly IList<DelftTools.Utils.Tuple<INetworkLocation, DelftTools.Utils.Tuple<IBranch, double>>> previousChainages = new List<DelftTools.Utils.Tuple<INetworkLocation, DelftTools.Utils.Tuple<IBranch, double>>>();
+        private readonly IList<Utils.Tuple<INetworkLocation, Utils.Tuple<IBranch, double>>> previousChainages = new List<Utils.Tuple<INetworkLocation, Utils.Tuple<IBranch, double>>>();
         private const int ChainageArgumentIndex = 0;
         private const int QorHArgumentIndex = 1;
 

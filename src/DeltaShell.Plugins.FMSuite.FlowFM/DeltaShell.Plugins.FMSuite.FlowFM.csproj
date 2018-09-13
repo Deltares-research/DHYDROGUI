@@ -301,6 +301,7 @@
     <Compile Include="ModelDefinition\WaterFlowFMModelDefinition.cs" />
     <Compile Include="ModelDefinition\WaterFlowFMProperty.cs" />
     <Compile Include="ModelDefinition\WaterFlowFMPropertyDefinition.cs" />
+    <Compile Include="WaterFlowFMModelDataSet.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">

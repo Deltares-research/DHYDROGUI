@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -39,7 +40,6 @@ using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
 using SharpMapTestUtils;
-using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -539,9 +539,48 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             ActivityRunner.RunActivity(model);
 
-            var diaFileDataItem = model.DataItems.FirstOrDefault(di => di.Tag == WaterFlowFMModel.DiaFileDataItemTag);
+            var diaFileDataItem = model.DataItems.FirstOrDefault(di => di.Tag == WaterFlowFMModelDataSet.DiaFileDataItemTag);
             Assert.NotNull(diaFileDataItem, "DiaFile not retrieved after model run, check WaterFlowFMModel.DiaFileDataItemTag");
             Assert.NotNull(diaFileDataItem.Value, "DiaFile not retrieved after model run, check WaterFlowFMModel.DiaFileDataItemTag");
+        }
+
+        [Test]
+        public void WhenInstantiatingAnFmModel_ThenTheModelHasDataItemFor1dRoughness()
+        {
+            var fmModel = new WaterFlowFMModel();
+            Assert.IsNotNull(fmModel.GetDataItemByTag(WaterFlowFMModelDataSet.Roughness1DTag), "Data item for 1D roughness is not present in the FM model.");
+        }
+
+        [Test]
+        public void WhenFmModelHasBeenInstantiated_ThenTheRoughness1DDataItemHasTheCorrectChildDataItems()
+        {
+            var fmModel = new WaterFlowFMModel();
+            var roughness1DDataItem = fmModel.GetDataItemByTag(WaterFlowFMModelDataSet.Roughness1DTag);
+
+            var networkSectionSectionTypes = fmModel.Network.CrossSectionSectionTypes;
+            var crossSectionSections = roughness1DDataItem.Value as DataItemsEventedListAdapter<RoughnessSection>;
+
+            Assert.IsNotNull(crossSectionSections);
+            Assert.That(crossSectionSections.Count, Is.EqualTo(1));
+            Assert.That(crossSectionSections.FirstOrDefault()?.Name, Is.EqualTo(networkSectionSectionTypes.FirstOrDefault()?.Name));
+        }
+
+        [Test]
+        public void GivenFmModelWithNetwork_WhenAddingNewrossSectionTypeToNetwork_ThenAnExtraDataItemIsAddedToTheModel()
+        {
+            var fmModel = new WaterFlowFMModel();
+            var newCrossSectionSectionType = new CrossSectionSectionType
+            {
+                Name = "myNewCrossSectionType"
+            };
+
+            fmModel.Network.CrossSectionSectionTypes.Add(newCrossSectionSectionType);
+
+            var roughness1DDataItem = fmModel.GetDataItemByTag(WaterFlowFMModelDataSet.Roughness1DTag);
+            var crossSectionSections = roughness1DDataItem.Value as DataItemsEventedListAdapter<RoughnessSection>;
+
+            Assert.IsNotNull(crossSectionSections);
+            Assert.That(crossSectionSections.Count, Is.EqualTo(2));
         }
 
         [Test]
