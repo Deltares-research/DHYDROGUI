@@ -441,6 +441,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void WriteMorphologySediment(string mduFilePath, IEnumerable<WaterFlowFMProperty> modelDefinition)
         {
+            if (modelDefinition == null) return;
+
             var targetMorFilePath = ReplaceMduExtension(mduFilePath, MorphologyExtension);
             var targetSedFilePath = ReplaceMduExtension(mduFilePath, SedimentExtension);
 
