@@ -39,13 +39,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness
         {
         }
 
-        public RoughnessNetworkCoverage(string name, bool isTimeDependend, string outputUnit = "-"): base(name, isTimeDependend, name, outputUnit)
+        public RoughnessNetworkCoverage(string name, bool isTimeDependent, string outputUnit = "-") 
+            : base(name, isTimeDependent, name, outputUnit)
         {
-            // use int iso RoughnessType; to avoid extra hibernate mappings. 
-            //MM dont' you don't need that anyway? What int can i use?
             Components.Add(new Variable<int>("roughnessType"));
             DefaultRoughnessType = RoughnessType.Chezy;
-            base.DefaultValue = 45.0;
+            DefaultValue = 45.0;
             InterpolateAcrossNodes = false;
         }
 
@@ -76,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness
 
         public override void SetValues(IEnumerable values, params IVariableFilter[] filters)
         {
-            if (filters.Count() > 1)
+            if (filters.Length > 1)
             {
                 throw new ArgumentException("SetValues only supports 1 filter");
             }
