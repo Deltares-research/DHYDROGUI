@@ -8,6 +8,7 @@ using DeltaShell.Core;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
@@ -17,6 +18,7 @@ using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMapTestUtils;
@@ -516,6 +518,131 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             }
             return data;
+        }
+
+        [Test]
+        public void
+    GivenAnFMModelWithABoundaryWithTwoBoundaryConditions_WhenSavingAndLoadingProject_ThenNumberOfBoundariesIsOne()
+        {
+            var model = new WaterFlowFMModel();
+
+            var boundary = new Feature2D
+            {
+                Geometry =
+                    new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) }),
+                Name = "boundary"
+            };
+
+            var boundaryConditionSet = new BoundaryConditionSet();
+            model.BoundaryConditionSets.Add(boundaryConditionSet);
+
+            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed, BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = boundary,
+                Name = "boundary_condition1",
+            };
+
+            var morphologyBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = boundary,
+                Name = "boundary_condition2"
+            };
+
+            flowBoundaryCondition.DataPointIndices.Add(0);
+            flowBoundaryCondition.PointData[0].Arguments[0].SetValues(new[] { model.StartTime, model.StopTime });
+            morphologyBoundaryCondition.DataPointIndices.Add(0);
+            morphologyBoundaryCondition.PointData[0].Arguments[0].SetValues(new[] { model.StartTime, model.StopTime });
+
+            boundaryConditionSet.BoundaryConditions.Add(flowBoundaryCondition);
+            boundaryConditionSet.BoundaryConditions.Add(morphologyBoundaryCondition);
+
+
+
+
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Integration)]
+        public void GivenAnFMModelWithABoundaryWithOneMorphologyAndOneFlowBoundaryConditionAnd_WhenSavedAndLoaded_ThenOnlyOneBoundaryWithTwoBoundaryConditionsIsCreated()
+        {
+            var tempDirPath = FileUtils.CreateTempDirectory();
+            var tempProjectFilePath = Path.Combine(tempDirPath, "Project.dsproj");
+
+            var boundaryName = "boundary1";
+            var flowBoundaryConditionName = "boundary_condition_flow";
+            var morphBoundaryConditionName = "boundary_condition_morph";
+;
+            try
+            {
+                using (var app = GetConfiguredApplication(tempProjectFilePath))
+                {
+                    using (var model = new WaterFlowFMModel())
+                    {
+                        model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+
+                        var boundary = new Feature2D
+                        {
+                            Geometry =
+                                new LineString(new[]
+                                    {new Coordinate(0, 0), new Coordinate(1, 0)}),
+                            Name = boundaryName
+                        };
+
+                        var boundaryConditionSet = new BoundaryConditionSet() {Feature = boundary};
+                        model.BoundaryConditionSets.Add(boundaryConditionSet);
+
+                        var flowBoundaryCondition =
+                            new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed,
+                                BoundaryConditionDataType.TimeSeries)
+                            {
+                                Feature = boundary,
+                                Name = flowBoundaryConditionName,
+                            };
+
+                        var morphologyBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
+                            BoundaryConditionDataType.TimeSeries)
+                        {
+                            Feature = boundary,
+                            Name = morphBoundaryConditionName
+                        };
+
+                        flowBoundaryCondition.DataPointIndices.Add(1);
+                        flowBoundaryCondition.PointData[0].Arguments[0]
+                            .SetValues(new[] {model.StartTime, model.StopTime});
+                        morphologyBoundaryCondition.DataPointIndices.Add(1);
+                        morphologyBoundaryCondition.PointData[0].Arguments[0]
+                            .SetValues(new[] {model.StartTime, model.StopTime});
+
+                        boundaryConditionSet.BoundaryConditions.Add(flowBoundaryCondition);
+                        boundaryConditionSet.BoundaryConditions.Add(morphologyBoundaryCondition);
+
+                        var project = app.Project;
+                        project.RootFolder.Add(model);
+
+                        app.SaveProject();
+
+                        app.OpenProject(tempProjectFilePath);
+
+                        Assert.That(model.Boundaries.Count, Is.EqualTo(1));
+                        Assert.That(model.Boundaries.FirstOrDefault().Name, Is.EqualTo(boundaryName));
+                        Assert.That(model.BoundaryConditionSets.Count, Is.EqualTo(1));
+                        Assert.That(model.BoundaryConditionSets.FirstOrDefault().Feature.Name, Is.EqualTo(boundaryName));
+                        Assert.That(model.BoundaryConditionSets.FirstOrDefault().BoundaryConditions.Count, Is.EqualTo(2));
+
+                        var boundaryConditionNames = model.BoundaryConditionSets.FirstOrDefault().BoundaryConditions
+                            .Select(bc => bc.Name).ToList();
+                        Assert.That(boundaryConditionNames.Contains(flowBoundaryConditionName));
+                        Assert.That(boundaryConditionNames.Contains(morphBoundaryConditionName));
+
+                        app.CloseProject();
+                    }
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(tempDirPath);
+            }
         }
     }
 }
