@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
@@ -898,8 +899,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             var crossSectionDef = new CrossSectionDefinitionZW("myCrossSectionDefinition");
             crossSectionDef.ZWDataTable.AddCrossSectionZWRow(10.0, 50.0, 5.0);
             crossSectionDef.ZWDataTable.AddCrossSectionZWRow(2.0, 30.0, 2.0);
-            crossSectionDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.MainSectionName }, 20.0);
-            crossSectionDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, 10.0);
+            crossSectionDef.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName }, 20.0);
+            crossSectionDef.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain1SectionTypeName }, 10.0);
 
             // Use a proxy in case that we want to test with a proxy cross section definition
             var csDefToCheck = useCsdProxy ? (ICrossSectionDefinition) new CrossSectionDefinitionProxy(crossSectionDef) : crossSectionDef;
@@ -923,9 +924,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             var crossSectionDef = new CrossSectionDefinitionZW("myCrossSectionDefinition");
             crossSectionDef.ZWDataTable.AddCrossSectionZWRow(10.0, 50.0, 5.0);
             crossSectionDef.ZWDataTable.AddCrossSectionZWRow(2.0, 30.0, 2.0);
-            crossSectionDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.MainSectionName }, 40.0);
-            crossSectionDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, 0.0);
-            crossSectionDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain2SectionTypeName }, 5.0);
+            crossSectionDef.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName }, 40.0);
+            crossSectionDef.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain1SectionTypeName }, 0.0);
+            crossSectionDef.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain2SectionTypeName }, 5.0);
 
             // Use a proxy in case that we want to test with a proxy cross section definition
             var csDefToCheck = useCsdProxy ? (ICrossSectionDefinition)new CrossSectionDefinitionProxy(crossSectionDef) : crossSectionDef;

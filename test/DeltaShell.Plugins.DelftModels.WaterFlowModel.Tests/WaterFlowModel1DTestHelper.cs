@@ -6,6 +6,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
@@ -255,16 +256,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             if (!crossSectionDefinitionsWithoutSections.Any()) return;
 
-            var mainSection = network.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name.Equals(CrossSectionDefinition.MainSectionName));
+            var mainSection = network.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name.Equals(RoughnessDataSet.MainSectionTypeName));
             if (mainSection == null)
             {
-                mainSection = new CrossSectionSectionType() { Name = CrossSectionDefinition.MainSectionName };
+                mainSection = new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName };
                 network.CrossSectionSectionTypes.Add(mainSection);
             }
 
             foreach (var definition in crossSectionDefinitionsWithoutSections)
             {
-                definition.Sections.Add(new CrossSectionSection() { SectionType = mainSection });
+                definition.Sections.Add(new CrossSectionSection { SectionType = mainSection });
             }
         }
     }

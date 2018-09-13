@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms;
 using NUnit.Framework;
@@ -91,7 +92,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
 
             var mainSection = new CrossSectionSection()
             {
-                SectionType = new CrossSectionSectionType() { Name = CrossSectionDefinition.MainSectionName },
+                SectionType = new CrossSectionSectionType() { Name = RoughnessDataSet.MainSectionTypeName },
                 MinY = 0.0,
                 MaxY = 30.0
             };

@@ -1,6 +1,6 @@
 ﻿using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
+using DelftTools.Hydro.Roughness;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
 {

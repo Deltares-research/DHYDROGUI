@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {

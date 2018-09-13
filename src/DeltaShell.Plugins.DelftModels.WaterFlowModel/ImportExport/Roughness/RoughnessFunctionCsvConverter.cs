@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
+using DelftTools.Hydro.Roughness;
 using DeltaShell.Plugins.NetworkEditor.ImportExportCsv;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness

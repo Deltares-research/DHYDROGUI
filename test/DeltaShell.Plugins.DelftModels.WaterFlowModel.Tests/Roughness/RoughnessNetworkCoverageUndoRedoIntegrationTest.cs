@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DelftTools.TestUtils;
 using DelftTools.Utils.UndoRedo;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;

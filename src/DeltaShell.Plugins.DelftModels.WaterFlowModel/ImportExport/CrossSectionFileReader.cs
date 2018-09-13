@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
@@ -150,9 +151,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             if (readCrossSectionDefinition.CrossSectionType == CrossSectionType.ZW)
             {
-                var mainCrossSectionSectionType = GetCrossSectionSectionType(CrossSectionDefinitionZW.MainSectionName, model.Network);
-                var floodPlain1CrossSectionSectionType = GetCrossSectionSectionType(CrossSectionDefinitionZW.Floodplain1SectionTypeName, model.Network);
-                var floodPlain2CrossSectionSectionType = GetCrossSectionSectionType(CrossSectionDefinitionZW.Floodplain2SectionTypeName, model.Network);
+                var mainCrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, model.Network);
+                var floodPlain1CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain1SectionTypeName, model.Network);
+                var floodPlain2CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain2SectionTypeName, model.Network);
 
                 var mainSectionWidth = csdDefinitionCategory.ReadProperty<double>(DefinitionPropertySettings.Main.Key);
                 var floodPlain1Width = csdDefinitionCategory.ReadProperty<double>(DefinitionPropertySettings.FloodPlain1.Key,true);

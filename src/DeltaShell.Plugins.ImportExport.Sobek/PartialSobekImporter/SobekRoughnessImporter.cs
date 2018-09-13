@@ -7,8 +7,8 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using GeoAPI.Extensions.Coverages;
@@ -36,9 +36,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             log.DebugFormat("Importing roughness data ...");
             
-            var main = GetCrossSectionSectionType(DelftModels.WaterFlowModel.WaterFlowModel1DDataSet.MainChannelName);
-            var floodPlain1 = GetCrossSectionSectionType(DelftModels.WaterFlowModel.WaterFlowModel1DDataSet.Floodplain1Name);
-            var floodPlain2 = GetCrossSectionSectionType(DelftModels.WaterFlowModel.WaterFlowModel1DDataSet.Floodplain2Name);
+            var main = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName);
+            var floodPlain1 = GetCrossSectionSectionType(RoughnessDataSet.Floodplain1SectionTypeName);
+            var floodPlain2 = GetCrossSectionSectionType(RoughnessDataSet.Floodplain2SectionTypeName);
  
             var frictionFile = GetFilePath(SobekFileNames.SobekFrictionFileName);
             if (!File.Exists(frictionFile))

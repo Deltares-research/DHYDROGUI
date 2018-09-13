@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
@@ -66,16 +67,16 @@ namespace Sobek.IntegrationTests
 
             if (!crossSectionDefinitionsWithoutSections.Any()) return;
 
-            var mainSection = network.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name.Equals(CrossSectionDefinition.MainSectionName));
+            var mainSection = network.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name.Equals(RoughnessDataSet.MainSectionTypeName));
             if (mainSection == null)
             {
-                mainSection = new CrossSectionSectionType() { Name = CrossSectionDefinition.MainSectionName };
+                mainSection = new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName };
                 network.CrossSectionSectionTypes.Add(mainSection);
             }
 
             foreach (var definition in crossSectionDefinitionsWithoutSections)
             {
-                definition.Sections.Add(new CrossSectionSection() { SectionType = mainSection });
+                definition.Sections.Add(new CrossSectionSection { SectionType = mainSection });
             }
         }
     }

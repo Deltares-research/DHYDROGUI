@@ -6,13 +6,13 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.UndoRedo;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
@@ -413,9 +413,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Roughness
             network.Nodes.AddRange(new[] { node1, node2 });
             network.Branches.Add(branch);
 
-            var roughnessSection1 = new RoughnessSection(new CrossSectionSectionType { Name = WaterFlowModel1DDataSet.MainChannelName }, network);
-            var roughnessSection2 = new RoughnessSection(new CrossSectionSectionType { Name = WaterFlowModel1DDataSet.Floodplain1Name }, network);
-            var roughnessSection3 = new RoughnessSection(new CrossSectionSectionType { Name = WaterFlowModel1DDataSet.Floodplain2Name }, network);
+            var roughnessSection1 = new RoughnessSection(new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName }, network);
+            var roughnessSection2 = new RoughnessSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain1SectionTypeName }, network);
+            var roughnessSection3 = new RoughnessSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain2SectionTypeName }, network);
 
             var roughnessSections = new List<RoughnessSection> {roughnessSection1, roughnessSection2, roughnessSection3};
             Assert.AreEqual(roughnessSection1, roughnessSections.MainChannel());

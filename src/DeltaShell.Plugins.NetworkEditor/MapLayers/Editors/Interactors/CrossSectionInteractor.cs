@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -126,7 +127,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                 var hydroNetwork = Network as IHydroNetwork;
                 if (hydroNetwork != null)
                 {
-                    var crossSectionSectionType = hydroNetwork.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name == CrossSectionDefinitionZW.MainSectionName);
+                    var crossSectionSectionType = hydroNetwork.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name == RoughnessDataSet.MainSectionTypeName);
                     if (crossSectionSectionType != null)
                     {
                         crossSection.Definition.Sections.Add(

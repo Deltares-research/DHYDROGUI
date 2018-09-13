@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
 {

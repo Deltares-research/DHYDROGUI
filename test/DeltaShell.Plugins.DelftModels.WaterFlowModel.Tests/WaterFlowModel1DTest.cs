@@ -8,6 +8,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core;
@@ -24,7 +25,6 @@ using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Commands;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
@@ -3196,7 +3196,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             var crossSection1 = CrossSection.CreateDefault(CrossSectionType.ZW, branch1, branchLength / 2);
             var csDef = crossSection1.Definition as CrossSectionDefinitionZW;
             crossSection1.Name = "crs1";
-            csDef.AddSection(new CrossSectionSectionType() { Name = CrossSectionDefinition.MainSectionName }, csDef.FlowWidth());
+            csDef.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName }, csDef.FlowWidth());
             branch1.BranchFeatures.Add(crossSection1);
 
             var waterFlowModel1D = new WaterFlowModel1D("flow waterFlowModel1D")
@@ -3210,7 +3210,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             };
 
             var calcGridLocations = new NetworkLocation[11];
-            for (int i = 0; i < 11; i++)
+            for (var i = 0; i < 11; i++)
             {
                 calcGridLocations[i] = new NetworkLocation(branch1, branchLength * (i / 10.0));
 

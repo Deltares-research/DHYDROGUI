@@ -1,7 +1,7 @@
 ﻿using DelftTools.Hydro;
+using DelftTools.Hydro.Roughness;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms

@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using DelftTools.Controls;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Gui.Swf;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.ProjectExplorer
 {

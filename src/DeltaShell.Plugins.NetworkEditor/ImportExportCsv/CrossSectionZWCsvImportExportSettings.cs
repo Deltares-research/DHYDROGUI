@@ -2,15 +2,16 @@
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Csv.Importer;
 
 namespace DeltaShell.Plugins.NetworkEditor.ImportExportCsv
 {
     public static class CrossSectionZWCsvImportExportSettings
     {
-        public const string MainSectionName = "Main";
-        public const string FloodPlain1SectionName = "FloodPlain1";
-        public const string FloodPlain2SectionName = "FloodPlain2";
+        public const string MainSectionName = RoughnessDataSet.MainSectionTypeName;
+        public const string FloodPlain1SectionName = RoughnessDataSet.Floodplain1SectionTypeName;
+        public const string FloodPlain2SectionName = RoughnessDataSet.Floodplain2SectionTypeName;
 
         public const string IdHeader = "id";
         public const string NameHeader = "Name";

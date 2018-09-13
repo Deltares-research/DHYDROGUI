@@ -4,6 +4,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters;
@@ -292,19 +293,19 @@ namespace DeltaShell.NGHS.IO.TestUtils
             crossSection.Definition.Name = crossSection.Name;
             crossSection.Definition.Sections.Add(new CrossSectionSection
             {
-                SectionType = new CrossSectionSectionType {Name = CrossSectionDefinitionZW.MainSectionName},
+                SectionType = new CrossSectionSectionType {Name = RoughnessDataSet.MainSectionTypeName},
                 MinY = 0.0,
                 MaxY = 25.0
             });
             crossSection.Definition.Sections.Add(new CrossSectionSection
             {
-                SectionType = new CrossSectionSectionType {Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName},
+                SectionType = new CrossSectionSectionType {Name = RoughnessDataSet.Floodplain1SectionTypeName},
                 MinY = 25.0,
                 MaxY = 75.0
             });
             crossSection.Definition.Sections.Add(new CrossSectionSection
             {
-                SectionType = new CrossSectionSectionType {Name = CrossSectionDefinitionZW.Floodplain2SectionTypeName},
+                SectionType = new CrossSectionSectionType {Name = RoughnessDataSet.Floodplain2SectionTypeName},
                 MinY = 75.0,
                 MaxY = 100.0
             });

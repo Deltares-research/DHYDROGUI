@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Roughness;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.TestUtils;
@@ -90,11 +91,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             {
                 waterFlowModel1D.Network.CrossSectionSectionTypes.Add(new CrossSectionSectionType
                 {
-                    Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName
+                    Name = RoughnessDataSet.Floodplain1SectionTypeName
                 });
                 waterFlowModel1D.Network.CrossSectionSectionTypes.Add(new CrossSectionSectionType
                 {
-                    Name = CrossSectionDefinitionZW.Floodplain2SectionTypeName
+                    Name = RoughnessDataSet.Floodplain2SectionTypeName
                 });
                 var branch = waterFlowModel1D.Network.Channels.FirstOrDefault();
                 Assert.NotNull(branch, "No branched added to the network");

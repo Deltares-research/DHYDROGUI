@@ -815,11 +815,6 @@ src/DeltaShell.Plugins.DelftModels.WaterFlowModel/Resources/*.user
 src/DeltaShell.Plugins.DelftModels.WaterFlowModel/Resources/bin
 src/DeltaShell.Plugins.DelftModels.WaterFlowModel/Resources/obj
 src/DeltaShell.Plugins.DelftModels.WaterFlowModel/Resources/packages
-src/DeltaShell.Plugins.DelftModels.WaterFlowModel/Roughness/*.suo
-src/DeltaShell.Plugins.DelftModels.WaterFlowModel/Roughness/*.user
-src/DeltaShell.Plugins.DelftModels.WaterFlowModel/Roughness/bin
-src/DeltaShell.Plugins.DelftModels.WaterFlowModel/Roughness/obj
-src/DeltaShell.Plugins.DelftModels.WaterFlowModel/Roughness/packages
 src/DeltaShell.Plugins.DelftModels.WaterFlowModel/Validation/*.suo
 src/DeltaShell.Plugins.DelftModels.WaterFlowModel/Validation/*.user
 src/DeltaShell.Plugins.DelftModels.WaterFlowModel/Validation/bin

@@ -3,6 +3,7 @@ using System.IO;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Roughness;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -66,9 +67,9 @@ namespace DeltaShell.NGHS.IO.TestUtils
                 if (crossSectionDefinitionProxy != null) crossSectionDefinitionProxy.LevelShift = levelShift;
             }
             
-            AddCrossSectionDefinitionSection(crossSection.Definition, CrossSectionDefinitionZW.MainSectionName, 0.0, 25.0);
-            AddCrossSectionDefinitionSection(crossSection.Definition, CrossSectionDefinitionZW.Floodplain1SectionTypeName, 25.0, 75.0);
-            AddCrossSectionDefinitionSection(crossSection.Definition, CrossSectionDefinitionZW.Floodplain2SectionTypeName, 75.0, 100.0);
+            AddCrossSectionDefinitionSection(crossSection.Definition, RoughnessDataSet.MainSectionTypeName, 0.0, 25.0);
+            AddCrossSectionDefinitionSection(crossSection.Definition, RoughnessDataSet.Floodplain1SectionTypeName, 25.0, 75.0);
+            AddCrossSectionDefinitionSection(crossSection.Definition, RoughnessDataSet.Floodplain2SectionTypeName, 75.0, 100.0);
             return crossSection;
         }
 

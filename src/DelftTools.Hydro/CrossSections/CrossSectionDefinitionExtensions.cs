@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Properties;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Collections;
 using GeoAPI.Geometries;
 using log4net;
@@ -93,7 +94,7 @@ namespace DelftTools.Hydro.CrossSections
 
             var sectionAndIndexToAdjust = crossSectionDefinition.Sections
                 .Select((section, index) => new {section, index})
-                .FirstOrDefault(s =>s.section.SectionType.Name.Equals(CrossSectionDefinition.MainSectionName, StringComparison.InvariantCultureIgnoreCase))
+                .FirstOrDefault(s =>s.section.SectionType.Name.Equals(RoughnessDataSet.MainSectionTypeName, StringComparison.InvariantCultureIgnoreCase))
                 ?? new {section = crossSectionDefinition.Sections.First(), index = 0};
 
             var adjustedSection = sectionAndIndexToAdjust.section;

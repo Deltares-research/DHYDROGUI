@@ -1,11 +1,11 @@
 ﻿using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid

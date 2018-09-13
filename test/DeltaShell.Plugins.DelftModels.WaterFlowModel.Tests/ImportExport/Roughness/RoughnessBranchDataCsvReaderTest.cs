@@ -2,9 +2,9 @@
 using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Roughness;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Roughness

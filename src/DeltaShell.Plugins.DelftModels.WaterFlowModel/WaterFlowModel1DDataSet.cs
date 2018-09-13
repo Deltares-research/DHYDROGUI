@@ -10,11 +10,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         {
             DHydroNames = CreateDHydroNamesDictionary();
         }
-
-        public const string MainChannelName = "Main";
-        public const string Floodplain1Name = "FloodPlain1";
-        public const string Floodplain2Name = "FloodPlain2";
-
+        
         // Tags of DataItems
         public const string LateralSourcesDataTag = "Lateral Data";
         public const string BoundaryConditionsTag = "Boundary Data";

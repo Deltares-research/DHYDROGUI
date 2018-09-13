@@ -2,8 +2,8 @@
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Collections;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness

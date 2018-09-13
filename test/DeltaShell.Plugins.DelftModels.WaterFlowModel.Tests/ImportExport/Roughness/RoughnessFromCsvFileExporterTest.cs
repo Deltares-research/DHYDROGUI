@@ -2,12 +2,12 @@
 using System.IO;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;

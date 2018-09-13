@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
 
@@ -39,9 +40,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 
             if (crossSectionDefinitionZw.Sections.Count > 0)
             {
-                IniCategory.AddProperty(DefinitionPropertySettings.Main, crossSectionDefinitionZw.GetSectionWidth(DelftTools.Hydro.CrossSections.CrossSectionDefinition.MainSectionName));
-                IniCategory.AddProperty(DefinitionPropertySettings.FloodPlain1, crossSectionDefinitionZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain1SectionTypeName));
-                IniCategory.AddProperty(DefinitionPropertySettings.FloodPlain2, crossSectionDefinitionZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain2SectionTypeName));
+                IniCategory.AddProperty(DefinitionPropertySettings.Main, crossSectionDefinitionZw.GetSectionWidth(RoughnessDataSet.MainSectionTypeName));
+                IniCategory.AddProperty(DefinitionPropertySettings.FloodPlain1, crossSectionDefinitionZw.GetSectionWidth(RoughnessDataSet.Floodplain1SectionTypeName));
+                IniCategory.AddProperty(DefinitionPropertySettings.FloodPlain2, crossSectionDefinitionZw.GetSectionWidth(RoughnessDataSet.Floodplain2SectionTypeName));
             }
             else // crossSectionDefinition came from a Culvert or Bridge
             {

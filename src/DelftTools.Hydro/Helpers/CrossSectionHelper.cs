@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Geometries;
@@ -326,7 +327,7 @@ namespace DelftTools.Hydro.Helpers
             var section = standardDefinition.Sections.FirstOrDefault();
             crossSectionDefinitionZw.Sections.Add(new CrossSectionSection
             {
-                SectionType = section == null ? new CrossSectionSectionType { Name = CrossSectionDefinition.MainSectionName } : section.SectionType,
+                SectionType = section == null ? new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName } : section.SectionType,
                 MinY = 0,
                 MaxY = crossSectionDefinitionZw.Width / 2
             });
@@ -521,7 +522,7 @@ namespace DelftTools.Hydro.Helpers
             return cs;
         }
 
-        public static ICrossSection AddYZCrossSectionFromYZCoordinates(IChannel branch, double chainage, IEnumerable<Coordinate> yzCoordinates, string name = "")
+        public static void AddYZCrossSectionFromYZCoordinates(IChannel branch, double chainage, IEnumerable<Coordinate> yzCoordinates, string name = "")
         {
             var csDef = new CrossSectionDefinitionYZ();
 
@@ -539,19 +540,16 @@ namespace DelftTools.Hydro.Helpers
                 csDef.YZDataTable.AddCrossSectionYZRow(yzCoordinate.X, yzCoordinate.Y, 0.0);
             }
             csDef.Thalweg = 0.0;
-
-            return cs;
         }
 
-        public static ICrossSection AddZWCrossSectionFromHeightWidthTable(IChannel branch, double chainage, List<HeightFlowStorageWidth> heightWidthFlowStorage, string name = "" )
+        public static void AddZWCrossSectionFromHeightWidthTable(IChannel branch, double chainage, List<HeightFlowStorageWidth> heightWidthFlowStorage, string name = "" )
         {
-
             var csDef = new CrossSectionDefinitionZW();
             csDef.ZWDataTable.Set(heightWidthFlowStorage);
 
             var mainSection = branch.HydroNetwork.CrossSectionSectionTypes
-                .FirstOrDefault(cst => cst.Name == CrossSectionDefinition.MainSectionName) ?? 
-                new CrossSectionSectionType() { Name = CrossSectionDefinition.MainSectionName };
+                .FirstOrDefault(cst => cst.Name == RoughnessDataSet.MainSectionTypeName) ?? 
+                new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName };
 
             csDef.AddSection(mainSection, csDef.FlowWidth());
 
@@ -564,8 +562,6 @@ namespace DelftTools.Hydro.Helpers
             }
             cs.Name = name;
             csDef.Thalweg = 0.0;
-
-            return cs;
         }
 
         public static ICrossSection CreateNewCrossSectionXYZ(List<Coordinate> vertices)

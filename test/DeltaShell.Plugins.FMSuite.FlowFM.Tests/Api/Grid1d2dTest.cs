@@ -11,9 +11,7 @@ using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation;
 using GeoAPI.Extensions.Coverages;
-using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api

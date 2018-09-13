@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core;
 using DeltaShell.NGHS.IO.FileReaders;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness

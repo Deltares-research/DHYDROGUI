@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Editing;
 using GeoAPI.Geometries;
@@ -13,8 +14,6 @@ namespace DelftTools.Hydro.CrossSections
     [Entity(FireOnCollectionChange=false)]
     public class CrossSectionDefinitionZW : CrossSectionDefinition, ISummerDikeEnabledDefinition
     {
-        public const string Floodplain1SectionTypeName = "FloodPlain1";
-        public const string Floodplain2SectionTypeName = "FloodPlain2";
         private bool skipValidation;
 
         public CrossSectionDefinitionZW() : this("")
@@ -302,7 +301,7 @@ namespace DelftTools.Hydro.CrossSections
         /// </summary>
         public virtual void RemoveInvalidSections()
         {
-            var validNames = new[] {MainSectionName, Floodplain1SectionTypeName, Floodplain2SectionTypeName};
+            var validNames = new[] { RoughnessDataSet.MainSectionTypeName, RoughnessDataSet.Floodplain1SectionTypeName, RoughnessDataSet.Floodplain2SectionTypeName};
             var crossSectionSections = Sections.ToList();
             foreach (var section in crossSectionSections)
             {

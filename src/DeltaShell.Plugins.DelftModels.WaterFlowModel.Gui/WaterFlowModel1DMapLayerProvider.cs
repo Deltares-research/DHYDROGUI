@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
@@ -11,7 +12,6 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Drawing;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using GeoAPI.Extensions.CoordinateSystems;
 using SharpMap.Api;
 using SharpMap.Api.Layers;

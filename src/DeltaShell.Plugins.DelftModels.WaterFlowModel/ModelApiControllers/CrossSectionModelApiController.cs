@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
@@ -82,9 +82,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers
             
             // set width of section main section, flood plane 1 and flood plane 2 to model engine
             var plains = new double[3];
-            plains[0] = crossSectionDefinitionZW.GetSectionWidth(CrossSectionDefinitionZW.MainSectionName);
-            plains[1] = crossSectionDefinitionZW.GetSectionWidth(CrossSectionDefinitionZW.Floodplain1SectionTypeName);
-            plains[2] = crossSectionDefinitionZW.GetSectionWidth(CrossSectionDefinitionZW.Floodplain2SectionTypeName);
+            plains[0] = crossSectionDefinitionZW.GetSectionWidth(RoughnessDataSet.MainSectionTypeName);
+            plains[1] = crossSectionDefinitionZW.GetSectionWidth(RoughnessDataSet.Floodplain1SectionTypeName);
+            plains[2] = crossSectionDefinitionZW.GetSectionWidth(RoughnessDataSet.Floodplain2SectionTypeName);
 
             groundLayerThickness = groundlayerUsed ? groundLayerThickness : 0.0; //just to be sure
 

@@ -1,7 +1,7 @@
-﻿using DelftTools.Utils;
+﻿using DelftTools.Hydro.Roughness;
+using DelftTools.Utils;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 {

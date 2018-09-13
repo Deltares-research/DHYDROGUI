@@ -1,4 +1,5 @@
 ﻿using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Tests.TestObjects;
 using NUnit.Framework;
 
@@ -13,13 +14,13 @@ namespace DelftTools.Hydro.Tests
         public void GivenCrossSectionWithSections_WhenGettingSectionWidthByName_ThenCorrectSectionWidthIsReturned()
         {
             var csDef = new TestCrossSectionDefinition();
-            csDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinition.MainSectionName }, 60.0);
-            csDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, 16.0);
+            csDef.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName }, 60.0);
+            csDef.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain1SectionTypeName }, 16.0);
 
-            var mainSectionWidth = csDef.GetSectionWidth(CrossSectionDefinition.MainSectionName);
+            var mainSectionWidth = csDef.GetSectionWidth(RoughnessDataSet.MainSectionTypeName);
             Assert.That(mainSectionWidth, Is.EqualTo(60.0));
 
-            var fp1SectionWidth = csDef.GetSectionWidth(CrossSectionDefinitionZW.Floodplain1SectionTypeName);
+            var fp1SectionWidth = csDef.GetSectionWidth(RoughnessDataSet.Floodplain1SectionTypeName);
             Assert.That(fp1SectionWidth, Is.EqualTo(16.0));
         }
 

@@ -2,7 +2,7 @@
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
+using DelftTools.Hydro.Roughness;
 using NetTopologySuite.IO;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;

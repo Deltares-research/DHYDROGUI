@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using GeoAPI.Geometries;
 using DelftTools.Hydro.Tests.TestObjects;
@@ -28,7 +29,7 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void GivenCrossSectionDefinitionWithOnlyMainSection_WhenValidatingSections_ThenMainSectionIsValidWhenItsWidthIsEqualToMaxFlowWidth(double mainSectionWidth, bool expectedResult, bool useCsdProxy)
         {
             var csDef = GetSimpleCrossSectionDefinition();
-            csDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinition.MainSectionName }, mainSectionWidth);
+            csDef.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName }, mainSectionWidth);
             CheckSectionWidthValidationWithOrWithoutProxy(csDef, checkSectionsTotalWidth, expectedResult, useCsdProxy);
         }
 
@@ -49,8 +50,8 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void GivenCrossSectionDefinitionWithMainSectionAndFloodPlain1_WhenValidatingSections_ThenSectionsAreValidWhenTheirTotalWidthIsEqualToMaxFlowWidth(double mainSectionWidth, double floodPlain1Width, bool expectedResult, bool useCsdProxy)
         {
             var csDef = GetSimpleCrossSectionDefinition();
-            csDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinition.MainSectionName }, mainSectionWidth);
-            csDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, floodPlain1Width);
+            csDef.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName }, mainSectionWidth);
+            csDef.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain1SectionTypeName }, floodPlain1Width);
             CheckSectionWidthValidationWithOrWithoutProxy(csDef, checkSectionsTotalWidth, expectedResult, useCsdProxy);
         }
 
@@ -81,9 +82,9 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void GivenCrossSectionDefinitionZWWithThreeSectionsDefined_WhenValidatingSections_ThenSectionsAreValidWhenTheirTotalWidthIsEqualToMaxFlowWidth(double mainSectionWidth, double floodPlain1Width, double floodPlain2Width, bool expectedResult, bool useCsdProxy)
         {
             var csDef = GetSimpleCrossSectionDefinition();
-            csDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinition.MainSectionName }, mainSectionWidth);
-            csDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, floodPlain1Width);
-            csDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain2SectionTypeName }, floodPlain2Width);
+            csDef.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName }, mainSectionWidth);
+            csDef.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain1SectionTypeName }, floodPlain1Width);
+            csDef.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain2SectionTypeName }, floodPlain2Width);
             
             CheckSectionWidthValidationWithOrWithoutProxy(csDef, checkSectionsTotalWidth, expectedResult, useCsdProxy);
         }
@@ -101,9 +102,9 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void WhenFloodPlain1WidthIsEqualToZeroAndFloodPlain2WidthIsLargerThanZero_ThenTheCrossSectionSectionsAreNotValid(double mainSectionWidth, double floodPlain1Width, double floodPlain2Width, bool expectedResult, bool useCsdProxy)
         {
             var csdZw = GetSimpleCrossSectionDefinitionZw();
-            csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.MainSectionName }, mainSectionWidth);
-            csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, floodPlain1Width);
-            csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain2SectionTypeName }, floodPlain2Width);
+            csdZw.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName }, mainSectionWidth);
+            csdZw.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain1SectionTypeName }, floodPlain1Width);
+            csdZw.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain1SectionTypeName }, floodPlain2Width);
             
             CheckSectionWidthValidationWithOrWithoutProxy(csdZw, checkFloodPlain1AndFloodPlain2, expectedResult, useCsdProxy);
         }
@@ -127,15 +128,15 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void GivenCrossSectionDefinitionThatIsNotOfTypeZw_WhenValidiatingFloodPlain1AndFloodPlain2_ThenCrossSectionPassesThisValidation(bool useCsdProxy)
         {
             var crossSectionDefYz = new CrossSectionDefinitionYZ();
-            crossSectionDefYz.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.MainSectionName }, 10.0);
-            crossSectionDefYz.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, 20.0);
-            crossSectionDefYz.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain2SectionTypeName }, 30.0);
+            crossSectionDefYz.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName }, 10.0);
+            crossSectionDefYz.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain1SectionTypeName }, 20.0);
+            crossSectionDefYz.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain2SectionTypeName }, 30.0);
             CheckSectionWidthValidationWithOrWithoutProxy(crossSectionDefYz, checkFloodPlain1AndFloodPlain2, true, useCsdProxy);
 
             var crossSectionDefStandard = new CrossSectionDefinitionStandard();
-            crossSectionDefStandard.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.MainSectionName }, 10.0);
-            crossSectionDefStandard.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, 20.0);
-            crossSectionDefStandard.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain2SectionTypeName }, 30.0);
+            crossSectionDefStandard.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName }, 10.0);
+            crossSectionDefStandard.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain1SectionTypeName }, 20.0);
+            crossSectionDefStandard.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain2SectionTypeName }, 30.0);
             CheckSectionWidthValidationWithOrWithoutProxy(crossSectionDefStandard, checkFloodPlain1AndFloodPlain2, true, useCsdProxy);
         }
 

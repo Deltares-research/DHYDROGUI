@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
@@ -11,7 +12,6 @@ using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using ValidationAspects;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation

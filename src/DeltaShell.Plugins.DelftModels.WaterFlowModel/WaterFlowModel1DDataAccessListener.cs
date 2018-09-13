@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
@@ -99,10 +100,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
             if (!crossSectionDefinitionsWithoutSections.Any()) return;
             
-            var mainSectionType = hydroNetwork.CrossSectionSectionTypes.FirstOrDefault(cst => cst.Name == CrossSectionDefinition.MainSectionName);
+            var mainSectionType = hydroNetwork.CrossSectionSectionTypes.FirstOrDefault(cst => cst.Name == RoughnessDataSet.MainSectionTypeName);
             if (mainSectionType == null)
             {
-                mainSectionType = new CrossSectionSectionType { Name = CrossSectionDefinition.MainSectionName };
+                mainSectionType = new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName };
                 hydroNetwork.CrossSectionSectionTypes.Add(mainSectionType);
             }
 

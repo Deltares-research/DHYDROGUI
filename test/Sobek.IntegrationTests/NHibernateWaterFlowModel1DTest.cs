@@ -9,6 +9,7 @@ using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -32,7 +33,6 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.ImportExport.Sobek;
@@ -674,7 +674,7 @@ namespace Sobek.IntegrationTests
             var project = projectRepository.GetProject();
 
             var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(100, 0));
-            var mainSection = hydroNetwork.CrossSectionSectionTypes.FirstOrDefault(s => s.Name == CrossSectionDefinition.MainSectionName);
+            var mainSection = hydroNetwork.CrossSectionSectionTypes.FirstOrDefault(s => s.Name == RoughnessDataSet.MainSectionTypeName);
             Assert.NotNull(mainSection);
 
             var crossSection1 = CrossSectionDefinitionZW.CreateDefault();

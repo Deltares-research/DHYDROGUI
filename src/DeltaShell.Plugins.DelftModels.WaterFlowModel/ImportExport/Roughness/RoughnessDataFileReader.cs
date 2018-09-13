@@ -6,12 +6,12 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
 

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
@@ -140,10 +141,10 @@ namespace DelftTools.Hydro.Helpers
             var crossSectionZw = csDefToCheck as CrossSectionDefinitionZW;
             if (crossSectionZw == null) return true;
 
-            var floodPlain1Width = crossSectionZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain1SectionTypeName);
+            var floodPlain1Width = crossSectionZw.GetSectionWidth(RoughnessDataSet.Floodplain1SectionTypeName);
             if (!floodPlain1Width.Equals(0.0)) return true;
 
-            var floodPlain2Width = crossSectionZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain2SectionTypeName);
+            var floodPlain2Width = crossSectionZw.GetSectionWidth(RoughnessDataSet.Floodplain2SectionTypeName);
             return !(floodPlain2Width > 0.0);
         }
 

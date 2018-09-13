@@ -17,8 +17,6 @@ namespace DelftTools.Hydro.CrossSections
     [Entity]
     public abstract class CrossSectionDefinition : EditableObjectUnique<long>, ICrossSectionDefinition
     {
-        public const string MainSectionName = "Main";
-
         private double thalweg;
         protected IEventedList<CrossSectionSection> sections;
         private bool inSectionsPropertyChanged;

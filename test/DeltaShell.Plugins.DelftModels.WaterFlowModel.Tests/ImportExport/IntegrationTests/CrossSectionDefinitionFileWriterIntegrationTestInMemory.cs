@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Roughness;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
 using DeltaShell.NGHS.IO.TestUtils;
@@ -57,11 +58,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
                 {
                     waterFlowModel1D.Network.CrossSectionSectionTypes.Add(new CrossSectionSectionType
                     {
-                        Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName
+                        Name = RoughnessDataSet.Floodplain1SectionTypeName
                     });
                     waterFlowModel1D.Network.CrossSectionSectionTypes.Add(new CrossSectionSectionType
                     {
-                        Name = CrossSectionDefinitionZW.Floodplain2SectionTypeName
+                        Name = RoughnessDataSet.Floodplain2SectionTypeName
                     });
                     //var branch = model.Network.Branches.FirstOrDefault();
                     var offsets = new double[] {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
@@ -86,13 +87,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
                     {
                         var mainRoughnessSection =
                             waterFlowModel1D.RoughnessSections.First(
-                                r => r.Name == CrossSectionDefinitionZW.MainSectionName);
+                                r => r.Name == RoughnessDataSet.MainSectionTypeName);
                         var floodPlain1RoughnessSection =
                             waterFlowModel1D.RoughnessSections.First(
-                                r => r.Name == CrossSectionDefinitionZW.Floodplain1SectionTypeName);
+                                r => r.Name == RoughnessDataSet.Floodplain1SectionTypeName);
                         var floodPlain2RoughnessSection =
                             waterFlowModel1D.RoughnessSections.First(
-                                r => r.Name == CrossSectionDefinitionZW.Floodplain2SectionTypeName);
+                                r => r.Name == RoughnessDataSet.Floodplain2SectionTypeName);
 
                         mainRoughnessSection.RoughnessNetworkCoverage[new NetworkLocation(branch, 20)] = new object[]
                         {45.0, RoughnessType.Chezy};
@@ -159,11 +160,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
                 {
                     waterFlowModel1D.Network.CrossSectionSectionTypes.Add(new CrossSectionSectionType
                     {
-                        Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName
+                        Name = RoughnessDataSet.Floodplain1SectionTypeName
                     });
                     waterFlowModel1D.Network.CrossSectionSectionTypes.Add(new CrossSectionSectionType
                     {
-                        Name = CrossSectionDefinitionZW.Floodplain2SectionTypeName
+                        Name = RoughnessDataSet.Floodplain2SectionTypeName
                     });
                     //var branch = model.Network.Branches.FirstOrDefault();
                     var offsets = new double[] {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
@@ -187,13 +188,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
                     {
                         var mainRoughnessSection =
                             waterFlowModel1D.RoughnessSections.First(
-                                r => r.Name == CrossSectionDefinitionZW.MainSectionName);
+                                r => r.Name == RoughnessDataSet.MainSectionTypeName);
                         var floodPlain1RoughnessSection =
                             waterFlowModel1D.RoughnessSections.First(
-                                r => r.Name == CrossSectionDefinitionZW.Floodplain1SectionTypeName);
+                                r => r.Name == RoughnessDataSet.Floodplain1SectionTypeName);
                         var floodPlain2RoughnessSection =
                             waterFlowModel1D.RoughnessSections.First(
-                                r => r.Name == CrossSectionDefinitionZW.Floodplain2SectionTypeName);
+                                r => r.Name == RoughnessDataSet.Floodplain2SectionTypeName);
 
                         mainRoughnessSection.RoughnessNetworkCoverage[new NetworkLocation(branch, 20)] = new object[]
                         {45.0, RoughnessType.Chezy};

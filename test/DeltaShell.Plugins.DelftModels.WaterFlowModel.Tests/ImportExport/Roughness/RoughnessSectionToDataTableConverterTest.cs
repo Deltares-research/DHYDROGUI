@@ -2,8 +2,8 @@
 using System.Data;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 

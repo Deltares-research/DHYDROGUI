@@ -4,8 +4,8 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Roughness;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using NUnit.Framework;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
 

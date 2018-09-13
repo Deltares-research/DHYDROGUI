@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media.Animation;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
@@ -15,9 +16,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
     {
         private readonly ICrossSectionDefinition crossSectionDefinition;
         private readonly IEventedList<CrossSectionSectionType> crossSectionSectionTypes;
-        private const string mainSectionName = "Main";
-        private const string floodplain1SectionTypeName = "FloodPlain1";
-        private const string floodplain2SectionTypeName = "FloodPlain2";
+        private const string mainSectionName = RoughnessDataSet.MainSectionTypeName;
+        private const string floodplain1SectionTypeName = RoughnessDataSet.Floodplain1SectionTypeName;
+        private const string floodplain2SectionTypeName = RoughnessDataSet.Floodplain2SectionTypeName;
 
         private class SectionData
         {

@@ -3,7 +3,7 @@ using System.Data;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
+using DelftTools.Hydro.Roughness;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
 

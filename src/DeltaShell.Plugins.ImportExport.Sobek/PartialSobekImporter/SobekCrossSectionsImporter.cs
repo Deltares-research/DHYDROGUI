@@ -7,6 +7,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Sobek.Readers.Readers;
@@ -20,10 +21,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
     public class SobekCrossSectionsImporter : PartialSobekImporterBase
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(SobekCrossSectionsImporter));
-
-        private static string mainChannelName = "Main";
-        private static string floodplain1Name = "FloodPlain1";
-        private static string floodplain2Name = "FloodPlain2";
 
         private Dictionary<string, IBranch> branches;
         
@@ -251,12 +248,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             if (definition.CrossSectionType == CrossSectionType.ZW)
             {
-                var main = GetCrossSectionSectionType(mainChannelName, hydroNetwork);
+                var main = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, hydroNetwork);
 
                 if (sobekDefinition.IsRiverProfile)
                 {
-                    var floodPlain1 = GetCrossSectionSectionType(floodplain1Name, hydroNetwork);
-                    var floodPlain2 = GetCrossSectionSectionType(floodplain2Name, hydroNetwork);
+                    var floodPlain1 = GetCrossSectionSectionType(RoughnessDataSet.Floodplain1SectionTypeName, hydroNetwork);
+                    var floodPlain2 = GetCrossSectionSectionType(RoughnessDataSet.Floodplain2SectionTypeName, hydroNetwork);
                     SetBedFrictionToTabulatedProfile(main, floodPlain1, floodPlain2,
                                                         definition as CrossSectionDefinitionZW,
                                                         sobekDefinition);
@@ -538,9 +535,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             if (HydroNetwork.CrossSections.Count(cs => cs.CrossSectionType == CrossSectionType.ZW) > 0)
             {
                 //make sure these types are added to the network
-                GetCrossSectionSectionType(mainChannelName, HydroNetwork);
-                GetCrossSectionSectionType(floodplain1Name, HydroNetwork);
-                GetCrossSectionSectionType(floodplain2Name, HydroNetwork);
+                GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, HydroNetwork);
+                GetCrossSectionSectionType(RoughnessDataSet.Floodplain1SectionTypeName, HydroNetwork);
+                GetCrossSectionSectionType(RoughnessDataSet.Floodplain2SectionTypeName, HydroNetwork);
             }
 
             // process CRFR (Cross Section Friction) records
@@ -590,7 +587,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             if (unhandledProfiles.Any())
             {
-                var crossSectionSectionType = GetCrossSectionSectionType(mainChannelName, HydroNetwork); 
+                var crossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, HydroNetwork); 
 
                 foreach (var crossSection in unhandledProfiles)
                 {

@@ -2,9 +2,9 @@
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Roughness;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
