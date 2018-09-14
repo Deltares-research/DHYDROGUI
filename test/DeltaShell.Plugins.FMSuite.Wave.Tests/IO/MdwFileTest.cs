@@ -1,16 +1,22 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using DelftTools.TestUtils;
-using DelftTools.Utils.Collections;
+﻿using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
+using DeltaShell.Core;
+using DeltaShell.NGHS.IO;
+using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
+using DeltaShell.Plugins.NetworkEditor;
+using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Geometries;
 using log4net.Core;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 {
@@ -409,6 +415,142 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(WaveBoundaryConditionSpatialDefinitionType.Uniform,
                 modelDefIn.BoundaryConditions[0].SpatialDefinitionType, 
                 "WaveBoundaryCondition of Spatially Varying DefinitionType with no data should default to Uniform on MdwFile save");
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Integration)]
+        public void GivenAModelWithABoundaryCondition_WhenSaved_ThenBcwFileIsReferencedInMdwFile()
+        {
+            var tempDirPath = FileUtils.CreateTempDirectory();
+            var tempProjectFilePath = Path.Combine(tempDirPath, "Project.dsproj");
+
+            try
+            {
+                using (var app = GetConfiguredApplication(tempProjectFilePath))
+                {
+                    using (var model = new WaveModel())
+                    {
+                        var project = app.Project;
+                        project.RootFolder.Add(model);
+
+                        var boundary = new Feature2D
+                        {
+                            Geometry =
+                                new LineString(new[]
+                                    {new Coordinate(0, 0), new Coordinate(1, 0)}),
+                            Name = "boundary"
+                        };
+
+                        var boundaryConditionFactory = new WaveBoundaryConditionFactory();
+                        var boundaryCondition = boundaryConditionFactory.CreateBoundaryCondition(boundary, "",
+                            BoundaryConditionDataType.ParametrizedSpectrumTimeseries);
+
+                        var refTime = model.ModelDefinition.ModelReferenceDateTime;
+                        boundaryCondition.DataPointIndices.Add(1);
+                        boundaryCondition.PointData[0].Arguments[0]
+                            .SetValues(new[] { refTime, refTime.AddDays(1) });
+
+                        model.Boundaries.Add(boundary);
+                        model.BoundaryConditions.Add((WaveBoundaryCondition)boundaryCondition);
+
+                        app.SaveProject();
+
+                        var mdwFilePath = model.MdwFilePath;
+                        var reader = new DelftIniReader();
+
+                        var categories = reader.ReadDelftIniFile(mdwFilePath);
+                        var tSeriesFilePropValue = categories
+                            .FirstOrDefault(c => c.Name == KnownWaveCategories.GeneralCategory)
+                            .GetPropertyValue(KnownWaveProperties.TimeSeriesFile);
+
+                        Assert.AreEqual(model.Name + ".bcw", tSeriesFilePropValue);
+
+                        app.CloseProject();
+
+                    }
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(tempDirPath);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Integration)]
+        public void GivenAModelWithABoundaryCondition_WhenSavedAndLoaded_BoundaryConditionIsCorrectlyLoaded()
+        {
+            var tempDirPath = FileUtils.CreateTempDirectory();
+            var tempProjectFilePath = Path.Combine(tempDirPath, "Project.dsproj");
+
+            var mdwFilePath = string.Empty;
+
+            try
+            {
+                using (var app = GetConfiguredApplication(tempProjectFilePath))
+                {
+                    using (var model = new WaveModel())
+                    {
+                        var project = app.Project;
+                        project.RootFolder.Add(model);
+
+                        var boundary = new Feature2D
+                        {
+                            Geometry =
+                                new LineString(new[]
+                                    {new Coordinate(0, 0), new Coordinate(1, 0)}),
+                            Name = "boundary"
+                        };
+
+                        var boundaryConditionFactory = new WaveBoundaryConditionFactory();
+                        var boundaryCondition = boundaryConditionFactory.CreateBoundaryCondition(boundary, "",
+                            BoundaryConditionDataType.ParametrizedSpectrumTimeseries);
+
+                        var refTime = model.ModelDefinition.ModelReferenceDateTime;
+                        boundaryCondition.DataPointIndices.Add(1);
+                        boundaryCondition.PointData[0].Arguments[0]
+                            .SetValues(new[] { refTime, refTime.AddDays(1) });
+
+                        model.Boundaries.Add(boundary);
+                        model.BoundaryConditions.Add((WaveBoundaryCondition)boundaryCondition);
+                     
+                        app.SaveProject();
+
+                        mdwFilePath = model.MdwFilePath;
+
+                        app.CloseProject();
+
+                    }
+
+                    using (var model = new WaveModel(mdwFilePath)) { 
+                                   
+                        var boundaries = model.Boundaries;
+                        var boundaryConditions = model.BoundaryConditions;
+
+                        Assert.IsNotNull(boundaryConditions);
+                        Assert.IsNotNull(boundaries);
+                    }
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(tempDirPath);
+            }
+        }
+
+        private DeltaShellApplication GetConfiguredApplication(string savePath)
+        {
+            var app = new DeltaShellApplication();
+            app.IsProjectCreatedInTemporaryDirectory = true;
+            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+            app.Plugins.Add(new CommonToolsApplicationPlugin());
+            app.Plugins.Add(new SharpMapGisApplicationPlugin());
+            app.Plugins.Add(new NetworkEditorApplicationPlugin());
+            app.Run();
+            app.SaveProjectAs(Path.Combine(savePath));
+            return app;
         }
     }
 }
