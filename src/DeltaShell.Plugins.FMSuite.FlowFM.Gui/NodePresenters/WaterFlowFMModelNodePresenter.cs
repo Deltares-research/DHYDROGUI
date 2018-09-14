@@ -110,6 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                     new FlowFMTreeShortcut(model.NetworkDiscretization.Name, NetworkDiscretizationIcon, model,
                         model.NetworkDiscretization);
             }
+            yield return new FlowFMTreeShortcut("1D Roughness", Resources.Roughness, model, null, model.RoughnessSections);
             yield return new FlowFMTreeShortcut("Grid", UnstrucIcon, model, model.Grid);
             yield return new FlowFMTreeShortcut("1D2D Links", Link1D2DIcon, model, model.Links);
             yield return

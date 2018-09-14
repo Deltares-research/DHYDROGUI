@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -10,6 +9,7 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.NetworkEditor;
@@ -208,6 +208,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var roughness1DDataItem = GetDataItemSetByTag(WaterFlowFMModelDataSet.Roughness1DTag);
             roughness1DDataItem.ReadOnly = true;
             roughness1DDataItem.DataItems.Add(new DataItem(roughnessSection));
+        }
+
+        public virtual IEventedList<RoughnessSection> RoughnessSections
+        {
+            get { return GetDataItemSetByTag(WaterFlowFMModelDataSet.Roughness1DTag).AsEventedList<RoughnessSection>(); }
         }
 
         /// <summary>
