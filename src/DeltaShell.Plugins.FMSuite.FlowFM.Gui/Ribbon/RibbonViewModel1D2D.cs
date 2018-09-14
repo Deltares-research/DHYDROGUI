@@ -16,19 +16,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
     public class RibbonViewModel1D2D
     {
         private readonly ObservableCollection<RibbonLink> _linkTypes;
-        private MapToolCommandGenerateLinksMapTool mapToolCommandGenerateLinksMapTool;
+        private MapToolCommand1D2DLinksMapTool mapToolCommandAdd1D2DLinkMapTool;
+        private MapToolCommand1D2DLinksMapTool mapToolCommandGenerate1D2DLinksMapTool;
         private RibbonLink selectedRibbonLink;
 
         public RibbonViewModel1D2D()
         {
-            mapToolCommandGenerateLinksMapTool = new MapToolCommandGenerateLinksMapTool(FlowFMMapViewDecorator.GenerateLinksToolName)
+            mapToolCommandGenerate1D2DLinksMapTool = new MapToolCommand1D2DLinksMapTool(FlowFMMapViewDecorator.GenerateLinksToolName)
             {
                 LayerType = typeof (AreaLayer)
             };
 
+            mapToolCommandAdd1D2DLinkMapTool = new MapToolCommand1D2DLinksMapTool(FlowFMMapViewDecorator.AddLinksToolName)
+            {
+                LayerType = typeof(AreaLayer)
+            };
+
             ActivateGenerateLinksToolCommand = new RelayMapToolCommand
             {
-                MapToolCommand = mapToolCommandGenerateLinksMapTool
+                MapToolCommand = mapToolCommandGenerate1D2DLinksMapTool
             };
 
             _linkTypes = new ObservableCollection<RibbonLink>
@@ -82,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
             set
             {
                 selectedRibbonLink = value;
-                mapToolCommandGenerateLinksMapTool.LinkType = selectedRibbonLink.Type;
+                mapToolCommandGenerate1D2DLinksMapTool.LinkType = selectedRibbonLink.Type;
             }
         }
 
@@ -98,9 +104,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
             }.ForEach(c => c.Refresh());
         }
 
-        private class MapToolCommandGenerateLinksMapTool : MapToolCommand
+        private class MapToolCommand1D2DLinksMapTool : MapToolCommand
         {
-            public MapToolCommandGenerateLinksMapTool(string toolName) : base(toolName)
+            public MapToolCommand1D2DLinksMapTool(string toolName) : base(toolName)
             {
             }
 
@@ -108,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
             {
                 set
                 {
-                    var mapTool = MapTool as GenerateLinksMapTool;
+                    var mapTool = MapTool as Base1D2DLinksMapTool;
                     if (mapTool != null) mapTool.LinkType = value;
                 }
             }

@@ -28,8 +28,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         internal const string MergeEmbankmentsToolName = "Merge embankments";
         internal const string GridWizardToolName = "Grid wizard";
         internal const string GenerateLinksToolName = "Generate links (1D2D)";
+        internal const string AddLinksToolName = "Add link (1D2D)";
 
         private static readonly string ModelName = typeof (WaterFlowFMModel).Name;
+
 
 
         public static void AddMapToolsIfMissing(MapView mapView)
@@ -58,6 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             tools.Add(new MergeEmbankmentsMapTool());
             tools.Add(new GridWizardMapTool());
             tools.Add(new GenerateLinksMapTool());
+            tools.Add(new Add1D2DLinkMapTool());
             tools.OfType<ITargetLayerTool>().ForEach(t => t.LayerFilter = GetLayerFilter(t));
 
             mapView.MapControl.Tools.AddRange(tools);

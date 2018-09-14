@@ -101,10 +101,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         private static bool Get1D2DGullyLinks(WaterFlowFMModel fmModel, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount)
         {
             var filter1DMesh = GetMesh1DFilter(fmModel.NetworkDiscretization, GridApiDataSet.LinkType.GullySewer);
-            IList<IGeometry> filter2DMesh = new List<IGeometry>();
+            var geometryGullies = fmModel.Area.Gullies.Where(r => r.Geometry.Intersects(selectedArea)).Select(r => r.Geometry);
 
             var gGeomApi = new GridGeomApi();
-            var ierr = gGeomApi.Get1D2DLinksFrom2DTo1D(fmModel.NetFilePath, fmModel.NetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, selectedArea, filter1DMesh, filter2DMesh);
+            var ierr = gGeomApi.Get1D2DLinksFromGullies(fmModel.NetFilePath, fmModel.NetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, filter1DMesh, geometryGullies);
             if (ierr != GridApiDataSet.GridConstants.NOERR)
             {
                 log.ErrorFormat(
@@ -118,28 +118,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         private static bool Get1D2DInhabitantsLinks(WaterFlowFMModel fmModel, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount)
         {
             var filter1DMesh = GetMesh1DFilter(fmModel.NetworkDiscretization, GridApiDataSet.LinkType.InhabitantsSewer);
-            IList<IGeometry> filter2DMesh = new List<IGeometry>();
-
-            var gGeomApi = new GridGeomApi();
-            var ierr = gGeomApi.Get1D2DLinksFrom2DTo1D(fmModel.NetFilePath, fmModel.NetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, selectedArea, filter1DMesh, filter2DMesh);
-            if (ierr != GridApiDataSet.GridConstants.NOERR)
-            {
-                log.ErrorFormat(
-                    "1D2D Links were not generated between the grid and the network of WaterFlowFMModel {0}. Please make sure the grid has been saved and the network is correct.",
-                    fmModel.Name);
-                return true;
-            }
-            return false;
+            return Get1D2DRoofLinks(fmModel, selectedArea, startIndex, ref linksFrom, ref linksTo, ref linksCount, filter1DMesh);
         }
 
         private static bool Get1D2DRoofLinks(WaterFlowFMModel fmModel, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount)
         {
             var filter1DMesh = GetMesh1DFilter(fmModel.NetworkDiscretization, GridApiDataSet.LinkType.RoofSewer);
+            return Get1D2DRoofLinks(fmModel, selectedArea, startIndex, ref linksFrom, ref linksTo, ref linksCount, filter1DMesh);
+        }
 
-            IList<IGeometry> filter2DMesh = new List<IGeometry>();
+        private static bool Get1D2DRoofLinks(WaterFlowFMModel fmModel, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount, List<bool> filter1DMesh)
+        {
+            var geometryRoofs = fmModel.Area.RoofAreas.Where(r => r.Geometry.Intersects(selectedArea)).Select(r => r.Geometry);
 
             var gGeomApi = new GridGeomApi();
-            var ierr = gGeomApi.Get1D2DLinksFrom2DTo1D(fmModel.NetFilePath, fmModel.NetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, selectedArea, filter1DMesh, filter2DMesh);
+            var ierr = gGeomApi.Get1D2DLinksFromRoofs(fmModel.NetFilePath, fmModel.NetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, filter1DMesh, geometryRoofs);
             if (ierr != GridApiDataSet.GridConstants.NOERR)
             {
                 log.ErrorFormat(

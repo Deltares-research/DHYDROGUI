@@ -62,7 +62,7 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 if (selectedArea == null)
                 {
-                    selectedArea = GetSelectedAllArea(points);
+                    selectedArea = GetSelectAllArea(points);
                 }
 
                 return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(gridFilePath, networkDiscretization, ref linksFrom, ref linksTo,
@@ -70,6 +70,42 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
         }
+
+        public int Get1D2DLinksFromRoofs(string netFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, List<bool> filter1DMesh, IEnumerable<IGeometry> geometryRoofs)
+        {
+            if (filter1DMesh == null)
+            {
+                filter1DMesh = Enumerable.Repeat(true, networkDiscretization.Locations.Values.Count()).ToList();
+            }
+
+            var points = networkDiscretization.Locations.Values.Select(p => p.Geometry as IPoint).ToList();
+
+            if (points.Any())
+            {
+                return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(netFilePath, networkDiscretization, ref linksFrom, ref linksTo,
+                    ref startIndex, ref linksCount, Make1D2DRoofLinks, null, filter1DMesh, geometryRoofs);
+            }
+            return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
+        }
+
+        public int Get1D2DLinksFromGullies(string netFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, List<bool> filter1DMesh, IEnumerable<IGeometry> geometryGullies)
+        {
+            if (filter1DMesh == null)
+            {
+                filter1DMesh = Enumerable.Repeat(true, networkDiscretization.Locations.Values.Count()).ToList();
+            }
+
+            var points = networkDiscretization.Locations.Values.Select(p => p.Geometry as IPoint).ToList();
+
+            if (points.Any())
+            {
+                return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(netFilePath, networkDiscretization, ref linksFrom, ref linksTo,
+                    ref startIndex, ref linksCount, Make1D2DGullyLinks, null, filter1DMesh, geometryGullies);
+            }
+            return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
+        }
+
+
 
         public int Get1D2DLinksFrom2DTo1D(string gridFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, IPolygon selectedArea, List<bool> filter1DMesh, IList<IGeometry> filter2DMesh)
         {
@@ -84,7 +120,7 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 if (selectedArea == null)
                 {
-                    selectedArea = GetSelectedAllArea(points);
+                    selectedArea = GetSelectAllArea(points);
                 }
 
                 return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(gridFilePath, networkDiscretization, ref linksFrom, ref linksTo,
@@ -101,12 +137,121 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 if (selectedArea == null)
                 {
-                    selectedArea = GetSelectedAllArea(points);
+                    selectedArea = GetSelectAllArea(points);
                 }
 
                 Make1D2DLateralLinks(selectedArea, filter1DMesh);
             }
             return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
+        }
+
+
+        private int Make1D2DRoofLinks(IPolygon selectedArea, IList<bool> filterMesh1DPoints, IList<IGeometry> roofs)
+        {
+            IntPtr intPtrXValuesRoofs = IntPtr.Zero;
+            IntPtr intPtrYValuesRoofs = IntPtr.Zero;
+            IntPtr intPtrZValuesRoofs = IntPtr.Zero;
+            IntPtr intPtrfilterMesh1DPoints = IntPtr.Zero;
+
+            try
+            {
+                var coordinatesSelectedArea = selectedArea.Coordinates.ToList();
+                coordinatesSelectedArea.Add(new Coordinate(missingValue, missingValue, missingValue)); //add separator
+                int nCoordinatesRoofs = coordinatesSelectedArea.Count;
+
+                IList<Coordinate> coordinatesFilterMesh2D = GetCoordinatesAndSeparators(roofs);
+                var nCoordinatesFilterMesh2D = coordinatesFilterMesh2D.Count;
+
+                int nFilterMesh1DPoints = filterMesh1DPoints.Count;
+                intPtrXValuesRoofs = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinatesRoofs);
+                intPtrYValuesRoofs = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinatesRoofs);
+                intPtrZValuesRoofs = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinatesRoofs);
+                intPtrfilterMesh1DPoints = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nFilterMesh1DPoints);
+
+                var roofXCoords = coordinatesSelectedArea.Select(c => c.X).ToArray();
+                var roofYCoords = coordinatesSelectedArea.Select(c => c.Y).ToArray();
+                var roofZCoords = Enumerable.Repeat<double>(0.0, nCoordinatesRoofs).ToArray();
+                var filterMesh1DPointsArray = filterMesh1DPoints.Select(b => b ? 1 : 0).ToArray();
+
+                Marshal.Copy(roofXCoords, 0, intPtrXValuesRoofs, nCoordinatesRoofs);
+                Marshal.Copy(roofYCoords, 0, intPtrYValuesRoofs, nCoordinatesRoofs);
+                Marshal.Copy(roofZCoords, 0, intPtrZValuesRoofs, nCoordinatesRoofs);
+                Marshal.Copy(filterMesh1DPointsArray, 0, intPtrfilterMesh1DPoints, nFilterMesh1DPoints);
+
+                var ierr = geomWrapper.Make1D2DRoofLinks(ref nCoordinatesRoofs, ref intPtrXValuesRoofs,
+                    ref intPtrYValuesRoofs, ref intPtrZValuesRoofs, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+            finally
+            {
+                Marshal.FreeCoTaskMem(intPtrXValuesRoofs);
+                Marshal.FreeCoTaskMem(intPtrYValuesRoofs);
+                Marshal.FreeCoTaskMem(intPtrZValuesRoofs);
+                Marshal.FreeCoTaskMem(intPtrfilterMesh1DPoints);
+            }
+
+            return GridApiDataSet.GridConstants.NOERR;
+        }
+
+        private int Make1D2DGullyLinks(IPolygon selectedArea, IList<bool> filterMesh1DPoints, IList<IGeometry> gullies)
+        {
+            IntPtr intPtrXValuesGullies = IntPtr.Zero;
+            IntPtr intPtrYValuesGullies = IntPtr.Zero;
+            IntPtr intPtrZValuesGullies = IntPtr.Zero;
+            IntPtr intPtrfilterMesh1DPoints = IntPtr.Zero;
+
+            try
+            {
+                var coordinatesSelectedArea = selectedArea.Coordinates.ToList();
+                coordinatesSelectedArea.Add(new Coordinate(missingValue, missingValue, missingValue)); //add separator
+                int nCoordinatesGullies = coordinatesSelectedArea.Count;
+
+                IList<Coordinate> coordinatesFilterMesh2D = GetCoordinatesAndSeparators(gullies);
+                var nCoordinatesFilterMesh2D = coordinatesFilterMesh2D.Count;
+
+                int nFilterMesh1DPoints = filterMesh1DPoints.Count;
+                intPtrXValuesGullies = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinatesGullies);
+                intPtrYValuesGullies = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinatesGullies);
+                intPtrZValuesGullies = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinatesGullies);
+                intPtrfilterMesh1DPoints = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nFilterMesh1DPoints);
+
+                var roofXCoords = coordinatesSelectedArea.Select(c => c.X).ToArray();
+                var roofYCoords = coordinatesSelectedArea.Select(c => c.Y).ToArray();
+                var roofZCoords = Enumerable.Repeat<double>(0.0, nCoordinatesGullies).ToArray();
+                var filterMesh1DPointsArray = filterMesh1DPoints.Select(b => b ? 1 : 0).ToArray();
+
+                Marshal.Copy(roofXCoords, 0, intPtrXValuesGullies, nCoordinatesGullies);
+                Marshal.Copy(roofYCoords, 0, intPtrYValuesGullies, nCoordinatesGullies);
+                Marshal.Copy(roofZCoords, 0, intPtrZValuesGullies, nCoordinatesGullies);
+                Marshal.Copy(filterMesh1DPointsArray, 0, intPtrfilterMesh1DPoints, nFilterMesh1DPoints);
+
+                var ierr = geomWrapper.Make1D2DGullyLinks(ref nCoordinatesGullies, ref intPtrXValuesGullies,
+                    ref intPtrYValuesGullies, ref intPtrZValuesGullies, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+            finally
+            {
+                Marshal.FreeCoTaskMem(intPtrXValuesGullies);
+                Marshal.FreeCoTaskMem(intPtrYValuesGullies);
+                Marshal.FreeCoTaskMem(intPtrZValuesGullies);
+                Marshal.FreeCoTaskMem(intPtrfilterMesh1DPoints);
+            }
+
+            return GridApiDataSet.GridConstants.NOERR;
         }
 
         private int Make1D2DLateralLinks(IPolygon selectedArea, IList<bool> filterMesh1DPoints, IList<IGeometry> filterMesh2D = null)
@@ -234,7 +379,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return GridApiDataSet.GridConstants.NOERR;
         }
 
-        private static IPolygon GetSelectedAllArea(List<IPoint> points)
+        private static IPolygon GetSelectAllArea(List<IPoint> points)
         {
             IPolygon selectedArea;
             var coordinates = new List<Coordinate>();
@@ -268,7 +413,7 @@ namespace DeltaShell.NGHS.IO.Grid
         }
 
         // TODO: This method is huge.. Make smaller please :(
-        private int SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(string gridFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, Func<IPolygon, IList<bool>, IList<IGeometry>,int> make1D2DLinks, IPolygon selectedArea, IList<bool> filter1DMesh, IList<IGeometry> filter2DMesh = null)
+        private int SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(string gridFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, Func<IPolygon, IList<bool>, IList<IGeometry>,int> make1D2DLinks, IPolygon selectedArea, IList<bool> filter1DMesh, IEnumerable<IGeometry> filter2DMesh = null)
         {
             IntPtr c_meshXCoords = IntPtr.Zero;
             IntPtr c_meshYCoords = IntPtr.Zero;
@@ -412,7 +557,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     return ierr;
                 }
                 //9. make the links
-                ierr = make1D2DLinks.Invoke(selectedArea, filter1DMesh, filter2DMesh);
+                ierr = make1D2DLinks.Invoke(selectedArea, filter1DMesh, filter2DMesh.ToList());
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;

@@ -325,6 +325,8 @@
     <Compile Include="Forms\GridWizard.Designer.cs">
       <DependentUpon>GridWizard.cs</DependentUpon>
     </Compile>
+    <Compile Include="MapTools\Add1D2DLinkMapTool.cs" />
+    <Compile Include="MapTools\Base1D2DLinksMapTool.cs" />
     <Compile Include="MapTools\GenerateLinksMapTool.cs" />
     <Compile Include="MapTools\GenerateLinksMapToolHelper.cs" />
     <Compile Include="Properties\PluginInfo.cs" />

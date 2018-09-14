@@ -31,12 +31,14 @@
                 <Setter Property="Margin" Value="0,3,3,3"/>
             </Style>
 
+            <!--Used for drag drop-->
             <Style x:Key="DragRectangleStyle" TargetType="{x:Type Rectangle}">
                 <Setter Property="Stroke" Value="Red"/>
                 <Setter Property="StrokeThickness" Value="2"/>
                 <Setter Property="StrokeDashArray" Value="2"/>
             </Style>
-            
+
+            <!--Used for drag drop-->
             <Style x:Key="DragCenterPointStyle" TargetType="{x:Type Ellipse}">
                 <Setter Property="Fill" Value="BlueViolet"/>
                 <Setter Property="Width" Value="10"/>
