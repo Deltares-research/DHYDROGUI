@@ -521,50 +521,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void
-    GivenAnFMModelWithABoundaryWithTwoBoundaryConditions_WhenSavingAndLoadingProject_ThenNumberOfBoundariesIsOne()
-        {
-            var model = new WaterFlowFMModel();
-
-            var boundary = new Feature2D
-            {
-                Geometry =
-                    new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) }),
-                Name = "boundary"
-            };
-
-            var boundaryConditionSet = new BoundaryConditionSet();
-            model.BoundaryConditionSets.Add(boundaryConditionSet);
-
-            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed, BoundaryConditionDataType.TimeSeries)
-            {
-                Feature = boundary,
-                Name = "boundary_condition1",
-            };
-
-            var morphologyBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
-            {
-                Feature = boundary,
-                Name = "boundary_condition2"
-            };
-
-            flowBoundaryCondition.DataPointIndices.Add(0);
-            flowBoundaryCondition.PointData[0].Arguments[0].SetValues(new[] { model.StartTime, model.StopTime });
-            morphologyBoundaryCondition.DataPointIndices.Add(0);
-            morphologyBoundaryCondition.PointData[0].Arguments[0].SetValues(new[] { model.StartTime, model.StopTime });
-
-            boundaryConditionSet.BoundaryConditions.Add(flowBoundaryCondition);
-            boundaryConditionSet.BoundaryConditions.Add(morphologyBoundaryCondition);
-
-
-
-
-        }
-
-        [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
-        public void GivenAnFMModelWithABoundaryWithOneMorphologyAndOneFlowBoundaryConditionAnd_WhenSavedAndLoaded_ThenOnlyOneBoundaryWithTwoBoundaryConditionsIsCreated()
+        public void GivenAnFMModelWithAMorphologyBoundaryCondition_WhenSavedAndLoaded_ThenOnlyOneBoundaryIsCreated()
         {
             var tempDirPath = FileUtils.CreateTempDirectory();
             var tempProjectFilePath = Path.Combine(tempDirPath, "Project.dsproj");
@@ -572,7 +531,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var boundaryName = "boundary1";
             var flowBoundaryConditionName = "boundary_condition_flow";
             var morphBoundaryConditionName = "boundary_condition_morph";
-;
+
             try
             {
                 using (var app = GetConfiguredApplication(tempProjectFilePath))

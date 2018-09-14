@@ -363,12 +363,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         
         private void ReadPolyLines(IEnumerable<DelftIniCategory> bndBlocks, WaterFlowFMModelDefinition modelDefinition)
         {
+            modelDefinition.Boundaries.ForEach(b => { existingPolylineFiles[b] = b.Name + ".pli"; });
+
             foreach (var delftIniCategory in bndBlocks)
             {
                 var locationFile = delftIniCategory.GetPropertyValue(LocationFileKey);
                 var isEmbankment = delftIniCategory.GetPropertyValue(QuantityKey) == ExtForceQuantNames.EmbankmentBnd;
-
-                modelDefinition.Boundaries.ForEach(b => { existingPolylineFiles[b] = b.Name + ".pli"; });
+          
                 if (existingPolylineFiles.Values.Contains(locationFile)) continue;
 
                 if (locationFile == null) continue;
