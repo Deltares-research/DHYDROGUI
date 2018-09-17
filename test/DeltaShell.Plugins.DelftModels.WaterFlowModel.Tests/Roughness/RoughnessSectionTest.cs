@@ -7,6 +7,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
+using DelftTools.Hydro.Tests.Helpers;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
@@ -418,9 +419,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Roughness
             var roughnessSection3 = new RoughnessSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain2SectionTypeName }, network);
 
             var roughnessSections = new List<RoughnessSection> {roughnessSection1, roughnessSection2, roughnessSection3};
-            Assert.AreEqual(roughnessSection1, roughnessSections.MainChannel());
-            Assert.AreEqual(roughnessSection2, roughnessSections.Floodplain1());
-            Assert.AreEqual(roughnessSection3, roughnessSections.Floodplain2());
+            Assert.AreEqual(roughnessSection1, roughnessSections.GetMainRoughnessSection());
+            Assert.AreEqual(roughnessSection2, roughnessSections.GetFloodplain1());
+            Assert.AreEqual(roughnessSection3, roughnessSections.GetFloodplain2());
             Assert.AreEqual(roughnessSection1, roughnessSections.GetApplicableReverseRoughnessSection(roughnessSection1));
         }
 

@@ -10,6 +10,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
+using DelftTools.Hydro.Tests.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -2056,10 +2057,13 @@ namespace Sobek.IntegrationTests
         {
             var network = new HydroNetwork();
             network.CrossSectionSectionTypes.Add(new CrossSectionSectionType { Name = "Main" });
-            var model = new WaterFlowModel1D {Network = network};
-            model.UseReverseRoughness = true;
-            
-            var main = model.RoughnessSections.MainChannel();
+            var model = new WaterFlowModel1D
+            {
+                Network = network,
+                UseReverseRoughness = true
+            };
+
+            var main = model.RoughnessSections.GetMainRoughnessSection();
             var reverseMain = (ReverseRoughnessSection)model.RoughnessSections.GetApplicableReverseRoughnessSection(main);
             reverseMain.UseNormalRoughness = false;
             
@@ -2075,7 +2079,7 @@ namespace Sobek.IntegrationTests
             var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
             model.UseSaveStateTimeRange = true;
             model.Initialize();
-            //Assert.IsNotNull(model.ModelEngine);
+
             var origParamSettings = model.ParameterSettings;
             var path = TestHelper.GetCurrentMethodName() + ".dsproj";
             SaveModelToProject(model, path);

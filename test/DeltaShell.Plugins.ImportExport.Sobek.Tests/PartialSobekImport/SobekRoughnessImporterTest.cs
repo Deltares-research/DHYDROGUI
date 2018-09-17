@@ -3,6 +3,7 @@ using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
+using DelftTools.Hydro.Tests.Helpers;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
@@ -63,8 +64,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             var channelD = network.Branches[3];
             var channelE = network.Branches[4];
             var sections = waterFlowModel1DModel.RoughnessSections;
-            var reverseMain = (ReverseRoughnessSection)sections.GetApplicableReverseRoughnessSection(sections.MainChannel());
-            var reverseFp1 = (ReverseRoughnessSection)sections.GetApplicableReverseRoughnessSection(sections.Floodplain1());
+            var reverseMain = (ReverseRoughnessSection)sections.GetApplicableReverseRoughnessSection(sections.GetMainRoughnessSection());
+            var reverseFp1 = (ReverseRoughnessSection)sections.GetApplicableReverseRoughnessSection(sections.GetFloodplain1());
             
             //see readme.txt in model for details
             var locationA = new NetworkLocation(channelA, 10);
@@ -97,8 +98,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.AreEqual(0.02, reverseFp1.EvaluateRoughnessValue(locationD));
             Assert.AreEqual(RoughnessType.Manning, reverseFp1.EvaluateRoughnessType(locationD));
 
-            var main = sections.MainChannel();
-            var floodplain1 = sections.Floodplain1();
+            var main = sections.GetMainRoughnessSection();
+            var floodplain1 = sections.GetFloodplain1();
 
             var locationE = new NetworkLocation(channelE, 0); //reverse leading
             Assert.AreEqual(30, main.EvaluateRoughnessValue(locationE));
@@ -135,9 +136,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             var network = waterFlowModel1DModel.Network;
             var sections = waterFlowModel1DModel.RoughnessSections;
-            var reverseMain = (ReverseRoughnessSection) sections.GetApplicableReverseRoughnessSection(sections.MainChannel());
-            var reverseFp1 = (ReverseRoughnessSection) sections.GetApplicableReverseRoughnessSection(sections.Floodplain1());
-            var reverseFp2 = (ReverseRoughnessSection) sections.GetApplicableReverseRoughnessSection(sections.Floodplain2());
+            var reverseMain = (ReverseRoughnessSection) sections.GetApplicableReverseRoughnessSection(sections.GetMainRoughnessSection());
+            var reverseFp1 = (ReverseRoughnessSection) sections.GetApplicableReverseRoughnessSection(sections.GetFloodplain1());
+            var reverseFp2 = (ReverseRoughnessSection) sections.GetApplicableReverseRoughnessSection(sections.GetFloodplain2());
 
             Assert.IsTrue(waterFlowModel1DModel.UseReverseRoughness);
             Assert.IsNotNull(sections);
@@ -149,7 +150,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.IsFalse(reverseFp2.UseNormalRoughness); //copy of main
 
             //check values and reverse values differ. 
-            var main = sections.MainChannel();
+            var main = sections.GetMainRoughnessSection();
             var reverseValues =
                 ((IMultiDimensionalArray<double>) reverseMain.RoughnessNetworkCoverage.Components[0].Values).Skip(10).
                     Take(5).ToArray();
@@ -210,7 +211,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             // since upgrade to framework 1.2, takes approx. 15 secs locally - much longer on build server
             TestHelper.AssertIsFasterThan(38000, importer.Import); //on my pc: 13sec, was 75sec.. more to gain though
 
-            Assert.AreEqual(10960, flowModel.RoughnessSections.MainChannel().RoughnessNetworkCoverage.Locations.Values.Count);
+            Assert.AreEqual(10960, flowModel.RoughnessSections.GetMainRoughnessSection().RoughnessNetworkCoverage.Locations.Values.Count);
         }
     }
 }

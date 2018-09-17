@@ -337,6 +337,10 @@
       <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\DelftTools.Hydro.Tests\DelftTools.Hydro.Tests.csproj">
+      <Project>{49CD81DC-63D2-4A23-818E-ADE790E1D9D8}</Project>
+      <Name>DelftTools.Hydro.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj">
       <Project>{002eb0b8-8d52-4794-a00e-a5d1fc465bfd}</Project>
       <Name>DeltaShell.NGHS.IO.TestUtils</Name>

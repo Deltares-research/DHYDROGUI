@@ -124,22 +124,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers
                                                                                   SectionType = roughnessSections[0].CrossSectionSectionType
                                                                               }
                                                                       };
-                return SetYZProfile(crossSectionDefinition, location, crossSectionSections, y, z, new List<double>(), new List<double>(), useReverseRoughness);
+                return SetYZProfile(location, crossSectionSections, y, z, new List<double>(), new List<double>(), useReverseRoughness);
             }
 
             //NOTE: Rekenhart doesn't support storage for YZ yet, so we're not implementing / sending that yet. Once it gets in,
             //NOTE: some validation test should fail and we can implement it.
 
-            return SetYZProfile(crossSectionDefinition, location, crossSectionDefinition.Sections, y, z, new List<double>(), new List<double>(), useReverseRoughness);
+            return SetYZProfile(location, crossSectionDefinition.Sections, y, z, new List<double>(), new List<double>(), useReverseRoughness);
         }
 
-        private int SetYZProfile(ICrossSectionDefinition crossSectionDefinition, IBranchFeature location,
+        private int SetYZProfile(IBranchFeature location,
                                  IList<CrossSectionSection> crossSectionSections, IList<double> y, IList<double> z,
                                  IList<double> yStorage, IList<double> zStorage, bool useReverseRoughness)
         {
             if (crossSectionSections.Count == 0)
             {
-                // this should not happen.
                 throw new ArgumentException("Can not set yz profile to engine without roughnessSection.",
                                             "crossSectionSections");
             }
@@ -153,13 +152,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers
             var frictionTypeNeg = new int[sectionCount];
             var frictionValueNeg = new double[sectionCount];
 
-            for (int i = 0; i < sectionCount; i++)
+            for (var i = 0; i < sectionCount; i++)
             {
-                CrossSectionSection crossSectionSection = crossSectionSections[i];
+                var crossSectionSection = crossSectionSections[i];
                 frictionSectionFrom[i] = crossSectionSection.MinY;
                 frictionSectionTo[i] = crossSectionSection.MaxY;
                 
-                RoughnessSection roughnessSection = GetRoughnessSection(crossSectionSection);
+                var roughnessSection = GetRoughnessSection(crossSectionSection);
 
                 //The roughness values for YZ cannot be Q or H dependent (specifically: not Q dependent without major performance issues and changes to rekenhart). 
                 //In the user interface this is not clear, so we need to add a validation warning. It does make life easier here, just use the coverage:
@@ -172,8 +171,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers
 
                 frictionValuePos[i] = roughnessSection.EvaluateRoughnessValue(
                     location.ToNetworkLocation());
-                frictionValueNeg[i] = GetNegativeFrictionValue(i, roughnessSection, crossSectionDefinition, location, frictionValuePos,
-                                                               useReverseRoughness);
+
+                frictionValueNeg[i] = useReverseRoughness ? GetNegativeFrictionValue(roughnessSection, location) : frictionValuePos[i];
             }
 
             return modelApi.NetworkSetYZCrossSection(y.ToArray(), z.ToArray(),
@@ -183,27 +182,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers
                                                             yStorage.ToArray(), zStorage.ToArray());
         }
 
-        private double GetNegativeFrictionValue(int i, RoughnessSection roughnessSection, ICrossSectionDefinition crossSectionDefinition, IBranchFeature location, double[] frictionValuePos, bool useReverseRoughness)
-        {
-            if (useReverseRoughness)
-            {
-                var reverseRoughnessSection =
-                    roughnessSections.GetApplicableReverseRoughnessSection(roughnessSection);
-                return reverseRoughnessSection.RoughnessNetworkCoverage.EvaluateRoughnessValue(
-                    new NetworkLocation(location.Branch, location.Chainage));
-            }
-            return frictionValuePos[i];
-        }
-
         private RoughnessSection GetRoughnessSection(CrossSectionSection crossSectionSection)
         {
-            var roughnessSection =
-                roughnessSections.Where(rs => rs.Name == crossSectionSection.SectionType.Name).FirstOrDefault();
+            var roughnessSection = roughnessSections.FirstOrDefault(rs => rs.Name == crossSectionSection.SectionType.Name);
             if (roughnessSection == null)
             {
                 throw new InvalidOperationException("No roughnessSection found with name " + crossSectionSection.SectionType.Name);
             }
             return roughnessSection;
+        }
+
+        private double GetNegativeFrictionValue(RoughnessSection roughnessSection, IBranchFeature location)
+        {
+            var reverseRoughnessSection = roughnessSections.GetApplicableReverseRoughnessSection(roughnessSection);
+            var networkLocation = new NetworkLocation(location.Branch, location.Chainage);
+
+            return reverseRoughnessSection.RoughnessNetworkCoverage.EvaluateRoughnessValue(networkLocation);
         }
     }
 }
