@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
@@ -39,26 +40,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static int FindCalculationPointIndex(IPoint startPointLink, IDiscretization networkDiscretization)
+        public static int FindCalculationPointIndex(IPoint startPointLink, IDiscretization networkDiscretization, double tolerance = 0.0, IList<bool> locationsMask = null)
         {
-            var location = networkDiscretization.Locations.Values.FirstOrDefault(
-                networkLocation => IsPointEqual(networkLocation, startPointLink));
-
-            return location == null ? MISSING_INDEX : networkDiscretization.Locations.Values.IndexOf(location);
+            var locationIndex = MISSING_INDEX;
+            if (locationsMask == null)
+            {
+                var location = networkDiscretization.Locations.Values.FirstOrDefault(
+                    networkLocation => IsPointEqual(networkLocation, startPointLink, tolerance));
+                locationIndex = networkDiscretization.Locations.Values.IndexOf(location);
+            }
+            else
+            {
+                var locations = networkDiscretization.Locations.Values.ToList();
+                for (int i = 0; i < locations.Count; i++)
+                {
+                    if (locationsMask[i])
+                    {
+                        if (IsPointEqual(locations[i], startPointLink, tolerance))
+                        {
+                            locationIndex = i;
+                            break;
+                        }
+                    }
+                }
+            }
+            return locationIndex;
         }
 
 
-        private static bool IsPointEqual(IFeature l, IGeometry pointLink)
+        private static bool IsPointEqual(IFeature l, IGeometry pointLink, double tolerance = 0.0)
         {
-            return l.Geometry.EqualsExact(pointLink);
+            return l.Geometry.EqualsExact(pointLink, tolerance);
         }
 
-        private static bool IsPointInSnapTolerance(INetworkLocation l, IPoint pointLink)
-        { 
-            return l.Geometry.EqualsExact(pointLink,SNAP_DISTANCE);
-        }
-
-        private static int FindCellIndex(IPoint point, UnstructuredGrid grid)
+        public static int FindCellIndex(IPoint point, UnstructuredGrid grid)
         {
             return grid.GetCellIndexForCoordinate(point.Coordinate) ?? MISSING_INDEX;
         }

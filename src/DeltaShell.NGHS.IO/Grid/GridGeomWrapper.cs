@@ -19,7 +19,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// </summary>
         /// <returns></returns>
         [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2Dinternalnetlinks", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_make1D2Dinternalnetlinks_dll( ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe, ref IntPtr c_mesh1DIndexesMask);
+        public static extern int ggeo_make1D2Dinternalnetlinks_dll( ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref int c_nOneDMask, ref IntPtr cMesh1DIndexesMask, ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
 
         /// <summary>
         /// Makes the 2d / 1d links (results are stored in memory)
@@ -127,12 +127,12 @@ namespace DeltaShell.NGHS.IO.Grid
             return ierr;
         }
 
-        public int Make1D2DInternalNetlinks(ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref IntPtr c_mesh1DIndexesMask)
+        public int Make1D2DInternalNetlinks(ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref int intnFlterMesh1DPoints, ref IntPtr intPtrfilterMesh1DPoints)
         {
             int c_jsferic = 0;
             int c_jasfer3D = 0;
             int c_jglobe = 0;
-            int ierr = ggeo_make1D2Dinternalnetlinks_dll(ref c_nin, ref c_xpl, ref c_ypl, ref c_zpl, ref c_jsferic, ref c_jasfer3D, ref c_jglobe, ref c_mesh1DIndexesMask);
+            int ierr = ggeo_make1D2Dinternalnetlinks_dll(ref c_nin, ref c_xpl, ref c_ypl, ref c_zpl, ref intnFlterMesh1DPoints, ref intPtrfilterMesh1DPoints, ref c_jsferic, ref c_jasfer3D, ref c_jglobe);
             return ierr;
         }
 

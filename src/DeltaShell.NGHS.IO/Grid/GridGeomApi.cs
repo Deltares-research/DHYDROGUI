@@ -351,6 +351,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 var selectedAreaYCoords = coordinates.Select(c => c.Y).ToArray();
                 var selectedAreaZCoords = Enumerable.Repeat<double>(0.0, nCoordinates).ToArray();
                 var filterMesh1DPointsArray = filterMesh1DPoints.Select(b => b ? 1 : 0).ToArray();
+                var nFilterMesh1DPointsArray = filterMesh1DPointsArray.Length;
 
                 Marshal.Copy(selectedAreaXCoords, 0, intPtrXValuesSelectedArea, nCoordinates);
                 Marshal.Copy(selectedAreaYCoords, 0, intPtrYValuesSelectedArea, nCoordinates);
@@ -358,7 +359,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 Marshal.Copy(filterMesh1DPointsArray, 0, intPtrZValuesSelectedArea, nCoordinates);
 
                 var ierr = geomWrapper.Make1D2DInternalNetlinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
-                    ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref intPtrfilterMesh1DPoints);
+                    ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref nFilterMesh1DPointsArray, ref intPtrfilterMesh1DPoints);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;

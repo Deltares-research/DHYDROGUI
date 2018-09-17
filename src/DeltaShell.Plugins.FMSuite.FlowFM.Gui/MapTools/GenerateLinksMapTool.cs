@@ -154,7 +154,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
             try
             {
-                if (!GenerateLinksMapToolHelper.Get1D2DLinks(fmModel, selectedArea, startIndex, ref linksFrom, ref linksTo, ref linksCount, LinkType)) return;
+                if (!MapTool1D2DLinksHelper.Generate1D2DLinks(fmModel, selectedArea, startIndex, ref linksFrom, ref linksTo, ref linksCount, LinkType)) return;
 
                 var created1D2DLinks = Creates1d2dLinks(linksCount, linksFrom, linksTo, fmModel.Grid, fmModel.NetworkDiscretization);
                 created1D2DLinks = GetNew1D2DLinks(created1D2DLinks, fmModel.Links);

@@ -60,6 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         public const string SourcesAndSinksLayerName = "Sources and Sinks";
         public const string OutputSnappedFeaturesLayerName = "Output Snapped features";
         public const string GridSnappedFeaturesLayerName = "Estimated Grid-snapped features";
+        public const string LayerName1D2DLinks = "1D/2D links";
 
         public ILayer CreateLayer(object data, object parent)
         {
@@ -126,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 var fmModel = (WaterFlowFMModel)parent;
                 var linkEndCap = new AdjustableArrowCap(4, 4, true) { BaseCap = LineCap.Triangle };
 
-                return new VectorLayer("1D/2D links")
+                return new VectorLayer(LayerName1D2DLinks)
                 {
                     //DataSource = new WaterFlowFM1D2DLinkFeatureCollection(fmModel),
                     DataSource = new Feature2DCollection().Init(links, "1d2dLink", ModelName, fmModel.CoordinateSystem),

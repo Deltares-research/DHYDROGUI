@@ -260,7 +260,7 @@
     <Compile Include="Gui\FlowFMGuiPluginTest.cs" />
     <Compile Include="Gui\FMFileBasedTreeViewTest.cs" />
     <Compile Include="Gui\FMOutputSnappedFeaturesGroupLayerDataTest.cs" />
-    <Compile Include="Gui\MapTools\GenerateLinksMapToolHelperTests.cs" />
+    <Compile Include="Gui\MapTools\MapTool1D2DLinksHelperTests.cs" />
     <Compile Include="Gui\Views\DelimeterSelectorTest.cs" />
     <Compile Include="Gui\Views\GwswImportDialogTest.cs" />
     <Compile Include="Gui\FMSnappedFeaturesGroupLayerDataTest.cs" />

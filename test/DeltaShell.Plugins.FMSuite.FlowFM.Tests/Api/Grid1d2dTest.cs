@@ -313,6 +313,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 //1. make area
                 var filterMesh1DPoints = Enumerable.Repeat(1, nmeshpoints).ToArray();
+                var nFilterMesh1DPoints = filterMesh1DPoints.Length;
                 int nCoordinates = areaXValues.Count();
                 intPtrXValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
                 intPtrYValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
@@ -331,7 +332,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 //2. generate links
                 ierr = gridGeomWrapper.Make1D2DInternalNetlinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
-                    ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref intPtrfilterMesh1DPoints);
+                    ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 //3. get the number of links

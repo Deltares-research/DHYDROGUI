@@ -179,7 +179,7 @@ namespace DelftTools.Hydro.Helpers
         {
             discretization.Locations.SkipUniqueValuesCheck = true;
 
-            selectedChannels = selectedChannels ?? discretization.Network.Branches.Cast<IChannel>().ToList();
+            selectedChannels = selectedChannels ?? discretization.Network.Branches.Where(b => b is IChannel).Cast<IChannel>().ToList();
             discretization.SegmentGenerationMethod = SegmentGenerationMethod.None;
             foreach (Channel channel in selectedChannels)
             {

@@ -15,14 +15,14 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
 {
     [TestFixture]
-    public class GenerateLinksMapToolHelperTests
+    public class MapTool1D2DLinksHelperTests
     {
 
         [Test]
         public void Get_1DPointsMask_DWA()
         {
             var discretisation = GetTestDiscretization();
-            var filter1DPoints = GenerateLinksMapToolHelper.GetMesh1DFilter(discretisation, GridApiDataSet.LinkType.InhabitantsSewer);
+            var filter1DPoints = MapTool1D2DLinksHelper.GetMesh1DFilter(discretisation, GridApiDataSet.LinkType.InhabitantsSewer);
 
             Assert.AreEqual(2, filter1DPoints.Count(p => p));
 
@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         public void Get_1DPointsMask_HWA()
         {
             var discretisation = GetTestDiscretization();
-            var filter1DPoints = GenerateLinksMapToolHelper.GetMesh1DFilter(discretisation, GridApiDataSet.LinkType.RoofSewer);
+            var filter1DPoints = MapTool1D2DLinksHelper.GetMesh1DFilter(discretisation, GridApiDataSet.LinkType.RoofSewer);
 
             Assert.AreEqual(2, filter1DPoints.Count(p => p));
 
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
 
             var filterMesh1D = Enumerable.Repeat(true, networkLocations.Count).ToList();
 
-            var tuplesFromToIndexes = GenerateLinksMapToolHelper.TemporaryMethodGetFromToIndexesFor1D2DLinks(grid, networkLocations, area, filterMesh1D);
+            var tuplesFromToIndexes = MapTool1D2DLinksHelper.TemporaryMethodGetFromToIndexesFor1D2DLinks(grid, networkLocations, area, filterMesh1D);
 
             Assert.AreEqual(4, tuplesFromToIndexes.Count);
             Assert.IsNotNull(tuplesFromToIndexes.FirstOrDefault(l => l.Item1 == 0 && l.Item2 == 0));
@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
             var linksTo = new List<int>();
             var startIndex = 1;
             int linksCount = 0;
-            GenerateLinksMapToolHelper.Get1D2DLinks(model, area, startIndex, ref linksFrom, ref linksTo, ref linksCount, linkType);
+            MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, startIndex, ref linksFrom, ref linksTo, ref linksCount, linkType);
 
             Assert.AreEqual(1, linksTo.Count);
             Assert.AreEqual(1, linksFrom.Count);
@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
             var linksTo = new List<int>();
             var startIndex = 1;
             int linksCount = 0;
-            GenerateLinksMapToolHelper.Get1D2DLinks(model, area, startIndex, ref linksFrom, ref linksTo, ref linksCount, linkType);
+            MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, startIndex, ref linksFrom, ref linksTo, ref linksCount, linkType);
 
             Assert.AreEqual(2, linksTo.Count);
             Assert.AreEqual(2, linksFrom.Count);
@@ -221,7 +221,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
             var linksTo = new List<int>();
             var startIndex = 1;
             int linksCount = 0;
-            GenerateLinksMapToolHelper.Get1D2DLinks(model, area, startIndex, ref linksFrom, ref linksTo, ref linksCount, linkType);
+            MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, startIndex, ref linksFrom, ref linksTo, ref linksCount, linkType);
 
             Assert.AreEqual(1, linksTo.Count);
             Assert.AreEqual(1, linksFrom.Count);
@@ -253,7 +253,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
             var linksTo = new List<int>();
             var startIndex = 1;
             int linksCount = 0;
-            GenerateLinksMapToolHelper.Get1D2DLinks(model, area, startIndex, ref linksFrom, ref linksTo, ref linksCount, linkType);
+            MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, startIndex, ref linksFrom, ref linksTo, ref linksCount, linkType);
 
             Assert.AreEqual(2, linksTo.Count);
             Assert.AreEqual(2, linksFrom.Count);

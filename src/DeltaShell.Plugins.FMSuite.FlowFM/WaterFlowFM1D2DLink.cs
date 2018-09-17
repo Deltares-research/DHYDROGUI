@@ -9,11 +9,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public class WaterFlowFM1D2DLink : Feature, INameable, IComparer
     {
-        public WaterFlowFM1D2DLink(int fromPoint, int toCell)
+        public WaterFlowFM1D2DLink(int fromPoint, int toCell, string name = null)
         {
             FaceIndex = toCell;
             DiscretisationPointIndex = fromPoint;
             TypeOfLink = GridApiDataSet.LinkType.Embedded;
+            if (string.IsNullOrEmpty(name))
+            {
+                Name = string.Format("1D2Dlink_{0}_{1}", fromPoint, toCell);
+            }
         }
 
         [DisplayName("Name")]
@@ -36,11 +40,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             var link1 = (WaterFlowFM1D2DLink)object1;
             var link2 = (WaterFlowFM1D2DLink)object2;
-            if ((link1.DiscretisationPointIndex == link2.DiscretisationPointIndex) && (link1.FaceIndex == link2.FaceIndex))
+            if ((link1.DiscretisationPointIndex == link2.DiscretisationPointIndex) && (link1.FaceIndex == link2.FaceIndex) && (link1.TypeOfLink == link2.TypeOfLink))
                 return 0;
             if ((link1.DiscretisationPointIndex < link2.DiscretisationPointIndex) || ((link1.DiscretisationPointIndex == link2.DiscretisationPointIndex) && (link1.FaceIndex < link2.FaceIndex)))
                 return -1;
-
             return 1;
         }
     }

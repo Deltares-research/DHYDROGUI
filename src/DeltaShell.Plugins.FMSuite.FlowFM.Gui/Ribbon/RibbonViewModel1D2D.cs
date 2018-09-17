@@ -37,6 +37,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
                 MapToolCommand = mapToolCommandGenerate1D2DLinksMapTool
             };
 
+            ActivateAddLinksToolCommand = new RelayMapToolCommand
+            {
+                MapToolCommand = mapToolCommandAdd1D2DLinkMapTool
+            };
+
             _linkTypes = new ObservableCollection<RibbonLink>
             {
                 new RibbonLink()
@@ -89,18 +94,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
             {
                 selectedRibbonLink = value;
                 mapToolCommandGenerate1D2DLinksMapTool.LinkType = selectedRibbonLink.Type;
+                mapToolCommandAdd1D2DLinkMapTool.LinkType = selectedRibbonLink.Type;
             }
         }
 
         public RelayMapToolCommand ActivateGenerateLinksToolCommand { get; private set; }
 
-        public RelayMapToolCommand ActivateAddLinkTool { get; private set; }
+        public RelayMapToolCommand ActivateAddLinksToolCommand { get; private set; }
 
         public void RefreshButtons()
         {
             new[]
             {
-                ActivateGenerateLinksToolCommand
+                ActivateGenerateLinksToolCommand, ActivateAddLinksToolCommand
             }.ForEach(c => c.Refresh());
         }
 

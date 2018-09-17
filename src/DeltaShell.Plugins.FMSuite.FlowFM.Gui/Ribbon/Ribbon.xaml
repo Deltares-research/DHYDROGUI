@@ -69,72 +69,12 @@
                         </ListView.ItemTemplate>
                     </ListView>
                 </fluent:DropDownButton>
-                <!--<fluent:DropDownButton Name="ButtonLinkType" Header="Type" VerticalAlignment="Top" Size="Large" SizeDefinition="Large,Large,Large">
-                <fluent:DropDownButton.LargeIcon >
-                        <Rectangle Fill="{StaticResource EmbeddedLinkBrush}" />
-                    </fluent:DropDownButton.LargeIcon>
-                    <fluent:Gallery Name="GalleryTypeOfLinks"
-                         MaxItemsInRow="1"
-                         ItemWidth="64"
-                         ItemHeight="64">
-                        <Border Tag="EmbeddedLink"
-                                    BorderThickness="4"
-                                    BorderBrush="Transparent">
-                            <StackPanel>
-                                <Rectangle MinWidth="32" MinHeight="32" Fill="{StaticResource EmbeddedLinkBrush}"/>
-                                <TextBlock Text="Embedded link"
-                                               VerticalAlignment="Top"
-                                               HorizontalAlignment="Center" />
-                            </StackPanel>
-                        </Border>
-                        <Border Tag="LinkType"
-                                    BorderThickness="4"
-                                    BorderBrush="Transparent">
-                            <StackPanel>
-                                <Rectangle MinWidth="32" MinHeight="32" Fill="{StaticResource LateralLinkBrush}"/>
-                                <TextBlock Text="Lateral link"
-                                               VerticalAlignment="Top"
-                                               HorizontalAlignment="Center" />
-                            </StackPanel>
-                        </Border>
-                        <Border Tag="LinkType"
-                                    BorderThickness="4"
-                                    BorderBrush="Transparent">
-                            <StackPanel>
-                                <Rectangle MinWidth="32" MinHeight="32" Fill="{StaticResource RoofLinkBrush}"/>
-                                <TextBlock Text="Roof-sewer"
-                                               VerticalAlignment="Top"
-                                               HorizontalAlignment="Center" />
-                            </StackPanel>
-                        </Border>
-                        <Border Tag="LinkType"
-                                    BorderThickness="4"
-                                    BorderBrush="Transparent">
-                            <StackPanel>
-                                <Rectangle MinWidth="32" MinHeight="32" Fill="{StaticResource InhabitantsLinkBrush}"/>
-                                <TextBlock Text="Inhabitants-sewer"
-                                               VerticalAlignment="Top"
-                                               HorizontalAlignment="Center" />
-                            </StackPanel>
-                        </Border>
-                        <Border Tag="LinkType"
-                                    BorderThickness="4"
-                                    BorderBrush="Transparent">
-                            <StackPanel>
-                                <Rectangle MinWidth="32" MinHeight="32" Fill="{StaticResource GullyLinkBrush}"/>
-                                <TextBlock Text="Gully-sewer"
-                                               VerticalAlignment="Top"
-                                               HorizontalAlignment="Center" />
-                            </StackPanel>
-                        </Border>
-                    </fluent:Gallery>
-                </fluent:DropDownButton> //-->
                 <fluent:ToggleButton x:Name="ButtonGenerateLinks" ToolTip="Generate 1D2D links in selected area" Header="Generate links" Command="{Binding ActivateGenerateLinksToolCommand}" IsChecked="{Binding ActivateGenerateLinksToolCommand.IsActive}"  Size="Middle" SizeDefinition="Middle,Middle,Middle">
                     <fluent:ToggleButton.Icon>
                         <Rectangle Fill="{StaticResource GenerateLinksBrush}"/>
                     </fluent:ToggleButton.Icon>
                 </fluent:ToggleButton>
-                <fluent:ToggleButton x:Name="ButtonAddLink" ToolTip="Add 1D2D Link" Header="Add link" Command="{Binding ActivateGenerateLinksToolCommand}" IsChecked="{Binding ActivateGenerateLinksToolCommand.IsActive}" Size="Middle" SizeDefinition="Middle,Middle,Middle">
+                <fluent:ToggleButton x:Name="ButtonAddLink" ToolTip="Add 1D2D Link" Header="Add link" Command="{Binding ActivateAddLinksToolCommand}" IsChecked="{Binding ActivateAddLinksToolCommand.IsActive}" Size="Middle" SizeDefinition="Middle,Middle,Middle">
                     <fluent:ToggleButton.Icon>
                         <Rectangle Fill="{StaticResource AddLinkBrush}"/>
                     </fluent:ToggleButton.Icon>

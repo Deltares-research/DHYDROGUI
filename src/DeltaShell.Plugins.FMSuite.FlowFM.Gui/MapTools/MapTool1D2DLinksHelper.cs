@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
+using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using log4net;
@@ -19,11 +23,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
     /// Fills up the missing functionality (WIP) in the GridGeom.
     /// Process can be slow ...
     /// </summary>
-    public static class GenerateLinksMapToolHelper
+    public static class MapTool1D2DLinksHelper
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(GenerateLinksMapToolHelper));
+        private static readonly ILog log = LogManager.GetLogger(typeof(MapTool1D2DLinksHelper));
+        private const double SNAP_DISTANCE = 10.0; //
 
-        public static bool Get1D2DLinks(WaterFlowFMModel fmModel, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount, GridApiDataSet.LinkType linkType)
+        public static bool Generate1D2DLinks(WaterFlowFMModel fmModel, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount, GridApiDataSet.LinkType linkType)
         {
             switch (linkType)
             {
@@ -43,6 +48,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             }
         }
 
+        public static bool AddNew1D2DLink(WaterFlowFMModel fmModel, GridApiDataSet.LinkType linkType, Coordinate startPoint, Coordinate endPoint)
+        {
+            switch (linkType)
+            {
+                case GridApiDataSet.LinkType.Embedded:
+                    return AddNew1D2DEmbeddedLink(fmModel, startPoint, endPoint);
+                case GridApiDataSet.LinkType.Lateral:
+                    return AddNew1D2DLateralLink(fmModel, startPoint, endPoint);
+                case GridApiDataSet.LinkType.RoofSewer:
+                    return AddNew1D2DRoofLink(fmModel, startPoint, endPoint);
+                case GridApiDataSet.LinkType.InhabitantsSewer:
+                    return AddNew1D2DInhabitantsLink(fmModel, startPoint, endPoint);
+                case GridApiDataSet.LinkType.GullySewer:
+                    return AddNew1D2DGullyLink(fmModel, startPoint, endPoint);
+                default:
+                    log.ErrorFormat("New 1D2D Link between the grid and the network of WaterFlowFMModel {0} is not added. Type of link {1} unknown", fmModel.Name, linkType);
+                    return false;
+            }
+        }
+
         /// <summary>
         /// Temporary method to get from/to indexes for creating lateral1d2d links. Can be deleted when GridGeom function for Lateral/River links is ready
         /// </summary>
@@ -50,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         /// <param name="gridPoints1D">The grid points1 d.</param>
         /// <param name="selectionArea">The selection area.</param>
         /// <returns></returns>
-       public static IList<Tuple<int,int>> TemporaryMethodGetFromToIndexesFor1D2DLinks(UnstructuredGrid grid, IList<INetworkLocation> gridPoints1D, IPolygon selectionArea, IList<bool> filterMesh1D)
+        public static IList<Tuple<int,int>> TemporaryMethodGetFromToIndexesFor1D2DLinks(UnstructuredGrid grid, IList<INetworkLocation> gridPoints1D, IPolygon selectionArea, IList<bool> filterMesh1D)
         {
             var edgesInSelectedArea = grid.Edges.Where(e => selectionArea.Intersects(new Point(e.GetEdgeCenter(grid)))).ToList();
             var filteredGridPoints1D = new List<Tuple<INetworkLocation, int>>();
@@ -269,5 +294,143 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             }
         }
         #endregion sub methods
+
+        #region add new link
+
+        private static bool AddNew1D2DEmbeddedLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate)
+        {
+            var link = GetNewLink(fmModel, startCoordinate, endCoordinate, GridApiDataSet.LinkType.Embedded);
+
+            if (link != null)
+            {
+                fmModel.Links.Add(link);
+                return true;
+            }
+            return false;
+        }
+
+        private static bool AddNew1D2DLateralLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate)
+        {
+            var link = GetNewLink(fmModel, startCoordinate, endCoordinate, GridApiDataSet.LinkType.Lateral);
+
+            if (link != null)
+            {
+                fmModel.Links.Add(link);
+                return true;
+            }
+            return false;
+        }
+
+        private static bool AddNew1D2DRoofLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate)
+        {
+            var link = GetNewLink(fmModel, startCoordinate, endCoordinate, GridApiDataSet.LinkType.RoofSewer);
+
+            if (link != null)
+            {
+                if (!IsLinkConnectedToARoof(link.Geometry.Coordinates.LastOrDefault(), fmModel.Area.RoofAreas))
+                {
+                    log.ErrorFormat("Link is not connected to a roof");
+                }
+                else
+                { 
+                    fmModel.Links.Add(link);
+                    return true;
+                }
+
+            }
+            return false;
+        }
+
+        private static bool AddNew1D2DInhabitantsLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate)
+        {
+            var link = GetNewLink(fmModel, startCoordinate, endCoordinate, GridApiDataSet.LinkType.InhabitantsSewer);
+
+            if (link != null)
+            {
+                if (!IsLinkConnectedToARoof(link.Geometry.Coordinates.LastOrDefault(), fmModel.Area.RoofAreas))
+                {
+                    log.ErrorFormat("Link is not connected to a roof");
+                }
+                else
+                {
+                    fmModel.Links.Add(link);
+                    return true;
+                }
+
+            }
+            return false;
+        }
+
+        private static bool AddNew1D2DGullyLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate)
+        {
+            var link = GetNewLink(fmModel, startCoordinate, endCoordinate, GridApiDataSet.LinkType.GullySewer);
+
+            if (link != null)
+            {
+                if (!IsLinkConnectedToAGully(link.FaceIndex, fmModel.Grid, fmModel.Area.Gullies))
+                {
+                    log.ErrorFormat("Link is not connected to a cell with a gully");
+                }
+                else
+                {
+                    fmModel.Links.Add(link);
+                    return true;
+                }
+
+            }
+            return false;
+        }
+
+        private static WaterFlowFM1D2DLink GetNewLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate, GridApiDataSet.LinkType linkType)
+        {
+            var startPoint = new Point(startCoordinate);
+            var endPoint = new Point(endCoordinate);
+            var filter1DMesh = GetMesh1DFilter(fmModel.NetworkDiscretization, linkType);
+            var networkLocationId = Links1D2DHelper.FindCalculationPointIndex(startPoint, fmModel.NetworkDiscretization, SNAP_DISTANCE, filter1DMesh);
+
+            if (networkLocationId == Links1D2DHelper.MISSING_INDEX)
+            {
+                log.WarnFormat("No discretization point for type {0} has been found for the start point of the link. We will the reverse direction.", linkType);
+                startPoint = new Point(endCoordinate);
+                endPoint = new Point(startCoordinate);
+                networkLocationId = Links1D2DHelper.FindCalculationPointIndex(startPoint, fmModel.NetworkDiscretization, SNAP_DISTANCE, filter1DMesh);
+            }
+
+            if (networkLocationId == Links1D2DHelper.MISSING_INDEX)
+            {
+                log.ErrorFormat("No discretization point for type {0} has been found.", GridApiDataSet.LinkType.Embedded);
+            }
+            else
+            {
+                var cellId = Links1D2DHelper.FindCellIndex(endPoint, fmModel.Grid);
+                if (cellId == Links1D2DHelper.MISSING_INDEX)
+                {
+                    log.ErrorFormat("No grid cell has been found for the link.");
+                }
+                else
+                {
+                    var link = new WaterFlowFM1D2DLink(networkLocationId, cellId)
+                    {
+                        TypeOfLink = linkType,
+                        Geometry = new LineString(new[] { startPoint.Coordinate, endPoint.Coordinate })
+                    };
+                    return link;
+                }
+            }
+            return null;
+        }
+
+        private static bool IsLinkConnectedToARoof(Coordinate lastCoordinate, IEnumerable<RoofArea> roofAreas)
+        {
+            var point = new Point(lastCoordinate);
+            return roofAreas.Any(r => r.Geometry.Intersects(point));
+        }
+
+        private static bool IsLinkConnectedToAGully(int cellIndex, UnstructuredGrid grid, IEnumerable<Gully> gullies)
+        {
+            return gullies.Any(g => Links1D2DHelper.FindCellIndex(g.Geometry as Point, grid) == cellIndex);
+        }
+
+        #endregion add new link
     }
 }
