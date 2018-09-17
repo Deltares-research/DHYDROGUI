@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="DelftTools.Hydro.Roughness" assembly="DelftTools.Hydro">
   <subclass name="ReverseRoughnessSection" lazy="false" discriminator-value="reverse_roughness_section" extends="DelftTools.Hydro.Roughness.RoughnessSection, DelftTools.Hydro" >
-      <property name="UseNormalRoughness"/>
+    <meta attribute="oldClassName">DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness.ReverseRoughnessSection, DeltaShell.Plugins.DelftModels.WaterFlowModel</meta>
+    <property name="UseNormalRoughness"/>
 
       <many-to-one name="NormalSection"
                    class ="DelftTools.Hydro.Roughness.RoughnessSection, DelftTools.Hydro"
