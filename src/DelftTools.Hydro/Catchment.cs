@@ -14,7 +14,7 @@ using Point = NetTopologySuite.Geometries.Point;
 namespace DelftTools.Hydro
 {
     [Entity]
-    public class Catchment : Feature, ICopyFrom, IHydroObject, IComparable, INameable
+    public class Catchment : Feature, ICopyFrom, IHydroObject, IComparable
     {
         private IPoint interiorPointCache;
         private string longName = String.Empty;
