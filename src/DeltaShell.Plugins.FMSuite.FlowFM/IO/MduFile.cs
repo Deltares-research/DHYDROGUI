@@ -53,6 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string DryAreaExtension = "_dry.pol";
         public const string DryPointExtension = "_dry.xyz";
         public const string EnclosureExtension = "_enc.pol";
+        public const string RoofAreaExtension = "_roofs.pol";
         public const string MorphologyExtension = ".mor";
         public const string SedimentExtension = ".sed";
 
@@ -67,6 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private PliFile<ObservationCrossSection2D> obsCrsFile;
         private PolFile<GroupableFeature2DPolygon> dryAreaFile;
         private PolFile<GroupableFeature2DPolygon> enclosureFile;
+        private PolFile<RoofArea> roofAreaFile;
         private XyzFile dryPointFile;
 
         // the following mdu-referenced files are written by the UI, or at least should not be copied along blindly 
@@ -78,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             KnownProperties.HisFile__Obsolete, KnownProperties.ThinDamFile, KnownProperties.FixedWeirFile,
             KnownProperties.BridgePillarFile,
             KnownProperties.ObsFile, KnownProperties.ObsCrsFile, KnownProperties.LandBoundaryFile,
-            KnownProperties.DryPointsFile, KnownProperties.RestartFile, KnownProperties.StructuresFile,
+            KnownProperties.DryPointsFile, KnownProperties.RestartFile, KnownProperties.StructuresFile, KnownProperties.RoofAreaFile
         };
 
         private static readonly Dictionary<string, string> MduFilePropertyDescriptionDictionary = new Dictionary<string, string>
@@ -725,6 +727,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.EnclosureFile, hydroArea.Enclosures,
                 ref enclosureFile, EnclosureExtension);
+
+            WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.RoofAreaFile, hydroArea.RoofAreas, ref roofAreaFile, RoofAreaExtension);
         }
 
         public void WriteLandBoundaries(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea)

@@ -46,6 +46,7 @@ geometry,VertplizFile,,,,FileName,,,,TRUE,,,,,,"Vertical layering file *_vlay.pl
 geometry,CrossDefFile,,,,FileName,,,,TRUE,,,,,,"Channel profile definition file *_profdefinition.def with definition for all profile numbers"
 geometry,CrossLocFile,,,,FileName,,,,TRUE,,,,,,"Channel profile location file *_proflocation.xyz with rows x, y, z, profile number ref"
 geometry,NodeFile,,,,FileName,,,,TRUE,,,,,,"Node file that describes data for compartments in a sewer network *.ini"
+geometry,RoofsFile,,,,FileName,,,,TRUE,,,,,,"Roof area file *.pliz, containing x- and y-coordinates that describe the shapes of these roofs"
 geometry,LeveeBreachFile,,,,FileName,,,,TRUE,,,,,,"Levee breach file with unknown extension"
 geometry,ProfdefxyzFile,,,,FileName,,,,TRUE,,,,,,"Channel profile definition file _profdefinition.def with definition for all profile numbers"
 geometry,Uniformwidth1D,,,Default 1D channel width,Double,2,,,TRUE,,,,,,"Uniform width for channel profiles not specified by profloc"

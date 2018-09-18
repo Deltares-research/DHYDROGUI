@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 {
                     return WaterFlowFMModelNodePresenter.DryPointIcon;
                 }
-                if (MatchProperty(data, KnownProperties.RoofsFile))
+                if (MatchProperty(data, KnownProperties.RoofAreaFile))
                 {
                     return WaterFlowFMModelNodePresenter.RoofAreaIcon;
                 }

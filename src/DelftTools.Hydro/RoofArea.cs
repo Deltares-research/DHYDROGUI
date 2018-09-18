@@ -1,6 +1,4 @@
-﻿using NetTopologySuite.Extensions.Features;
-
-namespace DelftTools.Hydro
+﻿namespace DelftTools.Hydro
 {
     public class RoofArea: GroupableFeature2DPolygon
     {
