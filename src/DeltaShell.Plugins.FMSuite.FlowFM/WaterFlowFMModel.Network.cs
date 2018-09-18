@@ -212,7 +212,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public virtual IEventedList<RoughnessSection> RoughnessSections
         {
-            get { return GetDataItemSetByTag(WaterFlowFMModelDataSet.Roughness1DTag).AsEventedList<RoughnessSection>(); }
+            get
+            {
+                var roughness1DDataItem = GetDataItemSetByTag(WaterFlowFMModelDataSet.Roughness1DTag);
+                return roughness1DDataItem == null 
+                    ? new EventedList<RoughnessSection>()
+                    : roughness1DDataItem.AsEventedList<RoughnessSection>();
+            }
         }
 
         /// <summary>
