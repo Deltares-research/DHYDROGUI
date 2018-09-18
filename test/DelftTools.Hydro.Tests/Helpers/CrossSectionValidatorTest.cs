@@ -104,7 +104,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             var csdZw = GetSimpleCrossSectionDefinitionZw();
             csdZw.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName }, mainSectionWidth);
             csdZw.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain1SectionTypeName }, floodPlain1Width);
-            csdZw.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain1SectionTypeName }, floodPlain2Width);
+            csdZw.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain2SectionTypeName }, floodPlain2Width);
             
             CheckSectionWidthValidationWithOrWithoutProxy(csdZw, checkFloodPlain1AndFloodPlain2, expectedResult, useCsdProxy);
         }
