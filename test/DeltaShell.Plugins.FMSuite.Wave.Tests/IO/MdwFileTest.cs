@@ -202,19 +202,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadModelWithEmptyBcwFileName()
-        {
-            var mdwPath = TestHelper.GetTestFilePath(@"bcwTimeSeriesEmptyFileName\Waves.mdw");
-            var mdwFile = new MdwFile();
-            var modelDef = mdwFile.Load(mdwPath);
-            Assert.That(modelDef.Properties[5].Value, Is.EqualTo(""));
-
-            mdwFile.SaveTo(@"bcwTimeSeriesEmptyFileName\ModelName", modelDef, true);
-            Assert.That(modelDef.Properties[5].Value, Is.EqualTo("ModelName.bcw"));
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
         public void ReadOrientedBoundaries()
         {
             var mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");

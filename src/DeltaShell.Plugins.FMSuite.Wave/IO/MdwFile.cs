@@ -88,13 +88,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 generalCategory.SetProperty(KnownWaveProperties.WaterVelocityY, modelDefinition.TimePointData.VelocityYConstant);
             }
 
-
-
             // save boundary data
-
             var tSeriesFile = modelName + ".bcw";
             generalCategory.SetProperty(KnownWaveProperties.TimeSeriesFile,
-                modelDefinition.BoundaryConditions.Any() ? tSeriesFile : string.Empty);
+                modelDefinition.BoundaryConditions.Any(bc =>
+                    bc.DataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+                    ? tSeriesFile
+                    : string.Empty);
 
             CreateBoundaryCategories(modelDefinition.BoundaryConditions, ref mdwCategories);
             SaveBoundaryConditions(modelDefinition, Path.Combine(targetDir, tSeriesFile),
