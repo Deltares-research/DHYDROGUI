@@ -7,23 +7,8 @@
                 <Component Id="cmpB5B12E8457A28288551AE46F31EE1232" Guid="*">
                     <File Id="fil62C54E536D517F90D05A656EF2A1AB57" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dimr_version_release_win64.txt" />
                 </Component>
-                <Directory Id="dir77DDDC3DF737E3056039D61EFC48E310" Name="dflow1d">
-                    <Directory Id="dir7A577413107A1F8397720DB875F45A3A" Name="bin">
-                        <Component Id="cmp25EB338565AE88437AED2E8C1FB381E0" Guid="*">
-                            <File Id="fil7ECA2FA44F99B3057C4C6CDB684DC11F" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflow1d\bin\cf_dll.dll" />
-                        </Component>
-                    </Directory>
-                </Directory>
-                <Directory Id="dirE7B3AF8BE8A81B4965CFCDF0C86642D5" Name="dflow1d2d">
-                    <Directory Id="dir25D7BA9C4E26AB3F7BA6E9BEA7360B0D" Name="bin">
-                        <Component Id="cmp88BA1F815EB6CFABA975ABD7D28CE674" Guid="*">
-                            <File Id="fil8AA5B9F8C2E4AA48977B00EFAB06E660" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflow1d2d\bin\cf_dll.dll" />
-                        </Component>
-                        <Component Id="cmpB994ED03E007730C5997469504D93EA7" Guid="*">
-                            <File Id="fil31BDB99A693A55815708177EE7B65FD0" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflow1d2d\bin\flow1d2d.dll" />
-                        </Component>
-                    </Directory>
-                </Directory>
+                
+                
                 <Directory Id="dir00715E5CE9AA23FB8DED3CD30FF084A3" Name="dflowfm">
                     <Directory Id="dir47B8284EC60747F8319156B0D6CC5298" Name="bin">
                         <Component Id="cmp902196C91527FE47C780499DBC4B27DB" Guid="*">
@@ -85,19 +70,7 @@
                         </Component>
                     </Directory>
                 </Directory>
-                <Directory Id="dir769EE3CCBBA8D2599EA564A848190BD9" Name="drr">
-                    <Directory Id="dir6D899BF422D37B36FB87530D44F98DAC" Name="bin">
-                        <Component Id="cmp279167FAE5B21234D628EEA018BE89B8" Guid="*">
-                            <File Id="fil4D7A4A1A45DF33DAD7FE1BCB77A2ED8F" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\drr\bin\rr.exe" />
-                        </Component>
-                        <Component Id="cmp050D354CFBA97ABA02B9B4F530D12AAD" Guid="*">
-                            <File Id="filE02C6F4720DC1AA44E4DD3136DAC5A83" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\drr\bin\rr_dll.dll" />
-                        </Component>
-                        <Component Id="cmp9D5CA4A4FB715175219D522D2234DA6C" Guid="*">
-                            <File Id="filDF3E3EAFE24EE88E8061905C352901A4" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\drr\bin\rr_dll_runner.exe" />
-                        </Component>
-                    </Directory>
-                </Directory>
+                
                 <Directory Id="dirF48462398A48626DA565E71D69DF68A6" Name="drtc">
                     <Directory Id="dir34A7950D5EBFF0FF9714AADD646A8787" Name="bin">
                         <Component Id="cmpAA21A4831117FE4CB198E7AB719969B5" Guid="*">
@@ -209,8 +182,122 @@
                         </Component>
                     </Directory>
                 </Directory>
-                
-                
+                <Directory Id="dir76A784A79E344689981AC91F9D4426E4" Name="dwaves">
+                    <Directory Id="dirA01B655C7561A568CCA217F5352AEE40" Name="bin">
+                        <Component Id="cmp9FB50E3287B0032665676142CD99AFD0" Guid="*">
+                            <File Id="filEE595C514C9EAB694980929B6E85E829" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dwaves\bin\wave.dll" />
+                        </Component>
+                        <Component Id="cmpC02969EBF9345584347FB2AA2900AC09" Guid="*">
+                            <File Id="fil936903F823876E2572DFA50CF9D683B4" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dwaves\bin\wave.exe" />
+                        </Component>
+                    </Directory>
+                    <Directory Id="dir7DC3B7044E6C8EA1E58A17139672AC5F" Name="default">
+                        <Component Id="cmp12E83D5C10F9ED3ECB832C369097E95A" Guid="*">
+                            <File Id="filF135E3968FBD078C58D3B32BCCC5590F" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dwaves\default\dioconfig.ini" />
+                        </Component>
+                    </Directory>
+                    <Directory Id="dir7F2BCF1DAB4E3C29C8C9FE2CF3AB79B3" Name="scripts">
+                        <Component Id="cmpF22EDC902438641401BF67C69E4765E6" Guid="*">
+                            <File Id="fil509629117A0AF4D5C84C6889A6CA179A" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dwaves\scripts\run_dwaves.bat" />
+                        </Component>
+                    </Directory>
+                </Directory>
+                <Directory Id="dir5E9206A796BF9D4187E88913590ED2C4" Name="esmf">
+                    <Directory Id="dir4EE4E47383963AEF8CC1E6560E840412" Name="bin">
+                        <Component Id="cmpEBB43F9FD086654F7C4221499725451E" Guid="*">
+                            <File Id="fil9E1203F2E8BC67251F64645FB343879A" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygcom_err-2.dll" />
+                        </Component>
+                        <Component Id="cmpD46DC6B04AF9008473C79E8F80D84F69" Guid="*">
+                            <File Id="fil38F049809469C494C861677EBE38CB26" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygcrypto-1.0.0.dll" />
+                        </Component>
+                        <Component Id="cmp497F80B3F47432E66BA84F58CA7E0324" Guid="*">
+                            <File Id="filFA9DC7EE2EEC9DF8A4DB554319909C13" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygcurl-4.dll" />
+                        </Component>
+                        <Component Id="cmp923F1F0CC14FF8E57C70A9CAED3AAAB8" Guid="*">
+                            <File Id="fil86058EFD8A13DE97ADBB60F05C4221E8" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cyggcc_s-seh-1.dll" />
+                        </Component>
+                        <Component Id="cmp7461EF9A178BE8419B92D990B102D320" Guid="*">
+                            <File Id="fil95E6039297322D787373ACF1A0D16278" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cyggfortran-3.dll" />
+                        </Component>
+                        <Component Id="cmpFAE4AC8702FBECE19DA3C24301E6D9F3" Guid="*">
+                            <File Id="filA9CBBC2517F8D4364FCB96DAF5743138" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cyggssapi_krb5-2.dll" />
+                        </Component>
+                        <Component Id="cmp15DED42635A94756DC489E644F2B87C4" Guid="*">
+                            <File Id="fil74A38869A626E11227C748016039F2C5" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cyghdf5-9.dll" />
+                        </Component>
+                        <Component Id="cmpF1BE32C584E9A5FF2A1E1D840097FFDD" Guid="*">
+                            <File Id="fil5923C5BCA2C05CE4DE903431042EDD0B" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cyghdf5_hl-9.dll" />
+                        </Component>
+                        <Component Id="cmpD31ABA4EBD4D79D003BAEBF6217A8566" Guid="*">
+                            <File Id="filF3724FAA02B733465038F04AAA8D89E6" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygiconv-2.dll" />
+                        </Component>
+                        <Component Id="cmpAD3220692D1ECB6075D68802CB025D3A" Guid="*">
+                            <File Id="fil5818E31981A15FFAEB6D45B1901E0EAF" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygidn2-0.dll" />
+                        </Component>
+                        <Component Id="cmpD3AA88B0D17E4213B67F6C3E2AE47238" Guid="*">
+                            <File Id="fil8F85C2AC1AAF897B2694B230FE82D47D" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygintl-8.dll" />
+                        </Component>
+                        <Component Id="cmp8357796556738063A43F6BB485EF86DF" Guid="*">
+                            <File Id="filF10149E738EEA597C8414E6E1C27C211" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygk5crypto-3.dll" />
+                        </Component>
+                        <Component Id="cmp6EF9DF4027BEAD0B22A7F2141C70F0C6" Guid="*">
+                            <File Id="fil3ED518ADC0852EBD4D16E648AE03956C" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygkrb5-3.dll" />
+                        </Component>
+                        <Component Id="cmpFF929199996E308FC2A57C1CE15A7DA4" Guid="*">
+                            <File Id="fil942A0E180F9045C8BE489B00AE9A1578" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygkrb5support-0.dll" />
+                        </Component>
+                        <Component Id="cmp358BF5F33BBBE37D50017795B969EB0F" Guid="*">
+                            <File Id="filDD10FCA8D6EDDA976AED58A32D0AD86A" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cyglber-2-4-2.dll" />
+                        </Component>
+                        <Component Id="cmp01F774F15AC5D0DE80A02B7029697213" Guid="*">
+                            <File Id="filBC49416AE243E79DC87F52BC019F35A8" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygldap-2-4-2.dll" />
+                        </Component>
+                        <Component Id="cmp0A933FA170C7FD0FA50C13356FDF12DA" Guid="*">
+                            <File Id="fil903A8CA0AB0E496155CF13F9E56149E2" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygldap_r-2-4-2.dll" />
+                        </Component>
+                        <Component Id="cmp7D5312CA770400E3EE0B5BB14AF6FEEB" Guid="*">
+                            <File Id="fil16D29267DBDA19C1D9D957EEA56B37D8" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygnghttp2-14.dll" />
+                        </Component>
+                        <Component Id="cmpDEE815F6809848B380473AA0BB25C0FF" Guid="*">
+                            <File Id="fil8989953C27C7B63B47211A1F31C92778" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygpsl-5.dll" />
+                        </Component>
+                        <Component Id="cmp694A916FF0967DE25851E03FD917DCC8" Guid="*">
+                            <File Id="fil61AB07F6DF7E9A14572F236DC8BF3FF5" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygquadmath-0.dll" />
+                        </Component>
+                        <Component Id="cmpEA73036634B9FCAAE278E23CED996421" Guid="*">
+                            <File Id="fil608EA832CBB8FF0174A5D8F76A8D802C" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygsasl2-3.dll" />
+                        </Component>
+                        <Component Id="cmp5EA8E58344708CD7710A581C240C2DBF" Guid="*">
+                            <File Id="fil5EC1F8769AAA286E569F6B7EC4DC1D13" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygssh2-1.dll" />
+                        </Component>
+                        <Component Id="cmpD6FB2F6CD0679EE86D13DBAF1FA6157A" Guid="*">
+                            <File Id="filFC9116594AA75FFD262530F3B5E2C6F6" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygssl-1.0.0.dll" />
+                        </Component>
+                        <Component Id="cmpB2F6720909A8793AC82E4C23A2EC85DE" Guid="*">
+                            <File Id="fil9D04017FF3FF55819726BD123BBE19B6" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygstdc++-6.dll" />
+                        </Component>
+                        <Component Id="cmp3D15509575F9AF6B4661DAEDFA54D969" Guid="*">
+                            <File Id="fil4DF91E645D02041456AF5AAF21FC5E2B" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygunistring-2.dll" />
+                        </Component>
+                        <Component Id="cmp9919C1F9C17B98A4A0B03F9C7089A20D" Guid="*">
+                            <File Id="filB6C9C8A746E0112086F69BF2AC1A818D" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygwin1.dll" />
+                        </Component>
+                        <Component Id="cmp9C361576D939083496B02E0B6BFAB5AF" Guid="*">
+                            <File Id="filA73A986B66C7A936A00444294552EC30" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\cygz.dll" />
+                        </Component>
+                        <Component Id="cmpD49082B3B023B79FFEB74DFE85DAA4A4" Guid="*">
+                            <File Id="filD8F06D58948AA9CA2467A0665DE7045F" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\ESMF_RegridWeightGen.exe" />
+                        </Component>
+                        <Component Id="cmpAE6590A81A426B1F867412F35F3BEB1A" Guid="*">
+                            <File Id="fil8CB844F6D1865F2E243DF8061D8B44E3" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\bin\libesmf.dll.a" />
+                        </Component>
+                    </Directory>
+                    <Directory Id="dir80EB27C2EC2BC4262916A53D68689193" Name="scripts">
+                        <Component Id="cmp1269E612B9F9F266A1679D5704B38852" Guid="*">
+                            <File Id="filACAA7C0E58F71A4F4EC733456108B93C" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\esmf\scripts\ESMF_RegridWeightGen_in_Delft3D-WAVE.bat" />
+                        </Component>
+                    </Directory>
+                </Directory>
                 <Directory Id="dirE24853C0BC99910687618ED2A520159E" Name="share">
                     <Directory Id="dir5FECE8CC2C63F61ABA72737FEC585295" Name="bin">
                         <Component Id="cmpEBE4F175239EBB7C7976EC21AC615E9D" Guid="*">
@@ -434,16 +521,27 @@
                         </Component>
                     </Directory>
                 </Directory>
-                
+                <Directory Id="dir7D6112937ADB08B66B164C63E45A5C17" Name="swan">
+                    <Directory Id="dirA41428F3AF1D764EB03D9322CAB62F9B" Name="bin">
+                        <Component Id="cmp2C24278DEB8560C8F33CFF07E3D4979E" Guid="*">
+                            <File Id="fil65DF8881634C59BAD989B7FD478C537C" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\swan\bin\swan_4072ABCDE_del_w64_i11_omp.exe" />
+                        </Component>
+                    </Directory>
+                    <Directory Id="dir88D712649789A288FAC30F29054828A7" Name="scripts">
+                        <Component Id="cmp90BB3CE8A6AD037BD65AA23837D51F2D" Guid="*">
+                            <File Id="fil4F403B832901449FE2E638918CE54012" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\swan\scripts\swan.bat" />
+                        </Component>
+                    </Directory>
+                </Directory>
             </Directory>
         </DirectoryRef>
     </Fragment>
     <Fragment>
         <ComponentGroup Id="DimrLibs">
             <ComponentRef Id="cmpB5B12E8457A28288551AE46F31EE1232" />
-            <ComponentRef Id="cmp25EB338565AE88437AED2E8C1FB381E0" />
-            <ComponentRef Id="cmp88BA1F815EB6CFABA975ABD7D28CE674" />
-            <ComponentRef Id="cmpB994ED03E007730C5997469504D93EA7" />
+            
+            
+            
             <ComponentRef Id="cmp902196C91527FE47C780499DBC4B27DB" />
             <ComponentRef Id="cmp98319D0E1AB37FB0D1EA2037237C6E33" />
             <ComponentRef Id="cmpBCBF21504C2CE84636F57BC7ED60D503" />
@@ -461,9 +559,9 @@
             <ComponentRef Id="cmpDE0E66256E37C266BE95D51E1B6DE9B7" />
             <ComponentRef Id="cmp27C3C6E70B77545D1E68B4015352AF67" />
             <ComponentRef Id="cmp8E8CD8889A979F8C9811E1BBFAD5EB72" />
-            <ComponentRef Id="cmp279167FAE5B21234D628EEA018BE89B8" />
-            <ComponentRef Id="cmp050D354CFBA97ABA02B9B4F530D12AAD" />
-            <ComponentRef Id="cmp9D5CA4A4FB715175219D522D2234DA6C" />
+            
+            
+            
             <ComponentRef Id="cmpAA21A4831117FE4CB198E7AB719969B5" />
             <ComponentRef Id="cmp67A542B5CF457895926E80296075206A" />
             <ComponentRef Id="cmp7D681A283A4936B38432E5B547E33A01" />
@@ -497,40 +595,40 @@
             <ComponentRef Id="cmp7C954BB73B96F4723992D5E4876B082B" />
             <ComponentRef Id="cmpC48A372BC900EA9967DC5707D5F4DF0E" />
             <ComponentRef Id="cmp41C307B8048D3E034E3A573B80F6A1DB" />
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+            <ComponentRef Id="cmp9FB50E3287B0032665676142CD99AFD0" />
+            <ComponentRef Id="cmpC02969EBF9345584347FB2AA2900AC09" />
+            <ComponentRef Id="cmp12E83D5C10F9ED3ECB832C369097E95A" />
+            <ComponentRef Id="cmpF22EDC902438641401BF67C69E4765E6" />
+            <ComponentRef Id="cmpEBB43F9FD086654F7C4221499725451E" />
+            <ComponentRef Id="cmpD46DC6B04AF9008473C79E8F80D84F69" />
+            <ComponentRef Id="cmp497F80B3F47432E66BA84F58CA7E0324" />
+            <ComponentRef Id="cmp923F1F0CC14FF8E57C70A9CAED3AAAB8" />
+            <ComponentRef Id="cmp7461EF9A178BE8419B92D990B102D320" />
+            <ComponentRef Id="cmpFAE4AC8702FBECE19DA3C24301E6D9F3" />
+            <ComponentRef Id="cmp15DED42635A94756DC489E644F2B87C4" />
+            <ComponentRef Id="cmpF1BE32C584E9A5FF2A1E1D840097FFDD" />
+            <ComponentRef Id="cmpD31ABA4EBD4D79D003BAEBF6217A8566" />
+            <ComponentRef Id="cmpAD3220692D1ECB6075D68802CB025D3A" />
+            <ComponentRef Id="cmpD3AA88B0D17E4213B67F6C3E2AE47238" />
+            <ComponentRef Id="cmp8357796556738063A43F6BB485EF86DF" />
+            <ComponentRef Id="cmp6EF9DF4027BEAD0B22A7F2141C70F0C6" />
+            <ComponentRef Id="cmpFF929199996E308FC2A57C1CE15A7DA4" />
+            <ComponentRef Id="cmp358BF5F33BBBE37D50017795B969EB0F" />
+            <ComponentRef Id="cmp01F774F15AC5D0DE80A02B7029697213" />
+            <ComponentRef Id="cmp0A933FA170C7FD0FA50C13356FDF12DA" />
+            <ComponentRef Id="cmp7D5312CA770400E3EE0B5BB14AF6FEEB" />
+            <ComponentRef Id="cmpDEE815F6809848B380473AA0BB25C0FF" />
+            <ComponentRef Id="cmp694A916FF0967DE25851E03FD917DCC8" />
+            <ComponentRef Id="cmpEA73036634B9FCAAE278E23CED996421" />
+            <ComponentRef Id="cmp5EA8E58344708CD7710A581C240C2DBF" />
+            <ComponentRef Id="cmpD6FB2F6CD0679EE86D13DBAF1FA6157A" />
+            <ComponentRef Id="cmpB2F6720909A8793AC82E4C23A2EC85DE" />
+            <ComponentRef Id="cmp3D15509575F9AF6B4661DAEDFA54D969" />
+            <ComponentRef Id="cmp9919C1F9C17B98A4A0B03F9C7089A20D" />
+            <ComponentRef Id="cmp9C361576D939083496B02E0B6BFAB5AF" />
+            <ComponentRef Id="cmpD49082B3B023B79FFEB74DFE85DAA4A4" />
+            <ComponentRef Id="cmpAE6590A81A426B1F867412F35F3BEB1A" />
+            <ComponentRef Id="cmp1269E612B9F9F266A1679D5704B38852" />
             <ComponentRef Id="cmpEBE4F175239EBB7C7976EC21AC615E9D" />
             <ComponentRef Id="cmp34745B0A269AC63EB3AAC1BF336F327A" />
             <ComponentRef Id="cmpD9CF362F37B1AD8C6A7C3CB9CF48805A" />
@@ -604,8 +702,8 @@
             <ComponentRef Id="cmp0D00E10B47679E0536F1CB03CFCD1BD0" />
             <ComponentRef Id="cmp5921F48E5BB60717DFD58F5BD35F42E2" />
             <ComponentRef Id="cmp49EB4196471899970EB35F8603181FDC" />
-            
-            
+            <ComponentRef Id="cmp2C24278DEB8560C8F33CFF07E3D4979E" />
+            <ComponentRef Id="cmp90BB3CE8A6AD037BD65AA23837D51F2D" />
         </ComponentGroup>
     </Fragment>
 </Wix>
