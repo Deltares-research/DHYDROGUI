@@ -23,11 +23,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public partial class WaterFlowFMModel
     {
-        public const string DiscretizationObjectName = "Computational 1D Grid";
-        public const string NetworkObjectName = "Network";
+        private const string NetworkObjectName = "Network";
         private IHydroNetwork network;
-
         private IDiscretization networkDiscretization;
+
+        public const string DiscretizationObjectName = "Computational 1D Grid";
 
         public IHydroNetwork Network
         {
@@ -93,6 +93,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
+        public List<RoughnessSection> RoughnessSections { get; private set; }
+
+        private void SynchronizeRoughnessSectionsWithNetwork()
+        {
+            if (Network == null) return;
+
+            RoughnessSections = new List<RoughnessSection>();
+            foreach (var crossSectionSectionType in Network.CrossSectionSectionTypes)
+            {
+                var roughnessSection = new RoughnessSection(crossSectionSectionType, Network);
+                RoughnessSections.Add(roughnessSection);
+            }
+        }
+
+        private void AddSewerRoughnessIfNecessary()
+        {
+            if (RoughnessSections.Any(rs => rs.Name == "Sewer")) return;
+
+            var csSectionType = new CrossSectionSectionType { Name = "Sewer" };
+            RoughnessSections.Insert(0, new RoughnessSection(csSectionType, Network));
+        }
+
         /// <summary>
         /// - Synchronize the boundary condition in the model with the IsBoundary property of the Nodes. Since this property
         ///   can be set/reset while the node was not part of the network it is necessary to monitor additions and removals.
@@ -153,7 +175,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             else if (e.Item is CrossSectionSectionType)
             {
-                UpdateCrossSectionSectionType(e);
+                UpdateRoughnessSections(e);
             }
 
             // check if removed item is used in the child data items
@@ -185,40 +207,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private void UpdateCrossSectionSectionType(NotifyCollectionChangingEventArgs e)
+        private void UpdateRoughnessSections(NotifyCollectionChangingEventArgs e)
         {
             var sectionType = (CrossSectionSectionType)e.Item;
 
             switch (e.Action)
             {
                 case NotifyCollectionChangeAction.Add:
-                    AddRoughnessSectionToDataItem(sectionType);
+                    AddNewRoughnessSection(sectionType);
                     break;
             }
         }
 
-        private void AddRoughnessSectionToDataItem(CrossSectionSectionType crossSectionSectionType)
+        private void AddNewRoughnessSection(CrossSectionSectionType crossSectionSectionType)
         {
             var roughnessSection = new RoughnessSection(crossSectionSectionType, Network);
-            AddRoughnessSection(roughnessSection);
-        }
-
-        protected virtual void AddRoughnessSection(RoughnessSection roughnessSection)
-        {
-            var roughness1DDataItem = GetDataItemSetByTag(WaterFlowFMModelDataSet.Roughness1DTag);
-            roughness1DDataItem.ReadOnly = true;
-            roughness1DDataItem.DataItems.Add(new DataItem(roughnessSection));
-        }
-
-        public virtual IEventedList<RoughnessSection> RoughnessSections
-        {
-            get
-            {
-                var roughness1DDataItem = GetDataItemSetByTag(WaterFlowFMModelDataSet.Roughness1DTag);
-                return roughness1DDataItem == null 
-                    ? new EventedList<RoughnessSection>()
-                    : roughness1DDataItem.AsEventedList<RoughnessSection>();
-            }
+            RoughnessSections.Add(roughnessSection);
         }
 
         /// <summary>

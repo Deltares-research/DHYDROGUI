@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using BasicModelInterface;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -79,44 +78,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private IDataItem areaDataItem;
 
         private readonly Dictionary<IFeature, List<IDataItem>> areaDataItems = new Dictionary<IFeature, List<IDataItem>>();
-        private double previousProgress = 0;
+        private double previousProgress;
         private string progressText;
 
         public WaterFlowFMModel() : this(null)
         {
-            Network = new HydroNetwork { Name = NetworkObjectName };
-            NetworkDiscretization = new Discretization { Network = network, Name = DiscretizationObjectName };
-
-            ModelDefinition = new WaterFlowFMModelDefinition();
-            ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = Name + NetFile.FullExtension;
-            ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value = false;
-
-            SynchronizeModelDefinitions();
-
-            Grid = new UnstructuredGrid();
-            InitializeUnstructuredGridCoverages();
-
-            AddRoughness1DDataItem();
-            AddSpatialDataItems();
-            RenameSubFilesIfApplicable();
         }
-
-        private void AddRoughness1DDataItem()
-        {
-            AddDataItemSet(new EventedList<RoughnessSection>(), WaterFlowFMModelDataSet.Roughness1DTag,
-                DataItemRole.Input, WaterFlowFMModelDataSet.Roughness1DTag);
-
-            if (Network == null) return;
-            foreach (var crossSectionSectionType in Network.CrossSectionSectionTypes)
-            {
-                var roughnessSection = new RoughnessSection(crossSectionSectionType, Network);
-                AddRoughnessSection(roughnessSection);
-            }
-        }
-
-        /// <summary>
-        /// Constructor for existing mdu file
-        /// </summary>
+        
         public WaterFlowFMModel(string mduFilePath, ImportProgressChangedDelegate progressChanged = null) : base("FlowFM")
         {
             runner = new DimrRunner(this);
@@ -125,22 +93,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             InstantiateVariables();
             tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
-            // DELFT3DFM-371: Disable Model Inspection
-            // ModelInspection = true;
-            
+            Network = new HydroNetwork { Name = NetworkObjectName };
+            NetworkDiscretization = new Discretization { Network = network, Name = DiscretizationObjectName };
+
             var area = new HydroArea();
             AddDataItem(area, DataItemRole.Input, WaterFlowFMModelDataSet.HydroAreaTag);
             areaDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.HydroAreaTag);
-
             SubscribeToEvents(area);
 
-            // Load mdu model settings
-            if (string.IsNullOrEmpty(mduFilePath)) return;
-            LoadStateFromMdu(mduFilePath);
+            if (File.Exists(mduFilePath))
+            {
+                LoadStateFromMdu(mduFilePath);
 
-            FireImportProgressChanged(this, "Reading spatial operations", 9, TotalImportSteps);
-            AddSpatialDataItems();
-            ImportSpatialOperationsAfterCreating();
+                FireImportProgressChanged(this, "Reading spatial operations", 9, TotalImportSteps);
+                AddSpatialDataItems();
+                ImportSpatialOperationsAfterCreating();
+            }
+            else
+            {
+                ModelDefinition = new WaterFlowFMModelDefinition();
+                ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = Name + NetFile.FullExtension;
+                ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value = false;
+
+                SynchronizeModelDefinitions();
+
+                Grid = new UnstructuredGrid();
+                InitializeUnstructuredGridCoverages();
+
+                AddSpatialDataItems();
+                RenameSubFilesIfApplicable();
+            }
+
+            SynchronizeRoughnessSectionsWithNetwork();
+            AddSewerRoughnessIfNecessary();
         }
 
         private void SubscribeToEvents(HydroArea area)
@@ -1648,7 +1633,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var modelDefinitionName = ModelDefinition.ModelName;
 
                 var modelNameBasedFiles = new Dictionary<string, string>
-                    {
+                {
                     {KnownProperties.NetFile, NetFile.FullExtension},
                     {KnownProperties.ExtForceFile, ExtForceFile.Extension},
                     {KnownProperties.BndExtForceFile, ExtForceFile.Extension},
@@ -1672,7 +1657,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                     var currentFileName = Path.GetFileName(propertyValue);
                     if (modelDefinitionName == null ||
-                        ((modelDefinitionName + pair.Value).Equals(currentFileName, StringComparison.InvariantCultureIgnoreCase) && pair.Key != KnownProperties.NetFile))
+                        (modelDefinitionName + pair.Value).Equals(currentFileName, StringComparison.InvariantCultureIgnoreCase) && pair.Key != KnownProperties.NetFile)
                     {
                         propertyValue = Name + pair.Value;
                     }

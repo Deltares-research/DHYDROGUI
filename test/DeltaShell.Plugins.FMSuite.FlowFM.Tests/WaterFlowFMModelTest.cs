@@ -65,12 +65,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var model = new WaterFlowFMModel();
 
-            Assert.AreEqual(0, model.SnapVersion);
+            Assert.That(model.SnapVersion, Is.EqualTo(0));
             Assert.IsTrue(model.ValidateBeforeRun);
-
-            // DELFT3DFM-371: Disable Model Inspection
-            // Assert.IsTrue(model.ModelInspection);
-
         }
 
         [Test]
@@ -112,8 +108,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"SimpleModel_SourceAndSink_Tracer_Morphology\SimpleModel.mdu"));
             var sourceAndSink = new SourceAndSink();
 
-            Assert.AreEqual(0, sourceAndSink.SedimentFractionNames.Count);
-            Assert.AreEqual(0, sourceAndSink.TracerNames.Count);
+            Assert.That(sourceAndSink.SedimentFractionNames.Count, Is.EqualTo(0));
+            Assert.That(sourceAndSink.TracerNames.Count, Is.EqualTo(0));
 
             model.SourcesAndSinks.Add(sourceAndSink);
 
@@ -147,8 +143,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var model = new WaterFlowFMModel();
             var sourceAndSink = new SourceAndSink();
 
-            Assert.AreEqual(0, sourceAndSink.SedimentFractionNames.Count);
-            Assert.AreEqual(0, sourceAndSink.TracerNames.Count);
+            Assert.That(sourceAndSink.SedimentFractionNames.Count, Is.EqualTo(0));
+            Assert.That(sourceAndSink.TracerNames.Count, Is.EqualTo(0));
 
             model.SourcesAndSinks.Add(sourceAndSink);
 
@@ -156,7 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var tracer02 = "Tracer02";
             model.TracerDefinitions.AddRange(new List<string> { tracer01, tracer02 });
 
-            var boundary01 = new Feature2D() { Name = "Boundary01" };
+            var boundary01 = new Feature2D { Name = "Boundary01" };
             var set01 = new BoundaryConditionSet();
             model.BoundaryConditionSets.Add(set01);
 
@@ -172,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 TracerName = tracer02
             });
 
-            var boundary02 = new Feature2D() { Name = "Boundary02" };
+            var boundary02 = new Feature2D { Name = "Boundary02" };
             var set02 = new BoundaryConditionSet();
             model.BoundaryConditionSets.Add(set02);
             set02.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
@@ -181,14 +177,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 TracerName = tracer01
             });
 
-            Assert.AreEqual(2, sourceAndSink.TracerNames.Count);
-            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
-            Assert.AreEqual(tracer02, sourceAndSink.TracerNames[1]);
+            Assert.That(sourceAndSink.TracerNames.Count, Is.EqualTo(2));
+            Assert.That(sourceAndSink.TracerNames[0], Is.EqualTo(tracer01));
+            Assert.That(sourceAndSink.TracerNames[1], Is.EqualTo(tracer02));
 
             set01.BoundaryConditions.Clear();
 
-            Assert.AreEqual(1, sourceAndSink.TracerNames.Count);
-            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
+            Assert.That(sourceAndSink.TracerNames.Count, Is.EqualTo(1));
+            Assert.That(sourceAndSink.TracerNames[0], Is.EqualTo(tracer01));
         }
 
         [Test]
@@ -199,8 +195,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var model = new WaterFlowFMModel();
             var sourceAndSink = new SourceAndSink();
 
-            Assert.AreEqual(0, sourceAndSink.SedimentFractionNames.Count);
-            Assert.AreEqual(0, sourceAndSink.TracerNames.Count);
+            Assert.That(sourceAndSink.SedimentFractionNames.Count, Is.EqualTo(0));
+            Assert.That(sourceAndSink.TracerNames.Count, Is.EqualTo(0));
 
             model.SourcesAndSinks.Add(sourceAndSink);
 
@@ -208,7 +204,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var tracer02 = "Tracer02";
             model.TracerDefinitions.AddRange(new List<string> { tracer01, tracer02 });
             
-            var boundary01 = new Feature2D() { Name = "Boundary01" };
+            var boundary01 = new Feature2D { Name = "Boundary01" };
             var set01 = new BoundaryConditionSet();
             model.BoundaryConditionSets.Add(set01);
 
@@ -224,7 +220,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 TracerName = tracer02
             });
 
-            var boundary02 = new Feature2D() { Name = "Boundary02" };
+            var boundary02 = new Feature2D { Name = "Boundary02" };
             var set02 = new BoundaryConditionSet();
             model.BoundaryConditionSets.Add(set02);
             set02.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
@@ -233,14 +229,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 TracerName = tracer01
             });
 
-            Assert.AreEqual(2, sourceAndSink.TracerNames.Count);
-            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
-            Assert.AreEqual(tracer02, sourceAndSink.TracerNames[1]);
+            Assert.That(sourceAndSink.TracerNames.Count, Is.EqualTo(2));
+            Assert.That(sourceAndSink.TracerNames[0], Is.EqualTo(tracer01));
+            Assert.That(sourceAndSink.TracerNames[1], Is.EqualTo(tracer02));
 
             model.BoundaryConditionSets.Remove(set01);
             
-            Assert.AreEqual(1, sourceAndSink.TracerNames.Count);
-            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
+            Assert.That(sourceAndSink.TracerNames.Count, Is.EqualTo(1));
+            Assert.That(sourceAndSink.TracerNames[0], Is.EqualTo(tracer01));
         }
 
         [Test]
@@ -256,7 +252,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             set.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty));
 
-            Assert.AreEqual(1, count);
+            Assert.That(count, Is.EqualTo(1));
         }
 
         [Test]
@@ -264,7 +260,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var model = new WaterFlowFMModel();
 
-            var weir = new Weir2D()
+            var weir = new Weir2D
             {
                 Name = "weir01",
                 WeirFormula = new SimpleWeirFormula()
@@ -285,11 +281,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             };
             // add weir to model
             model.Area.Weirs.Add(weir);
-            Assert.AreEqual(1, collectionChangedCount);
+            Assert.That(collectionChangedCount, Is.EqualTo(1));
             
             // change weirformula
             weir.WeirFormula = new GeneralStructureWeirFormula();
-            Assert.AreEqual(1, weirFormulaChangeCount);
+            Assert.That(weirFormulaChangeCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -306,19 +302,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             
             var dataItems = model.GetChildDataItems(weir).ToList();
             
-            Assert.AreEqual(1, dataItems.Count);
+            Assert.That(dataItems.Count, Is.EqualTo(1));
 
-            Assert.AreEqual(weir.Name, dataItems[0].Name);
-            Assert.AreEqual(KnownStructureProperties.CrestLevel, dataItems[0].Tag);
-            Assert.AreEqual(DataItemRole.Input, dataItems[0].Role);
-            Assert.AreEqual(weir, ((WaterFlowFMFeatureValueConverter)dataItems[0].ValueConverter).Location);
-            Assert.AreEqual(model, ((WaterFlowFMFeatureValueConverter)dataItems[0].ValueConverter).Model);
-            Assert.AreEqual(KnownStructureProperties.CrestLevel, ((WaterFlowFMFeatureValueConverter)dataItems[0].ValueConverter).ParameterName);
+            Assert.That(dataItems[0].Name, Is.EqualTo(weir.Name));
+            Assert.That(dataItems[0].Tag, Is.EqualTo(KnownStructureProperties.CrestLevel));
+            Assert.That(dataItems[0].Role, Is.EqualTo(DataItemRole.Input));
+
+            var valueConverter = (WaterFlowFMFeatureValueConverter)dataItems[0].ValueConverter;
+            Assert.That(valueConverter.Location, Is.EqualTo(weir));
+            Assert.That(valueConverter.Model, Is.EqualTo(model));
+            Assert.That(valueConverter.ParameterName, Is.EqualTo(KnownStructureProperties.CrestLevel));
 
             // change weir formula
             weir.WeirFormula = new GeneralStructureWeirFormula();
             dataItems = model.GetChildDataItems(weir).ToList();
-            Assert.AreEqual(5, dataItems.Count);
+            Assert.That(dataItems.Count, Is.EqualTo(5));
 
             var generalStructureDataItems = new List<string>
             {
@@ -330,22 +328,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             };
             Assert.That(generalStructureDataItems.Count == dataItems.Count);
 
-            for (int i = 0; i < dataItems.Count; ++i)
+            for (var i = 0; i < dataItems.Count; ++i)
             {
-                Assert.AreEqual(weir.Name, dataItems[i].Name);
-                Assert.AreEqual(generalStructureDataItems[i], dataItems[i].Tag);
-                Assert.AreEqual(DataItemRole.Input, dataItems[i].Role);
-                Assert.AreEqual(weir, ((WaterFlowFMFeatureValueConverter)dataItems[i].ValueConverter).Location);
-                Assert.AreEqual(model, ((WaterFlowFMFeatureValueConverter)dataItems[i].ValueConverter).Model);
-                Assert.AreEqual(generalStructureDataItems[i], ((WaterFlowFMFeatureValueConverter)dataItems[i].ValueConverter).ParameterName);
+                Assert.That(dataItems[i].Name, Is.EqualTo(weir.Name));
+                Assert.That(dataItems[i].Tag, Is.EqualTo(generalStructureDataItems[i]));
+                Assert.That(dataItems[i].Role, Is.EqualTo(DataItemRole.Input));
+
+                valueConverter = (WaterFlowFMFeatureValueConverter)dataItems[i].ValueConverter;
+                Assert.That(valueConverter.Location, Is.EqualTo(weir));
+                Assert.That(valueConverter.Model, Is.EqualTo(model));
+                Assert.That(valueConverter.ParameterName, Is.EqualTo(generalStructureDataItems[i]));
             }
         }
 
         [Test]
         public void CheckSedimentFormulaPropertyEventPropagatesToModel()
         {
-            var model = new WaterFlowFMModel();
-            model.ModelDefinition.UseMorphologySediment = true;
+            var model = new WaterFlowFMModel {ModelDefinition = {UseMorphologySediment = true}};
             var sedFrac = new SedimentFraction
             {
                 Name = "testFrac",
@@ -367,8 +366,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var prop = sedFrac.CurrentFormulaType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().First();
             prop.IsSpatiallyVarying = true;
 
-            Assert.AreEqual(1, sedFracCount);
-            Assert.AreEqual(1, modelCount); // IsSpatiallyVarying
+            Assert.That(sedFracCount, Is.EqualTo(1));
+            Assert.That(modelCount, Is.EqualTo(1)); // IsSpatiallyVarying
         }
 
         [Test]
@@ -387,11 +386,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var prop = sedFrac.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().First();
             prop.IsSpatiallyVarying = true;
 
-            Assert.AreEqual(1, sedFracCount);
+            Assert.That(sedFracCount, Is.EqualTo(1));
 
             // TODO: Set the assertion value to 3 when initial condition is supported in ext-files (DELFT3DFM-996)
-            //Assert.AreEqual(3, modelCount); /* IsSpatiallyVarying + 2 changes id AddOrRenameDataItem */
-            Assert.AreEqual(1, modelCount); /* IsSpatiallyVarying + 2 changes id AddOrRenameDataItem */
+            //Assert.That(3, modelCount); /* IsSpatiallyVarying + 2 changes id AddOrRenameDataItem */
+            Assert.That(modelCount, Is.EqualTo(1)); /* IsSpatiallyVarying + 2 changes id AddOrRenameDataItem */
         }
 
         [Test]
@@ -406,7 +405,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
 
                 ActivityRunner.RunActivity(model);
-                Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+                Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned));
                 workingDir = Path.Combine(model.WorkingDirectory, model.DirectoryName);
             }
             var statisticsWritten = false;
@@ -427,16 +426,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void CheckFileBasedStatesofFMModel()
         {
             var model1 = new WaterFlowFMModel();
-            Assert.AreEqual("FlowFM", model1.Name);
-            Assert.AreEqual(null, model1.MduFilePath);
+            Assert.That(model1.Name, Is.EqualTo("FlowFM"));
+            Assert.That(model1.MduFilePath, Is.EqualTo(null));
 
             var mduPath =
                 TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model2 = new WaterFlowFMModel(mduPath);
-            Assert.AreEqual("bendprof", model2.Name);
-            Assert.AreEqual("bendprof.mdu", Path.GetFileName(model2.MduFilePath));
+            Assert.That(model2.Name, Is.EqualTo("bendprof"));
+            Assert.That(Path.GetFileName(model2.MduFilePath), Is.EqualTo("bendprof.mdu"));
         }
 
         [Test]
@@ -445,7 +444,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var model = new WaterFlowFMModel(); // empty model
             Assert.IsTrue(model.Grid.IsEmpty);
             Assert.IsNotNull(model.Bathymetry);
-            Assert.AreEqual(0, model.Bathymetry.ToPointCloud().PointValues.Count);
+            Assert.That(model.Bathymetry.ToPointCloud().PointValues.Count, Is.EqualTo(0));
         }
 
         [Test]
@@ -454,13 +453,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // this test checks for SpatialDataLayersChanged() in WaterFlowFMModel.
             var model = new WaterFlowFMModel();
 
-            Assert.AreEqual(1, model.InitialSalinity.Coverages.Count);
+            Assert.That(model.InitialSalinity.Coverages.Count, Is.EqualTo(1));
             var originalDataItem = model.GetDataItemByValue(model.InitialSalinity.Coverages[0]);
             var originalName = originalDataItem.Name;
 
             model.InitialSalinity.VerticalProfile = new VerticalProfileDefinition(VerticalProfileType.TopBottom);
 
-            Assert.AreEqual(2, model.InitialSalinity.Coverages.Count);
+            Assert.That(model.InitialSalinity.Coverages.Count, Is.EqualTo(2));
             Assert.IsNotNull(model.GetDataItemByValue(model.InitialSalinity.Coverages[1]));
                 // check if a data item was created
 
@@ -483,25 +482,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var transformation = factory.CreateTransformation(model.CoordinateSystem, newCoordinateSystem);
             model.TransformCoordinates(transformation);
 
-            Assert.AreEqual(model.CoordinateSystem, newCoordinateSystem);
-            Assert.AreEqual(model.Roughness.CoordinateSystem, newCoordinateSystem);
+            Assert.That(newCoordinateSystem, Is.EqualTo(model.CoordinateSystem));
+            Assert.That(newCoordinateSystem, Is.EqualTo(model.Roughness.CoordinateSystem));
 
             var roughnessDataItem = model.GetDataItemByValue(model.Roughness);
             var valueConverter = (SpatialOperationSetValueConverter) roughnessDataItem.ValueConverter;
 
-            Assert.AreEqual(model.CoordinateSystem, valueConverter.SpatialOperationSet.CoordinateSystem);
-            Assert.AreEqual(model.CoordinateSystem,
-                valueConverter.SpatialOperationSet.Operations.Last().CoordinateSystem);
+            var spatialOperationSet = valueConverter.SpatialOperationSet;
+            Assert.That(spatialOperationSet.CoordinateSystem, Is.EqualTo(model.CoordinateSystem));
+            Assert.That(spatialOperationSet.Operations.Last().CoordinateSystem, Is.EqualTo(model.CoordinateSystem));
         }
 
         [Test]
         public void HydFileNameShouldBeBasedOnMduFileName()
         {
-            var model = new WaterFlowFMModel {ExplicitWorkingDirectory = "C:\\TestWorkDir"};
+            var model = new WaterFlowFMModel {ExplicitWorkingDirectory = @"C:\TestWorkDir"};
 
             TypeUtils.SetPrivatePropertyValue(model, TypeUtils.GetMemberName(() => model.MduFilePath), "Test.mdu");
 
-            Assert.AreEqual("C:\\TestWorkDir\\DFM_DELWAQ_Test\\Test.hyd", model.HydFilePath);
+            Assert.That(model.HydFilePath, Is.EqualTo(@"C:\TestWorkDir\DFM_DELWAQ_Test\Test.hyd"));
         }
 
         [Test]
@@ -517,12 +516,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             ActivityRunner.RunActivity(model);
             var waterLevelFirstRun = (double) model.OutputWaterLevel[model.StopTime, 0];
-            Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+            Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned));
             Assert.AreEqual(4.0d, waterLevelFirstRun, 0.1);
 
             ActivityRunner.RunActivity(model);
             var waterLevelSecondRun = (double) model.OutputWaterLevel[model.CurrentTime, 0];
-            Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+            Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned));
             Assert.AreEqual(waterLevelSecondRun, waterLevelFirstRun, 0.005); // value changes per run (see above)
 
         }
@@ -545,42 +544,58 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void WhenInstantiatingAnFmModel_ThenTheModelHasDataItemFor1dRoughness()
+        public void WhenInstantiatingAnFmModel_ThenTheModelHasDefaultRoughnessSections()
         {
             var fmModel = new WaterFlowFMModel();
-            Assert.IsNotNull(fmModel.GetDataItemByTag(WaterFlowFMModelDataSet.Roughness1DTag), "Data item for 1D roughness is not present in the FM model.");
+            Assert.IsNotNull(fmModel.RoughnessSections, "Roughness sections of the FM model were not instantiated.");
+            Assert.That(fmModel.RoughnessSections.Count(rs => rs.Name == "Main"), Is.EqualTo(1));
         }
 
         [Test]
-        public void WhenFmModelHasBeenInstantiated_ThenTheRoughness1DDataItemHasTheCorrectChildDataItems()
+        public void WhenInstantiatingAnFmModel_ThenTheModelHasSewerRoughnessSection()
         {
             var fmModel = new WaterFlowFMModel();
-            var roughness1DDataItem = fmModel.GetDataItemByTag(WaterFlowFMModelDataSet.Roughness1DTag);
+            var roughnessSections = fmModel.RoughnessSections;
+            bool IsSewerRoughnessSection(RoughnessSection rs) => rs.Name == "Sewer";
 
-            var networkSectionSectionTypes = fmModel.Network.CrossSectionSectionTypes;
-            var crossSectionSections = roughness1DDataItem.Value as DataItemsEventedListAdapter<RoughnessSection>;
-
-            Assert.IsNotNull(crossSectionSections);
-            Assert.That(crossSectionSections.Count, Is.EqualTo(1));
-            Assert.That(crossSectionSections.FirstOrDefault()?.Name, Is.EqualTo(networkSectionSectionTypes.FirstOrDefault()?.Name));
+            Assert.IsNotNull(roughnessSections, "Roughness sections of the FM model were not instantiated.");
+            Assert.That(roughnessSections.Count(IsSewerRoughnessSection), Is.EqualTo(1));
+            Assert.That(roughnessSections.FindIndex(IsSewerRoughnessSection), Is.EqualTo(0));
         }
 
         [Test]
-        public void GivenFmModelWithNetwork_WhenAddingNewrossSectionTypeToNetwork_ThenAnExtraDataItemIsAddedToTheModel()
+        public void GivenLegacyMduFileWithout1DNetworkDefined_WhenInstantiatingWithMduPath_ThenTheModelHasDefaultRoughnessSections()
         {
+            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            mduPath = TestHelper.CreateLocalCopy(mduPath);
+
+            var fmModel = new WaterFlowFMModel(mduPath);
+            var roughnessSections = fmModel.RoughnessSections;
+            bool IsMainRoughnessSection(RoughnessSection rs) => rs.Name == "Main";
+            bool IsSewerRoughnessSection(RoughnessSection rs) => rs.Name == "Sewer";
+
+            Assert.IsNotNull(roughnessSections, "Roughness sections of the FM model were not instantiated.");
+            Assert.That(roughnessSections.Count(IsMainRoughnessSection), Is.EqualTo(1));
+            Assert.That(roughnessSections.Count(IsSewerRoughnessSection), Is.EqualTo(1));
+            Assert.That(roughnessSections.FindIndex(IsSewerRoughnessSection), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void GivenFmModelWithNetwork_WhenAddingNewCrossSectionTypeToNetwork_ThenAnExtraDataItemIsAddedToTheModel()
+        {
+            const string crossSectionTypeName = "myNewCrossSectionType";
+
             var fmModel = new WaterFlowFMModel();
             var newCrossSectionSectionType = new CrossSectionSectionType
             {
-                Name = "myNewCrossSectionType"
+                Name = crossSectionTypeName
             };
 
             fmModel.Network.CrossSectionSectionTypes.Add(newCrossSectionSectionType);
 
-            var roughness1DDataItem = fmModel.GetDataItemByTag(WaterFlowFMModelDataSet.Roughness1DTag);
-            var crossSectionSections = roughness1DDataItem.Value as DataItemsEventedListAdapter<RoughnessSection>;
-
-            Assert.IsNotNull(crossSectionSections);
-            Assert.That(crossSectionSections.Count, Is.EqualTo(2));
+            var roughnessSections = fmModel.RoughnessSections;
+            Assert.That(roughnessSections.Count, Is.EqualTo(3));
+            Assert.That(roughnessSections.Count(rs => rs.Name == crossSectionTypeName), Is.EqualTo(1));
         }
 
         [Test]
@@ -593,11 +608,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var model = new WaterFlowFMModel(mduPath);
 
             var outputDirectory = FileUtils.CreateTempDirectory();
-            var diaFileName = string.Format("{0}.dia", model.Name);
+            var diaFileName = $"{model.Name}.dia";
             var diaFilePath = Path.Combine(outputDirectory, diaFileName);
 
             TestHelper.AssertAtLeastOneLogMessagesContains(() =>
-                TypeUtils.CallPrivateMethod(model, "ReadDiaFile", new[] { outputDirectory }),
+                TypeUtils.CallPrivateMethod(model, "ReadDiaFile", outputDirectory),
                 string.Format(Properties.Resources.WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_, diaFileName, diaFilePath)
             );
         }
@@ -617,14 +632,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Directory.CreateDirectory(tempDir);
 
             model.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(4326); //wgs84
-            model.ExportTo(Path.Combine(tempDir, "cs\\cs.mdu"));
+            model.ExportTo(Path.Combine(tempDir, @"cs\cs.mdu"));
 
-            Assert.AreEqual(4326, NetFile.ReadCoordinateSystem(model.NetFilePath).AuthorityCode);
+            Assert.That(NetFile.ReadCoordinateSystem(model.NetFilePath).AuthorityCode, Is.EqualTo(4326));
 
             model.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(28992); //other number
-            model.ExportTo(Path.Combine(tempDir, "cs2\\cs2.mdu"));
+            model.ExportTo(Path.Combine(tempDir, @"cs2\cs2.mdu"));
 
-            Assert.AreEqual(28992, NetFile.ReadCoordinateSystem(model.NetFilePath).AuthorityCode);
+            Assert.That(NetFile.ReadCoordinateSystem(model.NetFilePath).AuthorityCode, Is.EqualTo(28992));
         }
 
         [Test]
@@ -638,11 +653,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var model = new WaterFlowFMModel(mduPath);
 
-            Assert.AreEqual(new DateTime(1992, 08, 31), model.StartTime);
+            Assert.That(model.StartTime, Is.EqualTo(new DateTime(1992, 08, 31)));
 
             var newTime = new DateTime(2000, 1, 2, 11, 15, 5, 2); //time with milliseconds
             model.StartTime = newTime;
-            Assert.AreEqual(newTime, model.StartTime);
+            Assert.That(model.StartTime, Is.EqualTo(newTime));
         }
 
         [Test]
@@ -655,7 +670,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
-            Assert.AreEqual(null, model.CoordinateSystem);
+            Assert.IsNull(model.CoordinateSystem);
         }
 
         [Test]
@@ -667,7 +682,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
-            Assert.AreEqual("WGS 84", model.CoordinateSystem.Name);
+            Assert.That(model.CoordinateSystem.Name, Is.EqualTo("WGS 84"));
         }
 
         [Test]
@@ -675,15 +690,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [NUnit.Framework.Category(TestCategory.Slow)]
         public void ImportIvoorkustModel()
         {
-            var mduPath =
-                TestHelper.GetTestFilePath(@"mdu_ivoorkust\ivk.mdu");
+            var mduPath = TestHelper.GetTestFilePath(@"mdu_ivoorkust\ivk.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(mduPath);
 
             model.Initialize();
 
-            Assert.AreEqual(ActivityStatus.Initialized, model.Status);
+            Assert.That(model.Status, Is.EqualTo(ActivityStatus.Initialized));
         }
 
         [Test]
@@ -695,7 +709,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
-            Assert.AreEqual(10, model.DepthLayerDefinition.NumLayers, "depth layers");
+            Assert.That(model.DepthLayerDefinition.NumLayers, Is.EqualTo(10), "depth layers");
         }
 
         [Test]
@@ -767,7 +781,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var bcStartTime = times.MinValue;
 
-            Assert.AreEqual(refDate, bcStartTime);
+            Assert.That(bcStartTime, Is.EqualTo(refDate));
 
             const double minutes = 4.7520000e+04;
 
@@ -775,7 +789,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var bcStopTime = times.MaxValue;
 
-            Assert.AreEqual(refDate + bcTimeRange, bcStopTime);
+            Assert.That(bcStopTime, Is.EqualTo(refDate + bcTimeRange));
         }
 
         [Test]
@@ -828,7 +842,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Assert.IsNotNull(spatialOperationValueConverter);
 
-            Assert.AreEqual(2, spatialOperationValueConverter.SpatialOperationSet.Operations.Count);
+            Assert.That(spatialOperationValueConverter.SpatialOperationSet.Operations.Count, Is.EqualTo(2));
             Assert.IsTrue(spatialOperationValueConverter.SpatialOperationSet.Operations[1] is InterpolateOperation);
         }
 
@@ -869,9 +883,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));
             new FlowFMNetFileImporter().ImportItem(TestHelper.GetTestFilePath(@"harlingen\fm_003_net.nc"), model);
-            Assert.AreEqual(12845, model.Grid.Vertices.Count);
-            Assert.AreEqual(16597, model.Grid.Cells.Count);
-            Assert.AreEqual(29441, model.Grid.Edges.Count);
+            Assert.That(model.Grid.Vertices.Count, Is.EqualTo(12845));
+            Assert.That(model.Grid.Cells.Count, Is.EqualTo(16597));
+            Assert.That(model.Grid.Edges.Count, Is.EqualTo(29441));
         }
 
         [Test]
@@ -945,14 +959,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void TestUpdateBathymetryCoverage(UnstructuredGridFileHelper.BedLevelLocation[] bedLevelLocations, Type[] coverageTypes)
         {
             // if this is false, the test cases are not correct
-            Assert.AreEqual(bedLevelLocations.Length, coverageTypes.Length);
+            Assert.That(coverageTypes.Length, Is.EqualTo(bedLevelLocations.Length));
 
             var fmModel = new WaterFlowFMModel();
 
             for (var i = 0; i < bedLevelLocations.Length; i++)
             {
                 TypeUtils.CallPrivateMethod(fmModel, "UpdateBathymetryCoverage", bedLevelLocations[i]);
-                Assert.AreEqual(coverageTypes[i], fmModel.Bathymetry.GetType());
+                Assert.That(fmModel.Bathymetry.GetType(), Is.EqualTo(coverageTypes[i]));
             }
         }
 
@@ -1004,8 +1018,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             try
             {
                 var stateInfo = new StateInfo("StateName", "ZipPath");
-                Assert.AreEqual(stateInfo.Name, "StateName");
-                Assert.AreEqual(stateInfo.ZipPath, "ZipPath");
+                Assert.That(stateInfo.Name, Is.EqualTo("StateName"));
+                Assert.That(stateInfo.ZipPath, Is.EqualTo("ZipPath"));
             }
             catch (Exception e)
             {
@@ -1017,19 +1031,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [NUnit.Framework.Category(TestCategory.WorkInProgress)]
         public void Generate1D2DLinksAutomaticallyWhenExistsBoth1D2DGrids()
         {
-            //create model with 1D and 2D grids
             var model = new WaterFlowFMModel();
-            //1D Grid
             WaterFlowFMTestHelper.ConfigureDemoNetwork(model.Network);
+
             var offSet = new double[] { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150 };
             HydroNetworkHelper.GenerateDiscretization(model.NetworkDiscretization, (IChannel)model.Network.Branches[1], offSet);
+
             Assert.IsFalse(model.NetworkDiscretization == null || !model.NetworkDiscretization.Locations.AllValues.Any());
-            //2D Grid
+
             model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-            
-            //Links should be generated.
             Assert.IsNotEmpty(model.Links);
-            Assert.AreNotEqual(0, model.Links.Count);
+            Assert.That(model.Links.Count, Is.Not.EqualTo(0));
         }
 
         [Test]
@@ -1039,39 +1051,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             /* Default is false */
             Assert.IsFalse(model.WriteSnappedFeatures);
-            Assert.AreEqual( model.WriteSnappedFeatures, model.ModelDefinition.WriteSnappedFeatures);
+            Assert.That(model.ModelDefinition.WriteSnappedFeatures, Is.EqualTo(model.WriteSnappedFeatures));
 
             /* Value is the same in the model definition */
             model.ModelDefinition.WriteSnappedFeatures = true;
             Assert.IsTrue(model.WriteSnappedFeatures);
-            Assert.AreEqual(model.WriteSnappedFeatures, model.ModelDefinition.WriteSnappedFeatures);
+            Assert.That(model.ModelDefinition.WriteSnappedFeatures, Is.EqualTo(model.WriteSnappedFeatures));
         }
 
         [Test]
         [NUnit.Framework.Category(TestCategory.WorkInProgress)]
         public void Generate1D2DLinksAutomaticallyWhenExistsBoth1D2DGridsFromFile()
         {
-            //create model with 1D and 2D grids
             var model = new WaterFlowFMModel();
-            //1D Grid
+
             WaterFlowFMTestHelper.ConfigureDemoNetworkAtGivenCoordinates(model.Network);
             var offSet = new double[] { 0, 5, 10, 20};
             HydroNetworkHelper.GenerateDiscretization(model.NetworkDiscretization, (IChannel)model.Network.Branches[0], offSet);
             Assert.IsFalse(model.NetworkDiscretization == null || !model.NetworkDiscretization.Locations.AllValues.Any());
 
-            //2D Grid
-            string gridPath = TestHelper.GetTestFilePath(@"flow1d2dLinks\2d_ugrid_net.nc");
+            var gridPath = TestHelper.GetTestFilePath(@"flow1d2dLinks\2d_ugrid_net.nc");
             gridPath = TestHelper.CreateLocalCopy(gridPath);
             Assert.IsTrue(File.Exists(gridPath));
-            model.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
-                .SetValueAsString(gridPath);
-            Assert.AreEqual(model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).GetValueAsString(), gridPath);
-            model.Grid = UnstructuredGridFileHelper.LoadFromFile(gridPath);
 
-            //Links should be generated.
+            model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueAsString(gridPath);
+            model.Grid = UnstructuredGridFileHelper.LoadFromFile(gridPath);
             Assert.IsNotEmpty(model.Links);
-            Assert.AreNotEqual(0, model.Links.Count);
+            Assert.That(model.Links.Count, Is.Not.EqualTo(0));
         }
+
         [Test]
         public void GivenFmModel_WhenAddingAnAreaFeatureWithGroupNameEqualToPathThatIsPointingToASubFolderOfMduFolder_ThenGroupNameIsAlwaysRelative()
         {
@@ -1084,13 +1092,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // Make FM model from Mdu file
             var fmModel = new WaterFlowFMModel(mduFilePath);
             
-            // Import dry points
-            
-            fmModel.Area.DryPoints.Add(new GroupablePointFeature()
+            fmModel.Area.DryPoints.Add(new GroupablePointFeature
             {
                 GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"SubFolder/MyDryPoints_dry.xyz")
             });
-            fmModel.Area.LandBoundaries.Add(new DelftTools.Hydro.LandBoundary2D()
+            fmModel.Area.LandBoundaries.Add(new DelftTools.Hydro.LandBoundary2D
             {
                 GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"SubFolder/MyLandBoundaries.ldb")
             });
@@ -1276,7 +1282,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 fmModel.ReferenceTime = fmModel.StartTime;
                 fmModel.ProgressChanged += (sender, args) =>
                 {
-                    Assert.AreEqual(fmModel.ProgressText, messageList[counter]);
+                    Assert.That(messageList[counter], Is.EqualTo(fmModel.ProgressText));
                     counter++;
                 };
                 ActivityRunner.RunActivity(fmModel);
@@ -1300,9 +1306,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             using (var model = new WaterFlowFMModel(filePath))
             {
-                Assert.AreEqual( 2, model.Boundaries.Count);
-                Assert.AreEqual( 1, model.Area.Weirs.Count );
-                Assert.AreEqual( 3, model.Area.ObservationPoints.Count);
+                Assert.That(model.Boundaries.Count, Is.EqualTo(2));
+                Assert.That(model.Area.Weirs.Count, Is.EqualTo(1));
+                Assert.That(model.Area.ObservationPoints.Count, Is.EqualTo(3));
 
                 /* Verify the OP exist and OP1.X < OP2.X < OP2.X and the Y is the same */
                 var op1 = model.Area.ObservationPoints[0];
@@ -1313,8 +1319,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.NotNull(op2);
                 Assert.NotNull(op3);
 
-                Assert.AreEqual(op1.Geometry.Coordinate.Y, op2.Geometry.Coordinate.Y);
-                Assert.AreEqual(op1.Geometry.Coordinate.Y, op3.Geometry.Coordinate.Y);
+                Assert.That(op2.Geometry.Coordinate.Y, Is.EqualTo(op1.Geometry.Coordinate.Y));
+                Assert.That(op3.Geometry.Coordinate.Y, Is.EqualTo(op1.Geometry.Coordinate.Y));
                 Assert.Less(op1.Geometry.Coordinate.X, op2.Geometry.Coordinate.X);
                 Assert.Less(op2.Geometry.Coordinate.X, op3.Geometry.Coordinate.X);
 
@@ -1358,8 +1364,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 #region Check Water Level
                 /* OP2TN < OP1TN && OP2TN < OP3TN */
-                Assert.AreEqual(op1WLResults.Count, op2WLResults.Count);
-                Assert.AreEqual(op1WLResults.Count, op3WLResults.Count);
+                Assert.That(op2WLResults.Count, Is.EqualTo(op1WLResults.Count));
+                Assert.That(op3WLResults.Count, Is.EqualTo(op1WLResults.Count));
 
                 var nResults = op1WLResults.Count;
                 var lastResult = nResults - 1;
@@ -1384,9 +1390,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 #region Check Velocity
 
                 /* OP2TN > OP1TN && OP2TN > OP3TN */
-                Assert.AreEqual(op1WLResults.Count, op1VelResults.Count);
-                Assert.AreEqual(op1VelResults.Count, op2VelResults.Count);
-                Assert.AreEqual(op1VelResults.Count, op3VelResults.Count);
+                Assert.That(op1VelResults.Count, Is.EqualTo(op1WLResults.Count));
+                Assert.That(op2VelResults.Count, Is.EqualTo(op1VelResults.Count));
+                Assert.That(op3VelResults.Count, Is.EqualTo(op1VelResults.Count));
 
                 Assert.Greater(op2VelResults[lastResult], op1VelResults[lastResult]);
                 #endregion
@@ -1406,9 +1412,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             using (var model = new WaterFlowFMModel(filePath))
             {
-                Assert.AreEqual(2, model.Boundaries.Count);
-                Assert.AreEqual(1, model.Area.Weirs.Count);
-                Assert.AreEqual(3, model.Area.ObservationPoints.Count);
+                Assert.That(model.Boundaries.Count, Is.EqualTo(2));
+                Assert.That(model.Area.Weirs.Count, Is.EqualTo(1));
+                Assert.That(model.Area.ObservationPoints.Count, Is.EqualTo(3));
 
                 /* Verify the OP exist and OP1.X < OP2.X < OP2.X and the Y is the same */
                 var op1 = model.Area.ObservationPoints[0];
@@ -1419,8 +1425,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.NotNull(op2);
                 Assert.NotNull(op3);
 
-                Assert.AreEqual(op1.Geometry.Coordinate.Y, op2.Geometry.Coordinate.Y);
-                Assert.AreEqual(op2.Geometry.Coordinate.Y, op3.Geometry.Coordinate.Y);
+                Assert.That(op2.Geometry.Coordinate.Y, Is.EqualTo(op1.Geometry.Coordinate.Y));
+                Assert.That(op3.Geometry.Coordinate.Y, Is.EqualTo(op2.Geometry.Coordinate.Y));
 
                 Assert.Less(op1.Geometry.Coordinate.X, op2.Geometry.Coordinate.X);
                 Assert.Less(op2.Geometry.Coordinate.X, op3.Geometry.Coordinate.X);
@@ -1491,11 +1497,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var model = new WaterFlowFMModel(mduFilePath);
 
                 var modelvalue = model.FixedWeirsProperties[0].DataColumns[0].ValueList[0];
-                Assert.AreEqual(1.2 , modelvalue);
+                Assert.That(modelvalue, Is.EqualTo(1.2));
                 modelvalue = model.FixedWeirsProperties[0].DataColumns[0].ValueList[1];
-                Assert.AreEqual(6.4, modelvalue);
+                Assert.That(modelvalue, Is.EqualTo(6.4));
                 modelvalue = model.FixedWeirsProperties[0].DataColumns[1].ValueList[0];
-                Assert.AreEqual(3.5, modelvalue);
+                Assert.That(modelvalue, Is.EqualTo(3.5));
 
                 //To do test write function also
 
@@ -1685,8 +1691,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 fmModel.Area.FixedWeirs[0].Geometry = lineGeomery;
 
-                Assert.AreEqual(4,fmModel.FixedWeirsProperties[0].DataColumns[0].ValueList.Count);
-                Assert.AreEqual(2,clonedFmModel.FixedWeirsProperties[0].DataColumns[0].ValueList.Count);
+                Assert.That(fmModel.FixedWeirsProperties[0].DataColumns[0].ValueList.Count, Is.EqualTo(4));
+                Assert.That(clonedFmModel.FixedWeirsProperties[0].DataColumns[0].ValueList.Count, Is.EqualTo(2));
             }
             finally
             {
