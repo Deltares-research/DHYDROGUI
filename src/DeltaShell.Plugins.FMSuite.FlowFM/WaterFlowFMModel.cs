@@ -90,31 +90,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             runner = new DimrRunner(this);
             ImportProgressChanged = progressChanged;
 
-            InstantiateVariables();
+            InitializeModelProperties();
             tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
-            Network = new HydroNetwork { Name = NetworkObjectName };
-            NetworkDiscretization = new Discretization { Network = network, Name = DiscretizationObjectName };
-
-            var area = new HydroArea();
-            AddDataItem(area, DataItemRole.Input, WaterFlowFMModelDataSet.HydroAreaTag);
-            areaDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.HydroAreaTag);
-            SubscribeToEvents(area);
+            AddNetworkToModel();
+            AddAreaToModel();
 
             if (File.Exists(mduFilePath))
             {
                 LoadStateFromMdu(mduFilePath);
 
                 FireImportProgressChanged(this, "Reading spatial operations", 9, TotalImportSteps);
-                AddSpatialDataItems();
-                ImportSpatialOperationsAfterCreating();
+                var modelDataItems = AddSpatialDataItems();
+                ImportSpatialOperationsAfterCreating(modelDataItems);
             }
             else
             {
                 ModelDefinition = new WaterFlowFMModelDefinition();
-                ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = Name + NetFile.FullExtension;
+                ModelDefinition.SetModelProperty(KnownProperties.NetFile, Name + NetFile.FullExtension);
                 ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value = false;
-
                 SynchronizeModelDefinitions();
 
                 Grid = new UnstructuredGrid();
@@ -128,6 +122,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             AddSewerRoughnessIfNecessary();
         }
 
+        private void AddNetworkToModel()
+        {
+            Network = new HydroNetwork {Name = NetworkObjectName};
+            NetworkDiscretization = new Discretization {Network = network, Name = DiscretizationObjectName};
+        }
+
+        private void AddAreaToModel()
+        {
+            var area = new HydroArea();
+            AddDataItem(area, DataItemRole.Input, WaterFlowFMModelDataSet.HydroAreaTag);
+            areaDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.HydroAreaTag);
+            SubscribeToEvents(area);
+        }
+
         private void SubscribeToEvents(HydroArea area)
         {
             ((INotifyCollectionChanged) area).CollectionChanged += HydroAreaCollectionChanged;
@@ -136,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ((INotifyPropertyChange) this).PropertyChanged += (s, e) => { MarkDirty(); };
         }
 
-        private void InstantiateVariables()
+        private void InitializeModelProperties()
         {
             SnapVersion = 0;
             ValidateBeforeRun = true;
@@ -881,13 +889,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private void ImportSpatialOperationsAfterCreating()
+        private void ImportSpatialOperationsAfterCreating(IEventedList<IDataItem> modelDataItems)
         {
             foreach (var spatialOperation in ModelDefinition.SpatialOperations)
             {
                 var dataItemName = spatialOperation.Key;
                 var spatialOperationList = spatialOperation.Value;
-                var dataItem = DataItems.FirstOrDefault(di => di.Name == dataItemName);
+                var dataItem = modelDataItems.FirstOrDefault(di => di.Name == dataItemName);
 
                 if (!spatialOperationList.Any()) continue;
 
@@ -924,7 +932,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
         
-        private void AddSpatialDataItems()
+        private IEventedList<IDataItem> AddSpatialDataItems()
         {
             AddOrRenameDataItem(Bathymetry, WaterFlowFMModelDefinition.BathymetryDataItemName);
 
@@ -941,6 +949,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             AddOrRenameDataItems(InitialSalinity, WaterFlowFMModelDefinition.InitialSalinityDataItemName);
             AddOrRenameTracerDataItems();
             AddOrRenameFractionDataItems();
+
+            return DataItems;
         }
 
         private void AddOrRenameTracerDataItems()
