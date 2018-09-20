@@ -32,6 +32,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         protected NetworkCoverageLocationLayer discretizationLayer;
         private UnstructuredGridLayer gridLayer;
 
+        public Base1D2DLinksMapTool()
+        {
+            LinkType = GridApiDataSet.LinkType.Embedded;
+        }
+
         public GridApiDataSet.LinkType LinkType { get; set; }
 
         public override bool Enabled
