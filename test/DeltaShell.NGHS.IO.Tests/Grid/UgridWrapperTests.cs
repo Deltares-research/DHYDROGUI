@@ -30,6 +30,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         private int[] targetnodeid = {2, 2, 4};
 
+        private int[,] sourcetargetnodesid = { { 1,2} , { 3,2} , { 2,4 } };
+        private int nsourcetargetnodesid = 6;
+
         //branches info
         private double[] branchlengths = {4.0, 3.0, 3.0};
 
@@ -46,11 +49,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         //mesh dimension
         private int nmesh1dPoints = 10;
-        private int nedgenodes = 9;
+        private int nedgenodes = 3;
         private string[] meshpointsids = { "meshpoint1", "meshpoint2", "meshpoint3", "meshpoint4", "meshpoint5", "meshpoint6", "meshpoint7", "meshpoint8", "meshpoint9", "meshpoint10" };
         private string[] meshpointslongnames = { "meshpointlongname1", "meshpointlongname2", "meshpointlongname3", "meshpointlongname4", "meshpointlongname5", "meshpointlongname6", "meshpointlongname7", "meshpointlongname8", "meshpointlongname9", "meshpointlongname10" };
 
-        private int nmeshedges = 14;
 
         //mesh geometry
         private int[] branchidx = {0, 0, 0, 0, 1, 1, 1, 2, 2, 2};
@@ -89,6 +91,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr c_nodesY = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
             IntPtr c_sourcenodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
             IntPtr c_targetnodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
+            IntPtr c_sourcetargetnodesid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nsourcetargetnodesid);
             IntPtr c_branchlengths = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nBranches);
             IntPtr c_nbranchgeometrypoints = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
             IntPtr c_geopointsX = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nGeometry);
@@ -346,6 +349,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr c_edgenodes = Marshal.AllocCoTaskMem(2 * Marshal.SizeOf(typeof(int)) * nedgenodes);
             IntPtr c_sourcenodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
             IntPtr c_targetnodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
+            IntPtr c_sourcetargetnodesid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nsourcetargetnodesid);
 
             IntPtr c_branchoffset = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nmesh1dPoints);
             IntPtr c_branchlength = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nBranches);
@@ -370,15 +374,19 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 Assert.That(ierr, Is.EqualTo(0));
 
                 //2. Create the edge nodes (the algorithm is in gridgeom.dll, not in ionetcdf.dll)
+                int[] marshalSourcetargetnodesid = new int[nsourcetargetnodesid];
+                Buffer.BlockCopy(sourcetargetnodesid, 0, marshalSourcetargetnodesid, 0, nsourcetargetnodesid);
+
                 Marshal.Copy(branchidx, 0, c_branchidx, nmesh1dPoints);
                 Marshal.Copy(sourcenodeid, 0, c_sourcenodeid, nBranches);
                 Marshal.Copy(targetnodeid, 0, c_targetnodeid, nBranches);
+                Marshal.Copy(marshalSourcetargetnodesid, 0, c_sourcetargetnodesid, nsourcetargetnodesid);
                 Marshal.Copy(offset, 0, c_branchoffset, nmesh1dPoints);
                 Marshal.Copy(branchlengths, 0, c_branchlength, nBranches);
 
 
                 var gridwrapper = new GridGeomWrapper();
-                ierr = gridwrapper.CreateEdgeNodes(ref c_branchoffset, ref c_branchlength, ref c_branchidx, ref c_sourcenodeid, ref c_targetnodeid, ref c_edgenodes, ref nBranches, ref nmesh1dPoints, ref nedgenodes, ref startIndex);
+                ierr = gridwrapper.CreateEdgeNodes(ref c_branchoffset, ref c_branchlength, ref c_branchidx, ref nsourcetargetnodesid, ref c_sourcetargetnodesid, ref nBranches, ref nmesh1dPoints, ref nedgenodes, ref startIndex);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 //3. Create the node branchidx, offsets, meshnodeidsinfo
@@ -458,6 +466,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 Marshal.FreeCoTaskMem(c_edgenodes);
                 Marshal.FreeCoTaskMem(c_sourcenodeid);
                 Marshal.FreeCoTaskMem(c_targetnodeid);
+                Marshal.FreeCoTaskMem(c_sourcetargetnodesid);
 
                 Marshal.FreeCoTaskMem(c_branchoffset);
                 Marshal.FreeCoTaskMem(c_branchlength);

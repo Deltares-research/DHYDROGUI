@@ -48,20 +48,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             }
         }
 
-        public static bool AddNew1D2DLink(WaterFlowFMModel fmModel, GridApiDataSet.LinkType linkType, Coordinate startPoint, Coordinate endPoint)
+        public static bool AddNew1D2DLink(WaterFlowFMModel fmModel, GridApiDataSet.LinkType linkType, Coordinate startPoint, Coordinate endPoint, double snapTolerance = 0.0)
         {
             switch (linkType)
             {
                 case GridApiDataSet.LinkType.Embedded:
-                    return AddNew1D2DEmbeddedLink(fmModel, startPoint, endPoint);
+                    return AddNew1D2DEmbeddedLink(fmModel, startPoint, endPoint, snapTolerance);
                 case GridApiDataSet.LinkType.Lateral:
-                    return AddNew1D2DLateralLink(fmModel, startPoint, endPoint);
+                    return AddNew1D2DLateralLink(fmModel, startPoint, endPoint, snapTolerance);
                 case GridApiDataSet.LinkType.RoofSewer:
-                    return AddNew1D2DRoofLink(fmModel, startPoint, endPoint);
+                    return AddNew1D2DRoofLink(fmModel, startPoint, endPoint, snapTolerance);
                 case GridApiDataSet.LinkType.InhabitantsSewer:
-                    return AddNew1D2DInhabitantsLink(fmModel, startPoint, endPoint);
+                    return AddNew1D2DInhabitantsLink(fmModel, startPoint, endPoint, snapTolerance);
                 case GridApiDataSet.LinkType.GullySewer:
-                    return AddNew1D2DGullyLink(fmModel, startPoint, endPoint);
+                    return AddNew1D2DGullyLink(fmModel, startPoint, endPoint, snapTolerance);
                 default:
                     log.ErrorFormat("New 1D2D Link between the grid and the network of WaterFlowFMModel {0} is not added. Type of link {1} unknown", fmModel.Name, linkType);
                     return false;
@@ -297,9 +297,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         #region add new link
 
-        private static bool AddNew1D2DEmbeddedLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate)
+        private static bool AddNew1D2DEmbeddedLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate, double snapTolerance)
         {
-            var link = GetNewLink(fmModel, startCoordinate, endCoordinate, GridApiDataSet.LinkType.Embedded);
+            var link = GetNewLink(fmModel, startCoordinate, endCoordinate, GridApiDataSet.LinkType.Embedded, snapTolerance);
 
             if (link != null)
             {
@@ -309,9 +309,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             return false;
         }
 
-        private static bool AddNew1D2DLateralLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate)
+        private static bool AddNew1D2DLateralLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate, double snapTolerance)
         {
-            var link = GetNewLink(fmModel, startCoordinate, endCoordinate, GridApiDataSet.LinkType.Lateral);
+            var link = GetNewLink(fmModel, startCoordinate, endCoordinate, GridApiDataSet.LinkType.Lateral, snapTolerance);
 
             if (link != null)
             {
@@ -321,9 +321,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             return false;
         }
 
-        private static bool AddNew1D2DRoofLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate)
+        private static bool AddNew1D2DRoofLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate, double snapTolerance)
         {
-            var link = GetNewLink(fmModel, startCoordinate, endCoordinate, GridApiDataSet.LinkType.RoofSewer);
+            var link = GetNewLink(fmModel, startCoordinate, endCoordinate, GridApiDataSet.LinkType.RoofSewer, snapTolerance);
 
             if (link != null)
             {
@@ -341,9 +341,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             return false;
         }
 
-        private static bool AddNew1D2DInhabitantsLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate)
+        private static bool AddNew1D2DInhabitantsLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate, double snapTolerance)
         {
-            var link = GetNewLink(fmModel, startCoordinate, endCoordinate, GridApiDataSet.LinkType.InhabitantsSewer);
+            var link = GetNewLink(fmModel, startCoordinate, endCoordinate, GridApiDataSet.LinkType.InhabitantsSewer, snapTolerance);
 
             if (link != null)
             {
@@ -361,9 +361,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             return false;
         }
 
-        private static bool AddNew1D2DGullyLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate)
+        private static bool AddNew1D2DGullyLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate, double snapTolerance)
         {
-            var link = GetNewLink(fmModel, startCoordinate, endCoordinate, GridApiDataSet.LinkType.GullySewer);
+            var link = GetNewLink(fmModel, startCoordinate, endCoordinate, GridApiDataSet.LinkType.GullySewer, snapTolerance);
 
             if (link != null)
             {
@@ -381,12 +381,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             return false;
         }
 
-        private static WaterFlowFM1D2DLink GetNewLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate, GridApiDataSet.LinkType linkType)
+        private static WaterFlowFM1D2DLink GetNewLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate, GridApiDataSet.LinkType linkType, double snapTolerance = SNAP_DISTANCE)
         {
             var startPoint = new Point(startCoordinate);
             var endPoint = new Point(endCoordinate);
             var filter1DMesh = GetMesh1DFilter(fmModel.NetworkDiscretization, linkType);
-            var networkLocationId = Links1D2DHelper.FindCalculationPointIndex(startPoint, fmModel.NetworkDiscretization, SNAP_DISTANCE, filter1DMesh);
+            var networkLocationId = Links1D2DHelper.FindCalculationPointIndex(startPoint, fmModel.NetworkDiscretization, snapTolerance, filter1DMesh);
 
             if (networkLocationId == Links1D2DHelper.MISSING_INDEX)
             {

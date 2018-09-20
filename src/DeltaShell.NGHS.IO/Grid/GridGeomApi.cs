@@ -146,7 +146,7 @@ namespace DeltaShell.NGHS.IO.Grid
         }
 
 
-        private int Make1D2DRoofLinks(IPolygon selectedArea, IList<bool> filterMesh1DPoints, IList<IGeometry> roofs)
+        private int Make1D2DRoofLinks(IPolygon selectedArea, IList<bool> filterMesh1DPoints, IEnumerable<IGeometry> roofs)
         {
             IntPtr intPtrXValuesRoofs = IntPtr.Zero;
             IntPtr intPtrYValuesRoofs = IntPtr.Zero;
@@ -200,7 +200,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return GridApiDataSet.GridConstants.NOERR;
         }
 
-        private int Make1D2DGullyLinks(IPolygon selectedArea, IList<bool> filterMesh1DPoints, IList<IGeometry> gullies)
+        private int Make1D2DGullyLinks(IPolygon selectedArea, IList<bool> filterMesh1DPoints, IEnumerable<IGeometry> gullies)
         {
             IntPtr intPtrXValuesGullies = IntPtr.Zero;
             IntPtr intPtrYValuesGullies = IntPtr.Zero;
@@ -259,7 +259,7 @@ namespace DeltaShell.NGHS.IO.Grid
             throw new NotImplementedException();
         }
 
-        private int Make1D2DLinksFromMesh2D(IPolygon selectedArea, IList<bool> filterMesh1DPoints, IList<IGeometry> filterMesh2D)
+        private int Make1D2DLinksFromMesh2D(IPolygon selectedArea, IList<bool> filterMesh1DPoints, IEnumerable<IGeometry> filterMesh2D)
         {
             IntPtr intPtrXValuesSelectedArea = IntPtr.Zero;
             IntPtr intPtrYValuesSelectedArea = IntPtr.Zero;
@@ -330,7 +330,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
 
 
-        private int Make1D2DLinksFromMesh1D(IPolygon selectedArea, IList<bool> filterMesh1DPoints, IList<IGeometry> dummy = null)
+        private int Make1D2DLinksFromMesh1D(IPolygon selectedArea, IList<bool> filterMesh1DPoints, IEnumerable<IGeometry> dummy = null)
         {
             IntPtr intPtrXValuesSelectedArea = IntPtr.Zero;
             IntPtr intPtrYValuesSelectedArea = IntPtr.Zero;
@@ -399,7 +399,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return selectedArea;
         }
 
-        private IList<Coordinate> GetCoordinatesAndSeparators(IList<IGeometry> lstGeometry)
+        private IList<Coordinate> GetCoordinatesAndSeparators(IEnumerable<IGeometry> lstGeometry)
         {
             var coordinates = new List<Coordinate>();
             foreach (var geometry in lstGeometry)
@@ -414,7 +414,7 @@ namespace DeltaShell.NGHS.IO.Grid
         }
 
         // TODO: This method is huge.. Make smaller please :(
-        private int SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(string gridFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, Func<IPolygon, IList<bool>, IList<IGeometry>,int> make1D2DLinks, IPolygon selectedArea, IList<bool> filter1DMesh, IEnumerable<IGeometry> filter2DMesh = null)
+        private int SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(string gridFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, Func<IPolygon, IList<bool>, IEnumerable<IGeometry>,int> make1D2DLinks, IPolygon selectedArea, IList<bool> filter1DMesh, IEnumerable<IGeometry> filter2DMesh = null)
         {
             IntPtr c_meshXCoords = IntPtr.Zero;
             IntPtr c_meshYCoords = IntPtr.Zero;
@@ -558,7 +558,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     return ierr;
                 }
                 //9. make the links
-                ierr = make1D2DLinks.Invoke(selectedArea, filter1DMesh, filter2DMesh.ToList());
+                ierr = make1D2DLinks.Invoke(selectedArea, filter1DMesh, filter2DMesh);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;

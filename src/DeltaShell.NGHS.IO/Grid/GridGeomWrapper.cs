@@ -21,7 +21,7 @@ namespace DeltaShell.NGHS.IO.Grid
         [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2Dinternalnetlinks", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ggeo_make1D2Dinternalnetlinks_dll( ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref int c_nOneDMask, ref IntPtr cMesh1DIndexesMask, ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
 
-        /// <summary>
+       /// <summary>
         /// Makes the 2d / 1d links (results are stored in memory)
         /// </summary>
         /// <returns></returns>
@@ -97,8 +97,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="c_branchoffset">The c branchoffset.</param>
         /// <param name="c_branchlength">The c branchlength.</param>
         /// <param name="c_branchids">The c branchids.</param>
-        /// <param name="c_sourceNodeId">The c source node identifier.</param>
-        /// <param name="c_targetNodeId">The c target node identifier.</param>
+        /// <param name="c_nedgenodes">The nedgenodes = edges * 2.</param>
         /// <param name="c_edgenodes">The c edgenodes.</param>
         /// <param name="nBranches">The n branches.</param>
         /// <param name="nNodes">The n nodes.</param>
@@ -106,11 +105,11 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="startIndex">The start index.</param>
         /// <returns></returns>
         [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_create_edge_nodes", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_create_edge_nodes_dll([In] ref IntPtr c_branchoffset, [In] ref IntPtr c_branchlength, [In] ref IntPtr c_branchids, [In] ref IntPtr c_sourceNodeId, [In] ref IntPtr c_targetNodeId, [In, Out] ref IntPtr c_edgenodes, [In] ref int nBranches, [In] ref int nNodes, [In] ref int nEdgeNodes, [In] ref int startIndex);
+        public static extern int ggeo_create_edge_nodes_dll([In] ref IntPtr c_branchoffset, [In] ref IntPtr c_branchlength, [In] ref IntPtr c_branchids, [In] ref int c_nedge_nodes, ref IntPtr c_edgenodes, [In] ref int nBranches, [In] ref int nNodes, [In] ref int nEdgeNodes, [In] ref int startIndex);
         
-        public int CreateEdgeNodes(ref IntPtr c_branchoffset, ref IntPtr c_branchlength, ref IntPtr c_branchids, ref IntPtr c_sourceNodeId, ref IntPtr c_targetNodeId, ref IntPtr c_edgenodes, ref int nBranches, ref int nNodes, ref int nEdgeNodes, ref int startIndex)
+        public int CreateEdgeNodes(ref IntPtr c_branchoffset, ref IntPtr c_branchlength, ref IntPtr c_branchids, ref int c_nedgenodes, ref IntPtr c_edgenodes, ref int nBranches, ref int nNodes, ref int nEdgeNodes, ref int startIndex)
         {
-            int ierr = ggeo_create_edge_nodes_dll(ref c_branchoffset, ref c_branchlength, ref c_branchids, ref c_sourceNodeId, ref c_targetNodeId, ref c_edgenodes, ref nBranches, ref nNodes, ref nEdgeNodes, ref startIndex);
+            int ierr = ggeo_create_edge_nodes_dll(ref c_branchoffset, ref c_branchlength, ref c_branchids, ref c_nedgenodes, ref c_edgenodes, ref nBranches, ref nNodes, ref nEdgeNodes, ref startIndex);
             return ierr;
         }
 

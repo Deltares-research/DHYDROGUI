@@ -5,8 +5,10 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using GeoAPI.CoordinateSystems.Transformations;
@@ -23,9 +25,11 @@ using SharpMap.Api.Layers;
 using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
+using SharpMap.Rendering;
 using SharpMap.Styles;
 using SharpMap.UI.Helpers;
 using SharpMap.UI.Tools;
+using Point = System.Drawing.Point;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 {
@@ -38,6 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         private ILineString newArrowLineGeometry;
         private Coordinate startCoordinate;
         private Coordinate endCoordinate;
+        private int snapToleranceInPixels = 20;
 
         public Add1D2DLinkMapTool()
         {
@@ -126,7 +131,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             if (this.startCoordinate != null)
             {
                 this.EndCoordinate = this.GetLocalCoordinate(SharpMap.Converters.Geometries.GeometryFactory.CreateCoordinate(worldPosition.X, worldPosition.Y));
-                Add1D2DLink(this.StartCoordinate, this.EndCoordinate);
+                var snapTolerance = GetSnapTolerance(e.Location, snapToleranceInPixels);
+                Add1D2DLink(this.StartCoordinate, this.EndCoordinate, snapTolerance);
             }
             Cancel();
         }
@@ -153,6 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         private void AddDrawingLayer()
         {
             VectorLayer vectorLayer = new VectorLayer(this.VectorLayer);
+            var theme = this.VectorLayer.Theme;
             int num = 1;
             vectorLayer.RenderRequired = num != 0;
             string str = "newArrowLine";
@@ -166,10 +173,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                 CoordinateSystem = this.VectorLayer.CoordinateSystem
             };
             this.newArrowLineLayer = vectorLayer;
-            this.newArrowLineLayer.Style.Fill = Brushes.BlueViolet;
+            if (theme != null)
+            {
+                var styleName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(LinkType);
+                //var style = theme.GetStyle(LinkType) as VectorStyle;
+                var themeItem = theme.ThemeItems.FirstOrDefault(i => i.Label.Equals(styleName));
+                var style = themeItem?.Style as VectorStyle;
+                if (style != null)
+                {
+                    this.newArrowLineLayer.Style = style;
+                }
+            }
             this.newArrowLineLayer.Style.Line.DashStyle = DashStyle.Dot;
-            this.newArrowLineLayer.Style.Line.EndCap = LineCap.ArrowAnchor;
-            this.newArrowLineLayer.Style.Line.StartCap = LineCap.ArrowAnchor;
+
         }
 
         private void RemoveDrawingLayer()
@@ -186,7 +202,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             });
         }
 
-        private void Add1D2DLink(Coordinate startPoint, Coordinate endPoint)
+        private void Add1D2DLink(Coordinate startPoint, Coordinate endPoint, double snapTolerance)
         {
             var fmLayer = Map.GetAllLayers(true).OfType<ModelGroupLayer>().FirstOrDefault(l => l.Model is WaterFlowFMModel);
             if (fmLayer == null)
@@ -207,8 +223,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                 log.Error("No discretizazion/ 1D mesh available for 1D2D links");
                 return;
             };
+            MapTool1D2DLinksHelper.AddNew1D2DLink(fmModel, LinkType, startPoint, endPoint, snapTolerance);
+        }
 
-            MapTool1D2DLinksHelper.AddNew1D2DLink(fmModel, LinkType, startPoint, endPoint);
+        private double GetSnapTolerance(Point location, int pixelTolerance)
+        {
+            var result = 0.0;
+            var start = MapHelper.ImageToWorld((IMap) this.MapControl.Map, location.X, location.Y);
+            var end = MapHelper.ImageToWorld((IMap)this.MapControl.Map, location.X + pixelTolerance, location.Y + pixelTolerance);
+            result = Math.Max(Math.Abs(start.X - end.X), Math.Abs(start.Y - end.Y));
+            return result;
         }
     }
 }

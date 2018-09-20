@@ -6,12 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using DelftTools.Functions;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
@@ -125,24 +127,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (links != null && parent is WaterFlowFMModel)
             {
                 var fmModel = (WaterFlowFMModel)parent;
-                var linkEndCap = new AdjustableArrowCap(4, 4, true) { BaseCap = LineCap.Triangle };
+                var theme = Create1D2DLinksTheme();
 
                 return new VectorLayer(LayerName1D2DLinks)
                 {
                     //DataSource = new WaterFlowFM1D2DLinkFeatureCollection(fmModel),
                     DataSource = new Feature2DCollection().Init(links, "1d2dLink", ModelName, fmModel.CoordinateSystem),
                     FeatureEditor = new Feature2DEditor(fmModel),
-                    CanBeRemovedByUser = false,
+                    CanBeRemovedByUser = true,
                     SmoothingMode = SmoothingMode.AntiAlias,
                     Opacity = 0.7f,
-                    Style = new VectorStyle
-                    {
-                        Line = new Pen(Color.DarkViolet, 3)
-                        {
-                            CustomEndCap = linkEndCap,
-                            CustomStartCap = linkEndCap
-                        }
-                    },
+                    Theme = theme,
+                    Style = (VectorStyle)theme.DefaultStyle,
                     Selectable = true,
                     NameIsReadOnly = true,
 
@@ -499,6 +495,87 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 Symbol = Properties.Resources.empty
             };
             return theme;
+        }
+
+        private static CategorialTheme Create1D2DLinksTheme()
+        {
+            const int lineWidth = 3;
+            var linkEndCap = new AdjustableArrowCap(4, 4, true) { BaseCap = LineCap.Triangle };
+
+            var lateralName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(GridApiDataSet.LinkType.Lateral);
+            var lateralStyle = new VectorStyle
+            {
+                GeometryType = typeof(ILineString),
+                Line = new Pen(Color.Violet, lineWidth)
+                {
+                    CustomEndCap = linkEndCap,
+                    CustomStartCap = linkEndCap
+                },
+                EnableOutline = false
+            };
+
+            var embeddedName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(GridApiDataSet.LinkType.Embedded);
+            var embeddedStyle = new VectorStyle
+            {
+                GeometryType = typeof(ILineString),
+                Line = new Pen(Color.ForestGreen, lineWidth)
+                {
+                    CustomEndCap = linkEndCap,
+                    CustomStartCap = linkEndCap
+                },
+                EnableOutline = false
+            };
+
+            var roofSewerName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(GridApiDataSet.LinkType.RoofSewer);
+            var roofSewerStyle = new VectorStyle
+            {
+                GeometryType = typeof(ILineString),
+                Line = new Pen(Color.RoyalBlue, lineWidth)
+                {
+                    CustomEndCap = linkEndCap,
+                    CustomStartCap = linkEndCap
+                },
+                EnableOutline = false
+            };
+
+            var gullySewerName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(GridApiDataSet.LinkType.GullySewer);
+            var gullyWaterStyle = new VectorStyle
+            {
+                GeometryType = typeof(ILineString),
+                Line = new Pen(Color.RoyalBlue, lineWidth)
+                {
+                    CustomEndCap = linkEndCap,
+                    CustomStartCap = linkEndCap
+                },
+                EnableOutline = false
+            };
+
+            var inhabitantsSewerName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(GridApiDataSet.LinkType.InhabitantsSewer);
+            var inhabitantsSewerStyle = new VectorStyle
+            {
+                GeometryType = typeof(ILineString),
+                Line = new Pen(Color.IndianRed, lineWidth)
+                {
+                    CustomEndCap = linkEndCap,
+                    CustomStartCap = linkEndCap
+                },
+                EnableOutline = false
+            };
+
+            return new CategorialTheme
+            {
+                AttributeName = "Type of 1D2D link",
+                DefaultStyle = embeddedStyle,
+                ThemeItems = new EventedList<IThemeItem>
+                {
+                    new CategorialThemeItem(embeddedName, embeddedStyle, null, GridApiDataSet.LinkType.Embedded),
+                    new CategorialThemeItem(lateralName, lateralStyle, null, GridApiDataSet.LinkType.Lateral),
+                    new CategorialThemeItem(roofSewerName, roofSewerStyle, null, GridApiDataSet.LinkType.RoofSewer),
+                    new CategorialThemeItem(gullySewerName, gullyWaterStyle, null, GridApiDataSet.LinkType.GullySewer),
+                    new CategorialThemeItem(inhabitantsSewerName, inhabitantsSewerStyle, null, GridApiDataSet.LinkType.InhabitantsSewer),
+                }
+            };
+
         }
 
         private IModel GetRootModel(IModel model)
