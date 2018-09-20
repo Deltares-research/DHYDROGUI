@@ -12,7 +12,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Hydro.Helpers;
-using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -556,11 +555,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var fmModel = new WaterFlowFMModel();
             var roughnessSections = fmModel.RoughnessSections;
-            bool IsSewerRoughnessSection(RoughnessSection rs) => rs.Name == "Sewer";
 
             Assert.IsNotNull(roughnessSections, "Roughness sections of the FM model were not instantiated.");
-            Assert.That(roughnessSections.Count(IsSewerRoughnessSection), Is.EqualTo(1));
-            Assert.That(roughnessSections.FindIndex(IsSewerRoughnessSection), Is.EqualTo(0));
+            Assert.That(roughnessSections.Count(rs => rs.Name == "Sewer"), Is.EqualTo(1));
+            Assert.That(roughnessSections.FindIndex(rs => rs.Name == "Sewer"), Is.EqualTo(0));
         }
 
         [Test]
@@ -571,13 +569,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var fmModel = new WaterFlowFMModel(mduPath);
             var roughnessSections = fmModel.RoughnessSections;
-            bool IsMainRoughnessSection(RoughnessSection rs) => rs.Name == "Main";
-            bool IsSewerRoughnessSection(RoughnessSection rs) => rs.Name == "Sewer";
 
             Assert.IsNotNull(roughnessSections, "Roughness sections of the FM model were not instantiated.");
-            Assert.That(roughnessSections.Count(IsMainRoughnessSection), Is.EqualTo(1));
-            Assert.That(roughnessSections.Count(IsSewerRoughnessSection), Is.EqualTo(1));
-            Assert.That(roughnessSections.FindIndex(IsSewerRoughnessSection), Is.EqualTo(0));
+            Assert.That(roughnessSections.Count(rs => rs.Name == "Main"), Is.EqualTo(1));
+            Assert.That(roughnessSections.Count(rs => rs.Name == "Sewer"), Is.EqualTo(1));
+            Assert.That(roughnessSections.FindIndex(rs => rs.Name == "Sewer"), Is.EqualTo(0));
         }
 
         [Test]
