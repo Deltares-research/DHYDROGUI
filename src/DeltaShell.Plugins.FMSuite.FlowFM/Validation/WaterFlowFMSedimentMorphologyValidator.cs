@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         /// </summary>
         /// <param name="model">The WaterFlowFMModel that is being </param>
         /// <returns></returns>
-        private static IEnumerable<ValidationIssue> ValidateSpaciallyVaryingSedimentFractionProperties(IWaterFlowFMModel model)
+        private static IEnumerable<ValidationIssue> ValidateSpaciallyVaryingSedimentFractionProperties(WaterFlowFMModel model)
         {
             var spaciallyVaryingPropertyNames = model.SedimentFractions
                 .SelectMany(s => s.GetAllActiveSpatiallyVaryingPropertyNames()).Where(n => !n.EndsWith("SedConc"))

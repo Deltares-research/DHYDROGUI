@@ -453,7 +453,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var originalMD = new WaterFlowFMModelDefinition(mduDir, modelName);
                 var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
                 mduFile.Read(mduFilePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties);
-                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties, false);
+                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties, switchTo: false);
 
                 var savedArea = new HydroArea();
                 var savedMD = new WaterFlowFMModelDefinition(newMduDir, newMduName);
@@ -518,7 +518,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var originalMd = new WaterFlowFMModelDefinition(mduDir, modelName);
                 var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
                 mduFile.Read(mduFilePath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties);
-                mduFile.Write(savePath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties, false, false);
+                mduFile.Write(savePath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties, switchTo: false, writeExtForcings: false);
 
                 var savedArea = new HydroArea();
                 var savedMd = new WaterFlowFMModelDefinition(newMduDir, newMduName);
@@ -573,7 +573,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 RemoveGroupNameFromGroupableFeature(originalArea.Pumps);
                 RemoveGroupNameFromGroupableFeature(originalArea.Weirs);
 
-                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties, false);
+                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties, switchTo: false);
 
                 var savedArea = new HydroArea();
                 var savedMD = new WaterFlowFMModelDefinition(newMduDir, newMduName);
@@ -625,7 +625,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 mduFile.Read(mduFilePath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties);
 
                 RemoveGroupNameFromGroupableFeature(originalArea.DryPoints);
-                mduFile.Write(savePath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties, false, false);
+                mduFile.Write(savePath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties, switchTo: false, writeExtForcings: false);
 
                 var savedArea = new HydroArea();
                 var savedMd = new WaterFlowFMModelDefinition(newMduDir, newMduName);

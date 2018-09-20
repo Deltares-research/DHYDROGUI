@@ -337,7 +337,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.IsFalse(File.Exists(customPropXyzFile));
 
                 /* Save the sediments now and check for the xyz */
-                SedimentFile.Save(sedFile, fmModel);
+                SedimentFile.Save(sedFile, fmModel.ModelDefinition, fmModel);
                 Assert.IsTrue(File.Exists(customPropXyzFile));
             }
             finally

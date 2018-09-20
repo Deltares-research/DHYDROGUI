@@ -206,7 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // write and confirm output model A
             var mduFilePathOutA = Path.Combine(modelNameA + "_out" + ".mdu");
             var mduFileOutA = new MduFile();
-            mduFileOutA.Write(mduFilePathOutA, modelDefinitionA, new HydroArea(), new List<ModelFeatureCoordinateData<FixedWeir>>(),false, false, false);
+            mduFileOutA.Write(mduFilePathOutA, modelDefinitionA, new HydroArea(), new List<ModelFeatureCoordinateData<FixedWeir>>(),switchTo: false, writeExtForcings: false, writeFeatures: false);
             var originalLinesA = File.ReadAllLines(mduFilePathA).Where(l => !l.StartsWith("#")).ToList();
             var linesOutA = File.ReadAllLines(mduFilePathOutA).ToList();
             foreach (var line in originalLinesA.Where(l => !l.Contains("Version")))
@@ -219,7 +219,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // write and confirm output model B
             var mduFilePathOutB = Path.Combine(modelNameB + "_out" + ".mdu");
             var mduFileOutB = new MduFile();
-            mduFileOutB.Write(mduFilePathOutB, modelDefinitionB, new HydroArea(), new List<ModelFeatureCoordinateData<FixedWeir>>(),false, false, false);
+            mduFileOutB.Write(mduFilePathOutB, modelDefinitionB, new HydroArea(), new List<ModelFeatureCoordinateData<FixedWeir>>(),switchTo: false, writeExtForcings: false, writeFeatures: false);
             var originalLinesB = File.ReadAllLines(mduFilePathB).Where(l => !l.StartsWith("#")).ToList();
             var linesOutB = File.ReadAllLines(mduFilePathOutB).ToList();
             foreach (var line in originalLinesB.Where(l => !l.Contains("Version")))

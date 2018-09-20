@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             const string saveToDir = "LoadAndSaveSedFlowFM";
             Directory.CreateDirectory(saveToDir);
             var mduFileSaveToPath = Path.Combine(saveToDir, "FlowFMWithCustomProperties.mdu");
-            mduFile.Write(mduFileSaveToPath, flowFM.ModelDefinition, flowFM.Area, flowFM.FixedWeirsProperties);
+            mduFile.Write(mduFileSaveToPath, modelDefinition, flowFM.Area, flowFM.FixedWeirsProperties);
 
             /* Check if properties have been written again. */
             var newFlowFM = new WaterFlowFMModel(mduFileSaveToPath);
@@ -187,9 +187,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 fraction.CurrentFormulaType = testFormulaType;
 
                 fmModel.SedimentFractions = new EventedList<ISedimentFraction>() { fraction };
+                var modelDefinition = fmModel.ModelDefinition;
 
                 /* Test */
-                SedimentFile.Save(sedFile, fmModel);
+                SedimentFile.Save(sedFile, modelDefinition, fmModel);
                 var sedWritten = File.ReadAllText(sedFile);
                 Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader)); 
                 Assert.That(sedWritten, Is.StringContaining(SedimentFile.OverallHeader)); 
@@ -219,7 +220,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var fmModel = new WaterFlowFMModel();
                 fmModel.ModelDefinition.UseMorphologySediment = true;
 
-
                 /*Add the fraction to the model*/
                 var fraction = new SedimentFraction();
                 fraction.Name = "MySedimen*tName";
@@ -239,8 +239,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.IsFalse(spatiallyVaryingProperty.IsEnabled);//sedconc is always disabled
                 Assert.IsNotNull(spatiallyVaryingProperty.SpatiallyVaryingName);
 
-                /* Test */
-                SedimentFile.Save(sedFile, fmModel);
+                var modelDefinition = fmModel.ModelDefinition;
+                SedimentFile.Save(sedFile, modelDefinition, fmModel);
+
                 var model = new WaterFlowFMModel();
                 LogHelper.ConfigureLogging(Level.Error);
                 try
@@ -310,9 +311,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 fraction.CurrentFormulaType = fraction.SupportedFormulaTypes.FirstOrDefault(sft => sft.TraFrm == -2);
 
                 fmModel.SedimentFractions = new EventedList<ISedimentFraction>() { fraction };
+                var modelDefinition = fmModel.ModelDefinition;
 
                 /* Test */
-                SedimentFile.Save(sedFile, fmModel);
+                SedimentFile.Save(sedFile, modelDefinition, fmModel);
                 var model = new WaterFlowFMModel();
                 SedimentFile.LoadSediments(sedFile, model);
 
@@ -438,11 +440,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 fmModel.SedimentFractions = new EventedList<ISedimentFraction>();
                 fmModel.SedimentFractions.Add(fraction);
 
+                var modelDefinition = fmModel.ModelDefinition;
                 /* 
                  * SedimentFile.Save(sedFile, fmModel);
                  * Spatially varying operations no longer get saved through this method but through ExtForceFile.cs
                  */
-                SedimentFile.Save(sedFile, fmModel);
+                SedimentFile.Save(sedFile, modelDefinition, fmModel);
 
                 var sedWritten = File.ReadAllText(sedFile);
                 Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader));
@@ -506,9 +509,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var fraction = new SedimentFraction() { Name = "Frac1" };
                 fmModel.SedimentFractions.Add(fraction);
-                
+
+                var modelDefinition = fmModel.ModelDefinition;
                 // Save SedFile with no spatially varying properties. No warnings should be given.
-                TestHelper.AssertLogMessagesCount( () => SedimentFile.Save(sedFile, fmModel), 0);
+                TestHelper.AssertLogMessagesCount( () => SedimentFile.Save(sedFile, modelDefinition, fmModel), 0);
                 
                 // Add a spatially varying prop 
                 var randomSVProp = fraction.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().FirstOrDefault(p => p.Name != "SedConc");
@@ -516,7 +520,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 randomSVProp.IsSpatiallyVarying = true;
                 // Warning should be given.
                 TestHelper.AssertAtLeastOneLogMessagesContains(
-                    () => SedimentFile.Save(sedFile, fmModel),
+                    () => SedimentFile.Save(sedFile, fmModel.ModelDefinition, fmModel),
                     String.Format(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_, randomSVProp.SpatiallyVaryingName));
 
                 //Add a 'value' operation, another warning should be given.
@@ -546,8 +550,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
 
                 // New Warning should be given.
+            
                 TestHelper.AssertAtLeastOneLogMessagesContains(
-                    () => SedimentFile.Save(sedFile, fmModel),
+                    () => SedimentFile.Save(sedFile, modelDefinition, fmModel),
                     String.Format(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or, randomSVProp.SpatiallyVaryingName));
             }
             finally
@@ -637,7 +642,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // update model definition (called during export)
                 fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
 
-                SedimentFile.Save(sedFile, fmModel);
+                var modelDefinition = fmModel.ModelDefinition;
+                SedimentFile.Save(sedFile, modelDefinition, fmModel);
                 
                 var sedWritten = File.ReadAllText(sedFile);
                 Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader));
@@ -823,7 +829,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     FilePath = Path.GetFullPath(fileName)
                 });
                 valueConverter.SpatialOperationSet.Execute();
-                SedimentFile.Save(sedFile, fmModel);
+                var modelDefinition = fmModel.ModelDefinition;
+                SedimentFile.Save(sedFile, modelDefinition, fmModel);
                 var sedWritten = File.ReadAllText(sedFile);
                 Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader));
                 Assert.That(sedWritten, Is.StringContaining("#mysedimentName#"));

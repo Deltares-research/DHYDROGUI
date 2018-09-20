@@ -40,43 +40,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public static readonly string FileVersion = "FileVersion";
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SedimentFile));
+        private static SedMorDelftIniWriter writer;
+
+        public static SedMorDelftIniWriter Writer
+        {
+            get
+            {
+                if (writer == null)
+                {
+                    writer = new SedMorDelftIniWriter();
+                }
+
+                return writer;
+            }
+        }
 
         #region Write logic
 
-        public static void Save(string sedPath, WaterFlowFMModel model)
+        public static void Save(string sedPath, WaterFlowFMModelDefinition modelDefinition, ISedimentModelData sedimentModelData)
         {
             try
             {
-                /*Writing Headers*/
-                var sedCategories = new List<DelftIniCategory>()
+                var sedCategories = WriteHeaders(modelDefinition, sedimentModelData);
+                WriteSpatiallyVaryingSedimentPropertySubFiles(sedimentModelData, sedPath);
+
+                foreach (var sedimentFraction in sedimentModelData.SedimentFractions)
                 {
-                    MorphologySedimentIniFileGenerator.GenerateSedimentGeneralRegion()
-                };
-
-                var overalCat = MorphologySedimentIniFileGenerator.GenerateOverallRegion(model.SedimentOverallProperties);
-                AddPropertiesToCategory(model, overalCat, OverallHeader);
-                sedCategories.Add(overalCat);
-
-                WriteSpatiallyVaryingSedimentPropertySubFiles(model, sedPath);
-
-                foreach (var sedimentFraction in model.SedimentFractions)
-                {
-                    var sedimentCategory = new DelftIniCategory(Header);
-                    sedimentCategory.AddSedimentProperty(Name.Key, string.Format("#{0}#", sedimentFraction.Name), string.Empty, Name.Description);
-                    sedimentCategory.AddSedimentProperty(SedimentType.Key, sedimentFraction.CurrentSedimentType.Key, string.Empty, SedimentType.Description);
-
-                    AddSedimentTypeProperties(sedimentFraction, sedimentCategory);
-                    AddFormulaTypeProperties(sedimentFraction, sedimentCategory);
-
-                    /*Add custom properties*/
-                    AddPropertiesToCategory(model, sedimentCategory, sedimentFraction.Name);
-                    
-                    /*Add everything to the ini file*/
-                    sedCategories.Add(sedimentCategory);
+                    AddSedimentCategoryToIniFile(modelDefinition, sedimentFraction, sedCategories);
                 }
 
-                var writer = new SedMorDelftIniWriter();
-                writer.WriteDelftIniFile(sedCategories.ToList(), sedPath);
+                Writer.WriteDelftIniFile(sedCategories.ToList(), sedPath);
             }
             catch (Exception exception)
             {
@@ -84,11 +77,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static void WriteSpatiallyVaryingSedimentPropertySubFiles(IWaterFlowFMModel model, string sedPath)
+        private static void AddSedimentCategoryToIniFile(WaterFlowFMModelDefinition modelDefinition,
+            ISedimentFraction sedimentFraction, List<DelftIniCategory> sedCategories)
         {
-            var spaceVarNames = model.SedimentFractions.SelectMany(s => s.GetAllActiveSpatiallyVaryingPropertyNames()).Where( n => !n.EndsWith("SedConc")).ToList();
+            var sedimentCategory = new DelftIniCategory(Header);
+            sedimentCategory.AddSedimentProperty(Name.Key, string.Format("#{0}#", sedimentFraction.Name), string.Empty,
+                Name.Description);
+            sedimentCategory.AddSedimentProperty(SedimentType.Key, sedimentFraction.CurrentSedimentType.Key, string.Empty,
+                SedimentType.Description);
 
-            var dataItemsFound = spaceVarNames.SelectMany(spaceVarName => model.DataItems.Where(di => di.Name.Equals(spaceVarName))).ToArray();
+            AddSedimentTypeProperties(sedimentFraction, sedimentCategory);
+            AddFormulaTypeProperties(sedimentFraction, sedimentCategory);
+
+            /*Add custom properties*/
+            AddPropertiesToCategory(modelDefinition, sedimentCategory, sedimentFraction.Name);
+
+            /*Add everything to the ini file*/
+            sedCategories.Add(sedimentCategory);
+        }
+
+        private static List<DelftIniCategory> WriteHeaders(WaterFlowFMModelDefinition modelDefinition, ISedimentModelData sedimentModelData)
+        {
+            var sedCategories = new List<DelftIniCategory>()
+            {
+                MorphologySedimentIniFileGenerator.GenerateSedimentGeneralRegion()
+            };
+
+            var overalCat =
+                MorphologySedimentIniFileGenerator.GenerateOverallRegion(sedimentModelData.SedimentOverallProperties);
+            AddPropertiesToCategory(modelDefinition, overalCat, OverallHeader);
+            sedCategories.Add(overalCat);
+            return sedCategories;
+        }
+
+        private static void WriteSpatiallyVaryingSedimentPropertySubFiles(ISedimentModelData sedimentModelData, string sedPath)
+        {
+            var spaceVarNames = sedimentModelData.SedimentFractions.SelectMany(s => s.GetAllActiveSpatiallyVaryingPropertyNames()).Where( n => !n.EndsWith("SedConc")).ToList();
+
+            var dataItemsFound = spaceVarNames.SelectMany(spaceVarName => sedimentModelData.DataItems.Where(di => di.Name.Equals(spaceVarName))).ToArray();
             var dataItemsWithConverter = dataItemsFound.Where(d => d.ValueConverter is SpatialOperationSetValueConverter).ToList();
             var dataItemsWithOutConverter = dataItemsFound.Except(dataItemsWithConverter).ToList();
             var spatialOperations = GetSpatialOperations(dataItemsWithConverter);
@@ -164,25 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 foreach (var spatialOperation in operations.Value)
                 {
-                    var samplesOperation = spatialOperation as ImportSamplesSpatialOperationExtension;
-                    if (samplesOperation != null)
-                    {
-                        WriteXYZIfDirectoryExists(model, sedPath, spatialOperation, samplesOperation.GetPoints());
-                        continue;
-                    }
-
-                    var addSamplesOperation = spatialOperation as AddSamplesOperation;
-                    if (addSamplesOperation != null)
-                    {
-                        WriteXYZIfDirectoryExists(model, sedPath, spatialOperation, addSamplesOperation.GetPoints());
-                        continue;
-                    }
-                    
-                    var valueOperation = spatialOperation as ValueOperationBase;
-                    if (valueOperation != null)
-                    {
-                        Log.WarnFormat(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or, operations.Key);
-                    }
+                    WriteXyzIfDirectoryExist(sedimentModelData, sedPath, spatialOperation, operations);
                 }
             }
 
@@ -194,7 +202,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static void WriteXYZIfDirectoryExists(IWaterFlowFMModel model, string sedPath, ISpatialOperation spatialOperation,
+        private static void WriteXyzIfDirectoryExist(ISedimentModelData sedimentModelData, string sedPath,
+            ISpatialOperation spatialOperation, KeyValuePair<string, IList<ISpatialOperation>> operations)
+        {
+            var samplesOperation = spatialOperation as ImportSamplesSpatialOperationExtension;
+            if (samplesOperation != null)
+            {
+                WriteXYZIfDirectoryExists(sedimentModelData, sedPath, spatialOperation, samplesOperation.GetPoints());
+                return;
+            }
+
+            var addSamplesOperation = spatialOperation as AddSamplesOperation;
+            if (addSamplesOperation != null)
+            {
+                WriteXYZIfDirectoryExists(sedimentModelData, sedPath, spatialOperation, addSamplesOperation.GetPoints());
+                return;
+            }
+
+            var valueOperation = spatialOperation as ValueOperationBase;
+            if (valueOperation != null)
+            {
+                Log.WarnFormat(
+                    Resources
+                        .SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
+                    operations.Key);
+            }
+        }
+
+        private static void WriteXYZIfDirectoryExists(ISedimentModelData sedimentModelData, string sedPath, ISpatialOperation spatialOperation,
             IEnumerable<IPointValue> xyValuePoints)
         {
             /* If we don't point to the give sedPath then it won't be saved correctly 
@@ -210,13 +245,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             else
             {
-                throw new ArgumentException(String.Format(Resources.SedimentFile_WriteXYZIfDirectoryExists_Could_not_get_directory_name_from_file_path__0_, model.MduFilePath));
+                throw new ArgumentException(String.Format(Resources.SedimentFile_WriteXYZIfDirectoryExists_Could_not_get_directory_name_from_file_path__0_, sedimentModelData.MduFilePath));
             }
         }
 
-        private static void AddPropertiesToCategory(WaterFlowFMModel model, DelftIniCategory overalCat, string category)
+        private static void AddPropertiesToCategory(WaterFlowFMModelDefinition modelDefinition, DelftIniCategory overalCat, string category)
         {
-            var ovProperties = model.ModelDefinition.Properties
+            var ovProperties = modelDefinition.Properties
                 .Where(p => p.PropertyDefinition.FileCategoryName != "GUIOnly")
                 .Where(p => p.PropertyDefinition.Category.Equals(category)
                             && p.PropertyDefinition.FileCategoryName.Equals(SedimentUnknownProperty));
@@ -369,56 +404,67 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 foreach (var category in sedCategories)
                 {
                     Action<IDelftIniCategory, string, WaterFlowFMModel> Loader;
+                 
                     /*Load paramaters related to the model*/
                     if (SectionLoaders.TryGetValue(category.Name, out Loader))
                     {
                         Loader(category, path, model);
                     }
 
-                    /*Store unknown parameters for the overall properties*/
-                    var overallProps = model.SedimentOverallProperties;
-                    if (category.Name.Equals(OverallHeader) && overallProps != null)
-                    {
-                        foreach ( var readProp in category.Properties)
-                        {
-                            if (!overallProps.Any(p => p.Name.Equals(readProp.Name)))
-                            {
-                                AddUnknownSedimentProperty(readProp, definition, OverallHeader);
-                            }
-                        }
-                    }
-                    
-                    /*Only Store unknown parameters for the Sediment fractions*/
-                    if (!category.Name.Equals(Header)) continue;
-                    
-                    var sedimentProperty = category.Properties.FirstOrDefault(p => p.Name.Equals(Name.Key));
-                    var selectedSedimentFraction = sedimentProperty != null
-                        ? model.SedimentFractions.FirstOrDefault(sf => sf.Name.Equals(sedimentProperty.Value))
-                        : null;
+                    StoreUnknownParametersForOverallProperties(model, category, definition);
 
-                    if (selectedSedimentFraction == null) continue;
-
-                    var allFTProps = selectedSedimentFraction.CurrentFormulaType != null
-                        ? selectedSedimentFraction.CurrentFormulaType.Properties
-                        : new EventedList<ISedimentProperty>();
-
-                    var allsedimentPropertyNames = selectedSedimentFraction.CurrentSedimentType.Properties
-                        .Concat(allFTProps)
-                        .Select(p => p.Name)
-                        .ToList();
-
-                    allsedimentPropertyNames.Add(Name.Key);
-                    allsedimentPropertyNames.Add(SedimentType.Key);
-
-                    category.Properties
-                        .Where(p => !allsedimentPropertyNames.Contains(p.Name))
-                        .ForEach(p => AddUnknownSedimentProperty(p, definition, sedimentProperty.Value));                     
+                    StoreUnknownParamtersForSedimentFractions(model, category, definition);
                 }
             }
             catch (Exception exception)
             {
                 Log.ErrorFormat("Could not read sediment file because : {0}", exception.Message);
             }
+        }
+
+        private static void StoreUnknownParametersForOverallProperties(WaterFlowFMModel model, DelftIniCategory category,
+            WaterFlowFMModelDefinition definition)
+        {
+            var overallProps = model.SedimentOverallProperties;
+            if (category.Name.Equals(OverallHeader) && overallProps != null)
+            {
+                foreach (var readProp in category.Properties)
+                {
+                    if (!overallProps.Any(p => p.Name.Equals(readProp.Name)))
+                    {
+                        AddUnknownSedimentProperty(readProp, definition, OverallHeader);
+                    }
+                }
+            }
+        }
+
+        private static void StoreUnknownParamtersForSedimentFractions(WaterFlowFMModel model, DelftIniCategory category,
+            WaterFlowFMModelDefinition definition)
+        {
+            if (!category.Name.Equals(Header)) return;
+
+            var sedimentProperty = category.Properties.FirstOrDefault(p => p.Name.Equals(Name.Key));
+            var selectedSedimentFraction = sedimentProperty != null
+                ? model.SedimentFractions.FirstOrDefault(sf => sf.Name.Equals(sedimentProperty.Value))
+                : null;
+
+            if (selectedSedimentFraction == null) return;
+
+            var allFTProps = selectedSedimentFraction.CurrentFormulaType != null
+                ? selectedSedimentFraction.CurrentFormulaType.Properties
+                : new EventedList<ISedimentProperty>();
+
+            var allsedimentPropertyNames = selectedSedimentFraction.CurrentSedimentType.Properties
+                .Concat(allFTProps)
+                .Select(p => p.Name)
+                .ToList();
+
+            allsedimentPropertyNames.Add(Name.Key);
+            allsedimentPropertyNames.Add(SedimentType.Key);
+
+            category.Properties
+                .Where(p => !allsedimentPropertyNames.Contains(p.Name))
+                .ForEach(p => AddUnknownSedimentProperty(p, definition, sedimentProperty.Value));
         }
 
         #endregion

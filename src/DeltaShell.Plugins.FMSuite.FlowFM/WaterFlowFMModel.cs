@@ -56,7 +56,7 @@ using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     [Entity]
-    public partial class WaterFlowFMModel : TimeDependentModelBase, IDimrStateAwareModel, IFileBased, IHasCoordinateSystem, IGridOperationApi, IDisposable, IHydroModel, IHydFileModel, IDimrModel, IWaterFlowFMModel
+    public partial class WaterFlowFMModel : TimeDependentModelBase, IDimrStateAwareModel, IFileBased, IHasCoordinateSystem, IGridOperationApi, IDisposable, IHydroModel, IHydFileModel, IDimrModel, IWaterFlowFMModel, ISedimentModelData
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof (WaterFlowFMModel));
         private readonly DimrRunner runner;
@@ -1922,11 +1922,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 ModelDefinition.Bathymetry = Bathymetry;
             }
 
-            WriteMorSedFilesIfNeeded(mduPath);
-
             InitializeAreaDataColumns();
 
-            mduFile.Write(mduPath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, switchTo, writeExtForcings, writeFeatures, DisableFlowNodeRenumbering);
+            mduFile.Write(mduPath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null);
 
             RestoreAreaDataColumns();
 
@@ -1948,16 +1946,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             MduFile.CleanBridgePillarAttributes(Area.BridgePillars);
         }
 
-        private void WriteMorSedFilesIfNeeded(string mduPath)
-        {
-            if (!UseMorSed) return;
-
-            var morPath = Path.ChangeExtension(mduPath, "mor");
-            MorphologyFile.Save(morPath, ModelDefinition);
-
-            var sedPath = Path.ChangeExtension(mduPath, "sed");
-            SedimentFile.Save(sedPath, this);
-        }
+       
 
         private void OnSwitchTo(string mduPath)
         {
@@ -3094,15 +3083,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             ModelStateHandler.ModelWorkingDirectory = modelExplicitWorkingDirectory;
         }
-    }
-
-    public interface IWaterFlowFMModel : ITimeDependentModel
-    {
-        UnstructuredGrid Grid { get; set; }
-        bool DisableFlowNodeRenumbering { get; set; }
-        IEventedList<ISedimentProperty> SedimentOverallProperties { get; }
-        IEventedList<ISedimentFraction> SedimentFractions { get; }
-        string MduFilePath { get; }
-        WaterFlowFMModelDefinition ModelDefinition { get; }
     }
 }

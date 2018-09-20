@@ -34,7 +34,6 @@ namespace Sobek.IntegrationTests
             var legacyPath = TestHelper.GetTestFilePath(@"RtcFlow1DRestart\RtcWithPidFlow1DRestart.dsproj");
             var localLegacyPath = TestHelper.CopyProjectToLocalDirectory(legacyPath);
             var project = projectRepository.Open(localLegacyPath);
-
             var hydroModel = (HydroModel)project.RootFolder.Models.First();
             hydroModel.ExplicitWorkingDirectory = Path.GetFullPath(Path.Combine(".", TestHelper.GetCurrentMethodName()));
 
