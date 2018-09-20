@@ -18,7 +18,7 @@ using System.Linq;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 {
     [TestFixture]
-    class WaveBoundaryFileImporterTest
+    public class WaveBoundaryFileImporterTest
     {
         private WaveBoundaryFileImporter importer;
 
@@ -59,6 +59,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         {
             importer = new WaveBoundaryFileImporter();
             Assert.IsTrue(importer.OpenViewAfterImport);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ImportItemTest_WhenTargetIsNotWaveBoundaryConditionCollection_ThenReturnNull()
+        {
+            importer = new WaveBoundaryFileImporter();
+            var target = new List<string>();
+            var boundaryConditions = importer.ImportItem(string.Empty, target);
+            Assert.IsNull(boundaryConditions);
         }
 
         [Test]
