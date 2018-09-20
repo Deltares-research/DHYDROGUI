@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             AddNetworkToModel();
             AddAreaToModel();
 
-            if (File.Exists(mduFilePath))
+            if (!string.IsNullOrEmpty(mduFilePath))
             {
                 LoadStateFromMdu(mduFilePath);
 
