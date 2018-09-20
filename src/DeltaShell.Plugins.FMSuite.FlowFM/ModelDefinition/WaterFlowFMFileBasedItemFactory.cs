@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     extForceFile.WriteToDisk = false;
 
                     var extForceFileItems =
-                        extForceFile.WriteExtForceFileSubFiles(model.ExtFilePath, model.ModelDefinition, false,
+                        extForceFile.WriteExtForceFileSubFiles(model.ExtFilePath, model.ModelDefinition,
                             !newFormatBoundaryConditions);
 
                     extForceFile.WriteToDisk = writeToDisk;

@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void Write(WaterFlowFMModelDefinition modelDefinition, bool writeBoundaryConditions = true)
         {
-            var extForceFileItems = WriteExtForceFileSubFiles(modelDefinition, false, writeBoundaryConditions);
+            var extForceFileItems = WriteExtForceFileSubFiles(modelDefinition, writeBoundaryConditions);
 
             if (extForceFileItems.Count > 0)
             {
@@ -148,18 +148,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// </summary>
         /// <param name="path">File path.</param>
         /// <param name="modelDefinition">Contains data to be written.</param>
-        /// <param name="switchTo">Flag denoting whether to switch to the file path directory (save)</param>
         /// <param name="writeBoundaryConditions">Flag denoting whether to write boundary conditions</param>
         /// <returns>Resulting force file items</returns>
-        public IEnumerable<ExtForceFileItem> WriteExtForceFileSubFiles(string path,
-            WaterFlowFMModelDefinition modelDefinition, bool switchTo, bool writeBoundaryConditions)
+        public IEnumerable<ExtForceFileItem> WriteExtForceFileSubFiles(string path, WaterFlowFMModelDefinition modelDefinition, bool writeBoundaryConditions)
         {
             FilePath = path;
-            return WriteExtForceFileSubFiles(modelDefinition, switchTo, writeBoundaryConditions);
+            return WriteExtForceFileSubFiles(modelDefinition, writeBoundaryConditions);
         }
 
-        private IList<ExtForceFileItem> WriteExtForceFileSubFiles(WaterFlowFMModelDefinition modelDefinition,
-            bool switchTo, bool writeBoundaryConditions)
+        private IList<ExtForceFileItem> WriteExtForceFileSubFiles(WaterFlowFMModelDefinition modelDefinition, bool writeBoundaryConditions)
         {
             var extForceFileItems = new List<ExtForceFileItem>();
 

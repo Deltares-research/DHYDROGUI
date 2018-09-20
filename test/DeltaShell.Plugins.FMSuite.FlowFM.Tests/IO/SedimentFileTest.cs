@@ -462,7 +462,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var initialSpatialOps = new List<string>() { doubleSpatProp.SpatiallyVaryingName, doubleSpatProp2.SpatiallyVaryingName };
                 fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
                 var extFile = new ExtForceFile();
-                extFile.WriteExtForceFileSubFiles(sedFile, fmModel.ModelDefinition, false, false);
+                extFile.WriteExtForceFileSubFiles(sedFile, fmModel.ModelDefinition, false);
                 Assert.IsTrue(File.Exists(generatedXyzFile));
 
                 var xyzFileValues = new XyzFile().Read(generatedXyzFile).ToList();
@@ -652,7 +652,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                  */
                 Assert.IsFalse(File.Exists(generatedXyzFile));
                 var extFile = new ExtForceFile();
-                extFile.WriteExtForceFileSubFiles(sedFile, fmModel.ModelDefinition, false, false);
+                extFile.WriteExtForceFileSubFiles(sedFile, fmModel.ModelDefinition, false);
                 Assert.IsTrue(File.Exists(generatedXyzFile));
             }
             finally
