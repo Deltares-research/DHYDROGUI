@@ -141,6 +141,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Forms\SettingsWpf\FMSettingsView.cd" />
     <None Include="packages.config" />
     <None Include="Uml\HydroModelGui.cd" />
   </ItemGroup>
