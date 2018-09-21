@@ -66,7 +66,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 }
 
                 return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(gridFilePath, networkDiscretization, ref linksFrom, ref linksTo,
-                    ref startIndex, ref linksCount, Make1D2DLinksFromMesh1D, selectedArea, filter1DMesh);
+                    ref startIndex, ref linksCount, Make1D2DLinksFromMesh1D, selectedArea, GridApiDataSet.LinkType.Embedded, filter1DMesh);
             }
             return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
         }
@@ -83,7 +83,7 @@ namespace DeltaShell.NGHS.IO.Grid
             if (points.Any())
             {
                 return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(netFilePath, networkDiscretization, ref linksFrom, ref linksTo,
-                    ref startIndex, ref linksCount, Make1D2DRoofLinks, null, filter1DMesh, geometryRoofs);
+                    ref startIndex, ref linksCount, Make1D2DRoofLinks, null, GridApiDataSet.LinkType.RoofSewer, filter1DMesh, geometryRoofs);
             }
             return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
         }
@@ -100,7 +100,7 @@ namespace DeltaShell.NGHS.IO.Grid
             if (points.Any())
             {
                 return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(netFilePath, networkDiscretization, ref linksFrom, ref linksTo,
-                    ref startIndex, ref linksCount, Make1D2DGullyLinks, null, filter1DMesh, geometryGullies);
+                    ref startIndex, ref linksCount, Make1D2DGullyLinks, null, GridApiDataSet.LinkType.GullySewer, filter1DMesh, geometryGullies);
             }
             return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
         }
@@ -116,7 +116,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     selectedArea = GetSelectAllArea(points);
                 }
 
-                return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(gridFilePath, networkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, Make1D2DLateralLinks, selectedArea, filter1DMesh);
+                return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(gridFilePath, networkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, Make1D2DLateralLinks, selectedArea, GridApiDataSet.LinkType.Lateral, filter1DMesh);
             }
             return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
         }
@@ -385,7 +385,7 @@ namespace DeltaShell.NGHS.IO.Grid
         }
 
         // TODO: This method is huge.. Make smaller please :(
-        private int SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(string gridFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, Func<IPolygon, IList<bool>, IEnumerable<IGeometry>,int> make1D2DLinks, IPolygon selectedArea, IList<bool> filter1DMesh, IEnumerable<IGeometry> filter2DMesh = null)
+        private int SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(string gridFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, Func<IPolygon, IList<bool>, IEnumerable<IGeometry>,int> make1D2DLinks, IPolygon selectedArea, GridApiDataSet.LinkType linkType, IList<bool> filter1DMesh, IEnumerable<IGeometry> filter2DMesh = null)
         {
             IntPtr c_meshXCoords = IntPtr.Zero;
             IntPtr c_meshYCoords = IntPtr.Zero;
@@ -536,8 +536,9 @@ namespace DeltaShell.NGHS.IO.Grid
                 }
 
                 //10. get the number of links
+                var intLinkType = (int)linkType;
                 linksCount = 0;
-                ierr = geomWrapper.GetLinkCount(ref linksCount);
+                ierr = geomWrapper.GetLinkCount(ref linksCount, ref intLinkType);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -546,7 +547,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 //11. get the links: arrayfrom = 2d cell index, arrayto = 1d node index 
                 c_arrayfrom = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * linksCount); //2d cell number
                 c_arrayto = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * linksCount); //1d node
-                ierr = geomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref linksCount);
+                ierr = geomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref linksCount, ref intLinkType);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;

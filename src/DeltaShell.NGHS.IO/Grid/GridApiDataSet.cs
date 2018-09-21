@@ -106,13 +106,13 @@ namespace DeltaShell.NGHS.IO.Grid
             Lateral = -1,
 
             [Description("Roof sewer")]
-            RoofSewer = 5,
+            RoofSewer = 7,
 
             [Description("Inhabitants sewer")]
             InhabitantsSewer = -2,
 
             [Description("Gully sewer")]
-            GullySewer = 8
+            GullySewer = 5
         }
 
         public const string GRIDDLL_NAME = "io_netcdf.dll";

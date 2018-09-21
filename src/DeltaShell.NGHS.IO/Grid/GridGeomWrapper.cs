@@ -79,10 +79,10 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="nlinks"></param>
         /// <returns></returns>
         [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_get_links_count", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_get_links_count_dll([In, Out] ref int nlinks);
+        public static extern int ggeo_get_links_count_dll([In, Out] ref int nlinks, [In, Out] ref int linktype);
 
         [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_get_links", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_get_links_dll([In, Out] ref IntPtr arrayfrom, [In, Out] ref IntPtr arrayto, [In] ref int nlinks);
+        public static extern int ggeo_get_links_dll([In, Out] ref IntPtr arrayfrom, [In, Out] ref IntPtr arrayto, [In] ref int nlinks, [In, Out] ref int linktype);
 
         /// <summary>
         /// Clears the memory to allow new links being generated.
@@ -150,15 +150,15 @@ namespace DeltaShell.NGHS.IO.Grid
             return ierr;
         }
 
-        public int GetLinkCount(ref int nbranches)
+        public int GetLinkCount(ref int nbranches, ref int linkType)
         {
-            int ierr = ggeo_get_links_count_dll(ref nbranches);
+            int ierr = ggeo_get_links_count_dll(ref nbranches, ref linkType);
             return ierr;
         }
 
-        public int Get1d2dLinks(ref IntPtr arrayfrom, ref IntPtr arrayto, ref int nlinks)
+        public int Get1d2dLinks(ref IntPtr arrayfrom, ref IntPtr arrayto, ref int nlinks, ref int linkType)
         {
-            int ierr = ggeo_get_links_dll(ref arrayfrom, ref arrayto, ref nlinks);
+            int ierr = ggeo_get_links_dll(ref arrayfrom, ref arrayto, ref nlinks, ref linkType);
             return ierr;
         }
 

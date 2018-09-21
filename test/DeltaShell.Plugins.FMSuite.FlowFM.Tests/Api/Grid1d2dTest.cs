@@ -407,14 +407,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 }
 
                 //3. get the number of links
+                var linkType = (int) GridApiDataSet.LinkType.Embedded;
                 int n1d2dlinks = 0;
-                ierr = gridGeomWrapper.GetLinkCount(ref n1d2dlinks);
+                ierr = gridGeomWrapper.GetLinkCount(ref n1d2dlinks, ref linkType);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 //4. get the links: arrayfrom = 2d cell index, arrayto = 1d node index 
                 IntPtr c_arrayfrom = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * n1d2dlinks); //2d cell number
                 IntPtr c_arrayto = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * n1d2dlinks); //1d node
-                ierr = gridGeomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref n1d2dlinks);
+                ierr = gridGeomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref n1d2dlinks, ref linkType);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 int[] rc_arrayfrom = new int[n1d2dlinks];
@@ -513,18 +514,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 }
                 else
                 {
-                    throw new NotImplementedException();
+                    ierr = gridGeomWrapper.Make1D2DRoofLinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
+                        ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
+                    Assert.That(ierr, Is.EqualTo(0));
                 }
 
                 //3. get the number of links
+                var linkType = bGully ? (int) GridApiDataSet.LinkType.GullySewer : (int) GridApiDataSet.LinkType.RoofSewer;
                 int n1d2dlinks = 0;
-                ierr = gridGeomWrapper.GetLinkCount(ref n1d2dlinks);
+                ierr = gridGeomWrapper.GetLinkCount(ref n1d2dlinks, ref linkType);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 //4. get the links: arrayfrom = 2d cell index, arrayto = 1d node index 
                 IntPtr c_arrayfrom = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * n1d2dlinks); //2d cell number
                 IntPtr c_arrayto = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * n1d2dlinks); //1d node
-                ierr = gridGeomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref n1d2dlinks);
+                ierr = gridGeomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref n1d2dlinks, ref linkType);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 int[] rc_arrayfrom = new int[n1d2dlinks];
