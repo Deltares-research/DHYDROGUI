@@ -19,14 +19,14 @@ namespace DeltaShell.NGHS.IO.Grid
         /// </summary>
         /// <returns></returns>
         [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2Dinternalnetlinks", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_make1D2Dinternalnetlinks_dll( ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref int c_nOneDMask, ref IntPtr cMesh1DIndexesMask, ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
+        public static extern int ggeo_make1D2Dinternalnetlinks_dll(ref int c_npl, [In] ref IntPtr c_xpl, [In] ref IntPtr c_ypl, [In] ref IntPtr c_zpl, [In] ref int c_nOneDMask, [In] ref IntPtr c_oneDmask, ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
 
-       /// <summary>
+        /// <summary>
         /// Makes the 2d / 1d links (results are stored in memory)
         /// </summary>
         /// <returns></returns>
-        [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make2D1Dlinks_dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_make2D1Dlinks_dll(ref int cNin, ref IntPtr cXpl, ref IntPtr cYpl, ref IntPtr cZpl,ref int cJsferic, ref int cJasfer3D, ref int cJglobe, ref IntPtr cMesh1DIndexesMask, ref IntPtr c_2Dxlocations, ref IntPtr c_2Dylocations, ref IntPtr c_2Dzlocations);
+        [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2Dlaterallinks", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ggeo_make1D2Dlaterallinks_dll(ref int c_npl, [In] ref IntPtr c_xpl, [In] ref IntPtr c_ypl, [In] ref IntPtr c_zpl, [In] ref int c_nOneDMask, [In] ref IntPtr c_oneDmask, ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
 
         /// <summary>
         /// 1d2d links roof - 1d.
@@ -41,8 +41,8 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="c_jasfer3D">The c jasfer3 d.</param>
         /// <param name="c_jglobe">The c jglobe.</param>
         /// <returns></returns>
-        [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2Droofgutterpipes_dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_make1D2Droofgutterpipes_dll(ref int cNin, ref IntPtr cXpl, ref IntPtr cYpl, ref IntPtr cZpl, ref int c_nOneDMask , ref IntPtr cMesh1DIndexesMask, ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
+        [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2Droofgutterpipes", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ggeo_make1D2Droofgutterpipes_dll(ref int c_npl, [In] ref IntPtr c_xpl, [In] ref IntPtr c_ypl, [In] ref IntPtr c_zpl, [In] ref int c_nOneDMask, [In] ref IntPtr c_oneDmask, ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
 
         /// <summary>
         /// 1d2d links gullies - 1d.
@@ -56,8 +56,8 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="c_jasfer3D">The c jasfer3 d.</param>
         /// <param name="c_jglobe">The c jglobe.</param>
         /// <returns></returns>
-        [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2Dstreetinletpipes_dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_make1D2Dstreetinletpipes_dll(ref int cNin, ref IntPtr cXpl, ref IntPtr cYpl, ref int c_nOneDMask , ref IntPtr cMesh1DIndexesMask, ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
+        [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2Dstreetinletpipes", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ggeo_make1D2Dstreetinletpipes_dll(ref int c_npl, [In] ref IntPtr c_xpl, [In] ref IntPtr c_ypl, [In] ref IntPtr c_zpl, [In] ref int c_nOneDMask, [In] ref IntPtr c_oneDmask, ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
 
 
         /// <summary>
@@ -101,15 +101,15 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="c_edgenodes">The c edgenodes.</param>
         /// <param name="nBranches">The n branches.</param>
         /// <param name="nNodes">The n nodes.</param>
-        /// <param name="nEdgeNodes">The n edge nodes.</param>
+        /// <param name="nEdgeNodes">The network edge nodes.</param>
         /// <param name="startIndex">The start index.</param>
         /// <returns></returns>
         [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_create_edge_nodes", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_create_edge_nodes_dll([In] ref IntPtr c_branchoffset, [In] ref IntPtr c_branchlength, [In] ref IntPtr c_branchids, [In] ref int c_nedge_nodes, ref IntPtr c_edgenodes, [In] ref int nBranches, [In] ref int nNodes, [In] ref int nEdgeNodes, [In] ref int startIndex);
-        
-        public int CreateEdgeNodes(ref IntPtr c_branchoffset, ref IntPtr c_branchlength, ref IntPtr c_branchids, ref int c_nedgenodes, ref IntPtr c_edgenodes, ref int nBranches, ref int nNodes, ref int nEdgeNodes, ref int startIndex)
+        public static extern int ggeo_create_edge_nodes_dll([In] ref IntPtr c_branchoffset, [In] ref IntPtr c_branchlength, [In] ref IntPtr c_branchids, [In] ref IntPtr c_nedge_nodes, [In, Out] ref IntPtr c_edgenodes, [In] ref int nBranches, [In] ref int nNodes, [In] ref int nEdgeNodes, [In] ref int startIndex);
+
+        public int CreateEdgeNodes(ref IntPtr c_branchoffset, ref IntPtr c_branchlength, ref IntPtr c_branchids, ref IntPtr c_network_edgenodes, ref IntPtr c_mesh1D_edgenodes, ref int nBranches, ref int n_mesh1D_Edges, ref int nEdges, ref int startIndex)
         {
-            int ierr = ggeo_create_edge_nodes_dll(ref c_branchoffset, ref c_branchlength, ref c_branchids, ref c_nedgenodes, ref c_edgenodes, ref nBranches, ref nNodes, ref nEdgeNodes, ref startIndex);
+            int ierr = ggeo_create_edge_nodes_dll(ref c_branchoffset, ref c_branchlength, ref c_branchids, ref c_network_edgenodes, ref c_mesh1D_edgenodes, ref nBranches, ref n_mesh1D_Edges, ref nEdges, ref startIndex);
             return ierr;
         }
 
@@ -119,28 +119,27 @@ namespace DeltaShell.NGHS.IO.Grid
             return ierr;
         }
 
-
         public int Convert(ref GridWrapper.meshgeom c_meshgeom, ref GridWrapper.meshgeomdim c_meshgeomdim, ref int startIndex)
         {
             int ierr = ggeo_convert_dll(ref c_meshgeom, ref c_meshgeomdim, ref startIndex);
             return ierr;
         }
 
-        public int Make1D2DInternalNetlinks(ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref int intnFlterMesh1DPoints, ref IntPtr intPtrfilterMesh1DPoints)
+        public int Make1D2DInternalNetlinks(ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref int intnFilterMesh1DPoints, ref IntPtr intPtrfilterMesh1DPoints)
         {
             int c_jsferic = 0;
             int c_jasfer3D = 0;
             int c_jglobe = 0;
-            int ierr = ggeo_make1D2Dinternalnetlinks_dll(ref c_nin, ref c_xpl, ref c_ypl, ref c_zpl, ref intnFlterMesh1DPoints, ref intPtrfilterMesh1DPoints, ref c_jsferic, ref c_jasfer3D, ref c_jglobe);
+            int ierr = ggeo_make1D2Dinternalnetlinks_dll(ref c_nin, ref c_xpl, ref c_ypl, ref c_zpl, ref intnFilterMesh1DPoints, ref intPtrfilterMesh1DPoints, ref c_jsferic, ref c_jasfer3D, ref c_jglobe);
             return ierr;
         }
 
-        public int Make2D1DInternalNetlinks(ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref IntPtr c_mesh1DIndexesMask, ref IntPtr c_2dxlocations, ref IntPtr c_2dylocations, ref IntPtr c_2dzlocations)
+        public int Make1D2DLateralInternalNetlinks(ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref int intnFilterMesh1DPoints, ref IntPtr intPtrfilterMesh1DPoints)
         {
             int c_jsferic = 0;
             int c_jasfer3D = 0;
             int c_jglobe = 0;
-            int ierr = ggeo_make2D1Dlinks_dll(ref c_nin, ref c_xpl, ref c_ypl, ref c_zpl, ref c_jsferic, ref c_jasfer3D, ref c_jglobe, ref c_mesh1DIndexesMask, ref c_2dxlocations, ref c_2dylocations,ref c_2dzlocations); 
+            int ierr = ggeo_make1D2Dlaterallinks_dll(ref c_nin, ref c_xpl, ref c_ypl, ref c_zpl, ref intnFilterMesh1DPoints, ref intPtrfilterMesh1DPoints, ref c_jsferic, ref c_jasfer3D, ref c_jglobe); 
             return ierr;
         }
 
@@ -177,7 +176,7 @@ namespace DeltaShell.NGHS.IO.Grid
             int c_jsferic = 0;
             int c_jasfer3D = 0;
             int c_jglobe = 0;
-            int ierr = ggeo_make1D2Dstreetinletpipes_dll(ref nCoordinatesGullies, ref intPtrXValuesGullies, ref intPtrYValuesGullies, ref intnFlterMesh1DPoints, ref intPtrfilterMesh1DPoints, ref c_jsferic, ref c_jasfer3D, ref c_jglobe);
+            int ierr = ggeo_make1D2Dstreetinletpipes_dll(ref nCoordinatesGullies, ref intPtrXValuesGullies, ref intPtrYValuesGullies, ref intPtrZValuesGullies, ref intnFlterMesh1DPoints, ref intPtrfilterMesh1DPoints, ref c_jsferic, ref c_jasfer3D, ref c_jglobe);
             return ierr;
         }
     }
