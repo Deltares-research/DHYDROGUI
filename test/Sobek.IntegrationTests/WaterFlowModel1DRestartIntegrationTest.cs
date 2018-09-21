@@ -402,8 +402,6 @@ namespace Sobek.IntegrationTests
                     flowModel.SaveStateStopTime = flowModel.SaveStateStartTime.AddHours(runLengthSaveStateInHours);
                     flowModel.SaveStateTimeStep = TimeSpan.FromHours(intervalSaveStateInHours);
 
-                    app.SaveProject(); // model needs to be saved in the project, such that the paths are set correctly, and the expected state files are in the zip.
-
                     ActivityRunner.RunActivity(flowModel);
                     Assert.AreEqual(ActivityStatus.Cleaned, flowModel.Status);
 

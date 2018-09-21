@@ -3829,16 +3829,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
 
             // copy template data files into temp directory and use it as model work directory
-            if (ExplicitWorkingDirectory != null)
+            if (ExplicitWorkingDirectory == null)
             {
-                workDirectory = ExplicitWorkingDirectory;
-                FileUtils.DeleteIfExists(workDirectory);
+                ExplicitWorkingDirectory = Path.GetTempFileName();
             }
-            else
-            {
-                workDirectory = Path.GetTempFileName();
-                File.Delete(workDirectory);
-            }
+
+            workDirectory = ExplicitWorkingDirectory;
+            FileUtils.DeleteIfExists(workDirectory);
+
+
             Directory.CreateDirectory(workDirectory);
             workDirectory = Path.Combine(workDirectory, DirectoryName);
             Directory.CreateDirectory(workDirectory);
