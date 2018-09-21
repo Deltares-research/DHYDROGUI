@@ -171,6 +171,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
+        public void CreateRoofLinks()
+        {
+            var caseMaking1D2DLinks = new TestCaseMaking1D2DLinks();
+
+            //mesh1D coordinates
+            //meshXCoords = { -6, 5, 23, 34 };
+            //meshYCoords = { 22, 16, 16, 7 };
+            var geoX = new double[] { 10.0, 15.0, 15.0, 10.0, MissingValue, 20.0, 25.0, 25.0, 20.0, MissingValue };
+            var geoY = new double[] { 10.0, 10.0, 15.0, 10.0, MissingValue, 20.0, 20.0, 25.0, 20.0, MissingValue };
+
+            //expected links
+            var expectedLinksFrom1DIndexes = new int[] { 2 };
+            var expectedLinksTo2DIndexes = new int[] { 2 };
+
+            var linkIndexes = caseMaking1D2DLinks.MakeGullyOrRoofLinksForAreaAndReturnFromToOfAllLInks(geoX, geoY, false);
+
+            //check links
+            Assert.AreEqual(expectedLinksFrom1DIndexes.Length, linkIndexes.Count);
+
+            if (linkIndexes.Count == expectedLinksFrom1DIndexes.Length)
+            {
+                for (int i = 0; i < linkIndexes.Count; i++)
+                {
+                    Assert.That(linkIndexes[i].Item1, Is.EqualTo(expectedLinksFrom1DIndexes[i]));
+                    Assert.That(linkIndexes[i].Item2, Is.EqualTo(expectedLinksTo2DIndexes[i]));
+                }
+            }
+        }
+
+        [Test]
         [Ignore("For some reason it hangs.")]
         public void Get1d2dLinksShouldNotCrashWhenRunningTwice()
         {
