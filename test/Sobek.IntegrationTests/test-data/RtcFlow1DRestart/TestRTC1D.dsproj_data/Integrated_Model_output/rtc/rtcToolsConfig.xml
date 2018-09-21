@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rtcToolsConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews D:\D-Hydro\Tests_09.18SEPT\1D_issue\ModelTestData\TestRTC1D.dsproj_data\Integrated_Model_output\rtc\rtcToolsConfig.xsd">
+  <general>
+    <description>RTC Model DeltaShell</description>
+    <poolRoutingScheme>Theta</poolRoutingScheme>
+    <theta>0.5</theta>
+  </general>
+  <rules>
+    <rule>
+      <pid id="Control Group 1rule01">
+        <mode>PIDVEL</mode>
+        <settingMin>0</settingMin>
+        <settingMax>0</settingMax>
+        <settingMaxSpeed>0</settingMaxSpeed>
+        <kp>0</kp>
+        <ki>0</ki>
+        <kd>0</kd>
+        <input>
+          <x>input_ObservationPoint1_Water level (op)</x>
+          <setpointValue>0</setpointValue>
+        </input>
+        <output>
+          <y>output_Weir1_Crest level (s)</y>
+          <integralPart>Control Group 1rule01_IP</integralPart>
+          <differentialPart>Control Group 1rule01_DP</differentialPart>
+        </output>
+      </pid>
+    </rule>
+  </rules>
+</rtcToolsConfig>

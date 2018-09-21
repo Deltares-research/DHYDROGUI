@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Diag xmlns="http://www.wldelft.nl/fews/PI" version="1.2">
+
+  <line description="rtcToolsRuntime: RTC-Tools, version OSS_Version.OSS_Revision (GPL2 License)" level="3"/>
+
+  <line description="rtcToolsRuntime: model execution started at 2018-Sep-21 09:59:36 UTC time" level="3"/>
+
+  <line description="rtcToolsRuntime: simulation period = 2018-09-21 00:00:00 - 2018-09-22 00:00:00, dt[ms] = 3600000" level="3"/>
+
+  <line description="rtc tools config: element -general- is obsolete" level="2"/>
+
+  <line description="stateInterface: number of states in state file is not consistent with schematization" level="2"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+  <line description="rtcToolsRuntime: CPU time (simulation) = 0 ms" level="3"/>
+
+</Diag>

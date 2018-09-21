@@ -6,8 +6,11 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.IO;
+using DeltaShell.Core;
 using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -22,11 +25,11 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi
 namespace Sobek.IntegrationTests
 {
     [TestFixture]
+    [Category(TestCategory.DataAccess)]
+    [Category(TestCategory.Slow)]
     public class RealTimeControlModelRestartIntegrationTest : NHibernateIntegrationTestBase
     {
         [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
         [Ignore("No such things as RTC outputs with DIMR (so far)")]
         public void OpenProjectAndVerify()
         {
@@ -82,6 +85,145 @@ namespace Sobek.IntegrationTests
             {
                 Assert.AreEqual(fullRunRtcCrestLevel[i], crestLevelCombined[i], 0.0001);
             }
+        }
+
+        [TestCase(24, 24, 4, 0, TestName = "GivenAnIntegratedModelWithStateSavesFor1DAndRTCMatchingTheRunPeriodWhenThisModelRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun")]
+        [TestCase(24, 16, 4, 4, TestName = "GivenAnIntegratedModelWithStateSavesFor1DAndRTCMatchingASubsetOfTheRunPeriodWhenThisRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun")]
+        public void GivenAnIntegratedModelWithStateSavesFor1DAndRTCWhenThisModelIsRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun(int runLengthInHours, int runLengthSaveStateInHours, int intervalSaveStateInHours, int offsetSaveStateInHours)
+        {
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                // Get project files in temp folder.
+                const string projectName = "TestRTC1D.dsproj";
+                var projectPath = Path.Combine(tempDir, projectName);
+
+                var testDataPath = TestHelper.GetTestFilePath(Path.Combine("RtcFlow1DRestart", projectName));
+
+                FileUtils.CopyFile(testDataPath, projectPath);
+                FileUtils.CopyDirectory(testDataPath + "_data", tempDir);
+
+                // Set up application.
+                using (var app = new DeltaShellApplication())
+                {
+                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                    app.Plugins.Add(new CommonToolsApplicationPlugin());
+                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                    app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
+                    app.Plugins.Add(new NetCdfApplicationPlugin());
+                    app.Plugins.Add(new RealTimeControlApplicationPlugin());
+                    app.Plugins.Add(new HydroModelApplicationPlugin());
+
+                    app.Run();
+
+                    app.OpenProject(projectPath);
+
+                    // Given
+                    // Get models from project.
+                    var hydroModel = (HydroModel) app.Project.RootFolder.Models.First();
+                    var fullRunStartTime = hydroModel.StartTime;
+                    var fullRunStopTime = hydroModel.StopTime;
+
+                    var rtcModel = hydroModel.Models.OfType<RealTimeControlModel>().First();
+                    var flowModel = hydroModel.Models.OfType<WaterFlowModel1D>().First();
+
+                    // Set up time ranges on WaterFlowModel1D.
+                    flowModel.WriteRestart = true;
+                    flowModel.UseRestart = false;
+                    flowModel.StartTime = fullRunStartTime;
+                    flowModel.StopTime = fullRunStopTime;
+
+                    flowModel.UseSaveStateTimeRange = true;
+                    flowModel.SaveStateStartTime = flowModel.StartTime.AddHours(offsetSaveStateInHours);
+                    flowModel.SaveStateStopTime = flowModel.SaveStateStartTime.AddHours(runLengthSaveStateInHours);
+                    flowModel.SaveStateTimeStep = TimeSpan.FromHours(intervalSaveStateInHours);
+
+                    // Set up time ranges on RealTimeControlModel.
+                    rtcModel.WriteRestart = true;
+                    rtcModel.UseRestart = false;
+                    rtcModel.StartTime = fullRunStartTime;
+                    rtcModel.StopTime = fullRunStopTime;
+
+                    rtcModel.UseSaveStateTimeRange = true;
+                    rtcModel.SaveStateStartTime = rtcModel.StartTime.AddHours(offsetSaveStateInHours);
+                    rtcModel.SaveStateStopTime = rtcModel.SaveStateStartTime.AddHours(runLengthSaveStateInHours);
+                    rtcModel.SaveStateTimeStep = TimeSpan.FromHours(intervalSaveStateInHours);
+
+                    // When
+                    // Run initial model to generate restart values.
+                    ActivityRunner.RunActivity(hydroModel);
+                    Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
+
+                    // Obtain output values generated by non-restarted run.
+                    var rtcCrestLevelFullRun = rtcModel.OutputFeatureCoverages.First().Components[0].Values.OfType<double>().ToList();
+
+                    flowModel.WriteRestart = false;
+                    rtcModel.WriteRestart = false;
+
+                    app.SaveProject();
+                    app.CloseProject();
+
+                    // Calculate number of restart states to evaluate.
+                    var nRestartStates = (runLengthSaveStateInHours / intervalSaveStateInHours);
+                    var lastRestartStateOverlapsWithStop =
+                        fullRunStopTime.Equals(
+                            fullRunStartTime.AddHours(offsetSaveStateInHours + nRestartStates * intervalSaveStateInHours));
+
+                    if (lastRestartStateOverlapsWithStop)
+                        nRestartStates -= 1;
+
+                    // Do restarts for each of the restart files.
+                    for (var i = 0; i < nRestartStates; i++)
+                    {
+                        // Open projects and obtain models.
+                        app.OpenProject(projectPath);
+
+                        hydroModel = (HydroModel) app.Project.RootFolder.Models.First();
+                        rtcModel = hydroModel.Models.OfType<RealTimeControlModel>().First();
+                        flowModel = hydroModel.Models.OfType<WaterFlowModel1D>().First();
+
+                        // Set up restart.
+                        var restartStateFlowModel =
+                            (FileBasedRestartState) flowModel.GetRestartOutputStates().ElementAt(i).Clone();
+
+                        flowModel.StartTime = restartStateFlowModel.SimulationTime;
+                        flowModel.StopTime = fullRunStopTime;
+                        flowModel.UseRestart = true;
+                        flowModel.RestartInput = restartStateFlowModel;
+
+                        var restartStateRtcModel =
+                            (FileBasedRestartState) rtcModel.GetRestartOutputStates().ElementAt(i).Clone();
+
+                        rtcModel.StartTime = restartStateRtcModel.SimulationTime;
+                        rtcModel.StopTime = fullRunStopTime;
+                        rtcModel.UseRestart = true;
+                        rtcModel.RestartInput = restartStateRtcModel;
+
+                        // When
+                        // Run with restart.
+                        ActivityRunner.RunActivity(hydroModel);
+                        Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
+
+                        // Obtain data to compare to.
+                        var rtcCrestLevelRestart =
+                            rtcModel.OutputFeatureCoverages.First().Components[0].Values.OfType<double>().ToArray();
+                        var rtcCrestLevelFullRunSubset = rtcCrestLevelFullRun
+                            .Skip(rtcCrestLevelFullRun.Count - rtcCrestLevelRestart.Length)
+                            .ToArray();
+
+                        for (var indexCrestLevel = 0;
+                             indexCrestLevel < rtcCrestLevelRestart.Length;
+                             indexCrestLevel++)
+                        {
+                            // Then
+                            Assert.AreEqual(rtcCrestLevelRestart[indexCrestLevel],
+                                            rtcCrestLevelFullRunSubset[indexCrestLevel],
+                                            0.0001);
+                        }
+                        app.CloseProject();
+                    }
+                }
+            });
         }
 
         private IEnumerable<IFileExporter> GetFactoryFileExportersForDimr()
