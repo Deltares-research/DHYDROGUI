@@ -8,12 +8,18 @@ using System.Text;
 using DelftTools.Utils.Interop;
 using DelftTools.Utils.IO;
 using DeltaShell.Dimr;
+using Rhino.Mocks;
 
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {
+    
     [TestFixture]
     public class UgridWrapperTests
     {
+        /// <summary>
+        /// It's a partly copy of https://svn.oss.deltares.nl/repos/delft3d/trunk/src/utils_lgpl/io_netcdf/packages/tests/UGrid.tests/UGridTests.cs
+        /// </summary>
+
         //dimension info
         private int nNodes = 4;
         private int nBranches = 3;
@@ -30,26 +36,24 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         private int[] targetnodeid = {2, 2, 4};
 
-        private int[,] sourcetargetnodesid = { { 1,2} , { 3,2} , { 2,4 } };
-        private int nsourcetargetnodesid = 6;
+        private int[,] network_edges = { { 1,2} , { 3,2} , { 2,4 } };
+        private int n_network_edges = 3; //branches
 
-        //branches info
+        //branches info andgeometry info
         private double[] branchlengths = {4.0, 3.0, 3.0};
-
+        private double[] geopointsX = { 1.0, 3.0, 5.0, 7.0, 8.0, 5.0, 5.0 };
+        private double[] geopointsY = { 4.0, 4.0, 4.0, 4.0, 4.0, 1.0, 2.0 };
         private int[] nbranchgeometrypoints = {2, 3, 2};
-        private string[] branchids = {"branch1", "branch2", "branch3"};
 
+        private string[] branchids = {"branch1", "branch2", "branch3"};
         private string[] branchlongNames = {"branchlong1", "branchlong2", "branchlong3"};
         private int[] branch_order = { -1, -1, -1 };
 
-        //geometry info
-        private double[] geopointsX = {1.0, 3.0, 5.0, 7.0, 8.0, 5.0, 5.0};
 
-        private double[] geopointsY = {4.0, 4.0, 4.0, 4.0, 4.0, 1.0, 2.0};
 
         //mesh dimension
         private int nmesh1dPoints = 10;
-        private int nedgenodes = 3;
+        private int nedges = 3;
         private string[] meshpointsids = { "meshpoint1", "meshpoint2", "meshpoint3", "meshpoint4", "meshpoint5", "meshpoint6", "meshpoint7", "meshpoint8", "meshpoint9", "meshpoint10" };
         private string[] meshpointslongnames = { "meshpointlongname1", "meshpointlongname2", "meshpointlongname3", "meshpointlongname4", "meshpointlongname5", "meshpointlongname6", "meshpointlongname7", "meshpointlongname8", "meshpointlongname9", "meshpointlongname10" };
 
@@ -91,7 +95,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr c_nodesY = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
             IntPtr c_sourcenodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
             IntPtr c_targetnodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
-            IntPtr c_sourcetargetnodesid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nsourcetargetnodesid);
+            IntPtr c_network_sourcetargetnodeids = Marshal.AllocCoTaskMem(2 * Marshal.SizeOf(typeof(int)) * nNodes);
             IntPtr c_branchlengths = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nBranches);
             IntPtr c_nbranchgeometrypoints = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
             IntPtr c_geopointsX = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nGeometry);
@@ -346,10 +350,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr c_branchidx = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nmesh1dPoints);
             IntPtr c_offset = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nmesh1dPoints);
 
-            IntPtr c_edgenodes = Marshal.AllocCoTaskMem(2 * Marshal.SizeOf(typeof(int)) * nedgenodes);
-            IntPtr c_sourcenodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
-            IntPtr c_targetnodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
-            IntPtr c_sourcetargetnodesid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nsourcetargetnodesid);
+            IntPtr c_edgenodes = Marshal.AllocCoTaskMem(2 * Marshal.SizeOf(typeof(int)) * nedges);
+            IntPtr c_source_edge_nodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nedges);
+            IntPtr c_target_edge_nodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nedges);
+            IntPtr c_network_sourcetargetnodeids = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nedges);
+            IntPtr c_meh1d_sourcetargetnodeids = Marshal.AllocCoTaskMem(2 * Marshal.SizeOf(typeof(int)) * nedges);
 
             IntPtr c_branchoffset = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nmesh1dPoints);
             IntPtr c_branchlength = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nBranches);
@@ -374,20 +379,23 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 Assert.That(ierr, Is.EqualTo(0));
 
                 //2. Create the edge nodes (the algorithm is in gridgeom.dll, not in ionetcdf.dll)
-                int[] marshalSourcetargetnodesid = new int[nsourcetargetnodesid];
-                Buffer.BlockCopy(sourcetargetnodesid, 0, marshalSourcetargetnodesid, 0, nsourcetargetnodesid);
+                int nedgenodes = 2*nedges;
+                var marshal_network_sourcetargetnodesid = new int[2 * nedges];
+                Buffer.BlockCopy(network_edges, 0, marshal_network_sourcetargetnodesid, 0, nedgenodes);
 
                 Marshal.Copy(branchidx, 0, c_branchidx, nmesh1dPoints);
-                Marshal.Copy(sourcenodeid, 0, c_sourcenodeid, nBranches);
-                Marshal.Copy(targetnodeid, 0, c_targetnodeid, nBranches);
-                Marshal.Copy(marshalSourcetargetnodesid, 0, c_sourcetargetnodesid, nsourcetargetnodesid);
+                Marshal.Copy(sourcenodeid, 0, c_source_edge_nodeid, nBranches);
+                Marshal.Copy(targetnodeid, 0, c_target_edge_nodeid, nBranches);
+                Marshal.Copy(marshal_network_sourcetargetnodesid, 0, c_network_sourcetargetnodeids, nedgenodes);
                 Marshal.Copy(offset, 0, c_branchoffset, nmesh1dPoints);
                 Marshal.Copy(branchlengths, 0, c_branchlength, nBranches);
 
 
                 var gridwrapper = new GridGeomWrapper();
-                ierr = gridwrapper.CreateEdgeNodes(ref c_branchoffset, ref c_branchlength, ref c_branchidx, ref nsourcetargetnodesid, ref c_sourcetargetnodesid, ref nBranches, ref nmesh1dPoints, ref nedgenodes, ref startIndex);
+                var nReturnEdges = -1;
+                ierr = gridwrapper.CreateEdgeNodes(ref c_branchoffset, ref c_branchlength, ref c_branchidx, ref c_network_sourcetargetnodeids, ref c_meh1d_sourcetargetnodeids, ref nBranches, ref nmesh1dPoints, ref nReturnEdges, ref startIndex);
                 Assert.That(ierr, Is.EqualTo(0));
+                Assert.That(nReturnEdges, Is.GreaterThan(0));
 
                 //3. Create the node branchidx, offsets, meshnodeidsinfo
                 Marshal.Copy(offset, 0, c_offset, nmesh1dPoints);
@@ -428,8 +436,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 Assert.That(ierr, Is.EqualTo(0));
 
                 //2. Write 1d network branches
-                Marshal.Copy(sourcenodeid, 0, c_sourcenodeid, nBranches);
-                Marshal.Copy(targetnodeid, 0, c_targetnodeid, nBranches);
+                Marshal.Copy(sourcenodeid, 0, c_source_edge_nodeid, nBranches);
+                Marshal.Copy(targetnodeid, 0, c_target_edge_nodeid, nBranches);
                 Marshal.Copy(branchlengths, 0, c_branchlengths, nBranches);
                 Marshal.Copy(nbranchgeometrypoints, 0, c_nbranchgeometrypoints, nBranches);
                 GridWrapper.interop_charinfo[] branchinfo = new GridWrapper.interop_charinfo[3];
@@ -442,7 +450,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
                     branchinfo[i].longnames = tmpstring.ToCharArray();
                 }
-                ierr = wrapper.Write1DNetworkBranches(fileId, networkId, c_sourcenodeid, c_targetnodeid, branchinfo, c_branchlengths, c_nbranchgeometrypoints, nBranches, startIndex);
+                ierr = wrapper.Write1DNetworkBranches(fileId, networkId, c_source_edge_nodeid, c_target_edge_nodeid, branchinfo, c_branchlengths, c_nbranchgeometrypoints, nBranches, startIndex);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 //3. Write 1d network geometry
@@ -464,9 +472,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 Marshal.FreeCoTaskMem(c_offset);
 
                 Marshal.FreeCoTaskMem(c_edgenodes);
-                Marshal.FreeCoTaskMem(c_sourcenodeid);
-                Marshal.FreeCoTaskMem(c_targetnodeid);
-                Marshal.FreeCoTaskMem(c_sourcetargetnodesid);
+                Marshal.FreeCoTaskMem(c_source_edge_nodeid);
+                Marshal.FreeCoTaskMem(c_target_edge_nodeid);
+                Marshal.FreeCoTaskMem(c_meh1d_sourcetargetnodeids);
 
                 Marshal.FreeCoTaskMem(c_branchoffset);
                 Marshal.FreeCoTaskMem(c_branchlength);
