@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
@@ -36,7 +38,9 @@ namespace DelftTools.Hydro.SewerFeatures
 
         public double LevelSource { get; set; }
         public double LevelTarget { get; set; }
-        
+
+        [DisplayName("Sewer type")]
+        [FeatureAttribute(ExportName = "Sewer type", Order = 20)]
         public SewerConnectionWaterType WaterType { get; set; }
 
         // This property is used in the NetworkLayerStyleFactory, do not remove :)
@@ -44,6 +48,9 @@ namespace DelftTools.Hydro.SewerFeatures
 
         #region Source and Target
 
+        [DisplayName("To manhole")]
+        [FeatureAttribute(ExportName = "To manhole", Order = 12)]
+        [ReadOnly(true)]
         public override INode Source
         {
             get { return source; }
@@ -72,6 +79,9 @@ namespace DelftTools.Hydro.SewerFeatures
             source?.OutgoingBranches.Add(this);
         }
 
+        [DisplayName("From manhole")]
+        [FeatureAttribute(ExportName = "From manhole", Order = 10)]
+        [ReadOnly(true)]
         public override INode Target
         {
             get { return target; }
@@ -102,6 +112,9 @@ namespace DelftTools.Hydro.SewerFeatures
 
         #endregion
 
+        [DisplayName("From compartment")]
+        [FeatureAttribute(ExportName = "From compartment", Order = 11)]
+        [ReadOnly(true)]
         public Compartment SourceCompartment
         {
             get { return sourceCompartment; }
@@ -127,6 +140,9 @@ namespace DelftTools.Hydro.SewerFeatures
             }
         }
 
+        [DisplayName("To compartment")]
+        [FeatureAttribute(ExportName = "To compartment", Order = 13)]
+        [ReadOnly(true)]
         public Compartment TargetCompartment
         {
             get { return targetCompartment; }

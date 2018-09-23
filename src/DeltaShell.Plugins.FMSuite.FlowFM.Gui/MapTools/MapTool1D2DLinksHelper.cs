@@ -393,12 +393,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                 log.WarnFormat("No discretization point for type {0} has been found for the start point of the link. We will the reverse direction.", linkType);
                 startPoint = new Point(endCoordinate);
                 endPoint = new Point(startCoordinate);
-                networkLocationId = Links1D2DHelper.FindCalculationPointIndex(startPoint, fmModel.NetworkDiscretization, SNAP_DISTANCE, filter1DMesh);
+                networkLocationId = Links1D2DHelper.FindCalculationPointIndex(startPoint, fmModel.NetworkDiscretization, snapTolerance, filter1DMesh);
             }
 
             if (networkLocationId == Links1D2DHelper.MISSING_INDEX)
             {
-                log.ErrorFormat("No discretization point for type {0} has been found.", GridApiDataSet.LinkType.Embedded);
+                log.ErrorFormat("No discretization point for type {0} has been found. Maybe the type of channel or pipe is not suitable for this link.", linkType);
             }
             else
             {
@@ -412,7 +412,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                     var link = new WaterFlowFM1D2DLink(networkLocationId, cellId)
                     {
                         TypeOfLink = linkType,
-                        Geometry = new LineString(new[] { startPoint.Coordinate, endPoint.Coordinate })
+                        Geometry = new LineString(new[] { startPoint.Coordinate, endPoint.Coordinate }),
+                        SnapToleranceUsed = snapTolerance
                     };
                     return link;
                 }

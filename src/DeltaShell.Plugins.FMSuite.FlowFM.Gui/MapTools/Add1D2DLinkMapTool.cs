@@ -1,34 +1,21 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Utils;
-using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
-using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using GeoAPI.CoordinateSystems.Transformations;
-using GeoAPI.Extensions.Coverages;
-using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net;
-using NetTopologySuite.Extensions.Grids;
-using NetTopologySuite.Geometries;
 using SharpMap;
 using SharpMap.Api;
-using SharpMap.Api.Editors;
-using SharpMap.Api.Layers;
 using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Styles;
-using SharpMap.UI.Helpers;
-using SharpMap.UI.Tools;
 using Point = System.Drawing.Point;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
@@ -128,6 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         {
             if ((Unique<long>)this.VectorLayer == (Unique<long>)null || this.AdditionalButtonsBeingPressed(e))
                 return;
+
             if (this.startCoordinate != null)
             {
                 this.EndCoordinate = this.GetLocalCoordinate(SharpMap.Converters.Geometries.GeometryFactory.CreateCoordinate(worldPosition.X, worldPosition.Y));
@@ -159,7 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         private void AddDrawingLayer()
         {
             VectorLayer vectorLayer = new VectorLayer(this.VectorLayer);
-            var theme = this.VectorLayer.Theme;
+            var theme = VectorLayer.Theme.Clone() as ITheme;
             int num = 1;
             vectorLayer.RenderRequired = num != 0;
             string str = "newArrowLine";

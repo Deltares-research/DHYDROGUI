@@ -131,12 +131,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                var coordinatesSelectedArea = selectedArea.Coordinates.ToList();
-                coordinatesSelectedArea.Add(new Coordinate(missingValue, missingValue, missingValue)); //add separator
-                int nCoordinatesRoofs = coordinatesSelectedArea.Count;
-
-                IList<Coordinate> coordinatesFilterMesh2D = GetCoordinatesAndSeparators(roofs);
-                var nCoordinatesFilterMesh2D = coordinatesFilterMesh2D.Count;
+                IList<Coordinate> coordinatesRoofs = GetCoordinatesAndSeparators(roofs);
+                var nCoordinatesRoofs = coordinatesRoofs.Count;
 
                 int nFilterMesh1DPoints = filterMesh1DPoints.Count;
                 intPtrXValuesRoofs = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinatesRoofs);
@@ -144,8 +140,8 @@ namespace DeltaShell.NGHS.IO.Grid
                 intPtrZValuesRoofs = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinatesRoofs);
                 intPtrfilterMesh1DPoints = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nFilterMesh1DPoints);
 
-                var roofXCoords = coordinatesSelectedArea.Select(c => c.X).ToArray();
-                var roofYCoords = coordinatesSelectedArea.Select(c => c.Y).ToArray();
+                var roofXCoords = coordinatesRoofs.Select(c => c.X).ToArray();
+                var roofYCoords = coordinatesRoofs.Select(c => c.Y).ToArray();
                 var roofZCoords = Enumerable.Repeat<double>(0.0, nCoordinatesRoofs).ToArray();
                 var filterMesh1DPointsArray = filterMesh1DPoints.Select(b => b ? 1 : 0).ToArray();
 
@@ -180,36 +176,28 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             IntPtr intPtrXValuesGullies = IntPtr.Zero;
             IntPtr intPtrYValuesGullies = IntPtr.Zero;
-            IntPtr intPtrZValuesGullies = IntPtr.Zero;
             IntPtr intPtrfilterMesh1DPoints = IntPtr.Zero;
 
             try
             {
-                var coordinatesSelectedArea = selectedArea.Coordinates.ToList();
-                coordinatesSelectedArea.Add(new Coordinate(missingValue, missingValue, missingValue)); //add separator
-                int nCoordinatesGullies = coordinatesSelectedArea.Count;
-
-                IList<Coordinate> coordinatesFilterMesh2D = GetCoordinatesAndSeparators(gullies);
-                var nCoordinatesFilterMesh2D = coordinatesFilterMesh2D.Count;
+                //gullies without seperator
+                IList<Coordinate> coordinatesGullies = gullies.Select(g => g.Coordinate).ToList();
+                int nCoordinatesGullies = coordinatesGullies.Count;
 
                 int nFilterMesh1DPoints = filterMesh1DPoints.Count;
                 intPtrXValuesGullies = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinatesGullies);
                 intPtrYValuesGullies = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinatesGullies);
-                intPtrZValuesGullies = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinatesGullies);
                 intPtrfilterMesh1DPoints = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nFilterMesh1DPoints);
 
-                var roofXCoords = coordinatesSelectedArea.Select(c => c.X).ToArray();
-                var roofYCoords = coordinatesSelectedArea.Select(c => c.Y).ToArray();
-                var roofZCoords = Enumerable.Repeat<double>(0.0, nCoordinatesGullies).ToArray();
+                var gullyXCoords = coordinatesGullies.Select(c => c.X).ToArray();
+                var gullyYCoords = coordinatesGullies.Select(c => c.Y).ToArray();
                 var filterMesh1DPointsArray = filterMesh1DPoints.Select(b => b ? 1 : 0).ToArray();
 
-                Marshal.Copy(roofXCoords, 0, intPtrXValuesGullies, nCoordinatesGullies);
-                Marshal.Copy(roofYCoords, 0, intPtrYValuesGullies, nCoordinatesGullies);
-                Marshal.Copy(roofZCoords, 0, intPtrZValuesGullies, nCoordinatesGullies);
+                Marshal.Copy(gullyXCoords, 0, intPtrXValuesGullies, nCoordinatesGullies);
+                Marshal.Copy(gullyYCoords, 0, intPtrYValuesGullies, nCoordinatesGullies);
                 Marshal.Copy(filterMesh1DPointsArray, 0, intPtrfilterMesh1DPoints, nFilterMesh1DPoints);
 
-                var ierr = geomWrapper.Make1D2DGullyLinks(ref nCoordinatesGullies, ref intPtrXValuesGullies,
-                    ref intPtrYValuesGullies, ref intPtrZValuesGullies, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
+                var ierr = geomWrapper.Make1D2DGullyLinks(ref nCoordinatesGullies, ref intPtrXValuesGullies, ref intPtrYValuesGullies, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -223,7 +211,6 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 Marshal.FreeCoTaskMem(intPtrXValuesGullies);
                 Marshal.FreeCoTaskMem(intPtrYValuesGullies);
-                Marshal.FreeCoTaskMem(intPtrZValuesGullies);
                 Marshal.FreeCoTaskMem(intPtrfilterMesh1DPoints);
             }
 

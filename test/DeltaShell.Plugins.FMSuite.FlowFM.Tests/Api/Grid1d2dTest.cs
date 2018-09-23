@@ -148,12 +148,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             //mesh1D coordinates
             //meshXCoords = { -6, 5, 23, 34 };
             //meshYCoords = { 22, 16, 16, 7 };
-            var geoX = new double[] { 10.0 , MissingValue};
-            var geoY = new double[] { 10.0, MissingValue};
+            var geoX = new double[] { 15.0 };
+            var geoY = new double[] { 15.0 };
 
             //expected links
-            var expectedLinksFrom1DIndexes = new int[] { 2 };
-            var expectedLinksTo2DIndexes = new int[] { 2 };
+            var expectedLinksFrom1DIndexes = new int[] { 5 };
+            var expectedLinksTo2DIndexes = new int[] { 3};
 
             var linkIndexes = caseMaking1D2DLinks.MakeGullyOrRoofLinksForAreaAndReturnFromToOfAllLInks(geoX, geoY);
 
@@ -182,8 +182,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var geoY = new double[] { 10.0, 10.0, 15.0, 10.0, MissingValue, 20.0, 20.0, 25.0, 20.0, MissingValue };
 
             //expected links
-            var expectedLinksFrom1DIndexes = new int[] { 2 };
-            var expectedLinksTo2DIndexes = new int[] { 2 };
+            var expectedLinksFrom1DIndexes = new int[] { 2 , 2};
+            var expectedLinksTo2DIndexes = new int[] { 2, 2 };
 
             var linkIndexes = caseMaking1D2DLinks.MakeGullyOrRoofLinksForAreaAndReturnFromToOfAllLInks(geoX, geoY, false);
 
@@ -480,27 +480,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 ierr = gridGeomWrapper.Convert(ref meshtwod, ref meshtwoddim, ref start_index);
                 Assert.That(ierr, Is.EqualTo(0));
 
-                IntPtr intPtrXValuesSelectedArea;
-                IntPtr intPtrYValuesSelectedArea;
-                IntPtr intPtrZValuesSelectedArea;
+                IntPtr intPtrXValuesGeom;
+                IntPtr intPtrYValuesGeom;
+                IntPtr intPtrZValuesGeom;
                 IntPtr intPtrfilterMesh1DPoints;
 
                 //1. make area
                 var filterMesh1DPoints = Enumerable.Repeat(1, nmeshpoints).ToArray();
                 var nFilterMesh1DPoints = filterMesh1DPoints.Length;
                 int nCoordinates = geometryXValues.Count();
-                intPtrXValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
-                intPtrYValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
-                intPtrZValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
+                intPtrXValuesGeom = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
+                intPtrYValuesGeom = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
+                intPtrZValuesGeom = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
                 intPtrfilterMesh1DPoints = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nmeshpoints);
 
                 var gullyOrRoofXCoords = geometryXValues;
                 var gullyOrRoofYCoords = geometryYValues;
                 var gullyOrRoofZCoords = Enumerable.Repeat(0.0, nCoordinates).ToArray();
 
-                Marshal.Copy(gullyOrRoofXCoords, 0, intPtrXValuesSelectedArea, nCoordinates);
-                Marshal.Copy(gullyOrRoofYCoords, 0, intPtrYValuesSelectedArea, nCoordinates);
-                Marshal.Copy(gullyOrRoofZCoords, 0, intPtrZValuesSelectedArea, nCoordinates);
+                Marshal.Copy(gullyOrRoofXCoords, 0, intPtrXValuesGeom, nCoordinates);
+                Marshal.Copy(gullyOrRoofYCoords, 0, intPtrYValuesGeom, nCoordinates);
+                Marshal.Copy(gullyOrRoofZCoords, 0, intPtrZValuesGeom, nCoordinates);
                 Marshal.Copy(filterMesh1DPoints, 0, intPtrfilterMesh1DPoints, nmeshpoints);
 
 
@@ -508,14 +508,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 if (bGully)
                 {
-                    ierr = gridGeomWrapper.Make1D2DGullyLinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
-                        ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
+                    ierr = gridGeomWrapper.Make1D2DGullyLinks(ref nCoordinates, ref intPtrXValuesGeom,
+                        ref intPtrYValuesGeom, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
                     Assert.That(ierr, Is.EqualTo(0));
                 }
                 else
                 {
-                    ierr = gridGeomWrapper.Make1D2DRoofLinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
-                        ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
+                    ierr = gridGeomWrapper.Make1D2DRoofLinks(ref nCoordinates, ref intPtrXValuesGeom,
+                        ref intPtrYValuesGeom, ref intPtrZValuesGeom, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
                     Assert.That(ierr, Is.EqualTo(0));
                 }
 
@@ -546,9 +546,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 Marshal.FreeCoTaskMem(c_arrayto);
 
                 //selected area
-                Marshal.FreeCoTaskMem(intPtrXValuesSelectedArea);
-                Marshal.FreeCoTaskMem(intPtrYValuesSelectedArea);
-                Marshal.FreeCoTaskMem(intPtrZValuesSelectedArea);
+                Marshal.FreeCoTaskMem(intPtrXValuesGeom);
+                Marshal.FreeCoTaskMem(intPtrYValuesGeom);
+                Marshal.FreeCoTaskMem(intPtrZValuesGeom);
                 Marshal.FreeCoTaskMem(intPtrfilterMesh1DPoints);
 
                 gridGeomWrapper.DeallocateMemory();

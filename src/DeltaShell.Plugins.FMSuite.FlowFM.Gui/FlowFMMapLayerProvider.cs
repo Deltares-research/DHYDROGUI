@@ -564,7 +564,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             return new CategorialTheme
             {
-                AttributeName = "Type of 1D2D link",
+                AttributeName = "TypeOfLink",
                 DefaultStyle = embeddedStyle,
                 ThemeItems = new EventedList<IThemeItem>
                 {

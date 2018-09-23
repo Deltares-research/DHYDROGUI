@@ -699,7 +699,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Gullies, "Gullies", modelName, area2DParent.CoordinateSystem);
                 ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
                 {
-                    var newFeature = new GroupableFeature2DPoint() { Geometry = geometry };
+                    var newFeature = new Gully() { Geometry = geometry };
                     ds.Features.Add(newFeature);
 
                     return newFeature;

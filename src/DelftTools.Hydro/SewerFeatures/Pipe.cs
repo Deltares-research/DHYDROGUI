@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Properties;
@@ -7,6 +8,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using log4net;
 
@@ -35,8 +37,12 @@ namespace DelftTools.Hydro.SewerFeatures
 
         public SewerProfileMapping.SewerProfileMaterial Material { get; set; }
 
+        [DisplayName("Roughness")]
+        [FeatureAttribute(ExportName = "Roughness", Order = 8)]
         public double PipeRoughness { get; set; } = 0.003;
 
+        [DisplayName("Roughness type")]
+        [FeatureAttribute(ExportName = "Roughness type", Order = 9)]
         public RoughnessType PipeRoughnessType { get; set; } = RoughnessType.WhiteColebrook;
 
         public override IEventedList<IBranchFeature> BranchFeatures

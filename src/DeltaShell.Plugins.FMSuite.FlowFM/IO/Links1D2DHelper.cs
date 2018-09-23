@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        public static void SetIndexes1D2DLinks(IEnumerable<WaterFlowFM1D2DLink> listOfLinks, IDiscretization networkDiscretization, UnstructuredGrid grid)
+        public static void SetIndexes1D2DLinks(IEnumerable<WaterFlowFM1D2DLink> listOfLinks, IDiscretization networkDiscretization, UnstructuredGrid grid, double tolerance = 0.0)
         {
             if (networkDiscretization == null || !networkDiscretization.Locations.Values.Any() || grid == null || !grid.Cells.Any()) return;
 
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var line = link.Geometry as ILineString;
                 if (line == null) continue;
 
-                link.DiscretisationPointIndex = FindCalculationPointIndex(line.StartPoint, networkDiscretization);
+                link.DiscretisationPointIndex = FindCalculationPointIndex(line.StartPoint, networkDiscretization, tolerance);
                 link.FaceIndex = FindCellIndex(line.EndPoint, grid); 
             }
         }
@@ -67,6 +67,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return locationIndex;
         }
 
+        public static int FindCalculationPointIndex(Coordinate coordinate, IDiscretization networkDiscretization, double tolerance)
+        {
+            return FindCalculationPointIndex(new Point(coordinate.X, coordinate.Y), networkDiscretization, tolerance);
+        }
 
         private static bool IsPointEqual(IFeature l, IGeometry pointLink, double tolerance = 0.0)
         {
@@ -76,6 +80,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public static int FindCellIndex(IPoint point, UnstructuredGrid grid)
         {
             return grid.GetCellIndexForCoordinate(point.Coordinate) ?? MISSING_INDEX;
+        }
+
+        public static int FindCellIndex(Coordinate coordinate, UnstructuredGrid grid)
+        {
+            return FindCellIndex(new Point(coordinate.X, coordinate.Y), grid);
         }
     }
 }

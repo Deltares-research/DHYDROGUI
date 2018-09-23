@@ -42,6 +42,7 @@ using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
@@ -182,7 +183,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public IList<ModelFeatureCoordinateData<BridgePillar>> BridgePillarsDataModel { get; private set; }
 
-        public IEventedList<WaterFlowFM1D2DLink> Links { get; set; }
+        public IEventedList<WaterFlowFM1D2DLink> Links
+        {
+            get { return links; }
+            set
+            {
+                if (links != null)
+                {
+                    ((INotifyPropertyChanged)(links)).PropertyChanged -= OnWaterFlowFm1D2DLinkPropertyChanged;
+                }
+
+                links = value;
+
+                if (links != null)
+                {
+                    ((INotifyPropertyChanged)(links)).PropertyChanged += OnWaterFlowFm1D2DLinkPropertyChanged;
+                }
+            }
+        }
 
         private void RefreshMappings()
         {
@@ -2235,6 +2253,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private FMMapFileFunctionStore outputMapFileStore;
         private IEventedList<string> tracerDefinitions;
         private bool isLoading;
+        private IEventedList<WaterFlowFM1D2DLink> links;
 
         private const int TotalImportSteps = 10;
 
@@ -3165,6 +3184,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public void SetModelStateHandlerModelWorkingDirectory(string modelExplicitWorkingDirectory)
         {
             ModelStateHandler.ModelWorkingDirectory = modelExplicitWorkingDirectory;
+        }
+
+        private void OnWaterFlowFm1D2DLinkPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (sender is WaterFlowFM1D2DLink & e.PropertyName.Equals("Geometry"))
+            { 
+                //update indexes
+                var link = (WaterFlowFM1D2DLink) sender;
+                var firstCoordinate = link.Geometry?.Coordinates.First();
+                var lastCoordinate = link.Geometry?.Coordinates.Last();
+                link.DiscretisationPointIndex = Links1D2DHelper.FindCalculationPointIndex(firstCoordinate, NetworkDiscretization, link.SnapToleranceUsed);
+                link.FaceIndex = Links1D2DHelper.FindCellIndex(lastCoordinate, Grid);
+            }
         }
     }
 }
