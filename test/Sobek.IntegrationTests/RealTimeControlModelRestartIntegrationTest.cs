@@ -91,13 +91,13 @@ namespace Sobek.IntegrationTests
         [TestCase(24, 16, 4, 4, TestName = "GivenAnIntegratedModelWithStateSavesFor1DAndRTCMatchingASubsetOfTheRunPeriodWhenThisRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun")]
         public void GivenAnIntegratedModelWithStateSavesFor1DAndRTCWhenThisModelIsRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun(int runLengthInHours, int runLengthSaveStateInHours, int intervalSaveStateInHours, int offsetSaveStateInHours)
         {
+            const string projectName = "TestRTC1D.dsproj";
+            var testDataPath = TestHelper.GetTestFilePath(Path.Combine("RtcFlow1DRestart", projectName));
+
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
                 // Get project files in temp folder.
-                const string projectName = "TestRTC1D.dsproj";
                 var projectPath = Path.Combine(tempDir, projectName);
-
-                var testDataPath = TestHelper.GetTestFilePath(Path.Combine("RtcFlow1DRestart", projectName));
 
                 FileUtils.CopyFile(testDataPath, projectPath);
                 FileUtils.CopyDirectory(testDataPath + "_data", tempDir);
