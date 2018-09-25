@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -58,11 +59,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         public ILayer CreateLayer(object data, object parent)
         {
-            if (data is FlowFMTreeShortcut)
-            {
-                return CreateLayer(((FlowFMTreeShortcut) data).TargetData, parent);
-            }
-
             var waterFlowFmModel = data as WaterFlowFMModel;
             if (waterFlowFmModel != null)
             {
@@ -225,9 +221,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         public bool CanCreateLayerFor(object data, object parentObject)
         {
-            if (data is FlowFMTreeShortcut)
-                return true;
-
             return data is WaterFlowFMModel
                    || data is IGrouping<string, IFunction>
                    || data is FMMapFileFunctionStore
@@ -242,15 +235,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         public IEnumerable<object> ChildLayerObjects(object data)
         {
-            if (data is FlowFMTreeShortcut)
-            {
-                foreach (var item in ChildLayerObjects(((FlowFMTreeShortcut)data).TargetData))
-                {
-                    yield return item;
-                }
-                yield break;
-            }
-            
             var model = data as WaterFlowFMModel;
             if (model != null)
             {

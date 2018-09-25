@@ -607,7 +607,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             }
         }
         
-        [Test]
+/*        [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void GivenNoBedLevelInNetCdfFileWhenSetXYZSamplesAndSaveAndLoadThenBedLevelInNetCdfFile()
@@ -714,7 +714,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                     gui.Plugins.Add(new ProjectExplorerGuiPlugin());
                     gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                    gui.Plugins.Add(new FlowFMGuiPlugin(){GridHandler = null}); /* Using an extension to override the method. */
+                    gui.Plugins.Add(new FlowFMGuiPlugin(){GridHandler = null}); /* Using an extension to override the method. #1#
                     gui.Plugins.Add(new NetworkEditorGuiPlugin());
 
                     gui.Run();
@@ -724,10 +724,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         var targetModel = ImportLdbAndGrid(app, landBoundaryPath, netFile);
 
                         //Open grid
-                        /* Before fixes from rev 39122 (D3DFMIQ-16) performance was between 160 and 190 seconds. */
-                        /* Personal machine : 5000ms avg.(5secs) */
-                        /* x1.5 factor acceptance factor */
-                        /* x3 factor TeamCity acceptance factor */
+                        /* Before fixes from rev 39122 (D3DFMIQ-16) performance was between 160 and 190 seconds. #1#
+                        /* Personal machine : 5000ms avg.(5secs) #1#
+                        /* x1.5 factor acceptance factor #1#
+                        /* x3 factor TeamCity acceptance factor #1#
                         TestHelper.AssertIsFasterThan(22500, () => gui.CommandHandler.OpenView(targetModel.Grid, typeof(WaterFlowFMModelView)));
                     };
                     WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
@@ -766,9 +766,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                     var targetModel = ImportLdbAndGrid(app, landBoundaryPath, netFile);
 
-                    /* Personal machine : 330ms avg. */
-                    /* x1.5 factor acceptance factor */
-                    /* x3 factor TeamCity acceptance factor */
+                    /* Personal machine : 330ms avg. #1#
+                    /* x1.5 factor acceptance factor #1#
+                    /* x3 factor TeamCity acceptance factor #1#
                     TestHelper.AssertIsFasterThan(1500,
                         () => new MduFile().WriteLandBoundaries(targetModel.MduFilePath, targetModel.ModelDefinition,
                             targetModel.Area));
@@ -804,7 +804,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
                 gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin { GridHandler = null }); /* Using an extension to override the method. */
+                gui.Plugins.Add(new FlowFMGuiPlugin { GridHandler = null }); /* Using an extension to override the method. #1#
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
 
                 gui.Run();
@@ -870,7 +870,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
                 gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin { GridHandler = null }); /* Using an extension to override the method. */
+                gui.Plugins.Add(new FlowFMGuiPlugin { GridHandler = null }); /* Using an extension to override the method. #1#
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
 
                 gui.Run();
@@ -914,7 +914,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
                 gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin { GridHandler = null }); /* Using an extension to override the method. */
+                gui.Plugins.Add(new FlowFMGuiPlugin { GridHandler = null }); /* Using an extension to override the method. #1#
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
 
                 gui.Run();
@@ -975,7 +975,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
                 gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin { GridHandler = null }); /* Using an extension to override the method. */
+                gui.Plugins.Add(new FlowFMGuiPlugin { GridHandler = null }); /* Using an extension to override the method. #1#
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
 
                 gui.Run();
@@ -1027,7 +1027,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Plugins.Add(new FlowFMGuiPlugin
                 {
                     GridHandler = null
-                }); /* Using an extension to override the method. */
+                }); /* Using an extension to override the method. #1#
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
                 gui.Run();
 
@@ -1082,7 +1082,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             FileUtils.DeleteIfExists(netFile);
         }
- 
+ */
         [Test]
         [Category(TestCategory.Performance)]
         [Category(TestCategory.Slow)]

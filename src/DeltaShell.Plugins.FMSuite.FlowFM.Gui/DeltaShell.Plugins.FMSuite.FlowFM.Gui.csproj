@@ -245,12 +245,6 @@
     <Compile Include="Editors\WaterFlowFMFileStructureView.Designer.cs">
       <DependentUpon>WaterFlowFMFileStructureView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\WaterFlowFMModelView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Editors\WaterFlowFMModelView.Designer.cs">
-      <DependentUpon>WaterFlowFMModelView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\BoundaryGeometryPreviewWindowsFormsHostMap.cs" />
     <Compile Include="Editors\WaterFlowFmSettingsHelper.cs" />
     <Compile Include="FlowFMGuiPlugin.cs" />
@@ -341,11 +335,11 @@
     <Compile Include="NodePresenters\BoundaryConditionSetNodePresenter.cs" />
     <Compile Include="NodePresenters\FMHisFileFunctionStoreNodePresenter.cs" />
     <Compile Include="NodePresenters\FMMapFileFunctionStoreNodePresenter.cs" />
+    <Compile Include="NodePresenters\FmModelTreeShortcutNodePresenter.cs" />
     <Compile Include="NodePresenters\HeatFluxModelNodePresenter.cs" />
     <Compile Include="NodePresenters\ImportedFMNetFileNodePresenter.cs" />
     <Compile Include="NodePresenters\SourceSinkNodePresenter.cs" />
     <Compile Include="NodePresenters\WaterFlowFMFileBasedItemNodePresenter.cs" />
-    <Compile Include="NodePresenters\FlowFMTreeShortcutNodePresenter.cs" />
     <Compile Include="NodePresenters\WindItemListNodePresenter.cs" />
     <Compile Include="NodePresenters\WindItemNodePresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -359,7 +353,7 @@
     <Compile Include="Ribbon\Ribbon.xaml.cs">
       <DependentUpon>Ribbon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FlowFMTreeShortcut.cs" />
+    <Compile Include="FmModelTreeShortcut.cs" />
     <Compile Include="FlowFMMapLayerProvider.cs" />
     <Compile Include="Editors\WindFieldListView.cs">
       <SubType>UserControl</SubType>
@@ -438,9 +432,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\WaterFlowFMFileStructureView.resx">
       <DependentUpon>WaterFlowFMFileStructureView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editors\WaterFlowFMModelView.resx">
-      <DependentUpon>WaterFlowFMModelView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FMModelInspectionWindow.resx">
       <DependentUpon>FMModelInspectionWindow.cs</DependentUpon>

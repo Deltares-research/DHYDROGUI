@@ -41,11 +41,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         private static readonly Bitmap PhysParamIcon = new Bitmap(Common.Gui.Properties.Resources.folder_wrench, 16, 16);
         private static readonly Bitmap NumParamIcon = new Bitmap(Common.Gui.Properties.Resources.settings, 16, 16);
         private static readonly Bitmap OutParamIcon = new Bitmap(Common.Gui.Properties.Resources.output_param, 16, 16);
-        private static readonly Bitmap WindIcon = new Bitmap(Resources.Wind1, 16,16);
+        private static readonly Bitmap WindIcon = new Bitmap(Resources.Wind1, 16, 16);
 
         // boolean is used only the first time to expand the node after creation.
         private bool firstTimeCreate = true;
-        
+
         public WaterFlowFMModelNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin)
         {
         }
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         protected override void OnPropertyChanged(WaterFlowFMModel model, ITreeNode node, PropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(model, node, e);
-            
+
             if (e.PropertyName == TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.InitialCoverageSetChanged))
             {
                 TreeView.RefreshChildNodes(node);
@@ -92,111 +92,55 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             // some of these are shortcuts because they have not specific data object
             // others are wrapped in shortcuts because they are not IProjectItem
 
-            yield return new FlowFMTreeShortcut("General", NumParamIcon, model);
+            yield return new FmModelTreeShortcut("General", NumParamIcon, model, "General");
             yield return model.GetDataItemByValue(model.Area);
-            yield return new FlowFMTreeShortcut("Grid", UnstrucIcon, model, model.Grid);
-            yield return
-                new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>("Bed Level",
-                    Resources.unstrucWater, model, model.Bathymetry, "General")
-                {
-                    ContextMenuDataGetter = o => ((WaterFlowFMModel)o).Bathymetry
-                };
-            yield return new FlowFMTreeShortcut("Time Frame", TimeFrameIcon, model);
-            yield return new FlowFMTreeShortcut("Processes", ProcessesIcon, model);
-            yield return
-                new FlowFMTreeShortcut("Initial Conditions", InitialConditionsIcon, model, null,
-                    GetInitialConditionsItems(model));
-            yield return
-                new FlowFMTreeShortcut("Boundary Conditions", BoundaryConditionIcon, model, model.BoundaryConditionSets,
-                    model.BoundaryConditionSets);
-            yield return
-                new FlowFMTreeShortcut("Physical Parameters", PhysParamIcon, model, null, GetPhysicalSubItems(model));
-            yield return
-                new FlowFMTreeShortcut("Sources and Sinks", SourceSinkIcon, model, model.SourcesAndSinks,
-                    model.SourcesAndSinks);
-            yield return new FlowFMTreeShortcut("Numerical Parameters", NumParamIcon, model);
-            yield return new FlowFMTreeShortcut("Output Parameters", OutParamIcon, model);
+            yield return new FmModelTreeShortcut("Grid", UnstrucIcon, model, model.Grid, ShortCutType.Grid);
+            yield return new FmModelTreeShortcut("Bed Level", Resources.unstrucWater, model, model.Bathymetry, ShortCutType.SpatialCoverage);
+            yield return new FmModelTreeShortcut("Time Frame", TimeFrameIcon, model, "Time Frame");
+            yield return new FmModelTreeShortcut("Processes", ProcessesIcon, model, "Processes");
+            yield return new FmModelTreeShortcut("Initial Conditions", InitialConditionsIcon, model, "Initial Conditions", ShortCutType.SettingsTab, GetInitialConditionsItems(model));
+            yield return new FmModelTreeShortcut("Boundary Conditions", BoundaryConditionIcon, model, model.BoundaryConditionSets, ShortCutType.FeatureSet, model.BoundaryConditionSets);
+            yield return new FmModelTreeShortcut("Physical Parameters", PhysParamIcon, model, "Physical Parameters", ShortCutType.SettingsTab, GetPhysicalSubItems(model));
+            yield return new FmModelTreeShortcut("Sources and Sinks", SourceSinkIcon, model, model.SourcesAndSinks, ShortCutType.FeatureSet, model.SourcesAndSinks);
+            yield return new FmModelTreeShortcut("Numerical Parameters", NumParamIcon, model, "Numerical Parameters");
+            yield return new FmModelTreeShortcut("Output Parameters", OutParamIcon, model, "Output Parameters");
         }
 
         private static IEnumerable<object> GetInitialConditionsItems(WaterFlowFMModel model)
         {
             yield return model.GetDataItemByValue(model.RestartInput);
-            string tabText = "Initial Conditions";
-            yield return
-                new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>(
-                    WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Resources.waterLayers, model,
-                    model.InitialWaterLevel, tabText)
-                {
-                    ContextMenuDataGetter = o => ((WaterFlowFMModel) o).InitialWaterLevel
-                };
+
+            yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Resources.waterLayers, model, model.InitialWaterLevel, ShortCutType.SpatialCoverage);
+
             if (model.UseSalinity)
             {
-                yield return
-                    new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>(
-                        WaterFlowFMModelDefinition.InitialSalinityDataItemName, Resources.salt, model,
-                        model.InitialSalinity.Coverages[0], tabText)
-                    {
-                        ContextMenuDataGetter = o => ((WaterFlowFMModel) o).InitialSalinity.Coverages[0]
-                    };
+                yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InitialSalinityDataItemName, Resources.salt, model, model.InitialSalinity.Coverages[0], ShortCutType.SpatialCoverage);
             }
+
             if (model.HeatFluxModelType != HeatFluxModelType.None)
             {
-                yield return
-                    new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>(
-                        WaterFlowFMModelDefinition.InitialTemperatureDataItemName, Resources.thermometer, model,
-                        model.InitialTemperature, tabText)
-                    {
-                        ContextMenuDataGetter = o => ((WaterFlowFMModel) o).InitialTemperature
-                    };
+                yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InitialTemperatureDataItemName, Resources.thermometer, model, model.InitialTemperature, ShortCutType.SpatialCoverage);
             }
-            
+
             foreach (var tracer in model.InitialTracers)
             {
-                var treeShortCut = new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>(
-                    tracer.Name, Resources.pipette, model, tracer,
-                    tabText)
-                {
-                    ContextMenuDataGetter =
-                        o => ((WaterFlowFMModel) o).InitialTracers.First(tr => tr.Name == tracer.Name)
-                };
-                yield return treeShortCut;
+                yield return new FmModelTreeShortcut(tracer.Name, Resources.pipette, model, tracer, ShortCutType.SpatialCoverage);
             }
-            if (model.UseMorSed)
+
+            if (!model.UseMorSed) yield break;
+
+            foreach (var fraction in model.InitialFractions)
             {
-                tabText = "Sediment";
-                foreach (var fraction in model.InitialFractions)
-                {
-                    var treeShortCut = new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>(
-                        fraction.Name, Resources.pipette, model, fraction,
-                        tabText)
-                    {
-                        ContextMenuDataGetter =
-                            o => ((WaterFlowFMModel)o).InitialFractions.First(tr => tr.Name == fraction.Name)
-                    };
-                    yield return treeShortCut;
-                }
+                yield return new FmModelTreeShortcut(fraction.Name, Resources.pipette, model, fraction, ShortCutType.SpatialCoverage);
             }
         }
 
         private static IEnumerable<object> GetPhysicalSubItems(WaterFlowFMModel model)
         {
-            yield return
-                new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>(
-                    WaterFlowFMModelDefinition.RoughnessDataItemName, Resources.Roughness, model, model.Roughness,
-                    "Physical Parameters")
-                {
-                    ContextMenuDataGetter = o => ((WaterFlowFMModel) o).Roughness
-                };
-            yield return
-                new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>(
-                    WaterFlowFMModelDefinition.ViscosityDataItemName, Resources.tube, model, model.Viscosity,
-                    "Physical Parameters") {ContextMenuDataGetter = o => ((WaterFlowFMModel) o).Viscosity};
+            yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.RoughnessDataItemName, Resources.Roughness, model, model.Roughness, ShortCutType.SpatialCoverage);
+            yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.ViscosityDataItemName, Resources.tube, model, model.Viscosity, ShortCutType.SpatialCoverage);
+            yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.DiffusivityDataItemName, Resources.drop, model, model.Diffusivity, ShortCutType.SpatialCoverage);
 
-            yield return
-                new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>(
-                    WaterFlowFMModelDefinition.DiffusivityDataItemName, Resources.drop, model, model.Diffusivity,
-                    "Physical Parameters") {ContextMenuDataGetter = o => ((WaterFlowFMModel) o).Diffusivity};
-            
             if (model.ModelDefinition.HeatFluxModel.MeteoData != null)
             {
                 yield return model.ModelDefinition.HeatFluxModel;
@@ -216,7 +160,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
             foreach (var p in GetOutputDataItemsCore(model))
             {
-               
+
                 yield return p;
             }
         }
@@ -245,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
             if (existingItem == null)
             {
-                var newItem = new DataItem(o, DataItemRole.Output) {Tag = tag, Owner = model};
+                var newItem = new DataItem(o, DataItemRole.Output) { Tag = tag, Owner = model };
                 DataItems.Add(newItem);
                 return newItem;
             }
@@ -311,8 +255,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         {
             var item = new ClonableToolStripMenuItem
             {
-                Text = Resources.WaterFlowFMModelNodePresenter_CreateValidationMenuItem_Validate___, 
-                Tag = model, 
+                Text = Resources.WaterFlowFMModelNodePresenter_CreateValidationMenuItem_Validate___,
+                Tag = model,
                 Image = Common.Gui.Properties.Resources.validation
             };
             item.Click += OnValidateClicked;
@@ -323,8 +267,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         {
             var item = new ClonableToolStripMenuItem
             {
-                Text = Resources.WaterFlowFMModelNodePresenter_CreateFileStructureItem_File_Tree___, 
-                Tag = model, 
+                Text = Resources.WaterFlowFMModelNodePresenter_CreateFileStructureItem_File_Tree___,
+                Tag = model,
                 Image = Common.Gui.Properties.Resources.document_tree
             };
             item.Click += OnFileStructureClicked;
@@ -340,7 +284,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         private void OnValidateClicked(object sender, EventArgs args)
         {
             var model = (WaterFlowFMModel)((ToolStripItem)sender).Tag;
-            Gui.DocumentViewsResolver.OpenViewForData(model, typeof (ValidationView));
+            Gui.DocumentViewsResolver.OpenViewForData(model, typeof(ValidationView));
         }
 
         private void OnFileStructureClicked(object sender, EventArgs args)

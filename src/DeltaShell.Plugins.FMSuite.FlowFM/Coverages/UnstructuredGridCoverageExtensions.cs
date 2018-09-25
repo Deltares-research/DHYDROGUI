@@ -154,6 +154,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                     else
                     {
                         var value = points.PointValues[0].Value;
+
+                        coverage.Components[i].Values.Clear();
                         FunctionHelper.SetValuesRaw(coverage.Components[i], Enumerable.Repeat(value, count));
                     }
                 }

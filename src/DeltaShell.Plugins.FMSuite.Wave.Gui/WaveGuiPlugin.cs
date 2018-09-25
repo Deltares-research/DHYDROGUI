@@ -79,33 +79,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             {
                 Description = "Wave settings",
                 GetViewName = (v, o) => o.Name + _wavesSettings,
-                OnActivateView = (v, o) =>
-                {
-                    Gui.CommandHandler.OpenView(v);
-                },
                 AfterCreate = (v, o) =>
                 {
-                    var wpfSettingsViewModel = (WpfSettingsViewModel)v.DataContext;
-                    var waveModel = (WaveModel)v.Data;
-                    wpfSettingsViewModel.SettingsCategories = WaveSettingsHelper.GetWpfGuiCategories(waveModel, Gui);
-                    ((INotifyPropertyChange)waveModel.ModelDefinition.Properties).PropertyChanged += (sender, args) =>
-                    {
-                        var property = sender as WaveModelProperty;
-                        if (property != null)
-                        {
-                            wpfSettingsViewModel.UpdatePropertyValue(property.PropertyDefinition.FilePropertyName);
-                        }
-                    };
+                    //Set the properties.
+                    v.SettingsCategories = WaveSettingsHelper.GetWpfGuiCategories(o, Gui);
+                    v.GetChangedPropertyName = sender => (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
                 }
             };
 
             // observation points
-            var obsPointViewInfo =
-                FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2DPoint, WaveModel>("Observation Points (Waves)",
-                                                                                          m => m.ObservationPoints,
-                                                                                          () => Gui);
+            var obsPointViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2DPoint, WaveModel>("Observation Points (Waves)", m => m.ObservationPoints,() => Gui);
             yield return obsPointViewInfo;
-            yield return ViewInfoWrapper<WaveTreeShortcut>.Create(obsPointViewInfo, o => o.TargetData);
+            yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obsPointViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet);
+
             yield return ViewInfoWrapper<Feature2DPoint>.Create(obsPointViewInfo,
                                                                 o =>
                                                                 WaveModels.First(m => m.ObservationPoints.Contains(o))
@@ -114,90 +100,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                                                                 WaveModels.Any(m => m.ObservationPoints.Contains(o)));
 
             // obs. cross sections  
-            var obsCrossSectionViewInfo =
-                FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaveModel>("Observation Cross Section (Waves)",
+            var obsCrossSectionViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaveModel>("Observation Cross Section (Waves)",
                                                                                      m => m.ObservationCrossSections,
                                                                                      () => Gui);
             yield return obsCrossSectionViewInfo;
-            yield return ViewInfoWrapper<WaveTreeShortcut>.Create(obsCrossSectionViewInfo, o => o.TargetData);
+            yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obsCrossSectionViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet);
+
             yield return ViewInfoWrapper<Feature2D>.Create(obsCrossSectionViewInfo,
-                                                           o =>
-                                                           WaveModels.First(m => m.ObservationCrossSections.Contains(o))
+                                                           o => WaveModels.First(m => m.ObservationCrossSections.Contains(o))
                                                                      .ObservationCrossSections,
-                                                           o =>
-                                                           WaveModels.Any(m => m.ObservationCrossSections.Contains(o)));
-
-            
-            // D3DFMIQ-430 Disucssed with Michal Kleczek, apparently this editor is not really used, 
-            // double check and remove once it's clarified.
-            //            // spectral domain
-            //            yield return new ViewInfo<WaveDomainData, WaveDomainEditor>
-            //            {
-            //                Description = "Waves Domain Editor",
-            //                GetViewName = (v, o) => "Domain (" + o.Name + ")",
-            //                CompositeViewType = typeof (ProjectItemMapView),
-            //                GetCompositeViewData =
-            //                    o => WaveModels.First(m => WaveDomainHelper.GetAllDomains(m.OuterDomain).Contains(o)),
-            //                AdditionalDataCheck =
-            //                    o => WaveModels.Any(m => WaveDomainHelper.GetAllDomains(m.OuterDomain).Contains(o)),
-            //                AfterCreate = (v, o) =>
-            //                {
-            //                    var model = WaveModels.First(m => WaveDomainHelper.GetAllDomains(m.OuterDomain).Contains(o));
-            //                    v.ImportIntoModelDirectory = model.ImportIntoModelDirectory;
-            //                    v.IsCoupledToFlow = model.IsCoupledToFlow;
-            //                    ((INotifyPropertyChanged) model).PropertyChanged += (sender, args) =>
-            //                    {
-            //                        if (args.PropertyName == TypeUtils.GetMemberName(() => model.IsCoupledToFlow))
-            //                        {
-            //                            v.IsCoupledToFlow = model.IsCoupledToFlow;
-            //                        }
-            //                    };
-            //                }
-            //            };
-
-            // for launching rgfgrid editor
-            var gridViewInfo = new ViewInfo<CurvilinearGrid, WaveModel, WaveModelView>
-            {
-                Description = "Waves Model",
-                GetViewName = (v, o) => "Waves Model (" + o.Name + ")",
-                CompositeViewType = typeof (ProjectItemMapView),
-                AdditionalDataCheck =
-                    o =>
-                        o.IsEditable &&
-                        WaveModels.Any(m => WaveDomainHelper.GetAllDomains(m.OuterDomain).Any(d => Equals(d.Grid, o))),
-                GetCompositeViewData =
-                    o =>
-                        WaveModels.First(m => WaveDomainHelper.GetAllDomains(m.OuterDomain).Any(d => Equals(d.Grid, o))),
-                GetViewData =
-                    o =>
-                        WaveModels.First(m => WaveDomainHelper.GetAllDomains(m.OuterDomain).Any(d => Equals(d.Grid, o))),
-                OnActivateView = (v, o) =>
-                {
-                    v.Gui = Gui;
-                    var model =
-                        WaveModels.First(m => WaveDomainHelper.GetAllDomains(m.OuterDomain).Any(d => Equals(d.Grid, o)));
-                    var waveDomainData = WaveDomainHelper.GetAllDomains(model.OuterDomain).First(d => Equals(d.Grid, o));
-                    WaveGridEditor.LaunchGridEditor(model, waveDomainData);
-                    var centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>()
-                        .FirstOrDefault(vi => Equals(vi.Data, model));
-                    if (centralMap == null) return;
-
-                    // grid has been replaced, resolve through domain:
-                    var layer = centralMap.MapView.GetLayerForData(waveDomainData.Grid);
-                    if (layer == null) return;
-
-                    layer.Map.ZoomToExtents();
-                }
-            };
-            yield return gridViewInfo;
-            yield return ViewInfoWrapper<WaveTreeShortcut>.Create(gridViewInfo, o => o.TargetData, o => o.TargetData is CurvilinearGrid);
+                                                           o => WaveModels.Any(m => m.ObservationCrossSections.Contains(o)));
             
             // time points
             var timePointViewInfo = new ViewInfo<WaveInputFieldData, WaveTimePointEditor>
             {
                 Description = "Time Point Editor",
-                GetViewName =
-                    (v, o) => "Time Point Editor (" + WaveModels.First(m => Equals(o, m.TimePointData)).Name + ")",
+                GetViewName = (v, o) => "Time Point Editor (" + WaveModels.First(m => Equals(o, m.TimePointData)).Name + ")",
                 AdditionalDataCheck = o => WaveModels.Any(m => Equals(o, m.TimePointData)),
                 CloseForData = (v, o) => ((WaveModel) v.Data).TimePointData.Equals(o),
                 AfterCreate = (v, o) =>
@@ -211,8 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 }
             };
             yield return timePointViewInfo;
-            var fromTreeShortcut = ViewInfoWrapper<WaveTreeShortcut>.Create(timePointViewInfo, o => o.TargetData,
-                                                                  o => o.TargetData is WaveInputFieldData);
+            var fromTreeShortcut = ViewInfoWrapper<WaveModelTreeShortcut>.Create(timePointViewInfo, o => o.Data, o => o.Data is WaveInputFieldData && o.ShortCutType == ShortCutType.FeatureSet);
             fromTreeShortcut.CloseForData = (v, o) => o.Equals(v.Data);
 
             yield return fromTreeShortcut;
@@ -229,9 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 o => WaveModels.First(
                     m => m.BoundaryConditions.Equals(o)), o => WaveModels.Any(m => m.BoundaryConditions.Equals(o)));
 
-            yield return
-                ViewInfoWrapper<WaveTreeShortcut>.Create(boundaryListView, o => o.Model,
-                    o => o.Model.BoundaryConditions.Equals(o.TargetData));
+            yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(boundaryListView, o => o.Model, o => o.WaveModel.BoundaryConditions.Equals(o.Data) && o.ShortCutType == ShortCutType.FeatureSet);
             
             // boundary condition editor
             var boundaryConditionViewInfo = new ViewInfo<WaveBoundaryCondition, WaveBoundaryConditionEditor>()
@@ -284,74 +199,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     var model = WaveModels.FirstOrDefault(m => m.Obstacles.Contains(o));
                     return model != null ? model.Obstacles : null;
                 });
-            yield return
-                ViewInfoWrapper<Feature2D>.Create(obstacleViewInfo, FindObstaclesForFeature, IsModelObstacle);
-            yield return
-                ViewInfoWrapper<WaveTreeShortcut>.Create(obstacleViewInfo, o => o.TargetData,
-                                                         o => o.Model.Obstacles.Equals(o.TargetData));
-              
-            yield return
-                new ViewInfo<SpatialOperationCoverageTreeShortcut<WaveModel, WpfSettingsView>, WaveModel, WpfSettingsView>
-                {
-                    Description = "Spatial Operation on Coverage",
-                    GetViewName = (v, o) => o.Name + " (Waves)",
-                    GetViewData = o => o.Model,
-                    CompositeViewType = typeof (ProjectItemMapView),
-                    GetCompositeViewData = o => o.Model,
-                    OnActivateView = (v, o) =>
-                    {
-                        var treeShortcut = (SpatialOperationCoverageTreeShortcut<WaveModel, WpfSettingsView>) o;
-                        treeShortcut.FocusSpatialEditor(Gui);
-                        if (Gui.DocumentViewsResolver.OpenViewForData(treeShortcut.Model, typeof(WpfSettingsView)))
-                        {
-                            var settingsView = Gui.DocumentViews.OfType<WpfSettingsView>()
-                                .FirstOrDefault(dv => dv.Data.Equals(treeShortcut.Model));
-                            treeShortcut.NavigateToInView(settingsView);
-                        }
-                        treeShortcut.NavigateToInView(v);
-                    },
-                    AfterCreate = (v, o) =>
-                    {
-                        o.FocusSpatialEditor(Gui);
-                        //Set the properties.
-                        if (Gui.DocumentViewsResolver.OpenViewForData(o.Model, typeof(WpfSettingsView)))
-                        {
-                            var settingsView = Gui.DocumentViews.OfType<WpfSettingsView>()
-                                .FirstOrDefault(dv => dv.Data.Equals(o.Model));
-                            o.NavigateToInView(settingsView);
-                        }
-                    },
-                };
+            yield return ViewInfoWrapper<Feature2D>.Create(obstacleViewInfo, FindObstaclesForFeature, IsModelObstacle);
+            yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obstacleViewInfo, o => o.Data, o => o.WaveModel.Obstacles.Equals(o.Data) && o.ShortCutType == ShortCutType.FeatureSet);
 
-            // 'General'
-            yield return new ViewInfo<WaveTreeShortcut, WaveModel, WpfSettingsView>
+            yield return new ViewInfo<WaveModelTreeShortcut, WaveModel, WpfSettingsView>
             {
                 Description = "Wave settings",
                 GetViewName = (v, o) => o.Name + _wavesSettings,
-                AdditionalDataCheck = o => o.CanSwitchToTab,
-                GetViewData = o => o.Model,
-                CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = o => o.Model,
+                GetViewData = o => o.WaveModel,
                 OnActivateView = (v, o) =>
                 {
-                    Gui.CommandHandler.OpenView(v);
-                    var shortCut = ((WaveTreeShortcut)o);
-                    if (Gui.DocumentViewsResolver.OpenViewForData(shortCut.Model, typeof(WpfSettingsView)))
-                    {
-                        var settingsView = Gui.DocumentViews.OfType<WpfSettingsView>()
-                            .FirstOrDefault(dv => dv.Data.Equals(shortCut.Model));
-                        shortCut.NavigateToInView(settingsView);
-                    }
+                    var shortcut = o as WaveModelTreeShortcut;
+                    if (shortcut == null) return;
+                    v.EnsureVisible(shortcut.Data);
                 },
                 AfterCreate = (v, o) =>
                 {
                     //Set the properties.
-                    if (Gui.DocumentViewsResolver.OpenViewForData(o.Model, typeof(WpfSettingsView)))
-                    {
-                        var settingsView = Gui.DocumentViews.OfType<WpfSettingsView>()
-                            .FirstOrDefault(dv => dv.Data.Equals(o.Model));
-                        o.NavigateToInView(settingsView);
-                    }
+                    v.SettingsCategories = WaveSettingsHelper.GetWpfGuiCategories(o.WaveModel, Gui);
+                    v.GetChangedPropertyName = sender => (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
                 }
             };
 
@@ -457,11 +323,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             yield return new WaveModelNodePresenter(this);
             yield return new WaveDomainNodePresenter(d => WaveModels.FirstOrDefault(m => WaveDomainHelper.GetAllDomains(m.OuterDomain).Contains(d)));
-            yield return new WaveTreeShortcutNodePresenter {GuiPlugin = this};
             yield return new WaveBoundaryNodePresenter(getModelFromBoundaryConditionFunc) { GuiPlugin = this };
             yield return new WavmFileFunctionStoreNodePresenter {GuiPlugin = this};
-            yield return
-                new SpatialOperationCoverageTreeShortcutNodePresenter<WaveModel, WpfSettingsView> {GuiPlugin = this};
+            yield return new WaveModelTreeShortcutNodePresenter {GuiPlugin = this};
         }
 
         public override DelftTools.Shell.Gui.Forms.IRibbonCommandHandler RibbonCommandHandler

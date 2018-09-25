@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
-    [TestFixture]
+/*    [TestFixture]
     [Category(TestCategory.WindowsForms)]
     public class WaterFlowFMModelViewTest
     {
@@ -18,5 +18,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var view = new WaterFlowFMModelView {Data = model};
             WindowsFormsTestHelper.ShowModal(view);
         }
-    }
+    }*/
 }

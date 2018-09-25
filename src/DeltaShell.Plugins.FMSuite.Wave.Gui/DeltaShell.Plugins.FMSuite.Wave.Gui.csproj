@@ -233,7 +233,7 @@
     </Compile>
     <Compile Include="NodePresenters\WaveBoundaryNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveDomainNodePresenter.cs" />
-    <Compile Include="NodePresenters\WaveTreeShortcutNodePresenter.cs" />
+    <Compile Include="NodePresenters\WaveModelTreeShortcutNodePresenter.cs" />
     <Compile Include="NodePresenters\WavmFileFunctionStoreNodePresenter.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -251,14 +251,8 @@
     <Compile Include="WaveMapViewDecorator.cs" />
     <Compile Include="WaveModelMapLayerProvider.cs" />
     <Compile Include="WaveModelUIDescription.cs" />
-    <Compile Include="WaveModelView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="WaveModelView.Designer.cs">
-      <DependentUpon>WaveModelView.cs</DependentUpon>
-    </Compile>
     <Compile Include="WaveSettingsHelper.cs" />
-    <Compile Include="WaveTreeShortcut.cs" />
+    <Compile Include="WaveModelTreeShortcut.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
@@ -341,9 +335,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WaveModelView.resx">
-      <DependentUpon>WaveModelView.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

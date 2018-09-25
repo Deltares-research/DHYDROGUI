@@ -10,10 +10,8 @@ using DelftTools.Controls.Swf.TreeViewControls;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
-using NetTopologySuite.Extensions.Grids;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
@@ -53,21 +51,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         public override IEnumerable GetChildNodeObjects(WaveDomainData parentNodeData, ITreeNode node)
         {
             var model = getModelForDomain(parentNodeData);
-            yield return new WaveTreeShortcut(parentNodeData.Grid.Name, GridImage, model, parentNodeData.Grid)
-            {
-                ContextMenuDataGetter = o => o as CurvilinearGrid
-            };
-            var spatialOperationCoverageTreeShortcut = new SpatialOperationCoverageTreeShortcut<WaveModel, WpfSettingsView>(parentNodeData.Bathymetry.Name,
-                BathymetryImage, model, parentNodeData.Bathymetry, "Domain")
-            {
-                ContextMenuDataGetter = o =>
-                {
-                    var m = o as WaveModel;
-                    if (m == null || m.OuterDomain == null) return null;
-                    return m.OuterDomain.Bathymetry;
-                } // because bathymetry is not passed in data of derived class calling the base constructor!
-            };
-            yield return spatialOperationCoverageTreeShortcut;
+            yield return new WaveModelTreeShortcut(parentNodeData.Grid.Name, GridImage, model, parentNodeData.Grid, ShortCutType.Grid);
+            yield return new WaveModelTreeShortcut(parentNodeData.Bathymetry.Name, BathymetryImage, model, parentNodeData.Bathymetry, ShortCutType.SpatialCoverage);
 
             foreach (var domain in parentNodeData.SubDomains)
             {
@@ -115,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             model.AddSubDomain(target, domain);
             model.EndEdit();
         }
-        
+
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
         {
             var waveDomain = nodeData as WaveDomainData;
@@ -127,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
                     contextMenu.Items.Add(CreateAddSuperDomainMenuItem(model, waveDomain));
                 contextMenu.Items.Add(CreateAddDomainMenuItem(model, waveDomain));
                 contextMenu.Items.Add(CreateDeleteDomainMenuItem(model, waveDomain));
-                
+
                 var domainMenu = new MenuItemContextMenuStripAdapter(contextMenu);
                 return domainMenu;
             }
@@ -138,21 +123,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         {
             var item = new ClonableToolStripMenuItem
             {
-                Text = Resources.WaveDomainNodePresenter_CreateAddSuperDomainMenuItem_Add_Exterior_Domain___, 
+                Text = Resources.WaveDomainNodePresenter_CreateAddSuperDomainMenuItem_Add_Exterior_Domain___,
                 Tag = model
             };
             item.Click += (s, a) => AddSuperDomainOnClick(model, waveDomain);
             return item;
         }
-        
+
         private ToolStripItem CreateAddDomainMenuItem(WaveModel model, WaveDomainData waveDomain)
         {
             var item = new ClonableToolStripMenuItem
             {
-                Text = Resources.WaveDomainNodePresenter_CreateAddDomainMenuItem_Add_Interior_Domain___, 
+                Text = Resources.WaveDomainNodePresenter_CreateAddDomainMenuItem_Add_Interior_Domain___,
                 Tag = model
             };
-            item.Click += (s,a) => AddSubDomainOnClick(model, waveDomain);
+            item.Click += (s, a) => AddSubDomainOnClick(model, waveDomain);
             return item;
         }
 
@@ -160,10 +145,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         {
             var item = new ClonableToolStripMenuItem
             {
-                Text = Resources.WaveDomainNodePresenter_CreateDeleteDomainMenuItem_Delete_Domain, 
+                Text = Resources.WaveDomainNodePresenter_CreateDeleteDomainMenuItem_Delete_Domain,
                 Tag = model
             };
-            item.Click += (s,a) => DeleteDomain(model, nodeData);
+            item.Click += (s, a) => DeleteDomain(model, nodeData);
             item.Image = Common.Gui.Properties.Resources.DeleteHS;
             return item;
         }
@@ -211,13 +196,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         private void AddSubDomainOnClick(WaveModel model, WaveDomainData waveDomain)
         {
             var name = PromptForValidDomainName(model);
-            
+
             if (name != null)
             {
                 var newDomain = new WaveDomainData(name);
                 model.SyncWithModelDefaults(newDomain);
                 if (CancelOnExistingFile(model, newDomain)) return;
-                
+
                 model.AddSubDomain(waveDomain, newDomain);
             }
         }
@@ -225,12 +210,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         private static string PromptForValidDomainName(WaveModel model)
         {
             var dialog = new InputTextDialog
-                {
-                    Text = "Enter domain name...",
-                    InitialText = "",
-                    ValidationMethod = s => WaveDomainHelper.IsValidDomainName(s, model),
-                    ValidationErrorMsg = "Please enter a unique and valid name (to be used as filename)"
-                };
+            {
+                Text = "Enter domain name...",
+                InitialText = "",
+                ValidationMethod = s => WaveDomainHelper.IsValidDomainName(s, model),
+                ValidationErrorMsg = "Please enter a unique and valid name (to be used as filename)"
+            };
 
             return dialog.ShowDialog() == DialogResult.OK ? dialog.EnteredText : null;
         }

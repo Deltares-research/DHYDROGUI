@@ -53,6 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             }
         }
 
+/*
         [Test]
         public void JumpToSubTabThroughProjectExplorerWithModelViewNotYetOpen()
         {
@@ -130,6 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }
         }
+*/
 
         [Test]
         public void CheckEventLeaksThroughDataItemWrappers()
@@ -207,7 +209,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
 
-        private static WaterFlowFMModelView GetActiveFMModelView()
+/*        private static WaterFlowFMModelView GetActiveFMModelView()
         {
             return (WaterFlowFMModelView)FlowFMGuiPlugin.ActiveMapView.TabControl.ActiveView;
         }
@@ -215,6 +217,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         private static TabPage GetSelectedTab(WaterFlowFMModelView modelView)
         {
             return modelView.Controls[0].Controls.OfType<TabControl>().First().SelectedTab;
-        }
+        }*/
     }
 }

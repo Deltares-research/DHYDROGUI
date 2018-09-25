@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Hydro;
 using Image = System.Drawing.Image;
@@ -11,41 +14,49 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     /// <seealso cref="System.Windows.Controls.UserControl" />
     /// <seealso cref="System.Windows.Markup.IComponentConnector" />
     /// <seealso cref="DelftTools.Controls.IView" />
-    public partial class WpfSettingsView : IView
+    public partial class WpfSettingsView : IView, IAdditionalView
     {
-        private IHydroModel data;
         public WpfSettingsView()
         {
             InitializeComponent();
         }
 
-        #region Implmentation of IView
         public string Text { get; set; }
-        public bool Visible { get; }
-        #endregion
 
-        #region IView Members
+        public bool Visible { get; }
+
         public object Data
         {
-            get { return data; }
+            get { return ViewModel.DataModel; }
             set
             {
-                data = (IHydroModel)value;
-
-                if (data == null)
+                if (ViewModel.DataModel != null)
                 {
-                    DataContext = null;
-                    return;
+                    ((INotifyPropertyChanged)ViewModel.DataModel).PropertyChanged -= OnDataPropertyChanged;
                 }
-                DataContext = new WpfSettingsViewModel{DataModel = data};
+
+                ViewModel.DataModel = (IHydroModel)value;
+
+                if (ViewModel.DataModel != null)
+                {
+                    ((INotifyPropertyChanged)ViewModel.DataModel).PropertyChanged += OnDataPropertyChanged;
+                }
             }
         }
-        
+
+        public ObservableCollection<WpfGuiCategory> SettingsCategories
+        {
+            get { return ViewModel.SettingsCategories; }
+            set { ViewModel.SettingsCategories = value; }
+        }
+
         public Image Image
         {
             get; set;
         }
         public ViewInfo ViewInfo { get; set; }
+
+        public Func<object, string> GetChangedPropertyName { get; set; }
 
         /// <summary>
         /// Makes object visible in the view if possible
@@ -58,20 +69,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             {
                 var tabName = (item as string).ToLowerInvariant();
                 var selectedTab =
-                    settings.SettingsCategories.IndexOf( settings.SettingsCategories.FirstOrDefault( c => c.CategoryName
-                        .ToLowerInvariant().Equals(tabName)));
+                    settings.SettingsCategories.IndexOf(settings.SettingsCategories.FirstOrDefault(c => c.CategoryName
+                      .ToLowerInvariant().Equals(tabName)));
                 mainTabControl.SelectedIndex = selectedTab;
             }
         }
 
-        #endregion
-
-        #region Implementation of IDisposable
         public void Dispose()
         {
-            //            throw new NotImplementedException();
         }
-        #endregion
 
+        private void OnDataPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            var propertyName = GetChangedPropertyName(sender);
+            if (string.IsNullOrEmpty(propertyName)) return;
+
+            ViewModel.UpdatePropertyValue(propertyName);
+        }
     }
 }
