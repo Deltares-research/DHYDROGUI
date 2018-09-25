@@ -385,8 +385,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static void UnzipModel(string localZipFilePath, out string localExtractedZipPath)
         {
             var zipFileInfo = new FileInfo(localZipFilePath);
-            localExtractedZipPath = zipFileInfo.FullName.TrimEnd(zipFileInfo.Extension.ToCharArray());
-
+            localExtractedZipPath = Path.Combine(zipFileInfo.Directory.FullName, "unzip");
             FileUtils.DeleteIfExists(localExtractedZipPath);
             ZipFileUtils.Extract(localZipFilePath, localExtractedZipPath);
         }
