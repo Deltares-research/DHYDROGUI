@@ -1034,11 +1034,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         IModelState IStateAwareModelEngine.GetCopyOfCurrentState()
         {
-            var currentState = ModelStateHandler.GetState();
-            var filename = "rtc_" + CurrentTime.ToString("yyyyMMdd") + "_" + CurrentTime.ToString("HHmmss")+".xml";
-            if(File.Exists(Path.Combine(ExplicitWorkingDirectory, filename)))
-                ((ModelStateFilesImpl)currentState).AddFile(filename,RealTimeControlXMLFiles.XmlImportState);
-            return currentState;
+            return ModelStateHandler.GetState();
         }
 
         void IStateAwareModelEngine.SetState(IModelState modelState)
@@ -1150,6 +1146,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 if (modelStateHandler == null)
                 {
                     IList<DelftTools.Utils.Tuple<string, string>> outAndInFileNames = new List<DelftTools.Utils.Tuple<string, string>>();
+                    outAndInFileNames.Add(new DelftTools.Utils.Tuple<string, string>(RealTimeControlXMLFiles.XmlExportState, RealTimeControlXMLFiles.XmlImportState));
                     modelStateHandler = new ModelFileBasedStateHandler(Name, outAndInFileNames);
                 }
                 return modelStateHandler;
