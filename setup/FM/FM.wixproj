@@ -32,18 +32,6 @@
     <DefineConstants>$(DefineConstants);ReleaseVersion=$(ReleaseVersion);ProductName=$(ProductName);</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="..\Dimr\CLI.wxi">
-      <Link>CLI.wxi</Link>
-    </Content>
-    <Content Include="..\Dimr\CLI_FeatureContent.wxi">
-      <Link>CLI_FeatureContent.wxi</Link>
-    </Content>
-    <Content Include="..\Dimr\CLI_WAVE.wxi">
-      <Link>CLI_WAVE.wxi</Link>
-    </Content>
-    <Content Include="..\Dimr\CLI_WAVE_FeatureContent.wxi">
-      <Link>CLI_WAVE_FeatureContent.wxi</Link>
-    </Content>
     <Content Include="..\Dimr\Dimr.wxi">
       <Link>Dimr.wxi</Link>
     </Content>
@@ -170,9 +158,6 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\Dimr\Localization\CLINames.wxl">
-      <Link>Localization\CLINames.wxl</Link>
-    </EmbeddedResource>
     <EmbeddedResource Include="..\Dimr\Localization\DIMRNames.wxl">
       <Link>Localization\DIMRNames.wxl</Link>
     </EmbeddedResource>

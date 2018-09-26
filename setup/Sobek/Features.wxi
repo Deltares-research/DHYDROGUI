@@ -37,10 +37,5 @@
   <Feature Id="FewsAdapterFeature" Title="!(loc.FewsAdapterFeatureName)" Description="!(loc.FewsAdapterFeatureDescription)" Absent="allow" Level="1000" AllowAdvertise="no">
     <ComponentRef Id="FewsAdapterComponent"/>
   </Feature>
-
-  <Feature Id="CLI" Title="!(loc.CLIFeatureName)" Description="!(loc.CLIFeatureDescription)" Level="1000" Absent="allow" AllowAdvertise="no">
-    <?include ..\dimr\CLI_FeatureContent.wxi?>
-    <?include ..\dimr\CLI_SOBEK_FeatureContent.wxi?>
-  </Feature>
   
 </Include>

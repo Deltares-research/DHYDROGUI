@@ -5,11 +5,6 @@
   <?include ..\NGHS.IO\NGHS.IO.wxi?>
   <?include ..\Dimr\Dimr.wxi?>
   
-  <?ifndef var.NOKERNELS?>
-  <?include ..\Dimr\CLI.wxi?>
-  <?include ..\Dimr\CLI_WAVE.wxi?>
-  <?endif?>
-  
   <?include FMSuiteCommonPlugin.wxi?>
   <?include FMPlugin.wxi?>
   
