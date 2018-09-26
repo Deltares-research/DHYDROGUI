@@ -11,19 +11,14 @@
     <Directory Name="waq_kernel" Id="delwaq_kernel_folder">
       <?define waq_kernel_dir="$(var.waq_plugin_bin)\waq_kernel\"?>
       <Directory Name="x64" Id="delwaq_x64_folder">
-        <?ifndef var.NOKERNELS?>
         <Component Id="DuflowProcessLibraryPlugin_x64" Guid="7A0AEAE4-D3F2-4BB9-BD1E-8AFC41AF56F6">
           <File Id="x64_duflow.dll" Source="$(var.waq_kernel_dir)x64\duflow.dll" />
         </Component>
-        <?endif?>
       </Directory>
       
       <Directory Id="Data" Name="Data" >
-        <?ifndef var.NOKERNELS?>
         <Directory Id="SubstancesFilesDir" Name="Sobek" />
-        <?endif?>
         <Directory Id="Duflow" Name="Duflow" >
-          <?ifndef var.NOKERNELS?>
           <Component Id="WaterQualityDuflowLibrary" Guid="F9B29CFE-B4B8-442F-A865-EE53FED914FE">
             <File Source="$(var.waq_kernel_dir)Data\Duflow\01_Zoutr.0" />
             <File Source="$(var.waq_kernel_dir)Data\Duflow\01_Zoutr.des" />
@@ -80,16 +75,13 @@
             <File Source="$(var.waq_kernel_dir)Data\Duflow\16_PD124.des" />
             <File Source="$(var.waq_kernel_dir)Data\Duflow\16_PD124.sub" />
           </Component>
-          <?endif?>
         </Directory>
         <Directory Name="Default" Id="Default">
-          <?ifndef var.NOKERNELS?>
           <Component Guid="625BFC7C-1B83-43E4-BE38-FE0734C12BD5" Id="WaterQualityDefaultLibrary">
             <File Source="$(var.waq_kernel_dir)Data\Default\coefedit_duflow.dat" />
             <File Source="$(var.waq_kernel_dir)Data\Default\proc_def_duflow.dat" />
             <File Source="$(var.waq_kernel_dir)Data\Default\proc_def_duflow.def" />
           </Component>
-          <?endif?>
         </Directory>
       </Directory>
       <?undef waq_kernel_dir?>

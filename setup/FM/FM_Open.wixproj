@@ -201,11 +201,17 @@
   <Import Project="..\Framework\DeltaShell\CreateZipFromMSI.targets" />
   <Import Project="FMOpenProperties.targets" />
   <Import Project="..\Dimr\HarvestDimrLibs.targets" />
+  <Import Project="..\Waq\HarvestPLCTLibs.targets" />
+  <Import Project="..\Waq\HarvestDidoLibs.targets" />
+  <Import Project="..\Waq\HarvestSubstancesFiles.targets" />
   <Import Project="HarvestRGFGridLibs.targets" />
   <PropertyGroup>
     <BuildDependsOn>
       HarvestDimrLibsTarget;
+      HarvestPLCTLibsTarget;
       HarvestRGFGridLibsTarget;
+      HarvestDidoLibsTarget;
+      HarvestSubstancesFilesTarget;
       $(BuildDependsOn);
     </BuildDependsOn>
   </PropertyGroup>
