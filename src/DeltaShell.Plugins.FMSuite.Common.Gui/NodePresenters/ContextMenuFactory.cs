@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
             menu.Items.Add(new ToolStripSeparator());
 
             bool addToolStripSeparator = false;
-            if (nodePresenter.CanRemove(null, node.Tag))
+            if (nodePresenter.CanRemove(null, data))
             {
                 var deleteItem = new ClonableToolStripMenuItem { Text = "Delete", Tag = data, Enabled = true, Image = Resources.DeleteHS };
                 deleteItem.Click += (s, e) => nodePresenter.RemoveNodeData(node.Parent.Tag, data);
