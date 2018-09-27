@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             DelftIniCategory morphologyGroup;
             var morphologyCategories = GetMorphologyProperties(modelDefinition, out morphologyGroup);
 
-            GetMorphologyBoundaries(modelDefinition, morphologyGroup, morphologyCategories);
+            AddMorphologyBoundaries(modelDefinition, morphologyGroup, morphologyCategories);
 
             try
             {
@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             Writer.WriteDelftIniFile(morphologyCategories.ToList(), morPath);
         }
 
-        private static void GetMorphologyBoundaries(WaterFlowFMModelDefinition modelDefinition, DelftIniCategory morGroup,
+        private static void AddMorphologyBoundaries(WaterFlowFMModelDefinition modelDefinition, DelftIniCategory morGroup,
             List<DelftIniCategory> morCategories)
         {
             var morBoundaries = modelDefinition.BoundaryConditions.Where(FlowBoundaryCondition.IsMorphologyBoundary).ToList();
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 fbc.FlowQuantity != FlowBoundaryQuantityType.MorphologyBedLevelFixed &&
                 fbc.FlowQuantity != FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint)
                 ? modelDefinition.ModelName + BcmFile.Extension
-                : " ";
+                : "";
             var bcFilenameProperty = modelDefinition.GetModelProperty(BcFile);
             if (bcFilenameProperty == null)
             {
@@ -102,6 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 bcFilenameProperty.Value = bcmFilePath;
             }
 
+           // var morGroup = new DelftIniCategory(Header);
             morGroup.AddProperty(BcFile, bcmFilePath);
             morCategories.Add(morGroup);
 

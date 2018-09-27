@@ -1,4 +1,4 @@
-using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         IEventedList<ISedimentProperty> SedimentOverallProperties { get; }
         IEventedList<ISedimentFraction> SedimentFractions { get; }
-        IEventedList<IDataItem> DataItems { get; }
+        SedimentModelDataItem GetSedimentDataItem();
         string MduFilePath { get; }
     }
 }

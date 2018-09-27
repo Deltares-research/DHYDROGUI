@@ -692,15 +692,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             InitialTracerNames.Clear();
             InitialTracerNames.AddRange(tracerDefinitions);
-            if (spatiallyVaryingSedimentDefinitions != null)
+            var sedimentDefinitionList = spatiallyVaryingSedimentDefinitions?.ToList();
+
+            if ((sedimentDefinitionList != null) && sedimentDefinitionList.Any(sd => sd != null))
             {
                 InitialSpatiallyVaryingSedimentPropertyNames.Clear();
-                InitialSpatiallyVaryingSedimentPropertyNames.AddRange(spatiallyVaryingSedimentDefinitions);
+                InitialSpatiallyVaryingSedimentPropertyNames.AddRange(sedimentDefinitionList);
             }
+
             SpatialOperations.Clear();
 
-            var dataItemsFound = SpatialDataItemNames.Concat(InitialTracerNames).Concat(InitialSpatiallyVaryingSedimentPropertyNames).SelectMany(n => dataItems.Where(di => di.Name.StartsWith(n))).ToArray();
-
+            var combinedSpatialDataItemNames = SpatialDataItemNames.Concat(InitialTracerNames).Concat(InitialSpatiallyVaryingSedimentPropertyNames);
+            var dataItemsFound = combinedSpatialDataItemNames.SelectMany(n => dataItems.Where(di => di.Name.StartsWith(n))).ToArray();
             var dataItemsWithConverter = dataItemsFound.Where(d => d.ValueConverter is SpatialOperationSetValueConverter).Distinct().ToList();
             var dataItemsWithOutConverter = dataItemsFound.Except(dataItemsWithConverter).Distinct().ToList();
 

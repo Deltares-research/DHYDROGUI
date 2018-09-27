@@ -112,20 +112,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void WriteSpatiallyVaryingSedimentPropertySubFiles(ISedimentModelData sedimentModelData, string sedPath)
         {
-            var spaceVarNames = sedimentModelData.SedimentFractions.SelectMany(s => s.GetAllActiveSpatiallyVaryingPropertyNames()).Where( n => !n.EndsWith("SedConc")).ToList();
+            var sedimentDataItem = sedimentModelData.GetSedimentDataItem();
 
-            var dataItemsFound = spaceVarNames.SelectMany(spaceVarName => sedimentModelData.DataItems.Where(di => di.Name.Equals(spaceVarName))).ToArray();
-            var dataItemsWithConverter = dataItemsFound.Where(d => d.ValueConverter is SpatialOperationSetValueConverter).ToList();
-            var dataItemsWithOutConverter = dataItemsFound.Except(dataItemsWithConverter).ToList();
-            var spatialOperations = GetSpatialOperations(dataItemsWithConverter);
+            sedimentDataItem.SpacialVariableNames = sedimentModelData.SedimentFractions.SelectMany(s => s.GetAllActiveSpatiallyVaryingPropertyNames()).Where( n => !n.EndsWith("SedConc")).ToList();
 
-            var coverageByType = dataItemsWithOutConverter.Select(di => di.Value)
-                                    .OfType<UnstructuredGridCoverage>()
-                                    .GroupBy(c => c.GetType())
-                                    .ToList();
-            var dataItemNameLookup = dataItemsWithOutConverter.ToDictionary(di => di.Value, di => di.Name);
-
-            foreach (var coverageGrouping in coverageByType)
+            foreach (var coverageGrouping in sedimentDataItem.Coverages)
             {
                 Coordinate[] coordinates = null;
 
@@ -182,11 +173,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     var newOperation = new AddSamplesOperation(false) { Name = coverage.Name };
                     newOperation.SetInputData(AddSamplesOperation.SamplesInputName, pointCloudFeatureProvider);
 
-                    spatialOperations.Add(dataItemNameLookup[coverage], new[] { newOperation });
+                    sedimentDataItem.SpatialOperation.Add(sedimentDataItem.DataItemNameLookup[coverage], new[] { newOperation });
                 }
             }
 
-            foreach (var operations in spatialOperations)
+            foreach (var operations in sedimentDataItem.SpatialOperation)
             {
                 foreach (var spatialOperation in operations.Value)
                 {
@@ -194,8 +185,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
 
-            var spatialOperationNames = spatialOperations.SelectMany(sp => sp.Value.Select(spv => spv.Name));
-            foreach (var spaceVarName in spaceVarNames.Where( spN => ! spatialOperationNames.Contains(spN)))
+            var spatialOperationNames = sedimentDataItem.SpatialOperation.SelectMany(sp => sp.Value.Select(spv => spv.Name));
+            foreach (var spaceVarName in sedimentDataItem.SpacialVariableNames.Where( spN => ! spatialOperationNames.Contains(spN)))
             {
                 //Give a warning for all those space varying properties which have NO operations.
                 Log.WarnFormat(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_, spaceVarName);
@@ -468,59 +459,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
         #endregion
-
-        public static Dictionary<string, IList<ISpatialOperation>> GetSpatialOperations(List<IDataItem> dataItemsWithConverter)
-        {
-            var spatialOperations = new Dictionary<string, IList<ISpatialOperation>>();
-            foreach (var dataItem in dataItemsWithConverter)
-            {
-                var spatialOperationValueConverter = (SpatialOperationSetValueConverter) dataItem.ValueConverter;
-                if (
-                    spatialOperationValueConverter.SpatialOperationSet.Operations.All(
-                        WaterFlowFMModelDefinition.SupportedByExtForceFile))
-                {
-                    // put in everything except spatial operation sets,
-                    // because we only use interpolate commands that will grab the importsamplesoperation via the input parameters.
-                    var spatialOperation = spatialOperationValueConverter.SpatialOperationSet.GetOperationsRecursive()
-                        .Where(s => !(s is ISpatialOperationSet))
-                        .Select(WaterFlowFMModelDefinition.ConvertSpatialOperation)
-                        .ToList();
-
-                    //spatialOperations.AddRange(spatialOperation);
-                    spatialOperations.Add(dataItem.Name, spatialOperation);
-                }
-                // null check to see if it has a final coverage. It could be that there are only point clouds in the set.
-                else if (spatialOperationValueConverter.SpatialOperationSet.Output.Provider != null)
-                {
-                    // unsupported operations are converted to sample operations that are saved with an xyz file via the model definition.
-                    var coverage =
-                        spatialOperationValueConverter.SpatialOperationSet.Output.Provider.Features[0] as
-                            UnstructuredGridCoverage;
-
-                    // In the event that the coverage is comprised entirely of non-data values, ignore it and continue
-                    // (This can happen when exporting spatial operations that comprise of added points but no interpolation
-                    // - we're not interested in these for the mdu, they will be saved as dataitems to the dsproj)
-                    if (coverage == null || (coverage.Components[0].NoDataValues != null &&
-                                             coverage.GetValues<double>()
-                                                 .All(v => coverage.Components[0].NoDataValues.Contains(v))))
-                    {
-                        continue;
-                    }
-
-                    var newOperation = new AddSamplesOperation(false)
-                    {
-                        Name = spatialOperationValueConverter.SpatialOperationSet.Name
-                    };
-                    newOperation.SetInputData(AddSamplesOperation.SamplesInputName,
-                        new PointCloudFeatureProvider
-                        {
-                            PointCloud = coverage.ToPointCloud(0, true),
-                        });
-
-                    spatialOperations.Add(dataItem.Name, new[] { newOperation } );
-                }
-            }
-            return spatialOperations;
-        }
     }
 }

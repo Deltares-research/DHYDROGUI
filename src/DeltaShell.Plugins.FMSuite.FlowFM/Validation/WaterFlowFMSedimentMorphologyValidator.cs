@@ -101,8 +101,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 .ToArray();
             var dataItemsWithConverter = dataItemsFound
                 .Where(d => d.ValueConverter is SpatialOperationSetValueConverter).ToList();
-
-            var spatialOperations = SedimentFile.GetSpatialOperations(dataItemsWithConverter);
+            
+            var spatialOperations = model.GetSpatialOperationsLookupTable(dataItemsWithConverter);
 
             // If spatial operation is ValueOperationBase, then add a new ValidationIssue
             var issues = new List<ValidationIssue>();

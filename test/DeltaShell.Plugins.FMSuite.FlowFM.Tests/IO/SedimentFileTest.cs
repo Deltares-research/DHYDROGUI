@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -375,6 +376,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 /* Define new model */
                 var fmModel = new WaterFlowFMModel(sedFile);
                 fmModel.ModelDefinition.UseMorphologySediment = true;
+
+                //Area 
+                // Import dry points
+                const string baseFolderPath = @"HydroAreaCollection/MduFileProjects";
+
+                fmModel.Area.DryAreas.Add(new GroupableFeature2DPolygon()
+                {
+                    GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"MyDryAreas_dry.pol")
+                });
 
                 /* Define test properties */
                 var doubleSpatProp = new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, 0, true, "cc", "mydoubledescription", true, false);
