@@ -39,7 +39,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                         "Boundary condition contains unactivated support points. These points will be discarded upon saving, exporting or running",
                         bc);
             }
-            if (bc.DataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries && bc.PointData.Count > 1)
+
+            if (bc.DataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries && bc.PointData.Count > 1 &&
+                bc.SpatialDefinitionType != WaveBoundaryConditionSpatialDefinitionType.Uniform)
             {
                 var times = bc.PointData[0].Arguments[0].GetValues<DateTime>();
                 foreach (var f in bc.PointData.Skip(1))
