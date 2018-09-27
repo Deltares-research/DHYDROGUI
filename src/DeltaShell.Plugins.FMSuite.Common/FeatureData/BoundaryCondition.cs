@@ -178,7 +178,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 return null;
             }
             var pointIndex = DataPointIndices.IndexOf(i);
-            return PointData[pointIndex];
+
+            return pointIndex < PointData.Count ? PointData[pointIndex] : null;
         }
 
         public VerticalProfileDefinition GetDepthLayerDefinitionAtPoint(int i)
@@ -192,7 +193,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 return PointDepthLayerDefinitions[0];
             }
             var pointIndex = DataPointIndices.IndexOf(i);
-            return PointDepthLayerDefinitions[pointIndex];
+
+            return pointIndex < PointDepthLayerDefinitions.Count ? PointDepthLayerDefinitions[pointIndex] : null;
         }
 
         public bool IsEditing { get; private set; }

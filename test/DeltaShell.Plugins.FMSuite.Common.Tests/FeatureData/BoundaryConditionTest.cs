@@ -1,11 +1,11 @@
-﻿using System;
-using DelftTools.Units;
-using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
+﻿using DelftTools.Units;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
 {
@@ -313,6 +313,28 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
             Assert.AreEqual("mies_0001", boundaryConditionSet.SupportPointNames[0]);
             Assert.AreEqual("noot", boundaryConditionSet.SupportPointNames[1]);
             Assert.AreEqual("mies_0003", boundaryConditionSet.SupportPointNames[2]);
+        }
+
+        [Test]
+        public void GetDataPoint_WhenNoDataForPoint_NoExceptionIsGivenButReturnsNull()
+        {
+            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false)
+            {
+                Feature = new Feature2D {Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(1, 0)})}
+            };
+
+            boundaryCondition.AddPoint(0);
+            boundaryCondition.PointData[0].Arguments[0].SetValues(new[] {DateTime.Now});
+            boundaryCondition.PointData[0].Components[0].SetValues(new List<double>() {0});
+
+            boundaryCondition.AddPoint(1);
+            boundaryCondition.PointData.RemoveAt(1);
+
+            var data = boundaryCondition.GetDataAtPoint(0);
+            Assert.NotNull(data);
+
+            Assert.DoesNotThrow(() => { data = boundaryCondition.GetDataAtPoint(1); });
+            Assert.IsNull(data);
         }
     }
 }
