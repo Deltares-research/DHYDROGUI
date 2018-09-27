@@ -244,7 +244,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         {
             var item = new ClonableToolStripMenuItem
             {
-                Text = "FM Settings",
+                Text = "Settings",
                 Tag = model,
             };
             item.Click += OnSettingsClicked;
