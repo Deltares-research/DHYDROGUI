@@ -217,26 +217,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             var menu = base.GetContextMenu(sender, nodeData);
 
             var model = nodeData as WaterFlowFMModel;
+            if (model == null) return menu;
 
-            if (model != null)
+            var contextMenu = new ContextMenuStrip();
+
+            if (model.CoordinateSystem != null)
             {
-                var contextMenu = new ContextMenuStrip();
-                contextMenu.Items.Add(CreateWpfSettingsMenuItem(model));
-                if (model.CoordinateSystem != null)
-                {
-                    contextMenu.Items.Add(FMMenuItemHelper.CreateResetCoordinateSystemItem(model));
-                    contextMenu.Items.Add(FMMenuItemHelper.CreateCoordinateTransformItem(model, Gui));
-                }
-                contextMenu.Items.Add(CreateValidationMenuItem(model));
-                contextMenu.Items.Add(CreateFileStructureItem(model));
-
-                var flowMenu = new MenuItemContextMenuStripAdapter(contextMenu);
-
-                if (menu != null)
-                    menu.Insert(menu.Count - 2, flowMenu);
-                else
-                    return flowMenu;
+                contextMenu.Items.Add(FMMenuItemHelper.CreateResetCoordinateSystemItem(model));
+                contextMenu.Items.Add(FMMenuItemHelper.CreateCoordinateTransformItem(model, Gui));
+                contextMenu.Items.Add(new ToolStripSeparator());
             }
+
+            contextMenu.Items.Add(CreateFileStructureItem(model));
+            contextMenu.Items.Add(CreateWpfSettingsMenuItem(model));
+            contextMenu.Items.Add(CreateValidationMenuItem(model));
+
+            var flowMenu = new MenuItemContextMenuStripAdapter(contextMenu);
+            if (menu == null) return flowMenu;
+
+            menu.Add(flowMenu);
+
+            // remove properties because there is already a settings option
+            var propertiesItem = (menu as MenuItemContextMenuStripAdapter)?.ContextMenuStrip?.Items?
+                .OfType<ToolStripItem>()
+                .FirstOrDefault(i => i.Name == "buttonModelProperties");
+
+            if (propertiesItem != null)
+            {
+                propertiesItem.Visible = false;
+            }
+
             return menu;
         }
 

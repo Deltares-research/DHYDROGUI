@@ -114,25 +114,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             var menu = base.GetContextMenu(sender, nodeData);
 
             var model = nodeData as WaveModel;
+            if (model == null) return menu;
 
-            if (model != null)
+            var contextMenu = new ContextMenuStrip();
+
+            if (model.CoordinateSystem != null)
             {
-                var contextMenu = new ContextMenuStrip();
-                contextMenu.Items.Add(CreateWpfSettingsMenuItem(model));
-                if (model.CoordinateSystem != null)
-                {
-                    contextMenu.Items.Add(FMMenuItemHelper.CreateResetCoordinateSystemItem(model));
-                    contextMenu.Items.Add(FMMenuItemHelper.CreateCoordinateTransformItem(model, Gui));
-                }
-                contextMenu.Items.Add(CreateValidationMenuItem(model));
-
-                var waveMenu = new MenuItemContextMenuStripAdapter(contextMenu);
-
-                if (menu != null)
-                    menu.Add(waveMenu);
-                else
-                    return waveMenu;
+                contextMenu.Items.Add(FMMenuItemHelper.CreateResetCoordinateSystemItem(model));
+                contextMenu.Items.Add(FMMenuItemHelper.CreateCoordinateTransformItem(model, Gui));
+                contextMenu.Items.Add(new ToolStripSeparator());
             }
+
+            contextMenu.Items.Add(CreateWpfSettingsMenuItem(model));
+            contextMenu.Items.Add(CreateValidationMenuItem(model));
+
+            var waveMenu = new MenuItemContextMenuStripAdapter(contextMenu);
+            if (menu == null) return waveMenu;
+
+            menu.Add(waveMenu);
+
+            // remove properties because there is already a settings option
+            var propertiesItem = (menu as MenuItemContextMenuStripAdapter)?.ContextMenuStrip?.Items?
+                .OfType<ToolStripItem>()
+                .FirstOrDefault(i => i.Name == "buttonModelProperties");
+
+            if (propertiesItem != null)
+            {
+                propertiesItem.Visible = false;
+            }
+
             return menu;
         }
 
