@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             {
                 if (!MapTool1D2DLinksHelper.Generate1D2DLinks(fmModel, selectedArea, startIndex, ref linksFrom, ref linksTo, ref linksCount, LinkType)) return;
 
-                var created1D2DLinks = Creates1d2dLinks(linksCount, linksFrom, linksTo, fmModel.Grid, fmModel.NetworkDiscretization);
+                var created1D2DLinks = Creates1d2dLinks(linksCount, linksFrom, linksTo, fmModel.Grid, fmModel.NetworkDiscretization, LinkType);
                 created1D2DLinks = GetNew1D2DLinks(created1D2DLinks, fmModel.Links);
                 fmModel.Links.AddRange(created1D2DLinks);
             }
@@ -180,19 +180,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             return result;
         }
         
-        private IList<WaterFlowFM1D2DLink> Creates1d2dLinks(int linksCount, List<int> linksFromIndex, List<int> linksToIndex, UnstructuredGrid grid, IDiscretization networkDiscretization)
+        private IList<WaterFlowFM1D2DLink> Creates1d2dLinks(int linksCount, List<int> linksFromIndex, List<int> linksToIndex, UnstructuredGrid grid, IDiscretization networkDiscretization, GridApiDataSet.LinkType linkType)
         {
             var lstNewLinks = new List<WaterFlowFM1D2DLink>();
             for (int i = 0; i < linksCount; i++)
             {
-                var toCell = linksToIndex[i] - 1;
-                var fromPoint = linksFromIndex[i] - 1;
+                //seems lists are swapt  
+                var pointIndex = linksToIndex[i] - 1;
+                var cellIndex = linksFromIndex[i] - 1;
 
-                var fromCell = grid.Cells[toCell];
-                var toNode = networkDiscretization.Locations.Values[fromPoint];
-                var link = new WaterFlowFM1D2DLink(fromPoint, toCell)
+                var fromCell = grid.Cells[cellIndex];
+                var toNode = networkDiscretization.Locations.Values[pointIndex];
+                var link = new WaterFlowFM1D2DLink(pointIndex, cellIndex)
                 {
-                    Geometry = new LineString(new[] { fromCell.Center, toNode.Geometry.Coordinate })
+                    Geometry = new LineString(new[] { fromCell.Center, toNode.Geometry.Coordinate }),
+                    TypeOfLink = linkType
                 };
                 lstNewLinks.Add(link);
             }

@@ -243,5 +243,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             return CrossSectionHelper.CreateCrossSectionGeometryForXyzCrossSectionFromYZ(crossSection.Branch.Geometry, crossSection.Chainage, yzCoordinates);
         }
+
+        public static void ConfigureDemoNetwork2Branches(HydroNetwork network)
+        {
+            // add nodes and branches
+            INode node1 = new HydroNode { Name = "Node1", Network = network };
+            INode node2 = new HydroNode { Name = "Node2", Network = network };
+            INode node3 = new HydroNode { Name = "Node3", Network = network };
+
+            // create simplest network
+            node1.Geometry = new Point(-50, 250);
+            node2.Geometry = new Point(-50, 150);
+            node3.Geometry = new Point(300, 150);
+
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node3);
+
+            var branch1 = new Channel("branch1", node1, node2, 100);
+            branch1.Geometry = new LineString(new[]
+            {
+                new Coordinate(-50, 250.0),
+                new Coordinate(-30, 200.0),
+                new Coordinate(-50, 150.0),
+            });
+            network.Branches.Add(branch1);
+
+            var branch2 = new Channel("branch2", node2, node3, 350);
+            branch1.Geometry = new LineString(new[]
+            {
+                new Coordinate(-50, 150.0),
+                new Coordinate(300, 150.0),
+            });
+            network.Branches.Add(branch1);
+        }
     }
 }

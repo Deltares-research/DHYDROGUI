@@ -297,24 +297,26 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
+
                 var coordinates = selectedArea.Coordinates.ToList();
                 coordinates.Add(new Coordinate(missingValue, missingValue, missingValue)); //add separator
                 int nCoordinates = coordinates.Count;
-                intPtrXValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (double))*nCoordinates);
-                intPtrYValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (double))*nCoordinates);
-                intPtrZValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (double))*nCoordinates);
-                intPtrfilterMesh1DPoints = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nCoordinates);
-
                 var selectedAreaXCoords = coordinates.Select(c => c.X).ToArray();
                 var selectedAreaYCoords = coordinates.Select(c => c.Y).ToArray();
                 var selectedAreaZCoords = Enumerable.Repeat<double>(0.0, nCoordinates).ToArray();
+
+                intPtrXValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (double))*nCoordinates);
+                intPtrYValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (double))*nCoordinates);
+                intPtrZValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (double))*nCoordinates);
+
                 var filterMesh1DPointsArray = filterMesh1DPoints.Select(b => b ? 1 : 0).ToArray();
                 var nFilterMesh1DPointsArray = filterMesh1DPointsArray.Length;
+                intPtrfilterMesh1DPoints = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nFilterMesh1DPointsArray);
 
                 Marshal.Copy(selectedAreaXCoords, 0, intPtrXValuesSelectedArea, nCoordinates);
                 Marshal.Copy(selectedAreaYCoords, 0, intPtrYValuesSelectedArea, nCoordinates);
                 Marshal.Copy(selectedAreaZCoords, 0, intPtrZValuesSelectedArea, nCoordinates);
-                Marshal.Copy(filterMesh1DPointsArray, 0, intPtrZValuesSelectedArea, nFilterMesh1DPointsArray);
+                Marshal.Copy(filterMesh1DPointsArray, 0, intPtrfilterMesh1DPoints, nFilterMesh1DPointsArray);
 
                 var ierr = geomWrapper.Make1D2DInternalNetlinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
                     ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref nFilterMesh1DPointsArray, ref intPtrfilterMesh1DPoints);

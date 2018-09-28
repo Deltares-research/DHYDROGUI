@@ -105,6 +105,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
+        public void OneBrachInGrid_OneBranchOutsideGrid_ShouldNotCrashConverting1D()
+        {
+            string netFilePath = TestHelper.GetTestFilePath(@"flow1d2dLinks\3by3grid_net.nc");
+            Assert.IsTrue(File.Exists(netFilePath));
+            netFilePath = TestHelper.CreateLocalCopy(netFilePath);
+            Assert.IsTrue(File.Exists(netFilePath));
+            
+            // 0.1 Set Network Discretization.
+            var testNetwork = new HydroNetwork();
+            WaterFlowFMTestHelper.ConfigureDemoNetwork2Branches(testNetwork);
+            Assert.NotNull(testNetwork);
+
+            var testNetworkDiscretization = new Discretization
+            {
+                Name = WaterFlowFMModel.DiscretizationObjectName,
+                Network = testNetwork,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered
+            };
+            Assert.NotNull(testNetworkDiscretization);
+
+            var offSet = new double[] { 0, 50, 100 };
+            HydroNetworkHelper.GenerateDiscretization(testNetworkDiscretization, (IChannel)testNetwork.Branches[0], offSet);
+            offSet = new double[] { 0, 50, 100, 150, 200, 250, 300, 350 };
+            HydroNetworkHelper.GenerateDiscretization(testNetworkDiscretization, (IChannel)testNetwork.Branches[1], offSet);
+
+            var geomWrapper = new GridGeomApi();
+            var linksFrom = new List<int>();
+            var linksTo = new List<int>();
+            var startIndex = 0;
+            var linksCount = 0;
+            var ierr = geomWrapper.Get1D2DLinksFrom1DTo2D(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
+            Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, ierr);
+            Assert.AreNotEqual(0, linksCount);
+            Assert.IsNotEmpty(linksFrom);
+            Assert.IsNotEmpty(linksTo);
+
+        }
+
+        [Test]
         public void Get1d2dLinksFromApi()
         {
             string netFilePath = TestHelper.GetTestFilePath(@"flow1d2dLinks\SimpleModel\2d_ugrid_net.nc");
@@ -178,8 +217,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             //mesh1D coordinates
             //meshXCoords = { -6, 5, 23, 34 };
             //meshYCoords = { 22, 16, 16, 7 };
-            var geoX = new double[] { 10.0, 15.0, 15.0, 10.0, MissingValue, 20.0, 25.0, 25.0, 20.0, MissingValue };
-            var geoY = new double[] { 10.0, 10.0, 15.0, 10.0, MissingValue, 20.0, 20.0, 25.0, 20.0, MissingValue };
+            var geoX = new double[] { 10.0, 18.0, 18.0, 10.0, MissingValue, 20.0, 28.0, 28.0, 20.0, MissingValue };
+            var geoY = new double[] { 10.0, 10.0, 18.0, 10.0, MissingValue, 20.0, 20.0, 28.0, 20.0, MissingValue };
 
             //expected links
             var expectedLinksFrom1DIndexes = new int[] { 2 , 2};

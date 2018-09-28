@@ -163,9 +163,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                 log.ErrorFormat(
                     "1D2D Links were not generated between the grid and the network of WaterFlowFMModel {0}. Please make sure the grid has been saved and the network is correct.",
                     fmModel.Name);
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 
         private static bool Get1D2DLateralLinks(WaterFlowFMModel fmModel, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount)
@@ -189,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             linksFrom = tuplesFromToIndexes.Select(t => t.Item1).ToList();
             linksTo = tuplesFromToIndexes.Select(t => t.Item2).ToList();
             linksCount = tuplesFromToIndexes.Count;
-            return false;
+            return true;
         }
 
         private static bool Get1D2DEmbeddedLinks(WaterFlowFMModel fmModel, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount)
@@ -203,9 +203,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                 log.ErrorFormat(
                     "1D2D Links were not generated between the grid and the network of WaterFlowFMModel {0}. Please make sure the grid has been saved and the network is correct.",
                     fmModel.Name);
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 
         #endregion main methods
