@@ -197,6 +197,7 @@
     <Compile Include="GroupableFeatureExtensions.cs" />
     <Compile Include="GroupablePointFeature.cs" />
     <Compile Include="Gully.cs" />
+    <Compile Include="IStructure2D.cs" />
     <Compile Include="Roughness\ReverseRoughnessSection.cs" />
     <Compile Include="Roughness\RoughnessDataSet.cs" />
     <Compile Include="Roughness\RoughnessFunction.cs" />
@@ -223,6 +224,7 @@
     <Compile Include="SewerFeatures\GwswStructureOutletCompartment.cs" />
     <Compile Include="SewerFeatures\GwswStructurePump.cs" />
     <Compile Include="SewerFeatures\GwswStructureWeir.cs" />
+    <Compile Include="Structure2DType.cs" />
     <Compile Include="Structures\ICompartment.cs" />
     <Compile Include="Structures\ICompositeNetworkPointFeature.cs" />
     <Compile Include="SewerFeatures\IOrifice.cs" />

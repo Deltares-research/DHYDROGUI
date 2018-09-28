@@ -266,7 +266,7 @@
     <value>No computational grid cells defined for branch {0}; can not start calculation.</value>
   </data>
   <data name="WaterFlowFMModelComputationalGridValidator_FiniteVolumeCheckStructuresNotOnGridPoints_Original_discretization_is_invalid__structure__0__is_on_a_grid_point" xml:space="preserve">
-    <value>Original discretization is invalid: structure {0} is on a grid point</value>
+    <value>Original discretization is invalid: hydroObject {0} is on a grid point</value>
   </data>
   <data name="WaterFlowFMModelNetworkValidator_GetCrossSectionValidationIssues_No_CrossSection_defined__all_channels_will_be_using_the_default_values_" xml:space="preserve">
     <value>No CrossSection defined, all channels will be using the default values.</value>
@@ -287,7 +287,7 @@
     <value>Multiple cross-section-types (mix of Standard/ZW and Geometry/YZ) per branch(es) not supported.({0})</value>
   </data>
   <data name="WaterFlowFMModelComputationalGridValidator_CheckBranchStructureLocations_No_grid_points_defined_between_structure__0__and__1_" xml:space="preserve">
-    <value>No grid points defined between structure {0} and {1}</value>
+    <value>No grid points defined between hydroObject {0} and {1}</value>
   </data>
   <data name="WaterFlowFMModelComputationalGridValidator_CheckBranchLocations_Not_enough_grid_points_defined_for_branch__0___Make_sure_you_have_at_least_gridpoints_at_start_and_end_of_branch_" xml:space="preserve">
     <value>Not enough grid points defined for branch {0}. Make sure you have at least gridpoints at start and end of branch.</value>
@@ -331,8 +331,8 @@ Change this group name and save the project again to write these features to a s
     <value>Output snapped feature layers location not found at: {0}</value>
   </data>
   <data name="MduFile_RemoveAllStructuresFilesWithBadReferences_" xml:space="preserve">
-    <value>File at location '{0}' is referenced in structures file '{1}', but does not exist.
-File import of structures file '{1}' has failed.</value>
+    <value>File at location '{0}' is referenced in hydroObjects file '{1}', but does not exist.
+File import of hydroObjects file '{1}' has failed.</value>
   </data>
   <data name="TimFileExporter_Export_Failed_to_export_data_to__0____1_" xml:space="preserve">
     <value>Failed to export data to {0}: {1}</value>
@@ -462,7 +462,7 @@ Manhole with unique id '{4}' is not imported.</value>
     <value>No mapping was found to import Gwsw Files.</value>
   </data>
   <data name="GwswElementValidationExtensions_IsValidGwswStructure_Cannot_import_sewer_structure_s__without_a_unique_id__Please_check__Kunstwerk_csv__for_empty_unique_id_s" xml:space="preserve">
-    <value>Cannot import sewer structure(s) without a unique id. Please check 'Kunstwerk.csv' for empty unique id's</value>
+    <value>Cannot import sewer hydroObject(s) without a unique id. Please check 'Kunstwerk.csv' for empty unique id's</value>
   </data>
   <data name="GwswElementExtensions_GetAttributeFromList_Attribute__0__was_not_found_for_element__1__of_type__2__" xml:space="preserve">
     <value>Attribute {0} was not found for element {1} of type {2}.</value>

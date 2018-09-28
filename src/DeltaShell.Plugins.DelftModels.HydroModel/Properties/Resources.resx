@@ -172,7 +172,7 @@
     <value>HydroModel Specific</value>
   </data>
   <data name="HydroModelValidator_ConstructModelStructureReport_Model_structure" xml:space="preserve">
-    <value>Model structure</value>
+    <value>Model hydroObject</value>
   </data>
   <data name="HydroModelValidator_ConstructCurrentWorkflowReport_Workflow" xml:space="preserve">
     <value>Workflow</value>

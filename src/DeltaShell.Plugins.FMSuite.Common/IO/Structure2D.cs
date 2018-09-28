@@ -1,25 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils;
-using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
-    public enum StructureType
-    {
-        [Description(StructureRegion.StructureTypeName.Pump)] Pump,
-        [Description(StructureRegion.StructureTypeName.Gate)] Gate,
-        [Description(StructureRegion.StructureTypeName.Weir)] Weir,
-        [Description(StructureRegion.StructureTypeName.GeneralStructure)] GeneralStructure,
-        [Description(StructureRegion.StructureTypeName.LeveeBreach)] LeveeBreach,
-        InvalidType
-    }
-
     public class Structure2D
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Structure2D));
@@ -34,11 +23,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             try
             {
-                StructureType = EnumerableExtensions.GetValueFromDescription<StructureType>(type); // TODO: This is also a ModelProperty! Should this refer to the ModelProperty of should we remove that one from Properties?
+                Structure2DType = EnumerableExtensions.GetValueFromDescription<Structure2DType>(type); // TODO: This is also a ModelProperty! Should this refer to the ModelProperty of should we remove that one from Properties?
             }
             catch(ArgumentException e)
             {
-                StructureType = StructureType.InvalidType;
+                Structure2DType = Structure2DType.InvalidType;
                 InvalidStructureType = type;
             }
         }
@@ -52,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
         }
 
-        public StructureType StructureType { get; private set; }
+        public Structure2DType Structure2DType { get; private set; }
         public string InvalidStructureType { get; private set; }
         
         public IList<ModelProperty> Properties { get; private set; }

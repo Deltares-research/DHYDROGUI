@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils;
 
@@ -35,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                                                                 out string errorMessage)
         {
             string errorMessage1;
-            if (structure.StructureType == StructureType.Pump &&
+            if (structure.Structure2DType == Structure2DType.Pump &&
                 ValidateGeneralPumpProperties(structure, name, out errorMessage1))
             {
                 errorMessage = errorMessage1;
@@ -101,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             #region Type property
 
-            var structureType = structure.StructureType;
+            var structureType = structure.Structure2DType;
             if (SupportedTypes.All(t => t != structureType))
             {
                 if(structure.InvalidStructureType == null) errorMessage = String.Format("Structure '{0}' cannot have null as type.", name);
@@ -116,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 return true;
             }
             
-            if (EnumerableExtensions.GetValueFromDescription<StructureType>(typeAsString) != structureType)
+            if (EnumerableExtensions.GetValueFromDescription<Structure2DType>(typeAsString) != structureType)
             {
                 errorMessage = String.Format("Structure '{0}' has conflicting types: '{1}' and '{2}' are stated.",
                                     name, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType), typeAsString);
@@ -171,23 +172,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return false;
         }
 
-        public static readonly StructureType[] SupportedTypes = new[]
+        public static readonly Structure2DType[] SupportedTypes = new[]
         {
-            StructureType.Pump,
-            StructureType.Weir,
-            StructureType.Gate,
-            StructureType.GeneralStructure,
-            StructureType.LeveeBreach 
+            Structure2DType.Pump,
+            Structure2DType.Weir,
+            Structure2DType.Gate,
+            Structure2DType.GeneralStructure,
+            Structure2DType.LeveeBreach 
         };
 
         /// <summary>
         /// Throws <see cref="FormatException"/> is case structure does not match expected type.
         /// </summary>
         /// <exception cref="FormatException"></exception>
-        public static void ThrowIfInvalidType(Structure2D structure, IEnumerable<StructureType> expectedTypes)
+        public static void ThrowIfInvalidType(Structure2D structure, IEnumerable<Structure2DType> expectedTypes)
         {
-            var enumerable = expectedTypes as StructureType[] ?? expectedTypes.ToArray();
-            var structureType = structure.StructureType;
+            var enumerable = expectedTypes as Structure2DType[] ?? expectedTypes.ToArray();
+            var structureType = structure.Structure2DType;
             if (enumerable.All(type => type != structureType))
             {
                 var isSingularItem = enumerable.Length > 1;

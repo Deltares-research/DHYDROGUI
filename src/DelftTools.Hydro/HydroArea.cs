@@ -87,7 +87,7 @@ namespace DelftTools.Hydro
 
         public virtual IEnumerable<IHydroObject> AllHydroObjects
         {
-            get { return Enumerable.Empty<IHydroObject>(); }
+            get { return Pumps; }
         }
 
         public virtual IEventedList<HydroLink> Links { get; set; }

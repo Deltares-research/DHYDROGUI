@@ -17,7 +17,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Point = NetTopologySuite.Geometries.Point;
-using StructureType = DeltaShell.Plugins.FMSuite.Common.IO.StructureType;
+using StructureType = DelftTools.Hydro.StructureType;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 {
@@ -42,11 +42,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var structures = structureFile.ReadStructures2D(path).ToList();
 
             Assert.AreEqual(8, structures.Count);
-            Assert.AreEqual(2, structures.Count(s => s.StructureType == StructureType.Weir));
-            Assert.AreEqual(3, structures.Count(s => s.StructureType == StructureType.Pump));
-            Assert.AreEqual(1, structures.Count(s => s.StructureType == StructureType.Gate));
-            Assert.AreEqual(1, structures.Count(s => s.StructureType == StructureType.GeneralStructure));
-            Assert.AreEqual(1, structures.Count(s => s.StructureType == StructureType.LeveeBreach));
+            Assert.AreEqual(2, structures.Count(s => s.Structure2DType == Structure2DType.Weir));
+            Assert.AreEqual(3, structures.Count(s => s.Structure2DType == Structure2DType.Pump));
+            Assert.AreEqual(1, structures.Count(s => s.Structure2DType == Structure2DType.Gate));
+            Assert.AreEqual(1, structures.Count(s => s.Structure2DType == Structure2DType.GeneralStructure));
+            Assert.AreEqual(1, structures.Count(s => s.Structure2DType == Structure2DType.LeveeBreach));
 
             var weirDown = structures.First(s => s.Name == "Weir_down");
             Assert.AreEqual(6, weirDown.Properties.Count);
@@ -951,7 +951,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual(structures.Count, newStructures.Count, "Expected the same number of structures.");
             for (int i = 0; i < structures.Count; i++)
             {
-                Assert.AreEqual(structures[i].StructureType, newStructures[i].StructureType,
+                Assert.AreEqual(structures[i].Structure2DType, newStructures[i].Structure2DType,
                     String.Format("Expected same types at index {0}", i));
                 CompareStructureProperties(structures[i].Properties, newStructures[i].Properties);
             }

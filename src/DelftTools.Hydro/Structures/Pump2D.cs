@@ -5,7 +5,7 @@ using GeoAPI.Extensions.Feature;
 namespace DelftTools.Hydro.Structures
 {
     [Entity]
-    public class Pump2D : Pump, IGroupableFeature
+    public class Pump2D : Pump, IGroupableFeature, IStructure2D
     {
         private string groupName;
 
@@ -41,6 +41,11 @@ namespace DelftTools.Hydro.Structures
         {
             var instance = (Pump2D) base.Clone();
             return this.CloneGroupableFeature(instance);
+        }
+
+        public Structure2DType Structure2DType
+        {
+            get { return Structure2DType.Pump; }
         }
     }
 }

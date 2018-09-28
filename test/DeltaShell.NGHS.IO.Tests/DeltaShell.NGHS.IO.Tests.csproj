@@ -127,6 +127,7 @@
     <Compile Include="FileWriters\RetentionFileWriterTests.cs" />
     <Compile Include="FileWriters\SpatialDataFileWriterTests.cs" />
     <Compile Include="FileWriters\StructureFileWriterTest.cs" />
+    <Compile Include="FileWriters\Structures\StructureFileWriterIntegrationTest.cs" />
     <Compile Include="FunctionStores\MapHisFileReaderTest.cs" />
     <Compile Include="FunctionStores\ReadOnlyMapHisFileFunctionStoreTest.cs" />
     <Compile Include="Grid\AGridTests.cs" />

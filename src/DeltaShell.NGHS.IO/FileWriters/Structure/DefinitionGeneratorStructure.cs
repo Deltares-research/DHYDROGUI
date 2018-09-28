@@ -1,5 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.Helpers;
+using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
@@ -8,33 +9,46 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         private readonly CompoundStructureInfo compoundStructureInfo;
         protected DelftIniCategory IniCategory { get; private set; }
 
-        protected DefinitionGeneratorStructure(CompoundStructureInfo compoundStructureInfo)
+        protected DefinitionGeneratorStructure(CompoundStructureInfo compoundStructureInfo):this()
         {
             this.compoundStructureInfo = compoundStructureInfo;
+        }
+
+        protected DefinitionGeneratorStructure()
+        {
             IniCategory = new DelftIniCategory(StructureRegion.Header);
         }
 
-        public abstract DelftIniCategory CreateStructureRegion(IStructure1D structure);
+        public abstract DelftIniCategory CreateStructureRegion(IHydroObject hydroObject);
 
-        protected void AddCommonRegionElements(IStructure1D structure, string definitionType)
+        protected virtual void AddCommonRegionElements(IHydroObject hydroObject, string definitionType)
         {
-            if (structure.Branch == null) return;
-            string nameWithoutHashSigns = structure.Name.Replace("##", "~~");
-            IniCategory.AddProperty(StructureRegion.Id.Key, nameWithoutHashSigns, StructureRegion.Id.Description);
-            IniCategory.AddProperty(StructureRegion.Name.Key, structure.LongName, StructureRegion.Name.Description);
+            var branchFeature = hydroObject as IBranchFeature;
+            if (branchFeature?.Branch == null) return;
 
-            IniCategory.AddProperty(StructureRegion.BranchId.Key, structure.Branch.Name, StructureRegion.BranchId.Description);
-            IniCategory.AddProperty(StructureRegion.Chainage.Key, structure.Chainage, StructureRegion.Chainage.Description, StructureRegion.Chainage.Format);
+            AddIdPropertyToIniCategory(hydroObject);
+
+            var hydroNetworkFeature = hydroObject as IHydroNetworkFeature;
+            if(hydroNetworkFeature != null) IniCategory.AddProperty(StructureRegion.Name.Key, hydroNetworkFeature.LongName, StructureRegion.Name.Description);
+
+            IniCategory.AddProperty(StructureRegion.BranchId.Key, branchFeature.Branch.Name, StructureRegion.BranchId.Description);
+            IniCategory.AddProperty(StructureRegion.Chainage.Key, branchFeature.Chainage, StructureRegion.Chainage.Description, StructureRegion.Chainage.Format);
 
             var compoundStructureId = compoundStructureInfo.Id;
             IniCategory.AddProperty(StructureRegion.Compound.Key, compoundStructureId, StructureRegion.Compound.Description);
             if (compoundStructureId > 0) IniCategory.AddProperty(StructureRegion.CompoundName.Key, compoundStructureInfo.Name, StructureRegion.CompoundName.Description);
+            AddDefinitionTypePropertyToIniCategory(definitionType);
+        }
+
+        protected void AddIdPropertyToIniCategory(IHydroObject hydroObject)
+        {
+            var nameWithoutHashSigns = hydroObject.Name.Replace("##", "~~");
+            IniCategory.AddProperty(StructureRegion.Id.Key, nameWithoutHashSigns, StructureRegion.Id.Description);
+        }
+
+        protected void AddDefinitionTypePropertyToIniCategory(string definitionType)
+        {
             IniCategory.AddProperty(StructureRegion.DefinitionType.Key, definitionType, StructureRegion.DefinitionType.Description);
         }
-    }
-
-    public interface IDefinitionGeneratorStructure
-    {
-        DelftIniCategory CreateStructureRegion(IStructure1D structure);
     }
 }

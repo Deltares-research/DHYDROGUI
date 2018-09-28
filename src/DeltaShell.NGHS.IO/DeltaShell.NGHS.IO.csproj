@@ -159,6 +159,7 @@
     <Compile Include="FileWriters\SpatialData\SpatialDataRegion.cs" />
     <Compile Include="FileWriters\Structure\CompoundStructureInfo.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructure.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructure2D.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureAdvancedWeir.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureBridge.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureBridgePillar.cs" />
@@ -169,10 +170,12 @@
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureInvertedSiphon.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureOrifice.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructurePump.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructurePump2D.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureRiverWeir.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureSiphon.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureUniversalWeir.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureWeir.cs" />
+    <Compile Include="FileWriters\Structure\IDefinitionGeneratorStructure.cs" />
     <Compile Include="FileWriters\Structure\StructureFileWriter.cs" />
     <Compile Include="FileWriters\Structure\StructureRegion.cs" />
     <Compile Include="FunctionStores\MapHisFileMetaData.cs" />

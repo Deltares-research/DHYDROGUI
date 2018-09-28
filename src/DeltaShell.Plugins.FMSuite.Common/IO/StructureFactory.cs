@@ -22,13 +22,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(StructureFactory));
 
-        private static readonly Dictionary<StructureType, Func<Structure2D, string, DateTime, IStructure>> CreateStructureType = new Dictionary<StructureType, Func<Structure2D, string, DateTime, IStructure>>
+        private static readonly Dictionary<Structure2DType, Func<Structure2D, string, DateTime, IStructure>> CreateStructureType = new Dictionary<Structure2DType, Func<Structure2D, string, DateTime, IStructure>>
         {
-            {StructureType.Pump, CreatePumpCore},
-            {StructureType.Gate, CreateGateCore},
-            {StructureType.Weir, CreateSimpleWeirCore},
-            {StructureType.GeneralStructure, CreateGeneralStructureCore},
-            {StructureType.LeveeBreach, CreateLeveeBreach}
+            {Structure2DType.Pump, CreatePumpCore},
+            {Structure2DType.Gate, CreateGateCore},
+            {Structure2DType.Weir, CreateSimpleWeirCore},
+            {Structure2DType.GeneralStructure, CreateGeneralStructureCore},
+            {Structure2DType.LeveeBreach, CreateLeveeBreach}
         };
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             StructureFactoryValidator.ThrowIfInvalidType(structure2D, StructureFactoryValidator.SupportedTypes);
 
             IStructure structure = null;
-            structure = CreateStructureType[structure2D.StructureType](structure2D, path, refDate);
+            structure = CreateStructureType[structure2D.Structure2DType](structure2D, path, refDate);
             SetCommonStructureData(structure, structure2D, path);
 
             return structure;
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// <returns>The created pump.</returns>
         public static IPump CreatePump(Structure2D structure, string path, DateTime refDate)
         {
-            StructureFactoryValidator.ThrowIfInvalidType(structure, new[] { StructureType.Pump });
+            StructureFactoryValidator.ThrowIfInvalidType(structure, new[] { Structure2DType.Pump });
 
             var pump = CreatePumpCore(structure, path, refDate);
             SetCommonStructureData(pump, structure, path);
@@ -257,10 +257,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// <returns>The created weir.</returns>
         public static IWeir CreateWeir(Structure2D structure2D, string path, DateTime refDate)
         {
-            StructureFactoryValidator.ThrowIfInvalidType(structure2D, new[] { StructureType.Weir });
+            StructureFactoryValidator.ThrowIfInvalidType(structure2D, new[] { Structure2DType.Weir });
 
             IWeir structure = null;
-            if (structure2D.StructureType == StructureType.Weir)
+            if (structure2D.Structure2DType == Structure2DType.Weir)
             {
                 structure = CreateSimpleWeirCore(structure2D, path, refDate);
             }
@@ -480,10 +480,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public static IGate CreateGate(Structure2D structure2D, string path, DateTime refDate)
         {
-            StructureFactoryValidator.ThrowIfInvalidType(structure2D, new[] { StructureType.Gate });
+            StructureFactoryValidator.ThrowIfInvalidType(structure2D, new[] { Structure2DType.Gate });
 
             IGate structure = null;
-            if (structure2D.StructureType == StructureType.Gate)
+            if (structure2D.Structure2DType == Structure2DType.Gate)
             {
                 structure = CreateGateCore(structure2D, path, refDate);
             }

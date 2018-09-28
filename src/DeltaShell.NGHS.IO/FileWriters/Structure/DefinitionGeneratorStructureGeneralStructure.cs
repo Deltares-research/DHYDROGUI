@@ -2,6 +2,7 @@
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.Helpers;
+using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
@@ -12,12 +13,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
         }
 
-        public override DelftIniCategory CreateStructureRegion(IStructure1D structure)
-        { 
-            if (structure.Branch != null)
-                AddCommonRegionElements(structure, StructureRegion.StructureTypeName.GeneralStructure);
+        public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
+        {
+            AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.GeneralStructure);
 
-            var weir = structure as Weir;
+            var weir = hydroObject as Weir;
             if (weir == null) return IniCategory;
 
             var formula = weir.WeirFormula as GeneralStructureWeirFormula;
@@ -52,7 +52,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             var extraResistance = formula.UseExtraResistance ? formula.ExtraResistance : 0.0;
             IniCategory.AddProperty(StructureRegion.ExtraResistance.Key, extraResistance, StructureRegion.ExtraResistance.Description, StructureRegion.ExtraResistance.Format);
 
-            if (structure.Branch == null)
+            if (((IBranchFeature)hydroObject).Branch == null)
             {
                 /* for FM, add the GateDoorHeight for a general structure. 
                  * Checking if it is 1D or 2D by checking the structure branch == null is not the most awesome way to do this.

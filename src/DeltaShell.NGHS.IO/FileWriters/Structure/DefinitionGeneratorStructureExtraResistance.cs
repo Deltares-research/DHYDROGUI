@@ -12,11 +12,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
         }
 
-        public override DelftIniCategory CreateStructureRegion(IStructure1D structure)
+        public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
-            AddCommonRegionElements(structure, StructureRegion.StructureTypeName.ExtraResistanceStructure);
+            AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.ExtraResistanceStructure);
 
-            var extraResistance = structure as IExtraResistance;
+            var extraResistance = hydroObject as IExtraResistance;
             if(extraResistance == null) return IniCategory;
 
             if (extraResistance.FrictionTable == null) return IniCategory;

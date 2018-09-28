@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void ReadPropertiesTest()
         {
-            // StructureType,   attributeName,  Caption,            Type,       Default,    Min,    Max,    StructureFileOnly,  Description
+            // Structure2DType,   attributeName,  Caption,            Type,       Default,    Min,    Max,    StructureFileOnly,  Description
             // structure,       id,             Name,               String,     ,           ,       ,       FALSE,              Name of the structure
             // weir,            crest_level,    Crest level,        Double,     ,           ,       ,       FALSE,              Crest height in [m]
             // pump,            nrstages,       Number of stages,   Integer,    1,          1,      ,       FALSE,              Number of pump stages

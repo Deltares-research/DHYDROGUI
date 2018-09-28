@@ -36,7 +36,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             "When compound is equal or less than to 0 the structure is a single structure. " +
             "In case a value greater than 0 is given, the structure is a part of a compound structure. " +
             "All structures with the same compound id are considered to be elements of the same compound structure.");
-        public static readonly ConfigurationSetting CompoundName = new ConfigurationSetting(key: "compoundName", description: "");
+        public static readonly ConfigurationSetting CompoundName = new ConfigurationSetting(key: "compoundName", description: "Type of structure");
         public static readonly ConfigurationSetting DefinitionType = new ConfigurationSetting(key: "type", description: "");
         public static readonly ConfigurationSetting AllowedFlowDir = new ConfigurationSetting(key: "allowedflowdir", description: "0=Both, 1=Positive, 2=Negative, 3=None");
         // [Common Culvert and Common Bridge]
@@ -74,6 +74,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         public static readonly ConfigurationSetting ReductionFactorLevels = new ConfigurationSetting(key: "reductionfactorlevels", description: "Number of levels in reduction table");
         public static readonly ConfigurationSetting Head = new ConfigurationSetting(key: "head", description: "Head");
         public static readonly ConfigurationSetting ReductionFactor = new ConfigurationSetting(key: "reductionfactor", description: "Reduction factor (-)");
+        public static readonly ConfigurationSetting PolylineFile = new ConfigurationSetting(key: "polylinefile", description: "*.pli; Polyline geometry definition for 2D structure");
         #endregion
 
         #region Common Weir Elements

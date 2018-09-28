@@ -12,11 +12,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
         }
 
-        public override DelftIniCategory CreateStructureRegion(IStructure1D structure)
+        public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
-            AddCommonRegionElements(structure, StructureRegion.StructureTypeName.Weir);
+            AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.Weir);
 
-            var weir = structure as Weir;
+            var weir = hydroObject as Weir;
             if (weir == null) return IniCategory;
 
             var formula = weir.WeirFormula as SimpleWeirFormula;

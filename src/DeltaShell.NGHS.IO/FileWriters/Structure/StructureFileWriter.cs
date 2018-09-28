@@ -11,7 +11,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public static class StructureFileWriter
     {
-        public static void WriteFile(string targetFile, IHydroNetwork network)
+        public static void WriteFile(string targetFile, IHydroNetwork network, HydroArea hydroArea = null)
         {
             var categories = new List<DelftIniCategory>
             {
@@ -48,6 +48,18 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
                 }
             }
 
+            if (hydroArea != null)
+            {
+                foreach (var hydroObject in hydroArea.AllHydroObjects.Cast<IStructure2D>())
+                {
+                    var definitionGeneratorStructure = DefinitionGeneratorFactory.GetDefinitionGeneratorStructure(hydroObject.Structure2DType);
+                    var structureCategory = definitionGeneratorStructure.CreateStructureRegion(hydroObject);
+                    categories.Add(structureCategory);
+
+                    // Write structure files
+                    // Write time series file if needed
+                }
+            }
             if (File.Exists(targetFile)) File.Delete(targetFile);
             new IniFileWriter().WriteIniFile(categories, targetFile);
         }

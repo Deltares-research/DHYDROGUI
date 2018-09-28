@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using DelftTools.Hydro;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using NUnit.Framework;
 
@@ -25,14 +26,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
         public void GivenStructure2DWhenInstantiatingWithEmptyStringThenStructureHasInvalidType()
         {
             var structure = new Structure2D("");
-            Assert.That(structure.StructureType, Is.EqualTo(StructureType.InvalidType));
+            Assert.That(structure.Structure2DType, Is.EqualTo(Structure2DType.InvalidType));
         }
 
         [Test]
         public void WhenInstantiatingStructure2DWithNullValueThenStructureHasInvalidType()
         {
             var structure = new Structure2D(null);
-            Assert.That(structure.StructureType, Is.EqualTo(StructureType.InvalidType));
+            Assert.That(structure.Structure2DType, Is.EqualTo(Structure2DType.InvalidType));
         }
     }
 }

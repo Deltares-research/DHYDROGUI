@@ -17,11 +17,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
         }
 
-        public override DelftIniCategory CreateStructureRegion(IStructure1D structure)
+        public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
-            AddCommonRegionElements(structure, StructureRegion.StructureTypeName.Pump);
+            AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.Pump);
 
-            var pump = structure as Pump;
+            var pump = hydroObject as Pump;
             if (pump == null) return IniCategory;
 
             var direction = (pump.DirectionIsPositive ? (int)pump.ControlDirection : -1 * (int)pump.ControlDirection);

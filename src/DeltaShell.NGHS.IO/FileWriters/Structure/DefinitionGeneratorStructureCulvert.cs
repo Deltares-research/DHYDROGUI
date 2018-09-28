@@ -13,11 +13,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
         }
 
-        public override DelftIniCategory CreateStructureRegion(IStructure1D structure)
+        public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
-            AddCommonRegionElements(structure, StructureRegion.StructureTypeName.Culvert);
+            AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.Culvert);
 
-            var culvert = structure as Culvert;
+            var culvert = hydroObject as Culvert;
             if (culvert == null) return IniCategory;
             
             AddCommonCulvertElements(culvert);

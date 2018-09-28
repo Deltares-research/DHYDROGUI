@@ -90,51 +90,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public void Write(string filePath, IEnumerable<IStructure> structures)
         {
-            new DelftIniWriter().WriteDelftIniFile(
-                GetSupportedStructures(structures)
-                    .Select(s => CreateDelftIniCategory(s, filePath, ReferenceDate)), filePath);
-        }
+            var supportedStructures = GetSupportedStructures(structures);
+            var delftIniCategories = supportedStructures.Select(s => CreateDelftIniCategory(s, filePath, ReferenceDate));
 
-        public static void WriteStructures2D(string path, IEnumerable<Structure2D> structures)
-        {
-            new DelftIniWriter().WriteDelftIniFile(structures.Select(CreateDelftIniCategory), path);
-        }
-
-        private IStructure ConvertStructure(Structure2D structure, string filePath, string oldFilePath = null)
-        {
-            try
-            {
-                if (oldFilePath != null && !filePath.Equals(oldFilePath))
-                    CopyPolylineFile(structure.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString(), Path.GetDirectoryName(filePath), Path.GetDirectoryName(oldFilePath));
-                return StructureFactory.CreateStructure(structure, filePath, ReferenceDate, oldFilePath);
-            }
-            catch (Exception e)
-            {
-                if (e is ArgumentNullException || e is ArgumentException || e is FileNotFoundException ||
-                    e is DirectoryNotFoundException || e is IOException || e is OutOfMemoryException ||
-                    e is FormatException)
-                {
-                    Log.ErrorFormat("Failed to convert .ini structure definition '{0}' to actual structure: {1}.",
-                                    structure.Name, e.Message);
-                    return null;
-                }
-
-                // Unexpected Exception, don't handle:
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// oldDirectory and newDirectory point to locations of a structures file (.ini) from which an IStructure object needs to be created.
-        /// Whenever oldDirectory and newDirectory are pointing to different directories, a polyline file (.pli) will be copied from oldDirectory to newDirectory.
-        /// </summary>
-        /// <param name="polylineFileName">Name with extension of the referred polyline file.</param>
-        /// <param name="newDirectory">The directory to which the polyline file needs to be copied.</param>
-        /// <param name="oldDirectory">The directory from which the polyline file need to be copied.</param>
-        private static void CopyPolylineFile(string polylineFileName, string newDirectory, string oldDirectory)
-        {
-            var polylineFilePath = Path.Combine(oldDirectory, polylineFileName);
-            File.Copy(polylineFilePath, Path.Combine(newDirectory, polylineFileName));
+            new DelftIniWriter().WriteDelftIniFile(delftIniCategories, filePath);
         }
 
         private static IEnumerable<IStructure> GetSupportedStructures(IEnumerable<IStructure> structures)
@@ -154,33 +113,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return list;
         }
 
-        private static DelftIniCategory CreateDelftIniCategory(Structure2D structure)
-        {
-            var delftIniCategory = new DelftIniCategory(StructureCategoryName);
-
-            foreach (var property in structure.Properties)
-            {
-                if (property.PropertyDefinition.FilePropertyName == KnownStructureProperties.GateSillWidth &&
-                    FMParser.FromString<double>(property.GetValueAsString()) <= 0.0)
-                {
-                    continue;
-                }
-                if (property.PropertyDefinition.FilePropertyName == KnownStructureProperties.CrestLevel &&
-                    FMParser.FromString<double>(property.GetValueAsString()) <= 0.0)
-                {
-                    continue;
-                }
-                delftIniCategory.Properties.Add(new DelftIniProperty
-                {
-                    Name = property.PropertyDefinition.FilePropertyName,
-                    Value = property.GetValueAsString(),
-                    Comment = property.PropertyDefinition.Description
-                });
-            }
-
-            return delftIniCategory;
-        }
-
         private DelftIniCategory CreateDelftIniCategory(IStructure structure, string filePath, DateTime refDate)
         {
             var delftIniCategory = new DelftIniCategory(StructureCategoryName);
@@ -192,8 +124,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             return delftIniCategory;
         }
-
-        #region Sobek Structure to DelftIni related methods:
 
         private IEnumerable<DelftIniProperty> CreateDelftIniProperties(IStructure structure, string filePath, DateTime refDate)
         {
@@ -232,7 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 else
                 {
                     Log.ErrorFormat("Structure with invalid name {0} could not be serialized to *.pli file.",
-                                    structure.Name);
+                        structure.Name);
                 }
             }
 
@@ -240,6 +170,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 Log.ErrorFormat("Geometry type '{0}' for structure '{1}' not supported and therefore not written.", structure.Geometry.GetType(), structure.Name);
             }
+        }
+
+        private DelftIniProperty ConstructProperty(string propertyName, object value, string structureType)
+        {
+            var definition = StructureSchema.GetDefinition(structureType, propertyName);
+            var delftIniProperty = new DelftIniProperty
+            {
+                Name = definition.FilePropertyName,
+                Value = FMParser.ToString(value, value is ICollection ? typeof(IList<double>) : value.GetType()),
+                Comment = definition.Description
+            };
+            return delftIniProperty;
         }
 
         private IEnumerable<DelftIniProperty> ConstructStructureProperties(IStructure structure, string structureType, string path, DateTime refDate)
@@ -260,22 +202,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             if (leveeBreach != null)
                 return ConstructLeveeBreachProperties(leveeBreach, structureType, path, refDate);
             throw new NotImplementedException();
-        }
-
-        private IEnumerable<DelftIniProperty> ConstructWeirProperties(IStructure1D structure, string structureType, string path, DateTime refDate)
-        {
-            var weir = (IWeir)structure;
-            var weirFormula = weir.WeirFormula;
-            if (weirFormula is SimpleWeirFormula) return ConstructSimpleWeirProperties(weir, path, structureType, refDate);
-            if (weirFormula is GeneralStructureWeirFormula) return ConstructGeneralStructureProperties(weir);
-            throw new NotImplementedException();
-        }
-
-        private IEnumerable<DelftIniProperty> ConstructGeneralStructureProperties(IStructure1D structure)
-        {
-            var structureGenerator = new DefinitionGeneratorStructureGeneralStructure(new CompoundStructureInfo(0, string.Empty));
-            var generalStructureCategory = structureGenerator.CreateStructureRegion(structure);
-            return generalStructureCategory.Properties;
         }
 
         private IEnumerable<DelftIniProperty> ConstructPumpProperties(IStructure1D structure, string structureType, string path, DateTime refDate)
@@ -303,30 +229,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return properties;
         }
 
-        private IEnumerable<DelftIniProperty> ConstructSimpleWeirProperties(IStructure1D structure, string path, string structureType, DateTime refDate)
+        private IEnumerable<DelftIniProperty> ConstructWeirProperties(IStructure1D structure, string structureType, string path, DateTime refDate)
         {
             var weir = (IWeir)structure;
-            var properties = new List<DelftIniProperty>();
-
-            if (weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries)
-            {
-                var timeFilePath = ConstructTimeFilePath(weir, KnownStructureProperties.CrestLevel);
-                properties.Add(ConstructProperty(KnownStructureProperties.CrestLevel, timeFilePath, structureType));
-                WriteTimeFile(GetOtherFilePathInSameDirectory(path, timeFilePath), weir.CrestLevelTimeSeries, refDate);
-            }
-            else
-            {
-                properties.Add(ConstructProperty(KnownStructureProperties.CrestLevel, weir.CrestLevel, structureType));
-            }
-
-            if (weir.CrestWidth > 0)
-            {
-                properties.Add(ConstructProperty(KnownStructureProperties.CrestWidth, weir.CrestWidth, structureType));
-            }
-
-            var formula = (SimpleWeirFormula)((IWeir)structure).WeirFormula;
-            properties.Add(ConstructProperty(KnownStructureProperties.LateralContractionCoefficient, formula.LateralContraction, structureType));
-            return properties;
+            var weirFormula = weir.WeirFormula;
+            if (weirFormula is SimpleWeirFormula) return ConstructSimpleWeirProperties(weir, path, structureType, refDate);
+            if (weirFormula is GeneralStructureWeirFormula) return ConstructGeneralStructureProperties(weir);
+            throw new NotImplementedException();
         }
 
         private IEnumerable<DelftIniProperty> ConstructGateProperties(IStructure1D structure, string structureType, string path, DateTime refDate)
@@ -438,6 +347,120 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return properties;
         }
 
+        private string ConstructTimeFilePath(IStructure structure, string propertyName)
+        {
+            var filePath = String.Format("{0}_{1}.tim", structure.Name, propertyName);
+            if (TimFolder != null)
+            {
+                filePath = Path.Combine(TimFolder, filePath);
+            }
+            return filePath;
+        }
+
+        public static void WriteStructures2D(string path, IEnumerable<Structure2D> structures)
+        {
+            new DelftIniWriter().WriteDelftIniFile(structures.Select(CreateDelftIniCategory), path);
+        }
+
+        private IStructure ConvertStructure(Structure2D structure, string filePath, string oldFilePath = null)
+        {
+            try
+            {
+                if (oldFilePath != null && !filePath.Equals(oldFilePath))
+                    CopyPolylineFile(structure.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString(), Path.GetDirectoryName(filePath), Path.GetDirectoryName(oldFilePath));
+                return StructureFactory.CreateStructure(structure, filePath, ReferenceDate, oldFilePath);
+            }
+            catch (Exception e)
+            {
+                if (e is ArgumentNullException || e is ArgumentException || e is FileNotFoundException ||
+                    e is DirectoryNotFoundException || e is IOException || e is OutOfMemoryException ||
+                    e is FormatException)
+                {
+                    Log.ErrorFormat("Failed to convert .ini structure definition '{0}' to actual structure: {1}.",
+                                    structure.Name, e.Message);
+                    return null;
+                }
+
+                // Unexpected Exception, don't handle:
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// oldDirectory and newDirectory point to locations of a structures file (.ini) from which an IStructure object needs to be created.
+        /// Whenever oldDirectory and newDirectory are pointing to different directories, a polyline file (.pli) will be copied from oldDirectory to newDirectory.
+        /// </summary>
+        /// <param name="polylineFileName">Name with extension of the referred polyline file.</param>
+        /// <param name="newDirectory">The directory to which the polyline file needs to be copied.</param>
+        /// <param name="oldDirectory">The directory from which the polyline file need to be copied.</param>
+        private static void CopyPolylineFile(string polylineFileName, string newDirectory, string oldDirectory)
+        {
+            var polylineFilePath = Path.Combine(oldDirectory, polylineFileName);
+            File.Copy(polylineFilePath, Path.Combine(newDirectory, polylineFileName));
+        }
+
+        private static DelftIniCategory CreateDelftIniCategory(Structure2D structure)
+        {
+            var delftIniCategory = new DelftIniCategory(StructureCategoryName);
+
+            foreach (var property in structure.Properties)
+            {
+                if (property.PropertyDefinition.FilePropertyName == KnownStructureProperties.GateSillWidth &&
+                    FMParser.FromString<double>(property.GetValueAsString()) <= 0.0)
+                {
+                    continue;
+                }
+                if (property.PropertyDefinition.FilePropertyName == KnownStructureProperties.CrestLevel &&
+                    FMParser.FromString<double>(property.GetValueAsString()) <= 0.0)
+                {
+                    continue;
+                }
+                delftIniCategory.Properties.Add(new DelftIniProperty
+                {
+                    Name = property.PropertyDefinition.FilePropertyName,
+                    Value = property.GetValueAsString(),
+                    Comment = property.PropertyDefinition.Description
+                });
+            }
+
+            return delftIniCategory;
+        }
+
+        #region Sobek Structure to DelftIni related methods:
+
+        private IEnumerable<DelftIniProperty> ConstructGeneralStructureProperties(IStructure1D structure)
+        {
+            var structureGenerator = new DefinitionGeneratorStructureGeneralStructure(new CompoundStructureInfo(0, string.Empty));
+            var generalStructureCategory = structureGenerator.CreateStructureRegion(structure);
+            return generalStructureCategory.Properties;
+        }
+
+        private IEnumerable<DelftIniProperty> ConstructSimpleWeirProperties(IStructure1D structure, string path, string structureType, DateTime refDate)
+        {
+            var weir = (IWeir)structure;
+            var properties = new List<DelftIniProperty>();
+
+            if (weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries)
+            {
+                var timeFilePath = ConstructTimeFilePath(weir, KnownStructureProperties.CrestLevel);
+                properties.Add(ConstructProperty(KnownStructureProperties.CrestLevel, timeFilePath, structureType));
+                WriteTimeFile(GetOtherFilePathInSameDirectory(path, timeFilePath), weir.CrestLevelTimeSeries, refDate);
+            }
+            else
+            {
+                properties.Add(ConstructProperty(KnownStructureProperties.CrestLevel, weir.CrestLevel, structureType));
+            }
+
+            if (weir.CrestWidth > 0)
+            {
+                properties.Add(ConstructProperty(KnownStructureProperties.CrestWidth, weir.CrestWidth, structureType));
+            }
+
+            var formula = (SimpleWeirFormula)((IWeir)structure).WeirFormula;
+            properties.Add(ConstructProperty(KnownStructureProperties.LateralContractionCoefficient, formula.LateralContraction, structureType));
+            return properties;
+        }
+
         private void AddReductionTableRelatedProperties(IPump pump, List<DelftIniProperty> properties, string structureType)
         {
             if (pump.ReductionTable.Arguments[0].Values.Count == 0)
@@ -483,18 +506,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
         }
 
-        private DelftIniProperty ConstructProperty(string propertyName, object value, string structureType)
-        {
-            var definition = StructureSchema.GetDefinition(structureType, propertyName);
-            var delftIniProperty = new DelftIniProperty
-            {
-                Name = definition.FilePropertyName,
-                Value = FMParser.ToString(value, value is ICollection ? typeof(IList<double>) : value.GetType()),
-                Comment = definition.Description
-            };
-            return delftIniProperty;
-        }
-
         private static string DetermineType(IStructure structure)
         {
             if (structure is IPump) return StructureRegion.StructureTypeName.Pump;
@@ -525,16 +536,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 Name = structure.Name,
                 Geometry = structure.Geometry
             }});
-        }
-
-        private string ConstructTimeFilePath(IStructure structure, string propertyName)
-        {
-            var filePath = String.Format("{0}_{1}.tim", structure.Name, propertyName);
-            if (TimFolder != null)
-            {
-                filePath = Path.Combine(TimFolder, filePath);
-            }
-            return filePath;
         }
 
         private static void WriteTimeFile(string filePath, IFunction capacityTimeSeries, DateTime refDate, IEnumerable<string> commentLines = null)

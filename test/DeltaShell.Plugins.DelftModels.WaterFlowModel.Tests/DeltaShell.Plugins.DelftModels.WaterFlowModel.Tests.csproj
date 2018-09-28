@@ -227,7 +227,6 @@
     <Compile Include="ImportExport\IntegrationTests\CrossSectionDefinitionFileWriterIntegrationTestInMemory.cs" />
     <Compile Include="ImportExport\IntegrationTests\CrossSectionsFromDsProjTest.cs" />
     <Compile Include="ImportExport\IntegrationTests\RoughnessesFromDsProjTest.cs" />
-    <Compile Include="ImportExport\IntegrationTests\StructureFileWriterIntegrationTest.cs" />
     <Compile Include="ImportExport\IntegrationTests\WFM1DDsProjTest.cs" />
     <Compile Include="ImportExport\ModelDefinitionsFileWriterTest.cs" />
     <Compile Include="ImportExport\ModelFileNamesTest.cs" />

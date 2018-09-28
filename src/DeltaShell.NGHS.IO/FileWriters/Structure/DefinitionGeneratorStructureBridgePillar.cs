@@ -11,11 +11,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
         }
 
-        public override DelftIniCategory CreateStructureRegion(IStructure1D structure)
+        public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
-            AddCommonRegionElements(structure, StructureRegion.StructureTypeName.BridgePillar);
+            AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.BridgePillar);
 
-            var bridge = structure as IBridge;
+            var bridge = hydroObject as IBridge;
             if(bridge == null) return IniCategory;
 
             AddCommonBridgeElements(bridge);
