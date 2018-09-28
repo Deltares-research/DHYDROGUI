@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void GenerateFMFilesForJanNoort_Waardenburg()
+        public void Waardenburg_ImportFromGwsw_ThenExportModel()
         {
             var pathRead = TestHelper.GetTestFilePath(@"alex\Waardenburg\");
             var pathWrite = Path.Combine(FileUtils.CreateTempDirectory(), "Waardenburg.mdu");
