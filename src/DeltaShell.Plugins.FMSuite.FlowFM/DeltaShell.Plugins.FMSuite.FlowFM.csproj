@@ -144,7 +144,6 @@
     <Compile Include="EggCrossSectionDefinitionGenerator.cs" />
     <Compile Include="IO\BathymetryFileWriter.cs" />
     <Compile Include="IO\CrossSectionLocationWriter.cs" />
-    <Compile Include="IO\Exporters\FmCrossSectionDefinitionWriter.cs" />
     <Compile Include="IO\WaterFlowFMModelFactory.cs" />
     <Compile Include="IO\WaterFlowFMModelReaderData.cs" />
     <Compile Include="IO\Importers\GisToFeature2DImporter.cs" />

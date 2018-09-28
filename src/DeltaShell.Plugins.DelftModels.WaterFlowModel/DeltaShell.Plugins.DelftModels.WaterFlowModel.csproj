@@ -174,7 +174,6 @@
     <Compile Include="ImportExport\BoundaryFileWriterHelper.cs" />
     <Compile Include="ImportExport\BoundaryLocationFileWriter.cs" />
     <Compile Include="ImportExport\CrossSectionFileReader.cs" />
-    <Compile Include="ImportExport\CrossSectionDefinitionFileWriter.cs" />
     <Compile Include="ImportExport\Flow1DParameterGenerator.cs" />
     <Compile Include="ImportExport\ModelDefinitionFileWriter.cs" />
     <Compile Include="ImportExport\ModelDefinitionsRegion.cs" />

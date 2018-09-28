@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters;
+using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.FileWriters.Retention;
@@ -26,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             FileUtils.CreateDirectoryIfNotExists(fileName.TargetPath);
 
-            ThrowIfFileNotExists(fileName.CrossSectionDefinitions, fileName.TargetPath, p => CrossSectionDefinitionFileWriter.WriteFile(p, waterFlowModel1D));
+            ThrowIfFileNotExists(fileName.CrossSectionDefinitions, fileName.TargetPath, p => CrossSectionDefinitionFileWriter.WriteFile(p, waterFlowModel1D.Network, waterFlowModel1D.RoughnessSections));
             ThrowIfFileNotExists(fileName.CrossSectionLocations, fileName.TargetPath, p => LocationFileWriter.WriteFileCrossSectionLocations(p, waterFlowModel1D.Network.CrossSections));
             ThrowIfFileNotExists(fileName.ObservationPoints, fileName.TargetPath, p => LocationFileWriter.WriteFileObservationPointLocations(p, waterFlowModel1D.Network.ObservationPoints));
             ThrowIfFileNotExists(fileName.LateralDischarge, fileName.TargetPath, p => LocationFileWriter.WriteFileLateralDischargeLocations(p, waterFlowModel1D.Network.LateralSources));

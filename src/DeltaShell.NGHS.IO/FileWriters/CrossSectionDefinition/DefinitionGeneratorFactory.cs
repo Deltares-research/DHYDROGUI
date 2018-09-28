@@ -1,3 +1,4 @@
+using System;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.FileReaders.Definition;
@@ -5,6 +6,7 @@ using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using GeoAPI.Extensions.Networks;
 using log4net;
+using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
@@ -43,11 +45,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             }
         }
 
-        public static DefinitionGeneratorCrossSectionDefinition GetDefinitionGeneratorCrossSection(ICrossSectionDefinition crossSectionDefinition,
-                                                                                                   CrossSectionType crossSectionType)
+        public static DefinitionGeneratorCrossSectionDefinition GetDefinitionGeneratorCrossSection(ICrossSectionDefinition crossSectionDefinition)
         {
             DefinitionGeneratorCrossSectionDefinition definitionGeneratorCrossSectionDefinition = null;
 
+            var crossSectionType = crossSectionDefinition.CrossSectionType;
             switch (crossSectionType)
             {
                 case CrossSectionType.GeometryBased:
@@ -60,11 +62,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                     definitionGeneratorCrossSectionDefinition = new DefinitionGeneratorCrossSectionDefinitionZw();
                     break;
                 case CrossSectionType.Standard:
-                    definitionGeneratorCrossSectionDefinition = DefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(crossSectionDefinition);
+                    definitionGeneratorCrossSectionDefinition = DefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(crossSectionDefinition);
                     break;
             }
             return definitionGeneratorCrossSectionDefinition;
         }
+      
 
         public static IDefinitionGeneratorLocation GetDefinitionGeneratorLocation(IBranchFeature branchFeature)
         {
@@ -82,6 +85,17 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             }
             return null;
 
+        }
+
+        public static IDefinitionGeneratorStructure GetDefinitionGeneratorStructure(Structure2DType structureType)
+        {
+            switch (structureType)
+            {
+                case Structure2DType.Pump:
+                    return new DefinitionGeneratorStructurePump2D();
+                default:
+                    return null;
+            }
         }
 
         public static IDefinitionGeneratorStructure GetDefinitionGeneratorStructure(StructureType structureType, CompoundStructureInfo compoundStructureInfo)

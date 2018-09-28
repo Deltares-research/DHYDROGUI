@@ -337,7 +337,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             foreach (var crossSection in crossSections)
             {
                 var definitionGeneratorCrossSectionDefinition = DefinitionGeneratorFactory
-                    .GetDefinitionGeneratorCrossSection(crossSection.Definition, crossSection.CrossSectionType);
+                    .GetDefinitionGeneratorCrossSection(crossSection.Definition);
                 if (definitionGeneratorCrossSectionDefinition != null)
                 {
                     string csDefinitionId = crossSection.Definition.Name;

@@ -123,6 +123,7 @@
     <Compile Include="FileWriters\Boundary\BoundaryFileWriter.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryRegion.cs" />
     <Compile Include="FileWriters\Boundary\DefinitionGeneratorBoundary.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\CrossSectionDefinitionFileWriter.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionIniCategoryGeneratorFactory.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinition.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionArch.cs" />
@@ -230,6 +231,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="Grid\Grid.cd" />
     <None Include="packages.config">
       <SubType>Designer</SubType>

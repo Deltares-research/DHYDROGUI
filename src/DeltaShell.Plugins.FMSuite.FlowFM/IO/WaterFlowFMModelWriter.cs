@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
@@ -95,8 +96,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static void WriteCrossSectionDefinitions(WaterFlowFMModel model)
         {
             var filePath = WriterData.FilePaths.CrossSectionDefinitionFilePath;
-            if(!string.IsNullOrEmpty(filePath))
-                FmCrossSectionDefinitionWriter.WriteFile(filePath, model);
+            if (string.IsNullOrEmpty(filePath)) return;
+
+            CrossSectionDefinitionFileWriter.WriteFile(filePath, model.Network, model.RoughnessSections);
+            //StructureFileWriter.WriteFile(filePath, model.Network);
         }
 
         private static void WriteCrossSectionLocation(WaterFlowFMModel model)

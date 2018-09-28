@@ -10,56 +10,56 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
         [Test]
         public void GivenRoundShape_WhenGettingIniCategoryGenerator_ThenItIsOfTheCorrectType()
         {
-            var generator = DefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(CrossSectionStandardShapeType.Circle);
+            var generator = DefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType.Circle);
             Assert.IsTrue(generator is DefinitionGeneratorCrossSectionDefinitionCircle);
         }
 
         [Test]
         public void GivenEllipticalShape_WhenGettingIniCategoryGenerator_ThenItIsOfTheCorrectType()
         {
-            var generator = DefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(CrossSectionStandardShapeType.Elliptical);
+            var generator = DefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType.Elliptical);
             Assert.IsTrue(generator is DefinitionGeneratorCrossSectionDefinitionElliptical);
         }
 
         [Test]
         public void GivenRectangleShape_WhenGettingIniCategoryGenerator_ThenItIsOfTheCorrectType()
         {
-            var generator = DefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(CrossSectionStandardShapeType.Rectangle);
+            var generator = DefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType.Rectangle);
             Assert.IsTrue(generator is DefinitionGeneratorCrossSectionDefinitionRectangle);
         }
 
         [Test]
         public void GivenEggShape_WhenGettingIniCategoryGenerator_ThenItIsOfTheCorrectType()
         {
-            var generator = DefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(CrossSectionStandardShapeType.Egg);
+            var generator = DefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType.Egg);
             Assert.IsTrue(generator is DefinitionGeneratorCrossSectionDefinitionEgg);
         }
 
         [Test]
         public void GivenArchShape_WhenGettingIniCategoryGenerator_ThenItIsOfTheCorrectType()
         {
-            var generator = DefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(CrossSectionStandardShapeType.Arch);
+            var generator = DefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType.Arch);
             Assert.IsTrue(generator is DefinitionGeneratorCrossSectionDefinitionArch);
         }
 
         [Test]
         public void GivenCunetteShape_WhenGettingIniCategoryGenerator_ThenItIsOfTheCorrectType()
         {
-            var generator = DefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(CrossSectionStandardShapeType.Cunette);
+            var generator = DefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType.Cunette);
             Assert.IsTrue(generator is DefinitionGeneratorCrossSectionDefinitionCunette);
         }
 
         [Test]
         public void GivenSteelCunetteShape_WhenGettingIniCategoryGenerator_ThenItIsOfTheCorrectType()
         {
-            var generator = DefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(CrossSectionStandardShapeType.SteelCunette);
+            var generator = DefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType.SteelCunette);
             Assert.IsTrue(generator is DefinitionGeneratorCrossSectionDefinitionSteelCunette);
         }
 
         [Test]
         public void GivenTrapeziumShape_WhenGettingIniCategoryGenerator_ThenItIsOfTheCorrectType()
         {
-            var generator = DefinitionIniCategoryGeneratorFactory.GetIniCategoryGenerator(CrossSectionStandardShapeType.Trapezium);
+            var generator = DefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType.Trapezium);
             Assert.IsTrue(generator is DefinitionGeneratorCrossSectionDefinitionTrapezium);
         }
     }
