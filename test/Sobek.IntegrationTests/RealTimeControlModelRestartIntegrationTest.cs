@@ -2,11 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.IO;
 using DeltaShell.Core;
 using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.CommonTools;
@@ -15,12 +19,16 @@ using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
 using NUnit.Framework;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
+using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
+
 
 namespace Sobek.IntegrationTests
 {
@@ -92,19 +100,16 @@ namespace Sobek.IntegrationTests
         public void GivenAnIntegratedModelWithStateSavesFor1DAndRTCWhenThisModelIsRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun(int runLengthInHours, int runLengthSaveStateInHours, int intervalSaveStateInHours, int offsetSaveStateInHours)
         {
             const string projectName = "TestRTC1D.dsproj";
-            var testDataPath = TestHelper.GetTestFilePath(Path.Combine("RtcFlow1DRestart", projectName));
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
                 // Get project files in temp folder.
                 var projectPath = Path.Combine(tempDir, projectName);
 
-                FileUtils.CopyFile(testDataPath, projectPath);
-                FileUtils.CopyDirectory(testDataPath + "_data", tempDir);
-
                 // Set up application.
                 using (var app = new DeltaShellApplication())
                 {
+                    app.IsProjectCreatedInTemporaryDirectory = true;
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
                     app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -113,25 +118,33 @@ namespace Sobek.IntegrationTests
                     app.Plugins.Add(new NetCdfApplicationPlugin());
                     app.Plugins.Add(new RealTimeControlApplicationPlugin());
                     app.Plugins.Add(new HydroModelApplicationPlugin());
+                    app.Plugins.Add(new NetCdfApplicationPlugin());
 
                     app.Run();
 
-                    app.OpenProject(projectPath);
+                    app.SaveProjectAs(projectPath);
 
                     // Given
-                    // Get models from project.
-                    var hydroModel = (HydroModel) app.Project.RootFolder.Models.First();
-                    var fullRunStartTime = hydroModel.StartTime;
-                    var fullRunStopTime = hydroModel.StopTime;
-
-                    var rtcModel = hydroModel.Models.OfType<RealTimeControlModel>().First();
+                    var hydroModel = createSimpleHydroModel(projectPath + "_data");
                     var flowModel = hydroModel.Models.OfType<WaterFlowModel1D>().First();
+                    var rtcModel = hydroModel.Models.OfType<RealTimeControlModel>().First();
+
+                    app.Project.RootFolder.Add(hydroModel);
+
+                    var fullRunStartTime = DateTime.Today;
+                    var fullRunStopTime = fullRunStartTime.AddHours(runLengthInHours);
+
+                    // Set up time ranges on HydroModel
+                    hydroModel.StartTime = fullRunStartTime;
+                    hydroModel.StopTime = fullRunStopTime;
+                    hydroModel.TimeStep = TimeSpan.FromHours(1);
 
                     // Set up time ranges on WaterFlowModel1D.
                     flowModel.WriteRestart = true;
                     flowModel.UseRestart = false;
                     flowModel.StartTime = fullRunStartTime;
                     flowModel.StopTime = fullRunStopTime;
+                    flowModel.TimeStep = TimeSpan.FromHours(1);
 
                     flowModel.UseSaveStateTimeRange = true;
                     flowModel.SaveStateStartTime = flowModel.StartTime.AddHours(offsetSaveStateInHours);
@@ -150,7 +163,7 @@ namespace Sobek.IntegrationTests
                     rtcModel.SaveStateTimeStep = TimeSpan.FromHours(intervalSaveStateInHours);
 
                     // When
-                    // Run initial model to generate restart values.
+                    //   Run initial model to generate restart values.
                     ActivityRunner.RunActivity(hydroModel);
                     Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
 
@@ -211,9 +224,7 @@ namespace Sobek.IntegrationTests
                             .Skip(rtcCrestLevelFullRun.Count - rtcCrestLevelRestart.Length)
                             .ToArray();
 
-                        for (var indexCrestLevel = 0;
-                             indexCrestLevel < rtcCrestLevelRestart.Length;
-                             indexCrestLevel++)
+                        for (var indexCrestLevel = 0; indexCrestLevel < rtcCrestLevelRestart.Length; indexCrestLevel++)
                         {
                             // Then
                             Assert.AreEqual(rtcCrestLevelRestart[indexCrestLevel],
@@ -229,6 +240,81 @@ namespace Sobek.IntegrationTests
         private IEnumerable<IFileExporter> GetFactoryFileExportersForDimr()
         {
             return factory.SessionProvider.ConfigurationProvider.Plugins.OfType<ApplicationPlugin>().SelectMany(p => p.GetFileExporters()).Plus(new Iterative1D2DCouplerExporter());
+        }
+
+        private static HydroModel createSimpleHydroModel(string projectDataPath)
+        {
+            // Set up hydro model
+            var hydroModel = new HydroModel() {Name = "Integrated Model"};
+
+            var flowModel = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
+            hydroModel.Region.SubRegions.Add(flowModel.Network);
+
+            var rtcModel = new RealTimeControlModel("Real-Time Control");
+
+            // Add models to hydromodel
+            hydroModel.Activities.Add(flowModel);
+            hydroModel.Activities.Add(rtcModel);
+
+            // Set up flow model
+            flowModel.BoundaryConditions[0].DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+            flowModel.BoundaryConditions[0].Flow = 100.0;
+            flowModel.BoundaryConditions[1].DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            flowModel.BoundaryConditions[1].WaterLevel = 0.0;
+            flowModel.BoundaryConditions[2].DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+            flowModel.BoundaryConditions[2].WaterLevel = 0.0;
+            flowModel.OutputTimeStep = new TimeSpan(0, 0, 8, 0);
+
+            flowModel.InitialConditionsType = InitialConditionsType.WaterLevel;
+            flowModel.DefaultInitialWaterLevel = 0.0;
+            flowModel.InitialFlow.DefaultValue = 0.0;
+            flowModel.InitialConditions.DefaultValue = 0.0;
+
+            // Set up rtc model
+            var controlGroup = RealTimeControlModelHelper.CreateGroupPidRule(false);
+            rtcModel.ControlGroups.Add(controlGroup);
+
+            // Set up Observation Point -> RTC rule connection
+            var observationPoint = ObservationPoint.CreateDefault(flowModel.Network.Branches[0]);
+            observationPoint.Chainage = 20.0;
+            flowModel.Network.Branches[0].BranchFeatures.Add(observationPoint);
+
+            var dataItemsForObservationPoint = flowModel.GetChildDataItems(observationPoint).Where(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
+            Assert.That(dataItemsForObservationPoint.Count(), Is.Not.EqualTo(0));
+            
+            var outputDataItem = dataItemsForObservationPoint.First();
+            rtcModel.GetDataItemByValue(rtcModel.ControlGroups[0].Inputs[0]).LinkTo(outputDataItem);
+
+            // Set up RTC rule -> Water Crest Level connection
+            var weir = new Weir
+            {
+                OffsetY = 0,
+                FlowDirection = FlowDirection.Both,
+                WeirFormula = new SimpleWeirFormula
+                {
+                    LateralContraction = 0.9,
+                    DischargeCoefficient = 1.0
+                }
+            };
+
+            var branch = flowModel.Network.Branches[0];
+
+            var compositeStructure = new CompositeBranchStructure
+            {
+                Chainage  = 80.0,
+                Geometry = new Point(branch.Geometry.Coordinates[0])
+            };
+
+            NetworkHelper.AddBranchFeatureToBranch(compositeStructure, branch, compositeStructure.Chainage);
+            HydroNetworkHelper.AddStructureToComposite(compositeStructure, weir);
+
+            var dataItemsForWeir = flowModel.GetChildDataItems(weir).Where(di => (di.Role & DataItemRole.Input) > 0);
+            Assert.That(dataItemsForWeir.Count(), Is.Not.EqualTo(0));
+
+            var outputWeirDataItem = dataItemsForWeir.First();
+            outputWeirDataItem.LinkTo(rtcModel.GetDataItemByValue(rtcModel.ControlGroups[0].Outputs[0]));
+
+            return hydroModel;
         }
 
         [TestFixtureSetUp]
