@@ -186,7 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get { return depthLayerDefinition; }
             set
             {
-                BeginEdit(new DefaultEditAction("Changing depth layer definition"));
+                BeginEdit(new DefaultEditAction("Changing layer definition"));
                 depthLayerDefinition = value;
                 ModelDefinition.Kmx = depthLayerDefinition.UseLayers ? depthLayerDefinition.NumLayers : 0;
                 EndEdit();

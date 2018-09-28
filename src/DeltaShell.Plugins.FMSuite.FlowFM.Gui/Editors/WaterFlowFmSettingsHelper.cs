@@ -56,6 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 var depthlayers = new WpfGuiProperty(new FieldUIDescription(d => fmModel.DepthLayerDefinition?.Description, null, o => true, o => true)
                 {
                     Category = "General",
+                    SubCategory = "Layers",
                     ToolTip = EditDepthLayersHelper.ToolTip,
                     Label = EditDepthLayersHelper.Label,
                     ValueType = typeof(string),
@@ -71,6 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 var coordSys = new WpfGuiProperty(new FieldUIDescription(d => SetCoordinateSystemButton.CoordinateSystemName(fmModel), null)
                 {
                     Category = "General",
+                    SubCategory = "Global Position",
                     ToolTip = SetCoordinateSystemButton.ToolTip,
                     Label = SetCoordinateSystemButton.Label,
                     ValueType = typeof(string),
@@ -137,11 +139,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     // add to end:
                     .Concat(new[]
                     {
-                        new FieldUIDescription(d => data, null)
+                        // Disabled toolbox tab see issue : DELFT3DFM-500
+                        /*new FieldUIDescription(d => data, null)
                         {
                             Category = "Toolboxes",
                             CustomControlHelper = new FMToolboxesPanel(),
-                        },
+                        },*/
                         new FieldUIDescription(d => data.TracerDefinitions, null)
                         {
                             Category = "Processes",
