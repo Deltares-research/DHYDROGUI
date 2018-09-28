@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     Key = "sand",
                     Properties = new EventedList<ISedimentProperty>()
                     {
-                        new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, double.MaxValue, true, "kg/m³", "Initial Concentration", true, false, sediments => false),
+                        new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, double.MaxValue, true, "kg/m³", "Initial Concentration", true, false),
                         new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, false, double.MaxValue, true, "m","Initial sediment layer thickness at bed", false, false),
                         new SedimentProperty<double>("FacDss", 1, 0.6, false, 1, false, string.Empty, "Factor for suspended sediment diameter", true),
                         new SedimentProperty<double>("RhoSol", 2650, 0, true, 10000, true, "kg/m³", "Specific density", false),
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     Key = "mud",
                     Properties = new EventedList<ISedimentProperty>()
                     {
-                        new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, double.MaxValue, true, "kg/m³", "Initial Concentration", true, false, sediments => false),
+                        new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, double.MaxValue, true, "kg/m³", "Initial Concentration", true, false),
                         new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, false, double.MaxValue, true, "m", "Initial sediment layer thickness at bed", false, false),
                         new SedimentProperty<double>("FacDss", 1, 0.6, false, 1, false, string.Empty, "Factor for suspended sediment diameter", true),
                         new SedimentProperty<double>("RhoSol", 2650, 0, true, 10000, true, "kg/m³", "Specific density", false),

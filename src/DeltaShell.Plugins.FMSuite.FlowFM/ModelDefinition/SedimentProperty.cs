@@ -113,7 +113,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     {
                         typeof(double), "SpatiallyVaryingSedimentPropertyDoubleTemplate"
                     }
-                    
                 };
             }
         }
