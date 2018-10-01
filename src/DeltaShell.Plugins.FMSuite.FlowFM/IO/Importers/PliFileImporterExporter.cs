@@ -6,6 +6,7 @@ using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;

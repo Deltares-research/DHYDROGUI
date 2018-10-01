@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
@@ -10,6 +11,8 @@ using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
@@ -83,7 +86,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         }
 
         [Test]
-        public void GivenFmModelWithPump_WhenWritingStructures_ThenPumpIsBeingWrittenToFile()
+        public void GivenFmModelWithPump_WhenWritingStructures_ThenPumpIsBeingWrittenToIniFile()
         {
             var testFolder = FileUtils.CreateTempDirectory();
             var targetFile = Path.Combine(testFolder, "structures.ini");
@@ -95,25 +98,36 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var expectedCapacity = 25.08;
 
             var fmModel = new WaterFlowFMModel();
-            var pump2D = new Pump2D(pumpName) {Capacity = expectedCapacity};
+            var pump2D = new Pump2D(pumpName)
+            {
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
+                Capacity = expectedCapacity
+            };
             fmModel.Area.Pumps.Add(pump2D);
 
-            StructureFileWriter.WriteFile(targetFile, fmModel.Network, fmModel.Area);
-            var categories = new DelftIniReader().ReadDelftIniFile(targetFile);
-            Assert.That(categories.Count, Is.EqualTo(2));
+            try
+            {
+                StructureFileWriter.WriteFile(targetFile, fmModel.Network, fmModel.Area, DateTime.Now);
+                var categories = new DelftIniReader().ReadDelftIniFile(targetFile);
+                Assert.That(categories.Count, Is.EqualTo(2));
 
-            var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
-            Assert.IsNotNull(structureCategory);
-            Assert.That(structureCategory.Properties.Count, Is.EqualTo(4));
+                var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
+                Assert.IsNotNull(structureCategory);
+                Assert.That(structureCategory.Properties.Count, Is.EqualTo(4));
 
-            CheckKeyValuePair(structureCategory, StructureRegion.Id.Key, pumpName);
-            CheckKeyValuePair(structureCategory, StructureRegion.DefinitionType.Key, expectedType);
-            CheckKeyValuePair(structureCategory, StructureRegion.PolylineFile.Key, expectedPliFileName);
-            CheckKeyValuePair(structureCategory, StructureRegion.Capacity.Key, expectedCapacity);
+                CheckKeyValuePair(structureCategory, StructureRegion.Id.Key, pumpName);
+                CheckKeyValuePair(structureCategory, StructureRegion.DefinitionType.Key, expectedType);
+                CheckKeyValuePair(structureCategory, StructureRegion.PolylineFile.Key, expectedPliFileName);
+                CheckKeyValuePair(structureCategory, StructureRegion.Capacity.Key, expectedCapacity);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(targetFile));
+            }
         }
 
         [Test]
-        public void GivenFmModelWithPumpThatHasATimeSeriesForCapacity_WhenWritingStructures_ThenPumpIsBeingWrittenToFileWithTimeSeriesFile()
+        public void GivenFmModelWithPumpThatHasATimeSeriesForCapacity_WhenWritingStructures_ThenPumpIsBeingWrittenToFileWithTimeSeriesFileNameInIniFile()
         {
             var testFolder = FileUtils.CreateTempDirectory();
             var targetFile = Path.Combine(testFolder, "structures.ini");
@@ -127,23 +141,31 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var fmModel = new WaterFlowFMModel();
             var pump2D = new Pump2D(pumpName)
             {
+                Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(2, 2)}),
                 CanBeTimedependent = true,
                 UseCapacityTimeSeries = true
             };
             fmModel.Area.Pumps.Add(pump2D);
 
-            StructureFileWriter.WriteFile(targetFile, fmModel.Network, fmModel.Area);
-            var categories = new DelftIniReader().ReadDelftIniFile(targetFile);
-            Assert.That(categories.Count, Is.EqualTo(2));
+            try
+            {
+                StructureFileWriter.WriteFile(targetFile, fmModel.Network, fmModel.Area, DateTime.Now);
+                var categories = new DelftIniReader().ReadDelftIniFile(targetFile);
+                Assert.That(categories.Count, Is.EqualTo(2));
 
-            var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
-            Assert.IsNotNull(structureCategory);
-            Assert.That(structureCategory.Properties.Count, Is.EqualTo(4));
+                var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
+                Assert.IsNotNull(structureCategory);
+                Assert.That(structureCategory.Properties.Count, Is.EqualTo(4));
 
-            CheckKeyValuePair(structureCategory, StructureRegion.Id.Key, pumpName);
-            CheckKeyValuePair(structureCategory, StructureRegion.DefinitionType.Key, expectedType);
-            CheckKeyValuePair(structureCategory, StructureRegion.PolylineFile.Key, expectedPliFileName);
-            CheckKeyValuePair(structureCategory, StructureRegion.Capacity.Key, expectedCapacityString);
+                CheckKeyValuePair(structureCategory, StructureRegion.Id.Key, pumpName);
+                CheckKeyValuePair(structureCategory, StructureRegion.DefinitionType.Key, expectedType);
+                CheckKeyValuePair(structureCategory, StructureRegion.PolylineFile.Key, expectedPliFileName);
+                CheckKeyValuePair(structureCategory, StructureRegion.Capacity.Key, expectedCapacityString);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(targetFile));
+            }
         }
 
         private static void CheckKeyValuePair(IDelftIniCategory structureCategory, string key, string expectedValue)

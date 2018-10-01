@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.IO;
+using GeoAPI.Extensions.Feature;
 
 namespace DelftTools.Hydro
 {
@@ -15,7 +17,7 @@ namespace DelftTools.Hydro
             var originalGroupName = groupableFeature.GroupName;
 
             var relativePathToFile = FileUtils.GetRelativePath(directory, originalGroupName);
-            if (string.IsNullOrEmpty(relativePathToFile)) return;
+            if (String.IsNullOrEmpty(relativePathToFile)) return;
             groupableFeature.GroupName = GetNewGroupName(relativePathToFile, directory, originalGroupName);
         }
 
@@ -25,6 +27,20 @@ namespace DelftTools.Hydro
                                    (!Path.IsPathRooted(originalGroupName) || Path.GetPathRoot(directory) == Path.GetPathRoot(originalGroupName));
 
             return isInSubDirectory ? relativePathToFile : Path.GetFileName(relativePathToFile);
+        }
+
+        public static void TrySetGroupName(this IFeature feature, string filePath)
+        {
+            var groupableFeature = feature as IGroupableFeature;
+            if (groupableFeature == null) return;
+
+            groupableFeature.GroupName = filePath;
+        }
+
+        public static bool HasDefaultGroupName(this IGroupableFeature feature, string featureExtension, string defaultGroupName)
+        {
+            var featureGroupName = feature.GroupName;
+            return string.IsNullOrEmpty(featureGroupName) || featureGroupName.Replace(featureExtension, string.Empty).Equals(defaultGroupName);
         }
     }
 

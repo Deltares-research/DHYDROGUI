@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.NGHS.IO;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {

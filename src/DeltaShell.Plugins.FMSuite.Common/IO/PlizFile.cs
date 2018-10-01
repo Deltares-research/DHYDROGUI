@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.IO;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;

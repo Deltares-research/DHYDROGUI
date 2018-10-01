@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
@@ -6,12 +7,18 @@ using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
+using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public static class StructureFileWriter
     {
-        public static void WriteFile(string targetFile, IHydroNetwork network, HydroArea hydroArea = null)
+        public static void WriteFile(string targetIniFile, IHydroNetwork network)
+        {
+            WriteFile(targetIniFile, network, null, DateTime.MinValue);
+        }
+
+        public static void WriteFile(string targetIniFile, IHydroNetwork network, HydroArea hydroArea, DateTime referenceDateTime)
         {
             var categories = new List<DelftIniCategory>
             {
@@ -50,18 +57,63 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
             if (hydroArea != null)
             {
-                foreach (var hydroObject in hydroArea.AllHydroObjects.Cast<IStructure2D>())
+                foreach (var structure2D in hydroArea.AllHydroObjects.Cast<IStructure2D>())
                 {
-                    var definitionGeneratorStructure = DefinitionGeneratorFactory.GetDefinitionGeneratorStructure(hydroObject.Structure2DType);
-                    var structureCategory = definitionGeneratorStructure.CreateStructureRegion(hydroObject);
+                    var definitionGeneratorStructure = DefinitionGeneratorFactory.GetDefinitionGeneratorStructure(structure2D.Structure2DType);
+                    var structureCategory = definitionGeneratorStructure.CreateStructureRegion(structure2D);
                     categories.Add(structureCategory);
 
-                    // Write structure files
-                    // Write time series file if needed
+                    WriteHydroObjectSpecificFiles(targetIniFile, referenceDateTime, structureCategory, structure2D);
                 }
             }
-            if (File.Exists(targetFile)) File.Delete(targetFile);
-            new IniFileWriter().WriteIniFile(categories, targetFile);
+            if (File.Exists(targetIniFile)) File.Delete(targetIniFile);
+            new IniFileWriter().WriteIniFile(categories, targetIniFile);
+        }
+
+        private static void WriteHydroObjectSpecificFiles(string targetFile, DateTime referenceDateTime, DelftIniCategory structureCategory, IStructure2D structure2D)
+        {
+            var polylineFileProperty = structureCategory.Properties.FirstOrDefault(p => p.Name == StructureRegion.PolylineFile.Key);
+            if (polylineFileProperty != null)
+            {
+                var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(targetFile, polylineFileProperty.Value);
+                WritePolyLineFile(pliFilePath, structure2D);
+            }
+
+            var timFileCategory = structureCategory.Properties.FirstOrDefault(p => p.Name == StructureRegion.Capacity.Key);
+            if (timFileCategory != null)
+            {
+                var timFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(targetFile, timFileCategory.Value);
+                WriteTimeSeriesFile(timFilePath, structure2D, referenceDateTime);
+            }
+        }
+
+        private static void WritePolyLineFile(string pliFilePath, IStructure2D structure2D)
+        {
+            var geometryObjectsToBeWritten = new[]
+            {
+                new Feature2D
+                {
+                    Name = structure2D.Name,
+                    Geometry = structure2D.Geometry
+                }
+            };
+            new PliFile<Feature2D>().Write(pliFilePath, geometryObjectsToBeWritten);
+        }
+
+        private static void WriteTimeSeriesFile(string timFilePath, IStructure2D structure2D, DateTime referenceDateTime)
+        {
+            var pump = structure2D as IPump;
+            if (pump != null && pump.HasCapacityTimeSeries())
+            {
+                new TimFile().Write(timFilePath, pump.CapacityTimeSeries, referenceDateTime);
+            }
+        }
+
+        private static bool HasCapacityTimeSeries(this IPump pump)
+        {
+            return pump.CanBeTimedependent 
+                   && pump.UseCapacityTimeSeries 
+                   && pump.CapacityTimeSeries != null;
         }
 
         private static void AddFrictionData(DelftIniCategory category, Friction frictionType, double friction, double groundLayerRoughness)

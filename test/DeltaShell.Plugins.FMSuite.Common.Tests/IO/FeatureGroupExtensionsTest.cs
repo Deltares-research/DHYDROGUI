@@ -3,6 +3,7 @@ using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Extensions.Feature;
 using NUnit.Framework;
 using Rhino.Mocks;
+using GroupableFeatureExtensions = DelftTools.Hydro.GroupableFeatureExtensions;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 {
@@ -33,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             mocks.ReplayAll();
 
             Assert.IsNull(groupableFeature.GroupName);
-            FeatureGroupExtensions.TrySetGroupName(groupableFeature, filePath);
+            GroupableFeatureExtensions.TrySetGroupName(groupableFeature, filePath);
 
             Assert.That(groupableFeature.GroupName, Is.EqualTo(filePath));
         }

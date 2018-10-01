@@ -7,6 +7,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using NUnit.Framework;
 

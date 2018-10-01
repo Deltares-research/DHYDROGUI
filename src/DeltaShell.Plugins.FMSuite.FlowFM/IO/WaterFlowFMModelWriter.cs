@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (string.IsNullOrEmpty(filePath)) return;
 
             CrossSectionDefinitionFileWriter.WriteFile(filePath, model.Network, model.RoughnessSections);
-            StructureFileWriter.WriteFile(filePath, model.Network, model.Area);
+            StructureFileWriter.WriteFile(filePath, model.Network, model.Area, model.ReferenceTime);
         }
 
         private static void WriteCrossSectionLocation(WaterFlowFMModel model)

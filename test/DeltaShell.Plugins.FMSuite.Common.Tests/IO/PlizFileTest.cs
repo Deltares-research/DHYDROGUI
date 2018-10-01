@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;

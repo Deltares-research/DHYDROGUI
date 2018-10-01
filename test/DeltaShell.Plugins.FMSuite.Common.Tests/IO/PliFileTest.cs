@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using DeltaShell.NGHS.IO;
 using NetTopologySuite.Extensions.Geometries;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
