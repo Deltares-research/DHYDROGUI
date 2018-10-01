@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 var selectedTab =
                     settings.SettingsCategories.IndexOf(settings.SettingsCategories.FirstOrDefault(c => c.CategoryName
                       .ToLowerInvariant().Equals(tabName)));
-                mainTabControl.SelectedIndex = selectedTab;
+                MainTabControl.SelectedIndex = selectedTab;
             }
         }
 
