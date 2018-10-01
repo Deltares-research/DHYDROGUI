@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
-using DelftTools.Controls.Wpf.Commands;
 using Controls = System.Windows.Controls;
-using System.Windows.Input;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
@@ -22,30 +18,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     public class WpfGuiProperty : INotifyPropertyChanged, IDataErrorInfo
     {
         private readonly FieldUIDescription description;
-        private Func<object> _getModel;
-        private ObservableCollection<DoubleWrapper> _valueCollection;
-
-        /// <summary>
-        /// Gets a value indicating whether this instance has custom control.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance has custom control; otherwise, <c>false</c>.
-        /// </value>
-        public bool HasCustomControl
-        {
-            get { return CustomControl != null; }
-        }
-
-        /// <summary>
-        /// Gets or sets the custom control.
-        /// ToDo: This should be removed once all custom controls are migrated into WPF.
-        /// </summary>
-        /// <value>
-        /// The custom control.
-        /// </value>
-        public Controls.UserControl CustomControl { get; set; }
-
-        public CommandHelper CustomCommand { get; set; }
+        private Func<object> getModel;
+        private ObservableCollection<DoubleWrapper> valueCollection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WpfGuiProperty"/> class.
@@ -64,64 +38,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
 
             UpdateValueCollection();
-        }
-
-        private void UpdateValueCollection()
-        {
-            var valueList = new List<DoubleWrapper>();
-            if (ValueType == typeof(IList<double>) && Value is IList<double>)
-            {
-                var collection = Value as IList<double>;
-                valueList = collection.Select(
-                    v => new DoubleWrapper
-                    {
-                        WrapperValue = v,
-                        SetBackValue = wrapperValue =>
-                        {
-                            v = wrapperValue; //Overwrite value with new one.
-                            Value = ValueCollection.Select(vc => vc.WrapperValue).ToList(); //Trigger update.
-                        },
-                    }).ToList();
-            }
-            ValueCollection = new ObservableCollection<DoubleWrapper>(valueList); //Just to avoid a null exception
-        }
-
-        public Type ValueType { get { return description?.ValueType; } }
-        public string Name { get { return description?.Name; } }
-        public string SubCategory { get { return description?.SubCategory; } }
-
-        public string Label { get { return description?.Label; } }
-
-        public string ToolTip
-        {
-            get
-            {
-
-                return description?.ToolTip;
-            }
-        }
-
-        public string UnitSymbol { get { return description?.UnitSymbol; } }
-
-        /// <summary>
-        /// Gets or sets the get model function that will be used later on for 
-        /// retrieving the IsEnabled <seealso cref="IsEnabled"/>and IsVisible <seealso cref="IsVisible"/> properties.
-        /// </summary>
-        /// <value>
-        /// The get model.
-        /// </value>
-        public Func<object> GetModel
-        {
-            get { return _getModel; }
-            set
-            {
-                _getModel = value;
-                CustomCommand.GetModel = _getModel;
-                if (_getModel != null && HasCustomControl)
-                {
-                    UpdateCustomControlData();
-                }
-            }
         }
 
         /// <summary>
@@ -160,19 +76,62 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
         }
 
-        private string CheckValueWithinBoundaries(double valueAsDouble)
+        /// <summary>
+        /// Gets a value indicating whether this instance has custom control.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance has custom control; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasCustomControl
         {
-            if ((description.HasMinValue && valueAsDouble < description.MinValue) 
-                || (description.HasMaxValue && valueAsDouble > description.MaxValue))
+            get { return CustomControl != null; }
+        }
+
+        /// <summary>
+        /// Gets or sets the custom control.
+        /// ToDo: This should be removed once all custom controls are migrated into WPF.
+        /// </summary>
+        /// <value>
+        /// The custom control.
+        /// </value>
+        public Controls.UserControl CustomControl { get; set; }
+
+        public CommandHelper CustomCommand { get; set; }
+
+        public Type ValueType { get { return description?.ValueType; } }
+
+        public string Name { get { return description?.Name; } }
+
+        public string SubCategory { get { return description?.SubCategory; } }
+        
+        public string Label { get { return description?.Label; } }
+
+        public string ToolTip
+        {
+            get { return description?.ToolTip; }
+        }
+
+        public string UnitSymbol { get { return description?.UnitSymbol; } }
+
+        /// <summary>
+        /// Gets or sets the get model function that will be used later on for 
+        /// retrieving the IsEnabled <seealso cref="IsEnabled"/>and IsVisible <seealso cref="IsVisible"/> properties.
+        /// </summary>
+        /// <value>
+        /// The get model.
+        /// </value>
+        public Func<object> GetModel
+        {
+            get { return getModel; }
+            set
             {
+                getModel = value;
+                CustomCommand.GetModel = getModel;
+                if (getModel != null && HasCustomControl)
                 {
-                    return string.Format(Resources.WpfGuiProperty_this_This_value_must_be_between__0__and__1_,
-                        description.HasMinValue ? description.MinValue : double.NegativeInfinity,
-                        description.HasMaxValue ? description.MaxValue : double.PositiveInfinity);
+                    UpdateCustomControlData();
                 }
             }
-
-            return null;
         }
 
         /// <summary>
@@ -186,29 +145,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                     return mssg;
                 return null;
             }
-        }
-
-        private void UpdateCustomControlData()
-        {
-            if (description?.CustomControlHelper != null)
-            {
-                var control = CustomControl as WindowsFormsHostHelper;
-                var hostedControl = control?.HostedControl;
-                description.CustomControlHelper.SetData(hostedControl, _getModel?.Invoke(), null);
-            }
-        }
-
-        /// <summary>
-        /// Raises the property changed events.
-        /// </summary>
-        public void RaisePropertyChangedEvents()
-        {
-            OnPropertyChanged("IsEnabled");
-            OnPropertyChanged("IsVisible");
-            OnPropertyChanged("IsEditable");
-            OnPropertyChanged("Value");
-            UpdateValueCollection();
-            OnPropertyChanged("ValueCollection");
         }
 
         public bool IsEditable
@@ -258,10 +194,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// </value>
         public ObservableCollection<DoubleWrapper> ValueCollection
         {
-            get { return _valueCollection; }
+            get { return valueCollection; }
             set
             {
-                _valueCollection = value;
+                valueCollection = value;
             }
         }
 
@@ -287,57 +223,69 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
         }
 
+        /// <summary>
+        /// Raises the property changed events.
+        /// </summary>
+        public void RaisePropertyChangedEvents()
+        {
+            OnPropertyChanged("IsEnabled");
+            OnPropertyChanged("IsVisible");
+            OnPropertyChanged("IsEditable");
+            OnPropertyChanged("Value");
+            UpdateValueCollection();
+            OnPropertyChanged("ValueCollection");
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void UpdateValueCollection()
+        {
+            var valueList = new List<DoubleWrapper>();
+            if (ValueType == typeof(IList<double>) && Value is IList<double>)
+            {
+                var collection = Value as IList<double>;
+                valueList = collection.Select(
+                    v => new DoubleWrapper
+                    {
+                        WrapperValue = v,
+                        SetBackValue = wrapperValue =>
+                        {
+                            v = wrapperValue; //Overwrite value with new one.
+                            Value = ValueCollection.Select(vc => vc.WrapperValue).ToList(); //Trigger update.
+                        },
+                    }).ToList();
+            }
+            ValueCollection = new ObservableCollection<DoubleWrapper>(valueList); //Just to avoid a null exception
+        }
+
+        private string CheckValueWithinBoundaries(double valueAsDouble)
+        {
+            if ((description.HasMinValue && valueAsDouble < description.MinValue) 
+                || (description.HasMaxValue && valueAsDouble > description.MaxValue))
+            {
+                {
+                    return string.Format(Resources.WpfGuiProperty_this_This_value_must_be_between__0__and__1_,
+                        description.HasMinValue ? description.MinValue : double.NegativeInfinity,
+                        description.HasMaxValue ? description.MaxValue : double.PositiveInfinity);
+                }
+            }
+
+            return null;
+        }
+
+        private void UpdateCustomControlData()
+        {
+            if (description?.CustomControlHelper != null)
+            {
+                var control = CustomControl as WindowsFormsHostHelper;
+                var hostedControl = control?.HostedControl;
+                description.CustomControlHelper.SetData(hostedControl, getModel?.Invoke(), null);
+            }
+        }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
-
-    public class DoubleWrapper
-    {
-        private double _value;
-        public Action<double> SetBackValue { get; set; }
-
-        public double WrapperValue
-        {
-            get { return _value; }
-            set
-            {
-                _value = value;
-                SetBackValue?.Invoke(_value);
-            }
-        }
-    }
-
-
-    public class CommandHelper
-    {
-        public CommandHelper(Action updateAction)
-        {
-            UpdateAction = updateAction;
-        }
-
-        public ICommand CustomCommand
-        {
-            get { return new RelayCommand(ExecuteAction); }
-        }
-
-        public bool ButtonIsVisible { get { return ButtonFunction != null; } }
-
-        public Bitmap ButtonImage { get; set; }
-
-        private void ExecuteAction(object dummyObject)
-        {
-            var model = GetModel?.Invoke();
-            ButtonFunction?.Invoke(model);
-            UpdateAction?.Invoke();
-        }
-
-        public Func<object> GetModel { get; set; }
-        public Action UpdateAction { get; set; }
-        public Action<object> ButtonFunction { get; set; }
-    }
-
 }

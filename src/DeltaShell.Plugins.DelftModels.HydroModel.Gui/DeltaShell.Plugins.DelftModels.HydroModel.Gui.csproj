@@ -171,6 +171,8 @@
       <DependentUpon>MergeModelValidationView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ProjectExplorer\HydroModelTreeViewNodePresenter.cs" />
+    <Compile Include="Forms\SettingsWpf\CommandHelper.cs" />
+    <Compile Include="Forms\SettingsWpf\DoubleWrapper.cs" />
     <Compile Include="Forms\SettingsWpf\SettingsTemplateSelector.cs" />
     <Compile Include="Forms\SettingsWpf\WindowsFormsHostHelper.xaml.cs">
       <DependentUpon>WindowsFormsHostHelper.xaml</DependentUpon>
@@ -179,7 +181,6 @@
     <Compile Include="Forms\SettingsWpf\WpfGuiCategory.cs" />
     <Compile Include="Forms\SettingsWpf\WpfGuiProperty.cs" />
     <Compile Include="Forms\SettingsWpf\WpfGuiSubCategory.cs" />
-    <Compile Include="Forms\SettingsWpf\WpfImageConverter.cs" />
     <Compile Include="Forms\SettingsWpf\WpfSettingsView.xaml.cs">
       <DependentUpon>WpfSettingsView.xaml</DependentUpon>
     </Compile>

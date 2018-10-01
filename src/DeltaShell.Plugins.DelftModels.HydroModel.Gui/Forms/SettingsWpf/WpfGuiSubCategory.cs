@@ -11,6 +11,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     public class WpfGuiSubCategory : INotifyPropertyChanged
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="WpfGuiSubcategory"/> class.
+        /// Creates new WpfGuiProperties <seealso cref="WpfGuiProperty"/>.
+        /// </summary>
+        /// <param name="subCategory">The sub category.</param>
+        /// <param name="properties">The properties.</param>
+        public WpfGuiSubCategory(string subCategory, IList<FieldUIDescription> properties)
+        {
+            SubCategoryName = subCategory;
+
+            /*Small trick to force the initialization*/
+            if (properties == null)
+                properties = new List<FieldUIDescription>();
+
+            Properties = new ObservableCollection<WpfGuiProperty>(properties.Select(p => new WpfGuiProperty(p)));
+        }
+
+        /// <summary>
         /// Gets the name of the sub category.
         /// </summary>
         /// <value>
@@ -61,24 +78,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// </value>
         public ObservableCollection<WpfGuiProperty> Properties { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WpfGuiSubcategory"/> class.
-        /// Creates new WpfGuiProperties <seealso cref="WpfGuiProperty"/>.
-        /// </summary>
-        /// <param name="subCategory">The sub category.</param>
-        /// <param name="properties">The properties.</param>
-        public WpfGuiSubCategory(string subCategory, IList<FieldUIDescription> properties)
-        {
-            SubCategoryName = subCategory;
-
-            /*Small trick to force the initialization*/
-            if (properties == null)
-                properties = new List<FieldUIDescription>();
-
-            Properties = new ObservableCollection<WpfGuiProperty>(properties.Select(p => new WpfGuiProperty(p)));
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

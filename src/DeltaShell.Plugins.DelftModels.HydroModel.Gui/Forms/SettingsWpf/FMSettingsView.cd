@@ -27,9 +27,6 @@
       <HashCode>AAEIAAAAAAAAEAAAIAIEAAAAgCAAAAAAAACBAAASAAA=</HashCode>
       <FileName>Forms\SettingsWpf\WpfGuiCategory.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="CustomControl" />
-    </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="SubCategories" />
       <Property Name="Properties" />
@@ -42,48 +39,22 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAIAIABEACAEQAAKAEAIAwEiBgABAAABAApAAAAEBA=</HashCode>
+      <HashCode>AAAIAIABEACAEQAAKAUAIAwEiAgABAAABAApAAAAEAA=</HashCode>
       <FileName>Forms\SettingsWpf\WpfGuiProperty.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="CustomControl" />
       <Property Name="CustomCommand" />
     </ShowAsAssociation>
-    <ShowAsCollectionAssociation>
-      <Property Name="ValueCollection" />
-    </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf.DoubleWrapper">
-    <Position X="19.75" Y="11.75" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>ABABAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Forms\SettingsWpf\WpfGuiProperty.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf.CommandHelper">
-    <Position X="19.75" Y="8.5" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAABAAAAQCAAAAAAAAAAAAAgAAAAAEAAAAIABAAAAA=</HashCode>
-      <FileName>Forms\SettingsWpf\WpfGuiProperty.cs</FileName>
-    </TypeIdentifier>
   </Class>
   <Class Name="DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf.WpfGuiSubCategory" BaseTypeListCollapsed="true">
     <Position X="16" Y="3.5" Width="1.75" />
-    <AssociationLine Name="CustomControl" Type="System.Windows.FrameworkElement">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-1.461" Y="0.249" />
-      </MemberNameLabel>
-    </AssociationLine>
     <AssociationLine Name="Properties" Type="DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf.WpfGuiProperty" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="17.75" Y="5.312" />
         <Point X="18.375" Y="5.312" />
-        <Point X="18.375" Y="9.173" />
-        <Point X="18" Y="9.173" />
+        <Point X="18.375" Y="9.187" />
+        <Point X="18" Y="9.187" />
       </Path>
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="0.553" Y="3.561" />
@@ -93,9 +64,6 @@
       <HashCode>AAAIAAAAAAAAEAAAIAAAAAAAgAAAAAAAAAABAAAiAAA=</HashCode>
       <FileName>Forms\SettingsWpf\WpfGuiSubCategory.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="CustomControl" />
-    </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="Properties" />
     </ShowAsCollectionAssociation>
@@ -107,7 +75,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAAAAAAACAAAAQAAAAABAIAAAQCAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAACIAAACAAACAAAAQAAAAABBIAAAACAAAAAA=</HashCode>
       <FileName>Forms\SettingsWpf\WpfSettingsView.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -137,6 +105,23 @@
   <Class Name="System.Windows.Controls.DataTemplateSelector" Collapsed="true">
     <Position X="5.25" Y="1.25" Width="2" />
     <TypeIdentifier />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf.CommandHelper" Collapsed="true">
+    <Position X="20" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAQCAAAAAAAAAAAAAgAAAAAEAAAAIABAAAAA=</HashCode>
+      <FileName>Forms\SettingsWpf\CommandHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf.DoubleWrapper">
+    <Position X="19.75" Y="11.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>ABABAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Forms\SettingsWpf\DoubleWrapper.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Interface Name="DelftTools.Shell.Core.Workflow.IModel" Collapsed="true">
     <Position X="12.25" Y="1.5" Width="1.5" />
