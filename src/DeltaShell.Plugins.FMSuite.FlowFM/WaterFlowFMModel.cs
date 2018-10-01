@@ -2971,13 +2971,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-
         public virtual void ConnectOutput(string outputPath)
         {
             ReconnectOutputFiles(outputPath);
             ReadDiaFile(outputPath);
         }
 
+        //TODO: Refactor-Move to DiaFileReader class 
         private void ReadDiaFile(string outputDirectory)
         {
             ReportProgressText("Reading dia file");

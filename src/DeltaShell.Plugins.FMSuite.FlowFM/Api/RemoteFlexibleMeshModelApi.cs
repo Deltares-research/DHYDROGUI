@@ -6,6 +6,7 @@ using System.Threading;
 using BasicModelInterface;
 using DelftTools.Utils.Remoting;
 using DeltaShell.Dimr;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using ProtoBufRemote;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
@@ -142,18 +143,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         private static void TryThrowWithKernelLoggedErrors(Exception innerException, string runDirectory)
         {
             var diaFiles = Directory.GetFiles(runDirectory, "*.dia");
+
             if (diaFiles.Length <= 0)
             {
                 throw new FileNotFoundException("Could not detect diagnostics file in " + runDirectory);
             }
 
-            var errorMessages = new List<string>();
-
+            List<string> errorMessages;
             var diaFile = diaFiles[0];
+
             try
             {
-                errorMessages.AddRange(
-                    File.ReadAllLines(diaFile).Where(line => line.Contains("ERROR") || line.Contains("FATAL")));
+                errorMessages = DiaFileReader.CollectAllErrorMessages(diaFile);
+
+                errorMessages.AddRange(File.ReadAllLines(diaFile).Where( line => line.Contains("FATAL")));
             }
             catch (Exception e)
             {

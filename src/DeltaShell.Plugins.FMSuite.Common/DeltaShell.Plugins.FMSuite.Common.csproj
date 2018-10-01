@@ -149,6 +149,7 @@
     <Compile Include="IO\Delft3DGridFileImporter.cs" />
     <Compile Include="IO\Delft3DGridFileReader.cs" />
     <Compile Include="IO\Delft3DGridFileWriter.cs" />
+    <Compile Include="IO\DiaFileReader.cs" />
     <Compile Include="IO\Feature2DImportExportBase.cs" />
     <Compile Include="IO\FMNetCdfFileFunctionStore.cs" />
     <Compile Include="IO\FeatureGroupExtensions.cs" />
