@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DelftTools.Utils.Collections;
@@ -72,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// <value>
         /// The custom control.
         /// </value>
-        public UserControl CustomControl { get; set; }
+        public FrameworkElement CustomControl { get; set; }
 
         /// <summary>
         /// Gets the sub categories.

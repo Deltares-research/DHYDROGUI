@@ -29,7 +29,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         }
 
         public Func<object> GetModel { get; set; }
+
         public Action UpdateAction { get; set; }
+
         public Action<object> ButtonFunction { get; set; }
     }
 }

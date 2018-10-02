@@ -174,9 +174,6 @@
     <Compile Include="Forms\SettingsWpf\CommandHelper.cs" />
     <Compile Include="Forms\SettingsWpf\DoubleWrapper.cs" />
     <Compile Include="Forms\SettingsWpf\SettingsTemplateSelector.cs" />
-    <Compile Include="Forms\SettingsWpf\WindowsFormsHostHelper.xaml.cs">
-      <DependentUpon>WindowsFormsHostHelper.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Forms\SettingsWpf\WpfEnumConverter.cs" />
     <Compile Include="Forms\SettingsWpf\WpfGuiCategory.cs" />
     <Compile Include="Forms\SettingsWpf\WpfGuiProperty.cs" />
@@ -268,10 +265,6 @@
     <None Include="Resources\validation.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Forms\SettingsWpf\WindowsFormsHostHelper.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Forms\SettingsWpf\WpfSettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

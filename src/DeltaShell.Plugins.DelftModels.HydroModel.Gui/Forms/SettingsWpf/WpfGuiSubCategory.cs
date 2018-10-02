@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Controls;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 
@@ -52,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// <value>
         /// The custom control.
         /// </value>
-        public UserControl CustomControl { get; set; }
+        public FrameworkElement CustomControl { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is visible.

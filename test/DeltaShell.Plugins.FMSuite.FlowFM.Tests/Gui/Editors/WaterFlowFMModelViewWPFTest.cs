@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using DelftTools.TestUtils;
 using NUnit.Framework;
 using System.Linq;
+using System.Windows.Forms.Integration;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
@@ -90,8 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
             var tracerControl = editTracersControlHelper.CreateControl();
             editTracersControlHelper.SetData(tracerControl, fmModel, null);
 
-            var hostHelper = new WindowsFormsHostHelper();
-            hostHelper.HostedControl = tracerControl;
+            var hostHelper = new WindowsFormsHost {Child = tracerControl};
 
             var wpfGuiSubCategory = new WpfGuiSubCategory("Tracers", null)
             {

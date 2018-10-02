@@ -23,10 +23,20 @@
   </Class>
   <Class Name="DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf.WpfGuiCategory" BaseTypeListCollapsed="true">
     <Position X="12.25" Y="3.5" Width="2" />
+    <AssociationLine Name="Properties" Type="DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf.WpfGuiProperty" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="13" Y="6.853" />
+        <Point X="13" Y="11.71" />
+        <Point X="15.75" Y="11.71" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>AAEIAAAAAAAAEAAAIAIEAAAAgCAAAAAAAACBAAASAAA=</HashCode>
       <FileName>Forms\SettingsWpf\WpfGuiCategory.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CustomControl" />
+    </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="SubCategories" />
       <Property Name="Properties" />
@@ -43,6 +53,7 @@
       <FileName>Forms\SettingsWpf\WpfGuiProperty.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
+      <Property Name="CustomControl" />
       <Property Name="CustomCommand" />
     </ShowAsAssociation>
     <Lollipop Position="0.2" />
@@ -51,10 +62,10 @@
     <Position X="16" Y="3.5" Width="1.75" />
     <AssociationLine Name="Properties" Type="DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf.WpfGuiProperty" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="17.75" Y="5.312" />
-        <Point X="18.375" Y="5.312" />
-        <Point X="18.375" Y="9.187" />
-        <Point X="18" Y="9.187" />
+        <Point X="17.75" Y="5.186" />
+        <Point X="18.375" Y="5.186" />
+        <Point X="18.375" Y="9.173" />
+        <Point X="18" Y="9.173" />
       </Path>
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="0.553" Y="3.561" />
@@ -64,6 +75,9 @@
       <HashCode>AAAIAAAAAAAAEAAAIAAAAAAAgAAAAAAAAAABAAAiAAA=</HashCode>
       <FileName>Forms\SettingsWpf\WpfGuiSubCategory.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CustomControl" />
+    </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="Properties" />
     </ShowAsCollectionAssociation>
@@ -86,7 +100,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AQAAAAACAAIAAAAAIABAAAAAAAAAAAFAAACAAAABAAA=</HashCode>
+      <HashCode>AQAAAAACAAAAAAAAIABAAAAAAAAAAAFAAACAQAABAAA=</HashCode>
       <FileName>Forms\SettingsWpf\WpfSettingsViewModel.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -106,8 +120,8 @@
     <Position X="5.25" Y="1.25" Width="2" />
     <TypeIdentifier />
   </Class>
-  <Class Name="DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf.CommandHelper" Collapsed="true">
-    <Position X="20" Y="8.75" Width="1.5" />
+  <Class Name="DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf.CommandHelper">
+    <Position X="19.75" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAABAAAAQCAAAAAAAAAAAAAgAAAAAEAAAAIABAAAAA=</HashCode>
       <FileName>Forms\SettingsWpf\CommandHelper.cs</FileName>

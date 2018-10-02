@@ -4,6 +4,9 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Forms.Integration;
+using System.Windows.Media;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using Controls = System.Windows.Controls;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties;
@@ -32,8 +35,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             if (description?.CustomControlHelper != null)
             {
                 var control = description.CustomControlHelper.CreateControl();
-                var hostHelper = new WindowsFormsHostHelper();
-                hostHelper.HostedControl = control;
+                var hostHelper = new WindowsFormsHost
+                {
+                    Child = control,
+                    Width = 300,
+                    Height = 300,
+                    Background = new SolidColorBrush(Colors.White)
+                };
                 CustomControl = hostHelper;
             }
 
@@ -94,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// <value>
         /// The custom control.
         /// </value>
-        public Controls.UserControl CustomControl { get; set; }
+        public FrameworkElement CustomControl { get; set; }
 
         public CommandHelper CustomCommand { get; set; }
 
@@ -277,8 +285,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         {
             if (description?.CustomControlHelper != null)
             {
-                var control = CustomControl as WindowsFormsHostHelper;
-                var hostedControl = control?.HostedControl;
+                var control = CustomControl as WindowsFormsHost;
+                var hostedControl = control?.Child;
                 description.CustomControlHelper.SetData(hostedControl, getModel?.Invoke(), null);
             }
         }
