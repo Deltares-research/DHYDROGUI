@@ -657,6 +657,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return new VectorLayer(HydroArea.LeveeBreachName)
                 {
                     NameIsReadOnly = true,
+                    CanBeRemovedByUser = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
                     DataSource =
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.LeveeBreaches, "LeveeBreach", modelName,
@@ -690,7 +691,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     NameIsReadOnly = true,
                     Style = AreaLayerStyles.RoofAreaStyle,
-                    DataSource = ds
+                    DataSource = ds,
+                    CanBeRemovedByUser = true,
+                    Selectable = true
                 };
             }
 
@@ -709,7 +712,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     NameIsReadOnly = true,
                     Style = AreaLayerStyles.Gulliestyle,
-                    DataSource = ds
+                    DataSource = ds,
+                    CanBeRemovedByUser = true,
+                    Selectable = true
                 };
             }
 

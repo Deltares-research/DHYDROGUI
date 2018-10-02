@@ -114,7 +114,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                     var index = grid.Cells.IndexOf(edgeCell);
                     if (!dictionaryCellIndexLink.ContainsKey(index))
                     {
-                        dictionaryCellIndexLink.Add(index, new Tuple<int,int>(closestPoint.Item1, index));
+                        //dictionaryCellIndexLink.Add(index, new Tuple<int,int>(closestPoint.Item1, index));
+                        dictionaryCellIndexLink.Add(index, new Tuple<int, int>(index + 1, closestPoint.Item1 + 1)); //gridgeom swapt from to (2d-1d instead of 1d-2d, so we do the same in this temp method), index 1 based
                     }
                 }
             }
@@ -135,9 +136,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                 log.ErrorFormat(
                     "1D2D Links were not generated between the grid and the network of WaterFlowFMModel {0}. Please make sure the grid has been saved and the network is correct.",
                     fmModel.Name);
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 
         private static bool Get1D2DInhabitantsLinks(WaterFlowFMModel fmModel, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount)
@@ -171,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         private static bool Get1D2DLateralLinks(WaterFlowFMModel fmModel, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount)
         {
             var filterMesh1D = GetMesh1DFilter(fmModel.NetworkDiscretization, GridApiDataSet.LinkType.Lateral);
-            FilterMesh1DPointOutsideGrid(fmModel.NetworkDiscretization, fmModel.Grid, ref filterMesh1D);
+            FilterMesh1DPointInGrid(fmModel.NetworkDiscretization, fmModel.Grid, ref filterMesh1D, true);
 
             var gGeomApi = new GridGeomApi();
             //Not ready yet
@@ -195,6 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         private static bool Get1D2DEmbeddedLinks(WaterFlowFMModel fmModel, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount)
         {
             var filter1DMesh = GetMesh1DFilter(fmModel.NetworkDiscretization, GridApiDataSet.LinkType.Embedded);
+            FilterMesh1DPointInGrid(fmModel.NetworkDiscretization, fmModel.Grid, ref filter1DMesh);
 
             var gGeomApi = new GridGeomApi();
             var ierr = gGeomApi.Get1D2DLinksFrom1DTo2D(fmModel.NetFilePath, fmModel.NetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, selectedArea, filter1DMesh);
@@ -274,19 +276,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         }
 
 
-        private static void FilterMesh1DPointOutsideGrid(IDiscretization networkDiscretization, UnstructuredGrid grid, ref List<bool> filterMesh1D)
+        private static void FilterMesh1DPointInGrid(IDiscretization networkDiscretization, UnstructuredGrid grid, ref List<bool> filterMesh1D, bool bOutsideGrid = false)
         {
             if (!filterMesh1D.Any(b => b)) return;
             if (!grid.Cells.Any()) return;
 
-            var polygons = grid.Cells.Select(c => (IPolygon)c.ToPolygon(grid)).ToArray();
+            var polygons = grid.Cells.Select(c => (IPolygon)c.ToPolygon(grid)).ToArray(); //= slow. ready for improvement. for pilot ok.
             var multiPolygonOfCells = new MultiPolygon(polygons);
             var locations = networkDiscretization.Locations.Values;
             for (int i = 0; i < locations.Count; i++)
             {
                 if (filterMesh1D[i])
                 {
-                    if(multiPolygonOfCells.Intersects(locations[i].Geometry))
+                    if(multiPolygonOfCells.Intersects(locations[i].Geometry) == bOutsideGrid)
                     {
                         filterMesh1D[i] = false;
                     }

@@ -78,9 +78,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 filter1DMesh = Enumerable.Repeat(true, networkDiscretization.Locations.Values.Count()).ToList();
             }
 
-            var points = networkDiscretization.Locations.Values.Select(p => p.Geometry as IPoint).ToList();
-
-            if (points.Any())
+            if (filter1DMesh.Any(m => m.Equals(true)))
             {
                 return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(netFilePath, networkDiscretization, ref linksFrom, ref linksTo,
                     ref startIndex, ref linksCount, Make1D2DRoofLinks, null, GridApiDataSet.LinkType.RoofSewer, filter1DMesh, geometryRoofs);
@@ -95,9 +93,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 filter1DMesh = Enumerable.Repeat(true, networkDiscretization.Locations.Values.Count()).ToList();
             }
 
-            var points = networkDiscretization.Locations.Values.Select(p => p.Geometry as IPoint).ToList();
-
-            if (points.Any())
+            if (filter1DMesh.Any(m => m.Equals(true)))
             {
                 return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(netFilePath, networkDiscretization, ref linksFrom, ref linksTo,
                     ref startIndex, ref linksCount, Make1D2DGullyLinks, null, GridApiDataSet.LinkType.GullySewer, filter1DMesh, geometryGullies);
