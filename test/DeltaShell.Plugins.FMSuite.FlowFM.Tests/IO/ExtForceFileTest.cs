@@ -29,6 +29,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class ExtForceFileTest
     {
+        private void CheckInternalTidesFrictionCoefficient(WaterFlowFMModelDefinition newDef)
+        {
+            Assert.AreEqual(1, newDef.UnsupportedFileBasedExtForceFileItems.Count);
+            Assert.AreEqual("surroundingDomain.pol",
+                newDef.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName);
+            Assert.AreEqual("surroundingDomain.pol",
+                newDef.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName);
+            Assert.AreEqual(10, newDef.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileType);
+            Assert.AreEqual(4, newDef.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.Method);
+            Assert.AreEqual("*", newDef.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.Operand);
+            Assert.AreEqual(0.0125, newDef.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.Value);
+        }
+
         private static void AddBoundaryCondition(WaterFlowFMModel model, FlowBoundaryCondition bc)
         {
             var modelDefinition = model.ModelDefinition;
@@ -189,6 +202,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var boundaryCondition = def.BoundaryConditions.First();
             Assert.AreEqual("WaterLevel", boundaryCondition.VariableName);
             Assert.AreEqual("OB_001_orgsize-Water level", boundaryCondition.Name);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAnExtFileWithInternalTidesFrictionCoefficient_WhenImportingItAndExportingIt_ThenThisQuantityShouldBeReadAndWritten()
+        {
+            var def = new WaterFlowFMModelDefinition();
+            var extPath = TestHelper.GetTestFilePath(@"ExtFileTest\withInternalTidesFrictionCoefficientAndKnownQuantities.ext");
+            Assert.IsTrue(File.Exists(extPath));
+
+            extPath = TestHelper.CreateLocalCopy(extPath);
+            Assert.IsTrue(File.Exists(extPath));
+
+            var extForceFile = new ExtForceFile();
+            var expectedMessage =
+                string.Format(
+                    "Spatial varying quantity {0} detected in the external force file and will be passed to the computational core. This may affect your simulation.",
+                    extForceFile.UnsupportedQuantityInMemory);
+           
+
+            Assert.IsFalse(def.BoundaryConditions.Any());
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def), expectedMessage);
+            Assert.IsTrue(def.BoundaryConditions.Any());
+
+            /* Just check the boundary has been imported. */
+            var boundaryCondition = def.BoundaryConditions.First();
+            Assert.AreEqual("WaterLevel", boundaryCondition.VariableName);
+            Assert.AreEqual("OB_001_orgsize-Water level", boundaryCondition.Name);
+
+            // Check if the internaltidesfrictioncoefficient is in memory
+            CheckInternalTidesFrictionCoefficient(def);
+
+            string newPath = Path.Combine(Path.GetDirectoryName(extPath),"NewExtFileDirectory","NewExtFile");
+            extForceFile.Write(newPath, def); // write loaded definition to new location
+
+            var newExtFile = new ExtForceFile();
+            var newDef = new WaterFlowFMModelDefinition();
+
+            newExtFile.Read(newPath, newDef); // load written definition back
+            // Check if the internaltidesfrictioncoefficient is in memory again, so that the write method is correct.
+            CheckInternalTidesFrictionCoefficient(newDef);
         }
 
         [Test]

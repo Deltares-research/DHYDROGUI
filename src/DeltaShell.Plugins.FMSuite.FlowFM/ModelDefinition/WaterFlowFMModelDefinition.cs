@@ -20,6 +20,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
 using DelftTools.Utils;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
 using log4net;
@@ -98,6 +99,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         }
         
         public IEventedList<IWindField> WindFields { get; private set; }
+
+        public IList<IUnsupportedFileBasedExtForceFileItem> UnsupportedFileBasedExtForceFileItems { get; private set; }
 
         public HeatFluxModel HeatFluxModel { get; private set; }
 
@@ -186,6 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             Boundaries = new EventedList<Feature2D>();
             BoundaryConditionSets = new EventedList<BoundaryConditionSet>();
             WindFields = new EventedList<IWindField>();
+            UnsupportedFileBasedExtForceFileItems = new EventedList<IUnsupportedFileBasedExtForceFileItem>();
             SourcesAndSinks = new EventedList<SourceAndSink>();
             Pipes = new EventedList<Feature2D>();
             SpatialOperations = new Dictionary<string, IList<ISpatialOperation>>();

@@ -166,11 +166,13 @@
     <Compile Include="IO\Importers\ObsFileImporterExporter.cs" />
     <Compile Include="IO\Importers\PlizFileImporterExporter.cs" />
     <Compile Include="IO\Importers\SourceAndSinkImportExtensions.cs" />
+    <Compile Include="IO\IUnsupportedFileBasedExtForceFileItem.cs" />
     <Compile Include="IO\MorphologyBoundaryConditionQuantityType.cs" />
     <Compile Include="IO\MorphologySedimentIniFileGenerator.cs" />
     <Compile Include="IO\Importers\FMRstFileImporter.cs" />
     <Compile Include="IO\Importers\PolFileImporterExporter.cs" />
     <Compile Include="IO\LinkCoveragesDoneReadingEventArgs.cs" />
+    <Compile Include="IO\UnsupportedFileBasedExtForceFileItem.cs" />
     <Compile Include="IO\Operator.cs" />
     <Compile Include="IO\BcFile.cs" />
     <Compile Include="IO\BndExtForceFile.cs" />

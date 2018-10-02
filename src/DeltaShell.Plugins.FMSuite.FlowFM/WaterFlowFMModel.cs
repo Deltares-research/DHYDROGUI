@@ -209,9 +209,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         public IEventedList<IWindField> WindFields { get; private set; }
+        public IList<IUnsupportedFileBasedExtForceFileItem> UnsupportedFileBasedExtForceFileItems { get; private set; }
 
         public HeatFluxModelType HeatFluxModelType { get; private set; }
-
+         
         public IList<ModelFeatureCoordinateData<FixedWeir>> FixedWeirsProperties
         {
             get { return allFixedWeirsAndCorrespondingProperties; }
@@ -420,6 +421,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Boundaries = ModelDefinition.Boundaries;
             BoundaryConditionSets = ModelDefinition.BoundaryConditionSets;
             WindFields = ModelDefinition.WindFields;
+            UnsupportedFileBasedExtForceFileItems = ModelDefinition.UnsupportedFileBasedExtForceFileItems;
             Pipes = ModelDefinition.Pipes;
             SourcesAndSinks = ModelDefinition.SourcesAndSinks;
 
@@ -1154,6 +1156,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
             WindFields = ModelDefinition.WindFields;
+            UnsupportedFileBasedExtForceFileItems = ModelDefinition.UnsupportedFileBasedExtForceFileItems;
         }
 
         public void Dispose()
@@ -1976,6 +1979,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 var newPath = Path.Combine(Path.GetDirectoryName(ExtFilePath), Path.GetFileName(windField.Path));
                 windField.SwitchTo(newPath);
+            }
+
+            foreach (var notUsedExtForceFileItem in UnsupportedFileBasedExtForceFileItems)
+            {
+                var newPath = Path.Combine(Path.GetDirectoryName(ExtFilePath), Path.GetFileName(notUsedExtForceFileItem.Path));
+                notUsedExtForceFileItem.SwitchTo(newPath);
             }
         }
 
