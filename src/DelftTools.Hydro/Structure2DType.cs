@@ -4,11 +4,11 @@ namespace DelftTools.Hydro
 {
     public enum Structure2DType
     {
-        Pump,
-        Gate,
-        Weir,
-        GeneralStructure,
-        LeveeBreach,
+        [Description("pump")] Pump,
+        [Description("gate")] Gate,
+        [Description("weir")] Weir,
+        [Description("generalstructure")] GeneralStructure,
+        [Description("dambreak")] LeveeBreach,
         InvalidType
     }
 }
