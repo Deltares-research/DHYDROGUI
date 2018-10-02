@@ -27,13 +27,12 @@
         <!--#region Styles-->
         <sys:Double x:Key="UnitWidth">20</sys:Double>
 
-        <GridLength x:Key ="LabelLength">Auto</GridLength>
+        <GridLength x:Key ="LabelLength">200</GridLength>
         <GridLength x:Key ="ControlLength">*</GridLength>
         <GridLength x:Key ="UnitLength">20</GridLength>
 
         <Style x:Key="LabelTextBlockStyle" TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Width" Value="200"/>
             <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
         </Style>
 
@@ -57,6 +56,7 @@
                 <x:Type Type="settingsWpf:WpfGuiProperty"/>
             </d:Style.DataContext>
 
+            <Setter Property="Margin" Value="2"/>
             <Setter Property="IsEnabled" Value="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged}"/>
             <Setter Property="Visibility" Value="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}"/>
             <Setter Property="ToolTip" Value="{Binding ToolTip}"/>
@@ -184,7 +184,13 @@
                     Grid.Column="1"
                     ItemsSource="{Binding Path=ValueType, Converter={StaticResource GuiEnumConverter}}" 
                     SelectedItem="{Binding Path=Value}"
-                    Style="{StaticResource ControlStyle}"/>
+                    Style="{StaticResource ControlStyle}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" MaxWidth="140" TextWrapping="Wrap"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
             </Grid>
         </DataTemplate>
 
@@ -277,7 +283,8 @@
         <DataTemplate x:Key="tabCustomContentTemplate" DataType="{x:Type settingsWpf:WpfGuiCategory}">
             <!-- Bind to the whole data item (a collection) here -->
             <ScrollViewer 
-                VerticalScrollBarVisibility="Auto">
+                VerticalScrollBarVisibility="Auto"
+                Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}">
                 <ContentControl Content="{Binding CustomControl}"/>
             </ScrollViewer>
         </DataTemplate>

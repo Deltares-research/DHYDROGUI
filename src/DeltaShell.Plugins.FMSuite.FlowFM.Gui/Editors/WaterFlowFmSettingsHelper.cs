@@ -116,16 +116,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             var sedimentCategory = new WpfGuiCategory("Sediment", fieldUiDescriptions)
             {
                 CategoryVisibility = () => fmModel.UseMorSed,
+                CustomControl = new SedimentFractionsEditor(fmModel.SedimentFractions, fmModel.SedimentOverallProperties)
             };
-            var morphologyCategory = wpfCategories.FirstOrDefault(wCat => wCat.CategoryName.ToLower() == "morphology");
-            if( morphologyCategory != null) morphologyCategory.CategoryVisibility = () => fmModel.UseMorSed;
 
-            var sedProperty = sedimentCategory.Properties?.FirstOrDefault();
-            if (sedProperty == null) return;
-
-            sedProperty.CustomControl = new SedimentFractionsEditor(fmModel.SedimentFractions, fmModel.SedimentOverallProperties);
-            sedProperty.GetModel = () => fmModel;
             wpfCategories.Add(sedimentCategory);
+
+            var morphologyCategory = wpfCategories.FirstOrDefault(wCat => wCat.CategoryName.ToLower() == "morphology");
+            if (morphologyCategory != null)
+            {
+                morphologyCategory.CategoryVisibility = () => fmModel.UseMorSed;
+            }
         }
 
         /*Extraced from WaterFlowFMModelView.cs */
