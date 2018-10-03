@@ -23,8 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         private const string AreaFolderName = "Area";
         private const string TimePointFolderName = "Time Frame";
         private const string BoundaryFolderName = "Boundary Conditions";
-        private const string ProcessesName = "Processes";
-        private const string PhysicalParametersName = "Physical Parameters";
+        private const string PhysicalProcessesName = "Physical Processes";
         private const string NumericalParametersName = "Numerical Parameters";
         private const string OutputParametersName = "Output Parameters";
         private const string ObstacleNodeName = "Obstacles";
@@ -76,9 +75,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             yield return new WaveModelTreeShortcut(SpectralDomainName, PhysicalParametersImage, model, SpectralDomainName);
             yield return model.OuterDomain;
             yield return new WaveModelTreeShortcut(TimePointFolderName, TimePointImage, model, model.TimePointData, ShortCutType.FeatureSet);
-            yield return new WaveModelTreeShortcut(ProcessesName, ProcessesImage, model, ProcessesName);
             yield return new WaveModelTreeShortcut(BoundaryFolderName, BoundaryConditionsImage, model, model.BoundaryConditions, ShortCutType.FeatureSet, model.BoundaryConditions);
-            yield return new WaveModelTreeShortcut(PhysicalParametersName, PhysicalParametersImage, model, PhysicalParametersName);
+            yield return new WaveModelTreeShortcut(PhysicalProcessesName, ProcessesImage, model, PhysicalProcessesName);
             yield return new WaveModelTreeShortcut(NumericalParametersName, NumericsIcon, model, NumericalParametersName);
             yield return new WaveModelTreeShortcut(OutputParametersName, OutputParametersIcon, model, "Output");
             yield return new TreeFolder(model, GetOutputItems(model), "Output", FolderImageType.Output);
