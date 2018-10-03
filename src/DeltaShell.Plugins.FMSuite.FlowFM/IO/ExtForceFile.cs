@@ -414,28 +414,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void Read(WaterFlowFMModelDefinition modelDefinition)
         {
-            var extForceFileItems = ParseExtForceFile();
-            var forceFileItems = extForceFileItems as IList<ExtForceFileItem> ?? extForceFileItems.ToList();
-            ReadPolyLineData(forceFileItems, modelDefinition);
-            ReadWindItems(forceFileItems, modelDefinition);
-            ReadHeatFluxModelData(forceFileItems, modelDefinition);
-            ReadSpatialData(forceFileItems, modelDefinition);
-
-            var unsupportedFileBasedExtForceFileItems = forceFileItems.ToList()
-                .Where(fi => fi.Quantity.StartsWith(UnsupportedQuantityInMemory)).ToList();
-
-            if (unsupportedFileBasedExtForceFileItems.Count > 0)
-            {
-                log.WarnFormat(
-                    "Spatial varying quantity {0} detected in the external force file and will be passed to the computational core. This may affect your simulation.",UnsupportedQuantityInMemory);
-                foreach (var forceFileItem in unsupportedFileBasedExtForceFileItems)
-                {
-                    var unsupportedFileBasedExtForceFileItem = new UnsupportedFileBasedExtForceFileItem(
-                        Path.Combine(Path.GetDirectoryName(FilePath), forceFileItem.FileName), forceFileItem);
-                    
-                    modelDefinition.UnsupportedFileBasedExtForceFileItems.Add(unsupportedFileBasedExtForceFileItem);
-                }
-            }
+                var extForceFileItems = ParseExtForceFile();
+                var forceFileItems = extForceFileItems as IList<ExtForceFileItem> ?? extForceFileItems.ToList();
+                ReadPolyLineData(forceFileItems, modelDefinition);
+                ReadWindItems(forceFileItems, modelDefinition);
+                ReadHeatFluxModelData(forceFileItems, modelDefinition);
+                ReadSpatialData(forceFileItems, modelDefinition);
+                ReadInternalTidesFrictionCoefficientIfAvailable(forceFileItems, modelDefinition);
         }
 
         private IEnumerable<ExtForceFileItem> ParseExtForceFile()
@@ -1105,6 +1090,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                    log.Warn(e.Message);
                 }
+            }
+        }
+
+        private void ReadInternalTidesFrictionCoefficientIfAvailable(IEnumerable<ExtForceFileItem> extForceFileItems,
+            WaterFlowFMModelDefinition modelDefinition)
+        {
+            try
+            {
+                var unsupportedFileBasedExtForceFileItems = extForceFileItems.ToList()
+                    .Where(fi => fi.Quantity.StartsWith(UnsupportedQuantityInMemory)).ToList();
+
+                if (unsupportedFileBasedExtForceFileItems.Count > 0)
+                {
+                    log.WarnFormat(
+                        "Spatial varying quantity {0} detected in the external force file and will be passed to the computational core. This may affect your simulation.",
+                        UnsupportedQuantityInMemory);
+
+                    foreach (var forceFileItem in unsupportedFileBasedExtForceFileItems)
+                    {
+                        var unsupportedFileBaseExtForceFile =
+                            Path.Combine(Path.GetDirectoryName(FilePath), forceFileItem.FileName);
+                        if (!File.Exists(unsupportedFileBaseExtForceFile))
+                        {
+                            throw new FileNotFoundException(string.Format("File {0} could not be found for an internaltidesfrictioncoefficient quantity in the external force file",
+                                unsupportedFileBaseExtForceFile));
+                        }
+
+                        var unsupportedFileBasedExtForceFileItem = new UnsupportedFileBasedExtForceFileItem(
+                            Path.Combine(Path.GetDirectoryName(FilePath), forceFileItem.FileName), forceFileItem);
+
+                        modelDefinition.UnsupportedFileBasedExtForceFileItems.Add(unsupportedFileBasedExtForceFileItem);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                log.Warn(e.Message);
             }
         }
 

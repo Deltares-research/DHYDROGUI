@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,17 +30,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class ExtForceFileTest
     {
-        private void CheckInternalTidesFrictionCoefficient(WaterFlowFMModelDefinition newDef)
+        private void CheckInternalTidesFrictionCoefficient(WaterFlowFMModelDefinition def)
         {
-            Assert.AreEqual(1, newDef.UnsupportedFileBasedExtForceFileItems.Count);
+            Assert.AreEqual(1, def.UnsupportedFileBasedExtForceFileItems.Count);
             Assert.AreEqual("surroundingDomain.pol",
-                newDef.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName);
+                def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName);
             Assert.AreEqual("surroundingDomain.pol",
-                newDef.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName);
-            Assert.AreEqual(10, newDef.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileType);
-            Assert.AreEqual(4, newDef.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.Method);
-            Assert.AreEqual("*", newDef.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.Operand);
-            Assert.AreEqual(0.0125, newDef.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.Value);
+                def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName);
+            Assert.AreEqual(10, def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileType);
+            Assert.AreEqual(4, def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.Method);
+            Assert.AreEqual("*", def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.Operand);
+            Assert.AreEqual(0.0125, def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.Value);
         }
 
         private static void AddBoundaryCondition(WaterFlowFMModel model, FlowBoundaryCondition bc)
@@ -234,8 +235,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // Check if the internaltidesfrictioncoefficient is in memory
             CheckInternalTidesFrictionCoefficient(def);
 
+            Assert.That(File.Exists(Path.Combine(Path.GetDirectoryName(extPath),def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName)));
+
             string newPath = Path.Combine(Path.GetDirectoryName(extPath),"NewExtFileDirectory","NewExtFile");
             extForceFile.Write(newPath, def); // write loaded definition to new location
+
+            //Check
+            Assert.That(File.Exists(Path.Combine(Path.GetDirectoryName(newPath), def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName)));
 
             var newExtFile = new ExtForceFile();
             var newDef = new WaterFlowFMModelDefinition();
@@ -243,6 +249,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             newExtFile.Read(newPath, newDef); // load written definition back
             // Check if the internaltidesfrictioncoefficient is in memory again, so that the write method is correct.
             CheckInternalTidesFrictionCoefficient(newDef);
+
+            
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAnExtFileWithInternalTidesFrictionCoefficient_WhenImportingItAndCorrespondingFileIsMissing_ThenThisQuantityShouldNotBeImported()
+        {
+            var def = new WaterFlowFMModelDefinition();
+            var extPath =
+                TestHelper.GetTestFilePath(@"ExtFileTest\ExtFileWithInternalTidesFrictionCoefficientAndMissingFile\withInternalTidesFrictionCoefficientAndKnownQuantities.ext");
+            Assert.IsTrue(File.Exists(extPath));
+
+            extPath = TestHelper.CreateLocalCopy(extPath);
+            Assert.IsTrue(File.Exists(extPath));
+
+            var extForceFile = new ExtForceFile();
+            var expectedMessage =
+                string.Format(
+                    "Spatial varying quantity {0} detected in the external force file and will be passed to the computational core. This may affect your simulation.",
+                    extForceFile.UnsupportedQuantityInMemory);
+
+            var correspondingFile = Path.Combine(Path.GetDirectoryName(extPath), "surroundingDomain.pol");
+            var expectedMessage2 = string.Format("File {0} could not be found for an internaltidesfrictioncoefficient quantity in the external force file", correspondingFile);
+
+            List< string> messages = new List<string>();
+            messages.Add(expectedMessage);
+            messages.Add(expectedMessage2);
+
+            IEnumerable<string> messagesExpected = messages;
+
+            Assert.IsFalse(def.BoundaryConditions.Any());
+            TestHelper.AssertLogMessagesAreGenerated(() => extForceFile.Read(extPath, def), messagesExpected);
+            
+            Assert.IsTrue(def.BoundaryConditions.Any());
+
+            /* Just check the boundary has been imported. */
+            var boundaryCondition = def.BoundaryConditions.First();
+            Assert.AreEqual("WaterLevel", boundaryCondition.VariableName);
+            Assert.AreEqual("OB_001_orgsize-Water level", boundaryCondition.Name);
+
+            // Check if the internaltidesfrictioncoefficient is not in memory
+            Assert.AreEqual(0, def.UnsupportedFileBasedExtForceFileItems.Count);
         }
 
         [Test]
