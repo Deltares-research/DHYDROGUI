@@ -160,10 +160,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var fmModel = model as WaterFlowFMModel;
             if (fmModel?.Network == null) return Enumerable.Empty<DelftIniCategory>();
-            var categories1D = NetworkEditor.IO.StructureFile.ExtractFunctionStructuresOfNetworkGenerator(fmModel.Network);
-            var categories2D = StructureFile.ExtractFunctionStructuresOfAreaGenerator(fmModel.Area);
 
-            Action<string, WaterFlowFMModel, IStructure2D> myaction;
+            var categories1D = NetworkEditor.IO.StructureFile.ExtractFunctionStructuresOfNetworkGenerator(fmModel.Network);
+            var categories2D = StructureFile.ExtractFunctionStructuresOfAreaGenerator(fmModel.Area).ToList();
+
+            Action<string, WaterFlowFMModel, IStructure2D> myAction;
             foreach (var category2D in categories2D)
             {
                 var structureName = category2D.GetPropertyValue(StructureRegion.Id.Key);
@@ -171,22 +172,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 foreach (var propertyName in category2D.Properties.Select(property => property.Name))
                 {
-                    if (StructureWriteActions.TryGetValue(propertyName, out myaction))
+                    if (StructureWriteActions.TryGetValue(propertyName, out myAction))
                     {
                         var fileNameProperty = category2D.Properties.FirstOrDefault(p => p.Name == propertyName);
                         var structure2D = fmModel.Area.AllHydroObjects.Cast<IStructure2D>().FirstOrDefault(o => o.Name == structureName);
-                        if (fileNameProperty != null) myaction(fileNameProperty.Value, fmModel, structure2D);
+                        if (fileNameProperty != null) myAction(fileNameProperty.Value, fmModel, structure2D);
                     }
                 }
             }
-            
 
             return categories1D.Concat(categories2D);
         }
+
         private static readonly Dictionary<string, Action<string, WaterFlowFMModel, IStructure2D>> StructureWriteActions = new Dictionary<string, Action<string, WaterFlowFMModel, IStructure2D>>
         {
             {StructureRegion.PolylineFile.Key, WritePolylineFile},
-            {StructureRegion.Capacity.Key, WriteTimeSeriesFile}
+            {StructureRegion.Capacity.Key, WriteTimeSeriesFile},
+            {StructureRegion.CrestLevel.Key, WriteTimeSeriesFile }
         };
 
         private static void WritePolylineFile(string fileName, WaterFlowFMModel fmModel, IStructure2D structure2D)
@@ -210,6 +212,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (pump != null && pump.HasCapacityTimeSeries())
             {
                 new TimFile().Write(timFilePath, pump.CapacityTimeSeries, fmModel.ReferenceTime);
+                return;
+            }
+
+            var weir = structure2D as IWeir;
+            if (weir != null && weir.HasCrestLevelTimeSeries())
+            {
+                new TimFile().Write(timFilePath, weir.CrestLevelTimeSeries, fmModel.ReferenceTime);
             }
         }
 
@@ -218,6 +227,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return pump.CanBeTimedependent
                    && pump.UseCapacityTimeSeries
                    && pump.CapacityTimeSeries != null;
+        }
+
+        private static bool HasCrestLevelTimeSeries(this IWeir weir)
+        {
+            return weir.CanBeTimedependent
+                   && weir.UseCrestLevelTimeSeries
+                   && weir.CrestLevelTimeSeries != null;
         }
 
         private static void WriteUGridFile(WaterFlowFMModelWriterData writerData)

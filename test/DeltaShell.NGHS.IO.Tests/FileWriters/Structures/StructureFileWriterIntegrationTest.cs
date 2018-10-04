@@ -1,8 +1,10 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
@@ -177,6 +179,109 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
             }
         }
+
+        [Test]
+        public void GivenFmModelWithWeirThatHasATimeSeriesForCrestLevel_WhenWritingStructures_ThenWeirIsBeingWrittenToFileWithTimeSeriesFileNameInIniFile()
+        {
+            var testFolder = FileUtils.CreateTempDirectory();
+            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
+            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
+
+            var expectedCategoryName = "Structure";
+            var weirName = "myWeir";
+            var expectedType = "weir";
+            var expectedPliFileName = weirName + ".pli";
+            var expectedCrestLevelString = $"{weirName}_crest_level.tim";
+            var expectedCrestWidth = 2.58;
+            var expectedLateralContraction = 0.34;
+
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath
+            };
+            var weir2D = new Weir2D(weirName, true)
+            {
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
+                CrestWidth = expectedCrestWidth,
+                WeirFormula = new SimpleWeirFormula { LateralContraction = expectedLateralContraction},
+                UseCrestLevelTimeSeries = true
+            };
+            fmModel.Area.Weirs.Add(weir2D);
+
+            try
+            {
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
+                var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
+                Assert.That(categories.Count, Is.EqualTo(2));
+
+                var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
+                Assert.IsNotNull(structureCategory);
+                Assert.That(structureCategory.Properties.Count, Is.EqualTo(6));
+
+                CheckKeyValuePair(structureCategory, StructureRegion.Id.Key, weirName);
+                CheckKeyValuePair(structureCategory, StructureRegion.DefinitionType.Key, expectedType);
+                CheckKeyValuePair(structureCategory, StructureRegion.PolylineFile.Key, expectedPliFileName);
+                CheckKeyValuePair(structureCategory, StructureRegion.CrestLevel.Key, expectedCrestLevelString);
+                CheckKeyValuePair(structureCategory, StructureRegion.CrestWidth.Key, expectedCrestWidth);
+                CheckKeyValuePair(structureCategory, StructureRegion.LatContrCoeff.Key, expectedLateralContraction);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
+            }
+        }
+
+        [Test]
+        public void GivenFmModelWithWeir_WhenWritingStructures_ThenWeirIsBeingCorrectlyWrittenToIniFile()
+        {
+            var testFolder = FileUtils.CreateTempDirectory();
+            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
+            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
+
+            var expectedCategoryName = "Structure";
+            var weirName = "myWeir";
+            var expectedType = "weir";
+            var expectedPliFileName = weirName + ".pli";
+            var expectedCrestLevel = 1.12;
+            var expectedCrestWidth = 2.58;
+            var expectedLateralContraction = 0.34;
+
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath
+            };
+            var weir2D = new Weir2D(weirName)
+            {
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
+                CrestLevel = expectedCrestLevel,
+                CrestWidth = expectedCrestWidth,
+                WeirFormula = new SimpleWeirFormula { LateralContraction = expectedLateralContraction }
+            };
+            fmModel.Area.Weirs.Add(weir2D);
+
+            try
+            {
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
+                var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
+                Assert.That(categories.Count, Is.EqualTo(2));
+
+                var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
+                Assert.IsNotNull(structureCategory);
+                Assert.That(structureCategory.Properties.Count, Is.EqualTo(6));
+
+                CheckKeyValuePair(structureCategory, StructureRegion.Id.Key, weirName);
+                CheckKeyValuePair(structureCategory, StructureRegion.DefinitionType.Key, expectedType);
+                CheckKeyValuePair(structureCategory, StructureRegion.PolylineFile.Key, expectedPliFileName);
+                CheckKeyValuePair(structureCategory, StructureRegion.CrestLevel.Key, expectedCrestLevel);
+                CheckKeyValuePair(structureCategory, StructureRegion.CrestWidth.Key, expectedCrestWidth);
+                CheckKeyValuePair(structureCategory, StructureRegion.LatContrCoeff.Key, expectedLateralContraction);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
+            }
+        }
+
 
         private static void CheckKeyValuePair(IDelftIniCategory structureCategory, string key, string expectedValue)
         {

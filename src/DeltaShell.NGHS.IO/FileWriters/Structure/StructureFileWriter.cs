@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils.Collections;
-using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
-using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
@@ -29,9 +23,5 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             if (File.Exists(targetIniFile)) File.Delete(targetIniFile);
             new IniFileWriter().WriteIniFile(categories, targetIniFile);
         }
-
-        
-
-        
     }
 }

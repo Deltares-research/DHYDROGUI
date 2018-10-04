@@ -175,6 +175,7 @@
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureSiphon.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureUniversalWeir.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureWeir.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureWeir2D.cs" />
     <Compile Include="FileWriters\Structure\IDefinitionGeneratorStructure.cs" />
     <Compile Include="FileWriters\Structure\StructureFileWriter.cs" />
     <Compile Include="FileWriters\Structure\StructureRegion.cs" />

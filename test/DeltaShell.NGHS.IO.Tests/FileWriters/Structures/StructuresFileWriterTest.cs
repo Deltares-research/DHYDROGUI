@@ -2,6 +2,7 @@
 using System.IO;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -31,7 +32,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             var pump2D = new Pump2D(pumpName)
             {
-                Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(2, 2), new Coordinate(10, -2) })
+                Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(2, 2), new Coordinate(10, -2)})
             };
             var area = new HydroArea();
             area.Pumps.Add(pump2D);
@@ -39,13 +40,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             try
             {
                 StructureFileWriter.WriteFile(structuresFilePath,
-                    new WaterFlowFMModel {Area =  area, MduFilePath = mduFilePath}, 
+                    new WaterFlowFMModel {Area = area, MduFilePath = mduFilePath},
                     WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
 
                 Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
                 Assert.IsTrue(File.Exists(pliFilePath), $"Polyline file has not been written to location {pliFilePath}");
                 Assert.IsFalse(File.Exists(timFilePath),
-                    $"Time series file has been written to location {timFilePath}, while it the pump does not have a time series for the capacity");
+                    $"Time series file has been written to location {timFilePath}, while the pump does not have a time series for the capacity");
             }
             finally
             {
@@ -77,7 +78,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                     [new DateTime(2013, 7, 8, 9, 10, 0)] = 3.34
                 }
             };
-            
+
             var fmModel = new WaterFlowFMModel
             {
                 ReferenceTime = new DateTime(2013, 1, 2),
@@ -92,6 +93,87 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 Assert.That(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
                 Assert.That(File.Exists(pliFilePath), $"Polyline file has not been written to location {pliFilePath}");
                 Assert.That(File.Exists(timFilePath), $"Time series file has not been written to location {timFilePath}");
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
+            }
+        }
+
+        [Test]
+        public void GivenFmModelWithWeir_WhenWritingStructures_ThenTheCorrectFilesAreWritten()
+        {
+            var testFolder = FileUtils.CreateTempDirectory();
+            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
+            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
+
+            var weirName = "myWeir";
+            var pliFileName = weirName + ".pli";
+            var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, pliFileName);
+
+            var timFileName = weirName + "_crest_level.tim";
+            var timFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timFileName);
+
+            var weir2D = new Weir2D(weirName)
+            {
+                Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(2, 2), new Coordinate(10, -2)})
+            };
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath,
+                ReferenceTime = DateTime.Now
+            };
+            fmModel.Area.Weirs.Add(weir2D);
+
+            try
+            {
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
+                Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
+                Assert.IsTrue(File.Exists(pliFilePath), $"Polyline file has not been written to location {pliFilePath}");
+                Assert.IsFalse(File.Exists(timFilePath),
+                    $"Time series file has been written to location {timFilePath}, while the weir does not have a time series for the capacity");
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
+            }
+        }
+
+        [Test]
+        public void GivenFmModelWithWeirThatHasATimeSeriesForCapacity_WhenWritingStructures_ThenTheCorrectFilesAreWritten()
+        {
+            var testFolder = FileUtils.CreateTempDirectory();
+            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
+            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
+
+            var weirName = "myWeir";
+            var pliFileName = weirName + ".pli";
+            var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, pliFileName);
+
+            var timFileName = weirName + "_crest_level.tim";
+            var timFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timFileName);
+
+            var weir2D = new Weir2D(weirName, true)
+            {
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
+                CrestWidth = 2.58,
+                WeirFormula = new SimpleWeirFormula { LateralContraction = 0.34 },
+                UseCrestLevelTimeSeries = true
+            };
+
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath,
+                ReferenceTime = DateTime.Now
+            };
+            fmModel.Area.Weirs.Add(weir2D);
+
+            try
+            {
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
+                Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
+                Assert.IsTrue(File.Exists(pliFilePath), $"Polyline file has not been written to location {pliFilePath}");
+                Assert.IsTrue(File.Exists(timFilePath), $"Time series file has not been written to location {timFilePath}");
             }
             finally
             {

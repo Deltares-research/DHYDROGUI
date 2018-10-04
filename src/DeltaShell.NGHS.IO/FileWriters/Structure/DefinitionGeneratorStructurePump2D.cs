@@ -11,9 +11,15 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.Pump);
 
             var pump = (IPump) hydroObject;
+            AddCapacityProperty(pump);
+
+            return IniCategory;
+        }
+
+        private void AddCapacityProperty(IPump pump)
+        {
             var capacityKey = StructureRegion.Capacity.Key;
             var capacityDescription = StructureRegion.Capacity.Description;
-
             if (pump.CanBeTimedependent && pump.UseCapacityTimeSeries)
             {
                 var timeSeriesFileName = $"{pump.Name}_{capacityKey}.tim";
@@ -23,8 +29,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             {
                 IniCategory.AddProperty(capacityKey, pump.Capacity, capacityDescription, "F");
             }
-
-            return IniCategory;
         }
     }
 }

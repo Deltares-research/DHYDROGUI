@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
@@ -86,7 +87,7 @@ namespace DelftTools.Hydro
 
         public virtual IEnumerable<IHydroObject> AllHydroObjects
         {
-            get { return Pumps; }
+            get { return Pumps.OfType<IHydroObject>().Concat(Weirs).Concat(Gates); }
         }
 
         public virtual IEventedList<HydroLink> Links { get; set; }

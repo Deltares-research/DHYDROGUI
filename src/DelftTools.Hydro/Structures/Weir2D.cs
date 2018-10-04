@@ -1,11 +1,12 @@
 using System.ComponentModel;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;
 
 namespace DelftTools.Hydro.Structures
 {
     [Entity]
-    public class Weir2D : Weir, IGroupableFeature
+    public class Weir2D : Weir, IGroupableFeature, IStructure2D
     {
         private string groupName;
 
@@ -41,6 +42,16 @@ namespace DelftTools.Hydro.Structures
         {
             var instance = (Weir2D) base.Clone();
             return this.CloneGroupableFeature(instance);
+        }
+
+        public Structure2DType Structure2DType
+        {
+            get
+            {
+                return WeirFormula is GeneralStructureWeirFormula
+                    ? Structure2DType.GeneralStructure
+                    : Structure2DType.Weir;
+            }
         }
     }
 }
