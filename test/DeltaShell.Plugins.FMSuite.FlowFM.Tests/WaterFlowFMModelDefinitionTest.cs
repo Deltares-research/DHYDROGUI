@@ -1363,14 +1363,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [TestCase("EnclosureFile")]
-        [TestCase("ObsFile")]
-        [TestCase("LandBoundaryFile")]
-        [TestCase("ThinDamFile")]
-        [TestCase("FixedWeirFile")]
-        [TestCase("StructureFile")]
-        [TestCase("CrsFile")]
-        [TestCase("DryPointsFile")]
+        [TestCase(KnownProperties.EnclosureFile)]
+        [TestCase(KnownProperties.ObsFile)]
+        [TestCase(KnownProperties.LandBoundaryFile)]
+        [TestCase(KnownProperties.ThinDamFile)]
+        [TestCase(KnownProperties.FixedWeirFile)]
+        [TestCase(KnownProperties.StructuresFile)]
+        [TestCase(KnownProperties.ObsCrsFile)]
+        [TestCase(KnownProperties.DryPointsFile)]    
         public void HydroAreaPropertyIsMultipleEntriesFileName(string hydroAreaFileProperty)
         {
             var nameWithoutExtension = Path.GetTempFileName();
