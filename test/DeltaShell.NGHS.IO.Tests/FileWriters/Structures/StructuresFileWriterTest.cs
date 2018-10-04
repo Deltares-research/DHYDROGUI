@@ -180,5 +180,40 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
             }
         }
+
+        [Test]
+        public void GivenFmModelWithGeneralStructure_WhenWritingStructures_ThenTheCorrectFilesAreWritten()
+        {
+            var testFolder = FileUtils.CreateTempDirectory();
+            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
+            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
+
+            var generalStructureName = "myGeneralStructure";
+            var pliFileName = generalStructureName + ".pli";
+            var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, pliFileName);
+
+            var generalStructure2D = new Weir2D(generalStructureName)
+            {
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2), new Coordinate(10, -2) }),
+                WeirFormula = new GeneralStructureWeirFormula()
+            };
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath,
+                ReferenceTime = DateTime.Now
+            };
+            fmModel.Area.Weirs.Add(generalStructure2D);
+
+            try
+            {
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
+                Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
+                Assert.IsTrue(File.Exists(pliFilePath), $"Polyline file has not been written to location {pliFilePath}");
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
+            }
+        }
     }
 }
