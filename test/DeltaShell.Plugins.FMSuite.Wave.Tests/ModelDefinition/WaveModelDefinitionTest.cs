@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             var mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
             var modelDefinition = new MdwFile().Load(mdwPath);
             
-            Assert.AreEqual(7, modelDefinition.ModelSchema.GuiPropertyGroups.Count);
+            Assert.AreEqual(6, modelDefinition.ModelSchema.GuiPropertyGroups.Count);
             Assert.AreEqual(6, modelDefinition.ModelSchema.ModelDefinitionCategory.Count);
 
             Assert.AreEqual("nautical",
