@@ -35,7 +35,7 @@ model,AutoStart,,,AutoStart:0|1|2,0|1|2,0,0,2,TRUE,,,,,,"Autostart simulation af
 geometry,NetFile,,,,FileName,,,,TRUE,,,,,,Unstructured grid file *_net.nc
 geometry,BathymetryFile,,,,FileName,,,,TRUE,,,,,,Bathymetry points file *.xyb
 geometry,DryPointsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Dry points file *.xyz (third column dummy z values), or dry areas polygon file *.pol (third column 1/-1: inside/outside)"
-geometry,EnclosureFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Enclosure polygon file *.pol (third column 1/-1: inside/outside)"
+geometry,GridEnclosureFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Enclosure polygon file *.pol (third column 1/-1: inside/outside)"
 geometry,WaterLevIniFile,,,,FileName,,,,TRUE,,,,,,Initial water levels sample file *.xyz
 geometry,LandBoundaryFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Land boundaries file *.ldb, used for visualization"
 geometry,ThinDamFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Polyline file *_thd.pli, containing thin dams"

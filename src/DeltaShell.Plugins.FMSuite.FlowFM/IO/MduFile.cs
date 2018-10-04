@@ -993,6 +993,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         var fields = GetPropertyLine(line, out mduPropertyName, out mduPropertyLowerCase);
 
                         // some backwards compatibility issues (properties have been renamed
+                        if (mduPropertyLowerCase.Equals("enclosurefile"))
+                        {
+                            mduPropertyName = "GridEnclosureFile";
+                        }
                         if (mduPropertyLowerCase.Equals("trtdt"))
                         {
                             mduPropertyName = "DtTrt";

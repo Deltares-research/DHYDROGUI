@@ -616,5 +616,58 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     FileUtils.DeleteIfExists(mduDir);
                 }
             }
+
+        [Category(TestCategory.DataAccess)]
+        [Test]
+        public void GivenAnMDUWithTheOldNameForEnclosureFile_WhenImportingIt_ThenThisNameShouldBeChangedToGridEnclosureFile()
+        {
+            mduFilePath = TestHelper.GetTestFilePath(@"harlingen\HarlingenModelWithOldEnclosureFileMduPropertyName\har.mdu");
+            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
+            mduDir = Path.GetDirectoryName(mduFilePath);
+            Assert.NotNull(mduDir);
+            modelName = Path.GetFileName(mduFilePath);
+
+            saveDirectory = Path.Combine(mduDir, "SaveLocation");
+            Directory.CreateDirectory(saveDirectory);
+            savePath = Path.Combine(saveDirectory, "har.mdu");
+            newMduDir = Path.GetDirectoryName(savePath);
+            Assert.NotNull(newMduDir);
+
+            try
+            {
+                var mduFile = new MduFile();
+
+                var originalArea = new HydroArea();
+                var originalMD = new WaterFlowFMModelDefinition(mduDir, modelName);
+                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
+
+                mduFile.Read(mduFilePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties);
+
+                //Check if the enclosure file is in memory under the new mdu property name in the model definition.
+                var newModelProperty = originalMD.GetModelProperty(KnownProperties.EnclosureFile);
+                Assert.NotNull(newModelProperty);
+
+                //Check that the old mdu property name is not existing anymore in the model definition.
+                var oldModelProperty = originalMD.GetModelProperty("enclosurefile");
+                Assert.IsNull(oldModelProperty);
+
+                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties);
+
+                var generatedInputContent =
+                    File.ReadAllLines(mduFilePath);
+
+                Assert.IsFalse(generatedInputContent.Any(x => x.ToLower().Contains("gridenclosurefile")));
+                Assert.IsTrue(generatedInputContent.Any(x => x.ToLower().Contains("enclosurefile")));
+
+                var generatedResultsContent =
+                    File.ReadAllLines(savePath);
+
+                Assert.IsTrue(generatedResultsContent.Any(x => x.ToLower().Contains("gridenclosurefile")));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(mduDir);
+            }
+        }
     }
 }
