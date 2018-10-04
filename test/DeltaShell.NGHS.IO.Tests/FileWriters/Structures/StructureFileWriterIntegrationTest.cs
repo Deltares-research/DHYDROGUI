@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
@@ -10,7 +9,9 @@ using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -26,7 +27,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var flow1Dmodel = new WaterFlowModel1D { Network = HydroNetworkHelper.GetSnakeHydroNetwork(1) };
             var branch = flow1Dmodel.Network.Channels.First();
 
-            var pump = (IPump) new Pump(false);
+            var pump = (IPump)new Pump(false);
             branch.BranchFeatures.Add(pump);
 
             var weir = new Weir();
@@ -47,7 +48,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             composite2.Structures.Add(weir);
             weir.ParentStructure = composite2;
 
-            StructureFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Structures, flow1Dmodel.Network);
+            StructureFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Structures, flow1Dmodel, WaterFlowModel1DFileWriter.GenerateFlow1DStructureCategoriesFrom1DModel);
 
             var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures).ToList();
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
@@ -60,14 +61,14 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var pumpCompoundProperty = pumpProperties.First(p => p.Name == StructureRegion.Compound.Key);
             var weirCompoundProperty = weirProperties.First(p => p.Name == StructureRegion.Compound.Key);
             var culvertCompoundProperty = culvertProperties.First(p => p.Name == StructureRegion.Compound.Key);
-            
+
             int pumpCompoundStructureId;
             Assert.IsTrue(int.TryParse(pumpCompoundProperty.Value, out pumpCompoundStructureId));
             Assert.IsTrue(pumpCompoundStructureId > 0, "A valid CompoundStructureId must be greater than zero");
 
             int weirCompoundStructureId;
             Assert.IsTrue(int.TryParse(weirCompoundProperty.Value, out weirCompoundStructureId));
-            Assert.IsTrue(weirCompoundStructureId <= 0, "An individual structure should have a CompoundStructureId less than or equal to zero");    
+            Assert.IsTrue(weirCompoundStructureId <= 0, "An individual structure should have a CompoundStructureId less than or equal to zero");
 
             Assert.AreEqual(pumpCompoundProperty.Value, culvertCompoundProperty.Value, "CompoundStructureIds should match for structure with the same parent CompoundStructure");
 
@@ -78,7 +79,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             Assert.NotNull(pumpCompoundNameProperty);
             Assert.AreEqual(composite1.Name, pumpCompoundNameProperty.Value);
 
-            // Names for compounds with only 1 sub-structure should not be written to file!
+            //Names for compounds with only 1 sub - structure should not be written to file!
             Assert.Null(weirCompoundNameProperty);
 
             Assert.NotNull(culvertCompoundNameProperty);
@@ -89,7 +90,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         public void GivenFmModelWithPump_WhenWritingStructures_ThenPumpIsBeingWrittenToIniFile()
         {
             var testFolder = FileUtils.CreateTempDirectory();
-            var targetFile = Path.Combine(testFolder, "structures.ini");
+            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
+            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
 
             var expectedCategoryName = "Structure";
             var pumpName = "myPump";
@@ -97,18 +99,22 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var expectedPliFileName = pumpName + ".pli";
             var expectedCapacity = 25.08;
 
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath
+            };
             var pump2D = new Pump2D(pumpName)
             {
                 Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
-                Capacity = expectedCapacity
+                Capacity = expectedCapacity,
             };
             fmModel.Area.Pumps.Add(pump2D);
 
             try
             {
-                StructureFileWriter.WriteFile(targetFile, fmModel.Network, fmModel.Area, DateTime.Now);
-                var categories = new DelftIniReader().ReadDelftIniFile(targetFile);
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
+
+                var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
 
                 var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
@@ -122,7 +128,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             }
             finally
             {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(targetFile));
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
             }
         }
 
@@ -130,7 +136,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         public void GivenFmModelWithPumpThatHasATimeSeriesForCapacity_WhenWritingStructures_ThenPumpIsBeingWrittenToFileWithTimeSeriesFileNameInIniFile()
         {
             var testFolder = FileUtils.CreateTempDirectory();
-            var targetFile = Path.Combine(testFolder, "structures.ini");
+            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
+            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
 
             var expectedCategoryName = "Structure";
             var pumpName = "myPump";
@@ -138,10 +145,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var expectedPliFileName = pumpName + ".pli";
             var expectedCapacityString = $"{pumpName}_{StructureRegion.Capacity.Key}.tim";
 
-            var fmModel = new WaterFlowFMModel();
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath
+            };
             var pump2D = new Pump2D(pumpName)
             {
-                Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(2, 2)}),
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
                 CanBeTimedependent = true,
                 UseCapacityTimeSeries = true
             };
@@ -149,8 +159,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(targetFile, fmModel.Network, fmModel.Area, DateTime.Now);
-                var categories = new DelftIniReader().ReadDelftIniFile(targetFile);
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
+                var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
 
                 var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
@@ -164,7 +174,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             }
             finally
             {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(targetFile));
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
             }
         }
 

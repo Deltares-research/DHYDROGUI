@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             FileUtils.CreateDirectoryIfNotExists(Path.Combine(fileName.TargetPath, "output"), true);
         }
 
-        private static IEnumerable<DelftIniCategory> GenerateFlow1DStructureCategoriesFrom1DModel(IModel model)
+        public static IEnumerable<DelftIniCategory> GenerateFlow1DStructureCategoriesFrom1DModel(IModel model)
         {
             var flowModel = model as WaterFlowModel1D;
             if(flowModel?.Network == null) return Enumerable.Empty<DelftIniCategory>();

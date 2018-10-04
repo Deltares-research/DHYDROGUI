@@ -4,6 +4,8 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
+using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -18,6 +20,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         {
             var testFolder = FileUtils.CreateTempDirectory();
             var structuresFilePath = Path.Combine(testFolder, "structures.ini");
+            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
 
             var pumpName = "myPump";
             var pliFileName = pumpName + ".pli";
@@ -35,8 +38,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                var referenceDateTime = DateTime.Now;
-                StructureFileWriter.WriteFile(structuresFilePath, new HydroNetwork(), area, referenceDateTime);
+                StructureFileWriter.WriteFile(structuresFilePath,
+                    new WaterFlowFMModel {Area =  area, MduFilePath = mduFilePath}, 
+                    WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
+
                 Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
                 Assert.IsTrue(File.Exists(pliFilePath), $"Polyline file has not been written to location {pliFilePath}");
                 Assert.IsFalse(File.Exists(timFilePath),
@@ -53,6 +58,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         {
             var testFolder = FileUtils.CreateTempDirectory();
             var structuresFilePath = Path.Combine(testFolder, "structures.ini");
+            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
 
             var pumpName = "myPump";
             var pliFileName = pumpName + ".pli";
@@ -71,14 +77,18 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                     [new DateTime(2013, 7, 8, 9, 10, 0)] = 3.34
                 }
             };
-
-            var area = new HydroArea();
-            area.Pumps.Add(pump2D);
+            
+            var fmModel = new WaterFlowFMModel
+            {
+                ReferenceTime = new DateTime(2013, 1, 2),
+                MduFilePath = mduFilePath
+            };
+            fmModel.Area.Pumps.Add(pump2D);
 
             try
             {
-                var referenceDateTime = new DateTime(2013, 1, 2);
-                StructureFileWriter.WriteFile(structuresFilePath, new HydroNetwork(), area, referenceDateTime);
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
+
                 Assert.That(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
                 Assert.That(File.Exists(pliFilePath), $"Polyline file has not been written to location {pliFilePath}");
                 Assert.That(File.Exists(timFilePath), $"Time series file has not been written to location {timFilePath}");
