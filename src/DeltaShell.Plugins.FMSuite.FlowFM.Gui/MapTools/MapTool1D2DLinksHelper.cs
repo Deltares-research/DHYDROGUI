@@ -281,14 +281,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             if (!filterMesh1D.Any(b => b)) return;
             if (!grid.Cells.Any()) return;
 
-            var polygons = grid.Cells.Select(c => (IPolygon)c.ToPolygon(grid)).ToArray(); //= slow. ready for improvement. for pilot ok.
-            var multiPolygonOfCells = new MultiPolygon(polygons);
+            var extent = grid.GetExtents();
             var locations = networkDiscretization.Locations.Values;
             for (int i = 0; i < locations.Count; i++)
             {
                 if (filterMesh1D[i])
                 {
-                    if(multiPolygonOfCells.Intersects(locations[i].Geometry) == bOutsideGrid)
+                    var coordinate = locations[i].Geometry.Coordinate;
+                    var geometry = locations[i].Geometry;
+                    var nearestIndex = grid.IndexOfNearestCell(coordinate);
+                    if (extent.Intersects(coordinate) == bOutsideGrid && (grid.Cells[nearestIndex].ToPolygon(grid)).Intersects(geometry) == bOutsideGrid)
                     {
                         filterMesh1D[i] = false;
                     }
