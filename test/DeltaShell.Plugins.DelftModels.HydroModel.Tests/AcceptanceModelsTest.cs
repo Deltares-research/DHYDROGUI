@@ -264,8 +264,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     Assert.True(TryPerformAction(() => app.OpenProject(projectPath)),
                         string.Format("Failed to open project: {0}", projectPath));
 
-                    // Step 5: Save Project
-                    Assert.True(TryPerformAction(() => app.SaveProject()),
+                    // Step 5: Save Project As
+                    Assert.True(TryPerformAction(() => app.SaveProjectAs(projectPath)),
                         string.Format("Failed to save project before running the model: {0}", projectPath));
 
                     // Step 6: Close Project
@@ -384,8 +384,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static void UnzipModel(string localZipFilePath, out string localExtractedZipPath)
         {
+            var randomFileName = Path.GetRandomFileName().Substring(0, 5);
             var zipFileInfo = new FileInfo(localZipFilePath);
-            localExtractedZipPath = Path.Combine(zipFileInfo.Directory.FullName, "unzip");
+            localExtractedZipPath = Path.Combine(zipFileInfo.Directory.FullName, randomFileName);
             FileUtils.DeleteIfExists(localExtractedZipPath);
             ZipFileUtils.Extract(localZipFilePath, localExtractedZipPath);
         }
