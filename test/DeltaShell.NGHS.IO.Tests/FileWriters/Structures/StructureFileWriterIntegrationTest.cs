@@ -123,9 +123,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 Assert.IsNotNull(structureCategory);
                 Assert.That(structureCategory.Properties.Count, Is.EqualTo(4));
 
-                CheckKeyValuePair(structureCategory, StructureRegion.Id.Key, pumpName);
-                CheckKeyValuePair(structureCategory, StructureRegion.DefinitionType.Key, expectedType);
-                CheckKeyValuePair(structureCategory, StructureRegion.PolylineFile.Key, expectedPliFileName);
+                CheckCommon2DDelftIniProperties(structureCategory, pumpName, expectedType, expectedPliFileName);
                 CheckKeyValuePair(structureCategory, StructureRegion.Capacity.Key, expectedCapacity);
             }
             finally
@@ -169,9 +167,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 Assert.IsNotNull(structureCategory);
                 Assert.That(structureCategory.Properties.Count, Is.EqualTo(4));
 
-                CheckKeyValuePair(structureCategory, StructureRegion.Id.Key, pumpName);
-                CheckKeyValuePair(structureCategory, StructureRegion.DefinitionType.Key, expectedType);
-                CheckKeyValuePair(structureCategory, StructureRegion.PolylineFile.Key, expectedPliFileName);
+                CheckCommon2DDelftIniProperties(structureCategory, pumpName, expectedType, expectedPliFileName);
                 CheckKeyValuePair(structureCategory, StructureRegion.Capacity.Key, expectedCapacityString);
             }
             finally
@@ -218,9 +214,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 Assert.IsNotNull(structureCategory);
                 Assert.That(structureCategory.Properties.Count, Is.EqualTo(6));
 
-                CheckKeyValuePair(structureCategory, StructureRegion.Id.Key, weirName);
-                CheckKeyValuePair(structureCategory, StructureRegion.DefinitionType.Key, expectedType);
-                CheckKeyValuePair(structureCategory, StructureRegion.PolylineFile.Key, expectedPliFileName);
+                CheckCommon2DDelftIniProperties(structureCategory, weirName, expectedType, expectedPliFileName);
                 CheckKeyValuePair(structureCategory, StructureRegion.CrestLevel.Key, expectedCrestLevelString);
                 CheckKeyValuePair(structureCategory, StructureRegion.CrestWidth.Key, expectedCrestWidth);
                 CheckKeyValuePair(structureCategory, StructureRegion.LatContrCoeff.Key, expectedLateralContraction);
@@ -269,9 +263,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 Assert.IsNotNull(structureCategory);
                 Assert.That(structureCategory.Properties.Count, Is.EqualTo(6));
 
-                CheckKeyValuePair(structureCategory, StructureRegion.Id.Key, weirName);
-                CheckKeyValuePair(structureCategory, StructureRegion.DefinitionType.Key, expectedType);
-                CheckKeyValuePair(structureCategory, StructureRegion.PolylineFile.Key, expectedPliFileName);
+                CheckCommon2DDelftIniProperties(structureCategory, weirName, expectedType, expectedPliFileName);
                 CheckKeyValuePair(structureCategory, StructureRegion.CrestLevel.Key, expectedCrestLevel);
                 CheckKeyValuePair(structureCategory, StructureRegion.CrestWidth.Key, expectedCrestWidth);
                 CheckKeyValuePair(structureCategory, StructureRegion.LatContrCoeff.Key, expectedLateralContraction);
@@ -282,6 +274,58 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             }
         }
 
+        [Test]
+        public void GivenFmModelWithGeneralStructure_WhenWritingStructures_ThenGeneralStructureIsBeingCorrectlyWrittenToIniFile()
+        {
+            var testFolder = FileUtils.CreateTempDirectory();
+            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
+            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
+
+            var expectedCategoryName = "Structure";
+            var generalStructureName = "myGeneralStructure";
+            var expectedType = "generalstructure";
+            var expectedPliFileName = generalStructureName + ".pli";
+            var expectedCrestLevel = 1.12;
+            var expectedCrestWidth = 2.58;
+
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath
+            };
+
+            var weir2D = new Weir2D(generalStructureName)
+            {
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
+                CrestLevel = expectedCrestLevel,
+                CrestWidth = expectedCrestWidth,
+                WeirFormula = new GeneralStructureWeirFormula()
+            };
+            fmModel.Area.Weirs.Add(weir2D);
+
+            try
+            {
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
+                var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
+                Assert.That(categories.Count, Is.EqualTo(2));
+
+                var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
+                Assert.IsNotNull(structureCategory);
+                Assert.That(structureCategory.Properties.Count, Is.EqualTo(26));
+
+                CheckCommon2DDelftIniProperties(structureCategory, generalStructureName, expectedType, expectedPliFileName);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
+            }
+        }
+
+        private static void CheckCommon2DDelftIniProperties(DelftIniCategory structureCategory, string structureName, string expectedType, string expectedPliFileName)
+        {
+            CheckKeyValuePair(structureCategory, StructureRegion.Id.Key, structureName);
+            CheckKeyValuePair(structureCategory, StructureRegion.DefinitionType.Key, expectedType);
+            CheckKeyValuePair(structureCategory, StructureRegion.PolylineFile.Key, expectedPliFileName);
+        }
 
         private static void CheckKeyValuePair(IDelftIniCategory structureCategory, string key, string expectedValue)
         {
