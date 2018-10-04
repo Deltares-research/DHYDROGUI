@@ -28,7 +28,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             }
             else
             {
-                IniCategory.AddProperty(StructureRegion.CrestLevel.Key, weir.CrestLevel, StructureRegion.CrestLevel.Description, "F");
+                IniCategory.AddProperty(StructureRegion.CrestLevel.Key, weir.CrestLevel, StructureRegion.CrestLevel.Description, StructureRegion.CrestLevel.Format);
             }
         }
 
@@ -36,14 +36,14 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
             if (weir.CrestWidth > 0)
             {
-                IniCategory.AddProperty(StructureRegion.CrestWidth.Key, weir.CrestWidth, StructureRegion.CrestWidth.Description, "F");
+                IniCategory.AddProperty(StructureRegion.CrestWidth.Key, weir.CrestWidth, StructureRegion.CrestWidth.Description, StructureRegion.CrestWidth.Format);
             }
         }
 
         private void AddLateralContractionCoefficientProperty(IWeir weir)
         {
             var weirFormula = (SimpleWeirFormula) weir.WeirFormula;
-            IniCategory.AddProperty(StructureRegion.LatContrCoeff.Key, weirFormula.LateralContraction, StructureRegion.LatContrCoeff.Description, "F");
+            IniCategory.AddProperty(StructureRegion.LatContrCoeff.Key, weirFormula.LateralContraction, StructureRegion.LatContrCoeff.Description, StructureRegion.LatContrCoeff.Format);
         }
     }
 }

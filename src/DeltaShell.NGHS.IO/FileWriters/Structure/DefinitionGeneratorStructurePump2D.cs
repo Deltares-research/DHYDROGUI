@@ -27,7 +27,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             }
             else
             {
-                IniCategory.AddProperty(capacityKey, pump.Capacity, capacityDescription, "F");
+                IniCategory.AddProperty(capacityKey, pump.Capacity, capacityDescription, StructureRegion.Capacity.Format);
             }
         }
     }
