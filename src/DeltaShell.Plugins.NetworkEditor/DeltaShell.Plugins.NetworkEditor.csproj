@@ -179,6 +179,7 @@
     <Compile Include="ImportExportCsv\CrossSectionCsvData.cs" />
     <Compile Include="IO\BranchFile.cs" />
     <Compile Include="IO\NodeFile.cs" />
+    <Compile Include="IO\StructureFile.cs" />
     <Compile Include="MapLayers\AreaLayer.cs" />
     <Compile Include="MapLayers\AreaLayerStyles.cs" />
     <Compile Include="MapLayers\CustomRenderers\LeveeBreachRenderer.cs" />

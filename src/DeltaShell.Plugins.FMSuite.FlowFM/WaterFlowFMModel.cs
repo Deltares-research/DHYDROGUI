@@ -42,7 +42,6 @@ using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
-using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;

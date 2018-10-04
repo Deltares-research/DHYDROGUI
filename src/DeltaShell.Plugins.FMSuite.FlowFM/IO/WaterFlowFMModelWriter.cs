@@ -1,11 +1,19 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
+using DelftTools.Shell.Core.Workflow;
+using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.IO;
+using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -26,8 +34,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WriteNodeFile(model);
             WriteBranchesGuiFile(model);
             WriteStructuresFile(model);
+            //WriteRoughness(model);
             WriteUGridFile(WriterData);
         }
+
+        //private static void WriteRoughness(WaterFlowFMModel model)
+        //{
+        //    var writtenRoughessFiles = new List<string>();
+
+        //    foreach (var roughnessSection in model.RoughnessSections)
+        //    {
+        //        var filename = "roughness-" + roughnessSection.Name + ".ini";
+        //        var roughnessFilename = Path.Combine(KnownProperties.RoughnessFile, filename);
+
+        //        RoughnessDataFileWriter.
+        //        ThrowIfFileNotExists(roughnessFilename, fileName.TargetPath, p => RoughnessDataFileWriter.WriteFile(p, roughnessSection));//Add subPath!!
+        //        writtenRoughessFiles.Add(filename);
+        //    }
+        //    model.ModelDefinition.SetModelProperty(KnownProperties.RoughnessFile, string.Join(" ", writtenRoughessFiles));
+        //}
 
         private static void PrepareModelDefinitionForWriting(IWaterFlowFMModel model)
         {
@@ -98,7 +123,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (string.IsNullOrEmpty(filePath)) return;
 
             CrossSectionDefinitionFileWriter.WriteFile(filePath, model.Network, model.RoughnessSections);
-            StructureFileWriter.WriteFile(filePath, model.Network, model.Area, model.ReferenceTime);
         }
 
         private static void WriteCrossSectionLocation(WaterFlowFMModel model)
@@ -124,8 +148,76 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static void WriteStructuresFile(WaterFlowFMModel model)
         {
             var filePath = WriterData.FilePaths.StructuresFilePath;
+
             if (!string.IsNullOrEmpty(filePath))
-                StructureFileWriter.WriteFile(filePath, model.Network);
+                StructureFileWriter.WriteFile(
+                    filePath, 
+                    model,
+                    GenerateFlow2DStructureCategoriesFromFMModel);
+        }
+
+        public static IEnumerable<DelftIniCategory> GenerateFlow2DStructureCategoriesFromFMModel(IModel model)
+        {
+            var fmModel = model as WaterFlowFMModel;
+            if (fmModel?.Network == null) return Enumerable.Empty<DelftIniCategory>();
+            var categories1D = NetworkEditor.IO.StructureFile.ExtractFunctionStructuresOfNetworkGenerator(fmModel.Network);
+            var categories2D = StructureFile.ExtractFunctionStructuresOfAreaGenerator(fmModel.Area);
+
+            Action<string, WaterFlowFMModel, IStructure2D> myaction;
+            foreach (var category2D in categories2D)
+            {
+                var structureName = category2D.GetPropertyValue(StructureRegion.Id.Key);
+                if(string.IsNullOrEmpty(structureName)) continue;
+
+                foreach (var propertyName in category2D.Properties.Select(property => property.Name))
+                {
+                    if (StructureWriteActions.TryGetValue(propertyName, out myaction))
+                    {
+                        var fileNameProperty = category2D.Properties.FirstOrDefault(p => p.Name == propertyName);
+                        var structure2D = fmModel.Area.AllHydroObjects.Cast<IStructure2D>().FirstOrDefault(o => o.Name == structureName);
+                        if (fileNameProperty != null) myaction(fileNameProperty.Value, fmModel, structure2D);
+                    }
+                }
+            }
+            
+
+            return categories1D.Concat(categories2D);
+        }
+        private static readonly Dictionary<string, Action<string, WaterFlowFMModel, IStructure2D>> StructureWriteActions = new Dictionary<string, Action<string, WaterFlowFMModel, IStructure2D>>
+        {
+            {StructureRegion.PolylineFile.Key, WritePolylineFile},
+            {StructureRegion.Capacity.Key, WriteTimeSeriesFile}
+        };
+
+        private static void WritePolylineFile(string fileName, WaterFlowFMModel fmModel, IStructure2D structure2D)
+        {
+            var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(fmModel.MduFilePath, fileName);
+            var geometryObjectsToBeWritten = new[]
+            {
+                new Feature2D
+                {
+                    Name = structure2D.Name,
+                    Geometry = structure2D.Geometry
+                }
+            };
+            new PliFile<Feature2D>().Write(pliFilePath, geometryObjectsToBeWritten);
+        }
+
+        private static void WriteTimeSeriesFile(string fileName, WaterFlowFMModel fmModel, IStructure2D structure2D)
+        {
+            var timFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(fmModel.MduFilePath, fileName);
+            var pump = structure2D as IPump;
+            if (pump != null && pump.HasCapacityTimeSeries())
+            {
+                new TimFile().Write(timFilePath, pump.CapacityTimeSeries, fmModel.ReferenceTime);
+            }
+        }
+
+        private static bool HasCapacityTimeSeries(this IPump pump)
+        {
+            return pump.CanBeTimedependent
+                   && pump.UseCapacityTimeSeries
+                   && pump.CapacityTimeSeries != null;
         }
 
         private static void WriteUGridFile(WaterFlowFMModelWriterData writerData)

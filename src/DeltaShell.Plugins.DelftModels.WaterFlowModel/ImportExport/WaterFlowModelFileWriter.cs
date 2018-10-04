@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
@@ -10,8 +12,10 @@ using DeltaShell.NGHS.IO.FileWriters.Retention;
 using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
 using DeltaShell.Plugins.NetworkEditor;
+using DeltaShell.Plugins.NetworkEditor.IO;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
@@ -32,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             ThrowIfFileNotExists(fileName.ObservationPoints, fileName.TargetPath, p => LocationFileWriter.WriteFileObservationPointLocations(p, waterFlowModel1D.Network.ObservationPoints));
             ThrowIfFileNotExists(fileName.LateralDischarge, fileName.TargetPath, p => LocationFileWriter.WriteFileLateralDischargeLocations(p, waterFlowModel1D.Network.LateralSources));
             ThrowIfFileNotExists(fileName.BoundaryLocations, fileName.TargetPath, p => BoundaryLocationFileWriter.WriteFile(p, waterFlowModel1D));
-            ThrowIfFileNotExists(fileName.Structures, fileName.TargetPath, p => StructureFileWriter.WriteFile(p, waterFlowModel1D.Network));
+            ThrowIfFileNotExists(fileName.Structures, fileName.TargetPath, p => StructureFileWriter.WriteFile(p, waterFlowModel1D, GenerateFlow1DStructureCategoriesFrom1DModel));
             ThrowIfFileNotExists(fileName.Network, fileName.TargetPath, p => NetworkAndGridWriter.WriteFile(p, waterFlowModel1D.Network, waterFlowModel1D.NetworkDiscretization));
 
             #region Write network and computational grid in ugrid
@@ -85,6 +89,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             FileUtils.CreateDirectoryIfNotExists(Path.Combine(fileName.TargetPath, "output"), true);
         }
 
+        private static IEnumerable<DelftIniCategory> GenerateFlow1DStructureCategoriesFrom1DModel(IModel model)
+        {
+            var flowModel = model as WaterFlowModel1D;
+            if(flowModel?.Network == null) return Enumerable.Empty<DelftIniCategory>();
+            return StructureFile.ExtractFunctionStructuresOfNetworkGenerator(flowModel.Network);
+        }
         private static void ThrowIfFileNotExists(string filePath, string fileNameTargetPath, Action<string> writeAction)
         {
             writeAction(filePath);
