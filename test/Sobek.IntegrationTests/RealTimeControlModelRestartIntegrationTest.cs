@@ -175,7 +175,6 @@ namespace Sobek.IntegrationTests
                     // Set up restart time ranges on WaterFlowModel1D.
                     flowModel.WriteRestart = true;
                     flowModel.UseRestart = false;
-
                     flowModel.UseSaveStateTimeRange = true;
                     flowModel.SaveStateStartTime = flowModel.StartTime.AddHours(offsetSaveStateInHours);
                     flowModel.SaveStateStopTime = flowModel.SaveStateStartTime.AddHours(runLengthSaveStateInHours);
@@ -254,18 +253,18 @@ namespace Sobek.IntegrationTests
                         Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
 
                         // Obtain data to compare to.
-                        var rtcCrestLevelRestart =
-                            rtcModel.OutputFeatureCoverages.FirstOrDefault()?.Components[0].Values.OfType<double>().ToArray();
-                        Assert.NotNull(rtcCrestLevelRestart);
-                        var rtcCrestLevelFullRunSubset = crestLevelFullRun
-                            .Skip(crestLevelFullRun.Count - rtcCrestLevelRestart.Length)
+                        var crestLevelRestart = flowModel.OutputFunctions.FirstOrDefault(f => f.Name == crestLevelOutput.Name)?.Components[0].Values.OfType<double>().ToArray();
+                        Assert.NotNull(crestLevelRestart);
+
+                        var crestLevelFullRunSubset = crestLevelFullRun
+                            .Skip(crestLevelFullRun.Count - crestLevelRestart.Length)
                             .ToArray();
 
-                        for (var indexCrestLevel = 0; indexCrestLevel < rtcCrestLevelRestart.Length; indexCrestLevel++)
+                        for (var indexCrestLevel = 0; indexCrestLevel < crestLevelRestart.Length; indexCrestLevel++)
                         {
                             // Then
-                            Assert.That(rtcCrestLevelRestart[indexCrestLevel],
-                                Is.EqualTo(rtcCrestLevelFullRunSubset[indexCrestLevel]).Within(0.0001));
+                            Assert.That(crestLevelRestart[indexCrestLevel],
+                                Is.EqualTo(crestLevelFullRunSubset[indexCrestLevel]).Within(0.0001));
                         }
                         app.CloseProject();
                     }
@@ -425,18 +424,18 @@ namespace Sobek.IntegrationTests
                         Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
 
                         // Obtain data to compare to.
-                        var rtcCrestLevelRestart =
-                            rtcModel.OutputFeatureCoverages.FirstOrDefault()?.Components[0].Values.OfType<double>().ToArray();
-                        Assert.NotNull(rtcCrestLevelRestart);
-                        var rtcCrestLevelFullRunSubset = crestLevelFullRun
-                            .Skip(crestLevelFullRun.Count - rtcCrestLevelRestart.Length)
+                        var crestLevelRestart = flowModel.OutputFunctions.FirstOrDefault(f => f.Name == crestLevelOutput.Name)?.Components[0].Values.OfType<double>().ToArray();
+                        Assert.NotNull(crestLevelRestart);
+
+                        var crestLevelFullRunSubset = crestLevelFullRun
+                            .Skip(crestLevelFullRun.Count - crestLevelRestart.Length)
                             .ToArray();
 
-                        for (var indexCrestLevel = 0; indexCrestLevel < rtcCrestLevelRestart.Length; indexCrestLevel++)
+                        for (var indexCrestLevel = 0; indexCrestLevel < crestLevelRestart.Length; indexCrestLevel++)
                         {
                             // Then
-                            Assert.That(rtcCrestLevelRestart[indexCrestLevel],
-                                Is.EqualTo(rtcCrestLevelFullRunSubset[indexCrestLevel]).Within(0.0001));
+                            Assert.That(crestLevelRestart[indexCrestLevel],
+                                Is.EqualTo(crestLevelFullRunSubset[indexCrestLevel]).Within(0.0001));
                         }
                         app.CloseProject();
                     }

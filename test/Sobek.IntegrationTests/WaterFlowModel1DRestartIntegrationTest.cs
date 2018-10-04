@@ -458,10 +458,9 @@ namespace Sobek.IntegrationTests
                             indexWaterLevel < waterLevelFullRunSubSetRestart.Length;
                             indexWaterLevel++)
                         {
-                            // Then
-                            Assert.AreEqual(waterLevelFullRunSubSetRestart[indexWaterLevel],
-                                            waterLevelRestart[indexWaterLevel],
-                                            1E-4, $"Restart {i} {indexWaterLevel}: ");
+                        // Then
+                        Assert.That(waterLevelRestart[indexWaterLevel],
+                            Is.EqualTo(waterLevelFullRunSubSetRestart[indexWaterLevel]).Within(0.0001));
                         }
 
                         app.CloseProject();
