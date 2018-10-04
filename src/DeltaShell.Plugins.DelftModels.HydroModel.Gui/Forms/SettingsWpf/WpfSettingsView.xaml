@@ -18,7 +18,9 @@
         <settingsWpf:WpfEnumConverter x:Key="GuiEnumConverter"/>
         <valueConverters:ImageToBitmapSourceConverter x:Key="ImageToBitmapSourceConverter"/>
         <settingsWpf:SettingsTemplateSelector x:Key="TemplateSelector" />
+        <settingsWpf:DoubleToStringConverter x:Key="DoubleToStringConverter"/>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+
         <valueConverters:ValueConverterGroup x:Key="InverseBoolToVisibility">
             <valueConverters:InverseBooleanConverter/>
             <BooleanToVisibilityConverter/>
@@ -71,7 +73,7 @@
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Width" Value="400"/>
             <Setter Property="Header" Value="{Binding SubCategoryName}"/>
-            <Setter Property="IsExpanded" Value="True"/>
+            <Setter Property="IsExpanded" Value="{Binding Expanded}"/>
             <Setter Property="Visibility" Value="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}"/>
         </Style>
 
@@ -89,7 +91,13 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="{Binding Label}" Style="{StaticResource LabelTextBlockStyle}"/>
                 <TextBox Grid.Column="1"
-                    Text="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}"
+                    Text="{Binding Value,
+                            Mode=TwoWay, 
+                            ValidatesOnDataErrors=True, 
+                            ValidatesOnExceptions=True,
+                            Converter={StaticResource DoubleToStringConverter},
+                            Delay=500, 
+                            UpdateSourceTrigger=PropertyChanged}"
                     Style="{StaticResource ControlWithErrorStyle}"
                     IsEnabled="{Binding Path=IsEditable}" />
 
@@ -162,7 +170,7 @@
                 <xctk:TimeSpanUpDown Grid.Column="1"
                                      FractionalSecondsDigitsCount="1" 
                                      Style="{StaticResource ControlWithErrorStyle}"
-                                     Value="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}"
+                                     Value="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True}"
                                      Minimum="00:00:00.1"
                                      DefaultValue="{Binding Value}"
                                      TextAlignment="Left"/>
@@ -235,7 +243,7 @@
         <!-- GUI Subcategory -->
         <DataTemplate x:Key="subCategoryTemplate" DataType="{x:Type settingsWpf:WpfGuiSubCategory}">
             <!-- Display your BaseViewModel data items here -->
-            <Expander Style="{StaticResource SubCategoryExpanderStyle}" >
+            <Expander Style="{StaticResource SubCategoryExpanderStyle}" ClipToBounds="True" >
                 <Border>
                     <ScrollViewer
                         HorizontalScrollBarVisibility="Auto"

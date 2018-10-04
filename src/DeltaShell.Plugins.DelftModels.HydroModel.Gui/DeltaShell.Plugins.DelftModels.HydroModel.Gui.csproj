@@ -172,6 +172,7 @@
     </Compile>
     <Compile Include="Forms\ProjectExplorer\HydroModelTreeViewNodePresenter.cs" />
     <Compile Include="Forms\SettingsWpf\CommandHelper.cs" />
+    <Compile Include="Forms\SettingsWpf\DoubleToStringConverter.cs" />
     <Compile Include="Forms\SettingsWpf\DoubleWrapper.cs" />
     <Compile Include="Forms\SettingsWpf\SettingsTemplateSelector.cs" />
     <Compile Include="Forms\SettingsWpf\WpfEnumConverter.cs" />

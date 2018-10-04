@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                     Child = control,
                     Width = 300,
                     Height = 300,
-                    Background = new SolidColorBrush(Colors.White)
+                    Background = new SolidColorBrush(SystemColors.ControlColor)
                 };
                 CustomControl = hostHelper;
             }

@@ -4,13 +4,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Controls;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 {
     public class WpfGuiSubCategory : INotifyPropertyChanged
     {
+        private bool expanded;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="WpfGuiSubcategory"/> class.
         /// Creates new WpfGuiProperties <seealso cref="WpfGuiProperty"/>.
@@ -20,6 +21,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         public WpfGuiSubCategory(string subCategory, IList<FieldUIDescription> properties)
         {
             SubCategoryName = subCategory;
+
+            expanded = true;
 
             /*Small trick to force the initialization*/
             if (properties == null)
@@ -69,6 +72,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 return Properties.Any(p => p.IsVisible);
             }
             set { OnPropertyChanged(); }
+        }
+
+        public bool Expanded
+        {
+            get { return expanded; }
+            set
+            {
+                expanded = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
