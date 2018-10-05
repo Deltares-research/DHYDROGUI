@@ -1929,6 +1929,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             sf.CurrentFormulaType.Properties.OfType<ISpatiallyVaryingSedimentProperty>()
                                 .Where(p => p.IsSpatiallyVarying)).Select(p => p.SpatiallyVaryingName).ToList());
                 ModelDefinition.SelectSpatialOperations(DataItems, TracerDefinitions, spatVarSedPropNames) ;
+                ModelDefinition.Bathymetry = Bathymetry;
             }
 
             InitializeAreaDataColumns();
