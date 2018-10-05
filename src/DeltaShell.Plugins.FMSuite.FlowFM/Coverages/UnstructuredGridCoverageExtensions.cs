@@ -79,6 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             var newLocations = coverage.GetCoordinatesForGrid(grid).ToList();
             var count = newLocations.Count();
             var locationIndexVariable = coverage.Arguments.Last();
+
             if (!reInterpolate)
             {
                 locationIndexVariable.Values.Clear();
@@ -160,6 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                     }
                 }
             }
+
             coverage.Grid = grid;
             coverage.EndEdit();
         }

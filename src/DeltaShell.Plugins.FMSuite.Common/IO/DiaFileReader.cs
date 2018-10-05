@@ -4,12 +4,23 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
+using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
     public static class DiaFileReader
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(DiaFileReader));
+
+        public static string Read(string diaFilePath)
+        {
+            var diaFileContent = File.ReadAllText(diaFilePath);
+
+            return diaFileContent;
+        }
         public static List<string> CollectAllErrorMessages(string diaFile)
         {
             var errorLine = string.Empty;

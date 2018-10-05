@@ -27,6 +27,7 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
@@ -1928,7 +1929,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             sf.CurrentFormulaType.Properties.OfType<ISpatiallyVaryingSedimentProperty>()
                                 .Where(p => p.IsSpatiallyVarying)).Select(p => p.SpatiallyVaryingName).ToList());
                 ModelDefinition.SelectSpatialOperations(DataItems, TracerDefinitions, spatVarSedPropNames) ;
-                ModelDefinition.Bathymetry = Bathymetry;
             }
 
             InitializeAreaDataColumns();
@@ -2986,7 +2986,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ReadDiaFile(outputPath);
         }
 
-        //TODO: Refactor-Move to DiaFileReader class 
         private void ReadDiaFile(string outputDirectory)
         {
             ReportProgressText("Reading dia file");
@@ -3006,7 +3005,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         DataItems.Add(logDataItem);
                     }
 
-                    var log = File.ReadAllText(diaFilePath);
+                    var log = DiaFileReader.Read(diaFilePath);
                     ((TextDocument)logDataItem.Value).Content = log;
                 }
                 catch (Exception ex)

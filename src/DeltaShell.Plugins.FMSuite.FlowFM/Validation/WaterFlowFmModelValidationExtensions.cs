@@ -3,6 +3,8 @@ using System.Linq;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
@@ -12,6 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             var validationReports = new[]
             {
+                ValidateSpatiallyVaryingSedimentCoverage(model),
                 ValidateCoordinateSystem(model),
                 WaterFlowFMGridValidator.Validate(model),
                 ValidateBathymetry(model),
@@ -33,6 +36,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 subReports);
             
             return validationReport;
+        }
+
+        private static ValidationReport ValidateSpatiallyVaryingSedimentCoverage(WaterFlowFMModel model)
+        {
+             var unstructuredGridCoverages = GetSpatiallyVaryingSedimentCoveragesWithTag(model, "IniSedThick");
+
+            var issues = unstructuredGridCoverages
+                .Where(HasNoDataValue)
+                .Select(c => new ValidationIssue(model, ValidationSeverity.Error, $"SedimentThickness {c.Name} is not fully covering the grid, please cover entire grid"))
+                .ToList();
+            
+            return new ValidationReport("SedimentThickness", issues);
+        }
+
+        private static bool HasNoDataValue(UnstructuredGridCoverage coverage)
+        {
+            var component = coverage?.Components.FirstOrDefault();
+            if (component == null) return false;
+
+            var coverageValues = component?.GetValues<double>();
+            if (coverageValues == null) return true;
+
+            return coverageValues.Any(v => Equals(v, component.NoDataValue));
+        }
+
+        private static IEnumerable<UnstructuredGridCoverage> GetSpatiallyVaryingSedimentCoveragesWithTag(WaterFlowFMModel model, string tag)
+        {
+            var spatiallyVaryingSedimentPropertyNames = model.SedimentFractions
+                .SelectMany(f => f.CurrentSedimentType.Properties)
+                .OfType<ISpatiallyVaryingSedimentProperty>()
+                .Where(p => p.IsSpatiallyVarying)
+                .Select(p => p.SpatiallyVaryingName);
+
+            var sedimentThicknessDataItems = spatiallyVaryingSedimentPropertyNames
+                .Select(n => model.DataItems.FirstOrDefault(di => di.Name == n && di.Name.Contains(tag)))
+                .Where(di => di != null);
+            
+            return sedimentThicknessDataItems.Select(di => di.Value as UnstructuredGridCoverage).Where(c => c != null);
         }
 
         private static ValidationReport ValidatePhysicalProcesses(WaterFlowFMModel model)

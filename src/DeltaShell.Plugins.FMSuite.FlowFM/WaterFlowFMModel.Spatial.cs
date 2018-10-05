@@ -16,6 +16,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
@@ -282,26 +283,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             };
 
             // Update bathymetry coverage based on specified value in .mdu file
-            var bedLevelTypeProperty = ModelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
+            var bedLevelTypeProperty = ModelDefinition.Properties.FirstOrDefault(p =>
+                p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
             if (bedLevelTypeProperty != null)
             {
-                var bedLevelType = (UnstructuredGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
+                var bedLevelType = (UnstructuredGridFileHelper.BedLevelLocation) bedLevelTypeProperty.Value;
                 var zValues = GetZValuesFromNetFile(bedLevelType);
                 if (bedLevelLocationsForUnstructuredGridCellCoverage.Contains(bedLevelType))
                 {
-                    Bathymetry = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
+                    Bathymetry = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName,
+                        Grid, zValues);
                 }
                 else
                 {
-                    if(zValues == null) zValues = grid.Vertices.Count > 0 ? grid.Vertices.Select(v => v.Z).ToArray() : null;
-                    Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
+                    if (zValues == null)
+                        zValues = grid.Vertices.Count > 0 ? grid.Vertices.Select(v => v.Z).ToArray() : null;
+                    Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName,
+                        Grid, zValues);
                 }
-                
+
                 // sync ModelDefinition with new Bathymetry
                 ModelDefinition.Bathymetry = Bathymetry;
             }
 
-            InitialWaterLevel = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Grid);
+            InitialWaterLevel =
+                CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Grid);
             InitialSalinity = new CoverageDepthLayersList(s => CreateUnstructuredGridCellCoverage(s, Grid))
             {
                 Name = WaterFlowFMModelDefinition.InitialSalinityDataItemName,
@@ -310,9 +316,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             InitialSalinity.Coverages.CollectionChanged += SpatialDataLayersChanged;
             InitialTracers = new EventedList<UnstructuredGridCellCoverage>();
             InitialTracers.CollectionChanged += SpatialDataTracersChanged;
-            InitialTemperature = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialTemperatureDataItemName, Grid);
+            InitialTemperature =
+                CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialTemperatureDataItemName, Grid);
             Viscosity = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.ViscosityDataItemName, Grid);
-            Diffusivity = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.DiffusivityDataItemName,Grid);
+            Diffusivity =
+                CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.DiffusivityDataItemName, Grid);
             Roughness = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.RoughnessDataItemName, Grid);
             InitialFractions = new EventedList<UnstructuredGridCellCoverage>();
             InitialFractions.CollectionChanged += SpatialDataFractionsChanged;

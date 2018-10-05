@@ -153,6 +153,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.InitialTemperatureDataItemName, waterFlowFMModel.InitialTemperature);
             SynchronizeDataItemValues(waterFlowFMModel, WaterFlowFMModelDefinition.InitialSalinityDataItemName, waterFlowFMModel.InitialSalinity);
 
+
             foreach (var tracer in waterFlowFMModel.InitialTracers)
             {
                 SynchronizeDataItemValue(waterFlowFMModel, tracer.Name, tracer);
