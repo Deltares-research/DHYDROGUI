@@ -237,7 +237,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.IsNotNull(spatiallyVaryingProperty);
                 Assert.AreEqual("SedConc", spatiallyVaryingProperty.Name);
                 Assert.IsTrue(spatiallyVaryingProperty.IsVisible);
-                Assert.IsFalse(spatiallyVaryingProperty.IsEnabled);//sedconc is always disabled
+                Assert.IsTrue(spatiallyVaryingProperty.IsEnabled);//sedconc is always disabled
                 Assert.IsNotNull(spatiallyVaryingProperty.SpatiallyVaryingName);
 
                 var modelDefinition = fmModel.ModelDefinition;
