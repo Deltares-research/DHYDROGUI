@@ -1,5 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.Helpers;
 
@@ -23,7 +24,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
             if (weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries)
             {
-                var timeSeriesFileName = $"{weir.Name}_crest_level.tim";
+                var timeSeriesFileName = $"{weir.Name}_{KnownStructureProperties.CrestLevel}.tim";
                 IniCategory.AddProperty(StructureRegion.CrestLevel.Key, timeSeriesFileName, StructureRegion.CrestLevel.Description);
             }
             else
