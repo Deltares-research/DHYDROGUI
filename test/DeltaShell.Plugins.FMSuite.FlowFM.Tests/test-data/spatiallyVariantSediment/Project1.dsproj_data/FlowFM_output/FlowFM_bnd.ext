@@ -1,0 +1,6 @@
+
+[boundary]
+quantity=waterlevelbnd
+locationfile=boundary 1.pli
+forcingfile=WaterLevel.bc
+return_time=0.0000000e+000
