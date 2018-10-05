@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ModelDefinition
             spatiallyVaryingProperty = fraction.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().FirstOrDefault();
             Assert.IsNotNull(spatiallyVaryingProperty);
             Assert.AreEqual("SedConc", spatiallyVaryingProperty.Name);
-            Assert.IsFalse(spatiallyVaryingProperty.IsEnabled);
+            Assert.IsTrue(spatiallyVaryingProperty.IsEnabled);
             Assert.IsTrue(spatiallyVaryingProperty.IsVisible);
         }
 
