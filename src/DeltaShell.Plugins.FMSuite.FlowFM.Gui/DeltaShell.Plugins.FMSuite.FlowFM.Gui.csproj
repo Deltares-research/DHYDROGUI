@@ -177,7 +177,6 @@
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\CoordinateDataRowGeometryPropertyDescriptor.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\GeometryPropertyDescriptorType.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\CoordinateDataRowPropertyDescriptor.cs" />
-    <Compile Include="Editors\EditTracersControlHelper.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\ModelFeatureCoordinateDataView.xaml.cs">
       <DependentUpon>ModelFeatureCoordinateDataView.xaml</DependentUpon>
     </Compile>
@@ -234,11 +233,8 @@
     <Compile Include="Editors\SourceAndSinkView.Designer.cs">
       <DependentUpon>SourceAndSinkView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\TracerDefinitionsEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Editors\TracerDefinitionsEditor.Designer.cs">
-      <DependentUpon>TracerDefinitionsEditor.cs</DependentUpon>
+    <Compile Include="Editors\TracerDefinitionsEditorWpf.xaml.cs">
+      <DependentUpon>TracerDefinitionsEditorWpf.xaml</DependentUpon>
     </Compile>
     <Compile Include="Editors\WaterFlowFMGuiPropertyExtractor.cs" />
     <Compile Include="Editors\WaterFlowFMFileStructureView.cs" />
@@ -361,6 +357,7 @@
     <Compile Include="Editors\WindFieldListView.Designer.cs">
       <DependentUpon>WindFieldListView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editors\TracerDefinitionsEditorWpfViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
@@ -426,9 +423,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\SourceAndSinkView.resx">
       <DependentUpon>SourceAndSinkView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editors\TracerDefinitionsEditor.resx">
-      <DependentUpon>TracerDefinitionsEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\WaterFlowFMFileStructureView.resx">
       <DependentUpon>WaterFlowFMFileStructureView.cs</DependentUpon>
@@ -566,6 +560,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Editors\SedimentFractionsEditorResourceDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\TracerDefinitionsEditorWpf.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

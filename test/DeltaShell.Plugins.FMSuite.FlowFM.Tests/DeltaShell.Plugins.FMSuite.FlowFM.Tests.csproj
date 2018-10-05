@@ -217,7 +217,6 @@
     <Compile Include="Api\UnstrucGridOperationApiTests.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\BoundaryGeometryPreviewWindowsFormsHostMapTest.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\CoordinateDataRowTest.cs" />
-    <Compile Include="Editors\EditTracersControlHelperTest.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\ModelFeatureCoordinateDataViewTest.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\ModelFeatureCoordinateDataViewViewModelTest.cs" />
     <Compile Include="Editors\SedimentFractionsEditorTest.cs" />
@@ -225,6 +224,8 @@
     <Compile Include="Editors\SedimentFractionsEditorViewModelTest.cs" />
     <Compile Include="Editors\SedimentNamePropertyValidationRuleTests.cs" />
     <Compile Include="Editors\SedimentPropertyValidationRuleTest.cs" />
+    <Compile Include="Editors\TracerDefinitionsEditorWpfTest.cs" />
+    <Compile Include="Editors\TracerDefinitionsEditorWpfViewModelTest.cs" />
     <Compile Include="EmbankmentGeneratorTest.cs" />
     <Compile Include="EmbankmentMergerTest.cs" />
     <Compile Include="CoverageDepthLayersListTest.cs" />

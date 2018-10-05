@@ -74,41 +74,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        public void Test_WaterFlowFMModelViewWPF_AddExtras_SubCategory_Tracers()
-        {
-            var fmModel = new WaterFlowFMModel();
-            var fmViewWpf = new WpfSettingsView
-            {
-                Data = fmModel
-            };
-            var wpfSettingsViewModel = (WpfSettingsViewModel)fmViewWpf.DataContext;
-            SetUiProperties(fmModel, wpfSettingsViewModel);
-
-            var procGroup = wpfSettingsViewModel.SettingsCategories.FirstOrDefault(gp => gp.CategoryName == "Processes");
-            Assert.IsNotNull(procGroup);
-
-            var editTracersControlHelper = new EditTracersControlHelper();
-            var tracerControl = editTracersControlHelper.CreateControl();
-            editTracersControlHelper.SetData(tracerControl, fmModel, null);
-
-            var hostHelper = new WindowsFormsHost {Child = tracerControl};
-
-            var wpfGuiSubCategory = new WpfGuiSubCategory("Tracers", null)
-            {
-                CustomControl = hostHelper,
-            };
-
-            procGroup.SubCategories.Add(wpfGuiSubCategory);
-
-
-            WpfTestHelper.ShowModal(fmViewWpf);
-
-            var props = fmModel.ModelDefinition.Properties;
-            Assert.IsNotNull(props);
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
         public void Test_WaterFlowFMModelViewWPF_AddExtras_Property()
         {
             var fmModel = new WaterFlowFMModel();
