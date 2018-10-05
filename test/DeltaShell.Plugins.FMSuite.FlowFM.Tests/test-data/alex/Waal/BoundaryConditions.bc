@@ -1,0 +1,1010 @@
+[General]
+    majorVersion          = 1                   
+    minorVersion          = 0                   
+    fileType              = boundConds          
+
+[Boundary]
+    name                  = Hardinxveldboven    
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_level         
+    unit                  = m                   
+    0 0.6683 
+    21600 0.6683 
+    23040 0.9263 
+    43200 0.9263 
+    44640 1.2957 
+    64800 1.2957 
+    66240 1.8133 
+    86400 1.8133 
+    87840 2.2932 
+    108000 2.2932 
+    109440 2.5938 
+    129600 2.5938 
+    131040 2.9768 
+    151200 2.9768 
+    152640 3.6091 
+    172800 3.6091 
+
+[Boundary]
+    name                  = Krimpen             
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_level         
+    unit                  = m                   
+    0 0.9673 
+    21600 0.9673 
+    23040 1.1 
+    43200 1.1 
+    44640 1.268 
+    64800 1.268 
+    66240 1.4873 
+    86400 1.4873 
+    87840 1.6739 
+    108000 1.6739 
+    109440 1.8089 
+    129600 1.8089 
+    131040 1.9033 
+    151200 1.9033 
+    152640 2.1278 
+    172800 2.1278 
+
+[Boundary]
+    name                  = Keteldiep           
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_level         
+    unit                  = m                   
+    0 -0.3253 
+    21600 -0.3253 
+    23040 -0.2562 
+    43200 -0.2562 
+    44640 -0.1472 
+    64800 -0.1472 
+    66240 -0.0009 
+    86400 -0.0009 
+    87840 0.1034 
+    108000 0.1034 
+    109440 0.1973 
+    129600 0.1973 
+    131040 0.273 
+    151200 0.273 
+    152640 0.4488 
+    172800 0.4488 
+
+[Boundary]
+    name                  = Kattendiep          
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_level         
+    unit                  = m                   
+    0 -0.3246 
+    21600 -0.3246 
+    23040 -0.255 
+    43200 -0.255 
+    44640 -0.1454 
+    64800 -0.1454 
+    66240 0.0011 
+    86400 0.0011 
+    87840 0.1051 
+    108000 0.1051 
+    109440 0.1977 
+    129600 0.1977 
+    131040 0.2717 
+    151200 0.2717 
+    152640 0.448 
+    172800 0.448 
+
+[Boundary]
+    name                  = BovenLobith         
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 1020 
+    21600 1020 
+    23040 2000 
+    43200 2000 
+    44640 4000 
+    64800 4000 
+    66240 6000 
+    86400 6000 
+    87840 8000 
+    108000 8000 
+    109440 10000 
+    129600 10000 
+    131040 12000 
+    151200 12000 
+    152640 16000 
+    172800 16000 
+
+[LateralDischarge]
+    name                  = WAAL_1              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 1.19 
+    43200 1.19 
+    44640 2.38 
+    64800 2.38 
+    66240 3.58 
+    86400 3.58 
+    87840 5.73 
+    108000 5.73 
+    109440 7.59 
+    129600 7.59 
+    131040 8.49 
+    151200 8.49 
+    152640 10.51 
+    172800 10.51 
+
+[LateralDischarge]
+    name                  = WAAL_2              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 0.78 
+    43200 0.78 
+    44640 1.57 
+    64800 1.57 
+    66240 2.35 
+    86400 2.35 
+    87840 3.38 
+    108000 3.38 
+    109440 5.09 
+    129600 5.09 
+    131040 5.7 
+    151200 5.7 
+    152640 6.85 
+    172800 6.85 
+
+[LateralDischarge]
+    name                  = PANKAN              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 0.81 
+    43200 0.81 
+    44640 1.62 
+    64800 1.62 
+    66240 2.43 
+    86400 2.43 
+    87840 3.32 
+    108000 3.32 
+    109440 4.04 
+    129600 4.04 
+    131040 4.44 
+    151200 4.44 
+    152640 5.38 
+    172800 5.38 
+
+[LateralDischarge]
+    name                  = NEDR_1              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 0.21 
+    43200 0.21 
+    44640 0.41 
+    64800 0.41 
+    66240 0.62 
+    86400 0.62 
+    87840 0.81 
+    108000 0.81 
+    109440 0.97 
+    129600 0.97 
+    131040 1.08 
+    151200 1.08 
+    152640 1.29 
+    172800 1.29 
+
+[LateralDischarge]
+    name                  = NEDR_2              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 1.32 
+    43200 1.32 
+    44640 2.64 
+    64800 2.64 
+    66240 3.96 
+    86400 3.96 
+    87840 5.25 
+    108000 5.25 
+    109440 7.91 
+    129600 7.91 
+    131040 8.79 
+    151200 8.79 
+    152640 10.57 
+    172800 10.57 
+
+[LateralDischarge]
+    name                  = LINGE1              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 0 
+    43200 0 
+    44640 0 
+    64800 0 
+    66240 0 
+    86400 0 
+    87840 0 
+    108000 0 
+    109440 0 
+    129600 0 
+    131040 0 
+    151200 0 
+    152640 0 
+    172800 0 
+
+[LateralDischarge]
+    name                  = NEDR_3              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 -11.19 
+    43200 -11.19 
+    44640 -9.88 
+    64800 -9.88 
+    66240 -8.56 
+    86400 -8.56 
+    87840 -3.6 
+    108000 -3.6 
+    109440 1.13 
+    129600 1.13 
+    131040 1.88 
+    151200 1.88 
+    152640 2.88 
+    172800 2.88 
+
+[LateralDischarge]
+    name                  = LEK__1              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 0.57 
+    43200 0.57 
+    44640 1.15 
+    64800 1.15 
+    66240 1.72 
+    86400 1.72 
+    87840 2.22 
+    108000 2.22 
+    109440 3.52 
+    129600 3.52 
+    131040 4.6 
+    151200 4.6 
+    152640 5.46 
+    172800 5.46 
+
+[LateralDischarge]
+    name                  = LEK__2              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 1.35 
+    43200 1.35 
+    44640 2.69 
+    64800 2.69 
+    66240 4.04 
+    86400 4.04 
+    87840 4.16 
+    108000 4.16 
+    109440 5.29 
+    129600 5.29 
+    131040 6.55 
+    151200 6.55 
+    152640 7.76 
+    172800 7.76 
+
+[LateralDischarge]
+    name                  = YSSEL1              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 0.17 
+    43200 0.17 
+    44640 0.33 
+    64800 0.33 
+    66240 0.5 
+    86400 0.5 
+    87840 0.66 
+    108000 0.66 
+    109440 0.78 
+    129600 0.78 
+    131040 0.87 
+    151200 0.87 
+    152640 1.05 
+    172800 1.05 
+
+[LateralDischarge]
+    name                  = YSSEL2              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 1.33 
+    43200 1.33 
+    44640 2.66 
+    64800 2.66 
+    66240 4 
+    86400 4 
+    87840 5.17 
+    108000 5.17 
+    109440 6.26 
+    129600 6.26 
+    131040 6.91 
+    151200 6.91 
+    152640 8.23 
+    172800 8.23 
+
+[LateralDischarge]
+    name                  = OUDEYS              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 10.52 
+    43200 10.52 
+    44640 21.05 
+    64800 21.05 
+    66240 31.57 
+    86400 31.57 
+    87840 41.91 
+    108000 41.91 
+    109440 48.77 
+    129600 48.77 
+    131040 54.29 
+    151200 54.29 
+    152640 65.58 
+    172800 65.58 
+
+[LateralDischarge]
+    name                  = YSSEL3              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 1.09 
+    43200 1.09 
+    44640 2.18 
+    64800 2.18 
+    66240 3.28 
+    86400 3.28 
+    87840 4.63 
+    108000 4.63 
+    109440 5.88 
+    129600 5.88 
+    131040 6.7 
+    151200 6.7 
+    152640 7.95 
+    172800 7.95 
+
+[LateralDischarge]
+    name                  = YSSEL4              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 2.8 
+    43200 2.8 
+    44640 5.6 
+    64800 5.6 
+    66240 8.4 
+    86400 8.4 
+    87840 11 
+    108000 11 
+    109440 13.52 
+    129600 13.52 
+    131040 15.5 
+    151200 15.5 
+    152640 16.66 
+    172800 16.66 
+
+[LateralDischarge]
+    name                  = TWENTK              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 9.25 
+    43200 9.25 
+    44640 18.5 
+    64800 18.5 
+    66240 27.75 
+    86400 27.75 
+    87840 33.39 
+    108000 33.39 
+    109440 40.86 
+    129600 40.86 
+    131040 47.68 
+    151200 47.68 
+    152640 54.25 
+    172800 54.25 
+
+[LateralDischarge]
+    name                  = YSSEL5              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 1.12 
+    43200 1.12 
+    44640 2.23 
+    64800 2.23 
+    66240 3.35 
+    86400 3.35 
+    87840 4.14 
+    108000 4.14 
+    109440 5.01 
+    129600 5.01 
+    131040 5.86 
+    151200 5.86 
+    152640 6.57 
+    172800 6.57 
+
+[LateralDischarge]
+    name                  = SCHIPB              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 1.45 
+    43200 1.45 
+    44640 2.89 
+    64800 2.89 
+    66240 4.34 
+    86400 4.34 
+    87840 10.01 
+    108000 10.01 
+    109440 12.06 
+    129600 12.06 
+    131040 14.01 
+    151200 14.01 
+    152640 16.25 
+    172800 16.25 
+
+[LateralDischarge]
+    name                  = YSSEL6              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 3.28 
+    43200 3.28 
+    44640 6.57 
+    64800 6.57 
+    66240 9.85 
+    86400 9.85 
+    87840 5.72 
+    108000 5.72 
+    109440 7.23 
+    129600 7.23 
+    131040 8.47 
+    151200 8.47 
+    152640 9.83 
+    172800 9.83 
+
+[LateralDischarge]
+    name                  = YSSEL7              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 0.16 
+    43200 0.16 
+    44640 0.33 
+    64800 0.33 
+    66240 0.49 
+    86400 0.49 
+    87840 11.1 
+    108000 11.1 
+    109440 13.32 
+    129600 13.32 
+    131040 15.73 
+    151200 15.73 
+    152640 18.22 
+    172800 18.22 
+
+[LateralDischarge]
+    name                  = YSSEL8              
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+    21600 0 
+    23040 2.74 
+    43200 2.74 
+    44640 5.49 
+    64800 5.49 
+    66240 8.23 
+    86400 8.23 
+    87840 0.99 
+    108000 0.99 
+    109440 1.51 
+    129600 1.51 
+    131040 1.92 
+    151200 1.92 
+    152640 2.23 
+    172800 2.23 
+
+[LateralDischarge]
+    name                  = MaurikscheWetering-West
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 
+
+[LateralDischarge]
+    name                  = MaurikscheWetering-Oost
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 
+
+[LateralDischarge]
+    name                  = ARK-LingeIn         
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 
+
+[LateralDischarge]
+    name                  = ARK-LingeUit        
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 
+
+[LateralDischarge]
+    name                  = KrommeRijn          
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 
+
+[LateralDischarge]
+    name                  = DeWeteringARK       
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 
+
+[LateralDischarge]
+    name                  = Valleikan           
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 
+
+[LateralDischarge]
+    name                  = VeesWap1_onttrek    
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = water_discharge     
+    unit                  = m³/s                
+    0 0 
+
+[Boundary]
+    name                  = Hardinxveldboven    
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[Boundary]
+    name                  = Krimpen             
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[Boundary]
+    name                  = Keteldiep           
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[Boundary]
+    name                  = Kattendiep          
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[Boundary]
+    name                  = BovenLobith         
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = WAAL_1              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = WAAL_2              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = PANKAN              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = NEDR_1              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = NEDR_2              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = LINGE1              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = NEDR_3              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = LEK__1              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = LEK__2              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = YSSEL1              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = YSSEL2              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = OUDEYS              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = YSSEL3              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = YSSEL4              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = TWENTK              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = YSSEL5              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = SCHIPB              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = YSSEL6              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = YSSEL7              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = YSSEL8              
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = MaurikscheWetering-West
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = MaurikscheWetering-Oost
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = ARK-LingeIn         
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = ARK-LingeUit        
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = KrommeRijn          
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = DeWeteringARK       
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = Valleikan           
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[LateralDischarge]
+    name                  = VeesWap1_onttrek    
+    function              = constant            
+    time-interpolation    = linear-extrapolate  
+    quantity              = water_salinity      
+    unit                  = ppt                 
+    0 
+
+[Boundary]
+    name                  = model_wide          
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = wind_speed          
+    unit                  = m/s                 
+    0 0 
+
+[Boundary]
+    name                  = model_wide          
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = wind_from_direction 
+    unit                  = degree              
+    0 0 
+
+[Boundary]
+    name                  = model_wide          
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = air_temperature     
+    unit                  = degrees C           
+    0 0 
+
+[Boundary]
+    name                  = model_wide          
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = humidity            
+    unit                  = percentage          
+    0 0 
+
+[Boundary]
+    name                  = model_wide          
+    function              = timeseries          
+    time-interpolation    = linear-extrapolate  
+    quantity              = time                
+    unit                  = minutes since 2000-01-01 00:00:00
+    quantity              = cloudiness          
+    unit                  = percentage          
+    0 0 
+
