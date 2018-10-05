@@ -1,9 +1,9 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters.General;
@@ -87,6 +87,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             Assert.NotNull(culvertCompoundNameProperty);
             Assert.AreEqual(composite1.Name, culvertCompoundNameProperty.Value);
         }
+
+        #region Write Pump
 
         [Test]
         public void GivenFmModelWithPump_WhenWritingStructures_ThenPumpIsBeingWrittenToIniFile()
@@ -175,6 +177,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
             }
         }
+
+        #endregion
+
+        #region Write Weir
 
         [Test]
         public void GivenFmModelWithWeirThatHasATimeSeriesForCrestLevel_WhenWritingStructures_ThenWeirIsBeingWrittenToFileWithTimeSeriesFileNameInIniFile()
@@ -274,6 +280,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             }
         }
 
+        #endregion
+
+        #region Write General Structure
+
         [Test]
         public void GivenFmModelWithGeneralStructure_WhenWritingStructures_ThenGeneralStructureIsBeingCorrectlyWrittenToIniFile()
         {
@@ -319,6 +329,175 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
             }
         }
+
+        #endregion
+
+        #region Write Gate
+
+        [Test]
+        public void GivenFmModelWithGate_WhenWritingStructures_ThenGateIsBeingCorrectlyWrittenToIniFile()
+        {
+            var testFolder = FileUtils.CreateTempDirectory();
+            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
+            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
+
+            var expectedCategoryName = "Structure";
+            var gateName = "myGate";
+            var expectedType = "gate";
+            var expectedPliFileName = gateName + ".pli";
+            var expectedSillLevel = 1.12;
+            var expectedSillWidth = 1.23;
+            var expectedLowerEdgeLevel = 0.01;
+            var expectedOpeningWidth = 5.11;
+            var expectedHorizontalOpeningDirection = "from_right";
+
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath
+            };
+            var gate2D = new Gate2D(gateName)
+            {
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
+                SillLevel = expectedSillLevel,
+                SillWidth = expectedSillWidth,
+                LowerEdgeLevel = expectedLowerEdgeLevel,
+                OpeningWidth = expectedOpeningWidth,
+                HorizontalOpeningDirection = GateOpeningDirection.FromRight
+            };
+            fmModel.Area.Gates.Add(gate2D);
+
+            try
+            {
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
+                var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
+                Assert.That(categories.Count, Is.EqualTo(2));
+
+                var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
+                Assert.IsNotNull(structureCategory);
+                Assert.That(structureCategory.Properties.Count, Is.EqualTo(8));
+
+                CheckCommon2DDelftIniProperties(structureCategory, gateName, expectedType, expectedPliFileName);
+                CheckKeyValuePair(structureCategory, StructureRegion.GateSillLevel.Key, expectedSillLevel);
+                CheckKeyValuePair(structureCategory, StructureRegion.GateSillWidth.Key, expectedSillWidth);
+                CheckKeyValuePair(structureCategory, StructureRegion.GateLowerEdgeLevel.Key, expectedLowerEdgeLevel);
+                CheckKeyValuePair(structureCategory, StructureRegion.GateOpeningWidth.Key, expectedOpeningWidth);
+                CheckKeyValuePair(structureCategory, StructureRegion.GateHorizontalOpeningDirection.Key, expectedHorizontalOpeningDirection);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
+            }
+        }
+
+        [Test]
+        public void GivenFmModelWithGateThatHasSillLevelTimeSeries_WhenWritingStructures_ThenGateIsBeingCorrectlyWrittenToIniFile()
+        {
+            var testFolder = FileUtils.CreateTempDirectory();
+            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
+            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
+
+            var expectedCategoryName = "Structure";
+            var gateName = "myGate";
+            var timFileName = $"{gateName}_sill_level.tim";
+
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath
+            };
+            var gate2D = new Gate2D(gateName)
+            {
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
+                UseSillLevelTimeSeries = true
+            };
+            fmModel.Area.Gates.Add(gate2D);
+
+            try
+            {
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
+                var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
+
+                var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
+                CheckKeyValuePair(structureCategory, StructureRegion.GateSillLevel.Key, timFileName);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
+            }
+        }
+
+        [Test]
+        public void GivenFmModelWithGateThatHasLowerEdgeLevelTimeSeries_WhenWritingStructures_ThenGateIsBeingCorrectlyWrittenToIniFile()
+        {
+            var testFolder = FileUtils.CreateTempDirectory();
+            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
+            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
+
+            var expectedCategoryName = "Structure";
+            var gateName = "myGate";
+            var timFileName = $"{gateName}_{KnownStructureProperties.GateLowerEdgeLevel}.tim";
+
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath
+            };
+            var gate2D = new Gate2D(gateName)
+            {
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
+                UseLowerEdgeLevelTimeSeries = true
+            };
+            fmModel.Area.Gates.Add(gate2D);
+
+            try
+            {
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
+                var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
+
+                var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
+                CheckKeyValuePair(structureCategory, StructureRegion.GateLowerEdgeLevel.Key, timFileName);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
+            }
+        }
+
+        [Test]
+        public void GivenFmModelWithGateThatHasOpeningWidthTimeSeries_WhenWritingStructures_ThenGateIsBeingCorrectlyWrittenToIniFile()
+        {
+            var testFolder = FileUtils.CreateTempDirectory();
+            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
+            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
+
+            var expectedCategoryName = "Structure";
+            var gateName = "myGate";
+            var timFileName = $"{gateName}_{KnownStructureProperties.GateOpeningWidth}.tim";
+
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath
+            };
+            var gate2D = new Gate2D(gateName)
+            {
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
+                UseOpeningWidthTimeSeries = true
+            };
+            fmModel.Area.Gates.Add(gate2D);
+
+            try
+            {
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
+                var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
+
+                var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
+                CheckKeyValuePair(structureCategory, StructureRegion.GateOpeningWidth.Key, timFileName);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
+            }
+        }
+
+        #endregion
 
         private static void CheckCommon2DDelftIniProperties(DelftIniCategory structureCategory, string structureName, string expectedType, string expectedPliFileName)
         {

@@ -97,6 +97,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                     return new DefinitionGeneratorStructureWeir2D();
                 case Structure2DType.GeneralStructure:
                     return new DefinitionGeneratorStructureGeneralStructure2D();
+                case Structure2DType.Gate:
+                    return new DefinitionGeneratorStructureGate2D();
                 default:
                     return null;
             }

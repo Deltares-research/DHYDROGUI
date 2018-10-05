@@ -166,6 +166,7 @@
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureBridgeStandard.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureCulvert.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureExtraResistance.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureGate2D.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureGeneralStructure.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureGeneralStructure2D.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureInvertedSiphon.cs" />

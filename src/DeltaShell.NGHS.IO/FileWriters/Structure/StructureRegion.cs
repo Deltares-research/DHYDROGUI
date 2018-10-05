@@ -90,6 +90,16 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         public static readonly ConfigurationSetting LatDisCoeff = new ConfigurationSetting(key: "latdiscoeff", description: "Lateral discharge coefficient (-)");
         #endregion
 
+        #region Gate Elements
+
+        public static readonly ConfigurationSetting GateSillLevel = new ConfigurationSetting(key: "SillWidth", description: "");
+        public static readonly ConfigurationSetting GateSillWidth = new ConfigurationSetting(key: "GateSillLevel", description: "");
+        public static readonly ConfigurationSetting GateLowerEdgeLevel = new ConfigurationSetting(key: "LowerEdgeLevel", description: "");
+        public static readonly ConfigurationSetting GateOpeningWidth = new ConfigurationSetting(key: "OpeningWidth", description: "");
+        public static readonly ConfigurationSetting GateHorizontalOpeningDirection = new ConfigurationSetting(key: "HorizontalOpeningDirection", description: "");
+
+        #endregion
+
         #region Universal Weir Elements
         public static readonly ConfigurationSetting LevelsCount = new ConfigurationSetting(key: "levelsCount", description:"Number of YZ-Values");
         public static readonly ConfigurationSetting YValues = new ConfigurationSetting(key: "yValues", description: "y-values as used in the computational core (m)");
