@@ -190,6 +190,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {StructureRegion.PolylineFile.Key, WritePolylineFile},
             {StructureRegion.Capacity.Key, WriteTimeSeriesFile},
             {StructureRegion.CrestLevel.Key, WriteTimeSeriesFile },
+            {StructureRegion.GateSillLevel.Key, WriteTimeSeriesFile },
+            {StructureRegion.GateLowerEdgeLevel.Key, WriteTimeSeriesFile },
+            {StructureRegion.GateOpeningWidth.Key, WriteTimeSeriesFile },
             {StructureRegion.TimeFilePath.Key, WriteTimeSeriesFile }
         };
 
@@ -222,6 +225,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 new TimFile().Write(timFilePath, weir.CrestLevelTimeSeries, fmModel.ReferenceTime);
                 return;
+            }
+
+            var gate = structure2D as IGate;
+            if (gate != null)
+            {
+                if (gate.UseSillLevelTimeSeries)
+                {
+                    new TimFile().Write(timFilePath, gate.SillLevelTimeSeries, fmModel.ReferenceTime);
+                    return;
+                }
+                if (gate.UseLowerEdgeLevelTimeSeries)
+                {
+                    new TimFile().Write(timFilePath, gate.LowerEdgeLevelTimeSeries, fmModel.ReferenceTime);
+                    return;
+                }
+                if (gate.UseOpeningWidthTimeSeries)
+                {
+                    new TimFile().Write(timFilePath, gate.OpeningWidthTimeSeries, fmModel.ReferenceTime);
+                    return;
+                }
             }
 
             var leveeBreach = structure2D as LeveeBreach;
