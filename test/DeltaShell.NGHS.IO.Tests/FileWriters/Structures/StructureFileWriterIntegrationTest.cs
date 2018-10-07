@@ -1,9 +1,11 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
+using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters.General;
@@ -499,6 +501,179 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
         #endregion
 
+        #region Write Levee Breach
+
+        [Test]
+        public void GivenFmModelWithLeveeBreach_WhenWritingStructures_ThenLeveeBreachIsBeingCorrectlyWrittenToIniFile()
+        {
+            var testFolder = FileUtils.CreateTempDirectory();
+            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
+            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
+
+            var expectedCategoryName = "Structure";
+            var leveeBreachName = "myBreach";
+            var expectedBreachLocationX = 1.1;
+            var expectedBreachLocationY = 1.1;
+            //var expectedStartTimeBreachGrowth = 7200;
+            var expectedBreachGrowthActivated = "0";
+
+            var referenceTime = new DateTime(2018, 8, 25);
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath,
+                ReferenceTime = referenceTime
+            };
+            var leveeBreach = new LeveeBreach
+            {
+                Name = leveeBreachName,
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
+                BreachLocationX = expectedBreachLocationX,
+                BreachLocationY = expectedBreachLocationY
+            };
+            leveeBreach.SetBaseLeveeBreachSettings(referenceTime.AddHours(2.0), false);
+            fmModel.Area.LeveeBreaches.Add(leveeBreach);
+
+            try
+            {
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
+                var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
+                Assert.That(categories.Count, Is.EqualTo(2));
+
+                var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
+                Assert.IsNotNull(structureCategory);
+                //Assert.That(structureCategory.Properties.Count, Is.EqualTo(7));
+
+                CheckKeyValuePair(structureCategory, StructureRegion.BreachLocationX.Key, expectedBreachLocationX);
+                CheckKeyValuePair(structureCategory, StructureRegion.BreachLocationY.Key, expectedBreachLocationY);
+                //CheckKeyValuePair(structureCategory, StructureRegion.StartTimeBreachGrowth.Key, expectedStartTimeBreachGrowth);
+                CheckKeyValuePair(structureCategory, StructureRegion.BreachGrowthActivated.Key, expectedBreachGrowthActivated);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
+            }
+        }
+
+        [Test]
+        public void GivenFmModelWithLeveeBreachThatHasVerheijAsGrowthFormula_WhenWritingStructures_ThenLeveeBreachIsBeingCorrectlyWrittenToIniFile()
+        {
+            var testFolder = FileUtils.CreateTempDirectory();
+            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
+            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
+
+            var expectedCategoryName = "Structure";
+            var leveeBreachName = "myBreach";
+            var expectedBreachLocationX = 1.1;
+            var expectedBreachLocationY = 1.1;
+            var expectedBreachGrowthActivated = "1";
+            var expectedAlgorithmValue = (int) LeveeBreachGrowthFormula.VerheijvdKnaap2002;
+            var expectedSettingsValue = 1.09;
+
+            var referenceTime = new DateTime(2018, 8, 25);
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath,
+                ReferenceTime = referenceTime
+            };
+            var leveeBreach = new LeveeBreach
+            {
+                Name = leveeBreachName,
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
+                BreachLocationX = expectedBreachLocationX,
+                BreachLocationY = expectedBreachLocationY,
+                LeveeBreachFormula = LeveeBreachGrowthFormula.VerheijvdKnaap2002
+            };
+            leveeBreach.SetBaseLeveeBreachSettings(referenceTime.AddHours(2.0), true);
+
+            var leveeBreachSettings = leveeBreach.GetActiveLeveeBreachSettings() as VerheijVdKnaap2002BreachSettings;
+            Assert.IsNotNull(leveeBreachSettings);
+            leveeBreachSettings.InitialCrestLevel = expectedSettingsValue;
+            leveeBreachSettings.MinimumCrestLevel = expectedSettingsValue;
+            leveeBreachSettings.InitialBreachWidth = expectedSettingsValue;
+            leveeBreachSettings.PeriodToReachZmin = new TimeSpan(0, 1, 0, 0);
+            leveeBreachSettings.Factor1Alfa = expectedSettingsValue;
+            leveeBreachSettings.Factor2Beta = expectedSettingsValue;
+            leveeBreachSettings.CriticalFlowVelocity = expectedSettingsValue;
+
+            fmModel.Area.LeveeBreaches.Add(leveeBreach);
+
+            try
+            {
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
+                var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
+                Assert.That(categories.Count, Is.EqualTo(2));
+
+                var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
+                Assert.IsNotNull(structureCategory);
+                //Assert.That(structureCategory.Properties.Count, Is.EqualTo(8));
+
+                CheckKeyValuePair(structureCategory, StructureRegion.BreachLocationX.Key, expectedBreachLocationX);
+                CheckKeyValuePair(structureCategory, StructureRegion.BreachLocationY.Key, expectedBreachLocationY);
+                //CheckKeyValuePair(structureCategory, StructureRegion.StartTimeBreachGrowth.Key, expectedStartTimeBreachGrowth);
+                CheckKeyValuePair(structureCategory, StructureRegion.BreachGrowthActivated.Key, expectedBreachGrowthActivated);
+
+                CheckKeyValuePair(structureCategory, StructureRegion.Algorithm.Key, expectedAlgorithmValue);
+                CheckKeyValuePair(structureCategory, StructureRegion.InitialCrestLevel.Key, expectedSettingsValue);
+                CheckKeyValuePair(structureCategory, StructureRegion.MinimumCrestLevel.Key, expectedSettingsValue);
+                CheckKeyValuePair(structureCategory, StructureRegion.InitalBreachWidth.Key, expectedSettingsValue);
+                //CheckKeyValuePair(structureCategory, StructureRegion.TimeToReachMinimumCrestLevel.Key, expectedSettingsValue);
+                CheckKeyValuePair(structureCategory, StructureRegion.Factor1.Key, expectedSettingsValue);
+                CheckKeyValuePair(structureCategory, StructureRegion.Factor2.Key, expectedSettingsValue);
+                CheckKeyValuePair(structureCategory, StructureRegion.CriticalFlowVelocity.Key, expectedSettingsValue);
+
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
+            }
+        }
+
+        [Test]
+        public void GivenFmModelWithLeveeBreachThatHasUserDefinedFormula_WhenWritingStructures_ThenLeveeBreachIsBeingCorrectlyWrittenToIniFile()
+        {
+            var testFolder = FileUtils.CreateTempDirectory();
+            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
+            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
+
+            var expectedCategoryName = "Structure";
+            var leveeBreachName = "myBreach";
+            var timeSeriesFileName = $"{leveeBreachName}_{KnownStructureProperties.TimeFilePath}.tim";
+            
+            var referenceTime = new DateTime(2018, 8, 25);
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath,
+                ReferenceTime = referenceTime
+            };
+            var leveeBreach = new LeveeBreach
+            {
+                Name = leveeBreachName,
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
+                LeveeBreachFormula = LeveeBreachGrowthFormula.UserDefinedBreach
+            };
+            leveeBreach.SetBaseLeveeBreachSettings(referenceTime.AddHours(2.0), true);
+            fmModel.Area.LeveeBreaches.Add(leveeBreach);
+
+            try
+            {
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
+                var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
+                Assert.That(categories.Count, Is.EqualTo(2));
+
+                var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
+                Assert.IsNotNull(structureCategory);
+                Assert.That(structureCategory.Properties.Count, Is.EqualTo(8));
+
+                CheckKeyValuePair(structureCategory, StructureRegion.TimeFilePath.Key, timeSeriesFileName);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
+            }
+        }
+
+        #endregion
+
         private static void CheckCommon2DDelftIniProperties(DelftIniCategory structureCategory, string structureName, string expectedType, string expectedPliFileName)
         {
             CheckKeyValuePair(structureCategory, StructureRegion.Id.Key, structureName);
@@ -522,7 +697,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             }
             else
             {
-                throw new AssertionException("The requested property was not present in the DelftIniCategory.");
+                throw new AssertionException($"The requested property with name \"{key}\" was not present in the DelftIniCategory.");
             }
         }
     }

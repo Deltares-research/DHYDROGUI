@@ -87,7 +87,7 @@ namespace DelftTools.Hydro
 
         public virtual IEnumerable<IHydroObject> AllHydroObjects
         {
-            get { return Pumps.OfType<IHydroObject>().Concat(Weirs).Concat(Gates); }
+            get { return Pumps.OfType<IHydroObject>().Concat(Weirs).Concat(Gates).Concat(LeveeBreaches); }
         }
 
         public virtual IEventedList<HydroLink> Links { get; set; }

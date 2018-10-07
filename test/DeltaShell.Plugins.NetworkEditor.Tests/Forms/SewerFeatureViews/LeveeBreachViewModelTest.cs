@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
 
             Assert.That(vm.LeveeBreach.LeveeBreachFormula == LeveeBreachGrowthFormula.VerheijvdKnaap2002);
             Assert.NotNull(vm.LeveeBreachSettings);
-            Assert.That(vm.LeveeBreachSettings.GetType() == typeof(VerheijVdKnaap2002Breach));
+            Assert.That(vm.LeveeBreachSettings.GetType() == typeof(VerheijVdKnaap2002BreachSettings));
         }
     }
 }

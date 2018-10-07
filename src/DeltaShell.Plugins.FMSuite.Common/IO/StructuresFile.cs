@@ -320,7 +320,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             
             // specific properties
             properties.Add(ConstructProperty(KnownStructureProperties.Algorithm, (int)leveeBreach.LeveeBreachFormula, structureType));
-            var breachSettings = leveeBreach.GetActiveLeveeBreachSettings() as VerheijVdKnaap2002Breach;
+            var breachSettings = leveeBreach.GetActiveLeveeBreachSettings() as VerheijVdKnaap2002BreachSettings;
             var useVerheij = breachSettings != null;
             if (useVerheij)
             {
@@ -334,7 +334,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
 
             // Write tm file for table
-            var userDefinedSettings = settings as UserDefinedBreach;
+            var userDefinedSettings = settings as UserDefinedBreachSettings;
             if (userDefinedSettings != null)
             {
                 var timeSeries = userDefinedSettings.CreateTimeSeriesFromTable();

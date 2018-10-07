@@ -9,7 +9,7 @@ namespace DelftTools.Hydro.Tests.Structures.LeveeBreachFormula
         [Test]
         public void UserDefinedBreachConversionHelper_GetFormattedTimeSeriesShouldBe()
         {
-            var userDefinedBreach = new UserDefinedBreach();
+            var userDefinedBreach = new UserDefinedBreachSettings();
             var timeSeries = Hydro.Structures.LeveeBreachFormula.UserDefinedBreachConversionHelper.GetFormattedTimeSeries();
 
             Assert.AreEqual(1, timeSeries.Arguments.Count);

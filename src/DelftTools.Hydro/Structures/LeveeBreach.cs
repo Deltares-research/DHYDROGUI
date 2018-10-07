@@ -10,7 +10,7 @@ using DelftTools.Utils.Collections.Generic;
 namespace DelftTools.Hydro.Structures
 {
     [Entity]
-    public class LeveeBreach : GroupableFeature2D, IStructure
+    public class LeveeBreach : GroupableFeature2D, IStructure2D
     {
         private double breachLocationX;
         private double breachLocationY;
@@ -22,8 +22,8 @@ namespace DelftTools.Hydro.Structures
         {
             settings = new Dictionary<LeveeBreachGrowthFormula, LeveeBreachSettings>
             {
-                {LeveeBreachGrowthFormula.UserDefinedBreach, new UserDefinedBreach() },
-                {LeveeBreachGrowthFormula.VerheijvdKnaap2002, new VerheijVdKnaap2002Breach() }
+                {LeveeBreachGrowthFormula.UserDefinedBreach, new UserDefinedBreachSettings() },
+                {LeveeBreachGrowthFormula.VerheijvdKnaap2002, new VerheijVdKnaap2002BreachSettings() }
             };
         }
 
@@ -120,5 +120,9 @@ namespace DelftTools.Hydro.Structures
 
         #endregion
 
+        public Structure2DType Structure2DType
+        {
+            get { return Structure2DType.LeveeBreach; }
+        }
     }
 }

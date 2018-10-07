@@ -170,6 +170,7 @@
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureGeneralStructure.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureGeneralStructure2D.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureInvertedSiphon.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureLeveeBreach2D.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureOrifice.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructurePump.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructurePump2D.cs" />

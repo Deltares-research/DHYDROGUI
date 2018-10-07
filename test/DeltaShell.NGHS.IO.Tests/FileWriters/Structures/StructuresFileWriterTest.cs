@@ -2,6 +2,8 @@
 using System.IO;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.KnownStructureProperties;
+using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
@@ -16,6 +18,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
     [TestFixture]
     public class StructuresFileWriterTest
     {
+        #region Write Pump
+
         [Test]
         public void GivenFmModelWithPump_WhenWritingStructures_ThenTheCorrectFilesAreWritten()
         {
@@ -100,6 +104,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             }
         }
 
+        #endregion
+
+        #region Write Weir
+
         [Test]
         public void GivenFmModelWithWeir_WhenWritingStructures_ThenTheCorrectFilesAreWritten()
         {
@@ -181,6 +189,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             }
         }
 
+        #endregion
+
+        #region Write General Structure
+
         [Test]
         public void GivenFmModelWithGeneralStructure_WhenWritingStructures_ThenTheCorrectFilesAreWritten()
         {
@@ -215,5 +227,62 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
             }
         }
+
+        #endregion
+
+        #region Write Levee Breach
+
+        [Test]
+        public void GivenFmModelWithLeveeBreachThatHasUserDefinedFormula_WhenWritingStructures_ThenTheCorrectFilesAreWritten()
+        {
+            var testFolder = FileUtils.CreateTempDirectory();
+            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
+            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
+
+            var leveeBreachName = "myBreach";
+            var pliFileName = leveeBreachName + ".pli";
+            var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, pliFileName);
+
+            var timeSeriesFileName = $"{leveeBreachName}_{KnownStructureProperties.TimeFilePath}.tim";
+            var timeSeriesFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timeSeriesFileName);
+
+            var referenceTime = new DateTime(2018, 8, 25);
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath,
+                ReferenceTime = referenceTime
+            };
+            var leveeBreach = new LeveeBreach
+            {
+                Name = leveeBreachName,
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
+                LeveeBreachFormula = LeveeBreachGrowthFormula.UserDefinedBreach
+            };
+            leveeBreach.SetBaseLeveeBreachSettings(referenceTime.AddHours(2.0), true);
+            var settings = leveeBreach.GetActiveLeveeBreachSettings() as UserDefinedBreachSettings;
+            settings.ManualBreachGrowthSettings.Add(new BreachGrowthSetting
+            {
+                Width = 2.0,
+                Height = 3.0,
+                Area = 6.0,
+                TimeSpan = new TimeSpan(0, 1, 0, 0)
+            });
+
+            fmModel.Area.LeveeBreaches.Add(leveeBreach);
+
+            try
+            {
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, WaterFlowFMModelWriter.GenerateFlow2DStructureCategoriesFromFMModel);
+                Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
+                Assert.IsTrue(File.Exists(pliFilePath), $"Polyline file has not been written to location {pliFilePath}");
+                Assert.IsTrue(File.Exists(timeSeriesFilePath), $"Time series file has not been written to location {timeSeriesFilePath}");
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
+            }
+        }
+
+        #endregion
     }
 }

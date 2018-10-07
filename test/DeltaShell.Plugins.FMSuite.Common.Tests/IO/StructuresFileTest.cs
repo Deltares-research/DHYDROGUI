@@ -220,7 +220,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
                 };
 
-                var settings = lb.GetActiveLeveeBreachSettings() as VerheijVdKnaap2002Breach;
+                var settings = lb.GetActiveLeveeBreachSettings() as VerheijVdKnaap2002BreachSettings;
                 Assert.NotNull(settings);
 
                 settings.StartTimeBreachGrowth = new DateTime(2001, 01, 01);
@@ -718,7 +718,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
                 };
 
-                var settings = lb.GetActiveLeveeBreachSettings() as VerheijVdKnaap2002Breach;
+                var settings = lb.GetActiveLeveeBreachSettings() as VerheijVdKnaap2002BreachSettings;
                 Assert.NotNull(settings);
 
                 settings.BreachGrowthActive = true;
@@ -747,7 +747,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 CompareLeveeBreaches(lb, importedLeveeBreach);
                 CompareLeveeBreachSettingsBase(lb.GetActiveLeveeBreachSettings(), importedLeveeBreach.GetActiveLeveeBreachSettings());
 
-                var importedSettings = importedLeveeBreach.GetActiveLeveeBreachSettings() as VerheijVdKnaap2002Breach;
+                var importedSettings = importedLeveeBreach.GetActiveLeveeBreachSettings() as VerheijVdKnaap2002BreachSettings;
                 Assert.NotNull(importedSettings);
                 CompareLeveeBreachVerheijSettings(settings, importedSettings);
 
@@ -777,7 +777,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     LeveeBreachFormula = LeveeBreachGrowthFormula.UserDefinedBreach
                 };
 
-                var settings = lb.GetActiveLeveeBreachSettings() as UserDefinedBreach;
+                var settings = lb.GetActiveLeveeBreachSettings() as UserDefinedBreachSettings;
                 Assert.NotNull(settings);
 
                 settings.BreachGrowthActive = true;
@@ -809,7 +809,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 CompareLeveeBreaches(lb, importedLeveeBreach);
                 CompareLeveeBreachSettingsBase(lb.GetActiveLeveeBreachSettings(), importedLeveeBreach.GetActiveLeveeBreachSettings());
 
-                var importedSettings = importedLeveeBreach.GetActiveLeveeBreachSettings() as UserDefinedBreach;
+                var importedSettings = importedLeveeBreach.GetActiveLeveeBreachSettings() as UserDefinedBreachSettings;
                 Assert.NotNull(importedSettings);
                 CompareLeveeBreachUserDefinedSettings(settings, importedSettings);
 
@@ -881,7 +881,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual(expected.StartTimeBreachGrowth, actual.StartTimeBreachGrowth);
         }
 
-        private static void CompareLeveeBreachVerheijSettings(VerheijVdKnaap2002Breach expected, VerheijVdKnaap2002Breach actual)
+        private static void CompareLeveeBreachVerheijSettings(VerheijVdKnaap2002BreachSettings expected, VerheijVdKnaap2002BreachSettings actual)
         {
             Assert.AreEqual(expected.InitialCrestLevel, actual.InitialCrestLevel);
             Assert.AreEqual(expected.MinimumCrestLevel, actual.MinimumCrestLevel);
@@ -892,7 +892,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual(expected.CriticalFlowVelocity, actual.CriticalFlowVelocity);
         }
 
-        private static void CompareLeveeBreachUserDefinedSettings(UserDefinedBreach expected, UserDefinedBreach actual)
+        private static void CompareLeveeBreachUserDefinedSettings(UserDefinedBreachSettings expected, UserDefinedBreachSettings actual)
         {
             Assert.AreEqual(expected.ManualBreachGrowthSettings.Count, actual.ManualBreachGrowthSettings.Count);
 

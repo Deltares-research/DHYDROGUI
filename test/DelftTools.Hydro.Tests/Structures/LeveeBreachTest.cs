@@ -78,8 +78,8 @@ namespace DelftTools.Hydro.Tests.Structures
         }
 
         [Test]
-        [TestCase(LeveeBreachGrowthFormula.UserDefinedBreach, typeof(UserDefinedBreach))]
-        [TestCase(LeveeBreachGrowthFormula.VerheijvdKnaap2002, typeof(VerheijVdKnaap2002Breach))]
+        [TestCase(LeveeBreachGrowthFormula.UserDefinedBreach, typeof(UserDefinedBreachSettings))]
+        [TestCase(LeveeBreachGrowthFormula.VerheijvdKnaap2002, typeof(VerheijVdKnaap2002BreachSettings))]
         public void LeveeBreachWithGrowthFormula_GettingsSettings_ShouldReturnCorrectType<T>(LeveeBreachGrowthFormula growthFormula, T type)
         {
             var leveeBreach = new LeveeBreach { LeveeBreachFormula = growthFormula };

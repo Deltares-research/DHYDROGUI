@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
@@ -188,7 +189,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             {StructureRegion.PolylineFile.Key, WritePolylineFile},
             {StructureRegion.Capacity.Key, WriteTimeSeriesFile},
-            {StructureRegion.CrestLevel.Key, WriteTimeSeriesFile }
+            {StructureRegion.CrestLevel.Key, WriteTimeSeriesFile },
+            {StructureRegion.TimeFilePath.Key, WriteTimeSeriesFile }
         };
 
         private static void WritePolylineFile(string fileName, WaterFlowFMModel fmModel, IStructure2D structure2D)
@@ -219,6 +221,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (weir != null && weir.HasCrestLevelTimeSeries())
             {
                 new TimFile().Write(timFilePath, weir.CrestLevelTimeSeries, fmModel.ReferenceTime);
+                return;
+            }
+
+            var leveeBreach = structure2D as LeveeBreach;
+            var leveeBreachSettings = leveeBreach?.GetActiveLeveeBreachSettings() as UserDefinedBreachSettings;
+            if (leveeBreach != null && leveeBreachSettings != null)
+            {
+                var timeSeries = leveeBreachSettings.CreateTimeSeriesFromTable();
+                var commentLines = new List<string> { "Time entries are defined in minutes, relative to the breach growth start" };
+                new TimFile().Write(timFilePath, timeSeries, leveeBreachSettings.StartTimeBreachGrowth, commentLines);
             }
         }
 

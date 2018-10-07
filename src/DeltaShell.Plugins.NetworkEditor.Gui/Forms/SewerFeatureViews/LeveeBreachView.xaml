@@ -152,7 +152,7 @@
                         <Style TargetType="{x:Type TextBox}">
                             <Setter Property="Margin" Value="0,3,3,3"/>
                         </Style>
-                        <DataTemplate DataType="{x:Type leveeBreachFormula:UserDefinedBreach}">
+                        <DataTemplate DataType="{x:Type leveeBreachFormula:UserDefinedBreachSettings}">
                                 <DataGrid
                                     ItemsSource="{Binding ManualBreachGrowthSettings}"
                                     AutoGenerateColumns="False"
@@ -174,7 +174,7 @@
                                 </DataGrid>
                         </DataTemplate>
                         
-                        <DataTemplate DataType="{x:Type leveeBreachFormula:VerheijVdKnaap2002Breach}">
+                        <DataTemplate DataType="{x:Type leveeBreachFormula:VerheijVdKnaap2002BreachSettings}">
                             <StackPanel>
                                 <Grid>
                                     <Grid.RowDefinitions>

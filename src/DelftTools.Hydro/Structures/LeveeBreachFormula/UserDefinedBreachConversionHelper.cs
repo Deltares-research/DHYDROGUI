@@ -17,7 +17,7 @@ namespace DelftTools.Hydro.Structures.LeveeBreachFormula
             return timeSeries;
         }
 
-        public static TimeSeries CreateTimeSeriesFromTable(this UserDefinedBreach settings)
+        public static TimeSeries CreateTimeSeriesFromTable(this UserDefinedBreachSettings settings)
         {
             // Conversion 
             var timeSeries = GetFormattedTimeSeries();
@@ -27,7 +27,7 @@ namespace DelftTools.Hydro.Structures.LeveeBreachFormula
             return timeSeries;
         }
 
-        public static void CreateTableFromTimeSeries(this UserDefinedBreach settings, TimeSeries timeSeries)
+        public static void CreateTableFromTimeSeries(this UserDefinedBreachSettings settings, TimeSeries timeSeries)
         {
             var dateTimes = timeSeries.Time.AllValues.Select(d => d - settings.StartTimeBreachGrowth).ToList();
             var heights = timeSeries.Components[0].Values.Cast<double>().ToList();
