@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -1259,12 +1259,174 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reverse roughness section.
+        /// </summary>
+        public static string ReverseRoughnessSectionProperties_DisplayName {
+            get {
+                return ResourceManager.GetString("ReverseRoughnessSectionProperties_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Determines whether this roughness section is used for reverse direction overrides, or is ignored completely..
+        /// </summary>
+        public static string ReverseRoughnessSectionProperties_UseReverseRoughness_Description {
+            get {
+                return ResourceManager.GetString("ReverseRoughnessSectionProperties_UseReverseRoughness_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use reverse roughness.
+        /// </summary>
+        public static string ReverseRoughnessSectionProperties_UseReverseRoughness_DisplayName {
+            get {
+                return ResourceManager.GetString("ReverseRoughnessSectionProperties_UseReverseRoughness_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Roof {
             get {
                 object obj = ResourceManager.GetObject("Roof", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model settings.
+        /// </summary>
+        public static string RoughnessModelProperties_Categories_ModelSettings {
+            get {
+                return ResourceManager.GetString("RoughnessModelProperties_Categories_ModelSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Determines whether or not it should be possible to specify reverse roughness data..
+        /// </summary>
+        public static string RoughnessModelProperties_UseReverseRoughness_Description {
+            get {
+                return ResourceManager.GetString("RoughnessModelProperties_UseReverseRoughness_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use reverse roughness.
+        /// </summary>
+        public static string RoughnessModelProperties_UseReverseRoughness_DisplayName {
+            get {
+                return ResourceManager.GetString("RoughnessModelProperties_UseReverseRoughness_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Determines whether or not specified reverse roughness data should be factored into the calculation..
+        /// </summary>
+        public static string RoughnessModelProperties_UseReverseRoughnessInCalculation_Description {
+            get {
+                return ResourceManager.GetString("RoughnessModelProperties_UseReverseRoughnessInCalculation_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use reverse roughness in calculation.
+        /// </summary>
+        public static string RoughnessModelProperties_UseReverseRoughnessInCalculation_DisplayName {
+            get {
+                return ResourceManager.GetString("RoughnessModelProperties_UseReverseRoughnessInCalculation_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The default roughness value..
+        /// </summary>
+        public static string RoughnessSectionProperties_DefaultRoughness_Description {
+            get {
+                return ResourceManager.GetString("RoughnessSectionProperties_DefaultRoughness_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default roughness.
+        /// </summary>
+        public static string RoughnessSectionProperties_DefaultRoughness_DisplayName {
+            get {
+                return ResourceManager.GetString("RoughnessSectionProperties_DefaultRoughness_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The roughness type that is used by default..
+        /// </summary>
+        public static string RoughnessSectionProperties_DefaultRoughnessType_Description {
+            get {
+                return ResourceManager.GetString("RoughnessSectionProperties_DefaultRoughnessType_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default roughness type.
+        /// </summary>
+        public static string RoughnessSectionProperties_DefaultRoughnessType_DisplayName {
+            get {
+                return ResourceManager.GetString("RoughnessSectionProperties_DefaultRoughnessType_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extrapolation scheme used along the location-axis..
+        /// </summary>
+        public static string RoughnessSectionProperties_Extrapolation_Description {
+            get {
+                return ResourceManager.GetString("RoughnessSectionProperties_Extrapolation_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extrapolation.
+        /// </summary>
+        public static string RoughnessSectionProperties_Extrapolation_DisplayName {
+            get {
+                return ResourceManager.GetString("RoughnessSectionProperties_Extrapolation_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interpolation scheme used along the location-axis..
+        /// </summary>
+        public static string RoughnessSectionProperties_Interpolation_Description {
+            get {
+                return ResourceManager.GetString("RoughnessSectionProperties_Interpolation_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interpolation.
+        /// </summary>
+        public static string RoughnessSectionProperties_Interpolation_DisplayName {
+            get {
+                return ResourceManager.GetString("RoughnessSectionProperties_Interpolation_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name of the roughness section shown to the user..
+        /// </summary>
+        public static string RoughnessSectionProperties_Name_Description {
+            get {
+                return ResourceManager.GetString("RoughnessSectionProperties_Name_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Roughness section.
+        /// </summary>
+        public static string RoughnessSectionProperties_RoughnessSection_DisplayName {
+            get {
+                return ResourceManager.GetString("RoughnessSectionProperties_RoughnessSection_DisplayName", resourceCulture);
             }
         }
         

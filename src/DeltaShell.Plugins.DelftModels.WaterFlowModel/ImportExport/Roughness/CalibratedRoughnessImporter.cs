@@ -5,6 +5,8 @@ using System.Linq;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core;
 using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.FileReaders.Roughness;
+using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness

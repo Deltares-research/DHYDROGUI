@@ -317,6 +317,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap ReverseRoughnessSection {
+            get {
+                object obj = ResourceManager.GetObject("ReverseRoughnessSection", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap RoughnessSection {
+            get {
+                object obj = ResourceManager.GetObject("RoughnessSection", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap runoff {
             get {
                 object obj = ResourceManager.GetObject("runoff", resourceCulture);

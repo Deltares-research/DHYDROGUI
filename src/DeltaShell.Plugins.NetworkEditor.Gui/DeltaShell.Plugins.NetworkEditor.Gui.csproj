@@ -205,8 +205,25 @@
     <Compile Include="Editors\FMWeirPropertiesRow.cs" />
     <Compile Include="Export\HydroRegionShapeFileExporter.cs" />
     <Compile Include="Forms\CrossSectionView\SimplifiedCoordinate.cs" />
+    <Compile Include="Forms\ProjectExplorer\RoughnessSectionNodePresenter.cs" />
     <Compile Include="Forms\PropertyGrid\ManholeProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\ModelRoughnessProperties.cs" />
     <Compile Include="Forms\PropertyGrid\PipeProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\ReverseRoughnessSectionProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\RoughnessSectionPropertiesBase.cs" />
+    <Compile Include="Forms\Roughness\RoughnessAsFunctionOfView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Roughness\RoughnessAsFunctionOfView.Designer.cs">
+      <DependentUpon>RoughnessAsFunctionOfView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Roughness\RoughnessFunctionConvertor.cs" />
+    <Compile Include="Forms\Roughness\RoughnessSectionCoverageTableView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Roughness\RoughnessSectionCoverageTableView.Designer.cs">
+      <DependentUpon>RoughnessSectionCoverageTableView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SewerFeatureViews\CanvasItemsControl.cs" />
     <Compile Include="Forms\SewerFeatureViews\CompartmentShape.cs" />
     <Compile Include="Forms\SewerFeatureViews\CompartmentShapeDragAndDropStrategy.cs" />
@@ -828,6 +845,9 @@
     <EmbeddedResource Include="Forms\NetworkSideView\NetworkSideView.resx">
       <DependentUpon>NetworkSideView.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Roughness\RoughnessAsFunctionOfView.resx">
+      <DependentUpon>RoughnessAsFunctionOfView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SimpleProgress.resx">
       <DependentUpon>SimpleProgress.cs</DependentUpon>

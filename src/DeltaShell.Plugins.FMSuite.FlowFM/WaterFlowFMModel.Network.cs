@@ -21,7 +21,7 @@ using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    public partial class WaterFlowFMModel
+    public partial class WaterFlowFMModel : IModelWithRoughnessSections
     {
         private const string NetworkObjectName = "Network";
         private IHydroNetwork network;
@@ -93,20 +93,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        public List<RoughnessSection> RoughnessSections { get; private set; }
-
+        public IEventedList<RoughnessSection> RoughnessSections { get; private set; }
+        public bool UseReverseRoughness { get; set; }
+        public bool UseReverseRoughnessInCalculation { get; set; }
         private void SynchronizeRoughnessSectionsWithNetwork()
         {
             if (Network == null) return;
-
-            RoughnessSections = new List<RoughnessSection>();
+            RoughnessSections = null;
+            RoughnessSections = new EventedList<RoughnessSection>();
             foreach (var crossSectionSectionType in Network.CrossSectionSectionTypes)
             {
                 var roughnessSection = new RoughnessSection(crossSectionSectionType, Network);
                 RoughnessSections.Add(roughnessSection);
             }
         }
-
+        
         private void AddSewerRoughnessIfNecessary()
         {
             if (RoughnessSections.Any(rs => rs.Name == "Sewer")) return;
@@ -175,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             else if (e.Item is CrossSectionSectionType)
             {
-                UpdateRoughnessSections(e);
+                UpdateRoughnessSectionsEvent(e);
             }
 
             // check if removed item is used in the child data items
@@ -207,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private void UpdateRoughnessSections(NotifyCollectionChangingEventArgs e)
+        private void UpdateRoughnessSectionsEvent(NotifyCollectionChangingEventArgs e)
         {
             var sectionType = (CrossSectionSectionType)e.Item;
 
@@ -269,6 +270,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 .Select(di => di.Value)
                 .Cast<INetworkCoverage>()
                 .ForEach(c => c.Network = Network);
+            UpdateRoughnessSections();
+        }
+
+        public virtual void UpdateRoughnessSections()
+        {
+            if (RoughnessSections != null) RoughnessSections.ForEach(rs => rs.Network = null);
+
+            if (Network != null)
+            {
+                SynchronizeRoughnessSectionsWithNetwork();
+                AddSewerRoughnessIfNecessary();
+            }
         }
 
         private void OnEndingBranchSplit(BranchSplitAction splitAction)

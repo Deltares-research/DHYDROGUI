@@ -410,143 +410,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ReverseRoughnessSection {
-            get {
-                object obj = ResourceManager.GetObject("ReverseRoughnessSection", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Reverse roughness section.
-        /// </summary>
-        internal static string ReverseRoughnessSectionProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("ReverseRoughnessSectionProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Determines whether this roughness section is used for reverse direction overrides, or is ignored completely..
-        /// </summary>
-        internal static string ReverseRoughnessSectionProperties_UseReverseRoughness_Description {
-            get {
-                return ResourceManager.GetString("ReverseRoughnessSectionProperties_UseReverseRoughness_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Use reverse roughness.
-        /// </summary>
-        internal static string ReverseRoughnessSectionProperties_UseReverseRoughness_DisplayName {
-            get {
-                return ResourceManager.GetString("ReverseRoughnessSectionProperties_UseReverseRoughness_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap RoughnessSection {
-            get {
-                object obj = ResourceManager.GetObject("RoughnessSection", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The default roughness value..
-        /// </summary>
-        internal static string RoughnessSectionProperties_DefaultRoughness_Description {
-            get {
-                return ResourceManager.GetString("RoughnessSectionProperties_DefaultRoughness_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Default roughness.
-        /// </summary>
-        internal static string RoughnessSectionProperties_DefaultRoughness_DisplayName {
-            get {
-                return ResourceManager.GetString("RoughnessSectionProperties_DefaultRoughness_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The roughness type that is used by default..
-        /// </summary>
-        internal static string RoughnessSectionProperties_DefaultRoughnessType_Description {
-            get {
-                return ResourceManager.GetString("RoughnessSectionProperties_DefaultRoughnessType_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Default roughness type.
-        /// </summary>
-        internal static string RoughnessSectionProperties_DefaultRoughnessType_DisplayName {
-            get {
-                return ResourceManager.GetString("RoughnessSectionProperties_DefaultRoughnessType_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Extrapolation scheme used along the location-axis..
-        /// </summary>
-        internal static string RoughnessSectionProperties_Extrapolation_Description {
-            get {
-                return ResourceManager.GetString("RoughnessSectionProperties_Extrapolation_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Extrapolation.
-        /// </summary>
-        internal static string RoughnessSectionProperties_Extrapolation_DisplayName {
-            get {
-                return ResourceManager.GetString("RoughnessSectionProperties_Extrapolation_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Interpolation scheme used along the location-axis..
-        /// </summary>
-        internal static string RoughnessSectionProperties_Interpolation_Description {
-            get {
-                return ResourceManager.GetString("RoughnessSectionProperties_Interpolation_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Interpolation.
-        /// </summary>
-        internal static string RoughnessSectionProperties_Interpolation_DisplayName {
-            get {
-                return ResourceManager.GetString("RoughnessSectionProperties_Interpolation_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Name of the roughness section shown to the user..
-        /// </summary>
-        internal static string RoughnessSectionProperties_Name_Description {
-            get {
-                return ResourceManager.GetString("RoughnessSectionProperties_Name_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Roughness section.
-        /// </summary>
-        internal static string RoughnessSectionProperties_RoughnessSection_DisplayName {
-            get {
-                return ResourceManager.GetString("RoughnessSectionProperties_RoughnessSection_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap Temperature {
             get {
                 object obj = ResourceManager.GetObject("Temperature", resourceCulture);
@@ -1215,7 +1078,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reference node.
+        ///   Looks up a localized string similar to Estuary mouth node id (must be a node that is connected to only one channel).
         /// </summary>
         internal static string WaterFlowModel1DProperties_SalinityNode_Description {
             get {
@@ -1224,7 +1087,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reference node.
+        ///   Looks up a localized string similar to Estuary mouth.
         /// </summary>
         internal static string WaterFlowModel1DProperties_SalinityNode_DisplayName {
             get {
@@ -1481,42 +1344,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         internal static string WaterFlowModel1DProperties_UseRestart_DisplayName {
             get {
                 return ResourceManager.GetString("WaterFlowModel1DProperties_UseRestart_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Determines whether or not it should be possible to specify reverse roughness data..
-        /// </summary>
-        internal static string WaterFlowModel1DProperties_UseReverseRoughness_Description {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DProperties_UseReverseRoughness_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Use reverse roughness.
-        /// </summary>
-        internal static string WaterFlowModel1DProperties_UseReverseRoughness_DisplayName {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DProperties_UseReverseRoughness_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Determines whether or not specified reverse roughness data should be factored into the calculation..
-        /// </summary>
-        internal static string WaterFlowModel1DProperties_UseReverseRoughnessInCalculation_Description {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DProperties_UseReverseRoughnessInCalculation_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Use reverse roughness in calculation.
-        /// </summary>
-        internal static string WaterFlowModel1DProperties_UseReverseRoughnessInCalculation_DisplayName {
-            get {
-                return ResourceManager.GetString("WaterFlowModel1DProperties_UseReverseRoughnessInCalculation_DisplayName", resourceCulture);
             }
         }
         

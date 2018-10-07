@@ -8,6 +8,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
@@ -197,9 +198,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [DisplayName("Roughness properties")]
         [Description("Roughness properties")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        public WaterFlowModel1DRoughnessProperties Roughness
+        public ModelRoughnessProperties Roughness
         {
-            get { return new WaterFlowModel1DRoughnessProperties(data); }
+            get { return new ModelRoughnessProperties(data); }
         }
 
         [PropertyOrder(5)]

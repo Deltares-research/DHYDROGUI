@@ -10,7 +10,6 @@ using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
-using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -19,7 +18,6 @@ using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms;
@@ -97,17 +95,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
             yield return new PropertyInfo<WaterFlowModel1DLateralSourceData, WaterFlowModel1DLateralDataProperties>();
             yield return new PropertyInfo<WaterFlowModel1D, WaterFlowModel1DProperties>();
             yield return new PropertyInfo<WindFunction, WindFunctionProperties>();
-            yield return new PropertyInfo<ReverseRoughnessSection, ReverseRoughnessSectionProperties>();
-            yield return new PropertyInfo<RoughnessSection, RoughnessSectionPropertiesBase<RoughnessSection>>();
         }
         
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
-            yield return new ViewInfo<RoughnessSection, RoughnessSectionCoverageTableView>
-                {
-                    CompositeViewType = typeof(ProjectItemMapView),
-                    GetCompositeViewData = o => Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.Project, o),
-                };
             yield return new ViewInfo<FlowDataCsvImporter, FlowTimeSeriesCsvImportDialog>
                 {
                     Description = "Flow1D CSV Importer",
@@ -149,16 +140,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
             yield return new ViewInfo<WaterFlowModel1DLateralSourceData, WaterFlowModel1DLateralSourceDataViewWpf>
                 {
                     Description = "Lateral Source Data View (Flow 1D)"
-                };
-            yield return new ViewInfo<RoughnessNetworkCoverage, RoughnessSection, RoughnessSectionCoverageTableView>
-                {
-                    CompositeViewType = typeof(ProjectItemMapView),
-                    GetCompositeViewData = o => Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.Project, o),
-                    GetViewData = coverage => Gui.Application.GetAllModelsInProject()
-                                       .OfType<WaterFlowModel1D>()
-                                       .SelectMany(m => m.RoughnessSections)
-                                       .FirstOrDefault(rs => Equals(rs.RoughnessNetworkCoverage, coverage))
-                };
+                };           
             yield return new ViewInfo<WaterFlowModel1D, ValidationView>
                 {
                     Description = "Validation report",
@@ -281,7 +263,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
             //yield return new WaterFlowBoundaryConditionsNodePresenter(this);
             yield return new WaterFlowModel1DBoundaryNodeDataProjectNodePresenter {GuiPlugin = this};
             yield return new WaterFlowModel1DLateralDataProjectNodePresenter { GuiPlugin = this };
-            yield return new RoughnessSectionNodePresenter { GuiPlugin = this };
             yield return new WaterFlowModel1DNodePresenter(this);
             yield return new WindFunctionNodePresenter();
             yield return new MeteoFunctionNodePresenter();
@@ -444,10 +425,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                 {
                     editActionHandled = false;
                 }
-            }
-            if (sender is ReverseRoughnessSection && e.PropertyName == "UseNormalRoughness")
-            {
-                Gui.DocumentViews.OfType<ProjectItemMapView>().ForEach(v => v.RefreshModelLayers());
             }
         }
 

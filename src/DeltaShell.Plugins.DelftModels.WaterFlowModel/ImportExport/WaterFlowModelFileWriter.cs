@@ -9,6 +9,7 @@ using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.FileWriters.Retention;
+using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Grid;
@@ -31,13 +32,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             FileUtils.CreateDirectoryIfNotExists(fileName.TargetPath);
 
-            ThrowIfFileNotExists(fileName.CrossSectionDefinitions, fileName.TargetPath, p => CrossSectionDefinitionFileWriter.WriteFile(p, waterFlowModel1D.Network, waterFlowModel1D.RoughnessSections));
-            ThrowIfFileNotExists(fileName.CrossSectionLocations, fileName.TargetPath, p => LocationFileWriter.WriteFileCrossSectionLocations(p, waterFlowModel1D.Network.CrossSections));
-            ThrowIfFileNotExists(fileName.ObservationPoints, fileName.TargetPath, p => LocationFileWriter.WriteFileObservationPointLocations(p, waterFlowModel1D.Network.ObservationPoints));
-            ThrowIfFileNotExists(fileName.LateralDischarge, fileName.TargetPath, p => LocationFileWriter.WriteFileLateralDischargeLocations(p, waterFlowModel1D.Network.LateralSources));
-            ThrowIfFileNotExists(fileName.BoundaryLocations, fileName.TargetPath, p => BoundaryLocationFileWriter.WriteFile(p, waterFlowModel1D));
-            ThrowIfFileNotExists(fileName.Structures, fileName.TargetPath, p => StructureFileWriter.WriteFile(p, waterFlowModel1D, GenerateFlow1DStructureCategoriesFrom1DModel));
-            ThrowIfFileNotExists(fileName.Network, fileName.TargetPath, p => NetworkAndGridWriter.WriteFile(p, waterFlowModel1D.Network, waterFlowModel1D.NetworkDiscretization));
+            FileWritingUtils.ThrowIfFileNotExists(fileName.CrossSectionDefinitions, fileName.TargetPath, p => CrossSectionDefinitionFileWriter.WriteFile(p, waterFlowModel1D.Network, waterFlowModel1D.RoughnessSections));
+            FileWritingUtils.ThrowIfFileNotExists(fileName.CrossSectionLocations, fileName.TargetPath, p => LocationFileWriter.WriteFileCrossSectionLocations(p, waterFlowModel1D.Network.CrossSections));
+            FileWritingUtils.ThrowIfFileNotExists(fileName.ObservationPoints, fileName.TargetPath, p => LocationFileWriter.WriteFileObservationPointLocations(p, waterFlowModel1D.Network.ObservationPoints));
+            FileWritingUtils.ThrowIfFileNotExists(fileName.LateralDischarge, fileName.TargetPath, p => LocationFileWriter.WriteFileLateralDischargeLocations(p, waterFlowModel1D.Network.LateralSources));
+            FileWritingUtils.ThrowIfFileNotExists(fileName.BoundaryLocations, fileName.TargetPath, p => BoundaryLocationFileWriter.WriteFile(p, waterFlowModel1D));
+            FileWritingUtils.ThrowIfFileNotExists(fileName.Structures, fileName.TargetPath, p => StructureFileWriter.WriteFile(p, waterFlowModel1D, GenerateFlow1DStructureCategoriesFrom1DModel));
+            FileWritingUtils.ThrowIfFileNotExists(fileName.Network, fileName.TargetPath, p => NetworkAndGridWriter.WriteFile(p, waterFlowModel1D.Network, waterFlowModel1D.NetworkDiscretization));
 
             #region Write network and computational grid in ugrid
 
@@ -53,7 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             waterFlowModel1D.WriteSpatialData(fileName.TargetPath);
 
-            ThrowIfFileNotExists(fileName.BoundaryConditions, fileName.TargetPath, p => WaterFlowModel1DBoundaryFileWriter.WriteFile(p, waterFlowModel1D));
+            FileWritingUtils.ThrowIfFileNotExists(fileName.BoundaryConditions, fileName.TargetPath, p => WaterFlowModel1DBoundaryFileWriter.WriteFile(p, waterFlowModel1D));
 
             var writtenRoughessFiles = new List<string>();
             
@@ -62,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 var filename = "roughness-" + roughnessSection.Name + ".ini";
                 var roughnessFilename = Path.Combine(fileName.TargetPath, filename);
 
-                ThrowIfFileNotExists(roughnessFilename, fileName.TargetPath, p => RoughnessDataFileWriter.WriteFile(p, roughnessSection));//Add subPath!!
+                FileWritingUtils.ThrowIfFileNotExists(roughnessFilename, fileName.TargetPath, p => RoughnessDataFileWriter.WriteFile(p, roughnessSection));//Add subPath!!
                 writtenRoughessFiles.Add(filename);
             }
 
@@ -71,13 +72,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             RetentionFileWriter.WriteFile(fileName.Retention, waterFlowModel1D.Network.Retentions);
 
-            ThrowIfFileNotExists(targetModelFile, fileName.TargetPath, p => ModelDefinitionFileWriter.WriteFile(p, waterFlowModel1D));
+            FileWritingUtils.ThrowIfFileNotExists(targetModelFile, fileName.TargetPath, p => ModelDefinitionFileWriter.WriteFile(p, waterFlowModel1D));
 
             if (waterFlowModel1D.ValidSalinityFileWithNonConstantFormulationAndF4Values)
             {
                 fileName.Salinity = WaterFlowModel1D.SalinityFileName;
 
-                ThrowIfFileNotExists(fileName.Salinity, fileName.TargetPath,
+                FileWritingUtils.ThrowIfFileNotExists(fileName.Salinity, fileName.TargetPath,
                     p => WaterFlowModel1DSalinityIniWriter.WriteFile(p, waterFlowModel1D.DispersionFormulationType, waterFlowModel1D.SalinityEstuaryMouthNodeId));
             }
 
@@ -94,13 +95,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             var flowModel = model as WaterFlowModel1D;
             if(flowModel?.Network == null) return Enumerable.Empty<DelftIniCategory>();
             return StructureFile.ExtractFunctionStructuresOfNetworkGenerator(flowModel.Network);
-        }
-        private static void ThrowIfFileNotExists(string filePath, string fileNameTargetPath, Action<string> writeAction)
-        {
-            writeAction(filePath);
-
-            if (File.Exists(filePath)) return;
-            throw new FileWritingException(string.Format("{0} is not written at location {1}.", Path.GetFileName(filePath), fileNameTargetPath));
         }
 
         private static void CopyMorphologyFilesToRunDir(WaterFlowModel1D waterFlowModel1D, string targetPath)

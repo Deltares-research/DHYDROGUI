@@ -167,6 +167,7 @@
     <Compile Include="Import\GroupablePointCloudImporter.cs" />
     <Compile Include="Import\HydroAreaEmbankmentHeightImporter.cs" />
     <Compile Include="Import\HydroAreaEmbankmentImporter.cs" />
+    <Compile Include="Import\HydroNetworkFromGmlImporter.cs" />
     <Compile Include="Import\PointValuePairsFromGisImporter.cs" />
     <Compile Include="Import\NetworkCoverageFromGisImporter.cs" />
     <Compile Include="ImportExportCsv\CrossSectionFromCsvFileImporterBase.cs" />
@@ -251,14 +252,14 @@
     <Compile Include="NetworkDiscretisationUGridDataModel.cs" />
     <Compile Include="NetworkUGridDataModel.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
-    <Compile Include="UGridToNetworkAdapter.cs" />
-    <EmbeddedResource Include="MapLayers\Providers\HydroNetworkFeatureCollection.hbm.xml" />
-    <Compile Include="MapLayers\Providers\HydroAreaFeature2DCollection.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="UGridToNetworkAdapter.cs" />
+    <EmbeddedResource Include="MapLayers\Providers\HydroNetworkFeatureCollection.hbm.xml" />
+    <Compile Include="MapLayers\Providers\HydroAreaFeature2DCollection.cs" />
     <Compile Include="MapLayers\Providers\HydroNetworkFeatureCollection.cs" />
     <Compile Include="MapLayers\Editors\Snapping\HydroLinkSnapRule.cs" />
     <Compile Include="MapLayers\Editors\Snapping\HydroNodeSnapRule.cs" />
@@ -393,12 +394,17 @@
   <ItemGroup>
     <None Include="Resources\guide.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\ReverseRoughnessSection.png" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="Resources\KolkMap.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Gully.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\RoughnessSection.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

@@ -142,14 +142,8 @@
   <data name="Observation" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Observation.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="RoughnessSection" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\RoughnessSection.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="None" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\none.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ReverseRoughnessSection" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ReverseRoughnessSection.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Boundary" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Boundary.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -190,20 +184,20 @@
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="generateDataInSeriesToolStripMenuItem.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-      iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-      YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALggAA
-      C4IBvvripQAAAlxJREFUOE99kd1LU3Ecxp/WC+wPSMjeCF9YU8OtTExMUFOUmrPpEnWFlk7DduZ2fJmp
-      OPDlQsrojRDKmyAvigIrmFE3dRHYZZigRVhSDCm6KKHEp+/Zps1aPg8P53d+v/N8fud3DqLVe6ubdn85
-      y302Ng03MTIdWx4cgxe1kbuwcrty2PrCJVFY2mn5P8CFzTiFUdRjLDIT1j5fKntet4WS4jTGBijYiBrc
-      QBF+ohIfI7NhpZ03sm+ui/1z3dxt3/EvQMEWOHAHebgAK/zyBvdhqjOzcCSX5feO8vTzavbMq/R/7mDl
-      XStbJs7SFWhkvrPwu5Q3yM6jOIKbIVidAByYQEptGsueFvHMbCX9C230zbvY/cnD9vfn6HunsGNaodmZ
-      vgg7RmTnBZRhTwjgQJ8kgL01qdx/zcich2YBlbB6ysKaqVJWPJLrkwpWPbAxu+XQksltoq5U91a+e0II
-      UC2AZgEUNFqCJuVAML3fHNw2sJU5L9NCMfgMPD5sD1r6bD+qemtZslhC3UndjBQTQ4AmAXgFEK3tg3Es
-      mMyQHOSuhgSiGFdtF20sFuMLiBOYkbOHAV4BqH8BdrbGL2eOpVJLotNA65CVh8VSpZyeUp6BOwJQYwAM
-      DuNyUn0ykxqSmaFk/ylr/ipxC0BdBxBSOi7ldeUxU7xa1vxN4lkP0Cz/uRiXs5SstTuveAWwojUALzbp
-      G/VXLNctzBevlqL9S+LBdLggUtEpeawN7LJwO64tLvrx2PZiKVLXeq8kb7SBWxbG9e36D/FD8bMYwCwG
-      Y6RfohVUPJMEJJNQEfgNuaNBC2gm2WIAAAAASUVORK5CYII=
-    </value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALggAA
+        C4IBvvripQAAAlxJREFUOE99kd1LU3Ecxp/WC+wPSMjeCF9YU8OtTExMUFOUmrPpEnWFlk7DduZ2fJmp
+        OPDlQsrojRDKmyAvigIrmFE3dRHYZZigRVhSDCm6KKHEp+/Zps1aPg8P53d+v/N8fud3DqLVe6ubdn85
+        y302Ng03MTIdWx4cgxe1kbuwcrty2PrCJVFY2mn5P8CFzTiFUdRjLDIT1j5fKntet4WS4jTGBijYiBrc
+        QBF+ohIfI7NhpZ03sm+ui/1z3dxt3/EvQMEWOHAHebgAK/zyBvdhqjOzcCSX5feO8vTzavbMq/R/7mDl
+        XStbJs7SFWhkvrPwu5Q3yM6jOIKbIVidAByYQEptGsueFvHMbCX9C230zbvY/cnD9vfn6HunsGNaodmZ
+        vgg7RmTnBZRhTwjgQJ8kgL01qdx/zcich2YBlbB6ysKaqVJWPJLrkwpWPbAxu+XQksltoq5U91a+e0II
+        UC2AZgEUNFqCJuVAML3fHNw2sJU5L9NCMfgMPD5sD1r6bD+qemtZslhC3UndjBQTQ4AmAXgFEK3tg3Es
+        mMyQHOSuhgSiGFdtF20sFuMLiBOYkbOHAV4BqH8BdrbGL2eOpVJLotNA65CVh8VSpZyeUp6BOwJQYwAM
+        DuNyUn0ykxqSmaFk/ylr/ipxC0BdBxBSOi7ldeUxU7xa1vxN4lkP0Cz/uRiXs5SstTuveAWwojUALzbp
+        G/VXLNctzBevlqL9S+LBdLggUtEpeawN7LJwO64tLvrx2PZiKVLXeq8kb7SBWxbG9e36D/FD8bMYwCwG
+        Y6RfohVUPJMEJJNQEfgNuaNBC2gm2WIAAAAASUVORK5CYII=
+</value>
   </data>
   <data name="WaterFlowModel1DApplicationPlugin_Description" xml:space="preserve">
     <value>Allows to simulate 1D flow of water in open water systems, such as rivers and irrigation &amp; drainage channels.</value>
@@ -282,60 +276,6 @@
   </data>
   <data name="WaterFlowModel1DModelDataValidator_ValidateExtraResistance_Extra_resistance" xml:space="preserve">
     <value>Extra resistance</value>
-  </data>
-  <data name="RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist_" xml:space="preserve">
-    <value>Could not read file {0} properly, it doesn't exist.</value>
-  </data>
-  <data name="RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_seems_empty" xml:space="preserve">
-    <value>Could not read file {0} properly, it seems empty</value>
-  </data>
-  <data name="RoughnessDataFileReader_ReadFile_Could_not_read_content_section__0__properly" xml:space="preserve">
-    <value>Could not read content section {0} properly</value>
-  </data>
-  <data name="RoughnessDataFileReader_ReadFile_adding_to_network_went_wrong_" xml:space="preserve">
-    <value>adding to network went wrong!</value>
-  </data>
-  <data name="RoughnessDataFileReader_ReadFile_Could_not_set_roughness_data_in_model" xml:space="preserve">
-    <value>Could not set roughness data in model</value>
-  </data>
-  <data name="RoughnessDataFileReader_ReadFile_While_reading_roughness_section_an_error_occured___0___1_" xml:space="preserve">
-    <value>While reading roughness section an error occured :{0} {1}</value>
-  </data>
-  <data name="RoughnessDataFileReader_FillFunctionWithTableData_Filling_the_table_of_the_Q_or_H_function_failed_" xml:space="preserve">
-    <value>Filling the table of the Q or H function failed!</value>
-  </data>
-  <data name="RoughnessDataFileReader_FillFunctionWithTableData_Filling_the_table_of_the_Q_or_H_function_failed__values_count_doesn_t_match_the_defined_levels_count_" xml:space="preserve">
-    <value>Filling the table of the Q or H function failed, values count doesn't match the defined levels count!</value>
-  </data>
-  <data name="RoughnessDataFileReader_ReadRoughnessBranchData_branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model" xml:space="preserve">
-    <value>branch ({0}) where the roughness should be put on is not available in the model</value>
-  </data>
-  <data name="RoughnessDataFileReader_ReadRoughnessBranchData_The_length_of_the_number_of_levels___0___and_the_defined_number_of_levels_of_the_branch_property__1__are_not_the_same_of_branch_properties____2__" xml:space="preserve">
-    <value>The length of the number of levels ({0}) and the defined number of levels of the branch property {1} are not the same of branch properties : {2}!</value>
-  </data>
-  <data name="RoughnessDataFileReader_ReadRoughnessBranchData_Could_not_read_roughness_branch_data" xml:space="preserve">
-    <value>Could not read roughness branch data</value>
-  </data>
-  <data name="RoughnessDataFileReader_ReadRoughnessBranchData_While_reading_branches_for_roughness_section_an_error_occured___0___1_" xml:space="preserve">
-    <value>While reading branches for roughness section an error occured :{0} {1}</value>
-  </data>
-  <data name="RoughnessDataFileReader_ReadDefinitionData_Couldn_t_read_roughness_section_with_a_function_type_of____0_" xml:space="preserve">
-    <value>Couldn't read roughness section with a function type of : {0}</value>
-  </data>
-  <data name="RoughnessDataFileReader_ReadDefinitionData_Could_not_read_roughness_definition_data" xml:space="preserve">
-    <value>Could not read roughness definition data</value>
-  </data>
-  <data name="RoughnessDataFileReader_ReadRoughnessSection_Could_not_import_calibrated_roughness_section__0__because_the_calibrated_roughness_section_you_want_to_import_doesn_t_exist_in_the_model" xml:space="preserve">
-    <value>Could not import calibrated roughness section {0} because the calibrated roughness section you want to import doesn't exist in the model</value>
-  </data>
-  <data name="RoughnessDataFileReader_ReadRoughnessSection_When_reading_reverse_roughness_section___0___the_referring__linked___normal__roughness_section___1___is_not_found__The_normal_section___1___should_be_imported_first_" xml:space="preserve">
-    <value>When reading reverse roughness section ({0}) the referring (linked) 'normal' roughness section ({1}) is not found. The normal section ({1}) should be imported first!</value>
-  </data>
-  <data name="RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_roughness_network_coverage_is_not_created" xml:space="preserve">
-    <value>While creating the roughnes section from the roughness file the roughness network coverage is not created</value>
-  </data>
-  <data name="RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_fisrt_argument_of_the_roughness_network_coverage_is_not_created__used_to_set_the_interpolation_type" xml:space="preserve">
-    <value>While creating the roughnes section from the roughness file the fisrt argument of the roughness network coverage is not created (used to set the interpolation type</value>
   </data>
   <data name="WaterFlowModel1DOutputFileReader_ReadMetaData_ErrorReadingNetCdfFile" xml:space="preserve">
     <value>Error reading NetCdf file {0}</value>

@@ -30,6 +30,7 @@ using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
+using DelftTools.Hydro.Roughness;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui
 {
@@ -73,14 +74,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || data is IEventedList<ObservationCrossSection2D>
                    || (data is IEventedList<Feature2DPoint> && parentObject is HydroArea) //obs points
                    || (data is IEventedList<GroupableFeature2DPoint> && parentObject is HydroArea) //obs points
-                   || (data is IEventedList<GroupableFeature2DPolygon> && parentObject is HydroArea) // dry area & enclosures
+                   || (data is IEventedList<GroupableFeature2DPolygon> &&
+                       parentObject is HydroArea) // dry area & enclosures
                    || (data is IEventedList<GroupablePointFeature> && parentObject is HydroArea) // dry points, 
                    || (data is IEventedList<FixedWeir> && parentObject is HydroArea) //fixed weirs
                    || (data is IEventedList<Embankment> && parentObject is HydroArea)
                    || (data is IEventedList<BridgePillar> && parentObject is HydroArea)
                    || (data is IEventedList<LeveeBreach> && parentObject is HydroArea) //levee breach
                    || (data is IEventedList<Gully> && parentObject is HydroArea) //gullies
-                   || (data is IEventedList<RoofArea> && parentObject is HydroArea); //roofareas;
+                   || (data is IEventedList<RoofArea> && parentObject is HydroArea) //roofareas;
+                   || data is IEventedList<RoughnessSection>
+                   || data is RoughnessSection;
         }
 
         public IEnumerable<object> ChildLayerObjects(object data)
@@ -163,6 +167,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 foreach (var route in routes)
                 {
                     yield return route;
+                }
+            }
+            var modelWithRoughnessSections = data as IModelWithRoughnessSections;
+            if (modelWithRoughnessSections != null)
+            {
+                yield return modelWithRoughnessSections.RoughnessSections;
+            }
+            var roughnessSections = data as IEventedList<RoughnessSection>;
+            if (roughnessSections != null)
+            {
+                foreach (var roughnessSection in roughnessSections)
+                {
+                    var reverseRoughnessSection = roughnessSection as ReverseRoughnessSection;
+                    if (reverseRoughnessSection != null && reverseRoughnessSection.UseNormalRoughness)
+                    {
+                        continue;
+                    }
+
+                    yield return roughnessSection;
                 }
             }
         }
@@ -473,6 +496,84 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         DataSource = ds
                     };
                 }
+
+                if (Equals(features, area2DParent.Enclosures))
+                {
+                    var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Enclosures, "Enclosure", modelName, area2DParent.CoordinateSystem);
+                    ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
+                    {
+                        if (!(geometry is IPolygon))
+                        {
+                            if (geometry.Coordinates.Count() < 4) return null;
+                            geometry = new Polygon(new LinearRing(geometry.Coordinates));
+                        }
+                        var newFeature = new GroupableFeature2DPolygon() { Geometry = geometry };
+                        ds.Features.Add(newFeature);
+
+                        return newFeature;
+                    };
+
+                    return new VectorLayer(HydroArea.EnclosureName)
+                    {
+                        NameIsReadOnly = true,
+                        FeatureEditor = new Feature2DEditor(area2DParent),
+                        Opacity = (float)0.25,
+                        Style = AreaLayerStyles.EnclosureStyle,
+                        DataSource = ds,
+                        CustomRenderers = new List<IFeatureRenderer>(new[] { new EnclosureRenderer() })
+                    };
+                }
+                if (Equals(features, area2DParent.RoofAreas))
+                {
+                    var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.RoofAreas, "RoofAreas", modelName, area2DParent.CoordinateSystem);
+                    ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
+                    {
+                        if (!(geometry is IPolygon))
+                        {
+                            var coordinates = geometry.Coordinates.ToList();
+                            if (coordinates.Count < 3) return null;
+                            if (!coordinates.First().Equals(coordinates.Last()))
+                            {
+                                coordinates.Add(coordinates.First());
+                            }
+                            geometry = new Polygon(new LinearRing(coordinates.ToArray()));
+                        }
+                        var newFeature = new RoofArea { Geometry = geometry };
+                        ds.Features.Add(newFeature);
+
+                        return newFeature;
+                    };
+
+                    return new VectorLayer(HydroArea.RoofAreaName)
+                    {
+                        NameIsReadOnly = true,
+                        Style = AreaLayerStyles.RoofAreaStyle,
+                        DataSource = ds,
+                        CanBeRemovedByUser = true,
+                        Selectable = true
+                    };
+                }
+
+                if (Equals(features, area2DParent.Gullies))
+                {
+                    var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Gullies, "Gullies", modelName, area2DParent.CoordinateSystem);
+                    ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
+                    {
+                        var newFeature = new Gully() { Geometry = geometry };
+                        ds.Features.Add(newFeature);
+
+                        return newFeature;
+                    };
+
+                    return new VectorLayer(HydroArea.GullyName)
+                    {
+                        NameIsReadOnly = true,
+                        Style = AreaLayerStyles.Gulliestyle,
+                        DataSource = ds,
+                        CanBeRemovedByUser = true,
+                        Selectable = true
+                    };
+                }
             }
 
             var obsCrossSections2d = data as IEventedList<ObservationCrossSection2D>;
@@ -596,33 +697,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 };
             }
 
-            if (Equals(features, area2DParent.Enclosures))
-            {
-                var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Enclosures, "Enclosure", modelName, area2DParent.CoordinateSystem);
-                ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
-                {
-                    if (!(geometry is IPolygon))
-                    {
-                        if (geometry.Coordinates.Count() < 4) return null;
-                        geometry = new Polygon(new LinearRing(geometry.Coordinates));
-                    }
-                    var newFeature = new GroupableFeature2DPolygon() { Geometry = geometry };
-                    ds.Features.Add(newFeature);
-
-                    return newFeature;
-                };
-
-                return new VectorLayer(HydroArea.EnclosureName)
-                {
-                    NameIsReadOnly = true,
-                    FeatureEditor = new Feature2DEditor(area2DParent),
-                    Opacity = (float) 0.25,
-                    Style = AreaLayerStyles.EnclosureStyle,                  
-                    DataSource = ds,
-                    CustomRenderers = new List<IFeatureRenderer>(new[] { new EnclosureRenderer() })
-                };
-            }
-
+            
             var fixedWeirs2D = data as IEventedList<FixedWeir>;
             if (fixedWeirs2D != null && area2DParent != null && Equals(fixedWeirs2D, area2DParent.FixedWeirs))
             {
@@ -666,59 +741,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 };
             }
 
-            if (Equals(features, area2DParent.RoofAreas))
+            var roughnessSection = data as RoughnessSection;
+            if (roughnessSection != null)
             {
-                var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.RoofAreas, "RoofAreas", modelName, area2DParent.CoordinateSystem);
-                ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
-                {
-                    if (!(geometry is IPolygon))
-                    {
-                        var coordinates = geometry.Coordinates.ToList();
-                        if (coordinates.Count < 3) return null;
-                        if (!coordinates.First().Equals(coordinates.Last()))
-                        {
-                            coordinates.Add(coordinates.First());
-                        }
-                        geometry = new Polygon(new LinearRing(coordinates.ToArray()));
-                    }
-                    var newFeature = new RoofArea { Geometry = geometry };
-                    ds.Features.Add(newFeature);
-
-                    return newFeature;
-                };
-
-                return new VectorLayer(HydroArea.RoofAreaName)
-                {
-                    NameIsReadOnly = true,
-                    Style = AreaLayerStyles.RoofAreaStyle,
-                    DataSource = ds,
-                    CanBeRemovedByUser = true,
-                    Selectable = true
-                };
+                var coverageLayer = SharpMapLayerFactory.CreateMapLayerForCoverage(roughnessSection.RoughnessNetworkCoverage, null);
+                coverageLayer.Visible = false;
+                return coverageLayer;
             }
 
-            if (Equals(features, area2DParent.Gullies))
+            if (data is IEventedList<RoughnessSection>)
             {
-                var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Gullies, "Gullies", modelName, area2DParent.CoordinateSystem);
-                ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
+                return new GroupLayer("Roughness data")
                 {
-                    var newFeature = new Gully() { Geometry = geometry };
-                    ds.Features.Add(newFeature);
-
-                    return newFeature;
-                };
-
-                return new VectorLayer(HydroArea.GullyName)
-                {
-                    NameIsReadOnly = true,
-                    Style = AreaLayerStyles.Gulliestyle,
-                    DataSource = ds,
-                    CanBeRemovedByUser = true,
-                    Selectable = true
+                    LayersReadOnly = true,
+                    Selectable = false,
+                    NameIsReadOnly = true
                 };
             }
-
-
             return null;
         }
 

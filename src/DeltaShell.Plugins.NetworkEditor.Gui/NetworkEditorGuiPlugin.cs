@@ -9,6 +9,7 @@ using DelftTools.Controls.Swf;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
@@ -29,7 +30,9 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ProjectExplorer;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
@@ -180,10 +183,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new PropertyInfo<Retention, RetentionProperties>();
             yield return new PropertyInfo<HydroLink, HydroLinkProperties>();
             yield return new PropertyInfo<HydroArea, HydroAreaProperties>();
-        }
+            yield return new PropertyInfo<ReverseRoughnessSection, ReverseRoughnessSectionProperties>();
+            yield return new PropertyInfo<RoughnessSection, RoughnessSectionPropertiesBase<RoughnessSection>>();}
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
+            yield return new ViewInfo<RoughnessSection, RoughnessSectionCoverageTableView>
+            {
+                
+                CompositeViewType = typeof(ProjectItemMapView),
+                GetCompositeViewData = o =>
+                {
+                    return Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.Project, o) ?? new DataItem(o);
+                    /* var dataItem = Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.Project, o);
+                     if (dataItem != null) return dataItem;
+                     var roughnessSectionModel = Gui.Application.GetAllModelsInProject()
+                         .OfType<IModelWithRoughnessSections>()
+                         .FirstOrDefault(m => m.RoughnessSections.Contains(o));
+                     if ((RoughnessSection) roughnessSectionModel.RoughnessSectionDataItem.Value != o)
+                         roughnessSectionModel.RoughnessSectionDataItem = new DataItem(o);
+                     return roughnessSectionModel.RoughnessSectionDataItem;*/
+                },
+            };
+            yield return new ViewInfo<RoughnessNetworkCoverage, RoughnessSection, RoughnessSectionCoverageTableView>
+            {
+                CompositeViewType = typeof(ProjectItemMapView),
+                GetCompositeViewData = o => Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.Project, o) ?? new DataItem(o),
+                GetViewData = coverage => Gui.Application.GetAllModelsInProject()
+                    .OfType<IModelWithRoughnessSections>()
+                    .SelectMany(m => m.RoughnessSections)
+                    .FirstOrDefault(rs => Equals(rs.RoughnessNetworkCoverage, coverage))
+            };
             yield return new ViewInfo<CrossSectionFromCsvFileImporterBase, CrossSectionCsvImportWizard>();
             yield return new ViewInfo<IPump, PumpView>
                 {
@@ -742,6 +772,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new FeatureProjectTreeViewNodePresenter<BridgePillar>(HydroArea.BridgePillarsPluralName, Properties.Resources.BridgeSmall) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<RoofArea>(HydroArea.RoofAreaName, Properties.Resources.Roof) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<Gully>(HydroArea.GullyName, Properties.Resources.Gully) { GuiPlugin = this };
+            yield return new RoughnessSectionNodePresenter { GuiPlugin = this };
+
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()
@@ -785,6 +817,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             project.RootFolder.CollectionChanged += RootFolderCollectionChanged;
             project.RootFolder.PropertyChanged += RootFolderPropertyChanged;
+            ((INotifyPropertyChanged)Gui.Application.Project).PropertyChanged += ProjectPropertyChanged;
+        }
+
+        private void ProjectPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (sender is ReverseRoughnessSection && e.PropertyName == "UseNormalRoughness")
+            {
+                Gui.DocumentViews.OfType<ProjectItemMapView>().ForEach(v => v.RefreshModelLayers());
+            }
         }
 
         [EditAction]
@@ -942,6 +983,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 project.RootFolder.CollectionChanged -= RootFolderCollectionChanged;
                 project.RootFolder.PropertyChanged -= RootFolderPropertyChanged;
+                ((INotifyPropertyChanged)project).PropertyChanged -= ProjectPropertyChanged;
                 foreach (var network in project.RootFolder.GetAllItemsRecursive().OfType<INetwork>())
                 {
                     RemoveNetworkViews(network);

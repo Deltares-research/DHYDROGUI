@@ -243,4 +243,58 @@
   <data name="WeirProperties_DisplayName" xml:space="preserve">
     <value>#Weir</value>
   </data>
+  <data name="ReverseRoughnessSectionProperties_DisplayName" xml:space="preserve">
+    <value>#Omgekeerde ruwheid sectie</value>
+  </data>
+  <data name="ReverseRoughnessSectionProperties_UseReverseRoughness_Description" xml:space="preserve">
+    <value>#Bepaalt of deze ruwheid sectie wordt gebruikt voor omgekeerde richting overschrijvingen, of wordt volledig genegeerd.</value>
+  </data>
+  <data name="ReverseRoughnessSectionProperties_UseReverseRoughness_DisplayName" xml:space="preserve">
+    <value>#Gebruik omgekeerde ruwheid</value>
+  </data>
+  <data name="RoughnessModelProperties_ModelParameters_DisplayName" xml:space="preserve">
+    <value>#Model parameters</value>
+  </data>
+  <data name="RoughnessModelProperties_UseReverseRoughnessInCalculation_Description" xml:space="preserve">
+    <value>#Hiermee bepaalt u of of niet wordt opgegeven, omgekeerde ruwheid gegevens moeten worden verwerkt in de berekening.</value>
+  </data>
+  <data name="RoughnessModelProperties_UseReverseRoughnessInCalculation_DisplayName" xml:space="preserve">
+    <value>#Gebruik omgekeerde ruwheid in berekening</value>
+  </data>
+  <data name="RoughnessModelProperties_UseReverseRoughness_Description" xml:space="preserve">
+    <value>#Hiermee bepaalt u of of niet moet het mogelijk zijn om op te geven omgekeerde ruwheid gegevens.</value>
+  </data>
+  <data name="RoughnessModelProperties_UseReverseRoughness_DisplayName" xml:space="preserve">
+    <value>#Gebruik omgekeerde ruwheid</value>
+  </data>
+  <data name="RoughnessSectionProperties_DefaultRoughnessType_Description" xml:space="preserve">
+    <value>#De ruwheid-type dat standaard wordt gebruikt.</value>
+  </data>
+  <data name="RoughnessSectionProperties_DefaultRoughnessType_DisplayName" xml:space="preserve">
+    <value>#Standaardtype ruwheid</value>
+  </data>
+  <data name="RoughnessSectionProperties_DefaultRoughness_Description" xml:space="preserve">
+    <value>#De standaardwaarde voor ruwheid.</value>
+  </data>
+  <data name="RoughnessSectionProperties_DefaultRoughness_DisplayName" xml:space="preserve">
+    <value>#Standaard ruwheid</value>
+  </data>
+  <data name="RoughnessSectionProperties_Extrapolation_Description" xml:space="preserve">
+    <value>#Extrapolatie schema dat wordt gebruikt op de locatie-as.</value>
+  </data>
+  <data name="RoughnessSectionProperties_Extrapolation_DisplayName" xml:space="preserve">
+    <value>#Extrapolatie</value>
+  </data>
+  <data name="RoughnessSectionProperties_Interpolation_Description" xml:space="preserve">
+    <value>#Interpolatie dat wordt gebruikt op de locatie-as.</value>
+  </data>
+  <data name="RoughnessSectionProperties_Interpolation_DisplayName" xml:space="preserve">
+    <value>#Interpolatie</value>
+  </data>
+  <data name="RoughnessSectionProperties_Name_Description" xml:space="preserve">
+    <value>#Naam van de sectie van de ruwheid getoond aan de gebruiker.</value>
+  </data>
+  <data name="RoughnessSectionProperties_RoughnessSection_DisplayName" xml:space="preserve">
+    <value>#Ruwheid sectie</value>
+  </data>
 </root>

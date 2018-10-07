@@ -9,6 +9,8 @@ using DelftTools.Hydro.Roughness;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.IO.FileReaders.Roughness;
+using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;

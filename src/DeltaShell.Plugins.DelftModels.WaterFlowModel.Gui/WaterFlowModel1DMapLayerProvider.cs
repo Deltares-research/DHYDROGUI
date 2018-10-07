@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
@@ -28,10 +27,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
         {
             return data is WaterFlowModel1D
                    || (data is ModelFolder && ((ModelFolder)data).Model is WaterFlowModel1D)
-                   || data is IEventedList<RoughnessSection>
                    || data is IEventedList<WaterFlowModel1DLateralSourceData>
                    || data is IEventedList<WaterFlowModel1DBoundaryNodeData>
-                   || data is RoughnessSection;
+                   ;
         }
 
         public IEnumerable<object> ChildLayerObjects(object data)
@@ -58,7 +56,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                     yield return flowModel.NetworkDiscretization;
                     yield return flowModel.BoundaryConditions;
                     yield return flowModel.LateralSourceData;
-                    yield return flowModel.RoughnessSections;
                     yield return flowModel.InitialConditions;
                     yield return flowModel.InitialFlow;
 
@@ -87,21 +84,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                     }
                 }
             }
-
-            var roughnessSections = data as IEventedList<RoughnessSection>;
-            if (roughnessSections != null)
-            {
-                foreach (var roughnessSection in roughnessSections)
-                {
-                    var reverseRoughnessSection = roughnessSection as ReverseRoughnessSection;
-                    if (reverseRoughnessSection != null && reverseRoughnessSection.UseNormalRoughness)
-                    {
-                        continue;
-                    }
-                    
-                    yield return roughnessSection;
-                }
-            }
         }
 
         public ILayer CreateLayer(object data, object parentData)
@@ -117,12 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
             {
                 return CreateReadonlyGroupLayer(modelFolder.Role == DataItemRole.Input ? "Input" : "Output");
             }
-
-            if (data is IEventedList<RoughnessSection>)
-            {
-                return CreateReadonlyGroupLayer("Roughness data");
-            }
-
+            
             var lateralSourceData = data as IEventedList<WaterFlowModel1DLateralSourceData>;
             if (lateralSourceData != null)
             {
@@ -148,15 +125,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
 
                 return CreateBoundaryNodeDataLayer(boundaryNodeData, coordinateSystem);
             }
-
-            var roughnessSection = data as RoughnessSection;
-            if (roughnessSection != null)
-            {
-                var coverageLayer = SharpMapLayerFactory.CreateMapLayerForCoverage(roughnessSection.RoughnessNetworkCoverage, null);
-                coverageLayer.Visible = false;
-                return coverageLayer;
-            }
-
+            
             return null;
         }
 

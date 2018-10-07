@@ -1,8 +1,13 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
+using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.IO;
@@ -26,25 +31,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WriteNodeFile(model);
             WriteBranchesGuiFile(model);
             WriteStructuresFile(model);
-            //WriteRoughness(model);
+            WriteRoughness(model);
             WriteUGridFile(WriterData);
         }
 
-        //private static void WriteRoughness(WaterFlowFMModel model)
-        //{
-        //    var writtenRoughessFiles = new List<string>();
+        private static void WriteRoughness(WaterFlowFMModel model)
+        {   
+            var writtenRoughessFiles = new List<string>();
+            var directoryName = Path.GetDirectoryName(model.MduFilePath);
+            if (directoryName == null) return;
 
-        //    foreach (var roughnessSection in model.RoughnessSections)
-        //    {
-        //        var filename = "roughness-" + roughnessSection.Name + ".ini";
-        //        var roughnessFilename = Path.Combine(KnownProperties.RoughnessFile, filename);
+            foreach (var roughnessSection in model.RoughnessSections)
+            {
+                var filename = "roughness-" + roughnessSection.Name + ".ini";
+                
+                var roughnessFilename = Path.Combine(directoryName, filename);
 
-        //        RoughnessDataFileWriter.
-        //        ThrowIfFileNotExists(roughnessFilename, fileName.TargetPath, p => RoughnessDataFileWriter.WriteFile(p, roughnessSection));//Add subPath!!
-        //        writtenRoughessFiles.Add(filename);
-        //    }
-        //    model.ModelDefinition.SetModelProperty(KnownProperties.RoughnessFile, string.Join(" ", writtenRoughessFiles));
-        //}
+                FileWritingUtils.ThrowIfFileNotExists(roughnessFilename, directoryName, p => RoughnessDataFileWriter.WriteFile(p, roughnessSection));//Add subPath!!
+                writtenRoughessFiles.Add(filename);
+            }
+            //do we need to write this in the mdu file? which keyword?
+            //model.ModelDefinition.SetModelProperty(ModelDefinitionsRegion.RoughnessFile.Key, string.Join(" ", writtenRoughessFiles));
+            //ok.. and now? how do you want the roughness from the 2d model? It's a UnstructuredGridFlowLinkCoverage and has some physical parameters, if set it's a spatial operation
+            //model.Roughness.
+        }
 
         private static void PrepareModelDefinitionForWriting(IWaterFlowFMModel model)
         {

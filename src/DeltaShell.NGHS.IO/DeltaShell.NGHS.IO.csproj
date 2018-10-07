@@ -153,6 +153,9 @@
     <Compile Include="FileWriters\Network\NetworkDefinitionRegion.cs" />
     <Compile Include="FileWriters\Retention\RetentionFileWriter.cs" />
     <Compile Include="FileWriters\Retention\RetentionRegion.cs" />
+    <Compile Include="FileReaders\Roughness\RoughnessDataFileReader.cs" />
+    <Compile Include="FileWriters\Roughness\RoughnessDataFileWriter.cs" />
+    <Compile Include="FileWriters\Roughness\RoughnessDataRegion.cs" />
     <Compile Include="FileWriters\SpatialData\SpatialDataFileNames.cs" />
     <Compile Include="FileWriters\SpatialData\SpatialDataFileWriter.cs" />
     <Compile Include="FileWriters\SpatialData\SpatialDataQuantity.cs" />
@@ -216,6 +219,8 @@
     <Compile Include="Grid\UnstructuredGridFileHelper.cs" />
     <Compile Include="Helpers\ConfigurationSetting.cs" />
     <Compile Include="Helpers\DelftIniCategory.cs" />
+    <Compile Include="Helpers\FileWritingUtils.cs" />
+    <Compile Include="Helpers\ModelDefinitionsRegion.cs" />
     <Compile Include="Helpers\StringArrayExtensions.cs" />
     <Compile Include="IFeature2DFileBase.cs" />
     <Compile Include="NGHSFileBase.cs" />

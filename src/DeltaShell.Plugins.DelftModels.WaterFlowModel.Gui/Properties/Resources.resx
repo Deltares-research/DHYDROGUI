@@ -193,12 +193,6 @@
   <data name="QHBoundary" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\QHBoundary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ReverseRoughnessSection" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ReverseRoughnessSection.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="RoughnessSection" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\RoughnessSection.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="validation" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\validation.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -406,18 +400,6 @@
   <data name="WaterFlowModel1DProperties_UseSaltInCalculation_Description" xml:space="preserve">
     <value>Determines whether or not salinity should be factored into the calculation.</value>
   </data>
-  <data name="WaterFlowModel1DProperties_UseReverseRoughness_DisplayName" xml:space="preserve">
-    <value>Use reverse roughness</value>
-  </data>
-  <data name="WaterFlowModel1DProperties_UseReverseRoughness_Description" xml:space="preserve">
-    <value>Determines whether or not it should be possible to specify reverse roughness data.</value>
-  </data>
-  <data name="WaterFlowModel1DProperties_UseReverseRoughnessInCalculation_DisplayName" xml:space="preserve">
-    <value>Use reverse roughness in calculation</value>
-  </data>
-  <data name="WaterFlowModel1DProperties_UseReverseRoughnessInCalculation_Description" xml:space="preserve">
-    <value>Determines whether or not specified reverse roughness data should be factored into the calculation.</value>
-  </data>
   <data name="WaterFlowModel1DProperties_Categories_InitialConditions" xml:space="preserve">
     <value>Initial conditions</value>
   </data>
@@ -489,36 +471,6 @@
   </data>
   <data name="WindFunctionProperties_DisplayName" xml:space="preserve">
     <value>Wind time-series</value>
-  </data>
-  <data name="RoughnessSectionProperties_RoughnessSection_DisplayName" xml:space="preserve">
-    <value>Roughness section</value>
-  </data>
-  <data name="RoughnessSectionProperties_Name_Description" xml:space="preserve">
-    <value>Name of the roughness section shown to the user.</value>
-  </data>
-  <data name="RoughnessSectionProperties_DefaultRoughness_DisplayName" xml:space="preserve">
-    <value>Default roughness</value>
-  </data>
-  <data name="RoughnessSectionProperties_DefaultRoughness_Description" xml:space="preserve">
-    <value>The default roughness value.</value>
-  </data>
-  <data name="RoughnessSectionProperties_DefaultRoughnessType_DisplayName" xml:space="preserve">
-    <value>Default roughness type</value>
-  </data>
-  <data name="RoughnessSectionProperties_DefaultRoughnessType_Description" xml:space="preserve">
-    <value>The roughness type that is used by default.</value>
-  </data>
-  <data name="RoughnessSectionProperties_Extrapolation_DisplayName" xml:space="preserve">
-    <value>Extrapolation</value>
-  </data>
-  <data name="RoughnessSectionProperties_Extrapolation_Description" xml:space="preserve">
-    <value>Extrapolation scheme used along the location-axis.</value>
-  </data>
-  <data name="RoughnessSectionProperties_Interpolation_DisplayName" xml:space="preserve">
-    <value>Interpolation</value>
-  </data>
-  <data name="RoughnessSectionProperties_Interpolation_Description" xml:space="preserve">
-    <value>Interpolation scheme used along the location-axis.</value>
   </data>
   <data name="WaterFlowModel1DProperties_UseThatcherHarleman_DisplayName" xml:space="preserve">
     <value>Use thatcher harleman</value>
@@ -603,15 +555,6 @@
   </data>
   <data name="WaterFlowModel1DProperties_SalinityNode_Description" xml:space="preserve">
     <value>Estuary mouth node id (must be a node that is connected to only one channel)</value>
-  </data>
-  <data name="ReverseRoughnessSectionProperties_DisplayName" xml:space="preserve">
-    <value>Reverse roughness section</value>
-  </data>
-  <data name="ReverseRoughnessSectionProperties_UseReverseRoughness_Description" xml:space="preserve">
-    <value>Determines whether this roughness section is used for reverse direction overrides, or is ignored completely.</value>
-  </data>
-  <data name="ReverseRoughnessSectionProperties_UseReverseRoughness_DisplayName" xml:space="preserve">
-    <value>Use reverse roughness</value>
   </data>
   <data name="WaterFlowModel1DProperties_UseMorphology_Description" xml:space="preserve">
     <value>Determines whether to use the 1D morphology component</value>

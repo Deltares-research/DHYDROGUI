@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 {
     //TODO : this class is too big..split it up
     [Entity(FireOnCollectionChange=false)]
-    public class WaterFlowModel1D : TimeDependentModelBase, IDisposable, ICloneable, IHydroModel, IDimrStateAwareModel, IHydFileModel, IModelMerge, IDimrModel
+    public class WaterFlowModel1D : TimeDependentModelBase, IDisposable, ICloneable, IHydroModel, IDimrStateAwareModel, IHydFileModel, IModelMerge, IDimrModel, IModelWithRoughnessSections
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowModel1D));
         internal static readonly string SalinityFileName = "Salinity.ini";

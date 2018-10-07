@@ -176,7 +176,6 @@
     <Compile Include="ImportExport\CrossSectionFileReader.cs" />
     <Compile Include="ImportExport\Flow1DParameterGenerator.cs" />
     <Compile Include="ImportExport\ModelDefinitionFileWriter.cs" />
-    <Compile Include="ImportExport\ModelDefinitionsRegion.cs" />
     <Compile Include="ImportExport\FlowTimeSeriesCsvFileImporter.cs" />
     <Compile Include="ImportExport\ModelFileNames.cs" />
     <Compile Include="ImportExport\Roughness\RoughessCsvBranchData.cs" />
@@ -185,9 +184,6 @@
     <Compile Include="ImportExport\Roughness\RoughnessCsvRecord.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessCsvSettings.cs" />
     <Compile Include="ImportExport\Roughness\CalibratedRoughnessImporter.cs" />
-    <Compile Include="ImportExport\Roughness\RoughnessDataFileReader.cs" />
-    <Compile Include="ImportExport\Roughness\RoughnessDataFileWriter.cs" />
-    <Compile Include="ImportExport\Roughness\RoughnessDataRegion.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessFromCsvFileExporter.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessFromCsvToSectionImporter.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessFunctionCsvConverter.cs" />
@@ -394,8 +390,6 @@
     </Content>
     <EmbeddedResource Include="PhysicalParameters\MeteoFunction.hbm.xml" />
     <Content Include="Resources\None.png" />
-    <None Include="Resources\ReverseRoughnessSection.png" />
-    <Content Include="Resources\RoughnessSection.png" />
     <None Include="Resources\validation.png" />
     <None Include="Resources\unstruc.png" />
     <Content Include="Resources\Wind.png" />

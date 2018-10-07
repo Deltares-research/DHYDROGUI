@@ -166,6 +166,12 @@
   <data name="PumpSmallPositive" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\PumpSmallPositive.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="RoughnessSection" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\RoughnessSection.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ReverseRoughnessSection" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ReverseRoughnessSection.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Retention" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Retention.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

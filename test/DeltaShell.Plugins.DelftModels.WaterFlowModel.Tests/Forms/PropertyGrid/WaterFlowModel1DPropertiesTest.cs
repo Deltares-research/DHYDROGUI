@@ -1,5 +1,6 @@
 ﻿using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms.PropertyGrid
@@ -18,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms.PropertyGrid
         [Category(TestCategory.WindowsForms)]
         public void ShowRoughnessProperties()
         {
-            WindowsFormsTestHelper.ShowPropertyGridForObject(new WaterFlowModel1DRoughnessProperties(new WaterFlowModel1D()));
+            WindowsFormsTestHelper.ShowPropertyGridForObject(new ModelRoughnessProperties(new WaterFlowModel1D()));
         }
 
         [Test]
@@ -28,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms.PropertyGrid
         public void ValidateDynamicAttributesForRoughnessProperties(bool useRoughness)
         {
             var model = new WaterFlowModel1D();
-            var roughProperties = new WaterFlowModel1DRoughnessProperties(model);
+            var roughProperties = new ModelRoughnessProperties(model);
 
             model.UseReverseRoughness = useRoughness;
             Assert.That(model.UseReverseRoughness, Is.EqualTo(useRoughness));

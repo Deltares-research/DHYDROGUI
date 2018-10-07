@@ -64,29 +64,14 @@
     <Compile Include="Forms\PropertyGrid\ExtrapolationTypeQh.cs" />
     <Compile Include="Forms\PropertyGrid\InterpolationTypeBoundaryQh.cs" />
     <Compile Include="Forms\PropertyGrid\InterpolationTypeBoundaryTime.cs" />
-    <Compile Include="Forms\PropertyGrid\ReverseRoughnessSectionProperties.cs" />
     <Compile Include="Forms\PropertyGrid\SelectBoundaryNodeIdTypeConverter.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DAdvancedOptions.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DMorphologyProperties.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\WaterFlowModel1DRoughnessProperties.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DSalinityProperties.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DTemperatureProperties.cs" />
     <Compile Include="Forms\RefreshMainSectionWidthsDialog.xaml.cs">
       <DependentUpon>RefreshMainSectionWidthsDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\RoughnessAsFunctionOfView.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\RoughnessAsFunctionOfView.Designer.cs">
-      <DependentUpon>RoughnessAsFunctionOfView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\RoughnessFunctionConvertor.cs" />
-    <Compile Include="Forms\RoughnessSectionCoverageTableView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\RoughnessSectionCoverageTableView.Designer.cs">
-      <DependentUpon>RoughnessSectionCoverageTableView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Tools\BoundaryNodeDataMapTool.cs" />
     <Compile Include="Forms\Tools\LateralSourceDataMapTool.cs" />
@@ -109,8 +94,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ProjectExplorer\RoughnessSectionNodePresenter.cs" />
-    <Compile Include="Forms\PropertyGrid\RoughnessSectionPropertiesBase.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DBoundaryNodeDataProperties.cs" />
     <Compile Include="PathEditor.cs" />
     <Compile Include="Forms\RefreshMainSectionWidthsDialogViewModel.cs" />
@@ -128,10 +111,9 @@
     <EmbeddedResource Include="Forms\FlowSeriesCsvMappingPage.resx">
       <DependentUpon>FlowSeriesCsvMappingPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\RoughnessAsFunctionOfView.resx">
-      <DependentUpon>RoughnessAsFunctionOfView.cs</DependentUpon>
+    <EmbeddedResource Include="Properties\Resources.nl-NL.resx">
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

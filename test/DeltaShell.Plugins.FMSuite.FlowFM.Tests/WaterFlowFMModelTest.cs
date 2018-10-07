@@ -558,7 +558,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Assert.IsNotNull(roughnessSections, "Roughness sections of the FM model were not instantiated.");
             Assert.That(roughnessSections.Count(rs => rs.Name == "Sewer"), Is.EqualTo(1));
-            Assert.That(roughnessSections.FindIndex(rs => rs.Name == "Sewer"), Is.EqualTo(0));
+            Assert.That(roughnessSections.ElementAt(0).Name, Is.EqualTo("Sewer"));
         }
 
         [Test]
@@ -573,7 +573,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(roughnessSections, "Roughness sections of the FM model were not instantiated.");
             Assert.That(roughnessSections.Count(rs => rs.Name == "Main"), Is.EqualTo(1));
             Assert.That(roughnessSections.Count(rs => rs.Name == "Sewer"), Is.EqualTo(1));
-            Assert.That(roughnessSections.FindIndex(rs => rs.Name == "Sewer"), Is.EqualTo(0));
+            Assert.That(roughnessSections.ElementAt(0).Name, Is.EqualTo("Sewer"));
         }
 
         [Test]

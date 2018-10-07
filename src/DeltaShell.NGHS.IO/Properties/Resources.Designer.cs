@@ -10,9 +10,8 @@
 
 namespace DeltaShell.NGHS.IO.Properties {
     using System;
-    using System.Diagnostics.CodeAnalysis;
-
-
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -30,7 +29,6 @@ namespace DeltaShell.NGHS.IO.Properties {
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        [ExcludeFromCodeCoverage]
         internal Resources() {
         }
         
@@ -52,7 +50,6 @@ namespace DeltaShell.NGHS.IO.Properties {
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
-        [ExcludeFromCodeCoverage]
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
         public static global::System.Globalization.CultureInfo Culture {
             get {
@@ -84,7 +81,6 @@ namespace DeltaShell.NGHS.IO.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t get the network ids.
         /// </summary>
-        [ExcludeFromCodeCoverage]
         public static string AGrid_Couldn_t_get_the_network_ids {
             get {
                 return ResourceManager.GetString("AGrid_Couldn_t_get_the_network_ids", resourceCulture);
@@ -94,7 +90,6 @@ namespace DeltaShell.NGHS.IO.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t get the number of networks.
         /// </summary>
-        [ExcludeFromCodeCoverage]
         public static string AGrid_Couldn_t_get_the_number_of_networks {
             get {
                 return ResourceManager.GetString("AGrid_Couldn_t_get_the_number_of_networks", resourceCulture);
@@ -113,7 +108,6 @@ namespace DeltaShell.NGHS.IO.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t get coordinate system code because of err nr : .
         /// </summary>
-        [ExcludeFromCodeCoverage]
         public static string AGrid_Initialize_Couldn_t_get_coordinate_system_code_because_of_err_nr___ {
             get {
                 return ResourceManager.GetString("AGrid_Initialize_Couldn_t_get_coordinate_system_code_because_of_err_nr___", resourceCulture);
@@ -137,11 +131,10 @@ namespace DeltaShell.NGHS.IO.Properties {
                 return ResourceManager.GetString("AGrid_ThrowIfError__because_of_error_number___0_", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Level: {0}. message = {1}.
         /// </summary>
-        [ExcludeFromCodeCoverage]
         public static string GridApi_Initialize_Level_0__Message_1_ {
             get {
                 return ResourceManager.GetString("GridApi_Initialize_Level_0__Message_1_", resourceCulture);
@@ -151,10 +144,190 @@ namespace DeltaShell.NGHS.IO.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Progress: {0:P2}. message = {1}.
         /// </summary>
-        [ExcludeFromCodeCoverage]
         public static string GridApi_Initialize_Progress_0_Message_1_ {
             get {
                 return ResourceManager.GetString("GridApi_Initialize_Progress_0_Message_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filling the table of the Q or H function failed!.
+        /// </summary>
+        public static string RoughnessDataFileReader_FillFunctionWithTableData_Filling_the_table_of_the_Q_or_H_function_failed_ {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_FillFunctionWithTableData_Filling_the_table_of_the_Q_or_H" +
+                        "_function_failed_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filling the table of the Q or H function failed, values count doesn&apos;t match the defined levels count!.
+        /// </summary>
+        public static string RoughnessDataFileReader_FillFunctionWithTableData_Filling_the_table_of_the_Q_or_H_function_failed__values_count_doesn_t_match_the_defined_levels_count_ {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_FillFunctionWithTableData_Filling_the_table_of_the_Q_or_H" +
+                        "_function_failed__values_count_doesn_t_match_the_defined_levels_count_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read roughness definition data.
+        /// </summary>
+        public static string RoughnessDataFileReader_ReadDefinitionData_Could_not_read_roughness_definition_data {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_ReadDefinitionData_Could_not_read_roughness_definition_da" +
+                        "ta", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t read roughness section with a function type of : {0}.
+        /// </summary>
+        public static string RoughnessDataFileReader_ReadDefinitionData_Couldn_t_read_roughness_section_with_a_function_type_of____0_ {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_ReadDefinitionData_Couldn_t_read_roughness_section_with_a" +
+                        "_function_type_of____0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to adding to network went wrong!.
+        /// </summary>
+        public static string RoughnessDataFileReader_ReadFile_adding_to_network_went_wrong_ {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_ReadFile_adding_to_network_went_wrong_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read content section {0} properly.
+        /// </summary>
+        public static string RoughnessDataFileReader_ReadFile_Could_not_read_content_section__0__properly {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_ReadFile_Could_not_read_content_section__0__properly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read file {0} properly, it doesn&apos;t exist..
+        /// </summary>
+        public static string RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist_ {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_doesn_t_exi" +
+                        "st_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read file {0} properly, it seems empty.
+        /// </summary>
+        public static string RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_seems_empty {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_seems_empty" +
+                        "", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not set roughness data in model.
+        /// </summary>
+        public static string RoughnessDataFileReader_ReadFile_Could_not_set_roughness_data_in_model {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_ReadFile_Could_not_set_roughness_data_in_model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to While reading roughness section an error occured :{0} {1}.
+        /// </summary>
+        public static string RoughnessDataFileReader_ReadFile_While_reading_roughness_section_an_error_occured___0___1_ {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_ReadFile_While_reading_roughness_section_an_error_occured" +
+                        "___0___1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to branch ({0}) where the roughness should be put on is not available in the model.
+        /// </summary>
+        public static string RoughnessDataFileReader_ReadRoughnessBranchData_branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_ReadRoughnessBranchData_branch___0___where_the_roughness_" +
+                        "should_be_put_on_is_not_available_in_the_model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read roughness branch data.
+        /// </summary>
+        public static string RoughnessDataFileReader_ReadRoughnessBranchData_Could_not_read_roughness_branch_data {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_ReadRoughnessBranchData_Could_not_read_roughness_branch_d" +
+                        "ata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The length of the number of levels ({0}) and the defined number of levels of the branch property {1} are not the same of branch properties : {2}!.
+        /// </summary>
+        public static string RoughnessDataFileReader_ReadRoughnessBranchData_The_length_of_the_number_of_levels___0___and_the_defined_number_of_levels_of_the_branch_property__1__are_not_the_same_of_branch_properties____2__ {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_ReadRoughnessBranchData_The_length_of_the_number_of_level" +
+                        "s___0___and_the_defined_number_of_levels_of_the_branch_property__1__are_not_the_" +
+                        "same_of_branch_properties____2__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to While reading branches for roughness section an error occured :{0} {1}.
+        /// </summary>
+        public static string RoughnessDataFileReader_ReadRoughnessBranchData_While_reading_branches_for_roughness_section_an_error_occured___0___1_ {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_ReadRoughnessBranchData_While_reading_branches_for_roughn" +
+                        "ess_section_an_error_occured___0___1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not import calibrated roughness section {0} because the calibrated roughness section you want to import doesn&apos;t exist in the model.
+        /// </summary>
+        public static string RoughnessDataFileReader_ReadRoughnessSection_Could_not_import_calibrated_roughness_section__0__because_the_calibrated_roughness_section_you_want_to_import_doesn_t_exist_in_the_model {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_ReadRoughnessSection_Could_not_import_calibrated_roughnes" +
+                        "s_section__0__because_the_calibrated_roughness_section_you_want_to_import_doesn_" +
+                        "t_exist_in_the_model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When reading reverse roughness section ({0}) the referring (linked) &apos;normal&apos; roughness section ({1}) is not found. The normal section ({1}) should be imported first!.
+        /// </summary>
+        public static string RoughnessDataFileReader_ReadRoughnessSection_When_reading_reverse_roughness_section___0___the_referring__linked___normal__roughness_section___1___is_not_found__The_normal_section___1___should_be_imported_first_ {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_ReadRoughnessSection_When_reading_reverse_roughness_secti" +
+                        "on___0___the_referring__linked___normal__roughness_section___1___is_not_found__T" +
+                        "he_normal_section___1___should_be_imported_first_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to While creating the roughnes section from the roughness file the fisrt argument of the roughness network coverage is not created (used to set the interpolation type.
+        /// </summary>
+        public static string RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_fisrt_argument_of_the_roughness_network_coverage_is_not_created__used_to_set_the_interpolation_type {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_" +
+                        "from_the_roughness_file_the_fisrt_argument_of_the_roughness_network_coverage_is_" +
+                        "not_created__used_to_set_the_interpolation_type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to While creating the roughnes section from the roughness file the roughness network coverage is not created.
+        /// </summary>
+        public static string RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_roughness_network_coverage_is_not_created {
+            get {
+                return ResourceManager.GetString("RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_" +
+                        "from_the_roughness_file_the_roughness_network_coverage_is_not_created", resourceCulture);
             }
         }
         
