@@ -148,6 +148,9 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.40632\lib\net40\plugins\DeltaShell.Plugins.Scripting\Microsoft.Dynamic.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Microsoft.Scripting">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.40632\lib\net40\plugins\DeltaShell.Plugins.Scripting\Microsoft.Scripting.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Mono.Addins.1.3.3\lib\net40\Mono.Addins.dll</HintPath>
       <Private>False</Private>
@@ -215,6 +218,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IO\Exporters\FmCrossSectionDefinitionExporterTest.cs" />
+    <Compile Include="IO\Exporters\WaterFlowFmAndF1DFileExporterTests.cs" />
     <Compile Include="ISewerFeatureTest.cs" />
     <Compile Include="Api\Grid1d2dTest.cs" />
     <Compile Include="Api\FlexibleMeshModelDllTest.cs" />

@@ -11,28 +11,39 @@ using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.IO;
+using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public static class WaterFlowFMModelWriter
     {
         private static WaterFlowFMModelWriterData WriterData;
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModelWriter));
 
         // TODO: get rid of the optional parameters. Solve in a different way.
-        public static void Write(WaterFlowFMModel model, bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true)
+        public static bool Write(WaterFlowFMModel model, bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true)
         {
-            PrepareModelDefinitionForWriting(model);
-            WriterData = CreateWriterData(model);
 
-            WriteMorSedFilesIfNeeded(model);
-            WriteMduFile(model, switchTo, writeExtForcings, writeFeatures);
-            WriteCrossSectionDefinitions(model);
-            WriteCrossSectionLocation(model);
-            WriteNodeFile(model);
-            WriteBranchesGuiFile(model);
-            WriteStructuresFile(model);
-            WriteRoughness(model);
-            WriteUGridFile(WriterData);
+            PrepareModelDefinitionForWriting(model);
+            try
+            {
+                WriterData = CreateWriterData(model);
+                WriteMorSedFilesIfNeeded(model);
+                WriteMduFile(model, switchTo, writeExtForcings, writeFeatures);
+                WriteCrossSectionDefinitions(model);
+                WriteCrossSectionLocation(model);
+                WriteNodeFile(model);
+                WriteBranchesGuiFile(model);
+                WriteStructuresFile(model);
+                WriteRoughness(model);
+                WriteUGridFile(WriterData);
+            }
+            catch (Exception e)
+            {
+                Log.WarnFormat("While writing FM with 1D data an exception occured : {0}", e.Message);
+                return false;
+            }
+            return true;
         }
 
         private static void WriteRoughness(WaterFlowFMModel model)
