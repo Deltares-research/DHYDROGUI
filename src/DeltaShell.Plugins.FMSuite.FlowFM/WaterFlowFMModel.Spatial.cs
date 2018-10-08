@@ -16,7 +16,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
