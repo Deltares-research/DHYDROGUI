@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string HisInterval = "hisinterval";
         public const string LandBoundaryFile = "landboundaryfile";
         public const string DryPointsFile = "drypointsfile";
-        public const string EnclosureFile = "enclosurefile";
+        public const string EnclosureFile = "gridenclosurefile";
         public const string RoofAreaFile = "roofsfile";
         public const string GulliesFile = "Gulliesfile";
         public const string ManholeFile = "manholefile";

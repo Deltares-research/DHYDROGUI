@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
     public class BoundaryConditionSetNodePresenter : FMSuiteNodePresenterBase<BoundaryConditionSet>
     {
         private static readonly Bitmap BoundaryImage = Common.Gui.Properties.Resources.boundary;
-        
+
         protected override string GetNodeText(BoundaryConditionSet data)
         {
             return data.Feature != null ? data.Feature.Name : "<error>";
@@ -32,10 +32,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 return boundaryConditionSets.Remove(nodeData);
             }
 
-            var treeShortCut = parentNodeData as FlowFMTreeShortcut;
+            var treeShortCut = parentNodeData as FmModelTreeShortcut;
             if (treeShortCut != null)
             {
-                boundaryConditionSets = treeShortCut.TargetData as IList<BoundaryConditionSet>;
+                boundaryConditionSets = treeShortCut.Data as IList<BoundaryConditionSet>;
                 if (boundaryConditionSets != null)
                 {
                     return boundaryConditionSets.Remove(nodeData);

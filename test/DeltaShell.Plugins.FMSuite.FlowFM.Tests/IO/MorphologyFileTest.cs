@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void SaveMorWithBoundaryonditionsFile()
+        public void SaveMorWithBoundaryConditionsFile()
         {
             var morFile = Path.GetTempFileName();
             try
@@ -155,7 +155,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
         [Test]
-        public void SaveLoadMorWithBoundaryonditionsFile()
+        public void SaveLoadMorWithBoundaryConditionsFile()
         {
             var morFile = Path.GetTempFileName();
             try

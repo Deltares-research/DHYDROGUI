@@ -639,6 +639,87 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void CheckIfBcmFileIsReferencedInMorFileAfterRunningAnImportedMduFile()
+        {
+            //arrange
+            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            mduPath = TestHelper.CreateLocalCopy(mduPath);
+            var tempDir = FileUtils.CreateTempDirectory();
+            var model = new WaterFlowFMModel(mduPath);
+
+            model.ModelDefinition.UseMorphologySediment = true;
+            var sedFrac = new SedimentFraction
+            {
+                Name = "testFrac",
+                CurrentSedimentType = SedimentFractionHelper.GetSedimentationTypes()[1],
+                CurrentFormulaType = SedimentFractionHelper.GetSedimentationFormulas()[0]
+            };
+
+            model.SedimentFractions.Add(sedFrac);
+
+            var tracer01 = "Tracer01";
+            var tracer02 = "Tracer02";
+            model.TracerDefinitions.AddRange(new List<string> { tracer01, tracer02 });
+
+            var feature = new Feature2D
+            {
+                Name = "Boundary1",
+                Geometry =
+                    new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0) })
+            };
+
+            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.Discharge,
+                BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = feature,
+            };
+
+            flowBoundaryCondition.AddPoint(0);
+            flowBoundaryCondition.PointData[0].Arguments[0].SetValues(new[] { model.StartTime, model.StopTime });
+            flowBoundaryCondition.PointData[0][model.StartTime] = 0.5;
+            flowBoundaryCondition.PointData[0][model.StopTime] = 0.6;
+
+            var set01 = new BoundaryConditionSet { Feature = feature };
+            model.BoundaryConditionSets.Add(set01);
+
+            var boundary = new Feature2D()
+            {
+                Name = "TracerBoundary1",
+                Geometry =
+                    new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0) })
+            };
+            set01.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed, BoundaryConditionDataType.AstroComponents)
+            {
+                Feature = boundary,
+                TracerName = tracer01
+            });
+            var exportPath = Path.Combine(tempDir, "export");
+            var mduExportPath = Path.Combine(exportPath, "cs.mdu");
+            model.ExportTo(mduExportPath);
+
+            var modelAfterImport = new WaterFlowFMModel(mduExportPath);
+            ActivityRunner.RunActivity(modelAfterImport);
+            var mduFilePathAfterExport = modelAfterImport.MduFilePath;
+
+            File.Exists(Path.Combine(mduFilePathAfterExport, "cs.mdu"));
+            File.Exists(Path.Combine(mduFilePathAfterExport, "cs.mor"));
+            File.Exists(Path.Combine(mduFilePathAfterExport, "cs.sed"));
+
+            var morFilePath = Path.Combine(exportPath, "cs.mor");
+            File.Exists(morFilePath);
+
+            //act
+            var lines = File.ReadLines(morFilePath);
+            var countedLines = lines.Count(l => l.Replace(" ", "").Contains("BcFil=bendprof.bcm"));
+         
+            //assert
+            Assert.AreEqual(countedLines, 1);
+
+        }
+
+        [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         [NUnit.Framework.Category(TestCategory.Slow)]
         public void CheckStartTime()

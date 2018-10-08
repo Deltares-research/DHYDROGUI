@@ -1,17 +1,28 @@
-﻿using System.IO;
-using DelftTools.TestUtils;
+﻿using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DelftTools.Utils.IO;
+using DeltaShell.Core;
+using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
+using DeltaShell.Plugins.SharpMapGis;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 {
     [TestFixture]
     public class WaveGridFileImporterTests
     {
+        private WaveGridFileImporter importer;
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void GivenAGridFileWithASphericalCoordinateSystemWhenImportingThenCoordinateSystemOnTheModelIsSpherical()
@@ -136,6 +147,167 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
             {
                 FileUtils.DeleteIfExists(tempWorkingDirectory);
             }
+        }
+
+        [Test]
+        public void NamePropertyTest()
+        {
+            var expected = "Delft3D Grid";
+            importer = new WaveGridFileImporter("Waves Model", null);
+            Assert.AreEqual(expected, importer.Name);
+        }
+
+        [Test]
+        public void CategoryPropertyTest()
+        {
+            var expected = "Waves Model";
+            importer = new WaveGridFileImporter("Waves Model", null);
+            Assert.AreEqual(expected, importer.Category);
+        }
+
+        [Test]
+        public void SupportedItemTypesTypesPropertyTest()
+        {
+            var expected = new List<Type> { typeof(CurvilinearGrid) };
+            importer = new WaveGridFileImporter("Waves Model", null);
+            Assert.AreEqual(expected, importer.SupportedItemTypes);
+        }
+
+        [Test]
+        public void CanImportOnPropertyTest()
+        {
+            importer = new WaveGridFileImporter("Waves Model", null);
+            Assert.IsTrue(importer.CanImportOn(new object()));
+            Assert.IsFalse(importer.CanImportOnRootLevel);
+        }
+
+        [Test]
+        public void FileFilterTest()
+        {
+            var expected = "Delft3D Grid (*.grd)|*.grd|All Files (*.*)|*.*";
+            importer = new WaveGridFileImporter("Waves Model", null);
+            Assert.AreEqual(expected, importer.FileFilter);
+        }
+
+        [Test]
+        public void ImportItemTest_WhenTargetIsNotCurvilinearGrid_ThenExceptionIsThrown()
+        {
+            importer = new WaveGridFileImporter("Waves Model", null);
+            var target = new List<string>();
+            try
+            {
+                importer.ImportItem(string.Empty, target);
+                Assert.Fail();
+            }
+            catch (Exception e)
+            {
+                Assert.AreEqual(e.GetType(), typeof(NotSupportedException));
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ImportItemTest_GridIsCorrectlyImported()
+        {
+            var saveDirPath = FileUtils.CreateTempDirectory();
+            var projectName = "MyProject";
+            var savePath = Path.Combine(saveDirPath, projectName + ".dsproj");
+            var size = 3;
+            var oldGrid = CreateCurvilinearGrid(size, size);
+            string grdFilePath = Path.Combine(saveDirPath, projectName + ".dsproj_data", "Outer.grd");
+
+            try
+            {
+                using (var app = GetRunningApplication(savePath))
+                {
+                    importer = new WaveGridFileImporter("Waves Model", () => app.Project.RootFolder.GetAllItemsRecursive().OfType<WaveModel>());
+
+                    using (var model = new WaveModel())
+                    {
+                        var project = app.Project;
+                        project.RootFolder.Add(model);
+
+                        model.OuterDomain.Grid = oldGrid;
+                        Assert.AreEqual(size, model.OuterDomain.Grid.Size1);
+
+                        Delft3DGridFileWriter.Write(model.OuterDomain.Grid, grdFilePath);
+                        Assert.IsNotNullOrEmpty(grdFilePath, "There was no .grd file created.");
+                     
+                        model.OuterDomain.Grid = new CurvilinearGrid(0,0,null,null, string.Empty);
+                        Assert.AreEqual(0, model.OuterDomain.Grid.Size1);
+
+                        importer.ImportItem(grdFilePath, model.OuterDomain.Grid);
+
+                        var importedGrid = model.OuterDomain.Grid;
+
+                        Assert.AreEqual(oldGrid.Size1, importedGrid.Size1);
+                        Assert.AreEqual(oldGrid.GetValues().Count, importedGrid.GetValues().Count);
+                        Assert.AreEqual(oldGrid.GetValues(), importedGrid.GetValues());
+                    }
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(saveDirPath);
+            }
+        }
+
+        [Test]
+        public void TargetDataDirectory()
+        {
+            string targetDataDirectory = "dir";
+            importer = new WaveGridFileImporter("Waves Model", null) { TargetDataDirectory = targetDataDirectory };
+            Assert.AreEqual(targetDataDirectory, importer.TargetDataDirectory);
+        }
+
+        [Test]
+        public void ShouldCancelTest()
+        {
+            importer = new WaveGridFileImporter("Waves Model", null) { ShouldCancel = true };
+            Assert.AreEqual(true, importer.ShouldCancel);
+            importer.ShouldCancel = false;
+            Assert.AreEqual(false, importer.ShouldCancel);
+        }
+
+        [Test]
+        public void ProgressChangedTest()
+        {
+            importer = new WaveGridFileImporter("Waves Model", null);
+            bool succes = false;
+            importer.ProgressChanged = (name, current, total) => { succes = true; };
+            importer.ProgressChanged("Importing depth file...", 1, 2);
+            Assert.IsTrue(succes);
+        }
+
+        private static DeltaShellApplication GetRunningApplication(string savePath)
+        {
+            var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true };
+            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+            app.Plugins.Add(new CommonToolsApplicationPlugin());
+            app.Plugins.Add(new SharpMapGisApplicationPlugin());
+            app.Run();
+            app.SaveProjectAs(savePath);
+            return app;
+        }
+
+        private static CurvilinearGrid CreateCurvilinearGrid(int length, int width)
+        {
+            int size = length * width;
+
+            var x = new double[size];
+            var y = new double[size];
+            var values = new double[size];
+            for (int i = 0; i < size; i++)
+            {
+                x[i] = i;
+                y[i] = i;
+                values[i] = i;
+            }
+            var grid = new CurvilinearGrid(length, width, x, y, WaveModel.CoordinateSystemType.Cartesian);
+            grid.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
+            grid.IsTimeDependent = false;
+            grid.Name = "Grid (Outer)";
+            return grid;
         }
     }
 }

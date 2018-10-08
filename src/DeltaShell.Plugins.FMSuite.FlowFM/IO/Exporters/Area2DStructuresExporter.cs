@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -89,6 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         public string FileFilter { get { return "Structures file|*.ini"; } }
 
+        [ExcludeFromCodeCoverage]
         public Bitmap Icon { get { return Properties.Resources.StructureFeatureSmall; } }
         public bool CanExportFor(object item)
         {

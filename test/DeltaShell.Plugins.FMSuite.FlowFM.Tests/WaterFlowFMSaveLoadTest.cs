@@ -1056,9 +1056,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void OpenSaveAndLoadAllMorphologySedimentTestModels(string mduTestPath)
         {
             var testModelPath = Path.Combine(@"MorphologySediment_Models\", mduTestPath);
-            var mduPath =
-                TestHelper.GetTestFilePath(testModelPath);
+            var mduPath = TestHelper.GetTestFilePath(testModelPath);
             mduPath = TestHelper.CreateLocalCopy(mduPath);
+
             using (var app = new DeltaShellApplication())
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using DelftTools.Shell.Core;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
@@ -50,6 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         public abstract string FileFilter { get; }
 
+        [ExcludeFromCodeCoverage]
         public Bitmap Icon
         {
             get { return Properties.Resources.unstruc; }

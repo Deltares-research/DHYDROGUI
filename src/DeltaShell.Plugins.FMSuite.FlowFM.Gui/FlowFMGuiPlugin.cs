@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Resources;
-using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Hydro;
@@ -20,18 +17,14 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters;
-using DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
-using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
@@ -42,7 +35,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness;
 using DeltaShell.Plugins.SharpMapGis.Gui;
@@ -53,13 +45,11 @@ using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using Mono.Addins;
 using NetTopologySuite.Extensions.Features;
-using NetTopologySuite.Extensions.Grids;
 using SharpMap.CoordinateSystems;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using FeatureCollectionViewInfoHelper = DeltaShell.Plugins.FMSuite.Common.Gui.FeatureCollectionViewInfoHelper;
 using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
-using LdbFile = SharpMap.Extensions.Data.Providers.LdbFile;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 using BridgePillar = DelftTools.Hydro.Structures.BridgePillar;
@@ -94,12 +84,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             get { return "1.1.0.0"; }
         }
 
-        public Action<string, bool, IEnumerable<string>> GridHandler;
-
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
             yield return new WaterFlowFMModelNodePresenter(this);
-            yield return new FlowFMTreeShortcutNodePresenter {GuiPlugin = this};
+            yield return new FmModelTreeShortcutNodePresenter { GuiPlugin = this};
             yield return new BoundaryConditionSetNodePresenter { GuiPlugin = this };
             yield return new SourceSinkNodePresenter {GuiPlugin = this};
             yield return new FMMapFileFunctionStoreNodePresenter {GuiPlugin = this};
@@ -108,11 +96,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new HeatFluxModelNodePresenter {GuiPlugin = this};
             yield return new WindItemListNodePresenter {GuiPlugin = this};
             yield return new WindItemNodePresenter {GuiPlugin = this};
-            yield return
-                new SpatialOperationCoverageTreeShortcutNodePresenter<WaterFlowFMModel, WpfSettingsView>
-                {
-                    GuiPlugin = this
-                };
         }
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
@@ -121,24 +104,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             {
                 Description = "FM Settings",
                 GetViewName = (v, o) => o.Name + _fmModelSettingsSuffix,
-                OnActivateView = (v, o) =>
+                AfterCreate = (v, o) =>
                 {
-                    Gui.CommandHandler.OpenView(v);
+                    //Set the properties.
+                    v.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(o, Gui);
+                    v.GetChangedPropertyName = sender => (sender as WaterFlowFMProperty)?.PropertyDefinition.MduPropertyName;
+                }
+            };
+
+            yield return new ViewInfo<FmModelTreeShortcut, WaterFlowFMModel ,WpfSettingsView>
+            {
+                Description = "FM Settings",
+                AdditionalDataCheck = o => o.ShortCutType == ShortCutType.SettingsTab,
+                GetViewData = o => o.FlowFmModel,
+                GetViewName = (v, o) => o.Name + _fmModelSettingsSuffix,
+                OnActivateView = (v,o) =>
+                {
+                    var shortcut = o as FmModelTreeShortcut;
+                    if (shortcut == null) return;
+                    v.EnsureVisible(shortcut.Data);
                 },
                 AfterCreate = (v, o) =>
                 {
                     //Set the properties.
-                    var wpfSettingsViewModel = (WpfSettingsViewModel)v.DataContext;
-                    var waterFlowFmModel = (WaterFlowFMModel)v.Data;
-                    wpfSettingsViewModel.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(waterFlowFmModel, Gui);
-                    ((INotifyPropertyChange)waterFlowFmModel.ModelDefinition.Properties).PropertyChanged += (sender, args) =>
-                    {
-                        var property = sender as WaterFlowFMProperty;
-                        if (property != null)
-                        {
-                            wpfSettingsViewModel.UpdatePropertyValue(property.PropertyDefinition.MduPropertyName);
-                }
-            };
+                    v.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(o.FlowFmModel, Gui);
+                    v.GetChangedPropertyName = sender => (sender as WaterFlowFMProperty)?.PropertyDefinition.MduPropertyName;
                 }
             };
 
@@ -183,197 +173,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     v.OnValidate = d => (d as WaterFlowFMModel)?.Validate();
                 }
             };
-
-            // Spatial operations
-            yield return
-                new ViewInfo
-                    <SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>, WaterFlowFMModel,
-                        WpfSettingsView>
-                {
-                    Description = "Spatial operation on coverage",
-                    GetViewName = (v, o) => o.Name + _fmModelSettingsSuffix,
-                    GetViewData = o => o.Model,
-                    CompositeViewType = typeof(ProjectItemMapView),
-                    GetCompositeViewData = o => o.Model,
-                    OnActivateView =
-                        (v, o) =>
-                        {
-                            var treeShortcut = (SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WpfSettingsView>)o;
-                            treeShortcut.FocusSpatialEditor(Gui);
-                            if (Gui.DocumentViewsResolver.OpenViewForData(treeShortcut.Model, typeof(WpfSettingsView)))
-                            {
-                                var settingsView = Gui.DocumentViews.OfType<WpfSettingsView>()
-                                    .FirstOrDefault(dv => dv.Data.Equals(treeShortcut.Model));
-                                treeShortcut.NavigateToInView(settingsView);
-                            }
-                        },
-                    AfterCreate = (v, o) =>
-                    {
-                        o.FocusSpatialEditor(Gui);
-                        //Set the properties.
-                        if(Gui.DocumentViewsResolver.OpenViewForData(o.Model, typeof(WpfSettingsView)))
-                        {
-                            var settingsView = Gui.DocumentViews.OfType<WpfSettingsView>()
-                                .FirstOrDefault(dv => dv.Data.Equals(o.Model));
-                            o.NavigateToInView(settingsView);
-                        }
-                        
-                    },
-                };
-
-//                var attributeTableViewInfo = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<WaterFlowFM1D2DLink, WaterFlowFMModel>(m => m.Links, () => Gui);
-//            
-//                yield return new ViewInfo<FlowFMTreeShortcut, IEnumerable<WaterFlowFM1D2DLink>,VectorLayerAttributeTableView>
-//                {
-//                    Description = attributeTableViewInfo.Description,
-//                    GetViewName = (v, o) => "test",
-//                    AdditionalDataCheck = o => o.Text == "1D2D Links",
-//                    GetViewData = o => o.Model.Links,
-//                    CompositeViewType = typeof(ProjectItemMapView),
-//                    GetCompositeViewData = o => o.Model,
-//                    AfterCreate = (v, o) =>
-//                    {
-//                        attributeTableViewInfo.AfterCreate(v, o.Model.Links);
-//                        v.CanAddDeleteAttributes = false;
-//                        //v.DynamicAttributeVisible = s => s == Feature2D.LocationKey;
-//                    }
-//                };
-
-
-            // 'General'
-            yield return new ViewInfo<FlowFMTreeShortcut, WaterFlowFMModel, WpfSettingsView>
-            {
-                Description = "FM Settings",
-                GetViewName = (v, o) => o.Name + _fmModelSettingsSuffix,
-                AdditionalDataCheck = o => o.CanSwitchToTab,
-                GetViewData = o => o.Model,
-                CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = o => o.Model,
-                OnActivateView = (v, o) =>
-                {
-                    Gui.CommandHandler.OpenView(v);
-                    var shortCut = ((FlowFMTreeShortcut) o);
-                    if (Gui.DocumentViewsResolver.OpenViewForData(shortCut.Model, typeof(WpfSettingsView)))
-                    {
-                        var settingsView = Gui.DocumentViews.OfType<WpfSettingsView>()
-                            .FirstOrDefault(dv => dv.Data.Equals(shortCut.Model));
-                        shortCut.NavigateToInView(settingsView);
-                    }
-                },
-                AfterCreate = (v, o) =>
-                {
-                    //Set the properties.
-                    if (Gui.DocumentViewsResolver.OpenViewForData(o.Model, typeof(WpfSettingsView)))
-                    {
-                        var settingsView = Gui.DocumentViews.OfType<WpfSettingsView>()
-                            .FirstOrDefault(dv => dv.Data.Equals(o.Model));
-                        o.NavigateToInView(settingsView);
-                }
-                }
-            };
-
-            // 'Grid', launches rgfgrid. 
-            var gridViewInfo = new ViewInfo<UnstructuredGrid, WaterFlowFMModel, WaterFlowFMModelView>
-            {
-                Description = "FM Model",
-                GetViewName = (v, o) => "FM Model (" + o.Name + ")",
-                CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = o => FlowModels.First(m => Equals(m.Grid, o)),
-                GetViewData = o => FlowModels.First(m => Equals(m.Grid, o)),
-                AdditionalDataCheck = o => FlowModels.FirstOrDefault(m => Equals(m.Grid, o)) != null,
-                OnActivateView = (v, o) =>
-                {
-                    v.Gui = Gui;
-
-                    var model = FlowModels.First(m => Equals(m.Grid, o));
-                    var paths = GetLbdAndShapeFilePaths(v);
-
-                    var writer = new MduFile();
-                    var targetMduFilePath = model.MduFilePath;
-                    writer.WriteLandBoundaries(targetMduFilePath, model.ModelDefinition, model.Area);
-
-                    var modelLdbPaths = model.ModelDefinition.GetModelProperty(KnownProperties.LandBoundaryFile).GetFileNames(".ldb", ' ');
-
-                    foreach (var modelLdbPath in modelLdbPaths)
-                    {
-                        var landBoundariesFilePath = Path.Combine(Path.GetDirectoryName(targetMduFilePath), modelLdbPath);
-                        paths.Add(landBoundariesFilePath);
-                    }
-
-                    //Unless specified otherwise (declared in the FlowFMGuiPlugin constructor), this will execute the following: 
-                    //            RgfGridEditor.OpenGrid(model.NetFilePath, model.Grid == null || model.Grid.IsEmpty, paths);
-                    GridHandler?.Invoke(model.NetFilePath, model.Grid == null || model.Grid.IsEmpty, paths);
-                    var mapView = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault( mv => mv.Data.Equals(model));
-                    ReloadGrid(model, mapView);
-                    DialogResult userFeedback = DialogResult.OK;
-                    if (model.Grid != null && !model.Grid.IsEmpty)
-                    {
-                        userFeedback = DelftTools.Controls.Swf.MessageBox.Show("Editing the 2D grid will possibly remove the 1D2D links.", "Are you certain to continue?" , MessageBoxButtons.OKCancel);
-                    }
-                    if (userFeedback == DialogResult.OK)
-                    {
-                        RgfGridEditor.OpenGrid(model.NetFilePath, model.Grid == null || model.Grid.IsEmpty, paths);
-                        // reload grid..
-                        try
-                        {
-                            if (SharpMapGisGuiPlugin.Instance != null)
-                            {
-                                SharpMapGisGuiPlugin.Instance.Gui.MainWindow.SetWaitCursorOn();
-                            }
-                            if (File.Exists(model.NetFilePath) && new FileInfo(model.NetFilePath).Length == 0)
-                            {
-                                throw new FileFormatException(new Uri(model.NetFilePath),
-                                    "invalid empty file detected. Please save your project after editing in RGFGrid.");
-                            }
-                            if (!File.Exists(model.NetFilePath))
-                            {
-                                model.RemoveGrid();
-                                return;
-                            }
-
-                            if (model.CoordinateSystem != null)
-                            {
-                                var netfile = new ImportedFMNetFile(model.NetFilePath);
-                                var coordinates = netfile.Grid.Vertices;
-                                if (!CoordinateSystemValidator.CanAssignCoordinateSystem(coordinates, model.CoordinateSystem))
-                                {
-                                    throw new Exception("Grid coordinates are incompatible with current model coordinate system");
-                                }
-                            }
-                            model.ReloadGrid(false);
-                        }
-                        catch (Exception exception)
-                        {
-                            var dialogResult =
-                                DelftTools.Controls.Swf.MessageBox.Show(
-                                    "Failed to reload grid after RGFGrid edits: " + exception.Message +
-                                    Environment.NewLine + "Continue with new grid?", "Failed to reload grid.",
-                                    MessageBoxButtons.YesNo);
-                            if (dialogResult == DialogResult.Yes)
-                            {
-                                model.Grid = NetFileImporter.ImportGrid(model.NetFilePath) ?? new UnstructuredGrid();
-                            }
-                            else
-                            {
-                                if (File.Exists(model.NetFilePath))
-                                {
-                                    File.Delete(model.NetFilePath);
-                                }
-                                model.WriteNetFile(model.NetFilePath);
-                            }
-                        }
-                        finally
-                        {
-                            if (SharpMapGisGuiPlugin.Instance != null)
-                            {
-                                SharpMapGisGuiPlugin.Instance.Gui.MainWindow.SetWaitCursorOff();
-                            }
-                        }
-                    }
-                }
-            };
-            yield return gridViewInfo;
-            yield return ViewInfoWrapper<FlowFMTreeShortcut>.Create(gridViewInfo, o => o.TargetData, o => o.TargetData is UnstructuredGrid);
 
             // Boundary conditions
             var boundaryConditionSetViewInfo = new ViewInfo<BoundaryConditionSet, BoundaryConditionEditor>
@@ -428,27 +227,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 GetCompositeViewData = o => FlowModels.FirstOrDefault(m => m.BoundaryConditionSets.Equals(o)),
                 AfterCreate = (v, o) =>
                 {
-                    var centralMap =
-                        Gui.DocumentViews.OfType<ProjectItemMapView>()
-                            .FirstOrDefault(vi => vi.MapView.GetLayerForData(o) != null);
+                    var centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(vi => vi.MapView.GetLayerForData(o) != null);
                     if (centralMap == null) return;
 
                     v.OpenViewMethod = feature => Gui.CommandHandler.OpenView(feature);
-                    v.ZoomToFeature =
-                        feature =>
-                            centralMap.MapView.EnsureVisible(
-                                o.FirstOrDefault(
-                                    bcs => bcs.BoundaryConditions.Contains(feature as IBoundaryCondition)));
+                    v.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(o.FirstOrDefault(bcs => bcs.BoundaryConditions.Contains(feature as IBoundaryCondition)));
                 }
             };
 
             yield return allBoundarySetsViewInfo;
 
-            yield return ViewInfoWrapper<FlowFMTreeShortcut>.Create(allBoundarySetsViewInfo, o => o.TargetData);
+            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(allBoundarySetsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet);
 
-            yield return
-                FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Boundaries",
-                    m => m.Boundaries, () => Gui);
+            yield return FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Boundaries", m => m.Boundaries, () => Gui);
 
             // Sources and sinks
             var sourceAndSinkViewInfo = new ViewInfo<SourceAndSink, SourceAndSinkView>
@@ -461,17 +252,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             };
             yield return sourceAndSinkViewInfo;
+
             yield return ViewInfoWrapper<Feature2D>.Create(sourceAndSinkViewInfo, FindDataForPipe, IsModelPipe);
 
-            var pipesViewInfo =
-                            FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Sources and Sinks",
-                                m => m.Pipes, () => Gui);
-            yield return
-                            ViewInfoWrapper<FlowFMTreeShortcut>.Create(pipesViewInfo, GetPipesFromSourcesAndSinks,
-                                afterCreate: (v, o) => v.CanAddDeleteAttributes = false);
-
-
-
+            var pipesViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Sources and Sinks", m => m.Pipes, () => Gui);
+            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(pipesViewInfo, GetPipesFromSourcesAndSinks,o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
+            
             // Heat flux model
             yield return new ViewInfo<HeatFluxModel, HeatFluxModelView>
             {
@@ -494,22 +280,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             };
 
             //Wind
-            yield return
-                new ViewInfo<IEventedList<IWindField>, WindFieldListView>
+            yield return new ViewInfo<IEventedList<IWindField>, WindFieldListView>
                 {
                     AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => Equals(m.WindFields, t)) != null,
                     AfterCreate = (v, o) => v.TimeSeriesGeneratorTool = tableViewTimeSeriesGeneratorTool
                 };
+
             yield return new ViewInfo<UniformWindField, IFunction, FunctionView>
             {
                 GetViewData = w => w.Data,
                 AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => m.WindFields.Contains(t)) != null,
                 AfterCreate = (v, o) => tableViewTimeSeriesGeneratorTool.ConfigureTableView(v.TableView)
             };
+
             yield return new ViewInfo<GriddedWindField, GriddedWindView>
             {
                 AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => m.WindFields.Contains(t)) != null,
             };
+
             yield return new ViewInfo<SpiderWebWindField, GriddedWindView>
             {
                 AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => m.WindFields.Contains(t)) != null,
@@ -520,8 +308,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new ViewInfo<BcmFileExporter, BcmFileExportDialog>();
             yield return new ViewInfo<BcFileImporter, BcFileImportDialog>();
             yield return new ViewInfo<BcFileExporter, BcFileExportDialog>();
-            yield return
-                new ViewInfo<FMModelPartitionExporter, FMPartitionExportDialog>
+            yield return new ViewInfo<FMModelPartitionExporter, FMPartitionExportDialog>
                 {
                     AfterCreate = (v, o) =>
                     {
@@ -529,8 +316,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         v.EnableSolverSelection = true;
                     }
                 };
-            yield return
-                new ViewInfo<FMGridPartitionExporter, FMPartitionExportDialog>
+            yield return new ViewInfo<FMGridPartitionExporter, FMPartitionExportDialog>
                 {
                     AfterCreate = (v, o) =>
                     {
@@ -588,95 +374,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             };
         }
 
-        private static void ReloadGrid(WaterFlowFMModel model, ProjectItemMapView modelView)
+        private object GetPipesFromSourcesAndSinks(FmModelTreeShortcut treeShortCut)
         {
-            try
-            {
-                if (SharpMapGisGuiPlugin.Instance != null)
-                {
-                    SharpMapGisGuiPlugin.Instance.Gui.MainWindow.SetWaitCursorOn();
-                }
-
-                // D3DFMIQ-16: This if-statement should be removed after the fix in DELFT3DFM-1413, where the user should be 
-                // prompted by RGFGRID if he/she wants to save the grid.
-                if (File.Exists(model.NetFilePath) && new FileInfo(model.NetFilePath).Length == 0)
-                {
-                    throw new FileFormatException(new Uri(model.NetFilePath),
-                        "Empty file detected. Changes in the grid were not saved.\nPlease save your project before exiting RGFGRID.");
-                }
-
-                if (!File.Exists(model.NetFilePath))
-                {
-                    model.RemoveGrid();
-                    return;
-                }
-
-                var currentCoordinateSystem = model.CoordinateSystem;
-                var targetCoordinateSystem = UnstructuredGridFileHelper.GetCoordinateSystem(model.NetFilePath);
-
-                if (currentCoordinateSystem != targetCoordinateSystem && 
-                        (currentCoordinateSystem == null || 
-                        targetCoordinateSystem == null || 
-                        currentCoordinateSystem.IsGeographic != targetCoordinateSystem.IsGeographic)
-                    )
-                {
-                    model.CoordinateSystem = targetCoordinateSystem;
-                }
-                
-                model.ReloadGrid(false);
-            }
-            // D3DFMIQ-16: This catch block should be removed after the fix in DELFT3DFM-1413, where the user should be 
-            // prompted by RGFGRID if he/she wants to save the grid.
-            catch (FileFormatException exception)
-            {
-                DelftTools.Controls.Swf.MessageBox.Show(exception.Message, "Grid was not saved in RGFGRID",
-                    MessageBoxButtons.OK);
-                model.Grid = NetFileImporter.ImportGrid(model.NetFilePath) ?? new UnstructuredGrid();
-            }
-            catch (Exception exception)
-            {
-                var dialogResult = DelftTools.Controls.Swf.MessageBox.Show(
-                    "Failed to reload grid after RGFGrid edits: " + exception.Message + Environment.NewLine +
-                    "Continue with new grid?", "Failed to reload grid.", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.Yes)
-                {
-                    model.Grid = NetFileImporter.ImportGrid(model.NetFilePath) ?? new UnstructuredGrid();
-                }
-                else
-                {
-                    if (File.Exists(model.NetFilePath)) File.Delete(model.NetFilePath);
-                    model.WriteNetFile(model.NetFilePath);
-                }
-            }
-            finally
-            {
-                modelView?.MapView?.Map.ZoomToExtents();
-
-                if (SharpMapGisGuiPlugin.Instance != null)
-                {
-                    SharpMapGisGuiPlugin.Instance.Gui.MainWindow.SetWaitCursorOff();
-                }
-            }
-        }
-
-        private static List<string> GetLbdAndShapeFilePaths(WaterFlowFMModelView v)
-        {
-            if (v.Layer == null) return new List<string>();
-
-            var featureProviders = v.Layer.Map.Layers
-                .OfType<VectorLayer>()
-                .Select(l => l.DataSource)
-                .ToList();
-
-            var shapeFiles = featureProviders.OfType<ShapeFile>().OfType<IFileBased>();
-            var ldbFiles = featureProviders.OfType<LdbFile>().OfType<IFileBased>();
-
-            return shapeFiles.Concat(ldbFiles).Select(s => s.Path).ToList();
-        }
-
-        private object GetPipesFromSourcesAndSinks(FlowFMTreeShortcut treeShortCut)
-        {
-            var sourcesAndSinks = treeShortCut.TargetData as IEventedList<SourceAndSink>;
+            var sourcesAndSinks = treeShortCut.Data as IEventedList<SourceAndSink>;
             if (sourcesAndSinks == null) return null;
             var model = FlowModels.FirstOrDefault(m => Equals(sourcesAndSinks, m.SourcesAndSinks));
             return model == null ? null : model.Pipes;
@@ -762,15 +462,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return CreatePropertyInfoDynamic<WaterFlowFMModel>();
             yield return CreatePropertyInfoDynamic<PointCloudLayer>();
             yield return new PropertyInfo<IWeir, FMWeirProperties>{ AdditionalDataCheck = w => FlowModels.Any(m => m.Area.Weirs.Contains(w)) };
-            yield return new PropertyInfo<FlowFMTreeShortcut, HydroNetworkProperties>
+            yield return new PropertyInfo<FmModelTreeShortcut, HydroNetworkProperties>
             {
-                AdditionalDataCheck = w => w.TargetData is IHydroNetwork,
-                GetObjectPropertiesData = o => o.TargetData
+                AdditionalDataCheck = w => w.Data is IHydroNetwork,
+                GetObjectPropertiesData = o => o.Data
             };
-            yield return new PropertyInfo<FlowFMTreeShortcut, DiscretizationProperties>
+            yield return new PropertyInfo<FmModelTreeShortcut, DiscretizationProperties>
             {
-                AdditionalDataCheck = w => w.TargetData is IDiscretization,
-                GetObjectPropertiesData = o => o.TargetData
+                AdditionalDataCheck = w => w.Data is IDiscretization,
+                GetObjectPropertiesData = o => o.Data
             };
 
         }
@@ -1047,7 +747,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         public FlowFMGuiPlugin()
         {
             getActiveMapViewFunc = GetActiveMapView;
-            GridHandler = RgfGridEditor.OpenGrid;
         }
 
         private static Func<MapView> getActiveMapViewFunc;

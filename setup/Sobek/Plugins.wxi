@@ -4,8 +4,6 @@
   <?include ..\NetworkEditor\NetworkEditorPlugin.wxi?>
   <?include ..\NGHS.IO\NGHS.IO.wxi?>
   <?include ..\Dimr\Dimr.wxi?>
-  <?include ..\Dimr\CLI.wxi?>
-  <?include ..\Dimr\CLI_SOBEK.wxi?>
   
   <?include ..\FM\FMSuiteCommonPlugin.wxi?>
   <?include ..\FM\FMPlugin.wxi?>

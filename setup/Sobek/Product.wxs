@@ -8,7 +8,7 @@
   <?define checkForRegistration="true"?>
   <?define Delft3DPackageName="D-HYDRO"?>
   <?define registrationFeature="D-HYDRO"?>
-  <?define registrationVersion="1.0"?>
+  <?define registrationVersion="1.5"?>
   
   <?define pluginicon="$(var.ProjectDir)\Resources\SOBEK.ico"?>
   <?define licensefilepath="$(var.ProjectDir)\Resources\"?>

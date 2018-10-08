@@ -56,6 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 var depthlayers = new WpfGuiProperty(new FieldUIDescription(d => fmModel.DepthLayerDefinition?.Description, null, o => true, o => true)
                 {
                     Category = "General",
+                    SubCategory = "Layers",
                     ToolTip = EditDepthLayersHelper.ToolTip,
                     Label = EditDepthLayersHelper.Label,
                     ValueType = typeof(string),
@@ -71,6 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 var coordSys = new WpfGuiProperty(new FieldUIDescription(d => SetCoordinateSystemButton.CoordinateSystemName(fmModel), null)
                 {
                     Category = "General",
+                    SubCategory = "Global Position",
                     ToolTip = SetCoordinateSystemButton.ToolTip,
                     Label = SetCoordinateSystemButton.Label,
                     ValueType = typeof(string),
@@ -114,16 +116,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             var sedimentCategory = new WpfGuiCategory("Sediment", fieldUiDescriptions)
             {
                 CategoryVisibility = () => fmModel.UseMorSed,
+                CustomControl = new SedimentFractionsEditor(fmModel.SedimentFractions, fmModel.SedimentOverallProperties)
             };
-            var morphologyCategory = wpfCategories.FirstOrDefault(wCat => wCat.CategoryName.ToLower() == "morphology");
-            if( morphologyCategory != null) morphologyCategory.CategoryVisibility = () => fmModel.UseMorSed;
 
-            var sedProperty = sedimentCategory.Properties?.FirstOrDefault();
-            if (sedProperty == null) return;
-
-            sedProperty.CustomControl = new SedimentFractionsEditor(fmModel.SedimentFractions, fmModel.SedimentOverallProperties);
-            sedProperty.GetModel = () => fmModel;
             wpfCategories.Add(sedimentCategory);
+
+            var morphologyCategory = wpfCategories.FirstOrDefault(wCat => wCat.CategoryName.ToLower() == "morphology");
+            if (morphologyCategory != null)
+            {
+                morphologyCategory.CategoryVisibility = () => fmModel.UseMorSed;
+            }
+
+            var tracersCategory = new WpfGuiSubCategory("Tracers", new List<FieldUIDescription>{ new FieldUIDescription(null,null, o => true, o => true)})
+            {
+                CustomControl = new TracerDefinitionsEditorWpf
+                {
+                    Tracers = fmModel.TracerDefinitions
+                }
+            };
+
+            var processesCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("processes"));
+            processesCategory?.SubCategories.Add(tracersCategory);
         }
 
         /*Extraced from WaterFlowFMModelView.cs */
@@ -135,20 +148,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 // add to begin:
                 = objectDescription.FieldDescriptions
                     // add to end:
-                    .Concat(new[]
+                    /*.Concat(new[]
                     {
-                        new FieldUIDescription(d => data, null)
+                        // Disabled toolbox tab see issue : DELFT3DFM-500
+                        /*new FieldUIDescription(d => data, null)
                         {
                             Category = "Toolboxes",
                             CustomControlHelper = new FMToolboxesPanel(),
-                        },
+                        },#1#
                         new FieldUIDescription(d => data.TracerDefinitions, null)
                         {
                             Category = "Processes",
                             SubCategory = "Tracers",
                             CustomControlHelper = new EditTracersControlHelper(),
                         },
-                    }).ToList();
+                    })*/.ToList();
 
             objectDescription.FieldDescriptions.First(f => f.Name == "StopTime").ValidationMethod =
                 (m, t) =>

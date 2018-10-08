@@ -23,61 +23,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string BoundaryName = "Name";
         public const string BoundaryBedCondition = "IBedCond";
         public const string BcFile = "BcFil";
+        private static SedMorDelftIniWriter writer;
+
+        public static SedMorDelftIniWriter Writer
+        {
+            get
+            {
+                if (writer == null)
+                {
+                    writer = new SedMorDelftIniWriter();
+                }
+
+                return writer;
+            }
+        }
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(MorphologyFile));
 
-        public static void Save(string morPath, WaterFlowFMModelDefinition modelDefinition)
+        public static void Save(string morphologyPath, WaterFlowFMModelDefinition modelDefinition)
         {
-            // get the morphology properties
-            var morProperties = modelDefinition.Properties
-                    .Where(p => p.PropertyDefinition.FilePropertyName != BcFile)
-                    .Where(p => p.PropertyDefinition.FileCategoryName != "GUIOnly")
-                    .Where(p => p.PropertyDefinition.FileCategoryName.ToLower().Equals(KnownProperties.morphology)
-                             || p.PropertyDefinition.FileCategoryName.Equals(MorphologyUnknownProperty));
+            DelftIniCategory morphologyGroup;
+            var morphologyCategories = GetMorphologyProperties(modelDefinition, out morphologyGroup);
 
-            var morCategories = new List<DelftIniCategory>()
-            {
-                MorphologySedimentIniFileGenerator.GenerateMorpologyGeneralRegion()
-            };
-
-            var morGroup = new DelftIniCategory(Header);
-            foreach (var property in morProperties)
-            {
-                morGroup.AddProperty(property.PropertyDefinition.FilePropertyName, property.GetValueAsString());
-            }
-            
-            // get the morphology boundaries
-            var morBoundaries = modelDefinition.BoundaryConditions.Where(FlowBoundaryCondition.IsMorphologyBoundary).ToList();
-
-            var bcmFilePath = morBoundaries.OfType<FlowBoundaryCondition>().Any(fbc => fbc.FlowQuantity != FlowBoundaryQuantityType.MorphologyBedLevelFixed && fbc.FlowQuantity != FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint) ? modelDefinition.ModelName + BcmFile.Extension : " ";
-            var bcFilenameProperty = modelDefinition.GetModelProperty(BcFile);
-            if (bcFilenameProperty == null)
-            {
-                Log.WarnFormat("Cannot set the boundary conditions property in the model definition");
-            }
-            else
-            {
-                bcFilenameProperty.Value = bcmFilePath;
-            }
-
-            morGroup.AddProperty(BcFile, bcmFilePath); 
-            morCategories.Add(morGroup);
-
-            foreach (var morBoundary in morBoundaries)
-            {
-                var morBoundaryGroup = new DelftIniCategory(BoundaryHeader);
-                var boundary = morBoundary as FlowBoundaryCondition;
-                if (boundary == null) continue;
-
-                morBoundaryGroup.AddProperty(BoundaryName, boundary.Feature.Name);
-                morBoundaryGroup.AddProperty(BoundaryBedCondition, (int)BoundaryConditionQuantityTypeConverter.ConvertFlowBoundaryConditionQuantityTypeToMorphologyBoundaryConditionQuantityType(boundary.FlowQuantity));
-                morCategories.Add(morBoundaryGroup);
-            }
+            AddMorphologyBoundaries(modelDefinition, morphologyGroup, morphologyCategories);
 
             try
             {
-                var writer = new SedMorDelftIniWriter();
-                writer.WriteDelftIniFile(morCategories.ToList(), morPath);
+                WriteDelftIniFile(morphologyPath, morphologyCategories);
             }
             catch (Exception exception)
             {
@@ -104,6 +76,72 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             modelDefinition.SetMapFormatPropertyValue();
         }
 
+
+        private static void WriteDelftIniFile(string morPath, List<DelftIniCategory> morphologyCategories)
+        {
+            Writer.WriteDelftIniFile(morphologyCategories.ToList(), morPath);
+        }
+
+        private static void AddMorphologyBoundaries(WaterFlowFMModelDefinition modelDefinition, DelftIniCategory morGroup,
+            List<DelftIniCategory> morCategories)
+        {
+            var morBoundaries = modelDefinition.BoundaryConditions.Where(FlowBoundaryCondition.IsMorphologyBoundary).ToList();
+
+            var bcmFilePath = morBoundaries.OfType<FlowBoundaryCondition>().Any(fbc =>
+                fbc.FlowQuantity != FlowBoundaryQuantityType.MorphologyBedLevelFixed &&
+                fbc.FlowQuantity != FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint)
+                ? modelDefinition.ModelName + BcmFile.Extension
+                : "";
+            var bcFilenameProperty = modelDefinition.GetModelProperty(BcFile);
+            if (bcFilenameProperty == null)
+            {
+                Log.WarnFormat("Cannot set the boundary conditions property in the model definition");
+            }
+            else
+            {
+                bcFilenameProperty.Value = bcmFilePath;
+            }
+
+           // var morGroup = new DelftIniCategory(Header);
+            morGroup.AddProperty(BcFile, bcmFilePath);
+            morCategories.Add(morGroup);
+
+            foreach (var morBoundary in morBoundaries)
+            {
+                var morBoundaryGroup = new DelftIniCategory(BoundaryHeader);
+                var boundary = morBoundary as FlowBoundaryCondition;
+                if (boundary == null) continue;
+
+                morBoundaryGroup.AddProperty(BoundaryName, boundary.Feature.Name);
+                morBoundaryGroup.AddProperty(BoundaryBedCondition,
+                    (int)BoundaryConditionQuantityTypeConverter
+                        .ConvertFlowBoundaryConditionQuantityTypeToMorphologyBoundaryConditionQuantityType(
+                            boundary.FlowQuantity));
+                morCategories.Add(morBoundaryGroup);
+            }
+        }
+        private static List<DelftIniCategory> GetMorphologyProperties(WaterFlowFMModelDefinition modelDefinition, out DelftIniCategory morGroup)
+        {
+            var morProperties = modelDefinition.Properties
+                .Where(p => p.PropertyDefinition.FilePropertyName != BcFile)
+                .Where(p => p.PropertyDefinition.FileCategoryName != "GUIOnly")
+                .Where(p => p.PropertyDefinition.FileCategoryName.ToLower().Equals(KnownProperties.morphology)
+                            || p.PropertyDefinition.FileCategoryName.Equals(MorphologyUnknownProperty));
+
+            var morCategories = new List<DelftIniCategory>()
+            {
+                MorphologySedimentIniFileGenerator.GenerateMorpologyGeneralRegion()
+            };
+
+            morGroup = new DelftIniCategory(Header);
+            foreach (var property in morProperties)
+            {
+                morGroup.AddProperty(property.PropertyDefinition.FilePropertyName, property.GetValueAsString());
+            }
+
+            return morCategories;
+        }
+
         private static void ReadMorphologyBoundaryConditions(string mduFilePath, string bcmFile, IList<IDelftIniCategory> boundaryCategories, WaterFlowFMModelDefinition modelDefinition)
         {
             var bcmFileReader = new BcmFile();
@@ -126,8 +164,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
                 // create boundary conditions
                 ReadBoundaryConditionsBlock(boundaryCategory, feature, featureBlockDatas, mduFilePath, modelDefinition);
-
-                
             }
         }
 

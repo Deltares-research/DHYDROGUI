@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     [Entity]
     public class WpfSettingsViewModel
     {
-        private ObservableCollection<WpfGuiCategory> _settingsCategories;
+        private ObservableCollection<WpfGuiCategory> settingsCategories;
 
         /// <summary>
         /// Gets or sets the data model.
@@ -34,12 +34,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// </value>
         public ObservableCollection<WpfGuiCategory> SettingsCategories
         {
-            get { return _settingsCategories; }
+            get { return settingsCategories; }
             set
             {
                 if (value != null)
                 {
-                    _settingsCategories = new ObservableCollection<WpfGuiCategory>(value.Where(cat => cat.IsVisible));
+                    settingsCategories = new ObservableCollection<WpfGuiCategory>(value.Where(cat => cat.IsVisible));
                     RemovedCategories = value.Where(cat => !cat.IsVisible).ToList();
                     SettingsCategories.CollectionChanged += SettingsCategoriesOnCollectionChanged;
                     SettingsCategories.ForEach(gp => gp.PropertyChanged += OnPropertyChanged);

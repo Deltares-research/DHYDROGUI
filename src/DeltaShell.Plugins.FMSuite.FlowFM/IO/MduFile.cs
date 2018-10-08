@@ -137,7 +137,91 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         #region write logic
 
         public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
-        bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false)
+        bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false, ISedimentModelData sedimentModelData = null)
+        {
+            var targetDir = VerifyTargetDirectory(targetMduFilePath);
+            var substitutedPaths = new Dictionary<string, System.Tuple<string, string>>();
+
+            if (Path != null)
+            {
+                CopyNetFile(targetMduFilePath, modelDefinition, substitutedPaths, targetDir);
+            }
+
+            if (switchTo)
+            {
+                Path = targetMduFilePath;
+            }
+
+            if (writeFeatures)
+            {
+                WriteAreaFeatures(targetMduFilePath, modelDefinition, hydroArea, allFixedWeirsAndCorrespondingProperties);
+            }
+
+            if (writeExtForcings)
+            {
+                WriteExternalForcings(targetMduFilePath, modelDefinition, hydroArea);
+            }
+
+            if (modelDefinition.UseMorphologySediment)
+            {
+                WriteMorSedFiles(targetMduFilePath, modelDefinition, sedimentModelData);
+            }
+
+            modelDefinition.SetMduTimePropertiesFromGuiProperties();
+            var isPartOf1D2DModel = (bool)modelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
+          
+            // write at the end in case of updated file paths
+            WriteProperties(targetMduFilePath, modelDefinition.Properties, writeExtForcings, writeFeatures, useNetCDFMapFormat:isPartOf1D2DModel, disableFlowNodeRenumbering:disableFlowNodeRenumbering);
+
+            if (!switchTo)
+            {
+                // Revert path substitutions
+                foreach (var itemPair in substitutedPaths)
+                {
+                    modelDefinition.GetModelProperty(itemPair.Key).SetValueAsString(itemPair.Value.Item1);
+                }
+            }
+        }
+
+        public void WriteProperties(string filePath, IEnumerable<WaterFlowFMProperty> modelDefinition, bool writeExtForcings, bool writeFeatures, bool writePartionFile = true, bool useNetCDFMapFormat = false, bool disableFlowNodeRenumbering = false)
+        {
+            var waterFlowFmProperties = modelDefinition.ToList();
+            WriteMorphologySediment(filePath, waterFlowFmProperties);
+
+            OpenOutputFile(filePath);
+            try
+            {
+                var propertiesByGroup = GetPropertiesByGroup(waterFlowFmProperties, writeExtForcings, writeFeatures);
+                 
+                foreach (var propertyGroup in propertiesByGroup)
+                {
+                    WriteMduLine(writeExtForcings, writeFeatures, writePartionFile, useNetCDFMapFormat, disableFlowNodeRenumbering, propertyGroup);
+                }
+            }
+            finally
+            {
+                CloseOutputFile();
+            }
+        }
+
+        public void WriteBathymetry(WaterFlowFMModelDefinition modelDefinition, string path)
+        {
+            var bedLevelTypeProperty = modelDefinition.Properties.FirstOrDefault(p =>
+                p.PropertyDefinition != null &&
+                p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
+
+            if (bedLevelTypeProperty == null)
+            {
+                Log.WarnFormat("Cannot determine Bed level location, z-values will not be exported");
+                return;
+            }
+
+            var location = (UnstructuredGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
+            var values = modelDefinition.Bathymetry.Components[0].GetValues<double>().ToArray();
+            UnstructuredGridFileHelper.WriteZValues(path, location, values);
+        }
+
+        private static string VerifyTargetDirectory(string targetMduFilePath)
         {
             var targetDir = System.IO.Path.GetDirectoryName(targetMduFilePath);
             if (targetDir != string.Empty && !Directory.Exists(targetDir))
@@ -145,10 +229,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 throw new Exception("Non existing directory in file path: " + targetMduFilePath);
             }
 
-            var substitutedPaths = new Dictionary<string, System.Tuple<string, string>>();
+            return targetDir;
+        }
 
-            // copy netfile
-            if (Path != null)
+        private void CopyNetFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition,
+            Dictionary<string, System.Tuple<string, string>> substitutedPaths, string targetDir)
             {
                 var sourceFile = MduFileHelper.GetSubfilePath(Path,
                     modelDefinition.GetModelProperty(KnownProperties.NetFile));
@@ -163,8 +248,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         var targetNcDir = System.IO.Path.GetDirectoryName(targetFile);
                         Directory.CreateDirectory(targetNcDir);
 
-                        var fullSourcePath = string.IsNullOrEmpty(sourceFile) ? string.Empty : System.IO.Path.GetFullPath(sourceFile);
-                        var fullTargetPath = string.IsNullOrEmpty(targetFile) ? string.Empty : System.IO.Path.GetFullPath(targetFile);
+                    var fullSourcePath =
+                        string.IsNullOrEmpty(sourceFile) ? string.Empty : System.IO.Path.GetFullPath(sourceFile);
+                    var fullTargetPath =
+                        string.IsNullOrEmpty(targetFile) ? string.Empty : System.IO.Path.GetFullPath(targetFile);
 
                         if (fullSourcePath.ToLower() != fullTargetPath.ToLower())
                         {
@@ -235,16 +322,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
 
-            if (switchTo)
-                Path = targetMduFilePath;
-
-            if (writeFeatures)
-            {
-                WriteAreaFeatures(targetMduFilePath, modelDefinition, hydroArea, allFixedWeirsAndCorrespondingProperties);
-            }
-
-            // write external forcings (ExtForceFile.Write() will check if indeed the file is written)
-            if (writeExtForcings)
+        private void WriteExternalForcings(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition,
+            HydroArea hydroArea)
             {
                 var exportDirectory = System.IO.Path.GetDirectoryName(targetMduFilePath);
 
@@ -269,7 +348,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 // TODO: fix this, also, multiple FM models for a single integrated hydroregion to be expected?!
                 var hasEmbankments = hydroArea.Embankments.Any();
                 modelDefinition.Embankments = hydroArea.Embankments;
-
+           
+            // will check if indeed the file is written)
                 ExternalForcingsFile.Write(extForceFilePath, modelDefinition, !(newFormatBoundaryConditions || newBoundaries));
 
                 if (newFormatBoundaryConditions || newBoundaries || hasEmbankments)
@@ -284,6 +364,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     {
                         BoundaryExternalForcingsFile = new BndExtForceFile();
                     }
+
                     BoundaryExternalForcingsFile.Write(bndExtForceFilePath, modelDefinition);
                 }
                 else if (!modelDefinition.BoundaryConditions.Any())
@@ -292,20 +373,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
 
-            modelDefinition.SetMduTimePropertiesFromGuiProperties();
-            var isPartOf1D2DModel = (bool)modelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
-            // write at the end in case of updated file paths
-            WriteProperties(targetMduFilePath, modelDefinition.Properties, writeExtForcings, writeFeatures, useNetCDFMapFormat: isPartOf1D2DModel, disableFlowNodeRenumbering: disableFlowNodeRenumbering);
+        private void WriteMorSedFiles(string mduPath, WaterFlowFMModelDefinition modelDefinition, ISedimentModelData sedimentModelData)
+        {
+            var morPath = System.IO.Path.ChangeExtension(mduPath, "mor");
+            MorphologyFile.Save(morPath, modelDefinition);
 
-            if (!switchTo)
-            {
-                // Revert path substitutions
-                foreach (var itemPair in substitutedPaths)
-                {
-                    modelDefinition.GetModelProperty(itemPair.Key).SetValueAsString(itemPair.Value.Item1);
+            var sedPath = System.IO.Path.ChangeExtension(mduPath, "sed");
+            if (sedimentModelData != null) SedimentFile.Save(sedPath, modelDefinition, sedimentModelData);
                 }
-            }
-        }
 
         private bool IsNetfileCoordinateSystemUpToDate(WaterFlowFMModelDefinition modelDefinition, string targetFile)
         {
@@ -346,26 +421,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return nameProjectedCS;
         }
 
-        public void WriteProperties(string filePath, IEnumerable<WaterFlowFMProperty> modelDefinition, bool writeExtForcings, bool writeFeatures, bool writePartionFile = true, bool useNetCDFMapFormat = false, bool disableFlowNodeRenumbering = false)
-        {
-            WriteMorphologySediment(filePath, modelDefinition);
 
-            OpenOutputFile(filePath);
-            try
+        private void WriteMduLine(bool writeExtForcings, bool writeFeatures, bool writePartionFile, bool useNetCDFMapFormat,
+            bool disableFlowNodeRenumbering, IGrouping<string, WaterFlowFMProperty> propertyGroup)
             {
-                WriteLine("# Generated on " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                WriteLine("# Deltares,Delft3D FM 2018 Suite Version " + FMSuiteFlowModelVersion + ", D-Flow FM Version " + FMDllVersion);
-                SetValueToPropertyIfExists(modelDefinition, KnownProperties.Version, FMDllVersion);
-                SetValueToPropertyIfExists(modelDefinition, KnownProperties.GuiVersion, FMSuiteFlowModelVersion);
-                var propertiesByGroup = modelDefinition.Where(p => p.PropertyDefinition.FileCategoryName != "GUIOnly"
-                                                                    && p.PropertyDefinition.FileCategoryName != MorphologyFile.MorphologyUnknownProperty /*Remove morphology unknown properties*/
-                                                                    && p.PropertyDefinition.FileCategoryName != SedimentFile.SedimentUnknownProperty)/*Remove sediment unknown properties that should be located on the sediment file*/
-                                                        .GroupBy(p => p.PropertyDefinition.FileCategoryName);
-
-                propertiesByGroup = RemoveMorAndSedPropertiesIfNeeded(propertiesByGroup, modelDefinition, writeExtForcings, writeFeatures);
-
-                foreach (var propertyGroup in propertiesByGroup)
-                {
                     WriteLine("");
                     WriteLine("[" + propertyGroup.Key + "]");
                     foreach (var prop in propertyGroup)
@@ -392,12 +451,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         }
                     }
                 }
-            }
-            finally
+
+        private IEnumerable<IGrouping<string, WaterFlowFMProperty>> GetPropertiesByGroup(IEnumerable<WaterFlowFMProperty> modelDefinition, bool writeExtForcings, bool writeFeatures)
             {
-                CloseOutputFile();
+            WriteLine("# Generated on " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            WriteLine("# Deltares,Delft3D FM 2018 Suite Version " + FMSuiteFlowModelVersion + ", D-Flow FM Version " +
+                      FMDllVersion);
+            SetValueToPropertyIfExists(modelDefinition, KnownProperties.Version, FMDllVersion);
+            SetValueToPropertyIfExists(modelDefinition, KnownProperties.GuiVersion, FMSuiteFlowModelVersion);
+            var propertiesByGroup = modelDefinition.Where(p => p.PropertyDefinition.FileCategoryName != "GUIOnly"
+                                                               && p.PropertyDefinition.FileCategoryName !=
+                                                               MorphologyFile
+                                                                   .MorphologyUnknownProperty /*Remove morphology unknown properties*/
+                                                               && p.PropertyDefinition.FileCategoryName !=
+                                                               SedimentFile
+                                                                   .SedimentUnknownProperty) /*Remove sediment unknown properties that should be located on the sediment file*/
+                .GroupBy(p => p.PropertyDefinition.FileCategoryName);
+
+            propertiesByGroup =
+                RemoveMorAndSedPropertiesIfNeeded(propertiesByGroup, modelDefinition, writeExtForcings, writeFeatures);
+            return propertiesByGroup;
             }
-        }
 
         private void WriteMduLine(WaterFlowFMProperty prop, string pathValue)
         {
@@ -423,23 +497,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
             return propertiesByGroup;
-        }
-
-        public void WriteBathymetry(WaterFlowFMModelDefinition modelDefinition, string path)
-        {
-            var bedLevelTypeProperty = modelDefinition.Properties.FirstOrDefault(p =>
-                    p.PropertyDefinition != null &&
-                    p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
-
-            if (bedLevelTypeProperty == null)
-            {
-                Log.WarnFormat("Cannot determine Bed level location, z-values will not be exported");
-                return;
-            }
-
-            var location = (UnstructuredGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
-            var values = modelDefinition.Bathymetry.Components[0].GetValues<double>().ToArray();
-            UnstructuredGridFileHelper.WriteZValues(path, location, values);
         }
 
         private void WriteMorphologySediment(string mduFilePath, IEnumerable<WaterFlowFMProperty> modelDefinition)
@@ -941,6 +998,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         var fields = GetPropertyLine(line, out mduPropertyName, out mduPropertyLowerCase);
 
                         // some backwards compatibility issues (properties have been renamed
+                        if (mduPropertyLowerCase.Equals("enclosurefile"))
+                        {
+                            mduPropertyName = "GridEnclosureFile";
+                        }
                         if (mduPropertyLowerCase.Equals("trtdt"))
                         {
                             mduPropertyName = "DtTrt";

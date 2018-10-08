@@ -10,18 +10,18 @@
   <?ifdef var.RWS?>
     <?define Delft3DPackageName="D-HYDRO"?>
     <?define registrationFeature="D-HYDRO"?>
-    <?define registrationVersion="1.4"?>
-    <?define splashScreenCopyright="© Deltares 2016"?>
+    <?define registrationVersion="1.5"?>
+    <?define splashScreenCopyright="© Deltares 2018"?>
   <?else?>
-    <?define splashScreenCopyright="© Deltares 2017"?>    
+    <?define splashScreenCopyright="© Deltares 2018"?>    
     <?ifdef var.NOWAQ?>
       <?define Delft3DPackageName="Delft3D FM HM"?>
       <?define registrationFeature="Delft3D_FM_Hyd-Mor"?>
-      <?define registrationVersion="1.4"?>
+      <?define registrationVersion="1.5"?>
     <?else?>
       <?define Delft3DPackageName="Delft3D FM HMWQ"?>
       <?define registrationFeature="Delft3D_FM_Hyd-Mor_And_Waq"?>
-      <?define registrationVersion="1.4"?>
+      <?define registrationVersion="1.5"?>
     <?endif?>
   <?endif?>
   

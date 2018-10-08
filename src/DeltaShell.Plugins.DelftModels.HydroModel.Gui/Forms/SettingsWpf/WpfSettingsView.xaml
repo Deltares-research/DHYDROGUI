@@ -9,7 +9,8 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              x:Name="UserControl"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="1000" 
+             d:UserControl.DataContext="{x:Static settingsWpf:WpfSettingsViewModelDesignInstances.AllTypes}">
     <UserControl.DataContext>
         <settingsWpf:WpfSettingsViewModel x:Name="ViewModel"/>
     </UserControl.DataContext>
@@ -17,217 +18,249 @@
         <settingsWpf:WpfEnumConverter x:Key="GuiEnumConverter"/>
         <valueConverters:ImageToBitmapSourceConverter x:Key="ImageToBitmapSourceConverter"/>
         <settingsWpf:SettingsTemplateSelector x:Key="TemplateSelector" />
+        <settingsWpf:DoubleToStringConverter x:Key="DoubleToStringConverter"/>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
-        <!-- maybe refactor these styles? -->
-        <Style TargetType="TextBox">
+
+        <valueConverters:ValueConverterGroup x:Key="InverseBoolToVisibility">
+            <valueConverters:InverseBooleanConverter/>
+            <BooleanToVisibilityConverter/>
+        </valueConverters:ValueConverterGroup>
+
+        <!--#region Styles-->
+        <sys:Double x:Key="UnitWidth">20</sys:Double>
+
+        <GridLength x:Key ="LabelLength">200</GridLength>
+        <GridLength x:Key ="ControlLength">*</GridLength>
+        <GridLength x:Key ="UnitLength">20</GridLength>
+
+        <Style x:Key="LabelTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+        </Style>
+
+        <Style x:Key="ControlStyle" TargetType="Control">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Margin" Value="4,2,4,2"/>
+        </Style>
+
+        <Style x:Key="ControlWithErrorStyle" TargetType="Control" BasedOn="{StaticResource ControlStyle}">
             <Style.Triggers >
                 <Trigger Property="Validation.HasError" Value="true">
                     <Setter Property="ToolTip"
-                            Value="{Binding RelativeSource={x:Static RelativeSource.Self},
-                                    Path=(Validation.Errors)[0].ErrorContent}"/>
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <Style TargetType="xctk:DateTimePicker">
-            <Style.Triggers>
-                <Trigger Property="Validation.HasError" Value="true">
-                    <Setter Property="ToolTip"
-                            Value="{Binding RelativeSource={x:Static RelativeSource.Self},
-                                    Path=(Validation.Errors)[0].ErrorContent}"/>
-                </Trigger>
-            </Style.Triggers>
+
+        <Style x:Key="GridStyle" TargetType="Grid">
+            <d:Style.DataContext>
+                <x:Type Type="settingsWpf:WpfGuiProperty"/>
+            </d:Style.DataContext>
+
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="IsEnabled" Value="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged}"/>
+            <Setter Property="Visibility" Value="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}"/>
+            <Setter Property="ToolTip" Value="{Binding ToolTip}"/>
+            <Setter Property="ToolTipService.ShowDuration" Value="15000"/>
         </Style>
-        <Style TargetType="xctk:TimeSpanUpDown">
-            <Style.Triggers>
-                <Trigger Property="Validation.HasError" Value="true">
-                    <Setter Property="ToolTip"
-                            Value="{Binding RelativeSource={x:Static RelativeSource.Self},
-                                    Path=(Validation.Errors)[0].ErrorContent}"/>
-                </Trigger>
-            </Style.Triggers>
+
+        <Style x:Key="SubCategoryExpanderStyle" TargetType="Expander">
+            <d:Style.DataContext>
+                <x:Type Type="settingsWpf:WpfGuiSubCategory"/>
+            </d:Style.DataContext>
+
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Width" Value="400"/>
+            <Setter Property="Header" Value="{Binding SubCategoryName}"/>
+            <Setter Property="IsExpanded" Value="{Binding Expanded}"/>
+            <Setter Property="Visibility" Value="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}"/>
         </Style>
+
+        <!--#endregion-->
+
+        <!--#region WpfGuiProperty data templates-->
+
         <!-- DataTemplate for strings,integers and doubles -->
-        <DataTemplate x:Key="TextBoxTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}">
-            <StackPanel Orientation="Horizontal"
-                        IsEnabled="{Binding Path=IsEnabled}"
-                        Visibility="{Binding Path=IsVisible, Converter={StaticResource BoolToVisibility}}">
-                <Label Width="185" Margin="0">
-                    <TextBlock Text="{Binding Label}" TextWrapping="WrapWithOverflow"/>
-                </Label>
-                <TextBox 
-                    Text="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center"
-                    IsEnabled="{Binding Path=IsEditable}"
-                    Width="150"/>
-                <Label Content="{Binding UnitSymbol}"/>
+        <DataTemplate x:Key="TextBoxTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}" >
+            <Grid Style="{StaticResource GridStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource LabelLength}"/>
+                    <ColumnDefinition Width="{StaticResource ControlLength}"/>
+                    <ColumnDefinition Width="{StaticResource UnitLength}"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding Label}" Style="{StaticResource LabelTextBlockStyle}"/>
+                <TextBox Grid.Column="1"
+                    Text="{Binding Value,
+                            Mode=TwoWay, 
+                            ValidatesOnDataErrors=True, 
+                            ValidatesOnExceptions=True,
+                            Converter={StaticResource DoubleToStringConverter},
+                            Delay=500, 
+                            UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource ControlWithErrorStyle}"
+                    IsEnabled="{Binding Path=IsEditable}" />
+
+                <TextBlock Grid.Column="2"
+                           Text="{Binding UnitSymbol}" 
+                           Style="{StaticResource LabelTextBlockStyle}"
+                           Width="{StaticResource UnitWidth}"
+                           Visibility="{Binding CustomCommand.ButtonIsVisible, Converter={StaticResource InverseBoolToVisibility}}"/>
                 <Button 
-                    MaxWidth ="26"
-                    MaxHeight="26"
+                    Grid.Column="2"
+                    VerticalAlignment="Center"
+                    Width="{StaticResource UnitWidth}"
+                    Height="{StaticResource UnitWidth}"
                     Visibility="{Binding CustomCommand.ButtonIsVisible, Converter={StaticResource BoolToVisibility}}"
-                    Command="{Binding CustomCommand.CustomCommand}"
-                    VerticalAlignment="Stretch"
-                    HorizontalAlignment="Stretch">
-                    <StackPanel>
-                        <Image
-                            Source="{Binding CustomCommand.ButtonImage, Converter={StaticResource ImageToBitmapSourceConverter}}"/>
-                    </StackPanel>
+                    Command="{Binding CustomCommand.CustomCommand}">
+                    <Image Source="{Binding CustomCommand.ButtonImage, Converter={StaticResource ImageToBitmapSourceConverter}}"/>
                 </Button>
-                <StackPanel.ToolTip>
-                    <TextBlock Text="{Binding ToolTip}"/>
-                </StackPanel.ToolTip>
-            </StackPanel>
+            </Grid>
         </DataTemplate>
 
         <!-- DataTemplate for bool -->
         <DataTemplate x:Key="CheckboxTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}">
-            <StackPanel Orientation="Horizontal"
-                        IsEnabled="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged}"
-                        Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}">
-                <Label Width="185" Margin="0">
-                    <TextBlock Text="{Binding Label}" TextWrapping="WrapWithOverflow"/>
-                </Label>
-                <CheckBox 
-                    IsChecked="{Binding Value, Mode=TwoWay}"
-                    VerticalAlignment="Center"/>
-                <StackPanel.ToolTip>
-                    <TextBlock Text="{Binding ToolTip}"/>
-                </StackPanel.ToolTip>
-            </StackPanel>
+            <Grid Style="{StaticResource GridStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource LabelLength}" />
+                    <ColumnDefinition Width="{StaticResource ControlLength}" />
+                    <ColumnDefinition Width="{StaticResource UnitLength}" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Text="{Binding Label}" 
+                           Style="{StaticResource LabelTextBlockStyle}" />
+                <CheckBox Grid.Column="1"
+                          IsChecked="{Binding Value, Mode=TwoWay}"
+                          Style="{StaticResource ControlStyle}"/>
+            </Grid>
         </DataTemplate>
 
         <!-- DataTemplate for DateTime -->
         <DataTemplate x:Key="DateTimeTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}">
-            <StackPanel Orientation="Horizontal"
-                        IsEnabled="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged}"
-                        Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}">
-                <Label Width="185" Margin="0">
-                    <TextBlock Text="{Binding Label}" TextWrapping="WrapWithOverflow"/>
-                </Label>
+            <Grid Style="{StaticResource GridStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource LabelLength}" />
+                    <ColumnDefinition Width="{StaticResource ControlLength}" />
+                    <ColumnDefinition Width="{StaticResource UnitLength}" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Text="{Binding Label}" 
+                           Style="{StaticResource LabelTextBlockStyle}"/>
                 <xctk:DateTimePicker
+                    Grid.Column="1"
                     Value="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True}" 
+                    Style="{StaticResource ControlWithErrorStyle}"
                     Format="Custom"
                     FormatString="dd/MMM/yyyy HH:mm:ss"
-                    VerticalAlignment="Center"
-                    TextAlignment="Left"
-                    Width="150"/>
-                <StackPanel.ToolTip>
-                    <TextBlock Text="{Binding ToolTip}"/>
-                </StackPanel.ToolTip>
-            </StackPanel>
+                    TextAlignment="Left"/>
+            </Grid>
         </DataTemplate>
 
         <!-- DataTemplate for TimeSpan -->
         <DataTemplate x:Key="TimeSpanTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}">
-            <StackPanel Orientation="Horizontal"
-                        IsEnabled="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged}"
-                        Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}">
-                <Label Width="185" Margin="0">
-                    <TextBlock Text="{Binding Label}" TextWrapping="WrapWithOverflow"/>
-                </Label>
-                <xctk:TimeSpanUpDown FractionalSecondsDigitsCount="1" 
-                                     Width="150" 
-                                     VerticalAlignment="Center" 
-                                     Value="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}"
+            <Grid Style="{StaticResource GridStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource LabelLength}" />
+                    <ColumnDefinition Width="{StaticResource ControlLength}" />
+                    <ColumnDefinition Width="{StaticResource UnitLength}" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Label}" Style="{StaticResource LabelTextBlockStyle}"/>
+                <xctk:TimeSpanUpDown Grid.Column="1"
+                                     FractionalSecondsDigitsCount="1" 
+                                     Style="{StaticResource ControlWithErrorStyle}"
+                                     Value="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True}"
                                      Minimum="00:00:00.1"
                                      DefaultValue="{Binding Value}"
-                                     TextAlignment="Left">
-                </xctk:TimeSpanUpDown>
-                <StackPanel.ToolTip>
-                    <TextBlock Text="{Binding ToolTip}"/>
-                </StackPanel.ToolTip>
-            </StackPanel>
+                                     TextAlignment="Left"/>
+            </Grid>
         </DataTemplate>
 
         <!-- DataTemplate for Enum -->
         <DataTemplate x:Key="ComboBoxTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}">
-            <StackPanel Orientation="Horizontal"
-                        IsEnabled="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged}"
-                        Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}">
-                <Label Width="185" Margin="0">
-                    <TextBlock Text="{Binding Label}" TextWrapping="WrapWithOverflow"/>
-                </Label>
-                <ComboBox 
+            <Grid Style="{StaticResource GridStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource LabelLength}" />
+                    <ColumnDefinition Width="{StaticResource ControlLength}" />
+                    <ColumnDefinition Width="{StaticResource UnitLength}" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                           Text="{Binding Label}" 
+                           Style="{StaticResource LabelTextBlockStyle}"/>
+                <ComboBox
+                    Grid.Column="1"
                     ItemsSource="{Binding Path=ValueType, Converter={StaticResource GuiEnumConverter}}" 
                     SelectedItem="{Binding Path=Value}"
-                    VerticalAlignment="Center"
-                    Width="150"/>
-                <StackPanel.ToolTip>
-                    <TextBlock Text="{Binding ToolTip}"/>
-                </StackPanel.ToolTip>
-            </StackPanel>
+                    Style="{StaticResource ControlStyle}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" MaxWidth="140" TextWrapping="Wrap"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </Grid>
         </DataTemplate>
 
         <!-- DataTemplate for IList<double> -->
         <DataTemplate x:Key="ListTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}">
-            <StackPanel Orientation="Horizontal"
-                        IsEnabled="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged}"
-                        Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}">
-                <Label Width="183">
-                    <TextBlock Text="{Binding Label}" TextWrapping="WrapWithOverflow"/>
-                </Label>
-                <ItemsControl ItemsSource="{Binding ValueCollection, Mode=TwoWay}" 
-                              BorderBrush="Black" 
-                              BorderThickness="1.25" 
-                              Margin="2"
-                              HorizontalContentAlignment="Stretch"
-                              Width="150">
+            <Grid Style="{StaticResource GridStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource LabelLength}" />
+                    <ColumnDefinition Width="{StaticResource ControlLength}" />
+                    <ColumnDefinition Width="{StaticResource UnitLength}" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                           Text="{Binding Label}" 
+                           Style="{StaticResource LabelTextBlockStyle}"
+                           VerticalAlignment="Top"/>
+                <ItemsControl Grid.Column="1"
+                              ItemsSource="{Binding ValueCollection, Mode=TwoWay}" 
+                              Style="{StaticResource ControlStyle}"
+                              HorizontalContentAlignment="Stretch">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <TextBox Name="TextBoxList" Text="{Binding Path=WrapperValue}" 
-                                     Width="150" 
+                                     BorderThickness="1.25"
+                                     Margin="0,0,0,-1.25"
+                                     BorderBrush="Black"
                                      HorizontalAlignment="Stretch" 
-                                     VerticalAlignment="Stretch" 
-                                     Margin=".25"/>
+                                     VerticalAlignment="Stretch"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <StackPanel.ToolTip>
-                    <TextBlock Text="{Binding ToolTip}"/>
-                </StackPanel.ToolTip>
-            </StackPanel>
+            </Grid>
         </DataTemplate>
-        
-        <!--             -->
-        <!-- GUI LAYOUTS -->
-        <!--             -->
+
+        <!--#endregion-->
+
         <!-- GUI Custom Property -->
         <DataTemplate x:Key="propertyCustomTemplate" DataType="{x:Type settingsWpf:WpfGuiCategory}">
             <!-- Bind to the whole data item (a collection) here -->
             <ContentControl Content="{Binding CustomControl}"/>
         </DataTemplate>
 
-        <!-- GUI Property -->
-        <DataTemplate x:Key="guiPropertyTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}">
-            <StackPanel>
-                <ContentPresenter 
-                    Content="{Binding}"
-                    ContentTemplateSelector="{StaticResource TemplateSelector}" />
-            </StackPanel>
-        </DataTemplate>
         <!-- GUI Subcategory -->
         <DataTemplate x:Key="subCategoryTemplate" DataType="{x:Type settingsWpf:WpfGuiSubCategory}">
             <!-- Display your BaseViewModel data items here -->
-            <Expander 
-                Header="{Binding SubCategoryName}"
-                IsExpanded="True"
-                Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility} }">
-                <ScrollViewer 
-                    HorizontalScrollBarVisibility="Auto"
-                    VerticalScrollBarVisibility="Hidden">
-                    <ItemsControl 
-                        ItemsSource="{Binding Properties}" 
-                        ItemTemplate="{StaticResource guiPropertyTemplate}"/>
-                </ScrollViewer>
+            <Expander Style="{StaticResource SubCategoryExpanderStyle}" ClipToBounds="True" >
+                <Border>
+                    <ScrollViewer
+                        HorizontalScrollBarVisibility="Auto"
+                        VerticalScrollBarVisibility="Hidden">
+                        <ItemsControl 
+                            ItemsSource="{Binding Properties}"
+                            ItemTemplateSelector="{StaticResource TemplateSelector}">
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
             </Expander>
-        </DataTemplate>        
+        </DataTemplate>
+
         <!-- GUI CUSTOM SubCategory -->
         <DataTemplate x:Key="subCategoryCustomTemplate" DataType="{x:Type settingsWpf:WpfGuiSubCategory}">
             <!-- Display your BaseViewModel data items here -->
-            <Expander 
-                Header="{Binding SubCategoryName}"
-                IsExpanded="True"
-                Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility} }">
+            <Expander Style="{StaticResource SubCategoryExpanderStyle}">
                 <ScrollViewer 
                     HorizontalScrollBarVisibility="Auto"
                     VerticalScrollBarVisibility="Hidden">
@@ -235,18 +268,16 @@
                 </ScrollViewer>
             </Expander>
         </DataTemplate>
+
         <!-- GUI Category -->
-        <DataTemplate 
-            x:Key="tabContentTemplate" 
-            DataType="{x:Type settingsWpf:WpfGuiCategory}">
+        <DataTemplate x:Key="tabContentTemplate" DataType="{x:Type settingsWpf:WpfGuiCategory}">
             <!-- Bind to the whole data item (a collection) here -->
             <ScrollViewer 
                 VerticalScrollBarVisibility="Auto"
-                Visibility="{Binding Path=IsVisible, Converter={StaticResource BoolToVisibility}}">
+                Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}">
                 <ItemsControl 
                     ItemsSource="{Binding SubCategories}" 
-                    ItemTemplateSelector="{StaticResource TemplateSelector}"
-                    Margin="10">
+                    ItemTemplateSelector="{StaticResource TemplateSelector}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel Orientation="Horizontal"/>
@@ -255,25 +286,25 @@
                 </ItemsControl>
             </ScrollViewer>
         </DataTemplate>
+
         <!-- GUI Custom Category -->
-        <DataTemplate 
-            x:Key="tabCustomContentTemplate" 
-            DataType="{x:Type settingsWpf:WpfGuiCategory}">
+        <DataTemplate x:Key="tabCustomContentTemplate" DataType="{x:Type settingsWpf:WpfGuiCategory}">
             <!-- Bind to the whole data item (a collection) here -->
             <ScrollViewer 
-                VerticalScrollBarVisibility="Auto">
+                VerticalScrollBarVisibility="Auto"
+                Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}">
                 <ContentControl Content="{Binding CustomControl}"/>
             </ScrollViewer>
         </DataTemplate>
     </UserControl.Resources>
+
     <TabControl 
-        x:Name="mainTabControl"
+        x:Name="MainTabControl"
         ItemsSource="{Binding Path=SettingsCategories}"
         ContentTemplateSelector="{StaticResource TemplateSelector}">
         <TabControl.ItemTemplate>
             <DataTemplate>
-                <TextBlock 
-                    Text="{Binding Path=CategoryName}"/>
+                <TextBlock Text="{Binding Path=CategoryName}"/>
             </DataTemplate>
         </TabControl.ItemTemplate>
     </TabControl>

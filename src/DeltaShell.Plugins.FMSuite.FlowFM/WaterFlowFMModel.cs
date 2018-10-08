@@ -27,8 +27,10 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
@@ -48,6 +50,8 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
 using SharpMap;
 using SharpMap.Api;
+using SharpMap.Api.SpatialOperations;
+using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
 using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 using INotifyCollectionChanged = DelftTools.Utils.Collections.INotifyCollectionChanged;
@@ -56,7 +60,7 @@ using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     [Entity]
-    public partial class WaterFlowFMModel : TimeDependentModelBase, IDimrStateAwareModel, IFileBased, IHasCoordinateSystem, IGridOperationApi, IDisposable, IHydroModel, IHydFileModel, IDimrModel, IWaterFlowFMModel
+    public partial class WaterFlowFMModel : TimeDependentModelBase, IDimrStateAwareModel, IFileBased, IHasCoordinateSystem, IGridOperationApi, IDisposable, IHydroModel, IHydFileModel, IDimrModel, IWaterFlowFMModel, ISedimentModelData
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof (WaterFlowFMModel));
         private readonly DimrRunner runner;
@@ -146,6 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void InitializeModelProperties()
         {
+            SedimentModelDataItem = new SedimentModelDataItem();
             SnapVersion = 0;
             ValidateBeforeRun = true;
             DisableFlowNodeRenumbering = false;
@@ -225,7 +230,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get { return depthLayerDefinition; }
             set
             {
-                BeginEdit(new DefaultEditAction("Changing depth layer definition"));
+                BeginEdit(new DefaultEditAction("Changing layer definition"));
                 depthLayerDefinition = value;
                 ModelDefinition.Kmx = depthLayerDefinition.UseLayers ? depthLayerDefinition.NumLayers : 0;
                 EndEdit();
@@ -248,9 +253,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         public IEventedList<IWindField> WindFields { get; private set; }
+        public IList<IUnsupportedFileBasedExtForceFileItem> UnsupportedFileBasedExtForceFileItems { get; private set; }
 
         public HeatFluxModelType HeatFluxModelType { get; private set; }
-
+         
         public IList<ModelFeatureCoordinateData<FixedWeir>> FixedWeirsProperties
         {
             get { return allFixedWeirsAndCorrespondingProperties; }
@@ -459,6 +465,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Boundaries = ModelDefinition.Boundaries;
             BoundaryConditionSets = ModelDefinition.BoundaryConditionSets;
             WindFields = ModelDefinition.WindFields;
+            UnsupportedFileBasedExtForceFileItems = ModelDefinition.UnsupportedFileBasedExtForceFileItems;
             Pipes = ModelDefinition.Pipes;
             SourcesAndSinks = ModelDefinition.SourcesAndSinks;
 
@@ -1195,6 +1202,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
             WindFields = ModelDefinition.WindFields;
+            UnsupportedFileBasedExtForceFileItems = ModelDefinition.UnsupportedFileBasedExtForceFileItems;
         }
 
         public void Dispose()
@@ -1977,11 +1985,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 ModelDefinition.Bathymetry = Bathymetry;
             }
 
-            WriteMorSedFilesIfNeeded(mduPath);
-
             InitializeAreaDataColumns();
 
-            mduFile.Write(mduPath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, switchTo, writeExtForcings, writeFeatures, DisableFlowNodeRenumbering);
+            mduFile.Write(mduPath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null);
 
             RestoreAreaDataColumns();
 
@@ -2032,16 +2038,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             MduFile.CleanBridgePillarAttributes(Area.BridgePillars);
         }
 
-        private void WriteMorSedFilesIfNeeded(string mduPath)
-        {
-            if (!UseMorSed) return;
-
-            var morPath = Path.ChangeExtension(mduPath, "mor");
-            MorphologyFile.Save(morPath, ModelDefinition);
-
-            var sedPath = Path.ChangeExtension(mduPath, "sed");
-            SedimentFile.Save(sedPath, this);
-        }
+       
 
         private void OnSwitchTo(string mduPath)
         {
@@ -2066,6 +2063,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var newPath = Path.Combine(Path.GetDirectoryName(ExtFilePath), Path.GetFileName(windField.Path));
                 windField.SwitchTo(newPath);
             }
+
+            foreach (var notUsedExtForceFileItem in UnsupportedFileBasedExtForceFileItems)
+            {
+                var newPath = Path.Combine(Path.GetDirectoryName(ExtFilePath), Path.GetFileName(notUsedExtForceFileItem.Path));
+                notUsedExtForceFileItem.SwitchTo(newPath);
+        }
         }
 
         private void OnLoad(string mduPath)
@@ -2870,6 +2873,84 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
         #endregion
 
+        #region ISedimentModelData implementation
+        private SedimentModelDataItem SedimentModelDataItem { get; set; }
+
+        public SedimentModelDataItem GetSedimentDataItem()
+        {
+            SedimentModelDataItem.SpacialVariableNames = SedimentFractions
+                .SelectMany(s => s.GetAllActiveSpatiallyVaryingPropertyNames())
+                .Where(n => !n.EndsWith("SedConc")).ToList();
+
+            var dataItemsFound = SedimentModelDataItem.SpacialVariableNames.SelectMany(spaceVarName => DataItems.Where(di => di.Name.Equals(spaceVarName))).ToArray();
+            var dataItemsWithConverter = dataItemsFound.Where(d => d.ValueConverter is SpatialOperationSetValueConverter).ToList();
+            var dataItemsWithOutConverter = dataItemsFound.Except(dataItemsWithConverter).ToList();
+
+            SedimentModelDataItem.SpatialOperation = GetSpatialOperationsLookupTable(dataItemsWithConverter);
+            SedimentModelDataItem.Coverages = dataItemsWithOutConverter.Select(di => di.Value)
+                .OfType<UnstructuredGridCoverage>()
+                .GroupBy(c => c.GetType())
+                .ToList();
+            SedimentModelDataItem.DataItemNameLookup = dataItemsWithOutConverter.ToDictionary(di => di.Value, di => di.Name);
+
+            return SedimentModelDataItem;
+        }
+
+        public Dictionary<string, IList<ISpatialOperation>> GetSpatialOperationsLookupTable(List<IDataItem> dataItemsWithConverter)
+        {
+            var spatialOperationsLookupTable = new Dictionary<string, IList<ISpatialOperation>>();
+            foreach (var dataItem in dataItemsWithConverter)
+            {
+                var spatialOperationValueConverter = (SpatialOperationSetValueConverter)dataItem.ValueConverter;
+                if (
+                    spatialOperationValueConverter.SpatialOperationSet.Operations.All(
+                        WaterFlowFMModelDefinition.SupportedByExtForceFile))
+                {
+                    // put in everything except spatial operation sets,
+                    // because we only use interpolate commands that will grab the importsamplesoperation via the input parameters.
+                    var spatialOperation = spatialOperationValueConverter.SpatialOperationSet.GetOperationsRecursive()
+                        .Where(s => !(s is ISpatialOperationSet))
+                        .Select(WaterFlowFMModelDefinition.ConvertSpatialOperation)
+                        .ToList();
+
+                    //spatialOperations.AddRange(spatialOperation);
+                    spatialOperationsLookupTable.Add(dataItem.Name, spatialOperation);
+                }
+                // null check to see if it has a final coverage. It could be that there are only point clouds in the set.
+                else if (spatialOperationValueConverter.SpatialOperationSet.Output.Provider != null)
+                {
+                    // unsupported operations are converted to sample operations that are saved with an xyz file via the model definition.
+                    var coverage =
+                        spatialOperationValueConverter.SpatialOperationSet.Output.Provider.Features[0] as
+                            UnstructuredGridCoverage;
+
+                    // In the event that the coverage is comprised entirely of non-data values, ignore it and continue
+                    // (This can happen when exporting spatial operations that comprise of added points but no interpolation
+                    // - we're not interested in these for the mdu, they will be saved as dataitems to the dsproj)
+                    if (coverage == null || (coverage.Components[0].NoDataValues != null &&
+                                             coverage.GetValues<double>()
+                                                 .All(v => coverage.Components[0].NoDataValues.Contains(v))))
+                    {
+                        continue;
+                    }
+
+                    var newOperation = new AddSamplesOperation(false)
+                    {
+                        Name = spatialOperationValueConverter.SpatialOperationSet.Name
+                    };
+                    newOperation.SetInputData(AddSamplesOperation.SamplesInputName,
+                        new PointCloudFeatureProvider
+                        {
+                            PointCloud = coverage.ToPointCloud(0, true),
+                        });
+
+                    spatialOperationsLookupTable.Add(dataItem.Name, new[] { newOperation });
+                }
+            }
+            return spatialOperationsLookupTable;
+        }
+        #endregion
+
         #region Control computational timestep loop
         /*
         public override bool InitializeComputationalTimeStep(ref TimeSpan dt)
@@ -2988,7 +3069,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-
         public virtual void ConnectOutput(string outputPath)
         {
             ReconnectOutputFiles(outputPath);
@@ -3014,7 +3094,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         DataItems.Add(logDataItem);
                     }
 
-                    var log = File.ReadAllText(diaFilePath);
+                    var log = DiaFileReader.Read(diaFilePath);
                     ((TextDocument)logDataItem.Value).Content = log;
                 }
                 catch (Exception ex)

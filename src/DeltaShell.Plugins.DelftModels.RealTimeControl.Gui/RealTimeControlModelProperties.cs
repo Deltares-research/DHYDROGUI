@@ -13,6 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
     [ResourcesDisplayName(typeof(Resources), "RealTimeControlModelProperties_DisplayName")]
     public class RealTimeControlModelProperties : ObjectProperties<RealTimeControlModel>
     {
+        [PropertyOrder(1)]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Common_Name_DisplayName")]
         [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_Name_Description")]
@@ -22,6 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             set { data.Name = value; }
         }
 
+        [PropertyOrder(2)]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "RealTimeControlModelProperties_LimitMemory_DisplayName")]
         [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_LimitMemory_Description")]
@@ -30,8 +32,40 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             get { return data.LimitMemory; }
             set { data.LimitMemory = value; }
         }
-        
+
+        [PropertyOrder(3)]
+        [ResourcesCategory(typeof(Resources), "Categories_General")]
+        [ResourcesDisplayName(typeof(Resources), "RealTimeControlModelProperties_CoordinateSystem_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_CoordinateSystem_Description")]
+        [TypeConverter(typeof(CoordinateSystemStringTypeConverter))]
+        [Editor(typeof(CoordinateSystemTypeEditor), typeof(UITypeEditor))]
+        public ICoordinateSystem CoordinateSystem
+        {
+            get { return data.CoordinateSystem; }
+            set { data.CoordinateSystem = value; }
+        }
+
         [PropertyOrder(0)]
+        [ResourcesCategory(typeof(Resources), "RealTimeControlModelProperties_Category_RunParameters")]
+        [ResourcesDisplayName(typeof(Resources), "RealTimeControlModelProperties_UseRestart_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_UseRestart_Description")]
+        public bool UseRestart
+        {
+            get { return data.UseRestart; }
+            set { data.UseRestart = value; }
+        }
+
+        [PropertyOrder(1)]
+        [ResourcesCategory(typeof(Resources), "RealTimeControlModelProperties_Category_RunParameters")]
+        [ResourcesDisplayName(typeof(Resources), "RealTimeControlModelProperties_WriteRestart_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_WriteRestart_Description")]
+        public bool WriteRestart
+        {
+            get { return data.WriteRestart; }
+            set { data.WriteRestart = value; }
+        }
+
+        [PropertyOrder(2)]
         [ResourcesCategory(typeof(Resources), "RealTimeControlModelProperties_Category_RunParameters")]
         [ResourcesDisplayName(typeof(Resources), "RealTimeControlModelProperties_UseSaveStateTimeRange_DisplayName")]
         [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_UseSaveStateTimeRange_Description")]
@@ -41,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             set { data.UseSaveStateTimeRange = value; }
         }
 
-        [PropertyOrder(1)]
+        [PropertyOrder(3)]
         [TypeConverter(typeof(DeltaShellDateTimeConverter))]
         [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "RealTimeControlModelProperties_Category_RunParameters")]
@@ -53,19 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             set { data.SaveStateStartTime = value; }
         }
 
-        [PropertyOrder(2)]
-        [TypeConverter(typeof(DeltaShellDateTimeConverter))]
-        [DynamicReadOnly]
-        [ResourcesCategory(typeof(Resources), "RealTimeControlModelProperties_Category_RunParameters")]
-        [ResourcesDisplayName(typeof(Resources), "RealTimeControlModelProperties_SaveStateStopTime_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_SaveStateStopTime_Description")]
-        public DateTime SaveStateStopTime
-        {
-            get { return data.SaveStateStopTime; }
-            set { data.SaveStateStopTime = value; }
-        }
-
-        [PropertyOrder(3)]
+        [PropertyOrder(4)]
         [TypeConverter(typeof(DeltaShellTimeSpanConverter))]
         [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "RealTimeControlModelProperties_Category_RunParameters")]
@@ -77,33 +99,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             set { data.SaveStateTimeStep = value; }
         }
 
+        [PropertyOrder(5)]
+        [TypeConverter(typeof(DeltaShellDateTimeConverter))]
+        [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "RealTimeControlModelProperties_Category_RunParameters")]
-        [ResourcesDisplayName(typeof(Resources), "RealTimeControlModelProperties_UseRestart_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_UseRestart_Description")]
-        public bool UseRestart
+        [ResourcesDisplayName(typeof(Resources), "RealTimeControlModelProperties_SaveStateStopTime_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_SaveStateStopTime_Description")]
+        public DateTime SaveStateStopTime
         {
-            get { return data.UseRestart; }
-            set { data.UseRestart = value; }
-        }
-
-        [ResourcesCategory(typeof(Resources), "RealTimeControlModelProperties_Category_RunParameters")]
-        [ResourcesDisplayName(typeof(Resources), "RealTimeControlModelProperties_WriteRestart_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_WriteRestart_Description")]
-        public bool WriteRestart
-        {
-            get { return data.WriteRestart; }
-            set { data.WriteRestart = value; }
-        }
-
-        [ResourcesCategory(typeof(Resources), "Categories_General")]
-        [ResourcesDisplayName(typeof(Resources), "RealTimeControlModelProperties_CoordinateSystem_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_CoordinateSystem_Description")]
-        [TypeConverter(typeof(CoordinateSystemStringTypeConverter))]
-        [Editor(typeof(CoordinateSystemTypeEditor), typeof(UITypeEditor))]
-        public ICoordinateSystem CoordinateSystem
-        {
-            get { return data.CoordinateSystem; }
-            set { data.CoordinateSystem = value; }
+            get { return data.SaveStateStopTime; }
+            set { data.SaveStateStopTime = value; }
         }
 
         [DynamicReadOnlyValidationMethod]

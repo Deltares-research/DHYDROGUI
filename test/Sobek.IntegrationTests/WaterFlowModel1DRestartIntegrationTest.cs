@@ -366,6 +366,109 @@ namespace Sobek.IntegrationTests
             Assert.AreEqual(24, flowModel.GetRestartOutputStates().Count());
         }
 
+        [TestCase(24, 24, 4, 0, TestName = "GivenASimpleFlowModelWithAStateSaveMatchingTheRunPeriodWhenThisModelRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun")]
+        [TestCase(24, 16, 4, 4, TestName = "GivenASimpleFlowModelWithAStateSaveMatchingASubsetOfTheRunPeriodWhenThisRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun")]
+        public void GivenASimpleFlowModelWhenThisModelIsRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun(int runLengthInHours, int runLengthSaveStateInHours, int intervalSaveStateInHours, int offsetSaveStateInHours)
+        {
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                const string projectName = "restartTestProject.dsproj";
+                var projectPath = Path.Combine(tempDir, projectName);
+
+                using (var app = new DeltaShellApplication())
+                {
+                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                    app.Plugins.Add(new CommonToolsApplicationPlugin());
+                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                    app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
+                    app.Plugins.Add(new NetCdfApplicationPlugin());
+
+                    app.Run();
+
+                    app.SaveProjectAs(projectPath);
+
+                    var flowModel = CreateSimpleFlowModel();
+                    var samplePoint = flowModel.Network.CrossSections.First();
+                    app.Project.RootFolder.Add(flowModel);
+
+                    // When
+                    // Run full calculation with generating restart times.
+                    flowModel.WriteRestart = true;
+                    flowModel.StopTime = flowModel.StartTime.AddHours(runLengthInHours);
+
+                    flowModel.UseSaveStateTimeRange = true;
+                    flowModel.SaveStateStartTime = flowModel.StartTime.AddHours(offsetSaveStateInHours);
+                    flowModel.SaveStateStopTime = flowModel.SaveStateStartTime.AddHours(runLengthSaveStateInHours);
+                    flowModel.SaveStateTimeStep = TimeSpan.FromHours(intervalSaveStateInHours);
+
+                    ActivityRunner.RunActivity(flowModel);
+                    Assert.AreEqual(ActivityStatus.Cleaned, flowModel.Status);
+
+                    // Get results for the waterLevels after this run to compare with partial runs.
+                    var waterLevelValuesFullRun = flowModel.OutputWaterLevel.GetTimeSeries(samplePoint).Components[0]
+                        .Values.OfType<double>().ToList();
+
+                    // Remove writeRestart for subsequent runs.
+                    flowModel.WriteRestart = false;
+
+                    var fullRunStartTime = flowModel.StartTime;
+                    var fullRunStopTime = flowModel.StopTime;
+
+                    // Save project and close project.
+                    app.SaveProject();
+                    app.CloseProject();
+
+                    // Calculate number of restart states to evaluate.
+                    var nRestartStates = (runLengthSaveStateInHours / intervalSaveStateInHours);
+                    var lastRestartStateOverlapsWithStop =
+                        fullRunStopTime.Equals(fullRunStartTime.AddHours(offsetSaveStateInHours + nRestartStates * intervalSaveStateInHours));
+
+                    if (lastRestartStateOverlapsWithStop)
+                        nRestartStates -= 1;
+
+                    // Do restarts for each of the restart files.
+                    for (var i = 0; i < nRestartStates; i++)
+                    {
+                        app.OpenProject(projectPath);
+                        flowModel = app.Project.RootFolder.Models.OfType<WaterFlowModel1D>().First();
+                        samplePoint = flowModel.Network.CrossSections.First();
+
+                        // Set up restart details of next run.
+                        var restartState =
+                            (FileBasedRestartState) flowModel.GetRestartOutputStates().ElementAt(i).Clone();
+
+                        flowModel.StartTime = restartState.SimulationTime;
+                        flowModel.StopTime = fullRunStopTime;
+                        flowModel.UseRestart = true;
+
+                        flowModel.RestartInput = restartState;
+
+                        // Run with restart.
+                        ActivityRunner.RunActivity(flowModel);
+                        Assert.AreEqual(ActivityStatus.Cleaned, flowModel.Status);
+
+                        // Obtain the data to compare with.
+                        var waterLevelRestart = flowModel.OutputWaterLevel.GetTimeSeries(samplePoint).Components[0]
+                            .Values.OfType<double>().ToArray();
+                        var waterLevelFullRunSubSetRestart = waterLevelValuesFullRun
+                            .Skip(waterLevelValuesFullRun.Count - waterLevelRestart.Length).ToArray();
+
+                        for (var indexWaterLevel = 0;
+                            indexWaterLevel < waterLevelFullRunSubSetRestart.Length;
+                            indexWaterLevel++)
+                        {
+                        // Then
+                        Assert.That(waterLevelRestart[indexWaterLevel],
+                            Is.EqualTo(waterLevelFullRunSubSetRestart[indexWaterLevel]).Within(0.0001));
+                        }
+
+                        app.CloseProject();
+                    }
+                }
+            });
+        }
+
         private static WaterFlowModel1D CreateSimpleFlowModel()
         {
             var flowModel = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();

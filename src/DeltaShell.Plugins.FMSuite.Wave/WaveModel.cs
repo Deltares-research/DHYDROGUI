@@ -1003,6 +1003,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         protected override void OnInitialize()
         {
             if (RunsInIntegratedModel) return;
+            var pathFolders = Environment.GetEnvironmentVariable("path")?.Split(';');
+            //need to set because wave uses swan and esmf which use their own process and own environment path, set before!
+            if (pathFolders != null && !pathFolders.Contains(DimrApiDataSet.SharedDllPath))
+                DimrApiDataSet.SetSharedPath();
 
             waveApi = new RemoteWaveModelApi(ShowModelRunConsole)
             {

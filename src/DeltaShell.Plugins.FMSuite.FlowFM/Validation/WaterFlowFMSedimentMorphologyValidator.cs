@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         /// </summary>
         /// <param name="model">The WaterFlowFMModel that is being </param>
         /// <returns></returns>
-        private static IEnumerable<ValidationIssue> ValidateSpaciallyVaryingSedimentFractionProperties(IWaterFlowFMModel model)
+        private static IEnumerable<ValidationIssue> ValidateSpaciallyVaryingSedimentFractionProperties(WaterFlowFMModel model)
         {
             var spaciallyVaryingPropertyNames = model.SedimentFractions
                 .SelectMany(s => s.GetAllActiveSpatiallyVaryingPropertyNames()).Where(n => !n.EndsWith("SedConc"))
@@ -101,8 +101,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 .ToArray();
             var dataItemsWithConverter = dataItemsFound
                 .Where(d => d.ValueConverter is SpatialOperationSetValueConverter).ToList();
-
-            var spatialOperations = SedimentFile.GetSpatialOperations(dataItemsWithConverter);
+            
+            var spatialOperations = model.GetSpatialOperationsLookupTable(dataItemsWithConverter);
 
             // If spatial operation is ValueOperationBase, then add a new ValidationIssue
             var issues = new List<ValidationIssue>();

@@ -89,30 +89,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
 
             // save boundary data
-            var tseriesFile =
-                modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory,
-                    KnownWaveProperties.TimeSeriesFile)
-                    .GetValueAsString();
+            var tSeriesFile = modelName + ".bcw";
+            generalCategory.SetProperty(KnownWaveProperties.TimeSeriesFile,
+                modelDefinition.BoundaryConditions.Any(bc =>
+                    bc.DataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+                    ? tSeriesFile
+                    : string.Empty);
 
-            if (tseriesFile == string.Empty)
-            {
-                tseriesFile = modelName + ".bcw";
-
-                var waveModelPropertyDefinition = new WaveModelPropertyDefinition
-                {
-                    DataType = typeof(string),
-                    FileCategoryName = generalCategory.Name,
-                    FilePropertyName = KnownWaveProperties.TimeSeriesFile,
-                    Category = generalCategory.Name,
-                    DefaultValueAsString = string.Empty,
-                };
-           
-                modelDefinition.SetModelProperty(generalCategory.Name, KnownWaveProperties.TimeSeriesFile, new WaveModelProperty(waveModelPropertyDefinition, tseriesFile) );
-               // GroupPropertiesByMdwCategory(modelDefinition, mdwCategories);
-            }
-            
             CreateBoundaryCategories(modelDefinition.BoundaryConditions, ref mdwCategories);
-            SaveBoundaryConditions(modelDefinition, Path.Combine(targetDir, tseriesFile),
+            SaveBoundaryConditions(modelDefinition, Path.Combine(targetDir, tSeriesFile),
                 modelDefinition.ModelReferenceDateTime);
 
             if (MdwFilePath != null)
@@ -680,11 +665,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         private IEnumerable<WaveBoundaryCondition> CreateWaveBoundaries(IList<DelftIniCategory> categories,
                                                                         WaveModelDefinition modelDefinition)
         {
-            var generalSettings = categories.First(c => c.Name == KnownWaveCategories.GeneralCategory);
-            var bcwFilePath = generalSettings.GetPropertyValue("TSeriesFile");
+            var generalCategory = categories.First(c => c.Name == KnownWaveCategories.GeneralCategory);
+
+            var bcwFilePath = generalCategory.GetPropertyValue(KnownWaveProperties.TimeSeriesFile);
 
             IDictionary<string, List<IFunction>> functionLookup = null;
-            if (bcwFilePath != null)
+            if (!String.IsNullOrEmpty(bcwFilePath))
             {
                 functionLookup = new BcwFile().Read(Path.Combine(Path.GetDirectoryName(MdwFilePath), bcwFilePath));
             }

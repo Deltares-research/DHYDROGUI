@@ -363,11 +363,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         
         private void ReadPolyLines(IEnumerable<DelftIniCategory> bndBlocks, WaterFlowFMModelDefinition modelDefinition)
         {
+            modelDefinition.Boundaries.ForEach(b => { existingPolylineFiles[b] = b.Name + ".pli"; });
+
             foreach (var delftIniCategory in bndBlocks)
             {
                 var locationFile = delftIniCategory.GetPropertyValue(LocationFileKey);
                 var isEmbankment = delftIniCategory.GetPropertyValue(QuantityKey) == ExtForceQuantNames.EmbankmentBnd;
-
+          
                 if (existingPolylineFiles.Values.Contains(locationFile)) continue;
 
                 if (locationFile == null) continue;
@@ -394,7 +396,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     modelDefinition.Embankments.Add(features.First());
                 }
                 else
-                {
+                {                
                     var reader = new PliFile<Feature2D>();
                     var features = reader.Read(pliFilePath);
                     if (!features.Any()) continue;

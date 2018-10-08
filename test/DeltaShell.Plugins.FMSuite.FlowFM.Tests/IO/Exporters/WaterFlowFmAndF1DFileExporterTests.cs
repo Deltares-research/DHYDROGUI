@@ -1,16 +1,15 @@
 ﻿using System;
 using NUnit.Framework;
 using System.Linq;
-using Microsoft.Scripting;
 using Rhino.Mocks;
 using Contains = NUnit.Framework.Contains;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters.Tests
 {
-    [TestFixture()]
+    [TestFixture]
     public class WaterFlowFmAndF1DFileExporterTests
     {
-        [Test()]
+        [Test]
         [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Item to export Flow Flexible Mesh model with 1D Network is not set")]
         public void GivenAnythingButWaterFlowFmModelToExportWhenExportThanExpectExceptionTest()
         {
@@ -18,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters.Tests
             exporter.Export(null, string.Empty);
         }
 
-        [Test()]
+        [Test]
         [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Cannot export to unknown location, path is null or empty")]
         public void GivenAnythingButWaterFlowFmModelOrNullAndPathIsNullToExportWhenExportThanExpectExceptionTest()
         {
@@ -26,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters.Tests
             exporter.Export(new object(), null);
         }
 
-        [Test()]
+        [Test]
         [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Cannot export to unknown location, path is null or empty")]
         public void GivenAnythingButWaterFlowFmModelOrNullAndPathIsNotSetToExportWhenExportThanExpectExceptionTest()
         {
@@ -34,28 +33,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters.Tests
             exporter.Export(new object(), string.Empty);
         }
 
-        [Test()]
-        [ExpectedException(typeof(ArgumentTypeException), ExpectedMessage = "Unexpected object type: ", MatchType = MessageMatch.Contains)]
+        [Test]
+        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Unexpected object type: ", MatchType = MessageMatch.Contains)]
         public void GivenAnythingButWaterFlowFmModelOrNullAndPathIsSetToExportWhenExportThanExpectExceptionTest()
         {
             var exporter = new WaterFlowFmAndF1DFileExporter();
             exporter.Export(new object(), ".");
         }
 
-        [Test()]
+        [Test]
         public void GivenEmptyWaterFlowFmModelToExportWhenExportThanExpectExportToSuccesful()
         {
             var exporter = new WaterFlowFmAndF1DFileExporter();
             Assert.That(exporter.Export(new WaterFlowFMModel(), "."), Is.True);//exporting nothing should result to true?
         }
-        [Test()]
+        [Test]
         public void SourceTypesTest()
         {
             var exporter = new WaterFlowFmAndF1DFileExporter();
             Assert.That(exporter.SourceTypes().ToList(), Contains.Item(typeof(WaterFlowFMModel)));
         }
 
-        [Test()]
+        [Test]
         public void CanExportForTest()
         {
             var exporter = new WaterFlowFmAndF1DFileExporter();

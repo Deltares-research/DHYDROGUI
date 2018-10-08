@@ -1,14 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
+using Rhino.Mocks;
+using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
+using SharpMap.SpatialOperations;
 using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
@@ -187,6 +196,149 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.That(report.AllErrors.First(i => i.Severity == ValidationSeverity.Error).Message,
                 Is.EqualTo("Input restart state is empty; cannot restart."));
             
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void ValidateWithSpaciallyVariantFullCoverage()
+        {
+            //Arrange
+            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"spatiallyVariantSediment\fullGridCoverage\FlowFM.mdu"));
+
+            //Act
+            var report = model.Validate();
+
+            //Assert
+            Assert.AreEqual(0,
+                report.GetAllIssuesRecursive()
+                    .Count(i => i.Severity == ValidationSeverity.Error && i.Message.Contains("SedimentThickness is not fully covering the grid, please cover entire grid")));
+    }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void ValidateWithSpaciallyVariantPartialCoverage()
+        {
+            //Arrange
+            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"spatiallyVariantSediment\fullGridCoverage\FlowFM.mdu"));
+
+            //Act
+            var report = model.Validate();
+
+            //Assert
+            Assert.IsEmpty(report.AllErrors);
+            Assert.AreEqual(report.Issues, new List<ValidationIssue>());
+        }
+
+        [Test]
+        public void ModelBuildUpWithFullCoverage()
+        {
+            //Arrange
+            var fmModel = new WaterFlowFMModel();
+            fmModel.ModelDefinition.UseMorphologySediment = true;
+            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+            fmModel.Grid = grid;
+            var thickProp = new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, false, 0, true, "cc", "mydoubledescription", true, false)
+            {
+                SpatiallyVaryingName = "mysedimentName_IniSedThick",
+                Value = 12.3
+            };
+            thickProp.IsSpatiallyVarying = true;
+           
+            CreateSedimentFraction(thickProp, fmModel);
+
+            var coverage = (UnstructuredGridCoverage) fmModel.DataItems.First(di => di.Name == thickProp.SpatiallyVaryingName).Value;
+            coverage.SetValues(new [] {1.0,2.0,3.0,4.0});
+
+            //Act
+            var report = fmModel.Validate();
+            var recursive = report.GetAllIssuesRecursive();
+        
+            //Assert
+            Assert.IsFalse(recursive.Any(m => m.Message.Contains($"SedimentThickness {thickProp.SpatiallyVaryingName} is not fully covering the grid, please cover entire grid")));
+        }
+
+        [Test]
+        public void ModelBuildUpWithPartialCoverage()
+        {
+            //Arrange
+            //Arrange
+            var fmModel = new WaterFlowFMModel();
+            fmModel.ModelDefinition.UseMorphologySediment = true;
+            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+            fmModel.Grid = grid;
+            var thickProp = new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, false, 0, true, "cc", "mydoubledescription", true, false)
+            {
+                SpatiallyVaryingName = "mysedimentName_IniSedThick",
+                Value = 12.3
+            };
+            thickProp.IsSpatiallyVarying = true;
+
+            CreateSedimentFraction(thickProp, fmModel);
+
+            var coverage = (UnstructuredGridCoverage)fmModel.DataItems.First(di => di.Name == thickProp.SpatiallyVaryingName).Value;
+            coverage.SetValues(new[] { -999.0, 2.0, 3.0, 4.0 });
+
+            //Act
+            var report = fmModel.Validate();
+            var recursive = report.GetAllIssuesRecursive();
+
+            //Assert
+            Assert.IsTrue(recursive.Any(m =>
+                m.Message.Contains($"SedimentThickness {thickProp.SpatiallyVaryingName} is not fully covering the grid, please cover entire grid")));
+        }
+
+        [Test]
+        public void ModelBuildUpSpaciallyVaryingOff()
+        {
+            //Arrange
+            var fmModel = new WaterFlowFMModel();
+            fmModel.ModelDefinition.UseMorphologySediment = true;
+            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+            fmModel.Grid = grid;
+
+            var thickProp = new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, true, 0, true, "cc", "mydoubledescription", false, true, sediment1=>true, sediment2=> true)
+            {
+                SpatiallyVaryingName = "mysedimentName_IniSedThick",
+                Value = 12.3,
+                Name ="de",
+                Description = "",
+                DefaultValue = 1,
+                IsEnabled = true,
+                IsSpatiallyVarying = false
+            };
+
+            CreateSedimentFraction(thickProp, fmModel);
+
+            //Act
+            var report = fmModel.Validate();
+            var recursive = report.GetAllIssuesRecursive();
+
+            //Assert
+            Assert.IsFalse(recursive.Any(m => m.Message.Contains("SedimentThickness is not fully covering the grid, please cover entire grid")));
+        }
+
+        private static void CreateSedimentFraction(SpatiallyVaryingSedimentProperty<double> thickProp, WaterFlowFMModel fmModel)
+        {
+            var testSedimentType = new SedimentType
+            {
+                Key = "sand",
+                Properties = new EventedList<ISedimentProperty> { thickProp }
+            };
+
+            var overallProp = new SedimentProperty<double>("Cref", 0, 0, true, 0, false, "km", "myoveralldescription", false)
+            {
+                Value = 80.1
+            };
+
+            fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>() { overallProp };
+
+            var fraction = new SedimentFraction
+            {
+                Name = "mysedimentName",
+                CurrentSedimentType = testSedimentType
+            };
+
+            fmModel.SedimentFractions.Add(fraction);
         }
     }
 }

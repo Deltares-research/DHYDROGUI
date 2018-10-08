@@ -3,13 +3,34 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows.Controls;
+using System.Windows;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 {
     public class WpfGuiSubCategory : INotifyPropertyChanged
     {
+        private bool expanded;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WpfGuiSubcategory"/> class.
+        /// Creates new WpfGuiProperties <seealso cref="WpfGuiProperty"/>.
+        /// </summary>
+        /// <param name="subCategory">The sub category.</param>
+        /// <param name="properties">The properties.</param>
+        public WpfGuiSubCategory(string subCategory, IList<FieldUIDescription> properties)
+        {
+            SubCategoryName = subCategory;
+
+            expanded = true;
+
+            /*Small trick to force the initialization*/
+            if (properties == null)
+                properties = new List<FieldUIDescription>();
+
+            Properties = new ObservableCollection<WpfGuiProperty>(properties.Select(p => new WpfGuiProperty(p)));
+        }
+
         /// <summary>
         /// Gets the name of the sub category.
         /// </summary>
@@ -35,7 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// <value>
         /// The custom control.
         /// </value>
-        public UserControl CustomControl { get; set; }
+        public FrameworkElement CustomControl { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is visible.
@@ -53,6 +74,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             set { OnPropertyChanged(); }
         }
 
+        public bool Expanded
+        {
+            get { return expanded; }
+            set
+            {
+                expanded = value;
+                OnPropertyChanged();
+            }
+        }
+
         /// <summary>
         /// Gets the properties.
         /// </summary>
@@ -61,24 +92,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// </value>
         public ObservableCollection<WpfGuiProperty> Properties { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WpfGuiSubcategory"/> class.
-        /// Creates new WpfGuiProperties <seealso cref="WpfGuiProperty"/>.
-        /// </summary>
-        /// <param name="subCategory">The sub category.</param>
-        /// <param name="properties">The properties.</param>
-        public WpfGuiSubCategory(string subCategory, IList<FieldUIDescription> properties)
-        {
-            SubCategoryName = subCategory;
-
-            /*Small trick to force the initialization*/
-            if (properties == null)
-                properties = new List<FieldUIDescription>();
-
-            Properties = new ObservableCollection<WpfGuiProperty>(properties.Select(p => new WpfGuiProperty(p)));
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

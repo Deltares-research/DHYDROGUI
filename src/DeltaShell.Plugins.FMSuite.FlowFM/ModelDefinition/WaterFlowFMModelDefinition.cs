@@ -20,6 +20,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
 using DelftTools.Utils;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
 using log4net;
@@ -98,6 +99,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         }
         
         public IEventedList<IWindField> WindFields { get; private set; }
+
+        public IList<IUnsupportedFileBasedExtForceFileItem> UnsupportedFileBasedExtForceFileItems { get; private set; }
 
         public HeatFluxModel HeatFluxModel { get; private set; }
 
@@ -186,6 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             Boundaries = new EventedList<Feature2D>();
             BoundaryConditionSets = new EventedList<BoundaryConditionSet>();
             WindFields = new EventedList<IWindField>();
+            UnsupportedFileBasedExtForceFileItems = new EventedList<IUnsupportedFileBasedExtForceFileItem>();
             SourcesAndSinks = new EventedList<SourceAndSink>();
             Pipes = new EventedList<Feature2D>();
             SpatialOperations = new Dictionary<string, IList<ISpatialOperation>>();
@@ -697,15 +701,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             InitialTracerNames.Clear();
             InitialTracerNames.AddRange(tracerDefinitions);
-            if (spatiallyVaryingSedimentDefinitions != null)
+            var sedimentDefinitionList = spatiallyVaryingSedimentDefinitions?.ToList();
+
+            if ((sedimentDefinitionList != null) && sedimentDefinitionList.Any(sd => sd != null))
             {
                 InitialSpatiallyVaryingSedimentPropertyNames.Clear();
-                InitialSpatiallyVaryingSedimentPropertyNames.AddRange(spatiallyVaryingSedimentDefinitions);
+                InitialSpatiallyVaryingSedimentPropertyNames.AddRange(sedimentDefinitionList);
             }
+
             SpatialOperations.Clear();
 
-            var dataItemsFound = SpatialDataItemNames.Concat(InitialTracerNames).Concat(InitialSpatiallyVaryingSedimentPropertyNames).SelectMany(n => dataItems.Where(di => di.Name.StartsWith(n))).ToArray();
-
+            var combinedSpatialDataItemNames = SpatialDataItemNames.Concat(InitialTracerNames).Concat(InitialSpatiallyVaryingSedimentPropertyNames);
+            var dataItemsFound = combinedSpatialDataItemNames.SelectMany(n => dataItems.Where(di => di.Name.StartsWith(n))).ToArray();
             var dataItemsWithConverter = dataItemsFound.Where(d => d.ValueConverter is SpatialOperationSetValueConverter).Distinct().ToList();
             var dataItemsWithOutConverter = dataItemsFound.Except(dataItemsWithConverter).Distinct().ToList();
 

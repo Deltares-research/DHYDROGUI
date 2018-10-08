@@ -5,12 +5,9 @@
   <ComponentRef Id="WaterQualityModelGuiPlugin"/>
   <ComponentRef Id="Dimr"/>
   
-
-  <?ifndef var.NOKERNELS?>
   <ComponentRef Id="WaterQualityDefaultLibrary"/>
   <!--<ComponentRef Id="WaterQualitySobekLibrary"/>-->
   <ComponentGroupRef Id="SubstancesFiles"/>
-  <?endif?>
   
   <ComponentRef Id="WaterQuality_scripts_examples_files"/>
   <ComponentRef Id="WaterQuality_scripts_libraries_files"/>
@@ -24,7 +21,6 @@
   <ComponentGroupRef Id="DidoLibs"/>
   <ComponentRef Id="dido_manuals"/>
 
-  <?ifndef var.NOKERNELS?>
   <Feature Id="DuflowProcesses" Title="!(loc.DuFlowProcessFeatureName)" Description="!(loc.DuFlowProcessFeatureDescription)" Level="1000" Absent="allow" AllowAdvertise="no">
     <ComponentRef Id="WaterQualityDuflowLibrary"/>
 
@@ -33,5 +29,4 @@
       <ComponentRef Id="DuflowProcessLibraryPlugin_x64"/>
     </Feature>
   </Feature>
-  <?endif?>
 </Include>

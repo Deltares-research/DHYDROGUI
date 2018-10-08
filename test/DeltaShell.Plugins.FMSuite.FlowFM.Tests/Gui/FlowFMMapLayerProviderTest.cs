@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             ShowModelLayers(model);
         }
 
-        [Test]
+/*        [Test]
         public void CheckLayerIsSetCorrectlyWhenOpeningFMItems()
         {
             var mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
@@ -128,7 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }
-        }
+        }*/
 
         [Test]
         public void CheckFMEnclosureLayerIsCreated()

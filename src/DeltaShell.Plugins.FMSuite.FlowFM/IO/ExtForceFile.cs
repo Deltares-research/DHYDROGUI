@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
@@ -52,10 +53,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string InitialSpatialVaryingSedimentPrefix = "initialsedfrac";
         private const string SedConcPostfix = "_SedConc";
         private static readonly string[] UnsupportedQuantityKeys = { "WUANTITY", "_UANTITY" };
+        public string UnsupportedQuantityInMemory = "internaltidesfrictioncoefficient";
 
         // items that existed in the file when the file was read
         private readonly IDictionary<ExtForceFileItem, object> existingForceFileItems;
         private readonly IDictionary<IFeatureData, ExtForceFileItem> polylineForceFileItems;
+        
+
 
         public ExtForceFile() : base(true)
         {
@@ -90,6 +94,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private void Write(WaterFlowFMModelDefinition modelDefinition, bool writeBoundaryConditions = true)
         {
             var extForceFileItems = WriteExtForceFileSubFiles(modelDefinition, writeBoundaryConditions);
+            
+            foreach (var notUsedExtForceFileItem in modelDefinition.UnsupportedFileBasedExtForceFileItems)
+            {
+                extForceFileItems.Add(notUsedExtForceFileItem.UnsupportedExtForceFileItem);
+                var newPath = Path.Combine(Path.GetDirectoryName(FilePath),
+                    Path.GetFileName(notUsedExtForceFileItem.UnsupportedExtForceFileItem.FileName));
+                notUsedExtForceFileItem.CopyTo(newPath);
+            }
 
             if (extForceFileItems.Count > 0)
             {
@@ -400,12 +412,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void Read(WaterFlowFMModelDefinition modelDefinition)
         {
-            var extForceFileItems = ParseExtForceFile();
-            var forceFileItems = extForceFileItems as IList<ExtForceFileItem> ?? extForceFileItems.ToList();
-            ReadPolyLineData(forceFileItems, modelDefinition);
-            ReadWindItems(forceFileItems, modelDefinition);
-            ReadHeatFluxModelData(forceFileItems, modelDefinition);
-            ReadSpatialData(forceFileItems, modelDefinition);
+                var extForceFileItems = ParseExtForceFile();
+                var forceFileItems = extForceFileItems as IList<ExtForceFileItem> ?? extForceFileItems.ToList();
+                ReadPolyLineData(forceFileItems, modelDefinition);
+                ReadWindItems(forceFileItems, modelDefinition);
+                ReadHeatFluxModelData(forceFileItems, modelDefinition);
+                ReadSpatialData(forceFileItems, modelDefinition);
+                ReadInternalTidesFrictionCoefficientIfAvailable(forceFileItems, modelDefinition);
         }
 
         private IEnumerable<ExtForceFileItem> ParseExtForceFile()
@@ -905,10 +918,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var xyzUnreadItems = unReadExtForceFileItems.Where(fi => fi.FileName.EndsWith(XyzFile.Extension));
             foreach (var xyzItem in xyzUnreadItems)
             {
-                log.WarnFormat(
-                    Resources
-                        .ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_,
-                    xyzItem.Quantity, InitialTracerPrefix, InitialSpatialVaryingSedimentPrefix);
+                if (xyzItem.Quantity != UnsupportedQuantityInMemory)
+                {
+                    log.WarnFormat(
+                        Resources
+                            .ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_,
+                        xyzItem.Quantity, InitialTracerPrefix, InitialSpatialVaryingSedimentPrefix);
+                }
             }
         }
 
@@ -1072,6 +1088,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                    log.Warn(e.Message);
                 }
+            }
+        }
+
+        private void ReadInternalTidesFrictionCoefficientIfAvailable(IEnumerable<ExtForceFileItem> extForceFileItems,
+            WaterFlowFMModelDefinition modelDefinition)
+        {
+            try
+            {
+                var unsupportedFileBasedExtForceFileItems = extForceFileItems.ToList()
+                    .Where(fi => fi.Quantity.StartsWith(UnsupportedQuantityInMemory)).ToList();
+
+                if (unsupportedFileBasedExtForceFileItems.Count > 0)
+                {
+                    log.WarnFormat(
+                        "Spatial varying quantity {0} detected in the external force file and will be passed to the computational core. This may affect your simulation.",
+                        UnsupportedQuantityInMemory);
+
+                    foreach (var forceFileItem in unsupportedFileBasedExtForceFileItems)
+                    {
+                        var unsupportedFileBaseExtForceFile =
+                            Path.Combine(Path.GetDirectoryName(FilePath), forceFileItem.FileName);
+                        if (!File.Exists(unsupportedFileBaseExtForceFile))
+                        {
+                            throw new FileNotFoundException(string.Format("File {0} could not be found for an internaltidesfrictioncoefficient quantity in the external force file",
+                                unsupportedFileBaseExtForceFile));
+                        }
+
+                        var unsupportedFileBasedExtForceFileItem = new UnsupportedFileBasedExtForceFileItem(
+                            Path.Combine(Path.GetDirectoryName(FilePath), forceFileItem.FileName), forceFileItem);
+
+                        modelDefinition.UnsupportedFileBasedExtForceFileItems.Add(unsupportedFileBasedExtForceFileItem);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                log.Warn(e.Message);
             }
         }
 

@@ -59,11 +59,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 (d, v) => data.IsCoupledToFlow = (bool) v)
             {
                 Category = KnownWaveCategories.GeneralCategory,
-                SubCategory = "Hydrodynamics",
-                Label = "Coupled to DFlowFM",
+                SubCategory = "Data from D-Flow FM",
+                Label = "Coupled to D-Flow FM",
                 Name = "IsCoupledToFlow",
                 ValueType = typeof(bool),
-                ToolTip = "When enabled, run coupled to DFlowFM core"
+                ToolTip = "When enabled, run coupled to D-Flow FM core"
             };
 
             var startTime = new FieldUIDescription(o => data.StartTime, (d, v) => data.StartTime = (DateTime) v,

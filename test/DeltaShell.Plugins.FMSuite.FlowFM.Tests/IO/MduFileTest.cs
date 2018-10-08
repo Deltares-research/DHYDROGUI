@@ -50,6 +50,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        public void WriteMorphologyAndSedimentFiles()
+        {
+            var testFile = "ModelWithMorphology.mdu";
+            var mduFile = new MduFile();
+            var hydroArea = new HydroArea();
+            var model = new WaterFlowFMModel();
+            var sedimentData = model as ISedimentModelData;
+            var modelDefinition = model.ModelDefinition;
+            modelDefinition.UseMorphologySediment = true;
+
+            mduFile.Write(testFile, modelDefinition, hydroArea, null, false,false, true, false, sedimentData);
+
+            Assert.IsTrue(File.Exists(testFile));
+            var lines = File.ReadLines(testFile);
+            Assert.IsTrue(lines.Any(l => l.Contains("ModelWithMorphology.mor")));
+            Assert.IsTrue(lines.Any(l => l.Contains("ModelWithMorphology.sed")));
+        }
+
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Integration)]
+        [Test]
         public void Test_MduFile_Read_Loads_BridgePillars()
         {
             var testPath = TestHelper.GetTestFilePath(@"ImportMDUFile\bridge-1.mdu");
@@ -85,11 +106,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void Test_MduFile_Write_Writes_BridgePillars_Entry()
         {
             var testFile = "mduBridgePillars.mdu";
-            //Set up the model
             var mduFile = new MduFile();
             var modelDefinition = new WaterFlowFMModelDefinition();
             var hydroArea = new HydroArea();
-            //Write it
+
             try
             {
                 mduFile.Write(testFile, modelDefinition, hydroArea, null);
@@ -99,7 +119,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.Fail($"Test crashed. {e.Message}");
             }
             
-            //Find if the line for the object has been created.
             Assert.IsTrue(File.Exists(testFile));
             var lines = File.ReadLines(testFile);
             Assert.IsTrue( lines.Any( l => l.Contains("PillarFile")));
@@ -111,7 +130,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var tempFileName = Path.GetTempFileName();
             var testFile = string.Concat(tempFileName, ".mdu");
 
-            //Set up the model
             var mduFile = new MduFile();
             var modelDefinition = new WaterFlowFMModelDefinition();
             var hydroArea = new HydroArea();
@@ -129,7 +147,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
             hydroArea.BridgePillars.Add(pillar);
             
-            //Write it
             try
             {
                 mduFile.Write(testFile, modelDefinition, hydroArea, null);
@@ -139,11 +156,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.Fail($"Test crashed. {e.Message}");
             }
 
-            //Find if the line for the object has been created.
             Assert.IsTrue(File.Exists(testFile));
             var lines = File.ReadLines(testFile);
             var expectedLine = $"PillarFile        = {Path.GetFileName(tempFileName)}.pliz";
             Assert.IsTrue(lines.Any(l => l.Contains(expectedLine)));
+
             //The contents of th efile are checked at the PliZ Exporter and WaterFlowFM export level.
             Assert.IsTrue(File.Exists(tempFileName.Replace(".mdu", ".pliz")));
         }
@@ -175,7 +192,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             MduFile.SetBridgePillarAttributes(new List<BridgePillar> {bp}, modelFeatureCoordinateDatas);
 
-            //Check if now they are present.
             Assert.AreEqual(bp.Attributes.Count, 2);
             var attributes = bp.Attributes as DictionaryFeatureAttributeCollection;
             Assert.IsNotNull(attributes);
@@ -190,7 +206,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var dictionaryFeatureAttributeCollection = new DictionaryFeatureAttributeCollection();
             dictionaryFeatureAttributeCollection.Add("testAttr", 23);
             var bp = new BridgePillar{Attributes = dictionaryFeatureAttributeCollection};
-            
 
             Assert.IsTrue(bp.Attributes.Any());
             MduFile.CleanBridgePillarAttributes(new List<BridgePillar>{bp});
@@ -258,14 +273,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(2, bp.Attributes.Count);
             #endregion
 
-            /**/
             listofDataModel.Clear();
             var bpDataModel = new ModelFeatureCoordinateData<BridgePillar>(){Feature = bp};
             bpDataModel.UpdateDataColumns();
 
             listofDataModel.Add(bpDataModel);
 
-            //Check the values are not present
             Assert.IsNotNull(bpDataModel.DataColumns);
             Assert.AreEqual(2, bpDataModel.DataColumns.Count);
 
@@ -342,6 +355,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             );
         }
 
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Integration)]
         [TestCase(@"TestModelWithNcInSubFolder\trynet.mdu", "Sub\\gridtry.nc")]
         [TestCase(@"TestModelWithoutNcInSubFolder\trynet.mdu", "gridtry.nc")]
         [TestCase(@"TestModelWithNcInSubFolderAndDefaultNames\trynet.mdu", "Sub\\trynet_net.nc")]
@@ -366,7 +381,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var originalMD = new WaterFlowFMModelDefinition(mduDir, modelName);
                 var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
                 mduFile.Read(mduFilePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties);
-                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties, false);
+                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties, switchTo: false);
                 
                 var netFileLocationShouldBe = Path.Combine(newMduDir, relativeNcFilePath);
 
@@ -378,6 +393,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Integration)]
         [TestCase(@"cs_after_save\before_save_AmersfoortRDNew_net.nc", 28992, "Amersfoort / RD New")]
         [TestCase(@"cs_after_save\before_save_AmersfoortRDOld_net.nc", 28991, "Amersfoort / RD Old")]
         [TestCase(@"cs_after_save\before_save_UTMzone30N_net.nc", 32630, "WGS 84 / UTM zone 30N")]
@@ -407,6 +424,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             FileUtils.DeleteIfExists(workingDirectory);
         }
 
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Integration)]
         [TestCase(true, @"update_CS_netfile\amersfoortRDNew_net.nc", 28992, true)]
         [TestCase(true, @"update_CS_netfile\unknown_projected_net.nc", 28992, false)]
         [TestCase(true, @"update_CS_netfile\wgs84_net.nc", 4326 , true)]
@@ -441,6 +460,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(result, Is.EqualTo(expected));
         }
 
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Integration)]
         [Test]
         public void GivenAnMduToReadWithFixedWeirs_WhenTheSchemeNumbersRequiresMoreColumnsThanGivenInPlizFile_ThenAllMissingPropertiesShouldBeCreatedUsingTheDefaultValues()
         {
@@ -494,7 +515,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.AreEqual(0, allFixedWeirsAndCorrespondingProperties[0].DataColumns[6].ValueList[0]);
                 Assert.AreEqual(0, allFixedWeirsAndCorrespondingProperties[0].DataColumns[6].ValueList[1]);
 
-                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties,false);
+                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties,switchTo: false);
 
                 var generatedResultsContent = File.ReadAllLines(@"FlowFMFixedWeirs\MduFileReadsAndWritesTest\TwoFixedWeirs_fxw2_fxw.pliz");
 
@@ -524,6 +545,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Integration)]
         [Test]
         public void GivenAnMduToReadWithFixedWeirs_WhenTheSchemeNumbersRequiresLessColumnsThanGivenInPlizFile_ThenOnlyTheNeededPropertiesShouldBeCreatedAfterReadingThePlizFile()
             {
@@ -565,7 +588,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     Assert.AreEqual(3.2, allFixedWeirsAndCorrespondingProperties[0].DataColumns[2].ValueList[0]);
                     Assert.AreEqual(3.3, allFixedWeirsAndCorrespondingProperties[0].DataColumns[2].ValueList[1]);
 
-                    mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties, false);
+                    mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties, switchTo: false);
 
                     var generatedResultsContent = File.ReadAllLines(@"FlowFMFixedWeirs\MduFileReadsAndWritesTest\TwoFixedWeirs_fxw.pliz");
 
@@ -593,5 +616,110 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     FileUtils.DeleteIfExists(mduDir);
                 }
             }
+
+        [Category(TestCategory.DataAccess)]
+        [Test]
+        public void GivenAnMDUWithTheOldNameForEnclosureFile_WhenImportingIt_ThenThisNameShouldBeChangedToGridEnclosureFile()
+        {
+            mduFilePath = TestHelper.GetTestFilePath(@"harlingen\HarlingenModelWithOldEnclosureFileMduPropertyName\har.mdu");
+            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
+            mduDir = Path.GetDirectoryName(mduFilePath);
+            Assert.NotNull(mduDir);
+            modelName = Path.GetFileName(mduFilePath);
+
+            saveDirectory = Path.Combine(mduDir, "SaveLocation");
+            Directory.CreateDirectory(saveDirectory);
+            savePath = Path.Combine(saveDirectory, "har.mdu");
+            newMduDir = Path.GetDirectoryName(savePath);
+            Assert.NotNull(newMduDir);
+
+            try
+            {
+                var mduFile = new MduFile();
+
+                var originalArea = new HydroArea();
+                var originalMD = new WaterFlowFMModelDefinition(mduDir, modelName);
+                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
+
+                mduFile.Read(mduFilePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties);
+
+                //Check if the enclosure file is in memory under the new mdu property name in the model definition.
+                var newModelProperty = originalMD.GetModelProperty(KnownProperties.EnclosureFile);
+                Assert.NotNull(newModelProperty);
+
+                //Check that the old mdu property name is not existing anymore in the model definition.
+                var oldModelProperty = originalMD.GetModelProperty("enclosurefile");
+                Assert.IsNull(oldModelProperty);
+
+                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties);
+
+                var generatedInputContent =
+                    File.ReadAllLines(mduFilePath);
+
+                Assert.IsFalse(generatedInputContent.Any(x => x.ToLower().Contains("gridenclosurefile")));
+                Assert.IsTrue(generatedInputContent.Any(x => x.ToLower().Contains("enclosurefile")));
+
+                var generatedResultsContent =
+                    File.ReadAllLines(savePath);
+
+                Assert.IsTrue(generatedResultsContent.Any(x => x.ToLower().Contains("gridenclosurefile")));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(mduDir);
+            }
+        }
+
+        [Category(TestCategory.DataAccess)]
+        [Test]
+        public void GivenAnMDUWithTheNewNameForEnclosureFile_WhenImportingIt_ThenTheImportShouldBeCorrectForThisMduProperty()
+        {
+            mduFilePath = TestHelper.GetTestFilePath(@"harlingen\HarlingenModelWithNewEnclosureFileMduPropertyName\har.mdu");
+            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
+            mduDir = Path.GetDirectoryName(mduFilePath);
+            Assert.NotNull(mduDir);
+            modelName = Path.GetFileName(mduFilePath);
+
+            saveDirectory = Path.Combine(mduDir, "SaveLocation");
+            Directory.CreateDirectory(saveDirectory);
+            savePath = Path.Combine(saveDirectory, "har.mdu");
+            newMduDir = Path.GetDirectoryName(savePath);
+            Assert.NotNull(newMduDir);
+
+            try
+            {
+                var mduFile = new MduFile();
+
+                var originalArea = new HydroArea();
+                var originalMD = new WaterFlowFMModelDefinition(mduDir, modelName);
+                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
+
+                mduFile.Read(mduFilePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties);
+
+                //Check if the enclosure file is in memory under the new mdu property name in the model definition.
+                var newModelProperty = originalMD.GetModelProperty(KnownProperties.EnclosureFile);
+                Assert.NotNull(newModelProperty);
+
+                //Check that the old mdu property name is not existing anymore in the model definition.
+                var oldModelProperty = originalMD.GetModelProperty("enclosurefile");
+                Assert.IsNull(oldModelProperty);
+
+                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties);
+
+                var generatedInputContent =
+                    File.ReadAllLines(mduFilePath);
+
+                Assert.IsTrue(generatedInputContent.Any(x => x.ToLower().Contains("gridenclosurefile")));
+                
+                var generatedResultsContent =
+                    File.ReadAllLines(savePath);
+
+                Assert.IsTrue(generatedResultsContent.Any(x => x.ToLower().Contains("gridenclosurefile")));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(mduDir);
+            }
+        }
     }
 }

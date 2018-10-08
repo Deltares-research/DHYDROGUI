@@ -198,7 +198,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test] /* Extension of the one above but directly loading an MDU File. */
-        [TestCase("EnclosureFile", "Value1 Value2", "CustomPropertyTest", "Value3")]
+        [TestCase(KnownProperties.EnclosureFile, "Value1 Value2", "CustomPropertyTest", "Value3")]
         public void WhenMduExpectsANewMultipleLinePropertyButItIsANewPropertyItKeepsReading(string hydroAreaFileProperty, string expectedCompositeValue, string customPropertyName, string expectedSimpleValue)
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFMPropertyWithSlashAndNoNewLine.mdu");
@@ -453,7 +453,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var originalMD = new WaterFlowFMModelDefinition(mduDir, modelName);
                 var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
                 mduFile.Read(mduFilePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties);
-                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties, false);
+                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties, switchTo: false);
 
                 var savedArea = new HydroArea();
                 var savedMD = new WaterFlowFMModelDefinition(newMduDir, newMduName);
@@ -518,7 +518,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var originalMd = new WaterFlowFMModelDefinition(mduDir, modelName);
                 var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
                 mduFile.Read(mduFilePath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties);
-                mduFile.Write(savePath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties, false, false);
+                mduFile.Write(savePath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties, switchTo: false, writeExtForcings: false);
 
                 var savedArea = new HydroArea();
                 var savedMd = new WaterFlowFMModelDefinition(newMduDir, newMduName);
@@ -573,7 +573,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 RemoveGroupNameFromGroupableFeature(originalArea.Pumps);
                 RemoveGroupNameFromGroupableFeature(originalArea.Weirs);
 
-                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties, false);
+                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties, switchTo: false);
 
                 var savedArea = new HydroArea();
                 var savedMD = new WaterFlowFMModelDefinition(newMduDir, newMduName);
@@ -625,7 +625,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 mduFile.Read(mduFilePath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties);
 
                 RemoveGroupNameFromGroupableFeature(originalArea.DryPoints);
-                mduFile.Write(savePath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties, false, false);
+                mduFile.Write(savePath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties, switchTo: false, writeExtForcings: false);
 
                 var savedArea = new HydroArea();
                 var savedMd = new WaterFlowFMModelDefinition(newMduDir, newMduName);
@@ -1012,12 +1012,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var landBoundariesFileNameWithExtension = landBoundariesGroupName + MduFile.LandBoundariesExtension;
             var structuresFileNameWithExtension = structureGroupName + MduFile.StructuresExtension;
 
-            var expectedObsFileText = GetExpectedFileText("ObsFile", obsFileNameWithExtension);
-            var expectedEnclosureFileText = GetExpectedFileText("EnclosureFile", enclosureFileNameWithExtension);
-            var expectedDryPointsFileText = GetExpectedFileText("DryPointsFile", dryPointsFileNameWithExtension);
-            var expectedLandBoundariesFileText = GetExpectedFileText("LandBoundaryFile", landBoundariesFileNameWithExtension);
-            var expectedStructureFileText = GetExpectedFileText("StructureFile", structuresFileNameWithExtension);
-
+            var expectedObsFileText = GetExpectedFileText(modelDefinition.GetModelProperty(KnownProperties.ObsFile).PropertyDefinition.Caption, obsFileNameWithExtension);
+            var expectedEnclosureFileText = GetExpectedFileText(modelDefinition.GetModelProperty(KnownProperties.EnclosureFile).PropertyDefinition.Caption, enclosureFileNameWithExtension);
+            var expectedDryPointsFileText = GetExpectedFileText(modelDefinition.GetModelProperty(KnownProperties.DryPointsFile).PropertyDefinition.Caption, dryPointsFileNameWithExtension);
+            var expectedLandBoundariesFileText = GetExpectedFileText(modelDefinition.GetModelProperty(KnownProperties.LandBoundaryFile).PropertyDefinition.Caption, landBoundariesFileNameWithExtension);
+            var expectedStructureFileText = GetExpectedFileText(modelDefinition.GetModelProperty(KnownProperties.StructuresFile).PropertyDefinition.Caption, structuresFileNameWithExtension);
+            
             Assert.IsTrue(readAllText.Contains(expectedObsFileText), "Expected {0} \n Generated: {1}", expectedObsFileText, readAllText);
             Assert.IsTrue(readAllText.Contains(expectedEnclosureFileText), "Expected {0} \n Generated: {1}", expectedEnclosureFileText, readAllText);
             Assert.IsTrue(readAllText.Contains(expectedDryPointsFileText), "Expected {0} \n Generated: {1}", expectedDryPointsFileText, readAllText);

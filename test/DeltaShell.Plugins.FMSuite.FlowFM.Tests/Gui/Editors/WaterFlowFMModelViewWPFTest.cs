@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using DelftTools.TestUtils;
 using NUnit.Framework;
 using System.Linq;
+using System.Windows.Forms.Integration;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
@@ -64,42 +65,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
 
             wpfSettingsViewModel.SettingsCategories.Add(cat);
             Assert.IsTrue(wpfSettingsViewModel.SettingsCategories.Contains(cat));
-
-            WpfTestHelper.ShowModal(fmViewWpf);
-
-            var props = fmModel.ModelDefinition.Properties;
-            Assert.IsNotNull(props);
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        public void Test_WaterFlowFMModelViewWPF_AddExtras_SubCategory_Tracers()
-        {
-            var fmModel = new WaterFlowFMModel();
-            var fmViewWpf = new WpfSettingsView
-            {
-                Data = fmModel
-            };
-            var wpfSettingsViewModel = (WpfSettingsViewModel)fmViewWpf.DataContext;
-            SetUiProperties(fmModel, wpfSettingsViewModel);
-
-            var procGroup = wpfSettingsViewModel.SettingsCategories.FirstOrDefault(gp => gp.CategoryName == "Processes");
-            Assert.IsNotNull(procGroup);
-
-            var editTracersControlHelper = new EditTracersControlHelper();
-            var tracerControl = editTracersControlHelper.CreateControl();
-            editTracersControlHelper.SetData(tracerControl, fmModel, null);
-
-            var hostHelper = new WindowsFormsHostHelper();
-            hostHelper.HostedControl = tracerControl;
-
-            var wpfGuiSubCategory = new WpfGuiSubCategory("Tracers", null)
-            {
-                CustomControl = hostHelper,
-            };
-
-            procGroup.SubCategories.Add(wpfGuiSubCategory);
-
 
             WpfTestHelper.ShowModal(fmViewWpf);
 

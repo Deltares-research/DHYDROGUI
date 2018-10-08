@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 {
@@ -35,10 +37,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [Test]
         public void Test_WpfGuiProperty_With_ControlHelper_GetsUserControlHosted()
         {
+            var helper = MockRepository.GenerateStrictMock<ICustomControlHelper>();
+            helper.Expect(h => h.CreateControl()).Return(new Control());
+            helper.Replay();
+
             var dummyField = new FieldUIDescription(null, null)
             {
                 Label = "dummyName",
-                CustomControlHelper = new EditTracersControlHelper(),
+                CustomControlHelper = helper,
             };
 
             var property = new WpfGuiProperty(dummyField);

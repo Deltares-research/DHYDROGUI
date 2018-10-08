@@ -32,10 +32,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             {
                 return sourceAndSinks.Remove(nodeData);
             }
-            var treeShortCut = parentNodeData as FlowFMTreeShortcut;
+            var treeShortCut = parentNodeData as FmModelTreeShortcut;
             if (treeShortCut != null)
             {
-                sourceAndSinks = treeShortCut.TargetData as IList<SourceAndSink>;
+                sourceAndSinks = treeShortCut.Data as IList<SourceAndSink>;
                 if (sourceAndSinks != null)
                 {
                     return sourceAndSinks.Remove(nodeData);

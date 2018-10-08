@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             MorphologyFile.Save(morPath, model.ModelDefinition);
 
             var sedPath = Path.ChangeExtension(model.MduFilePath, "sed");
-            SedimentFile.Save(sedPath, model);
+            SedimentFile.Save(sedPath, model.ModelDefinition, model);
         }
 
         private static void WriteMduFile(WaterFlowFMModel model, bool switchTo, bool writeExtForcings, bool writeFeatures)

@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
-using Microsoft.Scripting;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 {
@@ -32,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             var waterFlowFMModel = item as WaterFlowFMModel;
             if (waterFlowFMModel == null)
             {
-                throw new ArgumentTypeException("Unexpected object type: " + item.GetType());
+                throw new ArgumentException("Unexpected object type: " + item.GetType());
             }
             var fullPath = path;
             if (Directory.Exists(path))

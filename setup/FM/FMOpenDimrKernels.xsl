@@ -35,8 +35,9 @@
 	<xsl:key name="rr-folder-search" match="wix:Directory[@Name = 'drr']" use="descendant::wix:Component/@Id" />
 	<xsl:key name="f1d-folder-search" match="wix:Directory[@Name = 'dflow1d']" use="descendant::wix:Component/@Id" />
 	<xsl:key name="f1d2d-folder-search" match="wix:Directory[@Name = 'dflow1d2d']" use="descendant::wix:Component/@Id" />
-	<xsl:key name="dfbc-folder-search" match="wix:Directory[@Name = 'dfbc']" use="descendant::wix:Component/@Id" />
+	<xsl:key name="drtc-folder-search" match="wix:Directory[@Name = 'drtc']" use="descendant::wix:Component/@Id" />
 	<xsl:key name="dimr-folder-search" match="wix:Directory[@Name = 'dimr']" use="descendant::wix:Component/@Id" />
+	<xsl:key name="dwaq-folder-search" match="wix:Directory[@Name = 'dwaq']" use="descendant::wix:Component/@Id" />
 	<xsl:key name="scripts-folder-search" match="wix:Directory[@Name = 'scripts']" use="descendant::wix:Component/@Id" />
 
 	
@@ -48,8 +49,9 @@
 	<xsl:template match="wix:Directory[@Name='drr']" />
 	<xsl:template match="wix:Directory[@Name='dflow1d']" />
 	<xsl:template match="wix:Directory[@Name='dflow1d2d']" />
-	<xsl:template match="wix:Directory[@Name='dfbc']" />
+	<xsl:template match="wix:Directory[@Name='drtc']" />
 	<xsl:template match="wix:Directory[@Name='dimr']" />
+	<xsl:template match="wix:Directory[@Name='dwaq']" />
 	<xsl:template match="wix:Directory[@Name='scripts']" />
 
 	<!-- Remove Components referencing those directories & files. -->
@@ -60,8 +62,9 @@
 	<xsl:template match="wix:Component[key('rr-folder-search', @Directory)]" />
 	<xsl:template match="wix:Component[key('f1d-folder-search', @Directory)]" />
 	<xsl:template match="wix:Component[key('f1d2d-folder-search', @Directory)]" />
-	<xsl:template match="wix:Component[key('dfbc-folder-search', @Directory)]" />
+	<xsl:template match="wix:Component[key('drtc-folder-search', @Directory)]" />
 	<xsl:template match="wix:Component[key('dimr-folder-search', @Directory)]" />
+	<xsl:template match="wix:Component[key('dwaq-folder-search', @Directory)]" />
 	<xsl:template match="wix:Component[key('scripts-folder-search', @Directory)]" />
 
 
@@ -73,8 +76,9 @@
 	<xsl:template match="wix:Fragment[wix:DirectoryRef[key('rr-folder-search', @Id)]]" />
 	<xsl:template match="wix:Fragment[wix:DirectoryRef[key('f1d-folder-search', @Id)]]" />
 	<xsl:template match="wix:Fragment[wix:DirectoryRef[key('f1d2d-folder-search', @Id)]]" />
-	<xsl:template match="wix:Fragment[wix:DirectoryRef[key('dfbc-folder-search', @Id)]]" />
+	<xsl:template match="wix:Fragment[wix:DirectoryRef[key('drtc-folder-search', @Id)]]" />
 	<xsl:template match="wix:Fragment[wix:DirectoryRef[key('dimr-folder-search', @Id)]]" />
+	<xsl:template match="wix:Fragment[wix:DirectoryRef[key('dwaq-folder-search', @Id)]]" />
 	<xsl:template match="wix:Fragment[wix:DirectoryRef[key('scripts-folder-search', @Id)]]" />
 
 	<!--Remove ComponentRefs referencing those directories & files.-->
@@ -85,8 +89,9 @@
 	<xsl:template match="wix:ComponentRef[key('rr-folder-search', @Id)]" />
 	<xsl:template match="wix:ComponentRef[key('f1d-folder-search', @Id)]" />
 	<xsl:template match="wix:ComponentRef[key('f1d2d-folder-search', @Id)]" />
-	<xsl:template match="wix:ComponentRef[key('dfbc-folder-search', @Id)]" />
+	<xsl:template match="wix:ComponentRef[key('drtc-folder-search', @Id)]" />
 	<xsl:template match="wix:ComponentRef[key('dimr-folder-search', @Id)]" />
+	<xsl:template match="wix:ComponentRef[key('dwaq-folder-search', @Id)]" />
 	<xsl:template match="wix:ComponentRef[key('scripts-folder-search', @Id)]" />
 		
 </xsl:stylesheet>

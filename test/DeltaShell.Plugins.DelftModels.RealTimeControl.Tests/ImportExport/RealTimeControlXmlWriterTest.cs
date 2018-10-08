@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -85,18 +84,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
 
         [Test]
-        public void GivenAModelAndAValidPathWhenGetRuntimeXmlIsCalledWithThisModelAndAPathThenTheResultingDocumentContainsRuntimeModel()
-        {
-            var model = new RealTimeControlModel();
-            var xsdPath = DimrApiDataSet.RtcToolsDllPath;
-
-            var resultDocument = RealTimeControlXmlWriter.GetRuntimeXml(xsdPath, model, false, 0);
-
-
-        }
-
-
-        [Test]
         public void GivenAModelWithUseSaveStateTimeRangeAndWriteRestartFlagsAndAValidXsdPathWhenGetRuntimeXmlIsCalledWithThisModelAndPathThenTheModelContainsValidStateFilesElement()
         {
             // Given
@@ -108,7 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
             model.WriteRestart = true;
 
-            var xsdPath = DimrApiDataSet.RtcToolsDllPath; // TODO ask what this is / which one to use
+            var xsdPath = DimrApiDataSet.RtcToolsDllPath;
 
             // When
             var resultDocument = RealTimeControlXmlWriter.GetRuntimeXml(xsdPath, model, false, 0);
@@ -117,8 +104,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var ns = (XNamespace) "http://www.wldelft.nl/fews";
 
             // stateFilesElement
-            var expectedNumberOfStateFilesChildren = 3;
-            var stateFilesElement = resultDocument.Root.Element(ns + "stateFiles");
+            const int expectedNumberOfStateFilesChildren = 3;
+
+            var stateFilesElement = resultDocument.Root?.Element(ns + "stateFiles");
             Assert.That(stateFilesElement, Is.Not.Null);
             Assert.That(stateFilesElement.Descendants().Count(), Is.EqualTo(expectedNumberOfStateFilesChildren));
 
