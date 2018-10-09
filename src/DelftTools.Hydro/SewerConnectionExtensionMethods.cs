@@ -31,7 +31,7 @@ namespace DelftTools.Hydro
                 var dy = y - sewerConnection.Geometry.Coordinates[0].Y; 
                 structure.Chainage = Math.Sqrt(dx*dx + dy*dy);
             }
-            structure.Name = sewerConnection.Name;
+            if (structure.Name == null) structure.Name = sewerConnection.Name;
 
             return HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(structure, sewerConnection);
         }

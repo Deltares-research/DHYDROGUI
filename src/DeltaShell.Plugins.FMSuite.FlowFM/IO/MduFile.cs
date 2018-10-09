@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         #region write logic
 
         public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
-        bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false, ISedimentModelData sedimentModelData = null)
+        bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false, ISedimentModelData sedimentModelData = null, bool writeStructureFile = true)
         {
             var targetDir = VerifyTargetDirectory(targetMduFilePath);
             var substitutedPaths = new Dictionary<string, System.Tuple<string, string>>();
@@ -154,7 +154,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             if (writeFeatures)
             {
-                WriteAreaFeatures(targetMduFilePath, modelDefinition, hydroArea, allFixedWeirsAndCorrespondingProperties);
+                WriteAreaFeatures(targetMduFilePath, modelDefinition, hydroArea, allFixedWeirsAndCorrespondingProperties, writeStructureFile);
             }
 
             if (writeExtForcings)
@@ -719,7 +719,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return feature;
         }
 
-        private void WriteAreaFeatures(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties)
+        private void WriteAreaFeatures(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, 
+            IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, bool writeStructureFile = true)
         {
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.LandBoundaryFile,
                 hydroArea.LandBoundaries, ref landBoundariesFile, LandBoundariesExtension);
@@ -778,8 +779,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var structures = hydroArea.Pumps.Cast<IStructure>().Concat(hydroArea.Weirs).Concat(hydroArea.Gates).Concat(hydroArea.LeveeBreaches).ToList();
 
-            WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.StructuresFile, structures,
-                ref structuresFile, StructuresExtension);
+            if (writeStructureFile)
+            {
+                WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.StructuresFile, structures,
+                    ref structuresFile, StructuresExtension);
+            }
 
             WriteDryPointsAndDryAreas(targetMduFilePath, modelDefinition, hydroArea.DryPoints, hydroArea.DryAreas);
 

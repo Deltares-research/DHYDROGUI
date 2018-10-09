@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
@@ -10,7 +11,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             FileUtils.DeleteIfExists(tempDirectory);
         }
 
-        [Test]
+        [Test, Ignore("Reading functionality for 1D2D models needs to be in place for this. Enable this test when this time has come.")]
         public void GivenOnePipeTwoManholes_WhenWritingAndReading_ThenNetworksAreTheSame()
         {
             var pipeName = "myPipe";
@@ -118,21 +118,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var toNode = new HydroNode("to") { Geometry = new Point(100, 0) };
             network.Nodes.Add(fromNode);
             network.Nodes.Add(toNode);
-            var channel = new Channel("channel",fromNode, toNode);
+            var channel = new Channel("channel", fromNode, toNode)
+            {
+                Geometry = new LineString(new[]{ new Coordinate(0, 0), new Coordinate(100, 0) })
+            };
             network.Branches.Add(channel);
-            var pump1 = new Pump("pump1");
-            NetworkHelper.AddBranchFeatureToBranch(pump1, channel, 50.0);
+            var pump1 = new Pump("pump1")
+            {
+                Chainage = 50.0
+            };
+            HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(pump1, channel);
 
             Assert.IsTrue(network.Pumps.Any(p => p.Name.Equals("pump1")));
 
             //1d pump manhole
             var manhole = SewerFactory.CreateDefaultManholeAndAddToNetwork(network, new Coordinate(0, 10));
-            //var pump2 = SewerFactory.CreateConnectionWithStructure<Pump>(manhole); why can't i use it? why two IManholes? mmm
             var fromCompartment = new Compartment("cmp1");
             var toCompartment = new Compartment("cmp2");
             manhole.Compartments.Add(fromCompartment);
             manhole.Compartments.Add(toCompartment);
-            network.Nodes.Add(manhole);
 
             var pump2 = new Pump("pump2");
 
@@ -146,7 +150,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
             pumpConnection.AddStructureToBranch(pump2);
             network.Branches.Add(pumpConnection);
-            //Assert.IsTrue(network.Pumps.Any(p => p.Name.Equals("pump2")));
 
             //2d pump 
             fmModel.Area.Pumps.Add(new Pump2D("pump3") {Geometry = new LineString(new [] {new Coordinate(0, 20), new Coordinate(100, 20)})});

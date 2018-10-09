@@ -8,7 +8,7 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.NetworkEditor.IO
 {
-    public class StructureFile
+    public static class StructureFile
     {
         public static IEnumerable<DelftIniCategory> ExtractFunctionStructuresOfNetworkGenerator(IHydroNetwork network)
         {
