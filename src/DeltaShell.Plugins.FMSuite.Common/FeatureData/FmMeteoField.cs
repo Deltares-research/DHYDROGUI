@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
         public static FmMeteoField CreateMeteoPrecipitationSeries()
         {
-            return new FmMeteoField() { Quantity = FmMeteoQuantity.Precipitation};
+            return new FmMeteoField(FmMeteoComponent.Precipitation) { Quantity = FmMeteoQuantity.Precipitation};
         }
         
         private readonly IList<FmMeteoComponent> components;

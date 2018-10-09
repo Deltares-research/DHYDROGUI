@@ -8,6 +8,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -55,9 +56,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var testFile = "ModelWithMeteo.mdu";
             var mduFile = new MduFile();
             var hydroArea = new HydroArea();
-            var model = new WaterFlowFMModel();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var meteoPrecipitationSeries = FmMeteoField.CreateMeteoPrecipitationSeries();
+            var start = new DateTime(1981, 8, 31, 12, 30, 0);
+            var times = new[] { start, start.AddDays(1), start.AddDays(2), start.AddDays(3), start.AddDays(4), start.AddDays(5) };
+            var rainFallValues = new[] { 5, 5.5, 7.5, 8.3, 11.2, 20.8 };
             
-            mduFile.Write(testFile, model.ModelDefinition, hydroArea, null, false, true, false);
+            meteoPrecipitationSeries.Data.Arguments[0].SetValues(times);
+            meteoPrecipitationSeries.Data.Components[0].SetValues(rainFallValues);
+
+            modelDefinition.FmMeteoFields.Add(meteoPrecipitationSeries);
+            mduFile.Write(testFile, modelDefinition , hydroArea, null, false, true, false);
 
             Assert.IsTrue(File.Exists(testFile));
         }

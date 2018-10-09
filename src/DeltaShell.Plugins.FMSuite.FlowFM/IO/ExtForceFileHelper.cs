@@ -775,6 +775,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 : string.Format("{0}_{1:0000}.{2}", filePathWithoutExtension, i, fileExtension);
         }
 
+        public static ExtForceFileItem CreateMeteoFieldExtForceFileItem(IFmMeteoField meteoField, string filePath)
+        {
+            return new ExtForceFileItem(ExtForceQuantNames.MeteoQuantityNames[meteoField.Quantity])
+                   {
+                       FileName = filePath,
+                       FileType = GetFileType(meteoField),
+                       Method = GetMethod(meteoField),
+                       Operand = "+"
+                   };
+        }
         public static ExtForceFileItem CreateWindFieldExtForceFileItem(IWindField windField, string filePath)
         {
             return new ExtForceFileItem(ExtForceQuantNames.WindQuantityNames[windField.Quantity])
@@ -786,6 +796,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                    };
         }
 
+        private static int GetFileType(IFmMeteoField meteoField)
+        {
+            var timeseriesMeteoField = meteoField as FmMeteoField;
+            if (timeseriesMeteoField != null)
+            {
+                return ExtForceQuantNames.FileTypes.Uniform;
+            }
+            return -1;
+        }
         private static int GetFileType(IWindField windField)
         {
             var uniformWindField = windField as UniformWindField;
@@ -804,6 +823,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (windField is SpiderWebWindField)
             {
                 return ExtForceQuantNames.FileTypes.SpiderWeb;
+            }
+            return -1;
+        }
+
+        private static int GetMethod(IFmMeteoField meteoField)
+        {
+            if (meteoField is FmMeteoField)
+            {
+                return 1;
             }
             return -1;
         }

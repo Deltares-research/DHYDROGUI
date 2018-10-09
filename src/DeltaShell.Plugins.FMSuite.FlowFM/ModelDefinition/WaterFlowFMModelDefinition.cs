@@ -190,6 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             Boundaries = new EventedList<Feature2D>();
             BoundaryConditionSets = new EventedList<BoundaryConditionSet>();
             WindFields = new EventedList<IWindField>();
+            FmMeteoFields = new EventedList<IFmMeteoField>();
             UnsupportedFileBasedExtForceFileItems = new EventedList<IUnsupportedFileBasedExtForceFileItem>();
             SourcesAndSinks = new EventedList<SourceAndSink>();
             Pipes = new EventedList<Feature2D>();
