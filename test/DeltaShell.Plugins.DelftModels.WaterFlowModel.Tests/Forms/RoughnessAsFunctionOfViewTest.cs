@@ -1,7 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness;
 using NUnit.Framework;
 
@@ -10,7 +9,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
     [TestFixture]
     public class RoughnessAsFunctionOfViewTest
     {
-        
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void Show()
@@ -29,6 +27,5 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
 
             WindowsFormsTestHelper.ShowModal(form);
         }
-
     }
 }

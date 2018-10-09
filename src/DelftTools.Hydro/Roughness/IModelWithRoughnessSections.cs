@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Core.Workflow.DataItems;
+﻿using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections.Generic;
 
 namespace DelftTools.Hydro.Roughness
