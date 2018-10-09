@@ -66,10 +66,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             //model.Roughness.
         }
 
-        private static void PrepareModelDefinitionForWriting(IWaterFlowFMModel model)
+        private static void PrepareModelDefinitionForWriting(WaterFlowFMModel fmModel)
         {
-            var network = model.Network;
-            var modelDefinition = model.ModelDefinition;
+            var network = fmModel.Network;
+
+            var modelDefinition = fmModel.ModelDefinition;
             if (network.Manholes.Any())
                 modelDefinition.SetModelProperty(KnownProperties.NodeFile, "nodeFile.ini");
             if (network.CrossSections.Any() || network.Pipes.Any(p => p.CrossSectionDefinition != null))
@@ -78,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 modelDefinition.SetModelProperty(KnownProperties.CrossLocFile, "crsloc.ini");
             }
 
-            if (network.BranchFeatures.Any())
+            if (network.BranchFeatures.Any() || fmModel.Area.AllHydroObjects.Any())
             {
                 modelDefinition.SetModelProperty(KnownProperties.StructuresFile, "structures.ini");
             }
