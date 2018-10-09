@@ -133,9 +133,11 @@
     <Compile Include="FeatureData\BoundaryConditionSet.cs" />
     <Compile Include="FeatureData\BoundaryConditionDataType.cs" />
     <Compile Include="FeatureData\BoundaryDataConverter.cs" />
+    <Compile Include="FeatureData\FMPrecipitationField.cs" />
     <Compile Include="FeatureData\GriddedWindField.cs" />
     <Compile Include="FeatureData\HarmonicComponent.cs" />
     <Compile Include="FeatureData\IBoundaryCondition.cs" />
+    <Compile Include="FeatureData\IFmMeteoField.cs" />
     <Compile Include="FeatureData\SpiderWebWindField.cs" />
     <Compile Include="FeatureData\VerticalInterpolationType.cs" />
     <Compile Include="FeatureData\VerticalProfileDefinition.cs" />

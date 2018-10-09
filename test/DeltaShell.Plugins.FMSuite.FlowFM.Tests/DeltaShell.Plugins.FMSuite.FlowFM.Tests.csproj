@@ -217,6 +217,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gui\MeteoFieldListViewTest.cs" />
     <Compile Include="IO\Exporters\FmCrossSectionDefinitionExporterTest.cs" />
     <Compile Include="IO\Exporters\WaterFlowFmAndF1DFileExporterTests.cs" />
     <Compile Include="ISewerFeatureTest.cs" />
