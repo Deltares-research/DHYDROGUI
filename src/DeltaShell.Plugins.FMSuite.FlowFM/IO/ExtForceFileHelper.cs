@@ -825,6 +825,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return -1;
         }
 
+        public static IFmMeteoField CreateMeteoField(ExtForceFileItem extForceFileItem, string extForceFilePath)
+        {
+            if (!ExtForceQuantNames.MeteoQuantityNames.Values.Contains(extForceFileItem.Quantity))
+            {
+                throw new NotSupportedException(string.Format("Meteo quantity {0} is not supported",
+                    extForceFileItem.Quantity));
+            }
+            var quantity = ExtForceQuantNames.MeteoQuantityNames.First(kvp => kvp.Value == extForceFileItem.Quantity).Key;
+
+            /*var fileName = extForceFileItem.FileName == null
+                ? null
+                : Path.Combine(Path.GetDirectoryName(extForceFilePath), extForceFileItem.FileName);
+            */
+            switch (quantity)
+            {
+                case FmMeteoQuantity.Precipitation:
+                    return FmMeteoField.CreateMeteoPrecipitationSeries();;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         public static IWindField CreateWindField(ExtForceFileItem extForceFileItem, string extForceFilePath)
         {
             if (!ExtForceQuantNames.WindQuantityNames.Values.Contains(extForceFileItem.Quantity))

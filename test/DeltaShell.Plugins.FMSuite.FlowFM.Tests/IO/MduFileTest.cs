@@ -50,6 +50,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        public void WriteExternalForcingsFiles()
+        {
+            var testFile = "ModelWithMeteo.mdu";
+            var mduFile = new MduFile();
+            var hydroArea = new HydroArea();
+            var model = new WaterFlowFMModel();
+            
+            mduFile.Write(testFile, model.ModelDefinition, hydroArea, null, false, true, false);
+
+            Assert.IsTrue(File.Exists(testFile));
+        }
+
+        [Test]
         public void WriteMorphologyAndSedimentFiles()
         {
             var testFile = "ModelWithMorphology.mdu";

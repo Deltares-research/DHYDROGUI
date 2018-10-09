@@ -48,6 +48,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string MeteoData = "humidity_airtemperature_cloudiness";
         public const string MeteoDataWithRadiation = "humidity_airtemperature_cloudiness_solarradiation";
 
+        // quantity names for filetype=1,2,4,7,8 method=1,2,3
+        public const string Precepitation = "rainfall";
+
         // trying to complicate things a bit further :-(, for flooding:
         public const string EmbankmentBnd = "1d2dbnd";
         public const string EmbankmentForcingFile = "REALTIME";
@@ -130,6 +133,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {WindQuantity.VelocityVector, WindXY},
             {WindQuantity.AirPressure, AtmosphericPressure},
             {WindQuantity.VelocityVectorAirPressure, PressureWindXWindY},
+        };
+
+        // meteo quantities
+        public static readonly IDictionary<FmMeteoQuantity, string> MeteoQuantityNames = new Dictionary
+            <FmMeteoQuantity, string>
+        {
+            {FmMeteoQuantity.Precipitation, Precepitation},
         };
 
         // Boundary condition quantities

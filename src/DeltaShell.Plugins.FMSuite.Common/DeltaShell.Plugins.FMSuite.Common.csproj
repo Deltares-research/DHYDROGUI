@@ -133,7 +133,7 @@
     <Compile Include="FeatureData\BoundaryConditionSet.cs" />
     <Compile Include="FeatureData\BoundaryConditionDataType.cs" />
     <Compile Include="FeatureData\BoundaryDataConverter.cs" />
-    <Compile Include="FeatureData\FMPrecipitationField.cs" />
+    <Compile Include="FeatureData\FmMeteoField.cs" />
     <Compile Include="FeatureData\GriddedWindField.cs" />
     <Compile Include="FeatureData\HarmonicComponent.cs" />
     <Compile Include="FeatureData\IBoundaryCondition.cs" />

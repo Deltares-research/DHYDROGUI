@@ -415,6 +415,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var extForceFileItems = ParseExtForceFile();
                 var forceFileItems = extForceFileItems as IList<ExtForceFileItem> ?? extForceFileItems.ToList();
                 ReadPolyLineData(forceFileItems, modelDefinition);
+                ReadMeteoItems(forceFileItems, modelDefinition);
                 ReadWindItems(forceFileItems, modelDefinition);
                 ReadHeatFluxModelData(forceFileItems, modelDefinition);
                 ReadSpatialData(forceFileItems, modelDefinition);
@@ -1060,8 +1061,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return operation;
         }
 
-        private void ReadWindItems(IEnumerable<ExtForceFileItem> extForceFileItems,
+        private void ReadMeteoItems(IEnumerable<ExtForceFileItem> extForceFileItems,
             WaterFlowFMModelDefinition modelDefinition)
+        {
+            var refDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+            foreach (
+                var extForceFileItem in
+                    extForceFileItems.Where(i => ExtForceQuantNames.MeteoQuantityNames.Values.Contains(i.Quantity)))
+            {
+                try
+                {
+                    var MeteoField = ExtForceFileHelper.CreateMeteoField(extForceFileItem, FilePath);
+                    var MeteoFile = Path.Combine(Path.GetDirectoryName(FilePath), extForceFileItem.FileName);
+                    if (!File.Exists(MeteoFile))
+                    {
+                        throw new FileNotFoundException(string.Format("Meteo file {0} could not be found", MeteoFile));
+                    }
+                    if (MeteoField is FmMeteoField)
+                    {
+                        var fileReader = new TimFile();
+                        fileReader.Read(MeteoFile, MeteoField.Data, refDate);
+                    }
+                    modelDefinition.FmMeteoFields.Add(MeteoField);
+                    existingForceFileItems[extForceFileItem] = MeteoField;
+                }
+                catch (Exception e)
+                {
+                   log.Warn(e.Message);
+                }
+            }
+        }
+
+        private void ReadWindItems(IEnumerable<ExtForceFileItem> extForceFileItems, WaterFlowFMModelDefinition modelDefinition)
         {
             var refDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
             foreach (
