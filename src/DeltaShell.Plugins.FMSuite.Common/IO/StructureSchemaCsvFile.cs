@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     var isReadOnly = lineFields[7];
                     var description = String.Join("", lineFields.Skip(NumberOfColumnsBeforeDescription));
 
-                    var dataType = FMParser.GetClrType(attributeName, typeField, ref captionField, propertiesDefinitionFile, LineNumber);
+                    var dataType = DataTypeValueParser.GetClrType(attributeName, typeField, ref captionField, propertiesDefinitionFile, LineNumber);
 
                     var propertyDefinition = new StructurePropertyDefinition
                         {

@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (fmModel?.Network == null) return Enumerable.Empty<DelftIniCategory>();
 
             var categories1D = NetworkEditor.IO.StructureFile.ExtractFunctionStructuresOfNetworkGenerator(fmModel.Network);
-            var categories2D = ExtractFunctionStructuresOfAreaGenerator(fmModel.Area).ToList();
+            var categories2D = ExtractFunctionStructuresOfAreaGenerator(fmModel.Area, fmModel.ReferenceTime).ToList();
 
             Action<string, WaterFlowFMModel, IStructure2D> myAction;
             foreach (var category2D in categories2D)
@@ -54,11 +54,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return categories1D.Concat(categories2D);
         }
 
-        private static IEnumerable<DelftIniCategory> ExtractFunctionStructuresOfAreaGenerator(HydroArea area)
+        private static IEnumerable<DelftIniCategory> ExtractFunctionStructuresOfAreaGenerator(HydroArea area, DateTime referenceDateTime)
         {
             foreach (var structure2D in area.AllHydroObjects.Cast<IStructure2D>())
             {
-                var definitionGeneratorStructure = DefinitionGeneratorFactory.GetDefinitionGeneratorStructure(structure2D.Structure2DType);
+                var definitionGeneratorStructure = DefinitionGeneratorFactory.GetDefinitionGeneratorStructure(structure2D.Structure2DType, referenceDateTime);
                 var structureCategory = definitionGeneratorStructure.CreateStructureRegion(structure2D);
                 yield return structureCategory;
             }

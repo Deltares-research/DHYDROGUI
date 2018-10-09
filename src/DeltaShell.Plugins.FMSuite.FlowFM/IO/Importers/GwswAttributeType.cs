@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
@@ -118,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             try
             {
-                return FMParser.GetClrType(name, typeField, ref definition, fileName, lineNumber);
+                return DataTypeValueParser.GetClrType(name, typeField, ref definition, fileName, lineNumber);
             }
             catch (Exception)
             {

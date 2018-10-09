@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     var description = string.Join("",
                         lineFields.Skip(NumberOfColumnsBeforeDescription).Select(s => s.Trim('"')));
 
-                    var dataType = FMParser.GetClrType(mduPropertyName, typeField, ref captionField, propertiesDefinitionFile, LineNumber);
+                    var dataType = DataTypeValueParser.GetClrType(mduPropertyName, typeField, ref captionField, propertiesDefinitionFile, LineNumber);
 
                     var guiGroupId = string.IsNullOrEmpty(guiGroupName) ? DefaultGUIGroupID : guiGroupName;
                     if (!schema.GuiPropertyGroups.ContainsKey(guiGroupId))

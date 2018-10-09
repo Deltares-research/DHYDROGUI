@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro;
+﻿using System;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
@@ -17,7 +18,13 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             IniCategory.AddProperty(StructureRegion.BreachLocationY.Key, leveeBreach.BreachLocationY, StructureRegion.BreachLocationY.Description);
 
             var leveeBreachSettings = leveeBreach.GetActiveLeveeBreachSettings();
-            //var secondsSinceRefDate = (int)(leveeBreachSettings.StartTimeBreachGrowth - refDate).TotalSeconds;
+
+            if (ReferenceDateTime != null)
+            {
+                var secondsSinceRefDate = (int) (leveeBreachSettings.StartTimeBreachGrowth - (DateTime) ReferenceDateTime).TotalSeconds;
+                IniCategory.AddProperty(StructureRegion.StartTimeBreachGrowth.Key, secondsSinceRefDate, StructureRegion.StartTimeBreachGrowth.Description);
+            }
+
             IniCategory.AddProperty(StructureRegion.BreachGrowthActivated.Key, leveeBreachSettings.BreachGrowthActive ? "1" : "0", StructureRegion.BreachGrowthActivated.Description);
 
             if (!leveeBreachSettings.BreachGrowthActive) return IniCategory;
@@ -30,7 +37,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
                 IniCategory.AddProperty(StructureRegion.InitialCrestLevel.Key, verheijLeveeBreachSettings.InitialCrestLevel);
                 IniCategory.AddProperty(StructureRegion.MinimumCrestLevel.Key, verheijLeveeBreachSettings.MinimumCrestLevel);
                 IniCategory.AddProperty(StructureRegion.InitalBreachWidth.Key, verheijLeveeBreachSettings.InitialBreachWidth);
-                //IniCategory.AddProperty(StructureRegion.TimeToReachMinimumCrestLevel.Key, verheijLeveeBreachSettings.PeriodToReachZmin.GetType());
+
+                var value = DataTypeValueParser.ToString(verheijLeveeBreachSettings.PeriodToReachZmin, typeof(TimeSpan));
+                IniCategory.AddProperty(StructureRegion.TimeToReachMinimumCrestLevel.Key, value);
+
                 IniCategory.AddProperty(StructureRegion.Factor1.Key, verheijLeveeBreachSettings.Factor1Alfa);
                 IniCategory.AddProperty(StructureRegion.Factor2.Key, verheijLeveeBreachSettings.Factor2Beta);
                 IniCategory.AddProperty(StructureRegion.CriticalFlowVelocity.Key, verheijLeveeBreachSettings.CriticalFlowVelocity);
@@ -44,6 +54,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             }
 
             return IniCategory;
+        }
+
+        public DefinitionGeneratorStructureLeveeBreach2D(DateTime? referenceDateTime) : base(referenceDateTime)
+        {
         }
     }
 }

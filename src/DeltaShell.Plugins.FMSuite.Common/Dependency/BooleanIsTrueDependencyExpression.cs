@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 
@@ -48,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
 
                     if (dependencyProperty != null)
                     {
-                        return FMParser.FromString<bool>(dependencyProperty.GetValueAsString());
+                        return DataTypeValueParser.FromString<bool>(dependencyProperty.GetValueAsString());
                     }
                     // Property does not exist -> Do not enable!
                     return false;

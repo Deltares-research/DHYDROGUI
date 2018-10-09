@@ -67,8 +67,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             property = structure2D.GetProperty(KnownStructureProperties.X);
             if (property != null)
             {
-                var xCoordinate = FMParser.FromString<double>(property.GetValueAsString());
-                var yCoordinate = FMParser.FromString<double>(structure2D.GetProperty(KnownStructureProperties.Y).GetValueAsString());
+                var xCoordinate = DataTypeValueParser.FromString<double>(property.GetValueAsString());
+                var yCoordinate = DataTypeValueParser.FromString<double>(structure2D.GetProperty(KnownStructureProperties.Y).GetValueAsString());
                 structure.Geometry = new Point(xCoordinate, yCoordinate);
             }
 
@@ -177,13 +177,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var property = structure.GetProperty(KnownStructureProperties.StartSuctionSide);
             if (property != null)
             {
-                pump.StartSuction = FMParser.FromString<double>(property.GetValueAsString());
+                pump.StartSuction = DataTypeValueParser.FromString<double>(property.GetValueAsString());
                 hasSuctionSideLevels = true;
             }
             property = structure.GetProperty(KnownStructureProperties.StopSuctionSide);
             if (property != null)
             {
-                pump.StopSuction = FMParser.FromString<double>(property.GetValueAsString());
+                pump.StopSuction = DataTypeValueParser.FromString<double>(property.GetValueAsString());
                 hasSuctionSideLevels = true;
             }
 
@@ -191,13 +191,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             property = structure.GetProperty(KnownStructureProperties.StartDeliverySide);
             if (property != null)
             {
-                pump.StartDelivery = FMParser.FromString<double>(property.GetValueAsString());
+                pump.StartDelivery = DataTypeValueParser.FromString<double>(property.GetValueAsString());
                 hasDeliverySideLevels = true;
             }
             property = structure.GetProperty(KnownStructureProperties.StopDeliverySide);
             if (property != null)
             {
-                pump.StopDelivery = FMParser.FromString<double>(property.GetValueAsString());
+                pump.StopDelivery = DataTypeValueParser.FromString<double>(property.GetValueAsString());
                 hasDeliverySideLevels = true;
             }
 
@@ -217,7 +217,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             property = structure.GetProperty(KnownStructureProperties.NrOfReductionFactors);
             if (property != null)
             {
-                var reductionLevels = FMParser.FromString<int>(property.GetValueAsString());
+                var reductionLevels = DataTypeValueParser.FromString<int>(property.GetValueAsString());
                 if (reductionLevels == 0)
                 {
                     // Do nothing, defaults are okey
@@ -225,7 +225,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 else if (reductionLevels == 1)
                 {
                     var reductionFactorProperty = structure.GetProperty(KnownStructureProperties.ReductionFactor);
-                    pump.ReductionTable[0.0] = FMParser.FromString<double>(reductionFactorProperty.GetValueAsString());
+                    pump.ReductionTable[0.0] = DataTypeValueParser.FromString<double>(reductionFactorProperty.GetValueAsString());
                 }
                 else
                 {
@@ -233,8 +233,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     var reductionFactorProperty = structure.GetProperty(KnownStructureProperties.ReductionFactor);
 
                     // Assumes the strings have already been validated:
-                    var headValues = FMParser.FromString<IList<double>>(headProperty.GetValueAsString());
-                    var reductionValues = FMParser.FromString<IList<double>>(reductionFactorProperty.GetValueAsString());
+                    var headValues = DataTypeValueParser.FromString<IList<double>>(headProperty.GetValueAsString());
+                    var reductionValues = DataTypeValueParser.FromString<IList<double>>(reductionFactorProperty.GetValueAsString());
 
                     for (var i = 0; i < headValues.Count; i++)
                     {
@@ -297,7 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var property = structure2D.GetProperty(KnownStructureProperties.LateralContractionCoefficient);
             if (property != null)
             {
-                simpleWeirFormula.LateralContraction = FMParser.FromString<double>(property.GetValueAsString());
+                simpleWeirFormula.LateralContraction = DataTypeValueParser.FromString<double>(property.GetValueAsString());
             }
             return simpleWeirFormula;
         }
@@ -328,7 +328,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     Log.WarnFormat("Property [{0}] is not supported and is skipped.", property);
                 else
                 {
-                    gsWeirFormula.SetPropertyValue(property, FMParser.FromString<double>(structureproperty.GetValueAsString()));
+                    gsWeirFormula.SetPropertyValue(property, DataTypeValueParser.FromString<double>(structureproperty.GetValueAsString()));
                 }
             }
 
@@ -349,7 +349,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var crestWidthString = crestWidthProperty == null ? null : crestWidthProperty.GetValueAsString();
             weir.CrestWidth = string.IsNullOrEmpty(crestWidthString)
                 ? 0.0
-                : FMParser.FromString<double>(crestWidthString);
+                : DataTypeValueParser.FromString<double>(crestWidthString);
             SetTimeSeriesProperty(structure2D, KnownStructureProperties.CrestLevel, path, refDate, weir,
                 TypeUtils.GetMemberName(() => weir.UseCrestLevelTimeSeries),
                 TypeUtils.GetMemberName(() => weir.CrestLevel), weir.CrestLevelTimeSeries);
@@ -470,7 +470,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var valueString = property?.GetValueAsString();
             var value = string.IsNullOrEmpty(valueString)
                 ? defaultValue
-                : FMParser.FromString<T>(valueString);
+                : DataTypeValueParser.FromString<T>(valueString);
             return value;
         }
 
@@ -498,15 +498,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             var sillWidthProperty = structure2D.GetProperty(KnownStructureProperties.GateSillWidth);
             var sillWidthString = sillWidthProperty == null ? null : sillWidthProperty.GetValueAsString();
-            gate.SillWidth = string.IsNullOrEmpty(sillWidthString) ? 0.0 : FMParser.FromString<double>(sillWidthString);
+            gate.SillWidth = string.IsNullOrEmpty(sillWidthString) ? 0.0 : DataTypeValueParser.FromString<double>(sillWidthString);
             gate.DoorHeight =
-                FMParser.FromString<double>(
+                DataTypeValueParser.FromString<double>(
                     structure2D.GetProperty(KnownStructureProperties.GateDoorHeight).GetValueAsString());
             var openingDirectionProperty =
                 structure2D.GetProperty(KnownStructureProperties.GateHorizontalOpeningDirection);
             var openingDirectionValue =
                 (Enum)
-                    FMParser.FromString(openingDirectionProperty.GetValueAsString(),
+                    DataTypeValueParser.FromString(openingDirectionProperty.GetValueAsString(),
                         openingDirectionProperty.PropertyDefinition.DataType);
             var displayName = EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(openingDirectionValue);
             switch (displayName)

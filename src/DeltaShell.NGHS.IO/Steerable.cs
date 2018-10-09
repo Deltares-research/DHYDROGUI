@@ -1,4 +1,4 @@
-﻿namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
+﻿namespace DeltaShell.NGHS.IO
 {
     /// <summary>
     /// A variable that can either be used as constant value,

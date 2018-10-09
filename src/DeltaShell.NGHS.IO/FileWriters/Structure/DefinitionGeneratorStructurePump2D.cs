@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro;
+﻿using System;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.Helpers;
 
@@ -29,6 +30,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             {
                 IniCategory.AddProperty(capacityKey, pump.Capacity, capacityDescription, StructureRegion.Capacity.Format);
             }
+        }
+
+        public DefinitionGeneratorStructurePump2D(DateTime? referenceDateTime) : base(referenceDateTime)
+        {
         }
     }
 }

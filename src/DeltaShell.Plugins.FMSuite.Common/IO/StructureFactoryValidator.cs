@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils;
+using DeltaShell.NGHS.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
@@ -53,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var property = structure.GetProperty(KnownStructureProperties.NrOfReductionFactors);
             if (property != null)
             {
-                var numberOfLevels = FMParser.FromString<int>(property.GetValueAsString());
+                var numberOfLevels = DataTypeValueParser.FromString<int>(property.GetValueAsString());
                 if (numberOfLevels == 1)
                 {
                     if (structure.GetProperty(KnownStructureProperties.ReductionFactor) == null)

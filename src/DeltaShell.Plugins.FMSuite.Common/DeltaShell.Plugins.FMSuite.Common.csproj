@@ -170,7 +170,6 @@
     <Compile Include="IO\StructureSchemaCsvFile.cs" />
     <Compile Include="IO\StructuresFile.cs" />
     <Compile Include="IO\T3DFile.cs" />
-    <Compile Include="IO\FMParser.cs" />
     <Compile Include="IO\WindFile.cs" />
     <Compile Include="Layers\Boundary2DEditor.cs" />
     <Compile Include="Layers\Boundary2DInteractor.cs" />
@@ -184,7 +183,6 @@
     <Compile Include="ModelSchema\ModelPropertyGroup.cs" />
     <Compile Include="ModelSchema\ModelSchema.cs" />
     <Compile Include="IO\ModelSchemaCsvFile.cs" />
-    <Compile Include="ModelSchema\Steerable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Toolboxes\ScriptCommand.cs" />
     <Compile Include="Toolboxes\ToolboxCommands.cs" />

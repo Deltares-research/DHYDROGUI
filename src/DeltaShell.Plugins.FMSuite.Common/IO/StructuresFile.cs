@@ -178,7 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var delftIniProperty = new DelftIniProperty
             {
                 Name = definition.FilePropertyName,
-                Value = FMParser.ToString(value, value is ICollection ? typeof(IList<double>) : value.GetType()),
+                Value = DataTypeValueParser.ToString(value, value is ICollection ? typeof(IList<double>) : value.GetType()),
                 Comment = definition.Description
             };
             return delftIniProperty;
@@ -406,12 +406,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             foreach (var property in structure.Properties)
             {
                 if (property.PropertyDefinition.FilePropertyName == KnownStructureProperties.GateSillWidth &&
-                    FMParser.FromString<double>(property.GetValueAsString()) <= 0.0)
+                    DataTypeValueParser.FromString<double>(property.GetValueAsString()) <= 0.0)
                 {
                     continue;
                 }
                 if (property.PropertyDefinition.FilePropertyName == KnownStructureProperties.CrestLevel &&
-                    FMParser.FromString<double>(property.GetValueAsString()) <= 0.0)
+                    DataTypeValueParser.FromString<double>(property.GetValueAsString()) <= 0.0)
                 {
                     continue;
                 }

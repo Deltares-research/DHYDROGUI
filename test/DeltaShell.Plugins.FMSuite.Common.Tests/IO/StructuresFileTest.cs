@@ -17,7 +17,6 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Point = NetTopologySuite.Geometries.Point;
-using StructureType = DelftTools.Hydro.StructureType;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 {

@@ -4,14 +4,13 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using log4net;
 
-namespace DeltaShell.Plugins.FMSuite.Common.IO
+namespace DeltaShell.NGHS.IO
 {
-    public static class FMParser
+    public static class DataTypeValueParser
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof (FMParser));
+        private static readonly ILog Log = LogManager.GetLogger(typeof (DataTypeValueParser));
 
         /// <summary>
         /// Returns the C# value <see cref="Type"/> for a property in the schema csv file.

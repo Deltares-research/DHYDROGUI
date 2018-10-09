@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
@@ -39,8 +40,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var hourValue = values[0];
 
-            Assert.AreEqual("H", FMParser.ToString(hourValue, tunitEnum));
-            Assert.AreEqual(hourValue, FMParser.FromString("H", tunitEnum));
+            Assert.AreEqual("H", DataTypeValueParser.ToString(hourValue, tunitEnum));
+            Assert.AreEqual(hourValue, DataTypeValueParser.FromString("H", tunitEnum));
 
         }
 

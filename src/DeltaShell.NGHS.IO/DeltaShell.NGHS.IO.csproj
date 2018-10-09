@@ -185,6 +185,7 @@
     <Compile Include="FileWriters\Structure\IDefinitionGeneratorStructure.cs" />
     <Compile Include="FileWriters\Structure\StructureFileWriter.cs" />
     <Compile Include="FileWriters\Structure\StructureRegion.cs" />
+    <Compile Include="DataTypeValueParser.cs" />
     <Compile Include="FMSuiteFileBase.cs" />
     <Compile Include="FunctionStores\MapHisFileMetaData.cs" />
     <Compile Include="FunctionStores\MapHisFileReader.cs" />
@@ -231,6 +232,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Steerable.cs" />
     <Compile Include="TimFile.cs" />
     <Compile Include="UgridGlobalMetaDataToProtoConverter.cs" />
   </ItemGroup>
@@ -247,7 +249,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="Grid\Grid.cd" />
     <None Include="packages.config">
       <SubType>Designer</SubType>

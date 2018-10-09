@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.RegularExpressions;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 
@@ -96,12 +97,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
             var numberValue = RegularExpression.GetFirstMatch(ValuePart, dependencyExpression).Value.Trim();
 
             // Do not catch exceptions, as value should be kept valid by application
-            return FMParser.FromString<double>(numberValue);
+            return DataTypeValueParser.FromString<double>(numberValue);
         }
 
         private static bool EvaluateComparison(ModelProperty dependencyProperty, double referenceValue, ComparisonType type)
         {
-            var dependencyValue = FMParser.FromString<double>(dependencyProperty.GetValueAsString());
+            var dependencyValue = DataTypeValueParser.FromString<double>(dependencyProperty.GetValueAsString());
             switch (type)
             {
                 case ComparisonType.LessThen: return dependencyValue < referenceValue;

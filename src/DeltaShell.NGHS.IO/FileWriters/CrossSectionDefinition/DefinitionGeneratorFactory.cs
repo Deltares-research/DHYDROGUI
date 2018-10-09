@@ -87,20 +87,20 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 
         }
 
-        public static IDefinitionGeneratorStructure GetDefinitionGeneratorStructure(Structure2DType structureType)
+        public static DefinitionGeneratorStructure2D GetDefinitionGeneratorStructure(Structure2DType structureType, DateTime? referenceDateTime)
         {
             switch (structureType)
             {
                 case Structure2DType.Pump:
-                    return new DefinitionGeneratorStructurePump2D();
+                    return new DefinitionGeneratorStructurePump2D(null);
                 case Structure2DType.Weir:
-                    return new DefinitionGeneratorStructureWeir2D();
+                    return new DefinitionGeneratorStructureWeir2D(null);
                 case Structure2DType.GeneralStructure:
-                    return new DefinitionGeneratorStructureGeneralStructure2D();
+                    return new DefinitionGeneratorStructureGeneralStructure2D(null);
                 case Structure2DType.Gate:
-                    return new DefinitionGeneratorStructureGate2D();
+                    return new DefinitionGeneratorStructureGate2D(null);
                 case Structure2DType.LeveeBreach:
-                    return new DefinitionGeneratorStructureLeveeBreach2D();
+                    return new DefinitionGeneratorStructureLeveeBreach2D(referenceDateTime);
                 default:
                     return null;
             }

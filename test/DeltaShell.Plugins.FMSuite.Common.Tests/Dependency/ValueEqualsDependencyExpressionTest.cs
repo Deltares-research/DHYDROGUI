@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.Dependency;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
@@ -52,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
                     new TestModelProperty(new TestModelPropertyDefinition
                         {
                             FilePropertyName = "B",
-                            DataType = FMParser.GetClrType("B", "-1|0|1|2", ref enumBCaption, null, 0)
+                            DataType = DataTypeValueParser.GetClrType("B", "-1|0|1|2", ref enumBCaption, null, 0)
                         }, "-1"),
                     new TestModelProperty(new TestModelPropertyDefinition
                         {

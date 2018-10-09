@@ -17,5 +17,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
             return IniCategory;
         }
+
+        public DefinitionGeneratorStructureGeneralStructure2D(DateTime? referenceDateTime) : base(referenceDateTime)
+        {
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro;
+﻿using System;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -45,6 +46,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
             var weirFormula = (SimpleWeirFormula) weir.WeirFormula;
             IniCategory.AddProperty(StructureRegion.LatContrCoeff.Key, weirFormula.LateralContraction, StructureRegion.LatContrCoeff.Description, StructureRegion.LatContrCoeff.Format);
+        }
+
+        public DefinitionGeneratorStructureWeir2D(DateTime? referenceDateTime) : base(referenceDateTime)
+        {
         }
     }
 }

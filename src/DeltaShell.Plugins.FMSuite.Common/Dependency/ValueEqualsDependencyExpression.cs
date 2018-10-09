@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.RegularExpressions;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 
@@ -76,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
             var numberValue = RegularExpression.GetFirstMatch(ValueArrayPart, dependencyExpression).Value.Trim();
 
             // Do not catch exceptions, as value should be kept valid by application
-            return numberValue.Split('|').Select(FMParser.FromString<int>);
+            return numberValue.Split('|').Select(DataTypeValueParser.FromString<int>);
         }
 
         private static string GetDependencyPropertyName(string dependencyExpression)

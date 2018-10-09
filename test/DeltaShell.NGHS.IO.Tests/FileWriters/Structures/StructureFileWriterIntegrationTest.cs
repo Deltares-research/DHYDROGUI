@@ -514,7 +514,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var leveeBreachName = "myBreach";
             var expectedBreachLocationX = 1.1;
             var expectedBreachLocationY = 1.1;
-            //var expectedStartTimeBreachGrowth = 7200;
+            var expectedStartTimeBreachGrowth = 7200;
             var expectedBreachGrowthActivated = "0";
 
             var referenceTime = new DateTime(2018, 8, 25);
@@ -541,11 +541,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
                 var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
                 Assert.IsNotNull(structureCategory);
-                //Assert.That(structureCategory.Properties.Count, Is.EqualTo(7));
+                Assert.That(structureCategory.Properties.Count, Is.EqualTo(7));
 
                 CheckKeyValuePair(structureCategory, StructureRegion.BreachLocationX.Key, expectedBreachLocationX);
                 CheckKeyValuePair(structureCategory, StructureRegion.BreachLocationY.Key, expectedBreachLocationY);
-                //CheckKeyValuePair(structureCategory, StructureRegion.StartTimeBreachGrowth.Key, expectedStartTimeBreachGrowth);
+                CheckKeyValuePair(structureCategory, StructureRegion.StartTimeBreachGrowth.Key, expectedStartTimeBreachGrowth);
                 CheckKeyValuePair(structureCategory, StructureRegion.BreachGrowthActivated.Key, expectedBreachGrowthActivated);
             }
             finally
@@ -565,9 +565,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var leveeBreachName = "myBreach";
             var expectedBreachLocationX = 1.1;
             var expectedBreachLocationY = 1.1;
+            var expectedStartTimeBreachGrowth = 7200;
             var expectedBreachGrowthActivated = "1";
             var expectedAlgorithmValue = (int) LeveeBreachGrowthFormula.VerheijvdKnaap2002;
             var expectedSettingsValue = 1.09;
+            var expectedTimeToReachMinimumCrestLevel = 3600;
 
             var referenceTime = new DateTime(2018, 8, 25);
             var fmModel = new WaterFlowFMModel
@@ -605,22 +607,21 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
                 var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
                 Assert.IsNotNull(structureCategory);
-                //Assert.That(structureCategory.Properties.Count, Is.EqualTo(8));
+                Assert.That(structureCategory.Properties.Count, Is.EqualTo(15));
 
                 CheckKeyValuePair(structureCategory, StructureRegion.BreachLocationX.Key, expectedBreachLocationX);
                 CheckKeyValuePair(structureCategory, StructureRegion.BreachLocationY.Key, expectedBreachLocationY);
-                //CheckKeyValuePair(structureCategory, StructureRegion.StartTimeBreachGrowth.Key, expectedStartTimeBreachGrowth);
+                CheckKeyValuePair(structureCategory, StructureRegion.StartTimeBreachGrowth.Key, expectedStartTimeBreachGrowth);
                 CheckKeyValuePair(structureCategory, StructureRegion.BreachGrowthActivated.Key, expectedBreachGrowthActivated);
 
                 CheckKeyValuePair(structureCategory, StructureRegion.Algorithm.Key, expectedAlgorithmValue);
                 CheckKeyValuePair(structureCategory, StructureRegion.InitialCrestLevel.Key, expectedSettingsValue);
                 CheckKeyValuePair(structureCategory, StructureRegion.MinimumCrestLevel.Key, expectedSettingsValue);
                 CheckKeyValuePair(structureCategory, StructureRegion.InitalBreachWidth.Key, expectedSettingsValue);
-                //CheckKeyValuePair(structureCategory, StructureRegion.TimeToReachMinimumCrestLevel.Key, expectedSettingsValue);
+                CheckKeyValuePair(structureCategory, StructureRegion.TimeToReachMinimumCrestLevel.Key, expectedTimeToReachMinimumCrestLevel);
                 CheckKeyValuePair(structureCategory, StructureRegion.Factor1.Key, expectedSettingsValue);
                 CheckKeyValuePair(structureCategory, StructureRegion.Factor2.Key, expectedSettingsValue);
                 CheckKeyValuePair(structureCategory, StructureRegion.CriticalFlowVelocity.Key, expectedSettingsValue);
-
             }
             finally
             {
@@ -662,7 +663,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
                 var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
                 Assert.IsNotNull(structureCategory);
-                Assert.That(structureCategory.Properties.Count, Is.EqualTo(8));
+                Assert.That(structureCategory.Properties.Count, Is.EqualTo(9));
 
                 CheckKeyValuePair(structureCategory, StructureRegion.TimeFilePath.Key, timeSeriesFileName);
             }

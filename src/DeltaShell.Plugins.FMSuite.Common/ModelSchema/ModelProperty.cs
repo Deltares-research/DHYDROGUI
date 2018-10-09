@@ -4,6 +4,7 @@ using System.IO;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
@@ -68,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
             {
                 if (!string.IsNullOrEmpty(propertyDefinition.MinValueAsString))
                 {
-                    return FMParser.FromString(propertyDefinition.MinValueAsString, propertyDefinition.DataType);
+                    return DataTypeValueParser.FromString(propertyDefinition.MinValueAsString, propertyDefinition.DataType);
                 }
                 return null;
             }
@@ -84,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
             {
                 if (!string.IsNullOrEmpty(propertyDefinition.MaxValueAsString))
                 {
-                    return FMParser.FromString(propertyDefinition.MaxValueAsString, propertyDefinition.DataType);
+                    return DataTypeValueParser.FromString(propertyDefinition.MaxValueAsString, propertyDefinition.DataType);
                 }
                 return null;
             }
@@ -116,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
                 }
                 else
                 {
-                    Value = FMParser.FromString(valueAsString, propertyDefinition.DataType);
+                    Value = DataTypeValueParser.FromString(valueAsString, propertyDefinition.DataType);
                 }
             }
             catch (Exception e)
@@ -161,7 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
                 return;
             }
 
-            var constantValue = FMParser.FromString<double>(valueAsString);
+            var constantValue = DataTypeValueParser.FromString<double>(valueAsString);
             steerableValue.ConstantValue = constantValue;
             steerableValue.Mode = SteerableMode.ConstantValue;
         }
@@ -171,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// </summary>
         public virtual string GetValueAsString()
         {
-            return FMParser.ToString(value, propertyDefinition.DataType);
+            return DataTypeValueParser.ToString(value, propertyDefinition.DataType);
         }
 
         /// <summary>
