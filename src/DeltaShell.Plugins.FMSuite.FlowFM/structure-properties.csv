@@ -39,7 +39,7 @@ generalstructure,extraresistance,Extra resistance,Double,,,,FALSE,Extra resistan
 generalstructure,gatedoorheight,Gate door height,Double,,,,FALSE,Gate opening height (m)
 dambreak,start_location_x,Breach start location-X,Double,,,,FALSE,X-position of the breach growth
 dambreak,start_location_y,Breach start location-Y,Double,,,,FALSE,Y-position of the breach growth
-dambreak,algorithm,Algorithm:Verheij - vd Knaap (2002)|User defined breach,2|1,,,,FALSE,0 = unknown 1 = User defined 2 = Verheij - vd Knaap (2002)
+dambreak,algorithm,Algorithm:Verheij - vd Knaap (2002)|User defined breach,2|3,,,,FALSE,0 = unknown 2 = Verheij - vd Knaap (2002) 3 = User defined
 dambreak,crestlevelini,Initial crest level,Double,,,,FALSE,Initial crest level [m]
 dambreak,crestlevelmin,Minimum crest level,Double,,,,FALSE,Minimum crest level [m]
 dambreak,breachwidthini,Initial breach width,Double,,,,FALSE,Initial breach width [m]

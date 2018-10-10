@@ -8,6 +8,6 @@ namespace DelftTools.Hydro.Structures.LeveeBreachFormula
         VerheijvdKnaap2002 = 2,
 
         [Description("User defined breach")]
-        UserDefinedBreach = 1,
+        UserDefinedBreach = 3
     }
 }
