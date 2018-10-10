@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using DelftTools.Controls.Swf.Table;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
@@ -43,35 +42,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void ShowWithMeteoItems()
         {
-
+            //Create model and view
             var model = new WaterFlowFMModel();
-
-            
             var view = new FmMeteoFieldListView
             {
                 TimeSeriesGeneratorTool = TableViewTimeSeriesGeneratorTool,
                 Data = model.ModelDefinition.FmMeteoFields
             };
-            
-            Action<Form> shown = delegate
-            {
-                //view.Controls[0]
-                Console.WriteLine();
-            };
 
+            //Simulate the clicking of the add button 
             Form testForm = new Form();
             testForm.Controls.Add(view);
+            Assert.That(model.ModelDefinition.FmMeteoFields.Count, Is.EqualTo(0));
             WindowsFormsTestHelper.ShowModal(testForm, f =>
             {
-                //((Button)f.Controls[0].Controls[1].Controls[1]).PerformClick();
-                //TypeUtils.GetPropertyInfo(typeof(IEventedList<IFmMeteoField>),"");
-                var fmMeteoItems =(IEventedList<IFmMeteoField>)TypeUtils.GetPropertyValue(((FmMeteoFieldListView) f.Controls[0]), "FmMeteoItems");
+                var fmMeteoItems = (IEventedList<IFmMeteoField>)TypeUtils.GetPropertyValue(((FmMeteoFieldListView) f.Controls[0]), "FmMeteoItems");
                 fmMeteoItems.Insert(0, FmMeteoField.CreateMeteoPrecipitationSeries());
-                var table = (TableView) f.Controls[0].Controls[0].Controls[0].Controls[0].Controls[0].Controls[0];
-                table.r
                 Console.WriteLine();
-
             });
+            Assert.That(model.ModelDefinition.FmMeteoFields.Count, Is.Not.EqualTo(0));
         }
     }
 }
