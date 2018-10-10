@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
     };
     public enum FmMeteoQuantity
     {
-        [Description("Precipication rain fall")]
+        [Description("Precipication rainfall")]
         Precipitation,
     }
     public interface IFmMeteoField

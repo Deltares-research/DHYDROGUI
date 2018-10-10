@@ -3,6 +3,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
@@ -27,12 +28,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void ShowWithZeroMeteoItems()
         {
             var itemList = new EventedList<IFmMeteoField>();
-//            var view = new FmMeteoFieldListView
-//            {
-//                TimeSeriesGeneratorTool = TableViewTimeSeriesGeneratorTool,
-//                Data = itemList
-//            };
-//            WindowsFormsTestHelper.ShowModal(view);
+            var view = new FmMeteoFieldListView
+            {
+                TimeSeriesGeneratorTool = TableViewTimeSeriesGeneratorTool,
+                Data = itemList
+            };
+            WindowsFormsTestHelper.ShowModal(view);
         }
     }
 }

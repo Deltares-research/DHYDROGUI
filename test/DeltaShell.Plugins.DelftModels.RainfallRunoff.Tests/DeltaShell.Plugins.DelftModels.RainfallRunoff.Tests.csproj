@@ -285,6 +285,10 @@
       <Name>DeltaShell.Plugins.ImportExport.Sobek</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj">
+      <Project>{56F47238-4ADC-4F56-BC27-BF1A0476D85C}</Project>
+      <Name>DeltaShell.Plugins.NetworkEditor.Gui</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
       <Project>{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}</Project>
       <Name>DeltaShell.Plugins.NetworkEditor</Name>

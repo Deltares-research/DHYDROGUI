@@ -244,6 +244,12 @@
     </Compile>
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\BoundaryGeometryPreviewWindowsFormsHostMap.cs" />
     <Compile Include="Editors\WaterFlowFmSettingsHelper.cs" />
+    <Compile Include="Editors\FmMeteoFieldListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\FmMeteoFieldListView.Designer.cs">
+      <DependentUpon>FmMeteoFieldListView.cs</DependentUpon>
+    </Compile>
     <Compile Include="FlowFMGuiPlugin.cs" />
     <Compile Include="FlowFMMapViewDecorator.cs" />
     <Compile Include="Forms\BcmFileExportDialog.cs">
@@ -315,10 +321,18 @@
     <Compile Include="Forms\GridWizard.Designer.cs">
       <DependentUpon>GridWizard.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FmMeteoSelectionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FmMeteoSelectionDialog.Designer.cs">
+      <DependentUpon>FmMeteoSelectionDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="MapTools\Add1D2DLinkMapTool.cs" />
     <Compile Include="MapTools\Base1D2DLinksMapTool.cs" />
     <Compile Include="MapTools\GenerateLinksMapTool.cs" />
     <Compile Include="MapTools\MapTool1D2DLinksHelper.cs" />
+    <Compile Include="NodePresenters\FmMeteoItemListNodePresenter.cs" />
+    <Compile Include="NodePresenters\FmMeteoItemNodePresenter.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -402,6 +416,14 @@
       <Project>{67C4F55D-2CF5-424D-91A3-A68365AC1C9C}</Project>
       <Name>DeltaShell.Plugins.DelftModels.HydroModel.Gui</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui\DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.csproj">
+      <Project>{CE44B789-11F2-4ECA-A761-D4636B8ED504}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RainfallRunoff\DeltaShell.Plugins.DelftModels.RainfallRunoff.csproj">
+      <Project>{1D52125E-F765-4D51-80C8-F9A67C6BE3D1}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.RainfallRunoff</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj">
       <Project>{56F47238-4ADC-4F56-BC27-BF1A0476D85C}</Project>
       <Name>DeltaShell.Plugins.NetworkEditor.Gui</Name>
@@ -450,6 +472,9 @@
     <EmbeddedResource Include="Editors\WaterFlowFMFileStructureView.resx">
       <DependentUpon>WaterFlowFMFileStructureView.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Editors\FmMeteoFieldListView.resx">
+      <DependentUpon>FmMeteoFieldListView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FMModelInspectionWindow.resx">
       <DependentUpon>FMModelInspectionWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -485,6 +510,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GridWizard.resx">
       <DependentUpon>GridWizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FmMeteoSelectionDialog.resx">
+      <DependentUpon>FmMeteoSelectionDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindSelectionDialog.resx">
       <DependentUpon>WindSelectionDialog.cs</DependentUpon>
@@ -532,6 +560,8 @@
     <None Include="Resources\BoundaryType_Harmonics.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\weather-cloudy.png" />
+    <None Include="Resources\precipitation.png" />
     <None Include="Resources\Gully.png" />
     <None Include="Resources\DamBreak.png" />
     <None Include="Resources\Roof.png" />
@@ -560,7 +590,6 @@
     <None Include="Resources\map.png" />
     <None Include="Resources\function_timeseries.png" />
     <None Include="Resources\thermometer.png" />
-    <None Include="Resources\weather-cloudy.png" />
     <None Include="Resources\Wind1.png" />
     <None Include="Resources\document-import.png" />
     <None Include="Resources\document-export.png" />

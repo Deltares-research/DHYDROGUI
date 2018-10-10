@@ -1,6 +1,6 @@
 ﻿using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
+using DeltaShell.Plugins.NetworkEditor.Gui;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Forms

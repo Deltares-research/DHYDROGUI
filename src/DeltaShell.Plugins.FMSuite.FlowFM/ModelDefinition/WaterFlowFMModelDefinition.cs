@@ -42,6 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string RoughnessDataItemName = "Roughness";
         public const string ViscosityDataItemName = "Viscosity";
         public const string DiffusivityDataItemName = "Diffusivity";
+        public const string PrecipitationDataItemName = "Precipitation (global)";
 
         public static readonly string[] SpatialDataItemNames =
         {
@@ -51,7 +52,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             InitialTemperatureDataItemName,
             RoughnessDataItemName,
             ViscosityDataItemName,
-            DiffusivityDataItemName
+            DiffusivityDataItemName,
+            PrecipitationDataItemName,
         };
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModelDefinition));

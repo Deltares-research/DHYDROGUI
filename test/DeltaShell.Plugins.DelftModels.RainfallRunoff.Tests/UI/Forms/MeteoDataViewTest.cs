@@ -4,7 +4,7 @@ using DelftTools.Controls.Swf.Table;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using NUnit.Framework;

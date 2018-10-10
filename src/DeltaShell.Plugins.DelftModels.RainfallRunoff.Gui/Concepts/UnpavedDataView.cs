@@ -14,6 +14,7 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Unpaved;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Unpaved;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
+using DeltaShell.Plugins.NetworkEditor.Gui;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
 {

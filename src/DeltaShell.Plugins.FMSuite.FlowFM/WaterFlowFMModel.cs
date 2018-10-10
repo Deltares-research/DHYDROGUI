@@ -24,6 +24,7 @@ using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -253,6 +254,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         public IEventedList<IWindField> WindFields { get; private set; }
+
+        public IEventedList<IFmMeteoField> FmMeteoFields { get; private set; }
         public IList<IUnsupportedFileBasedExtForceFileItem> UnsupportedFileBasedExtForceFileItems { get; private set; }
 
         public HeatFluxModelType HeatFluxModelType { get; private set; }
@@ -465,6 +468,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Boundaries = ModelDefinition.Boundaries;
             BoundaryConditionSets = ModelDefinition.BoundaryConditionSets;
             WindFields = ModelDefinition.WindFields;
+            FmMeteoFields = ModelDefinition.FmMeteoFields;
             UnsupportedFileBasedExtForceFileItems = ModelDefinition.UnsupportedFileBasedExtForceFileItems;
             Pipes = ModelDefinition.Pipes;
             SourcesAndSinks = ModelDefinition.SourcesAndSinks;

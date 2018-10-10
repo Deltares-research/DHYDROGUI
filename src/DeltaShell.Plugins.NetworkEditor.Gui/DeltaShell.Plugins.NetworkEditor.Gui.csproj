@@ -75,6 +75,9 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.40869\lib\net40\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DeltaShell.Plugins.CommonTools">
+      <HintPath>..\..\..\NGHS_WPFConvert\packages\DeltaShell.Framework.1.3.0.40545\lib\net40\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
+    </Reference>
     <Reference Include="DeltaShell.Plugins.CommonTools.Gui">
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.40869\lib\net40\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
       <Private>False</Private>
@@ -205,6 +208,12 @@
     <Compile Include="Editors\FMWeirPropertiesRow.cs" />
     <Compile Include="Export\HydroRegionShapeFileExporter.cs" />
     <Compile Include="Forms\CrossSectionView\SimplifiedCoordinate.cs" />
+    <Compile Include="Forms\MeteoDataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\MeteoDataView.Designer.cs">
+      <DependentUpon>MeteoDataView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ProjectExplorer\RoughnessSectionNodePresenter.cs" />
     <Compile Include="Forms\PropertyGrid\ManholeProperties.cs" />
     <Compile Include="Forms\PropertyGrid\ModelRoughnessProperties.cs" />
@@ -675,6 +684,7 @@
     <Compile Include="Helpers\HydroRegionEditorHelper.cs" />
     <Compile Include="Helpers\HydroNetworkCopyAndPasteHelper.cs" />
     <Compile Include="Helpers\NetworkCoordinateConvertor.cs" />
+    <Compile Include="IRRUnitAwareView.cs" />
     <Compile Include="MapTools\CopyBranchFeaturesMapTool.cs" />
     <Compile Include="MapTools\LeveeBreachMapTool.cs" />
     <Compile Include="MapTools\ExportCrossSectionToCsvMapTool.cs" />
@@ -688,6 +698,12 @@
     <Compile Include="MapTools\PasteIntoBranchFeaturesMapTool.cs" />
     <Compile Include="MapTools\SelectBranchesAlongShortestPathTool.cs" />
     <Compile Include="MapTools\SingleFeature2DLineTool.cs" />
+    <Compile Include="MeteoStationsListEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MeteoStationsListEditor.Designer.cs">
+      <DependentUpon>MeteoStationsListEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="NetworkEditorGuiPlugin.cs" />
     <Compile Include="NetworkEditorMapLayerProvider.cs" />
     <Compile Include="NetworkLayerStyleFactory.cs" />
@@ -842,6 +858,9 @@
     <EmbeddedResource Include="Forms\ImportBranchFeatureDialog.resx">
       <DependentUpon>ImportBranchFeatureDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MeteoDataView.resx">
+      <DependentUpon>MeteoDataView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\NetworkSideView\NetworkSideView.resx">
       <DependentUpon>NetworkSideView.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -893,6 +912,9 @@
       <DependentUpon>WeirView.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="MeteoStationsListEditor.resx">
+      <DependentUpon>MeteoStationsListEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -920,6 +942,10 @@
       <Project>{9f94f7fe-c79c-4e32-b3dc-a11c01b79349}</Project>
       <Name>DelftTools.Hydro</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RainfallRunoff\DeltaShell.Plugins.DelftModels.RainfallRunoff.csproj">
+      <Project>{1D52125E-F765-4D51-80C8-F9A67C6BE3D1}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.RainfallRunoff</Name>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
       <Project>{11330f89-2b3d-449d-9211-ea3e0d7f6cdc}</Project>

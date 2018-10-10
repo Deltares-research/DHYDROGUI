@@ -92,6 +92,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new HeatFluxModelNodePresenter {GuiPlugin = this};
             yield return new WindItemListNodePresenter {GuiPlugin = this};
             yield return new WindItemNodePresenter {GuiPlugin = this};
+            yield return new FmMeteoItemNodePresenter {GuiPlugin = this};
+            yield return new FmMeteoItemListNodePresenter { GuiPlugin = this };
         }
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
@@ -297,6 +299,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new ViewInfo<SpiderWebWindField, GriddedWindView>
             {
                 AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => m.WindFields.Contains(t)) != null,
+            };
+
+            //Fm Meteo fields
+            yield return new ViewInfo<IEventedList<IFmMeteoField>, FmMeteoFieldListView>
+            {
+                AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => Equals(m.FmMeteoFields, t)) != null,
+                AfterCreate = (v, o) => v.TimeSeriesGeneratorTool = tableViewTimeSeriesGeneratorTool
             };
 
             // Importers and exporters
