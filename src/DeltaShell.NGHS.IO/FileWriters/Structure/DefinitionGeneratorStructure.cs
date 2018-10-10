@@ -50,5 +50,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
             IniCategory.AddProperty(StructureRegion.DefinitionType.Key, definitionType, StructureRegion.DefinitionType.Description);
         }
+
+        protected void AddPropertyToIniCategory(double value, ConfigurationSetting setting)
+        {
+            IniCategory.AddProperty(setting.Key, value, setting.Description, setting.Format);
+        }
     }
 }

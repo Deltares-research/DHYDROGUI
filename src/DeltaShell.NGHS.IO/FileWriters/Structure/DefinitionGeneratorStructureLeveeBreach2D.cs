@@ -9,13 +9,17 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureLeveeBreach2D : DefinitionGeneratorStructure2D
     {
+        public DefinitionGeneratorStructureLeveeBreach2D(DateTime? referenceDateTime) : base(referenceDateTime)
+        {
+        }
+
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.LeveeBreach);
 
             var leveeBreach = (LeveeBreach) hydroObject;
-            IniCategory.AddProperty(StructureRegion.BreachLocationX.Key, leveeBreach.BreachLocationX, StructureRegion.BreachLocationX.Description);
-            IniCategory.AddProperty(StructureRegion.BreachLocationY.Key, leveeBreach.BreachLocationY, StructureRegion.BreachLocationY.Description);
+            AddPropertyToIniCategory(leveeBreach.BreachLocationX, StructureRegion.BreachLocationX);
+            AddPropertyToIniCategory(leveeBreach.BreachLocationY, StructureRegion.BreachLocationY);
 
             var leveeBreachSettings = leveeBreach.GetActiveLeveeBreachSettings();
 
@@ -34,16 +38,16 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             var verheijLeveeBreachSettings = leveeBreachSettings as VerheijVdKnaap2002BreachSettings;
             if (verheijLeveeBreachSettings != null)
             {
-                IniCategory.AddProperty(StructureRegion.InitialCrestLevel.Key, verheijLeveeBreachSettings.InitialCrestLevel);
-                IniCategory.AddProperty(StructureRegion.MinimumCrestLevel.Key, verheijLeveeBreachSettings.MinimumCrestLevel);
-                IniCategory.AddProperty(StructureRegion.InitalBreachWidth.Key, verheijLeveeBreachSettings.InitialBreachWidth);
+                AddPropertyToIniCategory(verheijLeveeBreachSettings.InitialCrestLevel, StructureRegion.InitialCrestLevel);
+                AddPropertyToIniCategory(verheijLeveeBreachSettings.MinimumCrestLevel, StructureRegion.MinimumCrestLevel);
+                AddPropertyToIniCategory(verheijLeveeBreachSettings.InitialBreachWidth, StructureRegion.InitalBreachWidth);
 
                 var value = DataTypeValueParser.ToString(verheijLeveeBreachSettings.PeriodToReachZmin, typeof(TimeSpan));
                 IniCategory.AddProperty(StructureRegion.TimeToReachMinimumCrestLevel.Key, value);
 
-                IniCategory.AddProperty(StructureRegion.Factor1.Key, verheijLeveeBreachSettings.Factor1Alfa);
-                IniCategory.AddProperty(StructureRegion.Factor2.Key, verheijLeveeBreachSettings.Factor2Beta);
-                IniCategory.AddProperty(StructureRegion.CriticalFlowVelocity.Key, verheijLeveeBreachSettings.CriticalFlowVelocity);
+                AddPropertyToIniCategory(verheijLeveeBreachSettings.Factor1Alfa, StructureRegion.Factor1);
+                AddPropertyToIniCategory(verheijLeveeBreachSettings.Factor2Beta, StructureRegion.Factor2);
+                AddPropertyToIniCategory(verheijLeveeBreachSettings.CriticalFlowVelocity, StructureRegion.CriticalFlowVelocity);
             }
 
             var userDefinedBreachSettings = leveeBreachSettings as UserDefinedBreachSettings;
@@ -54,10 +58,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             }
 
             return IniCategory;
-        }
-
-        public DefinitionGeneratorStructureLeveeBreach2D(DateTime? referenceDateTime) : base(referenceDateTime)
-        {
         }
     }
 }

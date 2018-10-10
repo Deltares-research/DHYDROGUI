@@ -637,9 +637,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
 
             var expectedCategoryName = "Structure";
+            var expectedAlgorithmValue = (int) LeveeBreachGrowthFormula.UserDefinedBreach;
             var leveeBreachName = "myBreach";
             var timeSeriesFileName = $"{leveeBreachName}_{KnownStructureProperties.TimeFilePath}.tim";
-            
+
             var referenceTime = new DateTime(2018, 8, 25);
             var fmModel = new WaterFlowFMModel
             {
@@ -665,6 +666,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 Assert.IsNotNull(structureCategory);
                 Assert.That(structureCategory.Properties.Count, Is.EqualTo(9));
 
+                CheckKeyValuePair(structureCategory, StructureRegion.Algorithm.Key, expectedAlgorithmValue);
                 CheckKeyValuePair(structureCategory, StructureRegion.TimeFilePath.Key, timeSeriesFileName);
             }
             finally
