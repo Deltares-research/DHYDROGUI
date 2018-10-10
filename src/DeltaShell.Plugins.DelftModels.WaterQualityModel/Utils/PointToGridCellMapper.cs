@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Utils;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Grids;
-using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
 {

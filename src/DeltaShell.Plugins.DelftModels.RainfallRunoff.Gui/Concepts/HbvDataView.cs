@@ -8,7 +8,7 @@ using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
-using DeltaShell.Plugins.NetworkEditor.Gui;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
 {

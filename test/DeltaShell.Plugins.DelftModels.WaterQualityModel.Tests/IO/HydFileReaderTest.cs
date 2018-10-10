@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;

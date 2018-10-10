@@ -1,9 +1,6 @@
 ﻿using System.IO;
-using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters

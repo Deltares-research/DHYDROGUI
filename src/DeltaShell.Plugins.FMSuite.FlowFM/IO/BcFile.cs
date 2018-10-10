@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
-using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using log4net;
 
@@ -177,6 +176,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         WriteLine("");
                     }
 
+                }
+            }
+            finally
+            {
+                CloseOutputFile();
+            }
+        }
+
+        public virtual void Write(IEnumerable<IFmMeteoField> fmMeteoFields, string filePath, BcMeteoFileDataBuilder bcMeteoFileDataBuilder, DateTime? refDate = null)
+        {
+            OpenOutputFile(filePath);
+            try
+            {
+                foreach (var fmMeteoField in fmMeteoFields)
+                {
+                    var blockData = bcMeteoFileDataBuilder.CreateBlockData(fmMeteoField, refDate);
+
+                    WriteBlock(blockData);
+                    WriteLine("");
                 }
             }
             finally

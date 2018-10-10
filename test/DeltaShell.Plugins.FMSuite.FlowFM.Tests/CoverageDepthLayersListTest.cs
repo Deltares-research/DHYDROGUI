@@ -2,7 +2,6 @@
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;

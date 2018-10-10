@@ -1,6 +1,4 @@
 ﻿using DelftTools.Hydro;
-using DeltaShell.Plugins.FMSuite.Common.IO;
-using GeoAPI.Extensions.Feature;
 using NUnit.Framework;
 using Rhino.Mocks;
 using GroupableFeatureExtensions = DelftTools.Hydro.GroupableFeatureExtensions;

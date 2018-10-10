@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
 using DelftTools.Controls;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Utils.Collections;
 using Image = System.Drawing.Image;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms

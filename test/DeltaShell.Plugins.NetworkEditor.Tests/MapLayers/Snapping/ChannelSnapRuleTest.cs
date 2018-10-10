@@ -5,7 +5,6 @@ using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
 using SharpMap.Editors.Snapping;
 using SharpMap.Layers;

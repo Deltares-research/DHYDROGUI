@@ -3,7 +3,6 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Validation;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests

@@ -7,7 +7,6 @@ using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
 using DeltaShell.Plugins.CommonTools.Gui.Property;
-using DeltaShell.Plugins.CommonTools.Gui.Property.Functions;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using NetTopologySuite.Extensions.Networks;

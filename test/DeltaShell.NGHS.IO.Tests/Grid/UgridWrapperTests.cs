@@ -8,7 +8,6 @@ using System.Text;
 using DelftTools.Utils.Interop;
 using DelftTools.Utils.IO;
 using DeltaShell.Dimr;
-using Rhino.Mocks;
 
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {

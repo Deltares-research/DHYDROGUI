@@ -2,7 +2,6 @@
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
-using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using GeoAPI.Extensions.Feature;

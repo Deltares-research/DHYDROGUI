@@ -1,5 +1,4 @@
-﻿using System;
-using DeltaShell.NGHS.IO.Properties;
+﻿using DeltaShell.NGHS.IO.Properties;
 
 namespace DeltaShell.NGHS.IO.Grid
 {

@@ -16,9 +16,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Forms;
-using DelftTools.Controls.Swf;
-using DelftTools.Hydro;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer
 {

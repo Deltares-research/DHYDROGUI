@@ -15,7 +15,6 @@ using DelftTools.Controls.Swf.Table;
 using DelftTools.Controls.Swf.Table.Validation;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Shell.Core;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;

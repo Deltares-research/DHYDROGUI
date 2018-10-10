@@ -7,7 +7,6 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 using SharpMap.Converters.WellKnownText;

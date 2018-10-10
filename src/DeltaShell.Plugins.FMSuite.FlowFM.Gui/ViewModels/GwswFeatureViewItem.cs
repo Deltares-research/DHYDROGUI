@@ -1,5 +1,4 @@
 using System;
-using System.Windows.Media;
 using DelftTools.Utils.Aop;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DeltaShell.NGHS.IO.Properties;
 using GeoAPI.Geometries;
 

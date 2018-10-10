@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Management.Instrumentation;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using DelftTools.Utils;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;

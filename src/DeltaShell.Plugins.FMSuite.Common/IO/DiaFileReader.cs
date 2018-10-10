@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Utils;
-using DelftTools.Utils.Reflection;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO

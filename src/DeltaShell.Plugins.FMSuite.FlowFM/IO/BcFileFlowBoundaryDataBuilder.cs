@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     {
         public const string ConcentrationAtBound = "sedfracbnd";
 
-        private class ForcingTypeDefinition
+        protected class ForcingTypeDefinition
         {
             public BoundaryConditionDataType ForcingType;
             public string[] ArgumentDefinitions;
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static readonly ILog Log = LogManager.GetLogger(typeof (BcFileFlowBoundaryDataBuilder));
 
-        private static readonly IDictionary<string, ForcingTypeDefinition> ForcingTypeDefinitions =
+        protected static readonly IDictionary<string, ForcingTypeDefinition> ForcingTypeDefinitions =
             new Dictionary<string, ForcingTypeDefinition>
             {
                     {
@@ -896,7 +896,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return false;
         }
 
-        private static string TimeInterpolationString(InterpolationType interpolationType)
+        protected static string TimeInterpolationString(InterpolationType interpolationType)
         {
             switch (interpolationType)
             {

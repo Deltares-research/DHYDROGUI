@@ -3,7 +3,6 @@ using System.ComponentModel;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using NUnit.Framework;
 using Rhino.Mocks;

@@ -4,7 +4,6 @@ using DelftTools.Controls.Swf.TreeViewControls;
 using DelftTools.Functions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExplorer
 {

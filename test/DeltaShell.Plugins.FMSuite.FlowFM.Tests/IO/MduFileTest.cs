@@ -53,22 +53,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void WriteExternalForcingsFiles()
         {
-            var testFile = "ModelWithMeteo.mdu";
-            var mduFile = new MduFile();
-            var hydroArea = new HydroArea();
-            var modelDefinition = new WaterFlowFMModelDefinition();
-            var meteoPrecipitationSeries = FmMeteoField.CreateMeteoPrecipitationSeries();
-            var start = new DateTime(1981, 8, 31, 12, 30, 0);
-            var times = new[] { start, start.AddDays(1), start.AddDays(2), start.AddDays(3), start.AddDays(4), start.AddDays(5) };
-            var rainFallValues = new[] { 5, 5.5, 7.5, 8.3, 11.2, 20.8 };
-            
-            meteoPrecipitationSeries.Data.Arguments[0].SetValues(times);
-            meteoPrecipitationSeries.Data.Components[0].SetValues(rainFallValues);
 
-            modelDefinition.FmMeteoFields.Add(meteoPrecipitationSeries);
-            mduFile.Write(testFile, modelDefinition , hydroArea, null, false, true, false);
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                var testFile = Path.Combine(tempDir,"ModelWithMeteo.mdu");
+                var mduFile = new MduFile();
+                var hydroArea = new HydroArea();
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                var meteoPrecipitationSeries = FmMeteoField.CreateMeteoPrecipitationSeries();
+                var start = new DateTime(1981, 8, 31, 12, 30, 0);
+                var times = new[]
+                    {start, start.AddDays(1), start.AddDays(2), start.AddDays(3), start.AddDays(4), start.AddDays(5)};
+                var rainFallValues = new[] {5, 5.5, 7.5, 8.3, 11.2, 20.8};
 
-            Assert.IsTrue(File.Exists(testFile));
+                meteoPrecipitationSeries.Data.Arguments[0].SetValues(times);
+                meteoPrecipitationSeries.Data.Components[0].SetValues(rainFallValues);
+                /*meteoPrecipitationSeries.FeatureData =
+                    new FeatureData<IFunction, Feature2D>()
+                    {
+                        Data = meteoPrecipitationSeries.Data,
+                        Feature = new LeveeBreach() { Name = "my_breach", Geometry = new LineString(new [] {new Coordinate(0 ,0), new Coordinate(10, 0)})}
+                    };*/
+                var propertyDefinition = new WaterFlowFMPropertyDefinition
+                {
+                    MduPropertyName = KnownProperties.MeteoExtForceFile,
+                    DataType = typeof(IList<string>),
+                    IsMultipleFile = true,
+                    FileCategoryName = "TestCategory"
+                };
+                modelDefinition.AddProperty(new WaterFlowFMProperty(propertyDefinition, string.Empty));
+                modelDefinition.FmMeteoFields.Add(meteoPrecipitationSeries);
+                modelDefinition.FmMeteoFields.Add(meteoPrecipitationSeries);
+                modelDefinition.ModelName = "ModelWithMeteo";
+                mduFile.Write(testFile, modelDefinition, hydroArea, null, false, true, false);
+
+                Assert.IsTrue(File.Exists(testFile));
+            });
+
         }
 
         [Test]

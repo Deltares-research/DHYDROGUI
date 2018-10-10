@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.TreeViewControls;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;

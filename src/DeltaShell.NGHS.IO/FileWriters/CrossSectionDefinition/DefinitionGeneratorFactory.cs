@@ -6,7 +6,6 @@ using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using GeoAPI.Extensions.Networks;
 using log4net;
-using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {

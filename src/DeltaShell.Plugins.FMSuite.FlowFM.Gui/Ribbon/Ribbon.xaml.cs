@@ -1,10 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
-using System.Windows.Controls.Primitives;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui.Forms;
-using DeltaShell.Plugins.FMSuite.Common.Layers;
 using Fluent;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon

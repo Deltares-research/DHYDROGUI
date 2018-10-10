@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO;
-using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Geometries;
 using log4net;
 

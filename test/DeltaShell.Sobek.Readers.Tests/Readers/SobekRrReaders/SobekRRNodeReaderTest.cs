@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.ImportExport.Sobek.Tests;
-using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using NUnit.Framework;

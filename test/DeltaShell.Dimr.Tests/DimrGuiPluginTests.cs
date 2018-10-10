@@ -4,13 +4,10 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
-using DeltaShell.Gui.Forms.ViewManager;
-using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using Rhino.Mocks;
 using SharpMap;
-using SharpMap.Api.Layers;
 
 namespace DeltaShell.Dimr.Gui.Tests
 {

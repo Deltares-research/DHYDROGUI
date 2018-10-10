@@ -2,7 +2,6 @@
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView

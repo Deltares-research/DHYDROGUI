@@ -1,9 +1,5 @@
 ﻿using NUnit.Framework;
-using DeltaShell.Dimr.Gui;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using DelftTools.Utils.Reflection;
 using Fluent;
 

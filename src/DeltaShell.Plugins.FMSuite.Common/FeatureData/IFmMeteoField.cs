@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using DelftTools.Functions;
+using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 {
@@ -22,5 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         IFunction Data { get; }
 
         string Name { get; }
+
+        IFeatureData FeatureData { get; set; }
     }
 }

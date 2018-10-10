@@ -134,6 +134,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public BndExtForceFile BoundaryExternalForcingsFile { get; private set; }
 
+        public MeteoExtForceFile MeteoExtForceFile { get; private set; }
+
         #region write logic
 
         public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
@@ -324,54 +326,72 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void WriteExternalForcings(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition,
             HydroArea hydroArea)
+        {
+            var exportDirectory = System.IO.Path.GetDirectoryName(targetMduFilePath);
+
+            var extFileName = modelDefinition.GetModelProperty(KnownProperties.ExtForceFile).GetValueAsString();
+            if (string.IsNullOrEmpty(extFileName))
+                extFileName = modelDefinition.ModelName + ExtForceFile.Extension;
+            var extForceFilePath = System.IO.Path.Combine(exportDirectory, extFileName);
+
+            if (ExternalForcingsFile == null)
             {
-                var exportDirectory = System.IO.Path.GetDirectoryName(targetMduFilePath);
-
-                var extFileName = modelDefinition.GetModelProperty(KnownProperties.ExtForceFile).GetValueAsString();
-                if (string.IsNullOrEmpty(extFileName))
-                    extFileName = modelDefinition.ModelName + ExtForceFile.Extension;
-                var extForceFilePath = System.IO.Path.Combine(exportDirectory, extFileName);
-
-                if (ExternalForcingsFile == null)
-                {
-                    ExternalForcingsFile = new ExtForceFile();
-                }
-
-                var newFormatBoundaryConditions =
-                    modelDefinition.BoundaryConditions.Except(ExternalForcingsFile.ExistingBoundaryConditions).Any();
-
-                var newBoundaries =
-                    modelDefinition.Boundaries.Except(
-                        ExternalForcingsFile.ExistingBoundaryConditions.Where(bc => bc.Feature != null)
-                            .Select(bc => bc.Feature)).Any();
-
-                // TODO: fix this, also, multiple FM models for a single integrated hydroregion to be expected?!
-                var hasEmbankments = hydroArea.Embankments.Any();
-                modelDefinition.Embankments = hydroArea.Embankments;
-           
-            // will check if indeed the file is written)
-                ExternalForcingsFile.Write(extForceFilePath, modelDefinition, !(newFormatBoundaryConditions || newBoundaries));
-
-                if (newFormatBoundaryConditions || newBoundaries || hasEmbankments)
-                {
-                    var bndExtFileName =
-                        modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).GetValueAsString();
-                    if (string.IsNullOrEmpty(bndExtFileName))
-                        bndExtFileName = System.IO.Path.GetFileNameWithoutExtension(extFileName) + "_bnd" + ExtForceFile.Extension;
-                    var bndExtForceFilePath = System.IO.Path.Combine(exportDirectory, bndExtFileName);
-
-                    if (BoundaryExternalForcingsFile == null)
-                    {
-                        BoundaryExternalForcingsFile = new BndExtForceFile();
-                    }
-
-                    BoundaryExternalForcingsFile.Write(bndExtForceFilePath, modelDefinition);
-                }
-                else if (!modelDefinition.BoundaryConditions.Any())
-                {
-                    modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).SetValueAsString(string.Empty);
-                }
+                ExternalForcingsFile = new ExtForceFile();
             }
+
+            var newFormatBoundaryConditions =
+                modelDefinition.BoundaryConditions.Except(ExternalForcingsFile.ExistingBoundaryConditions).Any();
+
+            var newBoundaries =
+                modelDefinition.Boundaries.Except(
+                    ExternalForcingsFile.ExistingBoundaryConditions.Where(bc => bc.Feature != null)
+                        .Select(bc => bc.Feature)).Any();
+
+            // TODO: fix this, also, multiple FM models for a single integrated hydroregion to be expected?!
+            var hasEmbankments = hydroArea.Embankments.Any();
+            modelDefinition.Embankments = hydroArea.Embankments;
+
+            // will check if indeed the file is written)
+            ExternalForcingsFile.Write(extForceFilePath, modelDefinition,
+                !(newFormatBoundaryConditions || newBoundaries));
+
+            if (newFormatBoundaryConditions || newBoundaries || hasEmbankments)
+            {
+                var bndExtFileName =
+                    modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).GetValueAsString();
+                if (string.IsNullOrEmpty(bndExtFileName))
+                    bndExtFileName = System.IO.Path.GetFileNameWithoutExtension(extFileName) + "_bnd" +
+                                     ExtForceFile.Extension;
+                var bndExtForceFilePath = System.IO.Path.Combine(exportDirectory, bndExtFileName);
+
+                if (BoundaryExternalForcingsFile == null)
+                {
+                    BoundaryExternalForcingsFile = new BndExtForceFile();
+                }
+
+                BoundaryExternalForcingsFile.Write(bndExtForceFilePath, modelDefinition);
+            }
+            else if (!modelDefinition.BoundaryConditions.Any())
+            {
+                modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).SetValueAsString(string.Empty);
+            }
+            if (modelDefinition.FmMeteoFields.Any())
+            {
+                var meteoExtFileName =
+                    modelDefinition.GetModelProperty(KnownProperties.MeteoExtForceFile).GetValueAsString();
+                if (string.IsNullOrEmpty(meteoExtFileName))
+                    meteoExtFileName = System.IO.Path.GetFileNameWithoutExtension(extFileName) + "_meteo" +
+                                     ExtForceFile.Extension;
+                var meteoExtForceFilePath = System.IO.Path.Combine(exportDirectory, meteoExtFileName);
+
+                if (MeteoExtForceFile== null)
+                {
+                    MeteoExtForceFile = new MeteoExtForceFile();
+                }
+
+                MeteoExtForceFile.Write(meteoExtForceFilePath, modelDefinition);
+            }
+        }
 
         private void WriteMorSedFiles(string mduPath, WaterFlowFMModelDefinition modelDefinition, ISedimentModelData sedimentModelData)
         {

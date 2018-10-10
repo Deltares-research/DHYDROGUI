@@ -5,7 +5,6 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Remoting;
 using DeltaShell.NGHS.IO.Grid;
-using log4net.Core;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;

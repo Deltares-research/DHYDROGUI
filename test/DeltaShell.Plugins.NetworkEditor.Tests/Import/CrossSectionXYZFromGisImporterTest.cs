@@ -4,7 +4,6 @@ using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Import;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Api;
 using SharpMap.Data.Providers;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using NetTopologySuite.Extensions.Grids;

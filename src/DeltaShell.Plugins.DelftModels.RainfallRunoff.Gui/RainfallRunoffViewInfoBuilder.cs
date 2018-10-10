@@ -23,8 +23,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Importers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation;
-using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
 {

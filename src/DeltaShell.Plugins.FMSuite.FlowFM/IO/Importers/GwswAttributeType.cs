@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using DeltaShell.NGHS.IO;
-using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 

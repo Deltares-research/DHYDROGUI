@@ -1,6 +1,4 @@
 ﻿using System.IO;
-using System.Linq;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using NUnit.Framework;

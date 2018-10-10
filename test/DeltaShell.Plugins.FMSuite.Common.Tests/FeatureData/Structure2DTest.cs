@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using NUnit.Framework;

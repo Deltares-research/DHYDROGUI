@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils;
-using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
@@ -219,7 +218,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.HorEddyDiffCoef,
                 modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.DiffusivityDataItemName)).Distinct());
 
-            extForceFileItems.AddRange(WriteMeteoItems(modelDefinition).Distinct());
+            //extForceFileItems.AddRange(WriteMeteoItems(modelDefinition).Distinct());
 
             extForceFileItems.AddRange(WriteWindItems(modelDefinition).Distinct());
 
@@ -373,19 +372,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var directory = Path.GetDirectoryName(FilePath);
             ExtForceFileHelper.StartWritingSubFiles();
 
-            foreach (var MeteoField in modelDefinition.FmMeteoFields)
+            foreach (var meteoField in modelDefinition.FmMeteoFields)
             {
+                yield return
+                    ExtForceFileHelper.WriteMeteoData(FilePath, meteoField, referenceTime, WriteToDisk);
+                /*
                 var fileBasedMeteoField = MeteoField as IFileBased;
                 if (fileBasedMeteoField != null)
                 {
+                    
                     var extForceFileItem = GetExistingForceFileItemOrNull(MeteoField) ??
                                            ExtForceFileHelper.CreateMeteoFieldExtForceFileItem(MeteoField,
                                                Path.GetFileName(((IFileBased)MeteoField).Path));
                     var newPath = Path.Combine(Path.GetDirectoryName(FilePath), Path.GetFileName(extForceFileItem.FileName));
                     ((IFileBased)MeteoField).CopyTo(newPath);
                     yield return extForceFileItem;
-                }
 
+                }
+                
                 var uniformMeteoField = MeteoField as FmMeteoField;
                 if (uniformMeteoField != null)
                 {
@@ -398,7 +402,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     var timFilePath = Path.Combine(directory, extForceFileItem.FileName);
                     timFile.Write(timFilePath, MeteoField.Data, referenceTime);
                     yield return extForceFileItem;
-                }
+                }*/
             }
         }
         private IEnumerable<ExtForceFileItem> WriteWindItems(WaterFlowFMModelDefinition modelDefinition)

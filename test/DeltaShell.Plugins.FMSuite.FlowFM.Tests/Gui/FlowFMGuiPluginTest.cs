@@ -1,12 +1,4 @@
-﻿using DelftTools.Hydro.Helpers;
-using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
-using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
-using NUnit.Framework;
-using SharpMap.Extensions.CoordinateSystems;
-using System.IO;
+﻿using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {

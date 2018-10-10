@@ -6,6 +6,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 {
@@ -17,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
     {
         private static readonly IDictionary<FmMeteoComponent, Unit> MeteoQuantityUnits = new Dictionary<FmMeteoComponent, Unit>
         {
-            {FmMeteoComponent.Precipitation, new Unit("", "")},
+            {FmMeteoComponent.Precipitation, new Unit("millimeters per day", "mm day-1")},
         };
 
         public static FmMeteoField CreateMeteoPrecipitationSeries()
@@ -78,8 +79,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             Name = CreateName(Quantity, components);
         }
 
+        public IFeatureData FeatureData { get; set; }
+        
         public IFunction Data { get; private set; }
 
         public string Name { get; private set; }
+        
     }
 }

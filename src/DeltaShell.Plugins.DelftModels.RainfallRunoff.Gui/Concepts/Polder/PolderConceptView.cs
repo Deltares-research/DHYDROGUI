@@ -7,8 +7,8 @@ using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties;
-using DeltaShell.Plugins.NetworkEditor.Gui;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Polder

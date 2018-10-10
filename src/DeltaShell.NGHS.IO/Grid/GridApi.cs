@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using DelftTools.Utils.Interop;
 using DelftTools.Utils.NetCdf;

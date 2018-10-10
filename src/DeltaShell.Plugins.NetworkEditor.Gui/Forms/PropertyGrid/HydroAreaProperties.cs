@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Drawing.Design;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;

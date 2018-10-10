@@ -17,7 +17,6 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
-using DeltaShell.Plugins.DelftModels.HydroModel.Api;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;

@@ -10,7 +10,6 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 using log4net;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
-using ValidationAspects.Factories;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {

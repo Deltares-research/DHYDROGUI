@@ -1,8 +1,6 @@
 using System;
 using System.ComponentModel;
-using System.Drawing.Design;
 using System.Linq;
-using System.Windows.Forms;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;

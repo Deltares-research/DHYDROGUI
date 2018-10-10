@@ -4,8 +4,6 @@ using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Location;
 using DeltaShell.NGHS.IO.FileReaders.Network;
 using DeltaShell.NGHS.IO.FileReaders.Roughness;
-using DeltaShell.NGHS.IO.FileWriters.Roughness;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport

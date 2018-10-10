@@ -2,7 +2,6 @@
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;

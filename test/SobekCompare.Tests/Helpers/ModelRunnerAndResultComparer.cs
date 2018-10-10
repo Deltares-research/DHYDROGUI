@@ -14,7 +14,6 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.ImportExport.Sobek;
-using DeltaShell.Plugins.ImportExport.Sobek.HisData;
 using GeoAPI.Extensions.Coverages;
 using NUnit.Framework;
 

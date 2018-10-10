@@ -1,4 +1,3 @@
-using System;
 using DeltaShell.NGHS.IO.Grid;
 
 namespace DeltaShell.NGHS.IO.Tests.Grid

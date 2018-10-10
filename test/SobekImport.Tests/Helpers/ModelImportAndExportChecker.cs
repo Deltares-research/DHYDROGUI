@@ -9,7 +9,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.ImportExport.Sobek;
-using GeoAPI.Extensions.Coverages;
 using NUnit.Framework;
 
 namespace SobekImport.Tests.Helpers

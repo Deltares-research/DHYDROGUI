@@ -15,7 +15,6 @@ using DeltaShell.NGHS.IO.FunctionStores;
 using DeltaShell.Plugins.NetworkEditor.Import;
 using DeltaShell.Plugins.NetworkEditor.ImportExportCsv;
 using GeoAPI.Extensions.Feature;
-using GeoAPI.Extensions.Networks;
 using Mono.Addins;
 using NetTopologySuite.IO;
 

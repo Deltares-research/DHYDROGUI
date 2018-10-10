@@ -1,7 +1,5 @@
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using GeoAPI.Geometries;
-using GeoAPI.IO;
 using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers

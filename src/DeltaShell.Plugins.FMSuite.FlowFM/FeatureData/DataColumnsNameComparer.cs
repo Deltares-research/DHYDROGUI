@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using DelftTools.Hydro.Structures;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {

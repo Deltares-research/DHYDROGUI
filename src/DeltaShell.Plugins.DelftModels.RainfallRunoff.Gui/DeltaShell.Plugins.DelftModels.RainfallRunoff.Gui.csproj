@@ -240,7 +240,20 @@
     <Compile Include="Controls\CatchmentAttributeCoverageView.Designer.cs">
       <DependentUpon>CatchmentAttributeCoverageView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\IRRUnitAwareView.cs" />
     <Compile Include="Controls\MeteoDataProperties.cs" />
+    <Compile Include="Controls\MeteoDataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\MeteoDataView.Designer.cs">
+      <DependentUpon>MeteoDataView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MeteoStationsListEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\MeteoStationsListEditor.Designer.cs">
+      <DependentUpon>MeteoStationsListEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MultipleDataEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -344,6 +357,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\CatchmentAttributeCoverageView.resx">
       <DependentUpon>CatchmentAttributeCoverageView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MeteoDataView.resx">
+      <DependentUpon>MeteoDataView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MeteoStationsListEditor.resx">
+      <DependentUpon>MeteoStationsListEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\MultipleDataEditor.resx">
       <DependentUpon>MultipleDataEditor.cs</DependentUpon>

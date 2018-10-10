@@ -1,6 +1,4 @@
-﻿using NetTopologySuite.Extensions.Features;
-
-namespace DelftTools.Hydro
+﻿namespace DelftTools.Hydro
 {
     public class Gully: GroupableFeature2DPoint
     {

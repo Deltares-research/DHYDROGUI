@@ -416,14 +416,6 @@
       <Project>{67C4F55D-2CF5-424D-91A3-A68365AC1C9C}</Project>
       <Name>DeltaShell.Plugins.DelftModels.HydroModel.Gui</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui\DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.csproj">
-      <Project>{CE44B789-11F2-4ECA-A761-D4636B8ED504}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RainfallRunoff\DeltaShell.Plugins.DelftModels.RainfallRunoff.csproj">
-      <Project>{1D52125E-F765-4D51-80C8-F9A67C6BE3D1}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.RainfallRunoff</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj">
       <Project>{56F47238-4ADC-4F56-BC27-BF1A0476D85C}</Project>
       <Name>DeltaShell.Plugins.NetworkEditor.Gui</Name>

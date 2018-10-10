@@ -147,8 +147,10 @@
     <Compile Include="DefaultCrossSectionDefinitionGenerator.cs" />
     <Compile Include="EggCrossSectionDefinitionGenerator.cs" />
     <Compile Include="IO\BathymetryFileWriter.cs" />
+    <Compile Include="IO\BcMeteoFileDataBuilder.cs" />
     <Compile Include="IO\CrossSectionLocationWriter.cs" />
     <Compile Include="IO\Exporters\WaterFlowFMAndF1dFileExporter.cs" />
+    <Compile Include="IO\MeteoExtForceFile.cs" />
     <Compile Include="IO\StructureFile.cs" />
     <Compile Include="IO\WaterFlowFMModelFactory.cs" />
     <Compile Include="IO\WaterFlowFMModelReaderData.cs" />
@@ -327,10 +329,6 @@
       <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
       <Name>DeltaShell.NGHS.IO</Name>
       <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RainfallRunoff\DeltaShell.Plugins.DelftModels.RainfallRunoff.csproj">
-      <Project>{1D52125E-F765-4D51-80C8-F9A67C6BE3D1}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.RainfallRunoff</Name>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
       <Project>{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}</Project>

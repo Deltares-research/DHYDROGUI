@@ -17,6 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string ObsCrsFile = "crsfile";
         public const string ExtForceFile = "extforcefile";
         public const string BndExtForceFile = "extforcefilenew";
+        public const string MeteoExtForceFile = "meteoextforcefilenew";
         public const string FlowGeomFile = "glowgeomfile";
         public const string HisInterval = "hisinterval";
         public const string LandBoundaryFile = "landboundaryfile";

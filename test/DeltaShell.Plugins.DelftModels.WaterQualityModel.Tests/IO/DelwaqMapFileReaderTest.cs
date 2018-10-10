@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using NUnit.Framework;

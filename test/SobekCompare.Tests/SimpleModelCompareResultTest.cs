@@ -2,7 +2,6 @@ using System.IO;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.CompareSobek.Tests;
 using NUnit.Framework;
-using SobekCompare.Tests.Helpers;
 
 namespace SobekCompare.Tests
 {

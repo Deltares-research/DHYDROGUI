@@ -1,7 +1,5 @@
 ﻿using System.Data;
 using System.Globalization;
-using DelftTools.Functions;
-using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;

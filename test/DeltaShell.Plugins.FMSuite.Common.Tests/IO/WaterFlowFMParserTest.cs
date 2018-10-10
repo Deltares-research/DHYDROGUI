@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using DeltaShell.NGHS.IO;
-using DeltaShell.Plugins.FMSuite.Common.IO;
-using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO

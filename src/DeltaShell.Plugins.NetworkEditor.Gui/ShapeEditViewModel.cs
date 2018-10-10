@@ -1,4 +1,3 @@
-using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui

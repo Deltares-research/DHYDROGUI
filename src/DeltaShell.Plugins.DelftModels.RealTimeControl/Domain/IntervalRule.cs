@@ -11,7 +11,6 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Converters;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 using log4net;
 using ValidationAspects;
-using ValidationAspects.Exceptions;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
