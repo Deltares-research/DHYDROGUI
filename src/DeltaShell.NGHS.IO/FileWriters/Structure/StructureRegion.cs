@@ -216,7 +216,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         public static readonly ConfigurationSetting Factor1 = new ConfigurationSetting(key: "f1");
         public static readonly ConfigurationSetting Factor2 = new ConfigurationSetting(key: "f2");
         public static readonly ConfigurationSetting CriticalFlowVelocity = new ConfigurationSetting(key: "ucrit");
-        public static readonly ConfigurationSetting TimeFilePath = new ConfigurationSetting(key: "BreachWidthAndLevel");
+        public static readonly ConfigurationSetting TimeFilePath = new ConfigurationSetting(key: "breachwidthandlevel");
 
         #endregion
     }
