@@ -5,6 +5,10 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
+    /// <summary>
+    /// Class responsible for creating the selection dialog when adding a new meteo item.
+    /// </summary>
+    /// <seealso cref="System.Windows.Forms.Form" />
     internal partial class FmMeteoSelectionDialog : Form
     {
 

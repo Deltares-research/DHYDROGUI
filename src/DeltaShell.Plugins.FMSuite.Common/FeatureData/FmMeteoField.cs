@@ -9,6 +9,10 @@ using DelftTools.Utils.Aop;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 {
+    /// <summary>
+    /// Class that contains the data object of a FMMeteoField
+    /// </summary>
+    /// <seealso cref="DeltaShell.Plugins.FMSuite.Common.FeatureData.IFmMeteoField" />
     public class FmMeteoField : IFmMeteoField
     {
         private static readonly IDictionary<FmMeteoComponent, Unit> MeteoQuantityUnits = new Dictionary<FmMeteoComponent, Unit>

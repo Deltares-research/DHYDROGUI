@@ -12,6 +12,11 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
+    /// <summary>
+    /// Class responsible for providing the list of items of which you can create a Meteo view.
+    /// </summary>
+    /// <seealso cref="System.Windows.Forms.UserControl" />
+    /// <seealso cref="DelftTools.Controls.ICompositeView" />
     public partial class FmMeteoFieldListView : UserControl, ICompositeView
     {
         public override string Text
@@ -92,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 }
             }
             ChildViews.Clear();
-            var windView = CreateFMMeteoView(fmMeteoItemsListBox.SelectedItem as IFmMeteoField);
+            var windView = CreateFmMeteoView(fmMeteoItemsListBox.SelectedItem as IFmMeteoField);
             if (windView != null)
             {
                 ChildViews.Add(windView);
@@ -102,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public TableViewTimeSeriesGeneratorTool TimeSeriesGeneratorTool { get; set; }
 
-        private IView CreateFMMeteoView(IFmMeteoField fmMeteoField)
+        private IView CreateFmMeteoView(IFmMeteoField fmMeteoField)
         {
             if (fmMeteoField == null) return null;
             if (fmMeteoField is FmMeteoField)

@@ -12,6 +12,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         [Description("Precipication rainfall")]
         Precipitation,
     }
+    /// <summary>
+    /// Interface which contains the quantity, data and name of an FmMeteoField
+    /// </summary>
     public interface IFmMeteoField
     {
         FmMeteoQuantity Quantity { get; }

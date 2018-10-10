@@ -20,7 +20,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
 using DelftTools.Utils;
-using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
 using log4net;
@@ -42,8 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string RoughnessDataItemName = "Roughness";
         public const string ViscosityDataItemName = "Viscosity";
         public const string DiffusivityDataItemName = "Diffusivity";
-        public const string PrecipitationDataItemName = "Precipitation (global)";
-
+        
         public static readonly string[] SpatialDataItemNames =
         {
             BathymetryDataItemName,
@@ -53,7 +51,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             RoughnessDataItemName,
             ViscosityDataItemName,
             DiffusivityDataItemName,
-            PrecipitationDataItemName,
         };
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModelDefinition));
