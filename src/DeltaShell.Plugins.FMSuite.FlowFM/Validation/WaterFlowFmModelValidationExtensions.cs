@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             };
 
             var subReports = model.UseMorSed
-                ? validationReports.Plus(WaterFlowFMSedimentMorphologyValidator.ValidateWithMorphologyBetaWarning(model))
+                ? validationReports.Plus(WaterFlowFMSedimentMorphologyValidator.ValidateMorphology(model))
                 : validationReports;
 
             var validationReport = new ValidationReport(model.Name + " (Water Flow FM Model)",

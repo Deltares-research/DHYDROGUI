@@ -24,9 +24,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return null;
         }
 
-        public static ValidationReport ValidateWithMorphologyBetaWarning(WaterFlowFMModel model)
+        public static ValidationReport ValidateMorphology(WaterFlowFMModel model)
         {
-            if(!model.UseMorSed) return new ValidationReport("Sediment & Morphology", Enumerable.Empty<ValidationIssue>());
+            if(!model.UseMorSed) return new ValidationReport(Resources.WaterFlowFMSedimentMorphologyValidator_ValidateMorphology_Morphology___Sediment, Enumerable.Empty<ValidationIssue>());
 
             var issues = new List<ValidationIssue>();
 
@@ -37,11 +37,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             issues.AddRange(ValidateInitialSedimentThicknessOfSedimentFractionsInModel(model));
 
             issues.AddRange(ValidateSpaciallyVaryingSedimentFractionProperties(model));
-
-            issues.Add(new ValidationIssue(model, ValidationSeverity.Warning,
-                string.Format(Resources.WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_________Morphology_is_beta_version_________0_You_are_using_morphology___sediment_in_this_model__Please_be_aware_this_feature_is_in_beta_, Environment.NewLine)));
             
-            return new ValidationReport(Resources.WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_Morphology___Sediment_Beta_warning, issues);
+            return new ValidationReport(Resources.WaterFlowFMSedimentMorphologyValidator_ValidateMorphology_Morphology___Sediment, issues);
         }
 
         /// <summary>

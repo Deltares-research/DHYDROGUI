@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             Assert.Greater(objectDescription.FieldDescriptions.Count, 65);
             Assert.IsNotNull(objectDescription.FieldDescriptions.FirstOrDefault(f => f.Name == "Icgsolver"));
-            Assert.IsNotNull(objectDescription.FieldDescriptions.FirstOrDefault(f => f.Label == "Sediment/Morphology [Beta]"));
+            Assert.IsNotNull(objectDescription.FieldDescriptions.FirstOrDefault(f => f.Label == "Sediment/Morphology"));
         }
         
         [Test]

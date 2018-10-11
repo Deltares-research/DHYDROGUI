@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -1278,23 +1278,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ********Morphology is beta version********{0}You are using morphology / sediment in this model. Please be aware this feature is in beta!.
+        ///   Looks up a localized string similar to Sediment/Morphology.
         /// </summary>
-        public static string WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_________Morphology_is_beta_version_________0_You_are_using_morphology___sediment_in_this_model__Please_be_aware_this_feature_is_in_beta_ {
+        public static string WaterFlowFMSedimentMorphologyValidator_ValidateMorphology_Morphology___Sediment {
             get {
-                return ResourceManager.GetString("WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_________Morp" +
-                        "hology_is_beta_version_________0_You_are_using_morphology___sediment_in_this_mod" +
-                        "el__Please_be_aware_this_feature_is_in_beta_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Morphology / Sediment Beta warning.
-        /// </summary>
-        public static string WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_Morphology___Sediment_Beta_warning {
-            get {
-                return ResourceManager.GetString("WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_Morphology__" +
-                        "_Sediment_Beta_warning", resourceCulture);
+                return ResourceManager.GetString("WaterFlowFMSedimentMorphologyValidator_ValidateMorphology_Morphology___Sediment", resourceCulture);
             }
         }
         

@@ -250,14 +250,11 @@
   <data name="GridHelper_CreateUnstructuredGridFromNetCdfFor1D2DLinks_It_was_not_possible_to_load_from_file___0___LogFilePath___1_" xml:space="preserve">
     <value>It was not possible to load from file: {0}. LogFilePath: {1}</value>
   </data>
-  <data name="WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_Morphology___Sediment_Beta_warning" xml:space="preserve">
-    <value>Morphology / Sediment Beta warning</value>
+  <data name="WaterFlowFMSedimentMorphologyValidator_ValidateMorphology_Morphology___Sediment" xml:space="preserve">
+    <value>Sediment/Morphology</value>
   </data>
   <data name="WaterFlowFMSedimentMorphologyValidator_ValidateSedimentName_Value_cannot_be_coverted_to_valid_sediment_fraction_name__You_can_only_use_characters__numbers__underscore_____and_hyphen_____and_it_cannot_start_only_with_a______it_NEEDS_a_closing_____" xml:space="preserve">
     <value>Value cannot be coverted to valid sediment fraction name. You can only use characters, numbers, underscore (_) and hyphen (-) and it cannot start only with a '#', it NEEDS a closing '#' </value>
-  </data>
-  <data name="WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_________Morphology_is_beta_version_________0_You_are_using_morphology___sediment_in_this_model__Please_be_aware_this_feature_is_in_beta_" xml:space="preserve">
-    <value>********Morphology is beta version********{0}You are using morphology / sediment in this model. Please be aware this feature is in beta!</value>
   </data>
   <data name="WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_defined_" xml:space="preserve">
     <value>No computational grid defined. Either a Flow1D or a 2D grid needs to be created.</value>
