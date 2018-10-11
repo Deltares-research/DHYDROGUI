@@ -58,34 +58,7 @@
         </DrawingBrush>
     </UserControl.Resources>
     <StackPanel>
-        <ListBox x:Name="ListBox"
-                 Margin="5" 
-                 HorizontalContentAlignment="Stretch" 
-                 Height="300"
-                 ItemsSource="{Binding Tracers}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid Margin="5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" 
-                                Command="{Binding DataContext.RemoveTracerCommand, ElementName=ListBox}"
-                                CommandParameter="{Binding}">
-                            <Button.Template>
-                                <ControlTemplate>
-                                    <Rectangle Width="24" Height="24" Fill="{StaticResource RemoveBrush}"/>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-                        <TextBlock Grid.Column="1" Text="{Binding}" Margin="5"/>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <Grid DockPanel.Dock="Top"
-              Margin="5" >
+        <Grid Margin="5" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto"/>
@@ -140,5 +113,32 @@
                 </Button.Style>
             </Button>
         </Grid>
+
+        <ListBox x:Name="ListBox"
+                 Margin="5" 
+                 HorizontalContentAlignment="Stretch" 
+                 Height="200"
+                 ItemsSource="{Binding Tracers}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" 
+                                Command="{Binding DataContext.RemoveTracerCommand, ElementName=ListBox}"
+                                CommandParameter="{Binding}">
+                            <Button.Template>
+                                <ControlTemplate>
+                                    <Rectangle Width="24" Height="24" Fill="{StaticResource RemoveBrush}"/>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                        <TextBlock Grid.Column="1" Text="{Binding}" Margin="5"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </StackPanel>
 </UserControl>
