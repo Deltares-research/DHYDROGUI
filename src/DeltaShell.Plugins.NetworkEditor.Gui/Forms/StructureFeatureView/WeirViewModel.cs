@@ -112,11 +112,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                     weir.WeirFormula = new SimpleWeirFormula();
                     SetSimpleWeirControls();
                 }
-                if (value == SelectableWeirFormulaType.SimpleGate)
-                {
-                    weir.WeirFormula = new GatedWeirFormula();
-                    SetSimpleGateViewControls();
-                }
                 if (value == SelectableWeirFormulaType.GeneralStructure)
                 {
                     weir.WeirFormula = new GeneralStructureWeirFormula();
@@ -180,23 +175,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         {
             GateGroupboxEnabled = true;
             CrestLevelEnabled = false;
-            SimpleGateGroupBoxEnabled = false;
-            if (EnableCrestLevelTimeSeries != previousCrestLevelTimeSeriesValue)
+            if(EnableCrestLevelTimeSeries != previousCrestLevelTimeSeriesValue)
                 previousCrestLevelTimeSeriesValue = EnableCrestLevelTimeSeries;
             EnableCrestLevelTimeSeries = false;
-        }
-        private void SetSimpleGateViewControls()
-        {
-           // SimpleGateGroupBoxEnabled = true;
-            GateGroupboxEnabled = true;
-            CrestLevelEnabled = true;
-            EnableCrestLevelTimeSeries = previousCrestLevelTimeSeriesValue;
         }
 
         private void SetSimpleWeirControls()
         {
             GateGroupboxEnabled = false;
-            SimpleGateGroupBoxEnabled = false;
             CrestLevelEnabled = true;
             EnableCrestLevelTimeSeries = previousCrestLevelTimeSeriesValue;
         }
@@ -230,15 +216,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 gateGroupboxEnabled = value;
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateGroupboxEnabled));
-            }
-        }        
-        public bool SimpleGateGroupBoxEnabled
-        {
-            get { return simpleGateGroupBoxEnabled; }
-            set
-            {
-                simpleGateGroupBoxEnabled = value;
-                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.SimpleGateGroupBoxEnabled));
             }
         }
 
@@ -286,7 +263,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         }
 
         private bool gateGroupboxEnabled;
-        private bool simpleGateGroupBoxEnabled;
         private bool crestLevelEnabled;
         private bool enableAdvancedSettings;
 
@@ -357,10 +333,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void UpdateControls()
         {
-            if (selectedWeirType == SelectableWeirFormulaType.SimpleGate)
-            {
-                SetSimpleGateViewControls();
-            }
             if (selectedWeirType == SelectableWeirFormulaType.GeneralStructure)
             {
                 SetGeneralStructureViewControls();
@@ -380,10 +352,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             if (formula is GeneralStructureWeirFormula)
             {
                 return SelectableWeirFormulaType.GeneralStructure;
-            }
-            if (formula is GatedWeirFormula)
-            {
-                return SelectableWeirFormulaType.SimpleGate;
             }
 
             throw new NotSupportedException(string.Format(Resources.WeirViewModel_GetSelectableWeirFormulaType_This_formula_type____0___is_not__yet__supported, formula.Name));
