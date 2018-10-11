@@ -8,7 +8,7 @@ namespace DelftTools.Hydro.Structures.LeveeBreachFormula
     {
         public override LeveeBreachGrowthFormula GrowthFormula { get; } = LeveeBreachGrowthFormula.VerheijvdKnaap2002;
 
-        public double InitialBreachWidth { get; set; } = 10; // in m
+        public double InitialBreachWidth { get; set; } = 10.0; // in m
 
         public double InitialCrestLevel { get; set; } // in m AD
 
