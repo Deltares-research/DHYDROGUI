@@ -12,6 +12,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Csv.Importer;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
@@ -1125,7 +1126,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.That(totalCompartmentsInNetwork, Is.EqualTo(importedCompartments.Count));
         }
 
+        [Test]
+        public void Given_EmptyFlowFmModel_When_ImportingGwswDirForTheFirstTime_Then_GwswAttributesDefinitionIsFilled()
+        {
+            var deltaresDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Deltares");
+
+            var originalDirectoryPath = TestHelper.GetTestFilePath(@"gwswFiles\GWSW_DidactischStelsel");
+            var testDirectoryPath = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(originalDirectoryPath, testDirectoryPath);
+
+            //Delete Deltares folder
+            FileUtils.DeleteIfExists(deltaresDirectory);
+
+            //Create new model
+            var gwswFileImporter = new GwswFileImporter();
+            var viewModel = new GwswImportDialogViewModel { Importer = gwswFileImporter };
+            Assert.IsNotNull(viewModel);
+            Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
+
+            gwswFileImporter.LoadFeatureFiles(null);
+
+            viewModel.SelectedDirectoryPath = testDirectoryPath;
+            viewModel.OnDirectorySelected.Execute(null);
+
+            //Assert that the viewmodel contain GwswFeatures 
+            Assert.IsTrue(viewModel.GwswFeatureFiles.Any());
+        }
+
         #endregion
+
+
 
         [Test]
         [Category(TestCategory.DataAccess)]

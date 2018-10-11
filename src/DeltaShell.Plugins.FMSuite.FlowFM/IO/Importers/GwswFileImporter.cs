@@ -155,15 +155,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// <param name="directoryPath">The directory path.</param>
         public void LoadFeatureFiles(string directoryPath)
         {
-            Log.InfoFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_, GwswAttributesDefinition.Count);
+            Log.InfoFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_,
+                GwswAttributesDefinition.Count);
 
             try
             {
-                GwswDefaultFeatures = GetDefinitionFeatureFiles(directoryPath);
+                GwswDefaultFeatures = CreateFileNameToViewDataDictionary(directoryPath);
             }
             catch (Exception)
             {
-                GwswAttributesDefinition = new EventedList<GwswAttributeType>();
                 Log.ErrorFormat(Resources.GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_, directoryPath);
             }
 
@@ -536,7 +536,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return importedCsv;
         }
 
-        private IDictionary<string, List<string>> GetDefinitionFeatureFiles(string directoryPath)
+        private IDictionary<string, List<string>> CreateFileNameToViewDataDictionary(string directoryPath)
         {
             //Get the items to import
             var dictionary = GwswAttributesDefinition?.GroupBy(i => i.FileName)
