@@ -200,6 +200,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
             var names = SedimentFractions.Select(l => l.Name).ToList();
             if (names.Contains(CurrentFractionName))
+
+
             {
                 string pattern = @"\d+$";
                 string replacement = "";
