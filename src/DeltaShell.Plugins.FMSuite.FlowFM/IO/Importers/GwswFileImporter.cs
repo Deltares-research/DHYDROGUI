@@ -177,8 +177,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// <returns>List of GwswElements or null</returns>
         public IList<GwswElement> ImportGwswElementList(string path)
         {
-            var mapping = GetCsvMappingDataForFileFromDefinition(path);
-            var importedDataTable = ImportFileAsDataTable(path, mapping); // TODO Sil -> invalid cast exception from this method
+            var importedDataTable = ImportFileAsDataTable(path); // TODO Sil -> invalid cast exception from this method
             if (importedDataTable == null)
                 return null;
 
@@ -259,8 +258,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// <param name="path">Location of the CSV file to import.</param>
         /// <param name="mappingData">Delimeters and properties for handling the CSV file.</param>
         /// <returns>DataTable with the content of the CSV file of <param name="path"/>.</returns>
-        public DataTable ImportFileAsDataTable(string path, CsvMappingData mappingData)
+        public DataTable ImportFileAsDataTable(string path, CsvMappingData mappingData = null)
         {
+            if (mappingData == null)
+                mappingData = GetCsvMappingDataForFileFromDefinition(path);
+
             if (mappingData == null)
             {
                 Log.ErrorFormat(Resources.GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__, path);
