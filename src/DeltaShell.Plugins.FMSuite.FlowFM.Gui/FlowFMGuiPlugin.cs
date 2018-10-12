@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             };
 
-            yield return new ViewInfo<FmModelTreeShortcut, WaterFlowFMModel ,WpfSettingsView>
+            yield return new ViewInfo<FmModelTreeShortcut, WaterFlowFMModel, WpfSettingsView>
             {
                 Description = "FM Settings",
                 AdditionalDataCheck = o => o.ShortCutType == ShortCutType.SettingsTab,
