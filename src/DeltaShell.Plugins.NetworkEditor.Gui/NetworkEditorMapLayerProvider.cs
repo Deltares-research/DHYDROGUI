@@ -36,6 +36,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 {
     public class NetworkEditorMapLayerProvider : IMapLayerProvider
     {
+        private const double MaxVisibilityLayerValue = 1000.0;
+
         public bool CanCreateLayerFor(object data, object parentObject)
         {
             return data is DrainageBasin
@@ -211,19 +213,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var manholeNodes = data as IEnumerable<IManhole>;
             if (hydroNetwork != null && manholeNodes != null)
             {
-                return CreateNetworkVectorLayer<Manhole>(manholeNodes, "Manholes", hydroNetwork); ;
+                return CreateNetworkVisibilityVectorLayer<Manhole>(manholeNodes, "Manholes", hydroNetwork, MaxVisibilityLayerValue); ;
             }
 
             var outletCompartments = data as IEnumerable<OutletCompartment>;
             if (hydroNetwork != null && outletCompartments != null)
             {
-                return CreateNetworkVectorLayer<OutletCompartment>(outletCompartments, "Outlets", hydroNetwork);
+                return CreateNetworkVisibilityVectorLayer<OutletCompartment>(outletCompartments, "Outlets", hydroNetwork, MaxVisibilityLayerValue);
             }
 
             var orifices = data as IEnumerable<Orifice>;
             if (orifices != null && hydroNetwork != null)
             {
-                return CreateNetworkVectorLayer<Orifice>(orifices, "Orifices", hydroNetwork);
+                return CreateNetworkVisibilityVectorLayer<Orifice>(orifices, "Orifices", hydroNetwork, MaxVisibilityLayerValue);
             }
 
             var pipes = data as IEnumerable<IPipe>;
@@ -380,7 +382,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var weirs = data as IEnumerable<IWeir>;
                 if (weirs != null)
                 {
-                    return CreateNetworkVectorLayer<Weir>(weirs, "Weirs", hydroNetwork,
+                    return CreateNetworkVisibilityVectorLayer<Weir>(weirs, "Weirs", hydroNetwork, MaxVisibilityLayerValue,
                                                           o => o is Channel && ((Channel) o).Weirs.Any());
                 }
 
@@ -606,7 +608,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     {
                         CreateNewFeature = layer => new Pump2D(true)
                     },
-                    CustomRenderers = new[] { new ArrowLineStringAdornerRenderer() }
+                    CustomRenderers = new[] { new ArrowLineStringAdornerRenderer() },
+                    MaxVisible = MaxVisibilityLayerValue
                 };
             }
 
@@ -616,7 +619,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var feature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(weirs2d, "weir", modelName,
                                                                          area2DParent.CoordinateSystem);
                 feature2DCollection.FeatureType = typeof(Weir2D); // Override so we can use FeatureAttributes!
-                return new VectorLayer(HydroArea.WeirsPluralName)
+                return new VisibilityVectorLayer(HydroArea.WeirsPluralName)
                 {
                     NameIsReadOnly = true,
                     Style = AreaLayerStyles.WeirStyle,
@@ -630,7 +633,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                             return weir;
                         }
                     },
-                    CustomRenderers = new[] { new ArrowLineStringAdornerRenderer() }
+                    CustomRenderers = new[] { new ArrowLineStringAdornerRenderer() },
+                    MaxVisible = MaxVisibilityLayerValue
                 };
             }
 
@@ -701,14 +705,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var fixedWeirs2D = data as IEventedList<FixedWeir>;
             if (fixedWeirs2D != null && area2DParent != null && Equals(fixedWeirs2D, area2DParent.FixedWeirs))
             {
-                return new VectorLayer(HydroArea.FixedWeirsPluralName)
+                return new VisibilityVectorLayer(HydroArea.FixedWeirsPluralName)
                 {
                     NameIsReadOnly = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
                     Style = AreaLayerStyles.FixedWeirStyle,
                     DataSource =
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.FixedWeirs, "FixedWeir", modelName,
-                            area2DParent.CoordinateSystem)
+                            area2DParent.CoordinateSystem),
+                    MaxVisible = MaxVisibilityLayerValue
                 };
             }
 
@@ -781,7 +786,36 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                                                     },
                                 CustomRenderers = GetCustomRenderer<TFeature>()
                             };
+            return (VectorLayer)AddSnappingRulesToLayer<TFeature>(layer);
+        }
+        private static VisibilityVectorLayer CreateNetworkVisibilityVectorLayer<TFeature>(IEnumerable<IFeature> networkItems, string name, IHydroNetwork hydroNetwork, double maxVisible, Func<object, bool> refreshForChangedItem = null)
+        {
+            var layer = new VisibilityVectorLayer(name)
+            {
+                Style = NetworkLayerStyleFactory.CreateStyle(networkItems),
+                Theme = NetworkLayerStyleFactory.CreateTheme(networkItems),
+                NameIsReadOnly = true,
+                DataSource = new HydroNetworkFeatureCollection
+                {
+                    FeatureType = typeof(TFeature),
+                    Network = hydroNetwork,
+                    RefreshForChangedItem = refreshForChangedItem,
+                    CoordinateSystem = hydroNetwork.CoordinateSystem
+                },
+                FeatureEditor = new HydroNetworkFeatureEditor(hydroNetwork)
+                {
+                    CreateNewFeature = NewNetworkFeature<TFeature>()
+                },
+                CustomRenderers = GetCustomRenderer<TFeature>(),
+                MaxVisible = maxVisible
+            };
+            
+                
 
+            return (VisibilityVectorLayer)AddSnappingRulesToLayer<TFeature>(layer);
+        }
+        private static ILayer AddSnappingRulesToLayer<TFeature>(ILayer layer)
+        {
             var snapRules = GetSnapRule<TFeature>(layer);
             if (snapRules != null)
             {
@@ -790,7 +824,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     layer.FeatureEditor.SnapRules.Add(snapRule);
                 }
             }
-            
+
             return layer;
         }
 

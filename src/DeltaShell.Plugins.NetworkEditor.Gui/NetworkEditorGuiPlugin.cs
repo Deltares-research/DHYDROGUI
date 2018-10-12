@@ -184,7 +184,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new PropertyInfo<HydroLink, HydroLinkProperties>();
             yield return new PropertyInfo<HydroArea, HydroAreaProperties>();
             yield return new PropertyInfo<ReverseRoughnessSection, ReverseRoughnessSectionProperties>();
-            yield return new PropertyInfo<RoughnessSection, RoughnessSectionPropertiesBase<RoughnessSection>>();}
+            yield return new PropertyInfo<RoughnessSection, RoughnessSectionPropertiesBase<RoughnessSection>>();
+            yield return new PropertyInfo<VisibilityVectorLayer, VisibilityVectorLayerProperties>();
+        }
+
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
