@@ -40,6 +40,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.WindowsForms)]
+        public void ShowWithOneGlobalMeteoItem()
+        {
+            var itemList = new EventedList<IFmMeteoField>() { FmMeteoField.CreateMeteoPrecipitationSeries(FmMeteoLocationType.Feature)};
+            var view = new FmMeteoFieldListView
+            {
+                TimeSeriesGeneratorTool = TableViewTimeSeriesGeneratorTool,
+                Data = itemList
+            };
+            WindowsFormsTestHelper.ShowModal(view);
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowWithMeteoItems()
         {
             //Create model and view
@@ -57,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             WindowsFormsTestHelper.ShowModal(testForm, f =>
             {
                 var fmMeteoItems = (IEventedList<IFmMeteoField>)TypeUtils.GetPropertyValue(((FmMeteoFieldListView) f.Controls[0]), "FmMeteoItems");
-                fmMeteoItems.Insert(0, FmMeteoField.CreateMeteoPrecipitationSeries());
+                fmMeteoItems.Insert(0, FmMeteoField.CreateMeteoPrecipitationSeries(FmMeteoLocationType.Global));
                 Console.WriteLine();
             });
             Assert.That(model.ModelDefinition.FmMeteoFields.Count, Is.Not.EqualTo(0));

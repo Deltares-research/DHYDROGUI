@@ -1,9 +1,18 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using DelftTools.Functions;
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 {
+    public enum FmMeteoLocationType
+    {
+        Global,     
+        Feature,    
+        Polygon,    
+        Grid        
+    }
+    
     public enum FmMeteoComponent
     {
         Precipitation
@@ -14,9 +23,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         Precipitation,
     }
     /// <summary>
-    /// Interface which contains the quantity, data and name of an FmMeteoField
+    /// Interface which contains the signatures of the basic data of an FmMeteoField
     /// </summary>
-    public interface IFmMeteoField
+    public interface IFmMeteoField: IEquatable<IFmMeteoField>
     {
         FmMeteoQuantity Quantity { get; }
 
@@ -25,5 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         string Name { get; }
 
         IFeatureData FeatureData { get; set; }
+
+        FmMeteoLocationType FmMeteoLocationType { get; }
     }
 }

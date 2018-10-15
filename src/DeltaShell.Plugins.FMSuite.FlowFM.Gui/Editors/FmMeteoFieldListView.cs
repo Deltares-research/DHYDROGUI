@@ -157,6 +157,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 var fmMeteoItem = dialog.FmMeteoField;
                 if (fmMeteoItem != null)
                 {
+                    if (FmMeteoItems.Contains(fmMeteoItem))
+                    {
+                        if (MessageBox.Show(string.Format("Do you want to remove the existing meteo item : {0}? This will remove all data of this type of meteo item and create an empty meteo item.", fmMeteoItem.Name), "", MessageBoxButtons.YesNo) == DialogResult.No) return;
+                        FmMeteoItems.Remove(fmMeteoItem);
+                    }
                     FmMeteoItems.Insert(fmMeteoItemsListBox.SelectedIndex + 1, fmMeteoItem);
                 }
             }

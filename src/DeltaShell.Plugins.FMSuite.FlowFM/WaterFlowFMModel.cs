@@ -255,6 +255,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public IEventedList<IWindField> WindFields { get; private set; }
 
         public IEventedList<IFmMeteoField> FmMeteoFields { get; private set; }
+        public FmMeteoLocationType FmMeteoLocationType { get; set; }
         public IList<IUnsupportedFileBasedExtForceFileItem> UnsupportedFileBasedExtForceFileItems { get; private set; }
 
         public HeatFluxModelType HeatFluxModelType { get; private set; }
@@ -468,6 +469,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             BoundaryConditionSets = ModelDefinition.BoundaryConditionSets;
             WindFields = ModelDefinition.WindFields;
             FmMeteoFields = ModelDefinition.FmMeteoFields;
+            FmMeteoLocationType = ModelDefinition.FmMeteoLocationType;
             UnsupportedFileBasedExtForceFileItems = ModelDefinition.UnsupportedFileBasedExtForceFileItems;
             Pipes = ModelDefinition.Pipes;
             SourcesAndSinks = ModelDefinition.SourcesAndSinks;

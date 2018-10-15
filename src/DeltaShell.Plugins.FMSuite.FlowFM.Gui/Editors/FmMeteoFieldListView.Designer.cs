@@ -81,7 +81,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             this.fmMeteoItemsListBox.Name = "fmMeteoItemsListBox";
             this.fmMeteoItemsListBox.Size = new System.Drawing.Size(136, 147);
             this.fmMeteoItemsListBox.TabIndex = 0;
-            
             // 
             // panel2
             // 

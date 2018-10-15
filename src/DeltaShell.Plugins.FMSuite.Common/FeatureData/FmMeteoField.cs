@@ -21,13 +21,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             {FmMeteoComponent.Precipitation, new Unit("millimeters per day", "mm day-1")},
         };
 
-        public static FmMeteoField CreateMeteoPrecipitationSeries()
+        public static FmMeteoField CreateMeteoPrecipitationSeries(FmMeteoLocationType fmMeteoLocationType)
         {
-            return new FmMeteoField(FmMeteoComponent.Precipitation) { Quantity = FmMeteoQuantity.Precipitation};
+            return new FmMeteoField(FmMeteoComponent.Precipitation) { Quantity = FmMeteoQuantity.Precipitation, FmMeteoLocationType = fmMeteoLocationType};
         }
         
         private readonly IList<FmMeteoComponent> components;
         private FmMeteoQuantity quantity;
+        private FmMeteoLocationType fmMeteoLocationType;
 
         private FmMeteoField(params FmMeteoComponent[] components)
         {
@@ -52,12 +53,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         }
 
 
-        private static string CreateName(FmMeteoQuantity meteoQuantity, IList<FmMeteoComponent> components)
+        private static string CreateName(FmMeteoQuantity meteoQuantity, IList<FmMeteoComponent> components, FmMeteoLocationType fmMeteoLocationType)
         {
             switch (meteoQuantity)
             {
                 case FmMeteoQuantity.Precipitation:
-                    return EnumDescriptionAttributeTypeConverter.GetEnumDescription(meteoQuantity);
+                    return EnumDescriptionAttributeTypeConverter.GetEnumDescription(meteoQuantity) + " (" + Enum.GetName(typeof(FmMeteoLocationType), fmMeteoLocationType) + ")"; 
                 default:
                     throw new NotImplementedException("meteo quantity not supported");
             }
@@ -76,14 +77,45 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         [EditAction]
         private void UpdateName()
         {
-            Name = CreateName(Quantity, components);
+            Name = CreateName(Quantity, components, FmMeteoLocationType);
         }
 
         public IFeatureData FeatureData { get; set; }
-        
+        public FmMeteoLocationType FmMeteoLocationType {
+            get { return fmMeteoLocationType; }
+            private set
+            {
+                fmMeteoLocationType = value;
+                UpdateName();
+            }
+        }
+
         public IFunction Data { get; private set; }
 
         public string Name { get; private set; }
-        
+                
+        public bool Equals(IFmMeteoField other)
+        {
+            //return Equals(components, other.components) && quantity == other.quantity && Equals(FeatureData, other.FeatureData) && FmMeteoLocationType == other.FmMeteoLocationType && Equals(Data, other.Data) && string.Equals(Name, other.Name);
+            return quantity == other.Quantity && FmMeteoLocationType == other.FmMeteoLocationType;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((FmMeteoField) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (int) quantity;
+                hashCode = (hashCode * 397) ^ (int) FmMeteoLocationType;
+                return hashCode;
+            }
+        }
     }
 }

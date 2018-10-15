@@ -1789,7 +1789,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(model.FmMeteoFields);
             
             //Add new Meteo Fields in List
-            var meteoPrecipitationSeries = FmMeteoField.CreateMeteoPrecipitationSeries();
+            var meteoPrecipitationSeries = FmMeteoField.CreateMeteoPrecipitationSeries(FmMeteoLocationType.Global);
             var dateTimeNow = DateTime.Now;
             meteoPrecipitationSeries.Data.Arguments[0].SetValues(new[]{ dateTimeNow, dateTimeNow.AddHours(1) , dateTimeNow.AddHours(2) });
             meteoPrecipitationSeries.Data.Components[0].SetValues(new[]{1.0,5.0,10.0});

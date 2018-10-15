@@ -218,8 +218,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.HorEddyDiffCoef,
                 modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.DiffusivityDataItemName)).Distinct());
 
-            //extForceFileItems.AddRange(WriteMeteoItems(modelDefinition).Distinct());
-
             extForceFileItems.AddRange(WriteWindItems(modelDefinition).Distinct());
 
             extForceFileItems.AddRange(WriteHeatFluxModelData(modelDefinition).Distinct());
@@ -366,45 +364,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return string.Join(".", quantity.Replace(" ", "_").Replace("\t", "_"), ExtForceQuantNames.XyzFileExtension);
         }
 
-        private IEnumerable<ExtForceFileItem> WriteMeteoItems(WaterFlowFMModelDefinition modelDefinition)
-        {
-            var referenceTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
-            var directory = Path.GetDirectoryName(FilePath);
-            ExtForceFileHelper.StartWritingSubFiles();
-
-            foreach (var meteoField in modelDefinition.FmMeteoFields)
-            {
-                yield return
-                    ExtForceFileHelper.WriteMeteoData(FilePath, meteoField, referenceTime, WriteToDisk);
-                /*
-                var fileBasedMeteoField = MeteoField as IFileBased;
-                if (fileBasedMeteoField != null)
-                {
-                    
-                    var extForceFileItem = GetExistingForceFileItemOrNull(MeteoField) ??
-                                           ExtForceFileHelper.CreateMeteoFieldExtForceFileItem(MeteoField,
-                                               Path.GetFileName(((IFileBased)MeteoField).Path));
-                    var newPath = Path.Combine(Path.GetDirectoryName(FilePath), Path.GetFileName(extForceFileItem.FileName));
-                    ((IFileBased)MeteoField).CopyTo(newPath);
-                    yield return extForceFileItem;
-
-                }
-                
-                var uniformMeteoField = MeteoField as FmMeteoField;
-                if (uniformMeteoField != null)
-                {
-                    var fileName = string.Join(".", ExtForceQuantNames.MeteoQuantityNames[MeteoField.Quantity],
-                        ExtForceQuantNames.TimFileExtension);
-                    var extForceFileItem = GetExistingForceFileItemOrNull(MeteoField) ??
-                                           ExtForceFileHelper.CreateMeteoFieldExtForceFileItem(MeteoField, fileName);
-                    ExtForceFileHelper.AddSuffixInCaseOfDuplicateFile(extForceFileItem);
-                    var timFile = new TimFile();
-                    var timFilePath = Path.Combine(directory, extForceFileItem.FileName);
-                    timFile.Write(timFilePath, MeteoField.Data, referenceTime);
-                    yield return extForceFileItem;
-                }*/
-            }
-        }
         private IEnumerable<ExtForceFileItem> WriteWindItems(WaterFlowFMModelDefinition modelDefinition)
         {
             var referenceTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
@@ -454,7 +413,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var extForceFileItems = ParseExtForceFile();
                 var forceFileItems = extForceFileItems as IList<ExtForceFileItem> ?? extForceFileItems.ToList();
                 ReadPolyLineData(forceFileItems, modelDefinition);
-                ReadMeteoItems(forceFileItems, modelDefinition);
                 ReadWindItems(forceFileItems, modelDefinition);
                 ReadHeatFluxModelData(forceFileItems, modelDefinition);
                 ReadSpatialData(forceFileItems, modelDefinition);
@@ -1098,37 +1056,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         extForceFileItem.Method, extForceFileItem.FileName));
             }
             return operation;
-        }
-
-        private void ReadMeteoItems(IEnumerable<ExtForceFileItem> extForceFileItems,
-            WaterFlowFMModelDefinition modelDefinition)
-        {
-            var refDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
-            foreach (
-                var extForceFileItem in
-                    extForceFileItems.Where(i => ExtForceQuantNames.MeteoQuantityNames.Values.Contains(i.Quantity)))
-            {
-                try
-                {
-                    var MeteoField = ExtForceFileHelper.CreateMeteoField(extForceFileItem, FilePath);
-                    var MeteoFile = Path.Combine(Path.GetDirectoryName(FilePath), extForceFileItem.FileName);
-                    if (!File.Exists(MeteoFile))
-                    {
-                        throw new FileNotFoundException(string.Format("Meteo file {0} could not be found", MeteoFile));
-                    }
-                    if (MeteoField is FmMeteoField)
-                    {
-                        var fileReader = new TimFile();
-                        fileReader.Read(MeteoFile, MeteoField.Data, refDate);
-                    }
-                    modelDefinition.FmMeteoFields.Add(MeteoField);
-                    existingForceFileItems[extForceFileItem] = MeteoField;
-                }
-                catch (Exception e)
-                {
-                   log.Warn(e.Message);
-                }
-            }
         }
 
         private void ReadWindItems(IEnumerable<ExtForceFileItem> extForceFileItems, WaterFlowFMModelDefinition modelDefinition)

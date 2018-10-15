@@ -951,10 +951,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 ? null
                 : Path.Combine(Path.GetDirectoryName(extForceFilePath), extForceFileItem.FileName);
             */
+            
             switch (quantity)
             {
                 case FmMeteoQuantity.Precipitation:
-                    return FmMeteoField.CreateMeteoPrecipitationSeries();
+                    return FmMeteoField.CreateMeteoPrecipitationSeries(FmMeteoLocationType.Global);
                 default:
                     throw new ArgumentOutOfRangeException();
             }

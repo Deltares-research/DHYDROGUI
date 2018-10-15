@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var mduFile = new MduFile();
                 var hydroArea = new HydroArea();
                 var modelDefinition = new WaterFlowFMModelDefinition();
-                var meteoPrecipitationSeries = FmMeteoField.CreateMeteoPrecipitationSeries();
+                var meteoPrecipitationSeries = FmMeteoField.CreateMeteoPrecipitationSeries(FmMeteoLocationType.Global);
                 var start = new DateTime(1981, 8, 31, 12, 30, 0);
                 var times = new[]
                     {start, start.AddDays(1), start.AddDays(2), start.AddDays(3), start.AddDays(4), start.AddDays(5)};

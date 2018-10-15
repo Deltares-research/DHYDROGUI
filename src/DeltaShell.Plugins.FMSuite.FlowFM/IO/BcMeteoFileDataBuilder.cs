@@ -6,6 +6,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 
+
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class BcMeteoFileDataBuilder : BcFileFlowBoundaryDataBuilder
@@ -26,7 +27,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void PopulateBcBlockData(IFmMeteoField fmMeteoField, DateTime? referenceTime, BcBlockData bcBlockData)
         {
-            if (ForcingTypeDefinitions == null) return;
+            { FmMeteoQuantity.Precipitation, "rainfall_rate" }
+        };
+
+        private static readonly Dictionary<FmMeteoLocationType, string> FmMeteoLocationKernelNames = new Dictionary<FmMeteoLocationType, string>()
+        {
+            { FmMeteoLocationType.Global, "global" }
+        };
+
+        private bool PopulateBcBlockData(IFmMeteoField fmMeteoField, DateTime? referenceTime, BcBlockData bcBlockData)
+        {
+
+            if (ForcingTypeDefinitions == null) return true;
             var forcingTypeDefinition = ForcingTypeDefinitions["timeseries"];
             if(!(fmMeteoField.FeatureData?.Feature is Feature2D))
                 bcBlockData.SupportPoint = "global";
