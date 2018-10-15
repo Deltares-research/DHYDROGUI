@@ -954,7 +954,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             switch (quantity)
             {
                 case FmMeteoQuantity.Precipitation:
-                    return FmMeteoField.CreateMeteoPrecipitationSeries();;
+                    return FmMeteoField.CreateMeteoPrecipitationSeries();
                 default:
                     throw new ArgumentOutOfRangeException();
             }

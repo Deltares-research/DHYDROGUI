@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string MeteoDataWithRadiation = "humidity_airtemperature_cloudiness_solarradiation";
 
         // quantity names for filetype=1,2,4,7,8 method=1,2,3
-        public const string Precepitation = "rainfall";
+        public const string Precipitation = "rainfall";
 
         // trying to complicate things a bit further :-(, for flooding:
         public const string EmbankmentBnd = "1d2dbnd";
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public static readonly IDictionary<FmMeteoQuantity, string> MeteoQuantityNames = new Dictionary
             <FmMeteoQuantity, string>
         {
-            {FmMeteoQuantity.Precipitation, Precepitation},
+            {FmMeteoQuantity.Precipitation, Precipitation},
         };
 
         // Boundary condition quantities
