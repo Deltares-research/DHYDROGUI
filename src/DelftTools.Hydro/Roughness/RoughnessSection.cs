@@ -318,9 +318,19 @@ namespace DelftTools.Hydro.Roughness
             return roughnessNetworkCoverage.DefaultRoughnessType;
         }
 
+        public virtual void SetDefaultRoughnessType(RoughnessType type)
+        {
+            roughnessNetworkCoverage.DefaultRoughnessType = type;
+        }
+
         public virtual double GetDefaultRoughnessValue()
         {
             return roughnessNetworkCoverage.DefaultValue;
+        }
+
+        public virtual void SetDefaultRoughnessValue(double value)
+        {
+            roughnessNetworkCoverage.DefaultValue = value;
         }
 
         public virtual void SetDefaults(RoughnessType defaultType, double defaultValue)

@@ -113,7 +113,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (RoughnessSections.Any(rs => rs.Name == "Sewer")) return;
 
             var csSectionType = new CrossSectionSectionType { Name = "Sewer" };
-            RoughnessSections.Insert(0, new RoughnessSection(csSectionType, Network));
+            var roughnessSection = new RoughnessSection(csSectionType, Network);
+            roughnessSection.SetDefaultRoughnessType(RoughnessType.WhiteColebrook);
+            roughnessSection.SetDefaultRoughnessValue(0.003);
+
+            RoughnessSections.Insert(0, roughnessSection);
         }
 
         /// <summary>

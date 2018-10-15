@@ -551,7 +551,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void WhenInstantiatingAnFmModel_ThenTheModelHasSewerRoughnessSection()
+        public void WhenInstantiatingAnFmModel_ThenTheModelHasSewerRoughnessSectionWithDefaultValues()
         {
             var fmModel = new WaterFlowFMModel();
             var roughnessSections = fmModel.RoughnessSections;
@@ -559,6 +559,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(roughnessSections, "Roughness sections of the FM model were not instantiated.");
             Assert.That(roughnessSections.Count(rs => rs.Name == "Sewer"), Is.EqualTo(1));
             Assert.That(roughnessSections.ElementAt(0).Name, Is.EqualTo("Sewer"));
+
+            var sewerRoughnessSection = roughnessSections.First();
+            Assert.That(sewerRoughnessSection.GetDefaultRoughnessValue(), Is.EqualTo(0.003));
+            Assert.That(sewerRoughnessSection.GetDefaultRoughnessType(), Is.EqualTo(RoughnessType.WhiteColebrook));
         }
 
         [Test]
