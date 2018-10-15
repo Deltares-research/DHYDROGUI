@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static readonly ILog Log = LogManager.GetLogger(typeof (MeteoExtForceFile));
 
-        private const BcFile.WriteMode BcFileWriteMode = BcFile.WriteMode.FilePerQuantity;
+        private const BcFile.WriteMode BcFileWriteMode = BcFile.WriteMode.SingleFile;
 
         // items that existed in the file when the file was read
         private readonly IDictionary<Feature2D, string> existingPolylineFiles;
@@ -162,89 +162,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private IEnumerable<DelftIniCategory> WriteFmMeteo(DateTime refDate, BcFile bcFile, IList<IFmMeteoField> fmMeteoFields, BcMeteoFileDataBuilder bcMeteoFileDataBuilder, string modelDefinitionName)
         {
             var resultingItems = new List<DelftIniCategory>();
-            
-            var fileNamesToBoundaryConditions = new Dictionary<string, IList<IFmMeteoField>>();
-            
-            
-                foreach (var fmMeteoField in fmMeteoFields)
-                {
-                    DelftIniCategory existingBlock;
-                    existingMeteoForceFileItems.TryGetValue(fmMeteoField, out existingBlock);
+            var fileName = modelDefinitionName + "_meteo";
+            string path = AddExtension(fileName, BcFile.Extension);
+            foreach (var fmMeteoField in fmMeteoFields)
+            {
+                var quantityName = ExtForceQuantNames.MeteoQuantityNames[fmMeteoField.Quantity];
+                
+                var pliFileName = fmMeteoField.FeatureData?.Feature is Feature2D
+                    ? existingPolylineFiles[(Feature2D) fmMeteoField.FeatureData.Feature]
+                    : null;
 
-                    var existingPaths = existingBlock != null
-                        ? existingBlock.GetPropertyValues(ForcingFileKey).ToList()
-                        : new List<string>();
+                var fmMeteoLocationType =
+                    BcMeteoFileDataBuilder.FmMeteoLocationKernelNames[fmMeteoField.FmMeteoLocationType];
+                var bndBlock = CreateMeteoBlock(quantityName, fmMeteoLocationType, pliFileName, path);
 
-                    string fileName = fmMeteoField.Name;
-                    if (string.IsNullOrEmpty(fileName) && bcFile.MultiFileMode == BcFile.WriteMode.SingleFile)
-                    {
-                        fileName = modelDefinitionName;
-                    }
-                    string path = existingPaths.Any() ? existingPaths.First() : AddExtension(fileName, BcFile.Extension);
+                resultingItems.Add(bndBlock);
+            }
 
-                    if (existingBlock != null && !existingPaths.Contains(path))
-                    {
-                        existingBlock.AddProperty(ForcingFileKey, path);
-                    }
-
-                    var corrPath = existingPaths.Count > 1
-                            ? existingPaths[1]
-                            : AddExtension(fileName + "_corr", BcFile.Extension);
-
-                    if (existingBlock != null)
-                    {
-                        if (!existingPaths.Contains(corrPath))
-                        {
-                            existingBlock.AddProperty(ForcingFileKey, corrPath);
-                        }
-                        if (existingPaths.Contains(corrPath))
-                        {
-                            existingBlock.Properties.RemoveAllWhere(p => p.Value == corrPath);
-                        }
-                    }
-
-                    IList<IFmMeteoField> tuples;
-                    if (fileNamesToBoundaryConditions.TryGetValue(path, out tuples))
-                    {
-                        tuples.Add(fmMeteoField);
-                    }
-                    else
-                    {
-                        tuples = new List<IFmMeteoField> {fmMeteoField};
-                        fileNamesToBoundaryConditions.Add(path, tuples);
-                    }
-
-                    if (existingBlock == null)
-                    {
-                        var quantityName = ExtForceQuantNames.MeteoQuantityNames[fmMeteoField.Quantity];
-
-                        
-                        var pliFileName = fmMeteoField.FeatureData?.Feature is Feature2D ? existingPolylineFiles[(Feature2D) fmMeteoField.FeatureData.Feature] : null;
-
-                        var fmMeteoLocationType = BcMeteoFileDataBuilder.FmMeteoLocationKernelNames[fmMeteoField.FmMeteoLocationType];
-                        var bndBlock = CreateMeteoBlock(quantityName, fmMeteoLocationType, pliFileName, path);
-
-                        resultingItems.Add(bndBlock);
-                    }
-                    else
-                    {
-                        resultingItems.Add(existingBlock);
-                    }
-                }
-            
 
             if (WriteToDisk)
             {
-                foreach (KeyValuePair<string, IList<IFmMeteoField>> fileNamesToBoundaryCondition in fileNamesToBoundaryConditions)
-                {
-                    var fullPath = GetFullPath(fileNamesToBoundaryCondition.Key);
-
-                    bcFile.CorrectionFile = fullPath.EndsWith("_corr.bc");
-
-                    bcFile.Write(fileNamesToBoundaryCondition.Value, fullPath, bcMeteoFileDataBuilder, refDate);
-
-                    bcFile.CorrectionFile = false;
-                }
+                var fullPath = GetFullPath(path);
+                bcFile.Write(fmMeteoFields, fullPath, bcMeteoFileDataBuilder, refDate);
             }
 
             return resultingItems;
