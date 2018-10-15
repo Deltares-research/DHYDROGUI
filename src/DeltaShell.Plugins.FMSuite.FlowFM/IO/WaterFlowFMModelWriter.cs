@@ -55,9 +55,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 var filename = "roughness-" + roughnessSection.Name + ".ini";
                 
-                var roughnessFilename = Path.Combine(directoryName, filename);
+                var roughnessFilePath = Path.Combine(directoryName, filename);
 
-                FileWritingUtils.ThrowIfFileNotExists(roughnessFilename, directoryName, p => RoughnessDataFileWriter.WriteFile(p, roughnessSection));//Add subPath!!
+                FileWritingUtils.ThrowIfFileNotExists(roughnessFilePath, directoryName, p => RoughnessDataFileWriter.WriteFile(p, roughnessSection));//Add subPath!!
                 writtenRoughessFiles.Add(filename);
             }
             //do we need to write this in the mdu file? which keyword?
