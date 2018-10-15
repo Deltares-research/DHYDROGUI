@@ -19,10 +19,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     public class MeteoExtForceFile : FMSuiteFileBase
     {
         public const string MeteoBlockKey = "[meteo]";
-        public const string QuantityKey = "quantity";
-        public const string LocationTypeKey = "locationtype";
-        public const string LocationFileKey = "locationfile";
-        public const string ForcingFileKey = "forcingfile";
+        public const string QuantityKey = "Quantity";
+        public const string LocationTypeKey = "LocationType";
+        public const string LocationFileKey = "LocationFile";
+        public const string ForcingFileKey = "ForcingFile";
         
         private static DelftIniCategory CreateMeteoBlock(string quantity, string locationFilePath, string forcingFilePath)
         {
