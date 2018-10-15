@@ -667,7 +667,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 Assert.That(structureCategory.Properties.Count, Is.EqualTo(9));
 
                 CheckKeyValuePair(structureCategory, StructureRegion.Algorithm.Key, expectedAlgorithmValue);
-                CheckKeyValuePair(structureCategory, StructureRegion.TimeFilePath.Key, timeSeriesFileName);
+                CheckKeyValuePair(structureCategory, StructureRegion.TimeFileName.Key, timeSeriesFileName);
             }
             finally
             {

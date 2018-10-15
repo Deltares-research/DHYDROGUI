@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {StructureRegion.GateSillLevel.Key, WriteTimeSeriesFile },
             {StructureRegion.GateLowerEdgeLevel.Key, WriteTimeSeriesFile },
             {StructureRegion.GateOpeningWidth.Key, WriteTimeSeriesFile },
-            {StructureRegion.TimeFilePath.Key, WriteTimeSeriesFile }
+            {StructureRegion.TimeFileName.Key, WriteTimeSeriesFile }
         };
 
         public static IEnumerable<DelftIniCategory> Generate2DStructureCategoriesFromFMModel(IModel model)

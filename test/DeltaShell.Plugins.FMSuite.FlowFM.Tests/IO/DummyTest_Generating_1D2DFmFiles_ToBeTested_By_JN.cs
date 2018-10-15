@@ -175,7 +175,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             //write
             WaterFlowFMModelWriter.Write(model);
-
         }
     }
 }
