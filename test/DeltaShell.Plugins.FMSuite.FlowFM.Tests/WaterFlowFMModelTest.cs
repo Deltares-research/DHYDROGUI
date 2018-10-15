@@ -1797,6 +1797,55 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(model.FmMeteoFields.Count,Is.GreaterThan(0));
             Assert.That(model.FmMeteoFields[0].Data.Components[0].Values[0],Is.EqualTo(1).Within(0.1));
         }
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Slow)]
+        public void GivenFMModelWithPrecipitationDataWhenDeepCloneThenReadBackMeteoData()
+        {
+            TestHelper.PerformActionInTemporaryDirectory(s =>
+            {
+                var model = new WaterFlowFMModel();
 
+                var meteoPrecipitationSeries = FmMeteoField.CreateMeteoPrecipitationSeries(FmMeteoLocationType.Global);
+                var dateTimeNow = DateTime.Today;
+                meteoPrecipitationSeries.Data.Arguments[0].SetValues(new[]
+                    {dateTimeNow, dateTimeNow.AddHours(1), dateTimeNow.AddHours(2)});
+                meteoPrecipitationSeries.Data.Components[0].SetValues(new[] {1.0, 5.0, 10.0});
+
+                model.ModelDefinition.FmMeteoFields.Add(meteoPrecipitationSeries);
+                var clone = (FmMeteoField) meteoPrecipitationSeries.Clone();
+                TypeUtils.SetField(clone, "fmMeteoLocationType", FmMeteoLocationType.Feature);
+                TypeUtils.CallPrivateMethod(clone, "UpdateName");
+                meteoPrecipitationSeries.Data.Components[0].Values[1] = 3.0;
+                Assert.That(clone.Data.Components[0].Values[1], Is.EqualTo(5.0).Within(0.1));
+                clone.Data.Components[0].Values[1] = 7.0;
+                Assert.That(meteoPrecipitationSeries.Data.Components[0].Values[1], Is.EqualTo(3.0).Within(0.1));
+
+                model.ModelDefinition.FmMeteoFields.Add(clone);
+                WaterFlowFMModel otherModel = null;
+                TestHelper.AssertAtLeastOneLogMessagesContains(() =>
+                {
+                    otherModel = (WaterFlowFMModel) model.DeepClone();
+                }, "Could not parse locationtype feature into a valid meteo location data");
+            
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.Count, Is.EqualTo(1));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault(), Is.EqualTo(meteoPrecipitationSeries));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.IsIndependent, Is.False);
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Arguments[0].Name, Is.EqualTo("Time"));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Arguments[0].Values.Count, Is.EqualTo(3));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Arguments[0].Values[0], Is.EqualTo(meteoPrecipitationSeries.Data.Arguments[0].Values[0]));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Arguments[0].Values[1], Is.EqualTo(meteoPrecipitationSeries.Data.Arguments[0].Values[1]));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Arguments[0].Values[2], Is.EqualTo(meteoPrecipitationSeries.Data.Arguments[0].Values[2]));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Name, Is.EqualTo(FmMeteoComponent.Precipitation.ToString()));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].InterpolationType, Is.EqualTo(InterpolationType.Linear));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].ExtrapolationType, Is.EqualTo(ExtrapolationType.None));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Unit.Name, Is.StringContaining("millimeters per day"));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Unit.Symbol, Is.StringContaining("mm day-1"));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Values.Count, Is.EqualTo(3));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Values[0], Is.EqualTo(meteoPrecipitationSeries.Data.Components[0].Values[0]));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Values[1], Is.EqualTo(meteoPrecipitationSeries.Data.Components[0].Values[1]));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Values[2], Is.EqualTo(meteoPrecipitationSeries.Data.Components[0].Values[2]));
+                
+            });
+        }
     }
 }

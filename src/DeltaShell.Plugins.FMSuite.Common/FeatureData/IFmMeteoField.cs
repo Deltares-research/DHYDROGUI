@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
     /// <summary>
     /// Interface which contains the signatures of the basic data of an FmMeteoField
     /// </summary>
-    public interface IFmMeteoField: IEquatable<IFmMeteoField>
+    public interface IFmMeteoField: IEquatable<IFmMeteoField>, ICloneable
     {
         FmMeteoQuantity Quantity { get; }
 

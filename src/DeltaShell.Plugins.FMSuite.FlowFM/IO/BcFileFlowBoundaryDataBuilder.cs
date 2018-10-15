@@ -879,7 +879,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
 
-        private static bool TryParseTimeInterpolationType(BcBlockData data, out InterpolationType interpolationType)
+        protected static bool TryParseTimeInterpolationType(BcBlockData data, out InterpolationType interpolationType)
         {
             if (String.IsNullOrEmpty(data.TimeInterpolationType) || data.TimeInterpolationType.ToLower() == "linear")
             {

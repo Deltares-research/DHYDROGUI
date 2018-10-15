@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string MeteoData = "humidity_airtemperature_cloudiness";
         public const string MeteoDataWithRadiation = "humidity_airtemperature_cloudiness_solarradiation";
 
-        // quantity names for filetype=1,2,4,7,8 method=1,2,3
+        
         public const string Precipitation = "rainfall";
 
         // trying to complicate things a bit further :-(, for flooding:
@@ -182,6 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             return (mapping.Key != null);
         }
+
 
         /// <summary>
         /// Returns the quantity string for a given flow boundary condition

@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
         }
 
-        public IFunction Data { get; private set; }
+        public IFunction Data { get; private set; }//also update the data in FeatureData when setting here?
 
         public string Name { get; private set; }
                 
@@ -116,6 +116,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 hashCode = (hashCode * 397) ^ (int) FmMeteoLocationType;
                 return hashCode;
             }
+        }
+
+        public object Clone()
+        {
+            var newFMMeteoField = new FmMeteoField(Components.ToArray())
+            {
+                Data = (IFunction) Data.Clone(),
+                Quantity = Quantity,
+                FmMeteoLocationType = FmMeteoLocationType,
+                FeatureData = null,//euhm how do we clone this?
+            };
+            return newFMMeteoField;
         }
     }
 }

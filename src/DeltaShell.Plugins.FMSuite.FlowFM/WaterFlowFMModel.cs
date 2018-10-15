@@ -469,7 +469,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             BoundaryConditionSets = ModelDefinition.BoundaryConditionSets;
             WindFields = ModelDefinition.WindFields;
             FmMeteoFields = ModelDefinition.FmMeteoFields;
-            FmMeteoLocationType = ModelDefinition.FmMeteoLocationType;
             UnsupportedFileBasedExtForceFileItems = ModelDefinition.UnsupportedFileBasedExtForceFileItems;
             Pipes = ModelDefinition.Pipes;
             SourcesAndSinks = ModelDefinition.SourcesAndSinks;

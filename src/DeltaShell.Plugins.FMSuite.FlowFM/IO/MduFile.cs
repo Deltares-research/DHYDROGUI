@@ -851,7 +851,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public void Read(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, Action<string, int, int> reportProgress = null, IList<ModelFeatureCoordinateData<BridgePillar>> allBridgePillarsAndCorrespondingProperties = null)
         {
             if (reportProgress == null) reportProgress = (name, current, total) => { };
-            var totalSteps = 5;
+            var totalSteps = 6;
 
             reportProgress("Reading properties", 1, totalSteps);
             ReadProperties(filePath, modelDefinition);
@@ -971,6 +971,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     BoundaryExternalForcingsFile = new BndExtForceFile();
                     BoundaryExternalForcingsFile.Read(forceFilePath, modelDefinition);
+                }
+            }
+
+            reportProgress("Reading fm meteo external forcings file", 6, totalSteps);
+            var meteoExtForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.MeteoExtForceFile);
+            if (meteoExtForceFileProperty != null)
+            {
+                var forceFilePath = MduFileHelper.GetSubfilePath(filePath, meteoExtForceFileProperty);
+
+                if (forceFilePath != null && File.Exists(forceFilePath))
+                {
+                    MeteoExtForceFile = new MeteoExtForceFile();
+                    MeteoExtForceFile.Read(forceFilePath, modelDefinition);
                 }
             }
 
