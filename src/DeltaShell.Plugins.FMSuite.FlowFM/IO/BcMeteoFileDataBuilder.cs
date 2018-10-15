@@ -11,21 +11,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class BcMeteoFileDataBuilder : BcFileFlowBoundaryDataBuilder
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(BcMeteoFileDataBuilder));
-
-        private static readonly Dictionary<FmMeteoQuantity, string> FmMeteoQuantityKernelNames = new Dictionary<FmMeteoQuantity, string>
-        {
-            { FmMeteoQuantity.Precipitation, "rainfall_rate" }
-        };
-
         public BcBlockData CreateBlockData(IFmMeteoField fmMeteoField, DateTime? refDate)
         {
             var block = new BcBlockData();
             PopulateBcBlockData(fmMeteoField, refDate, block);
             return block;
         }
-
-        private void PopulateBcBlockData(IFmMeteoField fmMeteoField, DateTime? referenceTime, BcBlockData bcBlockData)
+        private static readonly Dictionary<FmMeteoQuantity, string> FmMeteoQuantityKernelNames = new Dictionary<FmMeteoQuantity, string>()
         {
             { FmMeteoQuantity.Precipitation, "rainfall_rate" }
         };
@@ -75,6 +67,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     Values = PrintValues(component, null, null).ToList()
                 });
             }
+            return true;
         }
+
+        
+        private static readonly ILog Log = LogManager.GetLogger(typeof(BcMeteoFileDataBuilder));
+        
     }
 }
