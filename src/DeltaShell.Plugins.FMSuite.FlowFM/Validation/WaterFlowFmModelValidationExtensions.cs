@@ -22,6 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 ValidateBathymetry(model),
                 ValidatePhysicalProcesses(model),
                 WaterFlowFMWindValidator.Validate(model),
+                WaterFlowFMMeteoValidation.Validate(model),
                 WaterFlowFMModelDefinitionValidator.Validate(model),
                 WaterFlowFMBoundaryConditionValidator.Validate(model),
                 WaterFlowFMArea2DValidator.Validate(model),

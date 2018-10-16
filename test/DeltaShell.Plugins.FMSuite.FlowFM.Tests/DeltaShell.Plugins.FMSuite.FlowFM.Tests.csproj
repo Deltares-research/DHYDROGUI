@@ -371,6 +371,7 @@
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMEmbankmentValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMEnclosureValidationTest.cs" />
+    <Compile Include="Validation\WaterFlowFMMeteoValidationTest.cs" />
     <Compile Include="Validation\WaterFlowFMModelComputationalGridValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMModelDefinitionValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMModelNetworkValidatorTest.cs" />
