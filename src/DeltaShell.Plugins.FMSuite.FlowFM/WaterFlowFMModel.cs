@@ -255,7 +255,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public IEventedList<IWindField> WindFields { get; private set; }
 
         public IEventedList<IFmMeteoField> FmMeteoFields { get; private set; }
-        public FmMeteoLocationType FmMeteoLocationType { get; set; }
+
         public IList<IUnsupportedFileBasedExtForceFileItem> UnsupportedFileBasedExtForceFileItems { get; private set; }
 
         public HeatFluxModelType HeatFluxModelType { get; private set; }
