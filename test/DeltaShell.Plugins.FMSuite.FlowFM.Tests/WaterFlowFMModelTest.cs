@@ -1787,16 +1787,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var model = new WaterFlowFMModel();
             Assert.IsNotNull(model.FmMeteoFields);
-            
-            //Add new Meteo Fields in List
+
+            AddNewMeteoFieldsInPrecipitationList(model);
+
+            Assert.That(model.FmMeteoFields.Count, Is.GreaterThan(0));
+            Assert.That(model.FmMeteoFields[0].Data.Components[0].Values[0], Is.EqualTo(1).Within(0.1));
+        }
+
+        private static void AddNewMeteoFieldsInPrecipitationList(WaterFlowFMModel model)
+        {
             var meteoPrecipitationSeries = FmMeteoField.CreateMeteoPrecipitationSeries(FmMeteoLocationType.Global);
             var dateTimeNow = DateTime.Now;
-            meteoPrecipitationSeries.Data.Arguments[0].SetValues(new[]{ dateTimeNow, dateTimeNow.AddHours(1) , dateTimeNow.AddHours(2) });
-            meteoPrecipitationSeries.Data.Components[0].SetValues(new[]{1.0,5.0,10.0});
+            meteoPrecipitationSeries.Data.Arguments[0].SetValues(new[] { dateTimeNow, dateTimeNow.AddHours(1), dateTimeNow.AddHours(2) });
+            meteoPrecipitationSeries.Data.Components[0].SetValues(new[] { 1.0, 5.0, 10.0 });
             model.ModelDefinition.FmMeteoFields.Add(meteoPrecipitationSeries);
-            Assert.That(model.FmMeteoFields.Count,Is.GreaterThan(0));
-            Assert.That(model.FmMeteoFields[0].Data.Components[0].Values[0],Is.EqualTo(1).Within(0.1));
         }
+
         [Test]
         [NUnit.Framework.Category(TestCategory.Slow)]
         public void GivenFMModelWithPrecipitationDataWhenDeepCloneThenReadBackMeteoData()
