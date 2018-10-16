@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
@@ -13,40 +14,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
     public static class WaterFlowFMMeteoValidation
     {
         private const string subject = "Meteo";
-
+         
         public static ValidationReport Validate(WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
 
-            ValidateFmMeteoLocationTypes(model, issues);
+            issues.AddRange(ValidateFmMeteoLocationTypesOfModelDefinitionFMMeteoFields(model.ModelDefinition.FmMeteoFields));
 
-            ValidateFmMeteoQuantitiesCanHaveOnlyOneGlobalLocationType(model.FmMeteoFields, issues);
+            issues.AddRange(ValidateFmMeteoQuantitiesCanHaveOnlyOneGlobalLocationType(model.ModelDefinition.FmMeteoFields));
 
-            return new ValidationReport("Water flow FM model meteo items", issues);
+            return new ValidationReport(Resources.WaterFlowFMMeteoValidation_Validate_Water_flow_FM_model_meteo_items, issues);
         }
 
-        public static void ValidateFmMeteoQuantitiesCanHaveOnlyOneGlobalLocationType(IEventedList<IFmMeteoField> modelFmMeteoFields, List<ValidationIssue> issues)
+        private static IEnumerable<ValidationIssue> ValidateFmMeteoQuantitiesCanHaveOnlyOneGlobalLocationType(IEventedList<IFmMeteoField> modelFmMeteoFields)
         {
-            foreach (FmMeteoQuantity quantity in (FmMeteoQuantity[])Enum.GetValues(typeof(FmMeteoQuantity)))
+            foreach (var fmMeteoQuantity in (FmMeteoQuantity[])Enum.GetValues(typeof(FmMeteoQuantity)))
             {
-                if (modelFmMeteoFields.Count(fmMeteoField => fmMeteoField.Quantity == quantity && fmMeteoField.FmMeteoLocationType == FmMeteoLocationType.Global) > 1)
+                if (modelFmMeteoFields.Count(fmMeteoField => fmMeteoField.Quantity == fmMeteoQuantity && fmMeteoField.FmMeteoLocationType == FmMeteoLocationType.Global) > 1)
                 {
-                    issues.Add(new ValidationIssue(subject, ValidationSeverity.Error, $"There is more than one global {quantity} present, only {modelFmMeteoFields.FirstOrDefault(field => field.Quantity == quantity)?.Name} will be used in the calculation"));
+                    yield return new ValidationIssue(subject, ValidationSeverity.Error, string.Format(Resources.WaterFlowFMMeteoValidation_ValidateFmMeteoQuantitiesCanHaveOnlyOneGlobalLocationType_There_is_more_than_one_global__0__present__only__1__will_be_used_in_the_calculation, fmMeteoQuantity, modelFmMeteoFields.FirstOrDefault(field => field.Quantity == fmMeteoQuantity)?.Name));
                 }
             }
         }
 
-        public static void ValidateFmMeteoLocationTypes(WaterFlowFMModel model, List<ValidationIssue> issues)
+        private static Dictionary<FmMeteoLocationType, Func<ValidationIssue>> ValidateFmMeteoLocationTypesOfModelDefinitionFMMeteoFieldsGenerators = new Dictionary<FmMeteoLocationType, Func<ValidationIssue>>()
         {
-            foreach (var meteoField in model.FmMeteoFields)
+            {FmMeteoLocationType.Feature, ValidateFmMeteoLocationTypesOfModelDefinitionFMMeteoFieldsNotPossibleGenerator},
+            {FmMeteoLocationType.Grid, ValidateFmMeteoLocationTypesOfModelDefinitionFMMeteoFieldsNotPossibleGenerator},
+            {FmMeteoLocationType.Polygon, ValidateFmMeteoLocationTypesOfModelDefinitionFMMeteoFieldsNotPossibleGenerator}
+        };
+
+        private static ValidationIssue ValidateFmMeteoLocationTypesOfModelDefinitionFMMeteoFieldsNotPossibleGenerator()
+        {
+            return new ValidationIssue(subject, ValidationSeverity.Error,
+                Resources.WaterFlowFMMeteoValidation_ValidateFmMeteoLocationTypesOfModelDefinitionFMMeteoFieldsNotPossibleGenerator_Meteo_location_types__feature__grid___polygon_are_not_yet_supported_);
+        }
+        private static IEnumerable<ValidationIssue> ValidateFmMeteoLocationTypesOfModelDefinitionFMMeteoFields(IEnumerable<IFmMeteoField> fmMeteoFields)
+        {
+            foreach (var meteoField in fmMeteoFields)
             {
-                if (meteoField.FmMeteoLocationType == FmMeteoLocationType.Feature ||
-                    meteoField.FmMeteoLocationType == FmMeteoLocationType.Grid ||
-                    meteoField.FmMeteoLocationType == FmMeteoLocationType.Polygon)
-                {
-                    issues.Add(new ValidationIssue(subject, ValidationSeverity.Error,
-                        "Meteo location types: feature, grid & polygon are not yet supported."));
-                }
+                Func<ValidationIssue> ValidateIssueGenerator = null;
+                if (ValidateFmMeteoLocationTypesOfModelDefinitionFMMeteoFieldsGenerators.TryGetValue(meteoField.FmMeteoLocationType, out ValidateIssueGenerator))
+                    yield return ValidateIssueGenerator();
+
             }
         }
     }

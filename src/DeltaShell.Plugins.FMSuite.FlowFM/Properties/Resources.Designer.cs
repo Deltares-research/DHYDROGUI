@@ -1105,6 +1105,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Water flow FM model meteo items.
+        /// </summary>
+        public static string WaterFlowFMMeteoValidation_Validate_Water_flow_FM_model_meteo_items {
+            get {
+                return ResourceManager.GetString("WaterFlowFMMeteoValidation_Validate_Water_flow_FM_model_meteo_items", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meteo location types: feature, grid &amp; polygon are not yet supported..
+        /// </summary>
+        public static string WaterFlowFMMeteoValidation_ValidateFmMeteoLocationTypesOfModelDefinitionFMMeteoFieldsNotPossibleGenerator_Meteo_location_types__feature__grid___polygon_are_not_yet_supported_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMMeteoValidation_ValidateFmMeteoLocationTypesOfModelDefinitionFMMeteoFi" +
+                        "eldsNotPossibleGenerator_Meteo_location_types__feature__grid___polygon_are_not_y" +
+                        "et_supported_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is more than one global {0} present, only {1} will be used in the calculation.
+        /// </summary>
+        public static string WaterFlowFMMeteoValidation_ValidateFmMeteoQuantitiesCanHaveOnlyOneGlobalLocationType_There_is_more_than_one_global__0__present__only__1__will_be_used_in_the_calculation {
+            get {
+                return ResourceManager.GetString("WaterFlowFMMeteoValidation_ValidateFmMeteoQuantitiesCanHaveOnlyOneGlobalLocationT" +
+                        "ype_There_is_more_than_one_global__0__present__only__1__will_be_used_in_the_calc" +
+                        "ulation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find log file: {0} at expected path: {1}.
         /// </summary>
         public static string WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_ {

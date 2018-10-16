@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using DelftTools.Utils.Validation;
+﻿using System.Linq;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using NUnit.Framework;
@@ -11,17 +10,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
     {
         [Test]
         public void
-            Given_WaterFlowModelWithFmMeteoField_When_AddingTwoGlobalPrecipitationSeries_Then_AValidationIssueIsThrown()
+            Given_WaterFlowModelWithFmMeteoField_When_AddingTwoGlobalPrecipitationSeries_Then_OneValidationIssueIsThrown()
         {
             var model = new WaterFlowFMModel();
             var meteoData = FmMeteoField.CreateMeteoPrecipitationSeries(FmMeteoLocationType.Global);
             model.ModelDefinition.FmMeteoFields.Add(meteoData);
             model.ModelDefinition.FmMeteoFields.Add(meteoData);
-            var issues = new List<ValidationIssue>();
-            WaterFlowFMMeteoValidation.ValidateFmMeteoQuantitiesCanHaveOnlyOneGlobalLocationType(
-                model.ModelDefinition.FmMeteoFields, issues);
+            var validationReport = WaterFlowFMMeteoValidation.Validate(model);
+            Assert.IsNotNull(validationReport);
 
-            Assert.That(issues.Count, Is.EqualTo(1));
+            Assert.IsTrue(validationReport.Issues.FirstOrDefault().ToString().Contains("[Error] Meteo: There is more than one global Precipitation present, only Precipication rainfall (Global) will be used in the calculation"));
+            Assert.That(validationReport.ErrorCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -31,11 +30,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var model = new WaterFlowFMModel();
             var meteoData = FmMeteoField.CreateMeteoPrecipitationSeries(FmMeteoLocationType.Global);
             model.ModelDefinition.FmMeteoFields.Add(meteoData);
-            var issues = new List<ValidationIssue>();
-            WaterFlowFMMeteoValidation.ValidateFmMeteoQuantitiesCanHaveOnlyOneGlobalLocationType(
-                model.ModelDefinition.FmMeteoFields, issues);
+            var validationReport = WaterFlowFMMeteoValidation.Validate(model);
+            Assert.IsNotNull(validationReport);
 
-            Assert.That(issues.Count, Is.EqualTo(0));
+            Assert.That(validationReport.ErrorCount, Is.EqualTo(0));
         }
 
         [TestCase(FmMeteoLocationType.Feature)]
@@ -43,18 +41,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [TestCase(FmMeteoLocationType.Polygon)]
         [Test]
         public void
-            Given_WaterFlowModelWithFmMeteoField_When_AddingOneNonGlobalPrecipitationSeries_Then_AValidationIssueIsThrown(FmMeteoLocationType fmMeteoLocationType)
+            Given_WaterFlowModelWithFmMeteoField_When_AddingOneNonGlobalPrecipitationSeries_Then_OneValidationIssueIsThrown(FmMeteoLocationType fmMeteoLocationType)
         {
             var model = new WaterFlowFMModel();
 
             var meteoData = FmMeteoField.CreateMeteoPrecipitationSeries(fmMeteoLocationType);
             model.ModelDefinition.FmMeteoFields.Add(meteoData);
-            var issues = new List<ValidationIssue>();
-            WaterFlowFMMeteoValidation.ValidateFmMeteoLocationTypes(model, issues);
+            var validationReport = WaterFlowFMMeteoValidation.Validate(model);
+            Assert.IsNotNull(validationReport);
 
-            Assert.That(issues.Count, Is.EqualTo(1));
+            Assert.IsTrue(validationReport.Issues.FirstOrDefault().ToString().Contains("[Error] Meteo: Meteo location types: feature, grid & polygon are not yet supported"));
+            Assert.That(validationReport.ErrorCount, Is.EqualTo(1));
         }
-
     }
 }
 
