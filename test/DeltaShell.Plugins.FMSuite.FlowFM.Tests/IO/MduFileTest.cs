@@ -68,12 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 meteoPrecipitationSeries.Data.Arguments[0].SetValues(times);
                 meteoPrecipitationSeries.Data.Components[0].SetValues(rainFallValues);
-                /*meteoPrecipitationSeries.FeatureData =
-                    new FeatureData<IFunction, Feature2D>()
-                    {
-                        Data = meteoPrecipitationSeries.Data,
-                        Feature = new LeveeBreach() { Name = "my_breach", Geometry = new LineString(new [] {new Coordinate(0 ,0), new Coordinate(10, 0)})}
-                    };*/
+
                 var propertyDefinition = new WaterFlowFMPropertyDefinition
                 {
                     MduPropertyName = KnownProperties.MeteoExtForceFile,

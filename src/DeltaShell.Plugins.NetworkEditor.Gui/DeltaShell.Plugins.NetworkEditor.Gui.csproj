@@ -923,10 +923,6 @@
       <Name>DelftTools.Hydro</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RainfallRunoff\DeltaShell.Plugins.DelftModels.RainfallRunoff.csproj">
-      <Project>{1D52125E-F765-4D51-80C8-F9A67C6BE3D1}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.RainfallRunoff</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
       <Project>{11330f89-2b3d-449d-9211-ea3e0d7f6cdc}</Project>
       <Name>DeltaShell.Plugins.NetworkEditor</Name>

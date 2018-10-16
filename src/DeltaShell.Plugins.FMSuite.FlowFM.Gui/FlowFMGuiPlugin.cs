@@ -301,7 +301,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => m.WindFields.Contains(t)) != null,
             };
 
-            //Fm Meteo fields
             yield return new ViewInfo<IEventedList<IFmMeteoField>, FmMeteoFieldListView>
             {
                 AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => Equals(m.FmMeteoFields, t)) != null,

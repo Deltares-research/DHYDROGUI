@@ -11,7 +11,7 @@ using GeoAPI.Extensions.Feature;
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 {
     /// <summary>
-    /// Class that contains the data object of a FMMeteoField
+    /// Class that contains the data object of a FMMeteoField which couples the GUI and model
     /// </summary>
     /// <seealso cref="DeltaShell.Plugins.FMSuite.Common.FeatureData.IFmMeteoField" />
     public class FmMeteoField : IFmMeteoField
@@ -96,8 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 
         public bool Equals(IFmMeteoField other)
         {
-            //return Equals(components, other.components) && quantity == other.quantity && Equals(FeatureData, other.FeatureData) && FmMeteoLocationType == other.FmMeteoLocationType && Equals(Data, other.Data) && string.Equals(Name, other.Name);
-            return quantity == other.Quantity && FmMeteoLocationType == other.FmMeteoLocationType;
+            return quantity == other?.Quantity && FmMeteoLocationType == other.FmMeteoLocationType;
         }
 
         public override bool Equals(object obj)
