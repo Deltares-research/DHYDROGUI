@@ -15,6 +15,8 @@ namespace DelftTools.Hydro.SewerFeatures
     {
         private static ILog Log = LogManager.GetLogger(typeof(Compartment));
         private Manhole parentManhole;
+        private IGeometry geometry;
+
         public Compartment() : this("compartment")
         {
             
@@ -97,7 +99,19 @@ namespace DelftTools.Hydro.SewerFeatures
         }
 
         public long Id { get; set; }
-        public IGeometry Geometry { get; set; }
+        public virtual IGeometry Geometry
+        {
+            get { return geometry; }
+            set
+            {
+                geometry = value;
+                OnGeometryChanged();
+            }
+        }
+
+        protected virtual void OnGeometryChanged()
+        {
+        }
 
         public IFeatureAttributeCollection Attributes { get; set; }
 

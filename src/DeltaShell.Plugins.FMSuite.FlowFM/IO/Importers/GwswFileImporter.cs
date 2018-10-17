@@ -13,6 +13,8 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
 using DelftTools.Utils.Editing;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
 using log4net;
@@ -97,6 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 {
                     ReportProgress("Adding features to network");
                     AddSewerFeaturesToNetwork(importedFeatureElements, network);
+                    AddBoundariesOfNetworkOutletCompartmentsToModelDefinition(network, fmModel.ModelDefinition);
                 }
                 return importedFeatureElements;
             }
@@ -136,6 +139,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         private static void AddSewerFeaturesToNetwork(IList<ISewerFeature> importedFeatureElements, IHydroNetwork network)
         {
             importedFeatureElements.ForEach(e => e.AddToHydroNetwork(network));
+        }
+
+        private static void AddBoundariesOfNetworkOutletCompartmentsToModelDefinition(IHydroNetwork network, WaterFlowFMModelDefinition modelDefinition)
+        {
+            foreach (var outletCompartment in network.OutletCompartments)
+            {
+                modelDefinition.Boundaries.Add(outletCompartment.OutletCompatmentBoundaryFeature);
+                modelDefinition.BoundaryConditionSets.Add(new BoundaryConditionSet { Feature = outletCompartment.OutletCompatmentBoundaryFeature });
+            }
         }
 
         private void InitializeImportManager()
