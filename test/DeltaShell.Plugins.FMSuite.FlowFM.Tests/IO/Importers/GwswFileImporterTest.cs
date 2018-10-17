@@ -1127,18 +1127,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         }
 
         [Test]
-        public void Given_EmptyFlowFmModel_When_ImportingGwswDirForTheFirstTime_Then_GwswAttributesDefinitionIsFilled()
+        public void Given_EmptyFlowFmModel_When_ImportingGwswDirectoryForTheFirstTime_Then_GwswAttributesDefinitionIsFilled()
         {
-            var deltaresDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Deltares");
-
             var originalDirectoryPath = TestHelper.GetTestFilePath(@"gwswFiles\GWSW_DidactischStelsel");
             var testDirectoryPath = FileUtils.CreateTempDirectory();
             FileUtils.CopyDirectory(originalDirectoryPath, testDirectoryPath);
-
-            //Delete Deltares folder
+            
+            //Within the Deltares folder the previous chosen File path is saved, by deleting this folder, the Gwsw import dialog starts without a Gwsw File path.
+            var deltaresDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Deltares");
             FileUtils.DeleteIfExists(deltaresDirectory);
-
-            //Create new model
+            
             var gwswFileImporter = new GwswFileImporter();
             var viewModel = new GwswImportDialogViewModel { Importer = gwswFileImporter };
             Assert.IsNotNull(viewModel);
@@ -1149,7 +1147,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             viewModel.SelectedDirectoryPath = testDirectoryPath;
             viewModel.OnDirectorySelected.Execute(null);
 
-            //Assert that the viewmodel contain GwswFeatures 
             Assert.IsTrue(viewModel.GwswFeatureFiles.Any());
         }
 
