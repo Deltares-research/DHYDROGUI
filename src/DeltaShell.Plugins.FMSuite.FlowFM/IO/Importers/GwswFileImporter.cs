@@ -146,7 +146,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             foreach (var outletCompartment in network.OutletCompartments)
             {
                 modelDefinition.Boundaries.Add(outletCompartment.OutletCompatmentBoundaryFeature);
-                modelDefinition.BoundaryConditionSets.Add(new BoundaryConditionSet { Feature = outletCompartment.OutletCompatmentBoundaryFeature });
             }
         }
 

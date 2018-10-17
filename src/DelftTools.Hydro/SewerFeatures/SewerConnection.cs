@@ -170,10 +170,14 @@ namespace DelftTools.Hydro.SewerFeatures
 
         private void UpdateGeometry()
         {
-            if (Source != null && Target != null)
-            {
-                Geometry = new LineString(new[] { Source.Geometry.Coordinate, Target.Geometry.Coordinate });
-            }
+            if (Source == null || Target == null) return;
+
+            var sourceCoordinate = Source.Geometry.Coordinate;
+            var targetCoordinate = Target.Geometry.Coordinate;
+            Geometry = new LineString(new[] { sourceCoordinate, targetCoordinate });
+
+            var outletCompartment = targetCompartment as OutletCompartment;
+            outletCompartment?.SetBoundaryGeometry(sourceCoordinate, targetCoordinate);
         }
 
         public override bool IsLengthCustom

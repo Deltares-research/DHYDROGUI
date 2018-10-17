@@ -1,4 +1,6 @@
-﻿using GeoAPI.Extensions.Feature;
+﻿using System;
+using GeoAPI.Extensions.Feature;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 
@@ -12,14 +14,14 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             
         }
-        protected override void OnGeometryChanged()
+
+        public OutletCompartment(string name) : base(name)
         {
-            OutletCompatmentBoundaryFeature.Geometry = new Point(Geometry.Coordinate.X, Geometry.Coordinate.Y);
-            //mick will make geometry; if not connected make point else if connected my nice 90 degree line
         }
 
-        public OutletCompartment(string uniqueId) : base(uniqueId)
+        protected override void OnNameChanged()
         {
+            outletCompatmentBoundaryFeature.Name = Name;
         }
 
         [FeatureAttribute]
@@ -29,6 +31,44 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             get { return outletCompatmentBoundaryFeature; }
             set { outletCompatmentBoundaryFeature = value; }
+        }
+
+        public void SetBoundaryGeometry(Coordinate sourceCoordinate, Coordinate targetCoordinate)
+        {
+            OutletCompatmentBoundaryFeature.Geometry = CreateBoundaryGeometryForOutletCompartment(sourceCoordinate, targetCoordinate);
+        }
+
+        private static LineString CreateBoundaryGeometryForOutletCompartment(Coordinate sourceCoordinate, Coordinate targetCoordinate)
+        {
+            var deltaX = sourceCoordinate.X - targetCoordinate.X;
+            if (Math.Abs(deltaX) > 10e-6)
+            {
+                var slope = (sourceCoordinate.Y - targetCoordinate.Y) / deltaX;
+                var perpendicularSlope = -1 / slope;
+                var deltaToBoundaryMiddleX = 0.5 / Math.Sqrt(1 + slope * slope);
+                var deltaToBoundaryMiddleY = deltaToBoundaryMiddleX * slope;
+
+                var middleBoundaryCoordinate = sourceCoordinate.X < targetCoordinate.X
+                    ? new Coordinate(targetCoordinate.X + deltaToBoundaryMiddleX, targetCoordinate.Y + deltaToBoundaryMiddleY)
+                    : new Coordinate(targetCoordinate.X - deltaToBoundaryMiddleX, targetCoordinate.Y - deltaToBoundaryMiddleY);
+
+                var deltaToBoundaryEndsX = 5 / Math.Sqrt(1 + perpendicularSlope * perpendicularSlope);
+                var deltaToBoundaryEndsY = deltaToBoundaryEndsX * perpendicularSlope;
+
+                var boundaryStartCoordinate = new Coordinate(middleBoundaryCoordinate.X + deltaToBoundaryEndsX, middleBoundaryCoordinate.Y + deltaToBoundaryEndsY);
+                var boundaryEndCoordinate = new Coordinate(middleBoundaryCoordinate.X - deltaToBoundaryEndsX, middleBoundaryCoordinate.Y - deltaToBoundaryEndsY);
+                return new LineString(new[] { boundaryStartCoordinate, boundaryEndCoordinate });
+            }
+            else
+            {
+                var middleBoundaryCoordinate = sourceCoordinate.Y < targetCoordinate.Y
+                    ? new Coordinate(targetCoordinate.X, targetCoordinate.Y + 0.5)
+                    : new Coordinate(targetCoordinate.X, targetCoordinate.Y - 0.5);
+
+                var boundaryStartCoordinate = new Coordinate(middleBoundaryCoordinate.X - 5, middleBoundaryCoordinate.Y);
+                var boundaryEndCoordinate = new Coordinate(middleBoundaryCoordinate.X + 5, middleBoundaryCoordinate.Y);
+                return new LineString(new[] { boundaryStartCoordinate, boundaryEndCoordinate });
+            }
         }
     }
 }
