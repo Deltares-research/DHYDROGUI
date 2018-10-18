@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro.Roughness;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
@@ -45,25 +46,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return true;
         }
 
-        private static void WriteRoughness(WaterFlowFMModel model)
+        private static void WriteRoughness(WaterFlowFMModel fmModel)
         {   
-            var writtenRoughessFiles = new List<string>();
-            var directoryName = Path.GetDirectoryName(model.MduFilePath);
+            var directoryName = Path.GetDirectoryName(fmModel.MduFilePath);
             if (directoryName == null) return;
-
-            foreach (var roughnessSection in model.RoughnessSections)
+            
+            foreach (var roughnessSection in fmModel.RoughnessSections)
             {
-                var filename = "roughness-" + roughnessSection.Name + ".ini";
-                
+                var filename = GetRoughnessFilename(roughnessSection);
                 var roughnessFilePath = Path.Combine(directoryName, filename);
 
                 FileWritingUtils.ThrowIfFileNotExists(roughnessFilePath, directoryName, p => RoughnessDataFileWriter.WriteFile(p, roughnessSection));//Add subPath!!
-                writtenRoughessFiles.Add(filename);
             }
-            //do we need to write this in the mdu file? which keyword?
-            //model.ModelDefinition.SetModelProperty(ModelDefinitionsRegion.RoughnessFile.Key, string.Join(" ", writtenRoughessFiles));
             //ok.. and now? how do you want the roughness from the 2d model? It's a UnstructuredGridFlowLinkCoverage and has some physical parameters, if set it's a spatial operation
-            //model.Roughness.
+            //fmModel.Roughness.
+        }
+
+        private static string GetRoughnessFilename(RoughnessSection roughnessSection)
+        {
+            return "roughness-" + roughnessSection.Name + ".ini";
         }
 
         private static void PrepareModelDefinitionForWriting(WaterFlowFMModel fmModel)
@@ -83,6 +84,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 modelDefinition.SetModelProperty(KnownProperties.StructuresFile, "structures.ini");
             }
+
+            var roughnessFileNames = fmModel.RoughnessSections.Select(GetRoughnessFilename);
+            modelDefinition.SetModelProperty(KnownProperties.RoughnessFile, string.Join(" ", roughnessFileNames));
         }
 
         private static WaterFlowFMModelWriterData CreateWriterData(WaterFlowFMModel model)

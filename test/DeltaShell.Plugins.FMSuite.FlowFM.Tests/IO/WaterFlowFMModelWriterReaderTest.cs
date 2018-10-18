@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             FileUtils.DeleteIfExists(tempDirectory);
         }
 
-        [Test, Ignore("Reading functionality for 1D2D models needs to be in place for this. Enable this test when this time has come.")]
+        [Test]
         public void GivenOnePipeTwoManholes_WhenWritingAndReading_ThenNetworksAreTheSame()
         {
             var pipeName = "myPipe";
@@ -43,13 +43,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             var geometry = new LineString(new[]{ new Coordinate(0, 0), new Coordinate(0, 100) });
-            SewerFactory.AddDefaultPipeToNetwork(new Pipe { Name = pipeName, Geometry = geometry, Material = SewerProfileMapping.SewerProfileMaterial.Polyester}, model.Network);
+            var pipe = new Pipe
+            {
+                Name = pipeName,
+                Geometry = geometry,
+                Material = SewerProfileMapping.SewerProfileMaterial.Polyester
+            };
+            SewerFactory.AddDefaultPipeToNetwork(pipe, model.Network);
 
-            //action write
             WaterFlowFMModelWriter.Write(model);
 
             var ugridPath = Path.Combine(tempDirectory, model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).GetValueAsString());
-            Assert.True(File.Exists(ugridPath)); //UGrid file
+            Assert.True(File.Exists(ugridPath));
 
             var retrievedFmModel = WaterFlowFMModelReader.Read(model.MduFilePath);
             var retrievedNetwork = retrievedFmModel.Network;
@@ -95,11 +100,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             functionOfQ.Components.Add(new Variable<double>() { Values = new MultiDimensionalArray<double>() { 3.0, 5.0, 7.0 } });
 
             sewerRoughness.AddQRoughnessFunctionToBranch(branch1, functionOfQ);*/
-
-
+            
             WaterFlowFMModelWriter.Write(fmModel);
             var directory = Path.GetDirectoryName(fmModel.MduFilePath);
-            Assert.IsTrue(File.Exists(Path.Combine(directory, "roughness-" + sewerRoughness.Name+".ini")));
+            Assert.IsNotNull(directory);
+
+            var sewerRoughnessFileName = "roughness-" + sewerRoughness.Name + ".ini";
+            var expectedRoughnessFilePath = Path.Combine(directory, sewerRoughnessFileName);
+            Assert.IsTrue(File.Exists(expectedRoughnessFilePath));
+
+            var roughnessModelProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.RoughnessFile);
+            var roughnessFileNames = roughnessModelProperty.GetValueAsString().Split(' ');
+            Assert.That(roughnessFileNames.Contains(sewerRoughnessFileName));
         }
 
         [Test, Ignore("Issue FM1D2D-189")]
