@@ -136,7 +136,7 @@ namespace DelftTools.Hydro.SewerFeatures
                 sourceCompartment = value;
                 UpdateSource(sourceCompartment);
                 UpdateSourceCompartmentId();
-                UpdateGeometry();
+                UpdateGeometryBasedOnSourceAndTargetCompartments();
             }
         }
 
@@ -164,11 +164,11 @@ namespace DelftTools.Hydro.SewerFeatures
                 targetCompartment = value;
                 UpdateTarget(targetCompartment);
                 UpdateTargetCompartmentId();
-                UpdateGeometry();
+                UpdateGeometryBasedOnSourceAndTargetCompartments();
             }
         }
 
-        private void UpdateGeometry()
+        private void UpdateGeometryBasedOnSourceAndTargetCompartments()
         {
             if (Source == null || Target == null) return;
 
@@ -205,7 +205,7 @@ namespace DelftTools.Hydro.SewerFeatures
             }
             else
             {
-                Log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, this.Name);
+                Log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, Name);
             }
         }
 

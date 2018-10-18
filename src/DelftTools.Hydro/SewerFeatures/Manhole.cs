@@ -137,6 +137,12 @@ namespace DelftTools.Hydro.SewerFeatures
         protected override void OnGeometryChanged()
         {
             CopyGeometryToCompartments();
+
+            compartments.OfType<OutletCompartment>().ForEach(outletCompartment =>
+            {
+                var pipe = IncomingBranches.OfType<SewerConnection>().FirstOrDefault(sc => sc.TargetCompartment == outletCompartment);
+                if(pipe != null) outletCompartment.SetBoundaryGeometry(pipe.Source.Geometry.Coordinate, pipe.Target.Geometry.Coordinate);
+            });
         }
 
         private void CopyGeometryToCompartments()
