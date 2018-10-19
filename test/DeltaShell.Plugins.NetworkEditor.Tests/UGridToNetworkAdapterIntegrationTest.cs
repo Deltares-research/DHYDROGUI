@@ -99,6 +99,42 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
+        public void GivenNetworkAndDiscretisation_WhenSavingNetworkTwiceAtTheSameLocation_ThenNoExceptionsAreThrown()
+        {
+            var networkDiscretisation = TestNetworkAndDiscretisationProvider.CreateSimpleNetworkAndDiscretisation();
+            var storedNetwork = (IHydroNetwork)networkDiscretisation.Network;
+
+            var networkDataModel = new NetworkUGridDataModel(storedNetwork);
+            var discretisationDataModel = new NetworkDiscretisationUGridDataModel(networkDiscretisation);
+
+            var metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
+            UGridToNetworkAdapter.SaveNetwork(netFilePath, networkDataModel, metaData);
+            UGridToNetworkAdapter.SaveNetworkDiscretisation(netFilePath, discretisationDataModel);
+
+            TestHelper.AssertLogMessagesCount(() => UGridToNetworkAdapter.SaveNetwork(netFilePath, networkDataModel, metaData), 0);
+            // For reader: This test is failing at the second time that we try to save a network in the same netCDF file.
+            // Debug through method UGridToNetworkAdapter.SaveNetwork!
+        }
+
+        [Test]
+        public void GivenNetworkAndDiscretisation_WhenSavingNetworkDiscretisationTwiceAtTheSameLocation_ThenNoExceptionsAreThrown()
+        {
+            var networkDiscretisation = TestNetworkAndDiscretisationProvider.CreateSimpleNetworkAndDiscretisation();
+            var storedNetwork = (IHydroNetwork)networkDiscretisation.Network;
+
+            var networkDataModel = new NetworkUGridDataModel(storedNetwork);
+            var discretisationDataModel = new NetworkDiscretisationUGridDataModel(networkDiscretisation);
+
+            var metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
+            UGridToNetworkAdapter.SaveNetwork(netFilePath, networkDataModel, metaData);
+            UGridToNetworkAdapter.SaveNetworkDiscretisation(netFilePath, discretisationDataModel);
+
+            TestHelper.AssertLogMessagesCount(() => UGridToNetworkAdapter.SaveNetworkDiscretisation(netFilePath, discretisationDataModel), 0);
+            // For reader: This test is failing at the second time that we try to save a network discretisation in the same netCDF file.
+            // Debug through method UGridToNetworkAdapter.SaveNetworkDiscretisation!
+        }
+
+        [Test]
         [Ignore]
         public void GivenSimpleSewerNetwork_WhenSavingAndLoadingNetwork_ThenTheNetworkIsUnchanged()
         {
