@@ -46,7 +46,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
         public static void CompareNetworks(IHydroNetwork primaryNetwork, IHydroNetwork secondaryNetwork)
         {
             CompareNetworks((INetwork)primaryNetwork, secondaryNetwork);
+            CompareSewerNetworks(primaryNetwork, secondaryNetwork);
+        }
 
+        private static void CompareSewerNetworks(IHydroNetwork primaryNetwork, IHydroNetwork secondaryNetwork)
+        {
             var primaryManholes = primaryNetwork.Manholes.ToList();
             var secondaryManholes = secondaryNetwork.Manholes.ToList();
             var primaryPipes = primaryNetwork.Pipes.ToList();
@@ -67,8 +71,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             // loop over the pipes and assert each item
             for (var i = 0; i < primaryPipes.Count; ++i)
             {
-                var primaryPipe = (Pipe)primaryPipes[i];
-                var secondaryPipe = (Pipe)secondaryPipes[i];
+                var primaryPipe = (Pipe) primaryPipes[i];
+                var secondaryPipe = (Pipe) secondaryPipes[i];
 
                 ComparePipes(primaryPipe, secondaryPipe);
             }
