@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.IO;
@@ -19,38 +23,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static WaterFlowFMModelReaderData ReadFiles(string mduPath)
         {
             var modelName = Path.GetFileNameWithoutExtension(mduPath);
-            var readerData = new WaterFlowFMModelReaderData();
+            var fmReaderData = new WaterFlowFMModelReaderData();
 
             // read MDU file
             var flowFmModelDefinition = new WaterFlowFMModelDefinition(mduPath, modelName);
-            var mduFile = new MduFile();
-            //mduFile.Read(mduPath, flowFmModelDefinition);
-            readerData.ModelDefinition = flowFmModelDefinition;
+            var area = new HydroArea();
 
+            var mduFile = new MduFile();
+            mduFile.Read(mduPath, flowFmModelDefinition, area, new List<ModelFeatureCoordinateData<FixedWeir>>());
+            fmReaderData.ModelDefinition = flowFmModelDefinition;
+            fmReaderData.Area = area;
 
             // Read network from netCDF file
-            var netFileProperty = readerData.ModelDefinition.GetModelProperty(KnownProperties.NetFile);
+            var netFileProperty = fmReaderData.ModelDefinition.GetModelProperty(KnownProperties.NetFile);
             if (string.IsNullOrEmpty(netFileProperty.GetValueAsString()))
             {
                 netFileProperty.Value = modelName + NetFile.FullExtension;
             }
 
             var netFilePath = Path.Combine(Path.GetDirectoryName(mduPath), netFileProperty.GetValueAsString());
-            readerData.NetworkDataModel = UGridToNetworkAdapter.ReadNetworkDataModelFromUGrid(netFilePath);
+            fmReaderData.NetworkDataModel = UGridToNetworkAdapter.ReadNetworkDataModelFromUGrid(netFilePath);
 
             // Read nodes file
-            var nodeFileProperty = readerData.ModelDefinition.GetModelProperty(KnownProperties.NodeFile);
-            var nodeFilePath = UGridToNetworkAdapter.GetFilePathToLocationInSameDirectory(netFilePath, nodeFileProperty.GetValueAsString());
-            if (File.Exists(nodeFilePath)) readerData.PropertiesPerCompartment = NodeFile.Read(nodeFilePath);
+            var nodeFileProperty = fmReaderData.ModelDefinition.GetModelProperty(KnownProperties.NodeFile);
+            var nodeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, nodeFileProperty.GetValueAsString());
+            if (File.Exists(nodeFilePath)) fmReaderData.PropertiesPerCompartment = NodeFile.Read(nodeFilePath);
 
             // Read branches file (GUI properties only)
-            var branchFilePath = UGridToNetworkAdapter.GetFilePathToLocationInSameDirectory(netFilePath, UGridToNetworkAdapter.BranchGuiFileName);
-            if (File.Exists(branchFilePath)) readerData.PropertiesPerBranch = BranchFile.Read(branchFilePath);
+            var branchFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, UGridToNetworkAdapter.BranchGuiFileName);
+            if (File.Exists(branchFilePath)) fmReaderData.PropertiesPerBranch = BranchFile.Read(branchFilePath);
             
             // Read network discretization
-            readerData.NetworkDiscretisationDataModel = UGridToNetworkAdapter.LoadNetworkDiscretisationDataModel(netFilePath);
+            fmReaderData.NetworkDiscretisationDataModel = UGridToNetworkAdapter.LoadNetworkDiscretisationDataModel(netFilePath);
 
-            return readerData;
+            return fmReaderData;
         }
     }
 }
