@@ -18,6 +18,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.NetworkEditor.IO;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Geometries;
 using log4net;
@@ -57,6 +58,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string RoofAreaExtension = "_roofs.pol";
         public const string MorphologyExtension = ".mor";
         public const string SedimentExtension = ".sed";
+
+        private const string NodeFileName = "nodeFile.ini";
 
         private readonly Dictionary<string, string> mduComments = new Dictionary<string, string>();
 
@@ -137,6 +140,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public MeteoExtForceFile MeteoExtForceFile { get; private set; }
 
         #region write logic
+
+        public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroNetwork network)
+        {
+            var nodeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, NodeFileName);
+            FileUtils.DeleteIfExists(nodeFilePath);
+
+            var compartments = network.Manholes.SelectMany(m => m.Compartments).ToList();
+            if (compartments.Any())
+            {
+                modelDefinition.SetModelProperty(KnownProperties.NodeFile, NodeFileName);
+                NodeFile.Write(nodeFilePath, compartments);
+            }
+            else
+            {
+                modelDefinition.SetModelProperty(KnownProperties.NodeFile, string.Empty);
+            }
+        }
 
         public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
         bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false, ISedimentModelData sedimentModelData = null, bool writeStructureFile = true)

@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.NetworkEditor.IO;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -1376,6 +1379,73 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(modelDefinition.SourcesAndSinks.Count, Is.EqualTo(0));
             new MduFile().Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
             Assert.That(modelDefinition.SourcesAndSinks.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void GivenSewerNetworkWithCompartments_WhenWritingMduFile_ThenNodeFileIsWrittenAndIsReferencedInTheMduFile()
+        {
+            var nodeFileName = "nodeFile.ini";
+            var tempFolder = FileUtils.CreateTempDirectory();
+            var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
+            var nodeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, nodeFileName);
+
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            var manhole = new Manhole("myManhole")
+            {
+                Compartments = new EventedList<Compartment> { new Compartment("myCompartment")}
+            };
+            var network = new HydroNetwork();
+            network.Nodes.Add(manhole);
+
+            var mduFile = new MduFile();
+            mduFile.Write(mduFilePath, modelDefinition, network);
+
+            Assert.IsTrue(File.Exists(nodeFilePath));
+
+            var nodeFileProperty = modelDefinition.GetModelProperty(KnownProperties.NodeFile);
+            Assert.That(nodeFileProperty.GetValueAsString(), Is.EqualTo(nodeFileName));
+        }
+
+        [Test]
+        public void GivenSewerNetworkWithoutCompartments_WhenWritingMduFile_ThenNodeFileIsNotWrittenAndMduFileDoesNotReferenceANodeFile()
+        {
+            var tempFolder = FileUtils.CreateTempDirectory();
+            var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
+            var nodeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, "nodeFile.ini");
+
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            modelDefinition.SetModelProperty(KnownProperties.NodeFile, "someText");
+
+            var network = new HydroNetwork();
+            var mduFile = new MduFile();
+            mduFile.Write(mduFilePath, modelDefinition, network);
+
+            Assert.IsFalse(File.Exists(nodeFilePath));
+
+            var nodeFileProperty = modelDefinition.GetModelProperty(KnownProperties.NodeFile);
+            Assert.That(nodeFileProperty.GetValueAsString(), Is.EqualTo(string.Empty));
+        }
+
+        [Test]
+        public void GivenSewerNetworkWithoutCompartments_WhenWritingMduFileWithNodeFileAlreadyExisting_ThenExistingNodeFileIsDeleted()
+        {
+            var tempFolder = FileUtils.CreateTempDirectory();
+            var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
+            var nodeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, "nodeFile.ini");
+
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            modelDefinition.SetModelProperty(KnownProperties.NodeFile, "someText");
+
+            var network = new HydroNetwork();
+            var mduFile = new MduFile();
+
+            var fileStream = File.Create(nodeFilePath);
+            fileStream.Close();
+
+            mduFile.Write(mduFilePath, modelDefinition, network);
+
+            Assert.IsFalse(File.Exists(nodeFilePath));
         }
 
         #region TestHelpers

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Roughness;
@@ -113,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var fileName = fileProperty.GetValueAsString();
             if (string.IsNullOrEmpty(fileName)) return string.Empty;
 
-            var absolutePath = UGridToNetworkAdapter.GetFilePathToLocationInSameDirectory(model.NetFilePath, fileName);
+            var absolutePath = IoHelper.GetFilePathToLocationInSameDirectory(model.NetFilePath, fileName);
             return absolutePath;
         }
 
@@ -158,7 +157,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void WriteBranchesGuiFile(WaterFlowFMModel model)
         {
-            var branchesFilePath = UGridToNetworkAdapter.GetFilePathToLocationInSameDirectory(model.NetFilePath, UGridToNetworkAdapter.BranchGuiFileName);
+            var branchesFilePath = IoHelper.GetFilePathToLocationInSameDirectory(model.NetFilePath, UGridToNetworkAdapter.BranchGuiFileName);
             if (branchesFilePath != null) BranchFile.Write(branchesFilePath, model.Network.Branches);
         }
 

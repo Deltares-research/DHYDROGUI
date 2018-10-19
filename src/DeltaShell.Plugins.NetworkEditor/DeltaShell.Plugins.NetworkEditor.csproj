@@ -179,6 +179,7 @@
     <Compile Include="ImportExportCsv\CustomEnumCsvConverter.cs" />
     <Compile Include="ImportExportCsv\CrossSectionCsvData.cs" />
     <Compile Include="IO\BranchFile.cs" />
+    <Compile Include="IO\IoHelper.cs" />
     <Compile Include="IO\NodeFile.cs" />
     <Compile Include="IO\StructureFile.cs" />
     <Compile Include="MapLayers\AreaLayer.cs" />

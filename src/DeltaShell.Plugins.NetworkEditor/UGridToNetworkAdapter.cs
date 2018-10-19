@@ -171,7 +171,7 @@ namespace DeltaShell.Plugins.NetworkEditor
             {
                 using (var uGridNetwork = new UGridNetwork(netFilePath))
                 {
-                    var brancheTypeFilePath = GetFilePathToLocationInSameDirectory(netFilePath, BranchGuiFileName);
+                    var brancheTypeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, BranchGuiFileName);
                     var propertiesPerBranch = File.Exists(brancheTypeFilePath) ? BranchFile.Read(brancheTypeFilePath) : null;
 
                     // Open the file to load the network. There can be multiple networks stored in the NetCDF file
@@ -258,12 +258,6 @@ namespace DeltaShell.Plugins.NetworkEditor
             {
                 Log.Error(ex.Message);
             }
-        }
-
-        public static string GetFilePathToLocationInSameDirectory(string netFilePath, string fileName)
-        {
-            var directoryName = Path.GetDirectoryName(netFilePath);
-            return directoryName != null ? Path.Combine(directoryName, fileName) : null;
         }
     }
 }
