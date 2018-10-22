@@ -1660,6 +1660,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(crossSectionDefinitionFileProperty.GetValueAsString(), Is.EqualTo(string.Empty));
         }
 
+        [TestCase("Sewer")]
+        [TestCase("Main")]
+        public void GivenFmModelWithSewerRoughness_WhenWritingMduFile_ThenSewerRoughnessFileIsWritten(string roughnessSectionName)
+        {
+            var tempFolder = FileUtils.CreateTempDirectory();
+            var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
+            var sewerRoughnessFileName = $"roughness-{roughnessSectionName}.ini";
+            var sewerRoughnessFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, sewerRoughnessFileName);
+
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath
+            };
+            var sewerRoughnessSection = fmModel.RoughnessSections.FirstOrDefault(rs => rs.Name == roughnessSectionName);
+            Assert.IsNotNull(sewerRoughnessSection);
+
+            var mduFile = new MduFile();
+            mduFile.Write1D2DFeatures(fmModel);
+
+            Assert.That(File.Exists(sewerRoughnessFilePath), $"{roughnessSectionName} roughness file was not written");
+
+            var roughnessModelProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.RoughnessFile);
+            Assert.Contains(sewerRoughnessFileName, roughnessModelProperty.GetValueAsString().Split(' '));
+        }
+
         #region TestHelpers
 
         private void CompareHydroAreaFeatures(HydroArea originalArea, HydroArea savedArea)

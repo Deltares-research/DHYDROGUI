@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils;
@@ -13,8 +14,10 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
+using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -148,6 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WriteNodeFile(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network);
             WriteCrossSections(fmModel);
             WriteStructuresFiles(fmModel);
+            WriteRoughness(fmModel);
         }
 
         private void WriteNodeFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
@@ -201,6 +205,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 fmModel.ModelDefinition.SetModelProperty(KnownProperties.StructuresFile, string.Empty);
             }
+        }
+
+        private static void WriteRoughness(WaterFlowFMModel fmModel)
+        {
+            var directoryName = System.IO.Path.GetDirectoryName(fmModel.MduFilePath);
+            if (directoryName == null) return;
+
+            var roughnessFileNames = fmModel.RoughnessSections.Select(GetRoughnessFilename);
+            fmModel.ModelDefinition.SetModelProperty(KnownProperties.RoughnessFile, string.Join(" ", roughnessFileNames));
+
+            foreach (var roughnessSection in fmModel.RoughnessSections)
+            {
+                var roughnessFileName = GetRoughnessFilename(roughnessSection);
+                var roughnessFilePath = System.IO.Path.Combine(directoryName, roughnessFileName);
+                
+                FileWritingUtils.ThrowIfFileNotExists(roughnessFilePath, directoryName, p => RoughnessDataFileWriter.WriteFile(p, roughnessSection));
+            }
+        }
+
+        private static string GetRoughnessFilename(RoughnessSection roughnessSection)
+        {
+            return "roughness-" + roughnessSection.Name + ".ini";
         }
 
         public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
