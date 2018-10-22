@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Coverages;
@@ -96,6 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
     public class RasterFileImporter : IFileImporter
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(RasterFileImporter));
+        //TODO: Implement file size limit of 2GB.
         //private static double AscFileSizeErrorLimitInBytes = 2.0e9;
 
         public Func<UnstructuredGrid, WaterFlowFMModel> GetModelForGrid { get; set; }

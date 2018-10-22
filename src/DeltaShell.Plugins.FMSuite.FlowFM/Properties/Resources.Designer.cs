@@ -638,6 +638,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The file you are trying to import only contains integers. This is not yet supported. Please change a minimum of one value to a decimal number in the import file.
+        /// </summary>
+        public static string RasterBedLevelFileImporter_ConvertRegularGridToBedLevelValues_The_file_you_are_trying_to_import_only_contains_integers__This_is_not_yet_supported__Please_change_a_minimum_of_one_value_to_a_decimal_number_in_the_import_file {
+            get {
+                return ResourceManager.GetString("RasterBedLevelFileImporter_ConvertRegularGridToBedLevelValues_The_file_you_are_tr" +
+                        "ying_to_import_only_contains_integers__This_is_not_yet_supported__Please_change_" +
+                        "a_minimum_of_one_value_to_a_decimal_number_in_the_import_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There is already a grid present. Remove the current grid before importing a new one..
         /// </summary>
         public static string RasterFileImporter_ImportItem_There_is_already_a_grid_present__Remove_the_current_grid_before_importing_a_new_one_ {

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 
@@ -16,7 +13,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void Given_A2x2Raster_When_ImportingBedLevels_Then_CorrectPointCloudIsReturned()
         {
-
             var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\dem100x100_ref_dike2x2.asc");
             var importer = new RasterBedLevelFileImporter();
 
@@ -46,7 +42,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
         }
 
+        [Test]
+        public void Given_AnRasterFileImporter_When_ImportingAnAscFileWithOnlyIntsAsBedLevelValues_Then_ErrorMessageIsThrown()
+        {
+            var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\dem100x100_ref_dike2x2.asc");
 
+            var importer = new RasterBedLevelFileImporter();
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(testFilePath, new WaterFlowFMModel()), Resources.RasterBedLevelFileImporter_ConvertRegularGridToBedLevelValues_The_file_you_are_trying_to_import_only_contains_integers__This_is_not_yet_supported__Please_change_a_minimum_of_one_value_to_a_decimal_number_in_the_import_file);
+        }
 
     }
 }

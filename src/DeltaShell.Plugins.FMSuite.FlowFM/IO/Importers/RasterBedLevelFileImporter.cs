@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Coverages;
 using log4net;
@@ -17,8 +18,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         private static readonly ILog Log = LogManager.GetLogger(typeof(RasterBedLevelFileImporter));
         //TODO: Implement limit in file size of 2GB.
         //private static double AscFileSizeErrorLimitInBytes = 2.0e9;
-
-        public Func<UnstructuredGrid, WaterFlowFMModel> GetModelForGrid { get; set; }
 
         private static IRegularGridCoverage ImportAscFileToRegularGridCoverage(string ascFilePath)
         {
@@ -64,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
             catch (Exception)
             {
-                Log.Error("The file you are trying to import only contains integers. This is not yet supported. Please change a minimum of one value to a decimal number in the import file");
+                Log.Error(Resources.RasterBedLevelFileImporter_ConvertRegularGridToBedLevelValues_The_file_you_are_trying_to_import_only_contains_integers__This_is_not_yet_supported__Please_change_a_minimum_of_one_value_to_a_decimal_number_in_the_import_file);
             }
 
             return pointValueList;
