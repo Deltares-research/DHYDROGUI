@@ -12,6 +12,7 @@ using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
@@ -141,7 +142,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region write logic
 
-        public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroNetwork network)
+        public void Write1D2DFeatures(WaterFlowFMModel fmModel)
+        {
+            WriteNodeFile(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network);
+            WriteCrossSections(fmModel);
+        }
+
+        private void WriteNodeFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
         {
             var nodeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, NodeFileName);
             FileUtils.DeleteIfExists(nodeFilePath);
@@ -155,6 +162,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             else
             {
                 modelDefinition.SetModelProperty(KnownProperties.NodeFile, string.Empty);
+            }
+        }
+
+        private void WriteCrossSections(WaterFlowFMModel fmModel)
+        {
+            var crossSectionDefinitionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(fmModel.MduFilePath, "crsdef.ini");
+            var crossSectionLocationFilePath = IoHelper.GetFilePathToLocationInSameDirectory(fmModel.MduFilePath, "crsloc.ini");
+            FileUtils.DeleteIfExists(crossSectionDefinitionFilePath);
+            FileUtils.DeleteIfExists(crossSectionLocationFilePath);
+
+            if (fmModel.Network.CrossSections.Any() || fmModel.Network.Pipes.Any(p => p.CrossSectionDefinition != null))
+            {
+                fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossDefFile, "crsdef.ini");
+                fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossLocFile, "crsloc.ini");
+
+                CrossSectionDefinitionFileWriter.WriteFile(crossSectionDefinitionFilePath, fmModel.Network, fmModel.RoughnessSections);
+                CrossSectionLocationWriter.WriteFile(crossSectionLocationFilePath, fmModel);
+            }
+            else
+            {
+                fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossDefFile, string.Empty);
+                fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossLocFile, string.Empty);
             }
         }
 
