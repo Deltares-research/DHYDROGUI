@@ -13,6 +13,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
+using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
@@ -146,6 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             WriteNodeFile(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network);
             WriteCrossSections(fmModel);
+            WriteStructuresFiles(fmModel);
         }
 
         private void WriteNodeFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
@@ -184,6 +186,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossDefFile, string.Empty);
                 fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossLocFile, string.Empty);
+            }
+        }
+
+        private void WriteStructuresFiles(WaterFlowFMModel fmModel)
+        {
+            var structuresFilePath = IoHelper.GetFilePathToLocationInSameDirectory(fmModel.MduFilePath, "structures.ini");
+            if (fmModel.Network.BranchFeatures.Any() || fmModel.Area.AllHydroObjects.Any())
+            {
+                fmModel.ModelDefinition.SetModelProperty(KnownProperties.StructuresFile, "structures.ini");
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFMModel);
             }
         }
 
@@ -835,25 +847,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 fixedWeir.Attributes.Clear();
             }
 
-            /*Bridge pillars*/
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.BridgePillarFile, hydroArea.BridgePillars,
                 ref bridgePillarFile, BridgePillarExtension);
-            /**/
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.ObsFile, hydroArea.ObservationPoints,
                 ref obsFile, ObsExtension);
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.ObsCrsFile, hydroArea.ObservationCrossSections.ToList(),
                 ref obsCrsFile, ObsCrossExtension, ObsCrossAlternativeExtension);
-
-            var structures = hydroArea.Pumps.Cast<IStructure>().Concat(hydroArea.Weirs).Concat(hydroArea.Gates).Concat(hydroArea.LeveeBreaches).ToList();
-
-            if (writeStructureFile)
-            {
-                WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.StructuresFile, structures,
-                    ref structuresFile, StructuresExtension);
-            }
-
+            
             WriteDryPointsAndDryAreas(targetMduFilePath, modelDefinition, hydroArea.DryPoints, hydroArea.DryAreas);
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.EnclosureFile, hydroArea.Enclosures,
