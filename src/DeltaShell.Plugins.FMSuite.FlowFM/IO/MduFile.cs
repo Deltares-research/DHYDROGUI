@@ -197,6 +197,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 fmModel.ModelDefinition.SetModelProperty(KnownProperties.StructuresFile, "structures.ini");
                 StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFMModel);
             }
+            else
+            {
+                fmModel.ModelDefinition.SetModelProperty(KnownProperties.StructuresFile, string.Empty);
+            }
         }
 
         public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,

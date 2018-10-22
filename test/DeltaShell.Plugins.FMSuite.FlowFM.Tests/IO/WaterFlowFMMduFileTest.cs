@@ -1641,6 +1641,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(crossSectionDefinitionFileProperty.GetValueAsString(), Is.EqualTo(structureFileName));
         }
 
+        [Test]
+        public void GivenFmModelWithEmptyNetworkAndEmptyHydroArea_WhenWritingMduFile_ThenMduReferenceToStructuresFileIsRemoved()
+        {
+            var tempFolder = FileUtils.CreateTempDirectory();
+            var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
+            
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath
+            };
+            fmModel.ModelDefinition.SetModelProperty(KnownProperties.StructuresFile, "someText");
+            
+            var mduFile = new MduFile();
+            mduFile.Write1D2DFeatures(fmModel);
+
+            var crossSectionDefinitionFileProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.StructuresFile);
+            Assert.That(crossSectionDefinitionFileProperty.GetValueAsString(), Is.EqualTo(string.Empty));
+        }
+
         #region TestHelpers
 
         private void CompareHydroAreaFeatures(HydroArea originalArea, HydroArea savedArea)
