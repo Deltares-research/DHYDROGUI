@@ -50,6 +50,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var importer = new RasterBedLevelFileImporter();
             TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(testFilePath, new WaterFlowFMModel()), Resources.RasterBedLevelFileImporter_ConvertRegularGridToBedLevelValues_The_file_you_are_trying_to_import_only_contains_integers__This_is_not_yet_supported__Please_change_a_minimum_of_one_value_to_a_decimal_number_in_the_import_file);
         }
-
     }
 }
