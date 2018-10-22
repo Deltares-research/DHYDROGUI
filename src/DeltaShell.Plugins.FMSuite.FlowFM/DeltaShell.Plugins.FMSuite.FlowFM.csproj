@@ -150,6 +150,8 @@
     <Compile Include="IO\BcMeteoFileDataBuilder.cs" />
     <Compile Include="IO\CrossSectionLocationWriter.cs" />
     <Compile Include="IO\Exporters\WaterFlowFMAndF1dFileExporter.cs" />
+    <Compile Include="IO\Importers\RasterBedLevelFileImporter.cs" />
+    <Compile Include="IO\Importers\RasterFileImporter.cs" />
     <Compile Include="IO\MeteoExtForceFile.cs" />
     <Compile Include="IO\StructureFile.cs" />
     <Compile Include="IO\WaterFlowFMModelFactory.cs" />

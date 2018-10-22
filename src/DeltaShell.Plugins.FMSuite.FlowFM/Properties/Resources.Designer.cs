@@ -638,6 +638,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is already a grid present. Remove the current grid before importing a new one..
+        /// </summary>
+        public static string RasterFileImporter_ImportItem_There_is_already_a_grid_present__Remove_the_current_grid_before_importing_a_new_one_ {
+            get {
+                return ResourceManager.GetString("RasterFileImporter_ImportItem_There_is_already_a_grid_present__Remove_the_current" +
+                        "_grid_before_importing_a_new_one_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Read SourceAndSink values failed: could not determine component values for SourceAndSink {0}.
         /// </summary>
         public static string Read_SourceAndSink_values_failed__could_not_determine_component_values_for_SourceAndSink__0_ {

@@ -316,6 +316,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new GisToFeature2DImporter<ILineString, DelftTools.Hydro.LandBoundary2D>();
 
             yield return new FlowFMNetFileImporter {GetModelForGrid = GetModelForGrid};
+            yield return new RasterFileImporter {GetModelForGrid = GetModelForGrid};
             yield return new TimFileImporter
                 {
                     WindFileImporter = false,
