@@ -1,6 +1,7 @@
 using System;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.NGHS.IO.FileReaders.Definition;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
@@ -72,7 +73,15 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         {
             if (branchFeature is ICrossSection)
             {
-                return new DefinitionGeneratorCrossSectionLocation(CrossSectionRegion.IniHeader);
+                var branchFeatureBranch = branchFeature.Branch;
+                if (branchFeatureBranch is Channel)
+                {
+                    return new DefinitionGeneratorCrossSectionLocationForChannel(CrossSectionRegion.IniHeader);
+                }
+                if(branchFeatureBranch is Pipe)
+                {
+                    return new DefinitionGeneratorCrossSectionLocationForPipe(CrossSectionRegion.IniHeader);
+                }
             }
             if (branchFeature is IObservationPoint)
             {
@@ -83,7 +92,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                 return new DefinitionGeneratorLateralSourceLocation(BoundaryRegion.LateralDischargeHeader);
             }
             return null;
-
         }
 
         public static DefinitionGeneratorStructure2D GetDefinitionGeneratorStructure(Structure2DType structureType, DateTime? referenceDateTime)

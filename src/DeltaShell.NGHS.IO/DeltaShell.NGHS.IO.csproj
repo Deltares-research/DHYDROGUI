@@ -144,7 +144,8 @@
     <Compile Include="FileWriters\General\GeneralRegion.cs" />
     <Compile Include="FileWriters\General\GeneralRegionGenerator.cs" />
     <Compile Include="FileWriters\IniFileWriter.cs" />
-    <Compile Include="FileWriters\Location\DefinitionGeneratorCrossSectionLocation.cs" />
+    <Compile Include="FileWriters\Location\DefinitionGeneratorCrossSectionLocationForChannel.cs" />
+    <Compile Include="FileWriters\Location\DefinitionGeneratorCrossSectionLocationForPipe.cs" />
     <Compile Include="FileWriters\Location\DefinitionGeneratorLateralSourceLocation.cs" />
     <Compile Include="FileWriters\Location\DefinitionGeneratorLocation.cs" />
     <Compile Include="FileWriters\Location\LocationFileWriter.cs" />

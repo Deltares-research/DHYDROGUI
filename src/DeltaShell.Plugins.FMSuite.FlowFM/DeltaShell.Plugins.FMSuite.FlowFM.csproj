@@ -148,7 +148,6 @@
     <Compile Include="EggCrossSectionDefinitionGenerator.cs" />
     <Compile Include="IO\BathymetryFileWriter.cs" />
     <Compile Include="IO\BcMeteoFileDataBuilder.cs" />
-    <Compile Include="IO\CrossSectionLocationWriter.cs" />
     <Compile Include="IO\Exporters\WaterFlowFMAndF1dFileExporter.cs" />
     <Compile Include="IO\FeatureFile1D2DWriter.cs" />
     <Compile Include="IO\Importers\RasterBedLevelFileImporter.cs" />

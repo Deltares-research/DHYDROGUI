@@ -1,8 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
+using DelftTools.Shell.Core.Workflow;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
+using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Grid;
@@ -30,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 WriteMorSedFilesIfNeeded(model);
                 WriteMduFile(model, switchTo, writeExtForcings, writeFeatures);
                 WriteCrossSectionDefinitions(model);
-                WriteCrossSectionLocation(model);
+                WriteCrossSectionLocations(model);
                 WriteNodeFile(model);
                 WriteBranchesGuiFile(model);
                 WriteStructuresFile(model);
@@ -141,14 +144,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             CrossSectionDefinitionFileWriter.WriteFile(filePath, model.Network, model.RoughnessSections);
         }
 
-        private static void WriteCrossSectionLocation(WaterFlowFMModel model)
+        private static void WriteCrossSectionLocations(IWaterFlowFMModel model)
         {
             var filePath = WriterData.FilePaths.CrossSectionLocationFilePath;
+            
             if (!string.IsNullOrEmpty(filePath))
-                CrossSectionLocationWriter.WriteFile(filePath, model);
+            {
+                var pipeCrossSections = HydroNetworkHelper.GeneratePipeCrossSections(model.Network);
+                var crossSections = model.Network.CrossSections.Concat(pipeCrossSections);
+                LocationFileWriter.WriteFileCrossSectionLocations(filePath, crossSections);
+            }
         }
 
-        private static void WriteNodeFile(WaterFlowFMModel model)
+        private static void WriteNodeFile(IWaterFlowFMModel model)
         {
             var filePath = WriterData.FilePaths.NodeFilePath;
             if (!string.IsNullOrEmpty(filePath))
@@ -161,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (branchesFilePath != null) BranchFile.Write(branchesFilePath, model.Network.Branches);
         }
 
-        private static void WriteStructuresFile(WaterFlowFMModel model)
+        private static void WriteStructuresFile(IModel model)
         {
             var filePath = WriterData.FilePaths.StructuresFilePath;
 

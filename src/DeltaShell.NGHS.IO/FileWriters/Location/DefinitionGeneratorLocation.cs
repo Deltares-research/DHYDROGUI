@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro;
+﻿using System.Collections.Generic;
+using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
 
@@ -25,15 +26,15 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
                 IniCategory.AddProperty(LocationRegion.Name.Key, networkFeature.LongName, LocationRegion.Name.Description);
         }
 
-        public virtual DelftIniCategory CreateIniRegion(IBranchFeature branchFeature)
+        public virtual IEnumerable<DelftIniCategory> CreateIniRegion(IBranchFeature branchFeature)
         {
             AddCommonRegionElements(branchFeature);
-            return IniCategory;
+            yield return IniCategory;
         }
     }
 
     public interface IDefinitionGeneratorLocation
     {
-        DelftIniCategory CreateIniRegion(IBranchFeature branchFeature);
+        IEnumerable<DelftIniCategory> CreateIniRegion(IBranchFeature branchFeature);
     }
 }

@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace DeltaShell.NGHS.IO.Tests.FileWriters
 {
     [TestFixture]
-    class LocationFileWritersTest
+    public class LocationFileWritersTest
     {
         private IHydroNetwork network;
 

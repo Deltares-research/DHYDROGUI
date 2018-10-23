@@ -9,6 +9,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
         public static readonly ConfigurationSetting BranchId = new ConfigurationSetting(key: "branchid", description: "Branch on which the branch feature is located");
         public static readonly ConfigurationSetting Chainage = new ConfigurationSetting(key: "chainage", description: "Location on the branch (m)");
         public static readonly ConfigurationSetting Name = new ConfigurationSetting(key: "name", description: "Long name in the user interface");
+
+        public static readonly ConfigurationSetting PipeId = new ConfigurationSetting(key: "Id", description: "Unique location id for pipe cross sections");
+        public static readonly ConfigurationSetting Branch = new ConfigurationSetting(key: "Branch", description: "Unique pipe id");
+        public static readonly ConfigurationSetting PipeChainage = new ConfigurationSetting(key: "Chainage", description: "Location on the branch (m)");
+        public static readonly ConfigurationSetting Shift = new ConfigurationSetting(key: "Shift", description: "Level shift of the cross section definition (m)");
+        public static readonly ConfigurationSetting Definition = new ConfigurationSetting(key: "Definition", description: "Id of cross section definition");
     }
 
     public static class LateralSourceLocationRegion

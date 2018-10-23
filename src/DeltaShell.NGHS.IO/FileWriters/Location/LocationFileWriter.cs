@@ -29,7 +29,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
             new IniFileWriter().WriteIniFile(categories, targetFile);
         }
 
-        public static void WriteFileCrossSectionLocations(string targetFile, IEnumerable<ICrossSection> crossSectionLocations)
+        public static void WriteFileCrossSectionLocations(string targetFile, IEnumerable<ICrossSection> crossSections)
         {
             var categories = new List<DelftIniCategory>
             {
@@ -38,7 +38,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
                                       GeneralRegion.FileTypeName.CrossSectionLocation),
             };
             
-            var crossSectionLocationsDefinitions = GenerateFeatureDefinition(crossSectionLocations);
+            var crossSectionLocationsDefinitions = GenerateFeatureDefinition(crossSections);
             if (crossSectionLocationsDefinitions != null)
                 categories.AddRange(crossSectionLocationsDefinitions);
 
@@ -73,7 +73,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
                 var definitionGeneratorLocation = DefinitionGeneratorFactory.GetDefinitionGeneratorLocation(branchFeature);
                 if (definitionGeneratorLocation != null)
                 {
-                    definitions.Add(definitionGeneratorLocation.CreateIniRegion(branchFeature));
+                    definitions.AddRange(definitionGeneratorLocation.CreateIniRegion(branchFeature));
                 }
             });
             return definitions;

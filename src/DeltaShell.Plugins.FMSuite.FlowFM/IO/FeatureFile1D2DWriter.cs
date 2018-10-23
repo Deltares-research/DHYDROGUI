@@ -1,8 +1,10 @@
 ﻿using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
+using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
@@ -54,10 +56,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var crossSectionLocationFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, CROSS_SECTION_LOCATION_FILE_NAME);
             FileUtils.DeleteIfExists(crossSectionLocationFilePath);
 
-            if (fmModel.Network.CrossSections.Any() || fmModel.Network.Pipes.Any(p => p.CrossSectionDefinition != null))
+            var network = fmModel.Network;
+            if (network.CrossSections.Any() || network.Pipes.Any(p => p.CrossSectionDefinition != null))
             {
                 fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossLocFile, CROSS_SECTION_LOCATION_FILE_NAME);
-                CrossSectionLocationWriter.WriteFile(crossSectionLocationFilePath, fmModel);
+
+                var pipeCrossSections = HydroNetworkHelper.GeneratePipeCrossSections(network);
+                var crossSections = network.CrossSections.Concat(pipeCrossSections);
+                LocationFileWriter.WriteFileCrossSectionLocations(crossSectionLocationFilePath, crossSections);
             }
             else
             {
