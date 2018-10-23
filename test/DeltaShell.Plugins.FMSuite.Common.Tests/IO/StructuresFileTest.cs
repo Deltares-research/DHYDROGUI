@@ -16,6 +16,7 @@ using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using Rhino.Mocks;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
@@ -204,40 +205,42 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void WriteLeveeBreach()
         {
+            var mocks = new MockRepository();
+            var leveeBreach = mocks.StrictMock<ILeveeBreach>();
+            leveeBreach.Expect(lb => lb.Name).Return("lb_01").Repeat.Any();
+            leveeBreach.Expect(lb => lb.BreachLocationX).Return(125).Repeat.Any();
+            leveeBreach.Expect(lb => lb.BreachLocationY).Return(250).Repeat.Any();
+            leveeBreach.Expect(lb => lb.Geometry).Return(new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 10) })).Repeat.Any();
+            leveeBreach.Expect(lb => lb.LeveeBreachFormula).Return(LeveeBreachGrowthFormula.VerheijvdKnaap2002).Repeat.Any();
+
+            var settings = new VerheijVdKnaap2002BreachSettings
+            {
+                StartTimeBreachGrowth = new DateTime(2001, 01, 01),
+                BreachGrowthActive = true,
+                InitialCrestLevel = 2.25,
+                MinimumCrestLevel = 0.69,
+                InitialBreachWidth = 2.38,
+                PeriodToReachZmin = new TimeSpan(1, 11, 11),
+                Factor1Alfa = 0.88,
+                Factor2Beta = 0.73,
+                CriticalFlowVelocity = 1.22
+            };
+
+            leveeBreach.Expect(lb => lb.GetActiveLeveeBreachSettings()).Return(settings).Repeat.Any();
+
+            mocks.ReplayAll();
+
             var iniFilePath = TestHelper.GetCurrentMethodName() + ".ini";
             if (File.Exists(iniFilePath)) File.Delete(iniFilePath);
 
             try
             {
-                var lb = new LeveeBreach
-                {
-                    Name = "lb_01",
-                    BreachLocationX = 125,
-                    BreachLocationY = 250,
-                    Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 10) }),
-                    LeveeBreachFormula = LeveeBreachGrowthFormula.VerheijvdKnaap2002
-
-                };
-
-                var settings = lb.GetActiveLeveeBreachSettings() as VerheijVdKnaap2002BreachSettings;
-                Assert.NotNull(settings);
-
-                settings.StartTimeBreachGrowth = new DateTime(2001, 01, 01);
-                settings.BreachGrowthActive = true;
-                settings.InitialCrestLevel = 2.25;
-                settings.MinimumCrestLevel = 0.69;
-                settings.InitialBreachWidth = 2.38;
-                settings.PeriodToReachZmin = new TimeSpan(1, 11, 11);
-                settings.Factor1Alfa = 0.88;
-                settings.Factor2Beta = 0.73;
-                settings.CriticalFlowVelocity = 1.22;
-
                 var structuresFile = new StructuresFile
                 {
                     StructureSchema = schema,
                     ReferenceDate = new DateTime(2000, 1, 1)
                 };
-                structuresFile.Write(iniFilePath, new[] { lb });
+                structuresFile.Write(iniFilePath, new[] { leveeBreach });
                 Assert.That(File.Exists(iniFilePath));
 
                 // This is a temporary addition until the reader for levee breaches is finished.
@@ -251,7 +254,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                  "    start_location_y      = 250                 # Y-position of the breach growth" + Environment.NewLine +
                  "    t0                    = 31622400            # Start time of the breach (in seconds) [s]" + Environment.NewLine +
                  "    state                 = 1                   # 0 = off 1 = on (typically set via BMI)" + Environment.NewLine +
-                 "    algorithm             = 2                   # 0 = unknown 1 = User defined 2 = Verheij - vd Knaap (2002)" + Environment.NewLine +
+                 "    algorithm             = 2                   # 0 = unknown 2 = Verheij - vd Knaap (2002) 3 = User defined" + Environment.NewLine +
                  "    crestlevelini         = 2.25                # Initial crest level [m]" + Environment.NewLine +
                  "    crestlevelmin         = 0.69                # Minimum crest level [m]" + Environment.NewLine +
                  "    breachwidthini        = 2.38                # Initial breach width [m]" + Environment.NewLine +
@@ -267,8 +270,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             {
                 if (File.Exists(iniFilePath)) File.Delete(iniFilePath);
             }
+            
+            mocks.VerifyAll();
         }
-
+        
         [Test]
         [Category(TestCategory.DataAccess)]
         public void CanRepeatedlyReadAndWrite()
@@ -707,7 +712,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             try
             {
                 var name = "lb_01";
-                var lb = new LeveeBreach
+                var leveeBreach = new LeveeBreach
                 {
                     Name = name,
                     BreachLocationX = 125,
@@ -717,7 +722,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
                 };
 
-                var settings = lb.GetActiveLeveeBreachSettings() as VerheijVdKnaap2002BreachSettings;
+                var settings = leveeBreach.GetActiveLeveeBreachSettings() as VerheijVdKnaap2002BreachSettings;
                 Assert.NotNull(settings);
 
                 settings.BreachGrowthActive = true;
@@ -735,7 +740,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     StructureSchema = schema,
                     ReferenceDate = new DateTime(2000, 1, 1)
                 };
-                structuresFile.Write(iniFilePath, new[] { lb });
+                structuresFile.Write(iniFilePath, new[] { leveeBreach });
                 Assert.That(File.Exists(iniFilePath));
 
                 var importedStructures = structuresFile.Read(iniFilePath);
@@ -743,8 +748,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 var importedLeveeBreach = importedStructures.FirstOrDefault(s => s.Name == name) as LeveeBreach;
                 Assert.NotNull(importedLeveeBreach);
 
-                CompareLeveeBreaches(lb, importedLeveeBreach);
-                CompareLeveeBreachSettingsBase(lb.GetActiveLeveeBreachSettings(), importedLeveeBreach.GetActiveLeveeBreachSettings());
+                CompareLeveeBreaches(leveeBreach, importedLeveeBreach);
+                CompareLeveeBreachSettingsBase(leveeBreach.GetActiveLeveeBreachSettings(), importedLeveeBreach.GetActiveLeveeBreachSettings());
 
                 var importedSettings = importedLeveeBreach.GetActiveLeveeBreachSettings() as VerheijVdKnaap2002BreachSettings;
                 Assert.NotNull(importedSettings);
@@ -767,7 +772,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             try
             {
                 var name = "lb_02";
-                var lb = new LeveeBreach
+                var leveeBreach = new LeveeBreach
                 {
                     Name = name,
                     BreachLocationX = 250,
@@ -776,7 +781,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     LeveeBreachFormula = LeveeBreachGrowthFormula.UserDefinedBreach
                 };
 
-                var settings = lb.GetActiveLeveeBreachSettings() as UserDefinedBreachSettings;
+                var settings = leveeBreach.GetActiveLeveeBreachSettings() as UserDefinedBreachSettings;
                 Assert.NotNull(settings);
 
                 settings.BreachGrowthActive = true;
@@ -797,7 +802,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     StructureSchema = schema,
                     ReferenceDate = new DateTime(2000, 1, 1)
                 };
-                structuresFile.Write(iniFilePath, new[] { lb });
+                structuresFile.Write(iniFilePath, new[] { leveeBreach });
                 Assert.That(File.Exists(iniFilePath));
 
                 var importedStructures = structuresFile.Read(iniFilePath);
@@ -805,8 +810,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 var importedLeveeBreach = importedStructures.FirstOrDefault(s => s.Name == name) as LeveeBreach;
                 Assert.NotNull(importedLeveeBreach);
 
-                CompareLeveeBreaches(lb, importedLeveeBreach);
-                CompareLeveeBreachSettingsBase(lb.GetActiveLeveeBreachSettings(), importedLeveeBreach.GetActiveLeveeBreachSettings());
+                CompareLeveeBreaches(leveeBreach, importedLeveeBreach);
+                CompareLeveeBreachSettingsBase(leveeBreach.GetActiveLeveeBreachSettings(), importedLeveeBreach.GetActiveLeveeBreachSettings());
 
                 var importedSettings = importedLeveeBreach.GetActiveLeveeBreachSettings() as UserDefinedBreachSettings;
                 Assert.NotNull(importedSettings);
@@ -829,7 +834,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             try
             {
                 var name = "lb_02";
-                var lb = new LeveeBreach
+                var leveeBreach = new LeveeBreach
                 {
                     Name = name,
                     BreachLocationX = 375,
@@ -838,14 +843,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     LeveeBreachFormula = LeveeBreachGrowthFormula.VerheijvdKnaap2002
                 };
 
-                lb.GetActiveLeveeBreachSettings().BreachGrowthActive = false;
+                leveeBreach.GetActiveLeveeBreachSettings().BreachGrowthActive = false;
                 
                 var structuresFile = new StructuresFile
                 {
                     StructureSchema = schema,
                     ReferenceDate = new DateTime(2000, 1, 1)
                 };
-                structuresFile.Write(iniFilePath, new[] { lb });
+                structuresFile.Write(iniFilePath, new[] { leveeBreach });
                 Assert.That(File.Exists(iniFilePath));
 
                 var importedStructures = structuresFile.Read(iniFilePath);
@@ -853,8 +858,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 var importedLeveeBreach = importedStructures.FirstOrDefault(s => s.Name == name) as LeveeBreach;
                 Assert.NotNull(importedLeveeBreach);
 
-                CompareLeveeBreaches(lb, importedLeveeBreach);
-                CompareLeveeBreachSettingsBase(lb.GetActiveLeveeBreachSettings(), importedLeveeBreach.GetActiveLeveeBreachSettings());
+                CompareLeveeBreaches(leveeBreach, importedLeveeBreach);
+                CompareLeveeBreachSettingsBase(leveeBreach.GetActiveLeveeBreachSettings(), importedLeveeBreach.GetActiveLeveeBreachSettings());
             }
             finally
             {
@@ -864,7 +869,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         #region Comparison helper methods for levee breaches
         
-        private static void CompareLeveeBreaches(LeveeBreach expected, LeveeBreach actual)
+        private static void CompareLeveeBreaches(ILeveeBreach expected, ILeveeBreach actual)
         {
             Assert.AreEqual(expected.Name, actual.Name);
             Assert.AreEqual(expected.BreachLocationX, actual.BreachLocationX);

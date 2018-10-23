@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         private VectorStyle pointFeatureStyle;
         private VectorStyle errorPointFeatureStyle;
         private SnapResult snapResult;
-        private LeveeBreach selectedLeveeBreach;
+        private ILeveeBreach selectedLeveeBreach;
         private double hitAreaDistance = 25;
 
         public LeveeBreachMapTool(string targetLayerName, string name, Bitmap icon) : base(targetLayerName, name, icon)
@@ -110,11 +110,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             var c1 = new Coordinate(worldPosition.X - hitAreaDistance, worldPosition.Y - hitAreaDistance);
             var c2 = new Coordinate(worldPosition.X + hitAreaDistance, worldPosition.Y + hitAreaDistance);
             var hitArea = new Envelope(c1, c2);
-            var leveeBreachLayer = this.VectorLayer;
-            foreach (var feature in this.VectorLayer.DataSource.Features)
+            foreach (var feature in VectorLayer.DataSource.Features)
             {
-                var leveeBreach = feature as LeveeBreach;
-                if (leveeBreach != null && hitArea.Intersects(leveeBreach.BreachLocation.Coordinate))
+                var leveeBreach = feature as ILeveeBreach;
+                if (leveeBreach?.BreachLocation != null && hitArea.Intersects(leveeBreach.BreachLocation.Coordinate))
                 {
                     selectedLeveeBreach = leveeBreach;
                     return true;
@@ -174,7 +173,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             StopDrawing();
             SetMovingFeatureCoordinates(worldPosition);
             selectedLeveeBreach.BreachLocationX = newBreachLocationPoint.Coordinates[0].X;
-            selectedLeveeBreach.BreachLocationX = newBreachLocationPoint.Coordinates[0].Y;
+            selectedLeveeBreach.BreachLocationY = newBreachLocationPoint.Coordinates[0].Y;
             MapControl.Refresh();
             movingBreachLocation = false;
         }

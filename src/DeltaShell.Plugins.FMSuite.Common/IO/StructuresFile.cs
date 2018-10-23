@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var list = new List<IStructure>();
             foreach (var structure in structures)
             {
-                if (structure is IPump || structure is IWeir || structure is IGate || structure is LeveeBreach)
+                if (structure is IPump || structure is IWeir || structure is IGate || structure is ILeveeBreach)
                 {
                     list.Add(structure);
                 }
@@ -198,7 +198,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             if (gate != null)
                 return ConstructGateProperties(gate, structureType, path, refDate);
 
-            var leveeBreach = structure as LeveeBreach;
+            var leveeBreach = structure as ILeveeBreach;
             if (leveeBreach != null)
                 return ConstructLeveeBreachProperties(leveeBreach, structureType, path, refDate);
             throw new NotImplementedException();
@@ -302,7 +302,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         private IEnumerable<DelftIniProperty> ConstructLeveeBreachProperties(IStructure structure, string structureType, string path, DateTime refDate)
         {
-            var leveeBreach = structure as LeveeBreach;
+            var leveeBreach = structure as ILeveeBreach;
             var properties = new List<DelftIniProperty>();
             if (leveeBreach == null) return properties;
 
@@ -518,7 +518,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 if (weir.WeirFormula is GeneralStructureWeirFormula) return StructureRegion.StructureTypeName.GeneralStructure;
             }
 
-            var leveeBreach = structure as LeveeBreach;
+            var leveeBreach = structure as ILeveeBreach;
             if (leveeBreach != null) return StructureRegion.StructureTypeName.LeveeBreach;
 
             throw new NotImplementedException();

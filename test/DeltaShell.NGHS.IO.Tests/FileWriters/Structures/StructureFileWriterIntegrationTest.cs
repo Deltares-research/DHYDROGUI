@@ -118,7 +118,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFMModel);
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
 
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
@@ -163,7 +163,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFMModel);
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
 
@@ -214,7 +214,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFMModel);
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
 
@@ -263,7 +263,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFMModel);
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
 
@@ -316,7 +316,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFMModel);
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
 
@@ -370,7 +370,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFMModel);
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
 
@@ -415,7 +415,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFMModel);
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
 
                 var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
@@ -451,7 +451,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFMModel);
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
 
                 var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
@@ -487,7 +487,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFMModel);
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
 
                 var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
@@ -535,7 +535,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFMModel);
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
 
@@ -601,7 +601,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFMModel);
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
 
@@ -658,7 +658,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFMModel);
+                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
 

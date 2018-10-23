@@ -169,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 StructureFileWriter.WriteFile(
                     filePath, 
                     model,
-                    StructureFile.Generate2DStructureCategoriesFromFMModel);
+                    StructureFile.Generate2DStructureCategoriesFromFmModel);
         }
 
         private static void WriteUGridFile(WaterFlowFMModelWriterData writerData)

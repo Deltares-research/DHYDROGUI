@@ -4,6 +4,7 @@ using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DelftTools.Hydro.Tests.Structures
 {
@@ -14,9 +15,7 @@ namespace DelftTools.Hydro.Tests.Structures
         public void DefaultBreachLocation_ShouldBeCentered_StraightLineAsDamBreakLine()
         {
             var damBreak = new LeveeBreach();
-            var coordinates = new List<Coordinate>();
-            coordinates.Add(new Coordinate(0, 0));
-            coordinates.Add(new Coordinate(10, 10));
+            var coordinates = new List<Coordinate> {new Coordinate(0, 0), new Coordinate(10, 10)};
             var line = new LineString(coordinates.ToArray());
 
             var expectedBreachLocationX = 5.0;

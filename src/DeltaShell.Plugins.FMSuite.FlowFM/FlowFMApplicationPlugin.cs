@@ -335,7 +335,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Mode = Feature2DImportExportMode.Import,
                 CreateDelegate = delegate (List<Coordinate> points1, string name1)
                 {
-                    var feature1 = new LeveeBreach { Name = name1, Geometry = PliFile<LeveeBreach>.CreatePolyLineGeometry(points1) };
+                    var feature1 = new LeveeBreach { Name = name1, Geometry = PliFile<Feature2D>.CreatePolyLineGeometry(points1) };
                     return feature1;
                 },
                 EqualityComparer = new GroupableFeatureComparer<LeveeBreach>(),

@@ -42,8 +42,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             var leveeBreach = feature as LeveeBreach;
 
             IEnumerable<IGeometry> snappedLeveeBreachGeometry = new List<IGeometry>();
-            
-
             if (leveeBreach != null)
             {
                 if (snappedGeometry == null || snappedGeometry.IsEmpty)
@@ -66,24 +64,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
                 Log.WarnFormat(Resources.SnappedFeatureCollection_GetSnappedFeature_No_snapped_geometry_was_generated_for_type__0__, "LeveeBreaches (no levee breach type)");
             }
 
-            var feature2D = new LeveeBreach();
+            leveeBreach = new LeveeBreach();
             if (feature.Attributes != null)
-                feature2D.Attributes = (IFeatureAttributeCollection)feature.Attributes.Clone();
+                leveeBreach.Attributes = (IFeatureAttributeCollection)feature.Attributes.Clone();
             if (feature is INameable)
-                feature2D.Name = ((INameable)feature).Name;
+                leveeBreach.Name = ((INameable)feature).Name;
 
             if (snappedLeveeBreachGeometry.Count() == 2)
             {
-                feature2D.Geometry = snappedLeveeBreachGeometry.First();
+                leveeBreach.Geometry = snappedLeveeBreachGeometry.First();
                 var breachLocation = snappedLeveeBreachGeometry.Last() as IPoint;
                 if (breachLocation != null)
                 {
-                    feature2D.BreachLocationX = breachLocation.X;
-                    feature2D.BreachLocationY = breachLocation.Y;
+                    leveeBreach.BreachLocationX = breachLocation.X;
+                    leveeBreach.BreachLocationY = breachLocation.Y;
                 }
             }
 
-            return feature2D;
+            return leveeBreach;
         }
     }
 }

@@ -9,12 +9,22 @@ using DelftTools.Utils.Collections.Generic;
 
 namespace DelftTools.Hydro.Structures
 {
+    public interface ILeveeBreach : IStructure2D
+    {
+        double BreachLocationX { get; set; }
+        double BreachLocationY { get; set; }
+        IPoint BreachLocation { get; }
+        LeveeBreachGrowthFormula LeveeBreachFormula { get; set; }
+        LeveeBreachSettings GetActiveLeveeBreachSettings();
+        void SetBaseLeveeBreachSettings(DateTime startTime, bool breachGrowthActive);
+    }
+
     [Entity]
-    public class LeveeBreach : GroupableFeature2D, IStructure2D
+    public class LeveeBreach : GroupableFeature2D, ILeveeBreach
     {
         private double breachLocationX;
         private double breachLocationY;
-        private bool isLocationSet = false;
+        private bool isLocationSet;
 
         private readonly Dictionary<LeveeBreachGrowthFormula, LeveeBreachSettings> settings;
 

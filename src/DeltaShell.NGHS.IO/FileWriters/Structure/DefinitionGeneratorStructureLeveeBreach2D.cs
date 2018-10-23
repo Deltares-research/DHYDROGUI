@@ -17,7 +17,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.LeveeBreach);
 
-            var leveeBreach = (LeveeBreach) hydroObject;
+            var leveeBreach = hydroObject as ILeveeBreach;
+            if (leveeBreach == null) return IniCategory;
+
             AddPropertyToIniCategory(leveeBreach.BreachLocationX, StructureRegion.BreachLocationX);
             AddPropertyToIniCategory(leveeBreach.BreachLocationY, StructureRegion.BreachLocationY);
 

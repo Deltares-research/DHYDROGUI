@@ -6,6 +6,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Units;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -245,10 +246,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return results;
 
             var names = netCdfFile.Read(leveeBreachNameVariable).Cast<char[]>().Select(CharArrayToString).ToArray();
-            for (int i = 0; i < names.Length; i++)
+
+            var leveeFeatures = modelLeveeFeatures as IFeature[] ?? modelLeveeFeatures.ToArray();
+            for (var i = 0; i < names.Length; i++)
             {
-                results.Add(modelLeveeFeatures.FirstOrDefault(m => (m as LeveeBreach) != null && (m as LeveeBreach).Name == names[i]) ??
-                            CreateLeveeBreachFromNetCdf(i, names));
+                results.Add(leveeFeatures.FirstOrDefault(m => 
+                                (m as ILeveeBreach) != null && (m as INameable)?.Name == names[i]) ?? CreateLeveeBreachFromNetCdf(i, names));
             }
             return results;
         }
@@ -342,7 +345,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             };
         }
 
-        private static LeveeBreach CreateLeveeBreachFromNetCdf(int i, string[] names)
+        private static IFeature CreateLeveeBreachFromNetCdf(int i, string[] names)
         {
             return new LeveeBreach
             {

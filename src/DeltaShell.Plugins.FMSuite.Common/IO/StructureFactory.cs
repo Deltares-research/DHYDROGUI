@@ -376,7 +376,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return leveeBreach;
         }
 
-        private static LeveeBreach SetLeveeBreachProperties(Structure2D structure2D)
+        private static ILeveeBreach SetLeveeBreachProperties(Structure2D structure2D)
         {
             var breachLocationX = GetPropertyValue(structure2D, KnownStructureProperties.BreachLocationX, 0.0);
             var breachLocationY = GetPropertyValue(structure2D, KnownStructureProperties.BreachLocationY, 0.0);
@@ -391,7 +391,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return leveeBreach;
         }
 
-        private static void SetLeveeBreachSettings(LeveeBreach leveeBreach, Structure2D structure2D, string path, DateTime refDate)
+        private static void SetLeveeBreachSettings(ILeveeBreach leveeBreach, Structure2D structure2D, string path, DateTime refDate)
         {
             // Base settings
             var startTime = GetBreachGrowthStartTime(structure2D, refDate);
@@ -430,7 +430,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return startTime;
         }
 
-        private static void SetVerheijVdKnaapSettings(LeveeBreach leveeBreach, Structure2D structure2D)
+        private static void SetVerheijVdKnaapSettings(ILeveeBreach leveeBreach, Structure2D structure2D)
         {
             var settings = leveeBreach.GetActiveLeveeBreachSettings() as VerheijVdKnaap2002BreachSettings;
             if (settings == null) return;
@@ -445,7 +445,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             settings.CriticalFlowVelocity = GetPropertyValue(structure2D, KnownStructureProperties.CriticalFlowVelocity, 0.0);
         }
 
-        private static void SetUserDefinedSettings(LeveeBreach leveeBreach, Structure2D structure2D, string path, DateTime refDate)
+        private static void SetUserDefinedSettings(ILeveeBreach leveeBreach, Structure2D structure2D, string path, DateTime refDate)
         {
             var settings = leveeBreach.GetActiveLeveeBreachSettings() as UserDefinedBreachSettings;
             if (settings == null) return;

@@ -220,6 +220,7 @@
     <Compile Include="Gui\MeteoFieldListViewTest.cs" />
     <Compile Include="IO\Exporters\FmCrossSectionDefinitionExporterTest.cs" />
     <Compile Include="IO\Exporters\WaterFlowFmAndF1DFileExporterTests.cs" />
+    <Compile Include="IO\FeatureFile1D2DWriterTest.cs" />
     <Compile Include="IO\Importers\RasterBedLevelFileImporterTest.cs" />
     <Compile Include="IO\Importers\RasterFileImporterTest.cs" />
     <Compile Include="ISewerFeatureTest.cs" />

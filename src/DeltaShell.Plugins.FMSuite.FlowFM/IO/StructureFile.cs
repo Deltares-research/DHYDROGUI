@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
@@ -16,6 +17,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public static class StructureFile
     {
+        private static readonly Dictionary<Type, Action<string, DateTime, object>> WriteTimeSeriesActions = new Dictionary<Type, Action<string, DateTime, object>>();
+
         private static readonly Dictionary<string, Action<string, WaterFlowFMModel, IStructure2D>> StructureWriteActions = new Dictionary<string, Action<string, WaterFlowFMModel, IStructure2D>>
         {
             {StructureRegion.PolylineFile.Key, WritePolylineFile},
@@ -27,7 +30,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {StructureRegion.TimeFileName.Key, WriteTimeSeriesFile }
         };
 
-        public static IEnumerable<DelftIniCategory> Generate2DStructureCategoriesFromFMModel(IModel model)
+        static StructureFile()
+        {
+            RegisterWriteTimeSeriesAction<IPump>(WritePumpTimeSeriesFile);
+            RegisterWriteTimeSeriesAction<IWeir>(WriteWeirTimeSeriesFile);
+            RegisterWriteTimeSeriesAction<IGate>(WriteGateTimeSeriesFiles);
+            RegisterWriteTimeSeriesAction<LeveeBreach>(WriteLeveeBreachTimeSeriesFile);
+        }
+
+        private static void RegisterWriteTimeSeriesAction<T>(Action<string, DateTime, T> action)
+        {
+            WriteTimeSeriesActions.Add(typeof(T), (s, time, structure2D) => action(s,time, (T)structure2D));
+        }
+
+        public static IEnumerable<DelftIniCategory> Generate2DStructureCategoriesFromFmModel(IModel model)
         {
             var fmModel = model as WaterFlowFMModel;
             if (fmModel?.Network == null) return Enumerable.Empty<DelftIniCategory>();
@@ -83,23 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static void WriteTimeSeriesFile(string fileName, WaterFlowFMModel fmModel, IStructure2D structure2D)
         {
             var timFilePath = GetTargetFilePath(fileName, fmModel);
-
-            if (structure2D is IPump)
-            {
-                WritePumpTimeSeriesFile(timFilePath, fmModel.ReferenceTime, structure2D as IPump);
-            }
-            else if (structure2D is IWeir)
-            {
-                WriteWeirTimeSeriesFile(timFilePath, fmModel.ReferenceTime, structure2D as IWeir);
-            }
-            else if (structure2D is IGate)
-            {
-                WriteGateTimeSeriesFiles(timFilePath, fmModel.ReferenceTime, structure2D as IGate);
-            }
-            else if (structure2D is LeveeBreach)
-            {
-                WriteLeveeBreachTimeSeriesFile(timFilePath, structure2D as LeveeBreach);
-            }
+            WriteTimeSeriesActions.Keys.Where(k => k.IsInstanceOfType(structure2D)).ForEach(key => WriteTimeSeriesActions[key](timFilePath, fmModel.ReferenceTime, structure2D));
         }
 
         private static string GetTargetFilePath(string fileName, WaterFlowFMModel fmModel)
@@ -113,49 +113,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return filePath;
         }
 
-        private static void WritePumpTimeSeriesFile(string timFilePath, DateTime referenceTime, IPump pump)
+        private static void WritePumpTimeSeriesFile(string timFilePath, DateTime referenceDateTime, IPump pump)
         {
             if (pump != null && pump.HasCapacityTimeSeries())
             {
-                new TimFile().Write(timFilePath, pump.CapacityTimeSeries, referenceTime);
+                new TimFile().Write(timFilePath, pump.CapacityTimeSeries, referenceDateTime);
             }
         }
 
-        private static void WriteWeirTimeSeriesFile(string timFilePath, DateTime referenceTime, IWeir weir)
+        private static void WriteWeirTimeSeriesFile(string timFilePath, DateTime referenceDateTime, IWeir weir)
         {
             if (weir != null && weir.HasCrestLevelTimeSeries())
             {
-                new TimFile().Write(timFilePath, weir.CrestLevelTimeSeries, referenceTime);
+                new TimFile().Write(timFilePath, weir.CrestLevelTimeSeries, referenceDateTime);
             }
         }
 
-        private static void WriteGateTimeSeriesFiles(string timFilePath, DateTime referenceTime, IGate gate)
+        private static void WriteGateTimeSeriesFiles(string timFilePath, DateTime referenceDateTime, IGate gate)
         {
-            if (gate == null) return;
-
             if (gate.UseSillLevelTimeSeries)
             {
-                new TimFile().Write(timFilePath, gate.SillLevelTimeSeries, referenceTime);
+                new TimFile().Write(timFilePath, gate.SillLevelTimeSeries, referenceDateTime);
             }
             if (gate.UseLowerEdgeLevelTimeSeries)
             {
-                new TimFile().Write(timFilePath, gate.LowerEdgeLevelTimeSeries, referenceTime);
+                new TimFile().Write(timFilePath, gate.LowerEdgeLevelTimeSeries, referenceDateTime);
             }
             if (gate.UseOpeningWidthTimeSeries)
             {
-                new TimFile().Write(timFilePath, gate.OpeningWidthTimeSeries, referenceTime);
+                new TimFile().Write(timFilePath, gate.OpeningWidthTimeSeries, referenceDateTime);
             }
         }
 
-        private static void WriteLeveeBreachTimeSeriesFile(string timFilePath, LeveeBreach leveeBreach)
+        private static void WriteLeveeBreachTimeSeriesFile(string timFilePath, DateTime referenceDateTime, IStructure2D structure2D)
         {
+            var leveeBreach = structure2D as LeveeBreach;
             var leveeBreachSettings = leveeBreach?.GetActiveLeveeBreachSettings() as UserDefinedBreachSettings;
-            if (leveeBreach != null && leveeBreachSettings != null)
-            {
-                var timeSeries = leveeBreachSettings.CreateTimeSeriesFromTable();
-                var commentLines = new List<string> { "Time entries are defined in minutes, relative to the breach growth start" };
-                new TimFile().Write(timFilePath, timeSeries, leveeBreachSettings.StartTimeBreachGrowth, commentLines);
-            }
+            if (leveeBreach == null || leveeBreachSettings == null) return;
+
+            var timeSeries = leveeBreachSettings.CreateTimeSeriesFromTable();
+            var commentLines = new List<string> { "Time entries are defined in minutes, relative to the breach growth start" };
+            new TimFile().Write(timFilePath, timeSeries, leveeBreachSettings.StartTimeBreachGrowth, commentLines);
         }
 
         private static bool HasCapacityTimeSeries(this IPump pump)

@@ -30,10 +30,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 
         public bool Render(IFeature feature, Graphics graphics, ILayer layer)
         {
-            var leveeBreach = feature as LeveeBreach;
+            var leveeBreach = feature as ILeveeBreach;
             if (leveeBreach == null)
             {
-                throw new InvalidOperationException("Cannot render incompatible feature, should be an Levee breach.");
+                throw new InvalidOperationException("Cannot render incompatible feature, should be a Levee breach.");
             }
 
             var line = GetRenderedFeatureGeometry(feature, layer);

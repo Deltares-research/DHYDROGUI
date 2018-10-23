@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 
         private void DrawFeatureCoverage(Graphics g, IFeature featureToRender, double value, IMap map, FeatureCoverageLayer coverageLayer)
         {
-            var leveeBreach = featureToRender as LeveeBreach;
+            var leveeBreach = featureToRender as ILeveeBreach;
             if (leveeBreach == null) return;
             var geometry = leveeBreach.Geometry;
             var leveeBreachPoint = new Coordinate(leveeBreach.BreachLocationX, leveeBreach.BreachLocationY);
