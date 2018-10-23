@@ -1394,7 +1394,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             fmModel.Network.Nodes.Add(manhole);
 
             var mduFile = new MduFile();
-            mduFile.Write1D2DFeatures(fmModel);
+            mduFile.Write1D2DFeatures(fmModel.MduFilePath, fmModel);
 
             Assert.IsTrue(File.Exists(nodeFilePath));
 
@@ -1417,7 +1417,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             fmModel.ModelDefinition.SetModelProperty(KnownProperties.NodeFile, "someText");
             
             var mduFile = new MduFile();
-            mduFile.Write1D2DFeatures(fmModel);
+            mduFile.Write1D2DFeatures(fmModel.MduFilePath, fmModel);
 
             Assert.IsFalse(File.Exists(nodeFilePath));
 
@@ -1443,7 +1443,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             fileStream.Close();
 
             var mduFile = new MduFile();
-            mduFile.Write1D2DFeatures(fmModel);
+            mduFile.Write1D2DFeatures(fmModel.MduFilePath, fmModel);
 
             Assert.IsFalse(File.Exists(nodeFilePath));
         }
@@ -1472,7 +1472,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             var mduFile = new MduFile();
-            mduFile.Write1D2DFeatures(fmModel);
+            mduFile.Write1D2DFeatures(fmModel.MduFilePath, fmModel);
 
             Assert.IsTrue(File.Exists(crossSectionDefinitionFilePath), "Cross section definition file was not written");
             Assert.IsTrue(File.Exists(crossSectionLocationFilePath), "Cross section location file was not written");
@@ -1504,7 +1504,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             var mduFile = new MduFile();
-            mduFile.Write1D2DFeatures(fmModel);
+            mduFile.Write1D2DFeatures(fmModel.MduFilePath, fmModel);
 
             Assert.IsTrue(File.Exists(crossSectionDefinitionFilePath), "Cross section definition file was not written");
             Assert.IsTrue(File.Exists(crossSectionLocationFilePath), "Cross section location file was not written");
@@ -1544,7 +1544,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             locationFileStream.Close();
 
             var mduFile = new MduFile();
-            mduFile.Write1D2DFeatures(fmModel);
+            mduFile.Write1D2DFeatures(fmModel.MduFilePath, fmModel);
 
             Assert.IsFalse(File.Exists(crossSectionDefinitionFilePath), "Cross section definition file was written, but should not have been written");
             Assert.IsFalse(File.Exists(crossSectionDefinitionFilePath), "Cross section location file was written, but should not have been written");
@@ -1573,7 +1573,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             var mduFile = new MduFile();
-            mduFile.Write1D2DFeatures(fmModel);
+            mduFile.Write1D2DFeatures(fmModel.MduFilePath, fmModel);
 
             Assert.IsTrue(File.Exists(structuresFilePath), "Structures file was not written");
 
@@ -1599,7 +1599,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             var mduFile = new MduFile();
-            mduFile.Write1D2DFeatures(fmModel);
+            mduFile.Write1D2DFeatures(fmModel.MduFilePath, fmModel);
 
             Assert.IsTrue(File.Exists(structuresFilePath), "Structures file was not written");
 
@@ -1632,7 +1632,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             var mduFile = new MduFile();
-            mduFile.Write1D2DFeatures(fmModel);
+            mduFile.Write1D2DFeatures(fmModel.MduFilePath, fmModel);
 
             Assert.IsTrue(File.Exists(structuresFilePath), "Structures file was not written");
             Assert.IsTrue(File.Exists(pliFilePath), "Polyline file was not written");
@@ -1654,7 +1654,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             fmModel.ModelDefinition.SetModelProperty(KnownProperties.StructuresFile, "someText");
             
             var mduFile = new MduFile();
-            mduFile.Write1D2DFeatures(fmModel);
+            mduFile.Write1D2DFeatures(fmModel.MduFilePath, fmModel);
 
             var crossSectionDefinitionFileProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.StructuresFile);
             Assert.That(crossSectionDefinitionFileProperty.GetValueAsString(), Is.EqualTo(string.Empty));
@@ -1677,7 +1677,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsNotNull(sewerRoughnessSection);
 
             var mduFile = new MduFile();
-            mduFile.Write1D2DFeatures(fmModel);
+            mduFile.Write1D2DFeatures(fmModel.MduFilePath, fmModel);
 
             Assert.That(File.Exists(sewerRoughnessFilePath), $"{roughnessSectionName} roughness file was not written");
 

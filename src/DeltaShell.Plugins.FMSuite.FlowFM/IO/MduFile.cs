@@ -146,12 +146,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region write logic
 
-        public void Write1D2DFeatures(WaterFlowFMModel fmModel)
+        public void Write1D2DFeatures(string targetMduFilePath, WaterFlowFMModel fmModel)
         {
             WriteNodeFile(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network);
-            WriteCrossSections(fmModel);
-            WriteStructuresFiles(fmModel);
-            WriteRoughness(fmModel);
+            WriteCrossSections(targetMduFilePath, fmModel);
+            WriteStructuresFiles(targetMduFilePath, fmModel);
+            WriteRoughness(targetMduFilePath, fmModel);
         }
 
         private void WriteNodeFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
@@ -171,10 +171,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private void WriteCrossSections(WaterFlowFMModel fmModel)
+        private void WriteCrossSections(string targetMduFilePath, WaterFlowFMModel fmModel)
         {
-            var crossSectionDefinitionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(fmModel.MduFilePath, "crsdef.ini");
-            var crossSectionLocationFilePath = IoHelper.GetFilePathToLocationInSameDirectory(fmModel.MduFilePath, "crsloc.ini");
+            var crossSectionDefinitionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, "crsdef.ini");
+            var crossSectionLocationFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, "crsloc.ini");
             FileUtils.DeleteIfExists(crossSectionDefinitionFilePath);
             FileUtils.DeleteIfExists(crossSectionLocationFilePath);
 
@@ -193,13 +193,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private void WriteStructuresFiles(WaterFlowFMModel fmModel)
+        private void WriteStructuresFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
         {
-            var structuresFilePath = IoHelper.GetFilePathToLocationInSameDirectory(fmModel.MduFilePath, "structures.ini");
+            var structuresFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, "structures.ini");
             if (fmModel.Network.BranchFeatures.Any() || fmModel.Area.AllHydroObjects.Any())
             {
                 fmModel.ModelDefinition.SetModelProperty(KnownProperties.StructuresFile, "structures.ini");
+
+                var targetMduFilePathPropertyDefinition = new WaterFlowFMPropertyDefinition{ MduPropertyName = GuiProperties.TargetMduPath, Category = GuiProperties.GUIonly, FileCategoryName = GuiProperties.GUIonly, DataType = typeof(string) };
+                var targetMduFilePathProperty = new WaterFlowFMProperty(targetMduFilePathPropertyDefinition, targetMduFilePath);
+
+                fmModel.ModelDefinition.AddProperty(targetMduFilePathProperty);
                 StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFMModel);
+                fmModel.ModelDefinition.Properties.Remove(targetMduFilePathProperty);
             }
             else
             {
@@ -207,9 +213,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static void WriteRoughness(WaterFlowFMModel fmModel)
+        private static void WriteRoughness(string targetMduFilePath, WaterFlowFMModel fmModel)
         {
-            var directoryName = System.IO.Path.GetDirectoryName(fmModel.MduFilePath);
+            var directoryName = System.IO.Path.GetDirectoryName(targetMduFilePath);
             if (directoryName == null) return;
 
             var roughnessFileNames = fmModel.RoughnessSections.Select(GetRoughnessFilename);

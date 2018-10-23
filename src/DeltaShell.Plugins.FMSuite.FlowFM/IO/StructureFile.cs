@@ -9,6 +9,7 @@ using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
@@ -66,7 +67,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void WritePolylineFile(string fileName, WaterFlowFMModel fmModel, IStructure2D structure2D)
         {
-            var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(fmModel.MduFilePath, fileName);
+            var pliFilePath = GetTargetFilePath(fileName, fmModel);
+
             var geometryObjectsToBeWritten = new[]
             {
                 new Feature2D
@@ -80,7 +82,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void WriteTimeSeriesFile(string fileName, WaterFlowFMModel fmModel, IStructure2D structure2D)
         {
-            var timFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(fmModel.MduFilePath, fileName);
+            var timFilePath = GetTargetFilePath(fileName, fmModel);
+
             if (structure2D is IPump)
             {
                 WritePumpTimeSeriesFile(timFilePath, fmModel.ReferenceTime, structure2D as IPump);
@@ -97,6 +100,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 WriteLeveeBreachTimeSeriesFile(timFilePath, structure2D as LeveeBreach);
             }
+        }
+
+        private static string GetTargetFilePath(string fileName, WaterFlowFMModel fmModel)
+        {
+            var subFilePathProperty = fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath);
+            var subFilePath = subFilePathProperty?.GetValueAsString();
+
+            var mduFilePath = string.IsNullOrEmpty(subFilePath) ? fmModel.MduFilePath : subFilePath;
+            var filePath = NGHSFileBase.GetOtherFilePathInSameDirectory(mduFilePath, fileName);
+
+            return filePath;
         }
 
         private static void WritePumpTimeSeriesFile(string timFilePath, DateTime referenceTime, IPump pump)
