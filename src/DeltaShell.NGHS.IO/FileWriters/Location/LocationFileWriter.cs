@@ -14,7 +14,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
     {
         public static void WriteFileLateralDischargeLocations(string targetFile, IEnumerable<ILateralSource> lateralSources)
         {
-            var categories = new List<DelftIniCategory>()
+            var categories = new List<DelftIniCategory>
             {
                 GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.LateralDischargeLocationsMajorVersion, 
                                       GeneralRegion.LateralDischargeLocationsMinorVersion, 
@@ -31,7 +31,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
 
         public static void WriteFileCrossSectionLocations(string targetFile, IEnumerable<ICrossSection> crossSectionLocations)
         {
-            var categories = new List<DelftIniCategory>()
+            var categories = new List<DelftIniCategory>
             {
                 GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.CrossSectionLocationsMajorVersion, 
                                       GeneralRegion.CrossSectionLocationsMinorVersion, 
@@ -48,7 +48,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
 
         public static void WriteFileObservationPointLocations(string targetFile, IEnumerable<IObservationPoint> observationPointLocations)
         {
-            var categories = new List<DelftIniCategory>()
+            var categories = new List<DelftIniCategory>
             {
                 GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.ObservationPointLocationsMajorVersion, 
                                       GeneralRegion.ObservationPointLocationsMinorVersion, 

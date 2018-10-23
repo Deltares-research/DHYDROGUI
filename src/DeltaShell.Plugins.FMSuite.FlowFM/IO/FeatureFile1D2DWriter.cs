@@ -13,7 +13,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public static class FeatureFile1D2DWriter
     {
-        private const string NODE_FILE_NAME = "nodeFile.ini";
+        public const string NODE_FILE_NAME = "nodeFile.ini";
+        public const string CROSS_SECTION_DEFINITION_FILE_NAME = "crsdef.ini";
+        public const string CROSS_SECTION_LOCATION_FILE_NAME = "crsloc.ini";
+        public const string STRUCTURES_FILE_NAME = "structures.ini";
 
         public static void Write1D2DFeatures(string targetMduFilePath, WaterFlowFMModel fmModel)
         {
@@ -42,32 +45,48 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void WriteCrossSections(string targetMduFilePath, WaterFlowFMModel fmModel)
         {
-            var crossSectionDefinitionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, "crsdef.ini");
-            var crossSectionLocationFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, "crsloc.ini");
-            FileUtils.DeleteIfExists(crossSectionDefinitionFilePath);
+            WriteCrossSectionDefinitions(targetMduFilePath, fmModel);
+            WriteCrossSectionLocations(targetMduFilePath, fmModel);
+        }
+
+        private static void WriteCrossSectionLocations(string targetMduFilePath, WaterFlowFMModel fmModel)
+        {
+            var crossSectionLocationFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, CROSS_SECTION_LOCATION_FILE_NAME);
             FileUtils.DeleteIfExists(crossSectionLocationFilePath);
 
             if (fmModel.Network.CrossSections.Any() || fmModel.Network.Pipes.Any(p => p.CrossSectionDefinition != null))
             {
-                fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossDefFile, "crsdef.ini");
-                fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossLocFile, "crsloc.ini");
-
-                CrossSectionDefinitionFileWriter.WriteFile(crossSectionDefinitionFilePath, fmModel.Network, fmModel.RoughnessSections);
+                fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossLocFile, CROSS_SECTION_LOCATION_FILE_NAME);
                 CrossSectionLocationWriter.WriteFile(crossSectionLocationFilePath, fmModel);
             }
             else
             {
-                fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossDefFile, string.Empty);
                 fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossLocFile, string.Empty);
+            }
+        }
+
+        private static void WriteCrossSectionDefinitions(string targetMduFilePath, WaterFlowFMModel fmModel)
+        {
+            var crossSectionDefinitionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, CROSS_SECTION_DEFINITION_FILE_NAME);
+            FileUtils.DeleteIfExists(crossSectionDefinitionFilePath);
+
+            if (fmModel.Network.CrossSections.Any() || fmModel.Network.Pipes.Any(p => p.CrossSectionDefinition != null))
+            {
+                fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossDefFile, CROSS_SECTION_DEFINITION_FILE_NAME);
+                CrossSectionDefinitionFileWriter.WriteFile(crossSectionDefinitionFilePath, fmModel.Network, fmModel.RoughnessSections);
+            }
+            else
+            {
+                fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossDefFile, string.Empty);
             }
         }
 
         private static void WriteStructuresFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
         {
-            var structuresFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, "structures.ini");
+            var structuresFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, STRUCTURES_FILE_NAME);
             if (fmModel.Network.BranchFeatures.Any() || fmModel.Area.AllHydroObjects.Any())
             {
-                fmModel.ModelDefinition.SetModelProperty(KnownProperties.StructuresFile, "structures.ini");
+                fmModel.ModelDefinition.SetModelProperty(KnownProperties.StructuresFile, STRUCTURES_FILE_NAME);
 
                 var targetMduFilePathPropertyDefinition = new WaterFlowFMPropertyDefinition
                 {

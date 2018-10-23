@@ -21,14 +21,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class FeatureFile1D2DWriterTest
     {
+        private const string CrossSectionDefinitionFileName = FeatureFile1D2DWriter.CROSS_SECTION_DEFINITION_FILE_NAME;
+        private const string CrossSectionLocationFileName = FeatureFile1D2DWriter.CROSS_SECTION_LOCATION_FILE_NAME;
+        private const string StructuresFileName = FeatureFile1D2DWriter.STRUCTURES_FILE_NAME;
+        private const string NodeFileName = FeatureFile1D2DWriter.NODE_FILE_NAME;
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void GivenFmModelWithSewerNetworkWithCompartments_WhenWritingMduFile_ThenNodeFileIsWrittenAndIsReferencedInTheMduFile()
         {
-            var nodeFileName = "nodeFile.ini";
             var tempFolder = FileUtils.CreateTempDirectory();
             var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
-            var nodeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, nodeFileName);
+            var nodeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, NodeFileName);
 
             var fmModel = new WaterFlowFMModel
             {
@@ -46,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(File.Exists(nodeFilePath));
 
             var nodeFileProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.NodeFile);
-            Assert.That(nodeFileProperty.GetValueAsString(), Is.EqualTo(nodeFileName));
+            Assert.That(nodeFileProperty.GetValueAsString(), Is.EqualTo(NodeFileName));
         }
 
         [Test]
@@ -55,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var tempFolder = FileUtils.CreateTempDirectory();
             var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
-            var nodeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, "nodeFile.ini");
+            var nodeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, NodeFileName);
 
             var fmModel = new WaterFlowFMModel
             {
@@ -77,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var tempFolder = FileUtils.CreateTempDirectory();
             var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
-            var nodeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, "nodeFile.ini");
+            var nodeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, NodeFileName);
 
             var fmModel = new WaterFlowFMModel
             {
@@ -97,12 +101,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void GivenFmModelWith1DNetworkThatHasCrossSections_WhenWritingMduFile_ThenCrossSectionDataIsWrittenToFile()
         {
-            var crossSectionDefinitionFileName = "crsdef.ini";
-            var crossSectionLocationFileName = "crsloc.ini";
             var tempFolder = FileUtils.CreateTempDirectory();
             var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
-            var crossSectionDefinitionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, crossSectionDefinitionFileName);
-            var crossSectionLocationFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, crossSectionLocationFileName);
+            var crossSectionDefinitionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, CrossSectionDefinitionFileName);
+            var crossSectionLocationFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, CrossSectionLocationFileName);
 
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
             var crossSectionDefinitionZw = CrossSectionDefinitionZW.CreateDefault();
@@ -124,20 +126,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var crossSectionDefinitionFileProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.CrossDefFile);
             var crossSectionLocationFileProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.CrossLocFile);
 
-            Assert.That(crossSectionDefinitionFileProperty.GetValueAsString(), Is.EqualTo(crossSectionDefinitionFileName));
-            Assert.That(crossSectionLocationFileProperty.GetValueAsString(), Is.EqualTo(crossSectionLocationFileName));
+            Assert.That(crossSectionDefinitionFileProperty.GetValueAsString(), Is.EqualTo(CrossSectionDefinitionFileName));
+            Assert.That(crossSectionLocationFileProperty.GetValueAsString(), Is.EqualTo(CrossSectionLocationFileName));
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         public void GivenFmModelWithSewerNetworkThatHasCrossSections_WhenWritingMduFile_ThenCrossSectionDataIsWrittenToFile()
         {
-            var crossSectionDefinitionFileName = "crsdef.ini";
-            var crossSectionLocationFileName = "crsloc.ini";
             var tempFolder = FileUtils.CreateTempDirectory();
             var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
-            var crossSectionDefinitionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, crossSectionDefinitionFileName);
-            var crossSectionLocationFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, crossSectionLocationFileName);
+            var crossSectionDefinitionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, CrossSectionDefinitionFileName);
+            var crossSectionLocationFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, CrossSectionLocationFileName);
 
             var network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEachAndOnePipeWithACrossSection();
 
@@ -155,8 +155,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var crossSectionDefinitionFileProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.CrossDefFile);
             var crossSectionLocationFileProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.CrossLocFile);
 
-            Assert.That(crossSectionDefinitionFileProperty.GetValueAsString(), Is.EqualTo(crossSectionDefinitionFileName));
-            Assert.That(crossSectionLocationFileProperty.GetValueAsString(), Is.EqualTo(crossSectionLocationFileName));
+            Assert.That(crossSectionDefinitionFileProperty.GetValueAsString(), Is.EqualTo(CrossSectionDefinitionFileName));
+            Assert.That(crossSectionLocationFileProperty.GetValueAsString(), Is.EqualTo(CrossSectionLocationFileName));
         }
 
         [Test]
@@ -165,12 +165,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var crossSectionDefinitionFileKey = KnownProperties.CrossDefFile;
             var crossSectionLocationFileKey = KnownProperties.CrossLocFile;
-            var crossSectionDefinitionFileName = "crsdef.ini";
-            var crossSectionLocationFileName = "crsloc.ini";
             var tempFolder = FileUtils.CreateTempDirectory();
             var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
-            var crossSectionDefinitionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, crossSectionDefinitionFileName);
-            var crossSectionLocationFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, crossSectionLocationFileName);
+            var crossSectionDefinitionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, CrossSectionDefinitionFileName);
+            var crossSectionLocationFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, CrossSectionLocationFileName);
 
             var fmModel = new WaterFlowFMModel
             {
@@ -201,10 +199,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void GivenFmModelWithSewerNetworkWithAPump_WhenWritingMduFile_ThenStructureFilesAreWrittenAndMduReferenceIsCorrect()
         {
-            var structureFileName = "structures.ini";
             var tempFolder = FileUtils.CreateTempDirectory();
             var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
-            var structuresFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, structureFileName);
+            var structuresFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, StructuresFileName);
 
             var network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEachAndOnePump();
 
@@ -219,16 +216,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(File.Exists(structuresFilePath), "Structures file was not written");
 
             var crossSectionDefinitionFileProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.StructuresFile);
-            Assert.That(crossSectionDefinitionFileProperty.GetValueAsString(), Is.EqualTo(structureFileName));
+            Assert.That(crossSectionDefinitionFileProperty.GetValueAsString(), Is.EqualTo(StructuresFileName));
         }
 
         [Test]
         public void GivenFmModelWith1DNetworkWithAPump_WhenWritingMduFile_ThenStructureFilesAreWrittenAndMduReferenceIsCorrect()
         {
-            var structureFileName = "structures.ini";
             var tempFolder = FileUtils.CreateTempDirectory();
             var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
-            var structuresFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, structureFileName);
+            var structuresFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, StructuresFileName);
 
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
             HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(new Pump(), network.Channels.First());
@@ -244,18 +240,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(File.Exists(structuresFilePath), "Structures file was not written");
 
             var crossSectionDefinitionFileProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.StructuresFile);
-            Assert.That(crossSectionDefinitionFileProperty.GetValueAsString(), Is.EqualTo(structureFileName));
+            Assert.That(crossSectionDefinitionFileProperty.GetValueAsString(), Is.EqualTo(StructuresFileName));
         }
 
         [Test]
         public void GivenFmModelWith2DPump_WhenWritingMduFile_ThenStructureFilesAreWrittenAndMduReferenceIsCorrect()
         {
             var pumpName = "my2DPump";
-            var structureFileName = "structures.ini";
             var polylineFileName = $"{pumpName}.pli";
             var tempFolder = FileUtils.CreateTempDirectory();
             var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
-            var structuresFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, structureFileName);
+            var structuresFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, StructuresFileName);
             var pliFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, polylineFileName);
 
             var pump2D = new Pump2D(pumpName)
@@ -277,7 +272,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(File.Exists(pliFilePath), "Polyline file was not written");
 
             var crossSectionDefinitionFileProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.StructuresFile);
-            Assert.That(crossSectionDefinitionFileProperty.GetValueAsString(), Is.EqualTo(structureFileName));
+            Assert.That(crossSectionDefinitionFileProperty.GetValueAsString(), Is.EqualTo(StructuresFileName));
         }
 
         [Test]

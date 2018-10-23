@@ -72,16 +72,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var modelDefinition = fmModel.ModelDefinition;
             if (network.Manholes.Any())
-                modelDefinition.SetModelProperty(KnownProperties.NodeFile, "nodeFile.ini");
+                modelDefinition.SetModelProperty(KnownProperties.NodeFile, FeatureFile1D2DWriter.NODE_FILE_NAME);
             if (network.CrossSections.Any() || network.Pipes.Any(p => p.CrossSectionDefinition != null))
             {
-                modelDefinition.SetModelProperty(KnownProperties.CrossDefFile, "crsdef.ini");
-                modelDefinition.SetModelProperty(KnownProperties.CrossLocFile, "crsloc.ini");
+                modelDefinition.SetModelProperty(KnownProperties.CrossDefFile, FeatureFile1D2DWriter.CROSS_SECTION_DEFINITION_FILE_NAME);
+                modelDefinition.SetModelProperty(KnownProperties.CrossLocFile, FeatureFile1D2DWriter.CROSS_SECTION_LOCATION_FILE_NAME);
             }
 
             if (network.BranchFeatures.Any() || fmModel.Area.AllHydroObjects.Any())
             {
-                modelDefinition.SetModelProperty(KnownProperties.StructuresFile, "structures.ini");
+                modelDefinition.SetModelProperty(KnownProperties.StructuresFile, FeatureFile1D2DWriter.STRUCTURES_FILE_NAME);
             }
 
             var roughnessFileNames = fmModel.RoughnessSections.Select(GetRoughnessFilename);

@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
@@ -21,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [Test]
         public void GivenArrayOfCrossSectionDefinitions_WhenWritingToFile_ThenIniFileIsWritten()
         {
-            var filePath = Path.Combine(FileUtils.CreateTempDirectory(), "crsdef.ini");
+            var filePath = Path.Combine(FileUtils.CreateTempDirectory(), FeatureFile1D2DWriter.CROSS_SECTION_DEFINITION_FILE_NAME);
             var fmModel = new WaterFlowFMModel();
             //fmModel.Network.SharedCrossSectionDefinitions.Add(new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle()));
             CrossSectionDefinitionFileWriter.WriteFile(filePath, fmModel.Network, fmModel.RoughnessSections);
