@@ -14,23 +14,39 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
     {
         [Test]
         /* Units tests created after DELFT3DFM-510 */
-        [TestCase(0.0, false, InputFieldDataType.TimeVarying, false)]
-        [TestCase(0.0, false, InputFieldDataType.Constant, false)]
-        [TestCase(0.0, true, InputFieldDataType.TimeVarying, true)]
-        [TestCase(0.0, true, InputFieldDataType.Constant, true)]
-        [TestCase(30.0, false, InputFieldDataType.TimeVarying, false)]
-        [TestCase(30.0, false, InputFieldDataType.Constant, false)]
-        [TestCase(30.0, true, InputFieldDataType.TimeVarying, false)]
-        [TestCase(30.0, true, InputFieldDataType.Constant, false)]
+        [TestCase(0.0, new double[]{0.0}, false, InputFieldDataType.Constant, false, TestName = "ConstantWindSpeedZero_TimeseriesZero_QuadrupletsFalse_ForConstantWindCase_NoWarning")]
+        [TestCase(0.0, new double[]{0.0}, true, InputFieldDataType.Constant, true, TestName = "ConstantWindSpeedZero_TimeseriesZero_QuadrupletsTrue_ForConstantWindCase_WarningMustBeThere")]
+        [TestCase(0.0, new double[]{30.0}, true, InputFieldDataType.Constant, true, TestName = "ConstantWindSpeedZero_TimeseriesGreaterThanZero_QuadrupletsTrue_ForConstantWindCase_WarningMustBeThere")]
+        [TestCase(30.0, new double[]{0.0}, false, InputFieldDataType.Constant, false, TestName = "ConstantWindSpeedGreaterThanZero_TimeseriesZero_QuadrupletsFalse_ForConstantWindCase_NoWarning")]
+        [TestCase(30.0, new double[]{0.0}, true, InputFieldDataType.Constant, false, TestName = "ConstantWindSpeedGreaterThanZero_TimeseriesZero_QuadrupletsTrue_ForConstantWindCase_NoWarning")]
+        [TestCase(30.0, new double[] {30.0}, true, InputFieldDataType.Constant, false, TestName = "ConstantWindSpeedGreaterThanZero_TimeseriesGreaterThanZero_QuadrupletsTrue_ForConstantWindCase_NoWarning")]
+        [TestCase(0.0, new double[]{30.0, 30.0}, false, InputFieldDataType.TimeVarying, false, TestName = "ConstantWindSpeedZero_TimeseriesGreaterThanZero_QuadrupletsFalse_ForTimeSeriesWindCase_NoWarning")]
+        [TestCase(0.0, new double[]{30.0, 0.0}, false, InputFieldDataType.TimeVarying, false, TestName = "ConstantWindSpeedZero_TimeseriesNotAllGreaterThanZero_QuadrupletsFalse_ForTimeSeriesWindCase_NoWarning")]
+        [TestCase(0.0, new double[]{0.0, 0.0}, false, InputFieldDataType.TimeVarying, false, TestName = "ConstantWindSpeedZero_TimeseriesZero_QuadrupletsFalse_ForTimeSeriesWindCase_NoWarning")]
+        [TestCase(0.0, new double[]{30.0, 30.0}, true, InputFieldDataType.TimeVarying, false, TestName = "ConstantWindSpeedZero_TimeseriesGreaterThanZero_QuadrupletsTrue_ForTimeSeriesWindCase_NoWarning")]
+        [TestCase(0.0, new double[]{30.0, 0.0}, true, InputFieldDataType.TimeVarying, true, TestName = "ConstantWindSpeedZero_TimeseriesNotAllGreaterThanZero_QuadrupletsTrue_ForTimeSeriesWindCase_WarningMustBeThere")]
+        [TestCase(30.0, new double[]{30.0, 0.0}, true, InputFieldDataType.TimeVarying, true, TestName = "ConstantWindSpeedGreaterThanZero_TimeseriesNotAllGreaterThanZero_QuadrupletsTrue_ForTimeSeriesWindCase_WarningMustBeThere")]
+        [TestCase(0.0, new double[]{0.0, 0.0}, true, InputFieldDataType.TimeVarying, true, TestName = "ConstantWindSpeedZero_TimeseriesZero_QuadrupletsTrue_ForTimeSeriesWindCase_WarningMustBeThere")]
+        [TestCase(30.0, new double[]{0.0, 0.0}, true, InputFieldDataType.TimeVarying, true, TestName = "ConstantWindSpeedGreaterThanZero_TimeseriesZero_QuadrupletsTrue_ForTimeSeriesWindCase_WarningMustBeThere")]
         [Category(TestCategory.Integration)]
-        public void CheckWavePropertiesWithFlowModel(double windSpeed, bool quadruplets, InputFieldDataType windType, bool warningAlert)
+        public void CheckWavePropertiesWithFlowModel(double windSpeedConstant, double [] windSpeedTimeseries, bool quadruplets, InputFieldDataType windType, bool warningAlert)
         {
             var model = new WaveModel();
             var reportMessage = Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_;
             var reportSeverity = ValidationSeverity.Error;
 
             /* Assigning variables */
-            model.TimePointData.WindSpeedConstant = windSpeed;
+           
+            model.TimePointData.WindSpeedConstant = windSpeedConstant;
+            
+            var timeSeriesWindSpeed = model.TimePointData.InputFields.Components.FirstOrDefault(c => c.Name == "Wind Speed");
+            Assert.NotNull(timeSeriesWindSpeed);
+            
+            foreach (var wind in windSpeedTimeseries)
+            {
+               timeSeriesWindSpeed.Values.Add(wind);
+            }
+            
             model.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.Quadruplets).
                 Value = quadruplets;
             model.TimePointData.WindDataType = windType;

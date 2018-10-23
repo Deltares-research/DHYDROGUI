@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
@@ -55,7 +56,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
         private static ValidationReport ValidateWindSpeedAndQuadruple(WaveModel waveModel)
         {
-            var windSpeedValue = waveModel.TimePointData.WindSpeedConstant;
+            var windConstantSelected = waveModel.TimePointData.WindDataType == InputFieldDataType.Constant;
+            var windTimeseriesSelected = waveModel.TimePointData.WindDataType == InputFieldDataType.TimeVarying;
+
+            var windSpeedValueConstant = waveModel.TimePointData.WindSpeedConstant;
+            var windSpeedValueTimeseries =
+                waveModel.TimePointData.InputFields.Components.FirstOrDefault(c => c.Name == "Wind Speed");
+
             bool quadrupleSelected = false;
             try
             {
@@ -67,9 +74,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             }
             
             var issues = new List<ValidationIssue>();
-            if (quadrupleSelected && (Math.Abs(windSpeedValue) <= double.Epsilon) )
+
+            if (windConstantSelected && quadrupleSelected && (Math.Abs(windSpeedValueConstant) <= double.Epsilon)) 
             {
                 issues.Add(new ValidationIssue(waveModel, ValidationSeverity.Error, Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_));
+            }
+            else if (windTimeseriesSelected && quadrupleSelected && windSpeedValueTimeseries != null)
+            {
+                foreach (var windSpeedValue in windSpeedValueTimeseries.Values)
+                {
+                    if ((Math.Abs((double) windSpeedValue) <= double.Epsilon))
+                    {
+                        issues.Add(new ValidationIssue(waveModel, ValidationSeverity.Error, Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_));
+                    }
+                }
             }
 
             return new ValidationReport(KnownWaveCategories.ProcessesCategory, issues); 
