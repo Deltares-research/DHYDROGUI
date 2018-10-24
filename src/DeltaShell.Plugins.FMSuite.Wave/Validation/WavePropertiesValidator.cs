@@ -86,6 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     if ((Math.Abs((double) windSpeedValue) <= double.Epsilon))
                     {
                         issues.Add(new ValidationIssue(waveModel, ValidationSeverity.Error, Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_));
+                        break;
                     }
                 }
             }
