@@ -101,6 +101,11 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
+        public bool HasUgridDataSetConvention()
+        {
+            return GetDataSetConvention() == GridApiDataSet.DataSetConventions.CONV_UGRID;
+        }
+
         public virtual GridApiDataSet.DataSetConventions GetDataSetConvention()
         {
             if(!IsInitialized()) Initialize();

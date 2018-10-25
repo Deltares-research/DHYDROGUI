@@ -24,6 +24,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 uGridApi => uGridApi.WriteNetworkDiscretisationPoints(branchIdx, offset, ids, names),
                 Resources.UGridNetworkDiscretisation_WriteNetworkDiscretisationPoints_Couldn_t_write_the_network_discretisation_points);
         }
+
         #endregion
 
         #region Read network discretisation
