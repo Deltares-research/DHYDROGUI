@@ -176,8 +176,11 @@ namespace DelftTools.Hydro.SewerFeatures
             var targetCoordinate = Target.Geometry.Coordinate;
             Geometry = new LineString(new[] { sourceCoordinate, targetCoordinate });
 
-            var outletCompartment = targetCompartment as OutletCompartment;
-            outletCompartment?.SetBoundaryGeometry(sourceCoordinate, targetCoordinate);
+            var targetOutletCompartment = targetCompartment as OutletCompartment;
+            targetOutletCompartment?.SetBoundaryGeometry(sourceCoordinate, targetCoordinate);
+
+            var sourceOutletCompartment = sourceCompartment as OutletCompartment;
+            sourceOutletCompartment?.SetBoundaryGeometry(targetCoordinate, sourceCoordinate);
         }
 
         public override bool IsLengthCustom
