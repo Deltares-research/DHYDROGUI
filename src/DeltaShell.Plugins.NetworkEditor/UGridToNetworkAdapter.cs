@@ -36,15 +36,15 @@ namespace DeltaShell.Plugins.NetworkEditor
                         return null;
                     }
 
-                    int numberOfNetworks = uGridNetwork.GetNumberOfNetworks();
+                    var numberOfNetworks = uGridNetwork.GetNumberOfNetworks();
 
                     if (numberOfNetworks < 1)
                     {
-                        return null;
+                        return new NetworkUGridDataModel(new HydroNetwork());
                     }
 
                     var networkIds = uGridNetwork.GetNetworkIds();
-                    int networkId = func(networkIds);
+                    var networkId = func(networkIds);
 
                     return LoadNetworkUGridDataModel(uGridNetwork, networkId);
                 }

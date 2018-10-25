@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
 using GeoAPI.Geometries;
@@ -148,6 +149,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             Assert.That(loadedNetwork.Pipes.Count(), Is.EqualTo(1));
             Assert.That(loadedNetwork.Manholes.Count(), Is.EqualTo(2), "Work in progress: still work to be done for retention file writer to be able to distinguish between types of nodes");
+        }
+
+        [Test]
+        public void GivenNetCdfFileWithoutNetworkData_WhenReadingNetworkDataModelFromThisFile_ThenDefaultNetworkDataModelIsReturned()
+        {
+            var gridFilePath = TestHelper.GetTestFilePath(@"NetCDF files\FlowFM_net.nc"); // NetCDF file with only a 1 x 1-grid
+            var testFilePath = TestHelper.CreateLocalCopy(gridFilePath);
+
+            var networkDataModel = UGridToNetworkAdapter.ReadNetworkDataModelFromUGrid(testFilePath);
+            Assert.IsNotNull(networkDataModel);
+            Assert.That(networkDataModel.NumberOfBranches, Is.EqualTo(0));
         }
 
         private void CompareAndAssertNetworkAndNetworkUGridDataModel(IHydroNetwork storedNetwork, NetworkUGridDataModel networkUGridDataModel)

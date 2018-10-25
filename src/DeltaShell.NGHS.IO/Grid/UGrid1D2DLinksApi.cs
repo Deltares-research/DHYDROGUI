@@ -149,6 +149,11 @@ namespace DeltaShell.NGHS.IO.Grid
             if (!Links1D2DReadyForWritingOrReading)
             {
                 ierr = wrapper.Get1D2DLinksMeshId(ioncId, ref meshLinks1D2DIdx);
+                if (meshLinks1D2DIdx == -1 && ierr == GridApiDataSet.GridConstants.NOERR)
+                {
+                    // There are no links found in the netCDF file, so return a NO ERROR CODE
+                    return GridApiDataSet.GridConstants.NOERR;
+                }
             }
 
             if (ierr != GridApiDataSet.GridConstants.NOERR)
