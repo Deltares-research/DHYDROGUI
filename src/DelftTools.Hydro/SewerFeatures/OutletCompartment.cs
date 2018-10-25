@@ -40,10 +40,14 @@ namespace DelftTools.Hydro.SewerFeatures
 
         private static LineString CreateBoundaryGeometryForOutletCompartment(Coordinate sourceCoordinate, Coordinate targetCoordinate)
         {
+            Coordinate boundaryStartCoordinate;
+            Coordinate boundaryEndCoordinate;
+
             var deltaX = sourceCoordinate.X - targetCoordinate.X;
-            if (Math.Abs(deltaX) > 10e-6)
+            var deltaY = sourceCoordinate.Y - targetCoordinate.Y;
+            if (Math.Abs(deltaX) > 10e-6 && Math.Abs(deltaY) > 10e-6)
             {
-                var slope = (sourceCoordinate.Y - targetCoordinate.Y) / deltaX;
+                var slope = deltaY / deltaX;
                 var perpendicularSlope = -1 / slope;
                 var deltaToBoundaryMiddleX = 0.5 / Math.Sqrt(1 + slope * slope);
                 var deltaToBoundaryMiddleY = deltaToBoundaryMiddleX * slope;
@@ -55,20 +59,29 @@ namespace DelftTools.Hydro.SewerFeatures
                 var deltaToBoundaryEndsX = 5 / Math.Sqrt(1 + perpendicularSlope * perpendicularSlope);
                 var deltaToBoundaryEndsY = deltaToBoundaryEndsX * perpendicularSlope;
 
-                var boundaryStartCoordinate = new Coordinate(middleBoundaryCoordinate.X + deltaToBoundaryEndsX, middleBoundaryCoordinate.Y + deltaToBoundaryEndsY);
-                var boundaryEndCoordinate = new Coordinate(middleBoundaryCoordinate.X - deltaToBoundaryEndsX, middleBoundaryCoordinate.Y - deltaToBoundaryEndsY);
-                return new LineString(new[] { boundaryStartCoordinate, boundaryEndCoordinate });
+                boundaryStartCoordinate = new Coordinate(middleBoundaryCoordinate.X + deltaToBoundaryEndsX, middleBoundaryCoordinate.Y + deltaToBoundaryEndsY);
+                boundaryEndCoordinate = new Coordinate(middleBoundaryCoordinate.X - deltaToBoundaryEndsX, middleBoundaryCoordinate.Y - deltaToBoundaryEndsY);
             }
-            else
+            else if (Math.Abs(deltaX) < 10e-6)
             {
                 var middleBoundaryCoordinate = sourceCoordinate.Y < targetCoordinate.Y
                     ? new Coordinate(targetCoordinate.X, targetCoordinate.Y + 0.5)
                     : new Coordinate(targetCoordinate.X, targetCoordinate.Y - 0.5);
 
-                var boundaryStartCoordinate = new Coordinate(middleBoundaryCoordinate.X - 5, middleBoundaryCoordinate.Y);
-                var boundaryEndCoordinate = new Coordinate(middleBoundaryCoordinate.X + 5, middleBoundaryCoordinate.Y);
-                return new LineString(new[] { boundaryStartCoordinate, boundaryEndCoordinate });
+                boundaryStartCoordinate = new Coordinate(middleBoundaryCoordinate.X - 5, middleBoundaryCoordinate.Y);
+                boundaryEndCoordinate = new Coordinate(middleBoundaryCoordinate.X + 5, middleBoundaryCoordinate.Y);
             }
+            else //(Math.Abs(deltaY) < 10e-6)
+            {
+                var middleBoundaryCoordinate = sourceCoordinate.X < targetCoordinate.X
+                    ? new Coordinate(targetCoordinate.X + 0.5, targetCoordinate.Y)
+                    : new Coordinate(targetCoordinate.X - 0.5, targetCoordinate.Y);
+
+                boundaryStartCoordinate = new Coordinate(middleBoundaryCoordinate.X, middleBoundaryCoordinate.Y - 5);
+                boundaryEndCoordinate = new Coordinate(middleBoundaryCoordinate.X, middleBoundaryCoordinate.Y + 5);
+            }
+
+            return new LineString(new[] { boundaryStartCoordinate, boundaryEndCoordinate });
         }
     }
 }
