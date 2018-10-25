@@ -20,10 +20,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var bedLevels = (importer.ImportItem(testFilePath, new WaterFlowFMModel()) as IEnumerable<IPointValue>).ToList();
             Assert.IsNotNull(bedLevels);
 
-            // grid with values
-            // 1 2
-            // 5 6 
-
             Assert.IsTrue(bedLevels.Count == 252*173);
         }
 
@@ -34,6 +30,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             var importer = new RasterBedLevelFileImporter();
             TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(testFilePath, new WaterFlowFMModel()), Resources.RasterBedLevelFileImporter_ConvertRegularGridToBedLevelValues_The_file_you_are_trying_to_import_only_contains_integers__This_is_not_yet_supported__Please_change_a_minimum_of_one_value_to_a_decimal_number_in_the_import_file);
+        }
+
+        [Test]
+        public void Given_ATiffFile_When_ImportingBedLevelsFromTiff_Then_CorrectPointCloudIsReturned()
+        {
+            var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\Bed_Levels_SOBEK2.tif");
+            var importer = new RasterBedLevelFileImporter();
+            var model = new WaterFlowFMModel();
+            model.MduFilePath = @"RasterImport\FlowFM.mdu";
+            Assert.IsNotNull(model);
+            
+            var bedLevels = (importer.ImportItem(testFilePath, model) as IEnumerable<IPointValue>)
+                .ToList();
+            Assert.IsNotNull(bedLevels);
+            Assert.AreEqual(33*46, bedLevels.Count);
         }
     }
 }

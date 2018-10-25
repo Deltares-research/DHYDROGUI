@@ -4,16 +4,13 @@ using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using log4net;
 using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
     public class RasterBedLevelFileImporter : IFileImporter
     {
-        
-
-        public bool CanImportOn(object targetObject)
+       public bool CanImportOn(object targetObject)
         {
             return true;
         }
@@ -30,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 return new DataItem { Value = new ImportedFMNetFile(path), Name = Path.GetFileName(path) };
             }
         
-            return new RasterFile().Read(path);
+            return RasterFile.Read(path);
         }
 
 
@@ -62,7 +59,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 fileFilter += "|" + "PCRaster raster file format (*.map)|*.map"; ;
                 return fileFilter;
             }
-           
         }
 
         public string TargetDataDirectory { get; set; }

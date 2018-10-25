@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Functions.Conversion;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -21,18 +20,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         private static double FileSizeWarningLimitInBytes = 1e9;
 
-        private static double FileSizeErrorLimitInBytes = 2.5e9;
+        private static double FileSizeErrorLimitInBytes = 2.0e9;
 
-        public const string Extension = ".asc";//array of extensions?
+        public const string AscExtension = ".asc";
+
+        public const string TiffExtension = ".tif";
 
         /// <summary>
         /// Read the Asc from the provided <param name="ascFilePath"/>
         /// </summary>
         /// <param name="ascFilePath">Path to the Asc file</param>
-        /// <param name="checkForUnsupportedSize">Check if the file size is not to big (> 2.5 gb)</param>
+        /// <param name="checkForUnsupportedSize">Check if the file size is not to big (> 2.0 gb)</param>
         /// <returns>List of points with a value, or null if file is too large</returns>
         /// <exception cref="FormatException">When less then 3 values are found or the values are invalid</exception>
-        public IEnumerable<IPointValue> Read(string ascFilePath, bool checkForUnsupportedSize = false)
+        public static IEnumerable<IPointValue> Read(string ascFilePath, bool checkForUnsupportedSize = false)
         {
             if (checkForUnsupportedSize)
             {
@@ -51,11 +52,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         }
 
         /// <summary>
-        /// Write the xyValuePoints to the ascFilePath provided
+        /// Write the xyValuePoints to the filePath provided
         /// </summary>
-        /// <param name="ascFilePath">The FilePath to write the xyValuePoints to</param>
+        /// <param name="filePath">The FilePath to write the xyValuePoints to</param>
         /// <param name="xyValuePoints">The xyValues to write to the FilePath</param>
-        public void Write(string ascFilePath, IEnumerable<IPointValue> xyValuePoints)
+        public void Write(string filePath, IEnumerable<IPointValue> xyValuePoints)
         {
 
             var importer = new GdalFileExporter();
@@ -85,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
             var grid = builder.CreateFunction(variables);
 
-            importer.Export(grid, ascFilePath) ;
+            importer.Export(grid, filePath) ;
         }
 
         /// <summary>

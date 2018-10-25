@@ -26,12 +26,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 throw new ArgumentException("Cannot find file " + FilePath);
             }
             var extension = Path.GetExtension(FilePath);
-            if (extension != RasterFile.Extension)
+            if (extension != RasterFile.AscExtension || extension != RasterFile.TiffExtension)
             {
-                log.WarnFormat("File {0} does not have the extension .asc (only .asc import supported for now)", FilePath);
+                log.WarnFormat("File {0} does not have the right extension (only .asc/.tif imports are supported for now)", FilePath);
             }
 
-            var samples = new RasterFile().Read(FilePath, true);
+            var samples = RasterFile.Read(FilePath, true);
             if (samples == null || !samples.Any()) return null;
 
             if (SourceCoordinateSystem != null && TargetCoordinateSystem != null &&
