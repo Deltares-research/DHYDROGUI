@@ -80,6 +80,9 @@
                     </fluent:ToggleButton.Icon>
                 </fluent:ToggleButton>
             </fluent:RibbonGroupBox>
+            <fluent:RibbonGroupBox Header="Spatial Operations" x:Name="SpatialOperationsGroup" fluent:KeyTip.Keys="SO">
+                <fluent:Button x:Name="ButtonAddRasterSamples" Header="Add rasterfile samples" ToolTip="Add rasterfile points" Icon="/DeltaShell.Plugins.SharpMapGis.Gui;component\Resources\points.png" Click="ButtonCreateRasterSamples_Click" SizeDefinition="Middle,Small,Small" fluent:KeyTip.Keys="RT"/>
+            </fluent:RibbonGroupBox>
         </fluent:RibbonTabItem>
     </fluent:Ribbon>
 </UserControl>

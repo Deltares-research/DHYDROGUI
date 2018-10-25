@@ -339,6 +339,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Ribbon\ImportBedlevelFromFileCommand.cs" />
     <Compile Include="Ribbon\RelayMapToolCommand.cs" />
     <Compile Include="Ribbon\RibbonViewModel1D2D.cs" />
     <Compile Include="Ribbon\RibbonViewModelRegion.cs" />

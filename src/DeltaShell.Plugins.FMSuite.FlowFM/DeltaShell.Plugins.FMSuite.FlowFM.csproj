@@ -59,6 +59,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.40869\lib\net40\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DeltaShell.Plugins.NetCDF">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.40869\lib\net40\plugins\DeltaShell.Plugins.NetCDF\DeltaShell.Plugins.NetCDF.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis">
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.40869\lib\net40\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
       <Private>False</Private>
@@ -150,8 +154,10 @@
     <Compile Include="IO\BcMeteoFileDataBuilder.cs" />
     <Compile Include="IO\Exporters\WaterFlowFMAndF1dFileExporter.cs" />
     <Compile Include="IO\FeatureFile1D2DWriter.cs" />
+    <Compile Include="IO\Importers\RasterFile.cs" />
     <Compile Include="IO\Importers\RasterBedLevelFileImporter.cs" />
     <Compile Include="IO\Importers\RasterFileImporter.cs" />
+    <Compile Include="IO\ImportRasterSamplesSpatialOperationExtension.cs" />
     <Compile Include="IO\MeteoExtForceFile.cs" />
     <Compile Include="IO\StructureFile.cs" />
     <Compile Include="IO\WaterFlowFMModelFactory.cs" />
@@ -440,6 +446,7 @@
     <None Include="Resources\lines.png" />
     <None Include="Resources\points.png" />
     <None Include="Resources\polygon.png" />
+    <EmbeddedResource Include="IO\ImportRasterSamplesSpatialOperationExtension.hbm.xml" />
     <Content Include="toolboxes\Statistics.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

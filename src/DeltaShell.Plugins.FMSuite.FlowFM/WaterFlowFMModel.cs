@@ -901,16 +901,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (spatialOperationList.Count != 1 || !(spatialOperationList[0] is ImportSamplesOperation) ||
                     dataItem == null || dataItem.ValueConverter != null || !(dataItem.Value is UnstructuredGridCoverage))
                     continue;
+                IEnumerable<double> valuesToSet;
+                var coverage = (UnstructuredGridCoverage)dataItem.Value;
+                if (spatialOperationList[0] is ImportRasterSamplesSpatialOperationExtension)
+                {
+                    var samplesOperation = (ImportRasterSamplesSpatialOperationExtension)spatialOperationList[0];
+                    
+                    var rasterFile = new RasterFile().Read(samplesOperation.FilePath).ToList();
 
-                var samplesOperation = (ImportSamplesOperation) spatialOperationList[0];
-                var coverage = (UnstructuredGridCoverage) dataItem.Value;
-                var xyzFile = new XyzFile().Read(samplesOperation.FilePath).ToList();
+                    var componentValueCount = coverage.Arguments.Aggregate(0,
+                        (totaal, arguments) => totaal == 0 ? arguments.Values.Count : totaal * arguments.Values.Count);
 
-                var componentValueCount = coverage.Arguments.Aggregate(0,(totaal, arguments) => totaal == 0 ? arguments.Values.Count : totaal * arguments.Values.Count);
+                    valuesToSet = rasterFile.Count != componentValueCount
+                        ? new InterpolateOperation().InterpolateToGrid(rasterFile, coverage, coverage.Grid)
+                        : rasterFile.Select(p => p.Value);
+                }
+                else
+                {
+                    var samplesOperation = (ImportSamplesOperation) spatialOperationList[0];
+                    var xyzFile = new XyzFile().Read(samplesOperation.FilePath).ToList();
 
-                var valuesToSet = xyzFile.Count != componentValueCount
-                    ? new InterpolateOperation().InterpolateToGrid(xyzFile, coverage, coverage.Grid)
-                    : xyzFile.Select(p => p.Value);
+                    var componentValueCount = coverage.Arguments.Aggregate(0,
+                        (totaal, arguments) => totaal == 0 ? arguments.Values.Count : totaal * arguments.Values.Count);
+
+                    valuesToSet = xyzFile.Count != componentValueCount
+                        ? new InterpolateOperation().InterpolateToGrid(xyzFile, coverage, coverage.Grid)
+                        : xyzFile.Select(p => p.Value);
+                }
 
                 if(valuesToSet.Any())
                     coverage.SetValues(valuesToSet);

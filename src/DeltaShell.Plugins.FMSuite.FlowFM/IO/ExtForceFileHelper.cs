@@ -26,9 +26,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     // Hacky, but it does the job...
     public class ImportSamplesSpatialOperationExtension : ImportSamplesOperation
     {
-        public double RelativeSearchCellSize { get; set; }
-        public GridCellAveragingMethod AveragingMethod { get; set; }
-        public SpatialInterpolationMethod InterpolationMethod { get; set; }
+        public virtual double RelativeSearchCellSize { get; set; }
+        public virtual GridCellAveragingMethod AveragingMethod { get; set; }
+        public virtual SpatialInterpolationMethod InterpolationMethod { get; set; }
 
         public ImportSamplesSpatialOperationExtension() : base(false)
         {
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             InterpolationMethod = SpatialInterpolationMethod.Averaging;
         }
 
-        public DelftTools.Utils.Tuple<ImportSamplesOperation, InterpolateOperation> CreateOperations()
+        public virtual DelftTools.Utils.Tuple<ImportSamplesOperation, InterpolateOperation> CreateOperations()
         {
             var importSamplesOperation = new ImportSamplesOperation(false)
             {

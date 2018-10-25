@@ -745,7 +745,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         public override IRibbonCommandHandler RibbonCommandHandler
         {
-            get { return new Ribbon.Ribbon(); }
+            get { return ribbon ?? (ribbon = new Ribbon.Ribbon()); }
         }
 
         public FlowFMGuiPlugin()
@@ -755,7 +755,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         private static Func<MapView> getActiveMapViewFunc;
         private string _fmModelSettingsSuffix= " (FM model settings)";
-        
+        protected internal Ribbon.Ribbon ribbon;
+
         public static MapView ActiveMapView
         {
             get { return getActiveMapViewFunc(); }

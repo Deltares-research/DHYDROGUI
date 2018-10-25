@@ -1,7 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui.Forms;
+using DeltaShell.Plugins.SharpMapGis.Gui;
+using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
+using DeltaShell.Plugins.SharpMapGis.Gui.Commands.SpatialOperations;
 using Fluent;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
@@ -11,11 +15,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
     /// </summary>
     public partial class Ribbon : IRibbonCommandHandler
     {
+        private readonly IDictionary<UIElement, ICommand> buttonCommands = new Dictionary<UIElement, ICommand>();
+        
+        private readonly ICommand importBedlevelFromFileCommand = new ImportBedlevelFromFileCommand();
         public Ribbon()
         {
+            
             InitializeComponent();
 
             mapTab.Group = geospatialContextualGroup;
+            importBedlevelFromFileCommand = new ImportBedlevelFromFileCommand();
+
+            // with this call, the set label command is sent to the sharpmapgisguiplugin as its owner.
+            // It's not added to the list of Commands.
+            
+            SharpMapGisGuiPlugin.Instance.AddSpatialOperationCommand(ButtonAddRasterSamples, importBedlevelFromFileCommand, typeof(ImportBedlevelFromFileCommand), Properties.Resources.add);
 
             ButtonReverseLine.ToolTip = new ScreenTip
             {
@@ -30,7 +44,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
         {
             return RibbonControl;
         }
-
         public void ValidateItems()
         {
             ViewModelRegion.RefreshButtons();
@@ -42,7 +55,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
             return false;
         }
 
-        public IEnumerable<ICommand> Commands => Enumerable.Empty<ICommand>();
+        public IEnumerable<ICommand> Commands
+        {
+            get { return buttonCommands.Values; }
+        }
+        private void ButtonCreateRasterSamples_Click(object sender, RoutedEventArgs e)
+        {
+            importBedlevelFromFileCommand.Execute();
+            ValidateItems();
+        }
     }
 }
 
