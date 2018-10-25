@@ -627,7 +627,4 @@
   <data name="RoughnessModelProperties_UseReverseRoughness_DisplayName" xml:space="preserve">
     <value>Use reverse roughness</value>
   </data>
-  <data name="documentImport" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\documentImport.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
 </root>
