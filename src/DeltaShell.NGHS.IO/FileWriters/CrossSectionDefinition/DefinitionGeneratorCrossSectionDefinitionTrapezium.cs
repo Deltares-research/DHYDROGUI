@@ -8,7 +8,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
     {
         public DefinitionGeneratorCrossSectionDefinitionTrapezium() : base(CrossSectionRegion.CrossSectionDefinitionType.Trapezium)
         {
-            GenerateProfileProperties = false;
         }
 
         protected override bool HasCorrectCrossSectionShape(CrossSectionDefinitionStandard standardDefinition)

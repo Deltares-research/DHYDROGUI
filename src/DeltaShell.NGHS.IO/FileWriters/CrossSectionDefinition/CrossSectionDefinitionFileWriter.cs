@@ -145,7 +145,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             return roughnessSection;
         }
 
-        protected static IEnumerable<ICrossSectionDefinition> GetNetworkCrossSectionDefinitions(IHydroNetwork network)
+        private static IEnumerable<ICrossSectionDefinition> GetNetworkCrossSectionDefinitions(IHydroNetwork network)
         {
             var crossSections = GetNetworkCrossSections(network);
             var crossSectionDefinitions = crossSections.Select(GetCrossSectionDefinition).ToList();

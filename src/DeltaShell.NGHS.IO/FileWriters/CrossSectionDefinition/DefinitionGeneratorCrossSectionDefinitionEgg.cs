@@ -8,7 +8,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
     {
         public DefinitionGeneratorCrossSectionDefinitionEgg() : base(CrossSectionRegion.CrossSectionDefinitionType.Egg)
         {
-            GenerateProfileProperties = true;
         }
 
         protected override bool HasCorrectCrossSectionShape(CrossSectionDefinitionStandard standardDefinition)
@@ -22,7 +21,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             var eggShape = shape as CrossSectionStandardShapeEgg;
             if (eggShape == null) return;
 
-            IniCategory.AddProperty(DefinitionPropertySettings.EggWidth, eggShape.Width);
+            IniCategory.AddProperty(DefinitionPropertySettings.Diameter, eggShape.Width);
         }
     }
 }

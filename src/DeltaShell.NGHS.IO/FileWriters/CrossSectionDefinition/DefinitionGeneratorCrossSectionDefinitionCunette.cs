@@ -8,7 +8,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
     {
         public DefinitionGeneratorCrossSectionDefinitionCunette() : base(CrossSectionRegion.CrossSectionDefinitionType.Cunette)
         {
-            GenerateProfileProperties = true;
         }
 
         protected override bool HasCorrectCrossSectionShape(CrossSectionDefinitionStandard standardDefinition)

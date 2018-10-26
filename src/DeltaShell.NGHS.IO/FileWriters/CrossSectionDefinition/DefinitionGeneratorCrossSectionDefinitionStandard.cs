@@ -1,15 +1,12 @@
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
-using DelftTools.Hydro.Helpers;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
     public abstract class DefinitionGeneratorCrossSectionDefinitionStandard : DefinitionGeneratorCrossSectionDefinitionZw
     {
-        protected bool GenerateProfileProperties;
-
         protected DefinitionGeneratorCrossSectionDefinitionStandard(string definitionType) : base(definitionType)
         {
         }
@@ -34,23 +31,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             AddCommonProperties(standardDefinition);
             AddShapeMeasurementProperties(standardDefinition.Shape);
             AddCrossSectionStandardProperties();
-            AddTabulatedProfileProperties(standardDefinition);
         }
 
         private void AddCrossSectionStandardProperties()
         {
             IniCategory.AddProperty(DefinitionPropertySettings.Closed, 1);
-        }
-
-        private void AddTabulatedProfileProperties(CrossSectionDefinitionStandard standardDefinition)
-        {
-            if (GenerateProfileProperties) GenerateTabulatedProfile(standardDefinition);
-        }
-
-        private void GenerateTabulatedProfile(CrossSectionDefinitionStandard crossSectionDefinitionStandard)
-        {
-            var zwDefinition = crossSectionDefinitionStandard.ConverStandardToZw();
-            GenerateTabulatedProfile(zwDefinition);
         }
 
         protected override void AddCommonProperties(ICrossSectionDefinition crossSectionDefinition)

@@ -8,7 +8,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
     {
         public DefinitionGeneratorCrossSectionDefinitionElliptical() : base(CrossSectionRegion.CrossSectionDefinitionType.Elliptical)
         {
-            GenerateProfileProperties = true;
         }
         
         protected override bool HasCorrectCrossSectionShape(CrossSectionDefinitionStandard standardDefinition)
