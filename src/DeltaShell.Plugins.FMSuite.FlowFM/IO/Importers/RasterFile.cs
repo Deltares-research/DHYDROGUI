@@ -18,34 +18,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(RasterFile));
 
-        private static double FileSizeWarningLimitInBytes = 1e9;
+        private const double FileSizeWarningLimitInBytes = 1e9;
 
-        private static double FileSizeErrorLimitInBytes = 2.0e9;
+        private const double FileSizeErrorLimitInBytes = 2.0e9;
 
         public const string AscExtension = ".asc";
 
         public const string TiffExtension = ".tif";
 
         /// <summary>
-        /// Read the Asc from the provided <param name="ascFilePath"/>
+        /// Read the file from the provided path<param name="filePath" />
         /// </summary>
-        /// <param name="ascFilePath">Path to the Asc file</param>
-        /// <param name="checkForUnsupportedSize">Check if the file size is not to big (> 2.0 gb)</param>
-        /// <returns>List of points with a value, or null if file is too large</returns>
+        /// <param name="filePath">Path to the file</param>
+        /// <param name="checkForUnsupportedSize">Check if the file size is not to big (&gt; 2.0 gb)</param>
+        /// <returns>
+        /// List of points with a value, or null if file is too large
+        /// </returns>
         /// <exception cref="FormatException">When less then 3 values are found or the values are invalid</exception>
-        public static IEnumerable<IPointValue> Read(string ascFilePath, bool checkForUnsupportedSize = false)
+        public static IEnumerable<IPointValue> Read(string filePath, bool checkForUnsupportedSize = false)
         {
             if (checkForUnsupportedSize)
             {
-                LogFileSizeMessageIfNeeded(ascFilePath);
+                LogFileSizeMessageIfNeeded(filePath);
 
-                if (!IsFileSizeAccepted(ascFilePath))
+                if (!IsFileSizeAccepted(filePath))
                 {
                     return null;
                 }
             }
 
-            var regularGridCoverage = ReadAscFileToRegularGridCoverage(ascFilePath);
+            var regularGridCoverage = ReadFileToRegularGridCoverage(filePath);
             var pointValuesList = ConvertRegularGridToBedLevelValues(regularGridCoverage);
 
             return pointValuesList;
@@ -94,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// </summary>
         /// <param name="filePath">The path of the file to check</param>
         /// <returns>True or False</returns>
-        public static bool IsFileSizeAccepted(string filePath)
+        private static bool IsFileSizeAccepted(string filePath)
         {
             var fileSizeInBytes = GetFileSize(filePath);
             if (!(fileSizeInBytes > FileSizeWarningLimitInBytes)) return true;
@@ -106,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// Logs messsage (warning or error) if filesize is over acceptable limits
         /// </summary>
         /// <param name="filePath">The filepath to check</param>
-        public static void LogFileSizeMessageIfNeeded(string filePath)
+        private static void LogFileSizeMessageIfNeeded(string filePath)
         {
             var fileSizeInBytes = GetFileSize(filePath);
 
@@ -136,7 +138,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return fileSizeInBytes;
         }
 
-        private static IRegularGridCoverage ReadAscFileToRegularGridCoverage(string ascFilePath)
+        private static IRegularGridCoverage ReadFileToRegularGridCoverage(string ascFilePath)
         {
             var importer = new GdalFileImporter();
             var regularGrid = importer.ImportItem(ascFilePath) as IRegularGridCoverage;
@@ -152,7 +154,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var deltaX = gridCoverage.DeltaX / 2.0;
             var deltaY = gridCoverage.DeltaY / 2.0;
 
-            var values = gridCoverage.GetValues<float>();
+            var values = gridCoverage.Components[0].ValueType == typeof(float) 
+                ? new ConvertedArray<double, float>(gridCoverage.GetValues<float>(), Convert.ToSingle, Convert.ToDouble) 
+                : gridCoverage.GetValues<double>();
 
             var pointValueList = new List<IPointValue>();
 

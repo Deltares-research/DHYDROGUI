@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
     public class RasterBedLevelFileImporterTest
     {
         [Test]
-        public void Given_A2x2Raster_When_ImportingBedLevels_Then_CorrectPointCloudIsReturned()
+        public void Given_ARaster_When_ImportingBedLevels_Then_CorrectPointCloudIsReturned()
         {
             var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\ahn_breach.asc");
             var importer = new RasterBedLevelFileImporter();
@@ -20,11 +20,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var bedLevels = (importer.ImportItem(testFilePath, new WaterFlowFMModel()) as IEnumerable<IPointValue>).ToList();
             Assert.IsNotNull(bedLevels);
 
-            Assert.IsTrue(bedLevels.Count == 252*173);
+            Assert.AreEqual(252*173, bedLevels.Count);
         }
 
         [Test]
-        public void Given_AnRasterFileImporter_When_ImportingAnAscFileWithOnlyIntsAsBedLevelValues_Then_ErrorMessageIsThrown()
+        public void Given_ARasterFileImporter_When_ImportingAnAscFileWithOnlyIntsAsBedLevelValues_Then_ErrorMessageIsThrown()
         {
             var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\dem2x2_ref_dike.asc");
 
