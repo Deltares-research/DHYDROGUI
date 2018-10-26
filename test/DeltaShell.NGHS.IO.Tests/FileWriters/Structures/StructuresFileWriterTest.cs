@@ -361,7 +361,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var pliFileName = leveeBreachName + ".pli";
             var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, pliFileName);
 
-            var timeSeriesFileName = $"{leveeBreachName}_{KnownStructureProperties.TimeFilePath}.tim";
+            var timeSeriesFileName = $"{leveeBreachName}.tim";
             var timeSeriesFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timeSeriesFileName);
 
             var referenceTime = new DateTime(2018, 8, 25);

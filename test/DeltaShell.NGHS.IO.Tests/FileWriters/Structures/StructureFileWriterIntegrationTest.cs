@@ -639,7 +639,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var expectedCategoryName = "Structure";
             var expectedAlgorithmValue = (int) LeveeBreachGrowthFormula.UserDefinedBreach;
             var leveeBreachName = "myBreach";
-            var timeSeriesFileName = $"{leveeBreachName}_{KnownStructureProperties.TimeFilePath}.tim";
+            var timeSeriesFileName = $"{leveeBreachName}.tim";
 
             var referenceTime = new DateTime(2018, 8, 25);
             var fmModel = new WaterFlowFMModel
