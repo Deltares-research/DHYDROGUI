@@ -145,7 +145,6 @@
     <Compile Include="FeatureData\UniformWindField.cs" />
     <Compile Include="FileBasedWindDefinition.cs" />
     <Compile Include="IO\ApwxwyFileReader.cs" />
-    <Compile Include="IO\CrossSectionDefinitionStandardFile.cs" />
     <Compile Include="IO\Delft3DDepthFileExporter.cs" />
     <Compile Include="IO\Delft3DDepthFileImporter.cs" />
     <Compile Include="IO\Delft3DDepthFileReader.cs" />

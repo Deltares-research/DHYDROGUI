@@ -128,7 +128,6 @@
     <Compile Include="Gui\FileBasedWindDefinitionViewTest.cs" />
     <Compile Include="Gui\SupportPointListBoxTest.cs" />
     <Compile Include="IO\ApwxwyFileReaderTest.cs" />
-    <Compile Include="IO\CrossSectionDefinitionStandardFileTest.cs" />
     <Compile Include="IO\DiaFileReaderTest.cs" />
     <Compile Include="IO\Feature2DAttributesTestHelper.cs" />
     <Compile Include="IO\FeatureGroupExtensionsTest.cs" />
