@@ -118,9 +118,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
         private static void ComparePipes(Pipe primaryPipe, Pipe secondaryPipe)
         {
             Assert.That(primaryPipe.Material, Is.EqualTo(secondaryPipe.Material));
-            Assert.That(primaryPipe.PipeRoughness, Is.EqualTo(secondaryPipe.PipeRoughness));
-            Assert.That(primaryPipe.PipeRoughnessType, Is.EqualTo(secondaryPipe.PipeRoughnessType));
-            //Assert.That(primaryPipe.CrossSectionDefinition.Shape.Type, Is.EqualTo(secondaryPipe.CrossSectionDefinition.Shape.Type)); // To add when we can write/read cross section definitions
+            Assert.That(primaryPipe.CrossSectionDefinition.Shape.Type, Is.EqualTo(secondaryPipe.CrossSectionDefinition.Shape.Type)); // To add when we can write/read cross section definitions
         }
 
         private static void CompareGeometries(IGeometry primaryGeometry, IGeometry secondaryGeometry)

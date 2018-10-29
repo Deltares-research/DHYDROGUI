@@ -100,11 +100,11 @@
 
                     <!-- Row 5 -->
                     <Label Grid.Column="0" Grid.Row="5" Content="Roughness"/>
-                    <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding Pipe.PipeRoughness}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding PipeRoughnessValue, Mode=OneWay}"/>
 
                     <!-- Row 6 -->
                     <Label Grid.Column="0" Grid.Row="6" Content="Roughness type"/>
-                    <ComboBox Grid.Column="1" Grid.Row="6" SelectedItem="{Binding Pipe.PipeRoughnessType}" ItemsSource="{Binding Source={StaticResource RoughnessTypes}}" IsEnabled="False"/>
+                    <ComboBox Grid.Column="1" Grid.Row="6" SelectedItem="{Binding PipeRoughnessType, Mode=OneWay}" ItemsSource="{Binding Source={StaticResource RoughnessTypes}}" IsEnabled="False"/>
 
                     <!-- Row 7 -->
                     <!--<Label Grid.Column="0" Grid.Row="7" Content="Flow direction"/>

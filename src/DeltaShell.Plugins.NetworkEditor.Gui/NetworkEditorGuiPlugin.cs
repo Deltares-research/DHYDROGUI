@@ -407,7 +407,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.Enclosures);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.BridgePillars);
             yield return new ViewInfo<IManhole, ManholeView>();
-            yield return new ViewInfo<IPipe, PipeView>();
+            yield return new ViewInfo<IPipe, PipeView>
+            {
+                AdditionalDataCheck = pipe =>
+                {
+                    var defaultSewerCrossSectionSectionType = pipe.CrossSectionDefinition.Sections.FirstOrDefault()?.SectionType;
+                    var roughnessSectionModel = Gui.Application.GetAllModelsInProject().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Contains(pipe)) as IModelWithRoughnessSections;
+                    var sewerRoughnessSection = roughnessSectionModel?.RoughnessSections?.FirstOrDefault(rs => rs.Name == defaultSewerCrossSectionSectionType?.ToString());
+
+                    return sewerRoughnessSection != null;
+                },
+                AfterCreate = (view, pipe) =>
+                {
+                    var defaultSewerCrossSectionSectionType = pipe.CrossSectionDefinition.Sections.FirstOrDefault()?.SectionType;
+                    var roughnessSectionModel = Gui.Application.GetAllModelsInProject().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Contains(pipe)) as IModelWithRoughnessSections;
+                    var sewerRoughnessSection = roughnessSectionModel?.RoughnessSections?.FirstOrDefault(rs => rs.Name == defaultSewerCrossSectionSectionType?.ToString());
+
+                    view.PipeRoughnessSection = sewerRoughnessSection;
+                }
+            };
             yield return new ViewInfo<LeveeBreach, LeveeBreachView>();
         }
 

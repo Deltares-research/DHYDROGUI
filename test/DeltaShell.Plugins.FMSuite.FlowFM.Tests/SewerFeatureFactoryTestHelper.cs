@@ -196,7 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             return sewerEntity;
         }
 
-        protected static void AddSewerFeatureToNetwork(ISewerFeature sewerFeature, HydroNetwork network)
+        protected static void AddSewerFeatureToNetwork(ISewerFeature sewerFeature, IHydroNetwork network)
         {
             sewerFeature.AddToHydroNetwork(network);
         }

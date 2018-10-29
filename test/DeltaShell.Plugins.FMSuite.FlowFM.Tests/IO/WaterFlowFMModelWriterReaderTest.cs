@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 Network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEachAndOneOrifice()
             };
-            var sewerRoughness = fmModel.RoughnessSections.FirstOrDefault(rs => rs.Name == "Sewer");
+            var sewerRoughness = fmModel.RoughnessSections.FirstOrDefault(rs => rs.Name == RoughnessDataSet.SewerSectionTypeName);
             Assert.IsNotNull(sewerRoughness);
             var branch1 = fmModel.Network.Branches.OfType<SewerConnection>().FirstOrDefault();
             Assert.IsNotNull(branch1);
@@ -95,11 +95,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             // add functions
             sewerRoughness.AddHRoughnessFunctionToBranch(branch1, waterLevelfunction);
-            /*var functionOfQ = new Function("functionOfQ");
-            functionOfQ.Arguments.Add(new Variable<double>() { Values = new MultiDimensionalArray<double>() { 2.0, 6.0, 10.0 } });
-            functionOfQ.Components.Add(new Variable<double>() { Values = new MultiDimensionalArray<double>() { 3.0, 5.0, 7.0 } });
-
-            sewerRoughness.AddQRoughnessFunctionToBranch(branch1, functionOfQ);*/
             
             WaterFlowFMModelWriter.Write(fmModel);
             var directory = Path.GetDirectoryName(fmModel.MduFilePath);

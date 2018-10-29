@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Tests.Helpers;
@@ -293,8 +294,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(crossSectionDefinitionFileProperty.GetValueAsString(), Is.EqualTo(string.Empty));
         }
 
-        [TestCase("Sewer")]
-        [TestCase("Main")]
+        [TestCase(RoughnessDataSet.SewerSectionTypeName)]
+        [TestCase(RoughnessDataSet.MainSectionTypeName)]
         public void GivenFmModelWithSewerRoughness_WhenWritingMduFile_ThenSewerRoughnessFileIsWritten(string roughnessSectionName)
         {
             var tempFolder = FileUtils.CreateTempDirectory();

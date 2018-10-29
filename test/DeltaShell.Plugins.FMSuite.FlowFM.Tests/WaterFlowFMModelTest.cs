@@ -12,6 +12,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -557,8 +558,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var roughnessSections = fmModel.RoughnessSections;
 
             Assert.IsNotNull(roughnessSections, "Roughness sections of the FM model were not instantiated.");
-            Assert.That(roughnessSections.Count(rs => rs.Name == "Sewer"), Is.EqualTo(1));
-            Assert.That(roughnessSections.ElementAt(0).Name, Is.EqualTo("Sewer"));
+            Assert.That(roughnessSections.Count(rs => rs.Name == RoughnessDataSet.SewerSectionTypeName), Is.EqualTo(1));
+            Assert.That(roughnessSections.ElementAt(0).Name, Is.EqualTo(RoughnessDataSet.SewerSectionTypeName));
 
             var sewerRoughnessSection = roughnessSections.First();
             Assert.That(sewerRoughnessSection.GetDefaultRoughnessValue(), Is.EqualTo(0.003));
@@ -575,9 +576,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var roughnessSections = fmModel.RoughnessSections;
 
             Assert.IsNotNull(roughnessSections, "Roughness sections of the FM model were not instantiated.");
-            Assert.That(roughnessSections.Count(rs => rs.Name == "Main"), Is.EqualTo(1));
-            Assert.That(roughnessSections.Count(rs => rs.Name == "Sewer"), Is.EqualTo(1));
-            Assert.That(roughnessSections.ElementAt(0).Name, Is.EqualTo("Sewer"));
+            Assert.That(roughnessSections.Count(rs => rs.Name == RoughnessDataSet.MainSectionTypeName), Is.EqualTo(1));
+            Assert.That(roughnessSections.Count(rs => rs.Name == RoughnessDataSet.SewerSectionTypeName), Is.EqualTo(1));
+            Assert.That(roughnessSections.ElementAt(0).Name, Is.EqualTo(RoughnessDataSet.SewerSectionTypeName));
         }
 
         [Test]

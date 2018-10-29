@@ -3,12 +3,12 @@ using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Properties;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using log4net;
 
@@ -23,6 +23,19 @@ namespace DelftTools.Hydro.SewerFeatures
 
         public string PipeId { get; set; }
 
+        public Pipe()
+        {
+            PropertyChanged += OnPipePropertyChanged;
+        }
+
+        private void OnPipePropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Network))
+            {
+                AddCrossSectionDefinition((IHydroNetwork) Network);
+            }
+        }
+
         public CrossSectionDefinitionStandard CrossSectionDefinition
         {
             get { return crossSectionDefinition; }
@@ -36,14 +49,6 @@ namespace DelftTools.Hydro.SewerFeatures
         }
 
         public SewerProfileMapping.SewerProfileMaterial Material { get; set; }
-
-        [DisplayName("Roughness")]
-        [FeatureAttribute(ExportName = "Roughness", Order = 8)]
-        public double PipeRoughness { get; set; } = 0.003;
-
-        [DisplayName("Roughness type")]
-        [FeatureAttribute(ExportName = "Roughness type", Order = 9)]
-        public RoughnessType PipeRoughnessType { get; set; } = RoughnessType.WhiteColebrook;
 
         public override IEventedList<IBranchFeature> BranchFeatures
         {
@@ -77,12 +82,20 @@ namespace DelftTools.Hydro.SewerFeatures
 
         protected override void AddCrossSectionDefinition(IHydroNetwork hydroNetwork)
         {
+            if(hydroNetwork == null) return;
+
             if (CrossSectionDefinitionName == null) CrossSectionDefinition = (CrossSectionDefinitionStandard) CrossSectionDefinitionStandard.CreateDefault();
             else
             {
                 CrossSectionDefinition = hydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(cs => cs.Name == CrossSectionDefinitionName) as CrossSectionDefinitionStandard;
-                if (CrossSectionDefinition != null)
+                if (CrossSectionDefinition != null && !string.IsNullOrEmpty(CrossSectionDefinition.Shape.MaterialName))
                     Material = (SewerProfileMapping.SewerProfileMaterial) EnumDescriptionAttributeTypeConverter.GetEnumValue<SewerProfileMapping.SewerProfileMaterial>(CrossSectionDefinition.Shape.MaterialName);
+            }
+
+            var sewerCrossSectionSectionType = hydroNetwork.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name == RoughnessDataSet.SewerSectionTypeName);
+            if (sewerCrossSectionSectionType != null && CrossSectionDefinition != null)
+            {
+                CrossSectionDefinition.Sections.Add(new CrossSectionSection {SectionType = sewerCrossSectionSectionType});
             }
         }
 

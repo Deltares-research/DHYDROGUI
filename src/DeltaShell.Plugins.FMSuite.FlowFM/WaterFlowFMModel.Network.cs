@@ -110,10 +110,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         private void AddSewerRoughnessIfNecessary()
         {
-            if (RoughnessSections.Any(rs => rs.Name == "Sewer")) return;
-
-            var csSectionType = new CrossSectionSectionType { Name = "Sewer" };
-            var roughnessSection = new RoughnessSection(csSectionType, Network);
+            var roughnessSection = RoughnessSections.FirstOrDefault(rs => rs.Name == RoughnessDataSet.SewerSectionTypeName);
+            if ( roughnessSection != null )
+            {
+                roughnessSection.SetDefaultRoughnessType(RoughnessType.WhiteColebrook);
+                roughnessSection.SetDefaultRoughnessValue(0.003);
+                return;
+            }
+            
+            var csSectionType = Network.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name == RoughnessDataSet.SewerSectionTypeName);
+            if (csSectionType == null)
+            {
+                csSectionType = new CrossSectionSectionType {Name = RoughnessDataSet.SewerSectionTypeName};
+                network.CrossSectionSectionTypes.Add(csSectionType);
+            }roughnessSection = new RoughnessSection(csSectionType, Network);
             roughnessSection.SetDefaultRoughnessType(RoughnessType.WhiteColebrook);
             roughnessSection.SetDefaultRoughnessValue(0.003);
 
