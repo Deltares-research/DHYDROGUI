@@ -442,7 +442,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                         model.Boundaries.Add(boundary);
                         model.BoundaryConditions.Add((WaveBoundaryCondition)boundaryCondition);
 
+                        Assert.AreEqual(string.Empty, model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory,KnownWaveProperties.TimeSeriesFile).GetValueAsString());
+
+                        //During a save modeldefinition properties are also updated
                         app.SaveProject();
+
+                        Assert.AreEqual("Waves.bcw", model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeSeriesFile).GetValueAsString());
+
 
                         var mdwFilePath = model.MdwFilePath;
                         var reader = new DelftIniReader();
@@ -539,25 +545,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var modelDef = mdwFile.Load(importedMdwFilePath);
             var targetPath = TestHelper.GetCurrentMethodName() + "output.mdw";
 
-            Assert.AreEqual(
+            Assert.AreEqual("wad.obt",
                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ObstacleFile)
-                    .GetValueAsString(), "wad.obt");
+                    .GetValueAsString());
 
             modelDef.Obstacles.Clear();
 
-            //Modeldefinition properties updated after save
+            //Modeldefinition properties updated during save
             mdwFile.SaveTo(targetPath, modelDef, true);
 
-            Assert.AreEqual(
+            Assert.AreEqual(string.Empty,
                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ObstacleFile)
-                    .GetValueAsString(), string.Empty);
+                    .GetValueAsString());
 
             //Verify what was really written in the file
             var modelDef2 = mdwFile.Load(targetPath);
 
-            Assert.AreEqual(
+            Assert.AreEqual(string.Empty,
                 modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ObstacleFile)
-                    .GetValueAsString(), string.Empty);
+                    .GetValueAsString());
         }
 
 
@@ -574,37 +580,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var modelDef = mdwFile.Load(importedMdwFilePath);
             var targetPath = TestHelper.GetCurrentMethodName() + "output.mdw";
 
-            Assert.AreEqual(
+            Assert.AreEqual("10",
                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindSpeed)
-                    .GetValueAsString(), "10");
+                    .GetValueAsString());
 
-            Assert.AreEqual(
+            Assert.AreEqual("315",
                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindDirection)
-                    .GetValueAsString(), "315");
+                    .GetValueAsString());
 
             modelDef.TimePointData.WindDataType = InputFieldDataType.TimeVarying;
             
-            //Modeldefinition properties updated after save
+            //Modeldefinition properties updated during save
             mdwFile.SaveTo(targetPath, modelDef, true);
 
-            Assert.AreEqual(
+            Assert.AreEqual("0",
                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindSpeed)
-                    .GetValueAsString(), "0");
+                    .GetValueAsString());
 
-            Assert.AreEqual(
+            Assert.AreEqual("0",
                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindDirection)
-                    .GetValueAsString(), "0");
+                    .GetValueAsString());
 
             //Verify what was really written in the file
             var modelDef2 = mdwFile.Load(targetPath);
 
-            Assert.AreEqual(
+            Assert.AreEqual("0",
                 modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindSpeed)
-                    .GetValueAsString(), "0");
+                    .GetValueAsString());
 
-            Assert.AreEqual(
+            Assert.AreEqual("0",
                 modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindDirection)
-                    .GetValueAsString(), "0");
+                    .GetValueAsString());
         }
         
         [Test]
@@ -627,111 +633,78 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             // update modeldefintion properties
             mdwFile.SaveTo(targetPath, modelDef, true);
 
-            Assert.AreEqual(
+            Assert.AreEqual("6",
                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
-                    .GetValueAsString(), "6");
+                    .GetValueAsString());
 
-            Assert.AreEqual(
+            Assert.AreEqual("6",
                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .GetValueAsString(), "6");
+                    .GetValueAsString());
 
-            Assert.AreEqual(
+            Assert.AreEqual("6",
                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .GetValueAsString(), "6");
+                    .GetValueAsString());
 
             modelDef.TimePointData.HydroDataType = InputFieldDataType.TimeVarying;
 
             mdwFile.SaveTo(targetPath, modelDef, true);
 
-            Assert.AreEqual(
+            Assert.AreEqual("0",
                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
-                    .GetValueAsString(), "0");
+                    .GetValueAsString());
 
-            Assert.AreEqual(
+            Assert.AreEqual("0",
                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .GetValueAsString(), "0");
+                    .GetValueAsString());
 
-            Assert.AreEqual(
+            Assert.AreEqual("0",
                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .GetValueAsString(), "0");
+                    .GetValueAsString());
 
             //Verify what was really written in the file
             var modelDef2 = mdwFile.Load(targetPath);
 
-            Assert.AreEqual(
+            Assert.AreEqual("0",
                 modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
-                    .GetValueAsString(), "0");
+                    .GetValueAsString());
 
-            Assert.AreEqual(
+            Assert.AreEqual("0",
                 modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .GetValueAsString(), "0");
+                    .GetValueAsString());
 
-            Assert.AreEqual(
+            Assert.AreEqual("0",
                 modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .GetValueAsString(), "0");
+                    .GetValueAsString());
         }
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void GivenAWaveModelWithConstantHydrodynamics_WhenChangedItToTimeseries_ThenZerosShouldBeWrittenForConstantWaterLevelVelocityXAndVelocityYInTheModelDefinitionProperties2()
+        public void GivenAWaveModelWithObservationPoints_WhenImportedItAndRemoveTheObservationsPoints_ThenTheLocationFileWithObservationPointsShouldBeFromTheModeldefinitionProperties()
         {
             var mdwFile = new MdwFile();
-            var modelDef = new WaveModelDefinition()
-            {
-                OuterDomain = new WaveDomainData("Outer")
-            };
+            var importedMdwFilePath = TestHelper.GetTestFilePath(@"wad\wad.mdw");
+            var modelDef = mdwFile.Load(importedMdwFilePath);
             var targetPath = TestHelper.GetCurrentMethodName() + "output.mdw";
 
-            modelDef.TimePointData.HydroDataType = InputFieldDataType.Constant;
-            modelDef.TimePointData.WaterLevelConstant = 6;
-            modelDef.TimePointData.VelocityXConstant = 6;
-            modelDef.TimePointData.VelocityYConstant = 6;
+            Assert.AreEqual("wad.loc",
+                modelDef.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.LocationFile)
+                    .GetValueAsString());
 
-            // update modeldefintion properties
+            modelDef.ObservationPoints.Clear();
+
+            //Modeldefinition properties updated during save
             mdwFile.SaveTo(targetPath, modelDef, true);
 
-            Assert.AreEqual(
-                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
-                    .GetValueAsString(), "6");
-
-            Assert.AreEqual(
-                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .GetValueAsString(), "6");
-
-            Assert.AreEqual(
-                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .GetValueAsString(), "6");
-
-            modelDef.TimePointData.HydroDataType = InputFieldDataType.TimeVarying;
-
-            mdwFile.SaveTo(targetPath, modelDef, true);
-
-            Assert.AreEqual(
-                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
-                    .GetValueAsString(), "0");
-
-            Assert.AreEqual(
-                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .GetValueAsString(), "0");
-
-            Assert.AreEqual(
-                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .GetValueAsString(), "0");
+            Assert.AreEqual(string.Empty,
+                modelDef.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.LocationFile)
+                    .GetValueAsString());
 
             //Verify what was really written in the file
             var modelDef2 = mdwFile.Load(targetPath);
 
-            Assert.AreEqual(
-                modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
-                    .GetValueAsString(), "0");
-
-            Assert.AreEqual(
-                modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .GetValueAsString(), "0");
-
-            Assert.AreEqual(
-                modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .GetValueAsString(), "0");
+            Assert.AreEqual(string.Empty, 
+                modelDef2.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.LocationFile)
+                    .GetValueAsString());
         }
 
 
