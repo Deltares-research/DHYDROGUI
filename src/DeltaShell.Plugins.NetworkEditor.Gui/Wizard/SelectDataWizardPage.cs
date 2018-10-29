@@ -213,36 +213,43 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Wizard
             if (openFileDialog.ShowDialog() == DialogResult.OK )
             {
                 var path = openFileDialog.FileName;
-                var extension = Path.GetExtension(path);
-                lastVisitPath = Path.GetDirectoryName(path);
-                txtPath.Text = path;
-
-                var featureProvider = hydroRegionFromGisImporter.FileBasedFeatureProviders.First(p => p.FileFilter.Contains(extension));
-                schemaReader = AvailableSchemaReaders.First(sr => sr.FileExtensions.Contains(extension));
-
-                schemaReader.Path = path;
-                schemaReader.OpenConnection();
-
-                if(featureProvider.IsRelationalDataBase)
+                try
                 {
-                    comboBoxTable.DataSource = schemaReader.GetTableNames;
-                    comboBoxTable.Enabled = true;
-                    comboBoxTable.SelectedIndex = 0;
-                    btnRelatedTables.Enabled = true;
+                    var extension = Path.GetExtension(path) ?? string.Empty;
+                    lastVisitPath = Path.GetDirectoryName(path);
+                    txtPath.Text = path;
+
+                    var featureProvider = hydroRegionFromGisImporter.FileBasedFeatureProviders.First(p => p.FileFilter.Contains(extension));
+                    schemaReader = AvailableSchemaReaders.First(sr => sr.FileExtensions.Contains(extension));
+
+                    schemaReader.Path = path;
+                    schemaReader.OpenConnection();
+
+                    if (featureProvider.IsRelationalDataBase)
+                    {
+                        comboBoxTable.DataSource = schemaReader.GetTableNames;
+                        comboBoxTable.Enabled = true;
+                        comboBoxTable.SelectedIndex = 0;
+                        btnRelatedTables.Enabled = true;
+                    }
+                    else
+                    {
+                        comboBoxTable.DataSource = null;
+                        comboBoxTable.Enabled = false;
+
+                        var listColumns = schemaReader.GetColumnNames(null, true);
+                        listColumns.Insert(0, "<None>");
+                        comboBoxDiscriminatorColumn.DataSource = listColumns;
+                        comboBoxDiscriminatorColumn.SelectedIndex = 0;
+                        comboBoxDiscriminatorColumn.Enabled = true;
+                    }
+
+                    btnAddToList.Enabled = true;
                 }
-                else
+                catch (Exception ex)
                 {
-                    comboBoxTable.DataSource = null;
-                    comboBoxTable.Enabled = false;
-
-                    var listColumns = schemaReader.GetColumnNames(null, true);
-                    listColumns.Insert(0, "<None>");
-                    comboBoxDiscriminatorColumn.DataSource = listColumns;
-                    comboBoxDiscriminatorColumn.SelectedIndex = 0;
-                    comboBoxDiscriminatorColumn.Enabled = true;
+                    Log.ErrorFormat("Error occured importing from file: {0}{1}{2}", path, Environment.NewLine, ex.Message);
                 }
-
-                btnAddToList.Enabled = true;
             }
         }
 
