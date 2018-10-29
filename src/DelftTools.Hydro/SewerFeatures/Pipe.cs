@@ -30,7 +30,8 @@ namespace DelftTools.Hydro.SewerFeatures
 
         private void OnPipePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(Network))
+            var pipe = sender as IPipe;
+            if (pipe != null && e.PropertyName == nameof(Network))
             {
                 AddCrossSectionDefinition((IHydroNetwork) Network);
             }

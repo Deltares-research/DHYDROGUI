@@ -99,9 +99,10 @@ namespace DelftTools.Hydro.Tests.Helpers
             var sourceManhole = new Manhole(SourceManholeId);
             var sourceCompartment = new Compartment(SourceCompartmentName) { SurfaceLevel = 0.0, Geometry = SourceCompartmentGeometry };
             sourceManhole.Compartments.Add(sourceCompartment);
-
-            var crossSectionDefinition = new CrossSectionDefinitionStandard(CrossSectionStandardShapeArch.CreateDefault());
             
+            var crossSectionDefinition = new CrossSectionDefinitionStandard(CrossSectionStandardShapeArch.CreateDefault());
+            crossSectionDefinition.Name = crossSectionDefinitionName;
+
             var pipe = new Pipe
             {
                 Name = "myPipe",
@@ -112,9 +113,11 @@ namespace DelftTools.Hydro.Tests.Helpers
                 LevelSource = 0.0,
                 LevelTarget = 0.0,
                 WaterType = SewerConnectionWaterType.DryWater,
-                CrossSectionDefinition = crossSectionDefinition
+                CrossSectionDefinition = crossSectionDefinition,
+                CrossSectionDefinitionName = crossSectionDefinitionName
             };
 
+            network.SharedCrossSectionDefinitions.Add(crossSectionDefinition);
             network.Branches.Add(pipe);
             network.Nodes.Add(sourceManhole);
             network.Nodes.Add(targetManhole);

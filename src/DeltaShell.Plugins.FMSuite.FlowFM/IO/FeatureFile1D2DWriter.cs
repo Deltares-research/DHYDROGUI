@@ -23,9 +23,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public static void Write1D2DFeatures(string targetMduFilePath, WaterFlowFMModel fmModel)
         {
             WriteNodeFile(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network);
-            WriteCrossSections(targetMduFilePath, fmModel);
+            WriteCrossSectionFiles(targetMduFilePath, fmModel);
             WriteStructuresFiles(targetMduFilePath, fmModel);
-            WriteRoughness(targetMduFilePath, fmModel);
+            WriteRoughnessFiles(targetMduFilePath, fmModel);
         }
 
         private static void WriteNodeFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static void WriteCrossSections(string targetMduFilePath, WaterFlowFMModel fmModel)
+        private static void WriteCrossSectionFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
         {
             WriteCrossSectionDefinitions(targetMduFilePath, fmModel);
             WriteCrossSectionLocations(targetMduFilePath, fmModel);
@@ -113,13 +113,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static void WriteRoughness(string targetMduFilePath, WaterFlowFMModel fmModel)
+        private static void WriteRoughnessFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
         {
             var directoryName = System.IO.Path.GetDirectoryName(targetMduFilePath);
             if (directoryName == null) return;
 
             var roughnessFileNames = fmModel.RoughnessSections.Select(GetRoughnessFilename);
-            fmModel.ModelDefinition.SetModelProperty(KnownProperties.RoughnessFile, string.Join(" ", roughnessFileNames));
+            fmModel.ModelDefinition.SetModelProperty(KnownProperties.RoughnessFile, string.Join(";", roughnessFileNames));
 
             foreach (var roughnessSection in fmModel.RoughnessSections)
             {

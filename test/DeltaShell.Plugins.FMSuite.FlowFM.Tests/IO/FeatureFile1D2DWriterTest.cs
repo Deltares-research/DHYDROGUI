@@ -296,7 +296,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [TestCase(RoughnessDataSet.SewerSectionTypeName)]
         [TestCase(RoughnessDataSet.MainSectionTypeName)]
-        public void GivenFmModelWithSewerRoughness_WhenWritingMduFile_ThenSewerRoughnessFileIsWritten(string roughnessSectionName)
+        public void GivenFmModelWithSewerRoughness_WhenWriting1D2DFeatures_ThenSewerRoughnessFileIsWritten(string roughnessSectionName)
         {
             var tempFolder = FileUtils.CreateTempDirectory();
             var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
@@ -311,11 +311,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsNotNull(sewerRoughnessSection);
 
             FeatureFile1D2DWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel);
-
             Assert.That(File.Exists(sewerRoughnessFilePath), $"{roughnessSectionName} roughness file was not written");
+        }
+
+        [TestCase(RoughnessDataSet.SewerSectionTypeName)]
+        [TestCase(RoughnessDataSet.MainSectionTypeName)]
+        public void GivenFmModelWithSewerRoughness_WhenWriting1D2DFeatures_ThenSewerRoughnessFilesAreReferencedInTheMduFile(string roughnessSectionName)
+        {
+            var tempFolder = FileUtils.CreateTempDirectory();
+            var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
+            var sewerRoughnessFileName = $"roughness-{roughnessSectionName}.ini";
+
+            var fmModel = new WaterFlowFMModel
+            {
+                MduFilePath = mduFilePath
+            };
+            var sewerRoughnessSection = fmModel.RoughnessSections.FirstOrDefault(rs => rs.Name == roughnessSectionName);
+            Assert.IsNotNull(sewerRoughnessSection);
+
+            FeatureFile1D2DWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel);
 
             var roughnessModelProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.RoughnessFile);
-            Assert.Contains(sewerRoughnessFileName, roughnessModelProperty.GetValueAsString().Split(' '));
+            Assert.Contains(sewerRoughnessFileName, roughnessModelProperty.GetValueAsString().Split(';'));
         }
     }
 }
