@@ -665,7 +665,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             {
                 var importer = ((FileImportActivity) sender).FileImporter;
 
-                if (importer is FlowFMNetFileImporter || importer is IFeature2DImporterExporter)
+                if (importer is FlowFMNetFileImporter || importer is IFeature2DImporterExporter || importer is RasterFileImporter)
                 {
                     if (activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished)
                     {
