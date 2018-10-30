@@ -95,12 +95,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             var targetObj = mocks.StrictMultiMock<IHydroObject>(typeof(IHydroNode));
             targetObj.Expect(so => so.Name).Return("Node001").Repeat.Any();
 
-            var catchment1 = mocks.StrictMock<Catchment>();
-            catchment1.Expect(c => c.Name).Return("Catchment1").Repeat.Any();
-            catchment1.Expect(c => c.CatchmentType).Return(catchmentType).Repeat.Any();
-            var links = new EventedList<HydroLink>() {new HydroLink() {Source =  catchment1, Target = targetObj} };
-            catchment1.Expect(c => c.Links).Return(links).Repeat.Any();
-
+            var catchment1 = mocks.Stub<Catchment>();
+            catchment1.Name = "Catchment1";
+            catchment1.CatchmentType = catchmentType;
+            catchment1.Links = new EventedList<HydroLink> {new HydroLink() {Source =  catchment1, Target = targetObj} };
+            
             var basin = mocks.PartialMock<DrainageBasin>();
             var catchments = new EventedList<Catchment>() { catchment1 };
             basin.Expect(b => b.Catchments).Return(catchments).Repeat.Any();

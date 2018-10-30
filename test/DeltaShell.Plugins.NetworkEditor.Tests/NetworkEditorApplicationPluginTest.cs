@@ -256,7 +256,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             var drainageBasin = mocks.DynamicMock<IDrainageBasin>();
             drainageBasin.Expect(n => n.Catchments).Return(new EventedList<Catchment>()).Repeat.Once();
-            var wasteWaterTreatmentPlant = mocks.DynamicMock<WasteWaterTreatmentPlant>();
+            var wasteWaterTreatmentPlant = mocks.Stub<WasteWaterTreatmentPlant>();
             var wasteWaterTreatmentPlants = new EventedList<WasteWaterTreatmentPlant>() {wasteWaterTreatmentPlant};
             drainageBasin.Expect(n => n.WasteWaterTreatmentPlants).Return(wasteWaterTreatmentPlants).Repeat.Twice();
             subRegions.Add(drainageBasin);
@@ -275,9 +275,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             mocks.VerifyAll();
 
             Assert.That(link.Geometry.ToString(), Is.EqualTo("LINESTRING (5 5, 5 0)"));
-
-
-
         }
 
         [Test]
