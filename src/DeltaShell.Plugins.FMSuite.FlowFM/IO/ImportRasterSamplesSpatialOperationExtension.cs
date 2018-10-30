@@ -25,8 +25,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 throw new ArgumentException("Cannot find file " + FilePath);
             }
-            var extension = Path.GetExtension(FilePath);
-            if (extension != RasterFile.AscExtension || extension != RasterFile.TiffExtension)
+            string extension = Path.GetExtension(FilePath);
+            if (extension != RasterFile.AscExtension && extension != RasterFile.TiffExtension)
             {
                 log.WarnFormat("File {0} does not have the right extension (only .asc/.tif imports are supported for now)", FilePath);
             }
