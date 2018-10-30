@@ -209,7 +209,7 @@
     <Compile Include="Validation\WaterFlowModel1DTemperatureValidator.cs" />
     <Compile Include="Validation\WaterFlowModel1DOutputFileValidator.cs" />
     <Compile Include="ImportExport\WaterFlowModelFileReader.cs" />
-    <Compile Include="ImportExport\WaterFlowModelFileWriter.cs" />
+    <Compile Include="ImportExport\WaterFlowModel1DFileWriter.cs" />
     <Compile Include="InitialConditionsConverter.cs" />
     <Compile Include="InitialConditionsType.cs" />
     <Compile Include="ModelApiControllers\CrossSectionModelApiController.cs" />

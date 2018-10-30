@@ -21,7 +21,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 {
     [TestFixture]
-    public class GwswFileImporterTest: GwswFileImporterTestHelper
+    public class GwswFileImporterTest : GwswFileImporterTestHelper
     {
         #region Gwsw Attribute tests
 
@@ -1184,6 +1184,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 Assert.That(coords[1], Is.EqualTo(new Coordinate(30, 40, double.NaN)));
                 Assert.That(coords[2], Is.EqualTo(new Coordinate(30, 40, double.NaN)));
                 Assert.That(coords[3], Is.EqualTo(new Coordinate(23, 99, double.NaN)));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
+        }
+
+        [Test]
+        public void GivenFmModel_WhenImportingOutletFromGwsw_ThenBoundaryConditionsAreGeneratedWithTimeSeries()
+        {
+            var originalDir = TestHelper.GetTestFilePath(@"gwswFiles\SimpleModelWithOutlet");
+            var testDir = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(originalDir, testDir);
+
+            try
+            {
+                var gwswImporter = new GwswFileImporter
+                {
+                    FilesToImport =
+                    {
+                        Path.Combine(testDir, "Knooppunt.csv"),
+                        Path.Combine(testDir, "Verbinding.csv"),
+                        Path.Combine(testDir, "Kunstwerk.csv"),
+                        Path.Combine(testDir, "Profiel.csv")
+                    }
+                };
+
+                var fmModel = new WaterFlowFMModel();
+                gwswImporter.ImportItem(null, fmModel);
+
+                Assert.That(fmModel.BoundaryConditionSets.Count, Is.EqualTo(1));
             }
             finally
             {

@@ -20,11 +20,6 @@
                     <x:Type TypeName="hydro:SewerConnectionWaterType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <ObjectDataProvider x:Key="RoughnessTypes" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="hydro:RoughnessType"/>
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
             <ObjectDataProvider x:Key="MaterialTypes" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="sewer:SewerProfileMapping+SewerProfileMaterial"/>
@@ -104,7 +99,7 @@
 
                     <!-- Row 6 -->
                     <Label Grid.Column="0" Grid.Row="6" Content="Roughness type"/>
-                    <ComboBox Grid.Column="1" Grid.Row="6" SelectedItem="{Binding PipeRoughnessType, Mode=OneWay}" ItemsSource="{Binding Source={StaticResource RoughnessTypes}}" IsEnabled="False"/>
+                    <TextBlock Grid.Column="1" Grid.Row="6" Text="{Binding PipeRoughnessType, Mode=OneWay}"/>
 
                     <!-- Row 7 -->
                     <!--<Label Grid.Column="0" Grid.Row="7" Content="Flow direction"/>
