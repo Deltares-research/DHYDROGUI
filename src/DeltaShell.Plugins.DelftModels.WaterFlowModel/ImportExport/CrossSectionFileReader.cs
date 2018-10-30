@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             {
                 try
                 {
-                    var crossSectionDefinition = ReadCSDDefinition(csdDefinitionCategory, waterFlowModel1D);
+                    var crossSectionDefinition = TransformDefinitionCategoryIntoCrossSectionDefinition(csdDefinitionCategory, waterFlowModel1D);
                     if (crossSectionDefinitions.Contains(crossSectionDefinition) || crossSectionDefinitions.FirstOrDefault(csd => csd.Name == crossSectionDefinition.Name) != null)
                         throw new FileReadingException(string.Format("cross section definition with id {0} is already read, id's CAN NOT be duplicates!", crossSectionDefinition.Name));
 
@@ -97,14 +97,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             if (fileReadingExceptions.Count > 0)
             {
-                var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine);
-                throw new FileReadingException(string.Format("While reading cross sections an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
+                var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException?.InnerException != null 
+                    ? fileReadingException.InnerException.Message + Environment.NewLine 
+                    : string.Empty
+                    );
+                throw new FileReadingException(
+                    $"While reading cross sections an error occured :{Environment.NewLine} {string.Join(Environment.NewLine, innerExceptionMessages)}"
+                    );
             }
         }
 
-        public static ICrossSectionDefinition ReadCSDDefinition(IDelftIniCategory csdDefinitionCategory, WaterFlowModel1D crossSectionSectionTypes)
+        public static ICrossSectionDefinition TransformDefinitionCategoryIntoCrossSectionDefinition(IDelftIniCategory crossSectionDefinitionCategory, WaterFlowModel1D waterFlowModel)
         {
-            var typeProperty = csdDefinitionCategory.Properties.First(p => p.Name == DefinitionPropertySettings.DefinitionType.Key);
+            var typeProperty = crossSectionDefinitionCategory.Properties
+                .First(p => p.Name.ToLowerInvariant() == DefinitionPropertySettings.DefinitionType.Key.ToLowerInvariant());
+
             var definitionReader = DefinitionGeneratorFactory.GetDefinitionReaderCrossSection(typeProperty.Value);
             if (definitionReader == null)
             {
@@ -112,8 +119,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 throw new FileReadingException(errorMessage);
             }
 
-            var readCrossSectionDefinition = definitionReader.ReadCrossSectionDefinition(csdDefinitionCategory);
-            SetFrictionOnCrossSectionDefinition(csdDefinitionCategory, readCrossSectionDefinition, crossSectionSectionTypes);
+            var readCrossSectionDefinition = definitionReader.ReadCrossSectionDefinition(crossSectionDefinitionCategory);
+            SetFrictionOnCrossSectionDefinition(crossSectionDefinitionCategory, readCrossSectionDefinition, waterFlowModel);
             //groundlayer??
             return readCrossSectionDefinition;
         }
@@ -181,12 +188,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 if (sectionTypeName == null)
                     throw new FileReadingException("reading error");
 
-                readCrossSectionDefinition.Sections.Add(
-                    new CrossSectionSection()
-                    {
-                        SectionType = GetCrossSectionSectionType(sectionTypeName, model.Network)
-                    }
-                    );
+                readCrossSectionDefinition.Sections.Add(new CrossSectionSection{SectionType = GetCrossSectionSectionType(sectionTypeName, model.Network)});
             }
         }
         

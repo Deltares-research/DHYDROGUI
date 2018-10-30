@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             {
                 try
                 {
-                    var crossSectionDefinition = CrossSectionFileReader.ReadCSDDefinition(csdDefinitionCategory, waterFlowModel1D);
+                    var crossSectionDefinition = CrossSectionFileReader.TransformDefinitionCategoryIntoCrossSectionDefinition(csdDefinitionCategory, waterFlowModel1D);
                     if (crossSectionDefinitions.Contains(crossSectionDefinition) || crossSectionDefinitions.FirstOrDefault(csd => csd.Name == crossSectionDefinition.Name) != null)
                         throw new FileReadingException(string.Format("cross section definition with id {0} is already read, id's CAN NOT be duplicates!", crossSectionDefinition.Name));
 

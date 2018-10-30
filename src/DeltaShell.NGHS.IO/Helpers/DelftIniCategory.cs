@@ -195,7 +195,7 @@ namespace DeltaShell.NGHS.IO.Helpers
     {
         public static T ReadProperty<T>(this IDelftIniCategory category, string key, ref string errorMessage)
         {
-            var iniProperty = category.Properties.FirstOrDefault(property => property.Name == key);
+            var iniProperty = category.Properties.FirstOrDefault(property => property.Name.ToLowerInvariant() == key.ToLowerInvariant());
 
             if (iniProperty != null)
                 return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(iniProperty.Value);
@@ -205,7 +205,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         }
         public static T ReadProperty<T>(this IDelftIniCategory category, string key, bool isOptional = false)
         {
-            var iniProperty = category.Properties.FirstOrDefault(property => property.Name == key);
+            var iniProperty = category.Properties.FirstOrDefault(property => property.Name.ToLowerInvariant() == key.ToLowerInvariant());
 
             if (iniProperty != null)
                 return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(iniProperty.Value);
@@ -216,7 +216,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         }
         public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, ref string errorMessage)
         {
-            var iniProperty = category.Properties.FirstOrDefault(property => property.Name == key);
+            var iniProperty = category.Properties.FirstOrDefault(property => property.Name.ToLowerInvariant() == key.ToLowerInvariant());
 
             if (iniProperty != null)
             {
@@ -228,7 +228,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         }
         public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, bool isOptional = false, char separator = ' ')
         {
-            var iniProperty = category.Properties.FirstOrDefault(property => property.Name == key);
+            var iniProperty = category.Properties.FirstOrDefault(property => property.Name.ToLowerInvariant() == key.ToLowerInvariant());
 
             if (iniProperty != null)
             {
