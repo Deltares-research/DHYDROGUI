@@ -77,7 +77,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var typeDouble = "double";
 
             var pumpId = "pump123";
-            var pumpCapacity = 30.0;
+            var pumpCapacity = 36.0;
+            var expectedPumpCapacity = pumpCapacity / 3600; // Pump capacity in Gwsw files is in m3/hour, so divide by 3600 for m3/s
             var startLevelDownstreams = 0.5;
             var stopLevelDownstreams = 1;
             var startLevelUpstreams = -1;
@@ -100,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var createdPump = new SewerPumpGenerator().Generate(structurePumpGwswElement) as GwswStructurePump;
             Assert.IsNotNull(createdPump);
             Assert.That(createdPump.Name, Is.EqualTo(pumpId));
-            Assert.That(createdPump.Capacity, Is.EqualTo(pumpCapacity));
+            Assert.That(createdPump.Capacity, Is.EqualTo(expectedPumpCapacity));
             Assert.That(createdPump.StartDelivery, Is.EqualTo(startLevelUpstreams));
             Assert.That(createdPump.StopDelivery, Is.EqualTo(stopLevelUpstreams));
             Assert.That(createdPump.StartSuction, Is.EqualTo(startLevelDownstreams));

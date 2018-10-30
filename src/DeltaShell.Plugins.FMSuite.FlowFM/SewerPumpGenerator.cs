@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             double auxDouble;
             var pumpCapacity = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.PumpCapacity);
             if (pumpCapacity.TryGetValueAsDouble(out auxDouble))
-                pump.Capacity = auxDouble;
+                pump.Capacity = auxDouble / 3600; // File capacity is in m3/hour and in the GUI it is m3/s
 
             var startLevelDown = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.StartLevelDownstreams);
             if( startLevelDown.TryGetValueAsDouble(out auxDouble))
