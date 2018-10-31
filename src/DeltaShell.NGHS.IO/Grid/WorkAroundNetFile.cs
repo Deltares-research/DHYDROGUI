@@ -30,6 +30,8 @@ namespace DeltaShell.NGHS.IO.Grid
                 var netLinkTypeVar = file.AddVariable("NetLinkType", NetCdfDataType.NcInteger, new[] { netLinkDim });
                 var netLinkVar = file.AddVariable("NetLink", NetCdfDataType.NcInteger, new[] { netLinkDim, netLinkPtsDim });
 
+                var netNodeZVar = file.AddVariable("NetNode_z", NetCdfDataType.NcDoublePrecision, new[] { netNodeDim });
+
                 file.EndDefine();
 
                 file.Flush();

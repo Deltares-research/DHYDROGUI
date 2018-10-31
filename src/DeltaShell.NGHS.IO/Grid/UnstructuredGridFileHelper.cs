@@ -214,7 +214,7 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 WorkAroundNetFile.Initialize(netFilePath, grid);
                 NetFile.WriteToExisting(netFilePath, grid);
-                WriteZValues(netFilePath, location, zValues);
+                NetFile.WriteZValues(netFilePath, zValues);
             }
             else
             {
