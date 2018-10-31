@@ -431,12 +431,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var orificeName = "myOrifice";
 
             var network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEach();
-            var bottomLevel = 0.7;
+            var crestLevel = 0.7;
             var contractionCoefficent = 1.1;
             var maxDischarge = 44.0;
             var orifice = new Orifice(orificeName)
             {
-                BottomLevel = bottomLevel,
+                CrestLevel = crestLevel,
                 MaxDischarge = maxDischarge,
                 WeirFormula = new GatedWeirFormula
                 {
@@ -458,7 +458,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var orificeInNetwork = branchFeatures.FirstOrDefault(bf => bf is Orifice) as Orifice;
             Assert.IsNotNull(orificeInNetwork);
             Assert.That(orificeInNetwork.Name, Is.EqualTo(orificeName));
-            Assert.That(orificeInNetwork.BottomLevel, Is.EqualTo(bottomLevel));
+            Assert.That(orificeInNetwork.CrestLevel, Is.EqualTo(crestLevel));
             Assert.That(((GatedWeirFormula)orificeInNetwork.WeirFormula).ContractionCoefficient, Is.EqualTo(contractionCoefficent));
             Assert.That(orificeInNetwork.MaxDischarge, Is.EqualTo(maxDischarge));
         }
@@ -473,10 +473,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEachAndOneOrifice();
             var maxDischarge = 5.5;
             var contractionCoefficent = 4.4;
-            var bottomLevel = 3.3;
+            var crestLevel = 3.3;
             var orifice = new Orifice(orificeName)
             {
-                BottomLevel = bottomLevel,
+                CrestLevel = crestLevel,
                 MaxDischarge = maxDischarge,
                 WeirFormula = new GatedWeirFormula
                 {
@@ -501,7 +501,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var orificeInNetwork = sewerConnectionBranchFeatures.FirstOrDefault(bf => bf is Orifice) as Orifice;
             Assert.IsNotNull(orificeInNetwork);
             Assert.That(orificeInNetwork.Name, Is.EqualTo(orificeName));
-            Assert.That(orificeInNetwork.BottomLevel, Is.EqualTo(bottomLevel));
+            Assert.That(orificeInNetwork.CrestLevel, Is.EqualTo(crestLevel));
             Assert.That(((GatedWeirFormula)orificeInNetwork.WeirFormula).ContractionCoefficient, Is.EqualTo(contractionCoefficent));
             Assert.That(orificeInNetwork.MaxDischarge, Is.EqualTo(maxDischarge));
         }
@@ -672,7 +672,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var network = new HydroNetwork();
             var orificeName = TestSewerNetworkProvider.OrificeName;
 
-            var orifice = new Orifice(orificeName){BottomLevel = 12.3 };
+            var orifice = new Orifice(orificeName){CrestLevel = 12.3 };
             AddSewerFeatureToNetwork(orifice, network);
             Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
             Assert.That(network.Orifices.Count(), Is.EqualTo(1));
@@ -689,7 +689,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var or2 = network.Orifices.FirstOrDefault();
             Assert.IsNotNull(or2);
-            Assert.That(or2.BottomLevel, Is.EqualTo(12.3).Within(0.01));
+            Assert.That(or2.CrestLevel, Is.EqualTo(12.3).Within(0.01));
 
             createdSewerConnection = network.SewerConnections.FirstOrDefault();
             Assert.IsNotNull(createdSewerConnection);
@@ -701,28 +701,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var network = new HydroNetwork();
             var orificeName = TestSewerNetworkProvider.OrificeName;
+            var expectedCrestLevel = 12.3;
+            var expectedLevelSource = 80.1;
 
-            var gwswOrifice = new GwswConnectionOrifice(orificeName) { LevelSource = 80.1 };
+            var gwswOrifice = new GwswConnectionOrifice(orificeName) { LevelSource = expectedLevelSource };
             AddSewerFeatureToNetwork(gwswOrifice, network);
             Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
             Assert.That(network.Orifices.Count(), Is.EqualTo(1));
 
             var sewerConnection = network.SewerConnections.FirstOrDefault();
             Assert.IsNotNull(sewerConnection);
-            Assert.That(sewerConnection.LevelSource, Is.EqualTo(80.1).Within(0.01));
+            Assert.That(sewerConnection.LevelSource, Is.EqualTo(expectedLevelSource).Within(0.01));
 
-            var orifice = new Orifice(orificeName) { BottomLevel = 12.3 };
+            var orifice = new Orifice(orificeName) { CrestLevel = expectedCrestLevel };
             AddSewerFeatureToNetwork(orifice, network);
             Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
             Assert.That(network.Orifices.Count(), Is.EqualTo(1));
 
             var or2 = network.Orifices.FirstOrDefault();
             Assert.IsNotNull(or2);
-            Assert.That(or2.BottomLevel, Is.EqualTo(12.3).Within(0.01));
+            Assert.That(or2.CrestLevel, Is.EqualTo(expectedCrestLevel).Within(0.01));
 
             sewerConnection = network.SewerConnections.FirstOrDefault();
             Assert.IsNotNull(sewerConnection);
-            Assert.That(sewerConnection.LevelSource, Is.EqualTo(80.1).Within(0.01));
+            Assert.That(sewerConnection.LevelSource, Is.EqualTo(expectedLevelSource).Within(0.01));
         }
 
         [Test]
@@ -747,14 +749,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(sewerConnection);
             Assert.That(sewerConnection.LevelSource, Is.EqualTo(0.0).Within(0.01));
 
-            var orifice = new Orifice(orificeName) { BottomLevel = 12.3 };
+            var orifice = new Orifice(orificeName) { CrestLevel = 12.3 };
             AddSewerFeatureToNetwork(orifice, network);
             Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
             Assert.That(network.Orifices.Count(), Is.EqualTo(1));
 
             var or2 = network.Orifices.FirstOrDefault();
             Assert.IsNotNull(or2);
-            Assert.That(or2.BottomLevel, Is.EqualTo(12.3).Within(0.01));
+            Assert.That(or2.CrestLevel, Is.EqualTo(12.3).Within(0.01));
 
             sewerConnection = network.SewerConnections.FirstOrDefault();
             Assert.IsNotNull(sewerConnection);
@@ -766,7 +768,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var or3 = network.Orifices.FirstOrDefault();
             Assert.IsNotNull(or3);
-            Assert.That(or3.BottomLevel, Is.EqualTo(12.3).Within(0.01));
+            Assert.That(or3.CrestLevel, Is.EqualTo(12.3).Within(0.01));
 
             sewerConnection = network.SewerConnections.FirstOrDefault();
             Assert.IsNotNull(sewerConnection);

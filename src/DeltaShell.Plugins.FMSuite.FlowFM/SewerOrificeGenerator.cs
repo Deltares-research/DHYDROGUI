@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             //Add Attributes
             var bottomLevel = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.BottomLevel);
             if (bottomLevel.TryGetValueAsDouble(out auxDouble))
-                orifice.BottomLevel = auxDouble;
+                orifice.CrestLevel = auxDouble;
 
             var contractionCoefficient = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.ContractionCoefficient);
             if (contractionCoefficient.TryGetValueAsDouble(out auxDouble))

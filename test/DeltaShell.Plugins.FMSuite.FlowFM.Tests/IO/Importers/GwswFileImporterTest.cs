@@ -1054,7 +1054,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 var extendedOrifice = network.SewerConnections.SelectMany(sc => sc.GetStructuresFromBranchFeatures<Orifice>()).FirstOrDefault(o => o.Name.Equals(orifice.Name));
                 Assert.IsNotNull(extendedOrifice);
 
-                Assert.AreEqual(orifice.BottomLevel, extendedOrifice.BottomLevel, "the attributes from the element do not match");
+                Assert.AreEqual(orifice.CrestLevel, extendedOrifice.CrestLevel, "the attributes from the element do not match");
             }
 
         }

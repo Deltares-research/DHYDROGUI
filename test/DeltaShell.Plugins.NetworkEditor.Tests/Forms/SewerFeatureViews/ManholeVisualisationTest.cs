@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
                 TargetCompartment = compartment2,
                 Target = manhole,
             };
-            orificeConnection.AddStructureToBranch(new Orifice {BottomLevel = -1});
+            orificeConnection.AddStructureToBranch(new Orifice {CrestLevel = -1});
 
             var connections = new List<ISewerConnection>
             {

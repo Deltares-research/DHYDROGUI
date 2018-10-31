@@ -20,7 +20,6 @@ namespace DelftTools.Hydro.SewerFeatures
             WeirFormula = new GatedWeirFormula();
         }
 
-        public double BottomLevel { get; set; }
         public double MaxDischarge { get; set; }
 
         protected override void CopyPropertyValuesToExistingWeir(IWeir weir)
@@ -28,7 +27,7 @@ namespace DelftTools.Hydro.SewerFeatures
             var orifice = weir as IOrifice;
             if(orifice == null) return;
 
-            orifice.BottomLevel = BottomLevel;
+            orifice.CrestLevel = CrestLevel;
             ((GatedWeirFormula)orifice.WeirFormula).ContractionCoefficient = ((GatedWeirFormula)WeirFormula).ContractionCoefficient;
             orifice.MaxDischarge = MaxDischarge;
         }

@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         public override double TopLevel
         {
-            get { return Orifice?.BottomLevel ?? double.NaN; }
+            get { return Orifice?.CrestLevel ?? double.NaN; }
             set { }
         }
     }

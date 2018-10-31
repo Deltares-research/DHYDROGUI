@@ -61,7 +61,7 @@ namespace DelftTools.Hydro.Tests.Helpers
 
             var orifice = new Orifice(OrificeName)
             {
-                BottomLevel = 0.0,
+                CrestLevel = 0.0,
                 MaxDischarge = 0.0,
                 Length = 0.0,
                 WeirFormula = new GatedWeirFormula

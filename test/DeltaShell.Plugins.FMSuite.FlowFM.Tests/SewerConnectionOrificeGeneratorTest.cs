@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GenerateOrificeFromGwswStructureElementReturnsValidObject()
         {
             var orificeId = "orifice123";
-            var bottomLevel = 30.0;
+            var crestLevel = 30.0;
             var contractionCoef = 0.5;
             var maxDischarge = 1;
             var structureOrificeGwswElement = new GwswElement
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, orificeId, string.Empty),
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Orifice), string.Empty),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.BottomLevel, crestLevel.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.ContractionCoefficient, contractionCoef.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.MaxDischarge, maxDischarge.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble)
                 }
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var createdOrifice = generator.Generate(structureOrificeGwswElement) as Orifice;
             Assert.IsNotNull(createdOrifice);
             Assert.That(createdOrifice.Name, Is.EqualTo(orificeId));
-            Assert.That(createdOrifice.BottomLevel, Is.EqualTo(bottomLevel));
+            Assert.That(createdOrifice.CrestLevel, Is.EqualTo(crestLevel));
             Assert.That(((GatedWeirFormula)createdOrifice.WeirFormula).ContractionCoefficient, Is.EqualTo(contractionCoef));
             Assert.That(createdOrifice.MaxDischarge, Is.EqualTo(maxDischarge));
         }
@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void AfterAddingAConnectionOrificeYouCanExtendItsDefinitionWithTheStructure()
         {
             var orificeId = "orifice123";
-            var bottomLevel = 30.0;
+            var crestLevel = 30.0;
             var contractionCoef = 0.5;
             var maxDischarge = 1;
             var structureOrificeGwswElement = new GwswElement
@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, orificeId, string.Empty),
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Orifice), string.Empty),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.BottomLevel, crestLevel.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.ContractionCoefficient, contractionCoef.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.MaxDischarge, maxDischarge.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
                 }
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var createdOrifice = createdElement;
             Assert.IsNotNull(createdOrifice);
             Assert.That(createdOrifice.Name, Is.EqualTo(orificeId));
-            Assert.That(createdOrifice.BottomLevel, Is.EqualTo(bottomLevel));
+            Assert.That(createdOrifice.CrestLevel, Is.EqualTo(crestLevel));
             Assert.That(((GatedWeirFormula)createdOrifice.WeirFormula).ContractionCoefficient, Is.EqualTo(contractionCoef));
             Assert.That(createdOrifice.MaxDischarge, Is.EqualTo(maxDischarge));
         }
