@@ -155,7 +155,6 @@
     <Compile Include="IO\Exporters\WaterFlowFMAndF1dFileExporter.cs" />
     <Compile Include="IO\FeatureFile1D2DWriter.cs" />
     <Compile Include="IO\Importers\RasterFile.cs" />
-    <Compile Include="IO\Importers\RasterBedLevelFileImporter.cs" />
     <Compile Include="IO\Importers\RasterFileImporter.cs" />
     <Compile Include="IO\ImportRasterSamplesSpatialOperationExtension.cs" />
     <Compile Include="IO\MeteoExtForceFile.cs" />

@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             coverage.Grid = grid;
             coverage.EndEdit();
         }
-
+        
         public static void LoadGrid(this UnstructuredGridCoverage coverage, UnstructuredGrid grid, bool reInterpolate = false)
         {
             coverage.BeginEdit(new DefaultEditAction("Inserting new grid in coverage"));

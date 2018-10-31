@@ -25,6 +25,7 @@ using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net;
 using Mono.Addins;
+using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
@@ -316,7 +317,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new GisToFeature2DImporter<ILineString, DelftTools.Hydro.LandBoundary2D>();
 
             yield return new FlowFMNetFileImporter {GetModelForGrid = GetModelForGrid};
-            yield return new RasterFileImporter {GetModelForGrid = GetModelForGrid};
+
+            var rasterFileImporter = new RasterFileImporter();
+            rasterFileImporter.RegisterGetModelFunction<UnstructuredGrid>(GetModelForGrid);
+            rasterFileImporter.RegisterGetModelFunction<UnstructuredGridCoverage>(GetModelForBathymetry);
+
+            yield return rasterFileImporter;
+
             yield return new TimFileImporter
                 {
                     WindFileImporter = false,
@@ -561,6 +568,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private WaterFlowFMModel GetModelForGrid(UnstructuredGrid grid)
         {
             return FlowModels.FirstOrDefault(m => m.Grid.Equals(grid));
+        }
+
+        private WaterFlowFMModel GetModelForBathymetry(UnstructuredGridCoverage bathymetry)
+        {
+            return FlowModels.FirstOrDefault(m => m.Bathymetry.Equals(bathymetry));
         }
 
         private IEnumerable<WaterFlowFMModel> FlowModels

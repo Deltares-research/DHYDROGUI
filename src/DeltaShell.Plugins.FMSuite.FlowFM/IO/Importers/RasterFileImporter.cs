@@ -5,109 +5,115 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using DeltaShell.Plugins.SharpMapGis.ImportExport;
-using GeoAPI.Extensions.Coverages;
-using GeoAPI.Geometries;
 using log4net;
+using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
-    public static class RegularGridCoverageConvertExtensions
-    {
-        public static UnstructuredGrid ConvertRegularGridCoverage(this IRegularGridCoverage gridCoverage)
-        {
-            var vertices = new List<Coordinate>();
-            var edges = new List<Edge>();
-            var cellToVertex = new List<IList<int>>();
-            var previousHorizontalEdges = new List<Edge>();
-            Edge previousVerticalEdge = null;
-            var currentCellIndex = 0;
-
-            var xValues = gridCoverage.X.Values;
-            var yValues = gridCoverage.Y.Values;
-
-            var numbOfPointsHorizontal = xValues.Count + 1;
-            var numbOfPointsVertical = yValues.Count + 1;
-
-
-            for (int verticalIndex = 0; verticalIndex < numbOfPointsVertical; verticalIndex++)
-            {
-                var horizontalOffset = numbOfPointsHorizontal * verticalIndex;
-                for (int horizontalIndex = 0; horizontalIndex < numbOfPointsHorizontal; horizontalIndex++)
-                {
-                    var x = gridCoverage.Origin.X + (horizontalIndex * gridCoverage.DeltaX);
-                    var y = gridCoverage.Origin.Y + (verticalIndex * gridCoverage.DeltaY);
-
-                    vertices.Add(new Coordinate(x, y, 0));
-
-                    var currentPointIndex = horizontalOffset + horizontalIndex;
-
-                    if (horizontalIndex != 0)
-                    {
-                        if (previousHorizontalEdges.Count == xValues.Count)
-                        {
-                            previousHorizontalEdges.RemoveAt(0); // only cache the last row of horizontal edges
-                        }
-
-                        // create horizontal edge
-                        var horizontalEdge = new Edge(currentPointIndex - 1, currentPointIndex);
-                        previousHorizontalEdges.Add(horizontalEdge);
-                        edges.Add(horizontalEdge);
-                    }
-
-                    if (verticalIndex != 0)
-                    {
-                        // create vertical edge
-                        previousVerticalEdge = new Edge(currentPointIndex - numbOfPointsHorizontal,
-                            currentPointIndex);
-                        edges.Add(previousVerticalEdge);
-                    }
-
-                    if (horizontalIndex == 0 || verticalIndex == 0)
-                        continue;
-
-                    cellToVertex.Add(new[]
-                    {
-                        currentPointIndex - numbOfPointsHorizontal - 1,
-                        currentPointIndex - numbOfPointsHorizontal,
-                        currentPointIndex,
-                        currentPointIndex - 1,
-                    });
-
-                    currentCellIndex++;
-                }
-            }
-
-            var grid = new UnstructuredGrid
-            {
-                Vertices = vertices,
-                Edges = edges,
-            };
-
-            grid.Cells = cellToVertex.Select(c => new Cell(c.ToArray(), grid)).ToList();
-            return grid;
-        }
-    }
-
     public class RasterFileImporter : IFileImporter
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(RasterFileImporter));
-        //TODO: Implement file size limit of 2GB.
-        //private static double AscFileSizeErrorLimitInBytes = 2.0e9;
+        private static readonly Dictionary<Type, Func<object, WaterFlowFMModel>> GetModelFunctions = new Dictionary<Type, Func<object, WaterFlowFMModel>>();
+        private static readonly Dictionary<Type, Func<string, object, Func<object, WaterFlowFMModel>, object>> RasterImporterFunctions = new Dictionary<Type, Func<string, object, Func<object, WaterFlowFMModel>, object>>();
 
-        public Func<UnstructuredGrid, WaterFlowFMModel> GetModelForGrid { get; set; }
-
-        private static IRegularGridCoverage ImportAscFileToRegularGridCoverage(string ascFilePath)
+        public void RegisterGetModelFunction<T>(Func<T, WaterFlowFMModel> function)
         {
-            var importer = new GdalFileImporter();
-            var regularGrid = importer.ImportItem(ascFilePath) as IRegularGridCoverage;
-
-            return regularGrid;
+            if (GetModelFunctions.ContainsKey(typeof(T)))
+                GetModelFunctions[typeof(T)] = o => function((T) o);
+            else
+                GetModelFunctions.Add(typeof(T), o => function((T) o));
+        }
+        private static void RegisterRasterImporterFunction<T>(Func<string, T, Func<T, WaterFlowFMModel>, T> function)
+        {
+            if (RasterImporterFunctions.ContainsKey(typeof(T)))
+                RasterImporterFunctions[typeof(T)] = (path, target, getModelFunction) => (T) function(path, (T) target, typeToGetModelFor => getModelFunction((T) typeToGetModelFor));
+            else
+                RasterImporterFunctions.Add(typeof(T),
+                    (path, target, getModelFunction) => (T) function(path, (T) target,
+                        typeToGetModelFor => getModelFunction((T) typeToGetModelFor)));
         }
 
+        static RasterFileImporter()
+        {
+            RegisterRasterImporterFunction<UnstructuredGrid>(ImportRasterFileInGridOfFlowFMModel);
+            RegisterRasterImporterFunction<UnstructuredGridCoverage>(ImportRasterFileInBathymetryOfFlowFMModel);
+            RegisterRasterImporterFunction<WaterFlowFMModel>(ImportRasterFileInFlowFMModel);
+        }
+
+        private static WaterFlowFMModel ImportRasterFileInFlowFMModel(string path, WaterFlowFMModel flowModel, Func<WaterFlowFMModel, WaterFlowFMModel> getModelForFmModel)
+        {
+            if (flowModel.Grid.Cells.Any())
+            {
+                Log.Error(Resources
+                    .RasterFileImporter_ImportItem_There_is_already_a_grid_present__Remove_the_current_grid_before_importing_a_new_one_);
+                return null;
+            }
+
+            SetGrid(path, flowModel);
+            SetBedLevel(path, flowModel);
+            return flowModel;
+        }
+
+        private static UnstructuredGridCoverage ImportRasterFileInBathymetryOfFlowFMModel(string path, UnstructuredGridCoverage bathymetry, Func<UnstructuredGridCoverage, WaterFlowFMModel> getModelForBathemetry)
+        {
+            if (bathymetry != null && bathymetry.Name == WaterFlowFMModelDefinition.BathymetryDataItemName && getModelForBathemetry != null)
+            {
+                var flowModel = getModelForBathemetry(bathymetry);
+                if (flowModel?.Grid != null && flowModel.Grid.IsEmpty) return bathymetry;//maybe warn?
+                SetBedLevel(path, flowModel);
+                return flowModel.Bathymetry;
+            }
+            return bathymetry;
+        }
+
+        private static UnstructuredGrid ImportRasterFileInGridOfFlowFMModel(string path, UnstructuredGrid grid, Func<UnstructuredGrid, WaterFlowFMModel> getModelForGrid)
+        {
+            if (grid != null && getModelForGrid != null)
+            {
+                var flowModel = getModelForGrid(grid);
+                if (flowModel == null) return grid;//maybe warn?
+                SetGrid(path, flowModel);
+                return flowModel.Grid;
+            }
+            return grid;
+        }
+
+        private static void SetGrid(string path, WaterFlowFMModel flowModel)
+        {
+            var grid = RasterFile.ReadUnstructuredGrid(path);
+            if (grid != null)
+            {
+                flowModel.Grid = grid;
+                flowModel.ReloadGrid();
+            }
+        }
+
+        private static void SetBedLevel(string path, WaterFlowFMModel flowModel)
+        {
+            var bedlevels = RasterFile.ReadPointValues(path);
+            if (bedlevels != null)
+            {
+                var bedLevelTypeProperty = flowModel.ModelDefinition.Properties.FirstOrDefault(p =>
+                    p.PropertyDefinition != null &&
+                    p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
+
+                if (bedLevelTypeProperty == null)
+                {
+                    Log.WarnFormat("Cannot determine Bed level location, z-values will not be exported");
+                }
+                else
+                {
+                    var location = (UnstructuredGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
+                    BathymetryFileWriter.Write(flowModel.NetFilePath, location, bedlevels.Select(bl => bl.Value).ToArray());
+                    flowModel.ReloadGrid(false ,true);
+                }
+            }
+        }
         public bool CanImportOn(object targetObject)
         {
             return true;
@@ -122,39 +128,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
             if (target == null)
             {
+                //just return a dataitem with the grid in it
                 return new DataItem { Value = new ImportedFMNetFile(path), Name = Path.GetFileName(path) };
             }
-
-            var flowModel = target as WaterFlowFMModel;
-            if (flowModel == null)
-            {
-                flowModel = GetModelForGrid(target as UnstructuredGrid);
-            }
-
-            if (flowModel.Grid.Cells.Any())
-            {
-                Log.Error(Resources.RasterFileImporter_ImportItem_There_is_already_a_grid_present__Remove_the_current_grid_before_importing_a_new_one_);
-                return null;
-            }
-
-            var regularGridCoverage = ImportAscFileToRegularGridCoverage(path);
-            var grid = regularGridCoverage.ConvertRegularGridCoverage();
-            if (grid != null)
-            {
-//                try
-//                {
-//                  flowModel.BeginEdit(new DefaultEditAction("Reset grid"));
-                    flowModel.Grid = grid;
-//                }
-//                finally
-//                {
-//                    flowModel.EndEdit();
-//                }
-
-                flowModel.ReloadGrid();
-
-                return flowModel.Grid;
-            }
+            var getModelFunctionKey = GetModelFunctions.Keys.FirstOrDefault(k => k.IsInstanceOfType(target));
+            var importerFunctionKey = RasterImporterFunctions.Keys.FirstOrDefault(k => k.IsInstanceOfType(target));
+            if(importerFunctionKey != null)
+                return RasterImporterFunctions[importerFunctionKey](path, target, getModelFunctionKey != null ? GetModelFunctions[getModelFunctionKey] : null);
             return null;
         }
 
@@ -173,7 +153,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public IEnumerable<Type> SupportedItemTypes
         {
-            get { yield return typeof(UnstructuredGrid); }
+            get
+            {
+                yield return typeof(WaterFlowFMModel);
+                yield return typeof(UnstructuredGrid);
+                yield return typeof(UnstructuredGridCoverage);
+            }
         }
         public bool CanImportOnRootLevel { get; }
 

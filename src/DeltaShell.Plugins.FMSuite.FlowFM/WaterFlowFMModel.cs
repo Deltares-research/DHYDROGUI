@@ -907,7 +907,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     var samplesOperation = (ImportRasterSamplesSpatialOperationExtension)spatialOperationList[0];
                     
-                    var rasterFile = RasterFile.Read(samplesOperation.FilePath).ToList();
+                    var rasterFile = RasterFile.ReadPointValues(samplesOperation.FilePath).ToList();
 
                     var componentValueCount = coverage.Arguments.Aggregate(0,
                         (totaal, arguments) => totaal == 0 ? arguments.Values.Count : totaal * arguments.Values.Count);

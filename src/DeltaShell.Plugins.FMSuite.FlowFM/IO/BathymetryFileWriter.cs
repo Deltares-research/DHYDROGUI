@@ -25,5 +25,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var values = modelDefinition.Bathymetry.Components[0].GetValues<double>().ToArray();
             UnstructuredGridFileHelper.WriteZValues(filePath, location, values);
         }
+        public static void Write(string filePath, UnstructuredGridFileHelper.BedLevelLocation location, double[] values)
+        {
+            UnstructuredGridFileHelper.WriteZValues(filePath, location, values);
+        }
     }
 }

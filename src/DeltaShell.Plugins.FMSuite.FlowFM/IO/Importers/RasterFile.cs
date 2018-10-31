@@ -9,8 +9,10 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetCDF.Builders;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
@@ -27,28 +29,126 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public const string TiffExtension = ".tif";
 
         /// <summary>
-        /// Read the Asc from the provided <param name="ascFilePath"/>
+        /// Read the raster from the provided <param name="rasterFilePath"/>
         /// </summary>
-        /// <param name="ascFilePath">Path to the Asc file</param>
+        /// <param name="rasterFilePath">Path to the Asc file</param>
         /// <param name="checkForUnsupportedSize">Check if the file size is not to big (> 2.0 gb)</param>
         /// <returns>List of points with a value, or null if file is too large</returns>
         /// <exception cref="FormatException">When less then 3 values are found or the values are invalid</exception>
-        public static IEnumerable<IPointValue> Read(string ascFilePath, bool checkForUnsupportedSize = false)
+        public static IEnumerable<IPointValue> ReadPointValues(string rasterFilePath, bool checkForUnsupportedSize = false)
         {
             if (checkForUnsupportedSize)
             {
-                LogFileSizeMessageIfNeeded(ascFilePath);
+                LogFileSizeMessageIfNeeded(rasterFilePath);
 
-                if (!IsFileSizeAccepted(ascFilePath))
+                if (!IsFileSizeAccepted(rasterFilePath))
                 {
                     return null;
                 }
             }
 
-            var regularGridCoverage = ReadAscFileToRegularGridCoverage(ascFilePath);
+            var regularGridCoverage = ReadAscFileToRegularGridCoverage(rasterFilePath);
             var pointValuesList = ConvertRegularGridToBedLevelValues(regularGridCoverage);
 
             return pointValuesList;
+        }
+        
+        /// <summary>
+        /// Read the raster from the provided <param name="rasterFilePath"/>
+        /// </summary>
+        /// <param name="rasterFilePath">Path to the Asc file</param>
+        /// <param name="checkForUnsupportedSize">Check if the file size is not to big (> 2.0 gb)</param>
+        /// <returns>List of points with a value, or null if file is too large</returns>
+        /// <exception cref="FormatException">When less then 3 values are found or the values are invalid</exception>
+        public static UnstructuredGrid ReadUnstructuredGrid(string rasterFilePath, bool checkForUnsupportedSize = false)
+        {
+            if (checkForUnsupportedSize)
+            {
+                LogFileSizeMessageIfNeeded(rasterFilePath);
+
+                if (!IsFileSizeAccepted(rasterFilePath))
+                {
+                    return null;
+                }
+            }
+
+            var regularGridCoverage = ReadAscFileToRegularGridCoverage(rasterFilePath);
+
+            return ConvertRegularGridCoverageToUnstructuredGrid(regularGridCoverage);
+        }
+
+        private static UnstructuredGrid ConvertRegularGridCoverageToUnstructuredGrid(IRegularGridCoverage gridCoverage)
+        {
+            var vertices = new List<Coordinate>();
+            var edges = new List<Edge>();
+            var cellToVertex = new List<IList<int>>();
+            var previousHorizontalEdges = new List<Edge>();
+            Edge previousVerticalEdge = null;
+            var currentCellIndex = 0;
+
+            var xValues = gridCoverage.X.Values;
+            var yValues = gridCoverage.Y.Values;
+
+            var numbOfPointsHorizontal = xValues.Count + 1;
+            var numbOfPointsVertical = yValues.Count + 1;
+
+
+            for (int verticalIndex = 0; verticalIndex < numbOfPointsVertical; verticalIndex++)
+            {
+                var horizontalOffset = numbOfPointsHorizontal * verticalIndex;
+                for (int horizontalIndex = 0; horizontalIndex < numbOfPointsHorizontal; horizontalIndex++)
+                {
+                    var x = gridCoverage.Origin.X + (horizontalIndex * gridCoverage.DeltaX);
+                    var y = gridCoverage.Origin.Y + (verticalIndex * gridCoverage.DeltaY);
+
+                    vertices.Add(new Coordinate(x, y, 0));
+
+                    var currentPointIndex = horizontalOffset + horizontalIndex;
+
+                    if (horizontalIndex != 0)
+                    {
+                        if (previousHorizontalEdges.Count == xValues.Count)
+                        {
+                            previousHorizontalEdges.RemoveAt(0); // only cache the last row of horizontal edges
+                        }
+
+                        // create horizontal edge
+                        var horizontalEdge = new Edge(currentPointIndex - 1, currentPointIndex);
+                        previousHorizontalEdges.Add(horizontalEdge);
+                        edges.Add(horizontalEdge);
+                    }
+
+                    if (verticalIndex != 0)
+                    {
+                        // create vertical edge
+                        previousVerticalEdge = new Edge(currentPointIndex - numbOfPointsHorizontal,
+                            currentPointIndex);
+                        edges.Add(previousVerticalEdge);
+                    }
+
+                    if (horizontalIndex == 0 || verticalIndex == 0)
+                        continue;
+
+                    cellToVertex.Add(new[]
+                    {
+                        currentPointIndex - numbOfPointsHorizontal - 1,
+                        currentPointIndex - numbOfPointsHorizontal,
+                        currentPointIndex,
+                        currentPointIndex - 1,
+                    });
+
+                    currentCellIndex++;
+                }
+            }
+
+            var grid = new UnstructuredGrid
+            {
+                Vertices = vertices,
+                Edges = edges,
+            };
+
+            grid.Cells = cellToVertex.Select(c => new Cell(c.ToArray(), grid)).ToList();
+            return grid;
         }
 
         /// <summary>
@@ -152,32 +252,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var deltaX = gridCoverage.DeltaX / 2.0;
             var deltaY = gridCoverage.DeltaY / 2.0;
 
-            var values = gridCoverage.GetValues<float>();
-
-            var pointValueList = new List<IPointValue>();
-
-            try
+            var values = gridCoverage.Components[0].ValueType == typeof(float)
+                ? new ConvertedArray<double, float>(gridCoverage.GetValues<float>(), Convert.ToSingle, Convert.ToDouble)
+                : gridCoverage.GetValues<double>();
+            
+            for (var i = 0; i < yValues.Count; i++)
             {
-                for (var i = 0; i < yValues.Count; i++)
+                for (var j = 0; j < xValues.Count; j++)
                 {
-                    for (var j = 0; j < xValues.Count; j++)
+                    var pointValue = new PointValue
                     {
-                        var pointValue = new PointValue
-                        {
-                            X = xValues[j] + deltaX,
-                            Y = yValues[i] + deltaY,
-                            Value = values[j+i*xValues.Count]
-                        };
-                        pointValueList.Add(pointValue);
-                    }
+                        X = xValues[j] + deltaX,
+                        Y = yValues[i] + deltaY,
+                        Value = values[j + i * xValues.Count]
+                    };
+                    yield return pointValue;
                 }
             }
-            catch (Exception)
-            {
-                Log.Error(Resources.RasterBedLevelFileImporter_ConvertRegularGridToBedLevelValues_The_file_you_are_trying_to_import_only_contains_integers__This_is_not_yet_supported__Please_change_a_minimum_of_one_value_to_a_decimal_number_in_the_import_file);
-            }
-
-            return pointValueList;
         }
 
     }

@@ -214,6 +214,17 @@ namespace DeltaShell.NGHS.IO.Grid
                 WorkAroundNetFile.Initialize(netFilePath, grid);
                 NetFile.WriteToExisting(netFilePath, grid);
             }
+            else
+            {
+                //so no 1d or 1d2d stuff is written and the file is still needed to be written
+                if (grid == null || grid.IsEmpty)
+                {
+                    var file = NetCdfFile.CreateNew(netFilePath);
+                    file.Close();
+                    return;
+                }
+                NetFile.Write(netFilePath, grid);
+            }
         }
 
         private static void SaveNetwork(string netFilePath, NetworkUGridDataModel networkDataModel, UGridGlobalMetaData metaData)

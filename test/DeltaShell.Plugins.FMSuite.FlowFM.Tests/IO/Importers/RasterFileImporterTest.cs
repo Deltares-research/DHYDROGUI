@@ -1,27 +1,74 @@
-﻿using DelftTools.TestUtils;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.Core;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.Extensions.Coverages;
+using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 {
-   [TestFixture]
-   public class RasterFileImporterTest
-   {
+    [TestFixture]
+    public class RasterFileImporterTest
+    {
+
+        [Test]
+        public void
+            Given_ARasterFileImporterFromFmAppPlugin_When_ImportingATwoDecimalAscFileAsGrid_Then_AGridIsReturned()
+        {
+            try
+            {
+                var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\ahn_breach.asc");
+                var mduFilePath = TestHelper.GetTestFilePath(@"RasterImport\FlowFM.mdu");
+                using (var app = new DeltaShellApplication())
+                {
+                    app.Plugins.Add(new FlowFMApplicationPlugin());
+                    app.Run();
+                    using (var fmModel = new WaterFlowFMModel(mduFilePath))
+                    {
+                        app.Project.RootFolder.Add(fmModel);
+                        var importer = app.FileImporters.OfType<RasterFileImporter>().FirstOrDefault();
+                        Assert.IsNotNull(importer);
+
+                        var expectedGrid =
+                            importer.ImportItem(testFilePath, fmModel.Grid) as UnstructuredGrid;
+                        Assert.IsNotNull(expectedGrid);
+
+                        const int expectedCells = 252 * 173;
+                        Assert.AreEqual(expectedCells, expectedGrid.Cells.Count);
+
+                        const int expectedVertices = (252 + 1) * (173 + 1);
+                        Assert.AreEqual(expectedVertices, expectedGrid.Vertices.Count);
+
+                        const int expectedEdges = 87617;
+                        Assert.AreEqual(expectedEdges, expectedGrid.Edges.Count);
+                    }
+                }
+            }
+            finally
+            {
+                var netFilePath = TestHelper.GetTestFilePath(@"RasterImport\FlowFM_net.nc");
+                FileUtils.DeleteIfExists(netFilePath);
+            }
+        }
 
         [Test]
         public void Given_ARasterFileImporter_When_ImportingATwoDecimalAscFileAsGrid_Then_AGridIsReturned()
         {
             try
             {
-                var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\ahn_breach.asc");
                 var mduFilePath = TestHelper.GetTestFilePath(@"RasterImport\FlowFM.mdu");
-
-                var model = new WaterFlowFMModel {MduFilePath = mduFilePath};
-
+                var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\ahn_breach.asc");
                 var importer = new RasterFileImporter();
-                var expectedGrid = importer.ImportItem(testFilePath, model) as UnstructuredGrid;
+                var fmModel = new WaterFlowFMModel(mduFilePath);
+                importer.RegisterGetModelFunction<UnstructuredGrid>(g => fmModel);
+
+                var expectedGrid = importer.ImportItem(testFilePath, fmModel.Grid) as UnstructuredGrid;
                 Assert.IsNotNull(expectedGrid);
 
                 const int expectedCells = 252 * 173;
@@ -32,6 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
                 const int expectedEdges = 87617;
                 Assert.AreEqual(expectedEdges, expectedGrid.Edges.Count);
+
             }
             finally
             {
@@ -43,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void Given_ARasterFileImporter_When_ImportingAFourDecimalAscFileAsGrid_Then_AGridIsReturned()
         {
-            var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\dem100x100_ref_dike.asc");
+            var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\dem319x324_ref_dike.asc");
             var mduFilePath = TestHelper.GetTestFilePath(@"RasterImport\FlowFM.mdu");
 
             var model = new WaterFlowFMModel {MduFilePath = mduFilePath};
@@ -51,7 +99,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             try
             {
                 var importer = new RasterFileImporter();
-                var expectedGrid = importer.ImportItem(testFilePath, model) as UnstructuredGrid;
+                importer.RegisterGetModelFunction<UnstructuredGrid>(g => model);
+                var expectedGrid = importer.ImportItem(testFilePath, model.Grid) as UnstructuredGrid;
                 Assert.IsNotNull(expectedGrid);
 
                 const int expectedCells = 319 * 324;
@@ -70,35 +119,85 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             }
         }
 
-       [Test]
-       public void Given_ARasterFileImporter_When_ImportingATiffFileAsGrid_Then_AGridIsReturned()
-       {
-           var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\Bed_Levels_SOBEK2.tif");
-           var mduFilePath = TestHelper.GetTestFilePath(@"RasterImport\FlowFM.mdu");
+        [Test]
+        public void Given_ARasterFileImporter_When_ImportingATiffFileAsGrid_Then_AGridIsReturned()
+        {
+            var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\Bed_Levels_SOBEK2.tif");
+            var mduFilePath = TestHelper.GetTestFilePath(@"RasterImport\FlowFM.mdu");
 
-           var model = new WaterFlowFMModel { MduFilePath = mduFilePath };
+            var model = new WaterFlowFMModel {MduFilePath = mduFilePath};
 
-           try
-           {
-               var importer = new RasterFileImporter();
-               var expectedGrid = importer.ImportItem(testFilePath, model) as UnstructuredGrid;
-               Assert.IsNotNull(expectedGrid);
+            try
+            {
+                var importer = new RasterFileImporter();
+                importer.RegisterGetModelFunction<UnstructuredGrid>(g => model);
+                var expectedGrid = importer.ImportItem(testFilePath, model.Grid) as UnstructuredGrid;
+                Assert.IsNotNull(expectedGrid);
 
-               const int expectedCells = 33 * 46;
-               Assert.AreEqual(expectedCells, expectedGrid.Cells.Count);
+                const int expectedCells = 33 * 46;
+                Assert.AreEqual(expectedCells, expectedGrid.Cells.Count);
 
-               const int expectedVertices = (33+1)*(46+1);
-               Assert.AreEqual(expectedVertices, expectedGrid.Vertices.Count);
+                const int expectedVertices = (33 + 1) * (46 + 1);
+                Assert.AreEqual(expectedVertices, expectedGrid.Vertices.Count);
 
-               const int expectedEdges = 3115;
-               Assert.AreEqual(expectedEdges, expectedGrid.Edges.Count);
-           }
-           finally
-           {
-               var netFilePath = TestHelper.GetTestFilePath(@"RasterImport\FlowFM_net.nc");
-               FileUtils.DeleteIfExists(netFilePath);
-           }
-       }
-   }
+                const int expectedEdges = 3115;
+                Assert.AreEqual(expectedEdges, expectedGrid.Edges.Count);
+            }
+            finally
+            {
+                var netFilePath = TestHelper.GetTestFilePath(@"RasterImport\FlowFM_net.nc");
+                FileUtils.DeleteIfExists(netFilePath);
+            }
+        }
+
+        [Test]
+        public void Given_A2x2Raster_When_ImportingBedLevels_Then_CorrectPointCloudIsReturned()
+        {
+            var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\ahn_breach.asc");
+            var mduFilePath = TestHelper.GetTestFilePath(@"RasterImport\FlowFM.mdu");
+            var importer = new RasterFileImporter();
+            var model = new WaterFlowFMModel(mduFilePath);
+            importer.RegisterGetModelFunction<UnstructuredGrid>(g => model);
+            importer.RegisterGetModelFunction<UnstructuredGridCoverage>(coverage => model);
+            var grid = importer.ImportItem(testFilePath, model.Grid) as UnstructuredGrid;
+            var bedLevels = importer.ImportItem(testFilePath, model.Bathymetry) as UnstructuredGridCoverage;
+            Assert.IsNotNull(bedLevels);
+            Assert.IsTrue(bedLevels.Components[0].Values.Count == grid.Vertices.Count);
+        }
+        [Test]
+        public void Given_A2x2Raster_When_ReadingBedLevels_Then_CorrectPointCloudIsReturned()
+        {
+            var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\ahn_breach.asc");
+            var bedLevels = RasterFile.ReadPointValues(testFilePath).ToList();
+            Assert.IsNotNull(bedLevels);
+            Assert.IsTrue(bedLevels.Count == 252*173);
+        }
+
+        [Test]
+        public void Given_ATiffFile_When_ImportingBedLevelsFromTiff_Then_CorrectPointCloudIsReturned()
+        {
+            var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\Bed_Levels_SOBEK2.tif");
+            var mduFilePath = TestHelper.GetTestFilePath(@"RasterImport\FlowFM.mdu");
+            var importer = new RasterFileImporter();
+            var model = new WaterFlowFMModel(mduFilePath);
+            importer.RegisterGetModelFunction<UnstructuredGrid>(g => model);
+            importer.RegisterGetModelFunction<UnstructuredGridCoverage>(coverage => model);
+            importer.ImportItem(testFilePath, model.Grid);
+            Assert.IsNotNull(model);
+
+            var grid = importer.ImportItem(testFilePath, model.Grid) as UnstructuredGrid;
+            var bedLevels = importer.ImportItem(testFilePath, model.Bathymetry) as UnstructuredGridCoverage;
+            Assert.IsNotNull(bedLevels);
+            Assert.IsTrue(bedLevels.Components[0].Values.Count == grid.Vertices.Count);
+        }
+        [Test]
+        public void Given_ATiffFile_When_ReadingBedLevelsFromTiff_Then_CorrectPointCloudIsReturned()
+        {
+            var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\Bed_Levels_SOBEK2.tif");
+            var bedLevels = RasterFile.ReadPointValues(testFilePath).ToList();
+            Assert.IsNotNull(bedLevels);
+            Assert.AreEqual(33 * 46, bedLevels.Count);
+        }
+    }
 }
 

@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 log.WarnFormat("File {0} does not have the right extension (only .asc/.tif imports are supported for now)", FilePath);
             }
 
-            var samples = RasterFile.Read(FilePath, true);
+            var samples = RasterFile.ReadPointValues(FilePath, true);
             if (samples == null || !samples.Any()) return null;
 
             if (SourceCoordinateSystem != null && TargetCoordinateSystem != null &&

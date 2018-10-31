@@ -640,9 +640,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     return;
                 }
             }
-
+            
             if ((coverage is UnstructuredGridVertexCoverage && nodesChanged) ||
-                (coverage is UnstructuredGridCellCoverage && cellsChanged) ||
+                (coverage is UnstructuredGridCellCoverage && cellsChanged ) ||
                 (coverage is UnstructuredGridFlowLinkCoverage && linksChanged))
             {
                 coverage.LoadGrid(newGrid, reInterpolate);
