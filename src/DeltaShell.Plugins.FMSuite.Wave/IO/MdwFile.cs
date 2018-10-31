@@ -65,7 +65,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             WriteObstacles(modelDefinition, modelName, targetDir);
 
-            SetConstantWindAndHydrodynamicsProperties(modelDefinition);
+            SetConstantWindProperties(modelDefinition);
+            SetConstantHydrodynamicsProperties(modelDefinition);
 
             // save boundary data
             var tSeriesFile = modelName + ".bcw";
@@ -191,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
         }
 
-        private void SetConstantWindAndHydrodynamicsProperties(WaveModelDefinition modelDefinition)
+        private void SetConstantWindProperties(WaveModelDefinition modelDefinition)
         {
             if (modelDefinition.TimePointData.WindDataType == InputFieldDataType.Constant)
             {
@@ -203,7 +204,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindSpeed).SetValueAsString("0");
                 modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindDirection).SetValueAsString("0");
             }
+        }
 
+        private void SetConstantHydrodynamicsProperties(WaveModelDefinition modelDefinition)
+        {
             if (modelDefinition.TimePointData.HydroDataType == InputFieldDataType.Constant)
             {
                 modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel).Value = modelDefinition.TimePointData.WaterLevelConstant;
@@ -555,10 +559,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             MdwFilePath = filePath;
 
             var modelDefinition = new WaveModelDefinition();
-            var mdwCategories = ReadMdwProperties(modelDefinition);
+            var mdwCategories = new DelftIniReader().ReadDelftIniFile(MdwFilePath);
             var mdwDir = Path.GetDirectoryName(filePath);
 
-            ConvertingMdwCategoriesToModeldefinitionProperties(modelDefinition, mdwCategories);
+            ConvertMdwCategoriesToModeldefinitionProperties(modelDefinition, mdwCategories);
 
             // domain(s) and nesting
             var allDomains = CreateWaveDomainData(mdwCategories).ToList();
@@ -607,14 +611,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             return modelDefinition;
         }
 
-        private IList<DelftIniCategory> ReadMdwProperties(WaveModelDefinition modelDefinition)
-        {
-            var mdwCategories = new DelftIniReader().ReadDelftIniFile(MdwFilePath);
-            return mdwCategories;
-        }
-
-        private void ConvertingMdwCategoriesToModeldefinitionProperties(WaveModelDefinition modelDefinition,
-            IList<DelftIniCategory> mdwCategories)
+        private void ConvertMdwCategoriesToModeldefinitionProperties(WaveModelDefinition modelDefinition, IEnumerable<DelftIniCategory> mdwCategories)
         {
             foreach (var category in mdwCategories)
             {

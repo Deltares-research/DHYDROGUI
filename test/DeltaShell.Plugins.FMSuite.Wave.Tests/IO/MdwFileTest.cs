@@ -17,7 +17,6 @@ using NUnit.Framework;
 using System;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 {
@@ -407,7 +406,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Integration)]
         public void GivenAModelWithABoundaryCondition_WhenSaved_ThenBcwFileIsReferencedInMdwFile()
         {
             var tempDirPath = FileUtils.CreateTempDirectory();
@@ -473,7 +471,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Integration)]
         public void GivenAModelWithABoundaryCondition_WhenSavedAndLoaded_BoundaryConditionIsCorrectlyLoaded()
         {
             var tempDirPath = FileUtils.CreateTempDirectory();
@@ -536,8 +533,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Integration)]
-        public void GivenAMdwFileWithObstacleFile_WhenImportedItAndRemoveTheObstacles_ThenTheObstacleFileShouldBeFromTheModeldefinitionProperties()
+        public void GivenAMdwFileWithObstacleFile_WhenImportedAndObstaclesRemoved_ThenObstacleFileShouldBeRemovedFromTheModeldefinitionProperties()
         {
 
             var mdwFile = new MdwFile();
@@ -566,13 +562,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                     .GetValueAsString());
         }
 
-
-
-
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Integration)]
-        public void GivenAMdwFileWithConstantWind_WhenImportedItAndChangedTheWindToTimeseries_ThenZerosShouldBeWrittenForWindSpeedAndDirectionInTheModelDefinitionProperties()
+        public void GivenAMdwFileWithConstantWind_WhenImportedAndChangedToTimeseries_ThenZerosShouldBeWrittenForWindSpeedAndDirectionInTheModelDefinitionProperties()
         {
 
             var mdwFile = new MdwFile();
@@ -615,7 +607,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         
         [Test]
         [Category(TestCategory.Integration)]
-        public void GivenAWaveModelWithConstantHydronamics_WhenChangedItToTimeseries_ThenZerosShouldBeWrittenForConstantWaterLevelVelocityXAndVelocityYInTheModelDefinitionProperties()
+        public void GivenAWaveModelWithConstantHydronamics_WhenChangedToTimeseries_ThenZerosShouldBeWrittenForConstantWaterLevelVelocityXAndVelocityYInTheModelDefinitionProperties()
         {
 
             var mdwFile = new MdwFile();
@@ -679,7 +671,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void GivenAWaveModelWithObservationPoints_WhenImportedItAndRemoveTheObservationsPoints_ThenTheLocationFileWithObservationPointsShouldBeFromTheModeldefinitionProperties()
+        public void GivenAWaveModelWithObservationPoints_WhenImportedAndObservationsPointsRemoved_ThenLocationFileWithObservationPointsShouldBeRemovedFromTheModelDefinitionProperties()
         {
             var mdwFile = new MdwFile();
             var importedMdwFilePath = TestHelper.GetTestFilePath(@"wad\wad.mdw");
@@ -706,7 +698,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 modelDef2.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.LocationFile)
                     .GetValueAsString());
         }
-
 
         private DeltaShellApplication GetConfiguredApplication(string savePath)
         {
