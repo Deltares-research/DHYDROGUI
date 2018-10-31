@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
-            string FmSettingsPropertyChanged(object sender, string propertyName)
+            Func<object, string, string> FmSettingsPropertyChanged = (object sender, string propertyName) =>
             {
                 var property = sender as WaterFlowFMProperty;
                 if (property != null)
@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
 
                 return null;
-            }
+            };
 
             yield return new ViewInfo<WaterFlowFMModel, WpfSettingsView>
             {
