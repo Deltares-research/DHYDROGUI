@@ -6,7 +6,9 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
@@ -30,17 +32,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
 
         public static void OpenGrid(string gridPath,
                                     bool gridIsEmpty = false,
-                                    IEnumerable<string> additionalPaths = null)
+                                    IEnumerable<string> additionalPaths = null,
+                                    ICoordinateSystem coordinateSystem = null)
         {
-            OpenGrids(new[] {gridPath}, new[] {gridIsEmpty}, additionalPaths);
+            OpenGrids(new[] {gridPath}, new[] {gridIsEmpty}, additionalPaths, 
+                      coordinateSystem:coordinateSystem);
         }
 
         public static void OpenGrid(string gridPath,
                                     bool gridIsEmpty, 
                                     IEnumerable<IPolygon> polygons,
-                                    string polFileName)
+                                    string polFileName,
+                                    ICoordinateSystem coordinateSystem = null)
         {
-            OpenGrids(new[] { gridPath }, new[] { gridIsEmpty }, null, polygons, polFileName);
+            OpenGrids(new[] { gridPath }, new[] { gridIsEmpty }, null, polygons, polFileName, 
+                      coordinateSystem: coordinateSystem);
         }
 
         public static void OpenGrids(string[] grids,
@@ -48,7 +54,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
                                      IEnumerable<string> additionalPaths = null,
                                      IEnumerable<IPolygon> polygons = null,
                                      string polFileName = null,
-                                     CoordinateSystemType systemType = CoordinateSystemType.Cartesian)
+                                     CoordinateSystemType systemType = CoordinateSystemType.Cartesian,
+                                     ICoordinateSystem coordinateSystem = null)
         {
             additionalPaths = additionalPaths ?? new string[0];
 
@@ -58,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
             // create config file with paths
             var tempDir = FileUtils.CreateTempDirectory();
 
-            var gridCopies = PrepareGridCopies(grids, gridIsEmpty, tempDir, systemType);
+            var gridCopies = PrepareGridCopies(grids, gridIsEmpty, tempDir, systemType, coordinateSystem);
 
             var copiedAdditionalPaths = CopyFilesToDirectory(tempDir, additionalPaths);
             //copy additional files (ldb, shape)
@@ -180,7 +187,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
             }
         }
 
-        private static string[] PrepareGridCopies(string[] grids, bool[] gridIsEmpty, string tempDir, CoordinateSystemType systemType)
+        private static string[] PrepareGridCopies(string[] grids, bool[] gridIsEmpty, string tempDir, CoordinateSystemType systemType, ICoordinateSystem coordinateSystem)
         {
             var firstGrid = grids[0];
 
@@ -192,11 +199,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
                 var gridEditPath = Path.Combine(tempDir, gridIsEmpty[0]
                                                              ? "empty_grid_overwrite_this_net.nc"
                                                              : "save_grid_here_net.nc");
-                
-                if (gridIsEmpty[0]) // Do not let rgfgrid open it. We get an error, but it does start in the right (FM) mode, so that's a big plus
-                    File.WriteAllText(gridEditPath, ""); // create empty file as placeholder to save to
+
+                if (gridIsEmpty[0])
+                {
+                    ConstructNewEmptyGridFile(gridEditPath, coordinateSystem);
+                }
                 else
+                {
                     File.Copy(grids[0], gridEditPath);
+                    UnstructuredGridFileHelper.WriteCoordinateSystemToFile(gridEditPath, coordinateSystem, true);
+                }
 
                 return new[] {gridEditPath};
             }
@@ -216,6 +228,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
             }
 
             return CopyFilesToDirectory(tempDir, grids).ToArray();
+        }
+
+        private static void ConstructNewEmptyGridFile(string path, ICoordinateSystem coordinateSystem)
+        {
+            UnstructuredGridFileHelper.WriteEmptyUnstructuredGridFile(path);
+            UnstructuredGridFileHelper.WriteCoordinateSystemToFile(path, coordinateSystem, true);
         }
 
         private static void StartRgfGridFrom(string tempDir, IEnumerable<IPolygon> polygons = null, string polFileName = null)

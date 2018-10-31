@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             var modelLdbPaths = flowFmModel.ModelDefinition.GetModelProperty(KnownProperties.LandBoundaryFile).GetFileNames(".ldb", ' ');
             var paths = modelLdbPaths.Select(modelLdbPath => Path.Combine(Path.GetDirectoryName(targetMduFilePath), modelLdbPath));
 
-            RgfGridEditor.OpenGrid(flowFmModel.NetFilePath, flowFmModel.Grid == null || flowFmModel.Grid.IsEmpty, paths);
+            RgfGridEditor.OpenGrid(flowFmModel.NetFilePath, flowFmModel.Grid == null || flowFmModel.Grid.IsEmpty, paths, flowFmModel.CoordinateSystem);
             ReloadGrid(flowFmModel);
         }
 

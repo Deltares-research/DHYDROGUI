@@ -178,6 +178,191 @@ namespace DeltaShell.NGHS.IO.Grid
             NetFile.WriteCoordinateSystem(path, coordinateSystem);
         }
 
+        /// <summary>
+        /// Create a new Unstructured file at <paramref name="path"/>
+        /// containing only the correct Unstructured Grid metadata.
+        /// </summary>
+        /// <param name="path">The path at which the new Unstructured Grid File will be located</param>
+        public static void WriteEmptyUnstructuredGridFile(string path)
+        {
+            var metaData = new UGridGlobalMetaData("Unknown model",
+                                                   "DeltaShell",
+                                                   GridApiDataSet.GridConstants.UG_CONV_MIN_VERSION.ToString());
+            using (var uGrid = new UGrid(path, metaData))
+            {
+                uGrid.CreateFile();
+            }
+        }
+
+        /// <summary>
+        /// Write <paramref name="newCoordinateSystem"/> to the _net.nc file specified at <paramref name="path"/>
+        ///
+        /// If <paramref name="writeNullCoordinateSystem"/> is true, and a null coordinate system is provided
+        /// A projected_coordinated_system with EPSG 0 will be written to file.
+        /// </summary>
+        /// <param name="path">Path to the UGrid _net.nc file.</param>
+        /// <param name="newCoordinateSystem">The new coordinate system to be written to file.</param>
+        /// <param name="writeNullCoordinateSystem">If true, and <paramref name="newCoordinateSystem"/> == null, then write a projected_coordinate_system with EPSG 0 to file.</param>
+        public static void WriteCoordinateSystemToFile(string path, 
+                                                       ICoordinateSystem newCoordinateSystem,
+                                                       bool writeNullCoordinateSystem = false)
+        {
+            // Issue: D3DFMIQ-512
+            // This code should be replaced with a call to the net_io_lib, once
+            // it provides a method to write the coordinate system directly to
+            // the _net.nc file. For the time being this should be more correct
+            // than using the NetFile.WriteCoordinateSystem method.
+
+            var hasCoordinateSystem = 
+                FileContainsCoordinateSystem(path, out ICoordinateSystem currentCoordinateSystem);
+
+            // we do not want to write anything because we passed a null
+            // coordinate system.
+            if (newCoordinateSystem == null && !writeNullCoordinateSystem) return;
+
+            // we want to write a null coordinate system, but a null coordinate
+            // system has already been written.
+            if (hasCoordinateSystem && currentCoordinateSystem == null && newCoordinateSystem == null) return;
+
+            // we want to write a non null coordinate system, but this coordinate
+            // system already exists in file.
+            if (hasCoordinateSystem && currentCoordinateSystem != null && newCoordinateSystem != null &&
+                currentCoordinateSystem.AuthorityCode == newCoordinateSystem.AuthorityCode) return;
+
+            NetCdfFile netCdfFile = null;
+            try
+            {
+                netCdfFile = NetCdfFile.OpenExisting(path, true);
+                netCdfFile.ReDefine();
+
+                // issue: D3DFMIQ-512
+                // Once it is possible to either update or write UGrid files
+                // within DeltaShell, this function needs to be updated.
+                // Currently, it is possible for the situation where both
+                // coordinate system variables exist within the _net.nc file,
+                // as it is not possible to rename a variable, or rewrite the
+                // whole _net.nc file. As such, it is necessary to update both
+                // variables. In the future, when:
+                //
+                // currentCoordinateSystem.IsGeographic != newCoordinateSystem.IsGeographic,
+                //
+                // you would remove the variable associated with currentCoordinateSystem,
+                // and only execute the relevant if statement:
+                //
+                // * if (currentCoordinateSystem.IsGeographic != newCoordinateSystem.IsGeographic)
+                // *     RemoveVariable(netCdfFile, currentCoordinateSystem.IsGeographic ? "wgs84" : "projected_coordinate_system");
+                // * var variableName = newCoordinateSystem.IsGeographic ? "wgs84" : "projected_coordinate_system";
+                // * var pcs = netCdfFile.GetVariableByName(variableName) ?? 
+                // *           netCdfFIle.AddVariable(variableName, NetCdfDataType.NcInteger, new NetCdfDimension[0]);
+
+                // Log error
+                if (currentCoordinateSystem != null && newCoordinateSystem != null &&
+                    currentCoordinateSystem.IsGeographic != newCoordinateSystem.IsGeographic)
+                {
+                    Log.WarnFormat(
+                        "The conversion from {0} to {1} coordinates has corrupted your grid in {2}. Behaviour might be unexpected.",
+                        (currentCoordinateSystem.IsGeographic ? "spherical" : "carthesian"),
+                        (newCoordinateSystem.IsGeographic ? "spherical" : "carthesian"),
+                        path);
+                }
+
+                // Update wgs84
+                if ((currentCoordinateSystem?.IsGeographic ?? false) || (newCoordinateSystem?.IsGeographic ?? false))
+                {
+                    var pcs = netCdfFile.GetVariableByName("wgs84") ??
+                              netCdfFile.AddVariable("wgs84", NetCdfDataType.NcInteger, new NetCdfDimension[0]);
+                    WriteCoordinateSystemWithVariable(netCdfFile, pcs, newCoordinateSystem);
+                }
+
+                // update projected_coordinate_system
+                if ((newCoordinateSystem == null) ||
+                    (!newCoordinateSystem.IsGeographic) ||
+                    ((!currentCoordinateSystem?.IsGeographic) ?? false))
+                {
+                    var pcs = netCdfFile.GetVariableByName("projected_coordinate_system") ??
+                              netCdfFile.AddVariable("projected_coordinate_system", NetCdfDataType.NcInteger, new NetCdfDimension[0]);
+                    WriteCoordinateSystemWithVariable(netCdfFile, pcs, newCoordinateSystem);
+                }
+
+                netCdfFile.EndDefine();
+                netCdfFile.Flush();
+            }
+            finally
+            {
+                netCdfFile?.Close();
+            }
+        }
+
+        /// <summary>
+        /// Check if the _net.nc file at <paramref name="path"/> defines a
+        /// coordinate system and returns this coordinate system as
+        /// <paramref name="coordinateSystem"/>.
+        /// If true and <paramref name="coordinateSystem"/> equals null,
+        /// then a coordinate system with a non-existent EPGS code (i.e. 0)
+        /// has been written to file.
+        /// <returns> If the _net.nc file at <paramref name="path"/> specifies a coordinate system.</returns>
+        /// </summary>
+        public static bool FileContainsCoordinateSystem(string path, out ICoordinateSystem coordinateSystem)
+        {
+            var result = false;
+
+            NetCdfFile netCdfFile = null;
+            try
+            {
+                netCdfFile = NetCdfFile.OpenExisting(path);
+
+                result = netCdfFile.GetVariableByName("wgs84") != null ||
+                         netCdfFile.GetVariableByName("projected_coordinate_system") != null;
+            }
+            finally
+            {
+                netCdfFile?.Close();
+            }
+
+            coordinateSystem = GetCoordinateSystem(path);
+            return result;
+        }
+
+        private static void WriteCoordinateSystemWithVariable(NetCdfFile file,
+                                                              NetCdfVariable pcs,
+                                                              ICoordinateSystem coordinateSystem)
+        {
+
+
+            file.AddAttribute(pcs, new NetCdfAttribute("name", coordinateSystem?.Name ?? "Unknown projected"));
+
+            var epsg = coordinateSystem != null ? (int)coordinateSystem.AuthorityCode : 0;
+            file.AddAttribute(pcs, new NetCdfAttribute("epsg", epsg));
+
+
+            file.AddAttribute(pcs,
+                new NetCdfAttribute("grid_mapping_name", (coordinateSystem != null &&
+                                                          coordinateSystem.IsGeographic) ? "latitude_longitude" :
+                                                                                           "Unknown projected"));
+
+            file.AddAttribute(pcs, new NetCdfAttribute("longitude_of_prime_meridian", 0.0));
+
+            
+            var semiMajorAxis = coordinateSystem != null ? coordinateSystem.GetSemiMajor() : 6378137.0;
+            var semiMinorAxis = coordinateSystem != null ? coordinateSystem.GetSemiMinor() : 6356752.314245;
+            var inverseFlattening = coordinateSystem != null ? coordinateSystem.GetInverseFlattening() : 298.257223563;
+
+            file.AddAttribute(pcs, new NetCdfAttribute("semi_major_axis", semiMajorAxis));
+            file.AddAttribute(pcs, new NetCdfAttribute("semi_minor_axis", semiMinorAxis));
+            file.AddAttribute(pcs, new NetCdfAttribute("inverse_flattening", inverseFlattening));
+
+            if (coordinateSystem != null)
+                file.AddAttribute(pcs, new NetCdfAttribute("proj4_params", coordinateSystem.PROJ4));
+            file.AddAttribute(pcs, new NetCdfAttribute("EPSG_code", string.Format("EPSG:{0}", epsg)));
+
+            if (coordinateSystem != null)
+            {
+                file.AddAttribute(pcs, new NetCdfAttribute("projection_name", "unknown"));
+                file.AddAttribute(pcs, new NetCdfAttribute("wkt", coordinateSystem.WKT));
+            }
+        }
+
+
         public static void WriteGridToFile(string path, UnstructuredGrid grid)
         {
             var convention = GetConvention(path);
