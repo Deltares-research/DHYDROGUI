@@ -2,6 +2,9 @@
 using System.IO;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DeltaShell.NGHS.IO.FileWriters.Network;
+using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;

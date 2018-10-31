@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using DelftTools.Hydro;
 using DelftTools.Utils.Interop;
 using DeltaShell.Dimr;
 using GeoAPI.Extensions.Coverages;
@@ -63,7 +64,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 }
 
                 return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(gridFilePath, networkDiscretization, ref linksFrom, ref linksTo,
-                    ref startIndex, ref linksCount, Make1D2DLinksFromMesh1D, selectedArea, GridApiDataSet.LinkType.Embedded, filter1DMesh);
+                    ref startIndex, ref linksCount, Make1D2DLinksFromMesh1D, selectedArea, LinkType.Embedded, filter1DMesh);
             }
             return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
         }
@@ -78,7 +79,7 @@ namespace DeltaShell.NGHS.IO.Grid
             if (filter1DMesh.Any(m => m.Equals(true)))
             {
                 return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(netFilePath, networkDiscretization, ref linksFrom, ref linksTo,
-                    ref startIndex, ref linksCount, Make1D2DRoofLinks, null, GridApiDataSet.LinkType.RoofSewer, filter1DMesh, geometryRoofs);
+                    ref startIndex, ref linksCount, Make1D2DRoofLinks, null, LinkType.RoofSewer, filter1DMesh, geometryRoofs);
             }
             return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
         }
@@ -93,7 +94,7 @@ namespace DeltaShell.NGHS.IO.Grid
             if (filter1DMesh.Any(m => m.Equals(true)))
             {
                 return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(netFilePath, networkDiscretization, ref linksFrom, ref linksTo,
-                    ref startIndex, ref linksCount, Make1D2DGullyLinks, null, GridApiDataSet.LinkType.GullySewer, filter1DMesh, geometryGullies);
+                    ref startIndex, ref linksCount, Make1D2DGullyLinks, null, LinkType.GullySewer, filter1DMesh, geometryGullies);
             }
             return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
         }
@@ -109,7 +110,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     selectedArea = GetSelectAllArea(points);
                 }
 
-                return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(gridFilePath, networkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, Make1D2DLateralLinks, selectedArea, GridApiDataSet.LinkType.Lateral, filter1DMesh);
+                return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(gridFilePath, networkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, Make1D2DLateralLinks, selectedArea, LinkType.Lateral, filter1DMesh);
             }
             return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
         }
@@ -367,7 +368,7 @@ namespace DeltaShell.NGHS.IO.Grid
         }
 
         // TODO: This method is huge.. Make smaller please :(
-        private int SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(string gridFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, Func<IPolygon, IList<bool>, IEnumerable<IGeometry>,int> make1D2DLinks, IPolygon selectedArea, GridApiDataSet.LinkType linkType, IList<bool> filter1DMesh, IEnumerable<IGeometry> filter2DMesh = null)
+        private int SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(string gridFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, Func<IPolygon, IList<bool>, IEnumerable<IGeometry>,int> make1D2DLinks, IPolygon selectedArea, LinkType linkType, IList<bool> filter1DMesh, IEnumerable<IGeometry> filter2DMesh = null)
         {
             IntPtr c_meshXCoords = IntPtr.Zero;
             IntPtr c_meshYCoords = IntPtr.Zero;

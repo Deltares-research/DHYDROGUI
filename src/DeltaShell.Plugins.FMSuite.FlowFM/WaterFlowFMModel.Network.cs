@@ -12,7 +12,6 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.Plugins.NetworkEditor;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -341,19 +340,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             LoadNetwork();
 
-        }
-
-        private void SaveNetwork()
-        {
-            var metaData = new UGridGlobalMetaData(Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion);
-            var networkDataModel = new NetworkUGridDataModel(network);
-            UGridToNetworkAdapter.SaveNetwork(NetFilePath, networkDataModel, metaData);
-        }
-
-        private void SaveNetworkDiscretisation()
-        {
-            var networkDiscretizationDataModel = new NetworkDiscretisationUGridDataModel(networkDiscretization);
-            UGridToNetworkAdapter.SaveNetworkDiscretisation(NetFilePath, networkDiscretizationDataModel);
         }
     }
 }

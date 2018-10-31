@@ -1,8 +1,11 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
+using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
@@ -170,7 +173,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.IsTrue(File.Exists(testFilePath));
 
             var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
-            UnstructuredGridFileHelper.WriteGridToFile(localtestFile, new UnstructuredGrid());
+            UnstructuredGridFileHelper.WriteGridToFile(localtestFile, new UnstructuredGrid(), new HydroNetwork(), new Discretization(), new List<ILink1D2D>(), "myName", "myPlugin", "myVersion");
 
             FileUtils.DeleteIfExists(localtestFile);
         }
@@ -181,13 +184,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var testFilePath = Path.Combine(TestHelper.GetDataDir(), "fileDoesNotExist.nc");
             Assert.IsFalse(File.Exists(testFilePath));
 
-            var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
+            var localtestFilePath = TestHelper.CreateLocalCopy(testFilePath);
             Assert.IsFalse(File.Exists(testFilePath));
 
-            UnstructuredGridFileHelper.WriteGridToFile(localtestFile, new UnstructuredGrid());
-            Assert.IsTrue(File.Exists(localtestFile));
+            UnstructuredGridFileHelper.WriteGridToFile(localtestFilePath, new UnstructuredGrid(), new HydroNetwork(), new Discretization(), new List<ILink1D2D>(), "myName", "myPlugin", "myVersion");
+            Assert.IsTrue(File.Exists(localtestFilePath));
 
-            FileUtils.DeleteIfExists(localtestFile);
+            FileUtils.DeleteIfExists(localtestFilePath);
         }
 
         [TestCase(@"ugrid\Custom_Ugrid.nc")]

@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using DeltaShell.NGHS.IO.Grid;
+using DelftTools.Hydro;
 using GeoAPI.Extensions.Coverages;
 using SharpMap.Layers;
 using SharpMap.UI.Tools;
@@ -14,10 +14,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         public Base1D2DLinksMapTool()
         {
-            LinkType = GridApiDataSet.LinkType.Embedded;
+            LinkType = LinkType.Embedded;
         }
 
-        public GridApiDataSet.LinkType LinkType { get; set; }
+        public LinkType LinkType { get; set; }
 
         public override bool Enabled
         {

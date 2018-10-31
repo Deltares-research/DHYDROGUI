@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
+using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Adaptors;
 using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.CoordinateSystems;
+using GeoAPI.Extensions.Coverages;
 using log4net;
 using NetTopologySuite.Extensions.Grids;
 
@@ -38,7 +42,12 @@ namespace DeltaShell.NGHS.IO.Grid
                 case GridApiDataSet.DataSetConventions.CONV_UGRID:
                     using (var fmUGridAdaptor = new UGridToUnstructuredGridAdaptor(path))
                     {
-                        return fmUGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
+                        var unstructuredGridFromUGridMeshId = fmUGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
+
+                        return unstructuredGridFromUGridMeshId != null ? 
+                            unstructuredGridFromUGridMeshId: loadFlowLinksAndCells? 
+                                NetFileImporter.ImportModelGrid(path) : 
+                                NetFileImporter.ImportGrid(path);
                     }
                 case GridApiDataSet.DataSetConventions.CONV_OTHER:
                     return loadFlowLinksAndCells
@@ -170,37 +179,56 @@ namespace DeltaShell.NGHS.IO.Grid
                 }
                 finally
                 {
-                    if (netCdfFile != null)
-                        netCdfFile.Close();
+                    netCdfFile?.Close();
                 }
             }
 
             NetFile.WriteCoordinateSystem(path, coordinateSystem);
         }
 
-        public static void WriteGridToFile(string path, UnstructuredGrid grid)
+        public static void WriteGridToFile(string netFilePath, UnstructuredGrid grid, IHydroNetwork network, IDiscretization networkDiscretization, IEnumerable<ILink1D2D> links, string name, string pluginName, string pluginVersion)
         {
-            var convention = GetConvention(path);
-
-            if (convention == GridApiDataSet.DataSetConventions.CONV_OTHER)
+            FileUtils.DeleteIfExists(netFilePath);
+            
+            var metaData = new UGridGlobalMetaData(name, pluginName, pluginVersion);
+            
+            if (network?.Nodes?.Count > 0)
             {
-                if (!File.Exists(path))
+                var networkDataModel = new NetworkUGridDataModel(network);
+                SaveNetwork(netFilePath, networkDataModel, metaData);
+
+                if (networkDiscretization != null && networkDiscretization.Locations.Values.Count > 0)
                 {
-                    if (grid == null || grid.IsEmpty)
-                    {
-                        var file = NetCdfFile.CreateNew(path);
-                        file.Close();
-                        return;
-                    }
-                    NetFile.Write(path, grid);
-                }
-                else
-                {
-                    NetFile.WriteToExisting(path, grid);
+                    var networkDiscretizationDataModel = new NetworkDiscretisationUGridDataModel(networkDiscretization);
+                    SaveNetworkDiscretisation(netFilePath, networkDiscretizationDataModel);
                 }
             }
 
-            // throw error ??
+            if (links?.ToList().Count > 0)
+            {
+                Save1D2DLinks(netFilePath, links);
+            }
+
+            if (File.Exists(netFilePath))
+            {
+                WorkAroundNetFile.Initialize(netFilePath, grid);
+                NetFile.WriteToExisting(netFilePath, grid);
+            }
+        }
+
+        private static void SaveNetwork(string netFilePath, NetworkUGridDataModel networkDataModel, UGridGlobalMetaData metaData)
+        {
+            UGridToNetworkAdapter.SaveNetwork(netFilePath, networkDataModel, metaData);
+        }
+
+        private static void SaveNetworkDiscretisation(string netFilePath,  NetworkDiscretisationUGridDataModel networkDiscretizationDataModel)
+        {
+            UGridToNetworkAdapter.SaveNetworkDiscretisation(netFilePath, networkDiscretizationDataModel);
+        }
+
+        private static void Save1D2DLinks(string netFilePath, IEnumerable<ILink1D2D> links)
+        {
+            UGrid1D2DLinksAdapter.Save1D2DLinks(netFilePath, links);
         }
 
         public static void RewriteGridCoordinates(string path, UnstructuredGrid unstructuredGrid)

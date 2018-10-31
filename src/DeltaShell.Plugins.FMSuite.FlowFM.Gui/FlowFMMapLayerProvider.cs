@@ -6,13 +6,13 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using DelftTools.Functions;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             }
 
-            var links = data as IEventedList<WaterFlowFM1D2DLink>;
+            var links = data as IEventedList<Link1D2D>;
             if (links != null && parent is WaterFlowFMModel)
             {
                 var fmModel = (WaterFlowFMModel)parent;
@@ -276,7 +276,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             return data is WaterFlowFMModel
                 // TODO Sil: add check if data is Featurecoverage with a certain name/type (find the breach width coverage)
                    || data is FileBasedFeatureCoverage && IsCoverageLeveeBreachWidth((FileBasedFeatureCoverage)data)
-                   || data is IEventedList<WaterFlowFM1D2DLink> && parentObject is WaterFlowFMModel
+                   || data is IEventedList<Link1D2D> && parentObject is WaterFlowFMModel
                    || data is IGrouping<string, IFunction>
                    || data is FMMapFileFunctionStore
                    || data is FMHisFileFunctionStore
@@ -484,7 +484,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             const int lineWidth = 3;
             var linkEndCap = new AdjustableArrowCap(4, 4, true) { BaseCap = LineCap.Triangle };
 
-            var lateralName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(GridApiDataSet.LinkType.Lateral);
+            var lateralName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(LinkType.Lateral);
             var lateralStyle = new VectorStyle
             {
                 GeometryType = typeof(ILineString),
@@ -496,7 +496,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 EnableOutline = false
             };
 
-            var embeddedName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(GridApiDataSet.LinkType.Embedded);
+            var embeddedName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(LinkType.Embedded);
             var embeddedStyle = new VectorStyle
             {
                 GeometryType = typeof(ILineString),
@@ -508,7 +508,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 EnableOutline = false
             };
 
-            var roofSewerName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(GridApiDataSet.LinkType.RoofSewer);
+            var roofSewerName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(LinkType.RoofSewer);
             var roofSewerStyle = new VectorStyle
             {
                 GeometryType = typeof(ILineString),
@@ -520,7 +520,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 EnableOutline = false
             };
 
-            var gullySewerName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(GridApiDataSet.LinkType.GullySewer);
+            var gullySewerName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(LinkType.GullySewer);
             var gullyWaterStyle = new VectorStyle
             {
                 GeometryType = typeof(ILineString),
@@ -532,7 +532,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 EnableOutline = false
             };
 
-            var inhabitantsSewerName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(GridApiDataSet.LinkType.InhabitantsSewer);
+            var inhabitantsSewerName = EnumDescriptionAttributeTypeConverter.GetEnumDescription(LinkType.InhabitantsSewer);
             var inhabitantsSewerStyle = new VectorStyle
             {
                 GeometryType = typeof(ILineString),
@@ -550,11 +550,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 DefaultStyle = embeddedStyle,
                 ThemeItems = new EventedList<IThemeItem>
                 {
-                    new CategorialThemeItem(embeddedName, embeddedStyle, null, GridApiDataSet.LinkType.Embedded),
-                    new CategorialThemeItem(lateralName, lateralStyle, null, GridApiDataSet.LinkType.Lateral),
-                    new CategorialThemeItem(roofSewerName, roofSewerStyle, null, GridApiDataSet.LinkType.RoofSewer),
-                    new CategorialThemeItem(gullySewerName, gullyWaterStyle, null, GridApiDataSet.LinkType.GullySewer),
-                    new CategorialThemeItem(inhabitantsSewerName, inhabitantsSewerStyle, null, GridApiDataSet.LinkType.InhabitantsSewer),
+                    new CategorialThemeItem(embeddedName, embeddedStyle, null, LinkType.Embedded),
+                    new CategorialThemeItem(lateralName, lateralStyle, null, LinkType.Lateral),
+                    new CategorialThemeItem(roofSewerName, roofSewerStyle, null, LinkType.RoofSewer),
+                    new CategorialThemeItem(gullySewerName, gullyWaterStyle, null, LinkType.GullySewer),
+                    new CategorialThemeItem(inhabitantsSewerName, inhabitantsSewerStyle, null, LinkType.InhabitantsSewer),
                 }
             };
 

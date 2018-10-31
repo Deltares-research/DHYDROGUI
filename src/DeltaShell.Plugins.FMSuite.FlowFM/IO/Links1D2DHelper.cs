@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -10,10 +11,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public static class Links1D2DHelper
     {
-        private const double SNAP_DISTANCE = 9.0; //
-        public const int MISSING_INDEX = -1; //
+        public const int MISSING_INDEX = -1;
 
-        public static void SetGeometry1D2DLinks(IEnumerable<WaterFlowFM1D2DLink> listOfLinks, DelftTools.Functions.Generic.IVariable<INetworkLocation> networkLocations, IList<Cell> gridCells)
+        public static void SetGeometry1D2DLinks(IEnumerable<ILink1D2D> listOfLinks, DelftTools.Functions.Generic.IVariable<INetworkLocation> networkLocations, IList<Cell> gridCells)
         {
             if (!networkLocations.Values.Any() || !gridCells.Any()) return;
 
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        public static void SetIndexes1D2DLinks(IEnumerable<WaterFlowFM1D2DLink> listOfLinks, IDiscretization networkDiscretization, UnstructuredGrid grid, double tolerance = 0.0)
+        public static void SetIndexes1D2DLinks(IEnumerable<ILink1D2D> listOfLinks, IDiscretization networkDiscretization, UnstructuredGrid grid, double tolerance = 0.0)
         {
             if (networkDiscretization == null || !networkDiscretization.Locations.Values.Any() || grid == null || !grid.Cells.Any()) return;
 

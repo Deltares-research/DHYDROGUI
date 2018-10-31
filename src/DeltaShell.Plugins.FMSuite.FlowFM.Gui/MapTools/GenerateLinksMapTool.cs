@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using GeoAPI.Extensions.Coverages;
@@ -167,9 +167,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             }
         }
 
-        private IList<WaterFlowFM1D2DLink> GetNew1D2DLinks(IList<WaterFlowFM1D2DLink> created1D2DLinks, IEventedList<WaterFlowFM1D2DLink> existingLinks)
+        private IList<Link1D2D> GetNew1D2DLinks(IList<Link1D2D> created1D2DLinks, IEventedList<ILink1D2D> existingLinks)
         {
-            var result = new List<WaterFlowFM1D2DLink>();
+            var result = new List<Link1D2D>();
             foreach (var newLink in created1D2DLinks)
             {
                 if (!existingLinks.Contains(newLink))
@@ -180,9 +180,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             return result;
         }
         
-        private IList<WaterFlowFM1D2DLink> Creates1d2dLinks(int linksCount, List<int> linksFromIndex, List<int> linksToIndex, UnstructuredGrid grid, IDiscretization networkDiscretization, GridApiDataSet.LinkType linkType)
+        private IList<Link1D2D> Creates1d2dLinks(int linksCount, List<int> linksFromIndex, List<int> linksToIndex, UnstructuredGrid grid, IDiscretization networkDiscretization, LinkType linkType)
         {
-            var lstNewLinks = new List<WaterFlowFM1D2DLink>();
+            var lstNewLinks = new List<Link1D2D>();
             for (int i = 0; i < linksCount; i++)
             {
                 //seems lists are swapt  
@@ -191,7 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
                 var fromCell = grid.Cells[cellIndex];
                 var toNode = networkDiscretization.Locations.Values[pointIndex];
-                var link = new WaterFlowFM1D2DLink(pointIndex, cellIndex)
+                var link = new Link1D2D(pointIndex, cellIndex)
                 {
                     Geometry = new LineString(new[] { fromCell.Center, toNode.Geometry.Coordinate }),
                     TypeOfLink = linkType
@@ -206,13 +206,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             Map.Layers.Add(SelectPolygonLayer);
             MapControl.Tools.Add(selectPolygonTool);
             selectPolygonTool.MapControl = MapControl;
-        }
-
-        // TODO: Method seems to be unused, remove?
-        [Obsolete]
-        private void ExitBoundingBoxDrawingMode()
-        {
-            MapControl.Tools.Remove(selectPolygonTool);
         }
 
         private IPolygon GetSelectedAreaAsPolygon()

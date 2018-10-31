@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
-using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
@@ -42,35 +42,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
 
             _linkTypes = new ObservableCollection<RibbonLink>
             {
-                new RibbonLink()
+                new RibbonLink
                 {
                     Name = "Embedded",
                     ToolTipText = "Embedded 1D2D links for polder and manholes",
-                    Type = GridApiDataSet.LinkType.Embedded
+                    Type = LinkType.Embedded
                 },
-                new RibbonLink()
+                new RibbonLink
                 {
                     Name = "Lateral",
                     ToolTipText = "Lateral 1D2D links for rivers",
-                    Type = GridApiDataSet.LinkType.Lateral
+                    Type = LinkType.Lateral
                 },
-                new RibbonLink()
+                new RibbonLink
                 {
                     Name = "Roof-sewer",
                     ToolTipText = "Roof-sewer links for rainfall",
-                    Type = GridApiDataSet.LinkType.RoofSewer
+                    Type = LinkType.RoofSewer
                 },
-                new RibbonLink()
+                new RibbonLink
                 {
                     Name = "Inhabitants",
                     ToolTipText = "Inhabitants-sewer links for household wastewater",
-                    Type = GridApiDataSet.LinkType.InhabitantsSewer
+                    Type = LinkType.InhabitantsSewer
                 },
-                new RibbonLink()
+                new RibbonLink
                 {
                     Name = "Gully-sewer",
                     ToolTipText = "Gully-sewer links for street in/outlet",
-                    Type = GridApiDataSet.LinkType.GullySewer
+                    Type = LinkType.GullySewer
                 }
             };
 
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
             {
             }
 
-            public GridApiDataSet.LinkType LinkType
+            public LinkType LinkType
             {
                 set
                 {
@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
 
         public string ToolTipText { get; set; }
 
-        public GridApiDataSet.LinkType Type { get; set; }
+        public LinkType Type { get; set; }
     }
 }
 

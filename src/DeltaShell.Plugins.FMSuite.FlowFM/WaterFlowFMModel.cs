@@ -161,7 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             BridgePillarsDataModel = new List<ModelFeatureCoordinateData<BridgePillar>>();
 
             SedimentOverallProperties = SedimentFractionHelper.GetSedimentationOverAllProperties();
-            Links = new EventedList<WaterFlowFM1D2DLink>();
+            Links = new EventedList<ILink1D2D>();
         }
 
         public WaterFlowFMModelDefinition ModelDefinition
@@ -187,7 +187,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public IList<ModelFeatureCoordinateData<BridgePillar>> BridgePillarsDataModel { get; private set; }
 
-        public IEventedList<WaterFlowFM1D2DLink> Links
+        public IEventedList<ILink1D2D> Links
         {
             get { return links; }
             set
@@ -217,7 +217,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var links = UGrid1D2DLinksAdapter.Load1D2DLinks(NetFilePath);
             if (NetworkDiscretization == null || Grid == null) return;
             Links1D2DHelper.SetGeometry1D2DLinks(links, NetworkDiscretization.Locations, Grid.Cells);
-            Links = links;
+            Links = new EventedList<ILink1D2D>(links);
         }
 
         public override IBasicModelInterface BMIEngine
@@ -2008,39 +2008,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             InitializeAreaDataColumns();
 
+            ReloadGrid();
+
             FeatureFile1D2DWriter.Write1D2DFeatures(mduPath, this);
             mduFile.Write(mduPath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null);
 
             RestoreAreaDataColumns();
-
-            if (Grid != null)
-            {
-                if (MduFilePath == null) MduFilePath = mduPath;
-                SaveGrid();
-            }
-
-            if (Network != null)
-            {
-                if (Network.Nodes != null && Network.Nodes.Count > 0)
-                {
-                    SaveNetwork();
-
-                    if (NetworkDiscretization != null && NetworkDiscretization.Locations.Values.Count > 0)
-                    {
-                        SaveNetworkDiscretisation();
-                    }
-                }
-            }
-
-            if (Links != null)
-            {
-                if(Links.Count > 0)
-                {
-                    Save1D2DLinks();
-                }
-            }
-
-
 
             if (switchTo)
             {
@@ -2059,8 +2032,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             MduFile.CleanBridgePillarAttributes(Area.BridgePillars);
         }
-
-       
 
         private void OnSwitchTo(string mduPath)
         {
@@ -2277,7 +2248,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private FMMapFileFunctionStore outputMapFileStore;
         private IEventedList<string> tracerDefinitions;
         private bool isLoading;
-        private IEventedList<WaterFlowFM1D2DLink> links;
+        private IEventedList<ILink1D2D> links;
 
         private const int TotalImportSteps = 10;
 
@@ -3289,10 +3260,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void OnWaterFlowFm1D2DLinkPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is WaterFlowFM1D2DLink & e.PropertyName.Equals("Geometry"))
+            if (sender is Link1D2D & e.PropertyName.Equals("Geometry"))
             { 
                 //update indexes
-                var link = (WaterFlowFM1D2DLink) sender;
+                var link = (Link1D2D) sender;
                 var firstCoordinate = link.Geometry?.Coordinates.First();
                 var lastCoordinate = link.Geometry?.Coordinates.Last();
                 link.DiscretisationPointIndex = Links1D2DHelper.FindCalculationPointIndex(firstCoordinate, NetworkDiscretization, link.SnapToleranceUsed);

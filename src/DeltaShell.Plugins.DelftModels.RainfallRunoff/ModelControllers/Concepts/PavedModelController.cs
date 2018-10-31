@@ -7,6 +7,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
+using LinkType = DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter.LinkType;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concepts
 {

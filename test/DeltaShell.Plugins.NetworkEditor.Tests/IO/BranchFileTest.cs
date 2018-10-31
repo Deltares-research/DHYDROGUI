@@ -5,7 +5,8 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.NetworkEditor.IO;
+using DeltaShell.NGHS.IO.FileWriters.Network;
+using DeltaShell.NGHS.IO.Grid;
 using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
 

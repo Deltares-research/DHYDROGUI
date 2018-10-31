@@ -237,7 +237,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void FlowFmMapLayerProviderCanCreateLayerForListOfWaterFlowFm1D2DLinks()
         {
-            var canCreateLayerFor = mapLayerProvider.CanCreateLayerFor(new EventedList<WaterFlowFM1D2DLink>(), new WaterFlowFMModel());
+            var canCreateLayerFor = mapLayerProvider.CanCreateLayerFor(new EventedList<Link1D2D>(), new WaterFlowFMModel());
             Assert.IsTrue(canCreateLayerFor);
         }
 
@@ -246,13 +246,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var fromCell = 0;
             var toCell = 1;
-            var fmModel = new WaterFlowFMModel()
+            var fmModel = new WaterFlowFMModel
             {
-                Links = new EventedList<WaterFlowFM1D2DLink>() { mocks.Stub<WaterFlowFM1D2DLink>(fromCell, toCell) }
+                Links = new EventedList<ILink1D2D> { mocks.Stub<Link1D2D>(fromCell, toCell) }
             };
             var childObjects = mapLayerProvider.ChildLayerObjects(fmModel);
 
-            Assert.IsNotEmpty(childObjects.Where(c => c is EventedList<WaterFlowFM1D2DLink>));
+            Assert.IsNotEmpty(childObjects.Where(c => c is EventedList<Link1D2D>));
         }
 
         [Test]
@@ -260,9 +260,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var fromCell = 0;
             var toCell = 1;
-            var fmModel = new WaterFlowFMModel()
+            var fmModel = new WaterFlowFMModel
             {
-                Links = new EventedList<WaterFlowFM1D2DLink>() { mocks.Stub<WaterFlowFM1D2DLink>(fromCell, toCell) }
+                Links = new EventedList<ILink1D2D> { mocks.Stub<Link1D2D>(fromCell, toCell) }
             };
             var layer = mapLayerProvider.CreateLayer(fmModel.Links, fmModel);
 

@@ -2,7 +2,6 @@
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
-using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
@@ -22,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         public void Get_1DPointsMask_DWA()
         {
             var discretisation = GetTestDiscretization();
-            var filter1DPoints = MapTool1D2DLinksHelper.GetMesh1DFilter(discretisation, GridApiDataSet.LinkType.InhabitantsSewer);
+            var filter1DPoints = MapTool1D2DLinksHelper.GetMesh1DFilter(discretisation, LinkType.InhabitantsSewer);
 
             Assert.AreEqual(2, filter1DPoints.Count(p => p));
 
@@ -34,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         public void Get_1DPointsMask_HWA()
         {
             var discretisation = GetTestDiscretization();
-            var filter1DPoints = MapTool1D2DLinksHelper.GetMesh1DFilter(discretisation, GridApiDataSet.LinkType.RoofSewer);
+            var filter1DPoints = MapTool1D2DLinksHelper.GetMesh1DFilter(discretisation, LinkType.RoofSewer);
 
             Assert.AreEqual(2, filter1DPoints.Count(p => p));
 
@@ -78,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         [Test]
         public void Get_Roof1D2DLinks()
         {
-            var linkType = GridApiDataSet.LinkType.RoofSewer;
+            var linkType = LinkType.RoofSewer;
             var discretisation = GetTestDiscretization();
 
             var model = new WaterFlowFMModel();
@@ -133,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         [Test]
         public void Get_Inhabitants1D2DLinks()
         {
-            var linkType = GridApiDataSet.LinkType.InhabitantsSewer;
+            var linkType = LinkType.InhabitantsSewer;
             var discretisation = GetTestDiscretization();
 
             var model = new WaterFlowFMModel();
@@ -195,7 +194,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         [Test]
         public void Get_Gully1D2DLinks()
         {
-            var linkType = GridApiDataSet.LinkType.GullySewer;
+            var linkType = LinkType.GullySewer;
             var discretisation = GetTestDiscretization();
 
             var model = new WaterFlowFMModel();
@@ -233,12 +232,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         [Test]
         public void Get_EmbeddedLinks()
         {
-            var linkType = GridApiDataSet.LinkType.GullySewer;
+            var linkType = LinkType.GullySewer;
             var discretisation = GetTestDiscretization();
 
-            var model = new WaterFlowFMModel();
-            model.Network = (IHydroNetwork)discretisation.Network;
-            model.NetworkDiscretization = discretisation;
+            var model = new WaterFlowFMModel
+            {
+                Network = (IHydroNetwork) discretisation.Network,
+                NetworkDiscretization = discretisation
+            };
 
             var areaCoordinates = new List<Coordinate>();
             areaCoordinates.Add(new Coordinate(-1, -10));

@@ -167,7 +167,6 @@
     <Compile Include="IO\Importers\GwswAttributeType.cs" />
     <Compile Include="IO\Importers\GwswElement.cs" />
     <Compile Include="IO\Importers\GwswElementExtensions.cs" />
-    <Compile Include="IO\UGrid1D2DLinksAdapter.cs" />
     <Compile Include="IO\Links1D2DHelper.cs" />
     <Compile Include="IO\WaterFlowFMModelReader.cs" />
     <Compile Include="IO\WaterFlowFMModelWriter.cs" />
@@ -313,7 +312,6 @@
     <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidator.cs" />
     <Compile Include="Validation\WaterFlowFMWindValidator.cs" />
     <Compile Include="Validation\WaterFlowFMModelComputationalGridValidator.cs" />
-    <Compile Include="WaterFlowFM1D2DLink.cs" />
     <Compile Include="WaterFlowFMDataAccessListener.cs" />
     <Compile Include="WaterFlowFMFeatureValueConverter.cs" />
     <Compile Include="WaterFlowFMModel.Restart.cs" />

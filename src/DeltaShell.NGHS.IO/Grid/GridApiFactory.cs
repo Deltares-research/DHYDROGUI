@@ -10,7 +10,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
             return runRemote
                 ? (IUGridApi)new RemoteUGridApi()
-                : new UGridApi();        }
+                : new UGridApi();
+        }
 
         public static IUGridNetworkApi CreateNewNetwork()
         {

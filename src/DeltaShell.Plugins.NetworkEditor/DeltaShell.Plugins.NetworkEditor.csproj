@@ -178,9 +178,6 @@
     <Compile Include="ImportExportCsv\CsvImporterHelper.cs" />
     <Compile Include="ImportExportCsv\CustomEnumCsvConverter.cs" />
     <Compile Include="ImportExportCsv\CrossSectionCsvData.cs" />
-    <Compile Include="IO\BranchFile.cs" />
-    <Compile Include="IO\IoHelper.cs" />
-    <Compile Include="IO\NodeFile.cs" />
     <Compile Include="IO\StructureFile.cs" />
     <Compile Include="MapLayers\AreaLayer.cs" />
     <Compile Include="MapLayers\AreaLayerStyles.cs" />
@@ -249,16 +246,12 @@
     <Compile Include="ImportExportCsv\CrossSectionImportSettings.cs" />
     <Compile Include="ImportExportCsv\CrossSectionYZFromCsvFileImporter.cs" />
     <Compile Include="ImportExportCsv\CrossSectionYZToCsvFileExporter.cs" />
-    <Compile Include="NetworkDiscretisationFactory.cs" />
-    <Compile Include="NetworkDiscretisationUGridDataModel.cs" />
-    <Compile Include="NetworkUGridDataModel.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="UGridToNetworkAdapter.cs" />
     <EmbeddedResource Include="MapLayers\Providers\HydroNetworkFeatureCollection.hbm.xml" />
     <Compile Include="MapLayers\Providers\HydroAreaFeature2DCollection.cs" />
     <Compile Include="MapLayers\Providers\HydroNetworkFeatureCollection.cs" />

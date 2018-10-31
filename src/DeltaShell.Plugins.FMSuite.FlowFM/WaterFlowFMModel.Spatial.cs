@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Hydro;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
@@ -16,9 +17,9 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
@@ -96,22 +97,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             RefreshMappings();
         }
 
-        public void SaveGrid()
-        {
-            try
-            {
-                var metaData = new UGridGlobalMetaData(Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion);
-                using (var uGrid2D = new UGrid(NetFilePath, metaData))
-                {
-                    // Calls for writing grid data (cloning)
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex; // TODO: Rethrow the exception?
-            }
-        }
-
         private static IList<FlowLink> GenerateFlowLinksForEdges(UnstructuredGrid grid)
         {
             // optimized for performance
@@ -182,7 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 BeginEdit(new DefaultEditAction("Replacing unstructured grid"));
                 if (writeNetFile)
                 {
-                    WriteNetFile(NetFilePath, Grid);
+                    WriteNetFile(NetFilePath, Grid, Network, NetworkDiscretization, Links, Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion);
                 }
                 var isPartOf1D2DModel = (bool)ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
 
@@ -245,7 +230,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Grid = new UnstructuredGrid();
                 if (NetFilePath != null)
                 {
-                    WriteNetFile(NetFilePath, Grid);
+                    WriteNetFile(NetFilePath, Grid, Network, NetworkDiscretization, Links, Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion);
                 }
             }
             finally
@@ -256,18 +241,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public void WriteNetFile(string path)
         {
-            WriteNetFile(path, Grid);
+            WriteNetFile(path, Grid, Network, NetworkDiscretization, Links, Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion);
         }
 
-        public void Save1D2DLinks()
-        {
-            UGrid1D2DLinksAdapter.Save1D2DLinks(NetFilePath, Links);
-        }
-
-        private static void WriteNetFile(string path, UnstructuredGrid grid)
+        private static void WriteNetFile(string path, UnstructuredGrid grid, IHydroNetwork network, IDiscretization networkDiscretization, IEnumerable<ILink1D2D> links, string name, string pluginName, string pluginVersion)
         {
             if (path == null) return;
-            UnstructuredGridFileHelper.WriteGridToFile(path, grid);
+            UnstructuredGridFileHelper.WriteGridToFile(path, grid, network, networkDiscretization, links, name, pluginName, pluginVersion);
         }
 
         private IEnumerable<UnstructuredGridCoverage> SpatialData

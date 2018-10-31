@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.Grid
@@ -22,7 +23,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var links = UGrid1D2DLinksAdapter.Load1D2DLinks(localCopyOfTestFile);
 
             Assert.IsNotNull(links);
-            Assert.Greater(links.Count, 0);
+            Assert.Greater(links.Count(), 0);
         }
 
         [Test]
@@ -32,15 +33,15 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
             try
             {
-                var links = new List<WaterFlowFM1D2DLink>
+                var links = new List<Link1D2D>
                 {
-                    new WaterFlowFM1D2DLink(2, 2) { Name = "link1", LongName = "link1 longname", TypeOfLink = GridApiDataSet.LinkType.Embedded },
-                    new WaterFlowFM1D2DLink(4, 7) { Name = "link2", LongName = "link2 longname", TypeOfLink = GridApiDataSet.LinkType.RoofSewer }
+                    new Link1D2D(2, 2) { Name = "link1", LongName = "link1 longname", TypeOfLink = LinkType.Embedded },
+                    new Link1D2D(4, 7) { Name = "link2", LongName = "link2 longname", TypeOfLink = LinkType.RoofSewer }
                 };
 
                 UGrid1D2DLinksAdapter.Save1D2DLinks(localCopyOfTestFile, links);
 
-                var retrievedLinks = UGrid1D2DLinksAdapter.Load1D2DLinks(localCopyOfTestFile);
+                var retrievedLinks = UGrid1D2DLinksAdapter.Load1D2DLinks(localCopyOfTestFile).ToList();
 
                 Assert.AreEqual(links.Count, retrievedLinks.Count);
 
@@ -66,11 +67,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
             try
             {
-                var links = new List<WaterFlowFM1D2DLink>();
+                var links = new List<Link1D2D>();
 
-                UGrid1D2DLinksAdapter.Save1D2DLinks(localCopyOfTestFile, links);
+                UGrid1D2DLinksAdapter.Save1D2DLinks(localCopyOfTestFile, new List<Link1D2D>());
 
-                var retrievedLinks = UGrid1D2DLinksAdapter.Load1D2DLinks(localCopyOfTestFile);
+                var retrievedLinks = UGrid1D2DLinksAdapter.Load1D2DLinks(localCopyOfTestFile).ToList();
 
                 Assert.AreEqual(links.Count, retrievedLinks.Count);
 

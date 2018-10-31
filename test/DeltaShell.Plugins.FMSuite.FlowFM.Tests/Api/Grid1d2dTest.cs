@@ -446,7 +446,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 }
 
                 //3. get the number of links
-                var linkType = (int) GridApiDataSet.LinkType.Embedded;
+                var linkType = (int) LinkType.Embedded;
                 int n1d2dlinks = 0;
                 ierr = gridGeomWrapper.GetLinkCount(ref n1d2dlinks, ref linkType);
                 Assert.That(ierr, Is.EqualTo(0));
@@ -559,7 +559,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 }
 
                 //3. get the number of links
-                var linkType = bGully ? (int) GridApiDataSet.LinkType.GullySewer : (int) GridApiDataSet.LinkType.RoofSewer;
+                var linkType = bGully ? (int) LinkType.GullySewer : (int) LinkType.RoofSewer;
                 int n1d2dlinks = 0;
                 ierr = gridGeomWrapper.GetLinkCount(ref n1d2dlinks, ref linkType);
                 Assert.That(ierr, Is.EqualTo(0));

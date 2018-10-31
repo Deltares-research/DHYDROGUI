@@ -1,16 +1,17 @@
 ﻿using System.ComponentModel;
 using System.Linq;
+using DelftTools.Hydro;
 using SharpMap.Data.Providers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
     /// <summary>
-    /// Defines a feature collection (used by layers for rendering) for a WaterFlowFM1D2DLink
+    /// Defines a feature collection (used by layers for rendering) for a Link1D2D
     /// </summary>
     public class WaterFlowFM1D2DLinkFeatureCollection : FeatureCollection
     {
         private WaterFlowFMModel model;
-        public WaterFlowFM1D2DLinkFeatureCollection(WaterFlowFMModel fmModel) : base(fmModel.Links.ToList(), typeof(WaterFlowFM1D2DLink))
+        public WaterFlowFM1D2DLinkFeatureCollection(WaterFlowFMModel fmModel) : base(fmModel.Links.ToList(), typeof(Link1D2D))
         {
             FmModel = fmModel;
         }

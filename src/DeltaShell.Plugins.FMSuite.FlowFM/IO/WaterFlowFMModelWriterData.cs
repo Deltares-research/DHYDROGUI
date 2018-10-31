@@ -1,4 +1,4 @@
-﻿using DeltaShell.Plugins.NetworkEditor;
+﻿using DeltaShell.NGHS.IO.Grid;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {

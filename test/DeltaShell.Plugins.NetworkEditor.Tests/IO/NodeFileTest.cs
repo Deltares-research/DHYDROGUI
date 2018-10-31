@@ -2,7 +2,7 @@
 using System.IO;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.NetworkEditor.IO;
+using DeltaShell.NGHS.IO.FileWriters.Network;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
