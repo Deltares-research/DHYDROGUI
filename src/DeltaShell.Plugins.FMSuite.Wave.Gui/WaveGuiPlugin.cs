@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 {
                     //Set the properties.
                     v.SettingsCategories = WaveSettingsHelper.GetWpfGuiCategories(o, Gui);
-                    v.GetChangedPropertyName = sender => (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
+                    v.GetChangedPropertyName = (sender, propertyName) => (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
                 }
             };
 
@@ -217,7 +217,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 {
                     //Set the properties.
                     v.SettingsCategories = WaveSettingsHelper.GetWpfGuiCategories(o.WaveModel, Gui);
-                    v.GetChangedPropertyName = sender => (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
+                    v.GetChangedPropertyName = (sender, propertyName) => (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
                 }
             };
 

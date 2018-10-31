@@ -8,7 +8,6 @@ using System.Windows;
 using System.Windows.Forms.Integration;
 using System.Windows.Media;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
-using Controls = System.Windows.Controls;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf

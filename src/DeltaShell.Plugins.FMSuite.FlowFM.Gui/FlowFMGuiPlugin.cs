@@ -22,7 +22,6 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
-using DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -93,6 +92,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
+            string FmSettingsPropertyChanged(object sender, string propertyName)
+            {
+                var property = sender as WaterFlowFMProperty;
+                if (property != null)
+                {
+                    return property.PropertyDefinition.MduPropertyName;
+                }
+
+                var model = sender as WaterFlowFMModel;
+                if (model != null)
+                {
+                    if (propertyName == nameof(model.CoordinateSystem))
+                    {
+                        return "CoordinateSystem";
+                    }
+                }
+
+                return null;
+            }
+
             yield return new ViewInfo<WaterFlowFMModel, WpfSettingsView>
             {
                 Description = "FM Settings",
@@ -101,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 {
                     //Set the properties.
                     v.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(o, Gui);
-                    v.GetChangedPropertyName = sender => (sender as WaterFlowFMProperty)?.PropertyDefinition.MduPropertyName;
+                    v.GetChangedPropertyName = FmSettingsPropertyChanged;
                 }
             };
 
@@ -121,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 {
                     //Set the properties.
                     v.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(o.FlowFmModel, Gui);
-                    v.GetChangedPropertyName = sender => (sender as WaterFlowFMProperty)?.PropertyDefinition.MduPropertyName;
+                    v.GetChangedPropertyName = FmSettingsPropertyChanged;
                 }
             };
 
