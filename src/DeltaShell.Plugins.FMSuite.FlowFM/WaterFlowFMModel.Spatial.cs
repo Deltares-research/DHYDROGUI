@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 BeginEdit(new DefaultEditAction("Replacing unstructured grid"));
                 if (writeNetFile)
                 {
-                    WriteNetFile(NetFilePath, Grid, Network, NetworkDiscretization, Links, Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion);
+                    WriteNetFile(NetFilePath, Grid, Network, NetworkDiscretization, Links, Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion, BedLevelLocation, BedLevelZValues);
                 }
                 var isPartOf1D2DModel = (bool)ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
 
@@ -230,7 +230,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Grid = new UnstructuredGrid();
                 if (NetFilePath != null)
                 {
-                    WriteNetFile(NetFilePath, Grid, Network, NetworkDiscretization, Links, Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion);
+                    WriteNetFile(NetFilePath, Grid, Network, NetworkDiscretization, Links, Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion, BedLevelLocation, BedLevelZValues);
                 }
             }
             finally
@@ -239,15 +239,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
+        private double[] BedLevelZValues
+        {
+            get { return ModelDefinition.Bathymetry.Components[0].GetValues<double>().ToArray(); }
+        }
+        private UnstructuredGridFileHelper.BedLevelLocation BedLevelLocation
+        {
+            get
+            {
+                var bedLevelTypeProperty = modelDefinition.Properties.FirstOrDefault(p =>
+                    p.PropertyDefinition != null &&
+                    p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
+
+                if (bedLevelTypeProperty == null)
+                {
+                    Log.WarnFormat("Cannot determine Bed level location, z-values will be exported as {0}", default(UnstructuredGridFileHelper.BedLevelLocation));
+                    return default(UnstructuredGridFileHelper.BedLevelLocation);
+                }
+
+                return (UnstructuredGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
+
+            }
+        }
         public void WriteNetFile(string path)
         {
-            WriteNetFile(path, Grid, Network, NetworkDiscretization, Links, Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion);
+            WriteNetFile(path, Grid, Network, NetworkDiscretization, Links, Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion, BedLevelLocation, BedLevelZValues);
         }
 
-        private static void WriteNetFile(string path, UnstructuredGrid grid, IHydroNetwork network, IDiscretization networkDiscretization, IEnumerable<ILink1D2D> links, string name, string pluginName, string pluginVersion)
+        private static void WriteNetFile(string path, UnstructuredGrid grid, IHydroNetwork network, IDiscretization networkDiscretization
+            , IEnumerable<ILink1D2D> links, string name, string pluginName, string pluginVersion, UnstructuredGridFileHelper.BedLevelLocation location, double[] zValues)
         {
             if (path == null) return;
-            UnstructuredGridFileHelper.WriteGridToFile(path, grid, network, networkDiscretization, links, name, pluginName, pluginVersion);
+            UnstructuredGridFileHelper.WriteGridToFile(path, grid, network, networkDiscretization, links, name, pluginName, pluginVersion, location, zValues);
         }
 
         private IEnumerable<UnstructuredGridCoverage> SpatialData

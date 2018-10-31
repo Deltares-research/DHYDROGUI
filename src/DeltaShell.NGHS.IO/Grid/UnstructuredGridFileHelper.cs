@@ -186,7 +186,8 @@ namespace DeltaShell.NGHS.IO.Grid
             NetFile.WriteCoordinateSystem(path, coordinateSystem);
         }
 
-        public static void WriteGridToFile(string netFilePath, UnstructuredGrid grid, IHydroNetwork network, IDiscretization networkDiscretization, IEnumerable<ILink1D2D> links, string name, string pluginName, string pluginVersion)
+        public static void WriteGridToFile(string netFilePath, UnstructuredGrid grid, IHydroNetwork network, 
+            IDiscretization networkDiscretization, IEnumerable<ILink1D2D> links, string name, string pluginName, string pluginVersion, BedLevelLocation location, double[] zValues)
         {
             FileUtils.DeleteIfExists(netFilePath);
             
@@ -213,6 +214,7 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 WorkAroundNetFile.Initialize(netFilePath, grid);
                 NetFile.WriteToExisting(netFilePath, grid);
+                WriteZValues(netFilePath, location, zValues);
             }
             else
             {
@@ -224,6 +226,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     return;
                 }
                 NetFile.Write(netFilePath, grid);
+                WriteZValues(netFilePath, location, zValues);
             }
         }
 

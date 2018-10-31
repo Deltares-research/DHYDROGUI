@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using DelftTools.Utils.NetCdf;
-using DeltaShell.Plugins.SharpMapGis.ImportExport;
+﻿using DelftTools.Utils.NetCdf;
 using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.NGHS.IO.Grid

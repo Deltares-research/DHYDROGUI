@@ -173,7 +173,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.IsTrue(File.Exists(testFilePath));
 
             var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
-            UnstructuredGridFileHelper.WriteGridToFile(localtestFile, new UnstructuredGrid(), new HydroNetwork(), new Discretization(), new List<ILink1D2D>(), "myName", "myPlugin", "myVersion");
+            UnstructuredGridFileHelper.WriteGridToFile(localtestFile, new UnstructuredGrid(), new HydroNetwork(), new Discretization(), new List<ILink1D2D>(), "myName", "myPlugin", "myVersion",UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev,new double[]{});
 
             FileUtils.DeleteIfExists(localtestFile);
         }
@@ -187,7 +187,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var localtestFilePath = TestHelper.CreateLocalCopy(testFilePath);
             Assert.IsFalse(File.Exists(testFilePath));
 
-            UnstructuredGridFileHelper.WriteGridToFile(localtestFilePath, new UnstructuredGrid(), new HydroNetwork(), new Discretization(), new List<ILink1D2D>(), "myName", "myPlugin", "myVersion");
+            UnstructuredGridFileHelper.WriteGridToFile(localtestFilePath, new UnstructuredGrid(), new HydroNetwork(), new Discretization(), new List<ILink1D2D>(), "myName", "myPlugin", "myVersion", UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev, new double[] { });
             Assert.IsTrue(File.Exists(localtestFilePath));
 
             FileUtils.DeleteIfExists(localtestFilePath);
