@@ -361,7 +361,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         {
             /* Expected mock behavior */
             var mocks = new MockRepository();
-            var feature = mocks.StrictMock<Feature2D>();
+            var feature = mocks.DynamicMock<Feature2D>();
             var featureName = "MyFeature";
             var featureGeometry = mocks.StrictMock<IGeometry>();
             featureGeometry.Expect(g => g.Coordinates).Return(new[] {new Coordinate()}).Repeat.Once();
