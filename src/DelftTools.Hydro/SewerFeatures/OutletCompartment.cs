@@ -8,7 +8,7 @@ namespace DelftTools.Hydro.SewerFeatures
 {
     public class OutletCompartment : Compartment
     {
-        private Feature2D outletCompatmentBoundaryFeature = new Feature2D();
+        private Feature2D outletCompartmentBoundaryFeature = new Feature2D();
 
         public OutletCompartment() : this("outletCompartment")
         {
@@ -21,21 +21,21 @@ namespace DelftTools.Hydro.SewerFeatures
 
         protected override void OnNameChanged()
         {
-            outletCompatmentBoundaryFeature.Name = Name;
+            outletCompartmentBoundaryFeature.Name = Name;
         }
 
         [FeatureAttribute]
         public double SurfaceWaterLevel { get; set; }
 
-        public Feature2D OutletCompatmentBoundaryFeature
+        public Feature2D OutletCompartmentBoundaryFeature
         {
-            get { return outletCompatmentBoundaryFeature; }
-            set { outletCompatmentBoundaryFeature = value; }
+            get { return outletCompartmentBoundaryFeature; }
+            set { outletCompartmentBoundaryFeature = value; }
         }
 
         public void SetBoundaryGeometry(Coordinate sourceCoordinate, Coordinate targetCoordinate)
         {
-            OutletCompatmentBoundaryFeature.Geometry = CreateBoundaryGeometryForOutletCompartment(sourceCoordinate, targetCoordinate);
+            OutletCompartmentBoundaryFeature.Geometry = CreateBoundaryGeometryForOutletCompartment(sourceCoordinate, targetCoordinate);
         }
 
         private static LineString CreateBoundaryGeometryForOutletCompartment(Coordinate sourceCoordinate, Coordinate targetCoordinate)

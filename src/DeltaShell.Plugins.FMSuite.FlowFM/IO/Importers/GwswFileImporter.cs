@@ -14,6 +14,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
@@ -86,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
             Log.Info(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_);
 
-            var fmModel = target as IWaterFlowFMModel;
+            var fmModel = target as WaterFlowFMModel;
             var network = fmModel?.Network;
 
             network?.BeginEdit(new DefaultEditAction("Importing GWSW database"));
@@ -99,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 {
                     ReportProgress("Adding features to network");
                     AddSewerFeaturesToNetwork(importedFeatureElements, network);
-                    AddBoundariesOfNetworkOutletCompartmentsToModelDefinition(network, fmModel.ModelDefinition);
+                    AddBoundariesOfNetworkOutletCompartmentsToModelDefinition(fmModel);
                 }
                 return importedFeatureElements;
             }
@@ -141,12 +142,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             importedFeatureElements.ForEach(e => e.AddToHydroNetwork(network));
         }
 
-        private static void AddBoundariesOfNetworkOutletCompartmentsToModelDefinition(IHydroNetwork network, WaterFlowFMModelDefinition modelDefinition)
+        private static void AddBoundariesOfNetworkOutletCompartmentsToModelDefinition(WaterFlowFMModel fmModel)
         {
-            foreach (var outletCompartment in network.OutletCompartments)
+            foreach (var outletCompartment in fmModel.Network.OutletCompartments)
             {
-                modelDefinition.Boundaries.Add(outletCompartment.OutletCompatmentBoundaryFeature);
+                fmModel.ModelDefinition.Boundaries.Add(outletCompartment.OutletCompartmentBoundaryFeature);
+
+                var boundaryConditionSet = fmModel.BoundaryConditionSets.FirstOrDefault(bcs => bcs.Name.StartsWith(outletCompartment.Name));
+                var boundaryCondition = CreateOutletCompartmentBoundaryCondition(fmModel, outletCompartment);
+                boundaryConditionSet?.BoundaryConditions.Add(boundaryCondition);
             }
+        }
+
+        private static FlowBoundaryCondition CreateOutletCompartmentBoundaryCondition(WaterFlowFMModel fmModel, OutletCompartment outletCompartment)
+        {
+            var boundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = outletCompartment.OutletCompartmentBoundaryFeature
+            };
+
+            boundaryCondition.AddPoint(0);
+            boundaryCondition.PointData[0][fmModel.StartTime] = -1000.0;
+            boundaryCondition.PointData[0][fmModel.StopTime] = -1000.0;
+            return boundaryCondition;
         }
 
         private void InitializeImportManager()
