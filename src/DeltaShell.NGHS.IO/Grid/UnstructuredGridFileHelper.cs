@@ -262,8 +262,8 @@ namespace DeltaShell.NGHS.IO.Grid
                 {
                     Log.WarnFormat(
                         "The conversion from {0} to {1} coordinates has corrupted your grid in {2}. Behaviour might be unexpected.",
-                        (currentCoordinateSystem.IsGeographic ? "spherical" : "carthesian"),
-                        (newCoordinateSystem.IsGeographic ? "spherical" : "carthesian"),
+                        (currentCoordinateSystem.IsGeographic ? "spherical" : "cartesian"),
+                        (newCoordinateSystem.IsGeographic ? "spherical" : "cartesian"),
                         path);
                 }
 
@@ -275,7 +275,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     WriteCoordinateSystemWithVariable(netCdfFile, pcs, newCoordinateSystem);
                 }
 
-                // update projected_coordinate_system
+                // Update projected_coordinate_system
                 if ((newCoordinateSystem == null) ||
                     (!newCoordinateSystem.IsGeographic) ||
                     ((!currentCoordinateSystem?.IsGeographic) ?? false))
@@ -303,7 +303,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// has been written to file.
         /// <returns> If the _net.nc file at <paramref name="path"/> specifies a coordinate system.</returns>
         /// </summary>
-        public static bool FileContainsCoordinateSystem(string path, out ICoordinateSystem coordinateSystem)
+        private static bool FileContainsCoordinateSystem(string path, out ICoordinateSystem coordinateSystem)
         {
             var result = false;
 
