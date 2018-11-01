@@ -56,6 +56,7 @@ namespace DelftTools.Hydro.SewerFeatures
                 if (compartments != null)
                 {
                     compartments.CollectionChanged -= CompartmentCollectionChanged;
+                    compartments.CollectionChanging -= CompartmentCollectionChanging;
                 }
 
                 compartments = value;
@@ -65,6 +66,7 @@ namespace DelftTools.Hydro.SewerFeatures
                 {
                     compartments.ForEach(comp => comp.ParentManhole = this);
                     compartments.CollectionChanged += CompartmentCollectionChanged;
+                    compartments.CollectionChanging += CompartmentCollectionChanging;
                 }
             }
         }
@@ -91,6 +93,24 @@ namespace DelftTools.Hydro.SewerFeatures
         }
 
         public NetworkFeatureType NetworkFeatureType { get; } = NetworkFeatureType.Node;
+
+        private void CompartmentCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            var compartment = e.Item as Compartment;
+            if (compartment == null) return;
+
+            switch (e.Action)
+            {
+                case NotifyCollectionChangeAction.Add:
+                    if (Compartments.Select(c => c.Geometry).Contains(compartment.Geometry))
+                    {
+                        var newCoordinateX = compartment.Geometry.Coordinate.X + 1;
+                        var newCoordinateY = compartment.Geometry.Coordinate.Y;
+                        compartment.Geometry = new Point(newCoordinateX, newCoordinateY);
+                    }
+                    break;
+            }
+        }
 
         private void CompartmentCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
@@ -132,17 +152,6 @@ namespace DelftTools.Hydro.SewerFeatures
             var averageXCoordinate = compartments.Select(c => c.Geometry.Coordinate.X).Average();
             var averageYCoordinate = compartments.Select(c => c.Geometry.Coordinate.Y).Average();
             Geometry = new Point(averageXCoordinate, averageYCoordinate);
-        }
-
-        protected override void OnGeometryChanged()
-        {
-            CopyGeometryToCompartments();
-
-            compartments.OfType<OutletCompartment>().ForEach(outletCompartment =>
-            {
-                var pipe = IncomingBranches.OfType<SewerConnection>().FirstOrDefault(sc => sc.TargetCompartment == outletCompartment);
-                if(pipe != null) outletCompartment.SetBoundaryGeometry(pipe.Source.Geometry.Coordinate, pipe.Target.Geometry.Coordinate);
-            });
         }
 
         private void CopyGeometryToCompartments()
