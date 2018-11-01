@@ -212,6 +212,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             if (File.Exists(netFilePath))
             {
+                if (grid.IsEmpty) return;
                 WorkAroundNetFile.Initialize(netFilePath, grid);
                 NetFile.WriteToExisting(netFilePath, grid);
                 NetFile.WriteZValues(netFilePath, zValues);
