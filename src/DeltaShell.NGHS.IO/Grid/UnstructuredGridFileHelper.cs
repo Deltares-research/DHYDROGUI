@@ -213,8 +213,9 @@ namespace DeltaShell.NGHS.IO.Grid
             // the _net.nc file. For the time being this should be more correct
             // than using the NetFile.WriteCoordinateSystem method.
 
+            ICoordinateSystem currentCoordinateSystem = null;
             var hasCoordinateSystem = 
-                FileContainsCoordinateSystem(path, out ICoordinateSystem currentCoordinateSystem);
+                FileContainsCoordinateSystem(path, out currentCoordinateSystem);
 
             // we do not want to write anything because we passed a null
             // coordinate system.
