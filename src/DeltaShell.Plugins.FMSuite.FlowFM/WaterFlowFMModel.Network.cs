@@ -15,8 +15,11 @@ using DeltaShell.NGHS.IO.Grid;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Actions;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
@@ -174,7 +177,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             else if (Equals(sender, Network.Branches) && e.Item is ISewerConnection)
             {
                 var sewerConnection = e.Item as SewerConnection;
-                if (sewerConnection != null && sewerConnection.Length > 0)
+                if (sewerConnection?.Length > 0)
                 {
                     var calculationLocations = new List<NetworkLocation>();
                     switch (e.Action)

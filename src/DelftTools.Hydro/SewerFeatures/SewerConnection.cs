@@ -311,6 +311,11 @@ namespace DelftTools.Hydro.SewerFeatures
 
             ConnectSourceCompartment(sourceManhole);
             ConnectTargetCompartment(targetManhole);
+            if (Math.Abs(Length) < 10e-6)
+            {
+                Length = SourceCompartment.Geometry.Coordinate.Distance(TargetCompartment.Geometry.Coordinate);
+            }
+
             AddCrossSectionDefinition(hydroNetwork);
             hydroNetwork.Branches.Add(this);
         }

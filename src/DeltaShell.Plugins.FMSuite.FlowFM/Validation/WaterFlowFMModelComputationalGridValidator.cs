@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
@@ -37,6 +38,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             foreach (var branch in networkDiscretization.Network.Branches)
             {
+                var sewerConnection = branch as ISewerConnection;
+                if(sewerConnection != null && Math.Abs(sewerConnection.Length) < 10e-6) continue;
+
                 if (branchesWithoutGridSegments.Contains(branch) || !branchLocationsLookup.ContainsKey(branch))
                 {
                     var message =
@@ -85,6 +89,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             foreach (var branch in networkDiscretization.Network.Branches)
             {
+                var sewerConnection = branch as ISewerConnection;
+                if(sewerConnection != null) continue;
+
                 var branchStructures = branch.BranchFeatures.OfType<IStructure1D>();
                 var branchLocations = networkDiscretization.GetLocationsForBranch(branch);
 

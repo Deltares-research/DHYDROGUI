@@ -109,8 +109,20 @@ namespace DeltaShell.NGHS.IO.Grid
             if (network.Branches != null)
             {
                 NumberOfBranches = network.Branches.Count;
-                SourceNodeIds = network.Branches.Select(b => b.Source).ToArray().Select(n => network.Nodes.IndexOf(n)).ToArray();
-                TargedNodesIds = network.Branches.Select(b => b.Target).ToArray().Select(n => network.Nodes.IndexOf(n)).ToArray();
+                var sourceNames = network.Branches.Select(b =>
+                {
+                    var sewerConnection = b as SewerConnection;
+                    return sewerConnection != null ? sewerConnection.SourceCompartmentName : b.Source.Name;
+                }).ToArray();
+                SourceNodeIds = sourceNames.Select(n => NodesNames.ToList().IndexOf(n)).ToArray();
+
+                var targetNames = network.Branches.Select(b =>
+                {
+                    var sewerConnection = b as SewerConnection;
+                    return sewerConnection != null ? sewerConnection.TargetCompartmentName : b.Target.Name;
+                }).ToArray();
+                TargedNodesIds = targetNames.Select(n => NodesNames.ToList().IndexOf(n)).ToArray();
+
                 BranchLengths = network.Branches.Select(b => b.Length).ToArray();
 
                 NumberOfGeometryPoints = network.Branches.Sum(b => b.Geometry.Coordinates.Length);
