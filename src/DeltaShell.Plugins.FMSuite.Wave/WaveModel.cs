@@ -477,7 +477,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
 
             if(outerDomain != null && outerDomain.Grid != null)
-                UpdateCoordinateSystem(outerDomain.Grid.CoordinateSystem);
+                UpdateCoordinateSystem(loading && coordinateSystem != null ? coordinateSystem : outerDomain.Grid.CoordinateSystem);
 
             BoundaryConditions = ModelDefinition.BoundaryConditions;
             Obstacles = ModelDefinition.Obstacles;
