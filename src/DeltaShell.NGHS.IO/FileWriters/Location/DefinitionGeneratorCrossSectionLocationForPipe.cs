@@ -25,7 +25,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
         {
             var sourceiniCategory = new DelftIniCategory(CrossSectionRegion.IniHeader);
             sourceiniCategory.AddProperty(new DelftIniProperty(LocationRegion.PipeId.Key, pipe.Name + "_source", string.Empty));
-            sourceiniCategory.AddProperty(new DelftIniProperty(LocationRegion.Branch.Key, pipe.Name, string.Empty));
+            sourceiniCategory.AddProperty(new DelftIniProperty(LocationRegion.BranchId.Key, pipe.Name, string.Empty));
             sourceiniCategory.AddProperty(new DelftIniProperty(LocationRegion.PipeChainage.Key, "0.00", string.Empty));
             sourceiniCategory.AddProperty(new DelftIniProperty(LocationRegion.Shift.Key, string.Format(CultureInfo.InvariantCulture, "{0:0.00}", pipe.LevelSource), string.Empty));
             sourceiniCategory.AddProperty(new DelftIniProperty(LocationRegion.Definition.Key, pipe.CrossSectionDefinitionName, string.Empty));
@@ -36,7 +36,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
         {
             var targetIniCategory = new DelftIniCategory(CrossSectionRegion.IniHeader);
             targetIniCategory.AddProperty(new DelftIniProperty(LocationRegion.PipeId.Key, pipe.Name + "_target", string.Empty));
-            targetIniCategory.AddProperty(new DelftIniProperty(LocationRegion.Branch.Key, pipe.Name, string.Empty));
+            targetIniCategory.AddProperty(new DelftIniProperty(LocationRegion.BranchId.Key, pipe.Name, string.Empty));
             targetIniCategory.AddProperty(new DelftIniProperty(LocationRegion.PipeChainage.Key, string.Format(CultureInfo.InvariantCulture, "{0:0.00}", pipe.Length), string.Empty));
             targetIniCategory.AddProperty(new DelftIniProperty(LocationRegion.Shift.Key, string.Format(CultureInfo.InvariantCulture, "{0:0.00}", pipe.LevelTarget), string.Empty));
             targetIniCategory.AddProperty(new DelftIniProperty(LocationRegion.Definition.Key, pipe.CrossSectionDefinitionName, string.Empty));

@@ -38,9 +38,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
                                       GeneralRegion.FileTypeName.CrossSectionLocation),
             };
             
-            var crossSectionLocationsDefinitions = GenerateFeatureDefinition(crossSections);
-            if (crossSectionLocationsDefinitions != null)
-                categories.AddRange(crossSectionLocationsDefinitions);
+            var crossSectionLocationsCategories = GenerateFeatureDefinition(crossSections);
+            if (crossSectionLocationsCategories != null)
+                categories.AddRange(crossSectionLocationsCategories);
 
             if (File.Exists(targetFile)) File.Delete(targetFile);
             new IniFileWriter().WriteIniFile(categories, targetFile);
