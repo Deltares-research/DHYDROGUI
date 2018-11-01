@@ -120,6 +120,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         private static readonly Cursor NewRunoffBoundaryToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.runoff);
         private static readonly Cursor NewLinkToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.Link);
         private static readonly Cursor AddInterpolatedCrossSectionToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.AddInterpolatedCrossSection);
+        private static readonly Cursor AddNewPipeCursor = MapCursors.CreateArrowOverlayCuror(Resources.Pipe_Small);
 
         private bool FeatureTypeLayerFilter<T>(ILayer layer)
         {
@@ -163,12 +164,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 AutoCurve = false,
                 MinDistance = 0,
                 IsActive = false,
-                Cursor = MapCursors.CreateArrowOverlayCuror(Resources.new_branch_small),
+                Cursor = AddNewPipeCursor,
                 MaxPoints = 2
             };
             AddMapTool(newPipeTool);
 
-            var newInsertManholeTool = new NewPointFeatureTool<Manhole>(InsertManholeToolName) { Cursor = NewInsertNodeCursor };
+            var newInsertManholeTool = new NewPointFeatureTool<Manhole>(InsertManholeToolName) { Cursor = AddNewPipeCursor };
             AddMapTool(newInsertManholeTool);
 
             var newPointCrossSectionTool = new NewPointFeatureTool<CrossSection>(AddPointCrossSectionToolName) { Cursor = PointCrossSectionCuror };
