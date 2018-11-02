@@ -109,56 +109,55 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 if (network != null)
                 {
                     // The order below is also the order in which the layers will be stacked (layer order)
-                    yield return network.HydroNodes;
-                    yield return network.Pumps;
-                    yield return network.LateralSources;
-                    yield return network.Retentions;
-                    yield return network.ObservationPoints;
-                    yield return network.Weirs;
-                    yield return network.OutletCompartments;
-                    yield return network.Gates;
-                    yield return network.Orifices;
-                    yield return network.Culverts;
+                    yield return network.Channels;
                     yield return network.Bridges;
-                    yield return network.ExtraResistances;
                     yield return network.CompositeBranchStructures;
                     yield return network.CrossSections;
-                    yield return network.Routes;
-                    yield return network.Channels;
+                    yield return network.Culverts;
+                    yield return network.ExtraResistances;
+                    yield return network.Gates;
+                    yield return network.LateralSources;
                     yield return network.Manholes;
-                    yield return network.SewerConnections;
-
+                    yield return network.HydroNodes;
+                    yield return network.ObservationPoints;
+                    yield return network.Orifices;
+                    yield return network.OutletCompartments;
                     yield return network.Pipes;
+                    yield return network.Pumps;
+                    yield return network.Retentions;
+                    yield return network.Routes;
+                    yield return network.SewerConnections;
+                    yield return network.Weirs;
                 }
 
                 var drainageBasin = hydroRegion as DrainageBasin;
                 if (drainageBasin != null)
                 {
-                    yield return drainageBasin.WasteWaterTreatmentPlants;
                     yield return drainageBasin.Boundaries;
                     yield return drainageBasin.Catchments;
                     yield return drainageBasin.Links;
+                    yield return drainageBasin.WasteWaterTreatmentPlants;
                 }
 
                 var area2D = hydroRegion as HydroArea;
                 if (area2D != null)
                 {
-                    yield return area2D.ThinDams;
-                    yield return area2D.LeveeBreaches;
-                    yield return area2D.FixedWeirs;
-                    yield return area2D.ObservationPoints;
-                    yield return area2D.ObservationCrossSections;
-                    yield return area2D.Pumps;
-                    yield return area2D.Weirs;
-                    yield return area2D.Gates;
-                    yield return area2D.LandBoundaries;
+                    yield return area2D.BridgePillars;
                     yield return area2D.DryPoints;
                     yield return area2D.DryAreas;
-                    yield return area2D.RoofAreas;
-                    yield return area2D.Gullies;
                     yield return area2D.Embankments;
                     yield return area2D.Enclosures;
-                    yield return area2D.BridgePillars;
+                    yield return area2D.FixedWeirs;
+                    yield return area2D.Gates;
+                    yield return area2D.Gullies;
+                    yield return area2D.LandBoundaries;
+                    yield return area2D.LeveeBreaches;
+                    yield return area2D.ObservationCrossSections;
+                    yield return area2D.ObservationPoints;
+                    yield return area2D.Pumps;
+                    yield return area2D.RoofAreas;
+                    yield return area2D.ThinDams;
+                    yield return area2D.Weirs;
                 }
 
             }
