@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(RasterFileImporter));
         private static readonly Dictionary<Type, Func<object, WaterFlowFMModel>> GetModelFunctions = new Dictionary<Type, Func<object, WaterFlowFMModel>>();
-        private static readonly Dictionary<Type, Func<string, object, Func<object, WaterFlowFMModel>, object>> RasterImporterFunctions = new Dictionary<Type, Func<string, object, Func<object, WaterFlowFMModel>, object>>();
+        private static readonly Dictionary<Type, Func<string, object, Func<object, WaterFlowFMModel>, Action<object>, object>> RasterImporterFunctions = new Dictionary<Type, Func<string, object, Func<object, WaterFlowFMModel>, Action<object>, object>>();
 
         public void RegisterGetModelFunction<T>(Func<T, WaterFlowFMModel> function)
         {
@@ -28,14 +28,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             else
                 GetModelFunctions.Add(typeof(T), o => function((T) o));
         }
-        private static void RegisterRasterImporterFunction<T>(Func<string, T, Func<T, WaterFlowFMModel>, T> function)
+        private static void RegisterRasterImporterFunction<T>(Func<string, T, Func<T, WaterFlowFMModel>, Action<object>, T> function)
         {
             if (RasterImporterFunctions.ContainsKey(typeof(T)))
-                RasterImporterFunctions[typeof(T)] = (path, target, getModelFunction) => (T) function(path, (T) target, typeToGetModelFor => getModelFunction((T) typeToGetModelFor));
+                RasterImporterFunctions[typeof(T)] = (path, target, getModelFunction, makeLayerVisibleAction) => (T) function(path, (T) target, typeToGetModelFor => getModelFunction((T) typeToGetModelFor), makeLayerVisibleAction);
             else
                 RasterImporterFunctions.Add(typeof(T),
-                    (path, target, getModelFunction) => (T) function(path, (T) target,
-                        typeToGetModelFor => getModelFunction((T) typeToGetModelFor)));
+                    (path, target, getModelFunction, makeLayerVisibleAction) => (T) function(path, (T) target,
+                        typeToGetModelFor => getModelFunction((T) typeToGetModelFor), makeLayerVisibleAction));
         }
 
         static RasterFileImporter()
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             RegisterRasterImporterFunction<WaterFlowFMModel>(ImportRasterFileInFlowFMModel);
         }
 
-        private static WaterFlowFMModel ImportRasterFileInFlowFMModel(string path, WaterFlowFMModel flowModel, Func<WaterFlowFMModel, WaterFlowFMModel> getModelForFmModel)
+        private static WaterFlowFMModel ImportRasterFileInFlowFMModel(string path, WaterFlowFMModel flowModel, Func<WaterFlowFMModel, WaterFlowFMModel> getModelForFmModel, Action<object> makeLayerVisibleAction)
         {
             if (flowModel.Grid.Cells.Any())
             {
@@ -55,29 +55,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
 
             SetGrid(path, flowModel);
+            makeLayerVisibleAction?.Invoke(flowModel.Grid);
             SetBedLevel(path, flowModel);
+            makeLayerVisibleAction?.Invoke(flowModel.Bathymetry);
             return flowModel;
         }
 
-        private static UnstructuredGridCoverage ImportRasterFileInBathymetryOfFlowFMModel(string path, UnstructuredGridCoverage bathymetry, Func<UnstructuredGridCoverage, WaterFlowFMModel> getModelForBathemetry)
+        private static UnstructuredGridCoverage ImportRasterFileInBathymetryOfFlowFMModel(string path, UnstructuredGridCoverage bathymetry, Func<UnstructuredGridCoverage, WaterFlowFMModel> getModelForBathemetry, Action<object> makeLayerVisibleAction)
         {
             if (bathymetry != null && bathymetry.Name == WaterFlowFMModelDefinition.BathymetryDataItemName && getModelForBathemetry != null)
             {
                 var flowModel = getModelForBathemetry(bathymetry);
                 if (flowModel?.Grid != null && flowModel.Grid.IsEmpty) return bathymetry;//maybe warn?
                 SetBedLevel(path, flowModel);
+                makeLayerVisibleAction?.Invoke(flowModel.Bathymetry);
                 return flowModel.Bathymetry;
+
             }
             return bathymetry;
         }
 
-        private static UnstructuredGrid ImportRasterFileInGridOfFlowFMModel(string path, UnstructuredGrid grid, Func<UnstructuredGrid, WaterFlowFMModel> getModelForGrid)
+        private static UnstructuredGrid ImportRasterFileInGridOfFlowFMModel(string path, UnstructuredGrid grid, Func<UnstructuredGrid, WaterFlowFMModel> getModelForGrid, Action<object> makeLayerVisibleAction)
         {
             if (grid != null && getModelForGrid != null)
             {
                 var flowModel = getModelForGrid(grid);
                 if (flowModel == null) return grid;//maybe warn?
                 SetGrid(path, flowModel);
+                makeLayerVisibleAction?.Invoke(flowModel.Grid);
                 return flowModel.Grid;
             }
             return grid;
@@ -133,9 +138,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
             var getModelFunctionKey = GetModelFunctions.Keys.FirstOrDefault(k => k.IsInstanceOfType(target));
             var importerFunctionKey = RasterImporterFunctions.Keys.FirstOrDefault(k => k.IsInstanceOfType(target));
-            if(importerFunctionKey != null)
-                return RasterImporterFunctions[importerFunctionKey](path, target, getModelFunctionKey != null ? GetModelFunctions[getModelFunctionKey] : null);
-            return null;
+            if (importerFunctionKey == null) return null;
+            return RasterImporterFunctions[importerFunctionKey](path, target, getModelFunctionKey != null ? GetModelFunctions[getModelFunctionKey] : null, MakeLayerVisibleAfterImport);
         }
 
 
@@ -179,5 +183,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public bool ShouldCancel { get; set; }
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
         public bool OpenViewAfterImport { get; }
+        public Action<object> MakeLayerVisibleAfterImport { get; set; }
     }
 }

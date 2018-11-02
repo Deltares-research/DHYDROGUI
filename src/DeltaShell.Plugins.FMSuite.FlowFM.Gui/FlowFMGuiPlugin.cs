@@ -544,7 +544,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (base.Gui == null || base.Gui.Application == null) return;
             base.Gui.Application.ProjectOpened += SubscribeToProjectPropertyChanged;
             base.Gui.Application.ProjectClosing += UnsubscribeToProjectPropertyChanged;
-
+            base.Gui.Application.FileImporters.OfType<RasterFileImporter>().ForEach(rfi => rfi.MakeLayerVisibleAfterImport = MakeLayerVisibleAfterImport);
             // DELFT3DFM-371: Disable Model Inspection
             // base.Gui.Application.ActivityRunner.Activities.CollectionChanged += Activities_CollectionChanged;
 
@@ -751,6 +751,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         public FlowFMGuiPlugin()
         {
             getActiveMapViewFunc = GetActiveMapView;
+        }
+
+        private void MakeLayerVisibleAfterImport(object layerData)
+        {
+            var layer = GetActiveMapView().GetLayerForData(layerData);
+            if (layer != null)
+            {
+                layer.Visible = true;
+            }
         }
 
         private static Func<MapView> getActiveMapViewFunc;
