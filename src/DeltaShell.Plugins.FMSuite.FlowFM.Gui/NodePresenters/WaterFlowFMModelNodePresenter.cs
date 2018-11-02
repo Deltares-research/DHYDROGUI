@@ -99,22 +99,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             // others are wrapped in shortcuts because they are not IProjectItem
 
             yield return new FmModelTreeShortcut("General", NumParamIcon, model, "General");
-            yield return model.GetDataItemByValue(model.Area);
             if (model.Network != null && model.Network.Name != null)
             {
                 yield return new FmModelTreeShortcut(model.Network.Name, NetworkIcon, model, model.Network);
             }
+            yield return model.GetDataItemByValue(model.Area);
             if (model.NetworkDiscretization != null && model.NetworkDiscretization.Name != null)
             {
                 yield return
                     new FmModelTreeShortcut(model.NetworkDiscretization.Name, NetworkDiscretizationIcon, model,
                         model.NetworkDiscretization);
             }
-            yield return new FmModelTreeShortcut("1D Roughness", Resources.Roughness, model, null, ShortCutType.FeatureSet, model.RoughnessSections);
             yield return new FmModelTreeShortcut("Grid", UnstrucIcon, model, model.Grid, ShortCutType.Grid);
             yield return new FmModelTreeShortcut("1D2D Links", Link1D2DIcon, model, model.Links);
             yield return new FmModelTreeShortcut("Bed Level", Resources.unstrucWater, model, model.Bathymetry, ShortCutType.SpatialCoverage);
             yield return new FmModelTreeShortcut("Time Frame", TimeFrameIcon, model, "Time Frame");
+            yield return new FmModelTreeShortcut("1D Roughness", Resources.Roughness, model, null, ShortCutType.FeatureSet, model.RoughnessSections);
             yield return new FmModelTreeShortcut("Processes", ProcessesIcon, model, "Processes");
             yield return new FmModelTreeShortcut("Initial Conditions", InitialConditionsIcon, model, "Initial Conditions", ShortCutType.SettingsTab, GetInitialConditionsItems(model));
             yield return new FmModelTreeShortcut("Boundary Conditions", BoundaryConditionIcon, model, model.BoundaryConditionSets, ShortCutType.FeatureSet, model.BoundaryConditionSets);

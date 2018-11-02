@@ -300,15 +300,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var model = data as WaterFlowFMModel;
             if (model != null)
             {
+                yield return model.Network;
                 var rootModel = GetRootModel(model);
                 if (rootModel == null || rootModel is WaterFlowFMModel || model.GetDataItemByValue(model.Area).LinkedTo == null)
                 {
-                    if( model.Area.Enclosures.Count > 0 )
+                    if (model.Area.Enclosures.Count > 0)
                     {
-                        foreach( var enclosure in model.Area.Enclosures)
+                        foreach (var enclosure in model.Area.Enclosures)
                         {
                             var geoAsPol = enclosure.Geometry as Polygon;
-                            if( geoAsPol == null || !geoAsPol.IsValid)
+                            if (geoAsPol == null || !geoAsPol.IsValid)
                             {
                                 Log.WarnFormat(Resources.WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid, enclosure.Name);
                             }
@@ -316,10 +317,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     }
                     yield return model.Area;
                 }
-                yield return model.Network;
                 yield return model.NetworkDiscretization;
+                yield return model.Grid;
                 yield return model.Links;
-
+                yield return model.Bathymetry;
+                yield return model.Roughness;
                 yield return model.BoundaryConditionSets;
                 yield return model.Boundaries;
                 yield return model.Pipes;
@@ -348,10 +350,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
                     yield return outputLayerData;
                 }
-                yield return model.Grid;
 
                 yield return model.InitialWaterLevel;
-                yield return model.Roughness;
                 yield return model.Viscosity;
                 yield return model.Diffusivity;
 
@@ -377,8 +377,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         yield return fraction;
                     }
                 }
-                yield return model.Bathymetry;
-
+                
                 if (model.OutputMapFileStore != null)
                     yield return model.OutputMapFileStore;
                 
