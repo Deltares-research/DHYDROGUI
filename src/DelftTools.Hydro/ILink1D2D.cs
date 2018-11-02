@@ -5,7 +5,7 @@ using GeoAPI.Geometries;
 
 namespace DelftTools.Hydro
 {
-    public interface ILink1D2D : INameable, IComparer
+    public interface ILink1D2D : INameable, IComparer, IFeature
     {
         /// <summary>
         /// Geometry

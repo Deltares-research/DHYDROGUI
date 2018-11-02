@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             }
 
-            var links = data as IEventedList<Link1D2D>;
+            var links = data as IEventedList<ILink1D2D>;
             if (links != null && parent is WaterFlowFMModel)
             {
                 var fmModel = (WaterFlowFMModel)parent;
@@ -276,7 +276,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             return data is WaterFlowFMModel
                 // TODO Sil: add check if data is Featurecoverage with a certain name/type (find the breach width coverage)
                    || data is FileBasedFeatureCoverage && IsCoverageLeveeBreachWidth((FileBasedFeatureCoverage)data)
-                   || data is IEventedList<Link1D2D> && parentObject is WaterFlowFMModel
+                   || data is IEventedList<ILink1D2D> && parentObject is WaterFlowFMModel
                    || data is IGrouping<string, IFunction>
                    || data is FMMapFileFunctionStore
                    || data is FMHisFileFunctionStore
