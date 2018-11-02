@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     public partial class WaterFlowFMModel
     {
         private UnstructuredGrid grid;
-        private double bathymetryNoDataValue;
+        private double? bathymetryNoDataValue;
 
         public UnstructuredGridCoverage Bathymetry { get; private set; }
         public UnstructuredGridCellCoverage InitialWaterLevel { get; private set; }

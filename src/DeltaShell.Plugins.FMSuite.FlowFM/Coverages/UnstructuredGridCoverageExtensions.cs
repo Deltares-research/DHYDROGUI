@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             return pointCloud;
         }
 
-        public static void LoadBathymetry(this UnstructuredGridVertexCoverage coverage, UnstructuredGrid grid, double noDataValue = -999.0)
+        public static void LoadBathymetry(this UnstructuredGridVertexCoverage coverage, UnstructuredGrid grid, double? noDataValue)
         {
             coverage.BeginEdit(new DefaultEditAction("Starting import of bed levels"));
             var count = grid.Vertices.Count();
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             }
             var component = coverage.Components[0];
             component.Values.Clear();
-            component.NoDataValue = noDataValue;
+            component.NoDataValue = noDataValue ?? -999.0d;
             if (count > 0)
             {
                 FunctionHelper.SetValuesRaw(component, grid.Vertices.Select(v => v.Z));
