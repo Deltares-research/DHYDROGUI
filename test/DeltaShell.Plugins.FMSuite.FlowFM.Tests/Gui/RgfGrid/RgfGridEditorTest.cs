@@ -76,20 +76,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
                 new Coordinate {X = 0, Y = 30},
                 new Coordinate {X = 10, Y = 10},
             };
-            var polygons = new List<IPolygon> {new Polygon(new LinearRing(pointList))};
-            var gridPath = TestHelper.GetTestFilePath(@"grid_generation\empty_grid.nc");
-            gridPath = TestHelper.CreateLocalCopy(gridPath);
 
-            // perform operation
-            RgfGridEditor.OpenGrid(gridPath, false, polygons, "polygon.pol");
+            var polygons = new List<IPolygon> { new Polygon(new LinearRing(pointList)) };
 
-            Assert.IsTrue(new FileInfo(gridPath).Length > 0, "Generated grid file is empty, RGFGrid generation failed.");
+            TestHelper.PerformActionInTemporaryDirectory(temporaryDir => {
+                var gridPath = Path.Combine(temporaryDir, "empty_grid.nc");
+                UnstructuredGridFileHelper.WriteEmptyUnstructuredGridFile(gridPath);
 
-            using (var uGrid = new UGrid(gridPath))
-            {
-                var numEdges = uGrid.GetNumberOfEdgesForMeshId(1);
-                Assert.AreEqual(12, numEdges); // 12 new rows. 
-            }
+                // perform operation
+                RgfGridEditor.OpenGrid(gridPath, false, polygons, "polygon.pol");
+
+                Assert.IsTrue(new FileInfo(gridPath).Length > 0, "Generated grid file is empty, RGFGrid generation failed.");
+
+                using (var uGrid = new UGrid(gridPath))
+                {
+                    var numEdges = uGrid.GetNumberOfEdgesForMeshId(1);
+                    Assert.AreEqual(12, numEdges); // 12 new rows. 
+                }
+            });
         }
 
         [Test, RequiresMTA]
