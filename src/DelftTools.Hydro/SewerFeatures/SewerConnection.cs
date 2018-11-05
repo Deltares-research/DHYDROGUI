@@ -311,7 +311,7 @@ namespace DelftTools.Hydro.SewerFeatures
 
             ConnectSourceCompartment(sourceManhole);
             ConnectTargetCompartment(targetManhole);
-            if (Math.Abs(Length) < 10e-6)
+            if (Math.Abs(Length) < 10e-6 && SourceCompartment != null && TargetCompartment != null)
             {
                 Length = SourceCompartment.Geometry.Coordinate.Distance(TargetCompartment.Geometry.Coordinate);
             }
