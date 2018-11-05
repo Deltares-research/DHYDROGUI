@@ -256,17 +256,6 @@ namespace DeltaShell.NGHS.IO.Grid
                 // * var pcs = netCdfFile.GetVariableByName(variableName) ?? 
                 // *           netCdfFIle.AddVariable(variableName, NetCdfDataType.NcInteger, new NetCdfDimension[0]);
 
-                // Log error
-                if (currentCoordinateSystem != null && newCoordinateSystem != null &&
-                    currentCoordinateSystem.IsGeographic != newCoordinateSystem.IsGeographic)
-                {
-                    Log.WarnFormat(
-                        "The conversion from {0} to {1} coordinates has corrupted your grid in {2}. Behaviour might be unexpected.",
-                        (currentCoordinateSystem.IsGeographic ? "spherical" : "cartesian"),
-                        (newCoordinateSystem.IsGeographic ? "spherical" : "cartesian"),
-                        path);
-                }
-
                 // Update wgs84
                 if ((currentCoordinateSystem?.IsGeographic ?? false) || (newCoordinateSystem?.IsGeographic ?? false))
                 {
