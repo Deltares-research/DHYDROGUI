@@ -1,6 +1,6 @@
 ﻿namespace DelftTools.Hydro
 {
-    public class RoofArea: GroupableFeature2DPolygon
+    public class RoofArea : GroupableFeature2DPolygon
     {
     }
 }

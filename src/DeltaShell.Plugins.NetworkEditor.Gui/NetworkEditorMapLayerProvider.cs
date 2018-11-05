@@ -549,6 +549,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     {
                         NameIsReadOnly = true,
                         Style = AreaLayerStyles.RoofAreaStyle,
+                        FeatureEditor = new Feature2DEditor(area2DParent),
                         DataSource = ds,
                         CanBeRemovedByUser = true,
                         Selectable = true
@@ -570,6 +571,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     {
                         NameIsReadOnly = true,
                         Style = AreaLayerStyles.Gulliestyle,
+                        FeatureEditor = new Feature2DEditor(area2DParent),
                         DataSource = ds,
                         CanBeRemovedByUser = true,
                         Selectable = true
