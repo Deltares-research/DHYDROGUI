@@ -61,18 +61,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return flowModel;
         }
 
-        private static UnstructuredGridCoverage ImportRasterFileInBathymetryOfFlowFMModel(string path, UnstructuredGridCoverage bathymetry, Func<UnstructuredGridCoverage, WaterFlowFMModel> getModelForBathemetry, Action<object> makeLayerVisibleAction)
+        private static UnstructuredGridCoverage ImportRasterFileInBathymetryOfFlowFMModel(string netFilePath, UnstructuredGridCoverage bathymetry, Func<UnstructuredGridCoverage, WaterFlowFMModel> getModelForBathemetry, Action<object> makeLayerVisibleAction)
         {
-            if (bathymetry != null && bathymetry.Name == WaterFlowFMModelDefinition.BathymetryDataItemName && getModelForBathemetry != null)
-            {
-                var flowModel = getModelForBathemetry(bathymetry);
-                if (flowModel?.Grid != null && flowModel.Grid.IsEmpty) return bathymetry;//maybe warn?
-                SetBedLevel(path, flowModel);
-                makeLayerVisibleAction?.Invoke(flowModel.Bathymetry);
-                return flowModel.Bathymetry;
+            if (bathymetry == null || bathymetry.Name != WaterFlowFMModelDefinition.BathymetryDataItemName || getModelForBathemetry == null) return bathymetry;
 
+            var flowModel = getModelForBathemetry(bathymetry);
+            if (flowModel?.Grid != null && flowModel.Grid.IsEmpty)
+            {
+                Log.Error("Import of bed level canceled. You do not have a grid in your model to import bed levels on. Create or import a grid first.");
+                return bathymetry;
             }
-            return bathymetry;
+
+            bool verticesEqual;
+            bool cellsEqual;
+            bool linksEqual;
+            var grid = RasterFile.ReadUnstructuredGrid(netFilePath);
+            UnstructuredGridHelper.CompareGrids(flowModel.Grid, grid, out verticesEqual, out cellsEqual, out linksEqual);
+            if (!verticesEqual || !cellsEqual)
+            {
+                Log.Error($"Import of bed level canceled. The file at '{netFilePath}' does not contain the same grid data as the grid you currently have in your model.\nImport this file as a spatial operation instead and interpolate.");
+                return bathymetry;
+            }
+
+            SetBedLevel(netFilePath, flowModel);
+            return flowModel.Bathymetry;
         }
 
         private static UnstructuredGrid ImportRasterFileInGridOfFlowFMModel(string path, UnstructuredGrid grid, Func<UnstructuredGrid, WaterFlowFMModel> getModelForGrid, Action<object> makeLayerVisibleAction)
@@ -80,7 +92,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             if (grid != null && getModelForGrid != null)
             {
                 var flowModel = getModelForGrid(grid);
-                if (flowModel == null) return grid;//maybe warn?
+                if (flowModel == null)
+                {
+                    Log.Error("There is no model present for the selected grid. Import canceled.");
+                    return grid;
+                }
                 SetGrid(path, flowModel);
                 makeLayerVisibleAction?.Invoke(flowModel.Grid);
                 return flowModel.Grid;

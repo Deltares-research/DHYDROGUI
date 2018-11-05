@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetCDF.Builders;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Coverages;
@@ -144,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var grid = new UnstructuredGrid
             {
                 Vertices = vertices,
-                Edges = edges,
+                Edges = edges
             };
 
             grid.Cells = cellToVertex.Select(c => new Cell(c.ToArray(), grid)).ToList();
@@ -194,7 +193,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// </summary>
         /// <param name="filePath">The path of the file to check</param>
         /// <returns>True or False</returns>
-        public static bool IsFileSizeAccepted(string filePath)
+        private static bool IsFileSizeAccepted(string filePath)
         {
             var fileSizeInBytes = GetFileSize(filePath);
             if (!(fileSizeInBytes > FileSizeWarningLimitInBytes)) return true;
@@ -206,7 +205,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// Logs messsage (warning or error) if filesize is over acceptable limits
         /// </summary>
         /// <param name="filePath">The filepath to check</param>
-        public static void LogFileSizeMessageIfNeeded(string filePath)
+        private static void LogFileSizeMessageIfNeeded(string filePath)
         {
             var fileSizeInBytes = GetFileSize(filePath);
 
@@ -215,7 +214,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var fileSizeGreaterThanErrorLimit = fileSizeInBytes > FileSizeErrorLimitInBytes;
 
             var limitInGb = FileUtils.GetReadableFileSize(fileSizeGreaterThanErrorLimit ? FileSizeErrorLimitInBytes : FileSizeWarningLimitInBytes);
-            var message = string.Format("The file '{0}' is greater than {1} in size, ", Path.GetFileName(filePath), limitInGb);
+            var message = $"The file '{Path.GetFileName(filePath)}' is greater than {limitInGb} in size, ";
 
             if (fileSizeGreaterThanErrorLimit)
             {
@@ -230,9 +229,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             if (!File.Exists(filePath)) return 0;
 
-            var f = new FileInfo(filePath);
+            var fileInfo = new FileInfo(filePath);
 
-            var fileSizeInBytes = f.Length;
+            var fileSizeInBytes = fileInfo.Length;
             return fileSizeInBytes;
         }
 
@@ -243,6 +242,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
             return regularGrid;
         }
+
         private static IEnumerable<IPointValue> ConvertRegularGridToBedLevelValues(IRegularGridCoverage gridCoverage)
         {
             var xValues = gridCoverage.X.Values;
@@ -254,7 +254,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
             var values = gridCoverage.Components[0].ValueType == typeof(float)
                 ? new ConvertedArray<double, float>(gridCoverage.GetValues<float>(), Convert.ToSingle, Convert.ToDouble)
-                : gridCoverage.GetValues<double>();
+                : gridCoverage.Components[0].ValueType == typeof(int)
+                    ? new ConvertedArray<double, int>(gridCoverage.GetValues<int>(), Convert.ToInt32, Convert.ToDouble)
+                    : gridCoverage.GetValues<double>();
             
             for (var i = 0; i < yValues.Count; i++)
             {
