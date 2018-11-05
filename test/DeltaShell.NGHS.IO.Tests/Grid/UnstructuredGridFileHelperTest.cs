@@ -236,7 +236,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         /// </summary>
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void Given_AnUnstructuredGridFileHelperAndAPath_When_WriteEmptyUnstructuredGridFileWithThisPathIsCalled_Then_AnEmptyUnstructuredGridFileIsCreated()
+        public void GivenAnUnstructuredGridFileHelperAndAPath_WhenWriteEmptyUnstructuredGridFileWithThisPathIsCalled_ThenAnEmptyUnstructuredGridFileIsCreated()
         {
             const string fileName = "unstructured_grid_file_net.nc";
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
@@ -270,7 +270,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         [Category(TestCategory.DataAccess)]
         public void
-            Given_AnEmptyUnstructuredGridFileAndANullCoordinateSystem_When_ThisCoordinateSystemIsWrittenToThisFile_Then_TheUnstructuredGridFileShouldContainTheNullCoordinateSystem()
+            GivenAnEmptyUnstructuredGridFileAndANullCoordinateSystem_WhenThisCoordinateSystemIsWrittenToThisFile_ThenTheUnstructuredGridFileShouldContainTheNullCoordinateSystem()
         {
             const string fileName = "unstructured_grid_file_net.nc";
 
@@ -305,10 +305,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         /// THEN
         ///   The Unstructured Grid File should contain the Coordinate System
         /// </summary>
-        [TestCase(4326,  TestName = "GivenAnEmptyUnstructuredGridFileAndASphericalCoordinateSystem_When_ThisCoordinateSystemIsWrittenToThisFile_Then_ThisCoordinateSystemShouldBeWrittenCorrectly")]
-        [TestCase(28992, TestName = "GivenAnEmptyUnstructuredGridFileAndACartesianCoordinateSystem_When_ThisCoordinateSystemIsWrittenToThisFile_Then_ThisCoordinateSystemShouldBeWrittenCorrectly")]
+        [TestCase(4326,  TestName = "GivenAnEmptyUnstructuredGridFileAndASphericalCoordinateSystem_WhenThisCoordinateSystemIsWrittenToThisFile_ThenThisCoordinateSystemShouldBeWrittenCorrectly")]
+        [TestCase(28992, TestName = "GivenAnEmptyUnstructuredGridFileAndACartesianCoordinateSystem_WhenThisCoordinateSystemIsWrittenToThisFile_ThenThisCoordinateSystemShouldBeWrittenCorrectly")]
         [Category(TestCategory.DataAccess)]
-        public void Given_AnEmptyUnstructuredGridFileAndACoordinateSystem_When_ThisCoordinateSystemIsWrittenToThisFile_Then_TheUnstructuredGridFileShouldContainTheCoordinateSystem(int epsg)
+        public void GivenAnEmptyUnstructuredGridFileAndACoordinateSystem_WhenThisCoordinateSystemIsWrittenToThisFile_ThenTheUnstructuredGridFileShouldContainTheCoordinateSystem(int epsg)
         {
             const string fileName = "unstructured_grid_file_net.nc";
 
@@ -349,7 +349,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         /// </summary>
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void Given_AnUnstructuredGridFileContainingACoordinateSystemAndACoordinateSystemOfEqualType_When_ThisCoordinateSystemOfEqualTypeIsWrittenToTheGridFile_Then_ThisUnstructuredGridFileShouldContainTheNewCoordinateSystem()
+        public void GivenAnUnstructuredGridFileContainingACoordinateSystemAndACoordinateSystemOfEqualType_WhenThisCoordinateSystemOfEqualTypeIsWrittenToTheGridFile_ThenThisUnstructuredGridFileShouldContainTheNewCoordinateSystem()
         {
             // Given
             const string fileName = "unstructured_grid_file_net.nc";
@@ -399,10 +399,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         /// THEN
         ///   The Unstructured Grid File should still contain the same Coordinate System
         /// </summary>
-        [TestCase(4326,  TestName = "Given_AnUnstructuredGridFileContainingACartesianCoordinateSystem_When_TheSameCoordinateSystemIsWrittenToThisFile_Then_TheFileShouldContainTheCorrectCoordinateSystem")]
-        [TestCase(28992, TestName = "Given_AnUnstructuredGridFileContainingASphericalCoordinateSystem_When_TheSameCoordinateSystemIsWrittenToThisFile_Then_TheFileShouldContainTheCorrectCoordinateSystem")]
+        [TestCase(4326,  TestName = "GivenAnUnstructuredGridFileContainingACartesianCoordinateSystem_WhenTheSameCoordinateSystemIsWrittenToThisFile_ThenTheFileShouldContainTheCorrectCoordinateSystem")]
+        [TestCase(28992, TestName = "GivenAnUnstructuredGridFileContainingASphericalCoordinateSystem_WhenTheSameCoordinateSystemIsWrittenToThisFile_ThenTheFileShouldContainTheCorrectCoordinateSystem")]
         [Category(TestCategory.DataAccess)]
-        public void Given_AnUnstructuredGridFileContainingACoordinateSystem_When_TheSameCoordinateSystemIsWrittenToThisFile_Then_TheFileShouldContainTheCorrectCoordinateSystem(
+        public void GivenAnUnstructuredGridFileContainingACoordinateSystem_WhenTheSameCoordinateSystemIsWrittenToThisFile_ThenTheFileShouldContainTheCorrectCoordinateSystem(
                 int epsg)
         {
             // Given
@@ -454,7 +454,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         /// </summary>
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void Given_AnUnstructuredGridFileContainingANullCoordinateSystem_When_TheSameCoordinateSystemIsWrittenToThisFile_Then_TheFileShouldContainTheCorrectCoordinateSystem()
+        public void GivenAnUnstructuredGridFileContainingANullCoordinateSystem_WhenTheSameCoordinateSystemIsWrittenToThisFile_ThenTheFileShouldContainTheCorrectCoordinateSystem()
         {
             // Given
             const string fileName = "unstructured_grid_file_net.nc";
@@ -505,13 +505,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         /// WHEN
         ///   The coordinate system of type B is written to the Unstructured Grid File is written to file
         /// THEN
-        ///   A warning should be logged AND
         ///   Both variables should contain the Authority Code of coordinate system of type B
         /// </summary>
         [TestCase(4326, 28992)]
         [TestCase(28992, 4326)]
         [Category(TestCategory.DataAccess)]
-        public void Given_AnUnstructuredFileContainingACoordinateSystemAndACoordinateSystemOfADifferentType_When_ThisCoordinateSystemIsWrittenToTheUnstructuredGridFile_Then_AWarningIsGeneratedAndBothVariablesAreSetToTheExpectedEPSG(
+        public void GivenAnUnstructuredFileContainingACoordinateSystemAndACoordinateSystemOfADifferentType_WhenThisCoordinateSystemIsWrittenToTheUnstructuredGridFile_ThenBothVariablesAreSetToTheExpectedEPSG(
             int originalEpsg, int newEpsg)
         {
             // Given
