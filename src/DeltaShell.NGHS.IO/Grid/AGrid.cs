@@ -99,6 +99,12 @@ namespace DeltaShell.NGHS.IO.Grid
                 var ierr = GridApi.CreateFile(filename, GlobalMetaData);
                 ThrowIfError(ierr, Resources.AGrid_CreateFile_Couldn_t_create_new_NetCDF_file_at_location_ + filename);
             }
+            //if (filename != null && File.Exists(filename))
+            //{
+            //    var ierr = GridApi.CreateFile(filename, GlobalMetaData);
+            //    ThrowIfError(ierr, Resources.AGrid_CreateFile_Couldn_t_create_new_NetCDF_file_at_location_ + filename);
+            //}
+             
         }
 
         public bool HasUgridDataSetConvention()

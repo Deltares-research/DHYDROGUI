@@ -112,6 +112,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             UGridToNetworkAdapter.SaveNetwork(netFilePath, networkDataModel, metaData);
             UGridToNetworkAdapter.SaveNetworkDiscretisation(netFilePath, discretisationDataModel);
 
+
             TestHelper.AssertLogMessagesCount(() => UGridToNetworkAdapter.SaveNetwork(netFilePath, networkDataModel, metaData), 0);
             // For reader: This test is failing at the second time that we try to save a network in the same netCDF file.
             // Debug through method UGridToNetworkAdapter.SaveNetwork!

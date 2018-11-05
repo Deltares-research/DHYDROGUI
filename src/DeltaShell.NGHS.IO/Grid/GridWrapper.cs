@@ -257,6 +257,10 @@ namespace DeltaShell.NGHS.IO.Grid
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_meshgeom_dim", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_meshgeom_dim_dll([In] ref int ioncid, [In] ref int meshid, [In] ref int networkId, [In, Out] ref meshgeomdim meshgeomdim);
 
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_put_meshgeom", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_put_meshgeom_dll([In] ref int ioncid, [In, Out] ref int meshid, [In, Out] ref int networkid, [In] ref meshgeom meshgeom, [In] ref meshgeomdim meshgeomdim, [In] string c_meshname, [In] string c_networkName, [In] ref int start_index);
+
+
         #region meshgeom
 
         [StructLayout(LayoutKind.Sequential)]
@@ -1022,6 +1026,10 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             int networkId = -1;
             return ionc_get_meshgeom_dim_dll(ref ioncid, ref meshId, ref networkId, ref meshgeomdim);
+        }
+        public virtual int Create2DMesh(int ioncId, ref int meshId, ref int networkId, ref meshgeom meshgeom, ref meshgeomdim meshgeomdim, string meshName, string networkName, ref int start_index)
+        {
+            return ionc_put_meshgeom_dll(ref ioncId, ref meshId, ref networkId, ref meshgeom, ref meshgeomdim, meshName, networkName, ref start_index);
         }
 
     }

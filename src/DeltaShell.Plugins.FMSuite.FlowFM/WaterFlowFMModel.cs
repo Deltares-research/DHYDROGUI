@@ -3198,7 +3198,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             ReportProgressText("Exporting to mdu file");
             ExportTo(mduPath, false);
-            InitializeRunTimeGridOperationApi();
+            //InitializeRunTimeGridOperationApi();
 
             ReportProgressText("Initializing");
             runner.OnInitialize();

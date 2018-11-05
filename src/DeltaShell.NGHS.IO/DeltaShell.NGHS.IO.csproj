@@ -198,6 +198,7 @@
     <Compile Include="Grid\GridGeomWrapper.cs" />
     <Compile Include="Grid\IGridApi.cs" />
     <Compile Include="Grid\IUGrid1D2DLinksApi.cs" />
+    <Compile Include="Grid\IUGridMesh2DApi.cs" />
     <Compile Include="Grid\IUGridNetworkApi.cs" />
     <Compile Include="Grid\IUGridNetworkDiscretisationApi.cs" />
     <Compile Include="Grid\NetworkDiscretisationFactory.cs" />
@@ -205,11 +206,13 @@
     <Compile Include="Grid\NetworkUGridDataModel.cs" />
     <Compile Include="Grid\RemoteGridApi.cs" />
     <Compile Include="Grid\RemoteUGrid1D2DLinksApi.cs" />
+    <Compile Include="Grid\RemoteUGrid2DMeshApi.cs" />
     <Compile Include="Grid\RemoteUGridNetworkApi.cs" />
     <Compile Include="Grid\RemoteUGridNetworkDiscretisationApi.cs" />
     <Compile Include="Grid\UGrid1D2DLinks.cs" />
     <Compile Include="Grid\UGrid1D2DLinksAdapter.cs" />
     <Compile Include="Grid\UGrid1D2DLinksApi.cs" />
+    <Compile Include="Grid\UGridMesh2DApi.cs" />
     <Compile Include="Grid\UGridGlobalMetaData.cs" />
     <Compile Include="Grid\UGridNetwork.cs" />
     <Compile Include="Grid\UGridNetworkDiscretisation.cs" />

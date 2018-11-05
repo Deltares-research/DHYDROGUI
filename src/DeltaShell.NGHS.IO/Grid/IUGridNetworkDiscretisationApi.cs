@@ -8,5 +8,6 @@
         int GetNetworkDiscretisationName(int meshId, out string meshName);
         int GetNumberOfNetworkDiscretisationPoints(int meshId, out int numberOfDiscretisationPoints);
         int ReadNetworkDiscretisationPoints(int meshId, out int[] branchIdx, out double[] offset, out string[] ids, out string[] names);
+        int Close();
     }
 }

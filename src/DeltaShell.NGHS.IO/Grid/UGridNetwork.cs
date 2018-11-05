@@ -2,15 +2,35 @@
 
 namespace DeltaShell.NGHS.IO.Grid
 {
+    public class UGridMesh2D : AGrid<IUGridMesh2DApi>
+    {
+        public UGridMesh2D(string file, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite) : base(file, mode)
+        {
+            GridApi = GridApiFactory.CreateNewGrid();
+        }
+
+        public UGridMesh2D(string file, UGridGlobalMetaData globalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write) : base(file, globalMetaData, mode)
+        {
+            GridApi = GridApiFactory.CreateNewGrid();
+        }
+
+        public void CreateGridInFile(GridWrapper.meshgeomdim dimensions, GridWrapper.meshgeom data)
+        {
+            string errorMessage = string.Format("Couldn\'t create new grid {0}", GridApiDataSet.DataSetNames.Mesh2D);
+            var uGridGridApi = GetValidGridApi(errorMessage);
+            var ierr = uGridGridApi.CreateMesh2D(dimensions, data);
+            ThrowIfError(ierr, errorMessage);
+        }
+    }
 
     public class UGridNetwork : AGrid<IUGridNetworkApi>
     {
-        public UGridNetwork(string file, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite) : base(file, mode)
+        public UGridNetwork(string file, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write) : base(file, mode)
         {
             GridApi = GridApiFactory.CreateNewNetwork();
         }
 
-        public UGridNetwork(string file, UGridGlobalMetaData globalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite) : base(file, globalMetaData, mode)
+        public UGridNetwork(string file, UGridGlobalMetaData globalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write) : base(file, globalMetaData, mode)
         {
             GridApi = GridApiFactory.CreateNewNetwork();
         }

@@ -1,14 +1,111 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
+    public class GridUGridDataModel
+    {
+        public GridWrapper.meshgeomdim Dimensions
+        {
+            get { return dimensions; }
+            set { dimensions = value; }
+        }
+
+        public GridWrapper.meshgeom Data
+        {
+            get { return data; }
+            set { data = value; }
+        }
+
+        private GridWrapper.meshgeomdim dimensions;
+        private GridWrapper.meshgeom data;
+
+        public GridUGridDataModel(UnstructuredGrid grid)
+        {
+            Dimensions = new GridWrapper.meshgeomdim();
+            Data = new GridWrapper.meshgeom();
+            SetGridData(grid);
+        }
+
+        private void SetGridData(UnstructuredGrid grid)
+        {
+            dimensions.dim = 2;
+            dimensions.layertype = 0;
+            dimensions.numlayer = 0;
+            dimensions.numnode = grid.Vertices.Count;
+            dimensions.numedge = grid.Edges.Count;
+            dimensions.numface = grid.Cells.Count;
+            dimensions.maxnumfacenodes = grid.Cells.Select(c => c.VertexIndices.Length).Max();
+            //MeshgeomMemoryManager.allocate(ref dimensions, ref data);
+            var edgesx = new List<double>();
+            var edgesy = new List<double>();
+            var edgesz = new List<double>();
+            var edges = new List<int>();
+            foreach (var edge in grid.Edges)
+            {
+                edges.Add(edge.VertexFromIndex + 1);
+                edges.Add(edge.VertexToIndex + 1);
+                var edgeCenter = edge.GetEdgeCenter(grid);
+                edgesx.Add(edgeCenter.X);
+                edgesy.Add(edgeCenter.Y);
+                edgesz.Add(edgeCenter.Z);
+            }
+            var faces = new List<int>();
+            var facesx = new List<double>();
+            var facesy = new List<double>();
+            foreach (var cell in grid.Cells)
+            {
+                for(var i = 0 ; i < dimensions.maxnumfacenodes; i++)
+                {
+                    if( i < cell.VertexIndices.Length )
+                        faces.Add(cell.VertexIndices[i] + 1);
+                    else
+                        faces.Add(-999);
+                }
+                facesx.Add(cell.CenterX);
+                facesy.Add(cell.CenterY);
+            }
+            data.edge_nodes = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * dimensions.numedge * 2);
+            Marshal.Copy(edges.ToArray(), 0, data.edge_nodes, dimensions.numedge * 2);
+
+            data.edgex = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * dimensions.numedge);
+            Marshal.Copy(edgesx.ToArray(), 0, data.edgex, dimensions.numedge);
+
+            data.edgey = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * dimensions.numedge);
+            Marshal.Copy(edgesy.ToArray(), 0, data.edgey, dimensions.numedge);
+
+            data.edgez = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * dimensions.numedge);
+            Marshal.Copy(edgesz.ToArray(), 0, data.edgez, dimensions.numedge);
+
+            data.face_nodes = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * dimensions.numface * dimensions.maxnumfacenodes);
+            Marshal.Copy(faces.ToArray(), 0, data.face_nodes, dimensions.numface * dimensions.maxnumfacenodes);
+
+            data.facex = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * dimensions.numface);
+            Marshal.Copy(facesx.ToArray(), 0, data.facex, dimensions.numface);
+
+            data.facey = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * dimensions.numface);
+            Marshal.Copy(facesy.ToArray(), 0, data.facey, dimensions.numface);
+
+            data.nodex = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * dimensions.numnode);
+            Marshal.Copy(grid.Vertices.Select(v => v.CoordinateValue.X).ToArray(), 0, data.nodex, dimensions.numnode);
+
+            data.nodey = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * dimensions.numnode);
+            Marshal.Copy(grid.Vertices.Select(v => v.CoordinateValue.Y).ToArray(), 0, data.nodey, dimensions.numnode);
+
+            data.nodez = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * dimensions.numnode);
+            Marshal.Copy(grid.Vertices.Select(v => v.CoordinateValue.Z).ToArray(), 0, data.nodez, dimensions.numnode);
+
+        }
+    }
+
     public class NetworkUGridDataModel
     {
         public string Name;

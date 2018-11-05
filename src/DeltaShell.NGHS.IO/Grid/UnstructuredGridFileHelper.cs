@@ -204,31 +204,37 @@ namespace DeltaShell.NGHS.IO.Grid
                     SaveNetworkDiscretisation(netFilePath, networkDiscretizationDataModel);
                 }
             }
+            if (grid == null || grid.IsEmpty) return;
+            var gridDataModel = new GridUGridDataModel(grid);
+            SaveGrid(netFilePath, gridDataModel, metaData, grid.CoordinateSystem);
 
             if (links?.ToList().Count > 0)
             {
                 Save1D2DLinks(netFilePath, links);
             }
 
-            if (File.Exists(netFilePath))
-            {
-                if (grid.IsEmpty) return;
+                /*
+                
                 WorkAroundNetFile.Initialize(netFilePath, grid);
                 NetFile.WriteToExisting(netFilePath, grid);
-                NetFile.WriteZValues(netFilePath, zValues);
-            }
-            else
-            {
-                //so no 1d or 1d2d stuff is written and the file is still needed to be written
-                if (grid == null || grid.IsEmpty)
-                {
-                    var file = NetCdfFile.CreateNew(netFilePath);
-                    file.Close();
-                    return;
-                }
-                NetFile.Write(netFilePath, grid);
-                WriteZValues(netFilePath, location, zValues);
-            }
+                NetFile.WriteZValues(netFilePath, zValues);*/
+            //}
+            //else
+            //{
+            //    //so no 1d or 1d2d stuff is written and the file is still needed to be written
+            //    if (grid == null || grid.IsEmpty)
+            //    {
+            //        var file = NetCdfFile.CreateNew(netFilePath);
+            //        file.Close();
+            //        return;
+            //    }
+            //    NetFile.Write(netFilePath, grid);
+            //    WriteZValues(netFilePath, location, zValues);
+            //}
+        }
+        private static void SaveGrid(string netFilePath, GridUGridDataModel networkDataModel, UGridGlobalMetaData metaData, ICoordinateSystem coordinateSystem)
+        {
+            UGridToNetworkAdapter.SaveGrid(netFilePath, networkDataModel, metaData, coordinateSystem);
         }
 
         private static void SaveNetwork(string netFilePath, NetworkUGridDataModel networkDataModel, UGridGlobalMetaData metaData)
