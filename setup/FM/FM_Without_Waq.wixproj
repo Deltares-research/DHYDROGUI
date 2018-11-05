@@ -111,15 +111,9 @@
     <Content Include="UtilityShortcuts.wxi" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Waq\DidoLibs.wxs">
-      <Link>DidoLibs.wxs</Link>
-    </Compile>
     <Compile Include="WixUI\FM_WixUI_Deltares.wxs" />
     <Compile Include="..\Dimr\DimrLibs.wxs">
       <Link>DimrLibs.wxs</Link>
-    </Compile>
-    <Compile Include="..\Waq\PLCTLibs.wxs">
-      <Link>PLCTLibs.wxs</Link>
     </Compile>
     <Compile Include="RGFGridLibs.wxs">
       <Link>RGFGridLibs.wxs</Link>
