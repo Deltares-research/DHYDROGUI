@@ -1,11 +1,11 @@
 ﻿using System.Collections;
-using DelftTools.Utils;
+using System.ComponentModel;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 
 namespace DelftTools.Hydro
 {
-    public interface ILink1D2D : INameable, IComparer, IFeature
+    public interface ILink1D2D : IComparer, IFeature
     {
         /// <summary>
         /// Geometry
@@ -18,9 +18,26 @@ namespace DelftTools.Hydro
         /// </summary>
         double SnapToleranceUsed { get; set; }
 
+        [DisplayName("Name")]
+        [FeatureAttribute(Order = 1, ExportName = "Name")]
+        string Name { get; set; }
+
+        [DisplayName("Long name")]
+        [FeatureAttribute(Order = 2, ExportName = "Long name")]
         string LongName { get; set; }
+
+        [DisplayName("Type of link")]
+        [FeatureAttribute(Order = 3, ExportName = "Type")]
         LinkType TypeOfLink { get; set; }
+
+        [DisplayName("Point index")]
+        [FeatureAttribute(Order = 4, ExportName = "Point index")]
+        [ReadOnly(true)]
         int DiscretisationPointIndex { get; set; }
+
+        [DisplayName("Cell index")]
+        [FeatureAttribute(Order = 5, ExportName = "Cell index")]
+        [ReadOnly(true)]
         int FaceIndex { get; set; }
         IFeatureAttributeCollection Attributes { get; set; }
     }

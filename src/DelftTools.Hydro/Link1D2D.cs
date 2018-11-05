@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using DelftTools.Utils.Aop;
-using GeoAPI.Extensions.Feature;
+﻿using DelftTools.Utils.Aop;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 
@@ -16,7 +14,7 @@ namespace DelftTools.Hydro
             TypeOfLink = LinkType.Embedded;
             if (string.IsNullOrEmpty(name))
             {
-                Name = string.Format("1D2Dlink_{0}_{1}", fromPoint, toCell);
+                Name = $"1D2Dlink_{fromPoint}_{toCell}";
             }
         }
 
@@ -41,27 +39,15 @@ namespace DelftTools.Hydro
         /// The snap tolerance used during creation on map -> for reproducing
         /// </summary>
         public double SnapToleranceUsed { get; set; }
-
-        [DisplayName("Name")]
-        [FeatureAttribute(Order = 1, ExportName = "Name")]
+        
         public string Name { get; set; }
-
-        [DisplayName("Long name")]
-        [FeatureAttribute(Order = 2, ExportName = "Long name")]
+        
         public string LongName { get; set; }
 
-        [DisplayName("Type of link")]
-        [FeatureAttribute(Order = 3, ExportName = "Type")]
         public LinkType TypeOfLink { get; set; }
-
-        [DisplayName("Point index")]
-        [FeatureAttribute(Order = 4, ExportName = "Point index")]
-        [ReadOnly(true)]
+        
         public int DiscretisationPointIndex { get; set; }
-
-        [DisplayName("Cell index")]
-        [FeatureAttribute(Order = 5, ExportName = "Cell index")]
-        [ReadOnly(true)]
+        
         public int FaceIndex { get; set; }
 
         public int Compare(object object1, object object2)
