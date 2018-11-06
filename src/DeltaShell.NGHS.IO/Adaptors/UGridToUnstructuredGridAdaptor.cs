@@ -16,16 +16,16 @@ namespace DeltaShell.NGHS.IO.Adaptors
         
         public UnstructuredGrid GetUnstructuredGridFromUGridMeshId(int meshId)
         {
-            if (meshId > uGrid.GetNumberOf2DMeshes() || meshId <=0 ) return null;
+            if(uGrid.GetNumberOf2DMeshes() > 1 || meshId <= 0 ) return null;
 
             uGrid.GetAllNodeCoordinatesForMeshId(meshId);
             uGrid.GetEdgeNodesForMeshId(meshId);
             uGrid.GetFaceNodesForMeshId(meshId);
 
             var grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(
-                uGrid.NodeCoordinatesByMeshId[meshId-1].ToList(), 
-                uGrid.EdgeNodesByMeshId[meshId-1], 
-                uGrid.FaceNodesByMeshId[meshId-1], 
+                uGrid.NodeCoordinatesByMeshId[meshId].ToList(), 
+                uGrid.EdgeNodesByMeshId[meshId], 
+                uGrid.FaceNodesByMeshId[meshId], 
                 oneBased: false);
 
             if (grid != null) grid.CoordinateSystem = uGrid.CoordinateSystem;
@@ -35,6 +35,11 @@ namespace DeltaShell.NGHS.IO.Adaptors
         public void Dispose()
         {
             if (uGrid != null) uGrid.Dispose();
+        }
+
+        public int? GetMesh2DId()
+        {
+            return uGrid.GetMesh2DIds().FirstOrDefault();
         }
     }
 }

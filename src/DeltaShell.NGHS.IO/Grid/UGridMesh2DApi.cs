@@ -28,7 +28,7 @@ namespace DeltaShell.NGHS.IO.Grid
             {
              //   var ierr = wrapper.Create2DMesh(ioncId, ref mesh2DIdForWriting, GridApiDataSet.DataSetNames.Mesh2D, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints);
                 int networkid = -1;
-                int start_index = 1;
+                int start_index = 0;
                 var ierr = wrapper.Create2DMesh(ioncId, ref mesh2DIdForWriting, ref networkid, ref data, ref dimensions, GridApiDataSet.DataSetNames.Mesh2D,"", ref start_index);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {

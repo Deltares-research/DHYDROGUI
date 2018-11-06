@@ -42,7 +42,9 @@ namespace DeltaShell.NGHS.IO.Grid
                 case GridApiDataSet.DataSetConventions.CONV_UGRID:
                     using (var fmUGridAdaptor = new UGridToUnstructuredGridAdaptor(path))
                     {
-                        var unstructuredGridFromUGridMeshId = fmUGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
+                        var mesh2DId = fmUGridAdaptor.GetMesh2DId();
+                        if (mesh2DId == null) throw new ArgumentNullException(nameof(mesh2DId));
+                        var unstructuredGridFromUGridMeshId = fmUGridAdaptor.GetUnstructuredGridFromUGridMeshId(mesh2DId.Value);
 
                         return unstructuredGridFromUGridMeshId != null ? 
                             unstructuredGridFromUGridMeshId: loadFlowLinksAndCells? 

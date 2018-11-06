@@ -8,18 +8,26 @@ namespace DeltaShell.NGHS.IO.Grid
     {
         public int nNodes;
 
-        public int[][,] FaceNodesByMeshId { get; protected set; }
-        public int[][,] EdgeNodesByMeshId { get; protected set; }
-        public Dictionary<int, Coordinate[]> NodeCoordinatesByMeshId { get; protected set; }
-        public Dictionary<int, Dictionary<GridApiDataSet.LocationType, int[]>> VarNameIdsByLocationTypeByMeshId;
+        public Dictionary<int, int[,]> FaceNodesByMeshId { get; private set; }
+        public Dictionary<int, int[,]> EdgeNodesByMeshId { get; private set; }
+        public Dictionary<int, Coordinate[]> NodeCoordinatesByMeshId { get; private set; }
+        public Dictionary<int, Dictionary<GridApiDataSet.LocationType, int[]>> VarNameIdsByLocationTypeByMeshId { get; private set; }
 
         public UGrid(string file, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite) : base(file, mode)
         {
-           GridApi = GridApiFactory.CreateNew();
+            FaceNodesByMeshId = new Dictionary<int, int[,]>();
+            EdgeNodesByMeshId = new Dictionary<int, int[,]>();
+            NodeCoordinatesByMeshId = new Dictionary<int, Coordinate[]>();
+            VarNameIdsByLocationTypeByMeshId = new Dictionary<int, Dictionary<GridApiDataSet.LocationType, int[]>>();
+            GridApi = GridApiFactory.CreateNew();
         }
 
         public UGrid(string file, UGridGlobalMetaData globalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite) : base(file, globalMetaData, mode)
         {
+            FaceNodesByMeshId = new Dictionary<int, int[,]>();
+            EdgeNodesByMeshId = new Dictionary<int, int[,]>();
+            NodeCoordinatesByMeshId = new Dictionary<int, Coordinate[]>();
+            VarNameIdsByLocationTypeByMeshId = new Dictionary<int, Dictionary<GridApiDataSet.LocationType, int[]>>();
             GridApi = GridApiFactory.CreateNew();
         }
 
@@ -102,8 +110,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 {
                     coordinates[i] = new Coordinate(xCoordinates[i], yCoordinates[i], zCoordinates[i]);
                 }
-                if(NodeCoordinatesByMeshId == null) NodeCoordinatesByMeshId = new Dictionary<int, Coordinate[]>();
-                NodeCoordinatesByMeshId[meshId - 1] = coordinates;
+                NodeCoordinatesByMeshId[meshId] = coordinates;
 
                 return coordinates;
             }, new Coordinate[0], Resources.UGrid_GetAllNodeCoordinatesForMeshId_Couldn_t_get_the_node_coordinates);
@@ -112,13 +119,12 @@ namespace DeltaShell.NGHS.IO.Grid
         public int[,] GetEdgeNodesForMeshId(int meshId)
         {
             int[,] edgeNodes;
-
-            if (EdgeNodesByMeshId == null) EdgeNodesByMeshId = new int[GetNumberOf2DMeshes()][,];
+            
             var uGridApi = GetValidGridApi(Resources.UGrid_GetEdgeNodesForMeshId_Couldn_t_get_edge_nodes_of_the_mesh);
             var ierr = uGridApi.GetEdgeNodesForMesh(meshId, out edgeNodes);
             ThrowIfError(ierr, Resources.UGrid_GetEdgeNodesForMeshId_Couldn_t_get_edge_nodes_of_the_mesh);
 
-            EdgeNodesByMeshId[meshId - 1] = edgeNodes;
+            EdgeNodesByMeshId[meshId] = edgeNodes;
             return edgeNodes;
         }
 
@@ -129,9 +135,7 @@ namespace DeltaShell.NGHS.IO.Grid
             var uGridApi = GetValidGridApi(Resources.UGrid_GetFaceNodesForMeshId_Couldn_t_get_face_nodes_of_the_mesh);
             var ierr = uGridApi.GetFaceNodesForMesh(meshId, out faceNodes);
             ThrowIfError(ierr, Resources.UGrid_GetFaceNodesForMeshId_Couldn_t_get_face_nodes_of_the_mesh);
-
-            if(FaceNodesByMeshId == null) FaceNodesByMeshId = new int[GetNumberOf2DMeshes()][,];
-            FaceNodesByMeshId[meshId - 1] = faceNodes;
+            FaceNodesByMeshId[meshId] = faceNodes;
             return faceNodes;
         }
 
@@ -153,12 +157,9 @@ namespace DeltaShell.NGHS.IO.Grid
                 var ierr = uGridApi.GetVarNames(meshId, locationType, out varIds);
                 ThrowIfError(ierr, Resources.UGrid_GetNamesAtLocation_Couldn_t_get_the_names_at_location);
 
-                var varNameIdsAtLocation = new Dictionary<GridApiDataSet.LocationType, int[]>();
-                varNameIdsAtLocation[locationType] = varIds;
-                if (VarNameIdsByLocationTypeByMeshId == null) VarNameIdsByLocationTypeByMeshId = new Dictionary<int, Dictionary<GridApiDataSet.LocationType, int[]>>();
-                VarNameIdsByLocationTypeByMeshId[meshId - 1] = varNameIdsAtLocation;
+                VarNameIdsByLocationTypeByMeshId[meshId] = new Dictionary<GridApiDataSet.LocationType, int[]> {[locationType] = varIds};
             }, Resources.UGrid_GetNamesAtLocation_Couldn_t_get_the_names_at_location);
-            return VarNameIdsByLocationTypeByMeshId[meshId - 1];
+            return VarNameIdsByLocationTypeByMeshId[meshId];
         }
 
         /// <summary>
@@ -214,6 +215,19 @@ namespace DeltaShell.NGHS.IO.Grid
             ThrowIfError(ierr, Resources.UGrid_GetMeshName_Couldn_t_get_meshname);
 
             return meshName;
+        }
+
+        public int[] GetMesh2DIds()
+        {
+            int nMesh2D;
+            int[] mesh2DIds;
+            
+            var uGridApi = GetValidGridApi("Couldn\'t get number of mesh 2D");
+            var ierr = uGridApi.GetNumberOfMeshByType(UGridMeshType.Mesh2D, out nMesh2D);
+            ThrowIfError(ierr, "Couldn\'t get number of mesh 2D");
+            ierr = GridApi.GetMeshIdsByMeshType(UGridMeshType.Mesh2D, nMesh2D, out mesh2DIds);
+            ThrowIfError(ierr, "Couldn\'t get mesh 2D\'s");
+            return mesh2DIds;
         }
     }
 }

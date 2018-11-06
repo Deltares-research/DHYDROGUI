@@ -51,8 +51,8 @@ namespace DeltaShell.NGHS.IO.Grid
             var edges = new List<int>();
             foreach (var edge in grid.Edges)
             {
-                edges.Add(edge.VertexFromIndex + 1);
-                edges.Add(edge.VertexToIndex + 1);
+                edges.Add(edge.VertexFromIndex);
+                edges.Add(edge.VertexToIndex);
                 var edgeCenter = edge.GetEdgeCenter(grid);
                 edgesx.Add(edgeCenter.X);
                 edgesy.Add(edgeCenter.Y);
@@ -66,7 +66,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 for(var i = 0 ; i < dimensions.maxnumfacenodes; i++)
                 {
                     if( i < cell.VertexIndices.Length )
-                        faces.Add(cell.VertexIndices[i] + 1);
+                        faces.Add(cell.VertexIndices[i]);
                     else
                         faces.Add(-999);
                 }
