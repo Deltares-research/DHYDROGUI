@@ -40,20 +40,33 @@ namespace DeltaShell.Dimr
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposed)
+            if (disposed) return;
+
+            if (disposing)
             {
-                if (disposing)
+                if (api != null)
                 {
-                    if (api != null)
+                    // Issue: SOBEK3-1523
+                    // This try/catch was introduced to handle exceptions that might occur
+                    // when disposing the API, this should be replaced by a check if the api
+                    // thread is still valid, once the framework supports this.
+                    try
                     {
-                        api.Dispose(); 
+                        api.Dispose();
+                    }
+                    catch (InvalidOperationException e)
+                    {
+                        Log.Debug(e.Message);
+                    }
+                    finally
+                    {
                         RemoteInstanceContainer.RemoveInstance(api);
                         Thread.Sleep(100); // wait for process to truly exit
                     }
-                    api = null;
                 }
-                disposed = true;
+                api = null;
             }
+            disposed = true;
         }
 
         #endregion
