@@ -22,19 +22,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             try
             {
                 const int totalSteps = 7;
-                reportProgress(String.Format("Reading filenames from {0} file.", Path.GetFileName(modelFilename)), 1, totalSteps);
+                reportProgress($"Reading filenames from {Path.GetFileName(modelFilename)} file.", 1, totalSteps);
                 var fileName = new ModelFileNames(modelFilename);
                 
-                reportProgress(String.Format("Reading network from {0} file.", fileName.Network), 2, totalSteps);
+                reportProgress($"Reading network from {fileName.Network} file.", 2, totalSteps);
                 NetworkAndGridReader.ReadFile(fileName.Network, model.Network, model.NetworkDiscretization);
                 
-                reportProgress(String.Format("Reading lateral discharge locations from {0} file.", fileName.LateralDischarge), 3, totalSteps); 
+                reportProgress($"Reading lateral discharge locations from {fileName.LateralDischarge} file.", 3, totalSteps); 
                 LocationFileReader.ReadFileLateralDischargeLocations(fileName.LateralDischarge, model.Network);
                 
-                reportProgress(String.Format("Reading boundary conditions and lateral sources from {0} file.", fileName.BoundaryConditions), 4, totalSteps); 
+                reportProgress($"Reading boundary conditions and lateral sources from {fileName.BoundaryConditions} file.", 4, totalSteps); 
                 BoundaryFileReader.ReadFile(fileName.BoundaryConditions, model);
 
-                reportProgress(String.Format("Reading observation points from {0} file.", fileName.ObservationPoints), 5, totalSteps);
+                reportProgress($"Reading observation points from {fileName.ObservationPoints} file.", 5, totalSteps);
                 LocationFileReader.ReadFileObservationPointLocations(fileName.ObservationPoints, model.Network);
 
                 var totalRoughnessFiles = fileName.RoughnessFiles.Count;
@@ -44,11 +44,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
                 foreach (var roughnessFile in fileName.RoughnessFiles)
                 {
-                    reportProgress(String.Format("Reading roughness section from {0} file. (reading roughness file {1} of {2})", roughnessFile, i, totalRoughnessFiles), 6, totalSteps);
+                    reportProgress($"Reading roughness section from {roughnessFile} file. (reading roughness file {i} of {totalRoughnessFiles})", 6, totalSteps);
                     i++;
                     RoughnessDataFileReader.ReadFile(roughnessFile, model.Network, model.RoughnessSections);
                 }
-                reportProgress(String.Format("Reading cross sections from {0} file and {1}.", fileName.CrossSectionLocations, fileName.CrossSectionDefinitions), 7, totalSteps);
+                reportProgress($"Reading cross sections from {fileName.CrossSectionLocations} file and {fileName.CrossSectionDefinitions}.", 7, totalSteps);
                 CrossSectionFileReader.ReadFile(fileName.CrossSectionLocations, fileName.CrossSectionDefinitions, model);
             }
             catch (FileReadingException fileReadingException)
