@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Location;
 using DeltaShell.NGHS.IO.FileReaders.Network;
@@ -69,8 +70,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             var branches = networkDefinitionFileReader.ReadBranches(networkDefinitionFilePath, model.Network);
             model.Network.Branches.AddRange(branches);
 
-            var readNetworkLocations = networkDefinitionFileReader.ReadNetworkLocations(networkDefinitionFilePath, model.Network.Branches);
-            model.NetworkDiscretization.Locations.Values.Add(readNetworkLocations);
+            var readNetworkLocations = networkDefinitionFileReader.ReadNetworkLocations(networkDefinitionFilePath, model.Network.Branches).ToList();
+            model.NetworkDiscretization.Locations.Values.AddRange(readNetworkLocations);
         }
     }
 }

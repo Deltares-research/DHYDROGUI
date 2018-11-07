@@ -7,7 +7,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using GeoAPI.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using log4net;
@@ -394,6 +393,11 @@ namespace DelftTools.Hydro
         public virtual bool CanLinkTo(IHydroObject source, IHydroObject target)
         {
             return HydroRegion.CanLinkTo(source, target);
+        }
+
+        public override INode NewNode()
+        {
+            return new HydroNode();
         }
 
         public virtual INode GetNodeByName(string nodeName)
