@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Extensions;
@@ -22,9 +23,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
                     errorMessages.AddRange(ValidateConvertedNode(generatedNode, nodes));
                     nodes.Add(generatedNode);
                 }
-                catch (FileReadingException fileReadingException)
+                catch (Exception e)
                 {
-                    errorMessages.Add(fileReadingException.InnerException?.Message);
+                    errorMessages.Add(e.Message);
                 }
             }
 

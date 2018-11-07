@@ -114,9 +114,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\HydroNodeConverterTest.cs" />
     <Compile Include="FileReaders\CrossSectionDefinitionFileReaderTest.cs" />
     <Compile Include="FileReaders\LocationFileReaderTest.cs" />
-    <Compile Include="FileReaders\NetworkAndGridReaderTest.cs" />
+    <Compile Include="FileReaders\NetworkDefinitionFileReaderTest.cs" />
     <Compile Include="FileWriters\CrossSectionDefinitionFileWritersTest.cs" />
     <Compile Include="FileWriters\LocationFileWritersTest.cs" />
     <Compile Include="FileWriters\NetworkAndGridWriterTest.cs" />
@@ -182,7 +183,6 @@ cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.3.0.41027\tools\mklink-t
   <Import Project="..\..\packages\PostSharp.4.3.45\tools\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.4.3.45\tools\PostSharp.targets')" />
   <Target Name="EnsurePostSharpImported" BeforeTargets="BeforeBuild" Condition="'$(PostSharp30Imported)' == ''">
     <Error Condition="!Exists('..\..\packages\PostSharp.4.3.45\tools\PostSharp.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://www.postsharp.net/links/nuget-restore." />
-    
   </Target>
   <Import Project="..\..\packages\DeltaShell.Framework.1.3.0.41027\build\net40\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.3.0.41027\build\net40\DeltaShell.Framework.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
