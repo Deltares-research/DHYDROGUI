@@ -50,7 +50,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             readNetwork.Nodes.AddRange(nodes);
             var branches = networkDefinitionFileReader.ReadBranches(FileWriterTestHelper.ModelFileNames.Network, readNetwork);
             readNetwork.Branches.AddRange(branches);
-            var readNetworkLocations = networkDefinitionFileReader.ReadNetworkLocations(FileWriterTestHelper.ModelFileNames.Network, readNetwork);
+            var readNetworkLocations = networkDefinitionFileReader.ReadNetworkLocations(FileWriterTestHelper.ModelFileNames.Network, readNetwork.Branches);
             readDiscretization.Locations.Values.AddRange(readNetworkLocations.ToList());
 
 

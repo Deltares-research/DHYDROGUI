@@ -18,8 +18,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             {
                 try
                 {
-                    var generatedNode = GenerateHydroNode(nodeCategory);
-                    errorMessages.AddRange(ValidateGeneratedNode(generatedNode, nodes));
+                    var generatedNode = ConvertToHydroNode(nodeCategory);
+                    errorMessages.AddRange(ValidateConvertedNode(generatedNode, nodes));
                     nodes.Add(generatedNode);
                 }
                 catch (FileReadingException fileReadingException)
@@ -37,7 +37,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             return nodes;
         }
 
-        private static IHydroNode GenerateHydroNode(IDelftIniCategory nodeCategory)
+        private static IHydroNode ConvertToHydroNode(IDelftIniCategory nodeCategory)
         {
             var idProperty = nodeCategory.ReadProperty<string>(NetworkDefinitionRegion.Id.Key);
             var xCoordinate = nodeCategory.ReadProperty<double>(NetworkDefinitionRegion.X.Key);
@@ -54,7 +54,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             };
         }
 
-        private static IEnumerable<string> ValidateGeneratedNode(IHydroNode readNode, IList<IHydroNode> generatedNodes)
+        private static IEnumerable<string> ValidateConvertedNode(IHydroNode readNode, IList<IHydroNode> generatedNodes)
         {
             if (readNode.IsDuplicateIn(generatedNodes))
                 yield return $"Node with id {readNode.Name} already exists, there cannot be any duplicate Node ids";

@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using System.Collections.Generic;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Network
 {
@@ -38,11 +39,11 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             return branches;
         }
 
-        public IList<INetworkLocation> ReadNetworkLocations(string filePath, IHydroNetwork network)
+        public IList<INetworkLocation> ReadNetworkLocations(string filePath, IList<IBranch> networkBranches)
         {
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
             var categories = NetworkDefinitionFileParser.ReadFile(filePath);
-            var networkLocations = NetworkDiscretizationConverter.Convert(categories, network);
+            var networkLocations = NetworkDiscretizationConverter.Convert(categories, networkBranches, fileReadingExceptions);
 
             if (fileReadingExceptions.Count > 0)
             {

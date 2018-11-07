@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Geometries;
 
@@ -13,41 +13,39 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
 {
     public static class NetworkDiscretizationConverter
     {
-        public static IList<INetworkLocation> Convert(IList<DelftIniCategory> categories, IHydroNetwork network)
+        public static IList<INetworkLocation> Convert(IEnumerable<DelftIniCategory> categories, IList<IBranch> networkBranches, IList<FileReadingException> fileReadingExceptions)
         {
-            IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
             IList<INetworkLocation> networkLocations = new List<INetworkLocation>();
+            IList<string> errorMessages = new List<string>();
             foreach (var branchCategory in categories.Where(category => category.Name == NetworkDefinitionRegion.IniBranchHeader))
             {
                 try
                 {
-                    var readBranchDiscretization = ReadDiscretizationDefinition(branchCategory, network);
+                    var readBranchDiscretization = ReadDiscretizationDefinition(branchCategory, networkBranches);
                     if (readBranchDiscretization != null)
                         networkLocations.AddRange(readBranchDiscretization);
                 }
-                catch (FileReadingException fileReadingException)
+                catch (Exception e)
                 {
-                    fileReadingExceptions.Add(new FileReadingException("Could not read branch discretization", fileReadingException));
+                    errorMessages.Add(e.Message);
                 }
             }
 
-            if (fileReadingExceptions.Count > 0)
+            if (errorMessages.Count > 0)
             {
-                var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine);
-                throw new FileReadingException($"While reading discretizations for the branches an error occured : {Environment.NewLine} {string.Join(Environment.NewLine, innerExceptionMessages)}");
+                var fileReadingException = FileReadingException.GetReportAsException("network discretization", errorMessages);
+                fileReadingExceptions.Add(fileReadingException);
             }
 
             return networkLocations;
         }
 
-        private static ICollection<INetworkLocation> ReadDiscretizationDefinition(DelftIniCategory branchCategory, IHydroNetwork network)
+        private static ICollection<INetworkLocation> ReadDiscretizationDefinition(IDelftIniCategory branchCategory, IEnumerable<IBranch> networkBranches)
         {
             // Find branch in network
             var idValue = branchCategory.ReadProperty<string>(NetworkDefinitionRegion.Id.Key);
-            var branch = network.Branches.FirstOrDefault(b => b.Name == idValue);
-            if (branch == null)
-                throw new FileReadingException($"Branch with id '{idValue}' not found in network, could not add a discretization (if available) to a branch which is not in the network...");
-
+            var branch = networkBranches.FirstOrDefault(b => b.Name == idValue);
+            
             // Optional Discretization Properties
             var gridPointsCount = branchCategory.ReadProperty<int>(NetworkDefinitionRegion.GridPointsCount.Key, true);
             var gridPointsX = branchCategory.ReadPropertiesToListOfType<double>(NetworkDefinitionRegion.GridPointX.Key, true);
@@ -57,15 +55,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
 
             if (gridPointsCount == 0) return null;
 
-            if (gridPointsCount != gridPointsX.Count ||
-                gridPointsCount != gridPointsY.Count ||
-                gridPointsCount != gridPointsOffsets.Count ||
-                gridPointsCount != gridPointsNames.Count)
-                throw new FileReadingException("The size of the gridPointsCount doesn't match the array length of gridPointsX, gridPointsY, gridPointsOffsets or gridPointsNames");
+            ValidateDataModel(branch, idValue, gridPointsCount, gridPointsX.Count, gridPointsY.Count, gridPointsOffsets.Count, gridPointsNames.Count);
 
             ICollection<INetworkLocation> discretizationForThisBranch = new List<INetworkLocation>();
-
-            // Restore Discretization from file
             for (var i = 0; i < gridPointsCount; i++)
             {
                 discretizationForThisBranch.Add(new NetworkLocation
@@ -77,6 +69,24 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
                 });
             }
             return discretizationForThisBranch;
+        }
+
+        private static void ValidateDataModel(IBranch branch, string idValue, int gridPointsCount, int gridPointsXCount, int gridPointsYCount, int gridPointsOffsetsCount, int gridPointsNamesCount)
+        {
+            if (branch == null)
+                throw new FileReadingException($"Could not add discretization points for branch with id '{idValue}', because it was not found in the network.");
+
+            if (gridPointsCount != gridPointsXCount)
+                throw new FileReadingException($"The amount of x-coordinates defined for discretisation points on branch '{idValue}' does not match the defined amount of discretisation points.");
+
+            if (gridPointsCount != gridPointsYCount)
+                throw new FileReadingException($"The amount of y-coordinates defined for discretisation points on branch '{idValue}' does not match the defined amount of discretisation points.");
+
+            if (gridPointsCount != gridPointsOffsetsCount)
+                throw new FileReadingException($"The amount of offsets defined for discretisation points on branch '{idValue}' does not match the defined amount of discretisation points.");
+
+            if (gridPointsCount != gridPointsNamesCount)
+                throw new FileReadingException($"The amount of names defined for discretisation points on branch '{idValue}' does not match the defined amount of discretisation points.");
         }
     }
 }

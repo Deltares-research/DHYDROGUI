@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             var branches = networkDefinitionFileReader.ReadBranches(networkDefinitionFilePath, model.Network);
             model.Network.Branches.AddRange(branches);
 
-            var readNetworkLocations = networkDefinitionFileReader.ReadNetworkLocations(networkDefinitionFilePath, model.Network);
+            var readNetworkLocations = networkDefinitionFileReader.ReadNetworkLocations(networkDefinitionFilePath, model.Network.Branches);
             model.NetworkDiscretization.Locations.Values.Add(readNetworkLocations);
         }
     }

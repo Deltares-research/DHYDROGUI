@@ -19,8 +19,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             {
                 try
                 {
-                    var generatedBranch = GenerateBranch(branchCategory, network);
-                    errorMessages.AddRange(ValidateGeneratedBranch(generatedBranch, branches));
+                    var generatedBranch = ConvertToBranch(branchCategory, network);
+                    errorMessages.AddRange(ValidateConvertedBranch(generatedBranch, branches));
                     branches.Add(generatedBranch);
                 }
                 catch (Exception e)
@@ -38,7 +38,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             return branches;
         }
 
-        private static IChannel GenerateBranch(IDelftIniCategory branchCategory, IHydroNetwork network)
+        private static IChannel ConvertToBranch(IDelftIniCategory branchCategory, IHydroNetwork network)
         {
             var idValue = branchCategory.ReadProperty<string>(NetworkDefinitionRegion.Id.Key);
             var sourceNodeName = branchCategory.ReadProperty<string>(NetworkDefinitionRegion.FromNode.Key);
@@ -64,7 +64,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             };
         }
 
-        private static IEnumerable<string> ValidateGeneratedBranch(IChannel readBranch, IList<IChannel> generatedBranches)
+        private static IEnumerable<string> ValidateConvertedBranch(IChannel readBranch, IList<IChannel> generatedBranches)
         {
             if (readBranch.Source == null)
                 yield return $"Unable to parse Branch property: {NetworkDefinitionRegion.FromNode.Key}, Node not found in Network.{Environment.NewLine}";
