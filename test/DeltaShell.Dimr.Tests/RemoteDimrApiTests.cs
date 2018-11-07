@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Remoting;
@@ -11,7 +7,7 @@ using Rhino.Mocks;
 
 namespace DeltaShell.Dimr.Tests
 {
-    [TestFixture()]
+    [TestFixture]
     class RemoteDimrApiTests
     {
         /// <summary>
@@ -30,7 +26,7 @@ namespace DeltaShell.Dimr.Tests
         /// of the RemoteDimrApi, which is not good test design.
         /// </remarks>
         [Test]
-        public void GivenADimrApiWhichThrowsAnInvalidOperationExceptionWhenDisposedIsCalledAndARemoteDimrApiContainingThisDimrApi_WhenDisposedIsCalledOnThisRemoteDimrApi_ThenADebugMessageIsLoggedAndTheRemoteDimrApiIsProperlyDisposedOff()
+        public void GivenADimrApiWhichThrowsAnInvalidOperationExceptionAndARemoteDimrApiContainingThisMockedDimrApi_WhenDisposedIsCalledOnThisRemoteDimrApi_ThenADebugMessageIsLoggedAndTheRemoteDimrApiIsProperlyDisposedOff()
         {
             // Given
             var mocks = new MockRepository();
