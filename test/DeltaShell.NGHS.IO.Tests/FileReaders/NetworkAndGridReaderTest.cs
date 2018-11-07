@@ -44,8 +44,15 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             // Read from file
             IHydroNetwork readNetwork = new HydroNetwork();
             IDiscretization readDiscretization = new Discretization();
+            
+            var networkDefinitionFileReader = new NetworkDefinitionFileReader();
+            var nodes = networkDefinitionFileReader.ReadHydroNodes(FileWriterTestHelper.ModelFileNames.Network);
+            readNetwork.Nodes.AddRange(nodes);
+            var branches = networkDefinitionFileReader.ReadBranches(FileWriterTestHelper.ModelFileNames.Network, readNetwork);
+            readNetwork.Branches.AddRange(branches);
+            var readNetworkLocations = networkDefinitionFileReader.ReadNetworkLocations(FileWriterTestHelper.ModelFileNames.Network, readNetwork);
+            readDiscretization.Locations.Values.AddRange(readNetworkLocations.ToList());
 
-            NetworkAndGridReader.ReadFile(FileWriterTestHelper.ModelFileNames.Network, readNetwork, readDiscretization);
 
             // Comparison
             var originalNodes = originalNetwork.HydroNodes.ToArray();
@@ -92,23 +99,18 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             if (firstNode == null) return;
             firstNode.Properties.RemoveAt(1);
             new IniFileWriter().WriteIniFile(categories, FileWriterTestHelper.ModelFileNames.Network);
-
-
+            
             // Read from model
-            IHydroNetwork readNetwork = new HydroNetwork();
-            IDiscretization readDiscretization = new Discretization();
-            NetworkAndGridReader.ReadFile(FileWriterTestHelper.ModelFileNames.Network, readNetwork, readDiscretization);
+            var networkDefinitionFileReader = new NetworkDefinitionFileReader();
+            networkDefinitionFileReader.ReadHydroNodes(FileWriterTestHelper.ModelFileNames.Network);
         }
 
         [Test]
         [ExpectedException(typeof(FileReadingException))]
         public void GivenNoFile_WhenTryingToExecuteReadFile_ThenAFileReadingExceptionIsThrown()
         {
-            const string fileName = @"This/File/Does/Not/Exist";
-            var readNetwork = new HydroNetwork();
-            var readDiscretization = new Discretization();
-
-            NetworkAndGridReader.ReadFile(fileName, readNetwork, readDiscretization);
+            const string nonExistingFilePath = @"This/File/Does/Not/Exist";
+            NetworkDefinitionFileParser.ReadFile(nonExistingFilePath);
         }
     }
 }

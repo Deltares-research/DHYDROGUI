@@ -24,10 +24,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 const int totalSteps = 7;
                 reportProgress($"Reading filenames from {Path.GetFileName(modelFilename)} file.", 1, totalSteps);
                 var fileName = new ModelFileNames(modelFilename);
-                
-                reportProgress($"Reading network from {fileName.Network} file.", 2, totalSteps);
-                NetworkAndGridReader.ReadFile(fileName.Network, model.Network, model.NetworkDiscretization);
-                
+
+                var networkDefinitionFilePath = fileName.Network;
+                reportProgress($"Reading network from {networkDefinitionFilePath} file.", 2, totalSteps);
+                ReadNetworkDefinitionFile(networkDefinitionFilePath, model);
+
                 reportProgress($"Reading lateral discharge locations from {fileName.LateralDischarge} file.", 3, totalSteps); 
                 LocationFileReader.ReadFileLateralDischargeLocations(fileName.LateralDischarge, model.Network);
                 
@@ -57,6 +58,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 return null;
             }
             return model;
+        }
+
+        private static void ReadNetworkDefinitionFile(string networkDefinitionFilePath, WaterFlowModel1D model)
+        {
+            var networkDefinitionFileReader = new NetworkDefinitionFileReader();
+            var nodes = networkDefinitionFileReader.ReadHydroNodes(networkDefinitionFilePath);
+            model.Network.Nodes.AddRange(nodes);
+
+            var branches = networkDefinitionFileReader.ReadBranches(networkDefinitionFilePath, model.Network);
+            model.Network.Branches.AddRange(branches);
+
+            var readNetworkLocations = networkDefinitionFileReader.ReadNetworkLocations(networkDefinitionFilePath, model.Network);
+            model.NetworkDiscretization.Locations.Values.Add(readNetworkLocations);
         }
     }
 }

@@ -117,7 +117,11 @@
     <Compile Include="FileReaders\Definition\DefinitionReader.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
     <Compile Include="FileReaders\Location\LocationFileReader.cs" />
-    <Compile Include="FileReaders\Network\NetworkAndGridReader.cs" />
+    <Compile Include="FileReaders\Network\ChannelGenerator.cs" />
+    <Compile Include="FileReaders\Network\HydroNodeConverter.cs" />
+    <Compile Include="FileReaders\Network\NetworkDefinitionFileParser.cs" />
+    <Compile Include="FileReaders\Network\NetworkDefinitionFileReader.cs" />
+    <Compile Include="FileReaders\Network\NetworkDiscretizationConverter.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryFileWriter.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryRegion.cs" />
     <Compile Include="FileWriters\Boundary\DefinitionGeneratorBoundary.cs" />
@@ -231,7 +235,6 @@
   <Import Project="..\..\packages\PostSharp.4.3.45\tools\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.4.3.45\tools\PostSharp.targets')" />
   <Target Name="EnsurePostSharpImported" BeforeTargets="BeforeBuild" Condition="'$(PostSharp30Imported)' == ''">
     <Error Condition="!Exists('..\..\packages\PostSharp.4.3.45\tools\PostSharp.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://www.postsharp.net/links/nuget-restore." />
-    
   </Target>
   <Import Project="..\..\packages\DeltaShell.Framework.1.3.0.41027\build\net40\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.3.0.41027\build\net40\DeltaShell.Framework.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -38,5 +38,7 @@ namespace DelftTools.Hydro
         IEventedList<ICrossSectionDefinition> SharedCrossSectionDefinitions { get; }
 
         ICrossSectionDefinition DefaultCrossSectionDefinition { get; set; }
+
+        INode GetNodeByName(string nodeName);
     }
 }

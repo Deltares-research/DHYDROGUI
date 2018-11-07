@@ -396,11 +396,13 @@ namespace DelftTools.Hydro
             return HydroRegion.CanLinkTo(source, target);
         }
 
-        public override INode NewNode()
+        public virtual INode GetNodeByName(string nodeName)
         {
-            return new HydroNode();
+            return string.IsNullOrEmpty(nodeName) 
+                ? null 
+                : Nodes.FirstOrDefault(n => n.Name == nodeName);
         }
-        
+
         public virtual new bool EditWasCancelled
         {
             get { return base.EditWasCancelled; }
