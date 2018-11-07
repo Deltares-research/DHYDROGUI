@@ -200,7 +200,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             bathymetryNoDataValue = -999.0d;
                             return;
                         }
-                        uGridAdaptor.uGrid.GetAllNodeCoordinatesForMeshId(1);
+                        var mesh2DId = uGridAdaptor.GetMesh2DId();
+                        if (mesh2DId != null)
+                        { 
+                            uGridAdaptor.uGrid.GetAllNodeCoordinatesForMeshId(mesh2DId.Value);
+                        }
 
                         bathymetryNoDataValue = uGridAdaptor.uGrid.ZCoordinateFillValue;
                     });

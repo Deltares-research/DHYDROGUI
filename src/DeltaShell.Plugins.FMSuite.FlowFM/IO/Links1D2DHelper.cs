@@ -34,8 +34,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var line = link.Geometry as ILineString;
                 if (line == null) continue;
 
-                link.DiscretisationPointIndex = FindCalculationPointIndex(line.StartPoint, networkDiscretization, tolerance);
-                link.FaceIndex = FindCellIndex(line.EndPoint, grid); 
+                link.DiscretisationPointIndex = FindCalculationPointIndex(line.EndPoint, networkDiscretization, tolerance);
+                link.FaceIndex = FindCellIndex(line.StartPoint, grid); 
             }
         }
 
