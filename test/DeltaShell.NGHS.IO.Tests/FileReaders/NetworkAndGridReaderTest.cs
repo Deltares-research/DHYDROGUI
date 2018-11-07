@@ -41,7 +41,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             // Write to file
             NetworkAndGridWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Network, originalNetwork, originalDiscretization);
 
-            // Read to file
+            // Read from file
             IHydroNetwork readNetwork = new HydroNetwork();
             IDiscretization readDiscretization = new Discretization();
 
@@ -94,10 +94,21 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             new IniFileWriter().WriteIniFile(categories, FileWriterTestHelper.ModelFileNames.Network);
 
 
-            // Read to model
+            // Read from model
             IHydroNetwork readNetwork = new HydroNetwork();
             IDiscretization readDiscretization = new Discretization();
             NetworkAndGridReader.ReadFile(FileWriterTestHelper.ModelFileNames.Network, readNetwork, readDiscretization);
+        }
+
+        [Test]
+        [ExpectedException(typeof(FileReadingException))]
+        public void GivenNoFile_WhenTryingToExecuteReadFile_ThenAFileReadingExceptionIsThrown()
+        {
+            const string fileName = @"This/File/Does/Not/Exist";
+            var readNetwork = new HydroNetwork();
+            var readDiscretization = new Discretization();
+
+            NetworkAndGridReader.ReadFile(fileName, readNetwork, readDiscretization);
         }
     }
 }
