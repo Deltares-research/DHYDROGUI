@@ -114,6 +114,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\BranchConverterTest.cs" />
     <Compile Include="Converters\HydroNodeConverterTest.cs" />
     <Compile Include="FileReaders\CrossSectionDefinitionFileReaderTest.cs" />
     <Compile Include="FileReaders\LocationFileReaderTest.cs" />

@@ -25,11 +25,11 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
                 }
                 catch (Exception e)
                 {
-                    errorMessages.Add(e.InnerException?.Message);
+                    errorMessages.Add(e.Message);
                 }
             }
 
-            if (fileReadingExceptions.Count > 0)
+            if (errorMessages.Count > 0)
             {
                 var fileReadingException = FileReadingException.GetReportAsException("branches", errorMessages);
                 fileReadingExceptions.Add(fileReadingException);

@@ -22,9 +22,11 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
         }
 
         [Test]
-        public void GivenAnIniFileWithMissingXValues_WhenConverting_ThenAnExceptionisThrown()
+        [TestCase(@"HydroNodeConvertTest\NetworkDefinitionWithMissingX.ini")]
+        [TestCase(@"HydroNodeConvertTest\NetworkDefinitionWithDuplicateNode.ini")]
+        public void GivenAnIniFileWithMissingXValuesOrDuplicateNodes_WhenConverting_ThenAnExceptionisThrown(string filePath)
         {
-            var testFile = TestHelper.GetTestFilePath(@"HydroNodeConvertTest\NetworkDefinitionWithMissingX.ini");
+            var testFile = TestHelper.GetTestFilePath(filePath);
             var categories = DelftIniFileParser.ReadFile(testFile);
             Assert.IsNotNull(categories);
 
