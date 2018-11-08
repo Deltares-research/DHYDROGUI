@@ -116,8 +116,9 @@
     <Compile Include="DelftIniWriter.cs" />
     <Compile Include="FileReaders\Definition\DefinitionReader.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
-    <Compile Include="FileReaders\Location\LocationFileReader.cs" />
-    <Compile Include="FileReaders\Location\LateralSourcesConverter.cs" />
+    <Compile Include="FileReaders\Location\ObservationPointFileReader.cs" />
+    <Compile Include="FileReaders\Location\LateralSourceFileReader.cs" />
+    <Compile Include="FileReaders\Location\LateralSourceConverter.cs" />
     <Compile Include="FileReaders\Location\ObservationPointConverter.cs" />
     <Compile Include="FileReaders\Network\BranchConverter.cs" />
     <Compile Include="FileReaders\Network\HydroNodeConverter.cs" />

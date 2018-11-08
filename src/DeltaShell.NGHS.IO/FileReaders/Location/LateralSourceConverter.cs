@@ -13,7 +13,7 @@ using NetTopologySuite.LinearReferencing;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Location
 {
-    public static class LateralSourcesConverter
+    public static class LateralSourceConverter
     {
         public static IList<ILateralSource> Convert(IList<DelftIniCategory> categories, IHydroNetwork network, IList<FileReadingException> fileReadingExceptions)
         {
