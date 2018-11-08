@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Location;
 using DeltaShell.NGHS.IO.FileReaders.Network;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
+using GeoAPI.Extensions.Networks;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
@@ -31,13 +35,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 ReadNetworkDefinitionFile(networkDefinitionFilePath, model);
 
                 reportProgress($"Reading lateral discharge locations from {fileName.LateralDischarge} file.", 3, totalSteps); 
-                LocationFileReader.ReadFileLateralDischargeLocations(fileName.LateralDischarge, model.Network);
+                ReadFileLateralDischargeLocations(fileName.LateralDischarge, model.Network);
                 
                 reportProgress($"Reading boundary conditions and lateral sources from {fileName.BoundaryConditions} file.", 4, totalSteps); 
                 BoundaryFileReader.ReadFile(fileName.BoundaryConditions, model);
 
                 reportProgress($"Reading observation points from {fileName.ObservationPoints} file.", 5, totalSteps);
-                LocationFileReader.ReadFileObservationPointLocations(fileName.ObservationPoints, model.Network);
+                ReadFileObservationPointLocations(fileName.ObservationPoints, model.Network);
 
                 var totalRoughnessFiles = fileName.RoughnessFiles.Count;
                 var i = 1;
@@ -59,6 +63,38 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 return null;
             }
             return model;
+        }
+
+        private static void ReadFileLateralDischargeLocations(string locationFilePath, IHydroNetwork network)
+        {
+            var locationFileReader = new LocationFileReader();
+
+            var lateralSources = locationFileReader.ReadLateralSources(locationFilePath, network);
+
+            foreach (var lateralSource in lateralSources)
+            {
+                var reference = network.Channels.FirstOrDefault(c => c.Name == lateralSource.Branch.Name);
+                if (reference != null)
+                {
+                    reference.BranchFeatures.Add(lateralSource);
+                }
+            }
+        }
+
+        private static void ReadFileObservationPointLocations(string locationFilePath, IHydroNetwork network)
+        {
+            var locationFileReader = new LocationFileReader();
+
+            var observationPoints = locationFileReader.ReadObservationPoints(locationFilePath, network);
+
+            foreach (var observationPoint in observationPoints)
+            {
+                var reference = network.Channels.FirstOrDefault(c => c.Name == observationPoint.Branch.Name);
+                if (reference != null)
+                {
+                    reference.BranchFeatures.Add(observationPoint);
+                }
+            }
         }
 
         private static void ReadNetworkDefinitionFile(string networkDefinitionFilePath, WaterFlowModel1D model)

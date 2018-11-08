@@ -112,7 +112,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         public void GivenNoFile_WhenTryingToExecuteReadFile_ThenAFileReadingExceptionIsThrown()
         {
             const string nonExistingFilePath = @"This/File/Does/Not/Exist";
-            NetworkDefinitionFileParser.ReadFile(nonExistingFilePath);
+            DelftIniFileParser.ReadFile(nonExistingFilePath);
         }
 
         [Test]

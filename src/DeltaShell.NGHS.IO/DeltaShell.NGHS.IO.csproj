@@ -117,9 +117,11 @@
     <Compile Include="FileReaders\Definition\DefinitionReader.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
     <Compile Include="FileReaders\Location\LocationFileReader.cs" />
+    <Compile Include="FileReaders\Location\LateralSourcesConverter.cs" />
+    <Compile Include="FileReaders\Location\ObservationPointConverter.cs" />
     <Compile Include="FileReaders\Network\BranchConverter.cs" />
     <Compile Include="FileReaders\Network\HydroNodeConverter.cs" />
-    <Compile Include="FileReaders\Network\NetworkDefinitionFileParser.cs" />
+    <Compile Include="FileReaders\DelftIniFileParser.cs" />
     <Compile Include="FileReaders\Network\NetworkDefinitionFileReader.cs" />
     <Compile Include="FileReaders\Network\NetworkDiscretizationConverter.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryFileWriter.cs" />

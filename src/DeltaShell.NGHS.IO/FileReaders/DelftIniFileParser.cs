@@ -2,9 +2,9 @@
 using System.IO;
 using DeltaShell.NGHS.IO.Helpers;
 
-namespace DeltaShell.NGHS.IO.FileReaders.Network
+namespace DeltaShell.NGHS.IO.FileReaders
 {
-    public static class NetworkDefinitionFileParser
+    public static class DelftIniFileParser
     {
         public static IList<DelftIniCategory> ReadFile(string filePath)
         {

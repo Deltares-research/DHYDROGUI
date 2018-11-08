@@ -12,7 +12,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
         public IList<IHydroNode> ReadHydroNodes(string filePath)
         {
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
-            var categories = NetworkDefinitionFileParser.ReadFile(filePath);
+            var categories = DelftIniFileParser.ReadFile(filePath);
             var nodes = HydroNodeConverter.Convert(categories, fileReadingExceptions);
 
             if (fileReadingExceptions.Count > 0)
@@ -27,7 +27,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
         public IList<IChannel> ReadBranches(string filePath, IHydroNetwork network)
         {
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
-            var categories = NetworkDefinitionFileParser.ReadFile(filePath);
+            var categories = DelftIniFileParser.ReadFile(filePath);
             var branches = BranchConverter.Convert(categories, network, fileReadingExceptions);
 
             if (fileReadingExceptions.Count > 0)
@@ -42,7 +42,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
         public IList<INetworkLocation> ReadNetworkLocations(string filePath, IList<IBranch> networkBranches)
         {
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
-            var categories = NetworkDefinitionFileParser.ReadFile(filePath);
+            var categories = DelftIniFileParser.ReadFile(filePath);
             var networkLocations = NetworkDiscretizationConverter.Convert(categories, networkBranches, fileReadingExceptions);
 
             if (fileReadingExceptions.Count > 0)

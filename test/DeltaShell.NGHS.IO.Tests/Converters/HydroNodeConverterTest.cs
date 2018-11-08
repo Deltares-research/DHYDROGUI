@@ -14,7 +14,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
         {
 
             var testFile = TestHelper.GetTestFilePath(@"HydroNodeConvertTest\NetworkDefinition.ini");
-            var categories = NetworkDefinitionFileParser.ReadFile(testFile);
+            var categories = DelftIniFileParser.ReadFile(testFile);
             Assert.IsNotNull(categories);
 
             HydroNodeConverter.Convert(categories, new List<FileReadingException>());
@@ -25,7 +25,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
         public void GivenAnIniFileWithMissingXValues_WhenConverting_ThenAnExceptionisThrown()
         {
             var testFile = TestHelper.GetTestFilePath(@"HydroNodeConvertTest\NetworkDefinitionWithMissingX.ini");
-            var categories = NetworkDefinitionFileParser.ReadFile(testFile);
+            var categories = DelftIniFileParser.ReadFile(testFile);
             Assert.IsNotNull(categories);
 
             var amountOfExceptions = new List<FileReadingException>();
