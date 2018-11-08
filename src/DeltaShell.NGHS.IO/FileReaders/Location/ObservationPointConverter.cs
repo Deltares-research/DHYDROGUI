@@ -15,7 +15,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
 {
     public static class ObservationPointConverter
     {
-        public static IList<IObservationPoint> Convert(IEnumerable<DelftIniCategory> categories, IHydroNetwork network, IList<FileReadingException> fileReadingExceptions)
+        public static IList<IObservationPoint> Convert(IList<DelftIniCategory> categories, IHydroNetwork network, IList<FileReadingException> fileReadingExceptions)
         {
             IList<IObservationPoint> observationPoints = new List<IObservationPoint>();
             IList<string> errorMessages = new List<string>();
@@ -29,15 +29,15 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
                 }
                 catch (Exception e)
                 {
-                    errorMessages.Add(e.InnerException?.Message);
+                    errorMessages.Add(e.Message);
                 }
             }
-            if (fileReadingExceptions.Count > 0)
+
+            if (errorMessages.Count > 0)
             {
-                var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine);
-                throw new FileReadingException(string.Format("While reading observation points an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
+                var fileReadingException = FileReadingException.GetReportAsException("observation points", errorMessages);
+                fileReadingExceptions.Add(fileReadingException);
             }
-         
 
             return observationPoints;
         }

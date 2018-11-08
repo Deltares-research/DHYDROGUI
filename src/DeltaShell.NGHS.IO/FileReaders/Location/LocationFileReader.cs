@@ -17,7 +17,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
             if (fileReadingExceptions.Count > 0)
             {
                 var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException?.Message + Environment.NewLine);
-                throw new FileReadingException($"While reading the network nodes from file, an error occured :{Environment.NewLine} {string.Join(Environment.NewLine, innerExceptionMessages)}");
+                throw new FileReadingException($"While reading the observation points from file, an error occured :{Environment.NewLine} {string.Join(Environment.NewLine, innerExceptionMessages)}");
             }
 
             return observationPoints;
@@ -32,7 +32,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
             if (fileReadingExceptions.Count > 0)
             {
                 var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException?.Message + Environment.NewLine);
-                throw new FileReadingException($"While reading the network nodes from file, an error occured :{Environment.NewLine} {string.Join(Environment.NewLine, innerExceptionMessages)}");
+                throw new FileReadingException($"While reading the lateral sources from file, an error occured :{Environment.NewLine} {string.Join(Environment.NewLine, innerExceptionMessages)}");
             }
 
             return lateralSources;

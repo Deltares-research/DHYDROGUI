@@ -15,7 +15,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
 {
     public static class LateralSourcesConverter
     {
-        public static IList<ILateralSource> Convert(IEnumerable<DelftIniCategory> categories, IHydroNetwork network, IList<FileReadingException> fileReadingExceptions)
+        public static IList<ILateralSource> Convert(IList<DelftIniCategory> categories, IHydroNetwork network, IList<FileReadingException> fileReadingExceptions)
         {
             IList<ILateralSource> lateralSources = new List<ILateralSource>();
             IList<string> errorMessages = new List<string>();
@@ -29,15 +29,15 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
                 }
                 catch (Exception e)
                 {
-                    errorMessages.Add(e.InnerException?.Message);
+                    errorMessages.Add(e.Message);
                 }
             }
-            if (fileReadingExceptions.Count > 0)
+
+            if (errorMessages.Count > 0)
             {
-                var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine);
-                throw new FileReadingException(string.Format("While reading observation points an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
+                var fileReadingException = FileReadingException.GetReportAsException("lateral sources", errorMessages);
+                fileReadingExceptions.Add(fileReadingException);
             }
-         
 
             return lateralSources;
         }
