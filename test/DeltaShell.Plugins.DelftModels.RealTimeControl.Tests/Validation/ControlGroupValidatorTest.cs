@@ -161,19 +161,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             timeSeries[model.StartTime] = 3.0;
             timeSeries[model.StartTime.AddSeconds(1)] = 3.5;
 
-            var PIDrule = new PIDRule()
+            var pidRule = new PIDRule()
                 {TimeSeries = timeSeries, PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries};
 
             var controlGroup = model.ControlGroups.First();
-            controlGroup.Rules.Add(PIDrule);
+            controlGroup.Rules.Add(pidRule);
             controlGroup.Outputs.Add(new Output());
 
             var validator = new ControlGroupValidator();
             var allPidIssues = validator.Validate(model, controlGroup).GetAllIssuesRecursive()
-                .Where(i => ReferenceEquals(i.Subject, PIDrule)).ToList();
+                .Where(i => ReferenceEquals(i.Subject, pidRule)).ToList();
             Assert.AreEqual(1, allPidIssues.Count,
                 "The number of validation issues for the PID rule itself (i.e. not in the context of a control group)");
-            Assert.AreEqual(@"Series 'SetPoint' time steps not multiple of model time step 01:00:00.",
+            Assert.AreEqual($"Series '{pidRule.TimeSeries.Name}' in RTC control group '{controlGroup.Name}': the amount of time steps is not a multiple of the model time step {model.TimeStep}.",
                 allPidIssues.First().Message, "");
         }
 
@@ -216,20 +216,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
 
             var timeSeries =
                 SetRealTimeControllerControlGroup(out startTime, out timeStep, out irregularTimeStep, out controlGroup);
-            var model = new RealTimeControlModel() {TimeStep = timeStep, StartTime = startTime};
-            var PIDrule = new PIDRule()
-                {TimeSeries = timeSeries, PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries};
-            controlGroup.Rules.Add(PIDrule);
+            var model = new RealTimeControlModel {TimeStep = timeStep, StartTime = startTime};
+            var pidRule = new PIDRule {TimeSeries = timeSeries, PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries};
+            controlGroup.Rules.Add(pidRule);
             model.ControlGroups.Add(controlGroup);
 
             var validator = new ControlGroupValidator();
             var report = validator.Validate(model, controlGroup);
             var validationIssues = report.GetAllIssuesRecursive();
-            var foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, PIDrule)).ToList();
+            var foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, pidRule)).ToList();
             Assert.AreEqual(1, foundIssues.Count, "The number of validation issues for the PID rule");
 
             var errorExpected =
-                $"Series '{PIDrule.TimeSeries.Name}' time steps not multiple of model time step {model.TimeStep}.";
+                $"Series '{pidRule.TimeSeries.Name}' in RTC control group '{controlGroup.Name}': the amount of time steps is not a multiple of the model time step {model.TimeStep}.";
             Assert.AreEqual(errorExpected, foundIssues[0].Message);
         }
 
@@ -257,7 +256,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
            Assert.AreEqual(1, foundIssues.Count, "The number of validation issues for the time rule");
 
             var errorExpected =
-                $"Series '{timeRule.TimeSeries.Name}' time steps not multiple of model time step {model.TimeStep}.";
+                $"Series '{timeRule.TimeSeries.Name}' in RTC control group '{controlGroup.Name}': the amount of time steps is not a multiple of the model time step {model.TimeStep}.";
             Assert.AreEqual(errorExpected, foundIssues[0].Message);
         }
 
@@ -286,7 +285,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             Assert.AreEqual(1, foundIssues.Count, "The number of validation issues for the interval rule");
 
             var errorExpected =
-                $"Series '{intervalRule.TimeSeries.Name}' time steps not multiple of model time step {model.TimeStep}.";
+                $"Series '{intervalRule.TimeSeries.Name}' in RTC control group '{controlGroup.Name}': the amount of time steps is not a multiple of the model time step {model.TimeStep}.";
             Assert.AreEqual(errorExpected, foundIssues[0].Message);
         }
 

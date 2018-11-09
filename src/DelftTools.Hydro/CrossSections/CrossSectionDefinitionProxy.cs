@@ -110,7 +110,7 @@ namespace DelftTools.Hydro.CrossSections
             {
                 if (!(InnerDefinition is ISummerDikeEnabledDefinition))
                 {
-                    throw new InvalidOperationException("Inner definition does not support summerdike. Check CanHaveSummerdike property to see if this definition can have a summer dike");    
+                    throw new InvalidOperationException($"Inner definition {InnerDefinition.Name} does not support summerdike. Check CanHaveSummerdike property to see if this definition can have a summer dike");    
                 }
                 return (InnerDefinition as ISummerDikeEnabledDefinition).SummerDike;
             }

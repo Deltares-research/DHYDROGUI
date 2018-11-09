@@ -269,7 +269,7 @@
     <value>Series '{0}' has one or more timesteps that precede the model start time {1}.</value>
   </data>
   <data name="RealTimeControlControlGroupValidator_SeriesTimesShouldMatchModelTimeStep" xml:space="preserve">
-    <value>Series '{0}' time steps not multiple of model time step {1}.</value>
+    <value>Series '{0}' in RTC control group '{1}': the amount of time steps is not a multiple of the model time step {2}.</value>
   </data>
   <data name="RealTimeControlModel_ControlGroupsPropertyChanged_Unable_to_update_ControlGroup_name__all_ControlGroup_names_must_be_unique__0___1___has_been_reverted_back_to___2__" xml:space="preserve">
     <value>Unable to update ControlGroup name, all ControlGroup names must be unique!{0}'{1}' has been reverted back to '{2}'</value>
