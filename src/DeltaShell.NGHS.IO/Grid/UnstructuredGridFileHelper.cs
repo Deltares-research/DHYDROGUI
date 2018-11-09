@@ -33,7 +33,8 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             if (!File.Exists(path) || Path.GetFileName(path) == null)
             {
-                Log.ErrorFormat("Could not find grid at \"{0}\"", path);
+                Log.WarnFormat("Could not find grid file at \"{0}\", this is because you maybe just created this model. If this is not the case please check if the file with" +
+                               "the grid in it exists.", path);
                 return null;
             }
 

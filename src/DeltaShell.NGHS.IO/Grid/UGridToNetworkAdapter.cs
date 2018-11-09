@@ -203,8 +203,6 @@ namespace DeltaShell.NGHS.IO.Grid
                     uGridGrid.Initialize();
                     uGridGrid.CreateGridInFile(gridDataModel.Dimensions, gridDataModel.Data);
                 }
-                SetCoordinateSystem(netFilePath, coordinateSystem);
-                
             }
             catch (Exception ex)
             {

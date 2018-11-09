@@ -279,7 +279,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
 
                     // if needed, adjust coordinate system in netfile
-                    if (File.Exists(targetFile) && !IsNetfileCoordinateSystemUpToDate(modelDefinition, targetFile))
+                    if (modelDefinition.CoordinateSystem != null && File.Exists(targetFile) && !modelDefinition.CoordinateSystem.IsNetfileCoordinateSystemUpToDate(targetFile))
                         UnstructuredGridFileHelper.SetCoordinateSystem(targetFile, modelDefinition.CoordinateSystem);
                 }
 
@@ -406,48 +406,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var sedPath = System.IO.Path.ChangeExtension(mduPath, "sed");
             if (sedimentModelData != null) SedimentFile.Save(sedPath, modelDefinition, sedimentModelData);
-                }
-
-        private bool IsNetfileCoordinateSystemUpToDate(WaterFlowFMModelDefinition modelDefinition, string targetFile)
-        {
-            if (modelDefinition.CoordinateSystem != null && File.Exists(targetFile))
-            {
-                var fileCoordinateSystem = NetFile.ReadCoordinateSystem(targetFile);
-                var fileProjectedCSName = GetProjectedCoordinateSystemNameFromNetFile(targetFile);
-
-                if (fileCoordinateSystem == null ||
-                    fileCoordinateSystem.AuthorityCode != modelDefinition.CoordinateSystem.AuthorityCode ||
-                    (!string.IsNullOrEmpty(fileProjectedCSName) && fileProjectedCSName != modelDefinition.CoordinateSystem.Name))
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
-
-        private string GetProjectedCoordinateSystemNameFromNetFile(string targetFile)
-        {
-            NetCdfFile netCdfFile = null;
-            string nameProjectedCS = string.Empty;
-
-            try
-            {
-                netCdfFile = NetCdfFile.OpenExisting(targetFile, true);
-                var projectedCSVariable = netCdfFile.GetVariableByName("projected_coordinate_system");
-                if (projectedCSVariable != null)
-                    nameProjectedCS = netCdfFile.GetAttributeValue(projectedCSVariable, "name");
-            }
-            finally
-            {
-                if (netCdfFile != null)
-                    netCdfFile.Close();
-            }
-
-            return nameProjectedCS;
-        }
-
-
+        
         private void WriteMduLine(bool writeExtForcings, bool writeFeatures, bool writePartionFile, bool useNetCDFMapFormat,
             bool disableFlowNodeRenumbering, IGrouping<string, WaterFlowFMProperty> propertyGroup)
             {

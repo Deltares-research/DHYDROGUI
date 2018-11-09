@@ -275,6 +275,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (path == null) return;
             UnstructuredGridFileHelper.WriteGridToFile(path, grid, network, networkDiscretization, links, name, pluginName, pluginVersion, location, zValues);
+            // if needed, adjust coordinate system in netfile
+            if (File.Exists(path) && grid.CoordinateSystem != null && !grid.CoordinateSystem.IsNetfileCoordinateSystemUpToDate(path))
+                UnstructuredGridFileHelper.SetCoordinateSystem(path, grid.CoordinateSystem);
+
         }
 
         private IEnumerable<UnstructuredGridCoverage> SpatialData

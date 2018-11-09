@@ -263,6 +263,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 OnEndingBranchSplit((BranchSplitAction)Network.CurrentEditAction);
             }
+            if (sender == Network && e.PropertyName == nameof(CoordinateSystem))
+            {
+                CoordinateSystem = Network.CoordinateSystem;
+                Network.UpdateGeodeticDistancesOfChannels();
+            }
         }
 
         /// <summary>

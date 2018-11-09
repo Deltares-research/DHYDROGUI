@@ -1463,6 +1463,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     OutputMapFileStore.CoordinateSystem = value;
                 }
+                
+                if (Network != null)
+                {
+                    if (Network.CoordinateSystem != value) Network.CoordinateSystem = value;
+                }
+                
                 // coverages are handled via the feature collections.
 
                 InvalidateSnapping();

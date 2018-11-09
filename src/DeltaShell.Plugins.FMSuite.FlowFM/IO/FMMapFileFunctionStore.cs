@@ -382,8 +382,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     log.WarnFormat(Resources.FMMapFileFunctionStore_CreateCoverage_NetlinkDimensionCurrentyNotSupported, coverageName);
                     return null;
                 default:
-                    throw new NotImplementedException(
-                        string.Format(Resources.FMMapFileFunctionStore_CreateCoverage_UnexpectedLocationDimension, location));
+                    /*throw new NotImplementedException(
+                        string.Format(Resources.FMMapFileFunctionStore_CreateCoverage_UnexpectedLocationDimension, location));*/
+                    log.WarnFormat(Resources.FMMapFileFunctionStore_CreateCoverage_UnexpectedLocationDimension, location);
+                    return null;
             }
         }
 
