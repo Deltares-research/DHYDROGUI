@@ -23,7 +23,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
                 try
                 {
                     var generatedObservationPoint = ConvertToObservationPoint(observationPointCategory, network);
-                    errorMessages.AddRange(ValidateConvertedObservationPoint(generatedObservationPoint, observationPoints));
+                    ValidateConvertedObservationPoint(generatedObservationPoint, observationPoints);
                     observationPoints.Add(generatedObservationPoint);
                 }
                 catch (Exception e)
@@ -63,10 +63,13 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
             };
         }
 
-        private static IEnumerable<string> ValidateConvertedObservationPoint(IObservationPoint readObservationPoint, IList<IObservationPoint> generatedObservationPoints)
+        private static void ValidateConvertedObservationPoint(IObservationPoint readObservationPoint, IList<IObservationPoint> generatedObservationPoints)
         {
             if (readObservationPoint.IsDuplicateIn(generatedObservationPoints))
-                yield return $"Observation Point with id {readObservationPoint.Name} already exists, there cannot be any duplicate Node ids";
+            {
+                var errorMessage2 = string.Format("Observation Point with id {0} already exists, there cannot be any duplicate observation point ids.{1}", readObservationPoint.Name, Environment.NewLine);
+                throw new Exception(errorMessage2);
+            }
         }
 
         private static bool IsDuplicateIn(this IObservationPoint readObservationPoint, IList<IObservationPoint> observationPoints)

@@ -23,7 +23,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
                 try
                 {
                     var generatedLateralSource = ConvertToLateralSource(observationPointCategory, network);
-                    errorMessages.AddRange(ValidateConvertedLateralSource(generatedLateralSource, lateralSources));
+                    ValidateConvertedLateralSource(generatedLateralSource, lateralSources);
                     lateralSources.Add(generatedLateralSource);
                 }
                 catch (Exception e)
@@ -67,10 +67,13 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
             return lateralSource;
         }
 
-        private static IEnumerable<string> ValidateConvertedLateralSource(ILateralSource readLateralSource, IList<ILateralSource> generatedLateralSources)
+        private static void ValidateConvertedLateralSource(ILateralSource readLateralSource, IList<ILateralSource> generatedLateralSources)
         {
             if (readLateralSource.IsDuplicateIn(generatedLateralSources))
-                yield return $"Observation Point with id {readLateralSource.Name} already exists, there cannot be any duplicate Node ids";
+            {
+                var errorMessage2 = string.Format("Lateral source with id {0} already exists, there cannot be any duplicate lateral source ids.{1}", readLateralSource.Name, Environment.NewLine);
+                throw new Exception(errorMessage2);
+            }
         }
 
         private static bool IsDuplicateIn(this ILateralSource readLateralSource, IList<ILateralSource> lateralSources)
