@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Network;
+using DeltaShell.NGHS.IO.Helpers;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.Converters
@@ -10,25 +10,65 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
     public class HydroNodeConverterTest
     {
         [Test]
-        public void GivenAnIniFileWithCategories_WhenConverting_ThenAListOfNodesIsReturned()
+        public void GivenNetworkDefinitionDataModel_WhenConvertingToHydroNodes_ThenAListOfNodesIsReturned()
         {
+            var categories = new List<DelftIniCategory>();
+            var category1 = new DelftIniCategory("Node");
+            category1.AddProperty("id", "node1");
+            category1.AddProperty("x", 11.0);
+            category1.AddProperty("y", 13.5);
 
-            var testFile = TestHelper.GetTestFilePath(@"HydroNodeConvertTest\NetworkDefinition.ini");
-            var categories = DelftIniFileParser.ReadFile(testFile);
-            Assert.IsNotNull(categories);
+            var category2 = new DelftIniCategory("Node");
+            category2.AddProperty("id", "node2");
+            category2.AddProperty("x", 31.5);
+            category2.AddProperty("y", 37.0);
 
-            HydroNodeConverter.Convert(categories, new List<FileReadingException>());
-            Assert.AreEqual(4, categories.Count);
+            categories.Add(category1);
+            categories.Add(category2);
+
+            var nodes = HydroNodeConverter.Convert(categories, new List<FileReadingException>());
+            Assert.AreEqual(2, nodes.Count);
         }
 
         [Test]
-        [TestCase(@"HydroNodeConvertTest\NetworkDefinitionWithMissingX.ini")]
-        [TestCase(@"HydroNodeConvertTest\NetworkDefinitionWithDuplicateNode.ini")]
-        public void GivenAnIniFileWithMissingXValuesOrDuplicateNodes_WhenConverting_ThenAnExceptionisThrown(string filePath)
+        public void GivenAnIniFileWithMissingXValues_WhenConverting_ThenAnExceptionisThrown()
         {
-            var testFile = TestHelper.GetTestFilePath(filePath);
-            var categories = DelftIniFileParser.ReadFile(testFile);
-            Assert.IsNotNull(categories);
+            var categories = new List<DelftIniCategory>();
+            var category1 = new DelftIniCategory("Node");
+            category1.AddProperty("id", "node1");
+            category1.AddProperty("y", 13.5);
+
+            var category2 = new DelftIniCategory("Node");
+            category2.AddProperty("id", "node2");
+            category2.AddProperty("x", 31.5);
+            category2.AddProperty("y", 37.0);
+
+            categories.Add(category1);
+            categories.Add(category2);
+
+            var amountOfExceptions = new List<FileReadingException>();
+
+            HydroNodeConverter.Convert(categories, amountOfExceptions);
+
+            Assert.AreEqual(1, amountOfExceptions.Count);
+        }
+
+        [Test]
+        public void GivenAnIniFileWithDuplicateNodes_WhenConverting_ThenAnExceptionisThrown()
+        {
+            var categories = new List<DelftIniCategory>();
+            var category1 = new DelftIniCategory("Node");
+            category1.AddProperty("id", "node1");
+            category1.AddProperty("x", 11.0);
+            category1.AddProperty("y", 13.5);
+
+            var category2 = new DelftIniCategory("Node");
+            category2.AddProperty("id", "node1");
+            category2.AddProperty("x", 31.5);
+            category2.AddProperty("y", 37.0);
+
+            categories.Add(category1);
+            categories.Add(category2);
 
             var amountOfExceptions = new List<FileReadingException>();
 
