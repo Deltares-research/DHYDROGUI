@@ -45,7 +45,7 @@ namespace DeltaShell.NGHS.IO.Grid
                         var mesh2DId = fmUGridAdaptor.GetMesh2DId();
                         if (mesh2DId == null) throw new ArgumentNullException(nameof(mesh2DId));
                         var unstructuredGridFromUGridMeshId = fmUGridAdaptor.GetUnstructuredGridFromUGridMeshId(mesh2DId.Value);
-
+                        
                         return unstructuredGridFromUGridMeshId != null ? 
                             unstructuredGridFromUGridMeshId: loadFlowLinksAndCells? 
                                 NetFileImporter.ImportModelGrid(path) : 
@@ -155,7 +155,8 @@ namespace DeltaShell.NGHS.IO.Grid
                 string meshName;
                 using (var uGrid = new UGrid(path))
                 {
-                    meshName = uGrid.GetMeshName(1);
+                    var ids = uGrid.GetMesh2DIds();
+                    meshName = uGrid.GetMeshName(ids[0]);
                 }
                 if (string.IsNullOrEmpty(meshName))
                     return;

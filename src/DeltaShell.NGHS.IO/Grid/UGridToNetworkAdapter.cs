@@ -192,6 +192,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 branchDescriptions, geometryPointsX, geometryPointsY, branchOrderNumbers);
             return networkUGridDataModel;
         }
+
         public static void SaveGrid(string netFilePath, GridUGridDataModel gridDataModel, UGridGlobalMetaData metaData, ICoordinateSystem coordinateSystem)
         {
             try
@@ -214,23 +215,30 @@ namespace DeltaShell.NGHS.IO.Grid
         private static void SetCoordinateSystem(string netFilePath, ICoordinateSystem coordinateSystem)
         {
             var file = NetCdfFile.OpenExisting(netFilePath, true);
-            file.ReDefine();
-            string varname = coordinateSystem.IsGeographic ? "wgs84" : "projected_coordinate_system";
-            NetCdfVariable ncVariable = file.GetVariableByName(varname) ?? file.AddVariable(varname, NetCdfDataType.NcInteger, new NetCdfDimension[0]);
-            
-            file.AddAttribute(ncVariable, new NetCdfAttribute("name", (object)coordinateSystem.Name));
-            file.AddAttribute(ncVariable, new NetCdfAttribute("epsg", (object)(int)coordinateSystem.AuthorityCode));
-            file.AddAttribute(ncVariable, new NetCdfAttribute("grid_mapping_name", coordinateSystem.IsGeographic ? (object)"latitude_longitude" : (object)"Unknown projected"));
-            file.AddAttribute(ncVariable, new NetCdfAttribute("longitude_of_prime_meridian", (object)0.0));
-            file.AddAttribute(ncVariable, new NetCdfAttribute("semi_major_axis", (object)coordinateSystem.GetSemiMajor()));
-            file.AddAttribute(ncVariable, new NetCdfAttribute("semi_minor_axis", (object)coordinateSystem.GetSemiMinor()));
-            file.AddAttribute(ncVariable, new NetCdfAttribute("inverse_flattening", (object)coordinateSystem.GetInverseFlattening()));
-            file.AddAttribute(ncVariable, new NetCdfAttribute("proj4_params", (object)coordinateSystem.PROJ4));
-            file.AddAttribute(ncVariable, new NetCdfAttribute("EPSG_code", (object)string.Format("EPSG:{0}", (object)coordinateSystem.AuthorityCode)));
-            file.AddAttribute(ncVariable, new NetCdfAttribute("projection_name", (object)"unknown"));
-            file.AddAttribute(ncVariable, new NetCdfAttribute("wkt", (object)coordinateSystem.WKT));
-            file.EndDefine();
-            file.Flush();
+            try
+            {
+                file.ReDefine();
+                var varname = coordinateSystem.IsGeographic ? "wgs84" : "projected_coordinate_system";
+                var ncVariable = file.GetVariableByName(varname) ?? file.AddVariable(varname, NetCdfDataType.NcInteger, new NetCdfDimension[0]);
+
+                file.AddAttribute(ncVariable, new NetCdfAttribute("name", (object) coordinateSystem.Name));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("epsg", (object) (int) coordinateSystem.AuthorityCode));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("grid_mapping_name", coordinateSystem.IsGeographic ? (object) "latitude_longitude" : (object) "Unknown projected"));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("longitude_of_prime_meridian", (object) 0.0));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("semi_major_axis", (object) coordinateSystem.GetSemiMajor()));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("semi_minor_axis", (object) coordinateSystem.GetSemiMinor()));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("inverse_flattening", (object) coordinateSystem.GetInverseFlattening()));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("proj4_params", (object) coordinateSystem.PROJ4));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("EPSG_code", (object) string.Format("EPSG:{0}", (object) coordinateSystem.AuthorityCode)));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("projection_name", (object) "unknown"));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("wkt", (object) coordinateSystem.WKT));
+                file.EndDefine();
+                file.Flush();
+            }
+            finally
+            {
+                file.Close();
+            }
         }
 
         public static void SaveNetwork(string netFilePath, NetworkUGridDataModel networkDataModel, UGridGlobalMetaData metaData)

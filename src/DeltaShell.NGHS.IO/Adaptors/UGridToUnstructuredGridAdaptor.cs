@@ -34,7 +34,7 @@ namespace DeltaShell.NGHS.IO.Adaptors
 
         public void Dispose()
         {
-            if (uGrid != null) uGrid.Dispose();
+            uGrid?.Dispose();
         }
 
         public int? GetMesh2DId()

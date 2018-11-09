@@ -7,8 +7,6 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.NetworkEditor.IO;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
