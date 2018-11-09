@@ -15,12 +15,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
     public static class WaterFlowModel1DFileReader
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowModel1DFileReader));
-        
+
         public static WaterFlowModel1D Read(string modelFilename, Action<string, int, int> reportProgress = null)
         {
             reportProgress = reportProgress ?? ((s, c, t) => { });
             var errorReport = new List<string>();
-            Action<string, List<string>> CreateAndAddErrorReport = (header, errorMessages) => errorReport.Add($"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
+            Action<string, List<string>> CreateAndAddErrorReport = (header, errorMessages) =>
+                errorReport.Add($"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
 
             var model = new WaterFlowModel1D();
             try
@@ -37,28 +38,37 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     throw new Exception(); // If anything goes wring with reading the network, stop reading.
                 }
 
-                reportProgress($"Reading lateral discharge locations from {fileName.LateralDischarge} file.", 3, totalSteps); 
-                ReadFileLateralDischargeLocations(fileName.LateralDischarge, model.Network);
-                
-                reportProgress($"Reading boundary conditions and lateral sources from {fileName.BoundaryConditions} file.", 4, totalSteps); 
+                reportProgress($"Reading lateral discharge locations from {fileName.LateralDischarge} file.", 3,
+                    totalSteps);
+                ReadFileLateralDischargeLocations(fileName.LateralDischarge, model.Network, CreateAndAddErrorReport);
+
+                reportProgress(
+                    $"Reading boundary conditions and lateral sources from {fileName.BoundaryConditions} file.", 4,
+                    totalSteps);
                 BoundaryFileReader.ReadFile(fileName.BoundaryConditions, model);
 
                 reportProgress($"Reading observation points from {fileName.ObservationPoints} file.", 5, totalSteps);
-                ReadFileObservationPointLocations(fileName.ObservationPoints, model.Network);
+                ReadFileObservationPointLocations(fileName.ObservationPoints, model.Network, CreateAndAddErrorReport);
 
                 var totalRoughnessFiles = fileName.RoughnessFiles.Count;
                 var i = 1;
-                if(totalRoughnessFiles > 0)
+                if (totalRoughnessFiles > 0)
                     model.RoughnessSections.Clear();
 
                 foreach (var roughnessFile in fileName.RoughnessFiles)
                 {
-                    reportProgress($"Reading roughness section from {roughnessFile} file. (reading roughness file {i} of {totalRoughnessFiles})", 6, totalSteps);
+                    reportProgress(
+                        $"Reading roughness section from {roughnessFile} file. (reading roughness file {i} of {totalRoughnessFiles})",
+                        6, totalSteps);
                     i++;
                     RoughnessDataFileReader.ReadFile(roughnessFile, model.Network, model.RoughnessSections);
                 }
-                reportProgress($"Reading cross sections from {fileName.CrossSectionLocations} file and {fileName.CrossSectionDefinitions}.", 7, totalSteps);
-                CrossSectionFileReader.ReadFile(fileName.CrossSectionLocations, fileName.CrossSectionDefinitions, model);
+
+                reportProgress(
+                    $"Reading cross sections from {fileName.CrossSectionLocations} file and {fileName.CrossSectionDefinitions}.",
+                    7, totalSteps);
+                CrossSectionFileReader.ReadFile(fileName.CrossSectionLocations, fileName.CrossSectionDefinitions,
+                    model);
             }
             catch (Exception)
             {
@@ -70,7 +80,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return model;
         }
 
-        private static void ReadNetworkDefinitionFile(string networkDefinitionFilePath, WaterFlowModel1D model, Action<string, List<string>> createAndAddErrorReport)
+        private static void ReadNetworkDefinitionFile(string networkDefinitionFilePath, WaterFlowModel1D model,
+            Action<string, List<string>> createAndAddErrorReport)
         {
             var network = model.Network;
             var networkDefinitionFileReader = new NetworkDefinitionFileReader(createAndAddErrorReport);
@@ -85,9 +96,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             model.NetworkDiscretization.Locations.Values.AddRange(readNetworkLocations);
         }
 
-        private static void ReadFileLateralDischargeLocations(string locationFilePath, IHydroNetwork network)
+        private static void ReadFileLateralDischargeLocations(string locationFilePath, IHydroNetwork network,
+            Action<string, List<string>> createAndAddErrorReport)
         {
-            var lateralSourceFileReader = new LateralSourceFileReader();
+            var lateralSourceFileReader = new LateralSourceFileReader(createAndAddErrorReport);
 
             var lateralSources = lateralSourceFileReader.ReadLateralSources(locationFilePath, network);
 
@@ -101,9 +113,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
         }
 
-        private static void ReadFileObservationPointLocations(string locationFilePath, IHydroNetwork network)
+        private static void ReadFileObservationPointLocations(string locationFilePath, IHydroNetwork network,
+            Action<string, List<string>> createAndAddErrorReport)
         {
-            var observationPointFileReader = new ObservationPointFileReader();
+            var observationPointFileReader = new ObservationPointFileReader(createAndAddErrorReport);
 
             var observationPoints = observationPointFileReader.ReadObservationPoints(locationFilePath, network);
 
@@ -116,8 +129,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 }
             }
         }
+    
 
-        private static void LogErrorReport(List<string> errorReport)
+    private static void LogErrorReport(List<string> errorReport)
         {
             errorReport.ForEach(report => Log.WarnFormat(report));
         }

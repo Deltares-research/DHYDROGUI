@@ -15,10 +15,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
 {
     public static class LateralSourceConverter
     {
-        public static IList<ILateralSource> Convert(IList<DelftIniCategory> categories, IHydroNetwork network, IList<FileReadingException> fileReadingExceptions)
+        public static IList<ILateralSource> Convert(IList<DelftIniCategory> categories, IHydroNetwork network, IList<string> errorMessages)
         {
             IList<ILateralSource> lateralSources = new List<ILateralSource>();
-            IList<string> errorMessages = new List<string>();
             foreach (var observationPointCategory in categories.Where(category => category.Name == BoundaryRegion.LateralDischargeHeader))
             {
                 try
@@ -32,13 +31,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
                     errorMessages.Add(e.Message);
                 }
             }
-
-            if (errorMessages.Count > 0)
-            {
-                var fileReadingException = FileReadingException.GetReportAsException("lateral sources", errorMessages);
-                fileReadingExceptions.Add(fileReadingException);
-            }
-
+            
             return lateralSources;
         }
         
@@ -53,7 +46,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
             if (branch == null)
             {
                 var errorMessage = string.Format("Unable to parse {0} property: {1}, Branch not found in Network.{2}", category.Name, LocationRegion.BranchId.Key, Environment.NewLine);
-                throw new FileReadingException(errorMessage);
+                throw new Exception(errorMessage);
             }
 
              // Optional Properties (an error will not be generated if these fail)
@@ -80,9 +73,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
                 yield return $"Observation Point with id {readLateralSource.Name} already exists, there cannot be any duplicate Node ids";
         }
 
-        private static bool IsDuplicateIn(this ILateralSource readLateralSource, IList<ILateralSource> nodes)
+        private static bool IsDuplicateIn(this ILateralSource readLateralSource, IList<ILateralSource> lateralSources)
         {
-            return nodes.Contains(readLateralSource) || nodes.Any(n => n.Name == readLateralSource.Name);
+            return lateralSources.Contains(readLateralSource) || lateralSources.Any(n => n.Name == readLateralSource.Name);
         }
 
     }
