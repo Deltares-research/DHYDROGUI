@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Network;
 using DeltaShell.NGHS.IO.Helpers;
 using NUnit.Framework;
@@ -26,7 +25,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             categories.Add(category1);
             categories.Add(category2);
 
-            var nodes = HydroNodeConverter.Convert(categories, new List<FileReadingException>());
+            var nodes = HydroNodeConverter.Convert(categories, new List<string>());
             Assert.AreEqual(2, nodes.Count);
         }
 
@@ -46,7 +45,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             categories.Add(category1);
             categories.Add(category2);
 
-            var amountOfExceptions = new List<FileReadingException>();
+            var amountOfExceptions = new List<string>();
 
             HydroNodeConverter.Convert(categories, amountOfExceptions);
 
@@ -70,7 +69,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             categories.Add(category1);
             categories.Add(category2);
 
-            var amountOfExceptions = new List<FileReadingException>();
+            var amountOfExceptions = new List<string>();
 
             HydroNodeConverter.Convert(categories, amountOfExceptions);
 

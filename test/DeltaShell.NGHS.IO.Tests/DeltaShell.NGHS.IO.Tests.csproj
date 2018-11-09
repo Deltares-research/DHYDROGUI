@@ -117,6 +117,7 @@
     <Compile Include="Converters\BranchConverterTest.cs" />
     <Compile Include="Converters\HydroNodeConverterTest.cs" />
     <Compile Include="FileReaders\CrossSectionDefinitionFileReaderTest.cs" />
+    <Compile Include="FileReaders\DelftIniFileParserTest.cs" />
     <Compile Include="FileReaders\LocationFileReaderTest.cs" />
     <Compile Include="FileReaders\NetworkDefinitionFileReaderTest.cs" />
     <Compile Include="FileWriters\CrossSectionDefinitionFileWritersTest.cs" />

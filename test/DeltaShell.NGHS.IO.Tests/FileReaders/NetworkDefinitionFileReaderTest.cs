@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
-using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Network;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Network;
@@ -47,7 +46,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             IHydroNetwork readNetwork = new HydroNetwork();
             IDiscretization readDiscretization = new Discretization();
             
-            var networkDefinitionFileReader = new NetworkDefinitionFileReader();
+            var networkDefinitionFileReader = new NetworkDefinitionFileReader((header, errorMessages) => {});
             var nodes = networkDefinitionFileReader.ReadHydroNodes(FileWriterTestHelper.ModelFileNames.Network);
             readNetwork.Nodes.AddRange(nodes);
             var branches = networkDefinitionFileReader.ReadBranches(FileWriterTestHelper.ModelFileNames.Network, readNetwork);
@@ -82,7 +81,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
-        [ExpectedException(typeof(FileReadingException))]
         public void TestNetworkAndGridReaderGivesExpectedException()
         {
             // Setup network data
@@ -101,22 +99,16 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             if (firstNode == null) return;
             firstNode.Properties.RemoveAt(1);
             new IniFileWriter().WriteIniFile(categories, FileWriterTestHelper.ModelFileNames.Network);
-            
+
             // Read from model
-            var networkDefinitionFileReader = new NetworkDefinitionFileReader();
+            var errorReport = new List<string>();
+            var networkDefinitionFileReader = new NetworkDefinitionFileReader((header, errorMessages) => { errorReport.AddRange(errorMessages); });
             networkDefinitionFileReader.ReadHydroNodes(FileWriterTestHelper.ModelFileNames.Network);
+
+            Assert.That(errorReport.Count, Is.GreaterThan(0));
         }
 
         [Test]
-        [ExpectedException(typeof(FileReadingException))]
-        public void GivenNoFile_WhenTryingToExecuteReadFile_ThenAFileReadingExceptionIsThrown()
-        {
-            const string nonExistingFilePath = @"This/File/Does/Not/Exist";
-            DelftIniFileParser.ReadFile(nonExistingFilePath);
-        }
-
-        [Test]
-        [ExpectedException(typeof(FileReadingException))]
         public void GivenAFileWithZeroCategories_WhenTryingToExecuteReadFile_ThenAFileReadingExceptionIsThrown()
         {
             // Setup network data
@@ -134,13 +126,14 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 originalDiscretization);
 
             //Remove categories
-            var categories = new List<DelftIniCategory>();
-            new IniFileWriter().WriteIniFile(categories, FileWriterTestHelper.ModelFileNames.Network);
+            new IniFileWriter().WriteIniFile(new List<DelftIniCategory>(), FileWriterTestHelper.ModelFileNames.Network);
 
             //Read from model
-            var networkDefinitionFileReader = new NetworkDefinitionFileReader();
+            var errorReport = new List<string>();
+            var networkDefinitionFileReader = new NetworkDefinitionFileReader((header, errorMessages) => { errorReport.AddRange(errorMessages); });
             networkDefinitionFileReader.ReadHydroNodes(FileWriterTestHelper.ModelFileNames.Network);
 
+            Assert.That(errorReport.Count, Is.GreaterThan(0));
         }
     }
 }

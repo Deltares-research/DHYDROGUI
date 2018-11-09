@@ -11,10 +11,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
 {
     public static class HydroNodeConverter
     {
-        public static IList<IHydroNode> Convert(IList<DelftIniCategory> categories, IList<FileReadingException> fileReadingExceptions)
+        public static IList<IHydroNode> Convert(IList<DelftIniCategory> categories, IList<string> errorMessages)
         {
             IList<IHydroNode> nodes = new List<IHydroNode>();
-            IList<string> errorMessages = new List<string>();
             foreach (var nodeCategory in categories.Where(category => category.Name == NetworkDefinitionRegion.IniNodeHeader))
             {
                 try
@@ -27,12 +26,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
                 {
                     errorMessages.Add(e.Message);
                 }
-            }
-
-            if (errorMessages.Count > 0)
-            {
-                var fileReadingException = FileReadingException.GetReportAsException("nodes", errorMessages);
-                fileReadingExceptions.Add(fileReadingException);
             }
 
             return nodes;

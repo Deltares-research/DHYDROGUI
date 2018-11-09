@@ -9,7 +9,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
         public static IList<DelftIniCategory> ReadFile(string filePath)
         {
             if (!File.Exists(filePath))
-                throw new FileReadingException($"Could not read file {filePath} properly, it doesn't exist.");
+                throw new FileNotFoundException($"Could not read file {filePath} properly, it doesn't exist.");
 
             var categories = new DelftIniReader().ReadDelftIniFile(filePath);
 
