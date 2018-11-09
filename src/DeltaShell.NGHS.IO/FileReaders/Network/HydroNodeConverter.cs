@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
 using NetTopologySuite.Geometries;
@@ -19,7 +18,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
                 try
                 {
                     var generatedNode = ConvertToHydroNode(nodeCategory);
-                    errorMessages.AddRange(ValidateConvertedNode(generatedNode, nodes));
+                    ValidateConvertedNode(generatedNode, nodes);
                     nodes.Add(generatedNode);
                 }
                 catch (Exception e)
@@ -48,10 +47,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             };
         }
 
-        private static IEnumerable<string> ValidateConvertedNode(IHydroNode readNode, IList<IHydroNode> generatedNodes)
+        private static void ValidateConvertedNode(IHydroNode readNode, IList<IHydroNode> generatedNodes)
         {
             if (readNode.IsDuplicateIn(generatedNodes))
-                yield return $"Node with id {readNode.Name} already exists, there cannot be any duplicate Node ids";
+                throw new Exception($"Node with id {readNode.Name} already exists, there cannot be any duplicate Node ids");
         }
 
         private static bool IsDuplicateIn(this IHydroNode readNode, IList<IHydroNode> nodes)

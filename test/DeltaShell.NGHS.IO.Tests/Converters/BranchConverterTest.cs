@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileReaders.Network;
 using DeltaShell.NGHS.IO.Helpers;
+using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.Converters
@@ -10,30 +11,31 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
     [TestFixture]
     public class BranchConverterTest
     {
+        private const string NodeName1 = "node1";
+        private const string NodeName2 = "node2";
 
         [Test]
         public void GivenACorrectBranch_WhenConverting_ThenAListOfBranchesIsReturned()
         {
-            var categories = new List<DelftIniCategory>();
-            var category1 = CreateBranchDelftIniCategory();
+            var branchCategory = CreateBranchDelftIniCategory();
+            var categories = new List<DelftIniCategory> {branchCategory};
 
-            categories.Add(category1);
-
-            var branches = BranchConverter.Convert(categories, new HydroNetwork().Nodes, new List<string>());
+            var nodes = GetTestHydroNodes();
+            var branches = BranchConverter.Convert(categories, nodes, new List<string>());
             Assert.AreEqual(1, branches.Count);
         }
-        
+
 
         [Test]
-        public void GivenDuplicateBranches_WhenConverting_ThenAnExceptionisThrown()
+        public void GivenDuplicateBranches_WhenConverting_ThenAnErrorMessageIsProduced()
         {
             var categories = new List<DelftIniCategory>();
             var category1 = CreateBranchDelftIniCategory();
 
             var category2 = new DelftIniCategory("Branch");
             category2.AddProperty("id", "branch1");
-            category2.AddProperty("fromNode", "node1");
-            category2.AddProperty("toNode", "node2");
+            category2.AddProperty("fromNode", NodeName1);
+            category2.AddProperty("toNode", NodeName2);
             category2.AddProperty("order", "0");
             category2.AddProperty("geometry", "LINESTRING (0 0, 100 0)");
 
@@ -41,9 +43,11 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             categories.Add(category2);
 
             var errorMessages = new List<string>();
-            BranchConverter.Convert(categories, new HydroNetwork().Nodes, errorMessages);
-            
-            Assert.That(errorMessages.Any(m => m.EndsWith("branch id's cannot be duplicates.")));
+            var nodes = GetTestHydroNodes();
+            var branches = BranchConverter.Convert(categories, nodes, errorMessages);
+
+            Assert.AreEqual(1, branches.Count);
+            Assert.That(errorMessages.Any(m => m.EndsWith("branch id's cannot be duplicates.")), "A message about duplicate branch id's should have been produced, but was not.");
         }
 
         [Test]
@@ -63,11 +67,16 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
         {
             var category1 = new DelftIniCategory("Branch");
             category1.AddProperty("id", "branch1");
-            category1.AddProperty("fromNode", "node1");
-            category1.AddProperty("toNode", "node2");
+            category1.AddProperty("fromNode", NodeName1);
+            category1.AddProperty("toNode", NodeName2);
             category1.AddProperty("order", "0");
             category1.AddProperty("geometry", "LINESTRING (0 0, 100 0)");
             return category1;
+        }
+
+        private static List<INode> GetTestHydroNodes()
+        {
+            return new List<INode> {new HydroNode(NodeName1), new HydroNode(NodeName2)};
         }
     }
 }

@@ -23,9 +23,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             var categories = ReadCategoriesFromFileAndCollectErrorMessages(filePath, errorMessages);
             var nodes = HydroNodeConverter.Convert(categories, errorMessages);
 
-            if (errorMessages.Count > 0)
-                createAndAddErrorReport?.Invoke($"While reading the network nodes from file '{filePath}', an error occured", errorMessages);
-
+            CreateErrorReport("network nodes", filePath, errorMessages);
             return nodes;
         }
 
@@ -35,24 +33,17 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             var categories = ReadCategoriesFromFileAndCollectErrorMessages(filePath, errorMessages);
             var branches = BranchConverter.Convert(categories, nodes, errorMessages);
 
-            if (errorMessages.Count > 0)
-                createAndAddErrorReport?.Invoke($"While reading the network branches from file '{filePath}', an error occured", errorMessages);
-
+            CreateErrorReport("network branches", filePath, errorMessages);
             return branches;
         }
 
         public IList<INetworkLocation> ReadNetworkLocations(string filePath, IList<IBranch> networkBranches)
         {
-            IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
-            var categories = DelftIniFileParser.ReadFile(filePath);
-            var networkLocations = NetworkDiscretizationConverter.Convert(categories, networkBranches, fileReadingExceptions);
+            var errorMessages = new List<string>();
+            var categories = ReadCategoriesFromFileAndCollectErrorMessages(filePath, errorMessages);
+            var networkLocations = NetworkDiscretizationConverter.Convert(categories, networkBranches, errorMessages);
 
-            if (fileReadingExceptions.Count > 0)
-            {
-                var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException?.Message + Environment.NewLine);
-                throw new FileReadingException($"While reading the network discretization, an error occured :{Environment.NewLine} {string.Join(Environment.NewLine, innerExceptionMessages)}");
-            }
-
+            CreateErrorReport("network discretization", filePath, errorMessages);
             return networkLocations;
         }
 
@@ -69,6 +60,12 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             }
 
             return categories;
+        }
+
+        private void CreateErrorReport(string objectName, string filePath, List<string> errorMessages)
+        {
+            if (errorMessages.Count > 0)
+                createAndAddErrorReport?.Invoke($"While reading the {objectName} from file '{filePath}', the following errors occured", errorMessages);
         }
     }
 }
