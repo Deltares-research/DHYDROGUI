@@ -20,34 +20,23 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
         public IList<IHydroNode> ReadHydroNodes(string filePath)
         {
             var errorMessages = new List<string>();
-            IList<DelftIniCategory> categories = new List<DelftIniCategory>();
-            try
-            {
-                categories = DelftIniFileParser.ReadFile(filePath);
-            }
-            catch (Exception e)
-            {
-                errorMessages.Add(e.Message);
-            }
-            
+            var categories = ReadCategoriesFromFileAndCollectErrorMessages(filePath, errorMessages);
             var nodes = HydroNodeConverter.Convert(categories, errorMessages);
+
             if (errorMessages.Count > 0)
-                createAndAddErrorReport?.Invoke("While reading the network nodes from file, an error occured", errorMessages);
+                createAndAddErrorReport?.Invoke($"While reading the network nodes from file '{filePath}', an error occured", errorMessages);
 
             return nodes;
         }
 
-        public IList<IChannel> ReadBranches(string filePath, IHydroNetwork network)
+        public IList<IChannel> ReadBranches(string filePath, IList<INode> nodes)
         {
-            IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
-            var categories = DelftIniFileParser.ReadFile(filePath);
-            var branches = BranchConverter.Convert(categories, network, fileReadingExceptions);
+            var errorMessages = new List<string>();
+            var categories = ReadCategoriesFromFileAndCollectErrorMessages(filePath, errorMessages);
+            var branches = BranchConverter.Convert(categories, nodes, errorMessages);
 
-            if (fileReadingExceptions.Count > 0)
-            {
-                var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException?.Message + Environment.NewLine);
-                throw new FileReadingException($"While reading the network branches from file, an error occured :{Environment.NewLine} {string.Join(Environment.NewLine, innerExceptionMessages)}");
-            }
+            if (errorMessages.Count > 0)
+                createAndAddErrorReport?.Invoke($"While reading the network branches from file '{filePath}', an error occured", errorMessages);
 
             return branches;
         }
@@ -65,6 +54,21 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             }
 
             return networkLocations;
+        }
+
+        private static IList<DelftIniCategory> ReadCategoriesFromFileAndCollectErrorMessages(string filePath, List<string> errorMessages)
+        {
+            IList<DelftIniCategory> categories = new List<DelftIniCategory>();
+            try
+            {
+                categories = DelftIniFileParser.ReadFile(filePath);
+            }
+            catch (Exception e)
+            {
+                errorMessages.Add(e.Message);
+            }
+
+            return categories;
         }
     }
 }

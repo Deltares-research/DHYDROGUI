@@ -72,14 +72,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         private static void ReadNetworkDefinitionFile(string networkDefinitionFilePath, WaterFlowModel1D model, Action<string, List<string>> createAndAddErrorReport)
         {
+            var network = model.Network;
             var networkDefinitionFileReader = new NetworkDefinitionFileReader(createAndAddErrorReport);
+
             var nodes = networkDefinitionFileReader.ReadHydroNodes(networkDefinitionFilePath);
-            model.Network.Nodes.AddRange(nodes);
+            network.Nodes.AddRange(nodes);
 
-            var branches = networkDefinitionFileReader.ReadBranches(networkDefinitionFilePath, model.Network);
-            model.Network.Branches.AddRange(branches);
+            var branches = networkDefinitionFileReader.ReadBranches(networkDefinitionFilePath, network.Nodes);
+            network.Branches.AddRange(branches);
 
-            var readNetworkLocations = networkDefinitionFileReader.ReadNetworkLocations(networkDefinitionFilePath, model.Network.Branches).ToList();
+            var readNetworkLocations = networkDefinitionFileReader.ReadNetworkLocations(networkDefinitionFilePath, network.Branches).ToList();
             model.NetworkDiscretization.Locations.Values.AddRange(readNetworkLocations);
         }
 

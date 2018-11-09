@@ -49,7 +49,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             var networkDefinitionFileReader = new NetworkDefinitionFileReader((header, errorMessages) => {});
             var nodes = networkDefinitionFileReader.ReadHydroNodes(FileWriterTestHelper.ModelFileNames.Network);
             readNetwork.Nodes.AddRange(nodes);
-            var branches = networkDefinitionFileReader.ReadBranches(FileWriterTestHelper.ModelFileNames.Network, readNetwork);
+            var branches = networkDefinitionFileReader.ReadBranches(FileWriterTestHelper.ModelFileNames.Network, readNetwork.Nodes);
             readNetwork.Branches.AddRange(branches);
             var readNetworkLocations = networkDefinitionFileReader.ReadNetworkLocations(FileWriterTestHelper.ModelFileNames.Network, readNetwork.Branches);
             readDiscretization.Locations.Values.AddRange(readNetworkLocations.ToList());

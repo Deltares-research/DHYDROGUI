@@ -5,21 +5,21 @@ using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
+using GeoAPI.Extensions.Networks;
 using SharpMap.Converters.WellKnownText;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Network
 {
     public static class BranchConverter
     {
-        public static IList<IChannel> Convert(IList<DelftIniCategory> categories, IHydroNetwork network, IList<FileReadingException> fileReadingExceptions)
+        public static IList<IChannel> Convert(IList<DelftIniCategory> categories, IList<INode> nodes, IList<string> errorMessages)
         {
             IList<IChannel> branches = new List<IChannel>();
-            IList<string> errorMessages = new List<string>();
             foreach (var branchCategory in categories.Where(category => category.Name == NetworkDefinitionRegion.IniBranchHeader))
             {
                 try
                 {
-                    var generatedBranch = ConvertToBranch(branchCategory, network);
+                    var generatedBranch = ConvertToBranch(branchCategory, nodes);
                     errorMessages.AddRange(ValidateConvertedBranch(generatedBranch, branches));
                     branches.Add(generatedBranch);
                 }
@@ -29,26 +29,19 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
                 }
             }
 
-            if (errorMessages.Count > 0)
-            {
-                var fileReadingException = FileReadingException.GetReportAsException("branches", errorMessages);
-                fileReadingExceptions.Add(fileReadingException);
-            }
-
             return branches;
         }
 
-        private static IChannel ConvertToBranch(IDelftIniCategory branchCategory, IHydroNetwork network)
+        private static IChannel ConvertToBranch(IDelftIniCategory branchCategory, IList<INode> nodes)
         {
             var idValue = branchCategory.ReadProperty<string>(NetworkDefinitionRegion.Id.Key);
             var sourceNodeName = branchCategory.ReadProperty<string>(NetworkDefinitionRegion.FromNode.Key);
             var targetNodeName = branchCategory.ReadProperty<string>(NetworkDefinitionRegion.ToNode.Key);
             var branchOrderValue = branchCategory.ReadProperty<int>(NetworkDefinitionRegion.BranchOrder.Key);
 
-            var sourceNode = network.GetNodeByName(sourceNodeName);
-            var targetNode = network.GetNodeByName(targetNodeName);
+            var sourceNode = nodes.FirstOrDefault(n => n.Name == sourceNodeName);
+            var targetNode = nodes.FirstOrDefault(n => n.Name == targetNodeName);
             var geometryString = branchCategory.ReadProperty<string>(NetworkDefinitionRegion.Geometry.Key);
-
 
             // Optional Branch Properties
             var name = branchCategory.ReadProperty<string>(NetworkDefinitionRegion.Name.Key, true) ?? string.Empty;
@@ -67,10 +60,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
         private static IEnumerable<string> ValidateConvertedBranch(IChannel readBranch, IList<IChannel> generatedBranches)
         {
             if (readBranch.Source == null)
-                yield return $"Unable to parse Branch property: {NetworkDefinitionRegion.FromNode.Key}, Node not found in Network.{Environment.NewLine}";
+                yield return $"Unable to parse Branch property: {NetworkDefinitionRegion.FromNode.Key}, Node not found in Network.";
 
             if (readBranch.Target == null)
-                yield return $"Unable to parse Branch property: {NetworkDefinitionRegion.ToNode.Key}, Node not found in Network.{Environment.NewLine}";
+                yield return $"Unable to parse Branch property: {NetworkDefinitionRegion.ToNode.Key}, Node not found in Network.";
 
             if (readBranch.IsDuplicateIn(generatedBranches))
                 yield return $"branch with id {readBranch.Name} is already read, branch id's cannot be duplicates.";
