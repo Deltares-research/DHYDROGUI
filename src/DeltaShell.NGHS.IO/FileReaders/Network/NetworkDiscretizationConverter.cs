@@ -34,7 +34,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
 
         private static ICollection<INetworkLocation> ReadDiscretizationDefinition(IDelftIniCategory branchCategory, IEnumerable<IBranch> networkBranches)
         {
-            // Find branch in network
             var branchName = branchCategory.ReadProperty<string>(NetworkDefinitionRegion.Id.Key);
             var branch = networkBranches.FirstOrDefault(b => b.Name == branchName);
             
