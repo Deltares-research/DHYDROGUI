@@ -51,8 +51,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
 
              // Optional Properties (an error will not be generated if these fail)
             var longName = category.ReadProperty<string>(LocationRegion.Name.Key, true) ?? string.Empty;
-             var diffuseLength = category.ReadProperty<double?>(LateralSourceLocationRegion.Length.Key, true);
-
+            
             return new ObservationPoint()
             {
                 Branch = branch,
