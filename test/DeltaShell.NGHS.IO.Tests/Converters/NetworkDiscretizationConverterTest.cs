@@ -19,7 +19,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
         private readonly string[] gridPointsY = { "0.0", "50.0", "100.0" };
         private readonly string[] gridPointsOffSets = { "0.0", "50.0", "100.0" };
         private readonly string[] gridPointsNames = { "Channel1_0.000", "Channel1_50.000", "Channel1_100.000" };
-        private readonly Channel channel1 = new Channel("Channel1", new HydroNode("Node001") { Geometry = new Point(22.0, 0.0) }, new HydroNode("Node002") { Geometry = new Point(22.0, 100.0) }, 100.0);
+        private readonly Channel channel1 = new Channel("Channel1", new HydroNode("Node001") { Geometry = new Point(22.0, 0.0) }, new HydroNode("Node002") { Geometry = new Point(22.0, 100.0) }, 99.9997);
         private readonly Channel channel2 = new Channel("Channel2", new HydroNode("Node001") { Geometry = new Point(22.0, 0.0) }, new HydroNode("Node002") { Geometry = new Point(22.0, 100.0) });
 
         [Test]
@@ -108,6 +108,21 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             Assert.That(networkLocations.Count, Is.EqualTo(0));
             var expectedErrorMessage = $"Network location '{gridPointsNames[2]}' has an offset 250 that is larger than the length {channel1.Length} of its branch '{channel1.Name}'";
             Assert.That(errorMessages.Any(m => m.Contains(expectedErrorMessage)));
+        }
+
+        [Test]
+        public void GivenNetworkDiscretisationDataModelWithSlightlyTooLargeOffset_WhenConverting_ThenCorrectNetworkLocationsAreReturned()
+        {
+            var categories = new List<DelftIniCategory>();
+            var branchCategory = CreateCorrectBranchCategory();
+            branchCategory.SetProperty(NetworkDefinitionRegion.GridPointOffsets.Key, string.Join(" ", "0.0", "50.0", "100.0"));
+            categories.Add(branchCategory);
+
+            var branches = new List<IBranch> { channel1 };
+            var errorMessages = new List<string>();
+            var networkLocations = NetworkDiscretizationConverter.Convert(categories, branches, errorMessages);
+
+            Assert.That(networkLocations.Count, Is.EqualTo(3));
         }
 
         [Test]

@@ -134,7 +134,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             var branchLength = branch.Length;
             for (var n = 0; n < gridPointsOffsets.Count; n++)
             {
-                if (gridPointsOffsets[n] > branch.Length)
+                if (gridPointsOffsets[n] > Math.Round(branch.Length, 3, MidpointRounding.AwayFromZero))
                 {
                     yield return $"Network location '{gridPointsNames[n]}' has an offset {gridPointsOffsets[n]} that is larger than the length {branchLength} of its branch '{branchName}'";
                 }

@@ -72,11 +72,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
             catch (Exception)
             {
-                LogErrorReport(errorReport);
+                LogErrorReport(errorReport, report => Log.Error(report));
                 return null;
             }
 
-            LogErrorReport(errorReport);
+            LogErrorReport(errorReport, report => Log.Warn(report));
             return model;
         }
 
@@ -129,11 +129,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 }
             }
         }
-    
 
-    private static void LogErrorReport(List<string> errorReport)
+        private static void LogErrorReport(List<string> errorReport, Action<string> logAction)
         {
-            errorReport.ForEach(report => Log.WarnFormat(report));
+            errorReport.ForEach(logAction);
         }
     }
 }
