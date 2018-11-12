@@ -152,6 +152,7 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="ValidationAspects, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
       <HintPath>..\..\packages\ValidationAspects.dll.2.1.0.0\lib\net35\ValidationAspects.dll</HintPath>
       <Private>False</Private>
@@ -169,6 +170,10 @@
     <Compile Include="FiniteVolumeDiscretizationType.cs" />
     <Compile Include="Flow1DBasicModelInterface.cs" />
     <Compile Include="ImportExport\BoundaryFileReader.cs" />
+    <Compile Include="ImportExport\Dimr\DelftConfigXmlFileConverter.cs" />
+    <Compile Include="ImportExport\Dimr\DelftConfigXmlFileParser.cs" />
+    <Compile Include="ImportExport\Dimr\IDelftIniXmlConverter.cs" />
+    <Compile Include="ImportExport\Dimr\IDelftIniXmlDeserializer.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DBoundaryFileWriter.cs" />
     <Compile Include="ImportExport\BoundaryFileWriterHelper.cs" />
     <Compile Include="ImportExport\BoundaryLocationFileWriter.cs" />
@@ -430,7 +435,6 @@
   <Import Project="..\..\packages\PostSharp.4.3.45\tools\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.4.3.45\tools\PostSharp.targets')" />
   <Target Name="EnsurePostSharpImported" BeforeTargets="BeforeBuild" Condition="'$(PostSharp30Imported)' == ''">
     <Error Condition="!Exists('..\..\packages\PostSharp.4.3.45\tools\PostSharp.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://www.postsharp.net/links/nuget-restore." />
-    
   </Target>
   <Import Project="..\..\packages\DeltaShell.Framework.1.3.0.41027\build\net40\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.3.0.41027\build\net40\DeltaShell.Framework.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

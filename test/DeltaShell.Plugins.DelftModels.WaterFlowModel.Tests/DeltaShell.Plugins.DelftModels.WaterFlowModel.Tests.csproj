@@ -188,6 +188,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -222,6 +223,12 @@
     <Compile Include="ImportExport\Boundary\BoundaryFileReaderTestHelper.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryFileWriterTest.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryFileWriterTestHelper.cs" />
+    <Compile Include="ImportExport\Dimr\DelftIniDimrConverter.cs" />
+    <Compile Include="ImportExport\Dimr\DelftIniRtcConfigConverter.cs" />
+    <Compile Include="ImportExport\Dimr\DelftConfigXmlFileConverterTest.cs" />
+    <Compile Include="ImportExport\Dimr\DelftConfigXmlFileParserTest.cs" />
+    <Compile Include="ImportExport\IntegrationTests\DimrXmlReaderIntegrationTest.cs" />
+    <Compile Include="ImportExport\Dimr\DimrXmlReaderTest.cs" />
     <Compile Include="ImportExport\IntegrationTests\CrossSectionDefinitionFileWriterIntegrationTest.cs" />
     <Compile Include="ImportExport\IntegrationTests\CrossSectionDefinitionFileWriterIntegrationTestInMemory.cs" />
     <Compile Include="ImportExport\IntegrationTests\CrossSectionsFromDsProjTest.cs" />
@@ -257,6 +264,7 @@
     <Compile Include="Validation\WaterFlowModel1DModelMergeHelperTest.cs" />
     <Compile Include="Validation\WaterFlowModel1DModelMergeTest.cs" />
     <Compile Include="Validation\WaterFlowModel1DModelMergeValidatorTest.cs" />
+    <Compile Include="Validation\WaterFlowModel1DModelValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowModel1DOutFileValidatorTest.cs" />
     <Compile Include="WaterFlowModel1D30LegacyLoaderTest.cs" />
     <Compile Include="WaterFlowModel1DBoundaryNodeDataPropertiesTest.cs" />
@@ -272,7 +280,6 @@
     <Compile Include="WaterFlowModel1DWindTest.cs" />
     <Compile Include="WaterFlowModel1DWithCrossSectionTest.cs" />
     <Compile Include="WaterFlowModel1DWithCulvertTest.cs" />
-    <Compile Include="Validation\WaterFlowModel1DModelValidatorTest.cs" />
     <Compile Include="WaterFlowModel1DWithBridgeTest.cs" />
     <Compile Include="DataObjects\WaterFlowModel1DBoundaryNodeDataTest.cs" />
     <Compile Include="DataObjects\WaterFlowModel1DLateralSourceDataTest.cs" />
@@ -416,7 +423,6 @@ cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.3.0.41027\tools\mklink-t
   <Import Project="..\..\packages\PostSharp.4.3.45\tools\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.4.3.45\tools\PostSharp.targets')" />
   <Target Name="EnsurePostSharpImported" BeforeTargets="BeforeBuild" Condition="'$(PostSharp30Imported)' == ''">
     <Error Condition="!Exists('..\..\packages\PostSharp.4.3.45\tools\PostSharp.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://www.postsharp.net/links/nuget-restore." />
-    
   </Target>
   <Import Project="..\..\packages\DeltaShell.Framework.1.3.0.41027\build\net40\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.3.0.41027\build\net40\DeltaShell.Framework.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

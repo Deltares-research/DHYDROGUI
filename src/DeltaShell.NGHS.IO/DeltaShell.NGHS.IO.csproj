@@ -114,6 +114,7 @@
     <Compile Include="DelftBcWriter.cs" />
     <Compile Include="DelftIniReader.cs" />
     <Compile Include="DelftIniWriter.cs" />
+    <Compile Include="FileReaders\ConfigXml\DelftConfigXmlFileReader.cs" />
     <Compile Include="FileReaders\Definition\DefinitionReader.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
     <Compile Include="FileReaders\Location\ObservationPointFileReader.cs" />
@@ -229,6 +230,10 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="FileConverters\" />
+    <Folder Include="FileParsers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
