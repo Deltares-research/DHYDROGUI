@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             var timeSeriesStopTime = new DateTime(2012, 1, 31);
             var timeStep = new TimeSpan(0, 1, 0, 0);
 
-            var timeSeries = new TimeSeries()
+            var timeSeries = new TimeSeries
             {
                 Components = { new Variable<double>("SetPoint") },
                 Name = "SetPoint"
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
 
             var modelStartTime = timeSeriesStartTime.AddDays(1);
             var modelStopTime = timeSeriesStopTime.AddDays(-1);
-            var rtcModel = new RealTimeControlModel() { TimeStep = timeStep, StartTime = modelStartTime, StopTime = modelStopTime };
+            var rtcModel = new RealTimeControlModel { TimeStep = timeStep, StartTime = modelStartTime, StopTime = modelStopTime };
             rtcModel.ControlGroups.Add(new ControlGroup());
 
             return new Tuple<RealTimeControlModel, TimeSeries>(rtcModel, timeSeries);
@@ -329,26 +329,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             var controlGroup = model.ControlGroups.First();
 
             // check PIDrule
-            var PIDrule = new PIDRule()
-                { TimeSeries = timeSeries, PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries };
-            controlGroup.Rules.Add(PIDrule);
+            var pidRule = new PIDRule { TimeSeries = timeSeries, PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries };
+            controlGroup.Rules.Add(pidRule);
 
             var report = validator.Validate(model, controlGroup);
             var validationIssues = report.GetAllIssuesRecursive();
-            var foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, PIDrule)).ToList();
+            var foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, pidRule)).ToList();
             Assert.AreEqual(2, foundIssues.Count, "The number of validation issues for the PID rule");
             Assert.AreEqual(ValidationSeverity.Warning, foundIssues[0].Severity, "Time series bound checking should raise warnings, not errors.");
             Assert.AreEqual(ValidationSeverity.Warning, foundIssues[1].Severity, "Time series bound checking should raise warnings, not errors.");
-
-            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime, PIDrule.TimeSeries.Name, model.StartTime.ToString(CultureInfo.InvariantCulture)), 
+            
+            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime, pidRule.TimeSeries.Name, controlGroup.Name, model.StartTime.ToString(CultureInfo.InvariantCulture)),
                             foundIssues[0].Message);
 
-            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime, PIDrule.TimeSeries.Name, model.StopTime.ToString(CultureInfo.InvariantCulture)),
+            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime, pidRule.TimeSeries.Name, controlGroup.Name, model.StopTime.ToString(CultureInfo.InvariantCulture)),
                             foundIssues[1].Message);
 
             // check time rule
-            var timeRule = new TimeRule()
-                { TimeSeries = timeSeries };
+            var timeRule = new TimeRule { TimeSeries = timeSeries };
             controlGroup.Rules.Clear();
             controlGroup.Rules.Add(timeRule);
 
@@ -359,15 +357,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             Assert.AreEqual(ValidationSeverity.Warning, foundIssues[0].Severity, "Time series bound checking should raise warnings, not errors.");
             Assert.AreEqual(ValidationSeverity.Warning, foundIssues[1].Severity, "Time series bound checking should raise warnings, not errors.");
 
-            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime, timeRule.TimeSeries.Name, model.StartTime.ToString(CultureInfo.InvariantCulture)),
+            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime, timeRule.TimeSeries.Name, controlGroup.Name, model.StartTime.ToString(CultureInfo.InvariantCulture)),
                 foundIssues[0].Message);
 
-            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime, timeRule.TimeSeries.Name, model.StopTime.ToString(CultureInfo.InvariantCulture)),
+            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime, timeRule.TimeSeries.Name, controlGroup.Name, model.StopTime.ToString(CultureInfo.InvariantCulture)),
                 foundIssues[1].Message);
 
             // check interval rule
-            var intervalRule = new IntervalRule()
-                { TimeSeries = timeSeries };
+            var intervalRule = new IntervalRule { TimeSeries = timeSeries };
             controlGroup.Rules.Clear();
             controlGroup.Rules.Add(intervalRule);
 
@@ -378,10 +375,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             Assert.AreEqual(ValidationSeverity.Warning, foundIssues[0].Severity, "Time series bound checking should raise warnings, not errors.");
             Assert.AreEqual(ValidationSeverity.Warning, foundIssues[1].Severity, "Time series bound checking should raise warnings, not errors.");
 
-            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime, intervalRule.TimeSeries.Name, model.StartTime.ToString(CultureInfo.InvariantCulture)),
+            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime, intervalRule.TimeSeries.Name, controlGroup.Name, model.StartTime.ToString(CultureInfo.InvariantCulture)),
                 foundIssues[0].Message);
 
-            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime, intervalRule.TimeSeries.Name, model.StopTime.ToString(CultureInfo.InvariantCulture)),
+            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime, intervalRule.TimeSeries.Name, controlGroup.Name, model.StopTime.ToString(CultureInfo.InvariantCulture)),
                 foundIssues[1].Message);
 
             // check values at start and stop time of model

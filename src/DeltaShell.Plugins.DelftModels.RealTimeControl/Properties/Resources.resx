@@ -263,10 +263,10 @@
     <value>PIDRule {0} time series will not be included in the DIMR XML as Set Point Type is Constant</value>
   </data>
   <data name="RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime" xml:space="preserve">
-    <value>Series '{0}' has one or more timesteps that exceed the model stop time {1}.</value>
+    <value>Series '{0}' in RTC control group '{1}' has one or more timesteps that exceed the model stop time {2}.</value>
   </data>
   <data name="RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime" xml:space="preserve">
-    <value>Series '{0}' has one or more timesteps that precede the model start time {1}.</value>
+    <value>Series '{0}' in RTC control group '{1}' has one or more timesteps that precede the model start time {2}.</value>
   </data>
   <data name="RealTimeControlControlGroupValidator_SeriesTimesShouldMatchModelTimeStep" xml:space="preserve">
     <value>Series '{0}' in RTC control group '{1}': the amount of time steps is not a multiple of the model time step {2}.</value>

@@ -134,7 +134,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             
             var invalidTimeConditions = controlGroup.Conditions.OfType<TimeCondition>().Where(tc => !ValidateTimeSeries(tc.TimeSeries, startTime, timeStep));
             invalidTimeConditions.ForEach(tc => issues.Add(new ValidationIssue(tc, ValidationSeverity.Error,
-                                                                               String.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime,
+                                                                               string.Format(Resources.RealTimeControlControlGroupValidator_SeriesTimesShouldMatchModelTimeStep,
                                                                                              tc.TimeSeries.Name, controlGroup.Name,
                                                                                              timeStep), tc.TimeSeries)));
 

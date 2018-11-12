@@ -238,7 +238,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Series &apos;{0}&apos; has one or more timesteps that exceed the model stop time {1}..
+        ///   Looks up a localized string similar to Series &apos;{0}&apos; in RTC control group &apos;{1}&apos; has one or more timesteps that exceed the model stop time {2}..
         /// </summary>
         public static string RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime {
             get {
@@ -247,7 +247,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Series &apos;{0}&apos; has one or more timesteps that precede the model start time {1}..
+        ///   Looks up a localized string similar to Series &apos;{0}&apos; in RTC control group &apos;{1}&apos; has one or more timesteps that precede the model start time {2}..
         /// </summary>
         public static string RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime {
             get {
