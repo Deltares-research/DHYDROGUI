@@ -19,7 +19,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
         private readonly string[] gridPointsY = { "0.0", "50.0", "100.0" };
         private readonly string[] gridPointsOffSets = { "0.0", "50.0", "100.0" };
         private readonly string[] gridPointsNames = { "Channel1_0.000", "Channel1_50.000", "Channel1_100.000" };
-        private readonly Channel channel1 = new Channel("Channel1", new HydroNode("Node001") { Geometry = new Point(22.0, 0.0) }, new HydroNode("Node002") { Geometry = new Point(22.0, 100.0) });
+        private readonly Channel channel1 = new Channel("Channel1", new HydroNode("Node001") { Geometry = new Point(22.0, 0.0) }, new HydroNode("Node002") { Geometry = new Point(22.0, 100.0) }, 100.0);
         private readonly Channel channel2 = new Channel("Channel2", new HydroNode("Node001") { Geometry = new Point(22.0, 0.0) }, new HydroNode("Node002") { Geometry = new Point(22.0, 100.0) });
 
         [Test]
@@ -91,6 +91,76 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             Assert.That(errorMessages.Any(m => m.Contains("The amount of y-coordinates defined for discretization points")));
             Assert.That(errorMessages.Any(m => m.Contains("The amount of offsets defined for discretization points")));
             Assert.That(errorMessages.Any(m => m.Contains("The amount of names defined for discretization points")));
+        }
+
+        [Test]
+        public void GivenNetworkDiscretisationDataModelWithTooLargeOffsetValue_WhenConverting_ThenErrorMessageIsReturnedAndNoNetworkLocations()
+        {
+            var categories = new List<DelftIniCategory>();
+            var branchCategory = CreateCorrectBranchCategory();
+            branchCategory.SetProperty(NetworkDefinitionRegion.GridPointOffsets.Key, string.Join(" ", "0.0", "50.0", "250.0"));
+            categories.Add(branchCategory);
+
+            var branches = new List<IBranch> { channel1 };
+            var errorMessages = new List<string>();
+            var networkLocations = NetworkDiscretizationConverter.Convert(categories, branches, errorMessages);
+
+            Assert.That(networkLocations.Count, Is.EqualTo(0));
+            var expectedErrorMessage = $"Network location '{gridPointsNames[2]}' has an offset 250 that is larger than the length {channel1.Length} of its branch '{channel1.Name}'";
+            Assert.That(errorMessages.Any(m => m.Contains(expectedErrorMessage)));
+        }
+
+        [Test]
+        public void GivenNetworkDiscretisationDataModelWithNonOrderedOffsetValues_WhenConverting_ThenErrorMessageIsReturnedAndNoNetworkLocations()
+        {
+            var categories = new List<DelftIniCategory>();
+            var branchCategory = CreateCorrectBranchCategory();
+            branchCategory.SetProperty(NetworkDefinitionRegion.GridPointOffsets.Key, string.Join(" ", "0.0", "100.0", "50.0"));
+            categories.Add(branchCategory);
+
+            var branches = new List<IBranch> { channel1 };
+            var errorMessages = new List<string>();
+            var networkLocations = NetworkDiscretizationConverter.Convert(categories, branches, errorMessages);
+
+            Assert.That(networkLocations.Count, Is.EqualTo(0));
+            var expectedErrorMessage = $"Network location offsets of branch '{channel1.Name}' are not ordered.";
+            Assert.That(errorMessages.Any(m => m.Contains(expectedErrorMessage)));
+        }
+
+        [Test]
+        public void GivenNetworkDiscretisationDataModelWithoutNetworkDiscretisationProperties_WhenConverting_ThenNoNetworkLocationsAreReturned()
+        {
+            var categories = new List<DelftIniCategory>();
+            var branchCategory = new DelftIniCategory(NetworkDefinitionRegion.IniBranchHeader);
+            branchCategory.AddProperty(NetworkDefinitionRegion.Id.Key, channelName);
+            categories.Add(branchCategory);
+
+            var branches = new List<IBranch> { channel1 };
+            var errorMessages = new List<string>();
+            var networkLocations = NetworkDiscretizationConverter.Convert(categories, branches, errorMessages);
+
+            Assert.That(networkLocations.Count, Is.EqualTo(0));
+            Assert.IsFalse(errorMessages.Any(), "Error messages were returned when converting to network locations.");
+        }
+
+        [TestCase("gridPointOffsets")]
+        [TestCase("gridPointX")]
+        [TestCase("gridPointY")]
+        [TestCase("gridPointIds")]
+        public void GivenNetworkDiscretisationDataModelWithMissingNetworkDiscretisationProperties_WhenConverting_ThenErrorMessageIsReturnedAndNoNetworkLocations(string propertyName)
+        {
+            var categories = new List<DelftIniCategory>();
+            var branchCategory = CreateCorrectBranchCategory();
+            var removeProperty = branchCategory.Properties.FirstOrDefault(p => p.Name == propertyName);
+            branchCategory.RemoveProperty(removeProperty);
+            categories.Add(branchCategory);
+
+            var branches = new List<IBranch> { channel1 };
+            var errorMessages = new List<string>();
+            var networkLocations = NetworkDiscretizationConverter.Convert(categories, branches, errorMessages);
+
+            Assert.That(networkLocations.Count, Is.EqualTo(0));
+            Assert.That(errorMessages.Contains($"The {propertyName} property is missing for branch '{channel1.Name}'"));
         }
 
         private DelftIniCategory CreateCorrectBranchCategory()
