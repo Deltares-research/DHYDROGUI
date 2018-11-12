@@ -220,10 +220,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             set
             {
                 var convertedValue = value;
-                if (value is string)
-                {
-                    convertedValue = Convert.ChangeType(value, ValueType);
-                }
+                convertedValue = Convert.ChangeType(value, ValueType);
 
                 description?.SetValue(GetModel?.Invoke(), convertedValue);
                 OnPropertyChanged();
