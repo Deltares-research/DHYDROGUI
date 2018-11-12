@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Forms.Integration;
 using System.Windows.Media;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
@@ -220,7 +221,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             set
             {
                 var convertedValue = value;
-                convertedValue = Convert.ChangeType(value, ValueType);
+
+                if (ValueType.Implements(typeof(IConvertible)))
+                {
+                    convertedValue = Convert.ChangeType(value, ValueType);
+                }
 
                 description?.SetValue(GetModel?.Invoke(), convertedValue);
                 OnPropertyChanged();

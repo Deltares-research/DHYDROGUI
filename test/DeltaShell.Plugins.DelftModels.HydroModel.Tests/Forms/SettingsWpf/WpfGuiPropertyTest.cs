@@ -56,6 +56,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         }
 
         [Test]
+        public void Test_WpfGuiProperty_ValueType_Int__Is_Correctly_Set()
+        {
+            var integerValue = 1;
+            var dummyField = new FieldUIDescription((o) => integerValue, (o, o1) => integerValue = (int)o1)
+            {
+                Label = "dummyName",
+                ValueType = typeof(int),
+            };
+
+            var prop = new WpfGuiProperty(dummyField) {GetModel = () => true};
+            Assert.IsNotNull(prop);
+
+            prop.Value = "4";
+            Assert.AreEqual(integerValue, 4);
+        }
+
+        [Test]
         public void Test_WpfGuiProperty_ValueTypeList_Sets_Collection()
         {
             var doubleList = new List<double>() {1.0, 2.0};
