@@ -242,6 +242,7 @@
     <Compile Include="ImportExport\Roughness\RoughnessSectionToDataTableConverterTest.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessBranchDataCsvReaderTest.cs" />
     <Compile Include="ImportExport\SobekToFMExporterTest.cs" />
+    <Compile Include="ImportExport\WaterFlowModel1DFileReaderTest.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DImporterHelperTest.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DNetCdfFunctionStoreTest.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DOutputCoverageMappingsTest.cs" />

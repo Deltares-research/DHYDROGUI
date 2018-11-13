@@ -81,7 +81,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
-        public void TestNetworkAndGridReaderGivesExpectedException()
+        public void GivenAnIncorrectTestIniFile_WhenTryingToRead_AnErrorReportWithAnErrorIsReturned()
         {
             // Setup network data
             originalNetwork.Nodes[0].Geometry = new Point(NetworkAndGridReaderTestHelper.NODE1_X, NetworkAndGridReaderTestHelper.NODE1_Y);
@@ -109,7 +109,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
-        public void GivenAFileWithZeroCategories_WhenTryingToExecuteReadFile_ThenAFileReadingExceptionIsThrown()
+        public void GivenAFileWithZeroCategories_WhenTryingToExecuteReadFile_ThenAnErrorReportWithAnErrorIsReturned()
         {
             // Setup network data
             originalNetwork.Nodes[0].Geometry = new Point(NetworkAndGridReaderTestHelper.NODE1_X,
