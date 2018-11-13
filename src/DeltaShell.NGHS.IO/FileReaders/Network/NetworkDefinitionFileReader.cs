@@ -9,9 +9,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
 {
     public class NetworkDefinitionFileReader
     {
-        private readonly Action<string, List<string>> createAndAddErrorReport;
+        private readonly Action<string, IList<string>> createAndAddErrorReport;
 
-        public NetworkDefinitionFileReader(Action<string, List<string>> createAndAddErrorReport)
+        public NetworkDefinitionFileReader(Action<string, IList<string>> createAndAddErrorReport)
         {
             this.createAndAddErrorReport = createAndAddErrorReport;
         }

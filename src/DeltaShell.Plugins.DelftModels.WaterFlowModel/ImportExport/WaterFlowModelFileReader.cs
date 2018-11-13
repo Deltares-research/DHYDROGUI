@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             reportProgress = reportProgress ?? ((s, c, t) => { });
             var errorReport = new List<string>();
-            Action<string, List<string>> CreateAndAddErrorReport = (header, errorMessages) =>
+            Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
                 errorReport.Add($"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
 
             var model = new WaterFlowModel1D();
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         }
 
         private static void ReadNetworkDefinitionFile(string networkDefinitionFilePath, WaterFlowModel1D model,
-            Action<string, List<string>> createAndAddErrorReport)
+            Action<string, IList<string>> createAndAddErrorReport)
         {
             var network = model.Network;
             var networkDefinitionFileReader = new NetworkDefinitionFileReader(createAndAddErrorReport);
