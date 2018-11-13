@@ -84,7 +84,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             foreach (var errorMessage in ValidateDataQuantities(branchName, gridPointsCount, gridPointsX, gridPointsY, gridPointsOffsets, gridPointsNames))
                 yield return errorMessage;
 
-            foreach (var errorMessage in ValidateOffsetValues(branch, branchName, gridPointsOffsets, gridPointsNames))
+            foreach (var errorMessage in ValidateOffsetValues(branch, gridPointsOffsets))
                 yield return errorMessage;
         }
 
@@ -129,16 +129,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
                 yield return $"The amount of names defined for discretization points on branch '{branchName}' does not match the defined amount of discretisation points.";
         }
 
-        private static IEnumerable<string> ValidateOffsetValues(IBranch branch, string branchName, IList<double> gridPointsOffsets, IList<string> gridPointsNames)
+        private static IEnumerable<string> ValidateOffsetValues(IBranch branch, IList<double> gridPointsOffsets)
         {
-            var branchLength = branch.Length;
             for (var n = 0; n < gridPointsOffsets.Count; n++)
             {
-                if (gridPointsOffsets[n] > Math.Round(branch.Length, 3, MidpointRounding.AwayFromZero))
-                {
-                    yield return $"Network location '{gridPointsNames[n]}' has an offset {gridPointsOffsets[n]} that is larger than the length {branchLength} of its branch '{branchName}'";
-                }
-
                 if (n < gridPointsOffsets.Count - 1 && gridPointsOffsets[n + 1] <= gridPointsOffsets[n])
                 {
                     yield return $"Network location offsets of branch '{branch.Name}' are not ordered.";
