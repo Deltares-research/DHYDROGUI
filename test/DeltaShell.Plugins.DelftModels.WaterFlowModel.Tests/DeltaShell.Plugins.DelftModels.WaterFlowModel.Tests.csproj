@@ -223,6 +223,7 @@
     <Compile Include="ImportExport\Boundary\BoundaryFileReaderTestHelper.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryFileWriterTest.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryFileWriterTestHelper.cs" />
+    <Compile Include="ImportExport\Boundary\BoundaryLocationReaderTest.cs" />
     <Compile Include="ImportExport\Dimr\DelftIniDimrConverter.cs" />
     <Compile Include="ImportExport\Dimr\DelftIniRtcConfigConverter.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryLocationConverterTest.cs" />

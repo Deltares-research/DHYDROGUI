@@ -170,6 +170,7 @@
     <Compile Include="FiniteVolumeDiscretizationType.cs" />
     <Compile Include="Flow1DBasicModelInterface.cs" />
     <Compile Include="ImportExport\BoundaryFileReader.cs" />
+    <Compile Include="ImportExport\Boundary\BoundaryLocationReader.cs" />
     <Compile Include="ImportExport\Dimr\DelftConfigXmlFileConverter.cs" />
     <Compile Include="ImportExport\Dimr\DelftConfigXmlFileParser.cs" />
     <Compile Include="ImportExport\Dimr\IDelftIniXmlConverter.cs" />
