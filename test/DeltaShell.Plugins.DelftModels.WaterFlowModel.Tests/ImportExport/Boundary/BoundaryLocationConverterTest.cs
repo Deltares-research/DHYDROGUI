@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary
 {
     [TestFixture]
-    class BoundaryLocationConverterTest
+    public class BoundaryLocationConverterTest
     {
         // Happy Flow Handling
         /// <summary>
@@ -649,7 +649,42 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         }
 
 
-        // TODO dependent on PO
+        /// <summary>
+        /// GIVEN a set containing a single DelftIniCategory containing one nodeID one type and one unknown property
+        /// WHEN BoundaryLocationConverter Convert is called with this set
+        /// THEN A warning should be logged
+        ///  AND An set containing the LocationBoundary corresponding with the category should be returned
+        /// </summary>
+        [Test]
+        public void GivenASetContainingASingleDelftIniCategoryContainingOneNodeIDOneTypeAndOneUnknownProperty_WhenBoundaryLocationConverterConvertIsCalledWithThisSet_ThenAWarningShouldBeLoggedAndAnSetContainingTheLocationBoundaryCorrespondingWithTheCategoryShouldBeReturned()
+        {
+            const BoundaryType someType = BoundaryType.Level;
+            const string nodeID = "SomeNodeID";
+
+            var invalidSet = new List<DelftIniCategory>();
+            var categoryWithInvalidValues = new DelftIniCategory(BoundaryRegion.BoundaryHeader);
+            categoryWithInvalidValues.AddProperty(BoundaryRegion.NodeId.Key, nodeID, BoundaryRegion.NodeId.Description);
+            categoryWithInvalidValues.AddProperty(BoundaryRegion.Type.Key, valFromBoundaryType(someType), BoundaryRegion.Type.Description);
+            categoryWithInvalidValues.AddProperty("SomeUnknownProperty", "With a value", "And a description.");
+            invalidSet.Add(categoryWithInvalidValues);
+            var errorMsgs = new List<string>();
+
+            // When
+            var outputSet = BoundaryLocationConverter.Convert(invalidSet, errorMsgs);
+
+            // Then
+            Assert.That(outputSet.Count(), Is.EqualTo(1));
+            var locationBoundary = outputSet.First();
+            Assert.That(locationBoundary.Name, Is.EqualTo(nodeID));
+            Assert.That(locationBoundary.BoundaryType, Is.EqualTo(someType));
+            Assert.That(locationBoundary.ThatcherHarlemannCoefficient, Is.EqualTo(0.0));
+
+            var expectedErrorMsg = $"Location category contains additional data: {categoryWithInvalidValues.Name} at line {categoryWithInvalidValues.LineNumber}: Unknown data";
+            Assert.That(errorMsgs.Count, Is.EqualTo(1));
+            Assert.That(errorMsgs.First(), Is.EqualTo(expectedErrorMsg));
+        }
+
+
         /// <summary>
         /// GIVEN A set of DelftIniCategories containing both valid and invalid categories
         /// WHEN BoundaryLocationConverter Convert is called with this set
