@@ -9,9 +9,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
 {
     public class ObservationPointFileReader
     {
-        private readonly Action<string, List<string>> createAndAddErrorReport;
+        private readonly Action<string, IList<string>> createAndAddErrorReport;
 
-        public ObservationPointFileReader(Action<string, List<string>> createAndAddErrorReport)
+        public ObservationPointFileReader(Action<string, IList<string>> createAndAddErrorReport)
         {
             this.createAndAddErrorReport = createAndAddErrorReport;
         }

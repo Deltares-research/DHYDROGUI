@@ -110,7 +110,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             category.AddProperty(LocationRegion.Id.Key, "observationpoint1");
             category.AddProperty(LocationRegion.Chainage.Key, "50");
             category.AddProperty(LocationRegion.BranchId.Key, "branch2");
-            category.AddProperty(LocationRegion.Name.Key, "observationpoint1 ");
+            category.AddProperty(LocationRegion.Name.Key, "observationpoint1");
 
             categories.Add(category);
 
@@ -124,6 +124,48 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             
             Assert.AreEqual(expectedMessage, errorMessages[0]);
 
+        }
+
+        [Test]
+        public void GivenTwoCategoriesWithTheSameObservationPointIds_WhenReading_ThenTheSecondObservationPointShouldNotBeCreated()
+        {
+            var categories = new List<DelftIniCategory>();
+            var category = new DelftIniCategory(ObservationPointRegion.IniHeader);
+
+            category.AddProperty(LocationRegion.Id.Key, "observationpoint1");
+            category.AddProperty(LocationRegion.Chainage.Key, "50");
+            category.AddProperty(LocationRegion.BranchId.Key, "branch");
+            category.AddProperty(LocationRegion.Name.Key, "observationpoint1");
+
+            categories.Add(category);
+
+            var category2 = new DelftIniCategory(ObservationPointRegion.IniHeader);
+
+            category2.AddProperty(LocationRegion.Id.Key, "observationpoint1");
+            category2.AddProperty(LocationRegion.Chainage.Key, "75");
+            category2.AddProperty(LocationRegion.BranchId.Key, "branch");
+            category2.AddProperty(LocationRegion.Name.Key, "observationpoint1");
+
+            categories.Add(category2);
+
+            var errorMessages = new List<string>();
+            var allObservationPoints = ObservationPointConverter.Convert(categories, originalNetwork, errorMessages);
+
+            Assert.AreEqual(1, allObservationPoints.Count);
+
+            Assert.AreEqual("observationpoint1", allObservationPoints[0].Name);
+            Assert.AreEqual("branch", allObservationPoints[0].Branch.Name);
+            Assert.AreEqual(50, allObservationPoints[0].Chainage);
+            Assert.AreEqual("observationpoint1", allObservationPoints[0].LongName);
+
+            var coordinate = new Point(50, 0);
+            Assert.AreEqual(coordinate, allObservationPoints[0].Geometry);
+
+            Assert.AreEqual(1, errorMessages.Count);
+
+            var expectedMessage = string.Format("Observation point with id {0} already exists, there cannot be any duplicate observation point ids.{1}", allObservationPoints[0].Name, Environment.NewLine);
+
+            Assert.AreEqual(expectedMessage, errorMessages[0]);
         }
 
         private DelftIniCategory CreatePerfectObservationPointCategory()

@@ -49,7 +49,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
                 var errorReport = new List<string>();
 
-                Action<string, List<string>> CreateAndAddErrorReport = (header, errorMessages) =>
+                Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
                     errorReport.Add(
                         $"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
 
@@ -64,6 +64,41 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 Assert.AreEqual("observationpoint1", allObservationPoints[0].LongName);
 
                 Assert.AreEqual(0, errorReport.Count);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testFile);
+            }
+        }
+
+        [Test, Category(TestCategory.DataAccess)]
+        public void GivenAnEmptyObservationPointsFile_WhenReadingIt_ThenAnErrorReportShouldBeCreated()
+        {
+            var testFile = TestHelper.GetTestFilePath(@"ObservationPoints.ini");
+
+            try
+            {
+                var categories = new List<DelftIniCategory>();
+                
+                new IniFileWriter().WriteIniFile(categories, testFile);
+
+                var errorReport = new List<string>();
+
+                Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
+                    errorReport.Add(
+                        $"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
+
+                var reader = new ObservationPointFileReader(CreateAndAddErrorReport);
+                var allObservationPoints = reader.ReadObservationPoints(testFile, originalNetwork);
+
+                Assert.AreEqual(0, allObservationPoints.Count);
+                Assert.AreEqual(1, errorReport.Count);
+
+                var expectedMessage =
+                    string.Format(
+                        "While reading the observation points from file, an error occured:{0} Could not read file {1} properly, it seems empty", Environment.NewLine, testFile);
+
+                Assert.AreEqual(expectedMessage, errorReport[0]);
             }
             finally
             {

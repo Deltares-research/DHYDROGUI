@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         }
 
         private static void ReadFileLateralDischargeLocations(string locationFilePath, IHydroNetwork network,
-            Action<string, List<string>> createAndAddErrorReport)
+            Action<string, IList<string>> createAndAddErrorReport)
         {
             var lateralSourceFileReader = new LateralSourceFileReader(createAndAddErrorReport);
 
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         }
 
         private static void ReadFileObservationPointLocations(string locationFilePath, IHydroNetwork network,
-            Action<string, List<string>> createAndAddErrorReport)
+            Action<string, IList<string>> createAndAddErrorReport)
         {
             var observationPointFileReader = new ObservationPointFileReader(createAndAddErrorReport);
 

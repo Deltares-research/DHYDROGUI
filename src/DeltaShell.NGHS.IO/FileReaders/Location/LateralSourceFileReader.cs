@@ -9,9 +9,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
 {
     public class LateralSourceFileReader
     {
-        private readonly Action<string, List<string>> createAndAddErrorReport;
+        private readonly Action<string, IList<string>> createAndAddErrorReport;
 
-        public LateralSourceFileReader(Action<string, List<string>> createAndAddErrorReport)
+        public LateralSourceFileReader(Action<string, IList<string>> createAndAddErrorReport)
         {
             this.createAndAddErrorReport = createAndAddErrorReport;
         }

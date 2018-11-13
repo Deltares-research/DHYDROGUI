@@ -66,7 +66,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
         {
             if (readObservationPoint.IsDuplicateIn(generatedObservationPoints))
             {
-                var errorMessage2 = string.Format("Observation Point with id {0} already exists, there cannot be any duplicate observation point ids.{1}", readObservationPoint.Name, Environment.NewLine);
+                var errorMessage2 = string.Format("Observation point with id {0} already exists, there cannot be any duplicate observation point ids.{1}", readObservationPoint.Name, Environment.NewLine);
                 throw new Exception(errorMessage2);
             }
         }
