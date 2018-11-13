@@ -22,8 +22,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                                       Func<IList<DelftIniCategory>, IList<string>, IList<BoundaryLocation>> convertFunc,
                                       Action<string, IList<string>> createAndAddErrorReport)
         {
-            this.parseFunc = parseFunc ?? throw new ArgumentException("Parser cannot be null.");
-            this.convertFunc = convertFunc ?? throw new ArgumentException("Converter cannot be null.");
+            if (parseFunc != null) this.parseFunc = parseFunc;
+            else throw new ArgumentException("Parser cannot be null.");
+
+            if (convertFunc != null) this.convertFunc = convertFunc;
+            else throw new ArgumentException("Converter cannot be null.");
+
             this.createAndAddErrorReport = createAndAddErrorReport;
         }
 
