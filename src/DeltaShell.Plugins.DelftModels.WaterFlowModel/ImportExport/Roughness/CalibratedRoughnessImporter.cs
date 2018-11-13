@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
@@ -61,11 +62,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
             if (roughnessSections == null) return null;
             var firstRoughnessSection = roughnessSections.FirstOrDefault();
             if (firstRoughnessSection == null) return null;
-            var network = firstRoughnessSection.Network;
+            var network = firstRoughnessSection.Network as IHydroNetwork;
             
             try
             {
-                RoughnessDataFileReader.ReadFile(path, network, roughnessSections, isCalibratedRoughness: true);
+                var roughnessReader = new CalibratedRoughnessFileReader();
+                var roughnessSection = roughnessReader.ReadFile(path, network, roughnessSections);
+                roughnessSections.Add(roughnessSection);
             }
             catch (FileReadingException exception)
             {

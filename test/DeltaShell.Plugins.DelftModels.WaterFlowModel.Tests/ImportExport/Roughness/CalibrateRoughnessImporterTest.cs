@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
@@ -38,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             var importer = new CalibratedRoughnessImporter();
             TestHelper.AssertLogMessagesCount(() => importer.ImportItem(null, sections), 1 );
             /* We do not care for the reading as that it's done in another function 
-             RoughnessDataFileReader.ReadFile */
+             RoughnessFileReader.ReadFile */
         }
     }
 }

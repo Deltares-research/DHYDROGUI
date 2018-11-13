@@ -205,9 +205,9 @@ namespace DelftTools.Hydro
             Routes = new EventedList<Route>();
 
             var section = new CrossSectionSectionType
-                              {
-                                  Name = "Main"
-                              };
+            {
+                Name = "Main"
+            };
             
             CrossSectionSectionTypes.Add(section);
 

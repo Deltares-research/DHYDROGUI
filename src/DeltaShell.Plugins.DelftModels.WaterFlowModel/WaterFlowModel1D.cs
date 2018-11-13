@@ -2006,6 +2006,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 case NotifyCollectionChangeAction.Replace:
                     throw new NotImplementedException();
                 case NotifyCollectionChangeAction.Add:
+                    if (RoughnessSections.Any(rs => rs.Name == sectionType.Name)) break;
                     AddRoughnessSections(sectionType);
                     break;
                 case NotifyCollectionChangeAction.Remove:
