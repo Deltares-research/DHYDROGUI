@@ -225,6 +225,7 @@
     <Compile Include="ImportExport\Boundary\BoundaryFileWriterTestHelper.cs" />
     <Compile Include="ImportExport\Dimr\DelftIniDimrConverter.cs" />
     <Compile Include="ImportExport\Dimr\DelftIniRtcConfigConverter.cs" />
+    <Compile Include="ImportExport\Boundary\BoundaryLocationConverterTest.cs" />
     <Compile Include="ImportExport\IntegrationTests\CrossSectionDefinitionFileWriterIntegrationTest.cs" />
     <Compile Include="ImportExport\IntegrationTests\CrossSectionDefinitionFileWriterIntegrationTestInMemory.cs" />
     <Compile Include="ImportExport\IntegrationTests\CrossSectionsFromDsProjTest.cs" />

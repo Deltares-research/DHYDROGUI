@@ -174,6 +174,8 @@
     <Compile Include="ImportExport\Dimr\DelftConfigXmlFileParser.cs" />
     <Compile Include="ImportExport\Dimr\IDelftIniXmlConverter.cs" />
     <Compile Include="ImportExport\Dimr\IDelftIniXmlDeserializer.cs" />
+    <Compile Include="ImportExport\Boundary\BoundaryLocation.cs" />
+    <Compile Include="ImportExport\Boundary\BoundaryLocationConverter.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DBoundaryFileWriter.cs" />
     <Compile Include="ImportExport\BoundaryFileWriterHelper.cs" />
     <Compile Include="ImportExport\BoundaryLocationFileWriter.cs" />
