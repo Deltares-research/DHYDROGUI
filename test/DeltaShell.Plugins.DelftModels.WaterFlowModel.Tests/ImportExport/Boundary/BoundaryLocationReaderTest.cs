@@ -174,7 +174,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             var someParser = mocks.DynamicMock<Func<string, IList<DelftIniCategory>>>();
             someParser.Expect(e => e.Invoke(filePath))
                 .Return(someIniCategories)
-                .WhenCalled(_ => throw new Exception(errorMsg))
+                .Throw(new Exception(errorMsg))
                 .Repeat.AtLeastOnce();
 
             var someOutputValues = new List<BoundaryLocation>();
