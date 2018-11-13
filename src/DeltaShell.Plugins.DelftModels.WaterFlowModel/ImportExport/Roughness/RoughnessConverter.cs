@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
     {
         protected abstract RoughnessSection ReadRoughnessSection(IDelftIniCategory roughnessSectionCategory, IEnumerable<RoughnessSection> roughnessSections);
 
-        public RoughnessSection Convert(IList<DelftIniCategory> categories, IHydroNetwork network, IEnumerable<RoughnessSection> roughnessSections)
+        public RoughnessSection Convert(IList<DelftIniCategory> categories, IHydroNetwork network, IEnumerable<RoughnessSection> roughnessSections, IList<string> errorMessages)
         {
             var roughnessSectionCategory = categories.FirstOrDefault(category => category.Name == RoughnessDataRegion.ContentIniHeader);
             var roughnessSection = ReadRoughnessSection(roughnessSectionCategory, roughnessSections);
@@ -43,8 +43,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
             var readRoughnessBranchData = ReadRoughnessBranchData(network, categories);
             var definitionData = ReadDefinitionData(network, categories, readRoughnessBranchData);
 
-
-            //Reading went fine add to the model now!
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
             foreach (var roughnessBranchData in readRoughnessBranchData)
             {
@@ -118,7 +116,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
                 if (levels.Count != definitionData.Values.Count)
                     throw new FileReadingException(Resources.RoughnessDataFileReader_FillFunctionWithTableData_Filling_the_table_of_the_Q_or_H_function_failed__values_count_doesn_t_match_the_defined_levels_count_);
 
-                for (int index = 0; index < levels.Count; index++)
+                for (var index = 0; index < levels.Count; index++)
                 {
                     var level = levels[index];
                     function[definitionData.Chainage, level] = definitionData.Values[index];

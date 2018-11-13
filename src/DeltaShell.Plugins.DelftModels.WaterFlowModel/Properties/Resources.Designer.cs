@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -422,7 +422,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to While creating the roughnes section from the roughness file the fisrt argument of the roughness network coverage is not created (used to set the interpolation type.
+        ///   Looks up a localized string similar to While creating the roughnes section from the roughness file the fisrt argument of the roughness network coverage is not created (used to set the interpolation type).
         /// </summary>
         public static string RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_fisrt_argument_of_the_roughness_network_coverage_is_not_created__used_to_set_the_interpolation_type {
             get {

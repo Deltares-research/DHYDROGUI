@@ -23,30 +23,39 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
 
             if (roughnessSection == null)
                 throw new FileReadingException(string.Format(Resources.RoughnessDataFileReader_ReadRoughnessSection_Could_not_import_calibrated_roughness_section__0__because_the_calibrated_roughness_section_you_want_to_import_doesn_t_exist_in_the_model, sectionId));
+            
+            ClearRoughnessSectionData(roughnessSection);
+            SetRoughnessDefaults(roughnessSection, roughnessSectionCategory);
+            SetRoughnessInterpolationType(roughnessSection, interpolationType);
 
-            //cleanup old roughnessdata
+            return roughnessSection;
+        }
+
+        private static void ClearRoughnessSectionData(RoughnessSection roughnessSection)
+        {
             foreach (var branch in roughnessSection.Network.Branches)
             {
                 roughnessSection.RemoveRoughnessFunctionsForBranch(branch);
             }
             roughnessSection.RoughnessNetworkCoverage.Clear();
+        }
 
+        private static void SetRoughnessDefaults(RoughnessSection roughnessSection, IDelftIniCategory roughnessSectionCategory)
+        {
             var globalType = FrictionTypeConverter.ConvertToRoughnessFrictionType(roughnessSectionCategory.ReadProperty<Friction>(RoughnessDataRegion.GlobalType.Key));
-            double? globalValue = roughnessSectionCategory.ReadProperty<double>(RoughnessDataRegion.GlobalValue.Key);
+            var globalValue = roughnessSectionCategory.ReadProperty<double>(RoughnessDataRegion.GlobalValue.Key);
+            roughnessSection.SetDefaults(globalType, globalValue);
+        }
 
-            if (roughnessSection.RoughnessNetworkCoverage == null)
-                throw new FileReadingException(Resources.RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_roughness_network_coverage_is_not_created);
-
-            var roughnessNetworkCoverage = roughnessSection.RoughnessNetworkCoverage;
-            var firstNwcArgument = roughnessNetworkCoverage.Arguments.FirstOrDefault();
-
-            if (firstNwcArgument == null)
+        private static void SetRoughnessInterpolationType(RoughnessSection roughnessSection, InterpolationType interpolationType)
+        {
+            var firstRoughnessNetworkCoverage = roughnessSection.RoughnessNetworkCoverage.Arguments.FirstOrDefault();
+            if (firstRoughnessNetworkCoverage == null)
+            {
                 throw new FileReadingException(Resources.RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_fisrt_argument_of_the_roughness_network_coverage_is_not_created__used_to_set_the_interpolation_type);
+            }
 
-            firstNwcArgument.InterpolationType = interpolationType;
-            roughnessSection.SetDefaults(globalType, globalValue.Value);
-
-            return roughnessSection;
+            firstRoughnessNetworkCoverage.InterpolationType = interpolationType;
         }
     }
 }

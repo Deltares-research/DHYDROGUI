@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
             var categories = ReadCategoriesFromFileAndCollectErrorMessages(filePath, errorMessages);
 
             var roughnessConverter = GetRoughnessConverter();
-            var roughnessSection = roughnessConverter.Convert(categories, network, roughnessSections);
+            var roughnessSection = roughnessConverter.Convert(categories, network, roughnessSections, errorMessages);
 
             CreateErrorReport("roughness section", filePath, errorMessages);
 

@@ -335,7 +335,7 @@
     <value>While creating the roughnes section from the roughness file the roughness network coverage is not created</value>
   </data>
   <data name="RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_fisrt_argument_of_the_roughness_network_coverage_is_not_created__used_to_set_the_interpolation_type" xml:space="preserve">
-    <value>While creating the roughnes section from the roughness file the fisrt argument of the roughness network coverage is not created (used to set the interpolation type</value>
+    <value>While creating the roughnes section from the roughness file the fisrt argument of the roughness network coverage is not created (used to set the interpolation type)</value>
   </data>
   <data name="WaterFlowModel1DOutputFileReader_ReadMetaData_ErrorReadingNetCdfFile" xml:space="preserve">
     <value>Error reading NetCdf file {0}</value>
