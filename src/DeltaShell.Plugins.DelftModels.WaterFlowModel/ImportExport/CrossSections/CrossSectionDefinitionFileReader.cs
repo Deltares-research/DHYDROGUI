@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.Delftnetworks.WaterFlownetwork.ImportExport.CrossSe
             var crossSectionDefinitions = CrossSectionDefinitionConverter.Convert(categories).ToList();
 
             if (crossSectionDefinitions == null || crossSectionDefinitions.Count == 0)
-                throw new FileReadingException("Could not read cross section locations.");
+                throw new FileReadingException("Could get cross section definitions.");
 
             if (!crossSectionDefinitions.Select(csd => csd.Name).HasUniqueValues())
                 throw new FileReadingException("There are duplicate cross section IDs in the definition file, must be unique!");
@@ -82,12 +82,22 @@ namespace DeltaShell.Plugins.Delftnetworks.WaterFlownetwork.ImportExport.CrossSe
                 throw new FileReadingException("There was no roughness defined on the cross section definition");
 
             var crossSectionSectionType = GetCrossSectionSectionType(sectionTypeName, network);
+            
+            var sectionWidth = GetSectionWidthForStandardShape(category);
 
-            var maxflowWidth = category.ReadPropertiesToListOfType<double>(DefinitionRegion.FlowWidths.Key).Max();
-
-            crossSectionDefinition.AddSection(crossSectionSectionType, maxflowWidth);
+            crossSectionDefinition.AddSection(crossSectionSectionType, sectionWidth);
 
             AddCrossSectionSectionType(crossSectionSectionType, network);
+        }
+
+        private static double GetSectionWidthForStandardShape(IDelftIniCategory category)
+        {
+            var highestFlowWidth = category.ReadPropertiesToListOfType<double>(DefinitionRegion.FlowWidths.Key, true)?.Max() ?? 0.0d;
+            var rectangleWidth = category.ReadProperty<double>(DefinitionRegion.RectangleWidth.Key, true);
+            var maxflowWidth = category.ReadProperty<double>(DefinitionRegion.MaximumFlowWidth.Key, true);
+
+            var widths = new List<double>() {highestFlowWidth, rectangleWidth, maxflowWidth};
+            return widths.Max();
         }
 
         private static void SetFrictionOnZWCrossSectionDefinition(IDelftIniCategory category, ICrossSectionDefinition crossSectionDefinition,

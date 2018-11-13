@@ -141,100 +141,105 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
         [Category(TestCategory.Integration)]
         public void TestIntegrationFileReaderCrossSection()
         {
-            var path = "Sobek_FB_Read.dsproj";
+            var file = "Sobek_FB_Read.dsproj";
 
-            using (var app = new DeltaShellApplication())
+            TestHelper.PerformActionInTemporaryDirectory(temp =>
             {
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
-                app.Run();
-                app.SaveProjectAs(path);
-                using (var waterFlowModel1D = new WaterFlowModel1D()
+                var path = Path.Combine(temp, file);
+                using (var app = new DeltaShellApplication())
                 {
-                    // use a valid network for the calculation
-                    //Network = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch()
-                    Network = HydroNetworkHelper.GetSnakeHydroNetwork(9)
-
-                })
-                {
-                    waterFlowModel1D.Network.CrossSectionSectionTypes.Add(new CrossSectionSectionType
-                    {
-                        Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName
-                    });
-                    waterFlowModel1D.Network.CrossSectionSectionTypes.Add(new CrossSectionSectionType
-                    {
-                        Name = CrossSectionDefinitionZW.Floodplain2SectionTypeName
-                    });
-                    //var branch = model.Network.Branches.FirstOrDefault();
-                    var offsets = new double[] {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
-                    foreach (var branch in waterFlowModel1D.Network.Branches)
-                    {
-                        HydroNetworkHelper.GenerateDiscretization(waterFlowModel1D.NetworkDiscretization,
-                            (IChannel) branch,
-                            offsets);
-                    }
-                    app.Project.RootFolder.Add(waterFlowModel1D);
+                    app.Plugins.Add(new CommonToolsApplicationPlugin());
+                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                    app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
+                    app.Run();
                     app.SaveProjectAs(path);
-
-
-                    waterFlowModel1D.Network.Branches.AddMultipleCrossSections();
-
-                    waterFlowModel1D.Network.Branches.AddEvenMoreMultipleCrossSections();
-
-                    WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(waterFlowModel1D.Network);
-
-                    foreach (var branch in waterFlowModel1D.Network.Branches)
+                    using (var waterFlowModel1D = new WaterFlowModel1D()
                     {
-                        var mainRoughnessSection =
-                            waterFlowModel1D.RoughnessSections.First(
-                                r => r.Name == CrossSectionDefinitionZW.MainSectionName);
-                        var floodPlain1RoughnessSection =
-                            waterFlowModel1D.RoughnessSections.First(
-                                r => r.Name == CrossSectionDefinitionZW.Floodplain1SectionTypeName);
-                        var floodPlain2RoughnessSection =
-                            waterFlowModel1D.RoughnessSections.First(
-                                r => r.Name == CrossSectionDefinitionZW.Floodplain2SectionTypeName);
+                        // use a valid network for the calculation
+                        //Network = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch()
+                        Network = HydroNetworkHelper.GetSnakeHydroNetwork(9)
 
-                        mainRoughnessSection.RoughnessNetworkCoverage[new NetworkLocation(branch, 20)] = new object[]
-                        {45.0, RoughnessType.Chezy};
-                        floodPlain1RoughnessSection.RoughnessNetworkCoverage[new NetworkLocation(branch, 20)] = new object
-                            []
-                        {40.0, RoughnessType.Manning};
-                        floodPlain2RoughnessSection.RoughnessNetworkCoverage[new NetworkLocation(branch, 20)] = new object
-                            []
-                        {35.0, RoughnessType.DeBosAndBijkerk};
-
-                        mainRoughnessSection.RoughnessNetworkCoverage[new NetworkLocation(branch, 25)] = new object[]
-                        {45.0, RoughnessType.Chezy};
-                        floodPlain1RoughnessSection.RoughnessNetworkCoverage[new NetworkLocation(branch, 25)] = new object
-                            []
-                        {40.0, RoughnessType.Manning};
-                        floodPlain2RoughnessSection.RoughnessNetworkCoverage[new NetworkLocation(branch, 25)] = new object
-                            []
-                        {35.0, RoughnessType.DeBosAndBijkerk};
-                    }
-                    waterFlowModel1D.Network.Branches[0].AddMultipleStructures();
-
-                    var targetPath = string.Empty;
-                    try
+                    })
                     {
+                        waterFlowModel1D.Network.CrossSectionSectionTypes.Add(new CrossSectionSectionType
+                        {
+                            Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName
+                        });
+                        waterFlowModel1D.Network.CrossSectionSectionTypes.Add(new CrossSectionSectionType
+                        {
+                            Name = CrossSectionDefinitionZW.Floodplain2SectionTypeName
+                        });
+                        //var branch = model.Network.Branches.FirstOrDefault();
+                        var offsets = new double[] { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
+                        foreach (var branch in waterFlowModel1D.Network.Branches)
+                        {
+                            HydroNetworkHelper.GenerateDiscretization(waterFlowModel1D.NetworkDiscretization,
+                                (IChannel)branch,
+                                offsets);
+                        }
+                        app.Project.RootFolder.Add(waterFlowModel1D);
                         app.SaveProjectAs(path);
-                        targetPath = Path.Combine(waterFlowModel1D.ExplicitWorkingDirectory, waterFlowModel1D.DirectoryName);
-                        app.RunActivity(waterFlowModel1D);
-                    }
-                    catch (Exception exception)
-                    {
-                        // ignored
-                        Console.WriteLine(exception.Message);
-                    }
-                    var modelFilename = Path.Combine(targetPath, ModelFileNames.ModelDefinitionFilename);
-                    var modelFileNames = new ModelFileNames(modelFilename);
 
-                    CrossSectionFileReader.Read(modelFileNames.CrossSectionLocations,
-                        modelFileNames.CrossSectionDefinitions, waterFlowModel1D.Network);
+
+                        waterFlowModel1D.Network.Branches.AddMultipleCrossSections();
+
+                        waterFlowModel1D.Network.Branches.AddEvenMoreMultipleCrossSections();
+
+                        WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(waterFlowModel1D.Network);
+
+                        foreach (var branch in waterFlowModel1D.Network.Branches)
+                        {
+                            var mainRoughnessSection =
+                                waterFlowModel1D.RoughnessSections.First(
+                                    r => r.Name == CrossSectionDefinitionZW.MainSectionName);
+                            var floodPlain1RoughnessSection =
+                                waterFlowModel1D.RoughnessSections.First(
+                                    r => r.Name == CrossSectionDefinitionZW.Floodplain1SectionTypeName);
+                            var floodPlain2RoughnessSection =
+                                waterFlowModel1D.RoughnessSections.First(
+                                    r => r.Name == CrossSectionDefinitionZW.Floodplain2SectionTypeName);
+
+                            mainRoughnessSection.RoughnessNetworkCoverage[new NetworkLocation(branch, 20)] = new object[]
+                            {45.0, RoughnessType.Chezy};
+                            floodPlain1RoughnessSection.RoughnessNetworkCoverage[new NetworkLocation(branch, 20)] = new object
+                                []
+                            {40.0, RoughnessType.Manning};
+                            floodPlain2RoughnessSection.RoughnessNetworkCoverage[new NetworkLocation(branch, 20)] = new object
+                                []
+                            {35.0, RoughnessType.DeBosAndBijkerk};
+
+                            mainRoughnessSection.RoughnessNetworkCoverage[new NetworkLocation(branch, 25)] = new object[]
+                            {45.0, RoughnessType.Chezy};
+                            floodPlain1RoughnessSection.RoughnessNetworkCoverage[new NetworkLocation(branch, 25)] = new object
+                                []
+                            {40.0, RoughnessType.Manning};
+                            floodPlain2RoughnessSection.RoughnessNetworkCoverage[new NetworkLocation(branch, 25)] = new object
+                                []
+                            {35.0, RoughnessType.DeBosAndBijkerk};
+                        }
+                        waterFlowModel1D.Network.Branches[0].AddMultipleStructures();
+
+                        var targetPath = string.Empty;
+                        try
+                        {
+                            app.SaveProjectAs(path);
+                            targetPath = Path.Combine(waterFlowModel1D.ExplicitWorkingDirectory, waterFlowModel1D.DirectoryName);
+                            app.RunActivity(waterFlowModel1D);
+                        }
+                        catch (Exception exception)
+                        {
+                            // ignored
+                            Console.WriteLine(exception.Message);
+                        }
+                        var modelFilename = Path.Combine(targetPath, ModelFileNames.ModelDefinitionFilename);
+                        var modelFileNames = new ModelFileNames(modelFilename);
+
+                        CrossSectionFileReader.Read(modelFileNames.CrossSectionDefinitions,
+                            modelFileNames.CrossSectionLocations, waterFlowModel1D.Network);
+                    }
                 }
-            }
+            });
+
         }
     }
          
