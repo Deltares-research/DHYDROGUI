@@ -18,12 +18,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
         public void CalibrateRoughnessImporterPropertiesTest()
         {
             var importer = new CalibratedRoughnessImporter();
-            var expectedSupportedItemTypes = new List<Type>{
-                typeof(IList<RoughnessSection>)};
+            var expectedSupportedItemTypes = new List<Type> {typeof(IList<RoughnessSection>)};
             var importerSupportedItemTypes = importer.SupportedItemTypes;
+
             Assert.IsFalse(expectedSupportedItemTypes.Any(e => !importerSupportedItemTypes.Contains(e)));
             Assert.IsFalse(importerSupportedItemTypes.Any(e => !expectedSupportedItemTypes.Contains(e)));
-
             Assert.IsFalse(expectedSupportedItemTypes.Any(s => !importer.CanImportOn(s)));
         }
 

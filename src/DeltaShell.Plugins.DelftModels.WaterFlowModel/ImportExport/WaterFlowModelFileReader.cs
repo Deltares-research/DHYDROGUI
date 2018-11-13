@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         private static void ReadRoughnessFile(Action<string, IList<string>> CreateAndAddErrorReport, string roughnessFilePath, WaterFlowModel1D model)
         {
-            var roughnessReader = new RoughnessFileReader(CreateAndAddErrorReport);
+            var roughnessReader = new RegularRoughnessFileReader(CreateAndAddErrorReport);
             var roughnessSection = roughnessReader.ReadFile(roughnessFilePath, model.Network, model.RoughnessSections);
 
             model.RoughnessSections.Add(roughnessSection);

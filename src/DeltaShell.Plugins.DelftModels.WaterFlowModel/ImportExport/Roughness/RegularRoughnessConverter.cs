@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
@@ -12,15 +11,8 @@ using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
 {
-    public class RoughnessFileReader : RoughnessReader
+    public class RegularRoughnessConverter : RoughnessConverter
     {
-        private readonly Action<string, IList<string>> createAndAddErrorReport;
-
-        public RoughnessFileReader(Action<string, IList<string>> createAndAddErrorReport)
-        {
-            this.createAndAddErrorReport = createAndAddErrorReport;
-        }
-
         protected override RoughnessSection ReadRoughnessSection(INetwork network, IList<RoughnessSection> roughnessSections, IDelftIniCategory contentSection)
         {
             var sectionId = contentSection.ReadProperty<string>(RoughnessDataRegion.SectionId.Key);
@@ -31,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
             double? globalValue = null;
 
             RoughnessSection roughnessSection;
-            
+
             var hasGlobalType = contentSection.Properties.Any(p => p.Name == RoughnessDataRegion.GlobalType.Key);
 
             if (isReversed)
@@ -60,7 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
             }
 
             roughnessSection.Name = sectionId;
-            
+
 
             if (roughnessSection.RoughnessNetworkCoverage == null)
                 throw new FileReadingException(Resources.RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_roughness_network_coverage_is_not_created);

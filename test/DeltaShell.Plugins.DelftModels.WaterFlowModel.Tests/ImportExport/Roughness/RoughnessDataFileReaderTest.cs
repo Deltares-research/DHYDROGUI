@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
 
             var roughnessSections = new List<RoughnessSection> { orginalSection };
 
-            var roughnessSection = new RoughnessFileReader((header, errorMessages) => { }).ReadFile(path, network, roughnessSections);
+            var roughnessSection = new RegularRoughnessFileReader((header, errorMessages) => { }).ReadFile(path, network, roughnessSections);
             roughnessSections.Add(roughnessSection);
 
             Assert.AreEqual(2, roughnessSections.Count);
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             orginalSection.SetDefaults(RoughnessType.WhiteColebrook, 2.2);
             var roughnessSections = new List<RoughnessSection> { orginalSection };
 
-            var roughnessSection = new RoughnessFileReader((header, errorMessages) => { }).ReadFile(path, network, roughnessSections);
+            var roughnessSection = new RegularRoughnessFileReader((header, errorMessages) => { }).ReadFile(path, network, roughnessSections);
             roughnessSections.Add(roughnessSection);
 
             Assert.AreEqual(2, roughnessSections.Count);
