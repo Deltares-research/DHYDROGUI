@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileReaders.Location;
 using DeltaShell.NGHS.IO.FileReaders.Network;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
