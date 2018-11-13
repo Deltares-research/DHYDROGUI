@@ -176,10 +176,14 @@
     <Compile Include="ImportExport\Dimr\IDelftIniXmlDeserializer.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryLocation.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryLocationConverter.cs" />
+    <Compile Include="ImportExport\CrossSections\CrossSectionDefinitionConverter.cs" />
+    <Compile Include="ImportExport\CrossSections\CrossSectionDefinitionFileReader.cs" />
+    <Compile Include="ImportExport\CrossSections\CrossSectionFileReader.cs" />
+    <Compile Include="ImportExport\CrossSections\CrossSectionLocationConverter.cs" />
+    <Compile Include="ImportExport\CrossSections\CrossSectionLocationFileReader.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DBoundaryFileWriter.cs" />
     <Compile Include="ImportExport\BoundaryFileWriterHelper.cs" />
     <Compile Include="ImportExport\BoundaryLocationFileWriter.cs" />
-    <Compile Include="ImportExport\CrossSectionFileReader.cs" />
     <Compile Include="ImportExport\CrossSectionDefinitionFileWriter.cs" />
     <Compile Include="ImportExport\Flow1DParameterGenerator.cs" />
     <Compile Include="ImportExport\ModelDefinitionFileWriter.cs" />

@@ -15,7 +15,7 @@ namespace DelftTools.Hydro.CrossSections
     [Entity(FireOnCollectionChange=false)]
     public class CrossSectionDefinitionProxy : Unique<long>, ICrossSectionDefinition, ISummerDikeEnabledDefinition
     {
-        private IGeometry cachedGeometry;
+        private IGeometry geometry;
         protected CrossSectionDefinitionProxy() { } //nhibernate
 
         public CrossSectionDefinitionProxy(ICrossSectionDefinition innerDefinition)
@@ -90,7 +90,7 @@ namespace DelftTools.Hydro.CrossSections
 
         public void RefreshGeometry()
         {
-            cachedGeometry = null;
+            geometry = null;
         }
 
         public Utils.Tuple<string, bool> ValidateCellValue(int rowIndex, int columnIndex, object cellValue)
@@ -191,29 +191,25 @@ namespace DelftTools.Hydro.CrossSections
 
         public virtual IGeometry GetGeometry(ICrossSection crossSection)
         {
-            if (cachedGeometry == null)
+            var definition = InnerDefinition as CrossSectionDefinition;
+
+            if (definition != null)
             {
-                if (InnerDefinition is CrossSectionDefinition)
-                {
-                    cachedGeometry =
-                        ((CrossSectionDefinition) InnerDefinition).CalculateGeometry(crossSection.Branch.Geometry,
-                                                                                     NetworkHelper.MapChainage(
-                                                                                         crossSection.Branch,
-                                                                                         crossSection.Chainage));
-                }
-                else
-                {
-                    cachedGeometry = InnerDefinition.GetGeometry(crossSection);
-                }
+                geometry = definition.CalculateGeometry(crossSection.Branch.Geometry,
+                    NetworkHelper.MapChainage(crossSection.Branch, crossSection.Chainage));
             }
 
-            return cachedGeometry;
+            else
+            {
+                geometry = InnerDefinition.GetGeometry(crossSection);
+            }
+            return geometry;
         }
 
         public virtual void SetGeometry(IGeometry value)
         {
             if (value == null)
-                cachedGeometry = null;
+                geometry = null;
             //do nothing
         }
 

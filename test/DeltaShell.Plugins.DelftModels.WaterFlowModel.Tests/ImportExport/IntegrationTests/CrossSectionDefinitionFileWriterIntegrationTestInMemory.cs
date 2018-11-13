@@ -9,6 +9,7 @@ using DeltaShell.Core;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
 using DeltaShell.Plugins.NetworkEditor;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
@@ -230,8 +231,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
                     var modelFilename = Path.Combine(targetPath, ModelFileNames.ModelDefinitionFilename);
                     var modelFileNames = new ModelFileNames(modelFilename);
 
-                    CrossSectionFileReader.ReadFile(modelFileNames.CrossSectionLocations,
-                        modelFileNames.CrossSectionDefinitions, waterFlowModel1D);
+                    CrossSectionFileReader.Read(modelFileNames.CrossSectionLocations,
+                        modelFileNames.CrossSectionDefinitions, waterFlowModel1D.Network);
                 }
             }
         }

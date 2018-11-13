@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
-using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             if (!File.Exists(structureFilename)) throw new FileReadingException(string.Format("Could not read file {0} properly, it doesn't exist.", structureFilename));
             var structuresCategories = new DelftIniReader().ReadDelftIniFile(structureFilename);
             if (structuresCategories.Count == 0) throw new FileReadingException(string.Format("Could not read file {0} properly, it seems empty", structureFilename));
-            
+
             if (!File.Exists(csdFilename)) throw new FileReadingException(string.Format("Could not read file {0} properly, it doesn't exist.", csdFilename));
             var csdCategories = new DelftIniReader().ReadDelftIniFile(csdFilename);
             if (csdCategories.Count == 0) throw new FileReadingException(string.Format("Could not read file {0} properly, it seems empty", csdFilename));
@@ -34,7 +34,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             {
                 try
                 {
-                    var crossSectionDefinition = CrossSectionFileReader.ReadCSDDefinition(csdDefinitionCategory, waterFlowModel1D);
+                    var crossSectionDefinition =
+                        CrossSectionDefinitionConverter.Convert(new List<DelftIniCategory>() {csdDefinitionCategory})
+                            .FirstOrDefault();
+
+                    if (crossSectionDefinition == null) throw new FileReadingException(string.Format($"Cross Section {csdDefinitionCategory.Name} was not a available." ));
+
                     if (crossSectionDefinitions.Contains(crossSectionDefinition) || crossSectionDefinitions.FirstOrDefault(csd => csd.Name == crossSectionDefinition.Name) != null)
                         throw new FileReadingException(string.Format("cross section definition with id {0} is already read, id's CAN NOT be duplicates!", crossSectionDefinition.Name));
 
@@ -98,7 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 throw new FileReadingException(string.Format("While reading structures an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
             }
         }
-        
+
         private static IStructure1D ReadStructureDefinition(IDelftIniCategory definitionCategory)
         {
             var type = definitionCategory.ReadProperty<string>(StructureRegion.DefinitionType.Key);
@@ -111,7 +116,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             var definitionReader = DefinitionGeneratorFactory.GetDefinitionReaderStructure(structureType);
             if (definitionReader == null)
             {
-                var errorMessage = string.Format("No definition reader available for this structure definition: {0}",type);
+                var errorMessage = string.Format("No definition reader available for this structure definition: {0}", type);
                 throw new FileReadingException(errorMessage);
             }
 

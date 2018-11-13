@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileReaders.Location;
 using DeltaShell.NGHS.IO.FileReaders.Network;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
 using log4net;
 
@@ -67,8 +68,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 reportProgress(
                     $"Reading cross sections from {fileName.CrossSectionLocations} file and {fileName.CrossSectionDefinitions}.",
                     7, totalSteps);
-                CrossSectionFileReader.ReadFile(fileName.CrossSectionLocations, fileName.CrossSectionDefinitions,
-                    model);
+                CrossSectionFileReader.Read(fileName.CrossSectionDefinitions, fileName.CrossSectionLocations, 
+                    model.Network);
             }
             catch (Exception)
             {

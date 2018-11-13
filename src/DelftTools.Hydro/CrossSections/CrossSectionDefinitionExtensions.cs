@@ -74,13 +74,30 @@ namespace DelftTools.Hydro.CrossSections
                 return;
             }
 
-            var newMinY = sections.Any() ? sections.Select(s => s.MaxY).Max() : 0.0;
-            crossSectionDefinition.Sections.Add(new CrossSectionSection
+            var proxyDefinition = crossSectionDefinition as CrossSectionDefinitionProxy;
+            var nonProxyDefinition = proxyDefinition != null
+                ? proxyDefinition.InnerDefinition
+                : crossSectionDefinition;
+
+            if (nonProxyDefinition is CrossSectionDefinitionStandard)
             {
-                SectionType = crossSectionType,
-                MinY = newMinY,
-                MaxY = newMinY + sectionWidth / widthFactor
-            });
+                crossSectionDefinition.Sections.Add(new CrossSectionSection
+                {
+                    SectionType = crossSectionType,
+                    MinY = 0.0 - sectionWidth / widthFactor,
+                    MaxY = 0.0 + sectionWidth / widthFactor
+                });
+            }
+            else
+            {
+                var newMinY = sections.Any() ? sections.Select(s => s.MaxY).Max() : 0.0;
+                crossSectionDefinition.Sections.Add(new CrossSectionSection
+                {
+                    SectionType = crossSectionType,
+                    MinY = newMinY,
+                    MaxY = newMinY + sectionWidth / widthFactor
+                });
+            }
         }
 
         public static void AdjustSectionWidths(this CrossSectionDefinition crossSectionDefinition)
@@ -151,9 +168,13 @@ namespace DelftTools.Hydro.CrossSections
             return result;
         }
 
-        public static double GetWidthFactor(this ICrossSectionDefinition definition)
+        public static double GetWidthFactor(this ICrossSectionDefinition crossSectionDefinition)
         {
-            return definition is CrossSectionDefinitionZW ? 2.0 : 1.0;
+            var proxyDefinition = crossSectionDefinition as CrossSectionDefinitionProxy;
+
+            var definition  = proxyDefinition != null ? proxyDefinition.InnerDefinition : crossSectionDefinition;
+
+            return definition is CrossSectionDefinitionZW || definition is CrossSectionDefinitionStandard ? 2.0 : 1.0;
         }
 
         public static void GetCrossSectionDefinitionSectionBounds(this CrossSectionDefinition definition, out double minY, out double maxY)
