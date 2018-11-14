@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             var tempExportDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             bool exportSuccessful = exporter.Export(rainfallRunoffModel, tempExportDir);
             Assert.IsTrue(exportSuccessful);
-            const string sobekBFnm = "Sobek_3b.fnm";
+            const string sobekBFnm = "sobek_3b.fnm";
             Assert.IsTrue(File.Exists(Path.Combine(tempExportDir, sobekBFnm)));
             var linesWithFiles = File.ReadAllLines(System.IO.Path.Combine(tempExportDir, sobekBFnm));
             IList<string> inputFilenames = new List<string>();

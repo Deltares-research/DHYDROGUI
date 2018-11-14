@@ -983,8 +983,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 if (modelStateHandler == null)
                 {
                     IList<DelftTools.Utils.Tuple<string, string>> outAndInFileNames = new List<DelftTools.Utils.Tuple<string, string>>();
-                    //as defined in 'fixed' Sobek_3b.fnm (in RainfallRunoffModelEngine project)
-                    outAndInFileNames.Add(new DelftTools.Utils.Tuple<string, string>("RSRR_OUT", "RSRR_IN")); 
+                    //as defined in 'fixed' sobek_3b.fnm (in RainfallRunoffModelEngine project)
+                    outAndInFileNames.Add(new DelftTools.Utils.Tuple<string, string>("rsrr_out", "rsrr_in")); 
                     modelStateHandler = new ModelFileBasedStateHandler(Name, outAndInFileNames);
                 }
                 return modelStateHandler;
@@ -1005,7 +1005,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         #region Implementation of IDimrModel
 
         public virtual string LibraryName { get { return "rr_dll"; } }
-        public virtual string InputFile { get { return "Sobek_3b.fnm"; } }
+        public virtual string InputFile { get { return "sobek_3b.fnm"; } }
         public virtual string DirectoryName { get { return "rr"; } }
         public virtual bool IsMasterTimeStep
         {
