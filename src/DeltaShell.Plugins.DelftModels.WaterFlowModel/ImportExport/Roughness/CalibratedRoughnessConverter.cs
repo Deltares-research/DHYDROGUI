@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
 {
     public class CalibratedRoughnessConverter : RoughnessConverter
     {
-        protected override RoughnessSection ReadRoughnessSection(IDelftIniCategory roughnessSectionCategory, IEnumerable<RoughnessSection> roughnessSections)
+        protected override RoughnessSection ReadRoughnessSection(IDelftIniCategory roughnessSectionCategory, IEnumerable<RoughnessSection> roughnessSections, IHydroNetwork network)
         {
             var sectionId = roughnessSectionCategory.ReadProperty<string>(RoughnessDataRegion.SectionId.Key);
             var isReversed = roughnessSectionCategory.ReadProperty<bool>(RoughnessDataRegion.FlowDirection.Key);

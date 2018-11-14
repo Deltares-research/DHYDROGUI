@@ -15,13 +15,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
 {
     public abstract class RoughnessConverter
     {
-        protected abstract RoughnessSection ReadRoughnessSection(IDelftIniCategory roughnessSectionCategory, IEnumerable<RoughnessSection> roughnessSections);
+        protected abstract RoughnessSection ReadRoughnessSection(IDelftIniCategory roughnessSectionCategory, IEnumerable<RoughnessSection> roughnessSections, IHydroNetwork network);
 
         public RoughnessSection Convert(IList<DelftIniCategory> categories, IHydroNetwork network, IEnumerable<RoughnessSection> roughnessSections, IList<string> errorMessages)
         {
             var roughnessSectionCategory = categories.FirstOrDefault(category => category.Name == RoughnessDataRegion.ContentIniHeader);
-            var roughnessSection = ReadRoughnessSection(roughnessSectionCategory, roughnessSections);
-            if (roughnessSection.Network == null) roughnessSection.Network = network;
+            var roughnessSection = ReadRoughnessSection(roughnessSectionCategory, roughnessSections, network);
 
             var fileReadingExceptions = ReadBranchRoughnessData(categories, network, roughnessSection);
 

@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
 {
     public class RegularRoughnessConverter : RoughnessConverter
     {
-        protected override RoughnessSection ReadRoughnessSection(IDelftIniCategory roughnessSectionCategory, IEnumerable<RoughnessSection> roughnessSections)
+        protected override RoughnessSection ReadRoughnessSection(IDelftIniCategory roughnessSectionCategory, IEnumerable<RoughnessSection> roughnessSections, IHydroNetwork network)
         {
             RoughnessSection roughnessSection;
             var sectionId = roughnessSectionCategory.ReadProperty<string>(RoughnessDataRegion.SectionId.Key);
@@ -27,15 +27,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
             else
             {
                 var crossSectionSectionType = new CrossSectionSectionType { Name = sectionId };
-                roughnessSection = new RoughnessSection(crossSectionSectionType, null);
+                roughnessSection = new RoughnessSection(crossSectionSectionType, network);
             }
-            roughnessSection.Name = sectionId;
 
             if (!isReversed || hasGlobalType)
             {
                 SetRoughnessDefaults(roughnessSection, roughnessSectionCategory);
             }
-            
+            roughnessSection.Name = sectionId;
+
             SetRoughnessInterpolationType(roughnessSection, interpolationType);
 
             return roughnessSection;
