@@ -1,29 +1,52 @@
 ﻿using DelftTools.Hydro.CrossSections;
-using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.Helpers;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections
 {
-    public static class CrossSectionLocationFileReader
+    public class CrossSectionLocationFileReader
     {
-        public static IList<ICrossSectionLocation> Read(string path)
+        private readonly Action<string, IList<string>> createAndAddErrorReport;
+
+        public CrossSectionLocationFileReader(Action<string, IList<string>> createAndAddErrorReport)
         {
-            if (!File.Exists(path)) throw new FileReadingException($"Could not read file {path} properly, it doesn't exist.");
+            this.createAndAddErrorReport = createAndAddErrorReport;
+        }
 
-            var categories = DelftIniFileParser.ReadFile(path);
+        public IEnumerable<ICrossSectionLocation> Read(string filePath)
+        {
+            var errorMessages = new List<string>();
 
-            var crossSectionLocations = CrossSectionLocationConverter.Convert(categories);
+            var categories = ReadCategoriesFromFileAndCollectErrorMessages(filePath, errorMessages);
 
-            if (crossSectionLocations == null || crossSectionLocations.Count == 0)
-                throw new FileReadingException("Could not read cross section definitions.");
+            var crossSectionLocations = CrossSectionLocationConverter.Convert(categories, errorMessages);
 
-            if (!crossSectionLocations.Select(csl => csl.Name).HasUniqueValues())
-                throw new FileReadingException("There are duplicate cross section IDs in the location file, must be unique!");
+            CreateErrorReport("cross section locations", filePath, errorMessages);
 
             return crossSectionLocations;
+        }
+
+        private static IList<DelftIniCategory> ReadCategoriesFromFileAndCollectErrorMessages(string filePath, List<string> errorMessages)
+        {
+            IList<DelftIniCategory> categories = new List<DelftIniCategory>();
+            try
+            {
+                categories = DelftIniFileParser.ReadFile(filePath);
+            }
+            catch (Exception e)
+            {
+                errorMessages.Add(e.Message);
+            }
+
+            return categories;
+        }
+
+        private void CreateErrorReport(string objectName, string filePath, List<string> errorMessages)
+        {
+            if (errorMessages.Count > 0)
+                createAndAddErrorReport?.Invoke($"While reading the {objectName} from file '{filePath}', the following errors occured", errorMessages);
         }
     }
 }

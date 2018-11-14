@@ -141,11 +141,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
         [Category(TestCategory.Integration)]
         public void TestIntegrationFileReaderCrossSection()
         {
-            var file = "Sobek_FB_Read.dsproj";
+            var fileName = "Sobek_FB_Read.dsproj";
 
             TestHelper.PerformActionInTemporaryDirectory(temp =>
             {
-                var path = Path.Combine(temp, file);
+                var path = Path.Combine(temp, fileName);
                 using (var app = new DeltaShellApplication())
                 {
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -156,7 +156,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
                     using (var waterFlowModel1D = new WaterFlowModel1D()
                     {
                         // use a valid network for the calculation
-                        //Network = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch()
                         Network = HydroNetworkHelper.GetSnakeHydroNetwork(9)
 
                     })
@@ -169,7 +168,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
                         {
                             Name = CrossSectionDefinitionZW.Floodplain2SectionTypeName
                         });
-                        //var branch = model.Network.Branches.FirstOrDefault();
+
                         var offsets = new double[] { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
                         foreach (var branch in waterFlowModel1D.Network.Branches)
                         {
@@ -234,7 +233,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
                         var modelFilename = Path.Combine(targetPath, ModelFileNames.ModelDefinitionFilename);
                         var modelFileNames = new ModelFileNames(modelFilename);
 
-                        CrossSectionFileReader.Read(modelFileNames.CrossSectionDefinitions,
+                        var crossSectionFileReader = new CrossSectionFileReader((header, errorMessages) => {});
+
+                        crossSectionFileReader.Read(modelFileNames.CrossSectionDefinitions,
                             modelFileNames.CrossSectionLocations, waterFlowModel1D.Network);
                     }
                 }

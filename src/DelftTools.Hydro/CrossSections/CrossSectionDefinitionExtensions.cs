@@ -74,18 +74,16 @@ namespace DelftTools.Hydro.CrossSections
                 return;
             }
 
-            var proxyDefinition = crossSectionDefinition as CrossSectionDefinitionProxy;
-            var nonProxyDefinition = proxyDefinition != null
-                ? proxyDefinition.InnerDefinition
-                : crossSectionDefinition;
+            var definition = GetInnerOrCurrentCrossSectionDefinition(crossSectionDefinition);
 
-            if (nonProxyDefinition is CrossSectionDefinitionStandard)
+            if (definition is CrossSectionDefinitionStandard)
             {
+                var distanceToSymmetryAxis = sectionWidth / 2;
                 crossSectionDefinition.Sections.Add(new CrossSectionSection
                 {
                     SectionType = crossSectionType,
-                    MinY = - sectionWidth / 2,
-                    MaxY = - sectionWidth / 2
+                    MinY = - distanceToSymmetryAxis,
+                    MaxY = distanceToSymmetryAxis
                 });
             }
             else
@@ -170,11 +168,17 @@ namespace DelftTools.Hydro.CrossSections
 
         public static double GetWidthFactor(this ICrossSectionDefinition crossSectionDefinition)
         {
-            var proxyDefinition = crossSectionDefinition as CrossSectionDefinitionProxy;
-
-            var definition  = proxyDefinition != null ? proxyDefinition.InnerDefinition : crossSectionDefinition;
+            var definition = GetInnerOrCurrentCrossSectionDefinition(crossSectionDefinition);
 
             return definition is CrossSectionDefinitionZW ? 2.0 : 1.0;
+        }
+
+        private static ICrossSectionDefinition GetInnerOrCurrentCrossSectionDefinition(
+            ICrossSectionDefinition crossSectionDefinition)
+        {
+            var proxyDefinition = crossSectionDefinition as CrossSectionDefinitionProxy;
+
+            return proxyDefinition != null ? proxyDefinition.InnerDefinition : crossSectionDefinition;
         }
 
         public static void GetCrossSectionDefinitionSectionBounds(this CrossSectionDefinition definition, out double minY, out double maxY)

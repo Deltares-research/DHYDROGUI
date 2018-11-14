@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileReaders.Location;
 using DeltaShell.NGHS.IO.FileReaders.Network;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
 using log4net;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
@@ -67,8 +67,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 reportProgress(
                     $"Reading cross sections from {fileName.CrossSectionLocations} file and {fileName.CrossSectionDefinitions}.",
                     7, totalSteps);
-                CrossSectionFileReader.Read(fileName.CrossSectionDefinitions, fileName.CrossSectionLocations, 
-                    model.Network);
+
+                ReadCrossSectionsFile(fileName, model.Network, CreateAndAddErrorReport);
             }
             catch (Exception)
             {
@@ -78,6 +78,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             LogErrorReport(errorReport, report => Log.Warn(report));
             return model;
+        }
+
+        private static void ReadCrossSectionsFile(ModelFileNames fileName, IHydroNetwork network, Action<string, IList<string>> createAndAddErrorReport)
+        {
+            var crossSectionsReader = new CrossSectionFileReader(createAndAddErrorReport);
+            crossSectionsReader.Read(fileName.CrossSectionDefinitions, fileName.CrossSectionLocations, network);
         }
 
         private static void ReadRoughnessFile(Action<string, IList<string>> CreateAndAddErrorReport, string roughnessFilePath, WaterFlowModel1D model)

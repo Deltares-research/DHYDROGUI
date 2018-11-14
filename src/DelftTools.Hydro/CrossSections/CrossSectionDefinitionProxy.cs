@@ -195,8 +195,8 @@ namespace DelftTools.Hydro.CrossSections
 
             if (definition != null)
             {
-                geometry = definition.CalculateGeometry(crossSection.Branch.Geometry,
-                    NetworkHelper.MapChainage(crossSection.Branch, crossSection.Chainage));
+                var mapChainage = NetworkHelper.MapChainage(crossSection.Branch, crossSection.Chainage);
+                geometry = definition.CalculateGeometry(crossSection.Branch.Geometry, mapChainage);
             }
 
             else

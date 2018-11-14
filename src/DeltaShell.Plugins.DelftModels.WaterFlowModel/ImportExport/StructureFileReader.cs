@@ -35,8 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 try
                 {
                     var crossSectionDefinition =
-                        CrossSectionDefinitionConverter.Convert(new List<DelftIniCategory>() {csdDefinitionCategory})
-                            .FirstOrDefault();
+                        CrossSectionDefinitionConverter.Convert(new List<DelftIniCategory>() {csdDefinitionCategory}, new List<string>()).FirstOrDefault();
 
                     if (crossSectionDefinition == null) throw new FileReadingException(string.Format($"Cross Section {csdDefinitionCategory.Name} was not a available." ));
 

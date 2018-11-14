@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro.CrossSections;
+﻿using System;
+using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
 using System.Collections.Generic;
@@ -8,14 +9,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
 {
     public static class CrossSectionLocationConverter
     {
-        public static IList<ICrossSectionLocation> Convert(IList<DelftIniCategory> categories)
+        public static IEnumerable<ICrossSectionLocation> Convert(IList<DelftIniCategory> categories, List<string> errorMessages)
         {
+            var crossSectionLocations = new List<ICrossSectionLocation>();
+
             var selectedCategories = categories.Where(category => category.Name == CrossSectionRegion.IniHeader).ToList();
 
-            return selectedCategories.Select(CovertToCrossSectionLocation).ToList();
+            selectedCategories.ForEach(category =>
+            {
+                try
+                {
+                    var generatedCrossSectionLocation = ConvertToCrossSectionLocation(category);
+                    ValidateGeneratedCrossSectionLocation(generatedCrossSectionLocation, crossSectionLocations);
+                    crossSectionLocations.Add(generatedCrossSectionLocation);
+                }
+                catch (Exception e)
+                {
+                    errorMessages.Add(e.Message);
+                }
+            });
+            return crossSectionLocations;
         }
 
-        private static ICrossSectionLocation CovertToCrossSectionLocation(IDelftIniCategory category)
+        private static ICrossSectionLocation ConvertToCrossSectionLocation(IDelftIniCategory category)
         {
             var name = category.ReadProperty<string>(LocationRegion.Id.Key);
             var branchName = category.ReadProperty<string>(LocationRegion.BranchId.Key);
@@ -34,6 +50,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
             };
 
             return crossSectionLocation;
+        }
+
+        private static void ValidateGeneratedCrossSectionLocation(ICrossSectionLocation crossSectionLocation, IList<ICrossSectionLocation> crossSectionLocations)
+        {
+            if (crossSectionLocation.IsDuplicateIn(crossSectionLocations))
+                throw new Exception($"Cross section location with id {crossSectionLocation.Name} already exists, there cannot be any duplicate cross section location ids");
+        }
+
+        private static bool IsDuplicateIn(this ICrossSectionLocation crossSectionLocation, IList<ICrossSectionLocation> crossSectionLocations)
+        {
+            return crossSectionLocations.Contains(crossSectionLocation) || crossSectionLocations.Any(n => n.Name == crossSectionLocation.Name);
         }
 
     }

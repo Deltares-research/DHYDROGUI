@@ -1,35 +1,42 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace DeltaShell.Plugins.Delftnetworks.WaterFlownetwork.ImportExport.CrossSections
 {
-    public static class CrossSectionDefinitionFileReader
+    public class CrossSectionDefinitionFileReader
     {
-        public static IList<ICrossSectionDefinition> Read(string path, IHydroNetwork network)
+        private readonly Action<string, IList<string>> createAndAddErrorReport;
+
+        public CrossSectionDefinitionFileReader(Action<string, IList<string>> createAndAddErrorReport)
         {
-            if (!File.Exists(path))
-                throw new FileReadingException($"Could not read file {path} properly, it doesn't exist.");
+            this.createAndAddErrorReport = createAndAddErrorReport;
+        }
 
-            var categories = DelftIniFileParser.ReadFile(path);
+        public IList<ICrossSectionDefinition> Read(string filePath, IHydroNetwork network)
+        {
+            var errorMessages = new List<string>();
 
-            var crossSectionDefinitions = CrossSectionDefinitionConverter.Convert(categories).ToList();
+            var categories = ReadCategoriesFromFileAndCollectErrorMessages(filePath, errorMessages);
 
-            if (crossSectionDefinitions == null || crossSectionDefinitions.Count == 0)
-                throw new FileReadingException("Could get cross section definitions.");
+            var crossSectionDefinitions = CrossSectionDefinitionConverter.Convert(categories, errorMessages).ToList();
 
-            if (!crossSectionDefinitions.Select(csd => csd.Name).HasUniqueValues())
-                throw new FileReadingException("There are duplicate cross section IDs in the definition file, must be unique!");
+            try
+            {
+                SetRoughnessOnCrossSectionDefinitions(categories, crossSectionDefinitions, network);
+            }
+            catch (Exception e)
+            {
+                errorMessages.Add(e.Message);
+            }
 
-            SetRoughnessOnCrossSectionDefinitions(categories, crossSectionDefinitions, network);
+            CreateErrorReport("cross section definitions", filePath, errorMessages);
 
             return crossSectionDefinitions;
         }
@@ -79,10 +86,10 @@ namespace DeltaShell.Plugins.Delftnetworks.WaterFlownetwork.ImportExport.CrossSe
 
             var sectionTypeName = roughnessNames.FirstOrDefault();
             if (sectionTypeName == null)
-                throw new FileReadingException("There was no roughness defined on the cross section definition");
+                throw new FileReadingException("There was no roughness defined in the cross section definition file.");
 
             var crossSectionSectionType = GetCrossSectionSectionType(sectionTypeName, network);
-            
+
             var sectionWidth = GetSectionWidthForStandardShape(category);
 
             crossSectionDefinition.AddSection(crossSectionSectionType, sectionWidth);
@@ -96,7 +103,7 @@ namespace DeltaShell.Plugins.Delftnetworks.WaterFlownetwork.ImportExport.CrossSe
             var rectangleWidth = category.ReadProperty<double>(DefinitionRegion.RectangleWidth.Key, true);
             var maxflowWidth = category.ReadProperty<double>(DefinitionRegion.MaximumFlowWidth.Key, true);
 
-            var widths = new List<double>() {highestFlowWidth, rectangleWidth, maxflowWidth};
+            var widths = new List<double>() { highestFlowWidth, rectangleWidth, maxflowWidth };
             return widths.Max();
         }
 
@@ -137,19 +144,19 @@ namespace DeltaShell.Plugins.Delftnetworks.WaterFlownetwork.ImportExport.CrossSe
             var roughnessNames =
                 category.ReadPropertiesToListOfType<string>(DefinitionRegion.RoughnessNames.Key, separator: ';');
             if (roughnessNames.Count < 0)
-                throw new FileReadingException("reading error");
+                throw new FileReadingException("There were no roughness names defined in the cross section definition file.");
 
             var roughnessPositions =
                 category.ReadPropertiesToListOfType<double>(DefinitionRegion.RoughnessPositions.Key);
             if (roughnessPositions.Count < 0)
-                throw new FileReadingException("reading error");
+                throw new FileReadingException("There were no roughness positions defined in the cross section definition file.");
 
             if (roughnessPositions.Count != roughnessNames.Count + 1)
-                throw new FileReadingException("reading error");
+                throw new FileReadingException("Incorrect number of roughness positions in cross section definition file: should be one more than the number of roughness sections.");
 
             crossSectionDefinition.Sections.Clear();
 
-            for (int i = 0; i < roughnessNames.Count; i++)
+            for (var i = 0; i < roughnessNames.Count; i++)
             {
                 var networkSectionType = GetCrossSectionSectionType(roughnessNames[i], network);
 
@@ -180,6 +187,27 @@ namespace DeltaShell.Plugins.Delftnetworks.WaterFlownetwork.ImportExport.CrossSe
                 crossSectionSectionType = new CrossSectionSectionType { Name = sectionTypeName };
 
             return crossSectionSectionType;
+        }
+
+        private static IList<DelftIniCategory> ReadCategoriesFromFileAndCollectErrorMessages(string filePath, List<string> errorMessages)
+        {
+            IList<DelftIniCategory> categories = new List<DelftIniCategory>();
+            try
+            {
+                categories = DelftIniFileParser.ReadFile(filePath);
+            }
+            catch (Exception e)
+            {
+                errorMessages.Add(e.Message);
+            }
+
+            return categories;
+        }
+
+        private void CreateErrorReport(string objectName, string filePath, List<string> errorMessages)
+        {
+            if (errorMessages.Count > 0)
+                createAndAddErrorReport?.Invoke($"While reading the {objectName} from file '{filePath}', the following errors occured", errorMessages);
         }
     }
 }
