@@ -334,7 +334,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness
         {
             foreach (double chainage in roughnessFunction.Arguments[0].Values)
             {
-                if (chainage > branch.Length)
+                if (chainage > Math.Round(branch.Length, 0, MidpointRounding.ToEven))
                 {
                     Log.ErrorFormat("Invalid chainage '{0}' for branch '{1}'; skipped.", chainage, branch.Name);
                     continue;
