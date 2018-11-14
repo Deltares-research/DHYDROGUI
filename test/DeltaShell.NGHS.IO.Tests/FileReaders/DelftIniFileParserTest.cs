@@ -23,7 +23,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         {
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var filePath = Path.Combine(tempDir, "anEmpty.File");
+                var filePath = Path.Combine(tempDir, "anEmpty.ini");
                 using (File.Create(filePath)) { }
                 DelftIniFileParser.ReadFile(filePath);
             });

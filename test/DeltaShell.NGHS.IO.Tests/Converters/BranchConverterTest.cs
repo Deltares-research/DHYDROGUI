@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileReaders.Network;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.Converters
@@ -22,7 +24,10 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
 
             var nodes = GetTestHydroNodes();
             var branches = BranchConverter.Convert(categories, nodes, new List<string>());
+
             Assert.AreEqual(1, branches.Count);
+            Assert.AreEqual(branches[0].Geometry.Coordinates[0], new Coordinate(0.0,0.0, double.NaN));
+            Assert.AreEqual(branches[0].Geometry.Coordinates[1], new Coordinate(100.0,0.0, double.NaN));
         }
 
 
@@ -32,12 +37,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             var categories = new List<DelftIniCategory>();
             var category1 = CreateBranchDelftIniCategory();
 
-            var category2 = new DelftIniCategory("Branch");
-            category2.AddProperty("id", "branch1");
-            category2.AddProperty("fromNode", NodeName1);
-            category2.AddProperty("toNode", NodeName2);
-            category2.AddProperty("order", "0");
-            category2.AddProperty("geometry", "LINESTRING (0 0, 100 0)");
+            var category2 = CreateBranchDelftIniCategory();
 
             categories.Add(category1);
             categories.Add(category2);

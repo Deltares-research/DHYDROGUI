@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using DeltaShell.NGHS.IO.FileReaders.Network;
 using DeltaShell.NGHS.IO.Helpers;
+using GeoAPI.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.Converters
@@ -27,6 +28,8 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
 
             var nodes = HydroNodeConverter.Convert(categories, new List<string>());
             Assert.AreEqual(2, nodes.Count);
+            Assert.AreEqual(nodes[0].Geometry.Coordinates[0], new Coordinate(11.0, 13.5, double.NaN));
+            Assert.AreEqual(nodes[1].Geometry.Coordinates[0], new Coordinate(31.5, 37.0, double.NaN));
         }
 
         [Test]
