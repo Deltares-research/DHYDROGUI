@@ -1,0 +1,9 @@
+*Name of this file: \SOB_LITE\FIXED\DEF_RYN.EVP
+*Date and time of construction: 23-02-1998   15:43:15
+*Verdampingsfile
+*Meteo data: evaporation intensity in mm/day
+*First record: start date, data in mm/day
+*Datum (year month day), verdamping (mm/dag) voor elk weerstation
+*jaar maand dag verdamping[mm]
+1951    1    1    1.000
+1951    1    2    2.000
