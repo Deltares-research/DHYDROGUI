@@ -116,6 +116,7 @@
     <Compile Include="DelftIniWriter.cs" />
     <Compile Include="FileReaders\ConfigXml\DelftConfigXmlFileReader.cs" />
     <Compile Include="FileReaders\Definition\DefinitionReader.cs" />
+    <Compile Include="FileReaders\DelftBcFileParser.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
     <Compile Include="FileReaders\Location\ObservationPointFileReader.cs" />
     <Compile Include="FileReaders\Location\LateralSourceFileReader.cs" />

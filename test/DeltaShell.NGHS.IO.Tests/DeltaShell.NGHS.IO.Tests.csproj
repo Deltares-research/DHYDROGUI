@@ -119,6 +119,7 @@
     <Compile Include="Converters\LateralSourceConverterTest.cs" />
     <Compile Include="Converters\ObservationPointConverterTest.cs" />
     <Compile Include="FileReaders\CrossSectionDefinitionFileReaderTest.cs" />
+    <Compile Include="FileReaders\DelftBcFileParserTest.cs" />
     <Compile Include="FileReaders\DelftIniFileParserTest.cs" />
     <Compile Include="FileReaders\LateralSourceFileReaderTest.cs" />
     <Compile Include="FileReaders\NetworkDefinitionFileReaderTest.cs" />
