@@ -2,7 +2,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileReaders;
-using DeltaShell.Plugins.Delftnetworks.WaterFlownetwork.ImportExport.CrossSections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
