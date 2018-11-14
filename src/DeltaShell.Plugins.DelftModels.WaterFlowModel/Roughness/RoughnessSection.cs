@@ -12,6 +12,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.Editing;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using log4net;
@@ -334,21 +335,35 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness
         {
             foreach (double chainage in roughnessFunction.Arguments[0].Values)
             {
-                if (chainage > Math.Round(branch.Length, 0, MidpointRounding.ToEven))
+                if (chainage >= branch.Length + 0.5)
                 {
-                    Log.ErrorFormat("Invalid chainage '{0}' for branch '{1}'; skipped.", chainage, branch.Name);
+                    var errorMessage = Resources.RoughnessSection_UpdateCoverageForFunction_Invalid_chainage___0___in_arguments_of_roughness_function___1___for_branch___2____The_import_of_this_roughness_function_is_skipped_;
+                    Log.ErrorFormat(errorMessage, chainage, roughnessFunction.Name, branch.Name);
                     continue;
                 }
 
-                var location = new NetworkLocation(branch, chainage);
+                var resultingChainage = GetResultingChainage(branch, roughnessFunction.Name, chainage);
+                var location = new NetworkLocation(branch, resultingChainage);
                 var res = roughnessFunction[chainage];
 
-                var value = (res is IMultiDimensionalArray)
-                                ? ((MultiDimensionalArray) (roughnessFunction[chainage])).MinValue
-                                : res;
+                var value = res is IMultiDimensionalArray
+                    ? ((MultiDimensionalArray) roughnessFunction[chainage]).MinValue
+                    : res;
 
                 RoughnessNetworkCoverage[location] = new[] { value, (int) roughnessType };
             }
+        }
+
+        private static double GetResultingChainage(IBranch branch, string roughnessFunctionName, double chainage)
+        {
+            var resultingChainage = chainage;
+            if (chainage < branch.Length) return resultingChainage;
+
+            resultingChainage = branch.Length;
+            var warningMessage = Resources.RoughnessSection_UpdateCoverageForFunction_The_chainage___0___in_the_arguments_of_roughness_function___1____for_branch___2___was_corrected_to___3____to_match_the_branch_length_;
+            Log.WarnFormat(warningMessage, chainage, roughnessFunctionName, branch.Name, resultingChainage);
+
+            return resultingChainage;
         }
 
         [EditAction]

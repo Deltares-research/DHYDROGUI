@@ -12,6 +12,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.UndoRedo;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
@@ -35,12 +36,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Roughness
             var section = new RoughnessSection(crossSectionSectionType, network);
 
             var functionOfH = new Function("functionOfH");
-            functionOfH.Arguments.Add(new Variable<double>() {Values = new MultiDimensionalArray<double>() {6.0, 8.0, 10.0}});
-            functionOfH.Components.Add(new Variable<double>() { Values = new MultiDimensionalArray<double>() { 1.0, 5.0, 9.0 } });
+            functionOfH.Arguments.Add(new Variable<double> {Values = new MultiDimensionalArray<double> {6.0, 8.0, 10.0}});
+            functionOfH.Components.Add(new Variable<double> { Values = new MultiDimensionalArray<double> { 1.0, 5.0, 9.0 } });
 
             var functionOfQ = new Function("functionOfQ");
-            functionOfQ.Arguments.Add(new Variable<double>() { Values = new MultiDimensionalArray<double>() { 2.0, 6.0, 10.0 } });
-            functionOfQ.Components.Add(new Variable<double>() { Values = new MultiDimensionalArray<double>() { 3.0, 5.0, 7.0 } });
+            functionOfQ.Arguments.Add(new Variable<double> { Values = new MultiDimensionalArray<double> { 2.0, 6.0, 10.0 } });
+            functionOfQ.Components.Add(new Variable<double> { Values = new MultiDimensionalArray<double> { 3.0, 5.0, 7.0 } });
             
             // add functions
             section.AddHRoughnessFunctionToBranch(branch1, functionOfH);
@@ -95,9 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Roughness
             var branch2 = network.Branches[1];
             var crossSectionSectionType = new CrossSectionSectionType { Name = "main" };
             var section = new RoughnessSection(crossSectionSectionType, network);
-            var reverseSection = new ReverseRoughnessSection(section);
-
-            reverseSection.UseNormalRoughness = false;
+            var reverseSection = new ReverseRoughnessSection(section) {UseNormalRoughness = false};
 
             var locationOne = new NetworkLocation(branch2, 0);
             reverseSection.RoughnessNetworkCoverage[locationOne] = new object[] { 100.0, RoughnessType.Manning };
@@ -125,8 +124,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Roughness
         [Test]
         public void TestFunctionOfH()
         {
-            //var network = CreateNetwork();
-
             var function = RoughnessSection.DefineFunctionOfQ();
             function[0.0, 0.0] = 1.1;
             function[0.0, 1000.0] = 2.1;
@@ -151,7 +148,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Roughness
             Assert.AreEqual("main", section.RoughnessNetworkCoverage.Name);
 
             //change name of sectiontype should update the name of the coverage
-            string newname = "newName";
+            var newname = "newName";
             crossSectionSectionType.Name = newname;
 
             Assert.AreEqual(newname, section.RoughnessNetworkCoverage.Name);
@@ -168,7 +165,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Roughness
             var dataItem = new DataItem(section);
             Assert.AreEqual("main", dataItem.Name);
 
-            string newName = "kees";
+            var newName = "kees";
             crossSectionSectionType.Name = newName;
 
             Assert.AreEqual(newName, dataItem.Name);
@@ -230,8 +227,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Roughness
             var crossSectionSectionType = new CrossSectionSectionType {Name = "main"};
             var section = new RoughnessSection(crossSectionSectionType, network);
             //define two location 
-            int offset = 0;
-            int endOffset = 100;
+            var offset = 0;
+            var endOffset = 100;
             section.RoughnessNetworkCoverage[new NetworkLocation(channel, offset)] = new object[]
                                                                                          {
                                                                                              0.0, RoughnessType.StricklerKn
@@ -365,10 +362,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Roughness
             roughnessFunction[99.0] = 99.0;
             roughnessFunction[10000.0] = 10000.0;
 
-            TestHelper.AssertLogMessageIsGenerated(() => roughnessSection.UpdateCoverageForFunction(network.Branches.First(), roughnessFunction, RoughnessType.Chezy), "Invalid chainage '10000' for branch 'branch1'; skipped.");
+            var expectedMessage = string.Format(Resources.RoughnessSection_UpdateCoverageForFunction_Invalid_chainage___0___in_arguments_of_roughness_function___1___for_branch___2____The_import_of_this_roughness_function_is_skipped_, 10000, roughnessFunction.Name, "branch1");
+            TestHelper.AssertLogMessageIsGenerated(() => roughnessSection.UpdateCoverageForFunction(network.Branches.First(), roughnessFunction, RoughnessType.Chezy), expectedMessage);
             Assert.AreEqual(2, roughnessSection.RoughnessNetworkCoverage.Arguments[0].Values.Count);
             Assert.AreEqual(10.0, ((NetworkLocation) roughnessSection.RoughnessNetworkCoverage.Arguments[0].Values[0]).Chainage);
             Assert.AreEqual(99.0, ((NetworkLocation) roughnessSection.RoughnessNetworkCoverage.Arguments[0].Values[1]).Chainage);
+        }
+
+        [Test]
+        public void GivenRoughnessFunctionWithAnArgumentValueThatIsLessThanAHalfLargerThanItsBranchLength_WhenUpdatingCoverage_ThenArgumentValueIsChangedToTheBranchLengthAndWarningHasBeenLogged()
+        {
+            var tooLargeValue = 100.49;
+            var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+            var crossSectionSectionType = new CrossSectionSectionType { Name = "main" };
+            var roughnessSection = new RoughnessSection(crossSectionSectionType, network);
+            var roughnessFunction = RoughnessBranchDataMerger.DefineConstantFunction();
+
+            roughnessFunction[10.0] = 10.0;
+            roughnessFunction[99.0] = 99.0;
+            roughnessFunction[tooLargeValue] = tooLargeValue; // Less than 0.5 larger than the branch length of 100.0
+
+            TestHelper.AssertLogMessagesCount(() => roughnessSection.UpdateCoverageForFunction(network.Branches.First(), roughnessFunction, RoughnessType.Chezy), 1);
+
+            var roughnessFunctionArguments = roughnessSection.RoughnessNetworkCoverage.Arguments[0];
+            Assert.That(roughnessFunctionArguments.Values.Count, Is.EqualTo(3));
+            Assert.AreEqual(10.0, ((NetworkLocation)roughnessFunctionArguments.Values[0]).Chainage, 10e-6);
+            Assert.AreEqual(99.0, ((NetworkLocation)roughnessFunctionArguments.Values[1]).Chainage, 10e-6);
+            Assert.AreEqual(100.0, ((NetworkLocation)roughnessFunctionArguments.Values[2]).Chainage, 10e-6);
         }
 
         [Test]

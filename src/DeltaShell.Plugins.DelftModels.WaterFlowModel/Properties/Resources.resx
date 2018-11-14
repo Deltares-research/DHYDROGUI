@@ -442,4 +442,10 @@
   <data name="WaterFlowModel1DNetCdfFunctionStore_MetaData_Error_reading_MetaData_for_file___0__1__2_" xml:space="preserve">
     <value>Error reading MetaData for file: {0}{1}{2}</value>
   </data>
+  <data name="RoughnessSection_UpdateCoverageForFunction_Invalid_chainage___0___in_arguments_of_roughness_function___1___for_branch___2____The_import_of_this_roughness_function_is_skipped_" xml:space="preserve">
+    <value>Invalid chainage '{0}' in arguments of roughness function '{1}' for branch '{2}'. The import of this roughness function is skipped.</value>
+  </data>
+  <data name="RoughnessSection_UpdateCoverageForFunction_The_chainage___0___in_the_arguments_of_roughness_function___1____for_branch___2___was_corrected_to___3____to_match_the_branch_length_" xml:space="preserve">
+    <value>The chainage '{0}' in the arguments of roughness function '{1}' for branch '{2}' was corrected to '{3}', to match the branch length.</value>
+  </data>
 </root>

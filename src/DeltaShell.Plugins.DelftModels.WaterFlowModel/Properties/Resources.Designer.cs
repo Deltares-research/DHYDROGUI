@@ -453,6 +453,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid chainage &apos;{0}&apos; in arguments of roughness function &apos;{1}&apos; for branch &apos;{2}&apos;. The import of this roughness function is skipped..
+        /// </summary>
+        public static string RoughnessSection_UpdateCoverageForFunction_Invalid_chainage___0___in_arguments_of_roughness_function___1___for_branch___2____The_import_of_this_roughness_function_is_skipped_ {
+            get {
+                return ResourceManager.GetString("RoughnessSection_UpdateCoverageForFunction_Invalid_chainage___0___in_arguments_of" +
+                        "_roughness_function___1___for_branch___2____The_import_of_this_roughness_functio" +
+                        "n_is_skipped_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The chainage &apos;{0}&apos; in the arguments of roughness function &apos;{1}&apos; for branch &apos;{2}&apos; was corrected to &apos;{3}&apos;, to match the branch length..
+        /// </summary>
+        public static string RoughnessSection_UpdateCoverageForFunction_The_chainage___0___in_the_arguments_of_roughness_function___1____for_branch___2___was_corrected_to___3____to_match_the_branch_length_ {
+            get {
+                return ResourceManager.GetString("RoughnessSection_UpdateCoverageForFunction_The_chainage___0___in_the_arguments_of" +
+                        "_roughness_function___1____for_branch___2___was_corrected_to___3____to_match_the" +
+                        "_branch_length_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap unstruc {
