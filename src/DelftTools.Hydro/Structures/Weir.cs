@@ -32,8 +32,8 @@ namespace DelftTools.Hydro.Structures
                     LateralContraction = 1.0
                 };
             Name = name;
-            CrestWidth = 5;
-            CrestLevel = 1;
+            CrestWidth = 0.0;
+            CrestLevel = 0.0;
             OffsetY = 0;
             FlowDirection = FlowDirection.Both;
             CrestShape = CrestShape.Sharp;
@@ -82,7 +82,11 @@ namespace DelftTools.Hydro.Structures
                 }
                 return crestWidth;
             }
-            set { crestWidth = value; }
+            set
+            {
+                crestWidth = value;
+                OnCrestWidthChanged();
+            }
         }
 
         public virtual bool UseCrestLevelTimeSeries
@@ -127,6 +131,15 @@ namespace DelftTools.Hydro.Structures
             if (weirFormula is GeneralStructureWeirFormula)
             {
                 (weirFormula as GeneralStructureWeirFormula).BedLevelStructureCentre = crestLevel;
+            }
+        }
+
+        [EditAction]
+        private void OnCrestWidthChanged()
+        {
+            if (weirFormula is GeneralStructureWeirFormula)
+            {
+                (weirFormula as GeneralStructureWeirFormula).WidthStructureCentre = crestWidth;
             }
         }
 

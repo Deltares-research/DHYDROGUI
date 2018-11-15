@@ -117,7 +117,11 @@ namespace Sobek.IntegrationTests
             //get some random stuff in there
             if (typeof (TFormulaType) == typeof (GatedWeirFormula))
             {
-                ReflectionTestHelper.FillRandomValuesForValueTypeProperties(formula, new[] { "UseLowerEdgeLevelTimeSeries" });
+                ReflectionTestHelper.FillRandomValuesForValueTypeProperties(formula, new[] { "UseLowerEdgeLevelTimeSeries", "UseHorizontalDoorOpeningWidthTimeSeries", "DoorHeight", "HorizontalDoorOpeningWidth","LowerEdgeLevel", "HorizontalDoorOpeningDirection" });
+            }
+            else if (typeof(TFormulaType) == typeof(GeneralStructureWeirFormula))
+            {
+                ReflectionTestHelper.FillRandomValuesForValueTypeProperties(formula, new[] { "UseLowerEdgeLevelTimeSeries", "UseHorizontalDoorOpeningWidthTimeSeries", "DoorHeight", "HorizontalDoorOpeningWidth", "LowerEdgeLevel", "HorizontalDoorOpeningDirection" });
             }
             else
             {

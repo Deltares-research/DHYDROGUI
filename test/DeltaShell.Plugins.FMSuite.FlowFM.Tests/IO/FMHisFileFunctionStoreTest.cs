@@ -2,6 +2,7 @@
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
@@ -232,23 +233,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             weir.CrestLevelTimeSeries[model.StopTime.AddSeconds(1)] = 5.5;
             model.Area.Weirs.Add(weir);
 
-            var gate = new Gate2D("gate")
+            var gate = new Weir2D("weir",true)
             {
                 Geometry = new LineString(new[] {new Coordinate(-149.1, -180.0), new Coordinate(-50.1, -180.0)}),
-                SillWidth = 102.0,
-                UseOpeningWidthTimeSeries = true,
-                UseLowerEdgeLevelTimeSeries = true
+                WeirFormula = new GatedWeirFormula(true)
+                {
+                    UseHorizontalDoorOpeningWidthTimeSeries = true,
+                    UseLowerEdgeLevelTimeSeries = true
+                },
+                CrestLevel = 102.0
             };
-            gate.OpeningWidthTimeSeries[model.StartTime] = 0.0;
-            gate.OpeningWidthTimeSeries[model.StartTime.AddHours(1)] = 0.0;
-            gate.OpeningWidthTimeSeries[model.StartTime.AddHours(2)] = 25.0;
-            gate.OpeningWidthTimeSeries[model.StopTime.AddSeconds(1)] = 25.0;
 
-            gate.LowerEdgeLevelTimeSeries[model.StartTime] = 8.5;
-            gate.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(1)] = 6.5;
-            gate.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(2)] = 0.0;
-            gate.LowerEdgeLevelTimeSeries[model.StopTime.AddSeconds(1)] = -10.0;
-            model.Area.Gates.Add(gate);
+            var gatedWeirFormula = gate.WeirFormula as GatedWeirFormula;
+
+            Assert.NotNull(gatedWeirFormula);
+
+            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StartTime] = 0.0;
+            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StartTime.AddHours(1)] = 0.0;
+            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StartTime.AddHours(2)] = 25.0;
+            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries[model.StopTime.AddSeconds(1)] = 25.0;
+
+            gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime] = 8.5;
+            gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(1)] = 6.5;
+            gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(2)] = 0.0;
+            gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StopTime.AddSeconds(1)] = -10.0;
+            model.Area.Weirs.Add(gate);
 
             var pump = new Pump2D("pump", true)
             {

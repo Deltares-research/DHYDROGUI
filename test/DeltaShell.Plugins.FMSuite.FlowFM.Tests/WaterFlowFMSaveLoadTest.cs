@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
@@ -763,7 +764,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var model = new WaterFlowFMModel(mduPath);
                 model.StopTime = model.StartTime.AddMinutes(15);
 
-                Assert.IsTrue(model.Area.Gates.Any());
+                Assert.IsTrue(model.Area.Weirs.Where(w =>w.WeirFormula is GatedWeirFormula).ToList().Count>0);
 
                 app.Project.RootFolder.Add(model);
                 

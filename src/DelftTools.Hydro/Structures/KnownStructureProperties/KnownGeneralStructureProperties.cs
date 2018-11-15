@@ -26,6 +26,8 @@ namespace DelftTools.Hydro.Structures.KnownStructureProperties
         [Description("neg_drownweirflowcoeff")] NegativeDrownWeirFlowCoefficient,
         [Description("neg_contrcoeffreegate")] NegativeContractionCoefficientFreeGate,
         [Description("extraresistance")] ExtraResistance,
-        [Description("gatedoorheight")] GateDoorHeightGeneralStructure
+        [Description("gatedoorheight")] GateDoorHeightGeneralStructure,
+        [Description("horizontal_opening_direction")] HorizontalDoorOpeningDirection,
+        [Description("door_opening_width")] HorizontalDoorOpeningWidth
     }
 }

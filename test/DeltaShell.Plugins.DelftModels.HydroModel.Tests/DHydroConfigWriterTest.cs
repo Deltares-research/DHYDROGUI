@@ -304,7 +304,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 Geometry = new LineString(new[] { new Coordinate(-50, -100), new Coordinate(50, -100) })
             };
-            var gate = new Gate2D("poort")
+            var gate = new Weir2D("poort")
             {
                 Geometry = new LineString(new[] { new Coordinate(-50, 100), new Coordinate(50, 100) })
             };
@@ -315,7 +315,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             };
 
             waterFlowFMModel.Area.Pumps.Add(pump);
-            waterFlowFMModel.Area.Gates.Add(gate);
+            waterFlowFMModel.Area.Weirs.Add(gate);
             waterFlowFMModel.Area.ObservationPoints.Add(obserVationPoint);
 
             realTimeControlModel.ControlGroups.Add(RealTimeControlModelHelper.CreateStandardControlGroup("InvertorRule"));

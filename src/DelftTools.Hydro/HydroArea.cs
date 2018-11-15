@@ -20,8 +20,7 @@ namespace DelftTools.Hydro
         public const string ObservationPointsPluralName = "Observation Points";
         public const string ObservationCrossSectionsPluralName = "Observation Cross-Sections";
         public const string PumpsPluralName = "Pumps";
-        public const string WeirsPluralName = "Weirs";
-        public const string GatesPluralName = "Gates";
+        public const string WeirsPluralName = "Structures";
         public const string EmbankmentsPluralName = "Embankments";
         public const string EnclosureName = "Enclosure";
         public const string BridgePillarsPluralName = "Bridge Pillars";
@@ -51,7 +50,6 @@ namespace DelftTools.Hydro
 
             Pumps = new EventedList<Pump2D>();
             Weirs = new EventedList<Weir2D>();
-            Gates = new EventedList<Gate2D>();
         }
 
         public virtual IEventedList<LandBoundary2D> LandBoundaries { get; protected set; }
@@ -69,7 +67,6 @@ namespace DelftTools.Hydro
 
         public virtual IEventedList<Pump2D> Pumps { get; protected set; }
         public virtual IEventedList<Weir2D> Weirs { get; protected set; }
-        public virtual IEventedList<Gate2D> Gates { get; protected set; }
 
         #region IHydroRegion
 
@@ -91,11 +88,6 @@ namespace DelftTools.Hydro
             foreach (var weir in Weirs)
             {
                 yield return weir;
-            }
-            yield return Gates;
-            foreach (var gate in Gates)
-            {
-                yield return gate;
             }
 
             foreach (var thinDam in ThinDams)

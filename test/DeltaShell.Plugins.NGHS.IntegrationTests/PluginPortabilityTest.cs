@@ -822,7 +822,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             Assert.AreEqual((double) 100.0d, (double) setValueOperation.Value,0.1d);
             Assert.AreEqual((object) PointwiseOperationType.Overwrite, setValueOperation.OperationType);
                 
-            Assert.AreEqual((int) 1, (int) fmModel.Area.Gates.Count());
+            Assert.AreEqual((int) 1, (int) fmModel.Area.Weirs.Count());
             Assert.AreEqual((int) 1, (int) fmModel.Area.ThinDams.Count());
             Assert.AreEqual((int) 1, (int) fmModel.Area.FixedWeirs.Count());
             Assert.AreEqual((int) 1, (int) fmModel.Area.ObservationCrossSections.Count());
@@ -1100,7 +1100,6 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 }
             });
             var lineString = new LineString(new []{new Coordinate(0,0), new Coordinate(1,1)});            
-            area.Gates.Add(new Gate2D(){Name = "gate", Geometry = lineString});
             area.ThinDams.Add(new ThinDam2D(){Name = "thin", Geometry = lineString});
             area.FixedWeirs.Add(new FixedWeir(){Name ="fixedweir", Geometry = lineString});
             area.ObservationCrossSections.Add(new ObservationCrossSection2D(){Name="ObsCS", Geometry = lineString});

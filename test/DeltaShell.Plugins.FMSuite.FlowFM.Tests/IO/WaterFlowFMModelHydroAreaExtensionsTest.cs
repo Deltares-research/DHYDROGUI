@@ -50,7 +50,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             CheckIfRemoveDuplicateFeaturesWorks<ObservationCrossSection2D>();
             CheckIfRemoveDuplicateFeaturesWorks<Pump2D>();
             CheckIfRemoveDuplicateFeaturesWorks<Weir2D>();
-            CheckIfRemoveDuplicateFeaturesWorks<Gate2D>();
             CheckIfRemoveDuplicateFeaturesWorks<BridgePillar>();
         }
 
@@ -65,7 +64,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<ObservationCrossSection2D>();
             RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<Pump2D>();
             RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<Weir2D>();
-            RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<Gate2D>();
             RemoveDuplicateFeaturesDoesNotRemoveUniqueFeatures<BridgePillar>();
         }
 
@@ -79,7 +77,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenFeatureWithUnRootedGroupName_WhenUpdatingGroupName_ThenGroupNameWillNotChange(string groupName, string expectedGroupName)
         {
             // structures
-            CheckIfUpdateGroupNameGivesTheDesiredResult<Gate2D>(groupName, expectedGroupName);
             CheckIfUpdateGroupNameGivesTheDesiredResult<Weir2D>(groupName, expectedGroupName);
             CheckIfUpdateGroupNameGivesTheDesiredResult<Pump2D>(groupName, expectedGroupName);
 
@@ -136,7 +133,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         private void CheckUpdatingNamesForStructures(string fileName, string expectedGroupName, string parentDir)
         {
             var groupName = Path.Combine(parentDir, fileName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<Gate2D>(groupName, expectedGroupName);
             CheckIfUpdateGroupNameGivesTheDesiredResult<Weir2D>(groupName, expectedGroupName);
             CheckIfUpdateGroupNameGivesTheDesiredResult<Pump2D>(groupName, expectedGroupName);
         }

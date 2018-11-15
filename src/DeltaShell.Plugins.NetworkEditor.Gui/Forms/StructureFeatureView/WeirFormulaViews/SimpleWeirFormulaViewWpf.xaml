@@ -20,7 +20,7 @@
             <ColumnDefinition SharedSizeGroup="A"/>
             <ColumnDefinition SharedSizeGroup="B"/>
         </Grid.ColumnDefinitions>
-        <Label Grid.Row="0" Grid.Column="0" Content="Lateral contraction Cw"/>
+        <Label Grid.Row="0" Grid.Column="0" Content="Contraction coefficient"/>
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding LateralContraction, Mode=TwoWay}"/>
     </Grid>
 </UserControl>

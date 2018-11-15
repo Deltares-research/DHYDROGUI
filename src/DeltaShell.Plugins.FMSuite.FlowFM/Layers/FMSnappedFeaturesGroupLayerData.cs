@@ -55,9 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.Pumps,
                                                       AreaLayerStyles.PumpStyle, "Pumps (snapped)", UnstrucGridOperationApi.Pump);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.Weirs,
-                                                      AreaLayerStyles.WeirStyle, "Weirs (snapped)", UnstrucGridOperationApi.Weir);
-            yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.Gates,
-                                                      AreaLayerStyles.GateStyle, "Gates (snapped)", UnstrucGridOperationApi.Gate);
+                                                      AreaLayerStyles.WeirStyle, "Structures (snapped)", UnstrucGridOperationApi.Weir);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.ObservationCrossSections,
                                                       AreaLayerStyles.ObsCrossSectionStyle, "Observation cross sections (snapped)", UnstrucGridOperationApi.ObsCrossSection);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.Embankments,

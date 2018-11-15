@@ -83,7 +83,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new Area2DStructuresImporter { GetModelForArea = GetModelForArea };
             yield return new StructuresListImporter(StructuresListType.Pumps) { GetModelForList = GetModelForCollection };
             yield return new StructuresListImporter(StructuresListType.Weirs) { GetModelForList = GetModelForCollection };
-            yield return new StructuresListImporter(StructuresListType.Gates) { GetModelForList = GetModelForCollection };
             yield return new FMMapFileImporter();
             yield return new FMHisFileImporter();
             yield return new FMRstFileImporter {GetFMModelForRestartState = GetFMModelForRestartState};
@@ -232,15 +231,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.Pumps)),
                 GetEditableObject = target => GetModelFor(target, a => a.Pumps).Area
             };
-            yield return new PliFileImporterExporter<Gate2D, Gate2D>
-            {
-                Mode = Feature2DImportExportMode.Import,
-                CreateFromFeature = f => new Gate2D(f.Name) { Geometry = f.Geometry },
-                GetFeature = w => new Gate2D() { Name = w.Name, Geometry = w.Geometry },
-                EqualityComparer = new GroupableFeatureComparer<Gate2D>(),
-                AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.Gates)),
-                GetEditableObject = target => GetModelFor(target, a => a.Gates).Area
-            };
             yield return new PliFileImporterExporter<SourceAndSink, Feature2D>
             {
                 Mode = Feature2DImportExportMode.Import,
@@ -316,7 +306,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new Area2DStructuresExporter { GetModelForArea = GetModelForArea };
             yield return new StructuresListExporter(StructuresListType.Pumps) { GetModelForList = GetModelForCollection };
             yield return new StructuresListExporter(StructuresListType.Weirs) { GetModelForList = GetModelForCollection };
-            yield return new StructuresListExporter(StructuresListType.Gates) { GetModelForList = GetModelForCollection };
             yield return new BcFileExporter {GetRefDateForBoundaryCondition = GetRefDateForBoundaryCondition};
             yield return new BcmFileExporter {GetRefDateForBoundaryCondition = GetRefDateForBoundaryCondition};
             yield return new PliFileImporterExporter<Embankment, Embankment> { Mode = Feature2DImportExportMode.Export };
@@ -402,12 +391,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 Mode = Feature2DImportExportMode.Export,
                 CreateFromFeature = f => new Pump(f.Name, true) { Geometry = f.Geometry },
-                GetFeature = w => new Feature2D { Name = w.Name, Geometry = w.Geometry }
-            };
-            yield return new PliFileImporterExporter<IGate, Feature2D>
-            {
-                Mode = Feature2DImportExportMode.Export,
-                CreateFromFeature = f => new Gate(f.Name) { Geometry = f.Geometry },
                 GetFeature = w => new Feature2D { Name = w.Name, Geometry = w.Geometry }
             };
             yield return new PliFileImporterExporter<SourceAndSink, Feature2D>
@@ -514,7 +497,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private static bool GetAvailableLists(WaterFlowFMModel model, IEnumerable list)
         {
             if (Equals(model.Area.Weirs, list)) return true;
-            if (Equals(model.Area.Gates, list)) return true;
             if (Equals(model.Area.Pumps, list)) return true;
             // Add more if relevant...
 

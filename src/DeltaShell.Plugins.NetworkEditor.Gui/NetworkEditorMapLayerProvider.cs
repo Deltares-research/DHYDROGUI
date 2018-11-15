@@ -48,7 +48,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || data is IEnumerable<IChannel>
                    || (data is IEventedList<Pump2D> && parentObject is HydroArea)
                    || (data is IEventedList<Weir2D> && parentObject is HydroArea)
-                   || (data is IEventedList<Gate2D> && parentObject is HydroArea)
                    || data is IEnumerable<IPump>
                    || data is IEnumerable<ILateralSource>
                    || data is IEnumerable<IRetention>
@@ -127,7 +126,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     yield return area2D.ObservationCrossSections;
                     yield return area2D.Pumps;
                     yield return area2D.Weirs;
-                    yield return area2D.Gates;
                     yield return area2D.LandBoundaries;
                     yield return area2D.DryPoints;
                     yield return area2D.DryAreas;
@@ -472,38 +470,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     NameIsReadOnly = true,
                     Style = AreaLayerStyles.WeirStyle,
                     DataSource = feature2DCollection,
-                    FeatureEditor = new Feature2DEditor(area2DParent)
-                    {
-                        CreateNewFeature = layer =>
-                        {
-                            var weir = new Weir2D(true);
-                            weir.CrestWidth = 0.0;
-                            return weir;
-                        }
-                    },
+                    FeatureEditor = new Feature2DEditor(area2DParent),
                     CustomRenderers = new[] { new ArrowLineStringAdornerRenderer() }
                 };
             }
-
-            var gates2d = data as IEventedList<Gate2D>;
-            if (gates2d != null && area2DParent != null && Equals(gates2d, area2DParent.Gates))
-            {
-                var feature2DCollection = new HydroAreaFeature2DCollection (area2DParent).Init(gates2d, "gate", modelName,
-                    area2DParent.CoordinateSystem);
-                feature2DCollection.FeatureType = typeof(Gate2D); // Override so we can use FeatureAttributes!
-                return new VectorLayer(HydroArea.GatesPluralName)
-                {
-                    NameIsReadOnly = true,
-                    Style = AreaLayerStyles.GateStyle,
-                    DataSource = feature2DCollection,
-                    FeatureEditor = new Feature2DEditor(area2DParent)
-                    {
-                        CreateNewFeature = layer => new Gate2D()
-                    },
-                    CustomRenderers = new[] { new ArrowLineStringAdornerRenderer() }
-                };
-            }
-
 
             var thinDams = data as IEventedList<ThinDam2D>;
             if (thinDams != null && area2DParent != null && Equals(thinDams, area2DParent.ThinDams))

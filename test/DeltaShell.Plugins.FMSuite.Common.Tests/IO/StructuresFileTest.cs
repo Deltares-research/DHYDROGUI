@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
@@ -248,9 +249,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 BedLevelRightSideOfStructure = 20,
                 UseExtraResistance = true,
                 ExtraResistance = 40,
-                GateOpening = 60
+                DoorHeight = 50,
+                UseHorizontalDoorOpeningWidthTimeSeries = false,
+                HorizontalDoorOpeningWidth = 60,
+                UseLowerEdgeLevelTimeSeries = false,
+                LowerEdgeLevel = 70
+
             };
-            var initialGeneralStructure = new Weir("gs01")
+            var initialGeneralStructure = new Weir("gs01",true)
             {
                 Geometry = new LineString(new[] { new Coordinate(4, 5), new Coordinate(6, 7) }),
                 WeirFormula = initialFormula
@@ -259,9 +265,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var structuresFile = new StructuresFile
             {
                 StructureSchema = schema,
-                ReferenceDate = new DateTime(2013, 1, 1, 0, 0, 0)
+                ReferenceDate = new DateTime(2013, 1, 1, 0, 0, 0) 
             };
-
+             
             structuresFile.Write(iniFilePath, structures);
             var readResult = structuresFile.Read(iniFilePath);
             Assert.That(readResult.Count, Is.EqualTo(1));
@@ -306,6 +312,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
                                     initialFormula.UseExtraResistance == resultingFormula.UseExtraResistance &&
                                     initialFormula.ExtraResistance == resultingFormula.ExtraResistance &&
+                                    initialFormula.DoorHeight == resultingFormula.DoorHeight &&
+                                    initialFormula.UseHorizontalDoorOpeningWidthTimeSeries == resultingFormula.UseHorizontalDoorOpeningWidthTimeSeries &&
+                                    initialFormula.HorizontalDoorOpeningWidth == resultingFormula.HorizontalDoorOpeningWidth &&
+                                    initialFormula.UseLowerEdgeLevelTimeSeries == resultingFormula.UseLowerEdgeLevelTimeSeries &&
+                                    initialFormula.LowerEdgeLevel == resultingFormula.LowerEdgeLevel &&
                                     initialFormula.GateOpening == resultingFormula.GateOpening);
 
             Assert.IsTrue(weirPropertiesAreEqual && formulasAreEqual);
@@ -358,10 +369,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var structures = structureFile.Read(path).ToList();
 
             Assert.AreEqual(3, structures.Count);
-            Assert.AreEqual(1, structures.OfType<IWeir>().Count());
+            Assert.AreEqual(2, structures.OfType<IWeir>().Count());
             Assert.AreEqual(1, structures.OfType<IPump>().Count());
-            Assert.AreEqual(1, structures.OfType<IGate>().Count());
-
+            
             var pump = structures.OfType<IPump>().First();
             Assert.AreEqual(2, pump.CapacityTimeSeries.Time.Values.Count);
             Assert.AreEqual(5.6, pump.CapacityTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
@@ -372,13 +382,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual(1.2, weir.CrestLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
             Assert.AreEqual(3.4, weir.CrestLevelTimeSeries[new DateTime(2013, 1, 1, 1, 1, 0)]);
 
-            var gate = structures.OfType<IGate>().First();
-            Assert.AreEqual(2, gate.LowerEdgeLevelTimeSeries.Time.Values.Count);
-            Assert.AreEqual(1.2, gate.LowerEdgeLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
-            Assert.AreEqual(3.4, gate.LowerEdgeLevelTimeSeries[new DateTime(2013, 1, 1, 1, 1, 0)]);
-            Assert.AreEqual(2, gate.OpeningWidthTimeSeries.Time.Values.Count);
-            Assert.AreEqual(5.6, gate.OpeningWidthTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
-            Assert.AreEqual(7.8, gate.OpeningWidthTimeSeries[new DateTime(2013, 1, 1, 2, 3, 0)]);
+            var gate = structures.OfType<IWeir>().First(w => w.WeirFormula is GatedWeirFormula);
+            var gateFormula = gate.WeirFormula as GatedWeirFormula;
+            Assert.NotNull(gateFormula);
+
+            Assert.AreEqual(2, gateFormula.LowerEdgeLevelTimeSeries.Time.Values.Count);
+            Assert.AreEqual(1.2, gateFormula.LowerEdgeLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
+            Assert.AreEqual(3.4, gateFormula.LowerEdgeLevelTimeSeries[new DateTime(2013, 1, 1, 1, 1, 0)]);
+            Assert.AreEqual(2, gateFormula.HorizontalDoorOpeningWidthTimeSeries.Time.Values.Count);
+            Assert.AreEqual(5.6, gateFormula.HorizontalDoorOpeningWidthTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
+            Assert.AreEqual(7.8, gateFormula.HorizontalDoorOpeningWidthTimeSeries[new DateTime(2013, 1, 1, 2, 3, 0)]);
         }
 
         [Test]
@@ -625,6 +638,310 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         }
 
         #endregion
+
+        private const string ExpectedCrestLevelValue =      "    crest_level           = 10                  # Weir crest height (in [m])";
+        private const string ExpectedCrestLevelTimeSeries = "    crest_level           = TestStructure_crest_level.tim# Weir crest height (in [m])";
+
+        // Tests added in relation to DELFT3DFM
+        [TestCase(false, ExpectedCrestLevelValue)]
+        [TestCase(true,  ExpectedCrestLevelTimeSeries)]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAStructuresFileAndAValidFilePathAndASetOfStructuresContainingOnlyASimpleWeirWhenWriteIsCalledOnStructuresFileWithTheFilePathAndStructuresThenTheCorrectFileIsWritten(bool useCrestLevelTimeSeries, string expectedCrestLevelVal)
+        {
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                // Given
+                var structuresFile = new StructuresFile {StructureSchema = schema};
+                var writePath = Path.Combine(tempDir, "structures.ini");
+
+                var weir = new Weir2D("TestStructure", true)
+                {
+                    WeirFormula = new SimpleWeirFormula(),
+                    CrestWidth = 20.0,
+                    CrestLevel = 10.0,
+                    UseCrestLevelTimeSeries = useCrestLevelTimeSeries,
+                };
+
+                var structures = new[]
+                {
+                    weir
+                };
+
+                // When
+                structuresFile.Write(writePath, structures);
+
+                // Then
+                var expectedFileContents = 
+                    "[structure]" + Environment.NewLine +
+                    "    type                  = weir                # Type of structure"          + Environment.NewLine +
+                    "    id                    = TestStructure       # Name of the structure"      + Environment.NewLine +
+                    expectedCrestLevelVal                                                          + Environment.NewLine + 
+                    "    crest_width           = 20                  # Weir crest width (in [m])"  + Environment.NewLine +
+                    "    lat_contr_coeff       = 1                   # Lateral contraction coefficient" + Environment.NewLine;
+
+                var fileContents = File.ReadAllText(writePath);
+
+                Assert.That(fileContents, Is.EqualTo(expectedFileContents));
+            });
+        }
+
+
+        private const string ExpectedSillLevelValue =      "    sill_level            = 10                  # Gate sill level (in [m])";
+        private const string ExpectedSillLevelTimeSeries = "    sill_level            = TestStructure_sill_level.tim# Gate sill level (in [m])";
+
+        private const string ExpectedLowerEdgeLevelValueGatedFormula =      "    lower_edge_level      = 40                  # Gate lower edge level (in [m])";
+        private const string ExpectedLowerEdgeLevelTimeSeriesGatedFormula = "    lower_edge_level      = TestStructure_lower_edge_level.tim# Gate lower edge level (in [m])";
+
+        private const string ExpectedDoorOpeningValueGatedFormula =      "    opening_width         = 30                  # Gate opening width (in [m])";
+        private const string ExpectedDoorOpeningTimeSeriesGatedFormula = "    opening_width         = TestStructure_opening_width.tim# Gate opening width (in [m])";
+
+        [TestCase(false, ExpectedSillLevelValue,      
+                  false, ExpectedLowerEdgeLevelValueGatedFormula, 
+                  false, ExpectedDoorOpeningValueGatedFormula)]
+        [TestCase(false, ExpectedSillLevelValue,
+                  false, ExpectedLowerEdgeLevelValueGatedFormula,
+                  true, ExpectedDoorOpeningTimeSeriesGatedFormula)]
+        [TestCase(false, ExpectedSillLevelValue,
+                  true, ExpectedLowerEdgeLevelTimeSeriesGatedFormula,
+                  false, ExpectedDoorOpeningValueGatedFormula)]
+        [TestCase(false, ExpectedSillLevelValue,
+                  true, ExpectedLowerEdgeLevelTimeSeriesGatedFormula,
+                  true, ExpectedDoorOpeningTimeSeriesGatedFormula)]
+        [TestCase(true,  ExpectedSillLevelTimeSeries,
+                  false, ExpectedLowerEdgeLevelValueGatedFormula,
+                  false, ExpectedDoorOpeningValueGatedFormula)]
+        [TestCase(true,  ExpectedSillLevelTimeSeries,
+                  false, ExpectedLowerEdgeLevelValueGatedFormula,
+                  true, ExpectedDoorOpeningTimeSeriesGatedFormula)]
+        [TestCase(true,  ExpectedSillLevelTimeSeries,
+                  true, ExpectedLowerEdgeLevelTimeSeriesGatedFormula,
+                  false, ExpectedDoorOpeningValueGatedFormula)]
+        [TestCase(true,  ExpectedSillLevelTimeSeries,
+                  true, ExpectedLowerEdgeLevelTimeSeriesGatedFormula,
+                  true, ExpectedDoorOpeningTimeSeriesGatedFormula)]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAStructuresFileAndAValidFilePathAndASetOfStructuresContainingOnlyAGatedWeirWhenWriteIsCalledOnStructuresFileWithTheFilePathAndStructuresThenTheCorrectFileIsWritten(
+            bool useSillLevelTimeSeries, string expectedSillLevelVal,
+            bool useLowerEdgeLevelTimeSeries, string expectedLowerEdgeLevelVal,
+            bool useHorizontalDoorOpeningWidthTimeSeries, string expectedHorizontalDoorOpeningWidthVal)
+        {
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                // Given
+                var structuresFile = new StructuresFile { StructureSchema = schema };
+                var writePath = Path.Combine(tempDir, "structures.ini");
+
+                var weir = new Weir2D("TestStructure", true)
+                {
+                    WeirFormula = new GatedWeirFormula(true)
+                    {
+                        DoorHeight = 50.0,
+
+                        HorizontalDoorOpeningWidth = 30.0,
+                        HorizontalDoorOpeningWidthTimeSeries = new TimeSeries(),
+                        UseHorizontalDoorOpeningWidthTimeSeries = useHorizontalDoorOpeningWidthTimeSeries,
+
+                        LowerEdgeLevel = 40.0,
+                        LowerEdgeLevelTimeSeries = new TimeSeries(),
+                        UseLowerEdgeLevelTimeSeries = useLowerEdgeLevelTimeSeries,
+                    },
+                    CrestWidth = 20.0,
+                    CrestLevel = 10.0,
+                    UseCrestLevelTimeSeries = useSillLevelTimeSeries,
+                };
+
+                var structures = new[]
+                {
+                    weir
+                };
+
+                // When
+                structuresFile.Write(writePath, structures);
+
+                // Then
+                var expectedFileContents =
+                    "[structure]" + Environment.NewLine +
+                    "    type                  = gate                # Type of structure" + Environment.NewLine +
+                    "    id                    = TestStructure       # Name of the structure" + Environment.NewLine +
+                    expectedSillLevelVal + Environment.NewLine +
+                    expectedLowerEdgeLevelVal + Environment.NewLine +
+                    expectedHorizontalDoorOpeningWidthVal + Environment.NewLine +
+                    "    door_height           = 50                  # Gate door height (in [m])" + Environment.NewLine +
+                    "    horizontal_opening_direction= symmetric           # Horizontal direction of the opening doors" + Environment.NewLine +
+                    "    sill_width            = 20                  # Gate sill width (in [m])" + Environment.NewLine;
+
+                var fileContents = File.ReadAllText(writePath);
+
+                Assert.That(fileContents, Is.EqualTo(expectedFileContents));
+            });
+        }
+
+        private const string ExpectedGSCrestLevelValue      = "    levelcenter           = 10                  # Bed level at centre of structure (m AD)";
+        private const string ExpectedGSCrestLevelTimeSeries = "    levelcenter           = TestStructure_levelcenter.tim# Bed level at centre of structure (m AD)";
+
+        private const string ExpectedLowerEdgeLevelValueGeneralStructureFormula      = "    gateheight            = 40                  # Gate lower edge level (m AD)";
+        private const string ExpectedLowerEdgeLevelTimeSeriesGeneralStructureFormula = "    gateheight            = TestStructure_gateheight.tim# Gate lower edge level (m AD)";
+
+        private const string ExpectedDoorOpeningValueGeneralStructureFormula      = "    door_opening_width    = 30                  # Horizontal opening width between the doors (m)";
+        private const string ExpectedDoorOpeningTimeSeriesGeneralStructureFormula = "    door_opening_width    = TestStructure_door_opening_width.tim# Horizontal opening width between the doors (m)";
+
+        [TestCase(false, ExpectedGSCrestLevelValue, 
+                  false, ExpectedLowerEdgeLevelValueGeneralStructureFormula, 
+                  false, ExpectedDoorOpeningValueGeneralStructureFormula)]
+        [TestCase(false, ExpectedGSCrestLevelValue,
+                  false, ExpectedLowerEdgeLevelValueGeneralStructureFormula,
+                  true,  ExpectedDoorOpeningTimeSeriesGeneralStructureFormula)]
+        [TestCase(false, ExpectedGSCrestLevelValue, 
+                  true,  ExpectedLowerEdgeLevelTimeSeriesGeneralStructureFormula,
+                  false, ExpectedDoorOpeningValueGeneralStructureFormula)]
+        [TestCase(false, ExpectedGSCrestLevelValue,
+                  true, ExpectedLowerEdgeLevelTimeSeriesGeneralStructureFormula,
+                  true, ExpectedDoorOpeningTimeSeriesGeneralStructureFormula)]
+        [TestCase(true,  ExpectedGSCrestLevelTimeSeries,
+                  false, ExpectedLowerEdgeLevelValueGeneralStructureFormula,
+                  false, ExpectedDoorOpeningValueGeneralStructureFormula)]
+        [TestCase(true,  ExpectedGSCrestLevelTimeSeries,
+                  false, ExpectedLowerEdgeLevelValueGeneralStructureFormula,
+                  true, ExpectedDoorOpeningTimeSeriesGeneralStructureFormula)]
+        [TestCase(true,  ExpectedGSCrestLevelTimeSeries,
+                  true, ExpectedLowerEdgeLevelTimeSeriesGeneralStructureFormula,
+                  false, ExpectedDoorOpeningValueGeneralStructureFormula)]
+        [TestCase(true,  ExpectedGSCrestLevelTimeSeries,
+                  true, ExpectedLowerEdgeLevelTimeSeriesGeneralStructureFormula,
+                  true, ExpectedDoorOpeningTimeSeriesGeneralStructureFormula)]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAStructuresFileAndAValidFilePathAndASetOfStructuresContainingOnlyAGeneralStructureWhenWriteIsCalledOnStructuresFileWithTheFilePathAndStructuresThenTheCorrectFileIsWritten(
+            bool useCrestLevelTimeSeries, string expectedCrestLevelVal,
+            bool useLowerEdgeLevelTimeSeries, string expectedLowerEdgeLevelVal,
+            bool useHorizontalDoorOpeningWidthTimeSeries, string expectedHorizontalDoorOpeningWidthVal)
+        {
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                // Given
+                var structuresFile = new StructuresFile { StructureSchema = schema };
+                var writePath = Path.Combine(tempDir, "structures.ini");
+
+                var weir = new Weir2D("TestStructure", true)
+                {
+                    WeirFormula = new GeneralStructureWeirFormula()
+                    {
+                        DoorHeight = 50.0,
+
+                        HorizontalDoorOpeningWidth = 30.0,
+                        HorizontalDoorOpeningWidthTimeSeries = new TimeSeries(),
+                        UseHorizontalDoorOpeningWidthTimeSeries = useHorizontalDoorOpeningWidthTimeSeries,
+
+                        LowerEdgeLevel = 40.0,
+                        LowerEdgeLevelTimeSeries = new TimeSeries(),
+                        UseLowerEdgeLevelTimeSeries = useLowerEdgeLevelTimeSeries,
+
+                        WidthLeftSideOfStructure = 1.0,
+                        WidthStructureLeftSide = 2.0,
+                        WidthStructureRightSide = 3.0,
+                        WidthRightSideOfStructure = 4.0,
+
+                        BedLevelLeftSideOfStructure = 5.0,
+                        BedLevelLeftSideStructure = 6.0,
+                        BedLevelRightSideStructure = 7.0,
+                        BedLevelRightSideOfStructure = 8.0,
+
+                        PositiveFreeGateFlow = 9.0,
+                        PositiveDrownedGateFlow = 11.0,
+                        PositiveFreeWeirFlow = 12.0,
+                        PositiveDrownedWeirFlow = 13.0,
+                        PositiveContractionCoefficient = 14.0,
+
+                        NegativeFreeGateFlow = 15.0,
+                        NegativeDrownedGateFlow = 16.0,
+                        NegativeFreeWeirFlow = 17.0,
+                        NegativeDrownedWeirFlow = 18.0,
+                        NegativeContractionCoefficient = 19.0,
+                        
+                        UseExtraResistance = true,
+                        ExtraResistance = 21.0,
+                    },
+                    CrestWidth = 20.0,
+                    CrestLevel = 10.0,
+                    UseCrestLevelTimeSeries = useCrestLevelTimeSeries,
+                };
+
+                var structures = new[]
+                {
+                    weir
+                };
+
+                // When
+                structuresFile.Write(writePath, structures);
+
+                // Then
+                var expectedFileContents =
+                    "[structure]" + Environment.NewLine +
+                    "    type                  = generalstructure    # Type of structure" + Environment.NewLine +
+                    "    id                    = TestStructure       # Name of the structure" + Environment.NewLine +
+                    "    widthleftW1           = 1                   # Width left side of structure (m)" + Environment.NewLine +
+                    "    widthleftWsdl         = 2                   # Width structure left side (m)" + Environment.NewLine +
+                    "    widthcenter           = 20                  # Width structure centre (m)" + Environment.NewLine +
+                    "    widthrightWsdr        = 3                   # Width structure right side (m)" + Environment.NewLine +
+                    "    widthrightW2          = 4                   # Width right side of structure (m)" + Environment.NewLine +
+                    "    levelleftZb1          = 5                   # Bed level left side of structure (m AD)" + Environment.NewLine +
+                    "    levelleftZbsl         = 6                   # Bed level left side structure (m AD)" + Environment.NewLine +
+                    expectedCrestLevelVal + Environment.NewLine +
+                    "    levelrightZbsr        = 7                   # Bed level right side structure (m AD)" + Environment.NewLine +
+                    "    levelrightZb2         = 8                   # Bed level right side of structure (m AD)" + Environment.NewLine +
+                    expectedLowerEdgeLevelVal + Environment.NewLine +
+                    "    pos_freegateflowcoeff = 9                   # Positive free gate flow (-)" + Environment.NewLine +
+                    "    pos_drowngateflowcoeff= 11                  # Positive drowned gate flow (-)" + Environment.NewLine +
+                    "    pos_freeweirflowcoeff = 12                  # Positive free weir flow (-)" + Environment.NewLine +
+                    "    pos_drownweirflowcoeff= 13                  # Positive drowned weir flow (-)" + Environment.NewLine +
+                    "    pos_contrcoeffreegate = 14                  # Positive flow contraction coefficient (-)" + Environment.NewLine +
+                    "    neg_freegateflowcoeff = 15                  # Negative free gate flow (-)" + Environment.NewLine +
+                    "    neg_drowngateflowcoeff= 16                  # Negative drowned gate flow (-)" + Environment.NewLine +
+                    "    neg_freeweirflowcoeff = 17                  # Negative free weir flow (-)" + Environment.NewLine +
+                    "    neg_drownweirflowcoeff= 18                  # Negative drowned weir flow (-)" + Environment.NewLine +
+                    "    neg_contrcoeffreegate = 19                  # Negative flow contraction coefficient (-)" + Environment.NewLine +
+                    "    extraresistance       = 21                  # Extra resistance (-)" + Environment.NewLine +
+                    "    gatedoorheight        = 50                  # Vertical gate door height (m)" + Environment.NewLine +
+                    expectedHorizontalDoorOpeningWidthVal + Environment.NewLine +
+                    "    horizontal_opening_direction= symmetric           # Horizontal direction of the opening doors" + Environment.NewLine;
+                var fileContents = File.ReadAllText(writePath);
+
+                Assert.That(fileContents, Is.EqualTo(expectedFileContents));
+            });
+        }
+
+        [Test]
+        public void GivenAStructuresFileAndAValidFilePathAndASetOfStructuresContainingOnlyAPump2DWhenWriteIsCalledOnStructuresFileWithTheFilePathAndStructuresThenTheCorrectFileIsWritten()
+        {
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                // Given
+                var structuresFile = new StructuresFile { StructureSchema = schema };
+                var writePath = Path.Combine(tempDir, "structures.ini");
+
+                var pump = new Pump2D("TestStructure", true)
+                {
+                    Capacity = 20.0
+                };
+
+                var structures = new[]
+                {
+                    pump
+                };
+
+                // When
+                structuresFile.Write(writePath, structures);
+
+                // Then
+                var expectedFileContents =
+                    "[structure]" + Environment.NewLine +
+                    "    type                  = pump                # Type of structure" + Environment.NewLine +
+                    "    id                    = TestStructure       # Name of the structure" + Environment.NewLine +
+                    "    capacity              = 20                  # Pump capacity (in [m3/s])" + Environment.NewLine;
+                var fileContents = File.ReadAllText(writePath);
+
+                Assert.That(fileContents, Is.EqualTo(expectedFileContents));
+            });
+        }
 
         #region Comparison helper methods for .ini files:
 

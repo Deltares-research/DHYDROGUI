@@ -43,7 +43,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     LayerFilter = layer => (layer.Name == HydroArea.ObservationCrossSectionsPluralName ||
                                             layer.Name == HydroArea.PumpsPluralName ||
                                             layer.Name == HydroArea.WeirsPluralName ||
-                                            layer.Name == HydroArea.GatesPluralName ||
                                             layer.Name == FlowFMMapLayerProvider.SourcesAndSinksLayerName) &&
                                            layer.DataSource is Feature2DCollection
                 });

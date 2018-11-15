@@ -337,6 +337,7 @@
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="UnstructuredGridCoverageExtensionsTest.cs" />
     <Compile Include="Validation\VerticalProfileValidatorTests.cs" />
+    <Compile Include="Validation\WaterFlowFMArea2DValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMEmbankmentValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMEnclosureValidationTest.cs" />

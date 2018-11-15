@@ -350,7 +350,7 @@
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(75, 13);
             this.label9.TabIndex = 5;
-            this.label9.Text = "Upstream1";
+            this.label9.Text = "Upstream1CrestWidth";
             // 
             // label16
             // 

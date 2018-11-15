@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void GetAllAvailableSnappedFeaturesLayers()
         {
-            var expectedNumberOfLayers = 15;
+            var expectedNumberOfLayers = 14;
 
             using (var gui = new DeltaShellGui())
             {
@@ -73,8 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.ObsCrossSection, "Dry areas (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.ObsCrossSection, "Enclosure (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.Pump, "Pumps (snapped)"));
-                Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.Weir, "Weirs (snapped)"));
-                Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.Gate, "Gates (snapped)"));
+                Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.Weir, "Structures (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.ObsCrossSection, "Observation cross sections (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.Embankment, "Embankments (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.SourceSink, "Sources and sinks (snapped)"));
@@ -270,34 +269,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Geometry = new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) })
                 });
 
-                Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Weirs (snapped)"));
+                Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Structures (snapped)"));
             }
         }
-
-        [Test]
-        public void SnappedGatesFeatureIsGenerated()
-        {
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
-            netFile = TestHelper.CreateLocalCopy(netFile);
-
-            using (var gui = new DeltaShellGui())
-            {
-                var snappedLayers = SnappedLayers(gui, netFile);
-
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
-                Assert.IsNotNull(model);
-
-                var gridExtent = model.GridExtent;
-                var center = gridExtent.Centre;
-                model.Area.Gates.Add(new Gate2D()
-                {
-                    Geometry = new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) })
-                });
-
-                Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Gates (snapped)"));
-            }
-        }
-
+        
         [Test]
         public void SnappedObservationCrossSectionFeatureIsGenerated()
         {

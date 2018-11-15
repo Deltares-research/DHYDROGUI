@@ -5,9 +5,8 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
-using DelftTools.TestUtils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
-using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -50,167 +49,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         #region TimeSeriesEditor
 
         [Test]
-        public void GivenWeirViewModel_WhenWeirIsTimeDependent_ViewShouldNotSetItToConstant()
-        {
-            var weir = new Weir(true){ UseCrestLevelTimeSeries = true};
-            Assert.IsTrue(weir.UseCrestLevelTimeSeries);
-            var viewModel = new WeirViewModel
-            {
-                Weir = weir,
-            };
-            
-            Assert.IsTrue(weir.UseCrestLevelTimeSeries);
-            Assert.IsFalse(viewModel.IsCrestLevelConstantTime);
-            Assert.IsTrue(viewModel.EnableCrestLevelTimeSeries);
-        }
-
-        [Test]
-        public void GivenWeirViewModel_WhenWeirIsSetToConstant_IsCrestLevelConstantTime_ShouldBeTrue()
-        {
-            var weir = new Weir(true) { UseCrestLevelTimeSeries = true };
-            var viewModel = new WeirViewModel
-            {
-                Weir = weir,
-            };
-            Assert.IsTrue(weir.UseCrestLevelTimeSeries);
-            Assert.IsFalse(viewModel.IsCrestLevelConstantTime);
-
-            weir.UseCrestLevelTimeSeries = false;
-            Assert.IsFalse(weir.UseCrestLevelTimeSeries);
-            Assert.IsTrue(viewModel.IsCrestLevelConstantTime);
-            Assert.IsFalse(viewModel.EnableCrestLevelTimeSeries);
-        }
-
-        [Test]
-        public void GivenWeirViewModel_WhenWeirIsChangedToTimeDependent_ViewGetsRefreshedCorrectly()
-        {
-            var weir = new Weir(true);
-            var viewModel = new WeirViewModel
-            {
-                Weir = weir
-            };
-
-            var count = 0;
-            ((INotifyPropertyChanged)viewModel).PropertyChanged += (s, e) => count++;
-
-            Assert.IsFalse(weir.UseCrestLevelTimeSeries);
-            Assert.IsFalse(viewModel.EnableCrestLevelTimeSeries);
-            Assert.IsTrue(viewModel.IsCrestLevelConstantTime);
-
-            //Make it time dependent
-            weir.UseCrestLevelTimeSeries = true;
-
-            //Because the bubbling event tiggered the property change in the view model.
-            //OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
-            //OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsCrestLevelConstantTime));
-            Assert.IsTrue(count.Equals(2));
-
-            Assert.IsTrue(weir.UseCrestLevelTimeSeries);
-            Assert.IsTrue(viewModel.EnableCrestLevelTimeSeries);
-            Assert.IsFalse(viewModel.IsCrestLevelConstantTime);
-        }
-
-        [Test]
-        public void GivenWeirViewModel_WhenWeirIsNotTimeDependent_EnableTimeDependent_LogMessageIsGiven()
-        {
-            var viewModel = new WeirViewModel
-            {
-                Weir = new Weir("testName")
-            };
-            Assert.IsFalse(viewModel.Weir.CanBeTimedependent);
-
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => viewModel.EnableCrestLevelTimeSeries = true,
-                string.Format(Resources.WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_, viewModel.Weir.Name));
-
-            Assert.IsFalse(viewModel.EnableCrestLevelTimeSeries);
-        }
-
-        [Test]
-        public void GivenWeirViewModel_WhenWeirIsTimeDependent_EnableTimeDependent_LogMessageIsNotGiven()
-        {
-            var viewModel = new WeirViewModel
-            {
-                Weir = new Weir("testName", true)
-            };
-            Assert.IsTrue(viewModel.Weir.CanBeTimedependent);
-            Assert.Throws<AssertionException>(() => TestHelper.AssertAtLeastOneLogMessagesContains(
-                    () => viewModel.EnableCrestLevelTimeSeries = true,
-                    string.Format(Resources.WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_,
-                        viewModel.Weir.Name)),
-                "Expected no log messages, but at least one was found.");
-        }
-
-        [Test]
-        public void GivenWeirViewModel_WhenWeirIsNotTimeDependent_OnEditTimeSeries_LogMessageIsGiven()
-        {
-            var viewModel = new WeirViewModel
-            {
-                Weir = new Weir("testName")
-            };
-            Assert.IsFalse(viewModel.Weir.CanBeTimedependent);
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => viewModel.OnEditCrestLevelTimeSeries.Execute(null),
-                string.Format(Resources.WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_, viewModel.Weir.Name));
-        }
-
-        [Test]
-        public void GivenWeirViewModel_WhenWeirIsTimeDependent_OnEditTimeSeries_LogMessageIsNotGiven()
-        {
-            var viewModel = new WeirViewModel
-            {
-                Weir = new Weir("testName", true)
-            };
-            Assert.IsTrue(viewModel.Weir.CanBeTimedependent);
-            Assert.Throws<AssertionException>(() => TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => viewModel.OnEditCrestLevelTimeSeries.Execute(null),
-                string.Format(Resources.WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_,
-                    viewModel.Weir.Name)),
-                    "Expected no log messages, but at least one was found.");
-        }
-
-        [Test]
-        public void GivenWeirViewModel_WhenGeneralStructure_Set_UseCrestLevelTimeSeries_True_LogsErrorMessage()
-        {
-            var viewModel = new WeirViewModel
-            {
-                Weir = new Weir(true)
-            };
-            viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
-
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => viewModel.EnableCrestLevelTimeSeries = true,
-                string.Format(Resources.WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_, viewModel.Weir.Name));
-
-            Assert.IsFalse(viewModel.EnableCrestLevelTimeSeries);
-            Assert.IsFalse(viewModel.Weir.UseCrestLevelTimeSeries);
-        }
-
-        [Test]
-        public void GivenWeirViewModel_WhenSimpleWeir_Set_UseCrestLevelTimeSeries_True_LogsErrorMessageIsNotGiven()
-        {
-            var viewModel = new WeirViewModel
-            {
-                Weir = new Weir(true)
-            };
-            viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleWeir;
-            Assert.Throws<AssertionException>(
-                () => TestHelper.AssertAtLeastOneLogMessagesContains(
-                    () => viewModel.EnableCrestLevelTimeSeries = true,
-                    string.Format(Resources.WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_, viewModel.Weir.Name)),
-                "Expected no log messages, but at least one was found.");
-
-            Assert.IsTrue(viewModel.EnableCrestLevelTimeSeries);
-            Assert.IsTrue(viewModel.Weir.UseCrestLevelTimeSeries);
-        }
-
-        [Test]
         public void GivenWeirViewModel_WhenEditingTimeSeries_ModelGetsUpdated()
         {
             var viewModel = new WeirViewModel
             {
                 Weir = new Weir("testWeir", true),
-                GetTimeSeriesEditor = GenerateBasicTimeSeriesForIWeir
+                GetTimeSeriesEditorForCrestLevel = GenerateBasicTimeSeriesForIWeir
             };
 
             Assert.IsFalse(viewModel.Weir.CrestLevelTimeSeries.Time.Values.Any());
@@ -222,19 +66,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             //Values From the method GenerateBasicTimeSeriesForIWeir
             var timeSeriesValues = GenerateBasicTimeSeriesForIWeir(new Weir());
             Assert.AreEqual(timeSeriesValues.Time.Values, viewModel.Weir.CrestLevelTimeSeries.Time.Values);
-            Assert.AreEqual(timeSeriesValues.Components[0].Values, viewModel.Weir.CrestLevelTimeSeries.Components[0].Values);
+            Assert.AreEqual(timeSeriesValues.Components[0].Values,
+                viewModel.Weir.CrestLevelTimeSeries.Components[0].Values);
         }
 
         private TimeSeries GenerateBasicTimeSeriesForIWeir(IWeir weir)
         {
-            //We have IWeir in the header just for the signature in WeirViewModel.GetTimeSeriesEditor
+            //We have IWeir in the header just for the signature in WeirViewModel.GetTimeSeriesEditorForCrestLevel
             var timeSeries = new TimeSeries();
             timeSeries.Components.Add(new Variable<double>("value"));
 
-            var dates = new[] { new DateTime(2000, 1, 1), new DateTime(2001, 1, 1), new DateTime(2003, 1, 1) };
+            var dates = new[] {new DateTime(2000, 1, 1), new DateTime(2001, 1, 1), new DateTime(2003, 1, 1)};
             timeSeries.Time.SetValues(dates);
 
-            var values = new[] { 0.0, 10.0, 20.0 };
+            var values = new[] {0.0, 10.0, 20.0};
             timeSeries.Components[0].SetValues(values);
 
             return timeSeries;
@@ -258,75 +103,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             {
                 Weir = new Weir {WeirFormula = new SimpleWeirFormula()}
             };
-            Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(0.0));
+            Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(-0.0));
         }
 
         [Test]
-        public void GivenGeneralStructureWeirFormula_WhenGettingGateOpeningHeight_ThenReturnGateOpeningValue()
+        public void GivenWeirWithGeneralStructureWeirFormula_WhenSettingBedLevelStructure_ThenCrestLevelIsUpdated()
         {
-            const int returnValue = 123;
-            var gsWeirFormula = mocks.DynamicMock<GeneralStructureWeirFormula>();
-            gsWeirFormula.Expect(f => f.GateOpening).Return(returnValue).Repeat.Any();
-            mocks.ReplayAll();
-
-            var viewModel = new WeirViewModel
-            {
-                Weir = new Weir {WeirFormula = gsWeirFormula}
-            };
-            Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(returnValue));
-        }
-
-        [Test]
-        public void GivennWeirViewModelWithoutWeir_WhenSettingGateOpeningHeight_ThenDoNotChangeValue()
-        {
-            var viewModel = new WeirViewModel();
-
-            viewModel.GateOpeningHeight = 2;
-            Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(0.0d));
-        }
-
-        [Test]
-        public void GivenWeirWithWeirFormulaUnequalToGeneralStructureWeirFormula_WhenSettingGateOpeningHeight_ThenDoNotChangeValue()
-        {
-            var viewModel = new WeirViewModel
-            {
-                Weir = new Weir {WeirFormula = new SimpleWeirFormula()}
-            };
-
-            viewModel.GateOpeningHeight = 2;
-            Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(0.0d));
-        }
-
-        [Test]
-        public void GivenWeirWithGeneralStructureWeirFormula_WhenSettingGateOpeningHeight_ThenChangeValue()
-        {
-            var setValue = 2;
-            var viewModel = new WeirViewModel
-            {
-                Weir = new Weir {WeirFormula = new GeneralStructureWeirFormula()}
-            };
-
-            viewModel.GateOpeningHeight = setValue;
-            Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(2.0d));
-        }
-
-        [Test]
-        public void GivenWeirWithGeneralStructureWeirFormula_WhenSettingGateOpeningHeight_ThenLowerEdgeLevelChanges()
-        {
-            var setValue = 2;
             var viewModel = new WeirViewModel
             {
                 Weir = new Weir
                 {
-                    WeirFormula = new GeneralStructureWeirFormula
-                    {
-                        BedLevelStructureCentre = 3.5
-                    }
-                }
+                    WeirFormula = new GeneralStructureWeirFormula { }
+                },
+
+                BedLevelStructureCentre = 3.5d,
             };
 
-            viewModel.GateOpeningHeight = setValue;
-            Assert.That(viewModel.LowerEdgeLevel, Is.EqualTo(5.5d));
+            Assert.That(viewModel.Weir.CrestLevel, Is.EqualTo(3.5d));
         }
 
         #endregion
@@ -348,11 +141,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             Assert.That(viewModel.Weir.WeirFormula is SimpleWeirFormula);
             Assert.IsFalse(viewModel.GateGroupboxEnabled);
             Assert.That(viewModel.SimpleWeirPropertiesVisibility, Is.EqualTo(System.Windows.Visibility.Visible));
-            Assert.AreEqual(1, count);
+            Assert.AreEqual(4, count);
         }
 
         [Test]
-        public void GivenWeirViewModel_WhenSettingSelectedWeirTypeToGeneralStructure_ThenWeirFormulaIsGeneralStructureWeirFormula()
+        public void
+            GivenWeirViewModel_WhenSettingSelectedWeirTypeToGeneralStructure_ThenWeirFormulaIsGeneralStructureWeirFormula()
         {
             var viewModel = new WeirViewModel
             {
@@ -365,12 +159,44 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
             Assert.That(viewModel.Weir.WeirFormula is GeneralStructureWeirFormula);
             Assert.IsTrue(viewModel.GateGroupboxEnabled);
-            Assert.That(viewModel.SimpleWeirPropertiesVisibility, Is.EqualTo(System.Windows.Visibility.Collapsed));
-            Assert.AreEqual(1, count);
+            var crestLevelEnabled = (bool) TypeUtils.GetPropertyValue(viewModel, "CrestLevelEnabled");
+
+            if (crestLevelEnabled && !viewModel.LowerEdgeLevelEnabled && !viewModel.HorizontalDoorOpeningWidthEnabled)
+            {
+                Assert.That(viewModel.SimpleWeirPropertiesVisibility, Is.EqualTo(System.Windows.Visibility.Visible));
+
+            }
+
+            Assert.AreEqual(8, count);
         }
 
         [Test]
-        public void GivenWeirViewModel_WhenSettingSelectedWeirTypeToGeneralStructure_ThenEnableTimeDependentIsFalse()
+        public void GivenWeirViewModel_WhenSettingSelectedWeirTypeToSimpleGate_ThenWeirFormulaIsGatedWeirFormula()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir()
+            };
+
+            var count = 0;
+            ((INotifyPropertyChanged) viewModel.Weir).PropertyChanged += (s, e) => count++;
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleGate;
+            Assert.That(viewModel.Weir.WeirFormula is GatedWeirFormula);
+            Assert.IsTrue(viewModel.GateGroupboxEnabled);
+            var crestLevelEnabled = (bool) TypeUtils.GetPropertyValue(viewModel, "CrestLevelEnabled");
+
+            if (crestLevelEnabled && !viewModel.LowerEdgeLevelEnabled && !viewModel.HorizontalDoorOpeningWidthEnabled)
+            {
+                Assert.That(viewModel.SimpleWeirPropertiesVisibility, Is.EqualTo(System.Windows.Visibility.Visible));
+
+            }
+
+            Assert.AreEqual(4, count);
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenSettingSelectedWeirTypeToGeneralStructure_ThenEnableTimeDependentIsTrue()
         {
             var viewModel = new WeirViewModel
             {
@@ -381,15 +207,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             Assert.IsTrue(viewModel.EnableCrestLevelTimeSeries);
 
             viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
-            Assert.IsFalse(viewModel.EnableCrestLevelTimeSeries);
-            Assert.IsFalse(viewModel.Weir.UseCrestLevelTimeSeries);
+            Assert.IsTrue(viewModel.EnableCrestLevelTimeSeries);
+            Assert.IsTrue(viewModel.Weir.UseCrestLevelTimeSeries);
             Assert.IsTrue(viewModel.GateGroupboxEnabled);
         }
 
         [Test]
-        [TestCase(true)]
         [TestCase(false)]
-        public void GivenWeirViewModel_WhenSettingSelectedWeirType_FromGeneralStructure_ToSimpleWeir_ThenEnableTimeDependent_GetsItsPreviousValue(bool previousValue)
+        public void
+            GivenWeirViewModel_WhenSettingSelectedWeirType_FromGeneralStructure_ToSimpleWeir_WithValueFalse_ThenTimeSeriesNotEnabled(
+                bool previousValue)
         {
             var viewModel = new WeirViewModel
             {
@@ -401,6 +228,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
             Assert.IsFalse(viewModel.EnableCrestLevelTimeSeries);
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleWeir;
+            Assert.AreEqual(viewModel.EnableCrestLevelTimeSeries, previousValue);
+            Assert.AreEqual(viewModel.Weir.UseCrestLevelTimeSeries, previousValue);
+        }
+
+        [Test]
+        [TestCase(true)]
+        public void
+            GivenWeirViewModel_WhenSettingSelectedWeirType_FromGeneralStructure_ToSimpleWeir_WithValueTrue_ThenTimeSeriesEnabled(
+                bool previousValue)
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir(true),
+                EnableCrestLevelTimeSeries = previousValue,
+            };
+
+            Assert.AreEqual(previousValue, viewModel.EnableCrestLevelTimeSeries);
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
+            Assert.IsTrue(viewModel.EnableCrestLevelTimeSeries);
 
             viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleWeir;
             Assert.AreEqual(viewModel.EnableCrestLevelTimeSeries, previousValue);
@@ -419,21 +268,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         }
 
         [Test]
-        public void GivenWeirFormulaNotEqualToGeneralStructureWeirFormulaWhenGettingBedLevelStructureCentreThenReturnsZero()
+        public void
+            GivenWeirFormulaEqualToGeneralStructureWeirFormulaWhenGettingBedLevelStructureCentreThenReturnsDefaultValue()
         {
             var viewModel = new WeirViewModel
             {
-                Weir = new Weir { WeirFormula = new SimpleWeirFormula() }
-            };
-            Assert.That(viewModel.BedLevelStructureCentre, Is.EqualTo(0.0));
-        }
-
-        [Test]
-        public void GivenWeirFormulaEqualToGeneralStructureWeirFormulaWhenGettingBedLevelStructureCentreThenReturnsDefaultValue()
-        {
-            var viewModel = new WeirViewModel
-            {
-                Weir = new Weir { WeirFormula = new GeneralStructureWeirFormula() }
+                Weir = new Weir {WeirFormula = new GeneralStructureWeirFormula()}
             };
             Assert.That(viewModel.BedLevelStructureCentre, Is.EqualTo(0.0));
         }
@@ -441,22 +281,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         #endregion
 
         #region LowerEdgeLevel
-
-        [Test]
-        public void GivenWeirViewModelWithGeneralStructureWeirFormulaWhenGettingLowerEdgeLevelThenReturnValue()
-        {
-            var vm = new WeirViewModel()
-            {
-                Weir = new Weir()
-                {
-                    WeirFormula = new GeneralStructureWeirFormula()
-                }
-            };
-            vm.GateOpeningHeight = 123;
-            ((GeneralStructureWeirFormula)vm.Weir.WeirFormula).BedLevelStructureCentre = 321;
-
-            Assert.That(vm.LowerEdgeLevel, Is.EqualTo(444));
-        }
 
         [Test]
         public void GivenWeirViewModelWithSimpleWeirFormulaWhenGettingLowerEdgeLevelThenReturnZero()
@@ -482,11 +306,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         }
 
         [Test]
-        public void GivenWeirWithWeirFormulaUnequalToGeneralStructureWeirFormulaWhenSettingLowerEdgeLevelThenDoNotChangeValue()
+        public void
+            GivenWeirWithWeirFormulaUnequalToGeneralStructureWeirFormulaWhenSettingLowerEdgeLevelThenDoNotChangeValue()
         {
             var viewModel = new WeirViewModel
             {
-                Weir = new Weir { WeirFormula = new SimpleWeirFormula() }
+                Weir = new Weir {WeirFormula = new SimpleWeirFormula()}
             };
 
             viewModel.LowerEdgeLevel = 2;
@@ -499,7 +324,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             var setValue = 2;
             var viewModel = new WeirViewModel
             {
-                Weir = new Weir { WeirFormula = new GeneralStructureWeirFormula() }
+                Weir = new Weir {WeirFormula = new GeneralStructureWeirFormula()}
             };
 
             viewModel.LowerEdgeLevel = setValue;
@@ -514,12 +339,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             {
                 Weir = new Weir
                 {
-                    WeirFormula = new GeneralStructureWeirFormula
-                    {
-                        BedLevelStructureCentre = 3.5
-                    }
+                    WeirFormula = new GeneralStructureWeirFormula()
                 }
             };
+
+            var generalStructureFormula = viewModel.Weir.WeirFormula as GeneralStructureWeirFormula;
+            generalStructureFormula.BedLevelStructureCentre = 3.5;
 
             viewModel.LowerEdgeLevel = setValue;
             Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(-1.5d));
@@ -540,12 +365,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                 }
             };
 
-            var formula = (GeneralStructureWeirFormula)viewModel.Weir.WeirFormula;
-            Assert.AreEqual(viewModel.LowerEdgeLevel, formula.GateOpening + formula.BedLevelStructureCentre);
+            var formula = (GeneralStructureWeirFormula) viewModel.Weir.WeirFormula;
+            Assert.AreEqual(viewModel.LowerEdgeLevel, formula.LowerEdgeLevel);
         }
 
         [Test]
-        public void GivenWeirViewModelWhenWeirFormulaIsGeneralStructureThenSetLowerEdgeLevelAndGateOpeningHeightChanges()
+        public void
+            GivenWeirViewModelWhenWeirFormulaIsGeneralStructureThenSetLowerEdgeLevelAndGateOpeningHeightChanges()
         {
             var setValue = 4;
             var viewModel = new WeirViewModel
@@ -555,35 +381,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                     WeirFormula = new GeneralStructureWeirFormula()
                 }
             };
-            
-            Assert.That(viewModel.LowerEdgeLevel, Is.EqualTo(1.0d));
-            Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(1.0d));
+
+            Assert.That(viewModel.LowerEdgeLevel, Is.EqualTo(0.0d));
+            Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(0.0d));
             Assert.That(viewModel.BedLevelStructureCentre, Is.EqualTo(0.0d));
 
             viewModel.LowerEdgeLevel = setValue;
-
-            Assert.That(viewModel.LowerEdgeLevel, Is.EqualTo(4.0d));
-            Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(4.0d));
-            Assert.That(viewModel.BedLevelStructureCentre, Is.EqualTo(0.0d));
-        }
-
-        [Test]
-        public void GivenWeirViewModelWhenWeirFormulaIsGeneralStructureThenSetGateOpeningHeightAndLowerEdgeLevelChanges()
-        {
-            var setValue = 4;
-            var viewModel = new WeirViewModel
-            {
-                Weir = new Weir
-                {
-                    WeirFormula = new GeneralStructureWeirFormula()
-                }
-            };
-
-            Assert.That(viewModel.LowerEdgeLevel, Is.EqualTo(1.0d));
-            Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(1.0d));
-            Assert.That(viewModel.BedLevelStructureCentre, Is.EqualTo(0.0d));
-
-            viewModel.GateOpeningHeight = setValue;
 
             Assert.That(viewModel.LowerEdgeLevel, Is.EqualTo(4.0d));
             Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(4.0d));
@@ -602,18 +405,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                 }
             };
 
-            var formula = (GeneralStructureWeirFormula)viewModel.Weir.WeirFormula;
+            var formula = (GeneralStructureWeirFormula) viewModel.Weir.WeirFormula;
             var count = 0;
-            ((INotifyPropertyChanged)viewModel.Weir.WeirFormula).PropertyChanged += (s, e) => count++;
-            
-            Assert.That(viewModel.LowerEdgeLevel, Is.EqualTo(1.0d));
-            Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(1.0d));
+            ((INotifyPropertyChanged) viewModel.Weir.WeirFormula).PropertyChanged += (s, e) => count++;
+
+            Assert.That(viewModel.LowerEdgeLevel, Is.EqualTo(0.0d));
+            Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(0.0d));
             Assert.That(viewModel.BedLevelStructureCentre, Is.EqualTo(0.0d));
 
             formula.BedLevelStructureCentre = setValue;
 
-            Assert.That(viewModel.LowerEdgeLevel, Is.EqualTo(5.0d));
-            Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(1.0d));
+            Assert.That(viewModel.LowerEdgeLevel, Is.EqualTo(0.0d));
+            Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(-4.0d));
             Assert.That(viewModel.BedLevelStructureCentre, Is.EqualTo(4.0d));
             Assert.That(count == 1);
         }
@@ -635,10 +438,288 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             var vm = new WeirViewModel();
 
             var count = 0;
-            ((INotifyPropertyChanged)vm).PropertyChanged += (s, e) => count++;
+            ((INotifyPropertyChanged) vm).PropertyChanged += (s, e) => count++;
             vm.EnableAdvancedSettings = !vm.EnableAdvancedSettings;
 
             Assert.That(count, Is.EqualTo(1));
+        }
+
+        #endregion
+
+        #region
+
+        [Test]
+        public void
+            GivenWeirViewModelsWhenGatedWeirFormulaAndGeneralStructuresWeirFormulaAreSetThenDetermineDoorHeight()
+        {
+            var viewModel1 = new WeirViewModel
+            {
+                Weir = new Weir
+                {
+                    WeirFormula = new GatedWeirFormula()
+                }
+            };
+
+            var viewModel2 = new WeirViewModel
+            {
+                Weir = new Weir
+                {
+                    WeirFormula = new GeneralStructureWeirFormula()
+                }
+            };
+
+            var formula1 = (GatedWeirFormula) viewModel1.Weir.WeirFormula;
+            Assert.AreEqual(viewModel1.DoorHeight, formula1.DoorHeight);
+            var formula2 = (GeneralStructureWeirFormula) viewModel2.Weir.WeirFormula;
+            Assert.AreEqual(viewModel2.DoorHeight, formula2.DoorHeight);
+        }
+
+        [Test]
+        public void
+            GivenWeirViewModelsWhenGatedWeirFormulaAndGeneralStructuresWeirFormulaAreSetThenDetermineGatedOpeningDirection()
+        {
+            var viewModel1 = new WeirViewModel
+            {
+                Weir = new Weir
+                {
+                    WeirFormula = new GatedWeirFormula()
+                }
+            };
+
+            var viewModel2 = new WeirViewModel
+            {
+                Weir = new Weir
+                {
+                    WeirFormula = new GeneralStructureWeirFormula()
+                }
+            };
+
+            var formula1 = (GatedWeirFormula) viewModel1.Weir.WeirFormula;
+            Assert.AreEqual(viewModel1.SelectedDoorOpeningHeightDirectionType, formula1.HorizontalDoorOpeningDirection);
+            var formula2 = (GeneralStructureWeirFormula) viewModel2.Weir.WeirFormula;
+            Assert.AreEqual(viewModel2.SelectedDoorOpeningHeightDirectionType, formula2.HorizontalDoorOpeningDirection);
+        }
+
+        [Test]
+        public void GivenWeirViewModelWhenGeneralStructuresWeirFormulaIsSetThenDetermineUpstreamAndDownStream()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir
+                {
+                    WeirFormula = new GeneralStructureWeirFormula()
+                }
+            };
+
+            var formula1 = (GeneralStructureWeirFormula) viewModel.Weir.WeirFormula;
+
+            Assert.AreEqual(viewModel.Upstream1CrestWidth, formula1.WidthLeftSideOfStructure);
+            Assert.AreEqual(viewModel.Upstream1CrestLevel, formula1.BedLevelLeftSideOfStructure);
+            Assert.AreEqual(viewModel.Upstream2CrestWidth, formula1.WidthStructureLeftSide);
+            Assert.AreEqual(viewModel.Upstream2CrestLevel, formula1.BedLevelLeftSideStructure);
+            Assert.AreEqual(viewModel.Downstream1CrestWidth, formula1.WidthStructureRightSide);
+            Assert.AreEqual(viewModel.Downstream1CrestLevel, formula1.BedLevelRightSideStructure);
+            Assert.AreEqual(viewModel.Downstream2CrestWidth, formula1.WidthRightSideOfStructure);
+            Assert.AreEqual(viewModel.Downstream2CrestLevel, formula1.BedLevelRightSideOfStructure);
+        }
+
+        [Test]
+        public void GivenWeirViewModelWhenGatedWeirFormulaOrGeneralStructureWeirFormulaAreSetThenDetermineCrestLevel()
+        {
+            var viewModel1 = new WeirViewModel
+            {
+                Weir = new Weir
+                {
+                    CrestLevel = 1.0,
+                    WeirFormula = new GatedWeirFormula()
+                }
+            };
+
+            var viewModel2 = new WeirViewModel
+            {
+                Weir = new Weir
+                {
+                    CrestLevel = 2.0,
+                    WeirFormula = new GeneralStructureWeirFormula()
+                }
+            };
+
+            Assert.AreEqual(viewModel1.BedLevelStructureCentre, viewModel1.Weir.CrestLevel);
+            Assert.AreEqual(viewModel2.BedLevelStructureCentre, viewModel2.Weir.CrestLevel);
+        }
+
+        [Test]
+        public void GivenWeirViewModelWhenGatedWeirFormulaOrGeneralStructureWeirFormulaAreSetThenDetermineHorizontalDoorOpeningWidth()
+        {
+            var viewModel1 = new WeirViewModel
+            {
+                Weir = new Weir
+                {
+                    WeirFormula = new GatedWeirFormula()
+                }
+            };
+
+            var viewModel2 = new WeirViewModel
+            {
+                Weir = new Weir
+                {
+                    WeirFormula = new GeneralStructureWeirFormula()
+                }
+            };
+
+            var formula1 = (GatedWeirFormula)viewModel1.Weir.WeirFormula;
+            var formula2 = (GeneralStructureWeirFormula)viewModel2.Weir.WeirFormula;
+
+            Assert.AreEqual(viewModel1.HorizontalDoorOpeningWidth, formula1.HorizontalDoorOpeningWidth);
+            Assert.AreEqual(viewModel2.HorizontalDoorOpeningWidth, formula2.HorizontalDoorOpeningWidth);
+        }
+
+        [Test]
+        public void GivenWeirViewModelWhenGeneralStructureWeirFormulaIsSetThenDetermineExtraResistance()
+        {
+
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir
+                {
+                    WeirFormula = new GeneralStructureWeirFormula()
+                }
+            };
+
+            var formula1 = (GeneralStructureWeirFormula)viewModel.Weir.WeirFormula;
+
+            Assert.AreEqual(viewModel.ExtraResistance, formula1.ExtraResistance);
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenGeneralStructureWeirFormulaIsSet_ThenSimpleWeirVisibilityIsSet()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir(),
+            };
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
+            Assert.That(viewModel.Weir.WeirFormula is GeneralStructureWeirFormula);
+            Assert.AreEqual(viewModel.SimpleWeirPropertiesVisibility, System.Windows.Visibility.Visible);
+            Assert.AreNotEqual(viewModel.SimpleWeirPropertiesVisibility,  System.Windows.Visibility.Collapsed);
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenSimpleWeirFormulaIsSet_ThenSimpleWeirVisibilityIsSet()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir(),
+            };
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleWeir;
+            Assert.That(viewModel.Weir.WeirFormula is SimpleWeirFormula);
+            Assert.AreEqual(viewModel.SimpleWeirPropertiesVisibility, System.Windows.Visibility.Visible);
+            Assert.AreNotEqual(viewModel.SimpleWeirPropertiesVisibility,  System.Windows.Visibility.Collapsed);
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenGatedWeirFormulaIsSet_ThenSimpleWeirVisibilityIsSet()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir(),
+            };
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleGate;
+            Assert.That(viewModel.Weir.WeirFormula is GatedWeirFormula);
+            Assert.AreEqual(viewModel.SimpleWeirPropertiesVisibility, System.Windows.Visibility.Visible);
+            Assert.AreNotEqual(viewModel.SimpleWeirPropertiesVisibility,  System.Windows.Visibility.Collapsed);
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenGatedWeirFormulaIsSet_ThenGeneralStructureVisibilityIsNotSet()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir(),
+            };
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleGate;
+            Assert.That(viewModel.Weir.WeirFormula is GatedWeirFormula);
+            Assert.AreEqual(viewModel.GeneralStructurePropertiesVisibility, System.Windows.Visibility.Collapsed);
+            Assert.AreNotEqual(viewModel.GeneralStructurePropertiesVisibility,  System.Windows.Visibility.Visible);
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenSimpleWeirFormulaIsSet_ThenGeneralStructureVisibilityIsNotSet()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir(),
+            };
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleWeir;
+            Assert.That(viewModel.Weir.WeirFormula is SimpleWeirFormula);
+            Assert.AreEqual(viewModel.GeneralStructurePropertiesVisibility, System.Windows.Visibility.Collapsed);
+            Assert.AreNotEqual(viewModel.GeneralStructurePropertiesVisibility,  System.Windows.Visibility.Visible);
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenGeneralStructureWeirFormulaIsSet_ThenGeneralStructureVisibilityIsSet()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir(),
+            };
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
+            Assert.That(viewModel.Weir.WeirFormula is GeneralStructureWeirFormula);
+            Assert.AreEqual(viewModel.GeneralStructurePropertiesVisibility, System.Windows.Visibility.Visible);
+            Assert.AreNotEqual(viewModel.GeneralStructurePropertiesVisibility,  System.Windows.Visibility.Collapsed);
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenSimpleWeirFormulaIsSet_ThenGateGroupBoxIsDisabled()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir(),
+            };
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleWeir;
+            Assert.That(viewModel.Weir.WeirFormula is SimpleWeirFormula);
+            Assert.AreEqual(viewModel.GeneralStructurePropertiesVisibility, System.Windows.Visibility.Collapsed);
+            Assert.AreEqual(viewModel.GateGroupboxEnabled, false);
+            Assert.AreNotEqual(viewModel.GeneralStructurePropertiesVisibility,  System.Windows.Visibility.Visible);
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenGatedWeirFormulaIsSet_ThenGateGroupBoxIsEnabled()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir(),
+            };
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleGate;
+            Assert.That(viewModel.Weir.WeirFormula is GatedWeirFormula);
+            Assert.AreEqual(viewModel.GatedVisibility, System.Windows.Visibility.Visible);
+            Assert.AreNotEqual(viewModel.GatedVisibility, System.Windows.Visibility.Collapsed);
+            Assert.AreEqual(viewModel.GeneralStructurePropertiesVisibility, System.Windows.Visibility.Collapsed);
+            Assert.AreEqual(viewModel.GateGroupboxEnabled, true);
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenGeneralStructureWeirFormulaIsSet_ThenGateGroupBoxIsEnabled()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir(),
+            };
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
+            Assert.That(viewModel.Weir.WeirFormula is GeneralStructureWeirFormula);
+            Assert.AreEqual(viewModel.GatedVisibility, System.Windows.Visibility.Visible);
+            Assert.AreNotEqual(viewModel.GatedVisibility, System.Windows.Visibility.Collapsed);
+            Assert.AreEqual(viewModel.GeneralStructurePropertiesVisibility, System.Windows.Visibility.Visible);
+            Assert.AreEqual(viewModel.GateGroupboxEnabled, true);
         }
 
         #endregion

@@ -78,9 +78,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return;
             }
 
-            var gate = addedFeature as Gate2D;
-            if (gate != null) RemoveAddedFeatureIfDuplicate(features, gate, modelName);
-
             var bridgePillar = addedFeature as BridgePillar;
             if (bridgePillar != null) RemoveAddedFeatureIfDuplicate(features, bridgePillar, modelName);
 
@@ -115,8 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void RenameStructureGroupNameToStructureFilePath(this IGroupableFeature hydroAreaFeature, WaterFlowFMModel model)
         {
-            if (!(hydroAreaFeature is Gate2D) && !(hydroAreaFeature is Weir2D) && !(hydroAreaFeature is Pump2D)) return;
-            ChangeStructureGroupName<Gate2D>(hydroAreaFeature, model);
+            if (!(hydroAreaFeature is Weir2D) && !(hydroAreaFeature is Pump2D)) return;
             ChangeStructureGroupName<Weir2D>(hydroAreaFeature, model);
             ChangeStructureGroupName<Pump2D>(hydroAreaFeature, model);
         }

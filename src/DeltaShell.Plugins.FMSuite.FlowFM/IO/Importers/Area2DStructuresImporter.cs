@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         [InvokeRequired]
         private static void InsertStructures(IEnumerable<IStructure> structures, HydroArea targetHydroArea)
         {
-            int pumpCount = 0, weirCount = 0, gateCount = 0;
+            int pumpCount = 0, weirCount = 0;
             foreach (var structure in structures)
             {
                 if (structure is Pump2D)
@@ -121,19 +121,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     targetHydroArea.Weirs.Add((Weir2D) structure);
                     weirCount++;
                 }
-                else if (structure is Gate2D)
-                {
-                    targetHydroArea.Gates.Add((Gate2D) structure);
-                    gateCount++;
-                }
                 else
                 {
                     throw new NotImplementedException();
                 }
             }
 
-            Log.InfoFormat("Read {0} structures (Pumps: {1}; Weirs: {2}; Gates: {3}).",
-                pumpCount + weirCount + gateCount, pumpCount, weirCount, gateCount);
+            //TODO
+            Log.InfoFormat("Read {0} structures (Pumps: {1}; Weirs: {2};).",
+                pumpCount + weirCount,
+                pumpCount, 
+                weirCount);
         }
 
         #endregion

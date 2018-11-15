@@ -3,160 +3,316 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:weirFormula="clr-namespace:DelftTools.Hydro.Structures.WeirFormula;assembly=DelftTools.Hydro"
              xmlns:sturctures="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:converters="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Converters"
-             xmlns:views="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFormulaViews"
              xmlns:structureFeatureView="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView"
-             mc:Ignorable="d" 
-              d:DataContext="local:WeirViewModel.cs">
+             xmlns:weirFormula="clr-namespace:DelftTools.Hydro.Structures.WeirFormula;assembly=DelftTools.Hydro"
+             xmlns:weirFormulaViews="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFormulaViews"
+             mc:Ignorable="d"
+             d:DataContext="{x:Static structureFeatureView:WeirViewModelDesignerDataContext.GeneralStructurWeirViewModel}">
+
+    <!-- GENERAL RESOURCES-->
     <UserControl.Resources>
         <Style TargetType="TextBox">
             <Setter Property="Margin" Value="1"/>
         </Style>
         <ObjectDataProvider x:Key="CrestShapes" MethodName="GetValues"
-                            ObjectType="{x:Type system:Enum}">
+                                ObjectType="{x:Type system:Enum}">
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="sturctures:CrestShape"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider x:Key="WeirTypes" MethodName="GetValues" 
-                            ObjectType="{x:Type system:Enum}">
+                                ObjectType="{x:Type system:Enum}">
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="structureFeatureView:SelectableWeirFormulaType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="HorizontalOpeningDirections" MethodName="GetValues" 
+                                ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="sturctures:GateOpeningDirection"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
+
+    <!--DATACONTEXT RESOURCE-->
     <UserControl.DataContext>
         <structureFeatureView:WeirViewModel x:Name="WeirViewModel"/>
     </UserControl.DataContext>
+    
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+
+        <!--MAIN GRID DEFINITION-->
         <Grid IsSharedSizeScope="True">
+            <Grid.Resources>
+                <system:Double x:Key="UnitWidth">31</system:Double>
+                <Style x:Key="UnitLabelStyle" TargetType="TextBlock">
+                    <Setter Property="Margin" Value="3"/>
+                    <Setter Property="Width" Value="{StaticResource UnitWidth}"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+            </Grid.Resources>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <GroupBox Grid.Row="0" Grid.Column="0" Header="General weir properties" >
-                    <Grid Margin="5" >
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
+
+            <!--STRUCTURE TYPE SELECTION-->
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <Label Content="Structure type" />
+                <ComboBox ItemsSource="{Binding Source={StaticResource WeirTypes}}" SelectedItem="{Binding SelectedWeirType}" Margin="10.4,1,-9.6,-0.4" Grid.Column="1" Grid.RowSpan="2">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <ContentPresenter Content="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <!--Sill/Weir DEFINITON-->
+            <GroupBox Grid.Row="1">
+                <GroupBox.Resources>
+                    <Style TargetType="GroupBox">
+                        <Setter Property="Header" Value="Weir">
+                        </Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding GateGroupboxEnabled}" Value="true">
+                                <Setter Property="Header" Value="Sill"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </GroupBox.Resources>
+                <Grid>
+                    <Grid.Resources>
+                        <system:Double x:Key="UnitWidth">31</system:Double>
+                        <Style x:Key="UnitLabelStyle" TargetType="TextBlock">
+                            <Setter Property="Margin" Value="3"/>
+                            <Setter Property="Width" Value="{StaticResource UnitWidth}"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="170"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Content="Time Series" />
+                    <Label Grid.Row="0" Grid.Column="3" Content="Upstream 2"   Visibility="{Binding  GeneralStructurePropertiesVisibility}"/>
+                    <Label Grid.Row="0" Grid.Column="4" Content="Upstream 1"   Visibility="{Binding  GeneralStructurePropertiesVisibility}"/>
+                    <Label Grid.Row="0" Grid.Column="5" Content="Downstream 1" Visibility="{Binding  GeneralStructurePropertiesVisibility}"/>
+                    <Label Grid.Row="0" Grid.Column="6" Content="Downstream 2" Visibility="{Binding  GeneralStructurePropertiesVisibility}"/>
+                    
+                    <Label Grid.Row="1" Grid.Column="0" Content="Crest level" />
+                    <ContentControl Grid.Row="1" Grid.Column="1">
+                        <ContentControl.Style>
+                            <Style TargetType="ContentControl">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox Grid.Column="0" Text="{Binding BedLevelStructureCentre , Mode=TwoWay}" />
+                                            <TextBlock Grid.Column="1" Text="m AD" Style="{StaticResource UnitLabelStyle}" />
+                                        </Grid>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding EnableCrestLevelTimeSeries}" Value="True">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <Button Margin="5" Content=" Time series" VerticalAlignment="Center" Command="{Binding Path=OnEditCrestLevelTimeSeries}"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
+                    <CheckBox  Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding EnableCrestLevelTimeSeries}"/>
+                    <TextBox Grid.Row="1" Text="{Binding Upstream2CrestLevel}" Grid.Column="3" Visibility="{Binding   GeneralStructurePropertiesVisibility}" />
+                    <TextBox Grid.Row="1" Text="{Binding Upstream1CrestLevel}" Grid.Column="4" Visibility="{Binding   GeneralStructurePropertiesVisibility}" />
+                    <TextBox Grid.Row="1" Text="{Binding Downstream1CrestLevel}" Grid.Column="5" Visibility="{Binding   GeneralStructurePropertiesVisibility}"   />
+                    <TextBox Grid.Row="1" Text="{Binding Downstream2CrestLevel}" Grid.Column="6" Visibility="{Binding   GeneralStructurePropertiesVisibility}"   />
+
+                    <Label Grid.Row="2" Grid.Column="0" Content="Crest width" />
+                    <Grid Grid.Row="2" Grid.Column="1" >
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="A"/>
-                            <ColumnDefinition Width="100" SharedSizeGroup="B" />
-                            <ColumnDefinition Width="30"  SharedSizeGroup="C"/>
-                            <ColumnDefinition Width="110"  SharedSizeGroup="D"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-
-                        <Label Grid.Row="0" Grid.Column="0" Content="Structure type" />
-                        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Source={StaticResource WeirTypes}}" SelectedItem="{Binding SelectedWeirType}" Grid.ColumnSpan="2">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <ContentPresenter Content="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-
-                        <Label Grid.Row="1" Grid.Column="0" Content="Crest width" Visibility="{Binding SimpleWeirPropertiesVisibility}" />
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Weir.CrestWidth}" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
-                        <Label Grid.Row="1" Grid.Column="2" Content="m" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
-                        <Label Grid.Row="2" Grid.Column="0" Content="Crest level" Visibility="{Binding SimpleWeirPropertiesVisibility}" />
-                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Weir.CrestLevel}" Visibility="{Binding SimpleWeirPropertiesVisibility}" IsEnabled="{Binding IsCrestLevelConstantTime}"/>
-                        <Label Grid.Row="2" Grid.Column="2" Content="m" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
-
-                        <CheckBox Grid.Row="3" Grid.Column="0"  Margin="5" Content=" Time dependent" VerticalAlignment="Center" IsChecked="{Binding EnableCrestLevelTimeSeries}" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
-                        <Button Grid.Row="3" Grid.Column="1"  Margin="5" Content=" Time series" VerticalAlignment="Center" IsEnabled="{Binding EnableCrestLevelTimeSeries}" Command="{Binding Path=OnEditCrestLevelTimeSeries}" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
-                        
-                        <CheckBox Grid.Row="4" Grid.Column="0"  Margin="5" Content=" Edit advanced settings" VerticalAlignment="Center" IsChecked="{Binding EnableAdvancedSettings}"/>
+                        <TextBox Grid.Column="0" Text="{Binding Weir.CrestWidth}" />
+                        <TextBlock Grid.Column="1" Text="m" Style="{StaticResource UnitLabelStyle}"/>
                     </Grid>
 
-                </GroupBox>
-                <GroupBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Header="Flow properties" Visibility="Collapsed">
-                    <DockPanel  Margin="5"  LastChildFill="False">
-                        <Label DockPanel.Dock="Top" Content="Crest shape (Longitudinal)"/>
-                        <ComboBox DockPanel.Dock="Top" ItemsSource="{Binding Source={StaticResource CrestShapes}}" SelectedItem="{Binding Weir.CrestShape}">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <ContentPresenter Content="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
+                    <TextBox Grid.Row="2" Text="{Binding Upstream2CrestWidth}" Grid.Column="3" Visibility="{Binding   GeneralStructurePropertiesVisibility}" />
+                    <TextBox Grid.Row="2" Text="{Binding Upstream1CrestWidth}" Grid.Column="4" Visibility="{Binding   GeneralStructurePropertiesVisibility}" />
+                    <TextBox Grid.Row="2" Text="{Binding Downstream1CrestWidth}" Grid.Column="5" Visibility="{Binding   GeneralStructurePropertiesVisibility}"   />
+                    <TextBox Grid.Row="2" Text="{Binding Downstream2CrestWidth}" Grid.Column="6" Visibility="{Binding   GeneralStructurePropertiesVisibility}"   />
+                </Grid>
+            </GroupBox>
+            
+            <!--GATE PROPERTIES-->
+            <GroupBox  Grid.Row="2" Grid.Column="0" Header="Gate" Visibility="{Binding GateGroupboxEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid  Margin="5" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="170" SharedSizeGroup="A"/>
+                        <ColumnDefinition Width="100" SharedSizeGroup="B"/>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="D"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Content="Time Series" />
 
-                        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" VerticalAlignment="Center">
-                            <CheckBox VerticalAlignment="Center" Content="Max" Margin="20,0,5,0" />
-                            <TextBox MinWidth="40" />
-                            <Label Content="m³/s"/>
-                        </StackPanel>
-                        <CheckBox DockPanel.Dock="Bottom" Content="Negative" ></CheckBox>
-                        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" VerticalAlignment="Center">
-                            <CheckBox VerticalAlignment="Center" Content="Max" Margin="20,0,5,0" />
-                            <TextBox MinWidth="40" />
-                            <Label Content="m³/s"/>
-                        </StackPanel>
-                        <CheckBox DockPanel.Dock="Bottom" Content="Positive" />
-                        <Label DockPanel.Dock="Bottom" Content="Allowed flow direction"/>
-                    </DockPanel>
-                </GroupBox>
+                    <Label Grid.Row="1" Grid.Column="0" Content="Lower edge level"/>
+                    <ContentControl Grid.Row="1" Grid.Column="1">
+                        <ContentControl.Style>
+                            <Style TargetType="ContentControl">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox Grid.Column="0" Text="{Binding LowerEdgeLevel}"/>
+                                            <TextBlock Grid.Column="1" Text="m AD" Style="{StaticResource UnitLabelStyle}" />
+                                        </Grid>
+                                 </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding EnableLowerEdgeLevelTimeSeries}" Value="True">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <Button Margin="5" Content=" Time series" VerticalAlignment="Center" Command="{Binding Path=OnEditLowerEdgeLevelTimeSeries}"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
 
-                <GroupBox  Grid.Row="1" Grid.Column="0" Header="Gate properties" Visibility="{Binding GateGroupboxEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <Grid  Margin="5" >
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
+                    <CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding EnableLowerEdgeLevelTimeSeries}"/>
+                    <Label Grid.Row="2" Grid.Column="0" Content="Door opening height" Visibility="{Binding GatedVisibility}"/>
+                   
+                    <Grid Grid.Row="2" Grid.Column="1">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition SharedSizeGroup="A"/>
-                            <ColumnDefinition SharedSizeGroup="B"/>
-                            <ColumnDefinition SharedSizeGroup="C"/>
-                            <ColumnDefinition SharedSizeGroup="D"/>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-
-                        <Label Grid.Row="0" Grid.Column="0" Content="Lower edge level"/>
-                        <TextBox  Grid.Row="0" Grid.Column="1" Text="{Binding LowerEdgeLevel, Mode=TwoWay}"/>
-                        <Label Grid.Row="0" Grid.Column="2" Content="m"/>
-
-                        <Label Grid.Row="1" Grid.Column="0" Content="Gate opening height"/>
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding GateOpeningHeight, Mode=TwoWay}"/>
-                        <Label Grid.Row="1" Grid.Column="2" Content="m"/>
-
-                        <!--<Label Grid.Row="2" Grid.Column="0" Content="Gate door height"/>
-                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding GateDoorHeight, Mode=TwoWay}"/>
-                        <Label Grid.Row="2" Grid.Column="2" Content="m"/>-->
+                        <TextBox Text="{Binding GateOpeningHeight, Mode=OneWay}" Visibility="{Binding GatedVisibility}" IsReadOnly="True" Foreground="Gray" Background="Transparent" />
+                        <TextBlock Grid.Column="1" Text="m"  Visibility="{Binding GatedVisibility}" Style="{StaticResource UnitLabelStyle}"/>
                     </Grid>
-                </GroupBox>
-            </Grid>
-            <GroupBox Grid.Row="1" Header="Specific weir properties" IsEnabled="{Binding EnableAdvancedSettings}">
+                    <Label Grid.Row="3" Grid.Column="0" Content="Door height"/>
+
+                    <Grid Grid.Row="3" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text="{Binding DoorHeight}"/>
+                        <TextBlock Grid.Column="1" Text="m"  Visibility="{Binding GatedWeirPropertiesEnabled}" Style="{StaticResource UnitLabelStyle}"/>
+                    </Grid>
+
+                    <Label Grid.Row="4" Grid.Column="0" Content="Horizontal opening width"/>
+                    <CheckBox Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding EnableHorizontalDoorOpeningWidthTimeSeries}"/>
+                    <ContentControl Grid.Row="4" Grid.Column="1">
+                        <ContentControl.Style>
+                            <Style TargetType="ContentControl">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <Grid Grid.Row="2" Grid.Column="1">
+                                        
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox Text="{Binding HorizontalDoorOpeningWidth }"/>
+                                            <TextBlock Text="m" Grid.Column="1"  Style="{StaticResource UnitLabelStyle}"/>
+                                      
+                                        </Grid>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding EnableHorizontalDoorOpeningWidthTimeSeries}" Value="True">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <Button Margin="5" Content=" Time series" VerticalAlignment="Center" Command="{Binding Path=OnEditHorizontalDoorOpeningWidthTimeSeries}"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
+
+                    <Label Grid.Row="5" Grid.Column="0" Content="Horizontal opening direction"/>
+                    <ComboBox Grid.Row="5" Grid.Column="1"  ItemsSource="{Binding Source={StaticResource HorizontalOpeningDirections}}" SelectedItem="{Binding SelectedDoorOpeningHeightDirectionType}" IsEnabled="{Binding GatedWeirPropertiesEnabled}"/>
+                </Grid>
+            </GroupBox>
+
+            <!--COEFFICIENTS-->
+            <GroupBox Grid.Row="3" Grid.Column="0" Header="Coefficients" Visibility="{Binding Coefficients }">
                 <StackPanel Margin="5" >
                     <ContentPresenter Content="{Binding Weir.WeirFormula}">
                         <ContentPresenter.Resources>
                             <DataTemplate DataType="{x:Type weirFormula:SimpleWeirFormula}">
-                                <views:SimpleWeirFormulaViewWpf WeirFormula="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
-                                    AncestorType={x:Type ContentPresenter}}}"/>
+                                <weirFormulaViews:SimpleWeirFormulaViewWpf WeirFormula="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
+                                AncestorType={x:Type ContentPresenter}}}"/>
                             </DataTemplate>
+
                             <DataTemplate DataType="{x:Type weirFormula:GeneralStructureWeirFormula}">
-                                <views:GeneralStructureWeirFormulaViewWpf WeirFormula="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
-                                    AncestorType={x:Type ContentPresenter}}}"/>
+                                <weirFormulaViews:GeneralStructureWeirFormulaViewWpf WeirFormula="{Binding RelativeSource={RelativeSource Mode=FindAncestor,
+                                AncestorType={x:Type ContentPresenter}}}"/>
+                            </DataTemplate>
+
+                            <DataTemplate DataType="{x:Type weirFormula:GatedWeirFormula}">
                             </DataTemplate>
                         </ContentPresenter.Resources>
                     </ContentPresenter>
                 </StackPanel>
+            </GroupBox>
+
+            <GroupBox Grid.Row="4" Grid.Column="0" Header="Extra Resistance" Visibility="{Binding GeneralStructurePropertiesVisibility}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="175"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" Content="Extra Resistance"></Label>
+                    <TextBox Grid.Row="0" Grid.Column="1" Width="100" Text="{Binding ExtraResistance}"/>
+                </Grid>
             </GroupBox>
         </Grid>
     </ScrollViewer>

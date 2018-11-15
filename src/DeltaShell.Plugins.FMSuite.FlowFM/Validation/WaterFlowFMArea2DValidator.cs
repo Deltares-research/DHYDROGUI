@@ -78,16 +78,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             foreach (var weir in area.Weirs)
             {
+                var weirName = String.Format("structure {0}: '{1}'", weir.WeirFormula.Name, weir.Name);
                 if (!model.SnapsToGrid(weir.Geometry))
                 {
-                    issues.Add(new ValidationIssue(weir, ValidationSeverity.Warning,
-                                                   "weir '" + weir.Name + "' not within grid extent", area.Pumps));
+                    var msg = String.Format("{0} is not within grid extend.", weirName);
+                    issues.Add(new ValidationIssue(weir, ValidationSeverity.Warning, msg, area.Weirs)); 
                 }
                 var result = weir.Validate();
                 if (!result.IsValid)
                 {
-                    issues.Add(new ValidationIssue(weir, ValidationSeverity.Error,
-                        "weir '" + weir.Name + "': " + result.ValidationException.Message, weir));
+                    var msg = String.Format("{0}: {1}", weirName, result.ValidationException.Messages);
+                    issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                 }
 
                 if (weir.UseCrestLevelTimeSeries)
@@ -99,25 +100,123 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                         if (startTime > model.StartTime || stopTime < model.StopTime)
                         {
-                            issues.Add(new ValidationIssue(weir, ValidationSeverity.Error,
-                                "weir '" + weir.Name +
-                                "': crest level time series does not span the model run interval.", weir));
+                            var msg = String.Format(
+                                "{0}: crest level time series does not span the model run interval.", weirName);
+                            issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                         }
                     }
                     else
                     {
-                        issues.Add(new ValidationIssue(weir, ValidationSeverity.Error,
-                            "weir '" + weir.Name +
-                            "': crest level time series does not contain any values.", weir));
+                        var msg = String.Format("{0}: crest level time series does not contain any values.", weirName);
+                        issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
                 }
                 if (weir.WeirFormula is SimpleWeirFormula)
                 {
                     if (((SimpleWeirFormula) weir.WeirFormula).LateralContraction < 0.0)
                     {
-                        issues.Add(new ValidationIssue(weir, ValidationSeverity.Error,
-                            "weir '" + weir.Name +
-                            "': lateral contraction coefficient must be greater than or equal to zero.", weir));
+                        var msg = String.Format("{0}: lateral contraction coefficient must be greater than or equal to zero.", weirName);
+                        issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
+                    }
+                }
+
+                var gatedWeirFormula = weir.WeirFormula as IGatedWeirFormula;
+                if (gatedWeirFormula != null)
+                {
+                    // DoorHeight
+                    if (gatedWeirFormula.DoorHeight < 0.0)
+                    {
+                        var msg = String.Format("{0}: door height must be greater than or equal to 0.", weirName);
+                        issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
+                    }
+
+                    // HorizontalDoorOpeningWidth
+                    if (gatedWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries)
+                    {
+                        var doorOpeningTimeSeries = gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries;
+                        if (doorOpeningTimeSeries.Components[0].Values.Cast<object>()
+                                .Any(value => (double)value < 0.0))
+                        {
+                            var msg = String.Format("{0}: opening width time series values must be greater than or equal to 0.", weirName);
+                            issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
+                        }
+                        if (doorOpeningTimeSeries.Time.Values.Any())
+                        {
+                            var startTime = doorOpeningTimeSeries.Time.Values.First();
+                            var stopTime = doorOpeningTimeSeries.Time.Values.Last();
+
+                            if (startTime > model.StartTime || stopTime < model.StopTime)
+                            {
+                                var msg = String.Format("{0}: opening width time series does not span the model run interval.", weirName);
+                                issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
+                            }
+                        }
+                        else
+                        {
+                            var msg = String.Format("{0}: opening width time series does not contain any values.", weirName);
+                            issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
+                        }
+                    }
+                    else if (gatedWeirFormula.HorizontalDoorOpeningWidth < 0.0)
+                    {
+                        var msg = String.Format("{0}: opening width must be greater than or equal to 0.", weirName);
+                        issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
+                    }
+
+                    // LowerEdgeLevel
+                    if (gatedWeirFormula.UseLowerEdgeLevelTimeSeries)
+                    {
+                        var lowerEdgeLevelTimeSeries = gatedWeirFormula.LowerEdgeLevelTimeSeries;
+                        if (lowerEdgeLevelTimeSeries.Time.Values.Any())
+                        {
+                            var startTime = lowerEdgeLevelTimeSeries.Time.Values.First();
+                            var stopTime = lowerEdgeLevelTimeSeries.Time.Values.Last();
+
+                            if (startTime > model.StartTime || stopTime < model.StopTime)
+                            {
+                                var msg = String.Format("{0}: lower edge level time series does not span the model run interval.", weirName);
+                                issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
+                            }
+                        }
+                        else
+                        {
+                            var msg = String.Format("{0}: lower edge level time series does not contain any values.", weirName);
+                            issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
+                        }
+                    }
+                }
+
+                var generalStructureFormula = weir.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula != null)
+                {
+                    if (generalStructureFormula.HorizontalDoorOpeningDirection != GateOpeningDirection.Symmetric)
+                    {
+                        var msg = String.Format("{0}: only symmetric horizontal door opening direction is supported for general structures.", weirName);
+                        issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
+                    }
+
+                    if (generalStructureFormula.WidthStructureLeftSide <= 0.0)
+                    {
+                        var msg = String.Format("{0}: Upstream 2 must be greater than 0.", weirName);
+                        issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
+                    }
+
+                    if (generalStructureFormula.WidthLeftSideOfStructure <= 0.0)
+                    {
+                        var msg = String.Format("{0}: Upstream 1 must be greater than 0.", weirName);
+                        issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
+                    }
+
+                    if (generalStructureFormula.WidthStructureRightSide <= 0.0)
+                    {
+                        var msg = String.Format("{0}: Downstream 1 must be greater than 0.", weirName);
+                        issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
+                    }
+
+                    if (generalStructureFormula.WidthRightSideOfStructure <= 0.0)
+                    {
+                        var msg = String.Format("{0}: Downstream 2 must be greater than 0.", weirName);
+                        issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
                 }
             }
@@ -185,96 +284,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     case PumpControlDirection.SuctionSideControl:
                         ValidatePumpSuctionSide(sobekPump, issues);
                         break;
-                }
-            }
-
-            foreach (var gate in area.Gates)
-            {
-                if (!model.SnapsToGrid(gate.Geometry))
-                {
-                    issues.Add(new ValidationIssue(gate, ValidationSeverity.Warning,
-                                                   "gate '" + gate.Name + "' not within grid extent", gate));
-                }
-                if (gate.DoorHeight < 0.0)
-                {
-                    issues.Add(new ValidationIssue(gate, ValidationSeverity.Error,
-                            "gate '" + gate.Name +
-                            "': door height must be greater than or equal to 0.", gate));
-                }
-                if (gate.UseSillLevelTimeSeries)
-                {
-                    if (gate.SillLevelTimeSeries.Time.Values.Any())
-                    {
-                        var startTime = gate.SillLevelTimeSeries.Time.Values.First();
-                        var stopTime = gate.SillLevelTimeSeries.Time.Values.Last();
-
-                        if (startTime > model.StartTime || stopTime < model.StopTime)
-                        {
-                            issues.Add(new ValidationIssue(gate, ValidationSeverity.Error,
-                                "gate '" + gate.Name +
-                                "': sill level time series does not span the model run interval.", gate));
-                        }
-                    }
-                    else
-                    {
-                        issues.Add(new ValidationIssue(gate, ValidationSeverity.Error,
-                            "gate '" + gate.Name +
-                            "': sill level time series does not contain any values.", gate));
-                    }
-                }
-                if (gate.UseOpeningWidthTimeSeries)
-                {
-                    if (gate.OpeningWidthTimeSeries.Components[0].Values.Cast<object>()
-                            .Any(value => (double) value < 0.0))
-                    {
-                        issues.Add(new ValidationIssue(gate, ValidationSeverity.Error,
-                            "gate '" + gate.Name +
-                            "': Opening width time series values must be greater than or equal to 0.", gate));
-                    }
-                    if (gate.OpeningWidthTimeSeries.Time.Values.Any())
-                    {
-                        var startTime = gate.OpeningWidthTimeSeries.Time.Values.First();
-                        var stopTime = gate.OpeningWidthTimeSeries.Time.Values.Last();
-
-                        if (startTime > model.StartTime || stopTime < model.StopTime)
-                        {
-                            issues.Add(new ValidationIssue(gate, ValidationSeverity.Error,
-                                "gate '" + gate.Name +
-                                "': opening width time series does not span the model run interval.", gate));
-                        }
-                    }
-                    else
-                    {
-                        issues.Add(new ValidationIssue(gate, ValidationSeverity.Error,
-                            "gate '" + gate.Name +
-                            "': opening width time series does not contain any values.", gate));
-                    }
-                }
-                else if (gate.OpeningWidth < 0)
-                {
-                    issues.Add(new ValidationIssue(gate, ValidationSeverity.Error,
-                        "gate '" + gate.Name + "': Opening width must be greater than or equal to 0.", gate));
-                }
-                if (gate.UseLowerEdgeLevelTimeSeries)
-                {
-                    if (gate.LowerEdgeLevelTimeSeries.Time.Values.Any())
-                    {
-                        var startTime = gate.LowerEdgeLevelTimeSeries.Time.Values.First();
-                        var stopTime = gate.LowerEdgeLevelTimeSeries.Time.Values.Last();
-
-                        if (startTime > model.StartTime || stopTime < model.StopTime)
-                        {
-                            issues.Add(new ValidationIssue(gate, ValidationSeverity.Error,
-                                "gate '" + gate.Name +
-                                "': lower edge level time series does not span the model run interval.", gate));
-                        }
-                    }
-                    else
-                    {
-                        issues.Add(new ValidationIssue(gate, ValidationSeverity.Error,
-                            "gate '" + gate.Name +
-                            "': lower edge level time series does not contain any values.", gate));
-                    }
                 }
             }
 

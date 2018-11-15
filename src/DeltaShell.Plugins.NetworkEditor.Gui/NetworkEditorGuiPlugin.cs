@@ -354,8 +354,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             yield return CreateAreaStructureCollectionViewInfo<Pump2D>(HydroArea.PumpsPluralName);
             yield return CreateAreaStructureCollectionViewInfo<Weir2D>(HydroArea.WeirsPluralName);
-            yield return CreateAreaStructureCollectionViewInfo<Gate2D>(HydroArea.GatesPluralName);
-            
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.LandBoundaries);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.DryPoints);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.DryAreas);
@@ -725,7 +723,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new FeatureProjectTreeViewNodePresenter<ObservationCrossSection2D>(HydroArea.ObservationCrossSectionsPluralName, Properties.Resources.observationcs2d) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<Pump2D>(HydroArea.PumpsPluralName, Properties.Resources.pump) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<Weir2D>(HydroArea.WeirsPluralName, Properties.Resources.Weir) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<Gate2D>(HydroArea.GatesPluralName, Properties.Resources.Gate) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<Embankment>(HydroArea.EmbankmentsPluralName, Properties.Resources.Embankment) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<BridgePillar>(HydroArea.BridgePillarsPluralName, Properties.Resources.BridgeSmall) { GuiPlugin = this };
         }

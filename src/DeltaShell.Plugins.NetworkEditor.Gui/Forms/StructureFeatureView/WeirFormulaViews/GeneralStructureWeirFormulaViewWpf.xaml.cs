@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -26,7 +27,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
             "WeirFormula", 
             typeof(GeneralStructureWeirFormula), 
             typeof(GeneralStructureWeirFormulaViewWpf),
-            new FrameworkPropertyMetadata(new GeneralStructureWeirFormula(), OnWeirFormulaChangedCallback)); 
+            new FrameworkPropertyMetadata(new GeneralStructureWeirFormula(), OnWeirFormulaChangedCallback));
 
         private static void OnWeirFormulaChangedCallback(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {

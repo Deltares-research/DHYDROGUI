@@ -8,6 +8,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Utils;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
@@ -183,8 +184,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         private DelftIniCategory CreateDelftIniCategory(IStructure structure, string filePath, DateTime refDate)
         {
             var delftIniCategory = new DelftIniCategory(StructureCategoryName);
+            var delftIniProperties = CreateDelftIniProperties(structure, filePath, refDate);
 
-            foreach (var property in CreateDelftIniProperties(structure, filePath, refDate))
+            foreach (var property in delftIniProperties)
             {
                 delftIniCategory.Properties.Add(property);
             }
@@ -263,15 +265,118 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var weir = (IWeir)structure;
             var weirFormula = weir.WeirFormula;
             if (weirFormula is SimpleWeirFormula) return ConstructSimpleWeirProperties(weir, path, structureType, refDate);
-            if (weirFormula is GeneralStructureWeirFormula) return ConstructGeneralStructureProperties(weir);
+            if (weirFormula is GeneralStructureWeirFormula) return ConstructGeneralStructureProperties(weir, path, structureType, refDate);
+            if (weirFormula is GatedWeirFormula)
+                return ConstructGatedWeirProperties(weir, structureType, path, refDate);
             throw new NotImplementedException();
         }
 
-        private IEnumerable<DelftIniProperty> ConstructGeneralStructureProperties(IStructure1D structure)
+        private IEnumerable<DelftIniProperty> ConstructGeneralStructureProperties(IStructure1D structure, string path, string structureType, DateTime refDate)
         {
-            var structureGenerator = new DefinitionGeneratorStructureGeneralStructure(new CompoundStructureInfo(0, string.Empty));
-            var generalStructureCategory = structureGenerator.CreateStructureRegion(structure);
-            return generalStructureCategory.Properties;
+            var properties = new List<DelftIniProperty>();
+
+            var weirStructure =  structure as IWeir;
+            var generalStructureFormula = weirStructure.WeirFormula as GeneralStructureWeirFormula;
+
+            // Width
+            properties.Add(ConstructProperty(StructureRegion.WidthLeftW1.Key,    generalStructureFormula.WidthLeftSideOfStructure,  structureType));
+            properties.Add(ConstructProperty(StructureRegion.WidthLeftWsdl.Key,  generalStructureFormula.WidthStructureLeftSide,    structureType));
+            properties.Add(ConstructProperty(StructureRegion.WidthCenter.Key,    weirStructure.CrestWidth,                          structureType));
+            properties.Add(ConstructProperty(StructureRegion.WidthRightWsdr.Key, generalStructureFormula.WidthStructureRightSide,   structureType));
+            properties.Add(ConstructProperty(StructureRegion.WidthRightW2.Key,   generalStructureFormula.WidthRightSideOfStructure, structureType));
+
+            // Level
+            properties.Add(ConstructProperty(StructureRegion.LevelLeftZb1.Key,   generalStructureFormula.BedLevelLeftSideOfStructure,  structureType));
+            properties.Add(ConstructProperty(StructureRegion.LevelLeftZbsl.Key,  generalStructureFormula.BedLevelLeftSideStructure,    structureType));
+
+            if (weirStructure.CanBeTimedependent && weirStructure.UseCrestLevelTimeSeries)
+            {
+                ConstructTimeSeriesProperty(path, properties,
+                                            weirStructure,
+                                            StructureRegion.LevelCenter.Key,
+                                            structureType,
+                                            weirStructure.CrestLevelTimeSeries,
+                                            refDate);
+            }
+            else
+            {
+                properties.Add(ConstructProperty(StructureRegion.LevelCenter.Key, generalStructureFormula.BedLevelStructureCentre, structureType));
+            }
+
+            properties.Add(ConstructProperty(StructureRegion.LevelRightZbsr.Key, generalStructureFormula.BedLevelRightSideStructure,   structureType));
+            properties.Add(ConstructProperty(StructureRegion.LevelRightZb2.Key,  generalStructureFormula.BedLevelRightSideOfStructure, structureType));
+
+            // LowerEdgeLevel
+            if (generalStructureFormula.UseLowerEdgeLevelTimeSeries)
+            {
+                ConstructTimeSeriesProperty(path, properties,
+                                            weirStructure,
+                                            StructureRegion.GateHeight.Key,
+                                            structureType,
+                                            generalStructureFormula.LowerEdgeLevelTimeSeries,
+                                            refDate);
+            }
+            else
+            {
+                properties.Add(ConstructProperty(StructureRegion.GateHeight.Key,
+                                                 generalStructureFormula.LowerEdgeLevel,
+                                                 structureType));
+            }
+
+            // Flow Coefficients
+            properties.Add(ConstructProperty(StructureRegion.PosFreeGateFlowCoeff.Key, generalStructureFormula.PositiveFreeGateFlow, structureType));
+            properties.Add(ConstructProperty(StructureRegion.PosDrownGateFlowCoeff.Key, generalStructureFormula.PositiveDrownedGateFlow, structureType));
+            properties.Add(ConstructProperty(StructureRegion.PosFreeWeirFlowCoeff.Key, generalStructureFormula.PositiveFreeWeirFlow, structureType));
+            properties.Add(ConstructProperty(StructureRegion.PosDrownWeirFlowCoeff.Key, generalStructureFormula.PositiveDrownedWeirFlow, structureType));
+            properties.Add(ConstructProperty(StructureRegion.PosContrCoefFreeGate.Key, generalStructureFormula.PositiveContractionCoefficient, structureType));
+
+            properties.Add(ConstructProperty(StructureRegion.NegFreeGateFlowCoeff.Key, generalStructureFormula.NegativeFreeGateFlow, structureType));
+            properties.Add(ConstructProperty(StructureRegion.NegDrownGateFlowCoeff.Key, generalStructureFormula.NegativeDrownedGateFlow, structureType));
+            properties.Add(ConstructProperty(StructureRegion.NegFreeWeirFlowCoeff.Key, generalStructureFormula.NegativeFreeWeirFlow, structureType));
+            properties.Add(ConstructProperty(StructureRegion.NegDrownWeirFlowCoeff.Key, generalStructureFormula.NegativeDrownedWeirFlow, structureType));
+            properties.Add(ConstructProperty(StructureRegion.NegContrCoefFreeGate.Key, generalStructureFormula.NegativeContractionCoefficient, structureType));
+
+            // Misc.
+            var extraResistance = generalStructureFormula.UseExtraResistance ? generalStructureFormula.ExtraResistance : 0.0;
+            properties.Add(ConstructProperty(StructureRegion.ExtraResistance.Key, extraResistance, structureType));
+
+            properties.Add(ConstructProperty(StructureRegion.GateDoorHeight.Key, generalStructureFormula.DoorHeight, structureType));
+
+            // Horizontal door opening
+            if (generalStructureFormula.UseHorizontalDoorOpeningWidthTimeSeries)
+            {
+                ConstructTimeSeriesProperty(path, properties,
+                                            weirStructure,
+                                            EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.HorizontalDoorOpeningWidth),
+                                            structureType,
+                                            generalStructureFormula.HorizontalDoorOpeningWidthTimeSeries,
+                                            refDate);
+            }
+            else
+            {
+                properties.Add(ConstructProperty(EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.HorizontalDoorOpeningWidth),
+                    generalStructureFormula.HorizontalDoorOpeningWidth,
+                    structureType));
+            }
+
+            string horizontalDoorOpeningDirection;
+            switch (generalStructureFormula.HorizontalDoorOpeningDirection)
+            {
+                case GateOpeningDirection.Symmetric:
+                    horizontalDoorOpeningDirection = "symmetric"; break;
+                case GateOpeningDirection.FromLeft:
+                    horizontalDoorOpeningDirection = "from_left"; break;
+                case GateOpeningDirection.FromRight:
+                    horizontalDoorOpeningDirection = "from_right"; break;
+                default:
+                    throw new ArgumentException("We can't write " +
+                                                generalStructureFormula.HorizontalDoorOpeningDirection);
+            }
+            properties.Add(ConstructProperty(EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.HorizontalDoorOpeningDirection),
+                                             horizontalDoorOpeningDirection,
+                                             structureType));
+
+            return properties;
         }
 
         private IEnumerable<DelftIniProperty> ConstructPumpProperties(IStructure1D structure, string structureType, string path, DateTime refDate)
@@ -387,6 +492,123 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return properties;
         }
 
+        /// <summary>
+        /// Construct the set of gated weir properties to be written to the
+        /// structures.ini file.
+        /// </summary>
+        /// <param name="structure">The Weir </param>
+        /// <param name="structureType"></param>
+        /// <param name="path"></param>
+        /// <param name="refDate"></param>
+        /// <returns>
+        /// The set of properties which should be written to structures.ini
+        /// </returns>
+        private IEnumerable<DelftIniProperty> ConstructGatedWeirProperties(IStructure1D structure,
+                                                                           string structureType,
+                                                                           string path,
+                                                                           DateTime refDate)
+        {
+            var gatedWeir = (IWeir)structure;
+            var gatedWeirFormula = (IGatedWeirFormula) gatedWeir.WeirFormula;
+
+            var properties = new List<DelftIniProperty>();
+
+            if (gatedWeir.UseCrestLevelTimeSeries)
+            {
+                ConstructTimeSeriesProperty(path, properties,
+                                            gatedWeir, 
+                                            KnownStructureProperties.GateSillLevel,
+                                            structureType, 
+                                            gatedWeir.CrestLevelTimeSeries, 
+                                            refDate);
+            }
+            else
+            {
+                properties.Add(ConstructProperty(KnownStructureProperties.GateSillLevel, 
+                                                 gatedWeir.CrestLevel, 
+                                                 structureType));
+            }
+
+            if (gatedWeirFormula.UseLowerEdgeLevelTimeSeries)
+            {
+                ConstructTimeSeriesProperty(path, properties,
+                                            gatedWeir,
+                                            KnownStructureProperties.GateLowerEdgeLevel,
+                                            structureType,
+                                            gatedWeirFormula.LowerEdgeLevelTimeSeries,
+                                            refDate);
+            }
+            else
+            {
+                properties.Add(ConstructProperty(KnownStructureProperties.GateLowerEdgeLevel, 
+                                                 gatedWeirFormula.LowerEdgeLevel, 
+                                                 structureType));
+            }
+
+
+            if (gatedWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries)
+            {
+                ConstructTimeSeriesProperty(path, properties,
+                                            gatedWeir,
+                                            KnownStructureProperties.GateOpeningWidth,
+                                            structureType,
+                                            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries,
+                                            refDate);
+            }
+            else
+            {
+                properties.Add(ConstructProperty(KnownStructureProperties.GateOpeningWidth, 
+                                                 gatedWeirFormula.HorizontalDoorOpeningWidth, 
+                                                 structureType));
+            }
+
+            properties.Add(ConstructProperty(KnownStructureProperties.GateDoorHeight, 
+                                             gatedWeirFormula.DoorHeight, 
+                                             structureType));
+
+            string horizontalDoorOpeningDirection;
+            switch (gatedWeirFormula.HorizontalDoorOpeningDirection)
+            {
+                case GateOpeningDirection.Symmetric:
+                    horizontalDoorOpeningDirection = "symmetric"; break;
+                case GateOpeningDirection.FromLeft:
+                    horizontalDoorOpeningDirection = "from_left"; break;
+                case GateOpeningDirection.FromRight:
+                    horizontalDoorOpeningDirection = "from_right"; break;
+                default:
+                    throw new ArgumentException("We can't write " + 
+                                                gatedWeirFormula.HorizontalDoorOpeningDirection);
+            }
+            properties.Add(ConstructProperty(KnownStructureProperties.GateHorizontalOpeningDirection, 
+                                             horizontalDoorOpeningDirection, 
+                                             structureType));
+            if (gatedWeir.CrestWidth > 0.0)
+            {
+                properties.Add(ConstructProperty(KnownStructureProperties.GateSillWidth, 
+                                                 gatedWeir.CrestWidth, 
+                                                 structureType));
+            }
+            return properties;
+        }
+
+        private void ConstructTimeSeriesProperty(string path,
+                                                 ICollection<DelftIniProperty> properties,
+                                                 IStructure1D structure,
+                                                 string propertyName,
+                                                 string structureType,
+                                                 TimeSeries timeSeries,
+                                                 DateTime refDate)
+        {
+            var timeFilePath = ConstructTimeFilePath(structure, propertyName);
+            properties.Add(
+                ConstructProperty(propertyName,
+                                 timeFilePath,
+                                 structureType));
+            WriteTimeFile(GetOtherFilePathInSameDirectory(path, timeFilePath),
+                          timeSeries,
+                          refDate);
+        }
+
         private void AddReductionTableRelatedProperties(IPump pump, List<DelftIniProperty> properties, string structureType)
         {
             if (pump.ReductionTable.Arguments[0].Values.Count == 0)
@@ -453,9 +675,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             if (weir != null)
             {
                 if (weir.WeirFormula is SimpleWeirFormula) return StructureRegion.StructureTypeName.Weir;
+                // A GatedWeir is a Gate for the Kernel, hence we specify it as a "gate".
+                if (weir.WeirFormula is GatedWeirFormula) return StructureRegion.StructureTypeName.Gate;
                 if (weir.WeirFormula is GeneralStructureWeirFormula) return StructureRegion.StructureTypeName.GeneralStructure;
             }
-
 
             throw new NotImplementedException();
         }

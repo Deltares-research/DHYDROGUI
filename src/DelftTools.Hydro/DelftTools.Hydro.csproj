@@ -259,7 +259,6 @@
     <Compile Include="Structures\Culvert350LegacyLoader.cs" />
     <Compile Include="Structures\ExtraResistance.cs" />
     <Compile Include="Structures\Gate.cs" />
-    <Compile Include="Structures\Gate2D.cs" />
     <Compile Include="Structures\GroupableFeatureHelper.cs" />
     <Compile Include="Structures\IBridge.cs" />
     <Compile Include="Structures\ICompositeBranchStructure.cs" />

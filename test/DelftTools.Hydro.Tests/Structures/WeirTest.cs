@@ -233,7 +233,7 @@ namespace DelftTools.Hydro.Tests.Structures
         }
 
         [Test]
-        public void SimpleWeirPolylineWidthTest()
+        public void SimpleWeirPolylineDefaultWidthTest()
         {
             var weir = new Weir()
                 {
@@ -241,7 +241,24 @@ namespace DelftTools.Hydro.Tests.Structures
                     Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(4, 3),})
                 };
 
-            Assert.AreEqual(5,weir.CrestWidth);
+            Assert.AreEqual(0,weir.CrestWidth);
+        }
+
+        
+        [TestCase(typeof(FreeFormWeirFormula),         StructureType.UniversalWeir)]
+        [TestCase(typeof(GatedWeirFormula),            StructureType.Orifice)]
+        [TestCase(typeof(PierWeirFormula),             StructureType.AdvancedWeir)]
+        [TestCase(typeof(RiverWeirFormula),            StructureType.RiverWeir)]
+        [TestCase(typeof(SimpleWeirFormula),           StructureType.Weir)]
+        [TestCase(typeof(GeneralStructureWeirFormula), StructureType.GeneralStructure)]
+        public void GivenAWeirWithTheSpecifiedFormulaWhenGetStructureTypeIsCalledTheCorrectTypeIsReturned(Type weirFormula, StructureType expectedStructureType)
+        {
+            var weir = new Weir()
+            {
+                WeirFormula = (IWeirFormula) Activator.CreateInstance(weirFormula)
+            };
+
+            Assert.That(weir.GetStructureType(), Is.EqualTo(expectedStructureType));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using DelftTools.Functions;
@@ -9,51 +10,137 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.Gui.Commands;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
-using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 {
     public class WeirViewModel : IDisposable, INotifyPropertyChanged
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(WeirViewModel));
+        #region Fields
         private IWeir weir;
         private SelectableWeirFormulaType selectedWeirType;
-
         private double lowerEdgeLevel;
+        private double horizontalDoorOpeningWidth;
         private double previousCrestLevel;
-        public Func<IWeir, TimeSeries> GetTimeSeriesEditor { get; set; }
+        private bool previousCrestLevelTimeSeriesValue;
+        private bool previousLowerEdgeLevelTimeSeriesValue;
+        private bool gatedWeirPropertiesEnabled;
+        private bool previousHorizontalDoorOpeningWidthTimeSeriesValue;
+        private bool gateGroupboxEnabled;
+        private bool simpleGateGroupBoxEnabled;
+        private bool crestLevelEnabled;
+        private bool lowerEdgeLevelEnabled;
+        private bool horizontalDoorOpeningWidthEnabled;
+        private bool enableAdvancedSettings;
+        private bool _generalStructureVisibility;
+        private bool generalStructureEnabled;
+        private bool timeSeriesEnabled;
+        private double gateOpeningHeight;
+        public bool coefficientsEnabled;
+        #endregion
+
+        #region Functions/Delegates
+        public Func<IWeir, TimeSeries> GetTimeSeriesEditorForCrestLevel { get; set; }
+        public Func<IGatedWeirFormula, TimeSeries> GetTimeSeriesEditorForEdgeLevel { get; set; }
+        public Func<IGatedWeirFormula, TimeSeries> GetTimeSeriesEditorForHorizontalDoorOpeningWidth { get; set; }
+
+        #endregion
+
+        #region Commands
+        public ICommand OnEditCrestLevelTimeSeries
+        {
+            get { return new RelayCommand(param => EditCrestLevelTimeSeries()); }
+        }
+        public ICommand OnEditLowerEdgeLevelTimeSeries
+        {
+            get { return new RelayCommand(param => EditLowerEdgeLevelTimeSeries()); }
+        }
+        public ICommand OnEditHorizontalDoorOpeningWidthTimeSeries
+        {
+            get { return new RelayCommand(param => EditHorizontalDoorOpeningWidthTimeSeries()); }
+        }
+
+        #endregion
+
+        #region Model Properties
 
         public IWeir Weir
         {
-            get { return weir; }
+            get
+            {
+                return weir;
+            }
             set
             {
                 if (weir == value) return;
-
-                if (weir != null)
-                {
-                    ((INotifyPropertyChanged)weir).PropertyChanged -= WeirPropertyChanged;
-                    ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged -= WeirFormulaPropertyChanged;
-                }
 
                 weir = value;
 
                 if (weir != null)
                 {
+                    SynchronizeWeirAndFormula();
+
                     selectedWeirType = GetSelectableWeirFormulaType(weir.WeirFormula);
-                    previousCrestLevelTimeSeriesValue = weir.UseCrestLevelTimeSeries;
+
+                    SetPreviousCrestLevelTimeSeries();
+
+                    SetPreviousLowerEdgeLevelTimeSeries();
+
+                    SetPreviousHorizontalDoorOpeningWidthTimeSeries();
+
                     UpdateControls();
+
                     OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.Weir));
                     OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.HasWeir));
-                    OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.SelectedWeirType));
-                    OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
-                    OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.LowerEdgeLevel));
-                    OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
-                    OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsCrestLevelConstantTime));
 
-                    ((INotifyPropertyChanged)weir).PropertyChanged += WeirPropertyChanged;
-                    ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged += WeirFormulaPropertyChanged;
+                    SynchronizeCommonProperties();
 
+                    SynchronizeGatedOrGeneralStructureProperties();
+                }
+            }
+        }
+
+        private void SetPreviousCrestLevelTimeSeries()
+        {
+            if (EnableCrestLevelTimeSeries)
+            {
+                previousCrestLevelTimeSeriesValue = weir.UseCrestLevelTimeSeries;
+            }
+        }
+
+        private void SynchronizeGatedOrGeneralStructureProperties()
+        {
+            if (weir?.WeirFormula is GatedWeirFormula)
+            {
+                SynchronizeGatedProperties();
+            }
+            else if (weir?.WeirFormula is GeneralStructureWeirFormula)
+            {
+                SynchronizeGatedProperties();
+                SynchronizeGeneralStructureProperties();
+            }
+        }
+
+        private void SetPreviousHorizontalDoorOpeningWidthTimeSeries()
+        {
+            if (EnableHorizontalDoorOpeningWidthTimeSeries)
+            {
+                var gatedWeir = weir?.WeirFormula as IGatedWeirFormula;
+                if (gatedWeir != null)
+                {
+                    previousHorizontalDoorOpeningWidthTimeSeriesValue = gatedWeir.UseHorizontalDoorOpeningWidthTimeSeries;
+                }
+            }
+        }
+
+        private void SetPreviousLowerEdgeLevelTimeSeries()
+        {
+            if (EnableLowerEdgeLevelTimeSeries)
+            {
+                var gatedWeir = weir?.WeirFormula as IGatedWeirFormula;
+
+                if (gatedWeir != null)
+                {
+                    previousLowerEdgeLevelTimeSeriesValue = gatedWeir.UseLowerEdgeLevelTimeSeries;
                 }
             }
         }
@@ -67,35 +154,382 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         {
             get
             {
-                if (!HasWeir) return 0;
-                var gatedWeirFormula = Weir.WeirFormula as GeneralStructureWeirFormula;
-                if (gatedWeirFormula == null)
-                {
-                    return 0; 
-                }
-                return gatedWeirFormula.GateOpening;
+                gateOpeningHeight = LowerEdgeLevel - BedLevelStructureCentre;
+                return gateOpeningHeight;
+            }
+
+            set
+            {
+                gateOpeningHeight = value;
+                lowerEdgeLevel = value + BedLevelStructureCentre;
+
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.LowerEdgeLevel));
+            }
+        }
+
+
+        public double DoorHeight
+        {
+            get
+            {
+                if(weir?.WeirFormula == null) {return 0;}
+
+                var gatedWeirFormula = Weir?.WeirFormula as IGatedWeirFormula;
+
+                return gatedWeirFormula.DoorHeight;
             }
             set
             {
-                if(!HasWeir) return;
-                var gatedWeirFormula = Weir.WeirFormula as GeneralStructureWeirFormula;
+                if (weir?.WeirFormula == null) { return; }
+
+                var gatedWeirFormula = Weir.WeirFormula as IGatedWeirFormula;
+
                 if (gatedWeirFormula == null)
                 {
-                    return; 
+                    return;
                 }
-                
-                if (gatedWeirFormula.GateOpening != value)
+
+                if (gatedWeirFormula.DoorHeight != value)
                 {
-                    gatedWeirFormula.GateOpening = value;
+                    gatedWeirFormula.DoorHeight = value;
 
-                    lowerEdgeLevel = value + BedLevelStructureCentre;
-
-                    OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
-                    OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.LowerEdgeLevel));
+                    OnPropertyChanged();
                 }
             }
         }
 
+        private IGatedWeirFormula gatedWeirFormula;
+        public GateOpeningDirection SelectedDoorOpeningHeightDirectionType
+        {
+            get
+            {
+                gatedWeirFormula = Weir?.WeirFormula as IGatedWeirFormula;
+                if (gatedWeirFormula != null)
+                {
+                    if (gatedWeirFormula is GatedWeirFormula)
+                    {
+                        return gatedWeirFormula.HorizontalDoorOpeningDirection;
+                    }
+
+                    if (gatedWeirFormula is GeneralStructureWeirFormula)
+                    {
+                        return GateOpeningDirection.Symmetric;
+                    }
+                }
+
+                return GateOpeningDirection.Symmetric;
+            }
+            set
+            {
+                gatedWeirFormula = Weir?.WeirFormula as IGatedWeirFormula;
+                if (gatedWeirFormula != null)
+                {
+                    if (gatedWeirFormula is GatedWeirFormula)
+                    {
+                        gatedWeirFormula.HorizontalDoorOpeningDirection = value;
+                    }
+                }
+
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.SelectedDoorOpeningHeightDirectionType));
+            }
+
+        }
+
+        public double Upstream1CrestWidth
+        {
+            get
+            {
+                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula != null)
+                {
+                    return generalStructureFormula.WidthLeftSideOfStructure;
+                }
+
+                return -1.0;
+            }
+            set
+            {
+                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula != null)
+                {
+                    generalStructureFormula.WidthLeftSideOfStructure = value;
+                }
+            }
+        }
+
+        public double Upstream1CrestLevel
+        {
+            get
+            {
+                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula != null)
+                {
+                    return generalStructureFormula.BedLevelLeftSideOfStructure;
+                }
+
+                return -1.0;
+            }
+            set
+            {
+                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula != null)
+                {
+                    generalStructureFormula.BedLevelLeftSideOfStructure = value;
+                }
+            }
+        }
+
+        public double Upstream2CrestWidth
+        {
+            get
+            {
+                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula != null)
+                {
+                    return generalStructureFormula.WidthStructureLeftSide;
+                }
+
+                return -1.0;
+            }
+            set
+            {
+                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula != null)
+                {
+                    generalStructureFormula.WidthStructureLeftSide = value;
+                }
+            }
+        }
+
+        public double Upstream2CrestLevel
+        {
+            get
+            {
+                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula != null)
+                {
+                    return generalStructureFormula.BedLevelLeftSideStructure;
+                }
+
+                return -1.0;
+            }
+            set
+            {
+                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula != null)
+                {
+                    generalStructureFormula.BedLevelLeftSideStructure = value;
+                }
+            }
+        }
+
+        public double Downstream1CrestWidth
+        {
+            get
+            {
+                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula != null)
+                {
+                    return generalStructureFormula.WidthStructureRightSide;
+                }
+
+                return -1.0;
+            }
+            set
+            {
+                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula != null)
+                {
+                    generalStructureFormula.WidthStructureRightSide = value;
+                }
+            }
+        }
+
+        public double Downstream1CrestLevel
+        {
+            get
+            {
+                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula != null)
+                {
+                    return generalStructureFormula.BedLevelRightSideStructure;
+                }
+
+                return -1.0;
+            }
+            set
+            {
+                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula != null)
+                {
+                    generalStructureFormula.BedLevelRightSideStructure = value;
+                }
+            }
+        }
+
+        public double Downstream2CrestWidth
+        {
+            get
+            {
+                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula != null)
+                {
+                    return generalStructureFormula.WidthRightSideOfStructure;
+                }
+
+                return -1.0;
+            }
+            set
+            {
+                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula != null)
+                {
+                    generalStructureFormula.WidthRightSideOfStructure = value;
+                }
+            }
+        }
+
+        public double Downstream2CrestLevel
+        {
+            get
+            {
+                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula != null)
+                {
+                    return generalStructureFormula.BedLevelRightSideOfStructure;
+                }
+
+                return -1.0;
+            }
+            set
+            {
+                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula != null)
+                {
+                    generalStructureFormula.BedLevelRightSideOfStructure = value;
+                }
+            }
+        }
+
+        public double BedLevelStructureCentre
+        {
+            get
+            {
+                if (weir?.WeirFormula == null) { return 0; }
+
+                return Weir.CrestLevel;
+            }
+            set
+            {
+                if (weir?.WeirFormula != null)
+                {
+                    Weir.CrestLevel = value;
+                }
+
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.BedLevelStructureCentre));
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
+            }
+        }
+
+        public double LowerEdgeLevel
+        {
+            get
+            {
+                if (weir?.WeirFormula == null) { return 0; }
+
+                var gatedWeirFormula = Weir?.WeirFormula as IGatedWeirFormula;
+                if (gatedWeirFormula == null) return 0;
+
+
+
+                return gatedWeirFormula.LowerEdgeLevel;
+            }
+            set
+            {
+                var gatedWeirFormula = Weir?.WeirFormula as IGatedWeirFormula;
+                if (gatedWeirFormula != null)
+                {
+                    gatedWeirFormula.LowerEdgeLevel = value;
+                }
+
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.LowerEdgeLevel));
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
+
+            }
+        }
+
+        public double HorizontalDoorOpeningWidth
+        {
+            get
+            {
+                if (weir?.WeirFormula == null) { return 0; }
+
+
+                var gatedWeirFormula = Weir?.WeirFormula as IGatedWeirFormula;
+                if (gatedWeirFormula == null) return 0;
+
+                return gatedWeirFormula.HorizontalDoorOpeningWidth;
+            }
+            set
+            {
+                var gatedWeirFormula = Weir?.WeirFormula as IGatedWeirFormula;
+                if (gatedWeirFormula != null)
+                {
+                    gatedWeirFormula.HorizontalDoorOpeningWidth = value;
+
+                    OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.HorizontalDoorOpeningWidth));
+                }
+            }
+        }
+
+        public double ExtraResistance
+        {
+            get
+            {
+                if (weir?.WeirFormula == null) { return 0; }
+                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula == null) return 0;
+
+
+                return generalStructureFormula.ExtraResistance;
+            }
+            set
+            {
+                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureFormula != null)
+                {
+                    generalStructureFormula.ExtraResistance = value;
+                }
+
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GeneralStructurePropertiesVisibility));
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.ExtraResistance));
+
+            }
+        }
+
+        public bool LowerEdgeLevelEnabled
+        {
+            get { return lowerEdgeLevelEnabled; }
+            set
+            {
+                lowerEdgeLevelEnabled = value;
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.SimpleWeirPropertiesVisibility));
+            }
+        }
+
+        public bool HorizontalDoorOpeningWidthEnabled
+        {
+            get { return horizontalDoorOpeningWidthEnabled; }
+            set
+            {
+                horizontalDoorOpeningWidthEnabled = value;
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.SimpleWeirPropertiesVisibility));
+            }
+        }
+        #endregion
+
+        #region Methods: Gui enabling controls
         public SelectableWeirFormulaType SelectedWeirType
         {
             get
@@ -104,14 +538,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
             set
             {
-                if(!HasWeir || weir.WeirFormula == null) return;
-                ((INotifyPropertyChanged) weir.WeirFormula).PropertyChanged -= WeirFormulaPropertyChanged;
+                if (weir?.WeirFormula == null) return;
+
+                ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged -= WeirFormulaPropertyChanged;
 
                 if (value == SelectableWeirFormulaType.SimpleWeir)
                 {
                     weir.WeirFormula = new SimpleWeirFormula();
                     SetSimpleWeirControls();
                 }
+
+                if (value == SelectableWeirFormulaType.SimpleGate)
+                {
+                    weir.WeirFormula = new GatedWeirFormula(true);
+                    SetSimpleGateViewControls();
+                }
+
                 if (value == SelectableWeirFormulaType.GeneralStructure)
                 {
                     weir.WeirFormula = new GeneralStructureWeirFormula();
@@ -123,83 +565,213 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged += WeirFormulaPropertyChanged;
 
                 selectedWeirType = value;
-                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.SelectedWeirType));
-                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
-                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.LowerEdgeLevel));
-            }
-        }
 
-        public double BedLevelStructureCentre
-        {
-            get
-            {
-                if (!HasWeir) return 0;
-                var gatedWeirFormula = Weir.WeirFormula as GeneralStructureWeirFormula;
-                if (gatedWeirFormula == null)
+                SynchronizeCommonProperties();
+
+                if (value == SelectableWeirFormulaType.SimpleGate)
                 {
-                    return 0;
+                    SynchronizeGatedProperties();
                 }
-                return gatedWeirFormula.BedLevelStructureCentre;
-            }
-        }
-
-        public double LowerEdgeLevel
-        {
-            get
-            {
-                lowerEdgeLevel = GateOpeningHeight + BedLevelStructureCentre;
-                return lowerEdgeLevel;
-            }
-            set
-            {
-                if (lowerEdgeLevel != value)
+                else if (value == SelectableWeirFormulaType.GeneralStructure)
                 {
-                    lowerEdgeLevel = value;
-
-                    if(!HasWeir) return;
-                    var gatedWeirFormula = Weir.WeirFormula as GeneralStructureWeirFormula;
-                    if (gatedWeirFormula == null)
-                    {
-                        return;
-                    }
-
-                    GateOpeningHeight = lowerEdgeLevel - BedLevelStructureCentre;
-                    OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.LowerEdgeLevel));
+                    SynchronizeGatedProperties();
+                    SynchronizeGeneralStructureProperties();
                 }
             }
         }
 
-        #region Gui enabling controls
+        private void UpdateControls()
+        {
+            if (selectedWeirType == SelectableWeirFormulaType.SimpleGate)
+            {
+                PersistValuesAfterOpeningSimpleGateView();
+                if (Weir?.WeirFormula != null)
+
+                {
+                    return;
+                }
+                SetSimpleGateViewControls();
+            }
+
+            if (selectedWeirType == SelectableWeirFormulaType.GeneralStructure)
+            {
+                PersistValuesAfterOpeningGeneralStructureView();
+
+                if (Weir.WeirFormula != null)
+                {
+                    return;
+                }
+                SetGeneralStructureViewControls();
+            }
+
+            if (selectedWeirType == SelectableWeirFormulaType.SimpleWeir)
+            {
+                PersistValuesAfterOpeningSimpleWeirView();
+
+                if (Weir.WeirFormula != null)
+                {
+                    return;
+                }
+                SetSimpleWeirControls();
+            }
+        }
+
+        private SelectableWeirFormulaType GetSelectableWeirFormulaType(IWeirFormula formula)
+        {
+            if (formula is SimpleWeirFormula)
+            {
+                return SelectableWeirFormulaType.SimpleWeir;
+            }
+
+            if (formula is GeneralStructureWeirFormula)
+            {
+                return SelectableWeirFormulaType.GeneralStructure;
+            }
+
+            if (formula is GatedWeirFormula)
+            {
+                return SelectableWeirFormulaType.SimpleGate;
+            }
+
+            throw new NotSupportedException(string.Format(
+                Resources.WeirViewModel_GetSelectableWeirFormulaType_This_formula_type____0___is_not__yet__supported,
+                formula.Name));
+        }
 
         private void SetGeneralStructureViewControls()
         {
+            ResetValuesAfterStructureTypeSwitch();
+            PersistValuesAfterOpeningGeneralStructureView();
+        }
+
+        private void PersistValuesAfterOpeningGeneralStructureView()
+        {
+            ExtraResistanceEnabled = true;
             GateGroupboxEnabled = true;
             CrestLevelEnabled = false;
-            if(EnableCrestLevelTimeSeries != previousCrestLevelTimeSeriesValue)
+            LowerEdgeLevelEnabled = true;
+            HorizontalDoorOpeningWidthEnabled = true;
+            CoefficientsEnabled = true;
+            GatedWeirPropertiesEnabled = false;
+            if (EnableCrestLevelTimeSeries != previousCrestLevelTimeSeriesValue)
                 previousCrestLevelTimeSeriesValue = EnableCrestLevelTimeSeries;
-            EnableCrestLevelTimeSeries = false;
+            if (EnableLowerEdgeLevelTimeSeries != previousLowerEdgeLevelTimeSeriesValue)
+                previousLowerEdgeLevelTimeSeriesValue = EnableLowerEdgeLevelTimeSeries;
+            if (EnableHorizontalDoorOpeningWidthTimeSeries != previousHorizontalDoorOpeningWidthTimeSeriesValue)
+                previousHorizontalDoorOpeningWidthTimeSeriesValue = EnableHorizontalDoorOpeningWidthTimeSeries;
+            EnableCrestLevelTimeSeries = previousCrestLevelTimeSeriesValue;
+        }
+
+        private void SetSimpleGateViewControls()
+        {
+            ResetValuesAfterStructureTypeSwitch();
+            PersistValuesAfterOpeningSimpleGateView();
+        }
+
+        private void PersistValuesAfterOpeningSimpleGateView()
+        {
+            GatedWeirPropertiesEnabled = true;
+            GateGroupboxEnabled = true;
+            CrestLevelEnabled = false;
+            LowerEdgeLevelEnabled = true;
+            HorizontalDoorOpeningWidthEnabled = true;
+            CoefficientsEnabled = false;
+            EnableCrestLevelTimeSeries = previousCrestLevelTimeSeriesValue;
+            EnableLowerEdgeLevelTimeSeries = previousLowerEdgeLevelTimeSeriesValue;
+            EnableHorizontalDoorOpeningWidthTimeSeries = previousHorizontalDoorOpeningWidthTimeSeriesValue;
         }
 
         private void SetSimpleWeirControls()
         {
+            ResetValuesAfterStructureTypeSwitch();
+            PersistValuesAfterOpeningSimpleWeirView();
+        }
+
+        private void PersistValuesAfterOpeningSimpleWeirView()
+        {
+            CoefficientsEnabled = true;
             GateGroupboxEnabled = false;
             CrestLevelEnabled = true;
+            LowerEdgeLevelEnabled = true;
+            HorizontalDoorOpeningWidthEnabled = true;
+            GatedWeirPropertiesEnabled = false;
             EnableCrestLevelTimeSeries = previousCrestLevelTimeSeriesValue;
+            EnableLowerEdgeLevelTimeSeries = previousLowerEdgeLevelTimeSeriesValue;
+            EnableHorizontalDoorOpeningWidthTimeSeries = previousHorizontalDoorOpeningWidthTimeSeriesValue;
+        }
+
+        private void ResetValuesAfterStructureTypeSwitch()
+        {
+            ExtraResistance = 0.0;
+            BedLevelStructureCentre = 0.0;
+            Weir.CrestLevel = 0.0;
+            Weir.CrestWidth = 0.0;
         }
 
         public Visibility SimpleWeirPropertiesVisibility
         {
             get
             {
-                if (CrestLevelEnabled)
+                if (CrestLevelEnabled || LowerEdgeLevelEnabled || HorizontalDoorOpeningWidthEnabled)
                 {
                     return Visibility.Visible;
                 }
+
+                return Visibility.Collapsed;
+            }
+        }
+        public Visibility GatedVisibility
+        {
+            get
+            {
+                if (!TimeSeriesEnabled)
+                {
+                    return Visibility.Visible;
+                }
+
                 return Visibility.Collapsed;
             }
         }
 
-        private bool CrestLevelEnabled
+        public Visibility GeneralStructurePropertiesVisibility
+        {
+            get
+            {
+                if (weir != null && weir.WeirFormula != null && Weir.WeirFormula is GeneralStructureWeirFormula)
+                {
+                    return Visibility.Visible;
+
+                }
+
+                return Visibility.Collapsed;
+            }
+        }
+
+        public bool GatedWeirPropertiesEnabled
+        {
+            get { return gatedWeirPropertiesEnabled; }
+            set
+            {
+                gatedWeirPropertiesEnabled = value;
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GatedWeirPropertiesEnabled));
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
+            }
+        }
+
+        public Visibility Coefficients
+        {
+            get
+            {
+                if (CoefficientsEnabled)
+                {
+                    return Visibility.Visible;
+                }
+
+                return Visibility.Collapsed;
+            }
+        }
+
+        public bool CrestLevelEnabled
         {
             get { return crestLevelEnabled; }
             set
@@ -208,7 +780,48 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.SimpleWeirPropertiesVisibility));
             }
         }
-        
+
+        private bool TimeSeriesEnabled
+        {
+            get { return timeSeriesEnabled; }
+            set
+            {
+                timeSeriesEnabled = value;
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GeneralStructurePropertiesVisibility));
+            }
+        }
+
+        private bool CoefficientsEnabled
+        {
+            get { return coefficientsEnabled; }
+            set
+            {
+                coefficientsEnabled = value;
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.Coefficients));
+            }
+        }
+
+        private bool extraResistance;
+        private bool ExtraResistanceEnabled
+        {
+            get { return extraResistance; }
+            set
+            {
+                extraResistance = value;
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.ExtraResistance));
+            }
+        }
+
+        public bool GeneralStructureVisibility
+        {
+            get { return _generalStructureVisibility; }
+            set
+            {
+                _generalStructureVisibility = value;
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GeneralStructureVisibility));
+            }
+        }
+
         public bool GateGroupboxEnabled
         {
             get { return gateGroupboxEnabled; }
@@ -229,75 +842,180 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
         }
 
-        public bool IsCrestLevelConstantTime { get { return !weir.UseCrestLevelTimeSeries; } }
-
-        private bool previousCrestLevelTimeSeriesValue;
+        public bool IsLowerEdgeConstantTime
+        {
+            get
+            {
+                var gatedWeir = Weir.WeirFormula as GatedWeirFormula;
+                return !gatedWeir.UseLowerEdgeLevelTimeSeries;
+            }
+        }
+        public bool IsHorizontalDoorOpeningWidthConstantTime
+        {
+            get
+            {
+                var gatedWeir = Weir.WeirFormula as GatedWeirFormula;
+                return !gatedWeir.UseLowerEdgeLevelTimeSeries;
+            }
+        }
 
         public bool EnableCrestLevelTimeSeries
         {
             get { return weir?.UseCrestLevelTimeSeries ?? false; }
             set
             {
-                if (weir.UseCrestLevelTimeSeries == value) return; //Avoid useless propagation of events.
+                if (weir.UseCrestLevelTimeSeries == value) { return;}
+                //Avoid useless propagation of events.
+             
+                 weir.UseCrestLevelTimeSeries = value;
+
+                if (EnableLowerEdgeLevelTimeSeries || EnableCrestLevelTimeSeries)
+                {
+                    TimeSeriesEnabled = true;
+                }
+                else
+                {
+                    TimeSeriesEnabled = false;
+                }
+
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GatedVisibility));
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
+            }
+        }
+
+        public bool EnableLowerEdgeLevelTimeSeries
+        {
+            get
+            {
+                var gatedWeir = weir?.WeirFormula as IGatedWeirFormula;
+                return gatedWeir?.UseLowerEdgeLevelTimeSeries?? false;
+            }
+            set
+            {
+                var gatedWeir = weir?.WeirFormula as IGatedWeirFormula;
+                if (gatedWeir?.UseLowerEdgeLevelTimeSeries == value) return;
+                
+                //Avoid useless propagation of events.
                 try
                 {
-                    if (value && SelectedWeirType == SelectableWeirFormulaType.GeneralStructure)
+                    gatedWeir.UseLowerEdgeLevelTimeSeries = value;
+
+                }
+                catch (Exception)
+                {
+                    return;
+                }
+
+                if (EnableLowerEdgeLevelTimeSeries || EnableCrestLevelTimeSeries)
+                {
+                    TimeSeriesEnabled = true;
+                }
+                else
+                {
+                    TimeSeriesEnabled = false;
+                }
+
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableLowerEdgeLevelTimeSeries));
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GatedVisibility));
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
+
+            }
+        }
+        public bool EnableHorizontalDoorOpeningWidthTimeSeries
+        {
+            get
+            {
+                var gatedWeir = weir?.WeirFormula as IGatedWeirFormula;
+                return gatedWeir?.UseHorizontalDoorOpeningWidthTimeSeries?? false;
+            }
+            set
+            {
+                var gatedWeir = weir?.WeirFormula as IGatedWeirFormula;
+                if (gatedWeir?.UseHorizontalDoorOpeningWidthTimeSeries == value) return;
+                
+                //Avoid useless propagation of events.
+                try
+                {
+                    if (gatedWeir != null)
                     {
-                        //Log error
-                        Log.ErrorFormat(Resources.WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_, Weir.Name);
-                    }
-                    else
-                    {
-                        weir.UseCrestLevelTimeSeries = value;
+                        gatedWeir.UseHorizontalDoorOpeningWidthTimeSeries = value;
                     }
                 }
                 catch (Exception)
                 {
-                    //Log error
-                    Log.ErrorFormat(Resources.WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_, Weir.Name);
+                    return;
                 }
 
-                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
-                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsCrestLevelConstantTime));
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableHorizontalDoorOpeningWidthTimeSeries));
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsHorizontalDoorOpeningWidthConstantTime));
             }
         }
-
-        private bool gateGroupboxEnabled;
-        private bool crestLevelEnabled;
-        private bool enableAdvancedSettings;
-
         #endregion
 
-        public ICommand OnEditCrestLevelTimeSeries
+        #region Methods: Timeseries
+        private void EditLowerEdgeLevelTimeSeries()
         {
-            get { return new RelayCommand(param => EditCrestLevelTimeSeries()); }
+            var gatedWeir = Weir?.WeirFormula as IGatedWeirFormula;
+            var result = GetTimeSeriesEditorForEdgeLevel?.Invoke(gatedWeir);
+            if (result != null)
+            {
+                gatedWeir?.LowerEdgeLevelTimeSeries.Time.Clear();
+                gatedWeir?.LowerEdgeLevelTimeSeries.Components[0].Clear();
+                gatedWeir?.LowerEdgeLevelTimeSeries.Time.SetValues(result.Time.Values);
+                gatedWeir?.LowerEdgeLevelTimeSeries.Components[0].SetValues(result.Components[0].Values.Cast<double>());
+            }
+
+            TimeSeriesEnabled = true;
+            OnPropertyChanged(nameof(TimeSeriesEnabled));
+        }
+
+        private void EditHorizontalDoorOpeningWidthTimeSeries()
+        {
+            var gatedWeir = Weir?.WeirFormula as IGatedWeirFormula;
+
+            var result = GetTimeSeriesEditorForHorizontalDoorOpeningWidth?.Invoke(gatedWeir);
+            if (result != null)
+            {
+                gatedWeir?.HorizontalDoorOpeningWidthTimeSeries.Time.Clear();
+                gatedWeir?.HorizontalDoorOpeningWidthTimeSeries.Components[0].Clear();
+                gatedWeir?.HorizontalDoorOpeningWidthTimeSeries.Time.SetValues(result.Time.Values);
+                gatedWeir?.HorizontalDoorOpeningWidthTimeSeries.Components[0].SetValues(result.Components[0].Values.Cast<double>());
+            }
         }
 
         private void EditCrestLevelTimeSeries()
         {
-            if(!Weir.CanBeTimedependent)
-                Log.ErrorFormat(Resources.WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_, Weir.Name);
-            
-            var result = GetTimeSeriesEditor?.Invoke(Weir);
+            var result = GetTimeSeriesEditorForCrestLevel?.Invoke(Weir);
             if (result != null)
             {
-                Weir.CrestLevelTimeSeries.Time.Clear();
-                Weir.CrestLevelTimeSeries.Components[0].Clear();
-                Weir.CrestLevelTimeSeries.Time.SetValues(result.Time.Values);
-                Weir.CrestLevelTimeSeries.Components[0].SetValues(result.Components[0].Values.Cast<double>());
+                Weir?.CrestLevelTimeSeries.Time.Clear();
+                Weir?.CrestLevelTimeSeries.Components[0].Clear();
+                Weir?.CrestLevelTimeSeries.Time.SetValues(result.Time.Values);
+                Weir?.CrestLevelTimeSeries.Components[0].SetValues(result.Components[0].Values.Cast<double>());
             }
-        }
 
+            TimeSeriesEnabled = true;
+            OnPropertyChanged(nameof(TimeSeriesEnabled));
+        }
+        #endregion
+
+        #region Methods: Eventing
         public void Dispose()
         {
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged(string propertyName)
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            var handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void SynchronizeWeirAndFormula()
+        {
+            ((INotifyPropertyChanged)weir).PropertyChanged -= WeirPropertyChanged;
+            ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged -= WeirFormulaPropertyChanged;
         }
 
         private void WeirPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -311,7 +1029,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             if (e.PropertyName == TypeUtils.GetMemberName<IWeir>(vm => vm.UseCrestLevelTimeSeries))
             {
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
-                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsCrestLevelConstantTime));
             }
         }
 
@@ -319,11 +1036,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         {
             if (e.PropertyName == TypeUtils.GetMemberName<GeneralStructureWeirFormula>(f => f.BedLevelStructureCentre))
             {
-                var gatedWeirFormula = weir.WeirFormula as GeneralStructureWeirFormula;
+                var gatedWeirFormula = weir?.WeirFormula as GeneralStructureWeirFormula;
                 if (gatedWeirFormula == null)
                 {
                     return;
                 }
+
                 lowerEdgeLevel += (BedLevelStructureCentre - previousCrestLevel);
                 previousCrestLevel = BedLevelStructureCentre;
 
@@ -331,30 +1049,48 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
         }
 
-        private void UpdateControls()
+        private void SynchronizeCommonProperties()
         {
-            if (selectedWeirType == SelectableWeirFormulaType.GeneralStructure)
-            {
-                SetGeneralStructureViewControls();
-            }
-            if (selectedWeirType == SelectableWeirFormulaType.SimpleWeir)
-            {
-                SetSimpleWeirControls();
-            }
+            OnPropertyChanged(nameof(SelectedWeirType));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.SimpleWeirPropertiesVisibility));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GeneralStructurePropertiesVisibility));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GeneralStructureVisibility));
         }
 
-        private SelectableWeirFormulaType GetSelectableWeirFormulaType(IWeirFormula formula)
+        private void SynchronizeGatedProperties()
         {
-            if (formula is SimpleWeirFormula)
-            {
-                return SelectableWeirFormulaType.SimpleWeir;
-            }
-            if (formula is GeneralStructureWeirFormula)
-            {
-                return SelectableWeirFormulaType.GeneralStructure;
-            }
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GatedWeirPropertiesEnabled));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.DoorHeight));
 
-            throw new NotSupportedException(string.Format(Resources.WeirViewModel_GetSelectableWeirFormulaType_This_formula_type____0___is_not__yet__supported, formula.Name));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.HorizontalDoorOpeningWidth));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableHorizontalDoorOpeningWidthTimeSeries));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsHorizontalDoorOpeningWidthConstantTime));
+
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.LowerEdgeLevel));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableLowerEdgeLevelTimeSeries));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsLowerEdgeConstantTime));
+
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.SelectedDoorOpeningHeightDirectionType));
         }
+
+        private void SynchronizeUpAndDownStreamProperties()
+        {
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.Upstream1CrestWidth));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.Upstream2CrestWidth));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.Upstream1CrestLevel));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.Upstream2CrestLevel));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.Downstream1CrestWidth));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.Downstream2CrestWidth));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.Downstream1CrestLevel));
+            OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.Downstream2CrestLevel));
+        }
+
+        private void SynchronizeGeneralStructureProperties()
+        {
+            SynchronizeUpAndDownStreamProperties();
+        }
+        #endregion
     }
 }

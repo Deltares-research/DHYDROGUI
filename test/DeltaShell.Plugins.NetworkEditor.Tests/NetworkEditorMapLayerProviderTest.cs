@@ -108,17 +108,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             var area = new HydroArea();
 
-            var gate2DFeature = new Gate2D()
+            var gate2DFeature = new Weir2D()
             {
                 Name = "Gate2D01",
                 Geometry = new LineString(new[] { new Coordinate(0.0, 0.0), new Coordinate(12.0, 0.0) })
             };
 
-            area.Gates.Add(gate2DFeature);
+            area.Weirs.Add(gate2DFeature);
 
             using (var mapView = new MapView())
             {
-                var layer = MapLayerProviderHelper.CreateLayersRecursive(area.Gates, area, new List<IMapLayerProvider> { new NetworkEditorMapLayerProvider() });
+                var layer = MapLayerProviderHelper.CreateLayersRecursive(area.Weirs, area, new List<IMapLayerProvider> { new NetworkEditorMapLayerProvider() });
                 mapView.Map.Layers.Add(layer);
 
                 WindowsFormsTestHelper.ShowModal(mapView, delegate

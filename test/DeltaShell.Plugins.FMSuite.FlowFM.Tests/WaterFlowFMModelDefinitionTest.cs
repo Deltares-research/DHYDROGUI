@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
@@ -354,8 +355,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
 
             Assert.AreEqual(2, area.Pumps.Count);
-            Assert.AreEqual(2, area.Weirs.Count);
-            Assert.AreEqual(1, area.Gates.Count);
+            Assert.AreEqual(3, area.Weirs.Count);
+            Assert.AreEqual(1,area.Weirs.Where(w =>w.WeirFormula.GetType() == typeof(GatedWeirFormula)).ToList().Count);
+            Assert.AreEqual(2, area.Weirs.Where(w => w.WeirFormula.GetType() == typeof(SimpleWeirFormula)).ToList().Count);
         }
 
         

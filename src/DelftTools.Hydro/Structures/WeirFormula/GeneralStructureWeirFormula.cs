@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DelftTools.Functions;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
@@ -14,12 +15,10 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         {
             { KnownGeneralStructureProperties.WidthLeftW1, (f, v) => f.WidthLeftSideOfStructure = v },
             { KnownGeneralStructureProperties.WidthLeftWsdl, (f, v) => f.WidthStructureLeftSide = v },
-            { KnownGeneralStructureProperties.WidthCenter, (f, v) => f.WidthStructureCentre = v },
             { KnownGeneralStructureProperties.WidthRightWsdr, (f, v) => f.WidthStructureRightSide = v },
             { KnownGeneralStructureProperties.WidthRightW2, (f, v) => f.WidthRightSideOfStructure = v },
             { KnownGeneralStructureProperties.LevelLeftZb1, (f, v) => f.BedLevelLeftSideOfStructure = v },
             { KnownGeneralStructureProperties.LevelLeftZbsl, (f, v) => f.BedLevelLeftSideStructure = v },
-            { KnownGeneralStructureProperties.LevelCenter, (f, v) => f.BedLevelStructureCentre = v },
             { KnownGeneralStructureProperties.LevelRightZbsr, (f, v) => f.BedLevelRightSideStructure = v },
             { KnownGeneralStructureProperties.LevelRightZb2, (f, v) => f.BedLevelRightSideOfStructure = v },
             { KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient, (f, v) => f.PositiveFreeGateFlow = v },
@@ -33,8 +32,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             { KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient, (f, v) => f.NegativeDrownedWeirFlow = v },
             { KnownGeneralStructureProperties.NegativeContractionCoefficientFreeGate, (f, v) => f.NegativeContractionCoefficient = v },
             { KnownGeneralStructureProperties.ExtraResistance, (f, v) => { f.ExtraResistance = v; if (v == 0.0) f.UseExtraResistance = false; } },
-            { KnownGeneralStructureProperties.GateDoorHeightGeneralStructure, (f, v) => f.GateOpening = v },
-            { KnownGeneralStructureProperties.GateHeight, (f, v) => {/* do nothing */} }
+            { KnownGeneralStructureProperties.GateDoorHeightGeneralStructure, (f, v) => f.DoorHeight = v }
         };
 
         public GeneralStructureWeirFormula()
@@ -60,40 +58,68 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             ExtraResistance = 0.0;
 
             GateOpening = 1.0;
+
+            DoorHeight = 0.0;
+
+            HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric;
+            HorizontalDoorOpeningWidth = 0.0;
+
+            UseHorizontalDoorOpeningWidthTimeSeries = false;
+            HorizontalDoorOpeningWidthTimeSeries = null;
+
+            LowerEdgeLevel = 0.0;
+            UseLowerEdgeLevelTimeSeries = false;
+            LowerEdgeLevelTimeSeries = null;
         }
 
         public virtual object Clone()
         {
             var clone = new GeneralStructureWeirFormula
-                {
-                    PositiveFreeGateFlow = PositiveFreeGateFlow,
-                    PositiveContractionCoefficient = PositiveContractionCoefficient,
-                    PositiveDrownedGateFlow = PositiveDrownedGateFlow,
-                    PositiveDrownedWeirFlow = PositiveDrownedWeirFlow,
-                    PositiveFreeWeirFlow = PositiveFreeWeirFlow,
+            {
+                PositiveFreeGateFlow = PositiveFreeGateFlow,
+                PositiveContractionCoefficient = PositiveContractionCoefficient,
+                PositiveDrownedGateFlow = PositiveDrownedGateFlow,
+                PositiveDrownedWeirFlow = PositiveDrownedWeirFlow,
+                PositiveFreeWeirFlow = PositiveFreeWeirFlow,
 
-                    NegativeContractionCoefficient = NegativeContractionCoefficient,
-                    NegativeDrownedGateFlow = NegativeDrownedGateFlow,
-                    NegativeDrownedWeirFlow = NegativeDrownedWeirFlow,
-                    NegativeFreeGateFlow = NegativeFreeGateFlow,
-                    NegativeFreeWeirFlow = NegativeFreeWeirFlow,
+                NegativeContractionCoefficient = NegativeContractionCoefficient,
+                NegativeDrownedGateFlow = NegativeDrownedGateFlow,
+                NegativeDrownedWeirFlow = NegativeDrownedWeirFlow,
+                NegativeFreeGateFlow = NegativeFreeGateFlow,
+                NegativeFreeWeirFlow = NegativeFreeWeirFlow,
 
-                    BedLevelLeftSideOfStructure = BedLevelLeftSideOfStructure,
-                    BedLevelLeftSideStructure = BedLevelLeftSideStructure,
-                    BedLevelStructureCentre = BedLevelStructureCentre,
-                    BedLevelRightSideStructure = BedLevelRightSideStructure,
-                    BedLevelRightSideOfStructure = BedLevelRightSideOfStructure,
+                BedLevelLeftSideOfStructure = BedLevelLeftSideOfStructure,
+                BedLevelLeftSideStructure = BedLevelLeftSideStructure,
+                BedLevelStructureCentre = BedLevelStructureCentre,
+                BedLevelRightSideStructure = BedLevelRightSideStructure,
+                BedLevelRightSideOfStructure = BedLevelRightSideOfStructure,
 
-                    WidthLeftSideOfStructure = WidthLeftSideOfStructure,
-                    WidthStructureLeftSide = WidthStructureLeftSide,
-                    WidthStructureCentre = WidthStructureCentre,
-                    WidthStructureRightSide = WidthStructureRightSide,
-                    WidthRightSideOfStructure = WidthRightSideOfStructure,
+                WidthLeftSideOfStructure = WidthLeftSideOfStructure,
+                WidthStructureLeftSide = WidthStructureLeftSide,
+                WidthStructureCentre = WidthStructureCentre,
+                WidthStructureRightSide = WidthStructureRightSide,
+                WidthRightSideOfStructure = WidthRightSideOfStructure,
 
-                    UseExtraResistance = UseExtraResistance,
-                    ExtraResistance = ExtraResistance,
-                    GateOpening = GateOpening
-                };
+                UseExtraResistance = UseExtraResistance,
+                ExtraResistance = ExtraResistance,
+                GateOpening = GateOpening,
+
+                DoorHeight = DoorHeight,
+
+                HorizontalDoorOpeningDirection = HorizontalDoorOpeningDirection,
+                HorizontalDoorOpeningWidth = HorizontalDoorOpeningWidth,
+
+                UseHorizontalDoorOpeningWidthTimeSeries = UseHorizontalDoorOpeningWidthTimeSeries,
+
+                LowerEdgeLevel = LowerEdgeLevel,
+                UseLowerEdgeLevelTimeSeries = UseLowerEdgeLevelTimeSeries,
+            };
+
+            if (clone.UseLowerEdgeLevelTimeSeries)
+                clone.LowerEdgeLevelTimeSeries = (TimeSeries)LowerEdgeLevelTimeSeries.Clone(true);
+            if (clone.UseHorizontalDoorOpeningWidthTimeSeries)
+                clone.HorizontalDoorOpeningWidthTimeSeries = (TimeSeries)HorizontalDoorOpeningWidthTimeSeries.Clone(true);
+
             return clone;
         }
 
@@ -111,6 +137,51 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         {
             get { return false; }
         }
+
+        public virtual double DoorHeight { get; set; }
+
+        public virtual GateOpeningDirection HorizontalDoorOpeningDirection { get; set; }
+        public virtual double HorizontalDoorOpeningWidth { get; set; }
+        public virtual bool UseHorizontalDoorOpeningWidthTimeSeries
+        {
+            get { return useHorizontalDoorOpeningWidthTimeSeries; }
+            set
+            {
+                useHorizontalDoorOpeningWidthTimeSeries = value;
+                if (useHorizontalDoorOpeningWidthTimeSeries && HorizontalDoorOpeningWidthTimeSeries == null)
+                {
+                    HorizontalDoorOpeningWidthTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Horizontal door opening width", "Horizontal door opening width", "m AD");
+                }
+            }
+        }
+
+        private bool useHorizontalDoorOpeningWidthTimeSeries;
+        public virtual TimeSeries HorizontalDoorOpeningWidthTimeSeries { get; set; }
+
+        public virtual double LowerEdgeLevel { get; set; }
+
+        /// <summary>
+        /// When true, use <see cref="LowerEdgeLevelTimeSeries"/>, else use <see cref="GateOpening"/>.
+        /// </summary>
+        public virtual bool UseLowerEdgeLevelTimeSeries
+        {
+            get { return useLowerEdgeLevelTimeSeries; }
+            set
+            {
+                useLowerEdgeLevelTimeSeries = value;
+                if (useLowerEdgeLevelTimeSeries && LowerEdgeLevelTimeSeries == null)
+                {
+                    LowerEdgeLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Lower edge level", "Lower edge level", "m AD");
+                };
+            }
+        }
+
+        private bool useLowerEdgeLevelTimeSeries;
+
+        /// <summary>
+        /// Time dependent Lower edge level
+        /// </summary>
+        public virtual TimeSeries LowerEdgeLevelTimeSeries { get; set; }
 
         /// <summary>
         /// pg

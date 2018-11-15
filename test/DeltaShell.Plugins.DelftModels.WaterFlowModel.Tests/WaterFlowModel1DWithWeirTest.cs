@@ -573,9 +573,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         private static void TestSimplePropertiesAreClonesForWeirFormula<TFormulaType>() where TFormulaType : IWeirFormula
         {
             var formula = Activator.CreateInstance(typeof(TFormulaType));
+            
             if (typeof (TFormulaType) == typeof (GatedWeirFormula))
             {
-                ReflectionTestHelper.FillRandomValuesForValueTypeProperties(formula, "UseLowerEdgeLevelTimeSeries");
+                ReflectionTestHelper.FillRandomValuesForValueTypeProperties(formula, "UseLowerEdgeLevelTimeSeries", "UseHorizontalDoorOpeningWidthTimeSeries");
             }
             else
             {

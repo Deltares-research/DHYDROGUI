@@ -2349,7 +2349,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 yield return Area.Pumps;
                 yield return Area.Weirs;
-                yield return Area.Gates;
             }
         }
 
@@ -2386,11 +2385,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (item is Weir2D)
             {
                 return Area.Weirs.Contains(item);
-            }
-
-            if (item is Gate2D)
-            {
-                return Area.Gates.Contains(item);
             }
 
             return false;
@@ -2609,27 +2603,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 yield return KnownStructureProperties.Capacity;
             }
-
-            var gate = location as IGate;
-            if (gate != null)
-            {
-                yield return KnownStructureProperties.GateLowerEdgeLevel;
-                yield return KnownStructureProperties.GateOpeningWidth;
-                yield return KnownStructureProperties.GateSillLevel;
-            }
-
+            
             var weir = location as IWeir;
-            if (weir != null)
+
+            if (weir != null && (weir.WeirFormula is GeneralStructureWeirFormula || weir.WeirFormula is SimpleWeirFormula))
             {
                 yield return KnownStructureProperties.CrestLevel;
-
-                var weirFormula = weir.WeirFormula as GeneralStructureWeirFormula;
-                if (weirFormula != null)
+              
+                var weirFormulaGeneralStructures = weir.WeirFormula as GeneralStructureWeirFormula;
+                if (weirFormulaGeneralStructures != null)
                 {
                     yield return EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.GateHeight);
                     yield return KnownStructureProperties.GateLowerEdgeLevel;
                     yield return EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthCenter);
                     yield return EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelCenter);
+                }
+            }
+
+            if (weir != null && weir.WeirFormula is GatedWeirFormula)
+            {
+                var weirFormulaGates = weir.WeirFormula as GatedWeirFormula;
+                if (weirFormulaGates != null)
+                {
+                    yield return KnownStructureProperties.GateLowerEdgeLevel;
+                    yield return KnownStructureProperties.GateOpeningWidth;
+                    yield return KnownStructureProperties.GateSillLevel;
                 }
             }
 
@@ -2708,10 +2706,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (feature is IPump)
             {
                 return "pumps";
-            }
-            if (feature is IGate)
-            {
-                return "gates";
             }
             if (feature is IWeir)
             {

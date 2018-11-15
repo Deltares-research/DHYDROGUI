@@ -1,5 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.WeirFormula;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 
@@ -47,13 +48,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
         }
 
-        public static Gate2D GetNewGate2D(string groupName, string featureName)
+        public static Weir2D GetNewWeir2DWithGateFormula(string groupName, string featureName)
         {
-            return new Gate2D
+            return new Weir2D()
             {
                 GroupName = groupName,
                 Name = featureName,
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100), new Coordinate(50, 50) })
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100), new Coordinate(50, 50) }),
+                WeirFormula = new GatedWeirFormula()
             };
         }
     }

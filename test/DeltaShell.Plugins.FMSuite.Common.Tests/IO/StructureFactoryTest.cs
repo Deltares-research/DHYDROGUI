@@ -123,11 +123,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             foreach (var knownProperty in knownProperties)
             {
                 var property = (KnownGeneralStructureProperties) knownProperty;
-                if (property == KnownGeneralStructureProperties.GateHeight) continue;
 
                 var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
-                generalStructure.AddProperty(EnumDescriptionAttributeTypeConverter.GetEnumDescription(property), typeof(double), "12.34");
 
+                if (property == KnownGeneralStructureProperties.HorizontalDoorOpeningWidth ||
+                    property == KnownGeneralStructureProperties.GateHeight ||
+                    property == KnownGeneralStructureProperties.LevelCenter)
+                {
+                    generalStructure.AddProperty(EnumDescriptionAttributeTypeConverter.GetEnumDescription(property), typeof(Steerable), "12.34");
+                }
+                else if (property == KnownGeneralStructureProperties.HorizontalDoorOpeningDirection)
+                {
+                    continue;
+                }
+                else 
+                {
+                    generalStructure.AddProperty(EnumDescriptionAttributeTypeConverter.GetEnumDescription(property), typeof(double), "12.34");
+                }
+                
                 var resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
                 var weir = resultingStructure as Weir;
                 Assert.NotNull(weir);
@@ -169,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 {KnownGeneralStructureProperties.LevelCenter, weirFormula.BedLevelStructureCentre },
                 {KnownGeneralStructureProperties.LevelRightZbsr, weirFormula.BedLevelRightSideStructure },
                 {KnownGeneralStructureProperties.LevelRightZb2, weirFormula.BedLevelRightSideOfStructure },
-                {KnownGeneralStructureProperties.GateDoorHeightGeneralStructure, weirFormula.GateOpening},
+                {KnownGeneralStructureProperties.GateDoorHeightGeneralStructure, weirFormula.DoorHeight},
                 {KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient, weirFormula.PositiveFreeGateFlow},
                 {KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient, weirFormula.PositiveDrownedGateFlow},
                 {KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient, weirFormula.PositiveFreeWeirFlow},
@@ -180,7 +193,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 {KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient, weirFormula.NegativeFreeWeirFlow},
                 {KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient, weirFormula.NegativeDrownedWeirFlow},
                 {KnownGeneralStructureProperties.NegativeContractionCoefficientFreeGate, weirFormula.NegativeContractionCoefficient},
-                {KnownGeneralStructureProperties.ExtraResistance, weirFormula.ExtraResistance}
+                {KnownGeneralStructureProperties.ExtraResistance, weirFormula.ExtraResistance},
+                {KnownGeneralStructureProperties.HorizontalDoorOpeningWidth, weirFormula.HorizontalDoorOpeningWidth},
+                {KnownGeneralStructureProperties.GateHeight, weirFormula.LowerEdgeLevel}
             };
             return dictionary;
         }
@@ -281,21 +296,25 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
             var gate = StructureFactory.CreateGate(structure, dummyPath, new DateTime());
+            var gateWeirFormula = gate.WeirFormula as IGatedWeirFormula;
+
+            Assert.NotNull(gateWeirFormula);
+
             Assert.AreEqual("Gate01", gate.Name);
             Assert.IsNull(gate.LongName);
             Assert.IsNull(gate.Branch);
             Assert.IsNaN(gate.Chainage);
             Assert.AreEqual(new Point(500, 360), gate.Geometry);
-            Assert.IsFalse(gate.UseSillLevelTimeSeries);
-            Assert.AreEqual(2.0, gate.SillLevel);
-            Assert.AreEqual(55.7, gate.SillWidth);
-            Assert.IsFalse(gate.UseLowerEdgeLevelTimeSeries);
-            Assert.AreEqual(2.8, gate.LowerEdgeLevel);
-            Assert.AreEqual(0, gate.LowerEdgeLevelTimeSeries.Time.Values.Count);
-            Assert.IsFalse(gate.UseOpeningWidthTimeSeries);
-            Assert.AreEqual(1.0, gate.OpeningWidth);
-            Assert.AreEqual(0, gate.OpeningWidthTimeSeries.Time.Values.Count);
-            Assert.AreEqual(GateOpeningDirection.FromRight, gate.HorizontalOpeningDirection);
+            Assert.IsFalse(gate.UseCrestLevelTimeSeries);
+            Assert.AreEqual(2.0, gate.CrestLevel);
+            Assert.AreEqual(55.7, gate.CrestWidth);
+            Assert.IsFalse(gateWeirFormula.UseLowerEdgeLevelTimeSeries);
+            Assert.AreEqual(2.8, gateWeirFormula.LowerEdgeLevel);
+            Assert.AreEqual(0, gateWeirFormula.LowerEdgeLevelTimeSeries.Time.Values.Count);
+            Assert.IsFalse(gateWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries);
+            Assert.AreEqual(1.0, gateWeirFormula.HorizontalDoorOpeningWidth);
+            Assert.AreEqual(0, gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries.Time.Values.Count);
+            Assert.AreEqual(GateOpeningDirection.FromRight, gateWeirFormula.HorizontalDoorOpeningDirection);
         }
 
         [Test]
@@ -318,27 +337,31 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
             var gate = StructureFactory.CreateGate(structure, dummyPath, new DateTime(2013,1,1));
+            var gateWeirFormula = gate.WeirFormula as IGatedWeirFormula;
+
+            Assert.NotNull(gateWeirFormula);
             Assert.AreEqual("Gate02", gate.Name);
             Assert.IsNull(gate.LongName);
             Assert.IsNull(gate.Branch);
             Assert.IsNaN(gate.Chainage);
             Assert.AreEqual(new LineString(new [] { new Coordinate(1, 2), new Coordinate(3, 4), new Coordinate(6, 7) }), gate.Geometry);
-            Assert.IsTrue(gate.UseSillLevelTimeSeries);
-            Assert.AreEqual(2, gate.SillLevelTimeSeries.Time.Values.Count);
-            Assert.AreEqual(1.2, gate.SillLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
-            Assert.AreEqual(3.4, gate.SillLevelTimeSeries[new DateTime(2013, 1, 1, 1, 1, 0)]);
-            Assert.AreEqual(0.0, gate.SillWidth);
-            Assert.IsTrue(gate.UseLowerEdgeLevelTimeSeries);
-            Assert.AreEqual(2, gate.LowerEdgeLevelTimeSeries.Time.Values.Count);
-            Assert.AreEqual(1.2, gate.LowerEdgeLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
-            Assert.AreEqual(3.4, gate.LowerEdgeLevelTimeSeries[new DateTime(2013, 1, 1, 1, 1, 0)]);
+            Assert.IsTrue(gate.UseCrestLevelTimeSeries);
+            Assert.AreEqual(2, gate.CrestLevelTimeSeries.Time.Values.Count);
+            Assert.AreEqual(1.2, gate.CrestLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
+            Assert.AreEqual(3.4, gate.CrestLevelTimeSeries[new DateTime(2013, 1, 1, 1, 1, 0)]);
+            Assert.AreEqual(0.0, gate.CrestWidth);
 
-            Assert.IsTrue(gate.UseOpeningWidthTimeSeries);
-            Assert.AreEqual(2, gate.OpeningWidthTimeSeries.Time.Values.Count);
-            Assert.AreEqual(5.6, gate.OpeningWidthTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
-            Assert.AreEqual(7.8, gate.OpeningWidthTimeSeries[new DateTime(2013, 1, 1, 2, 3, 0)]);
+            Assert.IsTrue(gateWeirFormula.UseLowerEdgeLevelTimeSeries);
+            Assert.AreEqual(2, gateWeirFormula.LowerEdgeLevelTimeSeries.Time.Values.Count);
+            Assert.AreEqual(1.2, gateWeirFormula.LowerEdgeLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
+            Assert.AreEqual(3.4, gateWeirFormula.LowerEdgeLevelTimeSeries[new DateTime(2013, 1, 1, 1, 1, 0)]);
 
-            Assert.AreEqual(GateOpeningDirection.FromRight, gate.HorizontalOpeningDirection);
+            Assert.IsTrue(gateWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries);
+            Assert.AreEqual(2, gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries.Time.Values.Count);
+            Assert.AreEqual(5.6, gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
+            Assert.AreEqual(7.8, gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries[new DateTime(2013, 1, 1, 2, 3, 0)]);
+
+            Assert.AreEqual(GateOpeningDirection.FromRight, gateWeirFormula.HorizontalDoorOpeningDirection);
         }
 
         #endregion Gate

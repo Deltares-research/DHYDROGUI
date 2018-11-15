@@ -261,9 +261,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                  */
                 var structuresGroupNames =
                     new List<string> { "StructuresGroup1_structures.ini", "StructuresGroup2_structures.ini" };
-                CheckFeatureWasReadCorrectly(area.Gates, "Gates", structuresGroupNames);
-                CheckFeatureWasReadCorrectly(area.Pumps, "Pumps", structuresGroupNames);
+                
                 CheckFeatureWasReadCorrectly(area.Weirs, "Weirs", structuresGroupNames);
+                CheckFeatureWasReadCorrectly(area.Pumps, "Pumps", structuresGroupNames);
+                
             }
             finally
             {
@@ -569,7 +570,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 RemoveGroupNameFromGroupableFeature(originalArea.FixedWeirs);
                 RemoveGroupNameFromGroupableFeature(originalArea.ObservationCrossSections);
                 RemoveGroupNameFromGroupableFeature(originalArea.LandBoundaries);
-                RemoveGroupNameFromGroupableFeature(originalArea.Gates);
                 RemoveGroupNameFromGroupableFeature(originalArea.Pumps);
                 RemoveGroupNameFromGroupableFeature(originalArea.Weirs);
 
@@ -588,7 +588,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 CheckDefaultGroupIsInFeature("ObservationCrossSections", originalArea.ObservationCrossSections, mduPathName, MduFile.ObsCrossExtension);
                 CheckDefaultGroupIsInFeature("DryAreas", originalArea.DryAreas, mduPathName, MduFile.DryAreaExtension);
                 CheckDefaultGroupIsInFeature("Enclosures", originalArea.Enclosures, mduPathName, MduFile.EnclosureExtension);
-                CheckDefaultGroupIsInFeature("Gates", originalArea.Gates, mduPathName, MduFile.StructuresExtension);
                 CheckDefaultGroupIsInFeature("Pumps", originalArea.Pumps, mduPathName, MduFile.StructuresExtension);
                 CheckDefaultGroupIsInFeature("Weirs", originalArea.Weirs, mduPathName, MduFile.StructuresExtension);
             }
@@ -703,11 +702,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(area.DryPoints.Count, Is.EqualTo(2));
             Assert.That(area.Enclosures.Count, Is.EqualTo(1));
             Assert.That(area.FixedWeirs.Count, Is.EqualTo(1));
-            Assert.That(area.Gates.Count, Is.EqualTo(1));
             Assert.That(area.ObservationPoints.Count, Is.EqualTo(2));
             Assert.That(area.Pumps.Count, Is.EqualTo(1));
             Assert.That(area.ThinDams.Count, Is.EqualTo(1));
-            Assert.That(area.Weirs.Count, Is.EqualTo(1));
+            Assert.That(area.Weirs.Count, Is.EqualTo(2));
             Assert.That(area.ObservationCrossSections.Count, Is.EqualTo(1));
             Assert.That(area.LandBoundaries.Count, Is.EqualTo(1));
 
@@ -738,11 +736,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(area.DryPoints.Count, Is.EqualTo(2));
             Assert.That(area.Enclosures.Count, Is.EqualTo(1));
             Assert.That(area.FixedWeirs.Count, Is.EqualTo(1));
-            Assert.That(area.Gates.Count, Is.EqualTo(1));
             Assert.That(area.ObservationPoints.Count, Is.EqualTo(2));
             Assert.That(area.Pumps.Count, Is.EqualTo(1));
             Assert.That(area.ThinDams.Count, Is.EqualTo(1));
-            Assert.That(area.Weirs.Count, Is.EqualTo(1));
+            Assert.That(area.Weirs.Count, Is.EqualTo(2));
             Assert.That(area.ObservationCrossSections.Count, Is.EqualTo(1));
             Assert.That(area.LandBoundaries.Count, Is.EqualTo(1));
 
@@ -814,7 +811,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(area.DryPoints.Count, Is.EqualTo(0));
             Assert.That(area.Enclosures.Count, Is.EqualTo(1));
             Assert.That(area.FixedWeirs.Count, Is.EqualTo(0));
-            Assert.That(area.Gates.Count, Is.EqualTo(0));
             Assert.That(area.ObservationPoints.Count, Is.EqualTo(2));
             Assert.That(area.Pumps.Count, Is.EqualTo(0));
             Assert.That(area.ThinDams.Count, Is.EqualTo(0));
@@ -993,10 +989,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             );
 
             var structureGroupName = @"featureFiles/myGates";
-            area.Gates.AddRange(
+            area.Weirs.AddRange(
                 new[]
                 {
-                    WaterFlowFMMduFileTestHelper.GetNewGate2D(structureGroupName, "Gate01"), WaterFlowFMMduFileTestHelper.GetNewGate2D(structureGroupName, "Gate02")
+                    WaterFlowFMMduFileTestHelper.GetNewWeir2DWithGateFormula(structureGroupName, "Gate01"), WaterFlowFMMduFileTestHelper.GetNewWeir2DWithGateFormula(structureGroupName, "Gate02")
                 }
             );
 
@@ -1269,7 +1265,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) }),
                 IsDefaultGroup = true
             });
-            area.Gates.Add(new Gate2D
+            area.Weirs.Add(new Weir2D
             {
                 GroupName = "MyStructures.ini",
                 Name = "MyGate",
@@ -1319,7 +1315,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var structuresFileEntries = modelDefinition.GetModelProperty(KnownProperties.StructuresFile).Value as List<string>;
             Assert.NotNull(structuresFileEntries);
             Assert.That(structuresFileEntries.Count, Is.EqualTo(1));
-            Assert.That(area.Gates.FirstOrDefault().GroupName, Is.EqualTo("MyStructures.ini"));
+            Assert.That(area.Weirs.FirstOrDefault().GroupName, Is.EqualTo("MyStructures.ini"));
             Assert.That(structuresFileEntries.Contains(gateGroupName));
             Assert.That(File.Exists(gateFilePath));
 
@@ -1407,9 +1403,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 savedArea.LandBoundaries.Select(op => op.Name));
 
             /* Check structures */
-            CompareHydroAreaFeatureCollections("Gates", originalArea.Gates,
-                originalArea.Gates.Select(op => op.Name), savedArea.Gates,
-                savedArea.Gates.Select(op => op.Name));
             CompareHydroAreaFeatureCollections("Pumps", originalArea.Pumps,
                 originalArea.Pumps.Select(op => op.Name), savedArea.Pumps,
                 savedArea.Pumps.Select(op => op.Name));

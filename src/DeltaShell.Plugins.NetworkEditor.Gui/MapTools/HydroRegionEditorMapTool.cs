@@ -75,7 +75,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public const string ObservationCrossSectionToolName = "Observation cross section tool (2D)";
         public const string PumpToolName = "Pump tool (2D)";
         public const string WeirToolName = "Weir tool (2D)";
-        public const string GateToolName = "Gate tool (2D)";
         public const string LandBoundaryToolName = "Land boundary tool";
         public const string DryPointToolName = "Dry point tool";
         public const string DryAreaToolName = "Dry area tool";
@@ -285,7 +284,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             AddMapTool(new Feature2DLineTool(HydroArea.ObservationCrossSectionsPluralName, ObservationCrossSectionToolName, Resources.observationcs2d));
             AddMapTool(new Feature2DLineTool(HydroArea.PumpsPluralName, PumpToolName, Resources.pump));
             AddMapTool(new Feature2DLineTool(HydroArea.WeirsPluralName, WeirToolName, Resources.Weir) { MaxPoints = 2 });
-            AddMapTool(new Feature2DLineTool(HydroArea.GatesPluralName, GateToolName, Resources.Gate) { MaxPoints = 2 });
             AddMapTool(new Feature2DLineTool(HydroArea.LandBoundariesPluralName, LandBoundaryToolName, Resources.landboundary));
             AddMapTool(new Feature2DPointTool(HydroArea.DryPointsPluralName, DryPointToolName, Resources.dry_point));
             AddMapTool(new Feature2DLineTool(HydroArea.DryAreasPluralName, DryAreaToolName, Resources.dry_area) { CloseLine = true });

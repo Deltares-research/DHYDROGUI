@@ -69,7 +69,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addObsCS2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationCrossSectionToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addPump2dCommand = new MapToolCommand(HydroRegionEditorMapTool.PumpToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.WeirToolName) { LayerType = typeof(AreaLayer) };
-        private ICommand addGate2dCommand = new MapToolCommand(HydroRegionEditorMapTool.GateToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addLandBoundary2dCommand = new MapToolCommand(HydroRegionEditorMapTool.LandBoundaryToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addDryPoint2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryPointToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addDryArea2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryAreaToolName) { LayerType = typeof(AreaLayer) };
@@ -123,7 +122,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addObsCS2dCommand;
                 yield return addPump2dCommand;
                 yield return addWeir2dCommand;
-                yield return addGate2dCommand;
                 yield return addLandBoundary2dCommand;
                 yield return addDryPoint2dCommand;
                 yield return addDryArea2dCommand;
@@ -195,7 +193,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewObsCs2D.SetState(addObsCS2dCommand, showArea2DTools);
             ButtonAddNewPump2D.SetState(addPump2dCommand, showArea2DTools);
             ButtonAddNewWeir2D.SetState(addWeir2dCommand, showArea2DTools);
-            ButtonAddNewGate2D.SetState(addGate2dCommand, showArea2DTools);
             ButtonAddNewLandBoundary2D.SetState(addLandBoundary2dCommand, showArea2DTools);
             ButtonAddNewDryPoint2D.SetState(addDryPoint2dCommand, showArea2DTools);
             ButtonAddNewDryArea2D.SetState(addDryArea2dCommand, showArea2DTools);
@@ -515,12 +512,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewWeir2D_Click(object sender, RoutedEventArgs e)
         {
             addWeir2dCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewGate2D_Click(object sender, RoutedEventArgs e)
-        {
-            addGate2dCommand.Execute();
             ValidateItems();
         }
 

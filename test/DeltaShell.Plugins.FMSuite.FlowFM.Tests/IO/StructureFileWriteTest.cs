@@ -46,7 +46,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     BedLevelRightSideStructure = 9.0,
                     BedLevelRightSideOfStructure = 10.0,
 
-                    GateOpening = 11.0,
+                    DoorHeight = 11.0,
+
+                    HorizontalDoorOpeningWidth = 30.0,
+                    LowerEdgeLevel = 31.0,
 
                     PositiveFreeGateFlow = 12.0,
                     PositiveDrownedGateFlow = 13.0,
@@ -64,8 +67,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
             structs.Add(generalStructureWeir);
 
-            var simpleWeir = new Weir("weir02")
+            var simpleWeir = new Weir2D("weir02",true)
             {
+                CrestWidth = 5.0,
                 WeirFormula = new SimpleWeirFormula()
             };
             structs.Add(simpleWeir);
@@ -93,33 +97,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 "[structure]" + Environment.NewLine +
                 "    type                  = generalstructure    # Type of structure" + Environment.NewLine +
                 "    id                    = weir01              # Name of the structure" + Environment.NewLine +
-                "    widthleftW1           = 1.000               # Width left side of structure (m)" + Environment.NewLine +
-                "    widthleftWsdl         = 2.000               # Width structure left side (m)" + Environment.NewLine +
-                "    widthcenter           = 3.000               # Width structure centre (m)" + Environment.NewLine +
-                "    widthrightWsdr        = 4.000               # Width structure right side (m)" + Environment.NewLine +
-                "    widthrightW2          = 5.000               # Width right side of structure (m)" + Environment.NewLine +
-                "    levelleftZb1          = 6.000               # Bed level left side of structure (m AD)" + Environment.NewLine +
-                "    levelleftZbsl         = 7.000               # Bed level left side structure (m AD)" + Environment.NewLine +
-                "    levelcenter           = 8.000               # Bed level at centre of structure (m AD)" + Environment.NewLine +
-                "    levelrightZbsr        = 9.000               # Bed level right side structure (m AD)" + Environment.NewLine +
-                "    levelrightZb2         = 10.000              # Bed level right side of structure (m AD)" + Environment.NewLine +
-                "    gateheight            = 19.000              # Gate lower edge level (m AD)" + Environment.NewLine +
-                "    pos_freegateflowcoeff = 12.000              # Positive free gate flow (-)" + Environment.NewLine +
-                "    pos_drowngateflowcoeff= 13.000              # Positive drowned gate flow (-)" + Environment.NewLine +
-                "    pos_freeweirflowcoeff = 14.000              # Positive free weir flow (-)" + Environment.NewLine +
-                "    pos_drownweirflowcoeff= 15.000              # Positive drowned weir flow (-)" + Environment.NewLine +
-                "    pos_contrcoeffreegate = 16.000              # Positive flow contraction coefficient (-)" + Environment.NewLine +
-                "    neg_freegateflowcoeff = 17.000              # Negative free gate flow (-)" + Environment.NewLine +
-                "    neg_drowngateflowcoeff= 18.000              # Negative drowned gate flow (-)" + Environment.NewLine +
-                "    neg_freeweirflowcoeff = 19.000              # Negative free weir flow (-)" + Environment.NewLine +
-                "    neg_drownweirflowcoeff= 20.000              # Negative drowned weir flow (-)" + Environment.NewLine +
-                "    neg_contrcoeffreegate = 21.000              # Negative flow contraction coefficient (-)" + Environment.NewLine +
-                "    extraresistance       = 22.000              # Extra resistance (-)" + Environment.NewLine +
-                "    gatedoorheight        = 11.000              # Gate opening height (m)" + Environment.NewLine +
+                "    widthleftW1           = 1                   # Width left side of structure (m)" + Environment.NewLine +
+                "    widthleftWsdl         = 2                   # Width structure left side (m)" + Environment.NewLine +
+                "    widthcenter           = 3                   # Width structure centre (m)" + Environment.NewLine +
+                "    widthrightWsdr        = 4                   # Width structure right side (m)" + Environment.NewLine +
+                "    widthrightW2          = 5                   # Width right side of structure (m)" + Environment.NewLine +
+                "    levelleftZb1          = 6                   # Bed level left side of structure (m AD)" + Environment.NewLine +
+                "    levelleftZbsl         = 7                   # Bed level left side structure (m AD)" + Environment.NewLine +
+                "    levelcenter           = 8                   # Bed level at centre of structure (m AD)" + Environment.NewLine +
+                "    levelrightZbsr        = 9                   # Bed level right side structure (m AD)" + Environment.NewLine +
+                "    levelrightZb2         = 10                  # Bed level right side of structure (m AD)" + Environment.NewLine +
+                "    gateheight            = 31                  # Gate lower edge level (m AD)" + Environment.NewLine +
+                "    pos_freegateflowcoeff = 12                  # Positive free gate flow (-)" + Environment.NewLine +
+                "    pos_drowngateflowcoeff= 13                  # Positive drowned gate flow (-)" + Environment.NewLine +
+                "    pos_freeweirflowcoeff = 14                  # Positive free weir flow (-)" + Environment.NewLine +
+                "    pos_drownweirflowcoeff= 15                  # Positive drowned weir flow (-)" + Environment.NewLine +
+                "    pos_contrcoeffreegate = 16                  # Positive flow contraction coefficient (-)" + Environment.NewLine +
+                "    neg_freegateflowcoeff = 17                  # Negative free gate flow (-)" + Environment.NewLine +
+                "    neg_drowngateflowcoeff= 18                  # Negative drowned gate flow (-)" + Environment.NewLine +
+                "    neg_freeweirflowcoeff = 19                  # Negative free weir flow (-)" + Environment.NewLine +
+                "    neg_drownweirflowcoeff= 20                  # Negative drowned weir flow (-)" + Environment.NewLine +
+                "    neg_contrcoeffreegate = 21                  # Negative flow contraction coefficient (-)" + Environment.NewLine +
+                "    extraresistance       = 22                  # Extra resistance (-)" + Environment.NewLine +
+                "    gatedoorheight        = 11                  # Vertical gate door height (m)" + Environment.NewLine +
+                "    door_opening_width    = 30                  # Horizontal opening width between the doors (m)" + Environment.NewLine +
+                "    horizontal_opening_direction= symmetric           # Horizontal direction of the opening doors" + Environment.NewLine +
                 "[structure]" + Environment.NewLine +
                 "    type                  = weir                # Type of structure" + Environment.NewLine +
                 "    id                    = weir02              # Name of the structure" + Environment.NewLine +
-                "    crest_level           = 1                   # Weir crest height (in [m])" + Environment.NewLine +
+                "    crest_level           = 0                   # Weir crest height (in [m])" + Environment.NewLine +
                 "    crest_width           = 5                   # Weir crest width (in [m])" + Environment.NewLine +
                 "    lat_contr_coeff       = 1                   # Lateral contraction coefficient" + Environment.NewLine, fileContents);
             }

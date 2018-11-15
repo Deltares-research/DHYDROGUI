@@ -117,7 +117,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 .Concat(area.DryAreas)
                 .Concat(area.Pumps)
                 .Concat(area.Weirs)
-                .Concat(area.Gates)
                 .Concat(area.ThinDams)
                 .Concat(area.FixedWeirs)
                 .Concat(area.Enclosures)

@@ -1130,10 +1130,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var fmModel = new WaterFlowFMModel(mduFilePath);
 
             // Import dry points
-            fmModel.Area.Gates.Add(new Gate2D
-            {
-                GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")
-            });
             fmModel.Area.Pumps.Add(new Pump2D
             {
                 GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")
@@ -1144,7 +1140,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             });
 
             // Check that group name gives a relative path from the mdu folder
-            Assert.That(fmModel.Area.Gates.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
             Assert.That(fmModel.Area.Pumps.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
             Assert.That(fmModel.Area.Weirs.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
         }
@@ -1162,13 +1157,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var fmModel = new WaterFlowFMModel(mduFilePath);
 
             // Import dry points
-            fmModel.Area.Gates.Add(new Gate2D
+            fmModel.Area.Weirs.Add(new Weir2D
             {
                 GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/nonReferencedGates.pli")
             });
 
             // Check that group name gives a relative path from the mdu folder
-            Assert.That(fmModel.Area.Gates.FirstOrDefault().GroupName, Is.EqualTo("FeatureFiles/" + fmModel.Name + "_structures.ini"));
+            Assert.That(fmModel.Area.Weirs.FirstOrDefault().GroupName, Is.EqualTo("FeatureFiles/" + fmModel.Name + "_structures.ini"));
         }
 
         [Test]

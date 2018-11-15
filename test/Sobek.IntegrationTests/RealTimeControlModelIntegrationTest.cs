@@ -137,7 +137,7 @@ namespace Sobek.IntegrationTests
             var clonedRtc = clonedModel.Models.OfType<RealTimeControlModel>().First();
 
             clonedRtc.ControlGroups[0].Inputs[0].Value
-                .Should("Values of inputs are copied correctly during clone").Be.EqualTo(1.0);
+                .Should("Values of inputs are copied correctly during clone").Be.EqualTo(0.0);
         }
 
         [Test]
