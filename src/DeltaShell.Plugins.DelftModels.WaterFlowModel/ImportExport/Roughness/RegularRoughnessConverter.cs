@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
 {
     public class RegularRoughnessConverter : RoughnessConverter
     {
-        protected override RoughnessSection ReadRoughnessSection(IDelftIniCategory roughnessSectionCategory, IEnumerable<RoughnessSection> roughnessSections, IHydroNetwork network)
+        protected override RoughnessSection ReadRoughnessSection(IDelftIniCategory roughnessSectionCategory, IEnumerable<RoughnessSection> roughnessSections, IHydroNetwork network, IList<string> errorMessages)
         {
             RoughnessSection roughnessSection;
             var sectionId = roughnessSectionCategory.ReadProperty<string>(RoughnessDataRegion.SectionId.Key);
@@ -22,7 +22,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
 
             if (isReversed)
             {
-                roughnessSection = GetReverseRoughnessSection(roughnessSections, sectionId, hasGlobalType);
+                roughnessSection = GetReverseRoughnessSection(roughnessSections, sectionId, hasGlobalType, errorMessages);
+                if (roughnessSection == null) return null;
             }
             else
             {
@@ -41,20 +42,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
             return roughnessSection;
         }
 
-        private static RoughnessSection GetReverseRoughnessSection(IEnumerable<RoughnessSection> roughnessSections, string sectionId, bool hasGlobalType)
+        private static RoughnessSection GetReverseRoughnessSection(IEnumerable<RoughnessSection> roughnessSections, string sectionId, bool hasGlobalType, IList<string> errorMessages)
         {
             RoughnessSection roughnessSection;
             var normalSectionExists = roughnessSections.FirstOrDefault(rs => rs.Name == sectionId);
-            if (normalSectionExists != null)
-            {
-                roughnessSection = new ReverseRoughnessSection(normalSectionExists) {UseNormalRoughness = !hasGlobalType};
-            }
-            else
+            if (normalSectionExists == null)
             {
                 var message = Resources.RoughnessDataFileReader_ReadRoughnessSection_When_reading_reverse_roughness_section___0___the_referring__linked___normal__roughness_section___1___is_not_found__The_normal_section___1___should_be_imported_first_;
-                throw new FileReadingException(string.Format(message, sectionId + " (Reversed)", sectionId));
+                errorMessages.Add(string.Format(message, sectionId + " (Reversed)", sectionId));
+                return null;
             }
 
+            roughnessSection = new ReverseRoughnessSection(normalSectionExists) { UseNormalRoughness = !hasGlobalType };
             return roughnessSection;
         }
 

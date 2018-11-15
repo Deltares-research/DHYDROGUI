@@ -262,6 +262,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Two sections were found with the header &apos;{0}&apos;. Only one of them per file is allowed..
+        /// </summary>
+        public static string RoughnessConverter_Convert_Two_sections_were_found_with_same_header {
+            get {
+                return ResourceManager.GetString("RoughnessConverter_Convert_Two_sections_were_found_with_same_header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Two sections were found with the header &apos;{0}&apos;. Only one of them per file is allowed..
+        /// </summary>
+        public static string RoughnessConverter_Convert_Two_sections_were_found_with_the_header___0____Only_one_of_them_per_file_is_allowed_ {
+            get {
+                return ResourceManager.GetString("RoughnessConverter_Convert_Two_sections_were_found_with_the_header___0____Only_on" +
+                        "e_of_them_per_file_is_allowed_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Filling the table of the Q or H function failed!.
         /// </summary>
         public static string RoughnessDataFileReader_FillFunctionWithTableData_Filling_the_table_of_the_Q_or_H_function_failed_ {
@@ -307,15 +326,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         public static string RoughnessDataFileReader_ReadFile_adding_to_network_went_wrong_ {
             get {
                 return ResourceManager.GetString("RoughnessDataFileReader_ReadFile_adding_to_network_went_wrong_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Could not read content section {0} properly.
-        /// </summary>
-        public static string RoughnessDataFileReader_ReadFile_Could_not_read_content_section__0__properly {
-            get {
-                return ResourceManager.GetString("RoughnessDataFileReader_ReadFile_Could_not_read_content_section__0__properly", resourceCulture);
             }
         }
         

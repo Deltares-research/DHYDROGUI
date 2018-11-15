@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
@@ -37,12 +35,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
             catch (Exception e)
             {
                 errorMessages.Add(e.Message);
-            }
-
-            var contentCategories = categories.Where(category => category.Name == RoughnessDataRegion.ContentIniHeader).ToList();
-            if (contentCategories.Count != 1)
-            {
-                throw new FileReadingException(string.Format(Resources.RoughnessDataFileReader_ReadFile_Could_not_read_content_section__0__properly, filePath));
             }
 
             return categories;

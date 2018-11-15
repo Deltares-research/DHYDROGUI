@@ -4,9 +4,9 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Collections;
-using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using NUnit.Framework;
 
@@ -84,8 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
         }
 
         [Test]
-        [ExpectedException(typeof(FileReadingException))]
-        public void GivenReversedRoughnessDataModelAndNoNormalRoughnessSectionAvailable_WhenConvertingToRoughnessSection_ThenErrorMessage()
+        public void GivenReversedRoughnessDataModelAndNoNormalRoughnessSectionAvailableForThisReversedRoughness_WhenConvertingToRoughnessSection_ThenErrorMessageIsReturned()
         {
             var reversedRoughnessCategory = CreateRoughnessContentCategory();
             reversedRoughnessCategory.SetProperty(RoughnessDataRegion.FlowDirection.Key, "True");
@@ -99,7 +98,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             var section = new RoughnessSection(new CrossSectionSectionType { Name = "SomeSectionName" }, network);
             var roughnessSections = new List<RoughnessSection> {section}; // Only sections available with a different name than defined in the reversedRoughnessCategory
 
-            roughnessConverter.Convert(categories, network, roughnessSections, errorMessages);
+            var roughnessSection = roughnessConverter.Convert(categories, network, roughnessSections, errorMessages);
+            Assert.IsNull(roughnessSection);
+
+            Assert.That(errorMessages.Count, Is.EqualTo(1));
+            var expectedErrorMessage = string.Format(Resources.RoughnessDataFileReader_ReadRoughnessSection_When_reading_reverse_roughness_section___0___the_referring__linked___normal__roughness_section___1___is_not_found__The_normal_section___1___should_be_imported_first_, MainSectionName + " (Reversed)", MainSectionName);
+            Assert.That(errorMessages.Contains(expectedErrorMessage));
+        }
+
+        [Test]
+        public void GivenTwoRoughnessDataModelsWithTheSameName_WhenConvertingToRoughnessSection_ThenErrorMessageIsReturned()
+        {
+            var categories = new List<DelftIniCategory>
+            {
+                new DelftIniCategory(RoughnessDataRegion.ContentIniHeader),
+                new DelftIniCategory(RoughnessDataRegion.ContentIniHeader)
+            };
+
+            var roughnessConverter = new RegularRoughnessConverter();
+            var network = new HydroNetwork();
+            var errorMessages = new List<string>();
+            var roughnessSection = roughnessConverter.Convert(categories, network, new List<RoughnessSection>(), errorMessages);
+
+            Assert.IsNull(roughnessSection);
+            Assert.That(errorMessages.Count, Is.EqualTo(1));
+            var expectedErrorMessage = string.Format(Resources.RoughnessConverter_Convert_Two_sections_were_found_with_same_header, RoughnessDataRegion.ContentIniHeader);
+            Assert.That(errorMessages.Contains(expectedErrorMessage));
         }
 
         private static DelftIniCategory CreateRoughnessContentCategory()

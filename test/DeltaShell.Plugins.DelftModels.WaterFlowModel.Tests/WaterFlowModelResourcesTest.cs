@@ -121,7 +121,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 TryRetreivingMessage(Resources.RoughnessDataFileReader_ReadDefinitionData_Could_not_read_roughness_definition_data);
                 TryRetreivingMessage(Resources.RoughnessDataFileReader_ReadDefinitionData_Couldn_t_read_roughness_section_with_a_function_type_of____0_);
                 TryRetreivingMessage(Resources.RoughnessDataFileReader_ReadFile_adding_to_network_went_wrong_);
-                TryRetreivingMessage(Resources.RoughnessDataFileReader_ReadFile_Could_not_read_content_section__0__properly);
                 TryRetreivingMessage(Resources.RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist_);
                 TryRetreivingMessage(Resources.RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_seems_empty);
                 TryRetreivingMessage(Resources.RoughnessDataFileReader_ReadFile_Could_not_set_roughness_data_in_model);
