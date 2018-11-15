@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
 using DeltaShell.Dimr.xsd;
-using DeltaShell.NGHS.IO.Factories;
 using DeltaShell.NGHS.IO.FileConverters;
 
 namespace DeltaShell.NGHS.IO.FileReaders.ConfigXml
@@ -14,7 +12,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.ConfigXml
          
         public static object Read(string xmlFileSource)
         {
-            if (string.IsNullOrEmpty(xmlFileSource)) { throw new ArgumentException("Configuration file cannot be found"); }
+            if (string.IsNullOrEmpty(xmlFileSource)) { throw new FileReadingException("Configuration file cannot be found"); }
 
             object dataAccessModel;
             try
@@ -30,8 +28,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.ConfigXml
 
                 errorMessages.Add($"The following elements are missing {convertedObject.UnKnownElements}");
                 errorMessages.Add($"The following attributes are missing {convertedObject.UnKnownAttributes}");
-
-
             }
             catch
             {
