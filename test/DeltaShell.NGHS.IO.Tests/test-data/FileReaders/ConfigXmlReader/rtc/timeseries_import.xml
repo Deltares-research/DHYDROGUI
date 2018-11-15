@@ -1,0 +1,378 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<TimeSeries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.wldelft.nl/fews/PI" xsi:schemaLocation="http://www.wldelft.nl/fews/PI C:\Users\veen_jn\Desktop\AcceptanceModels\c01_sobek-rijn-j17_5-v1\sobek-rijn-j17_5-v1\dimr_expected\rtc\pi_timeseries.xsd" version="1.2">
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC DrielDriel PID</locationId>
+      <parameterId>SP</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2000-01-01" time="00:00:00" />
+      <endDate date="2000-01-31" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2000-01-01" time="00:00:00" value="0" />
+    <event date="2000-01-31" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC DrielFEWS_Driel_Breedte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2000-01-01" time="00:00:00" />
+      <endDate date="2000-01-31" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2000-01-01" time="00:00:00" value="96" />
+    <event date="2000-01-31" time="00:00:00" value="96" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC DrielFEWS_Driel_Klepstand</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2000-01-01" time="00:00:00" />
+      <endDate date="2000-01-31" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2000-01-01" time="00:00:00" value="9" />
+    <event date="2000-01-31" time="00:00:00" value="9" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC DrielFEWS_switch_Driel</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2014-01-01" time="00:00:00" />
+      <endDate date="2014-12-31" time="23:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2014-01-01" time="00:00:00" value="0" />
+    <event date="2014-12-31" time="23:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC DrielFEWS_switch_Driel_breedte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2014-01-01" time="00:00:00" />
+      <endDate date="2014-12-31" time="23:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2014-01-01" time="00:00:00" value="0" />
+    <event date="2014-12-31" time="23:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC AmerongenAmerongen PID</locationId>
+      <parameterId>SP</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2000-01-01" time="00:00:00" />
+      <endDate date="2000-01-31" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2000-01-01" time="00:00:00" value="0" />
+    <event date="2000-01-31" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC AmerongenFEWS_amerongen_klepstand</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2000-01-01" time="00:00:00" />
+      <endDate date="2000-01-31" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2000-01-01" time="00:00:00" value="7" />
+    <event date="2000-01-31" time="00:00:00" value="7" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC AmerongenFEWS_amerongen_breedte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2000-01-01" time="00:00:00" />
+      <endDate date="2000-01-31" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2000-01-01" time="00:00:00" value="7" />
+    <event date="2000-01-31" time="00:00:00" value="7" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC AmerongenFEWS_switch_Amerongen</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2014-01-01" time="00:00:00" />
+      <endDate date="2014-12-31" time="23:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2014-01-01" time="00:00:00" value="0" />
+    <event date="2014-12-31" time="23:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC AmerongenFEWS_switch_Amerongen_breedte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2014-01-01" time="00:00:00" />
+      <endDate date="2014-12-31" time="23:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2014-01-01" time="00:00:00" value="0" />
+    <event date="2014-12-31" time="23:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC HagesteinHagestein PID</locationId>
+      <parameterId>SP</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2000-01-01" time="00:00:00" />
+      <endDate date="2000-01-31" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2000-01-01" time="00:00:00" value="0" />
+    <event date="2000-01-31" time="00:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC HagesteinFEWS_hagestein_klepstand</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2000-01-01" time="00:00:00" />
+      <endDate date="2000-01-31" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2000-01-01" time="00:00:00" value="7" />
+    <event date="2000-01-31" time="00:00:00" value="7" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC HagesteinFEWS_hagestein_breedte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2000-01-01" time="00:00:00" />
+      <endDate date="2000-01-31" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2000-01-01" time="00:00:00" value="7" />
+    <event date="2000-01-31" time="00:00:00" value="7" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC HagesteinFEWS_switch_hagestein</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2014-01-01" time="00:00:00" />
+      <endDate date="2014-12-31" time="23:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2014-01-01" time="00:00:00" value="0" />
+    <event date="2014-12-31" time="23:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC HagesteinFEWS_switch_hagestein_breedte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2014-01-01" time="00:00:00" />
+      <endDate date="2014-12-31" time="23:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2014-01-01" time="00:00:00" value="0" />
+    <event date="2014-12-31" time="23:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC MarijkeFEWS_Marijke_deurhoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2000-01-01" time="00:00:00" />
+      <endDate date="2000-01-31" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2000-01-01" time="00:00:00" value="12" />
+    <event date="2000-01-31" time="00:00:00" value="12" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC MarijkeFEWS_switch_Marijke</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2014-01-01" time="00:00:00" />
+      <endDate date="2014-12-31" time="23:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2014-01-01" time="00:00:00" value="0" />
+    <event date="2014-12-31" time="23:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC BernhardFEWS_bernhard_deurhoogte</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2000-01-01" time="00:00:00" />
+      <endDate date="2000-01-31" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2000-01-01" time="00:00:00" value="16" />
+    <event date="2000-01-31" time="00:00:00" value="16" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC BernhardFEWS_switch_Bernhard</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2014-01-01" time="00:00:00" />
+      <endDate date="2014-12-31" time="23:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2014-01-01" time="00:00:00" value="0" />
+    <event date="2014-12-31" time="23:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC Driel OmlooprioolFEWS_Driel_omloopriool_klepstand</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2000-01-01" time="00:00:00" />
+      <endDate date="2000-01-31" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2000-01-01" time="00:00:00" value="3" />
+    <event date="2000-01-31" time="00:00:00" value="3" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC Driel OmlooprioolFEWS_switch_omloopriool_Driel</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2014-01-01" time="00:00:00" />
+      <endDate date="2014-12-31" time="23:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2014-01-01" time="00:00:00" value="0" />
+    <event date="2014-12-31" time="23:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC Amerongen OmlooprioolFEWS_omloopriool_Amerongen_klepstand</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2000-01-01" time="00:00:00" />
+      <endDate date="2000-01-31" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2000-01-01" time="00:00:00" value="3" />
+    <event date="2000-01-31" time="00:00:00" value="3" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC Amerongen OmlooprioolFEWS_switch_omloopriool_amerongen</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2014-01-01" time="00:00:00" />
+      <endDate date="2014-12-31" time="23:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2014-01-01" time="00:00:00" value="0" />
+    <event date="2014-12-31" time="23:00:00" value="0" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC Hagestein  omlooprioolFEWS_omloopriool_hagestein_klepstand</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2000-01-01" time="00:00:00" />
+      <endDate date="2000-01-31" time="00:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2000-01-01" time="00:00:00" value="3" />
+    <event date="2000-01-31" time="00:00:00" value="3" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>RTC Hagestein  omlooprioolFEWS_switch_hagestein_omloopriool</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="10" divider="1" />
+      <startDate date="2014-01-01" time="00:00:00" />
+      <endDate date="2014-12-31" time="23:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2014-01-01" time="00:00:00" value="0" />
+    <event date="2014-12-31" time="23:00:00" value="0" />
+  </series>
+</TimeSeries>
