@@ -7,6 +7,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Networks;
@@ -140,8 +141,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
             if (!branchLocations.Any(l => Math.Abs(l.Chainage) < BranchFeature.Epsilon) ||
                 !branchLocations.Any(l => DoubleEquals(l.Chainage, branch.Length)))
             {
-                var message = String.Format("Not enough grid points defined for branch {0}. " +
-                                            "Make sure you have at least gridpoints at start and end of branch.",
+                var message = string.Format(Resources.WaterFlowModel1DDiscretizationValidator_CheckBranchLocations_Not_enough_grid_points_defined_for_branch__0___Make_sure_you_have_at_least_gridpoints_at_start_and_end_of_branch_,
                                             branch.Name);
 
                 yield return new ValidationIssue(branch, ValidationSeverity.Error, message, networkDiscretization);

@@ -448,4 +448,7 @@
   <data name="RoughnessSection_UpdateCoverageForFunction_The_chainage___0___in_the_arguments_of_roughness_function___1____for_branch___2___was_corrected_to___3____to_match_the_branch_length_" xml:space="preserve">
     <value>The chainage '{0}' in the arguments of roughness function '{1}' for branch '{2}' was corrected to '{3}', to match the branch length.</value>
   </data>
+  <data name="WaterFlowModel1DDiscretizationValidator_CheckBranchLocations_Not_enough_grid_points_defined_for_branch__0___Make_sure_you_have_at_least_gridpoints_at_start_and_end_of_branch_" xml:space="preserve">
+    <value>Not enough grid points defined for branch {0}. Make sure you have at least gridpoints at start and end of branch.</value>
+  </data>
 </root>

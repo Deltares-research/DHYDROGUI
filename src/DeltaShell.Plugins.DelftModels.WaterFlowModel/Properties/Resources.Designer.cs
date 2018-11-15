@@ -550,6 +550,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not enough grid points defined for branch {0}. Make sure you have at least gridpoints at start and end of branch..
+        /// </summary>
+        public static string WaterFlowModel1DDiscretizationValidator_CheckBranchLocations_Not_enough_grid_points_defined_for_branch__0___Make_sure_you_have_at_least_gridpoints_at_start_and_end_of_branch_ {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DDiscretizationValidator_CheckBranchLocations_Not_enough_grid_poin" +
+                        "ts_defined_for_branch__0___Make_sure_you_have_at_least_gridpoints_at_start_and_e" +
+                        "nd_of_branch_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FloodPlain2 width cannot be larger than 0.0, if FloodPlain1 width is equal to 0.0.
         /// </summary>
         public static string WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_FloodPlain2_width_may_not_be_larger_than_zero_if_FloodPlain1_width_is_equal_to_zero_ {

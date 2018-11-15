@@ -552,8 +552,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
 
             model.NetworkDiscretization.Locations.Values.RemoveAt(0);
 
-            Assert.IsTrue(ContainsError(new WaterFlowModel1DModelValidator().Validate(model), 
-                          "Not enough grid points defined for branch branch1. Make sure you have at least gridpoints at start and end of branch."));
+            var expectedMessage = string.Format(Resources.WaterFlowModel1DDiscretizationValidator_CheckBranchLocations_Not_enough_grid_points_defined_for_branch__0___Make_sure_you_have_at_least_gridpoints_at_start_and_end_of_branch_, "branch1");
+            Assert.IsTrue(ContainsError(new WaterFlowModel1DModelValidator().Validate(model), expectedMessage));
         }
 
         [Test]
