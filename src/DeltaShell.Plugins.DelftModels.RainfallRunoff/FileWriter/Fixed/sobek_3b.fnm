@@ -22,8 +22,8 @@
 'pluvius.3b'                      *10. Pluvius                                                       I
 'pluvius.alg'                     *11. Pluvius algemeen                                              I
 'kasklass'                        *12. Kasklasse                                                     I
-'aamaas.bui'                      *13. buifile                                                  I
-'aamaas.evp'                      *14. verdampingsfile                                          I
+'default.bui'                     *13. buifile                                                  I
+'default.evp'                     *14. verdampingsfile                                          I
 'unpaved.3b'                      *15. unpaved algemeen                                              I
 'unpaved.sto'                     *16. unpaved storage                                               I
 'kasinit'                         *17. kasgebied initialisatie (SC)                                  I
@@ -88,7 +88,7 @@
 'saltdt.his'                      *76. Mappix output file detail zoutconcentraties            per tijdstap  O
 'industry.tbl'                    *77. Industry tabellen                                               I
 'rtc_3b.his'                      *78. Maalstop                                                 I
-'aamaas.tmp'                      *79. Temperature time series I
+'default.tmp'                     *79. Temperature time series I
 'rnff.#'                          *80. Runoff time series
 'bndfltot.his'                    *81. Totalen/lozingen op randknopen                           O
 'sobek_3b.lng'                    *82. Language file                                                   I
@@ -129,7 +129,7 @@
 '3b_rout.3b'                      *117. RR Routing link definitions I
 '3b_cel.3b'                       *118. Cel input file
 '3b_cel.his'                      *119. Cel output file
-'sobek3b_progress.tx'             *120. RR Log file for Simulate
+'sobek3b_progress.txt'            *120. RR Log file for Simulate
 'wqrtc.his'                       *121. coupling WQ salt RTC
-'boundaryconditions.c'            *122. RR Boundary conditions file for SOBEK3
-'asciirestartopenda.xt'           *123. Optional RR ASCII restart (test) for OpenDA
+'boundaryconditions.bc'           *122. RR Boundary conditions file for SOBEK3
+'asciirestartopenda.txt'          *123. Optional RR ASCII restart (test) for OpenDA
