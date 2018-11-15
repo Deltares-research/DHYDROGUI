@@ -16,7 +16,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
             this.createAndAddErrorReport = createAndAddErrorReport;
         }
 
-        public IList<IObservationPoint> ReadObservationPoints(string filePath, IHydroNetwork network)
+        public IList<IObservationPoint> ReadObservationPoints(string filePath, IList<IChannel> channelsList)
         {
             var errorMessages = new List<string>();
             IList<DelftIniCategory> categories = new List<DelftIniCategory>();
@@ -29,7 +29,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
                 errorMessages.Add(e.Message);
             }
 
-            var observationPoints = ObservationPointConverter.Convert(categories, network, errorMessages);
+            var observationPoints = ObservationPointConverter.Convert(categories, channelsList, errorMessages);
 
             if (errorMessages.Count > 0)
                 createAndAddErrorReport?.Invoke("While reading the observation points from file, an error occured", errorMessages);

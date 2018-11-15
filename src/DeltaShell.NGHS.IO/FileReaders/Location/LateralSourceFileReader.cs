@@ -16,7 +16,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
             this.createAndAddErrorReport = createAndAddErrorReport;
         }
 
-        public IList<ILateralSource> ReadLateralSources(string filePath, IHydroNetwork network)
+        public IList<ILateralSource> ReadLateralSources(string filePath, IList<IChannel> channelsList)
         {
             var errorMessages = new List<string>();
             IList<DelftIniCategory> categories = new List<DelftIniCategory>();
@@ -29,7 +29,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
                 errorMessages.Add(e.Message);
             }
 
-            var lateralSources = LateralSourceConverter.Convert(categories, network, errorMessages);
+            var lateralSources = LateralSourceConverter.Convert(categories, channelsList, errorMessages);
 
             if (errorMessages.Count > 0)
                 createAndAddErrorReport?.Invoke("While reading the lateral sources from file, an error occured", errorMessages);

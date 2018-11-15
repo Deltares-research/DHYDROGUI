@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -16,11 +17,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
     public class ObservationPointFileReaderTest
     {
         private IHydroNetwork originalNetwork;
+        private IList<IChannel> channelsList;
 
         [SetUp]
         public void SetUp()
         {
             originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch();
+            channelsList = originalNetwork.Channels.ToList();
         }
 
         [TearDown]
@@ -52,9 +55,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
                     errorReport.Add(
                         $"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
-
+                
                 var reader = new ObservationPointFileReader(CreateAndAddErrorReport);
-                var allObservationPoints = reader.ReadObservationPoints(testFile, originalNetwork);
+                var allObservationPoints = reader.ReadObservationPoints(testFile, channelsList);
 
                 Assert.AreEqual(1, allObservationPoints.Count);
 
@@ -87,9 +90,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
                     errorReport.Add(
                         $"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
-
+                
                 var reader = new ObservationPointFileReader(CreateAndAddErrorReport);
-                var allObservationPoints = reader.ReadObservationPoints(testFile, originalNetwork);
+                var allObservationPoints = reader.ReadObservationPoints(testFile, channelsList);
 
                 Assert.AreEqual(0, allObservationPoints.Count);
                 Assert.AreEqual(1, errorReport.Count);

@@ -15,11 +15,13 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
     public class LateralSourceConverterTest
     {
         private IHydroNetwork originalNetwork;
+        private IList<IChannel> channelsList;
 
         [SetUp]
         public void SetUp()
         {
             originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch();
+            channelsList = originalNetwork.Channels.ToList();
         }
 
         [TearDown]
@@ -36,7 +38,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             categories.Add(category);
                    
             var errorMessages = new List<string>();
-            var allLateralSources = LateralSourceConverter.Convert(categories, originalNetwork, errorMessages);
+            var allLateralSources = LateralSourceConverter.Convert(categories, channelsList, errorMessages);
 
             Assert.AreEqual(1, allLateralSources.Count);
 
@@ -67,7 +69,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
 
             var errorMessages = new List<string>();
 
-            var allLateralSources = LateralSourceConverter.Convert(categories, originalNetwork, errorMessages);
+            var allLateralSources = LateralSourceConverter.Convert(categories, channelsList, errorMessages);
 
             Assert.AreEqual(0, allLateralSources.Count);
             Assert.AreEqual(1, errorMessages.Count);
@@ -89,7 +91,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             
             var errorMessages = new List<string>();
 
-            var allLateralSources = LateralSourceConverter.Convert(categories, originalNetwork, errorMessages);
+            var allLateralSources = LateralSourceConverter.Convert(categories, channelsList, errorMessages);
 
             Assert.AreEqual(1, allLateralSources.Count);
 
@@ -127,7 +129,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
 
             var errorMessages = new List<string>();
             
-            var allLateralSources = LateralSourceConverter.Convert(categories, originalNetwork, errorMessages);
+            var allLateralSources = LateralSourceConverter.Convert(categories, channelsList, errorMessages);
 
             Assert.AreEqual(0, allLateralSources.Count);
             Assert.AreEqual(1, errorMessages.Count);
@@ -160,7 +162,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             categories.Add(category2);
 
             var errorMessages = new List<string>();
-            var allLateralSources = LateralSourceConverter.Convert(categories, originalNetwork, errorMessages);
+            var allLateralSources = LateralSourceConverter.Convert(categories, channelsList, errorMessages);
 
             Assert.AreEqual(1, allLateralSources.Count);
 

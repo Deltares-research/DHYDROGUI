@@ -15,14 +15,14 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
 {
     public static class LateralSourceConverter
     {
-        public static IList<ILateralSource> Convert(IList<DelftIniCategory> categories, IHydroNetwork network, IList<string> errorMessages)
+        public static IList<ILateralSource> Convert(IList<DelftIniCategory> categories, IList<IChannel> channelsList, IList<string> errorMessages)
         {
             IList<ILateralSource> lateralSources = new List<ILateralSource>();
             foreach (var observationPointCategory in categories.Where(category => category.Name == BoundaryRegion.LateralDischargeHeader))
             {
                 try
                 {
-                    var generatedLateralSource = ConvertToLateralSource(observationPointCategory, network);
+                    var generatedLateralSource = ConvertToLateralSource(observationPointCategory, channelsList);
                     ValidateConvertedLateralSource(generatedLateralSource, lateralSources);
                     lateralSources.Add(generatedLateralSource);
                 }
@@ -35,14 +35,14 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
             return lateralSources;
         }
         
-        private static ILateralSource ConvertToLateralSource(IDelftIniCategory category, IHydroNetwork network)
+        private static ILateralSource ConvertToLateralSource(IDelftIniCategory category, IList<IChannel> channelsList)
         {
            // Essential Properties (an error will be generated if these fail)
             var name = category.ReadProperty<string>(LocationRegion.Id.Key);
             var chainage = category.ReadProperty<double>(LocationRegion.Chainage.Key);
             
             var branchName = category.ReadProperty<string>(LocationRegion.BranchId.Key);
-            var branch = network.Channels.FirstOrDefault(c => c.Name == branchName);
+            var branch = channelsList.FirstOrDefault(c => c.Name == branchName);
             if (branch == null)
             {
                 var errorMessage = string.Format("Unable to parse {0} property: {1}, Branch not found in Network.{2}", category.Name, LocationRegion.BranchId.Key, Environment.NewLine);

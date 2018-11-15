@@ -15,11 +15,14 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
     public class ObservationPointConverterTest
     {
         private IHydroNetwork originalNetwork;
+        private IList<IChannel> channelsList;
 
         [SetUp]
         public void SetUp()
         {
             originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch();
+            channelsList = originalNetwork.Channels.ToList();
+
         }
 
         [TearDown]
@@ -34,9 +37,9 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             var category = CreatePerfectObservationPointCategory();
             
             categories.Add(category);
-
+            
             var errorMessages = new List<string>();
-            var allObservationPoints = ObservationPointConverter.Convert(categories, originalNetwork, errorMessages);
+            var allObservationPoints = ObservationPointConverter.Convert(categories, channelsList, errorMessages);
             
             Assert.AreEqual(1, allObservationPoints.Count);
 
@@ -66,7 +69,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             
             var errorMessages = new List<string>();
 
-            var allObservationPoints = ObservationPointConverter.Convert(categories, originalNetwork, errorMessages);
+            var allObservationPoints = ObservationPointConverter.Convert(categories, channelsList, errorMessages);
 
             Assert.AreEqual(0, allObservationPoints.Count);
             Assert.AreEqual(1, errorMessages.Count);
@@ -88,7 +91,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             
             var errorMessages = new List<string>();
 
-            var allObservationPoints = ObservationPointConverter.Convert(categories, originalNetwork, errorMessages);
+            var allObservationPoints = ObservationPointConverter.Convert(categories, channelsList, errorMessages);
 
             Assert.AreEqual(1, allObservationPoints.Count);
 
@@ -115,7 +118,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             categories.Add(category);
 
             var errorMessages = new List<string>();
-            var allObservationPoints = ObservationPointConverter.Convert(categories, originalNetwork, errorMessages);
+            var allObservationPoints = ObservationPointConverter.Convert(categories, channelsList, errorMessages);
 
             Assert.AreEqual(0, allObservationPoints.Count);
             Assert.AreEqual(1, errorMessages.Count);
@@ -130,26 +133,17 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
         public void GivenTwoCategoriesWithTheSameObservationPointIds_WhenReading_ThenTheSecondObservationPointShouldNotBeCreated()
         {
             var categories = new List<DelftIniCategory>();
-            var category = new DelftIniCategory(ObservationPointRegion.IniHeader);
 
-            category.AddProperty(LocationRegion.Id.Key, "observationpoint1");
-            category.AddProperty(LocationRegion.Chainage.Key, "50");
-            category.AddProperty(LocationRegion.BranchId.Key, "branch");
-            category.AddProperty(LocationRegion.Name.Key, "observationpoint1");
-
+            var category = CreatePerfectObservationPointCategory();
             categories.Add(category);
 
-            var category2 = new DelftIniCategory(ObservationPointRegion.IniHeader);
-
-            category2.AddProperty(LocationRegion.Id.Key, "observationpoint1");
-            category2.AddProperty(LocationRegion.Chainage.Key, "75");
-            category2.AddProperty(LocationRegion.BranchId.Key, "branch");
-            category2.AddProperty(LocationRegion.Name.Key, "observationpoint1");
-
+            var category2 = CreatePerfectObservationPointCategory();
+            category2.SetProperty(LocationRegion.Chainage.Key, "75");
+            
             categories.Add(category2);
 
             var errorMessages = new List<string>();
-            var allObservationPoints = ObservationPointConverter.Convert(categories, originalNetwork, errorMessages);
+            var allObservationPoints = ObservationPointConverter.Convert(categories, channelsList, errorMessages);
 
             Assert.AreEqual(1, allObservationPoints.Count);
 

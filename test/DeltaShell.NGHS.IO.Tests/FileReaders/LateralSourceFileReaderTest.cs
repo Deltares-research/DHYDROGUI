@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -17,11 +18,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
     public class LateralSourceFileReaderTest
     {
         private IHydroNetwork originalNetwork;
+        private IList<IChannel> channelsList;
 
         [SetUp]
         public void SetUp()
         {
             originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch();
+            channelsList = originalNetwork.Channels.ToList();
         }
 
         [TearDown]
@@ -58,7 +61,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 var reader = new LateralSourceFileReader(CreateAndAddErrorReport);
                 var filePath = TestHelper.GetTestFilePath(Path.Combine("LateralSourcesAndObservationPoints",
                     "LateralDischargeLocations.ini"));
-                var allLateralSources = reader.ReadLateralSources(testFile, originalNetwork);
+                var allLateralSources = reader.ReadLateralSources(testFile, channelsList);
 
                 Assert.AreEqual(1, allLateralSources.Count);
 
@@ -94,7 +97,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                         $"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
 
                 var reader = new LateralSourceFileReader(CreateAndAddErrorReport);
-                var allLateralSources = reader.ReadLateralSources(testFile, originalNetwork);
+                var allLateralSources = reader.ReadLateralSources(testFile, channelsList);
 
                 Assert.AreEqual(0, allLateralSources.Count);
                 Assert.AreEqual(1, errorReport.Count);

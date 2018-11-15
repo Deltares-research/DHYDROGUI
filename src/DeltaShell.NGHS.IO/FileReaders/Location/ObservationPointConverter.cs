@@ -15,14 +15,14 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
 {
     public static class ObservationPointConverter
     {
-        public static IList<IObservationPoint> Convert(IList<DelftIniCategory> categories, IHydroNetwork network, IList<string> errorMessages)
+        public static IList<IObservationPoint> Convert(IList<DelftIniCategory> categories, IList<IChannel> channelsList, IList<string> errorMessages)
         {
             IList<IObservationPoint> observationPoints = new List<IObservationPoint>();
             foreach (var observationPointCategory in categories.Where(category => category.Name == ObservationPointRegion.IniHeader))
             {
                 try
                 {
-                    var generatedObservationPoint = ConvertToObservationPoint(observationPointCategory, network);
+                    var generatedObservationPoint = ConvertToObservationPoint(observationPointCategory, channelsList);
                     ValidateConvertedObservationPoint(generatedObservationPoint, observationPoints);
                     observationPoints.Add(generatedObservationPoint);
                 }
@@ -35,14 +35,14 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
             return observationPoints;
         }
    
-        private static IObservationPoint ConvertToObservationPoint(IDelftIniCategory category, IHydroNetwork network)
+        private static IObservationPoint ConvertToObservationPoint(IDelftIniCategory category, IList<IChannel> channelsList)
         {
            // Essential Properties (an error will be generated if these fail)
             var name = category.ReadProperty<string>(LocationRegion.Id.Key);
             var chainage = category.ReadProperty<double>(LocationRegion.Chainage.Key);
             
             var branchName = category.ReadProperty<string>(LocationRegion.BranchId.Key);
-            var branch = network.Channels.FirstOrDefault(c => c.Name == branchName);
+            var branch = channelsList.FirstOrDefault(c => c.Name == branchName);
             if (branch == null)
             {
                 var errorMessage = string.Format("Unable to parse {0} property: {1}, Branch not found in Network.{2}", category.Name, LocationRegion.BranchId.Key, Environment.NewLine);

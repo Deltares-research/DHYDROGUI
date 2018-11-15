@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
                 reportProgress($"Reading lateral discharge locations from {fileName.LateralDischarge} file.", 3,
                     totalSteps);
-                ReadFileLateralDischargeLocations(fileName.LateralDischarge, model.Network, CreateAndAddErrorReport);
+                ReadFileLateralDischargeLocations(fileName.LateralDischarge, model.Network.Channels, CreateAndAddErrorReport);
 
                 reportProgress(
                     $"Reading boundary conditions and lateral sources from {fileName.BoundaryConditions} file.", 4,
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 BoundaryFileReader.ReadFile(fileName.BoundaryConditions, model);
 
                 reportProgress($"Reading observation points from {fileName.ObservationPoints} file.", 5, totalSteps);
-                ReadFileObservationPointLocations(fileName.ObservationPoints, model.Network, CreateAndAddErrorReport);
+                ReadFileObservationPointLocations(fileName.ObservationPoints, model.Network.Channels, CreateAndAddErrorReport);
 
                 var totalRoughnessFiles = fileName.RoughnessFiles.Count;
                 var i = 1;
@@ -115,16 +115,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             model.NetworkDiscretization.Locations.Values.AddRange(readNetworkLocations);
         }
 
-        private static void ReadFileLateralDischargeLocations(string locationFilePath, IHydroNetwork network,
+        private static void ReadFileLateralDischargeLocations(string locationFilePath, IEnumerable<IChannel> channels,
             Action<string, IList<string>> createAndAddErrorReport)
         {
+            var channelsList = channels.ToList();
+
             var lateralSourceFileReader = new LateralSourceFileReader(createAndAddErrorReport);
 
-            var lateralSources = lateralSourceFileReader.ReadLateralSources(locationFilePath, network);
+            var lateralSources = lateralSourceFileReader.ReadLateralSources(locationFilePath, channelsList);
 
             foreach (var lateralSource in lateralSources)
             {
-                var reference = network.Channels.FirstOrDefault(c => c.Name == lateralSource.Branch.Name);
+                var reference = channelsList.FirstOrDefault(c => c.Name == lateralSource.Branch.Name);
                 if (reference != null)
                 {
                     reference.BranchFeatures.Add(lateralSource);
@@ -132,16 +134,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
         }
 
-        private static void ReadFileObservationPointLocations(string locationFilePath, IHydroNetwork network,
+        private static void ReadFileObservationPointLocations(string locationFilePath, IEnumerable<IChannel> channels,
             Action<string, IList<string>> createAndAddErrorReport)
         {
+            var channelsList = channels.ToList();
+
             var observationPointFileReader = new ObservationPointFileReader(createAndAddErrorReport);
 
-            var observationPoints = observationPointFileReader.ReadObservationPoints(locationFilePath, network);
+            var observationPoints = observationPointFileReader.ReadObservationPoints(locationFilePath, channelsList);
 
             foreach (var observationPoint in observationPoints)
             {
-                var reference = network.Channels.FirstOrDefault(c => c.Name == observationPoint.Branch.Name);
+                var reference = channelsList.FirstOrDefault(c => c.Name == observationPoint.Branch.Name);
                 if (reference != null)
                 {
                     reference.BranchFeatures.Add(observationPoint);
