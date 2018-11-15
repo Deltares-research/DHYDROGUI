@@ -176,6 +176,9 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
 
             Assert.AreEqual(1, errorMessages.Count);
             Assert.AreEqual(0, networkLocations.Count);
+            Assert.That(errorMessages.Any(m =>
+                m.Contains(
+                    $"Network location '{gridPointsNames[2]}' has an offset 200 that is larger than the length {branches[0].Length} of its branch '{branches[0].Name}'")));
         }
 
 
