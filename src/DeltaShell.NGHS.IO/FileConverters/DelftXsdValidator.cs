@@ -6,6 +6,7 @@ using DeltaShell.Dimr.xsd;
 
 public static class DelftXsdValidator
 {
+    private static IXmlParsedObject xmlParsedObject = null;
     public static XmlSerializer ValidateWithSerializer(XmlSerializer serializer)
     {
         if (serializer == null) { throw new ArgumentException("Serializer cannot be null"); }
@@ -21,14 +22,12 @@ public static class DelftXsdValidator
         serializer.UnknownElement += (sender, args) =>
         {
             Console.WriteLine($@"Element : {args.Element.Name}");
-            IXmlParsedObject xmlParsedObject = args.ObjectBeingDeserialized as IXmlParsedObject;
             if (xmlParsedObject == null)
             {
-                Console.WriteLine($@"Element : {args.Element.Name} skipped");
-                return;
+                xmlParsedObject = args.ObjectBeingDeserialized as IXmlParsedObject;
             }
 
-            if (xmlParsedObject.UnKnownElements == null)
+            if (xmlParsedObject?.UnKnownElements == null)
             {
                 xmlParsedObject.UnKnownElements = new List<XmlElement>();
             }
@@ -43,12 +42,9 @@ public static class DelftXsdValidator
         {
             Console.WriteLine($@"Attribute : {args.Attr.Name}");
 
-            IXmlParsedObject xmlParsedObject = args.ObjectBeingDeserialized as IXmlParsedObject;
-
             if (xmlParsedObject == null)
             {
-                Console.WriteLine($@"Attribute : {args.Attr.Name} skipped");
-                return;
+                xmlParsedObject = args.ObjectBeingDeserialized as IXmlParsedObject;
             }
 
             if (xmlParsedObject.UnKnownAttributes == null)

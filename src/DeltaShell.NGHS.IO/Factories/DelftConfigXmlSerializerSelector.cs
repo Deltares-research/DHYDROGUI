@@ -17,6 +17,7 @@ namespace DeltaShell.NGHS.IO.Factories
 
         public DelftConfigXmlSerializerSelector()
         {
+            lookupSerializer = new Dictionary<string, XmlSerializer>();
             var dimrSerializer = new XmlSerializer(typeof(dimrXML));
             lookupSerializer.Add("dimrConfig", dimrSerializer);
 
