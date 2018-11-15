@@ -63,7 +63,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
             Assert.AreEqual(1, crossSectionLocations.Count);
             Assert.AreEqual(1, errorMessages.Count);
 
-            Assert.That(errorMessages.Any(e => e.Contains("duplicate")));
+            Assert.That(errorMessages.Any(e => e.Equals($"Cross section location with id {crossSectionName} already exists, there cannot be any duplicate cross section location ids")));
+
         }
 
         [Test]
@@ -89,7 +90,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
             Assert.AreEqual(0, crossSectionLocations.Count);
             Assert.AreEqual(1, errorMessages.Count);
 
-            Assert.That(errorMessages.Any(e => e.Contains(missingPropertyName)));
+            Assert.That(errorMessages.Any(e => e.Equals($"Property {missingPropertyName} is not found in the file")));
+
         }
 
         private DelftIniCategory CreateCrossSectionLocationCategory(string id)

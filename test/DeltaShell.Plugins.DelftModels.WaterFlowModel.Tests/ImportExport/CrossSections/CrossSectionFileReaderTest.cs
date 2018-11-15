@@ -1,15 +1,184 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
+using DelftTools.TestUtils;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
+using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.CrossSections
 {
     [TestFixture]
     public class CrossSectionFileReaderTest
     {
-        // stub class for tests
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCase(@"CrossSectionDefinitions_YZ.ini", "CrossSectionLocations_YZ.ini", CrossSectionType.YZ)]
+        [TestCase(@"CrossSectionDefinitions_ZW.ini", "CrossSectionLocations_ZW.ini", CrossSectionType.ZW)]
+        [TestCase(@"CrossSectionDefinitions_Standard.ini", "CrossSectionLocations_Standard.ini", CrossSectionType.Standard)]
+        public void GiveAValidCrossSectionFiles_WhenReading_ThenCrossSectionsAreSetOnNetworkWithoutErrors(string definitionFileName, string locationFileName, CrossSectionType type)
+        {
+            var testdataDir = "ImportCrossSections";
+
+            var definitionFilePath = TestHelper.GetTestFilePath(Path.Combine(testdataDir, definitionFileName));
+            var locationFilePath = TestHelper.GetTestFilePath(Path.Combine(testdataDir, locationFileName));
+
+            Assert.That(File.Exists(definitionFilePath));
+            Assert.That(File.Exists(locationFilePath));
+
+            var errorReport = new List<string>();
+
+            Action<string, IList<string>> createAndAddErrorReport =
+                (header, errorMessages) => errorReport.AddRange(errorMessages);
+
+            var reader = new CrossSectionFileReader(createAndAddErrorReport);
+
+            var network = new HydroNetwork();
+            var branchName = "Channel1";
+            network.Branches.Add(new Branch { Name = branchName });
+
+            reader.Read(definitionFilePath, locationFilePath, network);
+
+            var crossSections = network.CrossSections.ToList();
+
+            Assert.NotNull(crossSections);
+            Assert.AreEqual(2, crossSections.Count);
+
+            var crossSectionName1 = "CrossSection1";
+            var crossSectionName2 = "CrossSection2";
+
+            Assert.That(crossSections.Exists(cs => cs.Name == crossSectionName1));
+            Assert.That(crossSections.Exists(cs => cs.Name == crossSectionName2));
+
+            var crossSection = network.CrossSections.First();
+
+            Assert.AreEqual(0, errorReport.Count);
+
+            Assert.AreEqual(1, network.SharedCrossSectionDefinitions.Count);
+            Assert.AreEqual(crossSectionName1, network.SharedCrossSectionDefinitions.First().Name);
+            Assert.AreEqual(crossSectionName1, crossSection.Definition.Name);
+            Assert.AreEqual(crossSectionName1, crossSections.Last().Definition.Name);
+
+            Assert.AreEqual(branchName, crossSection.Branch.Name);
+            Assert.AreEqual(5.0, crossSection.Chainage);
+            Assert.AreEqual(type, crossSection.CrossSectionType);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCase(@"CrossSectionDefinitions_XYZ.ini", "CrossSectionLocations_XYZ.ini", CrossSectionType.GeometryBased)]
+        public void GiveAValidCrossSectionFilesOfGeomtreyBasedCrossSections_WhenReading_ThenCrossSectionsAreSetOnNetworkWithoutErrors(string definitionFileName, string locationFileName, CrossSectionType type)
+        {
+            var testdataDir = "ImportCrossSections";
+
+            var definitionFilePath = TestHelper.GetTestFilePath(Path.Combine(testdataDir, definitionFileName));
+            var locationFilePath = TestHelper.GetTestFilePath(Path.Combine(testdataDir, locationFileName));
+
+            Assert.That(File.Exists(definitionFilePath));
+            Assert.That(File.Exists(locationFilePath));
+
+            var errorReport = new List<string>();
+
+            Action<string, IList<string>> createAndAddErrorReport =
+                (header, errorMessages) => errorReport.AddRange(errorMessages);
+
+            var reader = new CrossSectionFileReader(createAndAddErrorReport);
+
+            var network = new HydroNetwork();
+            var branchName = "Channel1";
+            network.Branches.Add(new Branch { Name = branchName });
+
+            reader.Read(definitionFilePath, locationFilePath, network);
+
+            var crossSections = network.CrossSections.ToList();
+
+            Assert.NotNull(crossSections);
+            Assert.AreEqual(2, crossSections.Count);
+
+            var crossSectionName1 = "CrossSection1";
+            var crossSectionName2 = "CrossSection2";
+
+            Assert.That(crossSections.Exists(cs => cs.Name == crossSectionName1));
+            Assert.That(crossSections.Exists(cs => cs.Name == crossSectionName2));
+
+            var crossSection = network.CrossSections.First();
+
+            Assert.AreEqual(0, errorReport.Count);
+
+            Assert.AreEqual(0, network.SharedCrossSectionDefinitions.Count);
+            Assert.AreEqual(crossSectionName1, crossSection.Definition.Name);
+            Assert.AreEqual(crossSectionName2, crossSections.Last().Definition.Name);
+
+            Assert.AreEqual(branchName, crossSection.Branch.Name);
+            Assert.AreEqual(5.0, crossSection.Chainage);
+            Assert.AreEqual(type, crossSection.CrossSectionType);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+
+        public void GivenLocationReferencingNonExistingDefinitionInCrossSectionFiles_WhenReading_ThenErrorIsGiven()
+        {
+            var testdataDir = "ImportCrossSections";
+
+            var definitionFilePath = TestHelper.GetTestFilePath(Path.Combine(testdataDir, "CrossSectionDefinitions_YZ_DefinitionMissing.ini"));
+            var locationFilePath = TestHelper.GetTestFilePath(Path.Combine(testdataDir, "CrossSectionLocations_YZ_DefinitionMissing.ini"));
+
+            Assert.That(File.Exists(definitionFilePath));
+            Assert.That(File.Exists(locationFilePath));
+
+            var errorReport = new List<string>();
+
+            Action<string, IList<string>> createAndAddErrorReport =
+                (header, errorMessages) => errorReport.AddRange(errorMessages);
+
+            var reader = new CrossSectionFileReader(createAndAddErrorReport);
+
+            var network = new HydroNetwork();
+            var branchName = "Channel1";
+            network.Branches.Add(new Branch { Name = branchName });
+
+            reader.Read(definitionFilePath, locationFilePath, network);
+
+            Assert.AreEqual(2, errorReport.Count);
+            Assert.AreEqual(0, network.CrossSections.Count());
+            Assert.That(errorReport.All(e => e.Contains($"has no definition in the definition file: {definitionFilePath}")));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+
+        public void GivenCrossSectionFilesReferencingBranchThatDoesNotExist_WhenReading_ThenErrorIsGiven()
+        {
+            var testdataDir = "ImportCrossSections";
+
+            var definitionFilePath = TestHelper.GetTestFilePath(Path.Combine(testdataDir, "CrossSectionDefinitions_YZ.ini"));
+            var locationFilePath = TestHelper.GetTestFilePath(Path.Combine(testdataDir, "CrossSectionLocations_YZ.ini"));
+
+            Assert.That(File.Exists(definitionFilePath));
+            Assert.That(File.Exists(locationFilePath));
+
+            var errorReport = new List<string>();
+
+            Action<string, IList<string>> createAndAddErrorReport =
+                (header, errorMessages) => errorReport.AddRange(errorMessages);
+
+            var reader = new CrossSectionFileReader(createAndAddErrorReport);
+
+            var network = new HydroNetwork();
+
+            var branchNameInFile = "Channel1";
+
+            network.Branches.Add(new Branch { Name = "SomeOtherChannel" });
+
+            reader.Read(definitionFilePath, locationFilePath, network);
+
+            Assert.AreEqual(2, errorReport.Count);
+            Assert.AreEqual(0, network.CrossSections.Count());
+            Assert.That(errorReport.All(e => e.Contains($"has a branch ID ({branchNameInFile}) which is not available in the model.")));
+        }
     }
 }

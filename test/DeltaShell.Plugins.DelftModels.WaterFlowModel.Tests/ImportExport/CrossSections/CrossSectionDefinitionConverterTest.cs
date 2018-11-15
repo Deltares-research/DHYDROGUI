@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DelftTools.Hydro.CrossSections;
+﻿using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.CrossSections
 {
@@ -175,7 +173,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
             Assert.AreEqual(1, crossSectionDefinitions.Count);
             Assert.AreEqual(1, errorMessages.Count);
 
-            Assert.That(errorMessages.Any(e => e.Contains("duplicate")));
+            Assert.That(errorMessages.Any(e => e.Equals($"Cross section definition with id {crossSectionName} already exists, there cannot be any duplicate cross section definition ids")));
         }
 
         [Test]
@@ -204,7 +202,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
             Assert.AreEqual(0, crossSectionDefinitions.Count);
             Assert.AreEqual(1, errorMessages.Count);
 
-            Assert.That(errorMessages.Any(e => e.Contains(missingPropertyName)));
+            Assert.That(errorMessages.Any(e => e.Equals($"Property {missingPropertyName} is not found in the file"))); 
         }
 
         private DelftIniCategory CreateCrossSectionDefinitionCategory_YZ(string id)
@@ -268,8 +266,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
             category.AddProperty("a", 7.0);
             category.AddProperty("a1", 8.0);
             category.AddProperty("numLevels", 43);
-            category.AddProperty("levels", CreateListOfDoubles(1.0, 3.0, 43));
-            category.AddProperty("flowWidths", CreateListOfDoubles(0.0, 8.0, 43));
+            category.AddProperty("levels", CreateListOfDoubles(1.0, 43));
+            category.AddProperty("flowWidths", CreateListOfDoubles(0.0, 43));
             category.AddProperty("groundlayerUsed", 0);
             category.AddProperty("groundlayer", 0);
 
@@ -281,17 +279,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
             category.AddProperty("isShared", 1);
         }
 
-        private IList<double> CreateListOfDoubles(double start, double end, int numberOfDoubles)
+        private IList<double> CreateListOfDoubles(double start, int numberOfDoubles)
         {
             var doubles = new List<double>();
 
-            var difference = end - start;
-
-            var stepSize = difference / numberOfDoubles;
-
-            for (int i = 0; i < numberOfDoubles; i++)
+            for (var i = 0; i < numberOfDoubles; i++)
             {
-                doubles.Add(Math.Round(start + i * stepSize, 2));
+                doubles.Add(Math.Round(start + i * 0.1, 1));
             }
 
             return doubles;
