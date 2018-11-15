@@ -243,6 +243,7 @@
     <Compile Include="ImportExport\Roughness\CalibratedRoughnessFileReaderTest.cs" />
     <Compile Include="ImportExport\Roughness\CalibrateRoughnessImporterTest.cs" />
     <Compile Include="ImportExport\Roughness\NegativeIsPositiveCsvConverterTest.cs" />
+    <Compile Include="ImportExport\Roughness\RegularRoughnessConverterTest.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessDataFileReaderTest.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessDataFileWriterTest.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessFileReaderTestHelper.cs" />
