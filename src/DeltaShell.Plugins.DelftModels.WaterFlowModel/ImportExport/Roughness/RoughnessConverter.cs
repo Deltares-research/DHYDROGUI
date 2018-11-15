@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
         private static IList<FileReadingException> ReadRoughnessDataForIndividualBranches(IList<DelftIniCategory> categories, IHydroNetwork network, RoughnessSection roughnessSection)
         {
             var readRoughnessBranchData = ReadRoughnessBranchData(categories, network);
-            var definitionData = ReadDefinitionData(network, categories, readRoughnessBranchData);
+            var definitionData = ReadDefinitionData(categories, readRoughnessBranchData, network);
 
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
             foreach (var roughnessBranchData in readRoughnessBranchData)
@@ -143,13 +143,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
 
                     case RoughnessFunction.Constant:
                     {
-                        foreach (
-                            var roughnessContantData in
-                            definitionData.OfType<ConstantRoughnessDefinitionData>()
-                                .Where(dd => dd.Branch == branch))
+                        foreach (var roughnessContantData in definitionData.OfType<ConstantRoughnessDefinitionData>().Where(dd => dd.Branch == branch))
                         {
-                            roughnessSection.RoughnessNetworkCoverage[
-                                new NetworkLocation(branch, roughnessContantData.Chainage)] = new object[]
+                            roughnessSection.RoughnessNetworkCoverage[new NetworkLocation(branch, roughnessContantData.Chainage)] = new object[]
                                 {roughnessContantData.Value, roughnessBranchData.RoughnessType};
                         }
 
@@ -185,7 +181,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
             }
         }
 
-        private static IList<RoughnessDefinitionData> ReadDefinitionData(INetwork network, IList<DelftIniCategory> categories, IList<RoughnessBranchData> branchData)
+        private static IList<RoughnessDefinitionData> ReadDefinitionData(IList<DelftIniCategory> categories, IList<RoughnessBranchData> branchData, INetwork network)
         {
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
 

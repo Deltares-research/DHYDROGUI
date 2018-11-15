@@ -4,10 +4,12 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
+using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Roughness
@@ -126,6 +128,35 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             Assert.That(errorMessages.Contains(expectedErrorMessage));
         }
 
+        [Test]
+        public void GivenRoughnessDataModelWithRoughnessSpecifiedForSpecificBranch_WhenConvertingToRoughnessSection_ThenCorrectRoughnessSectionIsReturned()
+        {
+            var myBranchId = "myBranch";
+            var categories = new List<DelftIniCategory>
+            {
+                CreateRoughnessContentCategory(),
+                CreateBranchPropertiesCategory(myBranchId),
+                CreateDefinitionCategory(myBranchId)
+            };
+
+            var roughnessConverter = new RegularRoughnessConverter();
+            var errorMessages = new List<string>();
+            var network = new HydroNetwork();
+            var channel = new Channel {Name = myBranchId};
+            network.Branches.Add(channel);
+            var roughnessSection = roughnessConverter.Convert(categories, network, new List<RoughnessSection>(), errorMessages);
+
+            Assert.IsNotNull(roughnessSection);
+            Assert.That(roughnessSection.Name, Is.EqualTo(MainSectionName));
+            Assert.That(errorMessages.Count, Is.EqualTo(0));
+
+            var networkCoverage = roughnessSection.RoughnessNetworkCoverage;
+            var expectedNetworkLocation = new NetworkLocation(channel, 100.0);
+            Assert.That(roughnessSection.GetRoughnessFunctionType(channel), Is.EqualTo(RoughnessFunction.Constant));
+            Assert.That(networkCoverage.EvaluateRoughnessType(expectedNetworkLocation), Is.EqualTo(RoughnessType.WhiteColebrook));
+            Assert.That(networkCoverage.EvaluateRoughnessValue(expectedNetworkLocation), Is.EqualTo(2.3));
+        }
+
         private static DelftIniCategory CreateRoughnessContentCategory()
         {
             var category = new DelftIniCategory(RoughnessDataRegion.ContentIniHeader);
@@ -134,6 +165,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             category.AddProperty(RoughnessDataRegion.Interpolate.Key, "1");
             category.AddProperty(RoughnessDataRegion.GlobalType.Key, "9");
             category.AddProperty(RoughnessDataRegion.GlobalValue.Key, "25.08");
+            return category;
+        }
+
+        private static DelftIniCategory CreateBranchPropertiesCategory(string branchId)
+        {
+            var category = new DelftIniCategory(RoughnessDataRegion.BranchPropertiesIniHeader);
+            category.AddProperty(SpatialDataRegion.BranchId.Key, branchId);
+            category.AddProperty(RoughnessDataRegion.RoughnessType.Key, "7");
+            category.AddProperty(RoughnessDataRegion.FunctionType.Key, "0");
+            return category;
+        }
+
+        private static DelftIniCategory CreateDefinitionCategory(string branchId)
+        {
+            var category = new DelftIniCategory(RoughnessDataRegion.DefinitionIniHeader);
+            category.AddProperty(SpatialDataRegion.BranchId.Key, branchId);
+            category.AddProperty(SpatialDataRegion.Chainage.Key, "100.000");
+            category.AddProperty(SpatialDataRegion.Value.Key, "2.30000");
             return category;
         }
     }
