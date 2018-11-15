@@ -167,7 +167,8 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
         {
             var categories = new List<DelftIniCategory>();
             var branchCategory = CreateCorrectBranchCategory();
-            branchCategory.SetProperty(NetworkDefinitionRegion.GridPointOffsets.Key, string.Join(" ", "0.0", "100.49", "200.0" /*Larger than branch length of 100.0*/));
+            var gridPointsIncorrectOffSets = new[]{ "0.0", "100.49", "200" /*Larger than branch length of 100.0*/ };
+            branchCategory.SetProperty(NetworkDefinitionRegion.GridPointOffsets.Key, string.Join(" ", gridPointsIncorrectOffSets ));
             categories.Add(branchCategory);
 
             var branches = new List<IBranch> { channel1 };
@@ -178,7 +179,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             Assert.AreEqual(0, networkLocations.Count);
             Assert.That(errorMessages.Any(m =>
                 m.Contains(
-                    $"Network location '{gridPointsNames[2]}' has an offset 200 that is larger than the length {branches[0].Length} of its branch '{branches[0].Name}'")));
+                    $"Network location '{gridPointsNames[2]}' has an offset {gridPointsIncorrectOffSets[2]} that is larger than the length {branches[0].Length} of its branch '{branches[0].Name}'")));
         }
 
 
