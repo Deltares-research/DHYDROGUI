@@ -94,22 +94,6 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
         }
 
         [Test]
-        public void GivenNetworkDiscretisationDataModelWithTooLargeOffset_WhenConverting_ThenCorrectNetworkLocationsAreReturned()
-        {
-            var categories = new List<DelftIniCategory>();
-            var branchCategory = CreateCorrectBranchCategory();
-            branchCategory.SetProperty(NetworkDefinitionRegion.GridPointOffsets.Key, string.Join(" ", "0.0", "50.0", "200.0" /*Larger than branch length of 100.0*/));
-            categories.Add(branchCategory);
-
-            var branches = new List<IBranch> { channel1 };
-            var errorMessages = new List<string>();
-            var networkLocations = NetworkDiscretizationConverter.Convert(categories, branches, errorMessages);
-
-            Assert.That(networkLocations.Count, Is.EqualTo(3));
-            Assert.That(networkLocations[2].Chainage, Is.EqualTo(200.0));
-        }
-
-        [Test]
         public void GivenNetworkDiscretisationDataModelWithNonOrderedOffsetValues_WhenConverting_ThenErrorMessageIsReturnedAndNoNetworkLocations()
         {
             var categories = new List<DelftIniCategory>();
