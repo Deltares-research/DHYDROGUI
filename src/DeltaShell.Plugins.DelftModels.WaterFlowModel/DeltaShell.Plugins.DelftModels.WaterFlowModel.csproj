@@ -299,10 +299,6 @@
       <Name>DeltaShell.NGHS.IO</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
-      <Project>{6F5B9016-2DD7-4148-BA0B-0167B9E57D78}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.HydroModel</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
       <Project>{11330f89-2b3d-449d-9211-ea3e0d7f6cdc}</Project>
       <Name>DeltaShell.Plugins.NetworkEditor</Name>
