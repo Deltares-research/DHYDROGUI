@@ -4,6 +4,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
@@ -73,12 +74,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             var roughnessConverter = new RegularRoughnessConverter();
             var network = new HydroNetwork();
             var errorMessages = new List<string>();
+
             var section = new RoughnessSection(new CrossSectionSectionType { Name = MainSectionName }, network);
             var roughnessSections = new List<RoughnessSection> { section };
             var reversedRoughnessSection = roughnessConverter.Convert(categories, network, roughnessSections, errorMessages) as ReverseRoughnessSection;
 
             Assert.IsNotNull(reversedRoughnessSection);
             Assert.IsTrue(reversedRoughnessSection.UseNormalRoughness);
+        }
+
+        [Test]
+        [ExpectedException(typeof(FileReadingException))]
+        public void GivenReversedRoughnessDataModelAndNoNormalRoughnessSectionAvailable_WhenConvertingToRoughnessSection_ThenErrorMessage()
+        {
+            var reversedRoughnessCategory = CreateRoughnessContentCategory();
+            reversedRoughnessCategory.SetProperty(RoughnessDataRegion.FlowDirection.Key, "True");
+            reversedRoughnessCategory.Properties.RemoveAllWhere(p => p.Name == RoughnessDataRegion.GlobalType.Key);
+            var categories = new List<DelftIniCategory> { reversedRoughnessCategory };
+
+            var roughnessConverter = new RegularRoughnessConverter();
+            var network = new HydroNetwork();
+            var errorMessages = new List<string>();
+
+            var section = new RoughnessSection(new CrossSectionSectionType { Name = "SomeSectionName" }, network);
+            var roughnessSections = new List<RoughnessSection> {section}; // Only sections available with a different name than defined in the reversedRoughnessCategory
+
+            roughnessConverter.Convert(categories, network, roughnessSections, errorMessages);
         }
 
         private static DelftIniCategory CreateRoughnessContentCategory()
