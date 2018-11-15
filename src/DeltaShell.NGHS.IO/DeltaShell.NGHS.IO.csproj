@@ -107,6 +107,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adaptors\UGridToUnstructuredGridAdaptor.cs" />
@@ -114,6 +116,9 @@
     <Compile Include="DelftBcWriter.cs" />
     <Compile Include="DelftIniReader.cs" />
     <Compile Include="DelftIniWriter.cs" />
+    <Compile Include="Factories\DelftConfigXmlSerializerSelector.cs" />
+    <Compile Include="FileConverters\DelftXsdValidator.cs" />
+    <Compile Include="FileConverters\DelftXmlFileConverter.cs" />
     <Compile Include="FileReaders\ConfigXml\DelftConfigXmlFileReader.cs" />
     <Compile Include="FileReaders\Definition\DefinitionReader.cs" />
     <Compile Include="FileReaders\DelftBcFileParser.cs" />
@@ -232,10 +237,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="FileConverters\" />
-    <Folder Include="FileParsers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>

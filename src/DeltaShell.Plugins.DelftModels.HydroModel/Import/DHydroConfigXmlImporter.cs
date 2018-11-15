@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Shell.Core;
 using DeltaShell.NGHS.IO.FileReaders.ConfigXml;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 {
     public class DHydroConfigXmlImporter: IFileImporter
     {
-        public DHydroConfigXmlImporter()
-        {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(DHydroConfigXmlImporter));
 
-        }
         public bool CanImportOn(object targetObject)
         {
             throw new NotImplementedException();
@@ -22,15 +21,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             return DelftConfigXmlFileReader.Read(path);
         }
 
-        public string Name { get; }
-        public string Category { get; }
+        public string Name { get { return "DIMR Configuration File Importer (dimr.xml)"; }}
+        public string Category { get { return "Dimr Configuration File"; } }
         public Bitmap Image { get; }
         public IEnumerable<Type> SupportedItemTypes { get; }
         public bool CanImportOnRootLevel { get; }
-        public string FileFilter { get; }
+        public string FileFilter { get { return "xml|*.xml"; } }
         public string TargetDataDirectory { get; set; }
         public bool ShouldCancel { get; set; }
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
-        public bool OpenViewAfterImport { get; }
+        public bool OpenViewAfterImport { get {return true;} }
     }
 }

@@ -86,6 +86,7 @@
     <Compile Include="xsd\dimr-1.0.serializers.cs" />
     <Compile Include="xsd\dimr-1_0.cs" />
     <Compile Include="xsd\DimrModelExtensions.cs" />
+    <Compile Include="xsd\IXmlParsedObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

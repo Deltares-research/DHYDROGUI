@@ -246,6 +246,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ImportHydFileDialog.resx">
       <DependentUpon>ImportHydFileDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SubstanceProcessLibraryView.resx">
       <DependentUpon>SubstanceProcessLibraryView.cs</DependentUpon>
@@ -381,7 +382,6 @@
   <Import Project="..\..\packages\PostSharp.4.3.45\tools\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.4.3.45\tools\PostSharp.targets')" />
   <Target Name="EnsurePostSharpImported" BeforeTargets="BeforeBuild" Condition="'$(PostSharp30Imported)' == ''">
     <Error Condition="!Exists('..\..\packages\PostSharp.4.3.45\tools\PostSharp.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://www.postsharp.net/links/nuget-restore." />
-    
   </Target>
   <Import Project="..\..\packages\DeltaShell.Framework.1.3.0.41027\build\net40\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.3.0.41027\build\net40\DeltaShell.Framework.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

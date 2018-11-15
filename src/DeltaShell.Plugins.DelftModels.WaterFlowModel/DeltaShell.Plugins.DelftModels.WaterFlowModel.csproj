@@ -171,10 +171,6 @@
     <Compile Include="Flow1DBasicModelInterface.cs" />
     <Compile Include="ImportExport\BoundaryFileReader.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryLocationReader.cs" />
-    <Compile Include="ImportExport\Dimr\DelftConfigXmlFileConverter.cs" />
-    <Compile Include="ImportExport\Dimr\DelftConfigXmlFileParser.cs" />
-    <Compile Include="ImportExport\Dimr\IDelftIniXmlConverter.cs" />
-    <Compile Include="ImportExport\Dimr\IDelftIniXmlDeserializer.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryLocation.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryLocationConverter.cs" />
     <Compile Include="ImportExport\CrossSections\CrossSectionDefinitionConverter.cs" />
@@ -302,6 +298,10 @@
       <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
       <Name>DeltaShell.NGHS.IO</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
+      <Project>{6F5B9016-2DD7-4148-BA0B-0167B9E57D78}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.HydroModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
       <Project>{11330f89-2b3d-449d-9211-ea3e0d7f6cdc}</Project>
