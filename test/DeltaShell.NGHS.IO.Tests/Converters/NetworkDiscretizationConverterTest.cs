@@ -162,6 +162,23 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             Assert.That(errorMessages.Contains($"The {propertyName} property is missing for branch '{channel1.Name}'"));
         }
 
+        [Test]
+        public void GivenAGridOffsetWhichIsLargerThanTheBranch_WhenConverting_ThenAnErrorMessageIsReturned()
+        {
+            var categories = new List<DelftIniCategory>();
+            var branchCategory = CreateCorrectBranchCategory();
+            branchCategory.SetProperty(NetworkDefinitionRegion.GridPointOffsets.Key, string.Join(" ", "0.0", "100.49", "200.0" /*Larger than branch length of 100.0*/));
+            categories.Add(branchCategory);
+
+            var branches = new List<IBranch> { channel1 };
+            var errorMessages = new List<string>();
+            var networkLocations = NetworkDiscretizationConverter.Convert(categories, branches, errorMessages);
+
+            Assert.AreEqual(1, errorMessages.Count);
+            Assert.AreEqual(0, networkLocations.Count);
+        }
+
+
         private DelftIniCategory CreateCorrectBranchCategory()
         {
             var branchCategory = new DelftIniCategory(NetworkDefinitionRegion.IniBranchHeader);

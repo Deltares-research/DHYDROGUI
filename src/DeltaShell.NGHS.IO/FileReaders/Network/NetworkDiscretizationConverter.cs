@@ -6,6 +6,7 @@ using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
+using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Geometries;
 
@@ -13,6 +14,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
 {
     public static class NetworkDiscretizationConverter
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(NetworkDiscretizationConverter));
+
+
         public static IList<INetworkLocation> Convert(IEnumerable<DelftIniCategory> categories, IList<IBranch> networkBranches, IList<string> errorMessages)
         {
             IList<INetworkLocation> networkLocations = new List<INetworkLocation>();
@@ -84,7 +88,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             foreach (var errorMessage in ValidateDataQuantities(branchName, gridPointsCount, gridPointsX, gridPointsY, gridPointsOffsets, gridPointsNames))
                 yield return errorMessage;
 
-            foreach (var errorMessage in ValidateOffsetValues(branch, gridPointsOffsets))
+            foreach (var errorMessage in ValidateOffsetValues(branch, gridPointsOffsets, gridPointsNames))
                 yield return errorMessage;
         }
 
@@ -129,10 +133,19 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
                 yield return $"The amount of names defined for discretization points on branch '{branchName}' does not match the defined amount of discretisation points.";
         }
 
-        private static IEnumerable<string> ValidateOffsetValues(IBranch branch, IList<double> gridPointsOffsets)
+        private static IEnumerable<string> ValidateOffsetValues(IBranch branch, IList<double> gridPointsOffsets, IList<string> gridPointsNames)
         {
             for (var n = 0; n < gridPointsOffsets.Count; n++)
             {
+                if (gridPointsOffsets[n] > branch.Length && gridPointsOffsets[n] < branch.Length + 0.50)
+                {
+                    Log.WarnFormat("Not good");
+                }
+                if (gridPointsOffsets[n] >= branch.Length + 0.5)
+                {
+                    yield return $"Network location '{gridPointsNames[n]}' has an offset {gridPointsOffsets[n]} that is larger than the length {branch.Length} of its branch '{branch.Name}'";
+                }
+
                 if (n < gridPointsOffsets.Count - 1 && gridPointsOffsets[n + 1] <= gridPointsOffsets[n])
                 {
                     yield return $"Network location offsets of branch '{branch.Name}' are not ordered.";
