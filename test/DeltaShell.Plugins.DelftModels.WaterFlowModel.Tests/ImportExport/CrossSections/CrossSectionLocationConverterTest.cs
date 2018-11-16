@@ -68,13 +68,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
         }
 
         [Test]
-        public void GivenListOfIniCategoriesWithMissingProperty_WhenConvertingToCrossSectionLocations_ThenErrorIsGiven()
+        [TestCase("id")]
+        [TestCase("branchid")]
+        [TestCase("chainage")]
+        [TestCase("shift")]
+        [TestCase("definition")]
+        public void GivenListOfIniCategoriesWithMissingProperty_WhenConvertingToCrossSectionLocations_ThenErrorIsGiven(string missingPropertyName)
         {
             var categories = new List<DelftIniCategory>();
 
             var crossSectionName = "CrossSection1";
-
-            var missingPropertyName = "shift";
 
             categories.Add(CreateCrossSectionLocationCategory(crossSectionName));
             RemovePropertyByName(missingPropertyName, categories.FirstOrDefault());
@@ -91,7 +94,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
             Assert.AreEqual(1, errorMessages.Count);
 
             Assert.That(errorMessages.Any(e => e.Equals($"Property {missingPropertyName} is not found in the file")));
+        }
 
+        [Test]
+        public void GivenListOfIniCategoriesWithOptionalMissingProperty_WhenConvertingToCrossSectionLocations_ThenNoErrorIsGiven()
+        {
+            var categories = new List<DelftIniCategory>();
+
+            var crossSectionName = "CrossSection1";
+
+            var missingPropertyName = "name";
+
+            categories.Add(CreateCrossSectionLocationCategory(crossSectionName));
+            RemovePropertyByName(missingPropertyName, categories.FirstOrDefault());
+
+            Assert.NotNull(categories);
+            Assert.IsFalse(categories.First().Properties.Any(p => p.Name == missingPropertyName));
+
+            var errorMessages = new List<string>();
+
+            var crossSectionLocations = CrossSectionLocationConverter.Convert(categories, errorMessages).ToList();
+
+            Assert.NotNull(crossSectionLocations);
+            Assert.AreEqual(1, crossSectionLocations.Count);
+            Assert.AreEqual(0, errorMessages.Count);
+
+            Assert.That(!errorMessages.Any(e => e.Equals($"Property {missingPropertyName} is not found in the file")));
         }
 
         private DelftIniCategory CreateCrossSectionLocationCategory(string id)

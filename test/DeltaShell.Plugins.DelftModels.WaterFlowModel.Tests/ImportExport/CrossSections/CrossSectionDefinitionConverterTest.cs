@@ -176,14 +176,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
             Assert.That(errorMessages.Any(e => e.Equals($"Cross section definition with id {crossSectionName} already exists, there cannot be any duplicate cross section definition ids")));
         }
 
-        [Test]
-        public void GivenListOfIniCategoriesWithMissingProperty_WhenConvertingToCrossSectionDefinitions_ThenErrorIsGiven()
+        [TestCase("id")]
+        [TestCase("type")]
+        [TestCase("thalweg")]
+        [TestCase("yzCount")]
+        [TestCase("yValues")]
+        [TestCase("zValues")]
+        [TestCase("deltaZStorage")]
+        public void GivenListOfIniCategoriesWithMissingProperty_WhenConvertingToCrossSectionDefinitions_ThenErrorIsGiven(string missingPropertyName)
         {
             var categories = new List<DelftIniCategory>();
 
             var crossSectionName = "CrossSection1";
-
-            var missingPropertyName = "id";
 
             var category = CreateCrossSectionDefinitionCategory_YZ(crossSectionName);
 

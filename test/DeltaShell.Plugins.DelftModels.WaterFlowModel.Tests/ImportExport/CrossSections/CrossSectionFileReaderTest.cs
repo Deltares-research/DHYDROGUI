@@ -69,13 +69,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [TestCase(@"CrossSectionDefinitions_XYZ.ini", "CrossSectionLocations_XYZ.ini", CrossSectionType.GeometryBased)]
-        public void GiveAValidCrossSectionFilesOfGeomtreyBasedCrossSections_WhenReading_ThenCrossSectionsAreSetOnNetworkWithoutErrors(string definitionFileName, string locationFileName, CrossSectionType type)
+        public void GiveAValidCrossSectionFilesOfGeomtreyBasedCrossSections_WhenReading_ThenCrossSectionsAreSetOnNetworkWithoutErrors()
         {
             var testdataDir = "ImportCrossSections";
 
-            var definitionFilePath = TestHelper.GetTestFilePath(Path.Combine(testdataDir, definitionFileName));
-            var locationFilePath = TestHelper.GetTestFilePath(Path.Combine(testdataDir, locationFileName));
+            var definitionFilePath = TestHelper.GetTestFilePath(Path.Combine(testdataDir, "CrossSectionDefinitions_XYZ.ini"));
+            var locationFilePath = TestHelper.GetTestFilePath(Path.Combine(testdataDir, "CrossSectionLocations_XYZ.ini"));
 
             Assert.That(File.Exists(definitionFilePath));
             Assert.That(File.Exists(locationFilePath));
@@ -114,7 +113,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
 
             Assert.AreEqual(branchName, crossSection.Branch.Name);
             Assert.AreEqual(5.0, crossSection.Chainage);
-            Assert.AreEqual(type, crossSection.CrossSectionType);
+            Assert.AreEqual(CrossSectionType.GeometryBased, crossSection.CrossSectionType);
         }
 
         [Test]

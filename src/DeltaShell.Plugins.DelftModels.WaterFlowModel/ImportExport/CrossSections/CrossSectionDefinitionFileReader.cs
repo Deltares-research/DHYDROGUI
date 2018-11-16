@@ -80,12 +80,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
             var roughnessNames = category.ReadPropertiesToListOfType<string>(DefinitionRegion.RoughnessNames.Key, true);
             if (roughnessNames == null) return;
 
-            if (roughnessNames.Count != 1)
-                throw new FileReadingException("There can only be one roughness defined on a cross section definition.");
-
             var sectionTypeName = roughnessNames.FirstOrDefault();
-            if (sectionTypeName == null)
-                throw new FileReadingException("There was no roughness defined in the cross section definition file.");
+
+            if ((roughnessNames.Count == 1 && roughnessNames.First() == String.Empty) || sectionTypeName == null)
+            {
+                throw new FileReadingException(
+                    "There was no roughness defined in the cross section definition file.");
+            }
+
+            else if (roughnessNames.Count != 1)
+            {
+                throw new FileReadingException(
+                    "There can only be one roughness defined on a standard cross section definition.");
+            }
 
             var crossSectionSectionType = GetCrossSectionSectionType(sectionTypeName, network);
 
@@ -142,13 +149,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
 
             var roughnessNames =
                 category.ReadPropertiesToListOfType<string>(DefinitionRegion.RoughnessNames.Key, separator: ';');
-            if (roughnessNames.Count < 0)
+
+            if (roughnessNames.Count <= 0 || (roughnessNames.Count == 1 && roughnessNames.First() == String.Empty))
                 throw new FileReadingException("There were no roughness names defined in the cross section definition file.");
 
-            var roughnessPositions =
-                category.ReadPropertiesToListOfType<double>(DefinitionRegion.RoughnessPositions.Key);
-            if (roughnessPositions.Count < 0)
-                throw new FileReadingException("There were no roughness positions defined in the cross section definition file.");
+                var roughnessPositions =
+                    category.ReadPropertiesToListOfType<double>(DefinitionRegion.RoughnessPositions.Key);
 
             if (roughnessPositions.Count != roughnessNames.Count + 1)
                 throw new FileReadingException("Incorrect number of roughness positions in cross section definition file: should be one more than the number of roughness sections.");
