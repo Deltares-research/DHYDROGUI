@@ -35,6 +35,8 @@ using Rhino.Mocks;
 using SharpMap.Layers;
 using SharpTestsEx;
 using Point = NetTopologySuite.Geometries.Point;
+using System;
+using System.Windows.Controls;
 
 namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 {
@@ -136,39 +138,35 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                 gui.Plugins.Add(new SharpMapGisGuiPlugin());
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
                 gui.Run();
-
-                var project = app.Project;
-
-                // add data
-                var network = new HydroNetwork
-                                  {
-                                      Nodes = new EventedList<INode>
-                                                  {
-                                                      new HydroNode {Name = "node1", Geometry = new Point(0, 0)},
-                                                      new HydroNode {Name = "node2", Geometry = new Point(1, 1)}
-                                                  }
-                                  };
-
-                var points = new [] {new Coordinate(0, 0), new Coordinate(1, 1)};
-
-                Enumerable.Range(1, 100).ForEach(i => network.Branches.Add(
-                    new Channel
-                        {
-                            Name = "channel" + i,
-                            Source = network.Nodes[0],
-                            Target = network.Nodes[1],
-                            Geometry = new LineString(points)
-                        }
-                                                         ));
-
-                project.RootFolder.Add(network);
-
-                // show gui main window
-                var mainWindow = (Window)gui.MainWindow;
-
-                // wait until gui starts
-                mainWindow.Loaded += delegate
+                
+                Action mainWindowShown = delegate
                                         {
+                                            var project = app.Project;
+
+                                            // add data
+                                            var network = new HydroNetwork
+                                            {
+                                                Nodes = new EventedList<INode>
+                                                {
+                                                    new HydroNode {Name = "node1", Geometry = new Point(0, 0)},
+                                                    new HydroNode {Name = "node2", Geometry = new Point(1, 1)}
+                                                }
+                                            };
+
+                                            var points = new[] { new Coordinate(0, 0), new Coordinate(1, 1) };
+
+                                            Enumerable.Range(1, 100).ForEach(i => network.Branches.Add(
+                                                new Channel
+                                                {
+                                                    Name = "channel" + i,
+                                                    Source = network.Nodes[0],
+                                                    Target = network.Nodes[1],
+                                                    Geometry = new LineString(points)
+                                                }
+                                            ));
+
+                                            project.RootFolder.Add(network);
+
                                             var networkDataItem = project.RootFolder.DataItems.First(di => di.Value is HydroNetwork);
                                             gui.CommandHandler.OpenView(networkDataItem, typeof(ProjectItemMapView));
 
@@ -182,7 +180,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                                                 channelTableView.TableView.SelectCells(0, 0, 99, 1));
                                         };
 
-                WpfTestHelper.ShowModal(mainWindow);
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }
         }
         
