@@ -112,13 +112,16 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\BranchConverterTest.cs" />
+    <Compile Include="Converters\DelftXmlFileConverterTest.cs" />
     <Compile Include="Converters\HydroNodeConverterTest.cs" />
     <Compile Include="Converters\LateralSourceConverterTest.cs" />
     <Compile Include="Converters\ObservationPointConverterTest.cs" />
     <Compile Include="FileReaders\DelftBcFileParserTest.cs" />
+    <Compile Include="FileReaders\DelftConfigXmlFileReaderTest.cs" />
     <Compile Include="FileReaders\DelftIniFileParserTest.cs" />
     <Compile Include="FileReaders\LateralSourceFileReaderTest.cs" />
     <Compile Include="FileReaders\NetworkDefinitionFileReaderTest.cs" />
@@ -176,6 +179,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Factories\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

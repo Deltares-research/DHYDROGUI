@@ -12,6 +12,7 @@ using Mono.Addins;
 using log4net;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using log4net.Appender;
 using log4net.Repository.Hierarchy;
 
@@ -153,6 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 };
             }
         }
+
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
         {
             yield return new Iterative1D2DCouplerDataAccessListener();
@@ -161,6 +163,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         public override IEnumerable<Assembly> GetPersistentAssemblies()
         {
             yield return GetType().Assembly;
+        }
+
+        public override IEnumerable<IFileImporter> GetFileImporters()
+        {
+            yield return new DHydroConfigXmlImporter();
         }
 
         public override void Activate()

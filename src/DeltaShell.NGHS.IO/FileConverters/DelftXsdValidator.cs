@@ -6,26 +6,27 @@ using DeltaShell.Dimr.xsd;
 
 public static class DelftXsdValidator
 {
-    private static IXmlParsedObject xmlParsedObject = null;
-    public static XmlSerializer ValidateWithSerializer(XmlSerializer serializer)
+    public static XmlSerializer ValidateDataObjectModel(XmlSerializer serializer, List<string> errorMessages)
     {
         if (serializer == null) { throw new ArgumentException("Serializer cannot be null"); }
+        if (errorMessages == null) { throw new ArgumentException("Error Report cannot be null"); }
 
-        ValidateAttributes(serializer);
-        ValidateElements(serializer);
+        ValidateAttributes(serializer, errorMessages);
+        ValidateElements(serializer, errorMessages);
+        //errorList = errorReport;
+        
+        //errorList?.Invoke(($"The following items do not match the xsd: "), errorMessages);
 
         return serializer;
     }
 
-    private static void ValidateElements(XmlSerializer serializer)
+    private static void ValidateElements(XmlSerializer serializer, List<string> errorMessages)
     {
         serializer.UnknownElement += (sender, args) =>
         {
-            Console.WriteLine($@"Element : {args.Element.Name}");
-            if (xmlParsedObject == null)
-            {
-                xmlParsedObject = args.ObjectBeingDeserialized as IXmlParsedObject;
-            }
+            errorMessages.Add($" Element: {args.Element.Name} is missing");
+
+            var xmlParsedObject = args.ObjectBeingDeserialized as IXmlParsedObject;
 
             if (xmlParsedObject?.UnKnownElements == null)
             {
@@ -36,18 +37,15 @@ public static class DelftXsdValidator
         };
     }
 
-    private static void ValidateAttributes(XmlSerializer serializer)
+    private static void ValidateAttributes(XmlSerializer serializer, List<string> errorMessages)
     {
         serializer.UnknownAttribute += (sender, args) =>
         {
-            Console.WriteLine($@"Attribute : {args.Attr.Name}");
+            errorMessages.Add($" Attribute: {args.Attr.Name} is missing");
 
-            if (xmlParsedObject == null)
-            {
-                xmlParsedObject = args.ObjectBeingDeserialized as IXmlParsedObject;
-            }
+            var xmlParsedObject = args.ObjectBeingDeserialized as IXmlParsedObject;
 
-            if (xmlParsedObject.UnKnownAttributes == null)
+            if (xmlParsedObject?.UnKnownAttributes == null)
             {
                 xmlParsedObject.UnKnownAttributes = new List<XmlAttribute>();
             }

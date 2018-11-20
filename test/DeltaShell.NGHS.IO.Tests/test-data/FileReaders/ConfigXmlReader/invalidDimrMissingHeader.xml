@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+﻿
 <dimrConfig xmlns="http://schemas.deltares.nl/dimr" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.deltares.nl/dimr http://content.oss.deltares.nl/schemas/dimr-1.2.xsd">
   <documentation>
     <fileVersion>1.2</fileVersion>
     <createdBy>Deltares, Coupling Team</createdBy>
-    <creationDate>2018-09-06T12:56:45.1506771Z</creationDate>
+    <creationDate>2018-10-05T08:54:18.6912248Z</creationDate>
   </documentation>
   <!--<control>
           The <control> specifies the workflow of the deltaresHydro executable.
@@ -28,20 +28,7 @@
           should only be executed at a subset of simulation time steps.
 
       For each component/coupler there will be a corresponding component/coupler
-      specification block defined below.</control>-->
-  <control>
-    <parallel>
-      <startGroup>
-        <time>0 600 2592000</time>
-        <coupler name="flow1d_to_rtc" />
-        <start name="real-time control" />
-        <coupler name="rtc_to_flow1d" />
-      </startGroup>
-      <start name="rijn-flow-model" />
-    </parallel>
-  </control>
-  <test>
-  </test>
+      specification block defined below.-->
   <component name="real-time control">
     <library>FBCTools_BMI</library>
     <workingDir>rtc</workingDir>
@@ -52,11 +39,11 @@
     <workingDir>dflow1d</workingDir>
     <inputFile>rijn-flow-model.md1d</inputFile>
   </component>
-  <coupler abc="2" name="rtc_to_flow1d">
+  <coupler name="rtc_to_flow1d">
     <sourceComponent>real-time control</sourceComponent>
     <targetComponent>rijn-flow-model</targetComponent>
     <item>
-      <abcsourcename>output_ST_Driel_zom_Crest level (s)</abcsourcename>
+      <sourceName>output_ST_Driel_zom_Crest level (s)</sourceName>
       <targetName>weirs/ST_Driel_zom/structure_crest_level</targetName>
     </item>
     <item>

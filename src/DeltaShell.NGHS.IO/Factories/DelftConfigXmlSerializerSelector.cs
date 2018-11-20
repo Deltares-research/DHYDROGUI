@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 using DeltaShell.Dimr.xsd;
-using DeltaShell.NGHS.IO.FileConverters;
 
 namespace DeltaShell.NGHS.IO.Factories
 {

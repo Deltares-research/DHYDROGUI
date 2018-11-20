@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<dimrConfig xmlns="http://schemas.deltares.nl/dimr" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.deltares.nl/dimr http://content.oss.deltares.nl/schemas/dimr-1.2.xsd">
+<InvalidRoot xmlns="http://schemas.deltares.nl/dimr" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.deltares.nl/dimr http://content.oss.deltares.nl/schemas/dimr-1.2.xsd">
   <documentation>
     <fileVersion>1.2</fileVersion>
     <createdBy>Deltares, Coupling Team</createdBy>
@@ -28,7 +28,7 @@
           should only be executed at a subset of simulation time steps.
 
       For each component/coupler there will be a corresponding component/coupler
-      specification block defined below.</control>-->
+      specification block defined below.-->
   <control>
     <parallel>
       <startGroup>
@@ -40,8 +40,6 @@
       <start name="rijn-flow-model" />
     </parallel>
   </control>
-  <test>
-  </test>
   <component name="real-time control">
     <library>FBCTools_BMI</library>
     <workingDir>rtc</workingDir>
@@ -52,11 +50,11 @@
     <workingDir>dflow1d</workingDir>
     <inputFile>rijn-flow-model.md1d</inputFile>
   </component>
-  <coupler abc="2" name="rtc_to_flow1d">
+  <coupler name="rtc_to_flow1d">
     <sourceComponent>real-time control</sourceComponent>
     <targetComponent>rijn-flow-model</targetComponent>
     <item>
-      <abcsourcename>output_ST_Driel_zom_Crest level (s)</abcsourcename>
+      <sourceName>output_ST_Driel_zom_Crest level (s)</sourceName>
       <targetName>weirs/ST_Driel_zom/structure_crest_level</targetName>
     </item>
     <item>
@@ -192,4 +190,4 @@
       <outputFile>flow1d_to_rtc.nc</outputFile>
     </logger>
   </coupler>
-</dimrConfig>
+</InvalidRoot>
