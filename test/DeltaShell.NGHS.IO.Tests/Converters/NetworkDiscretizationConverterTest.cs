@@ -2,9 +2,11 @@
 using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.FileReaders.Network;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
+using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -157,15 +159,14 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
 
             var branches = new List<IBranch> { channel1 };
             var errorMessages = new List<string>();
-            var networkLocations = NetworkDiscretizationConverter.Convert(categories, branches, errorMessages);
+            IList<INetworkLocation> networkLocations = new List<INetworkLocation>();
 
-            Assert.AreEqual(1, errorMessages.Count);
-            Assert.AreEqual(0, networkLocations.Count);
-            Assert.That(errorMessages.Any(m =>
-                m.Contains(
-                    $"Network location '{gridPointsNames[2]}' has an offset {gridPointsIncorrectOffSets[2]} that is larger than the length {branches[0].Length} of its branch '{branches[0].Name}'")));
+            var expectedPartOfMessage = $"Network location '{gridPointsNames[2]}' has an offset {gridPointsIncorrectOffSets[2]} that is larger than the length {branches[0].Length} of its branch '{branches[0].Name}'";
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => networkLocations = NetworkDiscretizationConverter.Convert(categories, branches, errorMessages), expectedPartOfMessage);
+
+            Assert.AreEqual(0, errorMessages.Count);
+            Assert.AreEqual(3, networkLocations.Count);
         }
-
 
         private DelftIniCategory CreateCorrectBranchCategory()
         {

@@ -137,14 +137,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
         {
             for (var n = 0; n < gridPointsOffsets.Count; n++)
             {
-                if (gridPointsOffsets[n] > branch.Length && gridPointsOffsets[n] < branch.Length + 0.50)
+                if (gridPointsOffsets[n] > branch.Length)
                 {
-                    Log.WarnFormat($"Network location '{gridPointsNames[n]}' has an offset {gridPointsOffsets[n]} that is larger than the length {branch.Length} of its branch '{branch.Name}', but within acceptable limits. The offset has been set to the length of the branch.");
+                    Log.WarnFormat($"Network location '{gridPointsNames[n]}' has an offset {gridPointsOffsets[n]} that is larger than the length {branch.Length} of its branch '{branch.Name}'. The offset has been set to the length of the branch.");
                     gridPointsOffsets[n] = branch.Length;
-                }
-                if (gridPointsOffsets[n] >= branch.Length + 0.5)
-                {
-                    yield return $"Network location '{gridPointsNames[n]}' has an offset {gridPointsOffsets[n]} that is larger than the length {branch.Length} of its branch '{branch.Name}'";
                 }
 
                 if (n < gridPointsOffsets.Count - 1 && gridPointsOffsets[n + 1] <= gridPointsOffsets[n])
