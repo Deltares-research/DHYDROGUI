@@ -219,11 +219,15 @@
     <Compile Include="Forms\WaterFlowModel1DLateralSourceDataViewWpfViewModelTest.cs" />
     <Compile Include="GetInterpolatedCrossSectionTest.cs" />
     <Compile Include="ImportExport\BoundaryLocationFileWriterTest.cs" />
+    <Compile Include="ImportExport\Boundary\BcConverterHelperTest.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryFileReaderTest.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryFileReaderTestHelper.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryFileWriterTest.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryFileWriterTestHelper.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryLocationReaderTest.cs" />
+    <Compile Include="ImportExport\Boundary\BoundaryTestHelper.cs" />
+    <Compile Include="ImportExport\Boundary\MeteoDataConverterTest.cs" />
+    <Compile Include="ImportExport\Boundary\WindDataConverterTest.cs" />
     <Compile Include="ImportExport\CrossSections\CrossSectionDefinitionConverterTest.cs" />
     <Compile Include="ImportExport\CrossSections\CrossSectionDefinitionFileReaderTest.cs" />
     <Compile Include="ImportExport\CrossSections\CrossSectionFileReaderTest.cs" />
