@@ -18,11 +18,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
     public class RegularRoughnessConverterTest
     {
         private const string MainSectionName = "Main";
+        private const string FloodPlain1SectionName = "FloodPlain1";
 
         [Test]
         public void GivenSimpleCorrectRoughnessDataModel_WhenConvertingToRoughnessSection_ThenCorrectRoughnessSectionIsReturned()
         {
-            var contentCategory = CreateRoughnessContentCategory();
+            var contentCategory = CreateRoughnessContentCategory(MainSectionName);
             var categories = new List<DelftIniCategory> {contentCategory};
             
             var roughnessConverter = new RegularRoughnessConverter();
@@ -43,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
         [Test]
         public void GivenSimpleCorrectReversedRoughnessDataModel_WhenConvertingToRoughnessSection_ThenCorrectReversedRoughnessSectionIsReturned()
         {
-            var reversedRoughnessCategory = CreateRoughnessContentCategory();
+            var reversedRoughnessCategory = CreateRoughnessContentCategory(MainSectionName);
             reversedRoughnessCategory.SetProperty(RoughnessDataRegion.FlowDirection.Key, "True");
             var categories = new List<DelftIniCategory> { reversedRoughnessCategory };
 
@@ -66,9 +67,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
         }
 
         [Test]
+        public void GivenSimpleCorrectRoughnessDataModel_WhenConvertingToRoughnessSectionWithMissingCrossSectionType_ThenCrossSectionTypeISAddedToNetwork()
+        {
+            var contentCategory = CreateRoughnessContentCategory(FloodPlain1SectionName);
+            var categories = new List<DelftIniCategory> { contentCategory };
+
+            var roughnessConverter = new RegularRoughnessConverter();
+            var network = new HydroNetwork();
+            var errorMessages = new List<string>();
+            roughnessConverter.Convert(categories, network, new List<RoughnessSection>(), errorMessages);
+
+            Assert.IsTrue(network.CrossSectionSectionTypes.Any(t => t.Name == FloodPlain1SectionName));
+        }
+
+        [Test]
         public void GivenReversedRoughnessDataModelWithoutGlobalType_WhenConvertingToRoughnessSection_ThenUseNormalRoughnessIsTrue()
         {
-            var reversedRoughnessCategory = CreateRoughnessContentCategory();
+            var reversedRoughnessCategory = CreateRoughnessContentCategory(MainSectionName);
             reversedRoughnessCategory.SetProperty(RoughnessDataRegion.FlowDirection.Key, "True");
             reversedRoughnessCategory.Properties.RemoveAllWhere(p => p.Name == RoughnessDataRegion.GlobalType.Key);
             var categories = new List<DelftIniCategory> { reversedRoughnessCategory };
@@ -88,7 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
         [Test]
         public void GivenReversedRoughnessDataModelAndNoNormalRoughnessSectionAvailableForThisReversedRoughness_WhenConvertingToRoughnessSection_ThenErrorMessageIsReturned()
         {
-            var reversedRoughnessCategory = CreateRoughnessContentCategory();
+            var reversedRoughnessCategory = CreateRoughnessContentCategory(MainSectionName);
             reversedRoughnessCategory.SetProperty(RoughnessDataRegion.FlowDirection.Key, "True");
             reversedRoughnessCategory.Properties.RemoveAllWhere(p => p.Name == RoughnessDataRegion.GlobalType.Key);
             var categories = new List<DelftIniCategory> { reversedRoughnessCategory };
@@ -134,7 +149,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             var myBranchId = "myBranch";
             var categories = new List<DelftIniCategory>
             {
-                CreateRoughnessContentCategory(),
+                CreateRoughnessContentCategory(MainSectionName),
                 CreateBranchPropertiesCategory(myBranchId),
                 CreateDefinitionCategory(myBranchId)
             };
@@ -157,10 +172,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             Assert.That(networkCoverage.EvaluateRoughnessValue(expectedNetworkLocation), Is.EqualTo(2.3));
         }
 
-        private static DelftIniCategory CreateRoughnessContentCategory()
+        private static DelftIniCategory CreateRoughnessContentCategory(string crossSectionSectionName)
         {
             var category = new DelftIniCategory(RoughnessDataRegion.ContentIniHeader);
-            category.AddProperty(RoughnessDataRegion.SectionId.Key, MainSectionName);
+            category.AddProperty(RoughnessDataRegion.SectionId.Key, crossSectionSectionName);
             category.AddProperty(RoughnessDataRegion.FlowDirection.Key, "False");
             category.AddProperty(RoughnessDataRegion.Interpolate.Key, "1");
             category.AddProperty(RoughnessDataRegion.GlobalType.Key, "9");
