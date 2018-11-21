@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
 
             Assert.AreEqual(1, definitions.Count);
             Assert.AreEqual(0, errorReport.Count);
-            Assert.AreEqual(3, definitions.First().Sections.Count);
+            Assert.AreEqual(2, definitions.First().Sections.Count);
         }
 
         [Test]

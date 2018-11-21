@@ -27,8 +27,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
             }
             else
             {
-                var crossSectionSectionType = new CrossSectionSectionType { Name = sectionId };
-                roughnessSection = new RoughnessSection(crossSectionSectionType, network);
+                var existingType = network.CrossSectionSectionTypes.FirstOrDefault(t => t.Name == sectionId);
+                if (existingType == null)
+                {
+                    existingType = new CrossSectionSectionType { Name = sectionId };
+                    network.CrossSectionSectionTypes.Add(existingType);
+                }
+                roughnessSection = new RoughnessSection(existingType, network);
             }
 
             if (!isReversed || hasGlobalType)

@@ -66,6 +66,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
             
             try
             {
+                if (path == null)
+                {
+                    throw new FileReadingException("File path was 'null', so roughness sections will not be read.");
+                }
+
                 var roughnessReader = new CalibratedRoughnessFileReader();
                 var roughnessSection = roughnessReader.ReadFile(path, network, roughnessSections);
                 roughnessSections.Add(roughnessSection);

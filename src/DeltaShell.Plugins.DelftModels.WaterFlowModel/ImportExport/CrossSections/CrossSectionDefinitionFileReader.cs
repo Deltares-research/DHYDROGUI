@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
             var rectangleWidth = category.ReadProperty<double>(DefinitionRegion.RectangleWidth.Key, true);
             var maxflowWidth = category.ReadProperty<double>(DefinitionRegion.MaximumFlowWidth.Key, true);
 
-            var widths = new List<double>() { highestFlowWidth, rectangleWidth, maxflowWidth };
+            var widths = new List<double> { highestFlowWidth, rectangleWidth, maxflowWidth };
             return widths.Max();
         }
 
@@ -134,12 +134,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
             crossSectionDefinition.Sections.Clear();
 
             crossSectionDefinition.AddSection(mainCrossSectionSectionType, mainSectionWidth);
-            crossSectionDefinition.AddSection(floodPlain1CrossSectionSectionType, floodPlain1Width);
-            crossSectionDefinition.AddSection(floodPlain2CrossSectionSectionType, floodPlain2Width);
-
             AddCrossSectionSectionType(mainCrossSectionSectionType, network);
-            AddCrossSectionSectionType(floodPlain1CrossSectionSectionType, network);
-            AddCrossSectionSectionType(floodPlain2CrossSectionSectionType, network);
+
+            if (floodPlain1Width > 0)
+            {
+                crossSectionDefinition.AddSection(floodPlain1CrossSectionSectionType, floodPlain1Width);
+                AddCrossSectionSectionType(floodPlain1CrossSectionSectionType, network);
+            }
+
+            if (floodPlain1Width > 0 && floodPlain2Width > 0)
+            {
+                crossSectionDefinition.AddSection(floodPlain2CrossSectionSectionType, floodPlain2Width);
+                AddCrossSectionSectionType(floodPlain2CrossSectionSectionType, network);
+            }
         }
 
         private static void SetFrictionOnYZOrGeometryBasedCrossSectionDefinition(IDelftIniCategory category,

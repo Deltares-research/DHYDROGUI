@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Utils.Collections;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
@@ -61,7 +63,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     var importUpdateText = $"Reading roughness section from {roughnessFilePath} file. (reading roughness file {i} of {totalRoughnessFiles})";
                     reportProgress(importUpdateText, 6, totalSteps);
                     i++;
-                    ReadRoughnessFile(CreateAndAddErrorReport, roughnessFilePath, model);
+                    var roughnessSection = ReadRoughnessFile(roughnessFilePath, model, CreateAndAddErrorReport);
+                    AddRoughnessSectionToModel(model, roughnessSection);
                 }
 
                 reportProgress(
@@ -86,17 +89,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             crossSectionsReader.Read(fileName.CrossSectionDefinitions, fileName.CrossSectionLocations, network);
         }
 
-        private static void ReadRoughnessFile(Action<string, IList<string>> CreateAndAddErrorReport, string roughnessFilePath, WaterFlowModel1D model)
+        private static RoughnessSection ReadRoughnessFile(string roughnessFilePath, WaterFlowModel1D model, Action<string, IList<string>> CreateAndAddErrorReport)
         {
             var roughnessReader = new RegularRoughnessFileReader(CreateAndAddErrorReport);
             var roughnessSection = roughnessReader.ReadFile(roughnessFilePath, model.Network, model.RoughnessSections);
+            return roughnessSection;
+        }
 
+        private static void AddRoughnessSectionToModel(WaterFlowModel1D model, RoughnessSection roughnessSection)
+        {
+            model.RoughnessSections.RemoveAllWhere(rs => rs.Name == roughnessSection.Name);
             model.RoughnessSections.Add(roughnessSection);
-            var sectionType = roughnessSection.CrossSectionSectionType;
-            if (model.Network.CrossSectionSectionTypes.All(t => t.Name != sectionType.Name))
-            {
-                model.Network.CrossSectionSectionTypes.Add(sectionType);
-            }
         }
 
         private static void ReadNetworkDefinitionFile(string networkDefinitionFilePath, WaterFlowModel1D model,
