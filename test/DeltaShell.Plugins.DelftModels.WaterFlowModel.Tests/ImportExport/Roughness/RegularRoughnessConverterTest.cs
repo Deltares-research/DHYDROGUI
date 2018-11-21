@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
@@ -223,20 +224,52 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             Assert.That(roughnessSection.GetRoughnessFunctionType(channel), Is.EqualTo(RoughnessFunction.FunctionOfQ));
 
             var functionOfQ = roughnessSection.FunctionOfQ(channel);
-            Assert.That(functionOfQ.Components.Count, Is.EqualTo(1));
-            Assert.That(functionOfQ.Arguments.Count, Is.EqualTo(2));
+            CheckRoughnessFunctionPropertyValues(functionOfQ);
+        }
 
-            var chainageValues = functionOfQ.Arguments[0].Values;
+        [Test]
+        public void GivenRoughnessDataModelWithWaterLevelFunction_WhenConvertingToRoughnessSection_ThenCorrectRoughnessFunction()
+        {
+            var myBranchId = "myBranch";
+            var categories = new List<DelftIniCategory>
+            {
+                CreateRoughnessContentCategory(MainSectionName),
+                CreateBranchPropertiesForWaterLevelCategory(myBranchId),
+                CreateDefinitionForDischargeCategory(myBranchId)
+            };
+
+            var roughnessConverter = new RegularRoughnessConverter();
+            var errorMessages = new List<string>();
+            var network = new HydroNetwork();
+            var channel = new Channel { Name = myBranchId };
+            network.Branches.Add(channel);
+            var roughnessSection = roughnessConverter.Convert(categories, network, new List<RoughnessSection>(), errorMessages);
+            Assert.That(errorMessages.Count, Is.EqualTo(0));
+
+            Assert.IsNotNull(roughnessSection);
+            Assert.That(roughnessSection.Name, Is.EqualTo(MainSectionName));
+            Assert.That(roughnessSection.GetRoughnessFunctionType(channel), Is.EqualTo(RoughnessFunction.FunctionOfH));
+
+            var functionOfH = roughnessSection.FunctionOfH(channel);
+            CheckRoughnessFunctionPropertyValues(functionOfH);
+        }
+
+        private static void CheckRoughnessFunctionPropertyValues(IFunction function)
+        {
+            Assert.That(function.Components.Count, Is.EqualTo(1));
+            Assert.That(function.Arguments.Count, Is.EqualTo(2));
+
+            var chainageValues = function.Arguments[0].Values;
             Assert.That(chainageValues.Count, Is.EqualTo(1));
             Assert.That(chainageValues[0], Is.EqualTo(222.0));
 
-            var qValueArgument = functionOfQ.Arguments[1].Values;
-            Assert.That(qValueArgument.Count, Is.EqualTo(3));
-            Assert.That(qValueArgument[0], Is.EqualTo(0.0));
-            Assert.That(qValueArgument[1], Is.EqualTo(2.0));
-            Assert.That(qValueArgument[2], Is.EqualTo(3.0));
+            var valueArgument = function.Arguments[1].Values;
+            Assert.That(valueArgument.Count, Is.EqualTo(3));
+            Assert.That(valueArgument[0], Is.EqualTo(0.0));
+            Assert.That(valueArgument[1], Is.EqualTo(2.0));
+            Assert.That(valueArgument[2], Is.EqualTo(3.0));
 
-            var functionValues = functionOfQ.Components[0].Values;
+            var functionValues = function.Components[0].Values;
             Assert.That(functionValues.Count, Is.EqualTo(3));
             Assert.That(functionValues[0], Is.EqualTo(1.0));
             Assert.That(functionValues[1], Is.EqualTo(20.0));
@@ -299,6 +332,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             category.AddProperty(SpatialDataRegion.BranchId.Key, branchId);
             category.AddProperty(RoughnessDataRegion.RoughnessType.Key, "6");
             category.AddProperty(RoughnessDataRegion.FunctionType.Key, "1");
+            category.AddProperty(RoughnessDataRegion.NumberOfLevels.Key, "3");
+            category.AddProperty(RoughnessDataRegion.Levels.Key, "0.000 2.000 3.000");
+            return category;
+        }
+
+        private static DelftIniCategory CreateBranchPropertiesForWaterLevelCategory(string branchId)
+        {
+            var category = new DelftIniCategory(RoughnessDataRegion.BranchPropertiesIniHeader);
+            category.AddProperty(SpatialDataRegion.BranchId.Key, branchId);
+            category.AddProperty(RoughnessDataRegion.RoughnessType.Key, "4");
+            category.AddProperty(RoughnessDataRegion.FunctionType.Key, "2");
             category.AddProperty(RoughnessDataRegion.NumberOfLevels.Key, "3");
             category.AddProperty(RoughnessDataRegion.Levels.Key, "0.000 2.000 3.000");
             return category;
