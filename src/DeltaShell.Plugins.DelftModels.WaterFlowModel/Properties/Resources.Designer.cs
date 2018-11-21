@@ -281,6 +281,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An unexpected roughness function type has been used..
+        /// </summary>
+        public static string RoughnessConverter_ReadRoughnessBranchData_An_unexpected_roughness_function_type_has_been_used_ {
+            get {
+                return ResourceManager.GetString("RoughnessConverter_ReadRoughnessBranchData_An_unexpected_roughness_function_type_" +
+                        "has_been_used_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Filling the table of the Q or H function failed!.
         /// </summary>
         public static string RoughnessDataFileReader_FillFunctionWithTableData_Filling_the_table_of_the_Q_or_H_function_failed_ {
@@ -317,15 +327,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
             get {
                 return ResourceManager.GetString("RoughnessDataFileReader_ReadDefinitionData_Couldn_t_read_roughness_section_with_a" +
                         "_function_type_of____0_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to adding to network went wrong!.
-        /// </summary>
-        public static string RoughnessDataFileReader_ReadFile_adding_to_network_went_wrong_ {
-            get {
-                return ResourceManager.GetString("RoughnessDataFileReader_ReadFile_adding_to_network_went_wrong_", resourceCulture);
             }
         }
         
@@ -389,23 +390,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The length of the number of levels ({0}) and the defined number of levels of the branch property {1} are not the same of branch properties : {2}!.
+        ///   Looks up a localized string similar to The length of the number of levels &apos;{0}&apos; and the defined number of levels of the branch property &apos;{1}&apos; are not the same for branch properties: {2}..
         /// </summary>
         public static string RoughnessDataFileReader_ReadRoughnessBranchData_The_length_of_the_number_of_levels___0___and_the_defined_number_of_levels_of_the_branch_property__1__are_not_the_same_of_branch_properties____2__ {
             get {
                 return ResourceManager.GetString("RoughnessDataFileReader_ReadRoughnessBranchData_The_length_of_the_number_of_level" +
                         "s___0___and_the_defined_number_of_levels_of_the_branch_property__1__are_not_the_" +
                         "same_of_branch_properties____2__", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to While reading branches for roughness section an error occured :{0} {1}.
-        /// </summary>
-        public static string RoughnessDataFileReader_ReadRoughnessBranchData_While_reading_branches_for_roughness_section_an_error_occured___0___1_ {
-            get {
-                return ResourceManager.GetString("RoughnessDataFileReader_ReadRoughnessBranchData_While_reading_branches_for_roughn" +
-                        "ess_section_an_error_occured___0___1_", resourceCulture);
             }
         }
         

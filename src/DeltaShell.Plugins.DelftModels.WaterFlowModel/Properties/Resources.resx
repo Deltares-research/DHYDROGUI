@@ -289,9 +289,6 @@
   <data name="RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_seems_empty" xml:space="preserve">
     <value>Could not read file {0} properly, it seems empty</value>
   </data>
-  <data name="RoughnessDataFileReader_ReadFile_adding_to_network_went_wrong_" xml:space="preserve">
-    <value>adding to network went wrong!</value>
-  </data>
   <data name="RoughnessDataFileReader_ReadFile_Could_not_set_roughness_data_in_model" xml:space="preserve">
     <value>Could not set roughness data in model</value>
   </data>
@@ -308,13 +305,10 @@
     <value>branch ({0}) where the roughness should be put on is not available in the model</value>
   </data>
   <data name="RoughnessDataFileReader_ReadRoughnessBranchData_The_length_of_the_number_of_levels___0___and_the_defined_number_of_levels_of_the_branch_property__1__are_not_the_same_of_branch_properties____2__" xml:space="preserve">
-    <value>The length of the number of levels ({0}) and the defined number of levels of the branch property {1} are not the same of branch properties : {2}!</value>
+    <value>The length of the number of levels '{0}' and the defined number of levels of the branch property '{1}' are not the same for branch properties: {2}.</value>
   </data>
   <data name="RoughnessDataFileReader_ReadRoughnessBranchData_Could_not_read_roughness_branch_data" xml:space="preserve">
     <value>Could not read roughness branch data</value>
-  </data>
-  <data name="RoughnessDataFileReader_ReadRoughnessBranchData_While_reading_branches_for_roughness_section_an_error_occured___0___1_" xml:space="preserve">
-    <value>While reading branches for roughness section an error occured :{0} {1}</value>
   </data>
   <data name="RoughnessDataFileReader_ReadDefinitionData_Couldn_t_read_roughness_section_with_a_function_type_of____0_" xml:space="preserve">
     <value>Couldn't read roughness section with a function type of : {0}</value>
@@ -453,5 +447,8 @@
   </data>
   <data name="RoughnessConverter_Convert_Two_sections_were_found_with_same_header" xml:space="preserve">
     <value>Two sections were found with the header '{0}'. Only one of them per file is allowed.</value>
+  </data>
+  <data name="RoughnessConverter_ReadRoughnessBranchData_An_unexpected_roughness_function_type_has_been_used_" xml:space="preserve">
+    <value>An unexpected roughness function type has been used.</value>
   </data>
 </root>

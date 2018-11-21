@@ -243,6 +243,36 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             Assert.That(functionValues[2], Is.EqualTo(15.0));
         }
 
+        [Test]
+        public void GivenRoughnessDataModelWithDischargeFunctionAndInvalidNumberOfLevelsDefined_WhenConvertingToRoughnessSection_ThenWarningMessageIsLogged()
+        {
+            var myBranchId = "myBranch";
+            var branchPropertiesCategory = CreateBranchPropertiesForDischargeCategory(myBranchId);
+            branchPropertiesCategory.SetProperty(RoughnessDataRegion.NumberOfLevels.Key, "1"); // Set wrong number of levels (there should be three instead of one)
+
+            var categories = new List<DelftIniCategory>
+            {
+                CreateRoughnessContentCategory(MainSectionName),
+                branchPropertiesCategory,
+                CreateDefinitionForDischargeCategory(myBranchId)
+            };
+
+            var roughnessConverter = new RegularRoughnessConverter();
+            var errorMessages = new List<string>();
+            var network = new HydroNetwork();
+            var channel = new Channel { Name = myBranchId };
+            network.Branches.Add(channel);
+            var roughnessSection = roughnessConverter.Convert(categories, network, new List<RoughnessSection>(), errorMessages);
+
+            Assert.IsNotNull(roughnessSection);
+            Assert.That(roughnessSection.Name, Is.EqualTo("Main"));
+            Assert.That(roughnessSection.GetDefaultRoughnessType(), Is.EqualTo(RoughnessType.DeBosAndBijkerk));
+            Assert.That(roughnessSection.GetDefaultRoughnessValue(), Is.EqualTo(25.08));
+
+            var expectedLogMessage = string.Format(Resources.RoughnessDataFileReader_ReadRoughnessBranchData_The_length_of_the_number_of_levels___0___and_the_defined_number_of_levels_of_the_branch_property__1__are_not_the_same_of_branch_properties____2__, 3, 1, myBranchId);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => roughnessConverter.Convert(categories, network, new List<RoughnessSection>(), errorMessages), expectedLogMessage);
+        }
+
         private static DelftIniCategory CreateRoughnessContentCategory(string crossSectionSectionName)
         {
             var category = new DelftIniCategory(RoughnessDataRegion.ContentIniHeader);

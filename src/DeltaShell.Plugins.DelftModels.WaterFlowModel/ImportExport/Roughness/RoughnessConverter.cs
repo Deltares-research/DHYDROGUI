@@ -56,61 +56,52 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
         private static IList<RoughnessBranchData> ReadRoughnessBranchData(IEnumerable<DelftIniCategory> categories, INetwork network)
         {
             IList<RoughnessBranchData> branchData = new List<RoughnessBranchData>();
-            IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
             foreach (var branchCategory in categories.Where(category => category.Name == RoughnessDataRegion.BranchPropertiesIniHeader))
             {
-                try
+                var branchId = branchCategory.ReadProperty<string>(SpatialDataRegion.BranchId.Key);
+                var branch = network.Branches.FirstOrDefault(b => b.Name == branchId);
+                if (branch == null)
                 {
-                    var branchId = branchCategory.ReadProperty<string>(SpatialDataRegion.BranchId.Key);
-                    var branch = network.Branches.FirstOrDefault(b => b.Name == branchId);
-                    if (branch == null)
-                    {
-                        Log.WarnFormat(string.Format("Branch '{0}' is not available in the model, so we were not able to put roughness on this branch.", branchId));
-                        continue;
-                    }
-                    
-                    var branchRoughnessType = FrictionTypeConverter.ConvertToRoughnessFrictionType(branchCategory.ReadProperty<Friction>(RoughnessDataRegion.RoughnessType.Key));
-                    var functionType = (RoughnessFunction)branchCategory.ReadProperty<int>(RoughnessDataRegion.FunctionType.Key);
-                    switch (functionType)
-                    {
-                        case RoughnessFunction.Constant:
-                            branchData.Add(new RoughnessBranchData
-                            {
-                                Branch = branch,
-                                RoughnessType = branchRoughnessType,
-                                RoughnessFunctionType = functionType
-                            });
-                            break;
-                        case RoughnessFunction.FunctionOfQ:
-                        case RoughnessFunction.FunctionOfH:
-                            var numLevels = branchCategory.ReadProperty<int>(RoughnessDataRegion.NumberOfLevels.Key);
-                            var levels = branchCategory.ReadPropertiesToListOfType<double>(RoughnessDataRegion.Levels.Key);
-                            if (levels.Count != numLevels)
-                                throw new FileReadingException(string.Format(Resources.RoughnessDataFileReader_ReadRoughnessBranchData_The_length_of_the_number_of_levels___0___and_the_defined_number_of_levels_of_the_branch_property__1__are_not_the_same_of_branch_properties____2__, levels.Count, numLevels, branch.Name));
-                            branchData.Add(new QorHRoughnessBranchData
-                            {
-                                Branch = branch,
-                                RoughnessType = branchRoughnessType,
-                                RoughnessFunctionType = functionType,
-                                Levels = levels
-                            });
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-
+                    Log.WarnFormat(string.Format("Branch '{0}' is not available in the model, so we were not able to put roughness on this branch.", branchId));
+                    continue;
                 }
-                catch (FileReadingException fileReadingException)
+                    
+                var branchRoughnessType = FrictionTypeConverter.ConvertToRoughnessFrictionType(branchCategory.ReadProperty<Friction>(RoughnessDataRegion.RoughnessType.Key));
+                var functionType = (RoughnessFunction)branchCategory.ReadProperty<int>(RoughnessDataRegion.FunctionType.Key);
+                switch (functionType)
                 {
-                    fileReadingExceptions.Add(new FileReadingException(Resources.RoughnessDataFileReader_ReadRoughnessBranchData_Could_not_read_roughness_branch_data,
-                        fileReadingException));
+                    case RoughnessFunction.Constant:
+                        branchData.Add(new RoughnessBranchData
+                        {
+                            Branch = branch,
+                            RoughnessType = branchRoughnessType,
+                            RoughnessFunctionType = functionType
+                        });
+                        break;
+                    case RoughnessFunction.FunctionOfQ:
+                    case RoughnessFunction.FunctionOfH:
+                        var numLevels = branchCategory.ReadProperty<int>(RoughnessDataRegion.NumberOfLevels.Key);
+                        var levels = branchCategory.ReadPropertiesToListOfType<double>(RoughnessDataRegion.Levels.Key);
+                        if (levels.Count != numLevels)
+                        {
+                            Log.WarnFormat(Resources.RoughnessDataFileReader_ReadRoughnessBranchData_The_length_of_the_number_of_levels___0___and_the_defined_number_of_levels_of_the_branch_property__1__are_not_the_same_of_branch_properties____2__, levels.Count, numLevels, branch.Name);
+                            continue;
+                        }
+
+                        branchData.Add(new QorHRoughnessBranchData
+                        {
+                            Branch = branch,
+                            RoughnessType = branchRoughnessType,
+                            RoughnessFunctionType = functionType,
+                            Levels = levels
+                        });
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(functionType), Resources.RoughnessConverter_ReadRoughnessBranchData_An_unexpected_roughness_function_type_has_been_used_);
                 }
             }
 
-            if (fileReadingExceptions.Count == 0) return branchData;
-
-            var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine);
-            throw new FileReadingException(string.Format(Resources.RoughnessDataFileReader_ReadRoughnessBranchData_While_reading_branches_for_roughness_section_an_error_occured___0___1_, Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
+            return branchData;
         }
 
         private static void AddBranchRoughnessDataToRoughnessSection(RoughnessBranchData roughnessBranchData, IList<RoughnessDefinitionData> definitionData, RoughnessSection roughnessSection)
@@ -150,7 +141,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
                     break;
                 }
                 default:
-                    throw new FileReadingException(Resources.RoughnessDataFileReader_ReadFile_adding_to_network_went_wrong_);
+                    throw new ArgumentOutOfRangeException(nameof(roughnessBranchData.RoughnessFunctionType), Resources.RoughnessConverter_ReadRoughnessBranchData_An_unexpected_roughness_function_type_has_been_used_);
             }
         }
 
