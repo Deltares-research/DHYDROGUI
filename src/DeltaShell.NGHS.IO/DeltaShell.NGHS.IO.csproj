@@ -119,9 +119,9 @@
     <Compile Include="Factories\DelftConfigXmlSerializerSelector.cs" />
     <Compile Include="FileConverters\DelftXsdValidator.cs" />
     <Compile Include="FileConverters\DelftXmlFileConverter.cs" />
-    <Compile Include="FileReaders\ConfigXml\DelftDimrConfigFileReader.cs" />
     <Compile Include="FileReaders\Definition\DefinitionReader.cs" />
     <Compile Include="FileReaders\DelftBcFileParser.cs" />
+    <Compile Include="FileReaders\DelftConfigXmlFileParser.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
     <Compile Include="FileReaders\Location\ObservationPointFileReader.cs" />
     <Compile Include="FileReaders\Location\LateralSourceFileReader.cs" />
@@ -237,7 +237,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="FileReaders\ConfigXml\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>

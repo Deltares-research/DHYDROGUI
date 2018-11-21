@@ -4,14 +4,13 @@ using System.Xml;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr.xsd;
 using DeltaShell.NGHS.IO.FileReaders;
-using DeltaShell.NGHS.IO.FileReaders.ConfigXml;
 using NUnit.Framework;
 using QuickGraph;
 
 namespace DeltaShell.NGHS.IO.Tests.FileReaders
 {
     [TestFixture]
-    class DelftConfigXmlFileReaderTest
+    class DelftConfigXmlFileParserTest
     {
         private string dimrSourcePath;
         private string XmlFileDirectory = @"FileReaders\ConfigXmlReader";
@@ -27,14 +26,14 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         [ExpectedException(typeof(FileReadingException))]
         public void ConfigurationPathDoesNotExist()
         {
-            DelftConfigXmlFileReader.Read(null);
+            DelftConfigXmlFileParser.Read(null);
         }
 
         [Test]
         [ExpectedException(typeof(FileReadingException))]
         public void ConfigurationFilePathIsEmpty()
         {
-            DelftConfigXmlFileReader.Read("");
+            DelftConfigXmlFileParser.Read("");
         }
 
         [Test]
@@ -43,7 +42,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         {
             var unknownFilePath = @"\unknowpathtofile";
             var dimrFileSource = Path.Combine(unknownFilePath, dimrSourcePath);
-            DelftConfigXmlFileReader.Read(dimrFileSource);
+            DelftConfigXmlFileParser.Read(dimrFileSource);
         }
         #endregion
 
@@ -54,7 +53,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         public void DimrConfigFileWithMissingDocumentationTagThrowsXmlException()
         {
             var pathWithInvalidConfigurationFile = Path.Combine(dimrSourcePath, "dimrWithMissingDocTag.xml");
-            DelftConfigXmlFileReader.Read(pathWithInvalidConfigurationFile);
+            DelftConfigXmlFileParser.Read(pathWithInvalidConfigurationFile);
         }
 
         [Test]
@@ -63,7 +62,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         public void InvalidDimrConfigurationFileWithEmptyBodyThrowsXmlException()
         {
             var pathWithInvalidConfigurationFile = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), "invalidDimrEmptyBody.xml"));
-            DelftConfigXmlFileReader.Read(pathWithInvalidConfigurationFile);
+            DelftConfigXmlFileParser.Read(pathWithInvalidConfigurationFile);
         }
 
 
@@ -73,7 +72,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         public void InvalidDimrConfigurationFileWithInvalidHeaderThrowsXmlException()
         {
             var pathWithInvalidConfigurationFile = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), "invalidDimrMissingHeader.xml"));
-            DelftConfigXmlFileReader.Read(pathWithInvalidConfigurationFile);
+            DelftConfigXmlFileParser.Read(pathWithInvalidConfigurationFile);
         }
 
         [Test]
@@ -82,7 +81,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         public void InvalidDimrConfigurationFileWithUnknownRootName()
         {
             var pathWithInvalidConfigurationFile = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), "invalidDimrUnknownRootName.xml"));
-            DelftConfigXmlFileReader.Read(pathWithInvalidConfigurationFile);
+            DelftConfigXmlFileParser.Read(pathWithInvalidConfigurationFile);
         }
 
         [Test]
@@ -92,7 +91,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
 
             var dimrConfigurationFile = Path.Combine(dimrSourcePath, "dimr.xml");
-            var dataAccesModel = DelftConfigXmlFileReader.Read(dimrConfigurationFile);
+            var dataAccesModel = DelftConfigXmlFileParser.Read(dimrConfigurationFile);
             Assert.IsNotNull(dataAccesModel);
 
             var dimrXmlObject = (dimrXML)dataAccesModel;
@@ -109,7 +108,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         public void GetDimrConfigurationFileWithExtraElementsOnRootLevel()
         {
             var dimrConfigurationFile = DimrConfigFileWithExtraCategory();
-            var dataAccesModel = DelftConfigXmlFileReader.Read(dimrConfigurationFile);
+            var dataAccesModel = DelftConfigXmlFileParser.Read(dimrConfigurationFile);
 
             Assert.IsNotNull(dataAccesModel);
 
@@ -126,7 +125,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         public void GetDimrConfigurationFileWithUnknownAttributesOnCoupler()
         {
             var dimrConfigurationFile = DimrConfigFileWithExtraCategory();
-            var dataAccesModel = DelftConfigXmlFileReader.Read(dimrConfigurationFile);
+            var dataAccesModel = DelftConfigXmlFileParser.Read(dimrConfigurationFile);
 
             Assert.IsNotNull(dataAccesModel);
             var dimrXmlObject = (dimrXML)dataAccesModel;
@@ -142,7 +141,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         public void GetDimrConfigurationFileWithUnknownElementsOnCoupler()
         {
             var dimrConfigurationFile = DimrConfigFileWithExtraCategory();
-            var dataAccesModel = DelftConfigXmlFileReader.Read(dimrConfigurationFile);
+            var dataAccesModel = DelftConfigXmlFileParser.Read(dimrConfigurationFile);
 
             Assert.IsNotNull(dataAccesModel);
 
