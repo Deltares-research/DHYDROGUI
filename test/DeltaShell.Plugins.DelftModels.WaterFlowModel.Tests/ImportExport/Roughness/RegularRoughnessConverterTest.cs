@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.Helpers;
@@ -67,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
         }
 
         [Test]
-        public void GivenSimpleCorrectRoughnessDataModel_WhenConvertingToRoughnessSectionWithMissingCrossSectionType_ThenCrossSectionTypeISAddedToNetwork()
+        public void GivenSimpleCorrectRoughnessDataModel_WhenConvertingToRoughnessSectionWithMissingCrossSectionType_ThenCrossSectionTypeIsAddedToNetwork()
         {
             var contentCategory = CreateRoughnessContentCategory(FloodPlain1SectionName);
             var categories = new List<DelftIniCategory> { contentCategory };
@@ -78,6 +79,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             roughnessConverter.Convert(categories, network, new List<RoughnessSection>(), errorMessages);
 
             Assert.IsTrue(network.CrossSectionSectionTypes.Any(t => t.Name == FloodPlain1SectionName));
+        }
+
+        [Test]
+        public void GivenSimpleCorrectRoughnessDataModel_WhenConvertingToRoughnessSectionWithMissingBranch_ThenWarningMessageIsLogged()
+        {
+            var myBranchId = "myBranch";
+            var categories = new List<DelftIniCategory>
+            {
+                CreateRoughnessContentCategory(MainSectionName),
+                CreateBranchPropertiesCategory(myBranchId),
+                CreateDefinitionCategory(myBranchId)
+            };
+
+            var roughnessConverter = new RegularRoughnessConverter();
+            var errorMessages = new List<string>();
+            var network = new HydroNetwork();
+            network.Branches.Add(new Channel{ Name = "otherBranch"}); // Network without branch that has myBranchId as Name
+            var roughnessSection = roughnessConverter.Convert(categories, network, new List<RoughnessSection>(), errorMessages);
+
+            Assert.IsNotNull(roughnessSection);
+            Assert.That(roughnessSection.Name, Is.EqualTo("Main"));
+            Assert.That(roughnessSection.GetDefaultRoughnessType(), Is.EqualTo(RoughnessType.DeBosAndBijkerk));
+            Assert.That(roughnessSection.GetDefaultRoughnessValue(), Is.EqualTo(25.08));
+
+            var expectedLogMessage = "Branch 'myBranch' is not available in the model, so we were not able to put roughness on this branch.";
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => roughnessConverter.Convert(categories, network, new List<RoughnessSection>(), errorMessages), expectedLogMessage);
         }
 
         [Test]
