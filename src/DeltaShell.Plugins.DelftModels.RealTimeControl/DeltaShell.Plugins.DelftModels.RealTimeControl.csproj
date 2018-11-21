@@ -135,6 +135,7 @@
     <Compile Include="Converters\OperationConverter.cs" />
     <Compile Include="ImportExport\RealTimeControlModelExporter.cs" />
     <Compile Include="ImportExport\RealTimeControlModelImporter.cs" />
+    <Compile Include="ImportExport\RealTimeControlXmlReader.cs" />
     <Compile Include="ImportExport\RealTimeControlXmlWriter.cs" />
     <Compile Include="ImportExport\RealTimeControlDimrConfigModelCouplerProvider.cs" />
     <Compile Include="ImportExport\RealTimeControlOutputFileFunctionStore.cs" />
@@ -210,18 +211,6 @@
     <None Include="packages.config" />
     <None Include="Uml\RealTimeControl.cd" />
     <None Include="Uml\RealTimeControlXmlReaderWriter.cd" />
-    <None Include="Xsd\rtcDataConfig.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Xsd\rtcRuntimeConfig.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Xsd\rtcToolsConfig.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Xsd\treeVector.xsd">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />
@@ -232,7 +221,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Xsd\rtcDataConfig.xml" />
     <None Include="Resources\signal.png" />
     <None Include="Resources\validation.png" />
     <None Include="Resources\workingdirectory.png" />

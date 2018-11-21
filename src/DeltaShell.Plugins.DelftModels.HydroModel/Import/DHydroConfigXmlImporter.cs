@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Shell.Core;
-using DeltaShell.NGHS.IO.FileReaders.ConfigXml;
+using DeltaShell.NGHS.IO.FileReaders;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 {
@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
         public object ImportItem(string path, object target = null)
         {
-            return DelftConfigXmlFileReader.Read(path);
+            return DelftConfigXmlFileParser.Read(path);
         }
 
         public string Name { get { return "DIMR Configuration File Importer (dimr.xml)"; }}
