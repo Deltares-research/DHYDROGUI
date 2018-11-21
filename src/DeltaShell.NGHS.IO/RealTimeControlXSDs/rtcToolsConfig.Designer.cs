@@ -4,6 +4,9 @@
 //    <NameSpace>DeltaShell.NGHS.IO</NameSpace><Collection>List</Collection><codeType>CSharp</codeType><EnableDataBinding>False</EnableDataBinding><GenerateCloneMethod>False</GenerateCloneMethod><GenerateDataContracts>False</GenerateDataContracts><DataMemberNameArg>OnlyIfDifferent</DataMemberNameArg><DataMemberOnXmlIgnore>False</DataMemberOnXmlIgnore><CodeBaseTag>Net20</CodeBaseTag><InitializeFields>All</InitializeFields><GenerateUnusedComplexTypes>False</GenerateUnusedComplexTypes><GenerateUnusedSimpleTypes>False</GenerateUnusedSimpleTypes><GenerateXMLAttributes>True</GenerateXMLAttributes><OrderXMLAttrib>False</OrderXMLAttrib><EnableLazyLoading>False</EnableLazyLoading><VirtualProp>False</VirtualProp><PascalCase>False</PascalCase><AutomaticProperties>False</AutomaticProperties><PropNameSpecified>None</PropNameSpecified><PrivateFieldName>StartWithUnderscore</PrivateFieldName><PrivateFieldNamePrefix></PrivateFieldNamePrefix><EnableRestriction>False</EnableRestriction><RestrictionMaxLenght>False</RestrictionMaxLenght><RestrictionRegEx>False</RestrictionRegEx><RestrictionRange>False</RestrictionRange><ValidateProperty>False</ValidateProperty><ClassNamePrefix></ClassNamePrefix><ClassLevel>Public</ClassLevel><PartialClass>True</PartialClass><ClassesInSeparateFiles>False</ClassesInSeparateFiles><ClassesInSeparateFilesDir></ClassesInSeparateFilesDir><TrackingChangesEnable>False</TrackingChangesEnable><GenTrackingClasses>False</GenTrackingClasses><HidePrivateFieldInIDE>False</HidePrivateFieldInIDE><EnableSummaryComment>False</EnableSummaryComment><EnableAppInfoSettings>False</EnableAppInfoSettings><EnableExternalSchemasCache>False</EnableExternalSchemasCache><EnableDebug>False</EnableDebug><EnableWarn>False</EnableWarn><ExcludeImportedTypes>False</ExcludeImportedTypes><ExpandNesteadAttributeGroup>False</ExpandNesteadAttributeGroup><CleanupCode>False</CleanupCode><EnableXmlSerialization>False</EnableXmlSerialization><SerializeMethodName>Serialize</SerializeMethodName><DeserializeMethodName>Deserialize</DeserializeMethodName><SaveToFileMethodName>SaveToFile</SaveToFileMethodName><LoadFromFileMethodName>LoadFromFile</LoadFromFileMethodName><EnableEncoding>False</EnableEncoding><EnableXMLIndent>False</EnableXMLIndent><IndentChar>Indent2Space</IndentChar><NewLineAttr>False</NewLineAttr><OmitXML>False</OmitXML><Encoder>UTF8</Encoder><Serializer>XmlSerializer</Serializer><sspNullable>False</sspNullable><sspString>False</sspString><sspCollection>False</sspCollection><sspComplexType>False</sspComplexType><sspSimpleType>False</sspSimpleType><sspEnumType>False</sspEnumType><XmlSerializerEvent>False</XmlSerializerEvent><BaseClassName>EntityBase</BaseClassName><UseBaseClass>False</UseBaseClass><GenBaseClass>False</GenBaseClass><CustomUsings></CustomUsings><AttributesToExlude></AttributesToExlude>
 //  </auto-generated>
 // ------------------------------------------------------------------------------
+
+using DeltaShell.Dimr.xsd;
+
 #pragma warning disable
 namespace DeltaShell.NGHS.IO
 {
@@ -23,8 +26,12 @@ namespace DeltaShell.NGHS.IO
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
     [System.Xml.Serialization.XmlRootAttribute("rtcToolsConfig", Namespace="http://www.wldelft.nl/fews", IsNullable=false)]
-    public partial class RtcToolsConfigComplexType
+    public partial class RtcToolsConfigComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private GeneralModuleConfigComplexType _general;
@@ -101,8 +108,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class GeneralModuleConfigComplexType
+    public partial class GeneralModuleConfigComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _description;
@@ -170,8 +181,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TimeRelativeOutputComplexType
+    public partial class TimeRelativeOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _y;
@@ -209,8 +224,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TimeRelativeInputComplexType
+    public partial class TimeRelativeInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _y;
@@ -234,8 +253,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TimeRelativeControlTableRecordComplexType
+    public partial class TimeRelativeControlTableRecordComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _time;
@@ -275,8 +298,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TimeRelativeComplexType
+    public partial class TimeRelativeComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private TimeRelativeComplexTypeMode _mode;
@@ -436,8 +463,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TimeAbsoluteOutputComplexType
+    public partial class TimeAbsoluteOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _y;
@@ -461,8 +492,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TimeAbsoluteInputComplexType
+    public partial class TimeAbsoluteInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _x;
@@ -486,8 +521,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TimeAbsoluteComplexType
+    public partial class TimeAbsoluteComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private TimeAbsoluteInputComplexType _input;
@@ -561,8 +600,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class OutputPidComplexType
+    public partial class OutputPidComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _y;
@@ -614,8 +657,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class InputPidComplexType
+    public partial class InputPidComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _x;
@@ -674,8 +721,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class InputPidComplexTypeDisturbance
+    public partial class InputPidComplexTypeDisturbance : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _factor;
@@ -721,8 +772,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class PidComplexType
+    public partial class PidComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private PidComplexTypeMode _mode;
@@ -915,8 +970,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class LimiterInputComplexType
+    public partial class LimiterInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private object _item;
@@ -956,8 +1015,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class LimiterInputComplexTypeThresholdSeries
+    public partial class LimiterInputComplexTypeThresholdSeries : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -1016,8 +1079,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class LimiterComplexType
+    public partial class LimiterComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private limiterOptionEnumStringType _mode;
@@ -1103,8 +1170,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class IntervalOutputComplexType
+    public partial class IntervalOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _y;
@@ -1142,8 +1213,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class IntervalInputComplexType
+    public partial class IntervalInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private IntervalInputComplexTypeX _x;
@@ -1186,8 +1261,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class IntervalInputComplexTypeX
+    public partial class IntervalInputComplexTypeX : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -1233,8 +1312,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class IntervalComplexType
+    public partial class IntervalComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _settingBelow;
@@ -1426,8 +1509,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class GuideBandRuleOutputComplexType
+    public partial class GuideBandRuleOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _y;
@@ -1451,8 +1538,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class GuideBandRuleInputComplexType
+    public partial class GuideBandRuleInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _x;
@@ -1490,8 +1581,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class DateRecordComplexType
+    public partial class DateRecordComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _monthDay;
@@ -1576,8 +1671,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class GuideBandRuleComplexType
+    public partial class GuideBandRuleComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<DateRecordComplexType> _xMin;
@@ -1715,8 +1814,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ThunerseeRuleOutputComplexType
+    public partial class ThunerseeRuleOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _releaseWeir;
@@ -1782,8 +1885,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ThunerseeRuleInputComplexType
+    public partial class ThunerseeRuleInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _inflow;
@@ -1835,8 +1942,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TunnelThunerseeRuleComplexType
+    public partial class TunnelThunerseeRuleComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _levelThreshold;
@@ -1879,8 +1990,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class CapacityCharacteristicsComplexType
+    public partial class CapacityCharacteristicsComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private object _item;
@@ -1921,8 +2036,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class EquationsComplexType
+    public partial class EquationsComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<EquationComplexType> _equation;
@@ -1952,8 +2071,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class EquationComplexType
+    public partial class EquationComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _lowerLevel;
@@ -2033,8 +2156,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ElevationTableComplexType
+    public partial class ElevationTableComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<ElevationRecordComplexType> _elevationRecord;
@@ -2064,8 +2191,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ElevationRecordComplexType
+    public partial class ElevationRecordComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _elevation;
@@ -2118,8 +2249,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class WeirThunerseeRuleComplexType
+    public partial class WeirThunerseeRuleComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private CapacityCharacteristicsComplexType _capacityCharacteristics;
@@ -2148,8 +2283,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ReservoirThunerseeRuleComplexType
+    public partial class ReservoirThunerseeRuleComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private StorageCharacteristicsComplexType _storageCharacteristics;
@@ -2178,8 +2317,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class StorageCharacteristicsComplexType
+    public partial class StorageCharacteristicsComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private object _item;
@@ -2219,8 +2362,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ThunerseeRuleComplexType
+    public partial class ThunerseeRuleComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _levelSetpoint;
@@ -2367,8 +2514,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class AebiRuleOutputComplexType
+    public partial class AebiRuleOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _rTG;
@@ -2448,8 +2599,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class AebiRuleInputComplexType
+    public partial class AebiRuleInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _aareBruegg;
@@ -2585,8 +2740,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class AebiRuleComplexType
+    public partial class AebiRuleComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _factorRTG;
@@ -2689,8 +2848,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class DeadBandTimeOutputComplexType
+    public partial class DeadBandTimeOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _status;
@@ -2770,8 +2933,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class DeadBandTimeInputComplexType
+    public partial class DeadBandTimeInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private DeadBandTimeInputComplexTypeX _x;
@@ -2800,8 +2967,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class DeadBandTimeInputComplexTypeX
+    public partial class DeadBandTimeInputComplexTypeX : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -2847,8 +3018,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class SpreadsheetOutputComplexType
+    public partial class SpreadsheetOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _status;
@@ -2872,8 +3047,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class SpreadsheetInputComplexType
+    public partial class SpreadsheetInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private SpreadsheetInputComplexTypeX1 _x1;
@@ -2932,8 +3111,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class SpreadsheetInputComplexTypeX1
+    public partial class SpreadsheetInputComplexTypeX1 : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -2979,8 +3162,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class SpreadsheetInputComplexTypeX2
+    public partial class SpreadsheetInputComplexTypeX2 : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -3026,8 +3213,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class SpreadsheetInputComplexTypeX3
+    public partial class SpreadsheetInputComplexTypeX3 : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -3073,8 +3264,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class SpreadsheetRecordComplexType
+    public partial class SpreadsheetRecordComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _x1;
@@ -3144,8 +3339,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class SpreadsheetTableComplexType
+    public partial class SpreadsheetTableComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<SpreadsheetRecordComplexType> _record;
@@ -3190,8 +3389,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class DateComplexType
+    public partial class DateComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _monthDay;
@@ -3216,8 +3419,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ValidPeriodComplexType
+    public partial class ValidPeriodComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private DateComplexType _startDate;
@@ -3261,8 +3468,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class SpreadsheetComplexType
+    public partial class SpreadsheetComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<ValidPeriodComplexType> _validPeriods;
@@ -3442,8 +3653,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TriggerComplexType
+    public partial class TriggerComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private object _item;
@@ -3477,8 +3692,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class DeadBandTriggerComplexType
+    public partial class DeadBandTriggerComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private RelationalConditionComplexType _conditionOn;
@@ -3613,8 +3832,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class RelationalConditionComplexType
+    public partial class RelationalConditionComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private object _item;
@@ -3670,8 +3893,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class RelationalConditionComplexTypeX1Series
+    public partial class RelationalConditionComplexTypeX1Series : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -3742,8 +3969,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class RelationalConditionComplexTypeX2Series
+    public partial class RelationalConditionComplexTypeX2Series : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -3789,8 +4020,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TriggerOutputComplexType
+    public partial class TriggerOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _status;
@@ -3842,8 +4077,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class DeadBandTimeComplexType
+    public partial class DeadBandTimeComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private DeadBandTimeDiscreteComplexType _discrete;
@@ -3964,8 +4203,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class DeadBandTimeDiscreteComplexType
+    public partial class DeadBandTimeDiscreteComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private int _numberOfStepsUp;
@@ -4003,8 +4246,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ExpressionComplexType
+    public partial class ExpressionComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private object _item;
@@ -4124,8 +4371,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class ExpressionComplexTypeX1Series
+    public partial class ExpressionComplexTypeX1Series : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -4171,8 +4422,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class ExpressionComplexTypeX1SeriesVector
+    public partial class ExpressionComplexTypeX1SeriesVector : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -4247,8 +4502,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class ExpressionComplexTypeX2Series
+    public partial class ExpressionComplexTypeX2Series : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -4294,8 +4553,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class ExpressionComplexTypeX2SeriesVector
+    public partial class ExpressionComplexTypeX2SeriesVector : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -4354,8 +4617,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class LookupTableComplexType
+    public partial class LookupTableComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<LookupTableComplexTypeProperty> _property;
@@ -4502,8 +4769,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TableLookupTableComplexType
+    public partial class TableLookupTableComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<DateRecord2DataComplexType> _record;
@@ -4533,8 +4804,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class DateRecord2DataComplexType
+    public partial class DateRecord2DataComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _x;
@@ -4587,8 +4862,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class LookupTableInputComplexType
+    public partial class LookupTableInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private LookupTableInputComplexTypeX _x;
@@ -4631,8 +4910,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class LookupTableInputComplexTypeX
+    public partial class LookupTableInputComplexTypeX : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -4678,8 +4961,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class LookupTableOutputComplexType
+    public partial class LookupTableOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _y;
@@ -4703,8 +4990,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class MergerComplexType
+    public partial class MergerComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<MergerInputComplexTypeX> _input;
@@ -4779,8 +5070,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class MergerInputComplexTypeX
+    public partial class MergerInputComplexTypeX : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -4826,8 +5121,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class MergerOutputComplexType
+    public partial class MergerOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _item;
@@ -4882,8 +5181,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class PolygonLookupComplexType
+    public partial class PolygonLookupComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<PolygonComplexType> _polygons;
@@ -5021,8 +5324,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class PolygonComplexType
+    public partial class PolygonComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _value;
@@ -5083,8 +5390,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class EdgeComplexType
+    public partial class EdgeComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _x1;
@@ -5124,8 +5435,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class PolygonLookupInputComplexType
+    public partial class PolygonLookupInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private PolygonLookupInputComplexTypeX1 _x1;
@@ -5169,8 +5484,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class PolygonLookupInputComplexTypeX1
+    public partial class PolygonLookupInputComplexTypeX1 : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -5216,8 +5535,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class PolygonLookupInputComplexTypeX2
+    public partial class PolygonLookupInputComplexTypeX2 : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -5263,8 +5586,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class PolygonLookupOutputComplexType
+    public partial class PolygonLookupOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _status;
@@ -5288,8 +5615,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class SetTriggerComplexType
+    public partial class SetTriggerComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private object _item;
@@ -5442,8 +5773,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class SetTriggerComplexTypeX1Series
+    public partial class SetTriggerComplexTypeX1Series : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -5505,8 +5840,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class SetTriggerComplexTypeX2Series
+    public partial class SetTriggerComplexTypeX2Series : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -5552,8 +5891,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class StandardTriggerComplexType
+    public partial class StandardTriggerComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private RelationalConditionComplexType _condition;
@@ -5673,8 +6016,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class DeadBandValueInputComplexType
+    public partial class DeadBandValueInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _x;
@@ -5698,8 +6045,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class DeadBandValueComplexType
+    public partial class DeadBandValueComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _threshold;
@@ -5772,8 +6123,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class DateLookupTableOutputComplexType
+    public partial class DateLookupTableOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _y;
@@ -5811,8 +6166,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class DateLookupTableInputComplexType
+    public partial class DateLookupTableInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _x;
@@ -5850,8 +6209,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class DateRecord2ComplexType
+    public partial class DateRecord2ComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<DateRecord2DataComplexType> _record;
@@ -5896,8 +6259,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class InterpolationOptionsComplexType
+    public partial class InterpolationOptionsComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private interpolationOptionEnumStringType _date;
@@ -5935,8 +6302,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class DateLookupTableComplexType
+    public partial class DateLookupTableComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private InterpolationOptionsComplexType _interpolationOptions;
@@ -6041,8 +6412,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ConstantRuleOutputComplexType
+    public partial class ConstantRuleOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _y;
@@ -6066,8 +6441,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ConstantRuleComplexType
+    public partial class ConstantRuleComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _constant;
@@ -6140,8 +6519,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class RuleComplexType
+    public partial class RuleComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private object _item;
@@ -6182,8 +6565,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class Lookup2DTableComplexType
+    public partial class Lookup2DTableComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private Table2DLookupTableComplexType _table;
@@ -6272,8 +6659,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class Table2DLookupTableComplexType
+    public partial class Table2DLookupTableComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<float> _x;
@@ -6335,8 +6726,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class Lookup2DTableInputComplexType
+    public partial class Lookup2DTableInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _x;
@@ -6388,8 +6783,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class Lookup2DTableOutputComplexType
+    public partial class Lookup2DTableOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _z;
@@ -6413,8 +6812,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class UnitDelayComplexType
+    public partial class UnitDelayComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _nStep;
@@ -6502,8 +6905,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class UnitDelayInputComplexType
+    public partial class UnitDelayInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _x;
@@ -6527,8 +6934,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class UnitDelayOutputComplexType
+    public partial class UnitDelayOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string[] _items;
@@ -6654,8 +7065,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class UnitHydrographOutputComplexType
+    public partial class UnitHydrographOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string[] _items;
@@ -6725,8 +7140,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class UnitHydrographInputComplexType
+    public partial class UnitHydrographInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _x;
@@ -6750,8 +7169,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class UnitHydrographWeightCustomComplexType
+    public partial class UnitHydrographWeightCustomComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<double> _weight;
@@ -6781,8 +7204,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class UnitHydrographWeightTriangularComplexType
+    public partial class UnitHydrographWeightTriangularComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _nSteps;
@@ -6826,8 +7253,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class UnitHydrographWeightComplexType
+    public partial class UnitHydrographWeightComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private object _item;
@@ -6853,8 +7284,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class UnitHydrographComplexType
+    public partial class UnitHydrographComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private UnitHydrographWeightComplexType _weights;
@@ -6943,8 +7378,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class SRMOutputComplexType
+    public partial class SRMOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _qRainVector;
@@ -6999,8 +7438,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class SRMStateComplexType
+    public partial class SRMStateComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _pStorageVector;
@@ -7039,8 +7482,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class SRMInputComplexType
+    public partial class SRMInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _item;
@@ -7326,8 +7773,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class SRMParameterZoneComplexType
+    public partial class SRMParameterZoneComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _a;
@@ -7408,8 +7859,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class SRMParameterComplexType
+    public partial class SRMParameterComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _pt;
@@ -7475,8 +7930,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class SRMComplexType
+    public partial class SRMComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private SRMParameterComplexType _parameter;
@@ -7596,8 +8055,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class RoutingOutputComplexType
+    public partial class RoutingOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _discharge;
@@ -7635,8 +8098,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class SimpleReservoirComplexType
+    public partial class SimpleReservoirComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private StorageCharacteristicsComplexType _storageCharacteristics;
@@ -7697,8 +8164,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class InflowComplexType
+    public partial class InflowComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _factor;
@@ -7723,8 +8194,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class RoutingComplexType
+    public partial class RoutingComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<InflowComplexType> _inflow;
@@ -7829,8 +8304,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class LorentGeversOutputComplexType
+    public partial class LorentGeversOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _q;
@@ -7854,8 +8333,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class LorentGeversStateUpdateComplexType
+    public partial class LorentGeversStateUpdateComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _s;
@@ -7879,8 +8362,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class LorentGeversStateComplexType
+    public partial class LorentGeversStateComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _s;
@@ -7960,8 +8447,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class LorentGeversInputComplexType
+    public partial class LorentGeversInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _ep;
@@ -7999,8 +8490,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class LorentGeversParameterResponseComplexType
+    public partial class LorentGeversParameterResponseComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _aREA;
@@ -8108,8 +8603,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class LorentGeversParameterSoilComplexType
+    public partial class LorentGeversParameterSoilComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _bETA;
@@ -8161,8 +8660,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class LorentGeversComplexType
+    public partial class LorentGeversComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private LorentGeversParameterSoilComplexType _parameterSoil;
@@ -8296,8 +8799,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ReservoirCompactOutputComplexType
+    public partial class ReservoirCompactOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _s;
@@ -8517,8 +9024,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ReservoirCompactInputComplexType
+    public partial class ReservoirCompactInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _fb;
@@ -8736,8 +9247,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class ReservoirCompactInputComplexTypeQSPercentage
+    public partial class ReservoirCompactInputComplexTypeQSPercentage : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private bool _useAbsoluteAsSpillCap;
@@ -8777,8 +9292,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class ReservoirCompactInputComplexTypeQSPercentageValue
+    public partial class ReservoirCompactInputComplexTypeQSPercentageValue : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private bool _useAbsoluteAsSpillCap;
@@ -8831,8 +9350,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class MaxFlowsComplexType
+    public partial class MaxFlowsComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _maxFlow_head01;
@@ -9142,8 +9665,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class RowComplexType
+    public partial class RowComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _flow;
@@ -9468,8 +9995,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ColumnsComplexType
+    public partial class ColumnsComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _head01;
@@ -9779,8 +10310,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TurbineEfficiencyTableComplexType
+    public partial class TurbineEfficiencyTableComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private ColumnsComplexType _columns;
@@ -9840,8 +10375,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TailwaterTidalEquationComplexType
+    public partial class TailwaterTidalEquationComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _a;
@@ -9893,8 +10432,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TailwaterEquationComplexType
+    public partial class TailwaterEquationComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _a;
@@ -9980,8 +10523,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class LevelStorageEquationComplexType
+    public partial class LevelStorageEquationComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _a0;
@@ -10071,8 +10618,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ReservoirCompactComplexType
+    public partial class ReservoirCompactComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private UnitTypeEnumStringType _units;
@@ -10310,8 +10861,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ReservoirOutputComplexType
+    public partial class ReservoirOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _inflow;
@@ -10419,8 +10974,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ReservoirInputComplexType
+    public partial class ReservoirInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<string> _inflow;
@@ -10492,8 +11051,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TailwaterOutputComplexType
+    public partial class TailwaterOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _level;
@@ -10531,8 +11094,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TailwaterComplexType
+    public partial class TailwaterComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private object _item;
@@ -10577,8 +11144,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class UOutletInputComplexType
+    public partial class UOutletInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _release;
@@ -10602,8 +11173,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class UncontrolledOutletComplexType
+    public partial class UncontrolledOutletComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private CapacityCharacteristicsComplexType _capacityCharacteristics;
@@ -10692,8 +11267,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class OutletOutputComplexType
+    public partial class OutletOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _release;
@@ -10717,8 +11296,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class OutletInputComplexType
+    public partial class OutletInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string[] _items;
@@ -10774,8 +11357,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TurbineOutputCharacteristicsComplexType
+    public partial class TurbineOutputCharacteristicsComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _power;
@@ -10799,8 +11386,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TurbineCharacteristicsComplexType
+    public partial class TurbineCharacteristicsComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<ElevationRecordComplexType> _efficiencyTable;
@@ -10845,8 +11436,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ControlledOutletComplexType
+    public partial class ControlledOutletComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private CapacityCharacteristicsComplexType _capacityCharacteristics;
@@ -10950,8 +11545,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ReservoirComplexType
+    public partial class ReservoirComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private poolRoutingEnumStringType _mode;
@@ -11115,8 +11714,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class NeuronOutputComplexType
+    public partial class NeuronOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _x;
@@ -11154,8 +11757,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class NeuronInputComplexType
+    public partial class NeuronInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<NeuronInputComplexTypeExternal> _external;
@@ -11201,8 +11808,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class NeuronInputComplexTypeExternal
+    public partial class NeuronInputComplexTypeExternal : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _weight;
@@ -11242,8 +11853,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class NeuronInputComplexTypeInternal
+    public partial class NeuronInputComplexTypeInternal : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _weight;
@@ -11283,8 +11898,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class NeuronComplexType
+    public partial class NeuronComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _bias;
@@ -11402,8 +12021,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class LayerComplexType
+    public partial class LayerComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<NeuronComplexType> _neuron;
@@ -11463,8 +12086,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class NeuralNetworkComplexType
+    public partial class NeuralNetworkComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<LayerComplexType> _layer;
@@ -11524,8 +12151,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class MergerSplitterOutputComplexType
+    public partial class MergerSplitterOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<MergerSplitterOutputComplexTypeY> _items;
@@ -11555,8 +12186,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class MergerSplitterOutputComplexTypeY
+    public partial class MergerSplitterOutputComplexTypeY : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _factor;
@@ -11602,8 +12237,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class MergerSplitterInputComplexType
+    public partial class MergerSplitterInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<object> _items;
@@ -11634,8 +12273,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class MergerSplitterInputComplexTypeX
+    public partial class MergerSplitterInputComplexTypeX : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _factor;
@@ -11698,8 +12341,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class MergerSplitterInputComplexTypeXVector
+    public partial class MergerSplitterInputComplexTypeXVector : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private inputReferenceEnumStringType _ref;
@@ -11775,8 +12422,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class MergerSplitterComplexType
+    public partial class MergerSplitterComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private MergerSplitterEnumStringType _mode;
@@ -11880,8 +12531,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class OutputStorageSystemComplexType
+    public partial class OutputStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _nJac;
@@ -11933,8 +12588,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ParameterIrrigationStorageSystemComplexType
+    public partial class ParameterIrrigationStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _aREA;
@@ -12000,8 +12659,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class irrigationStorageSystemComplexType
+    public partial class irrigationStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private ParameterIrrigationStorageSystemComplexType _parameter;
@@ -12103,8 +12766,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class OutputLinkStorageSystemComplexType
+    public partial class OutputLinkStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _h;
@@ -12142,8 +12809,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ParameterReleaseWaterContentStorageSystemComplexType
+    public partial class ParameterReleaseWaterContentStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _aREA;
@@ -12195,8 +12866,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class releaseWaterContentStorageSystemComplexType
+    public partial class releaseWaterContentStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private ParameterReleaseWaterContentStorageSystemComplexType _parameter;
@@ -12298,8 +12973,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ParameterMeltRefreezingStorageSystemComplexType
+    public partial class ParameterMeltRefreezingStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _aREA;
@@ -12379,8 +13058,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class meltRefreezingStorageSystemComplexType
+    public partial class meltRefreezingStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private ParameterMeltRefreezingStorageSystemComplexType _parameter;
@@ -12496,8 +13179,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class InputWaterDistributionVariableStorageSystemComplexType
+    public partial class InputWaterDistributionVariableStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _hUp;
@@ -12549,8 +13236,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ParameterWaterDistributionVariableStorageSystemComplexType
+    public partial class ParameterWaterDistributionVariableStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _aREA;
@@ -12602,8 +13293,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class waterDistributionVariableStorageSystemComplexType
+    public partial class waterDistributionVariableStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private ParameterWaterDistributionVariableStorageSystemComplexType _parameter;
@@ -12692,8 +13387,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class InputWaterDistributionConstantStorageSystemComplexType
+    public partial class InputWaterDistributionConstantStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _hUp;
@@ -12731,8 +13430,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ParameterWaterDistributionConstantStorageSystemComplexType
+    public partial class ParameterWaterDistributionConstantStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _aREA;
@@ -12798,8 +13501,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class waterDistributionConstantStorageSystemComplexType
+    public partial class waterDistributionConstantStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private ParameterWaterDistributionConstantStorageSystemComplexType _parameter;
@@ -12888,8 +13595,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class InputSoilRunoffStorageSystemComplexType
+    public partial class InputSoilRunoffStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _hUp;
@@ -12947,8 +13658,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ParameterSoilRunoffStorageSystemComplexType
+    public partial class ParameterSoilRunoffStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _aREA;
@@ -13000,8 +13715,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class SoilRunoffStorageSystemComplexType
+    public partial class SoilRunoffStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private ParameterSoilRunoffStorageSystemComplexType _parameter;
@@ -13090,8 +13809,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class InputResponseStorageSystemComplexType
+    public partial class InputResponseStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _hUp;
@@ -13115,8 +13838,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ParameterResponseStorageSystemComplexType
+    public partial class ParameterResponseStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _aREA;
@@ -13168,8 +13895,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ResponseStorageSystemComplexType
+    public partial class ResponseStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private ParameterResponseStorageSystemComplexType _parameter;
@@ -13258,8 +13989,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class InputReleaseAboveThresholdStorageSystemComplexType
+    public partial class InputReleaseAboveThresholdStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _hUp;
@@ -13297,8 +14032,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ParameterReleaseAboveThresholdStorageSystemComplexType
+    public partial class ParameterReleaseAboveThresholdStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _aREA;
@@ -13370,8 +14109,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class releaseAboveThresholdStorageSystemComplexType
+    public partial class releaseAboveThresholdStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private ParameterReleaseAboveThresholdStorageSystemComplexType _parameter;
@@ -13460,8 +14203,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class InputPercolationStorageSystemComplexType
+    public partial class InputPercolationStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _hUp;
@@ -13499,8 +14246,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ParameterPercolationStorageSystemComplexType
+    public partial class ParameterPercolationStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _aREA;
@@ -13538,8 +14289,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class PercolationStorageSystemComplexType
+    public partial class PercolationStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private ParameterPercolationStorageSystemComplexType _parameter;
@@ -13628,8 +14383,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class InputGroundwaterFlowStorageSystemComplexType
+    public partial class InputGroundwaterFlowStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _hUp;
@@ -13667,8 +14426,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ParametergroundwaterFlowStorageSystemComplexType
+    public partial class ParametergroundwaterFlowStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _aLPHA;
@@ -13734,8 +14497,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class groundwaterFlowStorageSystemComplexType
+    public partial class groundwaterFlowStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private ParametergroundwaterFlowStorageSystemComplexType _parameter;
@@ -13824,8 +14591,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class InputEvaporationInterceptionStorageSystemComplexType
+    public partial class InputEvaporationInterceptionStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _hUp;
@@ -13863,8 +14634,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ParameterEvaporationInterceptionStorageSystemComplexType
+    public partial class ParameterEvaporationInterceptionStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _aREA;
@@ -13888,8 +14663,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class evaporationInterceptionStorageSystemComplexType
+    public partial class evaporationInterceptionStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private ParameterEvaporationInterceptionStorageSystemComplexType _parameter;
@@ -13978,8 +14757,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class InputEvaporationActualStorageSystemComplexType
+    public partial class InputEvaporationActualStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _hUp;
@@ -14031,8 +14814,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ParameterEvaporationActualStorageSystemComplexType
+    public partial class ParameterEvaporationActualStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _aREA;
@@ -14098,8 +14885,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class evaporationActualStorageSystemComplexType
+    public partial class evaporationActualStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private ParameterEvaporationActualStorageSystemComplexType _parameter;
@@ -14188,8 +14979,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class InputCapillaryFlowStorageSystemComplexType
+    public partial class InputCapillaryFlowStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _hUp;
@@ -14227,8 +15022,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ParameterCapillaryFlowStorageSystemComplexType
+    public partial class ParameterCapillaryFlowStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _aREA;
@@ -14280,8 +15079,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class CapillaryFlowStorageSystemComplexType
+    public partial class CapillaryFlowStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private ParameterCapillaryFlowStorageSystemComplexType _parameter;
@@ -14370,8 +15173,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class LinkStorageSystemComplexType
+    public partial class LinkStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private object _item;
@@ -14478,8 +15285,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class InputNodeStorageSystemComplexType
+    public partial class InputNodeStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<string> _discharge;
@@ -14539,8 +15350,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class NodeStorageSystemComplexType
+    public partial class NodeStorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _aREA;
@@ -14669,8 +15484,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class StorageSystemSettingsComplexType
+    public partial class StorageSystemSettingsComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _convergenceThreshold;
@@ -14730,8 +15549,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class StorageSystemComplexType
+    public partial class StorageSystemComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private StorageSystemSettingsComplexType _settings;
@@ -14837,8 +15660,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class OutputEvaporationPotentialComplexType
+    public partial class OutputEvaporationPotentialComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _ep;
@@ -14867,8 +15694,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class InputEvaporationPotentialComplexType
+    public partial class InputEvaporationPotentialComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _ePM;
@@ -14927,8 +15758,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ParameterEvaporationPotentialComplexType
+    public partial class ParameterEvaporationPotentialComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _eCORR;
@@ -14966,8 +15801,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class EvaporationPotentialComplexType
+    public partial class EvaporationPotentialComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private ParameterEvaporationPotentialComplexType _parameter;
@@ -15056,8 +15895,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class OutputSnowRainJunctionComplexType
+    public partial class OutputSnowRainJunctionComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _rf;
@@ -15101,8 +15944,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class InputSnowRainJunctionComplexType
+    public partial class InputSnowRainJunctionComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _p;
@@ -15146,8 +15993,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ParameterSnowRainJunctionComplexType
+    public partial class ParameterSnowRainJunctionComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _d;
@@ -15227,8 +16078,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class SnowRainJunctionComplexType
+    public partial class SnowRainJunctionComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private ParameterSnowRainJunctionComplexType _parameter;
@@ -15317,8 +16172,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class DataTypicalProfileComplexType
+    public partial class DataTypicalProfileComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private DataTypicalProfileComplexTypeMonthOfYear _monthOfYear;
@@ -15401,8 +16260,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TypicalProfileComplexType
+    public partial class TypicalProfileComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<DataTypicalProfileComplexType> _data;
@@ -15476,8 +16339,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class SubmodelComplexType
+    public partial class SubmodelComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private object _item;
@@ -15505,8 +16372,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class HydrologicalModelComplexType
+    public partial class HydrologicalModelComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<SubmodelComplexType> _submodel;
@@ -15566,8 +16437,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class HydraulicModelOutputComplexType
+    public partial class HydraulicModelOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _nJac;
@@ -15619,8 +16494,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class PumpOutputComplexType
+    public partial class PumpOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _q;
@@ -15644,8 +16523,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class PumpInputComplexType
+    public partial class PumpInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _hUp;
@@ -15697,8 +16580,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class PumpComplexType
+    public partial class PumpComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private PumpInputComplexType _input;
@@ -15742,8 +16629,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class RiverWeirOutputComplexType
+    public partial class RiverWeirOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _q;
@@ -15795,8 +16686,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class RiverWeirInputComplexType
+    public partial class RiverWeirInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _hUp;
@@ -15878,8 +16773,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class RiverWeirComplexType
+    public partial class RiverWeirComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _width;
@@ -15999,8 +16898,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class OrificeOutputComplexType
+    public partial class OrificeOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _q;
@@ -16052,8 +16955,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class OrificeInputComplexType
+    public partial class OrificeInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _hUp;
@@ -16168,8 +17075,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class OrificeComplexType
+    public partial class OrificeComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _width;
@@ -16301,8 +17212,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class HydraulicStructureComplexType
+    public partial class HydraulicStructureComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private object _item;
@@ -16344,8 +17259,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class BranchOutputComplexType
+    public partial class BranchOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _q;
@@ -16369,8 +17288,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class BranchInputComplexType
+    public partial class BranchInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _hUp;
@@ -16436,8 +17359,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class CrossSectionRoughnessComplexType
+    public partial class CrossSectionRoughnessComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<ElevationRecordComplexType> _roughnessTable;
@@ -16467,8 +17394,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class CrossSectionComplexType
+    public partial class CrossSectionComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<ElevationRecordComplexType> _crossSectionTable;
@@ -16498,8 +17429,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class BranchComplexType
+    public partial class BranchComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private EquationEnumStringType _equationType;
@@ -16705,8 +17640,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class NodeOutputComplexType
+    public partial class NodeOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _h;
@@ -16758,8 +17697,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class NodeInputComplexType
+    public partial class NodeInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _item;
@@ -16834,8 +17777,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class NodeInputComplexTypeQBC
+    public partial class NodeInputComplexTypeQBC : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _factor;
@@ -16881,8 +17828,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class NodeComplexType
+    public partial class NodeComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private StorageCharacteristicsComplexType _storageCharacteristics;
@@ -16986,8 +17937,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class HydraulicModelSimultaneousComplexType
+    public partial class HydraulicModelSimultaneousComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _theta;
@@ -17016,8 +17971,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class HydraulicModelSequentialImplicitComplexType
+    public partial class HydraulicModelSequentialImplicitComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _theta;
@@ -17076,8 +18035,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class HydraulicModelComplexType
+    public partial class HydraulicModelComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private HydraulicModelModeEnumStringType _mode;
@@ -17259,8 +18222,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class HBVOutputComplexType
+    public partial class HBVOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _q;
@@ -17312,8 +18279,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class HBVStateUpdateComplexType
+    public partial class HBVStateUpdateComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _ic;
@@ -17407,8 +18378,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class HBVStateComplexType
+    public partial class HBVStateComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _ic;
@@ -17502,8 +18477,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class HBVLinkComplexType
+    public partial class HBVLinkComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _cf;
@@ -17625,8 +18604,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class HBVInputComplexType
+    public partial class HBVInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _ep;
@@ -17692,8 +18675,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class HBVParameterResponseComplexType
+    public partial class HBVParameterResponseComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _aLPHA;
@@ -17773,8 +18760,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class HBVParameterSoilComplexType
+    public partial class HBVParameterSoilComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _bETA;
@@ -17854,8 +18845,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class HBVParameterInterceptionComplexType
+    public partial class HBVParameterInterceptionComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _lIC;
@@ -17879,8 +18874,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class HBVParameterSnowComplexType
+    public partial class HBVParameterSnowComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _cFMAX;
@@ -17946,8 +18945,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class HBVParameterInputComplexType
+    public partial class HBVParameterInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _eCORR;
@@ -18027,8 +19030,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class HBVComplexType
+    public partial class HBVComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private HBVParameterInputComplexType _parameterInput;
@@ -18222,8 +19229,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class GradientOutputComplexType
+    public partial class GradientOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _dx;
@@ -18247,8 +19258,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class GradientInputComplexType
+    public partial class GradientInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _x;
@@ -18272,8 +19287,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class GradientComplexType
+    public partial class GradientComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _multiplier;
@@ -18363,8 +19382,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ArmaOutputComplexType
+    public partial class ArmaOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _arma;
@@ -18388,8 +19411,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ArmaInputComplexType
+    public partial class ArmaInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _obs;
@@ -18427,8 +19454,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ArmaComplexType
+    public partial class ArmaComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _arCoef;
@@ -18517,8 +19548,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class InputATableComplexType
+    public partial class InputATableComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _x;
@@ -18556,8 +19591,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ATableComplexType
+    public partial class ATableComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private List<ATableComplexTypeRow> _row;
@@ -18587,8 +19626,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class ATableComplexTypeRow
+    public partial class ATableComplexTypeRow : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _id;
@@ -18628,8 +19671,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class AllocationTableComplexType
+    public partial class AllocationTableComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private object _item;
@@ -18720,8 +19767,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class OutputATableComplexTypeY
+    public partial class OutputATableComplexTypeY : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _id;
@@ -18776,8 +19827,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class AccumulationOutputComplexType
+    public partial class AccumulationOutputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _y;
@@ -18801,8 +19856,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class AccumulationInputComplexType
+    public partial class AccumulationInputComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private string _x;
@@ -18826,8 +19885,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class AccumulationComplexType
+    public partial class AccumulationComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private double _multiplier;
@@ -18917,8 +19980,12 @@ namespace DeltaShell.NGHS.IO
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ComponentComplexType
+    public partial class ComponentComplexType : IXmlParsedObject
     {
+        [XmlIgnore]
+        public List<XmlAttribute> UnKnownAttributes { get; set; }
+        [XmlIgnore]
+        public List<XmlElement> UnKnownElements { get; set; }
         
         #region Private fields
         private object _item;
