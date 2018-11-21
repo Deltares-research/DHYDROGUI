@@ -37,8 +37,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         private WaterFlowModel1DOutputFileMetaData metaData;
         private bool disableCaching;
+        private IWaterFlowModel1DOutputFileReader outputFileReader;
+        protected int sobekStartIndex = 1;// minus one because fortran is 1 based...
 
-        private WaterFlowModel1DOutputFileMetaData MetaData
+        protected WaterFlowModel1DOutputFileMetaData MetaData
         {
             get
             {
@@ -48,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
                 try
                 {
-                    metaData = WaterFlowModel1DOutputFileReader.ReadMetaData(Path);
+                    metaData = OutputFileReader.ReadMetaData(Path);
                 }
                 catch (Exception ex)
                 {
@@ -57,6 +59,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 }
                 return metaData;
             }
+        }
+
+        protected IWaterFlowModel1DOutputFileReader OutputFileReader
+        {
+            get { return outputFileReader ?? new WaterFlowModel1DOutputFileReader(); }
+            set { outputFileReader = value; }
         }
 
         #region IFunctionStore fields and Properties
@@ -99,7 +107,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         #region IFileBased Properties
 
-        public string Path
+        public virtual string Path
         {
             get { return path; }
             set
@@ -430,7 +438,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         private IMultiDimensionalArray GetValuesForTimeSeriesAtAllLocations(string ncVariableName)
         {
-            var variableData = WaterFlowModel1DOutputFileReader.GetAllVariableData(path, ncVariableName, MetaData);
+            var variableData = OutputFileReader.GetAllVariableData(path, ncVariableName, MetaData);
             var variableDataShape = variableData.GetShape();
             return new MultiDimensionalArray<double>(variableData, variableDataShape);
         }
@@ -478,7 +486,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             try
             {
-                return WaterFlowModel1DOutputFileReader.GetSelectionOfVariableData(path, ncVariableName, origin, shape);
+                return OutputFileReader.GetSelectionOfVariableData(path, ncVariableName, origin, shape);
             }
             catch (Exception ex)
             {
@@ -499,7 +507,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             foreach (var location in locations)
             {
-                var branchId = MetaData.Locations[location].BranchId - 1; // minus one because fortran is 1 based...
+                var branchId = MetaData.Locations[location].BranchId - sobekStartIndex; 
                 var chainage = MetaData.Locations[location].Chainage;
                 var networkLocation = networkLocationTypeConverter.ConvertFromStore(new object[] { branchId, chainage });
                 convertedList.Add(networkLocation);
@@ -528,7 +536,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             if (branchFeature is INetworkLocation)
             {
                 var branchIndex = branchFeature.Network.Branches.IndexOf(branchFeature.Branch);
-                location = MetaData.Locations.FirstOrDefault(l => l.BranchId - 1 == branchIndex && Math.Abs(l.Chainage - branchFeature.Chainage) < double.Epsilon);
+                location = MetaData.Locations.FirstOrDefault(l => l.BranchId - sobekStartIndex == branchIndex && Math.Abs(l.Chainage - branchFeature.Chainage) < double.Epsilon);
             }
             else if (branchFeature is IStructure1D)
             {
@@ -555,7 +563,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return MetaData.Locations.IndexOf(location);
         }
 
-        private string GetNetCdfVariableName(ICoverage coverage)
+        protected virtual string GetNetCdfVariableName(ICoverage coverage)
         {
             return WaterFlowModel1DOutputCoverageMappings.GetMappingForCoverage(fileName, coverage.Name);
         }

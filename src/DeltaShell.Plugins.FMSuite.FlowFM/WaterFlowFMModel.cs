@@ -1313,6 +1313,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (OutputMapFileStore != null)
                 foreach (var function in OutputMapFileStore.Functions)
                     yield return function;
+            if (Output1DFileStore != null)
+                foreach (var function in Output1DFileStore.Functions)
+                    yield return function;
         }
 
         public override IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
@@ -1410,6 +1413,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 OutputMapFileStore.Close();
                 OutputMapFileStore = null;
             }
+            if (Output1DFileStore != null)
+            {            
+                Output1DFileStore.Functions.Clear();
+                Output1DFileStore.Close();
+                Output1DFileStore = null;
+            }
             if (OutputHisFileStore != null)
             {
                 OutputHisFileStore.Functions.Clear();
@@ -1462,6 +1471,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (OutputMapFileStore != null)
                 {
                     OutputMapFileStore.CoordinateSystem = value;
+                }
+
+                if (Output1DFileStore != null)
+                {
+                    //Output1DFileStore.CoordinateSystem = value;
                 }
                 
                 if (Network != null)
@@ -2255,6 +2269,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private IEventedList<string> tracerDefinitions;
         private bool isLoading;
         private IEventedList<ILink1D2D> links;
+        private FM1DFileFunctionStore output1DFileStore;
 
         private const int TotalImportSteps = 10;
 
@@ -2302,6 +2317,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             protected set
             {
                 outputMapFileStore = value;
+            }
+        }
+        public virtual FM1DFileFunctionStore Output1DFileStore
+        {
+            get { return output1DFileStore; }
+            protected set
+            {
+                output1DFileStore = value;
             }
         }
 
@@ -2395,6 +2418,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     // don't change this to a property setter, because the timing is of great importance.
                     // elsewise, there will be no subscription to the read and Path triggers the Read().
                     OutputMapFileStore.Path = mapFilePath;
+                }
+
+                if (switchTo && Output1DFileStore != null)
+                {
+                    Output1DFileStore.Path = mapFilePath;
+                }
+                else
+                {
+                    Output1DFileStore = new FM1DFileFunctionStore();
+                    // don't change this to a property setter, because the timing is of great importance.
+                    // elsewise, there will be no subscription to the read and Path triggers the Read().
+                    Output1DFileStore.Path = mapFilePath;
                 }
             }
 
@@ -3058,6 +3093,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     OutputMapFileStore.Close();
                     OutputMapFileStore = null;
+                    Output1DFileStore.Close();
+                    Output1DFileStore = null;
                 }
                 if (hasHisFileStore)
                 {

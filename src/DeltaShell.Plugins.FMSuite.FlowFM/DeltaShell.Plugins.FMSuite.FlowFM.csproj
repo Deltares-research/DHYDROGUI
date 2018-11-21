@@ -154,6 +154,7 @@
     <Compile Include="IO\BcMeteoFileDataBuilder.cs" />
     <Compile Include="IO\Exporters\WaterFlowFMAndF1dFileExporter.cs" />
     <Compile Include="IO\FeatureFile1D2DWriter.cs" />
+    <Compile Include="IO\FM1DFileFunctionStore.cs" />
     <Compile Include="IO\Importers\RasterFile.cs" />
     <Compile Include="IO\Importers\RasterFileImporter.cs" />
     <Compile Include="IO\ImportRasterSamplesSpatialOperationExtension.cs" />
@@ -335,6 +336,11 @@
     <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
       <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
       <Name>DeltaShell.NGHS.IO</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.WaterFlowModel\DeltaShell.Plugins.DelftModels.WaterFlowModel.csproj">
+      <Project>{3038FF2F-A3B0-462E-8C41-30DFE1247822}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">

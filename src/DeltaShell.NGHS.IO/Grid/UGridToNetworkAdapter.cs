@@ -28,6 +28,25 @@ namespace DeltaShell.NGHS.IO.Grid
             return networkId;
         }
 
+        public static Tuple<IHydroNetwork, IDiscretization> LoadNetworkAndDiscretisationInOnce(string netFilePath)
+        {
+            var discretisationDataModel = LoadNetworkDiscretisationDataModel(netFilePath);
+            if (discretisationDataModel == null)
+            {
+                // no discretisation is found. Return null and try to get the network in another call
+                return null;
+            }
+
+            var loadedNetwork = LoadNetworkById(netFilePath, discretisationDataModel.NetworkId);
+            if (loadedNetwork == null)
+            {
+                return null;
+            }
+
+            var networkDiscretisation = NetworkDiscretisationFactory.CreateNetworkDiscretisation(loadedNetwork, discretisationDataModel);
+
+            return new Tuple<IHydroNetwork, IDiscretization>(loadedNetwork, networkDiscretisation);
+        }
         public static IDiscretization LoadNetworkAndDiscretisation(string netFilePath)
         {
             var discretisationDataModel = LoadNetworkDiscretisationDataModel(netFilePath);

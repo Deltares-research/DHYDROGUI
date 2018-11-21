@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
                                      string firstVarName, string firstVarLongName, string firstVarUnit, string lastVarName, string lastVarLongName, string lastVarUnit)
         {
             var filePath = TestHelper.GetTestFilePath(@"FileWriters/output/" + fileName);
-            var metaData = WaterFlowModel1DOutputFileReader.ReadMetaData(filePath);
+            var metaData = new WaterFlowModel1DOutputFileReader().ReadMetaData(filePath);
 
             // check times
             Assert.AreEqual(2, metaData.NumTimes);
@@ -70,10 +70,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
                                         double lastTimeStepFirstLocationValue, double lastTimeStepLastLocationValue)
         {
             var filePath = TestHelper.GetTestFilePath(@"FileWriters/output/" + fileName);
-            var metaData = WaterFlowModel1DOutputFileReader.ReadMetaData(filePath);
+            var metaData = new WaterFlowModel1DOutputFileReader().ReadMetaData(filePath);
 
             var variableName = metaData.TimeDependentVariables.First().Name;
-            var allTimeData = WaterFlowModel1DOutputFileReader.GetAllVariableData(filePath, variableName, metaData);
+            var allTimeData = new WaterFlowModel1DOutputFileReader().GetAllVariableData(filePath, variableName, metaData);
 
             Assert.AreEqual(metaData.NumTimes, allTimeData.GetLength(0));
             Assert.AreEqual(metaData.NumLocations, allTimeData.GetLength(1));
@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         public void TestGetTimeStepData(string fileName, double firstExpectedValue, double secondExpectedValue)
         {
             var filePath = TestHelper.GetTestFilePath(@"FileWriters/output/" + fileName);
-            var metaData = WaterFlowModel1DOutputFileReader.ReadMetaData(filePath);
+            var metaData = new WaterFlowModel1DOutputFileReader().ReadMetaData(filePath);
             var timeDependentVariableName = metaData.TimeDependentVariables.First().Name;
 
             var numTimesToRead = metaData.NumTimes/2;
@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             var origin = new[] { 0, 0 };
             var shape = new[] { numTimesToRead, numLocationsToRead };
 
-            var firstHalfOfVariableData = WaterFlowModel1DOutputFileReader.GetSelectionOfVariableData(filePath, timeDependentVariableName, origin, shape);
+            var firstHalfOfVariableData = new WaterFlowModel1DOutputFileReader().GetSelectionOfVariableData(filePath, timeDependentVariableName, origin, shape);
 
             Assert.AreEqual(numTimesToRead * numLocationsToRead, firstHalfOfVariableData.Count);
             Assert.AreEqual(firstExpectedValue, firstHalfOfVariableData.First(), Delta);
@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             origin = new[] { numTimesToRead, numLocationsToRead };
             shape = new[] { numTimesToRead, numLocationsToRead };
 
-            var secondHalfOfVariableData = WaterFlowModel1DOutputFileReader.GetSelectionOfVariableData(filePath, timeDependentVariableName, origin, shape);
+            var secondHalfOfVariableData = new WaterFlowModel1DOutputFileReader().GetSelectionOfVariableData(filePath, timeDependentVariableName, origin, shape);
 
             Assert.AreEqual(numTimesToRead * numLocationsToRead, secondHalfOfVariableData.Count);
             Assert.AreEqual(secondExpectedValue, secondHalfOfVariableData.Last(), Delta);
@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         public void TestGetVariableValuesFromOutputFile(string fileName, string variableName)
         {
             var filePath = TestHelper.GetTestFilePath(@"FileWriters/temperature/" + fileName);
-            var metaData = WaterFlowModel1DOutputFileReader.ReadMetaData(filePath);
+            var metaData = new WaterFlowModel1DOutputFileReader().ReadMetaData(filePath);
 
             // check time dependent variables
             var variables = metaData.TimeDependentVariables;

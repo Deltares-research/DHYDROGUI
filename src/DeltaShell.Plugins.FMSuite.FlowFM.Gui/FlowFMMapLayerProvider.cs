@@ -176,6 +176,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     };
             }
 
+            if (data is FM1DFileFunctionStore)
+            {
+                var groupLayer = new GroupLayer("Output (network)")
+                {
+                    LayersReadOnly = true,
+                    NameIsReadOnly = true
+                };
+                groupLayer.Layers.CollectionChanged += MapGroupLayerLayersCollectionChanged;
+                return groupLayer;
+            }
+
             var outputSnappedGroupLayerData = data as FMOutputSnappedFeaturesGroupLayerData;
             if (outputSnappedGroupLayerData != null)
             {
@@ -280,6 +291,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                    || data is IGrouping<string, IFunction>
                    || data is FMMapFileFunctionStore
                    || data is FMHisFileFunctionStore
+                   || data is FM1DFileFunctionStore
                    || data is ImportedFMNetFile
                    || data is IEventedList<BoundaryConditionSet> && parentObject is WaterFlowFMModel
                    || data is FMSnappedFeaturesGroupLayerData
@@ -383,6 +395,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 
                 if (model.OutputHisFileStore != null)
                     yield return model.OutputHisFileStore;
+
+                if (model.Output1DFileStore != null)
+                    yield return model.Output1DFileStore;
             }
 
             var coverageDepthLayersList = data as CoverageDepthLayersList;
@@ -409,7 +424,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         yield return output;
                 }
             }
-            
+
+            var output1dStore = data as FM1DFileFunctionStore;
+            if (output1dStore != null)
+            {
+                yield return output1dStore.OutputNetwork;
+                yield return output1dStore.OutputDiscretization;
+
+                foreach (var output in output1dStore.Functions)
+                    yield return output;
+
+            }
+
             // groupings currently used by FMMapFileFunctionStore (for sedimentation outputs)
             var grouping = data as IGrouping<string, IFunction>;
             if (grouping != null)

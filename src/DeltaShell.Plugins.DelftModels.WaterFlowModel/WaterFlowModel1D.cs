@@ -3483,7 +3483,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             {
                 try
                 {
-                    var metaData = WaterFlowModel1DOutputFileReader.ReadMetaData(netFile.FullName, true);
+                    var metaData = new WaterFlowModel1DOutputFileReader().ReadMetaData(netFile.FullName, true);
                     foreach (var timeDependentVariable in metaData.TimeDependentVariables)
                     {
                         var coverageName = WaterFlowModel1DOutputCoverageMappings.GetMappingForVariable(netFile.Name,

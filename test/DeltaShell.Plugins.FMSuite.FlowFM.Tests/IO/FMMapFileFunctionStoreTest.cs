@@ -47,6 +47,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        public void Open1DFileCheckFunctions()
+        {
+            var store = new FM1DFileFunctionStore()
+            {
+                Path = TestHelper.GetTestFilePath("output_mapfiles\\FlowFM_map.nc")
+            };
+        }
+
+        [Test]
         public void OpenMapFileCheckFunctions_NcFileContaining3DimensionalDataWithLowerUgridVersion()
         {
             var store = new FMMapFileFunctionStore(null)

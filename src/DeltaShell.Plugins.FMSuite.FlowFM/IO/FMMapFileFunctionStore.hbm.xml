@@ -10,6 +10,13 @@
     <property name="Path"/>
   </class>
 
+  <class name="FM1DFileFunctionStore" table="fm_1d_function_store" lazy="false">
+    <id name="Id" column="id" type="long">
+      <generator class="increment" />
+    </id>
+    <property name="Path"/>
+  </class>
+
   <class name="FMHisFileFunctionStore" table="fm_his_function_store" lazy="false">
     <id name="Id" column="id" type="long">
       <generator class="increment" />

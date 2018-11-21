@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -188,21 +189,36 @@ namespace DeltaShell.NGHS.IO.Grid
                     return ierr;
                 }
 
-                branchIdx = new int[numberOfDiscretisationPoints];
-                offset = new double[numberOfDiscretisationPoints];
+                var tmpbranchIdx = new int[numberOfDiscretisationPoints];
+                var tmpoffset = new double[numberOfDiscretisationPoints];
 
-                Marshal.Copy(branchIdxPtr, branchIdx, 0, numberOfDiscretisationPoints);
-                Marshal.Copy(offsetPtr, offset, 0, numberOfDiscretisationPoints);
+                Marshal.Copy(branchIdxPtr, tmpbranchIdx, 0, numberOfDiscretisationPoints);
+                Marshal.Copy(offsetPtr,tmpoffset, 0, numberOfDiscretisationPoints);
 
-                ids = new string[numberOfDiscretisationPoints];
-                names = new string[numberOfDiscretisationPoints];
+                var tmpids = new string[numberOfDiscretisationPoints];
+                var tmpnames = new string[numberOfDiscretisationPoints];
 
                 for (int i = 0; i < numberOfDiscretisationPoints; ++i)
                 {
-                    ids[i] = new string(meshpointsinfo[i].ids).Trim();
-                    names[i] = new string(meshpointsinfo[i].longnames).Trim();
+                    tmpids[i] = new string(meshpointsinfo[i].ids).Trim();
+                    tmpnames[i] = new string(meshpointsinfo[i].longnames).Trim();
                 }
 
+                var countRealpoints = tmpbranchIdx.Count(id => id != int.MinValue + 1);
+                branchIdx = new int[countRealpoints];
+                offset = new double[countRealpoints];
+                ids = new string[countRealpoints];
+                names = new string[countRealpoints];
+                var j = 0;
+                for (int i = 0; i < numberOfDiscretisationPoints; i++)
+                {
+                    if(tmpbranchIdx[i] == int.MinValue + 1) continue;
+                    branchIdx[j] = tmpbranchIdx[i];
+                    offset[j] = tmpoffset[i];
+                    ids[j] = tmpids[i];
+                    names[j] = tmpnames[i];
+                    j++;
+                }
                 return GridApiDataSet.GridConstants.NOERR;
             }
             catch

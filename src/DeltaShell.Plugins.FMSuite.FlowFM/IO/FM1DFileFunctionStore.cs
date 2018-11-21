@@ -1,0 +1,339 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using DelftTools.Functions;
+using DelftTools.Hydro;
+using DelftTools.Utils.NetCdf;
+using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
+using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Networks;
+using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.Utilities;
+
+namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
+{
+    public class FMMapFile1DOutputFileReader : WaterFlowModel1DOutputFileReader
+    {
+        public FMMapFile1DOutputFileReader()
+        {
+            branchidVariableNameInNetCDFFile = "mesh1d_nodes_branch_id";
+            chainageVariableNameInNetCDFFile = "mesh1d_nodes_branch_offset";
+            cfRoleAttributeNameInNetCdfFile = "long_name";
+            cfRoleAttributeValueInNetCdfFile = "the node ids";
+
+            //xCoordinateVariableNameInNetCDFFile = "";
+        }
+
+        public override WaterFlowModel1DOutputFileMetaData ReadMetaData(string path, bool doValidation = true)
+        {
+            return base.ReadMetaData(path, false);
+        }
+    }
+
+    public class FM1DFileFunctionStore : WaterFlowModel1DNetCdfFunctionStore
+    {
+        private readonly object readLock = new object();
+        protected NetCdfFile netCdfFile;
+        private const string TimeDimensionName = "time";
+        protected string dateTimeFormat = "yyyy-MM-dd hh:mm:ss"; // default
+        private IHydroNetwork outputNetwork;
+        private IDiscretization outputDiscretization;
+
+        private const string StandardNameAttribute = "standard_name";
+        private const string LongNameAttribute = "long_name";
+        private const string UnitAttribute = "units";
+
+        public FM1DFileFunctionStore()
+        {
+            OutputFileReader = new FMMapFile1DOutputFileReader();
+            sobekStartIndex = 0;
+        }
+
+        public IHydroNetwork OutputNetwork
+        {
+            get { return outputNetwork; }
+        }
+
+        public IDiscretization OutputDiscretization
+        {
+            get { return outputDiscretization; }
+        }
+
+        public override string Path
+        {
+            get { return base.Path; }
+            set
+            {
+                base.Path = value;
+                UpdateNetworkAndDiscretisationAfterPathSet();
+                UpdateFunctionsAfterPathSet();
+            }
+        }
+
+        private void UpdateNetworkAndDiscretisationAfterPathSet()
+        {
+            if (!File.Exists(Path)) return;
+            var outputNetworkAndDiscretization = UGridToNetworkAdapter.LoadNetworkAndDiscretisationInOnce(Path);
+            outputNetwork = outputNetworkAndDiscretization.Item1;
+            outputDiscretization = outputNetworkAndDiscretization.Item2;
+        }
+
+        protected virtual void UpdateFunctionsAfterPathSet()
+        {
+            Functions.Clear();
+            if (File.Exists(Path))
+            {
+                using (ReconnectToMapFile())
+                {
+                    Functions.AddRange(ConstructFunctions(GetVariableInfos()));
+                }
+            }
+        }
+
+        protected IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
+        {
+            var netCdfVariables = netCdfFile.GetVariables().ToList();
+            var mesh1DNameNetCdfVariable = netCdfVariables.FirstOrDefault(dv =>
+            {
+                var attributes = netCdfFile.GetAttributes(dv);
+                object dimension;
+                if (attributes.TryGetValue("topology_dimension", out dimension) && attributes.ContainsKey("coordinate_space"))
+                {
+                    if (int.Parse(dimension.ToString()) == 1)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            });
+            var mesh1DName = netCdfFile.GetVariableName(mesh1DNameNetCdfVariable);
+            var isUgridConvention = true;
+
+            return Get1DFunctions(dataVariables, isUgridConvention, mesh1DName);
+        }
+        private IEnumerable<INetworkCoverage> Get1DFunctions(IEnumerable<NetCdfVariableInfo> dataVariables, bool isUgridConvention, string mesh1DName)
+        {
+            var timeDepVarSelectionCriteria = isUgridConvention
+                ? (Func<NetCdfVariableInfo, bool>)(v =>
+                {
+                    var b = v.IsTimeDependent && v.NumDimensions > 1;
+                    var attributes = netCdfFile.GetAttributes(v.NetCdfDataVariable);
+                    object meshName;
+                    if (attributes.TryGetValue("mesh", out meshName))
+                    {
+                        return b && meshName.ToString() == mesh1DName;
+                    }
+                    return false;
+                }) : (v => v.IsTimeDependent && v.NumDimensions > 1 && v.NumDimensions <= 2);
+            var timeDepVariables = dataVariables.Where(timeDepVarSelectionCriteria).ToList();
+            var functions = timeDepVariables.SelectMany(ProcessTimeDependent1DVariable).Where(c => c != null).ToList();
+
+            return functions;
+        }
+        private IEnumerable<NetworkCoverage> ProcessTimeDependent1DVariable(NetCdfVariableInfo timeDependentVariable)
+        {
+            NetworkCoverage coverage = null;
+            var netcdfVariable = timeDependentVariable.NetCdfDataVariable;
+
+            var netCdfVariableName = netCdfFile.GetVariableName(netcdfVariable);
+            
+            var netCdfVariableType = netCdfFile.GetVariableDataType(netcdfVariable);
+            if (netCdfVariableType != NetCdfDataType.NcDoublePrecision)
+            {
+                yield break;
+            }
+
+            var longName = netCdfFile.GetAttributeValue(netcdfVariable, LongNameAttribute) ??
+                           netCdfFile.GetAttributeValue(netcdfVariable, StandardNameAttribute);
+
+            var coverageLongName = (longName != null)
+                ? string.Format("{0} ({1})", longName, netCdfVariableName)
+                : netCdfVariableName;
+
+            var location =
+                netCdfFile.GetAttributeValue(netcdfVariable, GridApiDataSet.UGridAttributeConstants.Names.Location);
+
+            var unitSymbol = netCdfFile.GetAttributeValue(netcdfVariable, UnitAttribute);
+
+            coverage = CreateNetworkCoverage(coverageLongName, unitSymbol);
+            coverage.Attributes.Add("NetCdfVariableName",netCdfVariableName);
+            coverage.Store = this;
+            var times = MetaData.Times;
+            AddNetworkLocationsToNetworkCoverage(outputDiscretization, times, coverage);
+            yield return coverage;
+        }
+
+        protected override string GetNetCdfVariableName(ICoverage coverage)
+        {
+            var nwConverage = coverage as NetworkCoverage;
+            if (nwConverage == null && !nwConverage.Attributes.ContainsKey("NetCdfVariableName")) return base.GetNetCdfVariableName(coverage);
+            return nwConverage.Attributes["NetCdfVariableName"];
+        }
+
+        public static void AddNetworkLocationsToNetworkCoverage(IDiscretization discretization, ICollection<DateTime> times, INetworkCoverage networkCoverage)
+        {
+            if (networkCoverage.Store is WaterFlowModel1DNetCdfFunctionStore) return; // temporary until modelApi is removed
+
+            var networkLocations = discretization.Locations.Values.OrderBy(l => l).ToArray();
+
+            networkCoverage.Clear();
+
+            networkCoverage.Time.FixedSize = times.Count;
+            networkCoverage.Locations.FixedSize = networkLocations.Length;
+
+            if (times.Count != 0) networkCoverage.Time.SetValues(times);
+            if (networkLocations.Count() != 0) networkCoverage.SetLocations(networkLocations);
+        }
+        private NetworkCoverage CreateNetworkCoverage(string coverageLongName, string unitSymbol, int number = -1)
+        {
+            var suffix = number < 0 ? string.Empty : string.Format(" ({0})", number);
+            var coverageName = coverageLongName + suffix;
+            return new NetworkCoverage(coverageName, true, coverageName, unitSymbol) { Network = outputNetwork};
+        }
+
+        private IEnumerable<NetCdfVariableInfo> GetVariableInfos()
+        {
+            using (ReconnectToMapFile())
+            {
+                foreach (NetCdfVariable variable in netCdfFile.GetVariables())
+                {
+                    List<NetCdfDimension> dimensions = netCdfFile.GetDimensions(variable).ToList();
+                    string firstDimensionName = dimensions.Select(d => netCdfFile.GetDimensionName(d)).FirstOrDefault();
+
+                    if (dimensions.Count == 0)
+                        continue;
+
+                    if (TimeVariableNames.Contains(netCdfFile.GetVariableName(variable)))
+                        continue;
+
+                    // maybe add some relationship checks here: now we're also returning some arguments & components seperately.
+                    if (firstDimensionName != null && TimeDimensionNames.Contains(firstDimensionName))
+                    {
+                        // time dependent variable
+                        string timeVariableName = GetTimeVariableName(firstDimensionName);
+                        string refDate = ReadReferenceDateFromFile(timeVariableName);
+                        yield return new NetCdfVariableInfo(variable, dimensions.Count, timeVariableName, refDate);
+                    }
+                    else
+                    {
+                        // non time dependent variable
+                        yield return new NetCdfVariableInfo(variable, dimensions.Count);
+                    }
+                }
+            }
+        }
+        protected virtual string ReadReferenceDateFromFile(string timeVariableName)
+        {
+            NetCdfVariable timeVariable = netCdfFile.GetVariableByName(timeVariableName);
+            string timeReference = netCdfFile.GetAttributeValue(timeVariable, "units");
+
+            const string secondsSinceStr = "seconds since ";
+
+            var dateTime = new DateTime(1970, 1, 1); // assume epoch otherwise
+            if (timeReference.StartsWith(secondsSinceStr))
+            {
+                string timeStr = timeReference.Substring(secondsSinceStr.Length);
+
+                if (!DateTime.TryParseExact(timeStr, dateTimeFormat,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out dateTime))
+                    throw new ArgumentException("Could not parse time reference");
+            }
+            return dateTime.ToString(DateTimeFormatInfo.InvariantInfo.FullDateTimePattern, CultureInfo.InvariantCulture);
+        }
+        protected IDisposable ReconnectToMapFile()
+        {
+            return new NetCdfFileConnection(this);
+        }
+        private class NetCdfFileConnection : IDisposable
+        {
+            private readonly bool fileWasAlreadyOpen = true;
+            private FM1DFileFunctionStore store;
+
+            public NetCdfFileConnection(FM1DFileFunctionStore store)
+            {
+                Monitor.Enter(store.readLock);
+
+                this.store = store;
+
+                if (store.netCdfFile != null)
+                    return;
+
+                store.netCdfFile = NetCdfFile.OpenExisting(store.Path);
+                fileWasAlreadyOpen = false;
+            }
+
+            public void Dispose()
+            {
+                try
+                {
+                    // there might be nesting:
+                    if (fileWasAlreadyOpen)
+                        return;
+
+                    store.netCdfFile.Close();
+                    store.netCdfFile = null;
+                }
+                finally
+                {
+                    Monitor.Exit(store.readLock);
+                    store = null;
+                }
+            }
+        }
+        protected class NetCdfVariableInfo
+        {
+            public NetCdfVariableInfo(NetCdfVariable dataVariable, int numDimensions)
+            {
+                NetCdfDataVariable = dataVariable;
+                NumDimensions = numDimensions;
+                IsTimeDependent = false;
+            }
+
+            public NetCdfVariableInfo(NetCdfVariable dataVariable, int numDimensions, string timeVariableName,
+                string referenceDate)
+                : this(dataVariable, numDimensions)
+            {
+                IsTimeDependent = true;
+                TimeVariableName = timeVariableName;
+                ReferenceDate = referenceDate;
+            }
+
+            public NetCdfVariable NetCdfDataVariable { get; private set; }
+            public int NumDimensions { get; private set; }
+
+            public bool IsTimeDependent { get; private set; }
+            public string TimeVariableName { get; private set; }
+            public string ReferenceDate { get; private set; }
+        }
+
+        private class VariableSizeInfo
+        {
+            public object Max;
+            public object Min;
+
+            public VariableSizeInfo(object min, object max)
+            {
+                Min = min;
+                Max = max;
+            }
+        }
+        protected IList<string> TimeVariableNames
+        {
+            get { return new[] { GetTimeVariableName(TimeDimensionName) }; }
+        }
+        protected IList<string> TimeDimensionNames
+        {
+            get { return new[] { TimeDimensionName }; }
+        }
+        protected string GetTimeVariableName(string dimName)
+        {
+            return "time";
+        }
+    }
+}

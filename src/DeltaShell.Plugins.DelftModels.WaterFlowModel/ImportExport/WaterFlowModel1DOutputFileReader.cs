@@ -12,9 +12,30 @@ using DeltaShell.Plugins.SharpMapGis.ImportExport;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
-    public static class WaterFlowModel1DOutputFileReader
+    public interface IWaterFlowModel1DOutputFileReader
     {
-        public static WaterFlowModel1DOutputFileMetaData ReadMetaData(string path, bool doValidation = true)
+        WaterFlowModel1DOutputFileMetaData ReadMetaData(string path, bool doValidation = true);
+        double[,] GetAllVariableData(string path, string variableName, WaterFlowModel1DOutputFileMetaData metaData);
+        IList<double> GetSelectionOfVariableData(string path, string variableName, int[] origin, int[] shape);
+    }
+
+    public class WaterFlowModel1DOutputFileReader : IWaterFlowModel1DOutputFileReader
+    {
+        protected string timeVariableNameInNetCDFFile = WaterFlowModel1DOutputFileConstants.VariableNames.Time;
+        protected string timeDimensionNameInNetCdfFile = WaterFlowModel1DOutputFileConstants.DimensionKeys.Time;
+        protected string cfRoleAttributeNameInNetCdfFile = WaterFlowModel1DOutputFileConstants.AttributeKeys.CfRole;
+        protected string cfRoleAttributeValueInNetCdfFile = WaterFlowModel1DOutputFileConstants.AttributeValues.CfRole;
+        protected string branchidVariableNameInNetCDFFile = WaterFlowModel1DOutputFileConstants.VariableNames.BranchId;
+        protected string chainageVariableNameInNetCDFFile = WaterFlowModel1DOutputFileConstants.VariableNames.Chainage;
+        protected string xCoordinateVariableNameInNetCDFFile = WaterFlowModel1DOutputFileConstants.VariableNames.XCoordinate;
+        protected string yCoordinateVariableNameInNetCDFFile = WaterFlowModel1DOutputFileConstants.VariableNames.YCoordinate;
+        protected string unitsAttributeKeyNameInNetCdfFile = WaterFlowModel1DOutputFileConstants.AttributeKeys.Units;
+        protected string timeVariableUnitValuePrefixInNetCdfFile = WaterFlowModel1DOutputFileConstants.TimeVariableUnitValuePrefix;
+        protected string dateTimeFormat = WaterFlowModel1DOutputFileConstants.DateTimeFormat;
+        protected string longNameAttributeKeyNameInNetCdfFile = WaterFlowModel1DOutputFileConstants.AttributeKeys.LongName;
+        protected string aggregationOptionAttributeKeyNameInNetCdfFile = WaterFlowModel1DOutputFileConstants.AttributeKeys.AggregationOption;
+
+        public virtual WaterFlowModel1DOutputFileMetaData ReadMetaData(string path, bool doValidation = true)
         {
             if (doValidation)
             {
@@ -37,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return new WaterFlowModel1DOutputFileMetaData(times, locationMetaData, timeDependentVariableMetaData);
         }
 
-        public static double[,] GetAllVariableData(string path, string variableName, WaterFlowModel1DOutputFileMetaData metaData)
+        public double[,] GetAllVariableData(string path, string variableName, WaterFlowModel1DOutputFileMetaData metaData)
         {
             using (var netCdfFileWrapper = new NetCdfFileWrapper(path))
             {
@@ -45,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
         }
         
-        public static IList<double> GetSelectionOfVariableData(string path, string variableName, int[] origin, int[] shape)
+        public IList<double> GetSelectionOfVariableData(string path, string variableName, int[] origin, int[] shape)
         {
             return DoWithNetCdfFile(path, outputFile =>
             {
@@ -56,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             });
         }
         
-        private static T DoWithNetCdfFile<T>(string path, Func<NetCdfFile, T> function)
+        private T DoWithNetCdfFile<T>(string path, Func<NetCdfFile, T> function)
         {
             NetCdfFile outputFile = null;
             try
@@ -76,11 +97,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
         }
 
-        private static IList<DateTime> ReadTimesFromNetCdfFile(string path)
+        private IList<DateTime> ReadTimesFromNetCdfFile(string path)
         {
             return DoWithNetCdfFile(path, outputFile =>
             {
-                var timeVariable = outputFile.GetVariableByName(WaterFlowModel1DOutputFileConstants.VariableNames.Time);
+                var timeVariable = outputFile.GetVariableByName(timeVariableNameInNetCDFFile);
                 if (timeVariable == null) return new List<DateTime>();
 
                 var t0 = ParseReferenceTime(outputFile, timeVariable);
@@ -88,7 +109,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             });
         }
 
-        private static IList<LocationMetaData> ReadLocationMetaDataFromNetCdfFile(string path)
+        private IList<LocationMetaData> ReadLocationMetaDataFromNetCdfFile(string path)
         {
             return DoWithNetCdfFile(path, outputFile =>
             {
@@ -100,7 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
                 var locationSpecificVariables = outputFile.GetVariables()
                     .Where(v => !outputFile.GetVariableDimensionNames(v)
-                    .Contains(WaterFlowModel1DOutputFileConstants.DimensionKeys.Time));
+                    .Contains(timeDimensionNameInNetCdfFile));
 
                 foreach (var netCdfVariable in locationSpecificVariables)
                 {
@@ -108,24 +129,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     var variableName = outputFile.GetVariableName(netCdfVariable);
 
                     var attributes = outputFile.GetAttributes(netCdfVariable);
-                    if (attributes.Any(a => a.Key == WaterFlowModel1DOutputFileConstants.AttributeKeys.CfRole &&
-                                            a.Value.ToString() == WaterFlowModel1DOutputFileConstants.AttributeValues.CfRole))
+                    if (attributes.Any(a =>
+                    {
+                        return a.Key == cfRoleAttributeNameInNetCdfFile &&
+                               a.Value.ToString() == cfRoleAttributeValueInNetCdfFile;
+                    }))
                     {  
                         // 'location'_id variable identified by CfRole attribute
                         locationIds = ParseLocationIdVariable(path, variableName);
                         continue;
                     }
 
-                    if(variableName == WaterFlowModel1DOutputFileConstants.VariableNames.BranchId)
+                    
+                    if(variableName == branchidVariableNameInNetCDFFile)
                         branchIds = Parse1DNetCdfVariable<int>(path, variableName);
-
-                    if (variableName == WaterFlowModel1DOutputFileConstants.VariableNames.Chainage)
+                    
+                    if (variableName == chainageVariableNameInNetCDFFile)
                         chainages = Parse1DNetCdfVariable<double>(path, variableName);
 
-                    if (variableName == WaterFlowModel1DOutputFileConstants.VariableNames.XCoordinate)
+                    
+                    if (variableName == xCoordinateVariableNameInNetCDFFile)
                         xCoordinates = Parse1DNetCdfVariable<double>(path, variableName);
 
-                    if (variableName == WaterFlowModel1DOutputFileConstants.VariableNames.YCoordinate)
+                    if (variableName == yCoordinateVariableNameInNetCDFFile)
                         yCoordinates = Parse1DNetCdfVariable<double>(path, variableName);
                 }
 
@@ -133,7 +159,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             });
         }
 
-        private static IList<TimeDependentVariableMetaData> ReadTimeDependentVariableMetaDataFromNetCdfFile(string path)
+        private IList<TimeDependentVariableMetaData> ReadTimeDependentVariableMetaDataFromNetCdfFile(string path)
         {
             return DoWithNetCdfFile(path, outputFile =>
             {
@@ -141,13 +167,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
                 var timeDependentVariables = outputFile.GetVariables()
                     .Where(v => outputFile.GetVariableDimensionNames(v)
-                    .Contains(WaterFlowModel1DOutputFileConstants.DimensionKeys.Time));
+                    .Contains(timeDimensionNameInNetCdfFile));
 
                 foreach (var netCdfVariable in timeDependentVariables)
                 {
                     // necessary to loop through since we don't know what the time-dependent variables will be called
                     var variableName = outputFile.GetVariableName(netCdfVariable);
-                    if(variableName == WaterFlowModel1DOutputFileConstants.VariableNames.Time) continue;
+                    if(variableName == timeVariableNameInNetCDFFile) continue;
 
                     var attributes = outputFile.GetAttributes(netCdfVariable);
 
@@ -158,17 +184,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             });
         }
 
-        private static DateTime ParseReferenceTime(NetCdfFile outputFile, NetCdfVariable timeVariable)
+        private DateTime ParseReferenceTime(NetCdfFile outputFile, NetCdfVariable timeVariable)
         {
             var attributes = outputFile.GetAttributes(timeVariable);
 
-            var unit = attributes.FirstOrDefault(a => a.Key == WaterFlowModel1DOutputFileConstants.AttributeKeys.Units).Value;
+            var unit = attributes.FirstOrDefault(a => a.Key == unitsAttributeKeyNameInNetCdfFile).Value;
             var unitString = unit == null 
                 ? string.Empty 
-                : unit.ToString().Replace(WaterFlowModel1DOutputFileConstants.TimeVariableUnitValuePrefix, "").Trim();
+                : unit.ToString().Replace(timeVariableUnitValuePrefixInNetCdfFile, "").Trim();
             
             DateTime referenceTime;
-            if (!DateTime.TryParseExact(unitString, WaterFlowModel1DOutputFileConstants.DateTimeFormat, 
+            if (!DateTime.TryParseExact(unitString, dateTimeFormat, 
                                         CultureInfo.InvariantCulture, DateTimeStyles.None, out referenceTime))
             {
                 var errorMessage = string.Format(
@@ -181,16 +207,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return referenceTime;
         }
 
-        private static IList<DateTime> ParseTimeVariable(string path, DateTime referenceTime)
+        private IList<DateTime> ParseTimeVariable(string path, DateTime referenceTime)
         {
             using (var netCdfFileWrapper = new NetCdfFileWrapper(path))
             {
-                var times = netCdfFileWrapper.GetValues1D<double>(WaterFlowModel1DOutputFileConstants.VariableNames.Time) ?? new List<double>();
+                var times = netCdfFileWrapper.GetValues1D<double>(timeVariableNameInNetCDFFile) ?? new List<double>();
                 return times.Select(referenceTime.AddSeconds).ToList();
             }  
         }
         
-        private static IList<string> ParseLocationIdVariable(string path, string variableName)
+        private IList<string> ParseLocationIdVariable(string path, string variableName)
         {
             using (var netCdfFileWrapper = new NetCdfFileWrapper(path))
             {
@@ -200,7 +226,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
         }
 
-        private static IList<T> Parse1DNetCdfVariable<T>(string path, string variableName)
+        private IList<T> Parse1DNetCdfVariable<T>(string path, string variableName)
         {
             using (var netCdfFileWrapper = new NetCdfFileWrapper(path))
             {
@@ -208,12 +234,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
         }
         
-        private static IList<LocationMetaData> ParseLocationMetaData(IList<string> locationIds, IList<int> branchIds, IList<double> chainages, 
+        private IList<LocationMetaData> ParseLocationMetaData(IList<string> locationIds, IList<int> branchIds, IList<double> chainages, 
                                                                      IList<double> xCoordinates, IList<double> yCoordinates)
         {
             if(locationIds == null) return new List<LocationMetaData>();
 
-            return locationIds.Select((id, index) => new LocationMetaData(id,
+            return locationIds.Where((s, i) => branchIds[i] != int.MinValue+1).Select((id, index) => new LocationMetaData(id,
                 branchIds == null ? 0 : branchIds[index],
                 chainages == null ? 0.0 : chainages[index],
                 xCoordinates == null ? 0.0 : xCoordinates[index],
@@ -221,15 +247,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 .ToList();
         }
 
-        private static TimeDependentVariableMetaData ParseVariableMetaData(string variableName, Dictionary<string, object> attributes)
+        private TimeDependentVariableMetaData ParseVariableMetaData(string variableName, Dictionary<string, object> attributes)
         {
-            var longName = attributes.FirstOrDefault(a => a.Key == WaterFlowModel1DOutputFileConstants.AttributeKeys.LongName).Value;
+            var longName = attributes.FirstOrDefault(a => a.Key == longNameAttributeKeyNameInNetCdfFile).Value;
             var longNameString = longName == null ? string.Empty : longName.ToString();
 
-            var unit = attributes.FirstOrDefault(a => a.Key == WaterFlowModel1DOutputFileConstants.AttributeKeys.Units).Value;
+            var unit = attributes.FirstOrDefault(a => a.Key == unitsAttributeKeyNameInNetCdfFile).Value;
             var unitString = unit == null ? string.Empty : unit.ToString();
 
-            var aggregationOption = attributes.FirstOrDefault(a => a.Key == WaterFlowModel1DOutputFileConstants.AttributeKeys.AggregationOption).Value;
+            var aggregationOption = attributes.FirstOrDefault(a => a.Key == aggregationOptionAttributeKeyNameInNetCdfFile).Value;
 
             AggregationOptions option = AggregationOptions.Current;// default to Current
             if (aggregationOption != null)
