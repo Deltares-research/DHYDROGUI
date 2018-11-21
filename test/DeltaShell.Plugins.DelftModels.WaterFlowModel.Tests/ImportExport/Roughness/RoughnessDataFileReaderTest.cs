@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using DelftTools.Functions.Generic;
@@ -19,6 +20,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
     [TestFixture]
     public class RoughnessDataFileReaderTest : RoughnessFileReaderTestHelper
     {
+        [TestCase("NonExistingFilePath")]
+        [TestCase(null)]
+        public void WhenReadingRoughnessFromANonExistingFile_ThenErrorMessagesAreReturnedAndNoRoughnessSectionHasBeenRead(string filePath)
+        {
+            var messages = string.Empty;
+            Action<string, IList<string>> getReport = (header, errorMessages) => { messages += errorMessages; };
+
+            var roughnessReader = new RegularRoughnessFileReader(getReport);
+            var roughnessSection = roughnessReader.ReadFile("NonExistingFilePath", new HydroNetwork(), new List<RoughnessSection>());
+
+            Assert.IsFalse(string.IsNullOrEmpty(messages));
+            Assert.IsNull(roughnessSection);
+        }
+
         [Test]
         public void TestRoughnessDataFileReader_With_Calibrated_RoughnessSectionFile()
         {
