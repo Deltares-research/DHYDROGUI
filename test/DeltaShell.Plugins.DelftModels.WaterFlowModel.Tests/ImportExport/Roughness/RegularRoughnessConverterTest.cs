@@ -172,6 +172,50 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             Assert.That(networkCoverage.EvaluateRoughnessValue(expectedNetworkLocation), Is.EqualTo(2.3));
         }
 
+        [Test]
+        public void GivenRoughnessDataModelWithDischargeFunction_WhenConvertingToRoughnessSection_ThenCorrectRoughnessFunction()
+        {
+            var myBranchId = "myBranch";
+            var categories = new List<DelftIniCategory>
+            {
+                CreateRoughnessContentCategory(MainSectionName),
+                CreateBranchPropertiesForDischargeCategory(myBranchId),
+                CreateDefinitionForDischargeCategory(myBranchId)
+            };
+
+            var roughnessConverter = new RegularRoughnessConverter();
+            var errorMessages = new List<string>();
+            var network = new HydroNetwork();
+            var channel = new Channel { Name = myBranchId };
+            network.Branches.Add(channel);
+            var roughnessSection = roughnessConverter.Convert(categories, network, new List<RoughnessSection>(), errorMessages);
+            Assert.That(errorMessages.Count, Is.EqualTo(0));
+
+            Assert.IsNotNull(roughnessSection);
+            Assert.That(roughnessSection.Name, Is.EqualTo(MainSectionName));
+            Assert.That(roughnessSection.GetRoughnessFunctionType(channel), Is.EqualTo(RoughnessFunction.FunctionOfQ));
+
+            var functionOfQ = roughnessSection.FunctionOfQ(channel);
+            Assert.That(functionOfQ.Components.Count, Is.EqualTo(1));
+            Assert.That(functionOfQ.Arguments.Count, Is.EqualTo(2));
+
+            var chainageValues = functionOfQ.Arguments[0].Values;
+            Assert.That(chainageValues.Count, Is.EqualTo(1));
+            Assert.That(chainageValues[0], Is.EqualTo(222.0));
+
+            var qValueArgument = functionOfQ.Arguments[1].Values;
+            Assert.That(qValueArgument.Count, Is.EqualTo(3));
+            Assert.That(qValueArgument[0], Is.EqualTo(0.0));
+            Assert.That(qValueArgument[1], Is.EqualTo(2.0));
+            Assert.That(qValueArgument[2], Is.EqualTo(3.0));
+
+            var functionValues = functionOfQ.Components[0].Values;
+            Assert.That(functionValues.Count, Is.EqualTo(3));
+            Assert.That(functionValues[0], Is.EqualTo(1.0));
+            Assert.That(functionValues[1], Is.EqualTo(20.0));
+            Assert.That(functionValues[2], Is.EqualTo(15.0));
+        }
+
         private static DelftIniCategory CreateRoughnessContentCategory(string crossSectionSectionName)
         {
             var category = new DelftIniCategory(RoughnessDataRegion.ContentIniHeader);
@@ -192,12 +236,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             return category;
         }
 
+        private static DelftIniCategory CreateBranchPropertiesForDischargeCategory(string branchId)
+        {
+            var category = new DelftIniCategory(RoughnessDataRegion.BranchPropertiesIniHeader);
+            category.AddProperty(SpatialDataRegion.BranchId.Key, branchId);
+            category.AddProperty(RoughnessDataRegion.RoughnessType.Key, "6");
+            category.AddProperty(RoughnessDataRegion.FunctionType.Key, "1");
+            category.AddProperty(RoughnessDataRegion.NumberOfLevels.Key, "3");
+            category.AddProperty(RoughnessDataRegion.Levels.Key, "0.000 2.000 3.000");
+            return category;
+        }
+
         private static DelftIniCategory CreateDefinitionCategory(string branchId)
         {
             var category = new DelftIniCategory(RoughnessDataRegion.DefinitionIniHeader);
             category.AddProperty(SpatialDataRegion.BranchId.Key, branchId);
             category.AddProperty(SpatialDataRegion.Chainage.Key, "100.000");
             category.AddProperty(SpatialDataRegion.Value.Key, "2.30000");
+            return category;
+        }
+
+        private static DelftIniCategory CreateDefinitionForDischargeCategory(string branchId)
+        {
+            var category = new DelftIniCategory(RoughnessDataRegion.DefinitionIniHeader);
+            category.AddProperty(SpatialDataRegion.BranchId.Key, branchId);
+            category.AddProperty(SpatialDataRegion.Chainage.Key, "222.000");
+            category.AddProperty(RoughnessDataRegion.Values.Key, "1.00000 20.00000 15.00000");
             return category;
         }
     }
