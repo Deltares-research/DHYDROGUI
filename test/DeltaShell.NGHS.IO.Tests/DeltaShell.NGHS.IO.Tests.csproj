@@ -120,7 +120,6 @@
     <Compile Include="Converters\HydroNodeConverterTest.cs" />
     <Compile Include="Converters\LateralSourceConverterTest.cs" />
     <Compile Include="Converters\ObservationPointConverterTest.cs" />
-    <Compile Include="DelftXsdValidatorTest.cs" />
     <Compile Include="FileReaders\DelftBcFileParserTest.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParserTest.cs" />
     <Compile Include="FileReaders\DelftIniFileParserTest.cs" />
