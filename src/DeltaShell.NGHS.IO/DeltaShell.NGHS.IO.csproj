@@ -210,7 +210,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RealTimeControlXSDs\pi_timeseries.Designer.cs" />
     <Compile Include="UgridGlobalMetaDataToProtoConverter.cs" />
+    <Compile Include="RealTimeControlXSDs\rtcDataConfig.Designer.cs" />
+    <Compile Include="RealTimeControlXSDs\rtcRuntimeConfig.Designer.cs" />
+    <Compile Include="RealTimeControlXSDs\rtcToolsConfig.Designer.cs" />
+    <Compile Include="RealTimeControlXSDs\treeVector.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
@@ -227,17 +232,20 @@
   <ItemGroup>
     <None Include="Grid\Grid.cd" />
     <None Include="packages.config" />
+    <None Include="RealTimeControlXSDs\pi_timeseries.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="UML\OverView.cd" />
-    <None Include="Xsd\rtcDataConfig.xsd">
+    <None Include="RealTimeControlXSDs\rtcDataConfig.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Xsd\rtcRuntimeConfig.xsd">
+    <None Include="RealTimeControlXSDs\rtcRuntimeConfig.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Xsd\rtcToolsConfig.xsd">
+    <None Include="RealTimeControlXSDs\rtcToolsConfig.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Xsd\treeVector.xsd">
+    <None Include="RealTimeControlXSDs\treeVector.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
