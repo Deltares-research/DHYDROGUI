@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                                                 ValidateStructures(flowModel1D.Network),
                                                 WaterFlowModel1DDiscretizationValidator.Validate(flowModel1D.NetworkDiscretization, flowModel1D),
                                                 ValidateRoughness(flowModel1D),
-                                                ValidateExtraResistance(flowModel1D),
+                                                ValidateExtraResistance(flowModel1D.Network.Structures.Where(s => s is IExtraResistance)),
                                                 RestartTimeRangeValidator.ValidateRestartTimeRangeSettings(
                                                     flowModel1D.UseSaveStateTimeRange,
                                                     flowModel1D.SaveStateStartTime,
@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
             return true;
         }
 
-        private static ValidationReport ValidateStructures(IHydroNetwork network)
+        public static ValidationReport ValidateStructures(IHydroNetwork network)
         {
             var issues = new List<ValidationIssue>();
 
@@ -276,13 +276,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
 
         private static ValidationReport ValidateRoughness(WaterFlowModel1D model)
         {
-            return new ValidationReport("Roughness", model.Network.Channels.SelectMany(c => GetRoughnessValidationIssues(model, c)));
+            return ValidateRoughness(model.Network, model.RoughnessSections);
         }
 
-        private static IEnumerable<ValidationIssue> GetRoughnessValidationIssues(WaterFlowModel1D model,
+        public static ValidationReport ValidateRoughness(IHydroNetwork network, IEnumerable<RoughnessSection> roughnessSections)
+        {
+            return new ValidationReport("Roughness", network.Channels.SelectMany(c => GetRoughnessValidationIssues(roughnessSections, c)));
+        }
+
+        private static IEnumerable<ValidationIssue> GetRoughnessValidationIssues(IEnumerable<RoughnessSection> roughnessSections,
             IChannel channel)
         {
-            return model.RoughnessSections.SelectMany(rs => GetRoughnessValidationIssuesForSection(rs, channel));
+            return roughnessSections.SelectMany(rs => GetRoughnessValidationIssuesForSection(rs, channel));
         }
 
         private static IEnumerable<ValidationIssue> GetRoughnessValidationIssuesForSection(RoughnessSection roughnessSection, IChannel channel)
@@ -321,11 +326,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
             }
         }
 
-        private static ValidationReport ValidateExtraResistance(WaterFlowModel1D model)
+        public static ValidationReport ValidateExtraResistance(IEnumerable<IStructure1D> extraResistances)
         {
             var issues = new List<ValidationIssue>();
 
-            var extraResistances = model.Network.Structures.Where(s => s is IExtraResistance);
             foreach (IExtraResistance extraResistance in extraResistances)
             {
                 int count = extraResistance.FrictionTable.Arguments[0].Values.Count;

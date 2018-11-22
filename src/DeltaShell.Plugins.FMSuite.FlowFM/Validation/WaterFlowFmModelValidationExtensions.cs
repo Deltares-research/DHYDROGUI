@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NetTopologySuite.Extensions.Coverages;
 
@@ -18,6 +21,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 ValidateCoordinateSystem(model),
                 WaterFlowFMModelComputationalGridValidator.Validate(model.NetworkDiscretization, model),
                 WaterFlowFMModelNetworkValidator.Validate(model.Network),
+                WaterFlowModel1DHydroNetworkValidator.Validate(model.Network),
+                WaterFlowModel1DDiscretizationValidator.Validate(model.NetworkDiscretization),
+                WaterFlowModel1DModelDataValidator.ValidateStructures(model.Network),
+                WaterFlowModel1DModelDataValidator.ValidateRoughness(model.Network, model.RoughnessSections),
+                WaterFlowModel1DModelDataValidator.ValidateExtraResistance(model.Network.Structures.Where(s => s is IExtraResistance)),
                 WaterFlowFMGridValidator.Validate(model),
                 ValidateBathymetry(model),
                 ValidatePhysicalProcesses(model),
