@@ -16,7 +16,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(NetworkDiscretizationConverter));
 
-
         public static IList<INetworkLocation> Convert(IEnumerable<DelftIniCategory> categories, IList<IBranch> networkBranches, IList<string> errorMessages)
         {
             IList<INetworkLocation> networkLocations = new List<INetworkLocation>();
@@ -57,6 +56,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             if(errorMessages.Any())
                 throw new Exception(string.Join(Environment.NewLine, errorMessages));
 
+            if (gridPointsOffsets != null) gridPointsOffsets = GetScaledCalculationPoints(gridPointsOffsets, branch);
             ICollection<INetworkLocation> discretizationForThisBranch = new List<INetworkLocation>();
             for (var i = 0; i < gridPointsCount; i++)
             {
@@ -69,6 +69,17 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
                 });
             }
             return discretizationForThisBranch;
+        }
+
+        private static IList<double> GetScaledCalculationPoints(IList<double> gridPointsOffsets, IBranch branch)
+        {
+            var maximumOffset = gridPointsOffsets.Max();
+            if (!(Math.Abs(maximumOffset - branch.Length) > 10e-10)) return gridPointsOffsets;
+
+            var scalingFactor = branch.Length / maximumOffset;
+            var scaledCalculationPoints = gridPointsOffsets.Select(offset => offset * scalingFactor).ToList();
+            Log.WarnFormat($"Rescaled the discretization points of branch {branch.Name} with a factor {scalingFactor}");
+            return scaledCalculationPoints;
         }
 
         private static IEnumerable<string> ValidateDataModel(IBranch branch, string branchName, int gridPointsCount, IList<double> gridPointsX, IList<double> gridPointsY, IList<double> gridPointsOffsets, IList<string> gridPointsNames)
@@ -88,7 +99,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             foreach (var errorMessage in ValidateDataQuantities(branchName, gridPointsCount, gridPointsX, gridPointsY, gridPointsOffsets, gridPointsNames))
                 yield return errorMessage;
 
-            foreach (var errorMessage in ValidateOffsetValues(branch, gridPointsOffsets, gridPointsNames))
+            foreach (var errorMessage in ValidateOffsetValueOrder(gridPointsOffsets, branchName))
                 yield return errorMessage;
         }
 
@@ -133,21 +144,11 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
                 yield return $"The amount of names defined for discretization points on branch '{branchName}' does not match the defined amount of discretisation points.";
         }
 
-        private static IEnumerable<string> ValidateOffsetValues(IBranch branch, IList<double> gridPointsOffsets, IList<string> gridPointsNames)
+        private static IEnumerable<string> ValidateOffsetValueOrder(IList<double> gridPointsOffsets, string branchName)
         {
-            for (var n = 0; n < gridPointsOffsets.Count; n++)
-            {
-                if (gridPointsOffsets[n] > branch.Length)
-                {
-                    Log.WarnFormat($"Network location '{gridPointsNames[n]}' has an offset {gridPointsOffsets[n]} that is larger than the length {branch.Length} of its branch '{branch.Name}'. The offset has been set to the length of the branch.");
-                    gridPointsOffsets[n] = branch.Length;
-                }
-
-                if (n < gridPointsOffsets.Count - 1 && gridPointsOffsets[n + 1] <= gridPointsOffsets[n])
-                {
-                    yield return $"Network location offsets of branch '{branch.Name}' are not ordered.";
-                }
-            }
+            return gridPointsOffsets
+                .Where((t, n) => n < gridPointsOffsets.Count - 1 && gridPointsOffsets[n + 1] <= t)
+                .Select(t => $"Network location offsets of branch '{branchName}' are not ordered.");
         }
     }
 }

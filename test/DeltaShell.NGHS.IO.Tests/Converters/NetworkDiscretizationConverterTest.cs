@@ -148,24 +148,30 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             Assert.That(errorMessages.Contains($"The {propertyName} property is missing for branch '{channel1.Name}'"));
         }
 
-        [Test]
-        public void GivenAGridOffsetWhichIsLargerThanTheBranch_WhenConverting_ThenAnErrorMessageIsReturned()
+        [TestCase("0.0", "20.0", "40.0", "2")]
+        [TestCase("0.0", "100.0", "200.0", "0,5")]
+        public void GivenGridOffsetsWithAMaximumValueThatIsDifferentFromTheBranchLength_WhenConverting_ThenWarningMessageIsLoggedAndNetworkLocationsHaveBeenScaled(string firstValue, string secondValue, string thirdValue, string scalingFactor)
         {
             var categories = new List<DelftIniCategory>();
             var branchCategory = CreateCorrectBranchCategory();
-            var gridPointsIncorrectOffSets = new[]{ "0.0", "100.49", "200" /*Larger than branch length of 100.0*/ };
-            branchCategory.SetProperty(NetworkDefinitionRegion.GridPointOffsets.Key, string.Join(" ", gridPointsIncorrectOffSets ));
+            var gridPointsIncorrectOffSets = new[] { firstValue, secondValue, thirdValue /*  Smaller/larger than branch length of 100.0 */ };
+            branchCategory.SetProperty(NetworkDefinitionRegion.GridPointOffsets.Key, string.Join(" ", gridPointsIncorrectOffSets));
             categories.Add(branchCategory);
 
             var branches = new List<IBranch> { channel1 };
             var errorMessages = new List<string>();
             IList<INetworkLocation> networkLocations = new List<INetworkLocation>();
 
-            var expectedPartOfMessage = $"Network location '{gridPointsNames[2]}' has an offset {gridPointsIncorrectOffSets[2]} that is larger than the length {branches[0].Length} of its branch '{branches[0].Name}'";
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => networkLocations = NetworkDiscretizationConverter.Convert(categories, branches, errorMessages), expectedPartOfMessage);
+            var expectedMessage = $"Rescaled the discretization points of branch {channel1.Name} with a factor {scalingFactor}";
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => networkLocations = NetworkDiscretizationConverter.Convert(categories, branches, errorMessages), expectedMessage);
 
             Assert.AreEqual(0, errorMessages.Count);
             Assert.AreEqual(3, networkLocations.Count);
+
+            var chainages = networkLocations.Select(l => l.Chainage).ToList();
+            Assert.That(chainages[0], Is.EqualTo(0.0));
+            Assert.That(chainages[1], Is.EqualTo(50.0));
+            Assert.That(chainages[2], Is.EqualTo(100.0));
         }
 
         private DelftIniCategory CreateCorrectBranchCategory()
