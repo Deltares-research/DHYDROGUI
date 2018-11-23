@@ -189,6 +189,14 @@
     <Compile Include="ImportExport\Roughness\RegularRoughnessConverter.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessConverter.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessReader.cs" />
+    <Compile Include="ImportExport\Structures\AdvancedWeirConverter.cs" />
+    <Compile Include="ImportExport\Structures\GeneralStructureConverter.cs" />
+    <Compile Include="ImportExport\Structures\OrificeConverter.cs" />
+    <Compile Include="ImportExport\Structures\CompositeBranchStructureConverter.cs" />
+    <Compile Include="ImportExport\Structures\UniversalWeirConverter.cs" />
+    <Compile Include="ImportExport\Structures\WeirConverter.cs" />
+    <Compile Include="ImportExport\Structures\StructuresFileReader.cs" />
+    <Compile Include="ImportExport\Structures\BasicStructuresOperations.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DBoundaryFileWriter.cs" />
     <Compile Include="ImportExport\BoundaryFileWriterHelper.cs" />
     <Compile Include="ImportExport\BoundaryLocationFileWriter.cs" />
@@ -214,7 +222,6 @@
     <Compile Include="ImportExport\Roughness\RoughnessSectionToDataTableConverter.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessTypeCsvConverter.cs" />
     <Compile Include="ImportExport\SobekToFMExporter.cs" />
-    <Compile Include="ImportExport\StructureFileReader.cs" />
     <Compile Include="ImportExport\StructureFileWriter.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DExporter.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DFileImporter.cs" />

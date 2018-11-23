@@ -5,9 +5,12 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
 using log4net;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro.Helpers;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 
@@ -29,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             var model = new WaterFlowModel1D();
             try
             {
-                const int totalSteps = 7;
+                const int totalSteps = 8;
                 reportProgress($"Reading filenames from {Path.GetFileName(modelFilename)} file.", 1, totalSteps);
                 var fileName = new ModelFileNames(modelFilename);
 
@@ -72,6 +75,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     7, totalSteps);
 
                 ReadCrossSectionsFile(fileName, model.Network, CreateAndAddErrorReport);
+
+                reportProgress(
+                    $"Reading structures from {fileName.Structures} file and {fileName.Structures}.",
+                    8, totalSteps);
+
+                ReadStructuresFile(fileName.Structures, model.Network, CreateAndAddErrorReport);
             }
             catch (Exception)
             {
@@ -83,6 +92,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return model;
         }
 
+        private static void ReadStructuresFile(string fileName, IHydroNetwork network,
+            Action<string, IList<string>> createAndAddErrorReport)
+        {
+            var structuresFileReader = new StructuresFileReader(createAndAddErrorReport);
+            var compositeBranchStructures = structuresFileReader.ReadStructures(fileName, network.Channels.ToList());
+
+            foreach (var compositeBranchStructure in compositeBranchStructures)
+            {
+                if (network.BranchFeatures.Any(bf => bf.Name == compositeBranchStructure.Name))
+                {
+                    //Extra check, since the composite structures will be added to the network at this level. 
+                    compositeBranchStructure.Name =
+                        HydroNetworkHelper.GetUniqueFeatureName(compositeBranchStructure.Network as HydroNetwork,
+                            compositeBranchStructure);
+                }
+
+                var correspondingBranch = network.Channels.FirstOrDefault(c => c.Name == compositeBranchStructure.Branch.Name);
+                correspondingBranch?.BranchFeatures.Add(compositeBranchStructure);
+            }
+
+        }
         private static void ReadCrossSectionsFile(ModelFileNames fileName, IHydroNetwork network, Action<string, IList<string>> createAndAddErrorReport)
         {
             var crossSectionsReader = new CrossSectionFileReader(createAndAddErrorReport);
