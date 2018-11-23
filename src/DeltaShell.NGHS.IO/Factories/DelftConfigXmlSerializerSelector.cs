@@ -16,22 +16,20 @@ namespace DeltaShell.NGHS.IO.Factories
             var dimrSerializer = new XmlSerializer(typeof(dimrXML));
             lookupSerializer.Add("dimrConfig", dimrSerializer);
 
-            //Todo: Add Rtc Data object model with xsd2code tooling
-            //var rtcDataConfigSerializer = new XmlSerializer(typeof(rtcDataConfig));
-            //lookupSerializer.Add("dimrConfig", rtcDataConfigSerializer)          
+            var rtcDataConfigSerializer = new XmlSerializer(typeof(RTCDataConfigXML));
+            lookupSerializer.Add("rtcDataConfig", rtcDataConfigSerializer);
 
-            //var rtcRuntimeConfigSerializer = new XmlSerializer(typeof(rtcRuntimeConfig));
-            //lookupSerializer.Add("dimrConfig", rtcDataConfigSerializer);       
+            var rtcRuntimeConfigSerializer = new XmlSerializer(typeof(RtcRuntimeConfigXML));
+            lookupSerializer.Add("rtcRuntimeConfig", rtcRuntimeConfigSerializer);
 
-            //var rtcToolsConfigSerializer = new XmlSerializer(typeof(rtcToolsConfig));
-            //lookupSerializer.Add("dimrConfig", rtcDataConfigSerializer);
+            var rtcToolsConfigSerializer = new XmlSerializer(typeof(RtcToolsConfigXML));
+            lookupSerializer.Add("rtcToolsConfig", rtcToolsConfigSerializer);
 
-            //var state_importSerializer = new XmlSerializer(typeof(state_import));
-            //lookupSerializer.Add("dimrConfig", rtcDataConfigSerializer);      
+            var state_importSerializer = new XmlSerializer(typeof(TreeVectorFileXML));
+            lookupSerializer.Add("treeVectorFile", state_importSerializer);
 
-            //var timeseries_importSerializer = new XmlSerializer(typeof(timeseries_import));
-            //lookupSerializer.Add("dimrConfig", rtcDataConfigSerializer);
+            //var timeseries_importSerializer = new XmlSerializer(typeof(TimeSeriesCollectionXML));
+            //lookupSerializer.Add("TimeSeries", timeseries_importSerializer);
         }
-
     }
 }
