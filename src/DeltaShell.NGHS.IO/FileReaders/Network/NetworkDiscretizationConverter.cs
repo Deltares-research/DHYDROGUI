@@ -35,7 +35,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             return networkLocations;
         }
 
-        private static ICollection<INetworkLocation> ReadDiscretizationDefinition(IDelftIniCategory branchCategory, IEnumerable<IBranch> networkBranches)
+        private static IEnumerable<INetworkLocation> ReadDiscretizationDefinition(IDelftIniCategory branchCategory, IEnumerable<IBranch> networkBranches)
         {
             var branchName = branchCategory.ReadProperty<string>(NetworkDefinitionRegion.Id.Key);
             var branch = networkBranches.FirstOrDefault(b => b.Name == branchName);
@@ -56,7 +56,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             if(errorMessages.Any())
                 throw new Exception(string.Join(Environment.NewLine, errorMessages));
 
-            if (gridPointsOffsets != null) gridPointsOffsets = GetScaledCalculationPoints(gridPointsOffsets, branch);
+            if (gridPointsOffsets != null && branch != null)
+                CorrectLastChainageValueInCaseOfRoundingError(gridPointsOffsets, branch.Length);
+
             ICollection<INetworkLocation> discretizationForThisBranch = new List<INetworkLocation>();
             for (var i = 0; i < gridPointsCount; i++)
             {
@@ -71,15 +73,11 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             return discretizationForThisBranch;
         }
 
-        private static IList<double> GetScaledCalculationPoints(IList<double> gridPointsOffsets, IBranch branch)
+        private static void CorrectLastChainageValueInCaseOfRoundingError(IList<double> gridPointsOffsets, double branchLength)
         {
-            var maximumOffset = gridPointsOffsets.Max();
-            if (!(Math.Abs(maximumOffset - branch.Length) > 10e-10)) return gridPointsOffsets;
-
-            var scalingFactor = branch.Length / maximumOffset;
-            var scaledCalculationPoints = gridPointsOffsets.Select(offset => offset * scalingFactor).ToList();
-            Log.WarnFormat($"Rescaled the discretization points of branch {branch.Name} with a factor {scalingFactor}");
-            return scaledCalculationPoints;
+            var lastOffset = gridPointsOffsets.Last();
+            if (Math.Abs(lastOffset - branchLength) < 1e-3)
+                gridPointsOffsets[gridPointsOffsets.Count - 1] = branchLength;
         }
 
         private static IEnumerable<string> ValidateDataModel(IBranch branch, string branchName, int gridPointsCount, IList<double> gridPointsX, IList<double> gridPointsY, IList<double> gridPointsOffsets, IList<string> gridPointsNames)

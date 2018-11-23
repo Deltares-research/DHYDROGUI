@@ -2,11 +2,9 @@
 using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.FileReaders.Network;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
-using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -148,22 +146,20 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             Assert.That(errorMessages.Contains($"The {propertyName} property is missing for branch '{channel1.Name}'"));
         }
 
-        [TestCase("0.0", "20.0", "40.0", "2")]
-        [TestCase("0.0", "100.0", "200.0", "0,5")]
-        public void GivenGridOffsetsWithAMaximumValueThatIsDifferentFromTheBranchLength_WhenConverting_ThenWarningMessageIsLoggedAndNetworkLocationsHaveBeenScaled(string firstValue, string secondValue, string thirdValue, string scalingFactor)
+        [TestCase(99.9997)]
+        [TestCase(100.0004)]
+        public void GivenGridOffsetsWithTheLastValueThatIsSlightlyLargerThanTheBranchLength_WhenConverting_ThenLastNetworkLocationChainageIsAdjustedToBranchLength(double channelLength)
         {
             var categories = new List<DelftIniCategory>();
             var branchCategory = CreateCorrectBranchCategory();
-            var gridPointsIncorrectOffSets = new[] { firstValue, secondValue, thirdValue /*  Smaller/larger than branch length of 100.0 */ };
+            var gridPointsIncorrectOffSets = new[] { "0.0", "50.0", "100.0" /*  Smaller/larger (by < 10e-3) than channel length */ };
             branchCategory.SetProperty(NetworkDefinitionRegion.GridPointOffsets.Key, string.Join(" ", gridPointsIncorrectOffSets));
             categories.Add(branchCategory);
 
-            var branches = new List<IBranch> { channel1 };
+            var channel = new Channel("Channel1", new HydroNode("Node001") { Geometry = new Point(22.0, 0.0) }, new HydroNode("Node002") { Geometry = new Point(22.0, channelLength) }, channelLength);
+            var branches = new List<IBranch> { channel }; // Channel with length 99.9997
             var errorMessages = new List<string>();
-            IList<INetworkLocation> networkLocations = new List<INetworkLocation>();
-
-            var expectedMessage = $"Rescaled the discretization points of branch {channel1.Name} with a factor {scalingFactor}";
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => networkLocations = NetworkDiscretizationConverter.Convert(categories, branches, errorMessages), expectedMessage);
+            var networkLocations = NetworkDiscretizationConverter.Convert(categories, branches, errorMessages);
 
             Assert.AreEqual(0, errorMessages.Count);
             Assert.AreEqual(3, networkLocations.Count);
@@ -171,7 +167,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             var chainages = networkLocations.Select(l => l.Chainage).ToList();
             Assert.That(chainages[0], Is.EqualTo(0.0));
             Assert.That(chainages[1], Is.EqualTo(50.0));
-            Assert.That(chainages[2], Is.EqualTo(100.0));
+            Assert.That(chainages[2], Is.EqualTo(channelLength));
         }
 
         private DelftIniCategory CreateCorrectBranchCategory()

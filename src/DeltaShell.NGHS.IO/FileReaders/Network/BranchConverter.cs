@@ -45,7 +45,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
             // Optional Branch Properties
             var name = branchCategory.ReadProperty<string>(NetworkDefinitionRegion.Name.Key, true) ?? string.Empty;
 
-            return new Channel
+            var channel =  new Channel
             {
                 Name = idValue,
                 Geometry = GeometryFromWKT.Parse(geometryString),
@@ -54,6 +54,18 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
                 Target = targetNode,
                 OrderNumber = branchOrderValue
             };
+            AdjustCustomLengthProperty(branchCategory, channel);
+
+            return channel;
+        }
+
+        private static void AdjustCustomLengthProperty(IDelftIniCategory branchCategory, IBranch channel)
+        {
+            var gridPointsOffsets = branchCategory.ReadPropertiesToListOfType<double>(NetworkDefinitionRegion.GridPointOffsets.Key, true);
+            if (Math.Abs(gridPointsOffsets.Max() - channel.Length) < 1e-3) return;
+
+            channel.IsLengthCustom = true;
+            channel.Length = gridPointsOffsets.Max();
         }
 
         private static void ValidateConvertedBranch(IChannel readBranch, IList<IChannel> generatedBranches)

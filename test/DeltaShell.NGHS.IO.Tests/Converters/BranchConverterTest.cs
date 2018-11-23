@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileReaders.Network;
+using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -15,9 +16,13 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
     {
         private const string NodeName1 = "node1";
         private const string NodeName2 = "node2";
+        private readonly string[] gridPointsX = { "0.0", "50.0", "100.0" };
+        private readonly string[] gridPointsY = { "0.0", "0.0", "0.0" };
+        private readonly string[] gridPointsOffSets = { "0.0", "75.0", "150.0" };
+        private readonly string[] gridPointsNames = { "Channel1_0.000", "Channel1_50.000", "Channel1_100.000" };
 
         [Test]
-        public void GivenACorrectBranch_WhenConverting_ThenAListOfBranchesIsReturned()
+        public void GivenCorrectBranchDataModel_WhenConverting_ThenAListOfBranchesIsReturned()
         {
             var branchCategory = CreateBranchDelftIniCategory();
             var categories = new List<DelftIniCategory> {branchCategory};
@@ -26,17 +31,18 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             var branches = BranchConverter.Convert(categories, nodes, new List<string>());
 
             Assert.AreEqual(1, branches.Count);
-            Assert.AreEqual(branches[0].Geometry.Coordinates[0], new Coordinate(0.0,0.0, double.NaN));
-            Assert.AreEqual(branches[0].Geometry.Coordinates[1], new Coordinate(100.0,0.0, double.NaN));
+
+            var branch = branches.First();
+            Assert.AreEqual(branch.Geometry.Coordinates[0], new Coordinate(0.0, 0.0, double.NaN));
+            Assert.AreEqual(branch.Geometry.Coordinates[1], new Coordinate(100.0, 0.0, double.NaN));
         }
 
 
         [Test]
-        public void GivenDuplicateBranches_WhenConverting_ThenAnErrorMessageIsProduced()
+        public void GivenTwoBranchCategoriesWithDuplicateIds_WhenConverting_ThenAnErrorMessageIsProducedAndOneBranchIsReturned()
         {
             var categories = new List<DelftIniCategory>();
             var category1 = CreateBranchDelftIniCategory();
-
             var category2 = CreateBranchDelftIniCategory();
 
             categories.Add(category1);
@@ -51,27 +57,48 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
         }
 
         [Test]
-        public void GivenACorrectBranch_WhenConvertingWithANetworkThatIsNull_ThenAnExceptionIsThrown()
+        public void GivenACorrectBranchDataModel_WhenConvertingWithANetworkThatIsNull_ThenAnExceptionIsThrown()
         {
-            var categories = new List<DelftIniCategory>();
-            var category1 = CreateBranchDelftIniCategory();
-            categories.Add(category1);
+            var categories = new List<DelftIniCategory> { CreateBranchDelftIniCategory() };
+            var errorMessages = new List<string>();
+            BranchConverter.Convert(categories, null, errorMessages);
 
-            var amountOfExceptions = new List<string>();
-            BranchConverter.Convert(categories, null, amountOfExceptions);
-
-            Assert.AreEqual(1, amountOfExceptions.Count);
+            Assert.AreEqual(1, errorMessages.Count);
         }
 
-        private static DelftIniCategory CreateBranchDelftIniCategory()
+        [TestCase("0.0", "75.0", "150.0")]
+        [TestCase("0.0", "75.0", "100.001")]
+        [TestCase("0.0", "25.0", "50.0")]
+        [TestCase("0.0", "75.0", "99.999")]
+        public void GivenCorrectBranchDataModelWithGridPointOffsetSignificantlyLargerThanBranchEuclideanLenght_WhenConvertingToBranch_ThenBranchHasCustomLengthEqualToTheLargestOffsetValue(string smallestOffset, string middleOffset, string largestOffset)
         {
-            var category1 = new DelftIniCategory("Branch");
-            category1.AddProperty("id", "branch1");
-            category1.AddProperty("fromNode", NodeName1);
-            category1.AddProperty("toNode", NodeName2);
-            category1.AddProperty("order", "0");
-            category1.AddProperty("geometry", "LINESTRING (0 0, 100 0)");
-            return category1;
+            var branchCategory = CreateBranchDelftIniCategory();
+            branchCategory.SetProperty(NetworkDefinitionRegion.GridPointOffsets.Key, string.Join(" ", smallestOffset, middleOffset, largestOffset));
+            var categories = new List<DelftIniCategory> { branchCategory };
+            var errorMessages = new List<string>();
+            var branches = BranchConverter.Convert(categories, GetTestHydroNodes(), errorMessages);
+
+            var branch = branches.FirstOrDefault();
+            var expectedCustomBranchLength = double.Parse(largestOffset, CultureInfo.InvariantCulture);
+            Assert.IsNotNull(branch);
+            Assert.IsTrue(branch.IsLengthCustom);
+            Assert.That(branch.Length, Is.EqualTo(expectedCustomBranchLength));
+        }
+
+        private DelftIniCategory CreateBranchDelftIniCategory()
+        {
+            var branchCategory = new DelftIniCategory(NetworkDefinitionRegion.IniBranchHeader);
+            branchCategory.AddProperty(NetworkDefinitionRegion.Id.Key, "branch1");
+            branchCategory.AddProperty(NetworkDefinitionRegion.FromNode.Key, NodeName1);
+            branchCategory.AddProperty(NetworkDefinitionRegion.ToNode.Key, NodeName2);
+            branchCategory.AddProperty(NetworkDefinitionRegion.BranchOrder.Key, "0");
+            branchCategory.AddProperty(NetworkDefinitionRegion.Geometry.Key, "LINESTRING (0 0, 100 0)");
+            branchCategory.AddProperty(NetworkDefinitionRegion.GridPointsCount.Key, "3");
+            branchCategory.AddProperty(NetworkDefinitionRegion.GridPointX.Key, string.Join(" ", gridPointsX));
+            branchCategory.AddProperty(NetworkDefinitionRegion.GridPointY.Key, string.Join(" ", gridPointsY));
+            branchCategory.AddProperty(NetworkDefinitionRegion.GridPointOffsets.Key, string.Join(" ", gridPointsOffSets));
+            branchCategory.AddProperty(NetworkDefinitionRegion.GridPointNames.Key, string.Join(";", gridPointsNames));
+            return branchCategory;
         }
 
         private static List<INode> GetTestHydroNodes()
