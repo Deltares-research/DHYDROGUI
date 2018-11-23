@@ -220,6 +220,7 @@
     <Compile Include="GetInterpolatedCrossSectionTest.cs" />
     <Compile Include="ImportExport\BoundaryLocationFileWriterTest.cs" />
     <Compile Include="ImportExport\Boundary\BcConverterHelperTest.cs" />
+    <Compile Include="ImportExport\Boundary\BoundaryConditionConverterTest.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryFileReaderTest.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryFileReaderTestHelper.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryFileWriterTest.cs" />

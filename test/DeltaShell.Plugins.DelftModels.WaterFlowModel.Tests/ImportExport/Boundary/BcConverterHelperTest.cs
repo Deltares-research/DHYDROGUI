@@ -85,6 +85,109 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             }
         }
 
+        /// <summary>
+        /// GIVEN some propertyKey
+        ///   AND a set not containing the propertyKey
+        ///   AND isOptional is False
+        /// WHEN ValidateUniqueProperty is called with these parameters
+        /// THEN False is returned
+        /// </summary>
+        [Test]
+        public void GivenSomePropertyKeyAndASetNotContainingThePropertyKeyAndIsOptionalIsFalse_WhenValidateUniquePropertyIsCalledWithTheseParameters_ThenFalseIsReturned()
+        {
+            // Given
+            var inputSet = new List<DelftIniProperty>();
+            const bool isOptional = false;
+            const string propertyKey = "Steak";
+
+            // When
+            string ignoredOutput;
+            var output = BcConverterHelper.ValidateUniqueProperty(inputSet, propertyKey, isOptional, out ignoredOutput);
+
+            // Then
+            Assert.That(output, Is.False);
+        }
+
+        /// <summary>
+        /// GIVEN some propertyKey
+        ///   AND a set not containing the propertyKey
+        ///   AND isOptional is True
+        /// WHEN ValidateUniqueProperty is called with these parameters
+        /// THEN True is returned
+        ///  AND propertyVal is null
+        /// </summary>
+        [Test]
+        public void GivenSomePropertyKeyAndASetNotContainingThePropertyKeyAndIsOptionalIsTrue_WhenValidateUniquePropertyIsCalledWithTheseParameters_ThenTrueIsReturnedAndPropertyValIsNull()
+        {
+            // Given
+            var inputSet = new List<DelftIniProperty>();
+            const bool isOptional = true;
+            const string propertyKey = "Tenderloin";
+
+            // When
+            string outputProperty;
+            var output = BcConverterHelper.ValidateUniqueProperty(inputSet, propertyKey, isOptional, out outputProperty);
+
+            // Then
+            Assert.That(output, Is.True);
+            Assert.That(outputProperty, Is.Null);
+        }
+
+        /// <summary>
+        /// GIVEN some propertyKey
+        ///   AND a set of properties containing one property with propertyKey
+        /// WHEN ValidateUniqueProperty is called with these parameters
+        /// THEN True is returned
+        ///  AND The value associated with this property is returned
+        /// </summary>
+        [TestCase(true)]
+        [TestCase(false)]
+        public void GivenSomePropertyKeyAndASetOfPropertiesContainingOnePropertyWithPropertyKey_WhenValidateUniquePropertyIsCalledWithTheseParameters_ThenTrueIsReturnedAndTheValueAssociatedWithThisPropertyIsReturned(bool isOptional)
+        {
+            const string propertyKey = "Bacon";
+            const string propertyValue = "Jerky";
+
+            var inputSet = new List<DelftIniProperty>()
+            {
+                new DelftIniProperty(propertyKey, propertyValue, "Fatback pork belly beef turkey porchetta.")
+            };
+
+            // When
+            string outputProperty;
+            var output = BcConverterHelper.ValidateUniqueProperty(inputSet, propertyKey, isOptional, out outputProperty);
+
+            // Then
+            Assert.That(output, Is.True);
+            Assert.That(outputProperty, Is.EqualTo(propertyValue));
+        }
+
+        /// <summary>
+        /// GIVEN some propertyKey
+        ///   AND a set of properties containing multiple properties with propertyKey
+        /// WHEN ValidateUniqueProperty is called with these parameters
+        /// THEN False is returned
+        /// </summary>
+        [TestCase(true)]
+        [TestCase(false)]
+        public void GivenSomePropertyKeyAndASetOfPropertiesContainingMultiplePropertiesWithPropertyKey_WhenValidateUniquePropertyIsCalledWithTheseParameters_ThenFalseIsReturned(bool isOptional)
+        {
+            const string propertyKey = "Bacon";
+
+            var inputSet = new List<DelftIniProperty>()
+            {
+                new DelftIniProperty(propertyKey, "Drumstick", "Fatback pork belly beef turkey porchetta."),
+                new DelftIniProperty(propertyKey, "Salami", "Tail boudin capicola corned beef leberkas pork.")
+            };
+
+            // When
+            string ignoredOutput;
+            var output = BcConverterHelper.ValidateUniqueProperty(inputSet, propertyKey, isOptional, out ignoredOutput);
+
+            // Then
+            Assert.That(output, Is.False);
+        }
+
+        #region TestHelpers
         [ExcludeFromCodeCoverage]
         private static DateTime CalcDateTimeFrom(DateTime refDate, string unit, double timeStep)
         {
@@ -108,5 +211,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                 return timeValues.Select(t => (t - refDate).TotalHours).ToList();
             return null;
         }
+        #endregion
     }
 }
