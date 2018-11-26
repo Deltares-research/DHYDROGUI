@@ -11,6 +11,7 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
+using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Utilities;
@@ -37,6 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
     public class FM1DFileFunctionStore : WaterFlowModel1DNetCdfFunctionStore
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(FM1DFileFunctionStore));
         private readonly object readLock = new object();
         protected NetCdfFile netCdfFile;
         private const string TimeDimensionName = "time";
@@ -78,9 +80,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private void UpdateNetworkAndDiscretisationAfterPathSet()
         {
             if (!File.Exists(Path)) return;
-            var outputNetworkAndDiscretization = UGridToNetworkAdapter.LoadNetworkAndDiscretisationInOnce(Path);
-            outputNetwork = outputNetworkAndDiscretization.Item1;
-            outputDiscretization = outputNetworkAndDiscretization.Item2;
+            using (ReconnectToMapFile())
+            {
+                if (GetNcFileConvention() != GridApiDataSet.DataSetConventions.CONV_UGRID) return;
+                var outputNetworkAndDiscretization = UGridToNetworkAdapter.LoadNetworkAndDiscretisationInOnce(Path);
+
+                outputNetwork = outputNetworkAndDiscretization.Item1;
+                outputDiscretization = outputNetworkAndDiscretization.Item2;
+            }
+        }
+        private GridApiDataSet.DataSetConventions GetNcFileConvention()
+        {
+            try
+            {
+                var api = GridApiFactory.CreateNew();
+                if (api != null)
+                {
+                    using (api)
+                    {
+                        GridApiDataSet.DataSetConventions convention;
+                        var ierr = api.GetConvention(netCdfFile.Path, out convention);
+                        if (ierr != GridApiDataSet.GridConstants.NOERR)
+                        {
+                            throw new Exception("Couldn't get the nc file convention because of error number: " + ierr);
+                        }
+                        return convention;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                log.ErrorFormat("Failed to construct grid spatial data : {0}", e.Message);
+            }
+
+            return GridApiDataSet.DataSetConventions.CONV_NULL;
         }
 
         protected virtual void UpdateFunctionsAfterPathSet()
@@ -90,6 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 using (ReconnectToMapFile())
                 {
+                    if (GetNcFileConvention() != GridApiDataSet.DataSetConventions.CONV_UGRID) return;
                     Functions.AddRange(ConstructFunctions(GetVariableInfos()));
                 }
             }

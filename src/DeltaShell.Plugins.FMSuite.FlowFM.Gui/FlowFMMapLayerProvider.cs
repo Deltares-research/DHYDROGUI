@@ -118,25 +118,48 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
 
             var links = data as IEventedList<ILink1D2D>;
-            if (links != null && parent is WaterFlowFMModel)
+            if (links != null)
             {
-                var fmModel = (WaterFlowFMModel)parent;
-                var theme = Create1D2DLinksTheme();
-
-                return new VectorLayer(LayerName1D2DLinks)
+                if (parent is WaterFlowFMModel)
                 {
-                    //DataSource = new WaterFlowFM1D2DLinkFeatureCollection(fmModel),
-                    DataSource = new Feature2DCollection().Init(links, "1d2dLink", ModelName, fmModel.CoordinateSystem),
-                    FeatureEditor = new Feature2DEditor(fmModel),
-                    CanBeRemovedByUser = true,
-                    SmoothingMode = SmoothingMode.AntiAlias,
-                    Opacity = 0.7f,
-                    Theme = theme,
-                    Style = (VectorStyle)theme.DefaultStyle,
-                    Selectable = true,
-                    NameIsReadOnly = true,
+                    var fmModel = (WaterFlowFMModel) parent;
+                    var theme = Create1D2DLinksTheme();
 
-                };
+                    return new VectorLayer(LayerName1D2DLinks)
+                    {
+                        //DataSource = new WaterFlowFM1D2DLinkFeatureCollection(fmModel),
+                        DataSource =
+                            new Feature2DCollection().Init(links, "1d2dLink", ModelName, fmModel.CoordinateSystem),
+                        FeatureEditor = new Feature2DEditor(fmModel),
+                        CanBeRemovedByUser = true,
+                        SmoothingMode = SmoothingMode.AntiAlias,
+                        Opacity = 0.7f,
+                        Theme = theme,
+                        Style = (VectorStyle) theme.DefaultStyle,
+                        Selectable = true,
+                        NameIsReadOnly = true,
+
+                    };
+                }
+                if (parent is FMMapFileFunctionStore)
+                {
+                    var coordinateSystem = ((FMMapFileFunctionStore)parent).Grid.CoordinateSystem;
+                    var theme = Create1D2DLinksTheme();
+
+                    return new VectorLayer(LayerName1D2DLinks)
+                    {
+                        //DataSource = new WaterFlowFM1D2DLinkFeatureCollection(fmModel),
+                        DataSource =
+                            new Feature2DCollection().Init(links, "1d2dLink", ModelName, coordinateSystem),
+                        CanBeRemovedByUser = false,
+                        SmoothingMode = SmoothingMode.AntiAlias,
+                        Opacity = 0.7f,
+                        Theme = theme,
+                        Style = (VectorStyle)theme.DefaultStyle,
+                        Selectable = true,
+                        NameIsReadOnly = true,
+                    };
+                }
             }
 
             var allBoundaryConditionSets = data as IEventedList<BoundaryConditionSet>;

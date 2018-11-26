@@ -185,7 +185,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
                 return false;
             });
-            var links1D2DName = netCdfFile.GetVariableName(links1d2dNameNetCdfVariableInfo);
+
+            var links1D2DName = links1d2dNameNetCdfVariableInfo == null ? string.Empty : netCdfFile.GetVariableName(links1d2dNameNetCdfVariableInfo);
 
             var isUgridConvention = GetNcFileConvention() == GridApiDataSet.DataSetConventions.CONV_UGRID;
 
@@ -800,7 +801,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             boundaryCellValues.Add(function);
         }
 
-        private GridApiDataSet.DataSetConventions GetNcFileConvention()
+        public GridApiDataSet.DataSetConventions GetNcFileConvention()
         {
             try
             {

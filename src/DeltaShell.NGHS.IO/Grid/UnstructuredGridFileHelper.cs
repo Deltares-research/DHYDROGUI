@@ -194,8 +194,8 @@ namespace DeltaShell.NGHS.IO.Grid
             IDiscretization networkDiscretization, IEnumerable<ILink1D2D> links, string name, string pluginName, string pluginVersion, BedLevelLocation location, double[] zValues)
         {
             FileUtils.DeleteIfExists(netFilePath);
-            
-            var metaData = new UGridGlobalMetaData(name, pluginName, pluginVersion);
+
+            var metaData = new UGridGlobalMetaData(name, pluginName ?? "custom", pluginVersion ?? "unknown");
             
             if (network?.Nodes?.Count > 0)
             {
