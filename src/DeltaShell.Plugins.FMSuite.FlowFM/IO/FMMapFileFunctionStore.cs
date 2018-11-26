@@ -7,6 +7,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Units;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.NetCdf;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
@@ -64,6 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private DateTime[] ncDatetimes;
         private IList<FlowLink> flowLinks1D2D;
+        private IEventedList<ILink1D2D> links1D2D;
         private UnstructuredGrid grid;
         private readonly IList<ITimeSeries> boundaryCellValues = new List<ITimeSeries>();
         private Dictionary<string, UnstructuredGridCoverage> velocityCoverages = new Dictionary<string, UnstructuredGridCoverage>();
@@ -83,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             DisableCaching = true;
         }
 
-        public IHydroNetwork Network
+        /*public IHydroNetwork Network
         {
             get { return network; }
         }
@@ -91,8 +93,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public IDiscretization Discretisation
         {
             get { return discretisation; }
-        }
+        }*/
 
+
+        public IEventedList<ILink1D2D> Links1D2D
+        {
+            get { return links1D2D; }
+        }
         public UnstructuredGrid Grid
         {
             get { return grid; }
@@ -135,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             boundaryCellValues.Clear();
             UpdateGrid();
             var netCdfVariables = netCdfFile.GetVariables().ToList();
-            var mesh1DNameNetCdfVariable = netCdfVariables.FirstOrDefault(dv =>
+           /* var mesh1DNameNetCdfVariable = netCdfVariables.FirstOrDefault(dv =>
             {
                 var attributes = netCdfFile.GetAttributes(dv);
                 object dimension;
@@ -149,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return false;
             });
             var mesh1DName = netCdfFile.GetVariableName(mesh1DNameNetCdfVariable);
-
+*/
             var mesh2DNameNetCdfVariableInfo = netCdfVariables.FirstOrDefault(dv =>
             {
                 var attributes = netCdfFile.GetAttributes(dv);
@@ -165,10 +172,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             });
             var mesh2DName = netCdfFile.GetVariableName(mesh2DNameNetCdfVariableInfo);
 
+            var links1d2dNameNetCdfVariableInfo = netCdfVariables.FirstOrDefault(dv =>
+            {
+                var attributes = netCdfFile.GetAttributes(dv);
+                object topologyrole;
+                if (attributes.TryGetValue("cf_role", out topologyrole))
+                {
+                    if (topologyrole.ToString() == "mesh_topology_contact")
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            });
+            var links1D2DName = netCdfFile.GetVariableName(links1d2dNameNetCdfVariableInfo);
+
             var isUgridConvention = GetNcFileConvention() == GridApiDataSet.DataSetConventions.CONV_UGRID;
 
-            var functions1D = Get1DFunctions(dataVariables, isUgridConvention, mesh1DName);
-            var functions2D = Get2DFunctions(dataVariables, isUgridConvention, mesh2DName);
+            //var functions1D = Get1DFunctions(dataVariables, isUgridConvention, mesh1DName);
+            var functions2D = Get2DFunctions(dataVariables, isUgridConvention, mesh2DName, links1D2DName);
             if (!isUgridConvention)
             {
                 LogWarningsForExcludedTimeDependentVariables(dataVariables);
@@ -197,7 +219,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return functions;
         }
 
-        private List<UnstructuredGridCoverage> Get2DFunctions(IEnumerable<NetCdfVariableInfo> dataVariables, bool isUgridConvention, string mesh2DName)
+        private List<UnstructuredGridCoverage> Get2DFunctions(IEnumerable<NetCdfVariableInfo> dataVariables, bool isUgridConvention, string mesh2DName, string links1d2dName)
         {
             // Construct UnstructuredGridCoverages from file
             var timeDepVarSelectionCriteria = isUgridConvention
@@ -208,7 +230,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     object meshName;
                     if (attributes.TryGetValue("mesh", out meshName))
                     {
-                        return b && meshName.ToString() == mesh2DName;
+                        return b && (meshName.ToString() == mesh2DName || meshName.ToString() == links1d2dName);
                     }
                     return false;
                 }) : (v => v.IsTimeDependent && v.NumDimensions > 1 && v.NumDimensions <= 2);
@@ -607,6 +629,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 case NFlowElemName:
                     return new UnstructuredGridCellCoverage(grid, true) { Name = coverageName };
                 case NFlowLinkName:
+                case "contact":
                     return new UnstructuredGridFlowLinkCoverage(grid, true) { Name = coverageName };
                 case NNetLinkName:
                 case NFlowElemBndName:
@@ -646,6 +669,95 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     var nearestEdge = grid.Edges[grid.IndexOfNearestEdge(coordinates[nr - 1], cellEdges)];
                     return new FlowLink(cellFromIndex, cellToIndex, nearestEdge);
                 });
+            }
+
+            if (ncDatetimes == null)
+            {
+                var time = netCdfFile.GetVariableByName(TimeVariableName);
+                var times = (double[])netCdfFile.Read(time);
+
+                var rds = ReadReferenceDateFromFile(TimeVariableName);
+
+                ncDatetimes = times.Select(d => DateTime.Parse(rds).AddSeconds(d)).ToArray();
+            }
+
+            var variable = netCdfFile.GetVariableByName(variableName);
+
+            var totalValuesArray = (double[,])netCdfFile.Read(variable);
+            var unit = netCdfFile.GetAttributeValue(variable, UnitsName);
+
+            // create timeseries with a component for every flowlink (cell index)
+            var function = new TimeSeries() { Name = variableName };
+            var flowLinkVariable = new Variable<FlowLink>()
+            {
+                Name = "FlowLink",
+            };
+            function.Arguments.Add(flowLinkVariable);
+            function.Components.Add(new Variable<double>()
+            {
+                Name = "value",
+                Unit = new Unit(unit, unit),
+            });
+
+            // set time values and interpolation times
+            function.Time.SkipUniqueValuesCheck = true;
+            function.Time.SetValues(ncDatetimes);
+            function.Time.SkipUniqueValuesCheck = false;
+
+            function.Arguments[1].SetValues(flowLinks1D2D);
+
+            function.SetValues(totalValuesArray);
+
+            boundaryCellValues.Add(function);
+        }
+        private void GetNewBoundaryLinkValues(string variableName)
+        {
+            // some variables need to be read only once
+            if (flowLinks1D2D == null)
+            {
+                /*
+                var ncFlowlinks = (int[,])netCdfFile.Read(netCdfFile.GetVariableByName("links1d2d"));
+                var ncFlowlink1D2Dlinknrs = (int[])netCdfFile.Read(netCdfFile.GetVariableByName(FlowLinkNrsName));
+                var ncFlowlinkXu = (double[])netCdfFile.Read(netCdfFile.GetVariableByName(FlowlinkXu));
+                var ncFlowlinkYu = (double[])netCdfFile.Read(netCdfFile.GetVariableByName(FlowlinkYu));
+
+                var coordinates = ncFlowlinkXu.Zip(ncFlowlinkYu, (x, y) => new Coordinate(x, y)).ToArray();
+
+                flowLinks1D2D = ncFlowlink1D2Dlinknrs.ConvertMultiThreaded(nr =>
+                {
+                    var cellFromIndex = ncFlowlinks[nr - 1, 0] - 1;
+                    var cellToIndex = ncFlowlinks[nr - 1, 1] - 1;
+
+                    var cellEdges = grid.GetCellEdgeIndices(grid.Cells[cellToIndex])
+                        .Concat(grid.GetCellEdgeIndices(grid.Cells[cellToIndex]))
+                        .Distinct()
+                        .Select(edgeIndex => grid.Edges[edgeIndex])
+                        .ToList();
+
+                    var nearestEdge = grid.Edges[grid.IndexOfNearestEdge(coordinates[nr - 1], cellEdges)];
+                    return new FlowLink(cellFromIndex, cellToIndex, nearestEdge);
+                });*/
+                var link1D2Ds = UGrid1D2DLinksAdapter.Load1D2DLinks(Path).ToList();
+                var discretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(Path);
+                Links1D2DHelper.SetGeometry1D2DLinks(link1D2Ds, discretisation.Locations, grid.Cells);
+                links1D2D = new EventedList<ILink1D2D>(link1D2Ds);
+                flowLinks1D2D = link1D2Ds.ConvertMultiThreaded(l1d2d =>
+                {
+                    var startCoordinate = l1d2d.Geometry.Coordinates.First();
+                    var cellFromIndex = Links1D2DHelper.FindCellIndex(startCoordinate, grid);
+                    var endCoordinate = l1d2d.Geometry.Coordinates.Last();
+                    var cellToIndex = Links1D2DHelper.FindCellIndex(endCoordinate, grid);
+                    var cellEdges = grid.GetCellEdgeIndices(grid.Cells[cellToIndex])
+                        .Concat(grid.GetCellEdgeIndices(grid.Cells[cellToIndex]))
+                        .Distinct()
+                        .Select(edgeIndex => grid.Edges[edgeIndex])
+                        .ToList();
+                    var centroidCoordinate = l1d2d.Geometry.Centroid.Coordinate;
+                    var indexOfNearestEdgeOfCentroidCoordinateOf1D2DGeometryLineString = grid.IndexOfNearestEdge(centroidCoordinate, cellEdges);
+                    var gridEdge = grid.Edges[indexOfNearestEdgeOfCentroidCoordinateOf1D2DGeometryLineString];
+                    return new FlowLink(cellFromIndex, cellToIndex, gridEdge);
+                });
+                grid.FlowLinks = flowLinks1D2D;
             }
 
             if (ncDatetimes == null)
@@ -851,6 +963,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 GetBoundaryLinkValues(netCdfVariableName);
                 yield break;
             }
+            if (secondDimensionName.Equals("nlinks1d2d_connections")) // UGrid 1d2d links
+            {
+                GetNewBoundaryLinkValues(netCdfVariableName);
+                //yield break;
+            }
 
             var longName = netCdfFile.GetAttributeValue(netcdfVariable, LongNameAttribute) ??
                            netCdfFile.GetAttributeValue(netcdfVariable, StandardNameAttribute);
@@ -924,8 +1041,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             // import the grid from the map file if there is no model grid available
             grid = UnstructuredGridFileHelper.LoadFromFile(netCdfFile.Path, true);
-            network = waterFlowFmModel.Network;
-            discretisation = waterFlowFmModel.NetworkDiscretization;
+            //network = waterFlowFmModel.Network;
+            //discretisation = waterFlowFmModel.NetworkDiscretization;
         }
         /*
         #region private GetValue helper methods

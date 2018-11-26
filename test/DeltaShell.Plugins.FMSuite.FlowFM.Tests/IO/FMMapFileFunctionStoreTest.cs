@@ -49,10 +49,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void Open1DFileCheckFunctions()
         {
-            var store = new FM1DFileFunctionStore()
+            /*var store = new FM1DFileFunctionStore()
+            {
+                Path = TestHelper.GetTestFilePath("output_mapfiles\\FlowFM_map.nc")
+            };*/
+            var store = new FMMapFileFunctionStore(null)
             {
                 Path = TestHelper.GetTestFilePath("output_mapfiles\\FlowFM_map.nc")
             };
+            Console.WriteLine(store.Functions.Count);
         }
 
         [Test]

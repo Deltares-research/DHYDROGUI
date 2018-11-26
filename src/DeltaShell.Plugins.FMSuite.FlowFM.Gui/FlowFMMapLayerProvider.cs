@@ -287,7 +287,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             return data is WaterFlowFMModel
                 // TODO Sil: add check if data is Featurecoverage with a certain name/type (find the breach width coverage)
                    || data is FileBasedFeatureCoverage && IsCoverageLeveeBreachWidth((FileBasedFeatureCoverage)data)
-                   || data is IEventedList<ILink1D2D> && parentObject is WaterFlowFMModel
+                   || data is IEventedList<ILink1D2D> && (parentObject is WaterFlowFMModel || parentObject is FMMapFileFunctionStore)
                    || data is IGrouping<string, IFunction>
                    || data is FMMapFileFunctionStore
                    || data is FMHisFileFunctionStore
@@ -389,9 +389,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         yield return fraction;
                     }
                 }
-                
+
                 if (model.OutputMapFileStore != null)
                     yield return model.OutputMapFileStore;
+                
                 
                 if (model.OutputHisFileStore != null)
                     yield return model.OutputHisFileStore;
@@ -450,6 +451,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private static IEnumerable<object> GetMapOutputFunctions(FMMapFileFunctionStore mapStore)
         {
             yield return mapStore.Grid;
+            if(mapStore.Links1D2D != null)
+                yield return mapStore.Links1D2D;
 
             var functionGrouping = mapStore.GetFunctionGrouping();
             foreach (IGrouping<string, IFunction> group in functionGrouping)
