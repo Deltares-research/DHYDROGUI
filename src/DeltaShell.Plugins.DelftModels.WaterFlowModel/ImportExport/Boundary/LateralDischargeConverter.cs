@@ -248,7 +248,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                                                                        val);
                     break;
                 case ComponentType.SaltConcentration:
-                    discharge.SaltComponent = new LateralDischargeSalt(SaltLateralDischargeType.ConcentrationConstant,
+                    discharge.SaltComponent = new LateralDischargeSalt(val == WaterFlowModel1DLateralSourceData.DefaultSalinity ? SaltLateralDischargeType.Default : 
+                                                                                                                                  SaltLateralDischargeType.ConcentrationConstant,
                                                                        interpolationType,
                                                                        hasPeriodicity,
                                                                        val);

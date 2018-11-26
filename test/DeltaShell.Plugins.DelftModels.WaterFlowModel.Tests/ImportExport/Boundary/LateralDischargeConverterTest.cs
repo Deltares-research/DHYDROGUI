@@ -442,6 +442,37 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
 
             Assert.That(errorMessages, Is.Empty);
         }
+
+        /// <summary>
+        /// GIVEN a LateralDischarge with a default salt value
+        ///   AND a set containing this LateralDischarge
+        ///   AND an empty list of error messages
+        /// WHEN LateralDischargeConverter convert is called with these parameters
+        /// THEN A set containing a single LateralDischarge with a Default salt value is returned
+        ///  AND no errors are logged
+        /// </summary>
+        [Test]
+        public void GivenALateralDischargeWithADefaultSaltValueAndASetContainingThisLateralDischargeAndAnEmptyListOfErrorMessages_WhenLateralDischargeConverterConvertIsCalledWithTheseParameters_ThenASetContainingASingleLateralDischargeWithADefaultSaltValueIsReturnedAndNoErrorsAreLogged()
+        {
+            // Given
+            const string nodeName = "Tenderloin";
+            var lateralDischargeSalt =
+                new LateralDischargeSalt(SaltLateralDischargeType.Default, InterpolationType.Constant, false, 0.0);
+            var lateralDischarge = GetLateralDischarge(nodeName, HasComponent.Constant, HasComponent.None, SaltType.None, HasComponent.None);
+            lateralDischarge.SaltComponent = lateralDischargeSalt;
+
+            var inputNodesCategory = new List<IDelftBcCategory>();
+            inputNodesCategory.AddRange(ToBcCategories(lateralDischarge));
+
+            var errorMessages = new List<string>();
+
+            // When
+            var output = LateralDischargeConverter.Convert(inputNodesCategory, errorMessages);
+
+            // Then
+            AssertOutputEqualsExpectedOutput(output, new Dictionary<string, LateralDischarge>() { { nodeName, lateralDischarge } });
+            Assert.That(errorMessages, Is.Empty);
+        }
         #endregion
 
         #region testhelpers
@@ -592,6 +623,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                                                                                          BoundaryRegion.QuantityStrings.WaterSalinity,
                                                                                          BoundaryRegion.UnitStrings.SaltMass);
                 } break;
+                case SaltLateralDischargeType.Default:
+                    boundaryDefinition.Table = BoundaryTestHelper.GetBcQuantityConstantValue(WaterFlowModel1DLateralSourceData.DefaultSalinity, BoundaryRegion.QuantityStrings.WaterSalinity, BoundaryRegion.UnitStrings.SaltPpt);
+                    break;
             }
 
             return boundaryDefinition;
@@ -668,7 +702,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                     Is.EqualTo(expected.SaltComponent.InterpolationType));
                 Assert.That(actual.SaltComponent.IsPeriodic, 
                     Is.EqualTo(expected.SaltComponent.IsPeriodic));
-                if (expected.SaltComponent.BoundaryType == SaltLateralDischargeType.ConcentrationConstant ||
+                if (expected.SaltComponent.BoundaryType == SaltLateralDischargeType.Default)
+                {
+                    Assert.That(actual.SaltComponent.ConstantBoundaryValue, 
+                        Is.EqualTo(WaterFlowModel1DLateralSourceData.DefaultSalinity));
+                } else if (expected.SaltComponent.BoundaryType == SaltLateralDischargeType.ConcentrationConstant ||
                     expected.SaltComponent.BoundaryType == SaltLateralDischargeType.MassConstant)
                 {
                     Assert.That(actual.SaltComponent.ConstantBoundaryValue, 
