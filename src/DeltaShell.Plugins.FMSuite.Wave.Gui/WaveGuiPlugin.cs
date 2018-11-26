@@ -117,7 +117,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 Description = "Time Point Editor",
                 GetViewName = (v, o) => "Time Point Editor (" + WaveModels.First(m => Equals(o, m.TimePointData)).Name + ")",
                 AdditionalDataCheck = o => WaveModels.Any(m => Equals(o, m.TimePointData)),
-                CloseForData = (v, o) => ((WaveModel) v.Data).TimePointData.Equals(o),
                 AfterCreate = (v, o) =>
                 {
                     var model = WaveModels.First(m => Equals(o, m.TimePointData));
