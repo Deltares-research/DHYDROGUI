@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
@@ -14,9 +13,9 @@ using NetTopologySuite.LinearReferencing;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    public class BasicStructuresOperations
+    public static class BasicStructuresOperations
     {
-        public static void ReadCommonRegionElements(DelftIniCategory structureBranchCategory, IList<IChannel> channelList, IStructure1D weir)
+        public static void ReadCommonRegionElements(IDelftIniCategory structureBranchCategory, IList<IChannel> channelList, IStructure1D weir)
         {
             var name = structureBranchCategory.ReadProperty<string>(StructureRegion.Id.Key);
             var longName = structureBranchCategory.ReadProperty<string>(StructureRegion.Name.Key, true);
@@ -45,8 +44,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             weir.LongName = longName;
         }
 
-        public static void CreateCompositeBranchStructuresIfNeededAndAddStructure
-            (DelftIniCategory structureBranchCategory, IStructure1D weir, IList<ICompositeBranchStructure> compositeBranchStructures)
+        public static ICompositeBranchStructure CreateCompositeBranchStructuresIfNeeded
+            (DelftIniCategory structureBranchCategory, IStructure1D structure, IList<ICompositeBranchStructure> compositeBranchStructures)
         {
             ICompositeBranchStructure compositeBranchStructure;
 
@@ -55,10 +54,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             {
                 compositeBranchStructure = new CompositeBranchStructure
                 {
-                    Branch = weir.Branch,
-                    Network = weir.Branch.Network,
-                    Chainage = weir.Chainage,
-                    Geometry = (IGeometry) weir.Geometry?.Clone()
+                    Branch = structure.Branch,
+                    Network = structure.Branch.Network,
+                    Chainage = structure.Chainage,
+                    Geometry = (IGeometry) structure.Geometry?.Clone()
                 };
 
                 // make new composite structure names unique
@@ -66,9 +65,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                     HydroNetworkHelper.GetUniqueFeatureName(compositeBranchStructure.Network as HydroNetwork,
                         compositeBranchStructure);
 
-                //weir.Branch.BranchFeatures.Add(compositeBranchStructure);
-
                 compositeBranchStructures.Add(compositeBranchStructure);
+
+                structure.ParentStructure = compositeBranchStructure;
+
+                return compositeBranchStructure;
             }
             else
             {
@@ -77,27 +78,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                 if (compositeBranchStructures.Any(cbs => cbs.Name == compoundName))
                 {
                     compositeBranchStructure = compositeBranchStructures.FirstOrDefault(bf => bf.Name == compoundName);
+
+                    structure.ParentStructure = compositeBranchStructure;
+
+                    return compositeBranchStructure;
                 }
                 else
                 {
                     compositeBranchStructure = new CompositeBranchStructure
                     {
-                        Branch = weir.Branch,
-                        Network = weir.Branch.Network,
-                        Chainage = weir.Chainage,
-                        Geometry = (IGeometry) weir.Geometry?.Clone(),
+                        Branch = structure.Branch,
+                        Network = structure.Branch.Network,
+                        Chainage = structure.Chainage,
+                        Geometry = (IGeometry) structure.Geometry?.Clone(),
                         Name = compoundName
                     };
 
-
-                    //  weir.Branch.BranchFeatures.Add(compositeBranchStructure);
-
                     compositeBranchStructures.Add(compositeBranchStructure);
+
+                    structure.ParentStructure = compositeBranchStructure;
+
+                    return compositeBranchStructure;
                 }
             }
 
-            HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, weir);
-            weir.ParentStructure = compositeBranchStructure;
+            
+            
         }
     }
 

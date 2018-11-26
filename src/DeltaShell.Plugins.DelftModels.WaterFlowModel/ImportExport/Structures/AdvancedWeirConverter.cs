@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -8,12 +7,14 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    internal class AdvancedWeirConverter
+    public class AdvancedWeirConverter : StructureConverter
     {
-        public static IWeir ConvertToAdvancedWeir(DelftIniCategory structureBranchCategory, IList<IChannel> channelsList)
+        public override IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory, IList<IChannel> channelsList)
         {
-            var weir = new Weir();
-            weir.WeirFormula = new GatedWeirFormula();
+            var weir = new Weir
+            {
+                WeirFormula = new GatedWeirFormula()
+            };
 
             // Essential Properties (an error will be generated if these fail)
             BasicStructuresOperations.ReadCommonRegionElements(structureBranchCategory, channelsList, weir);

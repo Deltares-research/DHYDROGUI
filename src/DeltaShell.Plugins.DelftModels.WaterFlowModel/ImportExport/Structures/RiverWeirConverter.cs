@@ -1,21 +1,21 @@
-﻿using DelftTools.Functions;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    internal class RiverWeirConverter
+    public class RiverWeirConverter : StructureConverter
     {
-        public static IWeir ConvertToRiverWeir(DelftIniCategory structureBranchCategory, IList<IChannel> channelsList)
+        public override IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory, IList<IChannel> channelsList)
         {
-            var weir = new Weir();
-            weir.WeirFormula = new RiverWeirFormula();
+            var weir = new Weir
+            {
+                WeirFormula = new RiverWeirFormula()
+            };
 
             // Essential Properties (an error will be generated if these fail)
             BasicStructuresOperations.ReadCommonRegionElements(structureBranchCategory, channelsList, weir);

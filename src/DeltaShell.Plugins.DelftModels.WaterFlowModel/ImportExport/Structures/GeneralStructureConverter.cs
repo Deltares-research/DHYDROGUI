@@ -8,12 +8,14 @@ using System.Collections.Generic;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    internal class GeneralStructureConverter
+    public class GeneralStructureConverter : StructureConverter
     {
-        public static IWeir ConvertToGeneralStructure(DelftIniCategory structureBranchCategory, IList<IChannel> channelsList)
+        public override IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory, IList<IChannel> channelsList)
         {
-            var weir = new Weir();
-            weir.WeirFormula = new GeneralStructureWeirFormula();
+            var weir = new Weir()
+            {
+                WeirFormula = new GeneralStructureWeirFormula()
+            };
 
             // Essential Properties (an error will be generated if these fail)
             BasicStructuresOperations.ReadCommonRegionElements(structureBranchCategory, channelsList, weir);

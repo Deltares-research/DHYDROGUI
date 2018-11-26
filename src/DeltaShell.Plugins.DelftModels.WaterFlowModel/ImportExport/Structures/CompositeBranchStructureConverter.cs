@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
@@ -26,50 +27,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                 
                 try
                 {
-
-                    IStructure1D structure = null;
                     var type = structureBranchCategory.ReadProperty<string>(StructureRegion.DefinitionType.Key);
 
-                    switch (type)
+                    var converter =  StructureConverterFactory.GetSpecificConverter(type);
+
+                    if (converter == null)
                     {
-                        case StructureRegion.StructureTypeName.Weir:
-                            structure = WeirConverter.ConvertToWeir(structureBranchCategory, channelsList);
-                            break;
-                        case StructureRegion.StructureTypeName.UniversalWeir:
-                            structure = UniversalWeirConverter.ConvertToUniversalWeir(structureBranchCategory, channelsList);
-                            break;
-                        case StructureRegion.StructureTypeName.RiverWeir:
-                            structure = RiverWeirConverter.ConvertToRiverWeir(structureBranchCategory, channelsList);
-                            break;
-                        case StructureRegion.StructureTypeName.AdvancedWeir:
-                            structure = AdvancedWeirConverter.ConvertToAdvancedWeir(structureBranchCategory, channelsList);
-                            break;
-                        case StructureRegion.StructureTypeName.Orifice:
-                            structure = OrificeConverter.ConvertToOrifice(structureBranchCategory, channelsList);
-                            break;
-                        case StructureRegion.StructureTypeName.GeneralStructure:
-                            structure = GeneralStructureConverter.ConvertToGeneralStructure(structureBranchCategory, channelsList);
-                            break;
-                        case StructureRegion.StructureTypeName.ExtraResistanceStructure:
-                            structure = ExtraResistanceConverter.ConvertToExtraResistance(structureBranchCategory, channelsList);
-                            break;
-                        case StructureRegion.StructureTypeName.Pump:
-                            throw new Exception("Pumps are not supported during an import and therefore it is not imported in the GUI");
-                           break;
-                        case StructureRegion.StructureTypeName.Culvert:
-                            throw new Exception("Culverts are not supported during an import and therefore it is not imported in the GUI");
-                            break;
-                        case StructureRegion.StructureTypeName.Siphon:
-                            throw new Exception("Siphons are not supported during an import and therefore it is not imported in the GUI");
-                            break;
-                        case StructureRegion.StructureTypeName.InvertedSiphon:
-                            throw new Exception("Inverted siphons are not supported during an import and therefore it is not imported in the GUI");
-                            break;
-                        default:
-                            throw new Exception("Unknown type for structures found in the structures file");
-                            break;
+                        throw new Exception(string.Format("A {0} is found in the structure file and this type is not supported during an import.Therefore it is not imported in the GUI", type));
                     }
-                    BasicStructuresOperations.CreateCompositeBranchStructuresIfNeededAndAddStructure(structureBranchCategory, structure, compositeBranchStructures);
+
+                    var structure = converter.ConvertToStructure1D(structureBranchCategory, channelsList);
+
+                    if (structure == null)
+                    {
+                        throw new Exception("Failed to create a structure from the structures file");
+                    }
+                    
+                    var compositeBranchStructure = BasicStructuresOperations.CreateCompositeBranchStructuresIfNeeded(structureBranchCategory, structure, compositeBranchStructures);
+
+                    if (compositeBranchStructure == null)
+                    {
+                        throw new Exception(string.Format("Failed to create structure {0} from the structures file", structure.Name));
+                    }
+
+                    HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, structure);
                 }
                 catch (Exception e)
                 {

@@ -8,9 +8,9 @@ using System.Collections.Generic;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    internal class OrificeConverter
+    public class OrificeConverter : StructureConverter
     {
-        public static IWeir ConvertToOrifice(DelftIniCategory structureBranchCategory, IList<IChannel> channelsList)
+        public override IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory, IList<IChannel> channelsList)
         {
             var weir = new Weir();
             weir.WeirFormula = new GatedWeirFormula();

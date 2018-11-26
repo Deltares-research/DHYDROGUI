@@ -11,12 +11,14 @@ using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    public class UniversalWeirConverter
+    public class UniversalWeirConverter : StructureConverter
     {
-        public static IWeir ConvertToUniversalWeir(DelftIniCategory structureBranchCategory, IList<IChannel> channelsList)
+        public override IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory, IList<IChannel> channelsList)
         {
-            var weir = new Weir();
-            weir.WeirFormula = new FreeFormWeirFormula();
+            var weir = new Weir
+            {
+                WeirFormula = new FreeFormWeirFormula()
+            };
 
             // Essential Properties (an error will be generated if these fail)
             BasicStructuresOperations.ReadCommonRegionElements(structureBranchCategory, channelsList, weir);
