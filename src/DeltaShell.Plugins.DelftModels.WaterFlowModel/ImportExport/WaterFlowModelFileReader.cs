@@ -5,13 +5,18 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
 using log4net;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Hydro.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
@@ -32,29 +37,45 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             var model = new WaterFlowModel1D();
             try
             {
-                const int totalSteps = 8;
-                reportProgress($"Reading filenames from {Path.GetFileName(modelFilename)} file.", 1, totalSteps);
+                const int totalSteps = 10;
+                var stepCounter = 1;
+
+                reportProgress($"'Reading model wide parameters from {Path.GetFileName(modelFilename)} file", stepCounter, totalSteps);
+                ReadMd1dFile(modelFilename, model);
+                stepCounter++;
+
+                reportProgress($"Reading filenames from {Path.GetFileName(modelFilename)} file.", stepCounter, totalSteps);
                 var fileName = new ModelFileNames(modelFilename);
+                stepCounter++;
 
                 var networkDefinitionFilePath = fileName.Network;
-                reportProgress($"Reading network from {networkDefinitionFilePath} file.", 2, totalSteps);
+                reportProgress($"Reading network from {networkDefinitionFilePath} file.", stepCounter, totalSteps);
                 ReadNetworkDefinitionFile(networkDefinitionFilePath, model, CreateAndAddErrorReport);
                 if (errorReport.Any())
                 {
-                    throw new Exception(); // If anything goes wring with reading the network, stop reading.
+                    throw new Exception(); // If anything goes wrong with reading the network, stop reading.
                 }
+                stepCounter++;
 
-                reportProgress($"Reading lateral discharge locations from {fileName.LateralDischarge} file.", 3,
+                reportProgress($"Reading lateral discharge locations from {fileName.LateralDischarge} file.", stepCounter,
                     totalSteps);
                 ReadFileLateralDischargeLocations(fileName.LateralDischarge, model.Network.Channels, CreateAndAddErrorReport);
+                stepCounter++;
+
+                reportProgress($"Reading boundary condition locations from {fileName.BoundaryLocations} file.",
+                    stepCounter, totalSteps);
+                ReadFileBoundaryConditionLocations(fileName.BoundaryLocations, model.BoundaryConditions, CreateAndAddErrorReport);
+                stepCounter++;
 
                 reportProgress(
-                    $"Reading boundary conditions and lateral sources from {fileName.BoundaryConditions} file.", 4,
+                    $"Reading boundary conditions and lateral sources from {fileName.BoundaryConditions} file.", stepCounter,
                     totalSteps);
-                BoundaryFileReader.ReadFile(fileName.BoundaryConditions, model);
+                ReadBoundaryConditionFile(fileName.BoundaryConditions, model, CreateAndAddErrorReport);
+                stepCounter++;
 
-                reportProgress($"Reading observation points from {fileName.ObservationPoints} file.", 5, totalSteps);
+                reportProgress($"Reading observation points from {fileName.ObservationPoints} file.", stepCounter, totalSteps);
                 ReadFileObservationPointLocations(fileName.ObservationPoints, model.Network.Channels, CreateAndAddErrorReport);
+                stepCounter++;
 
                 var totalRoughnessFiles = fileName.RoughnessFiles.Count;
                 var i = 1;
@@ -64,23 +85,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 foreach (var roughnessFilePath in fileName.RoughnessFiles)
                 {
                     var importUpdateText = $"Reading roughness section from {roughnessFilePath} file. (reading roughness file {i} of {totalRoughnessFiles})";
-                    reportProgress(importUpdateText, 6, totalSteps);
+                    reportProgress(importUpdateText, stepCounter, totalSteps);
                     i++;
                     var roughnessSection = ReadRoughnessFile(roughnessFilePath, model, CreateAndAddErrorReport);
                     AddRoughnessSectionToModel(model, roughnessSection);
                 }
+                stepCounter++;
 
                 reportProgress(
                     $"Reading cross sections from {fileName.CrossSectionLocations} file and {fileName.CrossSectionDefinitions}.",
-                    7, totalSteps);
-
+                    stepCounter, totalSteps);
                 ReadCrossSectionsFile(fileName, model.Network, CreateAndAddErrorReport);
+                stepCounter++;
 
                 reportProgress(
                     $"Reading structures from {fileName.Structures} file and {fileName.Structures}.",
-                    8, totalSteps);
-
+                    stepCounter, totalSteps);
                 ReadStructuresFile(fileName.Structures, model.Network, CreateAndAddErrorReport);
+                stepCounter++;
             }
             catch (Exception)
             {
@@ -90,6 +112,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             LogErrorReport(errorReport, report => Log.Warn(report));
             return model;
+        }
+
+        private static void ReadMd1dFile(string fileName, WaterFlowModel1D model)
+        {
+            // PLACEHOLDER, this should be replaced with proper reading of the MD1D file, currently it just sets it to true, so salinity is working
+            model.UseSalt = true;
         }
 
         private static void ReadStructuresFile(string fileName, IHydroNetwork network,
@@ -160,10 +188,196 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             foreach (var lateralSource in lateralSources)
             {
                 var reference = channelsList.FirstOrDefault(c => c.Name == lateralSource.Branch.Name);
-                if (reference != null)
+                reference?.BranchFeatures.Add(lateralSource);
+            }
+        }
+
+        private static void ReadFileBoundaryConditionLocations(string locationFilePath, IEventedList<WaterFlowModel1DBoundaryNodeData> boundaryNodes, Action<string, IList<string>> createAndAddErrorReport)
+        {
+            var boundaryLocations = (new BoundaryLocationReader(createAndAddErrorReport)).Read(locationFilePath);
+
+            foreach (var boundaryLocation in boundaryLocations)
+            {
+                var correspondingNode = boundaryNodes.FirstOrDefault(e => e.Feature.Name == boundaryLocation.Name);
+                correspondingNode.ThatcherHarlemannCoefficient = boundaryLocation.ThatcherHarlemannCoefficient;
+            }
+        }
+
+        private static void ReadBoundaryConditionFile(string boundaryConditionsFilePath, WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
+        {
+            var bcCategories = DelftBcFileParser.ReadFile(boundaryConditionsFilePath);
+            AddMeteoData(bcCategories, model);
+            AddWindData(bcCategories, model);
+            AddBoundaryConditionData(bcCategories, model.BoundaryConditions);
+            AddLateralDischargeData(bcCategories, model.LateralSourceData);
+        }
+
+        private static void AddMeteoData(IList<IDelftBcCategory> bcCategories, WaterFlowModel1D model)
+        {
+            var meteoData = MeteoDataConverter.Convert(bcCategories, new List<string>());
+            model.MeteoData.Arguments[0].SetValues(meteoData.Arguments[0].Values);
+            model.MeteoData.AirTemperature.SetValues(meteoData.AirTemperature.Values);
+            model.MeteoData.Cloudiness.SetValues(meteoData.Cloudiness.Values);
+            model.MeteoData.RelativeHumidity.SetValues(meteoData.RelativeHumidity.Values);
+        }
+
+        private static void AddWindData(IList<IDelftBcCategory> bcCategories, WaterFlowModel1D model)
+        {
+            var windData = WindDataConverter.Convert(bcCategories, new List<string>());
+            model.Wind.Arguments[0].SetValues(windData.Arguments[0].Values);
+            model.Wind.Direction.SetValues(windData.Direction.Values);
+            model.Wind.Velocity.SetValues(windData.Velocity.Values);
+        }
+
+        private static void AddBoundaryConditionData(IList<IDelftBcCategory> bcCategories,
+                                                     IEventedList<WaterFlowModel1DBoundaryNodeData> boundaryNodes)
+        {
+            var boundaryConditionData = BoundaryConditionConverter.Convert(bcCategories, new List<string>());
+            foreach (var boundaryNode in boundaryNodes)
+            {
+                if (!boundaryConditionData.ContainsKey(boundaryNode.Feature.Name)) continue;
+
+                var nodeData = boundaryConditionData[boundaryNode.Feature.Name];
+                if (nodeData.WaterComponent != null)
                 {
-                    reference.BranchFeatures.Add(lateralSource);
+                    boundaryNode.DataType = nodeData.WaterComponent.BoundaryType;
+
+                    switch (boundaryNode.DataType)
+                    {
+                        case WaterFlowModel1DBoundaryNodeDataType.FlowConstant:
+                            boundaryNode.Flow = nodeData.WaterComponent.ConstantBoundaryValue;
+                            break;
+                        case WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant:
+                            boundaryNode.WaterLevel = nodeData.WaterComponent.ConstantBoundaryValue;
+                            break;
+                        case WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable:
+                        case WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries:
+                        case WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries:
+                            copyFunction(nodeData.WaterComponent.TimeDependentBoundaryValue, boundaryNode.Data);
+                            break;
+                    }
                 }
+
+                if (nodeData.SaltComponent != null)
+                {
+                    boundaryNode.SaltConditionType = nodeData.SaltComponent.BoundaryType;
+
+                    switch (boundaryNode.SaltConditionType)
+                    {
+                        case SaltBoundaryConditionType.Constant:
+                            boundaryNode.SaltConcentrationConstant = nodeData.SaltComponent.ConstantBoundaryValue;
+                            break;
+                        case SaltBoundaryConditionType.TimeDependent:
+                            copyFunction(nodeData.SaltComponent.TimeDependentBoundaryValue, boundaryNode.SaltConcentrationTimeSeries);
+                            break;
+                        case SaltBoundaryConditionType.None:
+                            break;
+                    }
+                }
+
+                if (nodeData.TemperatureComponent != null)
+                {
+                    boundaryNode.TemperatureConditionType = nodeData.TemperatureComponent.BoundaryType;
+
+                    switch (boundaryNode.TemperatureConditionType)
+                    {
+                        case TemperatureBoundaryConditionType.Constant:
+                            boundaryNode.TemperatureConstant = nodeData.TemperatureComponent.ConstantBoundaryValue;
+                            break;
+                        case TemperatureBoundaryConditionType.TimeDependent:
+                            copyFunction(nodeData.TemperatureComponent.TimeDependentBoundaryValue, boundaryNode.TemperatureTimeSeries);
+                            break;
+                        case TemperatureBoundaryConditionType.None:
+                            break;
+                    }
+                }
+            }
+        }
+
+        private static void AddLateralDischargeData(IList<IDelftBcCategory> bcCategories,
+                                                    IEventedList<WaterFlowModel1DLateralSourceData> lateralNodes)
+        {
+            var lateralDischargeData = LateralDischargeConverter.Convert(bcCategories, new List<string>());
+            foreach (var lateralNode in lateralNodes)
+            {
+                if (!lateralDischargeData.ContainsKey(lateralNode.Feature.Name)) continue;
+
+                var nodeData = lateralDischargeData[lateralNode.Feature.Name];
+                if (nodeData.WaterComponent != null)
+                {
+                    lateralNode.DataType = nodeData.WaterComponent.BoundaryType;
+
+                    switch (lateralNode.DataType)
+                    {
+                        case WaterFlowModel1DLateralDataType.FlowConstant:
+                            lateralNode.Flow = nodeData.WaterComponent.ConstantBoundaryValue;
+                            break;
+                        case WaterFlowModel1DLateralDataType.FlowWaterLevelTable:
+                        case WaterFlowModel1DLateralDataType.FlowTimeSeries:
+                            copyFunction(nodeData.WaterComponent.TimeDependentBoundaryValue, lateralNode.Data);
+                            break;
+                    }
+                }
+
+                if (nodeData.SaltComponent != null)
+                {
+                    lateralNode.SaltLateralDischargeType = nodeData.SaltComponent.BoundaryType;
+
+                    switch (lateralNode.SaltLateralDischargeType)
+                    {
+                        case SaltLateralDischargeType.ConcentrationConstant:
+                            lateralNode.SaltConcentrationDischargeConstant = nodeData.SaltComponent.ConstantBoundaryValue;
+                            break;
+                        case SaltLateralDischargeType.ConcentrationTimeSeries:
+                            copyFunction(nodeData.SaltComponent.TimeDependentBoundaryValue, lateralNode.SaltConcentrationTimeSeries);
+                            break;
+                        case SaltLateralDischargeType.MassConstant:
+                            lateralNode.SaltMassDischargeConstant = nodeData.SaltComponent.ConstantBoundaryValue;
+                            break;
+                        case SaltLateralDischargeType.MassTimeSeries:
+                            copyFunction(nodeData.SaltComponent.TimeDependentBoundaryValue, lateralNode.SaltMassTimeSeries);
+                            break;
+                        case SaltLateralDischargeType.Default:
+                            break;
+                    }
+                }
+
+                if (nodeData.TemperatureComponent != null)
+                {
+                    lateralNode.TemperatureLateralDischargeType = nodeData.TemperatureComponent.BoundaryType;
+
+                    switch (lateralNode.TemperatureLateralDischargeType)
+                    {
+                        case TemperatureLateralDischargeType.Constant:
+                            lateralNode.TemperatureConstant = nodeData.TemperatureComponent.ConstantBoundaryValue;
+                            break;
+                        case TemperatureLateralDischargeType.TimeDependent:
+                            copyFunction(nodeData.TemperatureComponent.TimeDependentBoundaryValue, lateralNode.TemperatureTimeSeries);
+                            break;
+                        case TemperatureLateralDischargeType.None:
+                            break;
+                    }
+                }
+            }
+        }
+
+        private static void copyFunction(IFunction from, IFunction to)
+        {
+            if (from.Arguments.Count != to.Arguments.Count || from.Components.Count != to.Components.Count)
+                return;
+
+            for (var i = 0; i < from.Arguments.Count; i++)
+            {
+                to.Arguments[i].SetValues(from.Arguments[i].Values);
+                to.Arguments[i].ExtrapolationType = from.Arguments[i].ExtrapolationType;
+                to.Arguments[i].InterpolationType = from.Arguments[i].InterpolationType;
+            }
+
+            for (var i = 0; i < from.Components.Count; i++)
+            {
+                to.Components[i].SetValues(from.Components[i].Values);
+                to.Components[i].ExtrapolationType = from.Components[i].ExtrapolationType;
+                to.Components[i].InterpolationType = from.Components[i].InterpolationType;
             }
         }
 
