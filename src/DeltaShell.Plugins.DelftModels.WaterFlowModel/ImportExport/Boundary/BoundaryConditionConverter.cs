@@ -173,8 +173,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <summary>
         /// Validate the component type specified with the <paramref name="quantity"/>. 
         /// </summary>
-        /// <param name="quantity"></param>
-        /// <param name="componentType"></param>
+        /// <param name="quantity"> The quantity from which the componentType should be obtained.</param>
+        /// <param name="componentType">If valid, the found ComponentType. </param>
         /// <returns>
         /// True if quantity describes a valid ComponentType, false otherwise.
         /// If true, then componentType will contain the validated ComponentType.
@@ -197,7 +197,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
                     componentType = ComponentType.Temp;
                     break;
                 default:
-
                     return false;
             }
 
@@ -253,7 +252,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// <summary>
         /// Parse the QhTable WaterComponent specified by the parameters and set this in <paramref name="condition"/>
         /// </summary>
-        /// <param name="categoryTable"> The values associated with this constant component. </param>
+        /// <param name="categoryTable"> The values associated with this QhTable component. </param>
         /// <param name="condition"> The BoundaryCondition to which this component is added. </param>
         /// <param name="interpolationType"> The InterpolationType of this new BoundaryConditionComponent. </param>
         /// <param name="hasPeriodicity"> Whether this new BoundaryConditionComponent has periodicity. </param>

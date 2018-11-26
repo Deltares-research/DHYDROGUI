@@ -6,6 +6,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Units;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary
 {
@@ -81,6 +82,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             }
         }
 
+        public enum HasComponent
+        {
+            None,
+            Constant,
+            Table,
+            TimeDependent
+        }
+
+        public static IDelftBcCategory GetCommonCategory(string header,
+            string name,
+            string functionString,
+            InterpolationType interpolationType,
+            string isPeriodic)
+        {
+            IDefinitionGeneratorBoundary componentDefinitionGenerator =
+                new DefinitionGeneratorBoundary(header);
+
+            // Set common elements
+            var boundaryDefinition = componentDefinitionGenerator.CreateRegion(
+                name,
+                functionString,
+                interpolationType == InterpolationType.Constant
+                    ? BoundaryRegion.TimeInterpolationStrings.BlockFrom
+                    : BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate,
+                isPeriodic);
+            return boundaryDefinition;
+        }
+
         public static IFunction GetNewTimeFunction(string quantity, string unitName, string unitVal)
         {
             var function = new Function();
@@ -94,5 +123,36 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             function.Components.Add(new Variable<double>(quantity, new Unit(unitName, unitVal)));
             return function;
         }
+
+        public static string GetTimeSeriesIsPeriodicProperty(IFunction timeSeries)
+        {
+            string periodic = null;
+            if (timeSeries?.Arguments != null && timeSeries.Arguments.Count > 0)
+            {
+                periodic = timeSeries.Arguments[0].ExtrapolationType == ExtrapolationType.Periodic ? "true" : null;
+            }
+            return periodic;
+        }
+
+        public static void AssertThatTimeDependentFunctionIsEqualTo(IFunction actual, IFunction expected)
+        {
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(expected, Is.Not.Null);
+
+            var nValues = expected.Arguments[0].Values.Count;
+            Assert.That(expected.Arguments[0].Values.Count,
+                Is.EqualTo(nValues));
+            Assert.That(actual.Components[0].Values.Count,
+                Is.EqualTo(nValues));
+
+            for (var i = 0; i < nValues; i++)
+            {
+                Assert.That(actual.Arguments[0].Values[i],
+                    Is.EqualTo(expected.Arguments[0].Values[i]));
+                Assert.That(actual.Components[0].Values[i],
+                    Is.EqualTo(actual.Components[0].Values[i]));
+            }
+        }
+
     }
 }

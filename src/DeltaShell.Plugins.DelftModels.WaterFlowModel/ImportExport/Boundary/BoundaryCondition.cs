@@ -29,35 +29,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         public BoundaryConditionTemperature TemperatureComponent { get; set; }
     }
 
-
-    public abstract class BoundaryConditionComponent
-    {
-        protected BoundaryConditionComponent(InterpolationType interpolationType,
-                                           bool isPeriodic,
-                                           double constantBoundaryValue,
-                                           IFunction timeDependentBoundaryValue)
-        {
-            this.InterpolationType = interpolationType;
-            this.IsPeriodic = isPeriodic;
-            this.ConstantBoundaryValue = constantBoundaryValue;
-            this.TimeDependentBoundaryValue = timeDependentBoundaryValue;
-        }
-
-        /// <summary> The type of interpolation for the values of this BoundaryConditionComponent. </summary>
-        public readonly InterpolationType InterpolationType;
-        /// <summary> Whether this BoundaryConditionComponent values are repeating or not. </summary>
-        public readonly bool IsPeriodic;
-        /// <summary> The constant value of this BoundaryConditionComponent.  </summary>
-        public readonly double ConstantBoundaryValue;
-        /// <summary> The TimeDependent value of this BoundaryConditionComponent.  </summary>
-        public readonly IFunction TimeDependentBoundaryValue;
-    }
-
     /// <summary>
     /// BoundaryConditionWater is a read only class containing the relevant
     /// information of either the WaterLevel or Flow of a single node.
     /// </summary>
-    public class BoundaryConditionWater : BoundaryConditionComponent
+    public class BoundaryConditionWater : BoundaryComponent
     {
         /// <summary>
         /// Construct a new Constant BoundaryConditionWater.
@@ -98,10 +74,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
     }
 
     /// <summary>
-    /// BoundaryConditionWater is a read only class containing the relevant
+    /// BoundaryConditionSalt is a read only class containing the relevant
     /// information of the salinity of a BoundaryNode.
     /// </summary>
-    public class BoundaryConditionSalt : BoundaryConditionComponent
+    public class BoundaryConditionSalt : BoundaryComponent
     {
         /// <summary>
         /// Construct a new Constant BoundaryConditionSalt.
@@ -142,10 +118,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
     }
 
     /// <summary>
-    /// BoundaryConditionWater is a read only class containing the relevant
+    /// BoundaryConditionTemperature is a read only class containing the relevant
     /// information of the temperature of a BoundaryNode.
     /// </summary>
-    public class BoundaryConditionTemperature : BoundaryConditionComponent
+    public class BoundaryConditionTemperature : BoundaryComponent
     {
         /// <summary>
         /// Construct a new Constant BoundaryConditionTemperature.

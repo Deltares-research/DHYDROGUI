@@ -11,6 +11,8 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary;
 using NUnit.Framework;
 
+using HasComponent = DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary.BoundaryTestHelper.HasComponent;
+
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary
 {
     [TestFixture]
@@ -203,10 +205,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             var errorMessages = new List<string>();
 
             const string nodeName = "Tenderloin";
-            var boundaryCondition1 = getBoundaryCondition(nodeName, HasComponent.Constant, WaterType.Discharge, HasComponent.Constant, HasComponent.Constant);
+            var boundaryCondition1 = GetBoundaryCondition(nodeName, HasComponent.Constant, WaterType.Discharge, HasComponent.Constant, HasComponent.Constant);
             inputSet.AddRange(ToBcCategories(boundaryCondition1));
 
-            var boundaryCondition2 = getBoundaryCondition(nodeName, HasComponent.Constant, WaterType.Level, HasComponent.Constant, HasComponent.Constant);
+            var boundaryCondition2 = GetBoundaryCondition(nodeName, HasComponent.Constant, WaterType.Level, HasComponent.Constant, HasComponent.Constant);
             inputSet.AddRange(ToBcCategories(boundaryCondition2));
 
             for (var i = 0; i < inputSet.Count; i++)
@@ -315,7 +317,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         {
             const string nodeName = "Bacon";
             // Given
-            var boundaryCondition = getBoundaryCondition(nodeName, hasWater, waterType, hasSalt, hasTemperature);
+            var boundaryCondition = GetBoundaryCondition(nodeName, hasWater, waterType, hasSalt, hasTemperature);
             var inputSet = ToBcCategories(boundaryCondition);
             var errorMessages = new List<string>();
 
@@ -330,7 +332,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             var outputBoundaryCondition = output[nodeName];
             AssertThatBoundaryConditionIsEqualTo(outputBoundaryCondition, boundaryCondition);
 
-            Assert.That(errorMessages.Count, Is.EqualTo(0));
+            Assert.That(errorMessages, Is.Empty);
         }
 
         /// <summary>
@@ -345,11 +347,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         {
             var inputNodes = new List<BoundaryCondition>()
             {
-                getBoundaryCondition("Prosciutto", HasComponent.Constant,      WaterType.Discharge, HasComponent.None,          HasComponent.None),
-                getBoundaryCondition("Drumstick",  HasComponent.TimeDependent, WaterType.Level,     HasComponent.TimeDependent, HasComponent.TimeDependent),
-                getBoundaryCondition("Venison",    HasComponent.TimeDependent, WaterType.Discharge, HasComponent.None,          HasComponent.None),
-                getBoundaryCondition("T-bone",     HasComponent.Table,         WaterType.None,      HasComponent.Constant,      HasComponent.None),
-                getBoundaryCondition("Ribs",       HasComponent.Constant,      WaterType.Level,     HasComponent.None,          HasComponent.Constant),
+                GetBoundaryCondition("Prosciutto", HasComponent.Constant,      WaterType.Discharge, HasComponent.None,          HasComponent.None),
+                GetBoundaryCondition("Drumstick",  HasComponent.TimeDependent, WaterType.Level,     HasComponent.TimeDependent, HasComponent.TimeDependent),
+                GetBoundaryCondition("Venison",    HasComponent.TimeDependent, WaterType.Discharge, HasComponent.None,          HasComponent.None),
+                GetBoundaryCondition("T-bone",     HasComponent.Table,         WaterType.None,      HasComponent.Constant,      HasComponent.None),
+                GetBoundaryCondition("Ribs",       HasComponent.Constant,      WaterType.Level,     HasComponent.None,          HasComponent.Constant),
             };
 
             var errorMessages = new List<string>();
@@ -372,7 +374,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                 AssertThatBoundaryConditionIsEqualTo(boundaryCondition, node);
             }
 
-            Assert.That(errorMessages.Count, Is.EqualTo(0));
+            Assert.That(errorMessages, Is.Empty);
         }
 
         /// <summary>
@@ -387,11 +389,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         {
             var inputNodes = new List<BoundaryCondition>()
             {
-                getBoundaryCondition("Prosciutto", HasComponent.Constant,      WaterType.Discharge, HasComponent.None,          HasComponent.None),
-                getBoundaryCondition("Drumstick",  HasComponent.TimeDependent, WaterType.Level,     HasComponent.TimeDependent, HasComponent.TimeDependent),
-                getBoundaryCondition("Venison",    HasComponent.TimeDependent, WaterType.Discharge, HasComponent.None,          HasComponent.None),
-                getBoundaryCondition("T-bone",     HasComponent.Table,         WaterType.None,      HasComponent.Constant,      HasComponent.None),
-                getBoundaryCondition("Ribs",       HasComponent.Constant,      WaterType.Level,     HasComponent.None,          HasComponent.Constant),
+                GetBoundaryCondition("Prosciutto", HasComponent.Constant,      WaterType.Discharge, HasComponent.None,          HasComponent.None),
+                GetBoundaryCondition("Drumstick",  HasComponent.TimeDependent, WaterType.Level,     HasComponent.TimeDependent, HasComponent.TimeDependent),
+                GetBoundaryCondition("Venison",    HasComponent.TimeDependent, WaterType.Discharge, HasComponent.None,          HasComponent.None),
+                GetBoundaryCondition("T-bone",     HasComponent.Table,         WaterType.None,      HasComponent.Constant,      HasComponent.None),
+                GetBoundaryCondition("Ribs",       HasComponent.Constant,      WaterType.Level,     HasComponent.None,          HasComponent.Constant),
             };
 
             var errorMessages = new List<string>();
@@ -420,7 +422,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                 AssertThatBoundaryConditionIsEqualTo(boundaryCondition, node);
             }
 
-            Assert.That(errorMessages.Count, Is.EqualTo(0));
+            Assert.That(errorMessages, Is.Empty);
         }
 
         /// <summary>
@@ -435,11 +437,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         {
             var inputNodes = new List<BoundaryCondition>()
             {
-                getBoundaryCondition("Prosciutto", HasComponent.Constant,      WaterType.Discharge, HasComponent.None,          HasComponent.None),
-                getBoundaryCondition("Drumstick",  HasComponent.TimeDependent, WaterType.Level,     HasComponent.TimeDependent, HasComponent.TimeDependent),
-                getBoundaryCondition("Venison",    HasComponent.TimeDependent, WaterType.Discharge, HasComponent.None,          HasComponent.None),
-                getBoundaryCondition("T-bone",     HasComponent.Table,         WaterType.None,      HasComponent.Constant,      HasComponent.None),
-                getBoundaryCondition("Ribs",       HasComponent.Constant,      WaterType.Level,     HasComponent.None,          HasComponent.Constant),
+                GetBoundaryCondition("Prosciutto", HasComponent.Constant,      WaterType.Discharge, HasComponent.None,          HasComponent.None),
+                GetBoundaryCondition("Drumstick",  HasComponent.TimeDependent, WaterType.Level,     HasComponent.TimeDependent, HasComponent.TimeDependent),
+                GetBoundaryCondition("Venison",    HasComponent.TimeDependent, WaterType.Discharge, HasComponent.None,          HasComponent.None),
+                GetBoundaryCondition("T-bone",     HasComponent.Table,         WaterType.None,      HasComponent.Constant,      HasComponent.None),
+                GetBoundaryCondition("Ribs",       HasComponent.Constant,      WaterType.Level,     HasComponent.None,          HasComponent.Constant),
             };
 
             var errorMessages = new List<string>();
@@ -511,7 +513,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                 AssertThatBoundaryConditionIsEqualTo(boundaryCondition, node);
             }
 
-            Assert.That(errorMessages.Count, Is.EqualTo(0));
+            Assert.That(errorMessages, Is.Empty);
         }
 
         #region Helper functions
@@ -524,15 +526,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             Level
         }
 
-        public enum HasComponent
-        {
-            None,
-            Constant,
-            Table,
-            TimeDependent
-        }
-
-        private BoundaryCondition getBoundaryCondition(string name, HasComponent water, WaterType waterType, HasComponent salt, HasComponent temperature)
+        private BoundaryCondition GetBoundaryCondition(string name, HasComponent water, WaterType waterType, HasComponent salt, HasComponent temperature)
         {
             var boundaryCondition = new BoundaryCondition(name);
 
@@ -572,7 +566,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             return boundaryCondition;
         }
 
-        public static void AssertThatBoundaryConditionIsEqualTo(BoundaryCondition actual, BoundaryCondition expected)
+        private static void AssertThatBoundaryConditionIsEqualTo(BoundaryCondition actual, BoundaryCondition expected)
         {
             Assert.That(actual, Is.Not.Null);
             Assert.That(expected, Is.Not.Null);
@@ -594,8 +588,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                 }
                 else
                 {
-                    AssertThatTimeDependentFunctionIsEqualTo(actual.WaterComponent.TimeDependentBoundaryValue, 
-                                                             expected.WaterComponent.TimeDependentBoundaryValue);
+                    BoundaryTestHelper.AssertThatTimeDependentFunctionIsEqualTo(actual.WaterComponent.TimeDependentBoundaryValue, 
+                                                                                expected.WaterComponent.TimeDependentBoundaryValue);
                 }
             }
             else
@@ -616,8 +610,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                 }
                 else
                 {
-                    AssertThatTimeDependentFunctionIsEqualTo(actual.SaltComponent.TimeDependentBoundaryValue,
-                                                             expected.SaltComponent.TimeDependentBoundaryValue);
+                    BoundaryTestHelper.AssertThatTimeDependentFunctionIsEqualTo(actual.SaltComponent.TimeDependentBoundaryValue,
+                                                                                expected.SaltComponent.TimeDependentBoundaryValue);
                 }
             }
             else
@@ -638,8 +632,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                 }
                 else
                 {
-                    AssertThatTimeDependentFunctionIsEqualTo(actual.TemperatureComponent.TimeDependentBoundaryValue,
-                                                             expected.TemperatureComponent.TimeDependentBoundaryValue);
+                    BoundaryTestHelper.AssertThatTimeDependentFunctionIsEqualTo(actual.TemperatureComponent.TimeDependentBoundaryValue,
+                                                                                expected.TemperatureComponent.TimeDependentBoundaryValue);
                 }
             }
             else
@@ -648,25 +642,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             }
         }
 
-        public static void AssertThatTimeDependentFunctionIsEqualTo(IFunction actual, IFunction expected)
-        {
-            Assert.That(actual, Is.Not.Null);
-            Assert.That(expected, Is.Not.Null);
-
-            var nValues = expected.Arguments[0].Values.Count;
-            Assert.That(expected.Arguments[0].Values.Count,
-                Is.EqualTo(nValues));
-            Assert.That(actual.Components[0].Values.Count,
-                Is.EqualTo(nValues));
-
-            for (var i = 0; i < nValues; i++)
-            {
-                Assert.That(actual.Arguments[0].Values[i],
-                    Is.EqualTo(expected.Arguments[0].Values[i]));
-                Assert.That(actual.Components[0].Values[i], 
-                    Is.EqualTo(actual.Components[0].Values[i]));
-            }
-        }
 
         public static IList<IDelftBcCategory> ToBcCategories(BoundaryCondition boundaryCondition)
         {
@@ -685,30 +660,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             return result;
         }
 
-        private static IDelftBcCategory GetCommonCategory(string name, string functionString,
-            InterpolationType interpolationType, string isPeriodic)
-        {
-            IDefinitionGeneratorBoundary componentDefinitionGenerator =
-                new DefinitionGeneratorBoundary(BoundaryRegion.BcBoundaryHeader);
-
-            // Set common elements
-            var boundaryDefinition = componentDefinitionGenerator.CreateRegion(
-                name, 
-                functionString, 
-                interpolationType == InterpolationType.Constant
-                    ? BoundaryRegion.TimeInterpolationStrings.BlockFrom
-                    : BoundaryRegion.TimeInterpolationStrings.LinearAndExtrapolate,
-                isPeriodic);
-            return boundaryDefinition;
-        }
 
         private static IDelftBcCategory GetWaterComponentCategory(string name, BoundaryConditionWater boundaryCondition)
         {
             // Set common elements
-            var boundaryDefinition = GetCommonCategory(name,
+            var boundaryDefinition = BoundaryTestHelper.GetCommonCategory(
+                BoundaryRegion.BcBoundaryHeader, 
+                name,
                 BoundaryFileWriterHelper.GetFunctionString(boundaryCondition.BoundaryType),
-                boundaryCondition.InterpolationType,
-                GetTimeSeriesIsPeriodicProperty(boundaryCondition.TimeDependentBoundaryValue));
+                boundaryCondition.InterpolationType, 
+                BoundaryTestHelper.GetTimeSeriesIsPeriodicProperty(boundaryCondition.TimeDependentBoundaryValue));
 
             // Create actual table
             switch (boundaryCondition.BoundaryType)
@@ -755,10 +716,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         private static IDelftBcCategory GetSaltComponentCategory(string name, BoundaryConditionSalt boundaryCondition)
         {
             // Set common elements
-            var boundaryDefinition = GetCommonCategory(name,
+            var boundaryDefinition = BoundaryTestHelper.GetCommonCategory(
+                BoundaryRegion.BcBoundaryHeader, 
+                name,
                 BoundaryFileWriterHelper.GetFunctionString(boundaryCondition.BoundaryType),
                 boundaryCondition.InterpolationType,
-                GetTimeSeriesIsPeriodicProperty(boundaryCondition.TimeDependentBoundaryValue));
+                BoundaryTestHelper.GetTimeSeriesIsPeriodicProperty(boundaryCondition.TimeDependentBoundaryValue));
 
             switch (boundaryCondition.BoundaryType)
             {
@@ -786,10 +749,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         private static IDelftBcCategory GetTemperatureComponentCategory(string name,
             BoundaryConditionTemperature boundaryCondition)
         {
-            var boundaryDefinition = GetCommonCategory(name,
+            var boundaryDefinition = BoundaryTestHelper.GetCommonCategory(
+                BoundaryRegion.BcBoundaryHeader,
+                name,
                 BoundaryFileWriterHelper.GetFunctionString(boundaryCondition.BoundaryType),
-                boundaryCondition.InterpolationType,
-                GetTimeSeriesIsPeriodicProperty(boundaryCondition.TimeDependentBoundaryValue));
+                boundaryCondition.InterpolationType, 
+                BoundaryTestHelper.GetTimeSeriesIsPeriodicProperty(boundaryCondition.TimeDependentBoundaryValue));
             switch (boundaryCondition.BoundaryType)
             {
                 case TemperatureBoundaryConditionType.Constant:
@@ -810,16 +775,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                     break;
             }
             return boundaryDefinition;
-        }
-
-        private static string GetTimeSeriesIsPeriodicProperty(IFunction timeSeries)
-        {
-            string periodic = null;
-            if (timeSeries?.Arguments != null && timeSeries.Arguments.Count > 0)
-            {
-                periodic = timeSeries.Arguments[0].ExtrapolationType == ExtrapolationType.Periodic ? "true" : null;
-            }
-            return periodic;
         }
     }
     #endregion

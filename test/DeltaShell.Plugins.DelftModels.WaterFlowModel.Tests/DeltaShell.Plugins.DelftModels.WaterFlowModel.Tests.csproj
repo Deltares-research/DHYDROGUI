@@ -227,6 +227,7 @@
     <Compile Include="ImportExport\Boundary\BoundaryFileWriterTestHelper.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryLocationReaderTest.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryTestHelper.cs" />
+    <Compile Include="ImportExport\Boundary\LateralDischargeConverterTest.cs" />
     <Compile Include="ImportExport\Boundary\MeteoDataConverterTest.cs" />
     <Compile Include="ImportExport\Boundary\WindDataConverterTest.cs" />
     <Compile Include="ImportExport\CrossSections\CrossSectionDefinitionConverterTest.cs" />

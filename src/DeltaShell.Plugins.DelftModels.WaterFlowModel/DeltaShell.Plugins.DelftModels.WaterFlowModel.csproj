@@ -171,9 +171,12 @@
     <Compile Include="Flow1DBasicModelInterface.cs" />
     <Compile Include="ImportExport\BoundaryFileReader.cs" />
     <Compile Include="ImportExport\Boundary\BcConverterHelper.cs" />
+    <Compile Include="ImportExport\Boundary\BoundaryComponent.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryCondition.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryConditionConverter.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryLocationReader.cs" />
+    <Compile Include="ImportExport\Boundary\LateralDischarge.cs" />
+    <Compile Include="ImportExport\Boundary\LateralDischargeConverter.cs" />
     <Compile Include="ImportExport\Boundary\MeteoDataConverter.cs" />
     <Compile Include="ImportExport\Boundary\WindDataConverter.cs" />
     <Compile Include="ImportExport\Boundary\BoundaryLocation.cs" />
