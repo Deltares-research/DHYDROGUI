@@ -25,9 +25,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             var branchName = structureBranchCategory.ReadProperty<string>(StructureRegion.BranchId.Key);
             var branch = channelList.FirstOrDefault(c => c.Name == branchName);
 
-            var geometry = new Point(
-                LengthLocationMap.GetLocation(branch.Geometry, chainage).GetCoordinate(branch.Geometry));
-
             if (branch == null)
             {
                 var errorMessage =
@@ -35,6 +32,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                         structureBranchCategory.Name, LocationRegion.BranchId.Key, Environment.NewLine);
                 throw new Exception(errorMessage);
             }
+
+            var resultingChainage = chainage / branch.Length * branch.Geometry.Length;
+            var geometry = new Point(
+                LengthLocationMap.GetLocation(branch.Geometry, resultingChainage).GetCoordinate(branch.Geometry));
 
             weir.Name = name;
             weir.Chainage = chainage;

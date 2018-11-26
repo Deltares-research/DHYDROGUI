@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                             structure = UniversalWeirConverter.ConvertToUniversalWeir(structureBranchCategory, channelsList);
                             break;
                         case StructureRegion.StructureTypeName.RiverWeir:
-                            throw new Exception("River Weirs are not supported during an import and therefore they are not imported in the GUI"); ;
+                            structure = RiverWeirConverter.ConvertToRiverWeir(structureBranchCategory, channelsList);
                             break;
                         case StructureRegion.StructureTypeName.AdvancedWeir:
                             structure = AdvancedWeirConverter.ConvertToAdvancedWeir(structureBranchCategory, channelsList);
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                             structure = GeneralStructureConverter.ConvertToGeneralStructure(structureBranchCategory, channelsList);
                             break;
                         case StructureRegion.StructureTypeName.ExtraResistanceStructure:
-                            throw new Exception("Extra resistances are not supported during an import and therefore it is not imported in the GUI"); ;
+                            structure = ExtraResistanceConverter.ConvertToExtraResistance(structureBranchCategory, channelsList);
                             break;
                         case StructureRegion.StructureTypeName.Pump:
                             throw new Exception("Pumps are not supported during an import and therefore it is not imported in the GUI");

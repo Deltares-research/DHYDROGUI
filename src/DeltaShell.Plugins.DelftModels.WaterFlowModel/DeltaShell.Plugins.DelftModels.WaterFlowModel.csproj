@@ -193,9 +193,11 @@
     <Compile Include="ImportExport\Roughness\RoughnessConverter.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessReader.cs" />
     <Compile Include="ImportExport\Structures\AdvancedWeirConverter.cs" />
+    <Compile Include="ImportExport\Structures\ExtraResistanceConverter.cs" />
     <Compile Include="ImportExport\Structures\GeneralStructureConverter.cs" />
     <Compile Include="ImportExport\Structures\OrificeConverter.cs" />
     <Compile Include="ImportExport\Structures\CompositeBranchStructureConverter.cs" />
+    <Compile Include="ImportExport\Structures\RiverWeirConverter.cs" />
     <Compile Include="ImportExport\Structures\UniversalWeirConverter.cs" />
     <Compile Include="ImportExport\Structures\WeirConverter.cs" />
     <Compile Include="ImportExport\Structures\StructuresFileReader.cs" />
