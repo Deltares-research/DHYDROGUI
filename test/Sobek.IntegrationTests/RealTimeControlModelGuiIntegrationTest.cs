@@ -147,6 +147,121 @@ namespace Sobek.IntegrationTests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
+        public void TestRtcOutput_LoadRunClone()
+        {
+            // TestSetup is not sufficient for this test... so we do things a little differently
+            gui.Dispose();
+            app.Dispose();
+
+            using (gui = new DeltaShellGui())
+            {
+                app = gui.Application;
+                
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
+                app.Plugins.Add(new RealTimeControlApplicationPlugin());
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new NetCdfApplicationPlugin());
+                app.Plugins.Add(new HydroModelApplicationPlugin());
+
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new CommonToolsGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new WaterFlowModel1DGuiPlugin());
+                gui.Plugins.Add(new RealTimeControlGuiPlugin());
+                gui.Plugins.Add(new HydroModelGuiPlugin());
+
+                gui.Run();
+
+                var legacyPath = TestHelper.GetTestFilePath(@"RtcOutput\Flow1D_WithRtcOutput.dsproj");
+                var localLegacyPath = TestHelper.CopyProjectToLocalDirectory(legacyPath);
+                app.OpenProject(localLegacyPath);
+
+                app.SaveProject();
+
+                var originalHydroModel = app.Project.RootFolder.Models.OfType<HydroModel>().FirstOrDefault();
+                Assert.NotNull(originalHydroModel);
+
+                var originalFlowModel = originalHydroModel.CurrentWorkflow.Activities.GetActivitiesOfType<WaterFlowModel1D>().FirstOrDefault();
+                Assert.NotNull(originalFlowModel);
+
+                var originalObservationPoint1 = originalFlowModel.Network.ObservationPoints.FirstOrDefault(op => op.Name == "ObservationPoint1");
+                Assert.NotNull(originalObservationPoint1);
+                var originalObservationPoint2 = originalFlowModel.Network.ObservationPoints.FirstOrDefault(op => op.Name == "ObservationPoint2");
+                Assert.NotNull(originalObservationPoint2);
+
+                var originalWeir1 = originalFlowModel.Network.Weirs.FirstOrDefault(op => op.Name == "Weir1");
+                Assert.NotNull(originalWeir1);
+                var originalPump1 = originalFlowModel.Network.Pumps.FirstOrDefault(op => op.Name == "Pump1");
+                Assert.NotNull(originalPump1);
+
+                var originalRtcModel = originalHydroModel.CurrentWorkflow.Activities.GetActivitiesOfType<RealTimeControlModel>().FirstOrDefault();
+                Assert.NotNull(originalRtcModel);
+
+                gui.MainWindow.Show();
+
+                // run model to generate output
+                app.RunActivity(originalHydroModel);
+
+                // clone model after run
+                var clonedHydroModel = originalHydroModel.DeepClone() as HydroModel;
+                Assert.NotNull(clonedHydroModel);
+
+                var clonedFlowModel = clonedHydroModel.CurrentWorkflow.Activities.GetActivitiesOfType<WaterFlowModel1D>().FirstOrDefault();
+                Assert.NotNull(clonedFlowModel);
+
+                var clonedObservationPoint1 = clonedFlowModel.Network.ObservationPoints.FirstOrDefault(op => op.Name == "ObservationPoint1");
+                Assert.NotNull(clonedObservationPoint1);
+                var clonedObservationPoint2 = clonedFlowModel.Network.ObservationPoints.FirstOrDefault(op => op.Name == "ObservationPoint2");
+                Assert.NotNull(clonedObservationPoint2);
+
+                var clonedWeir1 = clonedFlowModel.Network.Weirs.FirstOrDefault(op => op.Name == "Weir1");
+                Assert.NotNull(clonedWeir1);
+                var clonedPump1 = clonedFlowModel.Network.Pumps.FirstOrDefault(op => op.Name == "Pump1");
+                Assert.NotNull(clonedPump1);
+
+                var clonedRtcModel = clonedHydroModel.CurrentWorkflow.Activities.GetActivitiesOfType<RealTimeControlModel>().FirstOrDefault();
+                Assert.NotNull(clonedRtcModel);
+                
+                // check results after clone
+                Assert.True(clonedRtcModel.ControlledModels.Contains(clonedFlowModel));
+                Assert.False(clonedRtcModel.ControlledModels.Contains(originalFlowModel));
+
+                var firstControlGroupFirstInputFeature = clonedRtcModel.ControlGroups[0].Inputs[0].Feature;
+                Assert.AreEqual(firstControlGroupFirstInputFeature, clonedObservationPoint1);
+                Assert.AreNotEqual(firstControlGroupFirstInputFeature, originalObservationPoint1);
+
+                var firstControlGroupFirstOutputFeature = clonedRtcModel.ControlGroups[0].Outputs[0].Feature;
+                Assert.AreEqual(firstControlGroupFirstOutputFeature, clonedWeir1);
+                Assert.AreNotEqual(firstControlGroupFirstOutputFeature, originalWeir1);
+
+                var secondControlGroupFirstInputFeature = clonedRtcModel.ControlGroups[1].Inputs[0].Feature;
+                Assert.AreEqual(secondControlGroupFirstInputFeature, clonedObservationPoint2);
+                Assert.AreNotEqual(secondControlGroupFirstInputFeature, originalObservationPoint2);
+
+                var secondControlGroupFirstOutputFeature = clonedRtcModel.ControlGroups[1].Outputs[0].Feature;
+                Assert.AreEqual(secondControlGroupFirstOutputFeature, clonedPump1);
+                Assert.AreNotEqual(secondControlGroupFirstOutputFeature, originalPump1);
+
+                Assert.True(clonedRtcModel.OutputFileFunctionStore.Features.Contains(clonedObservationPoint1));
+                Assert.True(clonedRtcModel.OutputFileFunctionStore.Features.Contains(clonedObservationPoint2));
+                Assert.True(clonedRtcModel.OutputFileFunctionStore.Features.Contains(clonedWeir1));
+                Assert.True(clonedRtcModel.OutputFileFunctionStore.Features.Contains(clonedPump1));
+
+                Assert.False(clonedRtcModel.OutputFileFunctionStore.Features.Contains(originalObservationPoint1));
+                Assert.False(clonedRtcModel.OutputFileFunctionStore.Features.Contains(originalObservationPoint2));
+                Assert.False(clonedRtcModel.OutputFileFunctionStore.Features.Contains(originalWeir1));
+                Assert.False(clonedRtcModel.OutputFileFunctionStore.Features.Contains(originalPump1));
+            }
+        }
+
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void TestRtcOutput_LoadRunSaveAsLoad()
         {
             // TestSetup is not sufficient for this test... so we do things a little differently
