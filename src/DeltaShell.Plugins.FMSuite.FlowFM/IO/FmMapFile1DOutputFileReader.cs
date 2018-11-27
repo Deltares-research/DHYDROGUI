@@ -2,7 +2,7 @@
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
-    public class FmMapFile1DOutputFileReader : Output1DFileReader<TimeDependentVariableMetaDataBase>
+    public class FmMapFile1DOutputFileReader : Output1DFileReader<LocationMetaData, TimeDependentVariableMetaDataBase>
     {
         public FmMapFile1DOutputFileReader()
         {
@@ -20,11 +20,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             timeVariableUnitValuePrefixInNetCdfFile = "seconds since";
             dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
             longNameAttributeKeyNameInNetCdfFile = "long_name";
-        }
-
-        public override OutputFile1DMetaData<LocationMetaData,TimeDependentVariableMetaDataBase> ReadMetaData(string path, bool doValidation = true)
-        {
-            return base.ReadMetaData(path, false);
         }
     }
 }

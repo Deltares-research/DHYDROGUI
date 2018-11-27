@@ -18,9 +18,9 @@ using ArrayExtensions = DelftTools.Utils.ArrayExtensions;
 
 namespace DeltaShell.NGHS.IO.Store1D
 {
-    public class NetCdfFunctionStore1DBase<T> : IFunctionStore, IFileBased where T : TimeDependentVariableMetaDataBase, new()
+    public abstract class NetCdfFunctionStore1DBase<T, U> : IFunctionStore, IFileBased where T : ILocationMetaData, new() where U : ITimeDependentVariableMetaDataBase, new()
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(NetCdfFunctionStore1DBase<T>));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(NetCdfFunctionStore1DBase<T, U>));
         private IEventedList<IFunction> functions;
         private readonly IDictionary<string, double> minValues = new Dictionary<string, double>();
         private readonly IDictionary<string, double> maxValues = new Dictionary<string, double>();
@@ -29,18 +29,18 @@ namespace DeltaShell.NGHS.IO.Store1D
         protected string fileName;
         protected FeatureTypeConverter featureTypeConverter = new FeatureTypeConverter();
         protected NetworkLocationTypeConverter networkLocationTypeConverter = new NetworkLocationTypeConverter();
-        private OutputFile1DMetaData<LocationMetaData, T> metaData;
+        private OutputFile1DMetaData<T, U> metaData;
         private bool disableCaching;
-        private IOutput1DFileReader<T> outputFileReader;
+        private IOutput1DFileReader<T, U> outputFileReader;
         protected int sobekStartIndex = 1;// minus one because fortran is 1 based...
 
-        protected OutputFile1DMetaData<LocationMetaData, T> MetaData
+        protected OutputFile1DMetaData<T, U> MetaData
         {
             get
             {
                 if (metaData != null) return metaData;
 
-                if(!File.Exists(Path)) return new OutputFile1DMetaData<LocationMetaData, T>();
+                if(!File.Exists(Path)) return new OutputFile1DMetaData<T, U>();
 
                 try
                 {
@@ -49,13 +49,13 @@ namespace DeltaShell.NGHS.IO.Store1D
                 catch (Exception ex)
                 {
                     Log.ErrorFormat("Error reading MetaData for file: {0}{1}{2}", Path, Environment.NewLine, ex.Message);
-                    metaData = new OutputFile1DMetaData<LocationMetaData, T>();
+                    metaData = new OutputFile1DMetaData<T, U>();
                 }
                 return metaData;
             }
         }
 
-        protected IOutput1DFileReader<T> OutputFileReader
+        protected IOutput1DFileReader<T, U> OutputFileReader
         {
             get { return outputFileReader; }
             set { outputFileReader = value; }

@@ -8,7 +8,7 @@ using DeltaShell.Plugins.SharpMapGis.ImportExport;
 
 namespace DeltaShell.NGHS.IO.Store1D
 {
-    public abstract class Output1DFileReader<T> : IOutput1DFileReader<T> where T: TimeDependentVariableMetaDataBase, new()
+    public abstract class Output1DFileReader<T, U> : IOutput1DFileReader<T, U> where T : ILocationMetaData, new() where U: ITimeDependentVariableMetaDataBase, new()
     {
         protected string timeVariableNameInNetCDFFile;
         protected string timeDimensionNameInNetCdfFile;
@@ -23,16 +23,16 @@ namespace DeltaShell.NGHS.IO.Store1D
         protected string dateTimeFormat;
         protected string longNameAttributeKeyNameInNetCdfFile;
         
-        public virtual OutputFile1DMetaData<LocationMetaData, T> ReadMetaData(string path, bool doValidation = true)
+        public virtual OutputFile1DMetaData<T, U> ReadMetaData(string path, bool doValidation = true)
         {
             var times = ReadTimesFromNetCdfFile(path);
             var locationMetaData = ReadLocationMetaDataFromNetCdfFile(path);
             var timeDependentVariableMetaData = ReadTimeDependentVariableMetaDataFromNetCdfFile(path);
             
-            return new OutputFile1DMetaData<LocationMetaData,T>(times, locationMetaData, timeDependentVariableMetaData);
+            return new OutputFile1DMetaData<T, U>(times, locationMetaData, timeDependentVariableMetaData);
         }
 
-        public double[,] GetAllVariableData(string path, string variableName, OutputFile1DMetaData<LocationMetaData, T> metaData)
+        public double[,] GetAllVariableData(string path, string variableName, OutputFile1DMetaData<T, U> metaData)
         {
             using (var netCdfFileWrapper = new NetCdfFileWrapper(path))
             {
@@ -51,7 +51,7 @@ namespace DeltaShell.NGHS.IO.Store1D
             });
         }
         
-        private T DoWithNetCdfFile<T>(string path, Func<NetCdfFile, T> function)
+        private V DoWithNetCdfFile<V>(string path, Func<NetCdfFile, V> function)
         {
             NetCdfFile outputFile = null;
             try
@@ -83,7 +83,7 @@ namespace DeltaShell.NGHS.IO.Store1D
             });
         }
 
-        private IList<LocationMetaData> ReadLocationMetaDataFromNetCdfFile(string path)
+        private IList<T> ReadLocationMetaDataFromNetCdfFile(string path)
         {
             return DoWithNetCdfFile(path, outputFile =>
             {
@@ -133,11 +133,11 @@ namespace DeltaShell.NGHS.IO.Store1D
             });
         }
 
-        private IList<T> ReadTimeDependentVariableMetaDataFromNetCdfFile(string path)
+        private IList<U> ReadTimeDependentVariableMetaDataFromNetCdfFile(string path)
         {
             return DoWithNetCdfFile(path, outputFile =>
             {
-                IList<T> timeDependentVariableMetaData = new List<T>();
+                IList<U> timeDependentVariableMetaData = new List<U>();
 
                 var timeDependentVariables = outputFile.GetVariables()
                     .Where(v => outputFile.GetVariableDimensionNames(v)
@@ -207,42 +207,33 @@ namespace DeltaShell.NGHS.IO.Store1D
                 return netCdfFileWrapper.GetValues1D<T>(variableName) ?? new List<T>();
             }
         }
-        
-        private IList<LocationMetaData> ParseLocationMetaData(IList<string> locationIds, IList<int> branchIds, IList<double> chainages, 
+
+        private IList<T> ParseLocationMetaData(IList<string> locationIds, IList<int> branchIds, IList<double> chainages,
             IList<double> xCoordinates, IList<double> yCoordinates)
         {
-            if(locationIds == null) return new List<LocationMetaData>();
+            if (locationIds == null) return new List<T>();
 
-            return locationIds.Where((s, i) => branchIds[i] != int.MinValue+1).Select((id, index) => new LocationMetaData(id,
-                    branchIds == null ? 0 : branchIds[index],
-                    chainages == null ? 0.0 : chainages[index],
-                    xCoordinates == null ? 0.0 : xCoordinates[index],
-                    yCoordinates == null ? 0.0 : yCoordinates[index]))
+            return locationIds.Where((s, i) => branchIds[i] != int.MinValue + 1).Select((id, index) =>
+                    new T
+                    {
+                        Id = id,
+                        BranchId = branchIds == null ? 0 : branchIds[index],
+                        Chainage = chainages == null ? 0.0 : chainages[index],
+                        XCoordinate = xCoordinates == null ? 0.0 : xCoordinates[index],
+                        YCoordinate = yCoordinates == null ? 0.0 : yCoordinates[index]
+                    })
                 .ToList();
         }
 
-        protected virtual T ParseVariableMetaData(string variableName, Dictionary<string, object> attributes)
+        protected virtual U ParseVariableMetaData(string variableName, Dictionary<string, object> attributes)
         {
             var longName = attributes.FirstOrDefault(a => a.Key == longNameAttributeKeyNameInNetCdfFile).Value;
             var longNameString = longName == null ? string.Empty : longName.ToString();
 
             var unit = attributes.FirstOrDefault(a => a.Key == unitsAttributeKeyNameInNetCdfFile).Value;
             var unitString = unit == null ? string.Empty : unit.ToString();
-            /*
-            var aggregationOption = attributes.FirstOrDefault(a => a.Key == aggregationOptionAttributeKeyNameInNetCdfFile).Value;
 
-            AggregationOptions option = AggregationOptions.Current;// default to Current
-            if (aggregationOption != null)
-            {
-                var aggregationOptionString = aggregationOption.ToString();
-                aggregationOptionString = aggregationOptionString.First().ToString().ToUpper() + string.Join("", aggregationOptionString.Skip(1));
-                if (!Enum.TryParse(aggregationOptionString, true, out option))
-                {
-                    option = AggregationOptions.Current;// default to Current
-                }
-            }*/
-            
-            return new T { Name = variableName, LongName  = longNameString, Unit = unitString};
+            return new U { Name = variableName, LongName  = longNameString, Unit = unitString};
         }
     }
 }
