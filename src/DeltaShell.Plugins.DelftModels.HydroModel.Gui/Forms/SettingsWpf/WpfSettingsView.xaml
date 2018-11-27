@@ -10,7 +10,7 @@
              mc:Ignorable="d" 
              x:Name="UserControl"
              d:DesignHeight="300" d:DesignWidth="1000" 
-             d:DataContext="{x:Static settingsWpf:WpfSettingsViewModelDesignInstances.AllTypes}">
+             d:UserControl.DataContext="{x:Static settingsWpf:WpfSettingsViewModelDesignInstances.AllTypes}">
     <UserControl.DataContext>
         <settingsWpf:WpfSettingsViewModel x:Name="ViewModel"/>
     </UserControl.DataContext>
