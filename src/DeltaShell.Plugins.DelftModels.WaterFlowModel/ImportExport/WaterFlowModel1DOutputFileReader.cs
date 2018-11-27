@@ -9,7 +9,7 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
-    public class WaterFlowModel1DOutputFileReader : Output1DFileReader<WaterFlow1DTimeDependentVariableMetaData>
+    public class WaterFlowModel1DOutputFileReader : Output1DFileReader<LocationMetaData, WaterFlow1DTimeDependentVariableMetaData>
     {
         public WaterFlowModel1DOutputFileReader()
         {

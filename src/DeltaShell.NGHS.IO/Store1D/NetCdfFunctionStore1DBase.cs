@@ -18,7 +18,7 @@ using ArrayExtensions = DelftTools.Utils.ArrayExtensions;
 
 namespace DeltaShell.NGHS.IO.Store1D
 {
-    public abstract class NetCdfFunctionStore1DBase<T, U> : IFunctionStore, IFileBased where T : ILocationMetaData, new() where U : ITimeDependentVariableMetaDataBase, new()
+    public class NetCdfFunctionStore1DBase<T, U> : IFunctionStore, IFileBased where T : ILocationMetaData, new() where U : ITimeDependentVariableMetaDataBase, new()
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(NetCdfFunctionStore1DBase<T, U>));
         private IEventedList<IFunction> functions;
@@ -121,7 +121,7 @@ namespace DeltaShell.NGHS.IO.Store1D
 
         public object Clone()
         {
-            var clonedStore = new NetCdfFunctionStore1DBase<T>(){ Path = this.Path };
+            var clonedStore = new NetCdfFunctionStore1DBase<T, U>(){ Path = this.Path };
 
             foreach (var existingNetworkCoverage in Functions.OfType<INetworkCoverage>())
             {
@@ -502,7 +502,7 @@ namespace DeltaShell.NGHS.IO.Store1D
 
         private int GetLocationIndex(IBranchFeature branchFeature)
         {
-            LocationMetaData location;
+            T location;
             if (branchFeature is INetworkLocation)
             {
                 var branchIndex = branchFeature.Network.Branches.IndexOf(branchFeature.Branch);

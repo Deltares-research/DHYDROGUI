@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DeltaShell.NGHS.IO.Store1D
 {
-    public class OutputFile1DMetaData<T, U> where T : LocationMetaData, new() where U : ITimeDependentVariableMetaDataBase, new()
+    public class OutputFile1DMetaData<T, U> where T : ILocationMetaData, new() where U : ITimeDependentVariableMetaDataBase, new()
     {
         public IList<DateTime> Times { get; private set; }
         public IList<T> Locations { get; private set; }

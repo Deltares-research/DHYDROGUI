@@ -5,7 +5,7 @@ using GeoAPI.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
-    public class WaterFlowModel1DNetCdfFunctionStore : NetCdfFunctionStore1DBase<WaterFlow1DTimeDependentVariableMetaData>
+    public class WaterFlowModel1DNetCdfFunctionStore : NetCdfFunctionStore1DBase<LocationMetaData, WaterFlow1DTimeDependentVariableMetaData>
     {
         public WaterFlowModel1DNetCdfFunctionStore()
         {

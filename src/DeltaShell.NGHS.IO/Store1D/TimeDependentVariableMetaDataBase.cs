@@ -2,9 +2,9 @@
 {
     public interface ITimeDependentVariableMetaDataBase
     {
-        string Name { get; }
-        string LongName { get; }
-        string Unit { get; }
+        string Name { get; set; }
+        string LongName { get; set; }
+        string Unit { get; set; }
     }
 
     public class TimeDependentVariableMetaDataBase : ITimeDependentVariableMetaDataBase

@@ -15,7 +15,7 @@ using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
-    public class FM1DFileFunctionStore : NetCdfFunctionStore1DBase<TimeDependentVariableMetaDataBase>
+    public class FM1DFileFunctionStore : NetCdfFunctionStore1DBase<LocationMetaData, TimeDependentVariableMetaDataBase>
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(FM1DFileFunctionStore));
         private readonly object readLock = new object();
