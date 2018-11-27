@@ -1,4 +1,5 @@
-﻿using DelftTools.Utils.Validation;
+﻿using DelftTools.Hydro.Validators;
+using DelftTools.Utils.Validation;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
 {
@@ -8,7 +9,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
         {
             return new ValidationReport(rootObject.Name + " (Water Flow 1D Model)", new[]
             {
-                WaterFlowModel1DHydroNetworkValidator.Validate(rootObject.Network),
+                HydroNetworkValidator.Validate(rootObject.Network),
                 WaterFlowModel1DModelDataValidator.Validate(rootObject)
             });
         }

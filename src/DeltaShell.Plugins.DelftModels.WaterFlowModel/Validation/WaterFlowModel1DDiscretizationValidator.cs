@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Validators;
 using DelftTools.Utils;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
@@ -16,60 +17,49 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
     public static class WaterFlowModel1DDiscretizationValidator
     {
         public static ValidationReport Validate(IDiscretization networkDiscretization,
-                                                WaterFlowModel1D waterFlowModel1D = null)
+            WaterFlowModel1D waterFlowModel1D)
         {
+            var report = DiscretizationValidator.Validate(networkDiscretization);
             var issues = new List<ValidationIssue>();
+            var boundaryNodeData = waterFlowModel1D != null ? waterFlowModel1D.BoundaryConditions : null;
+            if (networkDiscretization.Locations.Values.Count == 0) return report;
 
-            if (networkDiscretization.Locations.Values.Count == 0)
-            {
-                issues.Add(new ValidationIssue(networkDiscretization, ValidationSeverity.Error,
-                                               "No computational grid defined."));
-            }
-            else
-            {
-                var branchesWithoutGridSegments = GetBranchesWithoutGridSegments(networkDiscretization);
-                var branchLocationsLookup =
-                    networkDiscretization.Locations.Values.GroupBy(l => l.Branch).ToDictionary(g => g.Key, g => g);
-                var boundaryNodeData = waterFlowModel1D != null ? waterFlowModel1D.BoundaryConditions : null;
+            var branchesWithoutGridSegments = DiscretizationValidator.GetBranchesWithoutGridSegments(networkDiscretization);
+            var branchLocationsLookup = networkDiscretization.Locations.Values.GroupBy(l => l.Branch).ToDictionary(g => g.Key, g => g);
 
-                foreach (var branch in networkDiscretization.Network.Branches)
+            foreach (var branch in networkDiscretization.Network.Branches)
+            {
+                if (branchesWithoutGridSegments.Contains(branch) || !branchLocationsLookup.ContainsKey(branch))
                 {
-                    if (branchesWithoutGridSegments.Contains(branch) || !branchLocationsLookup.ContainsKey(branch))
-                    {
-                        var message =
-                            String.Format(
-                                "No computational grid cells defined for branch {0}; can not start calculation.",
-                                branch.Name);
-                        issues.Add(new ValidationIssue(branch, ValidationSeverity.Error, message, networkDiscretization));
+                    var message =
+                        String.Format(
+                            "No computational grid cells defined for branch {0}; can not start calculation.",
+                            branch.Name);
+                    issues.Add(new ValidationIssue(branch, ValidationSeverity.Error, message, networkDiscretization));
 
-                        continue; //no computational grid, so no sense reporting additional errors
-                    }
+                    continue; //no computational grid, so no sense reporting additional errors
+                }
 
+                if (waterFlowModel1D != null)
+                {
                     var branchLocations = branchLocationsLookup[branch].ToList();
 
-                    issues.AddRange(CheckBranchLocations(networkDiscretization, branch, branchLocations));
-
-                    issues.AddRange(CheckBranchStructureLocations(networkDiscretization, branch, branchLocations));
-
-                    if (waterFlowModel1D != null)
-                    {
-                        issues.AddRange(ValidateNetworkDiscretizationQBoundariesAndStructures(networkDiscretization, boundaryNodeData, branch, branchLocations));
-                        issues.AddRange(ValidateNetworkDiscretizationBoundariesAndExtraResistances(networkDiscretization, boundaryNodeData, branch, branchLocations));
-                    }
+                    issues.AddRange(ValidateNetworkDiscretizationQBoundariesAndStructures(networkDiscretization,
+                        boundaryNodeData, branch, branchLocations));
+                    issues.AddRange(ValidateNetworkDiscretizationBoundariesAndExtraResistances(networkDiscretization,
+                        boundaryNodeData, branch, branchLocations));
                 }
             }
-
-            var subReports = ValidateIds(networkDiscretization);
-
+            IEnumerable<ValidationReport> finiteVolumeValidationReport = null;
             if (CheckFiniteVolume(waterFlowModel1D)) //bleh
             {
                 var finiteVolumeIssues = FiniteVolumeCheckStructuresNotOnGridPoints(networkDiscretization);
                 if (finiteVolumeIssues.Count > 0)
                 {
-                    subReports = subReports.Concat(new[] {new ValidationReport("Finite volume", finiteVolumeIssues)});
+                    finiteVolumeValidationReport = report.SubReports.Concat(new[] { new ValidationReport("Finite volume", finiteVolumeIssues) });
                 }
             }
-            return new ValidationReport("Computational grid", issues, subReports);
+            return new ValidationReport(report.Category, issues.Count > 0 ? report.Issues.Concat(issues) : report.Issues, finiteVolumeValidationReport ?? report.SubReports);
         }
 
         private static bool CheckFiniteVolume(WaterFlowModel1D waterFlowModel1D)
@@ -102,52 +92,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
 
             return issues;
         }
-
-        private static IEnumerable<ValidationIssue> CheckBranchStructureLocations(IDiscretization networkDiscretization,
-                                                                                  IBranch branch,
-                                                                                  List<INetworkLocation> branchLocations)
-        {
-            // There should be at least one grid point between structures
-            var branchStructures =
-                branch.BranchFeatures.OfType<IStructure1D>()
-                      .Where(s => s.ParentStructure == null)
-                      .OrderBy(s => s.Chainage)
-                      .ToList();
-
-            for (var i = 1; i < branchStructures.Count(); i++)
-            {
-                var branchStructureFirst = branchStructures[i - 1];
-                var branchStructureSecond = branchStructures[i];
-
-                if (
-                    branchLocations.Any(
-                        l => l.Chainage >= branchStructureFirst.Chainage && l.Chainage <= branchStructureSecond.Chainage))
-                    continue;
-
-                var message = String.Format("No grid points defined between structure {0} and {1}",
-                                            branchStructureFirst.Name, branchStructureSecond.Name);
-                yield return
-                    new ValidationIssue(branchStructureSecond, ValidationSeverity.Error, message, networkDiscretization)
-                    ;
-            }
-        }
-
-        private static IEnumerable<ValidationIssue> CheckBranchLocations(IDiscretization networkDiscretization,
-                                                                         IBranch branch,
-                                                                         IList<INetworkLocation> branchLocations)
-        {
-            // Each branch should have calculation point at start and end
-            if (!branchLocations.Any(l => Math.Abs(l.Chainage) < BranchFeature.Epsilon) ||
-                !branchLocations.Any(l => DoubleEquals(l.Chainage, branch.Length)))
-            {
-                var message = String.Format("Not enough grid points defined for branch {0}. " +
-                                            "Make sure you have at least gridpoints at start and end of branch.",
-                                            branch.Name);
-
-                yield return new ValidationIssue(branch, ValidationSeverity.Error, message, networkDiscretization);
-            }
-        }
-
+        
         private static IEnumerable<ValidationIssue> ValidateNetworkDiscretizationQBoundariesAndStructures(IDiscretization networkDiscretization,
             IEnumerable<WaterFlowModel1DBoundaryNodeData> boundaryNodeData, IBranch branch, List<INetworkLocation> branchLocations)
         {
@@ -243,36 +188,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                 return boundary;
             }
             return null;
-        }
-
-        private static IEnumerable<IBranch> GetBranchesWithoutGridSegments(IDiscretization networkDiscretization)
-        {
-            var branches = new HashSet<IBranch>(networkDiscretization.Network.Branches);
-
-            foreach(var seg in networkDiscretization.Segments.Values)
-            {
-                branches.Remove(seg.Branch);
-            }
-
-            return branches;
-        }
-
-        private static IEnumerable<ValidationReport> ValidateIds(IDiscretization networkDiscretization)
-        {
-            var reports = new List<ValidationReport>();
-            var issues = ValidationHelper.ValidateDuplicateNames(networkDiscretization.Locations.Values.Cast<INameable>(),
-                                                        "grid points", networkDiscretization, ValidationSeverity.Warning);
-            if (issues.Any())
-            {
-                reports.Add(new ValidationReport("General", issues));
-            }
-
-            return reports;
-        }
-
-        private static bool DoubleEquals(double d1, double d2)
-        {
-            return Math.Abs(d1 - d2) < 0.000001;
         }
     }
 }

@@ -198,7 +198,7 @@
     <Compile Include="ImportExport\WaterFlowModel1DMorphologyFile.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DOutputCoverageMappings.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DOutputFileConstants.cs" />
-    <Compile Include="ImportExport\WaterFlowModel1DOutputFileMetaData.cs" />
+    <Compile Include="ImportExport\OutputFile1DMetaData.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DOutputFileReader.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DSalinityIniWriter.cs" />
     <Compile Include="PhysicalParameters\DensityType.cs" />
@@ -224,7 +224,6 @@
     <Compile Include="ModelApiControllers\WaterFlowModelApiFactory.cs" />
     <Compile Include="ModelApiControllers\ModelApiParameterTypeConverter.cs" />
     <Compile Include="Validation\WaterFlowModel1DDiscretizationValidator.cs" />
-    <Compile Include="Validation\WaterFlowModel1DHydroNetworkValidator.cs" />
     <Compile Include="Validation\WaterFlowModel1DModelDataValidator.cs" />
     <Compile Include="Validation\WaterFlowModel1DModelMergeHelper.cs" />
     <Compile Include="Validation\WaterFlowModel1DModelMergeValidator.cs" />

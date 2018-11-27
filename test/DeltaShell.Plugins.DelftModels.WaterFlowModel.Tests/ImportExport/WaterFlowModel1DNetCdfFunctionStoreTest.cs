@@ -11,6 +11,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.Store1D;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
@@ -67,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             var testFile = TestHelper.GetTestFilePath(@"FileWriters\output\gridpoints.nc");
             var store = new WaterFlowModel1DNetCdfFunctionStore(){ Path = testFile };
 
-            var metaData = TypeUtils.GetPropertyValue(store, "MetaData") as WaterFlowModel1DOutputFileMetaData;
+            var metaData = TypeUtils.GetPropertyValue(store, "MetaData") as OutputFile1DMetaData<LocationMetaData,WaterFlow1DTimeDependentVariableMetaData>;
             Assert.NotNull(metaData);
             Assert.IsTrue(metaData.Locations.Any());
         }
@@ -78,7 +79,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             var testFile = TestHelper.GetTestFilePath(@"thisFileDoesNotExist.nc");
             var store = new WaterFlowModel1DNetCdfFunctionStore() { Path = testFile };
 
-            var metaData = TypeUtils.GetPropertyValue(store, "MetaData") as WaterFlowModel1DOutputFileMetaData;
+            var metaData = TypeUtils.GetPropertyValue(store, "MetaData") as OutputFile1DMetaData<LocationMetaData, WaterFlow1DTimeDependentVariableMetaData>;
             Assert.NotNull(metaData);
             Assert.IsFalse(metaData.Locations.Any());
         }

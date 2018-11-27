@@ -7,6 +7,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Validators;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Utils.Validation;
@@ -104,102 +105,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
 
         public static ValidationReport ValidateStructures(IHydroNetwork network)
         {
-            var issues = new List<ValidationIssue>();
-
-            foreach (var composite in network.CompositeBranchStructures)
-            {
-                if (composite.Structures.Count == 0)
-                {
-                    issues.Add(new ValidationIssue(composite, ValidationSeverity.Error, "Does not contain any structures", network));
-                }
-
-                foreach (var structure in composite.Structures)
-                {
-                    //generic validation (using Validation Aspects)
-                    var result = structure.Validate();
-                    if (!result.IsValid)
-                    {
-                        issues.Add(new ValidationIssue(structure, ValidationSeverity.Error, result.ValidationException.Message));
-                    }
-
-                    if (structure is IWeir) ValidateWeir((IWeir)structure, issues);
-                    if (structure is IPump) ValidatePump((IPump)structure, issues);
-                }
-            }
-            return new ValidationReport("Structures", issues);
-        }
-
-        private static void ValidatePump(IPump structure, List<ValidationIssue> issues)
-        {
-            // Capacity must be >= 0
-            if (structure.Capacity < 0)
-            {
-                issues.Add(new ValidationIssue(structure, ValidationSeverity.Error, "pump '" + structure.Name + Resources.WaterFlowModel1DModelDataValidator_ValidatePump____Capacity_must_be_greater_than_or_equal_to_0_));
-            }
-
-            switch (structure.ControlDirection)
-            {
-                case PumpControlDirection.DeliverySideControl:
-                    ValidatePumpDeliverySide(structure, issues);
-                    break;
-                case PumpControlDirection.SuctionAndDeliverySideControl:
-                    ValidatePumpDeliverySide(structure, issues);
-                    ValidatePumpSuctionSide(structure, issues);
-                    break;
-                case PumpControlDirection.SuctionSideControl:
-                    ValidatePumpSuctionSide(structure, issues);
-                    break;
-            }
-        }
-
-        private static void ValidatePumpSuctionSide(IPump sobekPump, ICollection<ValidationIssue> issues)
-        {
-            if (sobekPump.StartSuction < sobekPump.StopSuction)
-            {
-                issues.Add(new ValidationIssue(sobekPump, ValidationSeverity.Error,
-                                               "pump '" + sobekPump.Name + Resources.WaterFlowModel1DModelDataValidator_ValidatePumpSuctionSide____Suction_start_level_must_be_greater_than_or_equal_to_suction_stop_level_));
-            }
-        }
-
-        private static void ValidatePumpDeliverySide(IPump sobekPump, ICollection<ValidationIssue> issues)
-        {
-            if (sobekPump.StartDelivery > sobekPump.StopDelivery)
-            {
-                issues.Add(new ValidationIssue(sobekPump, ValidationSeverity.Error,
-                                               "pump '" + sobekPump.Name + Resources.WaterFlowModel1DModelDataValidator_ValidatePumpDeliverySide____Delivery_start_level_must_be_less_than_or_equal_to_delivery_stop_level_));
-            }
-        }
-
-        private static void ValidateWeir(IWeir structure, ICollection<ValidationIssue> issues)
-        {
-            if (structure.CrestWidth < 0)
-            {
-                issues.Add(new ValidationIssue(structure, ValidationSeverity.Error, "weir '" + structure.Name + Resources.WaterFlowModel1DModelDataValidator_ValidateWeir____Crest_width_must_be_greater_than_or_equal_to_0_));
-            }
-
-            if (structure.WeirFormula is GatedWeirFormula)
-            {
-                ValidateGatedWeirFormula(structure, issues);
-            }
-        }
-
-        private static void ValidateGatedWeirFormula(IWeir weir, ICollection<ValidationIssue> issues)
-        {
-            var gatedWeirFormula = (GatedWeirFormula)weir.WeirFormula;
-
-            if (gatedWeirFormula.GateOpening < 0)
-            {
-                issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, "weir '" + weir.Name + Resources.WaterFlowModel1DModelDataValidator_ValidateGatedWeirFormula____Gate_opening_must_be_greater_than_or_equal_to_0_));
-            }
-
-            if (gatedWeirFormula.UseMaxFlowPos && gatedWeirFormula.MaxFlowPos < 0)
-            {
-                issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, "weir '" + weir.Name + Resources.WaterFlowModel1DModelDataValidator_ValidateGatedWeirFormula____Maximum_positive_flow_restrictions_must_be_greater_than_or_equal_to_0_));
-            }
-            if (gatedWeirFormula.UseMaxFlowNeg && gatedWeirFormula.MaxFlowNeg < 0)
-            {
-                issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, "weir '" + weir.Name + Resources.WaterFlowModel1DModelDataValidator_ValidateGatedWeirFormula____Maximum_negative_flow_restrictions_must_be_greater_than_or_equal_to_0_));
-            }
+            return StructuresValidator.Validate(network);
         }
 
         private static ValidationReport ValidateModelSettings(WaterFlowModel1D model)
@@ -328,18 +234,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
 
         public static ValidationReport ValidateExtraResistance(IEnumerable<IStructure1D> extraResistances)
         {
-            var issues = new List<ValidationIssue>();
-
-            foreach (IExtraResistance extraResistance in extraResistances)
-            {
-                int count = extraResistance.FrictionTable.Arguments[0].Values.Count;
-
-                if (count == 0)
-                {
-                    issues.Add(new ValidationIssue(extraResistance, ValidationSeverity.Error, Resources.WaterFlowModel1DModelDataValidator_ValidateExtraResistance_Empty_roughness_table));
-                }
-            }
-            return new ValidationReport(Resources.WaterFlowModel1DModelDataValidator_ValidateExtraResistance_Extra_resistance, issues);
+            return ExtraResistanceValidator.Validate(extraResistances);
         }
 
         private static ValidationReport ValidateInputRestartState(WaterFlowModel1D flowModel1D)

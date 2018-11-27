@@ -246,6 +246,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Steerable.cs" />
+    <Compile Include="Store1D\IOutput1DFileReader.cs" />
+    <Compile Include="Store1D\LocationMetaData.cs" />
+    <Compile Include="Store1D\NetCdfFunctionStore1DBase.cs" />
+    <Compile Include="Store1D\Output1DFileReader.cs" />
+    <Compile Include="Store1D\OutputFile1DMetaData.cs" />
+    <Compile Include="Store1D\TimeDependentVariableMetaDataBase.cs" />
     <Compile Include="TimFile.cs" />
     <Compile Include="UgridGlobalMetaDataToProtoConverter.cs" />
   </ItemGroup>

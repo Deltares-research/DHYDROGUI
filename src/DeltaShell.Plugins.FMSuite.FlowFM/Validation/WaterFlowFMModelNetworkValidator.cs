@@ -6,9 +6,9 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Validators;
 using DelftTools.Utils;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
@@ -33,20 +33,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 {
                     subReports.AddRange(new[]
                     {
-                        WaterFlowModel1DHydroNetworkValidator.Validate(target),
-                        WaterFlowModel1DModelDataValidator.ValidateStructures(target),
-                        WaterFlowModel1DModelDataValidator.ValidateExtraResistance(target.Structures.Where(s => s is IExtraResistance)),
+                        HydroNetworkValidator.Validate(target),
+                        StructuresValidator.Validate(target),
+                        ExtraResistanceValidator.Validate(target.Structures.Where(s => s is IExtraResistance)),
                     });
 
                 }
+                
                 if (target.HydroNodes.Any() && networkDiscretization != null)
                 {
                     subReports.AddRange(new[]
                     {
-                        WaterFlowModel1DDiscretizationValidator.Validate(networkDiscretization),
+                        DiscretizationValidator.Validate(networkDiscretization),
                     });
-
+                    
                 }
+                /*
                 if (target.HydroNodes.Any() && roughnessSections != null)
                 {
                     subReports.AddRange(new[]
@@ -54,6 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         WaterFlowModel1DModelDataValidator.ValidateRoughness(target, roughnessSections),
                     });
                 }
+                */
             }
             return new ValidationReport(CategoryName, new List<ValidationIssue>(), subReports);
         }

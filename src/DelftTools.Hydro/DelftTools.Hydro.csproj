@@ -349,6 +349,10 @@
     <Compile Include="HydroTimeSeriesFactory.cs" />
     <Compile Include="StructureType.cs" />
     <Compile Include="Structures\ThinDam2D.cs" />
+    <Compile Include="Validators\DiscretizationValidator.cs" />
+    <Compile Include="Validators\ExtraResistanceValidator.cs" />
+    <Compile Include="Validators\HydroNetworkValidator.cs" />
+    <Compile Include="Validators\StructuresValidator.cs" />
     <Compile Include="WasteWaterTreatmentPlant.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -574,6 +578,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -7,6 +7,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Validators;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
@@ -460,7 +461,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(new Weir { Chainage = 15.0 }, firstChannel);
             HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(new Weir { Chainage = 16.0 }, firstChannel);
 
-            var report = WaterFlowModel1DDiscretizationValidator.Validate(model.NetworkDiscretization);
+            var report = DiscretizationValidator.Validate(model.NetworkDiscretization);
 
             Assert.AreEqual(ValidationSeverity.Error, report.Severity());
         }
@@ -477,7 +478,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             Assert.IsNotNull(model.NetworkDiscretization.Locations.Values.FirstOrDefault(l => l.Branch == firstChannel && l.Chainage == 0.0));
             Assert.IsNotNull(model.NetworkDiscretization.Locations.Values.FirstOrDefault(l => l.Branch == firstChannel && l.Chainage == 0.2));
 
-            var report = WaterFlowModel1DDiscretizationValidator.Validate(model.NetworkDiscretization);
+            var report = DiscretizationValidator.Validate(model.NetworkDiscretization);
 
             Assert.AreEqual(ValidationSeverity.None, report.Severity()); 
         }
@@ -499,7 +500,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure,weir1);
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, weir2);
             
-            var report = WaterFlowModel1DDiscretizationValidator.Validate(model.NetworkDiscretization);
+            var report = DiscretizationValidator.Validate(model.NetworkDiscretization);
             Assert.AreNotEqual(ValidationSeverity.Error, report.Severity()); //should give no error?
         }
 
@@ -701,7 +702,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
                                         extres.Name, secondChannel.Target.Name)));
         }
 
-        #region WaterFlowModel1DHydroNetworkValidator
+        #region HydroNetworkValidator
 
         [Test]
         public void BranchesWithTheSameOrderNumberNeedJustOneCS()
@@ -716,13 +717,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             Assert.AreEqual(-1,lstBranches[0].OrderNumber);
             Assert.AreEqual(-1, lstBranches[1].OrderNumber);
 
-            Assert.IsTrue(ContainsError(WaterFlowModel1DHydroNetworkValidator.Validate(network), 
+            Assert.IsTrue(ContainsError(HydroNetworkValidator.Validate(network), 
                                         string.Format("No cross sections on channel(s) {0}; can not start calculation.", lstBranches[1].Name)));
 
             lstBranches[0].OrderNumber = 1;
             lstBranches[1].OrderNumber = 1;
 
-            Assert.IsFalse(ContainsError(WaterFlowModel1DHydroNetworkValidator.Validate(network),
+            Assert.IsFalse(ContainsError(HydroNetworkValidator.Validate(network),
                                          string.Format("No cross sections on channel(s) {0}; can not start calculation.", lstBranches[1].Name)));
         }
 
@@ -754,7 +755,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             lstBranches[0].OrderNumber = 1;
             lstBranches[1].OrderNumber = 1;
 
-            Assert.IsFalse(ContainsError(WaterFlowModel1DHydroNetworkValidator.Validate(network),
+            Assert.IsFalse(ContainsError(HydroNetworkValidator.Validate(network),
                                          string.Format("No cross sections on channel {0}; can not start calculation.", lstBranches[1].Name)));
         }
 
@@ -797,7 +798,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             Assert.AreEqual(-1, lstBranches[1].OrderNumber);
             Assert.AreEqual(-1, lstBranches[2].OrderNumber);
 
-            Assert.IsFalse(ContainsError(WaterFlowModel1DHydroNetworkValidator.Validate(network),
+            Assert.IsFalse(ContainsError(HydroNetworkValidator.Validate(network),
                                         string.Format("More than two branches with the same ordernumber '{0}' are connected to node {1}; can not start calculation.",
                                         orderNumber, network.Nodes[1].Name)));
 
@@ -805,7 +806,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             lstBranches[1].OrderNumber = orderNumber;
             lstBranches[2].OrderNumber = orderNumber;
 
-            Assert.IsTrue(ContainsError(WaterFlowModel1DHydroNetworkValidator.Validate(network),
+            Assert.IsTrue(ContainsError(HydroNetworkValidator.Validate(network),
                                         string.Format("More than two branches with the same ordernumber '{0}' are connected to node {1}; can not start calculation.",
                                         orderNumber, network.Nodes[1].Name)));
         }
@@ -849,7 +850,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             lstBranches[0].OrderNumber = 1;
             lstBranches[1].OrderNumber = 1;
 
-            Assert.IsTrue(ContainsError(WaterFlowModel1DHydroNetworkValidator.Validate(network),
+            Assert.IsTrue(ContainsError(HydroNetworkValidator.Validate(network),
                                         string.Format("Multiple cross-section-types (mix of Standard/ZW and Geometry/YZ) per branch(es) not supported.({0})",
                                         lstBranches[1].Name + "," + lstBranches[0].Name)));
 
@@ -878,12 +879,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
 
             #endregion
 
-            Assert.IsFalse(ContainsError(WaterFlowModel1DHydroNetworkValidator.Validate(network),
+            Assert.IsFalse(ContainsError(HydroNetworkValidator.Validate(network),
                                          string.Format(Resources.WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Tabulated_cross_section__0__cannot_have_zero_width_at_levels_above_deepest_point_of_its_definition_, zwcs.Name)));
 
             ((CrossSectionDefinitionZW)zwcs.Definition).ZWDataTable.AddCrossSectionZWRow(-20.0, 0.0, 0.0); // add second row of zero width (no points in between)
 
-            Assert.IsTrue(ContainsError(WaterFlowModel1DHydroNetworkValidator.Validate(network),
+            Assert.IsTrue(ContainsError(HydroNetworkValidator.Validate(network),
                                  string.Format(Resources.WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Tabulated_cross_section__0__cannot_have_zero_width_at_levels_above_deepest_point_of_its_definition_, zwcs.Name)));
 
         }
@@ -909,7 +910,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             // Check if the Validation Report contains the desired error message
             var expectedMessage =
                 Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_one_or_more_cross_sections_is_larger_than_the_total_width_of_all_its_sections_;
-            var validationReport = WaterFlowModel1DHydroNetworkValidator.Validate(network);
+            var validationReport = HydroNetworkValidator.Validate(network);
             Assert.IsTrue(ContainsError(validationReport, expectedMessage));
         }
 
@@ -934,7 +935,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
 
             // Check if the Validation Report contains the desired error message
             var expectedMessage = Resources.WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_FloodPlain2_width_may_not_be_larger_than_zero_if_FloodPlain1_width_is_equal_to_zero_;
-            var validationReport = WaterFlowModel1DHydroNetworkValidator.Validate(network);
+            var validationReport = HydroNetworkValidator.Validate(network);
             Assert.IsTrue(ContainsError(validationReport, expectedMessage));
         }
 

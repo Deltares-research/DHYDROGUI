@@ -8,35 +8,14 @@ using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
+using DeltaShell.NGHS.IO.Store1D;
 using GeoAPI.Extensions.Coverages;
-using GeoAPI.Extensions.Networks;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Geometries;
-using NetTopologySuite.Utilities;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
-    public class FMMapFile1DOutputFileReader : WaterFlowModel1DOutputFileReader
-    {
-        public FMMapFile1DOutputFileReader()
-        {
-            branchidVariableNameInNetCDFFile = "mesh1d_nodes_branch_id";
-            chainageVariableNameInNetCDFFile = "mesh1d_nodes_branch_offset";
-            cfRoleAttributeNameInNetCdfFile = "long_name";
-            cfRoleAttributeValueInNetCdfFile = "the node ids";
-
-            //xCoordinateVariableNameInNetCDFFile = "";
-        }
-
-        public override WaterFlowModel1DOutputFileMetaData ReadMetaData(string path, bool doValidation = true)
-        {
-            return base.ReadMetaData(path, false);
-        }
-    }
-
-    public class FM1DFileFunctionStore : WaterFlowModel1DNetCdfFunctionStore
+    public class FM1DFileFunctionStore : NetCdfFunctionStore1DBase<TimeDependentVariableMetaDataBase>
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(FM1DFileFunctionStore));
         private readonly object readLock = new object();
@@ -52,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public FM1DFileFunctionStore()
         {
-            OutputFileReader = new FMMapFile1DOutputFileReader();
+            OutputFileReader = new FmMapFile1DOutputFileReader();
             sobekStartIndex = 0;
         }
 
@@ -211,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public static void AddNetworkLocationsToNetworkCoverage(IDiscretization discretization, ICollection<DateTime> times, INetworkCoverage networkCoverage)
         {
-            if (networkCoverage.Store is WaterFlowModel1DNetCdfFunctionStore) return; // temporary until modelApi is removed
+            if (networkCoverage.Store is FM1DFileFunctionStore) return; // temporary until modelApi is removed
 
             var networkLocations = discretization.Locations.Values.OrderBy(l => l).ToArray();
 

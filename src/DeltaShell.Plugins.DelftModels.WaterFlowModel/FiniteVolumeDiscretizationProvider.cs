@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Validators;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation;
 using GeoAPI.Extensions.Coverages;
@@ -87,7 +88,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 return false;
             }
 
-            var validationReport = WaterFlowModel1DDiscretizationValidator.Validate(networkDiscretization);
+            var validationReport = DiscretizationValidator.Validate(networkDiscretization);
 
             if (validationReport.Severity() == ValidationSeverity.Error)
             {
