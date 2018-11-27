@@ -45,10 +45,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 stepCounter++;
 
                 reportProgress($"Reading filenames from {Path.GetFileName(modelFilename)} file.", stepCounter, totalSteps);
-                var fileName = new ModelFileNames(modelFilename);
+                var fileNames = new ModelFileNames(modelFilename);
                 stepCounter++;
 
-                var networkDefinitionFilePath = fileName.Network;
+                var networkDefinitionFilePath = fileNames.Network;
                 reportProgress($"Reading network from {networkDefinitionFilePath} file.", stepCounter, totalSteps);
                 ReadNetworkDefinitionFile(networkDefinitionFilePath, model, CreateAndAddErrorReport);
                 if (errorReport.Any())
@@ -57,32 +57,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 }
                 stepCounter++;
 
-                reportProgress($"Reading lateral discharge locations from {fileName.LateralDischarge} file.", stepCounter,
+                reportProgress($"Reading lateral discharge locations from {fileNames.LateralDischarge} file.", stepCounter,
                     totalSteps);
-                ReadFileLateralDischargeLocations(fileName.LateralDischarge, model.Network.Channels, CreateAndAddErrorReport);
+                ReadFileLateralDischargeLocations(fileNames.LateralDischarge, model.Network.Channels, CreateAndAddErrorReport);
                 stepCounter++;
 
-                reportProgress($"Reading boundary condition locations from {fileName.BoundaryLocations} file.",
+                reportProgress($"Reading boundary condition locations from {fileNames.BoundaryLocations} file.",
                     stepCounter, totalSteps);
-                ReadFileBoundaryConditionLocations(fileName.BoundaryLocations, model.BoundaryConditions, CreateAndAddErrorReport);
+                ReadFileBoundaryConditionLocations(fileNames.BoundaryLocations, model.BoundaryConditions, CreateAndAddErrorReport);
                 stepCounter++;
 
                 reportProgress(
-                    $"Reading boundary conditions and lateral sources from {fileName.BoundaryConditions} file.", stepCounter,
+                    $"Reading boundary conditions and lateral sources from {fileNames.BoundaryConditions} file.", stepCounter,
                     totalSteps);
-                ReadBoundaryConditionFile(fileName.BoundaryConditions, model, CreateAndAddErrorReport);
+                ReadBoundaryConditionFile(fileNames.BoundaryConditions, model, CreateAndAddErrorReport);
                 stepCounter++;
 
-                reportProgress($"Reading observation points from {fileName.ObservationPoints} file.", stepCounter, totalSteps);
-                ReadFileObservationPointLocations(fileName.ObservationPoints, model.Network.Channels, CreateAndAddErrorReport);
+                reportProgress($"Reading observation points from {fileNames.ObservationPoints} file.", stepCounter, totalSteps);
+                ReadFileObservationPointLocations(fileNames.ObservationPoints, model.Network.Channels, CreateAndAddErrorReport);
                 stepCounter++;
 
-                var totalRoughnessFiles = fileName.RoughnessFiles.Count;
+                var totalRoughnessFiles = fileNames.RoughnessFiles.Count;
                 var i = 1;
                 if (totalRoughnessFiles > 0)
                     model.RoughnessSections.Clear();
 
-                foreach (var roughnessFilePath in fileName.RoughnessFiles)
+                foreach (var roughnessFilePath in fileNames.RoughnessFiles)
                 {
                     var importUpdateText = $"Reading roughness section from {roughnessFilePath} file. (reading roughness file {i} of {totalRoughnessFiles})";
                     reportProgress(importUpdateText, stepCounter, totalSteps);
@@ -93,15 +93,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 stepCounter++;
 
                 reportProgress(
-                    $"Reading cross sections from {fileName.CrossSectionLocations} file and {fileName.CrossSectionDefinitions}.",
+                    $"Reading cross sections from {fileNames.CrossSectionLocations} file and {fileNames.CrossSectionDefinitions}.",
                     stepCounter, totalSteps);
-                ReadCrossSectionsFile(fileName, model.Network, CreateAndAddErrorReport);
+                ReadCrossSectionsFile(fileNames, model.Network, CreateAndAddErrorReport);
                 stepCounter++;
 
                 reportProgress(
-                    $"Reading structures from {fileName.Structures} file and {fileName.Structures}.",
+                    $"Reading structures from {fileNames.Structures} file and {fileNames.Structures}.",
                     stepCounter, totalSteps);
-                ReadStructuresFile(fileName.Structures, model.Network, CreateAndAddErrorReport);
+                ReadStructuresFile(fileNames.Structures, model.Network, CreateAndAddErrorReport);
                 stepCounter++;
             }
             catch (Exception)
@@ -151,6 +151,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             var roughnessReader = new RegularRoughnessFileReader(CreateAndAddErrorReport);
             var roughnessSection = roughnessReader.ReadFile(roughnessFilePath, model.Network, model.RoughnessSections);
+            if (roughnessSection is ReverseRoughnessSection)
+            {
+                model.UseReverseRoughness = true;
+            }
             return roughnessSection;
         }
 

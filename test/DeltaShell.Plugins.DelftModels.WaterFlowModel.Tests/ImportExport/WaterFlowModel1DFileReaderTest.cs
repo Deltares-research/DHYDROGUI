@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         }
         
         [Test]
-       public void GivenAMd1dFile_WhenReadingTheAttachedNetworkDefinitionFile_ThenAModelIsReturned()
+       public void GivenAnMd1dFile_WhenReadingTheAttachedNetworkDefinitionFile_ThenAModelIsReturned()
         {
             var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExport.md1d");
 
@@ -37,7 +37,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         }
 
         [Test]
-        public void GivenAMd1dFile_WhenReadingTheNetworkDefinitionFileWithABadNode_ThenNullIsReturned()
+        public void GivenAnMd1dFileWithReversedRoughnessSectionDefined_WhenReadingFlow1DModel_ThenModelUsesReversedRoughness()
+        {
+            var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExportWithReversedRoughnessSection.md1d");
+
+            var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
+            Assert.IsNotNull(waterFlowModel1D);
+            Assert.IsTrue(waterFlowModel1D.UseReverseRoughness);
+            Assert.IsTrue(waterFlowModel1D.UseReverseRoughnessInCalculation);
+        }
+
+        [Test]
+        public void GivenAnMd1dFile_WhenReadingTheNetworkDefinitionFileWithABadNode_ThenNullIsReturned()
         {
             var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExportBadNode.md1d");
 
@@ -46,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         }
 
         [Test]
-        public void GivenAMd1dFile_WhenReadingTheNetworkDefinitionFileWithABadBranch_ThenNullIsReturned()
+        public void GivenAnMd1dFile_WhenReadingTheNetworkDefinitionFileWithABadBranch_ThenNullIsReturned()
         {
             var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExportBadBranch.md1d");
 
@@ -55,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         }
 
         [Test]
-        public void GivenAMd1dFile_WhenReadingTheNetworkDefinitionFileWithABadNetworkDiscretization_ThenNullIsReturned()
+        public void GivenAnMd1dFile_WhenReadingTheNetworkDefinitionFileWithABadNetworkDiscretization_ThenNullIsReturned()
         {
             var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExportBadNetworkDiscretization.md1d");
 
