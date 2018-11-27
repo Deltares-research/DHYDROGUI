@@ -8,7 +8,6 @@ using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
@@ -29,31 +28,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     ValidateBranches(target),
                     ValidateCrossSections(target)
                 });
-                if (target.HydroNodes.Any())
-                {
-                    subReports.AddRange(new[]
-                    {
-                        WaterFlowModel1DHydroNetworkValidator.Validate(target),
-                        WaterFlowModel1DModelDataValidator.ValidateStructures(target),
-                        WaterFlowModel1DModelDataValidator.ValidateExtraResistance(target.Structures.Where(s => s is IExtraResistance)),
-                    });
+                //if (target.HydroNodes.Any())
+                //{
+                //    subReports.AddRange(new[]
+                //    {
+                //        WaterFlowModel1DHydroNetworkValidator.Validate(target),
+                //        WaterFlowModel1DModelDataValidator.ValidateStructures(target),
+                //        WaterFlowModel1DModelDataValidator.ValidateExtraResistance(target.Structures.Where(s => s is IExtraResistance)),
+                //    });
 
-                }
-                if (target.HydroNodes.Any() && networkDiscretization != null)
-                {
-                    subReports.AddRange(new[]
-                    {
-                        WaterFlowModel1DDiscretizationValidator.Validate(networkDiscretization),
-                    });
+                //}
+                //if (target.HydroNodes.Any() && networkDiscretization != null)
+                //{
+                //    subReports.AddRange(new[]
+                //    {
+                //        WaterFlowModel1DDiscretizationValidator.Validate(networkDiscretization),
+                //    });
 
-                }
-                if (target.HydroNodes.Any() && roughnessSections != null)
-                {
-                    subReports.AddRange(new[]
-                    {
-                        WaterFlowModel1DModelDataValidator.ValidateRoughness(target, roughnessSections),
-                    });
-                }
+                //}
+                //if (target.HydroNodes.Any() && roughnessSections != null)
+                //{
+                //    subReports.AddRange(new[]
+                //    {
+                //        WaterFlowModel1DModelDataValidator.ValidateRoughness(target, roughnessSections),
+                //    });
+                //}
             }
             return new ValidationReport(CategoryName, new List<ValidationIssue>(), subReports);
         }
