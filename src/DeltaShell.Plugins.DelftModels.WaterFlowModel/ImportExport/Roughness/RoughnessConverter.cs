@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
                 var branch = network.Branches.FirstOrDefault(b => b.Name == branchId);
                 if (branch == null)
                 {
-                    Log.WarnFormat(string.Format("Branch '{0}' is not available in the model, so we were not able to put roughness on this branch.", branchId));
+                    Log.WarnFormat(Resources.RoughnessConverter_ReadRoughnessBranchData_no_specific_roughness_was_added_for_this_branch_, branchId);
                     continue;
                 }
                     

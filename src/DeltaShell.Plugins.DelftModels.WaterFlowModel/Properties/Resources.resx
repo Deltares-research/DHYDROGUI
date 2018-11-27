@@ -451,4 +451,7 @@
   <data name="RoughnessConverter_ReadRoughnessBranchData_An_unexpected_roughness_function_type_has_been_used_" xml:space="preserve">
     <value>An unexpected roughness function type has been used.</value>
   </data>
+  <data name="RoughnessConverter_ReadRoughnessBranchData_no_specific_roughness_was_added_for_this_branch_" xml:space="preserve">
+    <value>Branch '{0}' is not available in the model, so there no specific roughness was added for this branch.</value>
+  </data>
 </root>

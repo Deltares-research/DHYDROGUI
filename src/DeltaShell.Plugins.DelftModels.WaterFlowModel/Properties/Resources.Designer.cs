@@ -291,6 +291,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Branch &apos;{0}&apos; is not available in the model, so there no specific roughness was added for this branch..
+        /// </summary>
+        public static string RoughnessConverter_ReadRoughnessBranchData_no_specific_roughness_was_added_for_this_branch_ {
+            get {
+                return ResourceManager.GetString("RoughnessConverter_ReadRoughnessBranchData_no_specific_roughness_was_added_for_th" +
+                        "is_branch_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Filling the table of the Q or H function failed!.
         /// </summary>
         public static string RoughnessDataFileReader_FillFunctionWithTableData_Filling_the_table_of_the_Q_or_H_function_failed_ {

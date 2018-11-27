@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
         }
 
         [Test]
-        public void GivenSimpleCorrectRoughnessDataModel_WhenConvertingToRoughnessSectionWithMissingCrossSectionType_ThenCrossSectionTypeIsAddedToNetwork()
+        public void GivenRoughnessDataModelWithMissingCrossSectionType_WhenConvertingToRoughnessSection_ThenCrossSectionTypeIsAddedToNetwork()
         {
             var contentCategory = CreateRoughnessContentCategory(FloodPlain1SectionName);
             var categories = new List<DelftIniCategory> { contentCategory };
@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
         }
 
         [Test]
-        public void GivenSimpleCorrectRoughnessDataModel_WhenConvertingToRoughnessSectionWithMissingBranch_ThenWarningMessageIsLogged()
+        public void GivenRoughnessDataModelWithMissingBranch_WhenConvertingToRoughnessSection_ThenWarningMessageIsLogged()
         {
             var myBranchId = "myBranch";
             var categories = new List<DelftIniCategory>
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             Assert.That(roughnessSection.GetDefaultRoughnessType(), Is.EqualTo(RoughnessType.DeBosAndBijkerk));
             Assert.That(roughnessSection.GetDefaultRoughnessValue(), Is.EqualTo(25.08));
 
-            var expectedLogMessage = "Branch 'myBranch' is not available in the model, so we were not able to put roughness on this branch.";
+            var expectedLogMessage = string.Format(Resources.RoughnessConverter_ReadRoughnessBranchData_no_specific_roughness_was_added_for_this_branch_, myBranchId);
             TestHelper.AssertAtLeastOneLogMessagesContains(() => roughnessConverter.Convert(categories, network, new List<RoughnessSection>(), errorMessages), expectedLogMessage);
         }
 
