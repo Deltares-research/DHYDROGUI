@@ -116,6 +116,7 @@
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj">
       <Project>{7DAD8091-178D-43B1-97A7-D47A5C5FAAEA}</Project>
       <Name>DeltaShell.Plugins.DelftModels.RealTimeControl</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.csproj">
       <Project>{91A0DBAF-8970-4152-A8CC-EF283AC482C3}</Project>
