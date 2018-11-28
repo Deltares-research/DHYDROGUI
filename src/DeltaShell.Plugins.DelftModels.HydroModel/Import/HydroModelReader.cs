@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
         public static HydroModel Convert(object dataObject, string path, List<IDimrModelFileImporter> fileImporters)
         {
-            var dimrObject = (dimrXML) dataObject;
+            var dimrObject = (dimrXML)dataObject;
             var flowImporter = fileImporters.FirstOrDefault(fi=> fi.LibraryName == "cf_dll");
             var hasFlowLibrary = dimrObject.component.Any(c => c.library == "cf_dll");
 
@@ -64,32 +64,37 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
     public class WaterFlowModel1DActivityConverter : ConverterStrategy
     {
+        private readonly string dimrFileName = "dimr.xml";
+        private string dflow1dFolderName = "dflow1d";
+
         public override IEnumerable<object> Convert(object dataObject, string path, IDimrModelFileImporter importer)
         {
             var dimrObject = (dimrXML)dataObject;
             var components = dimrObject.component.ToList();
-            var flowFmFiles = GetInputFilesNamesFromDataModel(components).ToList();
-            var pathToFiles = path.Replace("dimr.xml", "dflow1d");
-            var flowModels = new List<object>();
+
+            var filesFromDimrModel = GetInputFilesNamesFromDimrModel(components).ToList();
+            var pathToFiles = path.Replace(dimrFileName, dflow1dFolderName);
+
             importer.ProgressChanged = (name, step, steps) => { };
 
-            flowFmFiles.ForEach(file => flowModels.Add(importer.ImportItem(Path.Combine(pathToFiles, "rijn-flow-model.md1d"))));
+            var md1DFiles = filesFromDimrModel.Where(file => file.EndsWith(".md1d")).ToList();
 
-            //var flowModel = importer.ImportItem(Path.Combine(pathToFiles, "rijn-flow-model.md1d"));
+            var flowModels = new List<object>();
+            md1DFiles.ForEach(file => flowModels.Add(importer.ImportItem(Path.Combine(pathToFiles, file))));
 
             return flowModels;
         }
 
-        private static IEnumerable<string> GetInputFilesNamesFromDataModel(List<dimrComponentXML> components)
+        private static IEnumerable<string> GetInputFilesNamesFromDimrModel(List<dimrComponentXML> components)
         {
-            var inputFileList = new List<string>();
+            var inputFiles = new List<string>();
 
             foreach (var component in components)
             {
-                inputFileList.Add(component.inputFile);
+                inputFiles.Add(component.inputFile);
             }
 
-            return inputFileList;
+            return inputFiles;
         }
     }
 
