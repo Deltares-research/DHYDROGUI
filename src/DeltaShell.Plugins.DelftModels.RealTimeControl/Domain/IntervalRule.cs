@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         {
         }
 
-        public IntervalRule(string name)
+        public IntervalRule(string name) : base (RtcXmlTag.IntervalRule)
         {
             if (name != null) Name = name;
             Setting = new Setting { MaxSpeed = 0 };

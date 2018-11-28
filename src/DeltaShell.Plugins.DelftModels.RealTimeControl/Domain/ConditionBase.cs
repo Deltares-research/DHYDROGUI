@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         [Aggregation]
         public IEventedList<RtcBaseObject> FalseOutputs { get; protected set; }
 
-        protected ConditionBase()
+        protected ConditionBase(string xmlTag) : base(xmlTag)
         {
             Name = ConditionProvider.GetTitle(GetType());
             TrueOutputs = new EventedList<RtcBaseObject>();
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public virtual IEnumerable<XElement> ToDataConfigExportSeries(XNamespace xNamespace, string prefix)
         {
-            yield return new XElement(xNamespace + "timeSeries", new XAttribute("id", prefix + StatusOutputSeriesName));
+            yield return new XElement(xNamespace + "timeSeries", new XAttribute("id", XmlTag + RtcXmlTag.Status + prefix + "/" + Name));
         }
 
         public virtual IEnumerable<XElement> ToDataConfigImportSeries(string prefix, XNamespace xNamespace)

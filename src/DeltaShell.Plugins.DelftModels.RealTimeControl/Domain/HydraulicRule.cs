@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         private int timeLag = 0;
         private int timeLagInTimeSteps = 0;
 
-        public HydraulicRule()
+        public HydraulicRule(string xmlTag = RtcXmlTag.HydraulicRule) : base (xmlTag)
         {
             Function = DefineFunction();
         }

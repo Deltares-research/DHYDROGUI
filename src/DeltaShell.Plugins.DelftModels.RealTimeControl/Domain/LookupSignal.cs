@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         {
         }
 
-        public LookupSignal(string name)
+        public LookupSignal(string name) : base (RtcXmlTag.LookupSignal)
         {
             if (name != null) Name = name;
             Function = DefineFunction();

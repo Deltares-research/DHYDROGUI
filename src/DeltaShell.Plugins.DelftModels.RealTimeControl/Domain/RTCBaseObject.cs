@@ -11,8 +11,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     [Entity(FireOnCollectionChange=false)]
     public abstract class RtcBaseObject : Unique<long>, INameable, ICloneable, ICopyFrom
     {
+        protected RtcBaseObject(string xmlTag)
+        {
+            XmlTag = xmlTag;
+        }
+
         public string Name { get; set; }
         public string LongName { get; set; }
+        protected string XmlTag { get; }
 
         /// <summary>
         /// todo refactor this; there not 1 xml attached to a RtcBaseObject
@@ -26,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public virtual XElement ToXmlReference(XNamespace xNamespace, string prefix)
         {
-            return new XElement(xNamespace + "trigger", new XElement(xNamespace + "ruleReference", prefix + Name));
+            return new XElement(xNamespace + "trigger", new XElement(xNamespace + "ruleReference", prefix + "/" + Name));
         }
 
         /// <summary>
@@ -67,6 +73,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 Name = rtcBaseObject.Name;
                 LongName = rtcBaseObject.LongName;
             }
+        }
+
+        public class RtcXmlTag
+        {
+            public const string DirectionalCondition = "[DirectionalCondition]";
+            public const string FactorRule = "[FactorRule]";
+            public const string HydraulicRule = "[HydraulicRule]";
+            public const string IntervalRule = "[IntervalRule]";
+            public const string LookupSignal = "[LookupSignal]";
+            public const string PIDRule = "[PIDRule]";
+            public const string RelativeTimeRule = "[RelativeTimeRule]";
+            public const string StandardCondition = "[StandardCondition]";
+            public const string TimeCondition = "[TimeCondition]";
+            public const string TimeRule = "[TimeRule]";
+
+            public const string OutputAsInput = "[AsInputFor]";
+            public const string Status = "[Status]";
+
         }
     }
 }

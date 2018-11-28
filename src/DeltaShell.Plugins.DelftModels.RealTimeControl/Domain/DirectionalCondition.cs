@@ -10,8 +10,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     public class DirectionalCondition : StandardCondition
     {
         public static string TimeLagPostFix = "-1";
-        
-        public DirectionalCondition() : base(true)
+
+        public DirectionalCondition() : base(true, RtcXmlTag.DirectionalCondition)
         {
         }
 

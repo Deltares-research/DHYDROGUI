@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public string Name { get; set; }
 
-        public abstract string XmlName { get; }
+        public virtual string XmlName { get; }
 
         [NoNotifyPropertyChange]
         public double Value { get; set; }

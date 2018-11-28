@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         {
         }
 
-        public RelativeTimeRule(string name, bool fromValue)
+        public RelativeTimeRule(string name, bool fromValue) : base (RtcXmlTag.RelativeTimeRule)
         {
             if (name != null) Name = name;
             FromValue = fromValue;
@@ -101,11 +101,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             set { Function.Arguments.First().InterpolationType = value; }
         }
 
-        public string TimeActive
-        {
-            get { return Name + "_t"; }
-        }
-
         public override IEnumerable<IXmlTimeSeries> XmlExportTimeSeries(string prefix)
         {
             yield return GetExportTimeSeries(prefix);
@@ -113,20 +108,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         private string OutputAsInput(Output outputAsInput)
         {
-            return outputAsInput.Name + "_AsInputFor_" + Name;
+            return outputAsInput.XmlName + RtcXmlTag.OutputAsInput + Name;
         }
 
         public override XElement ToXml(XNamespace xNamespace, string prefix)
         {
             var result = base.ToXml(xNamespace, prefix);
             IList<Record> table = GetTable();
-
             foreach (var output in Outputs)
             {
-                output.IntegralPart = prefix + TimeActive; // also in data export and statevector
+                output.IntegralPart = XmlTag + prefix + "/" + Name; // also in data export and statevector
             }
             var element = new XElement(xNamespace + "timeRelative",
-                                       new XAttribute("id", prefix + Name),
+                                       new XAttribute("id", prefix + "/" + Name),
                                        new XElement(xNamespace + "mode", "RETAINVALUEWHENINACTIVE"),
                                        new XElement(xNamespace + "valueOption", TimeValueOption),
                                        new XElement(xNamespace + "maximumPeriod", MinimumPeriod.ToString()),
@@ -221,8 +215,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         {
             var xmlTimeSeries = new XmlTimeSeries
                                     {
-                                        Name = prefix + TimeActive,
-                                        LocationId = prefix + Name,
+                                        Name = XmlTag + prefix +"/"+ Name,
+                                        LocationId = prefix + "/" + Name,
                                         ParameterId = "t",
                                     };
             return xmlTimeSeries;

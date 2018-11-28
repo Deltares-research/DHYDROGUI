@@ -26,9 +26,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(StandardCondition));
 
-        public TimeCondition() : base(false)
+        public TimeCondition() : base(false, RtcXmlTag.TimeCondition)
         {
             Reference = "IMPLICIT"; // = IMPLICIT -> timeseries
+
         }
 
         private TimeSeries timeSeries;
@@ -104,8 +105,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 StartTime = startTime,
                 EndTime = endTime,
-                Name = prefix + TimeSeriesName,
-                LocationId = prefix + LocationId,
+                Name = XmlTag + prefix +"/" + LocationId,
+                LocationId = prefix + "/" + LocationId,
                 ParameterId = QuantityId,
                 TimeStep = timeStep,
                 TimeSeries = (TimeSeries) TimeSeries.Clone(),
@@ -126,25 +127,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         }
         private string QuantityId = "TimeSeries";
 
-        private string TimeSeriesName
-        {
-            get
-            {
-                return LocationId + "_" + QuantityId;
-            }
-        }
-
-        /// <summary>
-        /// All trigger should dump their state to te export file (mail DS )
-        /// </summary>
-        public string InputTimeSeriesName
-        {
-            get { return string.Format("Timeseries_{0}", Name); }
-        }
-
         public override XElement ToXml(XNamespace xNamespace, string prefix)
         {
-            return ToXml(xNamespace, prefix, prefix + InputTimeSeriesName);
+            return ToXml(xNamespace, prefix, XmlTag + prefix + "/" + Name);
         }
 
         public override IEnumerable<XElement> ToDataConfigImportSeries(string prefix, XNamespace xNamespace)
@@ -153,9 +138,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 yield return export;
             }
-            yield return new XElement(xNamespace + "timeSeries", new XAttribute("id", prefix+InputTimeSeriesName),
+            yield return new XElement(xNamespace + "timeSeries", new XAttribute("id", XmlTag + prefix + "/" + Name),
                 new XElement(xNamespace + "PITimeSeries",
-                    new XElement(xNamespace + "locationId", prefix+LocationId),
+                    new XElement(xNamespace + "locationId", prefix + "/" + LocationId),
                     new XElement(xNamespace + "parameterId",QuantityId),
                     new XElement(xNamespace + "interpolationOption",InterpolationOptionsTime == InterpolationType.Constant ? "BLOCK" : "LINEAR"),
                     new XElement(xNamespace + "extrapolationOption", TimeSeries.Time.ExtrapolationType == ExtrapolationType.Periodic ? "PERIODIC" : "BLOCK")

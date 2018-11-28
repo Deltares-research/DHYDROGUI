@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public bool StoreAsRule { get; set; }
 
-        protected SignalBase()
+        protected SignalBase(string xmlTag) : base (xmlTag)
         {
             Name = SignalProvider.GetTitle(GetType());
             Inputs = new EventedList<Input>();

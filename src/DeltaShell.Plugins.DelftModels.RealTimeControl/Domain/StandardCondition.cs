@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public StandardCondition(): this(true){}
 
-        public StandardCondition(bool inputRequired)
+        public StandardCondition(bool inputRequired, string xmlTag = RtcXmlTag.StandardCondition ) : base (xmlTag)
         {
             Operation = Operation.Equal;
             Reference = "EXPLICIT"; // = default EXPLICIT
@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public XElement ToXml(XNamespace xNamespace, string prefix, string inputName)
         {
             var result = base.ToXml(xNamespace, prefix);
-            var standard = new XElement(xNamespace + "standard", new XAttribute("id", prefix + Name));
+            var standard = new XElement(xNamespace + "standard", new XAttribute("id", prefix +"/"+ Name));
             standard.Add(new XElement(xNamespace + "condition",
                                 new XElement(xNamespace + "x1Series", Reference == string.Empty ? null : new XAttribute("ref", Reference), inputName),
                                 new XElement(xNamespace + "relationalOperator", Operation.ToString()),
@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
 
             // output series with status info is required by RTC
-            standard.Add(new XElement(xNamespace + "output", new XElement(xNamespace + "status", prefix + StatusOutputSeriesName)));
+            standard.Add(new XElement(xNamespace + "output", new XElement(xNamespace + "status", XmlTag + RtcXmlTag.Status + prefix +"/"+ Name)));
             result.Add(standard);
             return result;
         }

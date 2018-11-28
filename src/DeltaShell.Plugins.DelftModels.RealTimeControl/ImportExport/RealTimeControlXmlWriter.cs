@@ -593,9 +593,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     var openMi = new XElement(Fns + "timeSeries", new XAttribute("id", output.XmlName));
                     if (output.IsConnected)
                     {
-                        string locationNameWithoutHashSigns = output.LocationName;
+
                         openMi.Add(new XElement(Fns + "OpenMIExchangeItem",
-                                                     new XElement(Fns + "elementId", locationNameWithoutHashSigns),
+                                                     new XElement(Fns + "elementId", output.LocationName),
                                                      new XElement(Fns + "quantityId", output.ParameterName),
                                                      new XElement(Fns + "unit", "m")));
                     }
@@ -710,7 +710,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     }
                     foreach (var timeSeries in ruleBase.XmlImportTimeSeries(@group.Name, timeDependentModel.StartTime, timeDependentModel.StopTime, timeDependentModel.TimeStep))
                     {
-                        var key = group.Name + "_" + timeSeries.LocationId + "_" + timeSeries.ParameterId;
+                        var key = group.Name + "/" + timeSeries.LocationId + "/" + timeSeries.ParameterId;
                         if (seriesNames.Contains(key))
                         {
                             continue;
@@ -725,7 +725,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 {
                     foreach (var timeSeries in conditionBase.XmlImportTimeSeries(@group.Name, timeDependentModel.StartTime, timeDependentModel.StopTime, timeDependentModel.TimeStep))
                     {
-                        var key = group.Name + "_" + timeSeries.LocationId + "_" + timeSeries.ParameterId;
+                        var key = group.Name + "/" + timeSeries.LocationId + "/" + timeSeries.ParameterId;
 
                         if (seriesNames.Contains(key))
                         {

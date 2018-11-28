@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         private TimeSeries timeSeries;
 
-        public PIDRule(string name)
+        public PIDRule(string name) : base (RtcXmlTag.PIDRule)
         {
             if (name != null) Name = name;
 

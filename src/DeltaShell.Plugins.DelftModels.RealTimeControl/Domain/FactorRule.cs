@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     [Entity(FireOnCollectionChange=false)]
     public class FactorRule : HydraulicRule
     {
-        public FactorRule()
+        public FactorRule() : base (RtcXmlTag.FactorRule)
         {
             Factor = -1.0; // default an invertor
         }

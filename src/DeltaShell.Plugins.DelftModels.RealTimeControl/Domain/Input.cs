@@ -51,10 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public override string XmlName
         {
-            get
-            {
-                {return "input_" + Name;}
-            }
+            get { return "[Input]" + LocationName.Replace("##", "~~") + "/" + ParameterName; }
         }
     }
 }
