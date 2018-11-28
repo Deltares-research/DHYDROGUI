@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region write logic
 
-        public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
+        public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IEnumerable<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
         bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false, ISedimentModelData sedimentModelData = null)
         {
             var targetDir = VerifyTargetDirectory(targetMduFilePath);
@@ -716,7 +716,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return feature;
         }
 
-        private void WriteAreaFeatures(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties)
+        private void WriteAreaFeatures(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IEnumerable<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties)
         {
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.LandBoundaryFile,
                 hydroArea.LandBoundaries, ref landBoundariesFile, LandBoundariesExtension);
@@ -819,7 +819,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region read logic
 
-        public void Read(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, Action<string,int,int> reportProgress = null, IList<ModelFeatureCoordinateData<BridgePillar>> allBridgePillarsAndCorrespondingProperties = null)
+        public void Read(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IDictionary<FixedWeir,ModelFeatureCoordinateData<FixedWeir>> fixedWeirProperties, Action<string,int,int> reportProgress = null, IList<ModelFeatureCoordinateData<BridgePillar>> allBridgePillarsAndCorrespondingProperties = null)
         {
             if (reportProgress == null) reportProgress = (name, current, total) => { };
             var totalSteps = 5;
@@ -834,10 +834,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ReadAreaFeatures(filePath, modelDefinition, hydroArea);
 
             //fix for fixed weirs
-            
+            fixedWeirProperties.Clear();
+
             foreach (var fixedWeir in hydroArea.FixedWeirs)
             {
-                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir>() {Feature = fixedWeir};
+                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir> {Feature = fixedWeir};
                 var scheme = modelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
                 modelFeatureCoordinateData.UpdateDataColumns(scheme);
 
@@ -876,7 +877,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         break;
                     }
                 }
-                allFixedWeirsAndCorrespondingProperties.Add(modelFeatureCoordinateData);
+
+                fixedWeirProperties.Add(fixedWeir, modelFeatureCoordinateData);
             }
 
             foreach (var fixedWeir in hydroArea.FixedWeirs)

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
@@ -113,63 +114,72 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Mode = Feature2DImportExportMode.Import,
                 CreateDelegate = delegate(List<Coordinate> points1, string name1)
                 {
-                    var feature1 = new FixedWeir {Name = name1, Geometry = PliFile<FixedWeir>.CreatePolyLineGeometry(points1)};
+                    var feature1 = new FixedWeir
+                        {Name = name1, Geometry = PliFile<FixedWeir>.CreatePolyLineGeometry(points1)};
                     feature1.InitializeAttributes();
                     return feature1;
                 },
                 EqualityComparer = new GroupableFeatureComparer<FixedWeir>(),
-                AfterCreateAction = delegate(object featureList, FixedWeir fixedWeir)
+                //AfterCreateAction = ,
+                AfterImportAction = featureList =>
                 {
-                    fixedWeir.UpdateGroupName(GetModelFor(featureList, a => a.FixedWeirs));
-                    
-                    var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir>() {Feature = fixedWeir};
-                    var scheme = GetModelFor(featureList, a => a.FixedWeirs).ModelDefinition
-                        .GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
-                    modelFeatureCoordinateData.UpdateDataColumns(scheme);
+                    var waterFlowFmModel = GetModelFor(featureList, a => a.FixedWeirs);
+                    var scheme = waterFlowFmModel.ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
+                    var warningMessages = new StringBuilder();
 
-                    var locationKeyFound = fixedWeir.Attributes.ContainsKey(Feature2D.LocationKey);
-                    var indexKey = !locationKeyFound ? -1 : fixedWeir.Attributes.Keys.ToList().IndexOf(Feature2D.LocationKey);
-
-                    var numberFixedWeirAttributes = !locationKeyFound ? fixedWeir.Attributes.Count : (fixedWeir.Attributes.Count - 1);
-
-                    var difference = Math.Abs(modelFeatureCoordinateData.DataColumns.Count - numberFixedWeirAttributes);
-
-                    
-                    if (modelFeatureCoordinateData.DataColumns.Count < fixedWeir.Attributes.Count)
+                    foreach (var fixedWeirsProperty in waterFlowFmModel.FixedWeirsProperties)
                     {
-                        Log.Warn($"Based on the Fixed Weir Scheme {scheme}, there are too many column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been ignored");
-                    }
+                        var fixedWeir = fixedWeirsProperty.Feature;
+                        fixedWeirsProperty.UpdateDataColumns(scheme);
 
-                    if (modelFeatureCoordinateData.DataColumns.Count > fixedWeir.Attributes.Count)
-                    {
-                        Log.Warn($"Based on the Fixed Weir Scheme {scheme}, there are not enough column(s) defined for {fixedWeir} in the imported fixed weir file. The last {difference} column(s) have been generated using default values");
-                    }
+                        var locationKeyFound = fixedWeir.Attributes.ContainsKey(Feature2D.LocationKey);
+                        var indexKey = !locationKeyFound ? -1 : fixedWeir.Attributes.Keys.ToList().IndexOf(Feature2D.LocationKey);
 
-                    for (var index = 0; index < modelFeatureCoordinateData.DataColumns.Count; index++)
-                    {
+                        var numberFixedWeirAttributes = !locationKeyFound ? fixedWeir.Attributes.Count : (fixedWeir.Attributes.Count - 1);
+                        var difference = Math.Abs(fixedWeirsProperty.DataColumns.Count - numberFixedWeirAttributes);
 
-                        if (index < fixedWeir.Attributes.Count)
+                        if (fixedWeirsProperty.DataColumns.Count < fixedWeir.Attributes.Count)
                         {
-                            if (index == indexKey) continue;
+                            warningMessages.AppendLine($"Based on the Fixed Weir Scheme {scheme}, " +
+                                                       $"there are too many column(s) defined for {fixedWeir} in the imported fixed weir file. " +
+                                                       $"The last {difference} column(s) have been ignored");
+                        }
 
-                            var dataColumn = modelFeatureCoordinateData.DataColumns[index];
-                            var attributeWithListOfLoadedData =
-                                    fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] as
-                                        GeometryPointsSyncedList<double>;
-                                dataColumn.ValueList = attributeWithListOfLoadedData.ToList();
-                        }
-                        else
+                        if (fixedWeirsProperty.DataColumns.Count > fixedWeir.Attributes.Count)
                         {
-                            break;
+                            warningMessages.AppendLine($"Based on the Fixed Weir Scheme {scheme}, " +
+                                                       $"there are not enough column(s) defined for {fixedWeir} in the imported fixed weir file. " +
+                                                       $"The last {difference} column(s) have been generated using default values");
                         }
+
+                        for (var index = 0; index < fixedWeirsProperty.DataColumns.Count; index++)
+                        {
+                            if (index < fixedWeir.Attributes.Count)
+                            {
+                                if (index == indexKey) continue;
+
+                                var dataColumn = fixedWeirsProperty.DataColumns[index];
+                                var attributeWithListOfLoadedData = fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] as GeometryPointsSyncedList<double>;
+                                dataColumn.ValueList = attributeWithListOfLoadedData?.ToList();
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+                        fixedWeir.Attributes.Clear(); //To Do during last step of cleaning. Turn this on.
                     }
-                    GetModelFor(featureList, a => a.FixedWeirs).FixedWeirsProperties.Add(modelFeatureCoordinateData);
-                    
-                        fixedWeir.Attributes.Clear(); //To Do during last step of cleaning. Turn this on. 
-                    
+
+                    Log.Warn(warningMessages.ToString());
+                },
+                AfterCreateAction = (featureList, fixedWeir) =>
+                {
+                    var waterFlowFmModel = GetModelFor(featureList, a => a.FixedWeirs);
+                    fixedWeir.UpdateGroupName(waterFlowFmModel);
                 },
 
-            GetEditableObject = target => GetModelFor(target, a => a.FixedWeirs).Area
+                GetEditableObject = target => GetModelFor(target, a => a.FixedWeirs).Area
             };
 
             yield return new PlizFileImporterExporter<BridgePillar, BridgePillar>

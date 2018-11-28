@@ -534,8 +534,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Geometry = new LineString(new[] { new Coordinate(100, 0), new Coordinate(100, 200) })
             });
             
-            flow.FixedWeirsProperties[0].DataColumns[0].ValueList[0] = 10.0;
-            flow.FixedWeirsProperties[0].DataColumns[0].ValueList[1] = 10.0;
+            flow.FixedWeirsProperties.ElementAt(0).DataColumns[0].ValueList[0] = 10.0;
+            flow.FixedWeirsProperties.ElementAt(0).DataColumns[0].ValueList[1] = 10.0;
 
             flow.Area.Weirs.Add(new Weir2D("weir")
             {

@@ -75,8 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private WaterFlowFMModelDefinition modelDefinition;
         private bool disposing;
         private bool updatingGroupName;
-
-        private IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties;
+        private Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>> fixedWeirProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
         
         /// <summary>
         /// Gets the bridge pillars data model.
@@ -128,7 +127,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             TracerDefinitions = new EventedList<string>();
             SedimentFractions = new EventedList<ISedimentFraction>();
 
-            allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
             BridgePillarsDataModel = new List<ModelFeatureCoordinateData<BridgePillar>>();
 
             SedimentOverallProperties = SedimentFractionHelper.GetSedimentationOverAllProperties();
@@ -214,9 +212,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public HeatFluxModelType HeatFluxModelType { get; private set; }
          
-        public IList<ModelFeatureCoordinateData<FixedWeir>> FixedWeirsProperties
+        public IEnumerable<ModelFeatureCoordinateData<FixedWeir>> FixedWeirsProperties
         {
-            get { return allFixedWeirsAndCorrespondingProperties; }
+            get
+            {
+                return fixedWeirProperties.Values;
+            }
         }
 
         public bool UseDepthLayers
@@ -976,7 +977,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.FixedWeirScheme,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
-                    allFixedWeirsAndCorrespondingProperties.ForEach(p => p.UpdateDataColumns(prop.GetValueAsString()));                    
+                    fixedWeirProperties.Values.ForEach(p => p.UpdateDataColumns(prop.GetValueAsString()));                    
                 }
                 if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.BedlevType,
                     StringComparison.InvariantCultureIgnoreCase))
@@ -1169,7 +1170,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             syncers.ForEach(s => s.Dispose());
             syncers.Clear();
 
-            allFixedWeirsAndCorrespondingProperties.ForEach(d => d.Dispose());
+            fixedWeirProperties.Values.ForEach(d => d.Dispose());
+            fixedWeirProperties.Clear();
             BridgePillarsDataModel.ForEach( d => d.Dispose());
         }
 
@@ -1440,14 +1442,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     ((INotifyPropertyChanged)value).PropertyChanged -= HydroAreaPropertyChanged;
                 }
 
-                allFixedWeirsAndCorrespondingProperties.Clear();
+                fixedWeirProperties.Clear();
+                
                 BridgePillarsDataModel.Clear();
 
                 areaItem.Value = value;
 
                 if (value != null)
                 {
-                    value.FixedWeirs.ForEach(fw => allFixedWeirsAndCorrespondingProperties.Add(CreateModelFeatureCoordinateDataFor(fw)));
+                    value.FixedWeirs.ForEach(fw => fixedWeirProperties.Add(fw, CreateModelFeatureCoordinateDataFor(fw)));
                     value.BridgePillars.ForEach( bp => BridgePillarsDataModel.Add(CreateModelFeatureCoordinateDataFor(bp)));
 
                     ((INotifyCollectionChanged)value).CollectionChanged += HydroAreaCollectionChanged;
@@ -1868,7 +1871,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (File.Exists(mduFilePath))
             {
                 isLoading = true;
-                mduFile.Read(mduFilePath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, (name, current, total) => FireImportProgressChanged(this, "Reading mdu - " + name, current, total), BridgePillarsDataModel);
+                mduFile.Read(mduFilePath, ModelDefinition, Area, fixedWeirProperties, (name, current, total) => FireImportProgressChanged(this, "Reading mdu - " + name, current, total), BridgePillarsDataModel);
                 isLoading = false;
                 SyncModelTimesWithBase();
             }
@@ -1934,7 +1937,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             InitializeAreaDataColumns();
 
-            mduFile.Write(mduPath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null);
+            mduFile.Write(mduPath, ModelDefinition, Area, fixedWeirProperties.Values, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null);
 
             RestoreAreaDataColumns();
 
@@ -2397,35 +2400,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var fixedWeir = e.Item as FixedWeir;
                 if (fixedWeir != null)
                 {
+                    var weirProperties = fixedWeirProperties.ContainsKey(fixedWeir)
+                        ? fixedWeirProperties[fixedWeir]
+                        : null;
+
                     switch (e.Action)
                     {
                         case NotifyCollectionChangeAction.Add:
-                            if (allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir) == null)
+                            if (weirProperties == null)
                             {
-                                allFixedWeirsAndCorrespondingProperties.Add(
-                                    CreateModelFeatureCoordinateDataFor(fixedWeir));
+                                fixedWeirProperties.Add(fixedWeir, CreateModelFeatureCoordinateDataFor(fixedWeir));
                             }
 
                             break;
                         case NotifyCollectionChangeAction.Remove:
-                            var dataToRemove =
-                                allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir);
-                            if (dataToRemove == null) break;
-
-                            allFixedWeirsAndCorrespondingProperties.Remove(dataToRemove);
-                            dataToRemove.Dispose();
+                            if (weirProperties == null) break;
+                            
+                            fixedWeirProperties.Remove(weirProperties.Feature);
+                            weirProperties.Dispose();
+                            
                             break;
                         case NotifyCollectionChangeAction.Replace:
-                            var dataToUpdate =
-                                allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir);
-                            if (dataToUpdate == null)
+                            if (weirProperties == null)
                             {
-                                allFixedWeirsAndCorrespondingProperties.Add(
-                                    CreateModelFeatureCoordinateDataFor(fixedWeir));
+                                fixedWeirProperties.Add(fixedWeir, CreateModelFeatureCoordinateDataFor(fixedWeir));
                                 break;
                             }
 
-                            dataToUpdate.Feature = fixedWeir;
+                            weirProperties.Feature = fixedWeir;
                             break;
 
                         default:

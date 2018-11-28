@@ -39,8 +39,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             get { return Properties.Resources.TextDocument; }
         }
 
-
-
         public override IEnumerable<Type> SourceTypes()
         {
             yield return typeof (TParent);
@@ -102,7 +100,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public Func<TFeat,TParent> CreateFromFeature { get; set; }
  
         public Func<TParent,TFeat> GetFeature { get; set; }
+
         public Func<List<Coordinate>, string, TFeat> CreateDelegate { private get; set; }
+
+        public Action<IList<TFeat>> AfterImportAction { get; set; }
+
+        public new object ImportItem(string path, object target = null)
+        {
+            var importedItem = base.ImportItem(path, target);
+            AfterImportAction?.Invoke(target as IList<TFeat>);
+            return importedItem;
+        }
 
         private TParent CreateParentFromFeature(TFeat feature)
         {

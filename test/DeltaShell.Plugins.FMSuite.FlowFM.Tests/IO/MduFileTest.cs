@@ -379,9 +379,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var originalArea = new HydroArea();
                 var originalMD = new WaterFlowFMModelDefinition(mduDir, modelName);
-                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
+                var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir,ModelFeatureCoordinateData<FixedWeir>>();
                 mduFile.Read(mduFilePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties);
-                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties, switchTo: false);
+                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties.Values, switchTo: false);
                 
                 var netFileLocationShouldBe = Path.Combine(newMduDir, relativeNcFilePath);
 
@@ -482,40 +482,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var originalArea = new HydroArea();
                 var originalMD = new WaterFlowFMModelDefinition(mduDir, modelName);
-                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
+                var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
                 mduFile.Read(mduFilePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties);
 
-                Assert.AreEqual(7, allFixedWeirsAndCorrespondingProperties[0].DataColumns.Count);
+                var coordinateData = allFixedWeirsAndCorrespondingProperties.ElementAt(0).Value;
+                Assert.AreEqual(7, coordinateData.DataColumns.Count);
 
                 //CrestLevel
-                Assert.AreEqual(0, allFixedWeirsAndCorrespondingProperties[0].DataColumns[0].ValueList[0]);
-                Assert.AreEqual(0, allFixedWeirsAndCorrespondingProperties[0].DataColumns[0].ValueList[1]);
+                Assert.AreEqual(0, coordinateData.DataColumns[0].ValueList[0]);
+                Assert.AreEqual(0, coordinateData.DataColumns[0].ValueList[1]);
 
                 //Ground Height Left
-                Assert.AreEqual(0, allFixedWeirsAndCorrespondingProperties[0].DataColumns[1].ValueList[0]);
-                Assert.AreEqual(0, allFixedWeirsAndCorrespondingProperties[0].DataColumns[1].ValueList[1]);
+                Assert.AreEqual(0, coordinateData.DataColumns[1].ValueList[0]);
+                Assert.AreEqual(0, coordinateData.DataColumns[1].ValueList[1]);
 
                 //Ground Height Right
-                Assert.AreEqual(0, allFixedWeirsAndCorrespondingProperties[0].DataColumns[2].ValueList[0]);
-                Assert.AreEqual(0, allFixedWeirsAndCorrespondingProperties[0].DataColumns[2].ValueList[1]);
+                Assert.AreEqual(0, coordinateData.DataColumns[2].ValueList[0]);
+                Assert.AreEqual(0, coordinateData.DataColumns[2].ValueList[1]);
 
                 //Crest Width
-                Assert.AreEqual(3, allFixedWeirsAndCorrespondingProperties[0].DataColumns[3].ValueList[0]);
-                Assert.AreEqual(3, allFixedWeirsAndCorrespondingProperties[0].DataColumns[3].ValueList[1]);
+                Assert.AreEqual(3, coordinateData.DataColumns[3].ValueList[0]);
+                Assert.AreEqual(3, coordinateData.DataColumns[3].ValueList[1]);
 
                 //Slope Left
-                Assert.AreEqual(4, allFixedWeirsAndCorrespondingProperties[0].DataColumns[4].ValueList[0]);
-                Assert.AreEqual(4, allFixedWeirsAndCorrespondingProperties[0].DataColumns[4].ValueList[1]);
+                Assert.AreEqual(4, coordinateData.DataColumns[4].ValueList[0]);
+                Assert.AreEqual(4, coordinateData.DataColumns[4].ValueList[1]);
 
                 //Slope Right
-                Assert.AreEqual(4, allFixedWeirsAndCorrespondingProperties[0].DataColumns[5].ValueList[0]);
-                Assert.AreEqual(4, allFixedWeirsAndCorrespondingProperties[0].DataColumns[5].ValueList[1]);
+                Assert.AreEqual(4, coordinateData.DataColumns[5].ValueList[0]);
+                Assert.AreEqual(4, coordinateData.DataColumns[5].ValueList[1]);
 
                 //Roughness Code
-                Assert.AreEqual(0, allFixedWeirsAndCorrespondingProperties[0].DataColumns[6].ValueList[0]);
-                Assert.AreEqual(0, allFixedWeirsAndCorrespondingProperties[0].DataColumns[6].ValueList[1]);
+                Assert.AreEqual(0, coordinateData.DataColumns[6].ValueList[0]);
+                Assert.AreEqual(0, coordinateData.DataColumns[6].ValueList[1]);
 
-                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties,switchTo: false);
+                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties.Values, switchTo: false);
 
                 var generatedResultsContent = File.ReadAllLines(@"FlowFMFixedWeirs\MduFileReadsAndWritesTest\TwoFixedWeirs_fxw2_fxw.pliz");
 
@@ -568,27 +569,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                     var originalArea = new HydroArea();
                     var originalMD = new WaterFlowFMModelDefinition(mduDir, modelName);
-                    var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
-
-                    
+                    var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
 
                     mduFile.Read(mduFilePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties);
 
-                    Assert.AreEqual(3, allFixedWeirsAndCorrespondingProperties[0].DataColumns.Count);
+                    var coordinateData = allFixedWeirsAndCorrespondingProperties.ElementAt(0).Value;
+
+                    Assert.AreEqual(3, coordinateData.DataColumns.Count);
 
                     //CrestLevel
-                    Assert.AreEqual(1.2, allFixedWeirsAndCorrespondingProperties[0].DataColumns[0].ValueList[0]);
-                    Assert.AreEqual(6.4, allFixedWeirsAndCorrespondingProperties[0].DataColumns[0].ValueList[1]);
+                    Assert.AreEqual(1.2, coordinateData.DataColumns[0].ValueList[0]);
+                    Assert.AreEqual(6.4, coordinateData.DataColumns[0].ValueList[1]);
 
                     //Ground Height Left
-                    Assert.AreEqual(3.5, allFixedWeirsAndCorrespondingProperties[0].DataColumns[1].ValueList[0]);
-                    Assert.AreEqual(3.0, allFixedWeirsAndCorrespondingProperties[0].DataColumns[1].ValueList[1]);
+                    Assert.AreEqual(3.5, coordinateData.DataColumns[1].ValueList[0]);
+                    Assert.AreEqual(3.0, coordinateData.DataColumns[1].ValueList[1]);
 
                     //Ground Height Right
-                    Assert.AreEqual(3.2, allFixedWeirsAndCorrespondingProperties[0].DataColumns[2].ValueList[0]);
-                    Assert.AreEqual(3.3, allFixedWeirsAndCorrespondingProperties[0].DataColumns[2].ValueList[1]);
+                    Assert.AreEqual(3.2, coordinateData.DataColumns[2].ValueList[0]);
+                    Assert.AreEqual(3.3, coordinateData.DataColumns[2].ValueList[1]);
 
-                    mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties, switchTo: false);
+                    mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties.Values, switchTo: false);
 
                     var generatedResultsContent = File.ReadAllLines(@"FlowFMFixedWeirs\MduFileReadsAndWritesTest\TwoFixedWeirs_fxw.pliz");
 
@@ -639,7 +640,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var originalArea = new HydroArea();
                 var originalMD = new WaterFlowFMModelDefinition(mduDir, modelName);
-                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
+                var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
 
                 mduFile.Read(mduFilePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties);
 
@@ -651,7 +652,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var oldModelProperty = originalMD.GetModelProperty("enclosurefile");
                 Assert.IsNull(oldModelProperty);
 
-                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties);
+                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties.Values);
 
                 var generatedInputContent =
                     File.ReadAllLines(mduFilePath);
@@ -692,7 +693,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var originalArea = new HydroArea();
                 var originalMD = new WaterFlowFMModelDefinition(mduDir, modelName);
-                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
+                var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
 
                 mduFile.Read(mduFilePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties);
 
@@ -704,7 +705,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var oldModelProperty = originalMD.GetModelProperty("enclosurefile");
                 Assert.IsNull(oldModelProperty);
 
-                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties);
+                mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties.Values);
 
                 var generatedInputContent =
                     File.ReadAllLines(mduFilePath);

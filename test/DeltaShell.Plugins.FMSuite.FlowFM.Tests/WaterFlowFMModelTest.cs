@@ -1502,11 +1502,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 var model = new WaterFlowFMModel(mduFilePath);
 
-                var modelvalue = model.FixedWeirsProperties[0].DataColumns[0].ValueList[0];
+                var featureCoordinateData = model.FixedWeirsProperties.ElementAt(0);
+
+                var modelvalue = featureCoordinateData.DataColumns[0].ValueList[0];
                 Assert.AreEqual(1.2 , modelvalue);
-                modelvalue = model.FixedWeirsProperties[0].DataColumns[0].ValueList[1];
+                modelvalue = featureCoordinateData.DataColumns[0].ValueList[1];
                 Assert.AreEqual(6.4, modelvalue);
-                modelvalue = model.FixedWeirsProperties[0].DataColumns[1].ValueList[0];
+                modelvalue = featureCoordinateData.DataColumns[1].ValueList[0];
                 Assert.AreEqual(3.5, modelvalue);
 
                 //To do test write function also
@@ -1677,15 +1679,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 Assert.NotNull(clonedFmModel);
 
-                Assert.That(fmModel.FixedWeirsProperties[0].Feature, Is.Not.SameAs(clonedFmModel.FixedWeirsProperties[0].Feature));
-                Assert.That(fmModel.FixedWeirsProperties[1].Feature, Is.Not.SameAs(clonedFmModel.FixedWeirsProperties[1].Feature));
-                Assert.That(fmModel.FixedWeirsProperties[0].Feature, Is.Not.SameAs(clonedFmModel.FixedWeirsProperties[1].Feature));
-                Assert.That(fmModel.FixedWeirsProperties[1].Feature, Is.Not.SameAs(clonedFmModel.FixedWeirsProperties[0].Feature));
+                Assert.That(fmModel.FixedWeirsProperties.ElementAt(0).Feature, Is.Not.SameAs(clonedFmModel.FixedWeirsProperties.ElementAt(0).Feature));
+                Assert.That(fmModel.FixedWeirsProperties.ElementAt(1).Feature, Is.Not.SameAs(clonedFmModel.FixedWeirsProperties.ElementAt(1).Feature));
+                Assert.That(fmModel.FixedWeirsProperties.ElementAt(0).Feature, Is.Not.SameAs(clonedFmModel.FixedWeirsProperties.ElementAt(1).Feature));
+                Assert.That(fmModel.FixedWeirsProperties.ElementAt(1).Feature, Is.Not.SameAs(clonedFmModel.FixedWeirsProperties.ElementAt(0).Feature));
 
-                Assert.That(fmModel.FixedWeirsProperties[0].Feature, Is.SameAs(fmModel.Area.FixedWeirs[0]));
-                Assert.That(fmModel.FixedWeirsProperties[1].Feature, Is.SameAs(fmModel.Area.FixedWeirs[1]));
-                Assert.That(clonedFmModel.FixedWeirsProperties[0].Feature, Is.SameAs(clonedFmModel.Area.FixedWeirs[0]));
-                Assert.That(clonedFmModel.FixedWeirsProperties[1].Feature, Is.SameAs(clonedFmModel.Area.FixedWeirs[1]));
+                Assert.That(fmModel.FixedWeirsProperties.ElementAt(0).Feature, Is.SameAs(fmModel.Area.FixedWeirs[0]));
+                Assert.That(fmModel.FixedWeirsProperties.ElementAt(1).Feature, Is.SameAs(fmModel.Area.FixedWeirs[1]));
+                Assert.That(clonedFmModel.FixedWeirsProperties.ElementAt(0).Feature, Is.SameAs(clonedFmModel.Area.FixedWeirs[0]));
+                Assert.That(clonedFmModel.FixedWeirsProperties.ElementAt(1).Feature, Is.SameAs(clonedFmModel.Area.FixedWeirs[1]));
 
                 var lineGeomery = new LineString(new[]
                 {
@@ -1697,8 +1699,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 fmModel.Area.FixedWeirs[0].Geometry = lineGeomery;
 
-                Assert.AreEqual(4,fmModel.FixedWeirsProperties[0].DataColumns[0].ValueList.Count);
-                Assert.AreEqual(2,clonedFmModel.FixedWeirsProperties[0].DataColumns[0].ValueList.Count);
+                Assert.AreEqual(4,fmModel.FixedWeirsProperties.ElementAt(0).DataColumns[0].ValueList.Count);
+                Assert.AreEqual(2,clonedFmModel.FixedWeirsProperties.ElementAt(0).DataColumns[0].ValueList.Count);
             }
             finally
             {
