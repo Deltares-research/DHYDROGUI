@@ -17,6 +17,7 @@ using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
@@ -114,9 +115,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return model;
         }
 
-        private static void ReadMd1dFile(string fileName, WaterFlowModel1D model)
+        private static void ReadMd1dFile(string filePath, WaterFlowModel1D model)
         {
-            // PLACEHOLDER, this should be replaced with proper reading of the MD1D file, currently it just sets it to true, so salinity is working
+            var modelPropertySettings = DelftIniFileParser.ReadFile(filePath);
+            WaterFlowModelPropertySetter.SetProperties(modelPropertySettings, model);
+
             model.UseSalt = true;
         }
 

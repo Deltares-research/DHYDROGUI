@@ -63,9 +63,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                         return;
                     }
                 }
-                catch (FileNotFoundException exception)
+                catch (FileNotFoundException)
                 {
-                    //targetPath = Path.GetDirectoryName(modelFilename);
                     //the directory doesn't exist
                     FileUtils.CreateDirectoryIfNotExists(modelFilename);
                     targetPath = modelFilename;
@@ -157,7 +156,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             RoughnessFiles.CollectionChanged += RoughnessFiles_CollectionChanged;
         }
 
-        void RoughnessFiles_CollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        private void RoughnessFiles_CollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (e.Action == NotifyCollectionChangeAction.Add)
             {

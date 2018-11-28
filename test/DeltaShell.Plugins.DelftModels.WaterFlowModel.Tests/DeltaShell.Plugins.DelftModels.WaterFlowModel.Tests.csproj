@@ -243,6 +243,7 @@
     <Compile Include="ImportExport\IntegrationTests\StructureFileWriterIntegrationTest.cs" />
     <Compile Include="ImportExport\IntegrationTests\WFM1DDsProjTest.cs" />
     <Compile Include="ImportExport\ModelDefinitionsFileWriterTest.cs" />
+    <Compile Include="ImportExport\ModelDefinition\WaterFlowModelPropertySetterTest.cs" />
     <Compile Include="ImportExport\ModelFileNamesTest.cs" />
     <Compile Include="ImportExport\Roughness\CalibratedRoughnessFileReaderTest.cs" />
     <Compile Include="ImportExport\Roughness\CalibrateRoughnessImporterTest.cs" />

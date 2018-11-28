@@ -77,16 +77,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return parameterGroups;
         }
 
-        private DelftIniCategory GenerateTimeValues(WaterFlowModel1D waterFlowModel1D)
+        private static DelftIniCategory GenerateTimeValues(WaterFlowModel1D waterFlowModel1D)
         {
-            DelftIniCategory timeValues = new DelftIniCategory(ModelDefinitionsRegion.TimeHeader);
+            var timeValues = new DelftIniCategory(ModelDefinitionsRegion.TimeHeader);
 
             timeValues.AddProperty(ModelDefinitionsRegion.StartTime.Key, waterFlowModel1D.StartTime, ModelDefinitionsRegion.StartTime.Description);
             timeValues.AddProperty(ModelDefinitionsRegion.StopTime.Key, waterFlowModel1D.StopTime, ModelDefinitionsRegion.StopTime.Description);
-
             timeValues.AddProperty(ModelDefinitionsRegion.TimeStep.Key, waterFlowModel1D.TimeStep.TotalSeconds, ModelDefinitionsRegion.TimeStep.Description, ModelDefinitionsRegion.TimeStep.Format);
-            timeValues.AddProperty(ModelDefinitionsRegion.OutTimeStepGridPoints.Key, waterFlowModel1D.OutputSettings.GridOutputTimeStep.TotalSeconds, ModelDefinitionsRegion.OutTimeStepGridPoints.Description, ModelDefinitionsRegion.OutTimeStepGridPoints.Format);
-            timeValues.AddProperty(ModelDefinitionsRegion.OutTimeStepStructures.Key, waterFlowModel1D.OutputSettings.StructureOutputTimeStep.TotalSeconds, ModelDefinitionsRegion.OutTimeStepStructures.Description, ModelDefinitionsRegion.OutTimeStepStructures.Format);
+
+            var modelOutputSettings = waterFlowModel1D.OutputSettings;
+            timeValues.AddProperty(ModelDefinitionsRegion.OutTimeStepGridPoints.Key, modelOutputSettings.GridOutputTimeStep.TotalSeconds, ModelDefinitionsRegion.OutTimeStepGridPoints.Description, ModelDefinitionsRegion.OutTimeStepGridPoints.Format);
+            timeValues.AddProperty(ModelDefinitionsRegion.OutTimeStepStructures.Key, modelOutputSettings.StructureOutputTimeStep.TotalSeconds, ModelDefinitionsRegion.OutTimeStepStructures.Description, ModelDefinitionsRegion.OutTimeStepStructures.Format);
             
             return timeValues;
         }
