@@ -171,7 +171,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         fixedWeir.Attributes.Clear(); //To Do during last step of cleaning. Turn this on.
                     }
 
-                    Log.Warn(warningMessages.ToString());
+                    var message = warningMessages.ToString();
+                    if (!string.IsNullOrEmpty(message))
+                    {
+                        Log.Warn(message);
+                    }
                 },
                 AfterCreateAction = (featureList, fixedWeir) =>
                 {
