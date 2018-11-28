@@ -4,6 +4,7 @@ using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 
+
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
 {
     /// <summary>
@@ -34,6 +35,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
             return boundaryLocations;
         }
 
+        /// <summary>
+        /// Validate the provided <paramref name="dataCategories"/>.
+        /// </summary>
+        /// <param name="dataCategories">The dataAccessModel to be validated. </param>
+        /// <param name="errorMessages">Collection of error messages to which new messages will be added.</param>
+        /// <returns>
+        /// True if the <paramref name="dataCategories"/> is valid and false otherwise.
+        /// </returns>
         private static bool ValidateCategoryList(IList<DelftIniCategory> dataCategories, IList<string> errorMessages)
         {
             if (dataCategories == null || !dataCategories.Any())
