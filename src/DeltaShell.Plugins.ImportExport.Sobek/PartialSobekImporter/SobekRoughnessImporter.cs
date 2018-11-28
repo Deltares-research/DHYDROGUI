@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
@@ -196,6 +197,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
 
             // process all BDFR records
+            var warningMessagesBranchDoesNotExist = new StringBuilder();
+            var warningMessagesBranchDefinitionWithoutProfiles = new StringBuilder();
             foreach (var sobekBedFriction in sobekFriction.SobekBedFrictionList)
             {
                 if (ShouldCancel)
@@ -205,16 +208,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
                 if (!channels.ContainsKey(sobekBedFriction.BranchId))
                 {
-                    log.WarnFormat("Friction BDFR {0} is linked to branch that does not exist (id {1}); ignored.",
-                                   sobekBedFriction.Id, sobekBedFriction.BranchId);
+                    warningMessagesBranchDoesNotExist.AppendLine(
+                        $"Friction BDFR {sobekBedFriction.Id} is linked to branch that does not exist (id {sobekBedFriction.BranchId}); ignored.");
                     continue;
                 }
                 var channel = channels[sobekBedFriction.BranchId];
                 if (! channel.CrossSections.Any(c => c.CrossSectionType == CrossSectionType.ZW || c.CrossSectionType == CrossSectionType.Standard))
                 {
-                    log.WarnFormat(
-                        "Friction BDFR {0} is linked to branch definition {1} without any tabulated,standard or river profiles; ignored.",
-                        sobekBedFriction.Id, sobekBedFriction.BranchId);
+                    warningMessagesBranchDefinitionWithoutProfiles.AppendLine(
+                        $"Friction BDFR {sobekBedFriction.Id} is linked to branch definition {sobekBedFriction.BranchId} without any tabulated,standard or river profiles; ignored.");
                     continue;
                 }
 
@@ -235,7 +237,21 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     SetPositiveAndNegativeRoughnessToSection(sectionFloodplain2, channel, sobekBedFriction.FloodPlain2Friction, sobekMainBedFrictionData);
                 }
             }
-            coveragesWithInterpolationSet.Clear(); //clear our administration, we no longer care
+
+            var branchDoesNotExistMessages = warningMessagesBranchDoesNotExist.ToString();
+            
+            if (!string.IsNullOrEmpty(branchDoesNotExistMessages))
+            {
+                log.Warn(branchDoesNotExistMessages);
+            }
+
+            var branchDefinitionWithoutProfilesMessages = warningMessagesBranchDefinitionWithoutProfiles.ToString();
+            if (!string.IsNullOrEmpty(branchDefinitionWithoutProfilesMessages))
+            {
+                log.Warn(branchDefinitionWithoutProfilesMessages);
+            }
+
+            coveragesWithInterpolationSet.Clear(); //clear our administration
         }
 
         private bool SobekBedFrictionContainsReverseRoughness(SobekFriction sobekFriction)
