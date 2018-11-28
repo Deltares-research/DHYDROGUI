@@ -18,6 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
             TemperatureComponent = null;
         }
 
+        /// <summary> Name of the boundary location (node id). </summary>
         public readonly string Name;
         public LateralDischargeWater WaterComponent { get; set; }
         public LateralDischargeSalt SaltComponent { get; set; }

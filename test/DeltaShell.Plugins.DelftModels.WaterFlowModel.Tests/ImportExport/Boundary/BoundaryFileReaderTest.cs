@@ -1,15 +1,16 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using DelftTools.Functions.Generic;
-using DeltaShell.NGHS.IO.TestUtils;
+using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary
 {
     [TestFixture]
+    [Category(TestCategory.Integration)]
     class BoundaryFileReaderTest
     {
         private WaterFlowModel1D originalModel;
@@ -118,62 +119,35 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         [Test]
         public void TestBoundaryConditionFileReaderGivesExpectedResults()
         {
-
-            var boundaryConditionsFile = FileWriterTestHelper.ModelFileNames.BoundaryConditions;
-            if (File.Exists(boundaryConditionsFile)) File.Delete(boundaryConditionsFile);
-            WaterFlowModel1DBoundaryFileWriter.WriteFile(boundaryConditionsFile, originalModel);
-
-            var readModel = BoundaryFileReaderTestHelper.GetSimpleModel();
-            
-            BoundaryFileReader.ReadFile(FileWriterTestHelper.ModelFileNames.BoundaryConditions, readModel);
-
-            Assert.AreEqual(originalModel.BoundaryConditions.Count, readModel.BoundaryConditions.Count);
-            for (var i = 0; i < originalModel.BoundaryConditions.Count; i++)
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                Assert.IsTrue(BoundaryFileReaderTestHelper.CompareBoundaryNodeData(originalModel.BoundaryConditions[i],
-                    readModel.BoundaryConditions[i]));
-            }
+                var boundaryConditionsFile = new ModelFileNames(Path.Combine(tempDir, ModelFileNames.ModelDefinitionFilename)).BoundaryConditions;
+                WaterFlowModel1DBoundaryFileWriter.WriteFile(boundaryConditionsFile, originalModel);
 
-            Assert.AreEqual(originalModel.LateralSourceData.Count, readModel.LateralSourceData.Count);
-            for (var i = 0; i < originalModel.LateralSourceData.Count; i++)
-            {
-                Assert.IsTrue(BoundaryFileReaderTestHelper.CompareLateralSourceData(originalModel.LateralSourceData[i],
-                    readModel.LateralSourceData[i]));
-            }
+                var readModel = BoundaryFileReaderTestHelper.GetSimpleModel();
 
-            Assert.IsTrue(BoundaryFileReaderTestHelper.CompareWindSourceData(originalModel.Wind, readModel.Wind));
-            
+                (new BoundaryConditionFileReader()).Read(boundaryConditionsFile, 
+                                                         readModel.MeteoData, 
+                                                         readModel.Wind, 
+                                                         readModel.BoundaryConditions, 
+                                                         readModel.LateralSourceData);
+
+                Assert.AreEqual(originalModel.BoundaryConditions.Count, readModel.BoundaryConditions.Count);
+                for (var i = 0; i < originalModel.BoundaryConditions.Count; i++)
+                {
+                    Assert.IsTrue(BoundaryFileReaderTestHelper.CompareBoundaryNodeData(originalModel.BoundaryConditions[i],
+                        readModel.BoundaryConditions[i]));
+                }
+
+                Assert.AreEqual(originalModel.LateralSourceData.Count, readModel.LateralSourceData.Count);
+                for (var i = 0; i < originalModel.LateralSourceData.Count; i++)
+                {
+                    Assert.IsTrue(BoundaryFileReaderTestHelper.CompareLateralSourceData(originalModel.LateralSourceData[i],
+                        readModel.LateralSourceData[i]));
+                }
+
+                Assert.IsTrue(BoundaryFileReaderTestHelper.CompareWindSourceData(originalModel.Wind, readModel.Wind));
+            });
         }
-
-        [Test]
-        public void TestBoundaryConditionFileReaderGivesExpectedResults_TempIgnoreSalt()
-        {
-            // TODO: this test can be removed once we've implemented Salt in the reader
-            originalModel.BoundaryConditions.Last().SaltConditionType = SaltBoundaryConditionType.Constant;
-            originalModel.LateralSourceData.Last().SaltLateralDischargeType = SaltLateralDischargeType.ConcentrationConstant;
-
-            var boundaryConditionsFile = FileWriterTestHelper.ModelFileNames.BoundaryConditions;
-            if (File.Exists(boundaryConditionsFile)) File.Delete(boundaryConditionsFile);
-            WaterFlowModel1DBoundaryFileWriter.WriteFile(boundaryConditionsFile, originalModel);
-
-            var readModel = BoundaryFileReaderTestHelper.GetSimpleModel();
-
-            BoundaryFileReader.ReadFile(FileWriterTestHelper.ModelFileNames.BoundaryConditions, readModel);
-
-            Assert.AreEqual(originalModel.BoundaryConditions.Count, readModel.BoundaryConditions.Count);
-            for (var i = 0; i < originalModel.BoundaryConditions.Count; i++)
-            {
-                Assert.IsTrue(BoundaryFileReaderTestHelper.CompareBoundaryNodeData(originalModel.BoundaryConditions[i],
-                    readModel.BoundaryConditions[i]));
-            }
-
-            Assert.AreEqual(originalModel.LateralSourceData.Count, readModel.LateralSourceData.Count);
-            for (var i = 0; i < originalModel.LateralSourceData.Count; i++)
-            {
-                Assert.IsTrue(BoundaryFileReaderTestHelper.CompareLateralSourceData(originalModel.LateralSourceData[i],
-                    readModel.LateralSourceData[i]));
-            }
-        }
-
     }
 }

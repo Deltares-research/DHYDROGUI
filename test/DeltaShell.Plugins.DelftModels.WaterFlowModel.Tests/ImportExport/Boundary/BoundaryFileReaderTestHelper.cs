@@ -1,6 +1,7 @@
 ﻿using DelftTools.Functions;
 using DelftTools.Hydro;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary
@@ -41,7 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             return model;
         }
 
-        public static bool CompareBoundaryNodeData(WaterFlowModel1DBoundaryNodeData boundaryNodeData1, WaterFlowModel1DBoundaryNodeData boundaryNodeData2)
+        public static bool CompareBoundaryNodeData(WaterFlowModel1DBoundaryNodeData boundaryNodeData1, WaterFlowModel1DBoundaryNodeData boundaryNodeData2, bool verifyGeometry = true)
         {
             var areEqual = true;
 
@@ -67,12 +68,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             areEqual &= boundaryNodeData1.InterpolationType == boundaryNodeData2.InterpolationType;
             areEqual &= boundaryNodeData1.Flow.Equals(boundaryNodeData2.Flow);
             areEqual &= boundaryNodeData1.WaterLevel.Equals(boundaryNodeData2.WaterLevel);
-            areEqual &= boundaryNodeData1.Geometry.EqualsExact(boundaryNodeData2.Geometry);
+            if (verifyGeometry)
+                areEqual &= boundaryNodeData1.Geometry.EqualsExact(boundaryNodeData2.Geometry);
 
             return areEqual;
         }
 
-        public static bool CompareLateralSourceData(WaterFlowModel1DLateralSourceData lateralSourceData1, WaterFlowModel1DLateralSourceData lateralSourceData2)
+        public static bool CompareLateralSourceData(WaterFlowModel1DLateralSourceData lateralSourceData1, WaterFlowModel1DLateralSourceData lateralSourceData2, bool verifyGeometry = true)
         {
             var areEqual = true;
 
@@ -98,7 +100,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             }
 
             areEqual &= lateralSourceData1.Flow.Equals(lateralSourceData2.Flow);
-            areEqual &= lateralSourceData1.Geometry.EqualsExact(lateralSourceData2.Geometry);
+
+            if (verifyGeometry)
+                areEqual &= lateralSourceData1.Geometry.EqualsExact(lateralSourceData2.Geometry);
 
             return areEqual;
         }
@@ -120,6 +124,35 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                 areEqual &= CompareDataValues(wind1.Velocity.Values, wind2.Velocity.Values);
                 areEqual &= CompareDataValues(wind1.Direction.Values, wind2.Direction.Values);
             }
+
+            return areEqual;
+        }
+
+        public static bool CompareMeteoSourceData(MeteoFunction meteo1, MeteoFunction meteo2)
+        {
+            var areEqual = true;
+
+            areEqual &= meteo1.Name == meteo2.Name;
+
+            areEqual &= ((meteo1.Arguments[0] == null && meteo2.Arguments[0] == null) ||
+                         (meteo1.Arguments[0] != null && meteo2.Arguments[0] != null));
+            if (meteo1.Arguments[0] != null)
+                areEqual &= CompareDataValues(meteo1.Arguments[0].Values, meteo2.Arguments[0].Values);
+
+            areEqual &= ((meteo1.AirTemperature == null && meteo2.AirTemperature == null) ||
+                         (meteo1.AirTemperature != null && meteo2.AirTemperature != null));
+            if (meteo1.AirTemperature != null)
+                areEqual &= CompareDataValues(meteo1.AirTemperature.Values, meteo2.AirTemperature.Values);
+
+            areEqual &= ((meteo1.Cloudiness == null && meteo2.Cloudiness == null) ||
+                         (meteo1.Cloudiness != null && meteo2.Cloudiness != null));
+            if (meteo1.Cloudiness != null)
+                areEqual &= CompareDataValues(meteo1.Cloudiness.Values, meteo2.Cloudiness.Values);
+
+            areEqual &= ((meteo1.RelativeHumidity == null && meteo2.RelativeHumidity == null) ||
+                         (meteo1.RelativeHumidity != null && meteo2.RelativeHumidity != null));
+            if (meteo1.Cloudiness != null)
+                areEqual &= CompareDataValues(meteo1.RelativeHumidity.Values, meteo2.RelativeHumidity.Values);
 
             return areEqual;
         }

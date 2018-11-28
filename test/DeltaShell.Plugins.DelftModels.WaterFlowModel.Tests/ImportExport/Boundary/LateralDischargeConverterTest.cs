@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Units;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary.TestHelpers;
 using NUnit.Framework;
 
-using HasComponent = DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary.BoundaryTestHelper.HasComponent;
+using HasComponent = DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary.TestHelpers.HasComponent;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary
 {
@@ -36,100 +35,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         public void TestFixtureSetUp()
         {
             // Water
-            constantWaterComponent = new LateralDischargeWater(WaterFlowModel1DLateralDataType.FlowConstant, InterpolationType.Constant, false, 21.0);
-
-            var valuesWaterLevelTable = new List<double>() { 55.0, 520.0, 1150.0, 1530.0 };
-            var valuesWaterDischargeTable = new List<double>() { 95.0, 120.0, 210.0, 430.0 };
-            var tableFunction = new Function();
-
-            tableFunction.Arguments.Add(new Variable<double>(BoundaryRegion.QuantityStrings.WaterLevel)
-            {
-                InterpolationType = InterpolationType.Linear,
-                ExtrapolationType = ExtrapolationType.Periodic
-            });
-
-            tableFunction.Components.Add(new Variable<double>(BoundaryRegion.QuantityStrings.WaterDischarge, new Unit("", "")));
-            tableFunction.Arguments[0].SetValues(valuesWaterLevelTable);
-            tableFunction.Components[0].SetValues(valuesWaterDischargeTable);
-            tableWaterComponent = new LateralDischargeWater(WaterFlowModel1DLateralDataType.FlowWaterLevelTable, InterpolationType.Linear, true, tableFunction);
-
-            var startTime = DateTime.Today;
-            var valuesWaterLevel = new List<double>() { 5.0, 20.0, 10.0, 30.0 };
-            var timeValuesWaterLevel = new List<DateTime>()
-            {
-                startTime.AddHours(2),
-                startTime.AddHours(4),
-                startTime.AddHours(6),
-                startTime.AddHours(8),
-            };
-
-            var functionWaterLevel = BoundaryTestHelper.GetNewTimeFunction("Water Level", "", "");
-            functionWaterLevel.Arguments[0].SetValues(timeValuesWaterLevel);
-            functionWaterLevel.Components[0].SetValues(valuesWaterLevel);
-            timeDependentWaterComponent = new LateralDischargeWater(WaterFlowModel1DLateralDataType.FlowTimeSeries,
-                                                                    InterpolationType.Linear,
-                                                                    true,
-                                                                    functionWaterLevel);
+            constantWaterComponent = BoundaryObjectConstructionTestHelper.GetConstantWaterLdComponent();
+            tableWaterComponent = BoundaryObjectConstructionTestHelper.GetTableWaterLdComponent();
+            timeDependentWaterComponent = BoundaryObjectConstructionTestHelper.GetTimeDependentWaterLdComponent();
 
             // Salt
-            constantSaltMassComponent = 
-                new LateralDischargeSalt(SaltLateralDischargeType.MassConstant, InterpolationType.Constant, false, 23.0);
-            constantSaltConcentrationComponent = 
-                new LateralDischargeSalt(SaltLateralDischargeType.ConcentrationConstant, InterpolationType.Constant, false, 25.0);
-
-
-            var valuesSaltMass = new List<double>() { 7.0, 22.0, 12.0, 32.0 };
-            var timeValuesSaltMass = new List<DateTime>()
-            {
-                startTime.AddHours(4),
-                startTime.AddHours(6),
-                startTime.AddHours(8),
-                startTime.AddHours(10),
-            };
-
-            var functionSaltMass = BoundaryTestHelper.GetNewTimeFunction(BoundaryRegion.QuantityStrings.WaterSalinity, "", "");
-            functionSaltMass.Arguments[0].SetValues(timeValuesSaltMass);
-            functionSaltMass.Components[0].SetValues(valuesSaltMass);
-            timeDependentSaltMassComponent = new LateralDischargeSalt(SaltLateralDischargeType.MassTimeSeries,
-                                                                      InterpolationType.Linear,
-                                                                      true,
-                                                                      functionSaltMass);
-
-            var valuesSaltConcentration = new List<double>() { 7.0, 22.0, 12.0, 32.0 };
-            var timeValuesSaltConcentration = new List<DateTime>()
-            {
-                startTime.AddHours(8),
-                startTime.AddHours(10),
-                startTime.AddHours(12),
-                startTime.AddHours(14),
-            };
-
-            var functionSaltConcentration = BoundaryTestHelper.GetNewTimeFunction(BoundaryRegion.QuantityStrings.WaterSalinity, "", "");
-            functionSaltConcentration.Arguments[0].SetValues(timeValuesSaltConcentration);
-            functionSaltConcentration.Components[0].SetValues(valuesSaltConcentration);
-            timeDependentSaltConcentrationComponent = new LateralDischargeSalt(SaltLateralDischargeType.ConcentrationTimeSeries,
-                                                                               InterpolationType.Linear,
-                                                                               true,
-                                                                               functionSaltMass);
+            constantSaltMassComponent = BoundaryObjectConstructionTestHelper.GetConstantSaltMassLdComponent();
+            constantSaltConcentrationComponent = BoundaryObjectConstructionTestHelper.GetConstantSaltConcentrationLdComponent();
+            timeDependentSaltMassComponent = BoundaryObjectConstructionTestHelper.GetTimeDependentSaltMassLdComponent();
+            timeDependentSaltConcentrationComponent = BoundaryObjectConstructionTestHelper.GetTimeDependentSaltConcentrationLdComponent();
 
             // Temperature
-            constantTemperatureComponent = new LateralDischargeTemperature(TemperatureLateralDischargeType.Constant, InterpolationType.Constant, false, 24.0);
-
-            var valuesTemperature = new List<double>() { 5.0, 20.0, 10.0, 30.0 };
-            var timeValuesTemperature = new List<DateTime>()
-            {
-                startTime.AddHours(1),
-                startTime.AddHours(2),
-                startTime.AddHours(3),
-                startTime.AddHours(4),
-            };
-            var functionTemperature = BoundaryTestHelper.GetNewTimeFunction(BoundaryRegion.QuantityStrings.WaterTemperature, "", "");
-            functionTemperature.Arguments[0].SetValues(timeValuesTemperature);
-            functionTemperature.Components[0].SetValues(valuesTemperature);
-            timeDependentTemperatureComponent = new LateralDischargeTemperature(TemperatureLateralDischargeType.TimeDependent,
-                                                                                 InterpolationType.Linear,
-                                                                                 true,
-                                                                                 functionTemperature);
+            constantTemperatureComponent = BoundaryObjectConstructionTestHelper.GetConstantTemperatureLdComponent();
+            timeDependentTemperatureComponent = BoundaryObjectConstructionTestHelper.timeDependentTemperatureLdComponent();
 
         }
 
@@ -180,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         }
 
         /// <summary> an empty set will be returned </summary>
-        private void AssertEmptyOutput(Dictionary<string, LateralDischarge> output)
+        private void AssertEmptyOutput(IDictionary<string, LateralDischarge> output)
         {
             Assert.That(output, Is.Not.Null);
             Assert.That(output, Is.Empty);
@@ -683,7 +601,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                     Assert.That(actual.WaterComponent.ConstantBoundaryValue, 
                         Is.EqualTo(expected.WaterComponent.ConstantBoundaryValue));
                 else
-                    BoundaryTestHelper.AssertThatTimeDependentFunctionIsEqualTo(actual.WaterComponent.TimeDependentBoundaryValue,
+                    BoundaryAssertionTestHelper.AssertThatTimeDependentFunctionIsEqualTo(actual.WaterComponent.TimeDependentBoundaryValue,
                                                                                 expected.WaterComponent.TimeDependentBoundaryValue);
             }
             else
@@ -714,7 +632,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                 }
                 else
                 {
-                    BoundaryTestHelper.AssertThatTimeDependentFunctionIsEqualTo(actual.SaltComponent.TimeDependentBoundaryValue,
+                    BoundaryAssertionTestHelper.AssertThatTimeDependentFunctionIsEqualTo(actual.SaltComponent.TimeDependentBoundaryValue,
                                                                                 expected.SaltComponent.TimeDependentBoundaryValue);
                 }
             }
@@ -741,7 +659,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
                 }
                 else
                 {
-                    BoundaryTestHelper.AssertThatTimeDependentFunctionIsEqualTo(actual.TemperatureComponent.TimeDependentBoundaryValue,
+                    BoundaryAssertionTestHelper.AssertThatTimeDependentFunctionIsEqualTo(actual.TemperatureComponent.TimeDependentBoundaryValue,
                                                                                 expected.TemperatureComponent.TimeDependentBoundaryValue);
                 }
             }

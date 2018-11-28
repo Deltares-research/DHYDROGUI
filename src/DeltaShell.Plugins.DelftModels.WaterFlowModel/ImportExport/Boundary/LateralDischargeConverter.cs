@@ -9,6 +9,7 @@ using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 
+
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
 {
     /// <summary>
@@ -26,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// A Dictionary mapping the NodeNames to the corresponding valid LateralDischarges extracted from
         /// the data access model.
         /// </returns>
-        public static Dictionary<string, LateralDischarge> Convert(IList<IDelftBcCategory> dataAccessModel,
+        public static IDictionary<string, LateralDischarge> Convert(IList<IDelftBcCategory> dataAccessModel,
                                                                    IList<string> errorMessages)
         {
             var lateralDischarges = new Dictionary<string, LateralDischarge>();

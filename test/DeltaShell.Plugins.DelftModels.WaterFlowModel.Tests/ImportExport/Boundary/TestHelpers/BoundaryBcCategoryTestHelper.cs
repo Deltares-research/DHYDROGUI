@@ -82,13 +82,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             }
         }
 
-        public enum HasComponent
-        {
-            None,
-            Constant,
-            Table,
-            TimeDependent
-        }
 
         public static IDelftBcCategory GetCommonCategory(string header,
             string name,
@@ -133,26 +126,5 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             }
             return periodic;
         }
-
-        public static void AssertThatTimeDependentFunctionIsEqualTo(IFunction actual, IFunction expected)
-        {
-            Assert.That(actual, Is.Not.Null);
-            Assert.That(expected, Is.Not.Null);
-
-            var nValues = expected.Arguments[0].Values.Count;
-            Assert.That(expected.Arguments[0].Values.Count,
-                Is.EqualTo(nValues));
-            Assert.That(actual.Components[0].Values.Count,
-                Is.EqualTo(nValues));
-
-            for (var i = 0; i < nValues; i++)
-            {
-                Assert.That(actual.Arguments[0].Values[i],
-                    Is.EqualTo(expected.Arguments[0].Values[i]));
-                Assert.That(actual.Components[0].Values[i],
-                    Is.EqualTo(actual.Components[0].Values[i]));
-            }
-        }
-
     }
 }

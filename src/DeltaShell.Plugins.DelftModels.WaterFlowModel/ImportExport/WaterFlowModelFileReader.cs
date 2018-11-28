@@ -8,13 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Functions;
 using DelftTools.Hydro.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.FileReaders;
-using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
@@ -121,6 +119,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             WaterFlowModelPropertySetter.SetProperties(modelPropertySettings, model);
 
             model.UseSalt = true;
+            model.UseTemperature = true;
         }
 
         private static void ReadStructuresFile(string fileName, IHydroNetwork network,
@@ -212,181 +211,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         private static void ReadBoundaryConditionFile(string boundaryConditionsFilePath, WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
         {
-            var bcCategories = DelftBcFileParser.ReadFile(boundaryConditionsFilePath);
-            AddMeteoData(bcCategories, model);
-            AddWindData(bcCategories, model);
-            AddBoundaryConditionData(bcCategories, model.BoundaryConditions);
-            AddLateralDischargeData(bcCategories, model.LateralSourceData);
+            new BoundaryConditionFileReader(createAndAddErrorReport).Read(boundaryConditionsFilePath, 
+                                                                          model.MeteoData, 
+                                                                          model.Wind, 
+                                                                          model.BoundaryConditions, 
+                                                                          model.LateralSourceData);
         }
 
-        private static void AddMeteoData(IList<IDelftBcCategory> bcCategories, WaterFlowModel1D model)
-        {
-            var meteoData = MeteoDataConverter.Convert(bcCategories, new List<string>());
-            model.MeteoData.Arguments[0].SetValues(meteoData.Arguments[0].Values);
-            model.MeteoData.AirTemperature.SetValues(meteoData.AirTemperature.Values);
-            model.MeteoData.Cloudiness.SetValues(meteoData.Cloudiness.Values);
-            model.MeteoData.RelativeHumidity.SetValues(meteoData.RelativeHumidity.Values);
-        }
-
-        private static void AddWindData(IList<IDelftBcCategory> bcCategories, WaterFlowModel1D model)
-        {
-            var windData = WindDataConverter.Convert(bcCategories, new List<string>());
-            model.Wind.Arguments[0].SetValues(windData.Arguments[0].Values);
-            model.Wind.Direction.SetValues(windData.Direction.Values);
-            model.Wind.Velocity.SetValues(windData.Velocity.Values);
-        }
-
-        private static void AddBoundaryConditionData(IList<IDelftBcCategory> bcCategories,
-                                                     IEventedList<WaterFlowModel1DBoundaryNodeData> boundaryNodes)
-        {
-            var boundaryConditionData = BoundaryConditionConverter.Convert(bcCategories, new List<string>());
-            foreach (var boundaryNode in boundaryNodes)
-            {
-                if (!boundaryConditionData.ContainsKey(boundaryNode.Feature.Name)) continue;
-
-                var nodeData = boundaryConditionData[boundaryNode.Feature.Name];
-                if (nodeData.WaterComponent != null)
-                {
-                    boundaryNode.DataType = nodeData.WaterComponent.BoundaryType;
-
-                    switch (boundaryNode.DataType)
-                    {
-                        case WaterFlowModel1DBoundaryNodeDataType.FlowConstant:
-                            boundaryNode.Flow = nodeData.WaterComponent.ConstantBoundaryValue;
-                            break;
-                        case WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant:
-                            boundaryNode.WaterLevel = nodeData.WaterComponent.ConstantBoundaryValue;
-                            break;
-                        case WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable:
-                        case WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries:
-                        case WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries:
-                            copyFunction(nodeData.WaterComponent.TimeDependentBoundaryValue, boundaryNode.Data);
-                            break;
-                    }
-                }
-
-                if (nodeData.SaltComponent != null)
-                {
-                    boundaryNode.SaltConditionType = nodeData.SaltComponent.BoundaryType;
-
-                    switch (boundaryNode.SaltConditionType)
-                    {
-                        case SaltBoundaryConditionType.Constant:
-                            boundaryNode.SaltConcentrationConstant = nodeData.SaltComponent.ConstantBoundaryValue;
-                            break;
-                        case SaltBoundaryConditionType.TimeDependent:
-                            copyFunction(nodeData.SaltComponent.TimeDependentBoundaryValue, boundaryNode.SaltConcentrationTimeSeries);
-                            break;
-                        case SaltBoundaryConditionType.None:
-                            break;
-                    }
-                }
-
-                if (nodeData.TemperatureComponent != null)
-                {
-                    boundaryNode.TemperatureConditionType = nodeData.TemperatureComponent.BoundaryType;
-
-                    switch (boundaryNode.TemperatureConditionType)
-                    {
-                        case TemperatureBoundaryConditionType.Constant:
-                            boundaryNode.TemperatureConstant = nodeData.TemperatureComponent.ConstantBoundaryValue;
-                            break;
-                        case TemperatureBoundaryConditionType.TimeDependent:
-                            copyFunction(nodeData.TemperatureComponent.TimeDependentBoundaryValue, boundaryNode.TemperatureTimeSeries);
-                            break;
-                        case TemperatureBoundaryConditionType.None:
-                            break;
-                    }
-                }
-            }
-        }
-
-        private static void AddLateralDischargeData(IList<IDelftBcCategory> bcCategories,
-                                                    IEventedList<WaterFlowModel1DLateralSourceData> lateralNodes)
-        {
-            var lateralDischargeData = LateralDischargeConverter.Convert(bcCategories, new List<string>());
-            foreach (var lateralNode in lateralNodes)
-            {
-                if (!lateralDischargeData.ContainsKey(lateralNode.Feature.Name)) continue;
-
-                var nodeData = lateralDischargeData[lateralNode.Feature.Name];
-                if (nodeData.WaterComponent != null)
-                {
-                    lateralNode.DataType = nodeData.WaterComponent.BoundaryType;
-
-                    switch (lateralNode.DataType)
-                    {
-                        case WaterFlowModel1DLateralDataType.FlowConstant:
-                            lateralNode.Flow = nodeData.WaterComponent.ConstantBoundaryValue;
-                            break;
-                        case WaterFlowModel1DLateralDataType.FlowWaterLevelTable:
-                        case WaterFlowModel1DLateralDataType.FlowTimeSeries:
-                            copyFunction(nodeData.WaterComponent.TimeDependentBoundaryValue, lateralNode.Data);
-                            break;
-                    }
-                }
-
-                if (nodeData.SaltComponent != null)
-                {
-                    lateralNode.SaltLateralDischargeType = nodeData.SaltComponent.BoundaryType;
-
-                    switch (lateralNode.SaltLateralDischargeType)
-                    {
-                        case SaltLateralDischargeType.ConcentrationConstant:
-                            lateralNode.SaltConcentrationDischargeConstant = nodeData.SaltComponent.ConstantBoundaryValue;
-                            break;
-                        case SaltLateralDischargeType.ConcentrationTimeSeries:
-                            copyFunction(nodeData.SaltComponent.TimeDependentBoundaryValue, lateralNode.SaltConcentrationTimeSeries);
-                            break;
-                        case SaltLateralDischargeType.MassConstant:
-                            lateralNode.SaltMassDischargeConstant = nodeData.SaltComponent.ConstantBoundaryValue;
-                            break;
-                        case SaltLateralDischargeType.MassTimeSeries:
-                            copyFunction(nodeData.SaltComponent.TimeDependentBoundaryValue, lateralNode.SaltMassTimeSeries);
-                            break;
-                        case SaltLateralDischargeType.Default:
-                            break;
-                    }
-                }
-
-                if (nodeData.TemperatureComponent != null)
-                {
-                    lateralNode.TemperatureLateralDischargeType = nodeData.TemperatureComponent.BoundaryType;
-
-                    switch (lateralNode.TemperatureLateralDischargeType)
-                    {
-                        case TemperatureLateralDischargeType.Constant:
-                            lateralNode.TemperatureConstant = nodeData.TemperatureComponent.ConstantBoundaryValue;
-                            break;
-                        case TemperatureLateralDischargeType.TimeDependent:
-                            copyFunction(nodeData.TemperatureComponent.TimeDependentBoundaryValue, lateralNode.TemperatureTimeSeries);
-                            break;
-                        case TemperatureLateralDischargeType.None:
-                            break;
-                    }
-                }
-            }
-        }
-
-        private static void copyFunction(IFunction from, IFunction to)
-        {
-            if (from.Arguments.Count != to.Arguments.Count || from.Components.Count != to.Components.Count)
-                return;
-
-            for (var i = 0; i < from.Arguments.Count; i++)
-            {
-                to.Arguments[i].SetValues(from.Arguments[i].Values);
-                to.Arguments[i].ExtrapolationType = from.Arguments[i].ExtrapolationType;
-                to.Arguments[i].InterpolationType = from.Arguments[i].InterpolationType;
-            }
-
-            for (var i = 0; i < from.Components.Count; i++)
-            {
-                to.Components[i].SetValues(from.Components[i].Values);
-                to.Components[i].ExtrapolationType = from.Components[i].ExtrapolationType;
-                to.Components[i].InterpolationType = from.Components[i].InterpolationType;
-            }
-        }
 
         private static void ReadFileObservationPointLocations(string locationFilePath, IEnumerable<IChannel> channels,
             Action<string, IList<string>> createAndAddErrorReport)
