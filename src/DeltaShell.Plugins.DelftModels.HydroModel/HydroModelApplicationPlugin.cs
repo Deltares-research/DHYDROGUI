@@ -12,6 +12,7 @@ using Mono.Addins;
 using log4net;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using log4net.Appender;
 using log4net.Repository.Hierarchy;
@@ -50,6 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         }
 
         public override string FileFormatVersion
+
         {
             get { return "1.1.1.0"; }
         }
@@ -165,11 +167,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             yield return GetType().Assembly;
         }
 
-        public override IEnumerable<IFileImporter> GetFileImporters()
-        {
-            yield return new DHydroConfigXmlImporter();
-        }
-
         public override void Activate()
         {
             var initializeThread = new Thread(InitializeModelBuilder) { Priority = ThreadPriority.BelowNormal };
@@ -203,6 +200,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         public override IEnumerable<IFileExporter> GetFileExporters()
         {
             yield return new DHydroConfigXmlExporter();
+        }
+
+        public override IEnumerable<IFileImporter> GetFileImporters()
+        {
+            yield return new DHydroConfigXmlImporter(() 
+                => Application.FileImporters.OfType<IDimrModelFileImporter>().ToList());
         }
 
         private void InitializeModelBuilder()

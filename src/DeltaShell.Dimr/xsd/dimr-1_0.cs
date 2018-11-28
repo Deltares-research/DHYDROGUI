@@ -30,7 +30,7 @@ namespace DeltaShell.Dimr.xsd {
         private dimrDocumentationXML documentationField;
         
         private string waitFileField;
-        
+       
         private object[] controlField;
         
         private dimrComponentXML[] componentField;

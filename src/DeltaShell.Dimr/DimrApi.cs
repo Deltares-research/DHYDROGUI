@@ -25,7 +25,7 @@ namespace DeltaShell.Dimr
         private DateTime currentTime;
         private DateTime dimrRefDate;
         private double relativeStartTime;
-
+   
         static DimrApi()
         {
             DimrApiDataSet.SetSharedPath();

@@ -24,6 +24,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
     [Extension(typeof(IPlugin))]
     public class WaterQualityModelApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
+        private IEnumerable<IFileImporter> _getFileImporters;
+
         public override string Name
         {
             get { return "Water quality model"; }
@@ -318,6 +320,5 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             ((WaterQualityModel) sender).SetupModelDataFolderStructure(Application.HybridProjectRepository.ProjectDataDirectory);
         }
-
     }
 }
