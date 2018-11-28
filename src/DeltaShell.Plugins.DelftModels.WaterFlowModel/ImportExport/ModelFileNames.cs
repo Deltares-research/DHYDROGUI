@@ -65,7 +65,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 }
                 catch (FileNotFoundException)
                 {
-                    //the directory doesn't exist
                     FileUtils.CreateDirectoryIfNotExists(modelFilename);
                     targetPath = modelFilename;
                     return;
