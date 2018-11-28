@@ -115,8 +115,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         private static void ReadMd1dFile(string filePath, WaterFlowModel1D model)
         {
-            var modelPropertySettings = DelftIniFileParser.ReadFile(filePath);
-            WaterFlowModelPropertySetter.SetProperties(modelPropertySettings, model);
+            var modelPropertySettingsCategories = DelftIniFileParser.ReadFile(filePath);
+            WaterFlowModelPropertySetter.SetProperties(modelPropertySettingsCategories, model);
 
             model.UseSalt = true;
             model.UseTemperature = true;
