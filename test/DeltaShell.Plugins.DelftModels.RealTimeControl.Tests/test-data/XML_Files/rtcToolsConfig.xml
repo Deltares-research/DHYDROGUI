@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rtcToolsConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews C:\Users\veen_jn\Desktop\AcceptanceModels\c01_sobek-rijn-j17_5-v1\sobek-rijn-j17_5-v1\dimr_expected\rtc\rtcToolsConfig.xsd">
+<rtcToolsConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews D:\sluis_pa\Documents\WORK\ExportNew\rtc\rtcToolsConfig.xsd">
   <general>
     <description>RTC Model DeltaShell</description>
     <poolRoutingScheme>Theta</poolRoutingScheme>
@@ -7,1628 +7,1518 @@
   </general>
   <rules>
     <rule>
-      <unitDelay id="Driel PID_unitDelay">
+      <unitDelay id="HY_dicht_peil_unitDelay">
         <input>
-          <x>output_ST_Driel_zom_Crest level (s)</x>
+          <x>[Output]HolIJsselkering/Gate lower edge level (s)</x>
         </input>
         <output>
-          <y>output_ST_Driel_zom_Crest level (s)</y>
+          <y>[Output]HolIJsselkering/Gate lower edge level (s)</y>
         </output>
       </unitDelay>
     </rule>
     <rule>
-      <unitDelay id="Amerongen PID_unitDelay">
+      <unitDelay id="Spui_naar_Westerschelde_unitDelay">
         <input>
-          <x>output_ST_Amerongen_zom_Crest level (s)</x>
+          <x>[Output]zwd_BathseSpuisl/Gate lower edge level (s)</x>
         </input>
         <output>
-          <y>output_ST_Amerongen_zom_Crest level (s)</y>
+          <y>[Output]zwd_BathseSpuisl/Gate lower edge level (s)</y>
         </output>
       </unitDelay>
     </rule>
     <rule>
-      <unitDelay id="Hagestein PID_unitDelay">
+      <timeAbsolute id="Maeslantkering/timeseries drempel width">
         <input>
-          <x>output_ST_Hagestein_zom_Crest level (s)</x>
+          <x>[TimeRule]Maeslantkering/timeseries drempel width</x>
         </input>
         <output>
-          <y>output_ST_Hagestein_zom_Crest level (s)</y>
+          <y>[Output]Maeslant_drempel/Crest width (s)</y>
         </output>
-      </unitDelay>
+      </timeAbsolute>
     </rule>
     <rule>
-      <unitDelay id="Driel_sluit_omloopriool_unitDelay">
+      <timeAbsolute id="Maeslantkering/timeseries schuif width">
         <input>
-          <x>output_ST_Driel_oml_Crest level (s)</x>
+          <x>[TimeRule]Maeslantkering/timeseries schuif width</x>
         </input>
         <output>
-          <y>output_ST_Driel_oml_Crest level (s)</y>
+          <y>[Output]Maeslant_schuif/Crest width (s)</y>
         </output>
-      </unitDelay>
+      </timeAbsolute>
     </rule>
     <rule>
-      <unitDelay id="Amerongen_sluit_omloopriool_unitDelay">
+      <timeAbsolute id="Maeslantkering/timeseries overstort width">
         <input>
-          <x>output_ST_Amerongen_oml_Crest level (s)</x>
+          <x>[TimeRule]Maeslantkering/timeseries overstort width</x>
         </input>
         <output>
-          <y>output_ST_Amerongen_oml_Crest level (s)</y>
+          <y>[Output]Maeslant_over/Crest width (s)</y>
         </output>
-      </unitDelay>
+      </timeAbsolute>
     </rule>
     <rule>
-      <unitDelay id="Hagestein_sluit_omloopriool_unitDelay">
+      <timeAbsolute id="Maeslantkering/timeseries schuif crest">
         <input>
-          <x>output_ST_Hagestein_oml_Crest level (s)</x>
+          <x>[TimeRule]Maeslantkering/timeseries schuif crest</x>
         </input>
         <output>
-          <y>output_ST_Hagestein_oml_Crest level (s)</y>
+          <y>[Output]Maeslant_schuif/Gate lower edge level (s)</y>
         </output>
-      </unitDelay>
+      </timeAbsolute>
     </rule>
     <rule>
-      <unitDelay id="sluiten Vees-wap1_unitDelay">
+      <timeAbsolute id="Maeslantkering/timeseries overstort crest">
         <input>
-          <x>output_Blok1_Vees_wap_Crest level (s)</x>
+          <x>[TimeRule]Maeslantkering/timeseries overstort crest</x>
         </input>
         <output>
-          <y>output_Blok1_Vees_wap_Crest level (s)</y>
+          <y>[Output]Maeslant_over/Crest level (s)</y>
         </output>
-      </unitDelay>
+      </timeAbsolute>
     </rule>
     <rule>
-      <unitDelay id="Vees-wap open blok 2_unitDelay">
+      <timeAbsolute id="Hartelkering/timeseries breed onder">
         <input>
-          <x>output_Blok2_Vees_wap_Crest level (s)</x>
+          <x>[TimeRule]Hartelkering/timeseries breed onder</x>
         </input>
         <output>
-          <y>output_Blok2_Vees_wap_Crest level (s)</y>
+          <y>[Output]Hartel_breed/Gate lower edge level (s)</y>
         </output>
-      </unitDelay>
+      </timeAbsolute>
     </rule>
     <rule>
-      <unitDelay id="Vees-wap open blok3_unitDelay">
+      <timeAbsolute id="Hartelkering/timeseries smal onder">
         <input>
-          <x>output_Blok3_Vees_wap_Crest level (s)</x>
+          <x>[TimeRule]Hartelkering/timeseries smal onder</x>
         </input>
         <output>
-          <y>output_Blok3_Vees_wap_Crest level (s)</y>
+          <y>[Output]Hartel_smal/Gate lower edge level (s)</y>
         </output>
-      </unitDelay>
+      </timeAbsolute>
     </rule>
     <rule>
-      <unitDelay id="Vees-wap open blok4_unitDelay">
+      <timeAbsolute id="Hartelkering/hartel smal over">
         <input>
-          <x>output_Blok4_Vees_wap_Crest level (s)</x>
+          <x>[TimeRule]Hartelkering/hartel smal over</x>
         </input>
         <output>
-          <y>output_Blok4_Vees_wap_Crest level (s)</y>
+          <y>[Output]Hartel_smal_ovl/Crest level (s)</y>
         </output>
-      </unitDelay>
+      </timeAbsolute>
     </rule>
     <rule>
-      <lookupTable id="RTC DrielDriel_stuwtabel">
-        <table>
-          <record x="8.65" y="8.2" />
-          <record x="8.7" y="8.25" />
-          <record x="8.8" y="8.25" />
-          <record x="8.9" y="8.2" />
-          <record x="9" y="8.15" />
-          <record x="9.1" y="8.05" />
-          <record x="9.2" y="7.9" />
-          <record x="9.3" y="7.8" />
-          <record x="9.4" y="7.7" />
-          <record x="9.5" y="7.65" />
-          <record x="9.6" y="7.6" />
-          <record x="9.7" y="7.55" />
-          <record x="9.8" y="7.5" />
-          <record x="9.9" y="7.45" />
-          <record x="10" y="7.4" />
-        </table>
-        <interpolationOption>LINEAR</interpolationOption>
-        <extrapolationOption>BLOCK</extrapolationOption>
+      <timeAbsolute id="Hartelkering/hartel breed over">
         <input>
-          <x ref="IMPLICIT">input_LMW.Lobith_Water level (op)</x>
+          <x>[TimeRule]Hartelkering/hartel breed over</x>
         </input>
         <output>
-          <y>RTC DrielDriel_stuwtabel</y>
+          <y>[Output]Hartel_breed_ovl/Crest level (s)</y>
         </output>
-      </lookupTable>
+      </timeAbsolute>
     </rule>
     <rule>
-      <pid id="RTC DrielDriel PID">
-        <mode>PIDVEL</mode>
-        <settingMin>1.7</settingMin>
-        <settingMax>8.4</settingMax>
-        <settingMaxSpeed>0.0025</settingMaxSpeed>
-        <kp>0.5</kp>
-        <ki>0</ki>
-        <kd>4</kd>
-        <input>
-          <x>input_LMW.Drielboven_Water level (op)</x>
-          <setpointSeries>RTC DrielDriel_stuwtabel</setpointSeries>
-        </input>
-        <output>
-          <y>output_ST_Driel_zom_Crest level (s)</y>
-          <integralPart>RTC DrielDriel PID_IP</integralPart>
-          <differentialPart>RTC DrielDriel PID_DP</differentialPart>
-        </output>
-      </pid>
-    </rule>
-    <rule>
-      <timeRelative id="RTC DrielDriel_langzaam_open">
+      <timeRelative id="HollandscheIJsselkering/HY_dicht_peil">
         <mode>RETAINVALUEWHENINACTIVE</mode>
         <valueOption>RELATIVE</valueOption>
         <maximumPeriod>0</maximumPeriod>
         <controlTable>
-          <record time="0" value="8.4" />
-          <record time="3600" value="1.7" />
-          <record time="3601" value="1.7" />
+          <record time="0" value="12.1" />
+          <record time="780" value="-3.5" />
+          <record time="960" value="-3.5" />
+          <record time="1020" value="-3.8" />
+          <record time="1200" value="-3.8" />
+          <record time="1260" value="-4.1" />
+          <record time="1440" value="-4.1" />
+          <record time="1500" value="-4.4" />
+          <record time="1680" value="-4.4" />
+          <record time="1740" value="-4.7" />
+          <record time="1920" value="-4.7" />
+          <record time="1980" value="-5" />
+          <record time="2160" value="-5" />
+          <record time="2220" value="-5.3" />
+          <record time="2400" value="-5.3" />
+          <record time="2460" value="-5.6" />
+          <record time="2640" value="-5.6" />
+          <record time="2700" value="-5.9" />
+          <record time="2880" value="-5.9" />
+          <record time="2940" value="-6.2" />
+          <record time="3120" value="-6.2" />
+          <record time="3180" value="-6.458" />
+          <record time="3181" value="-6.458" />
         </controlTable>
         <input>
-          <y>ST_Driel_zom_Crest level (s)_AsInputFor_Driel_langzaam_open</y>
+          <y>[Output]HolIJsselkering/Gate lower edge level (s)[AsInputFor]HY_dicht_peil</y>
         </input>
         <output>
-          <y>output_ST_Driel_zom_Crest level (s)</y>
-          <timeActive>RTC DrielDriel_langzaam_open_t</timeActive>
+          <y>[Output]HolIJsselkering/Gate lower edge level (s)</y>
+          <timeActive>[RelativeTimeRule]HollandscheIJsselkering/HY_dicht_peil</timeActive>
         </output>
       </timeRelative>
     </rule>
     <rule>
-      <timeAbsolute id="RTC DrielFEWS_Driel_Breedte">
-        <input>
-          <x>RTC DrielFEWS_Driel_Breedte_TimeSeries</x>
-        </input>
-        <output>
-          <y>output_ST_Driel_zom_Crest width (s)</y>
-        </output>
-      </timeAbsolute>
-    </rule>
-    <rule>
-      <timeAbsolute id="RTC DrielFEWS_Driel_Klepstand">
-        <input>
-          <x>RTC DrielFEWS_Driel_Klepstand_TimeSeries</x>
-        </input>
-        <output>
-          <y>output_ST_Driel_zom_Crest level (s)</y>
-        </output>
-      </timeAbsolute>
-    </rule>
-    <rule>
-      <lookupTable id="RTC AmerongenAmerongen_stuwtabel">
-        <table>
-          <record x="8.65" y="6" />
-          <record x="8.7" y="6" />
-          <record x="8.8" y="6" />
-          <record x="8.9" y="6" />
-          <record x="9" y="6" />
-          <record x="9.1" y="6" />
-          <record x="9.2" y="6" />
-          <record x="9.3" y="6" />
-          <record x="9.4" y="5.95" />
-          <record x="9.5" y="5.95" />
-          <record x="9.6" y="5.9" />
-          <record x="9.7" y="5.9" />
-          <record x="9.8" y="5.9" />
-          <record x="9.9" y="5.85" />
-          <record x="10" y="5.8" />
-          <record x="10.2" y="5.75" />
-          <record x="10.4" y="5.75" />
-          <record x="10.6" y="5.7" />
-          <record x="10.8" y="5.6" />
-          <record x="11" y="5.6" />
-          <record x="11.2" y="5.5" />
-          <record x="11.4" y="4.3" />
-        </table>
-        <interpolationOption>LINEAR</interpolationOption>
-        <extrapolationOption>BLOCK</extrapolationOption>
-        <input>
-          <x ref="IMPLICIT">input_LMW.Lobith_Water level (op)</x>
-        </input>
-        <output>
-          <y>RTC AmerongenAmerongen_stuwtabel</y>
-        </output>
-      </lookupTable>
-    </rule>
-    <rule>
-      <pid id="RTC AmerongenAmerongen PID">
-        <mode>PIDVEL</mode>
-        <settingMin>-2</settingMin>
-        <settingMax>6.1</settingMax>
-        <settingMaxSpeed>0.0025</settingMaxSpeed>
-        <kp>0.5</kp>
-        <ki>0</ki>
-        <kd>4</kd>
-        <input>
-          <x>input_LMW.Amerongenbov_Water level (op)</x>
-          <setpointSeries>RTC AmerongenAmerongen_stuwtabel</setpointSeries>
-        </input>
-        <output>
-          <y>output_ST_Amerongen_zom_Crest level (s)</y>
-          <integralPart>RTC AmerongenAmerongen PID_IP</integralPart>
-          <differentialPart>RTC AmerongenAmerongen PID_DP</differentialPart>
-        </output>
-      </pid>
-    </rule>
-    <rule>
-      <timeRelative id="RTC AmerongenAmerongen_langzaam_open">
+      <timeRelative id="HollandscheIJsselkering/HY_open">
         <mode>RETAINVALUEWHENINACTIVE</mode>
         <valueOption>RELATIVE</valueOption>
         <maximumPeriod>0</maximumPeriod>
         <controlTable>
-          <record time="0" value="6.1" />
-          <record time="3600" value="-2" />
-          <record time="3601" value="-2" />
+          <record time="0" value="-6.5" />
+          <record time="930" value="12.1" />
+          <record time="931" value="12.1" />
         </controlTable>
         <input>
-          <y>ST_Amerongen_zom_Crest level (s)_AsInputFor_Amerongen_langzaam_open</y>
+          <y>[Output]HolIJsselkering/Gate lower edge level (s)[AsInputFor]HY_open</y>
         </input>
         <output>
-          <y>output_ST_Amerongen_zom_Crest level (s)</y>
-          <timeActive>RTC AmerongenAmerongen_langzaam_open_t</timeActive>
+          <y>[Output]HolIJsselkering/Gate lower edge level (s)</y>
+          <timeActive>[RelativeTimeRule]HollandscheIJsselkering/HY_open</timeActive>
         </output>
       </timeRelative>
     </rule>
     <rule>
-      <timeAbsolute id="RTC AmerongenFEWS_amerongen_klepstand">
+      <timeAbsolute id="HollandscheIJsselkering/HYK_timeseries">
         <input>
-          <x>RTC AmerongenFEWS_amerongen_klepstand_TimeSeries</x>
+          <x>[TimeRule]HollandscheIJsselkering/HYK_timeseries</x>
         </input>
         <output>
-          <y>output_ST_Amerongen_zom_Crest level (s)</y>
+          <y>[Output]HolIJsselkering/Gate lower edge level (s)</y>
         </output>
       </timeAbsolute>
     </rule>
     <rule>
-      <timeAbsolute id="RTC AmerongenFEWS_amerongen_breedte">
-        <input>
-          <x>RTC AmerongenFEWS_amerongen_breedte_TimeSeries</x>
-        </input>
-        <output>
-          <y>output_ST_Amerongen_zom_Crest width (s)</y>
-        </output>
-      </timeAbsolute>
-    </rule>
-    <rule>
-      <lookupTable id="RTC HagesteinHagestein_stuwtabel">
-        <table>
-          <record x="8.65" y="3" />
-          <record x="8.7" y="3" />
-          <record x="8.8" y="3" />
-          <record x="8.9" y="3" />
-          <record x="9" y="3" />
-          <record x="9.1" y="3" />
-          <record x="9.2" y="3" />
-          <record x="9.3" y="3" />
-          <record x="9.4" y="3" />
-          <record x="9.5" y="2.95" />
-          <record x="9.6" y="2.95" />
-          <record x="9.7" y="2.95" />
-          <record x="9.8" y="2.95" />
-          <record x="9.9" y="2.9" />
-          <record x="10" y="2.85" />
-          <record x="10.2" y="2.85" />
-          <record x="10.4" y="2.8" />
-          <record x="10.6" y="2.7" />
-          <record x="10.8" y="2.65" />
-          <record x="11" y="2.55" />
-          <record x="11.2" y="2.45" />
-          <record x="11.4" y="2.35" />
-        </table>
-        <interpolationOption>LINEAR</interpolationOption>
-        <extrapolationOption>BLOCK</extrapolationOption>
-        <input>
-          <x ref="IMPLICIT">input_LMW.Lobith_Water level (op)</x>
-        </input>
-        <output>
-          <y>RTC HagesteinHagestein_stuwtabel</y>
-        </output>
-      </lookupTable>
-    </rule>
-    <rule>
-      <pid id="RTC HagesteinHagestein PID">
-        <mode>PIDVEL</mode>
-        <settingMin>-4.6</settingMin>
-        <settingMax>3.1</settingMax>
-        <settingMaxSpeed>0.0025</settingMaxSpeed>
-        <kp>0.25</kp>
-        <ki>0</ki>
-        <kd>4</kd>
-        <input>
-          <x>input_LMW.Hagesteinboven_Water level (op)</x>
-          <setpointSeries>RTC HagesteinHagestein_stuwtabel</setpointSeries>
-        </input>
-        <output>
-          <y>output_ST_Hagestein_zom_Crest level (s)</y>
-          <integralPart>RTC HagesteinHagestein PID_IP</integralPart>
-          <differentialPart>RTC HagesteinHagestein PID_DP</differentialPart>
-        </output>
-      </pid>
-    </rule>
-    <rule>
-      <timeRelative id="RTC HagesteinHagestein_langzaam_open">
+      <timeRelative id="HollandscheIJsselkering/HY_dicht_kent">
         <mode>RETAINVALUEWHENINACTIVE</mode>
         <valueOption>RELATIVE</valueOption>
         <maximumPeriod>0</maximumPeriod>
         <controlTable>
-          <record time="0" value="3.1" />
-          <record time="3600" value="-4.55" />
-          <record time="3601" value="-4.55" />
+          <record time="0" value="12.1" />
+          <record time="3180" value="-6.458" />
+          <record time="3181" value="-6.458" />
         </controlTable>
         <input>
-          <y>ST_Hagestein_zom_Crest level (s)_AsInputFor_Hagestein_langzaam_open</y>
+          <y>[Output]HolIJsselkering/Gate lower edge level (s)[AsInputFor]HY_dicht_kent</y>
         </input>
         <output>
-          <y>output_ST_Hagestein_zom_Crest level (s)</y>
-          <timeActive>RTC HagesteinHagestein_langzaam_open_t</timeActive>
+          <y>[Output]HolIJsselkering/Gate lower edge level (s)</y>
+          <timeActive>[RelativeTimeRule]HollandscheIJsselkering/HY_dicht_kent</timeActive>
         </output>
       </timeRelative>
     </rule>
     <rule>
-      <timeAbsolute id="RTC HagesteinFEWS_hagestein_klepstand">
+      <timeAbsolute id="Volkerakdam/Volkerak_over_crest">
         <input>
-          <x>RTC HagesteinFEWS_hagestein_klepstand_TimeSeries</x>
+          <x>[TimeRule]Volkerakdam/Volkerak_over_crest</x>
         </input>
         <output>
-          <y>output_ST_Hagestein_zom_Crest level (s)</y>
+          <y>[Output]Volkerak_over/Crest level (s)</y>
         </output>
       </timeAbsolute>
     </rule>
     <rule>
-      <timeAbsolute id="RTC HagesteinFEWS_hagestein_breedte">
+      <timeAbsolute id="Volkerakdam/Volkerak_schuiven_gate">
         <input>
-          <x>RTC HagesteinFEWS_hagestein_breedte_TimeSeries</x>
+          <x>[TimeRule]Volkerakdam/Volkerak_schuiven_gate</x>
         </input>
         <output>
-          <y>output_ST_Hagestein_zom_Crest width (s)</y>
+          <y>[Output]Volkerak_schuiven/Gate lower edge level (s)</y>
         </output>
       </timeAbsolute>
     </rule>
     <rule>
-      <lookupTable id="RTC MarijkeMarijke">
-        <table>
-          <record x="-5" y="8" />
-          <record x="5.49" y="8" />
-          <record x="5.5" y="-2" />
-          <record x="25" y="-2" />
-        </table>
-        <interpolationOption>LINEAR</interpolationOption>
-        <extrapolationOption>BLOCK</extrapolationOption>
+      <timeAbsolute id="HVSL_01/HVSL_01">
         <input>
-          <x ref="IMPLICIT">input_Wijk_bij_Duurstede_Water level (op)</x>
+          <x>[TimeRule]HVSL_01/HVSL_01</x>
         </input>
         <output>
-          <y>output_Sluis_Marijke_Gate lower edge level (s)</y>
-        </output>
-      </lookupTable>
-    </rule>
-    <rule>
-      <timeAbsolute id="RTC MarijkeFEWS_Marijke_deurhoogte">
-        <input>
-          <x>RTC MarijkeFEWS_Marijke_deurhoogte_TimeSeries</x>
-        </input>
-        <output>
-          <y>output_Sluis_Marijke_Gate lower edge level (s)</y>
+          <y>[Output]Haringvliet1/Gate lower edge level (s)</y>
         </output>
       </timeAbsolute>
     </rule>
     <rule>
-      <lookupTable id="RTC BernhardBernhard">
-        <table>
-          <record x="-10" y="8" />
-          <record x="2.99" y="8" />
-          <record x="3.01" y="-2" />
-          <record x="4.01" y="-2" />
-        </table>
-        <interpolationOption>LINEAR</interpolationOption>
-        <extrapolationOption>BLOCK</extrapolationOption>
+      <timeAbsolute id="HVSL_01/HVSL_01_sluithoogte">
         <input>
-          <x ref="IMPLICIT">input_LMW.TielWaal_Water level (op)</x>
+          <x>[TimeRule]HVSL_01/HVSL_01_sluithoogte</x>
         </input>
         <output>
-          <y>output_Sluis_Bernhard_Gate lower edge level (s)</y>
-        </output>
-      </lookupTable>
-    </rule>
-    <rule>
-      <timeAbsolute id="RTC BernhardFEWS_bernhard_deurhoogte">
-        <input>
-          <x>RTC BernhardFEWS_bernhard_deurhoogte_TimeSeries</x>
-        </input>
-        <output>
-          <y>output_Sluis_Bernhard_Gate lower edge level (s)</y>
+          <y>[Output]Haringvliet1/Gate lower edge level (s)</y>
         </output>
       </timeAbsolute>
     </rule>
     <rule>
-      <timeRelative id="RTC Driel OmlooprioolDriel_sluit_omloopriool">
+      <timeAbsolute id="HVSL_02/HVSL_02">
+        <input>
+          <x>[TimeRule]HVSL_02/HVSL_02</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet2/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_02/HVSL_02_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_02/HVSL_02_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet2/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_03/HVSL_03">
+        <input>
+          <x>[TimeRule]HVSL_03/HVSL_03</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet3/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_03/HVSL_03_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_03/HVSL_03_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet3/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_04/HVSL_04">
+        <input>
+          <x>[TimeRule]HVSL_04/HVSL_04</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet4/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_04/HVSL_04_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_04/HVSL_04_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet4/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_05/HVSL_05">
+        <input>
+          <x>[TimeRule]HVSL_05/HVSL_05</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet5/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_05/HVSL_05_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_05/HVSL_05_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet5/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_06/HVSL_06">
+        <input>
+          <x>[TimeRule]HVSL_06/HVSL_06</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet6/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_06/HVSL_06_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_06/HVSL_06_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet6/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_07/HVSL_07">
+        <input>
+          <x>[TimeRule]HVSL_07/HVSL_07</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet7/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_07/HVSL_07_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_07/HVSL_07_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet7/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_08/HVSL_08">
+        <input>
+          <x>[TimeRule]HVSL_08/HVSL_08</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet8/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_08/HVSL_08_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_08/HVSL_08_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet8/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_09/HVSL_09">
+        <input>
+          <x>[TimeRule]HVSL_09/HVSL_09</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet9/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_09/HVSL_09_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_09/HVSL_09_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet9/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_10/HVSL_10">
+        <input>
+          <x>[TimeRule]HVSL_10/HVSL_10</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet10/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_10/HVSL_10_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_10/HVSL_10_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet10/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_11/HVSL_11">
+        <input>
+          <x>[TimeRule]HVSL_11/HVSL_11</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet11/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_11/HVSL_11_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_11/HVSL_11_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet11/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_12/HVSL_12">
+        <input>
+          <x>[TimeRule]HVSL_12/HVSL_12</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet12/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_12/HVSL_12_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_12/HVSL_12_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet12/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_13/HVSL_13">
+        <input>
+          <x>[TimeRule]HVSL_13/HVSL_13</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet13/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_13/HVSL_13_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_13/HVSL_13_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet13/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_14/HVSL_14">
+        <input>
+          <x>[TimeRule]HVSL_14/HVSL_14</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet14/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_14/HVSL_14_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_14/HVSL_14_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet14/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_15/HVSL_15">
+        <input>
+          <x>[TimeRule]HVSL_15/HVSL_15</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet15/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_15/HVSL_15_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_15/HVSL_15_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet15/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_16/HVSL_16">
+        <input>
+          <x>[TimeRule]HVSL_16/HVSL_16</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet16/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_16/HVSL_16_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_16/HVSL_16_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet16/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_17/HVSL_17">
+        <input>
+          <x>[TimeRule]HVSL_17/HVSL_17</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet17/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_17/HVSL_17_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_17/HVSL_17_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet17/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="KrommeNolkering/Open the gate">
+        <input>
+          <x>[TimeRule]KrommeNolkering/Open the gate</x>
+        </input>
+        <output>
+          <y>[Output]Kromme Nolkering/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="KrommeNolkering/Close the gate">
+        <input>
+          <x>[TimeRule]KrommeNolkering/Close the gate</x>
+        </input>
+        <output>
+          <y>[Output]Kromme Nolkering/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeRelative id="CNTL_Bathsesluis/Spui_naar_Westerschelde">
         <mode>RETAINVALUEWHENINACTIVE</mode>
-        <valueOption>RELATIVE</valueOption>
+        <valueOption>ABSOLUTE</valueOption>
         <maximumPeriod>0</maximumPeriod>
         <controlTable>
-          <record time="0" value="3.7" />
-          <record time="14400" value="3.2" />
-          <record time="14401" value="3.2" />
+          <record time="0" value="-4.25" />
+          <record time="120" value="0" />
+          <record time="121" value="0" />
         </controlTable>
-        <input>
-          <y>ST_Driel_oml_Crest level (s)_AsInputFor_Driel_sluit_omloopriool</y>
-        </input>
         <output>
-          <y>output_ST_Driel_oml_Crest level (s)</y>
-          <timeActive>RTC Driel OmlooprioolDriel_sluit_omloopriool_t</timeActive>
+          <y>[Output]zwd_BathseSpuisl/Gate lower edge level (s)</y>
+          <timeActive>[RelativeTimeRule]CNTL_Bathsesluis/Spui_naar_Westerschelde</timeActive>
         </output>
       </timeRelative>
     </rule>
     <rule>
-      <timeRelative id="RTC Driel OmlooprioolDriel_open_omloopriool">
+      <timeRelative id="CNTL_Bathsesluis/CloseSluis">
         <mode>RETAINVALUEWHENINACTIVE</mode>
-        <valueOption>RELATIVE</valueOption>
-        <maximumPeriod>0</maximumPeriod>
-        <controlTable>
-          <record time="0" value="3.2" />
-          <record time="14400" value="3.7" />
-          <record time="14401" value="3.7" />
-        </controlTable>
-        <input>
-          <y>ST_Driel_oml_Crest level (s)_AsInputFor_Driel_open_omloopriool</y>
-        </input>
-        <output>
-          <y>output_ST_Driel_oml_Crest level (s)</y>
-          <timeActive>RTC Driel OmlooprioolDriel_open_omloopriool_t</timeActive>
-        </output>
-      </timeRelative>
-    </rule>
-    <rule>
-      <timeAbsolute id="RTC Driel OmlooprioolFEWS_Driel_omloopriool_klepstand">
-        <input>
-          <x>RTC Driel OmlooprioolFEWS_Driel_omloopriool_klepstand_TimeSeries</x>
-        </input>
-        <output>
-          <y>output_ST_Driel_oml_Crest level (s)</y>
-        </output>
-      </timeAbsolute>
-    </rule>
-    <rule>
-      <timeRelative id="RTC Amerongen OmlooprioolAmerongen_sluit_omloopriool">
-        <mode>RETAINVALUEWHENINACTIVE</mode>
-        <valueOption>RELATIVE</valueOption>
+        <valueOption>ABSOLUTE</valueOption>
         <maximumPeriod>0</maximumPeriod>
         <controlTable>
           <record time="0" value="0" />
-          <record time="14400" value="-0.5" />
-          <record time="14401" value="-0.5" />
-        </controlTable>
-        <input>
-          <y>ST_Amerongen_oml_Crest level (s)_AsInputFor_Amerongen_sluit_omloopriool</y>
-        </input>
-        <output>
-          <y>output_ST_Amerongen_oml_Crest level (s)</y>
-          <timeActive>RTC Amerongen OmlooprioolAmerongen_sluit_omloopriool_t</timeActive>
-        </output>
-      </timeRelative>
-    </rule>
-    <rule>
-      <timeRelative id="RTC Amerongen OmlooprioolAmerongen_open_omloopriool">
-        <mode>RETAINVALUEWHENINACTIVE</mode>
-        <valueOption>RELATIVE</valueOption>
-        <maximumPeriod>0</maximumPeriod>
-        <controlTable>
-          <record time="0" value="-0.5" />
-          <record time="14400" value="0" />
-          <record time="14401" value="0" />
-        </controlTable>
-        <input>
-          <y>ST_Amerongen_oml_Crest level (s)_AsInputFor_Amerongen_open_omloopriool</y>
-        </input>
-        <output>
-          <y>output_ST_Amerongen_oml_Crest level (s)</y>
-          <timeActive>RTC Amerongen OmlooprioolAmerongen_open_omloopriool_t</timeActive>
-        </output>
-      </timeRelative>
-    </rule>
-    <rule>
-      <timeAbsolute id="RTC Amerongen OmlooprioolFEWS_omloopriool_Amerongen_klepstand">
-        <input>
-          <x>RTC Amerongen OmlooprioolFEWS_omloopriool_Amerongen_klepstand_TimeSeries</x>
-        </input>
-        <output>
-          <y>output_ST_Amerongen_oml_Crest level (s)</y>
-        </output>
-      </timeAbsolute>
-    </rule>
-    <rule>
-      <timeRelative id="RTC Hagestein  omlooprioolHagestein_sluit_omloopriool">
-        <mode>RETAINVALUEWHENINACTIVE</mode>
-        <valueOption>RELATIVE</valueOption>
-        <maximumPeriod>0</maximumPeriod>
-        <controlTable>
-          <record time="0" value="-2.5" />
-          <record time="14400" value="-3" />
-          <record time="14401" value="-3" />
-        </controlTable>
-        <input>
-          <y>ST_Hagestein_oml_Crest level (s)_AsInputFor_Hagestein_sluit_omloopriool</y>
-        </input>
-        <output>
-          <y>output_ST_Hagestein_oml_Crest level (s)</y>
-          <timeActive>RTC Hagestein  omlooprioolHagestein_sluit_omloopriool_t</timeActive>
-        </output>
-      </timeRelative>
-    </rule>
-    <rule>
-      <timeRelative id="RTC Hagestein  omlooprioolHagestein_open_omloopriool">
-        <mode>RETAINVALUEWHENINACTIVE</mode>
-        <valueOption>RELATIVE</valueOption>
-        <maximumPeriod>0</maximumPeriod>
-        <controlTable>
-          <record time="0" value="-3" />
-          <record time="14400" value="-2.5" />
-          <record time="14401" value="-2.5" />
-        </controlTable>
-        <input>
-          <y>ST_Hagestein_oml_Crest level (s)_AsInputFor_Hagestein_open_omloopriool</y>
-        </input>
-        <output>
-          <y>output_ST_Hagestein_oml_Crest level (s)</y>
-          <timeActive>RTC Hagestein  omlooprioolHagestein_open_omloopriool_t</timeActive>
-        </output>
-      </timeRelative>
-    </rule>
-    <rule>
-      <timeAbsolute id="RTC Hagestein  omlooprioolFEWS_omloopriool_hagestein_klepstand">
-        <input>
-          <x>RTC Hagestein  omlooprioolFEWS_omloopriool_hagestein_klepstand_TimeSeries</x>
-        </input>
-        <output>
-          <y>output_ST_Hagestein_oml_Crest level (s)</y>
-        </output>
-      </timeAbsolute>
-    </rule>
-    <rule>
-      <timeRelative id="RTC Vees-wap blok1sluiten Vees-wap1">
-        <mode>RETAINVALUEWHENINACTIVE</mode>
-        <valueOption>ABSOLUTE</valueOption>
-        <maximumPeriod>0</maximumPeriod>
-        <controlTable>
-          <record time="0" value="4.6" />
-          <record time="21600" value="5.65" />
-          <record time="21601" value="5.65" />
+          <record time="120" value="-4.25" />
+          <record time="121" value="-4.25" />
         </controlTable>
         <output>
-          <y>output_Blok1_Vees_wap_Crest level (s)</y>
-          <timeActive>RTC Vees-wap blok1sluiten Vees-wap1_t</timeActive>
-        </output>
-      </timeRelative>
-    </rule>
-    <rule>
-      <timeRelative id="RTC Vees-wap blok1Openen Vees-wap1">
-        <mode>RETAINVALUEWHENINACTIVE</mode>
-        <valueOption>ABSOLUTE</valueOption>
-        <maximumPeriod>0</maximumPeriod>
-        <controlTable>
-          <record time="0" value="5.65" />
-          <record time="5400" value="4.6" />
-          <record time="5401" value="4.6" />
-        </controlTable>
-        <output>
-          <y>output_Blok1_Vees_wap_Crest level (s)</y>
-          <timeActive>RTC Vees-wap blok1Openen Vees-wap1_t</timeActive>
-        </output>
-      </timeRelative>
-    </rule>
-    <rule>
-      <timeRelative id="RTC Vees-wap blok1initieel sluiten">
-        <mode>RETAINVALUEWHENINACTIVE</mode>
-        <valueOption>ABSOLUTE</valueOption>
-        <maximumPeriod>0</maximumPeriod>
-        <controlTable>
-          <record time="0" value="5.65" />
-          <record time="1" value="5.65" />
-        </controlTable>
-        <output>
-          <y>output_Blok1_Vees_wap_Crest level (s)</y>
-          <timeActive>RTC Vees-wap blok1initieel sluiten_t</timeActive>
-        </output>
-      </timeRelative>
-    </rule>
-    <rule>
-      <lookupTable id="RTC Vees-Wap-ledigenonttrekken1">
-        <table>
-          <record x="0.5" y="0" />
-          <record x="1.5" y="-1" />
-          <record x="3.5" y="-45" />
-          <record x="6" y="-50" />
-        </table>
-        <interpolationOption>LINEAR</interpolationOption>
-        <extrapolationOption>BLOCK</extrapolationOption>
-        <input>
-          <x ref="IMPLICIT">input_Stuurpunt_pomp_Water level (op)</x>
-        </input>
-        <output>
-          <y>output_VeesWap1_onttrek_Actual discharge (l)</y>
-        </output>
-      </lookupTable>
-    </rule>
-    <rule>
-      <lookupTable id="RTC Vees-Wap-ledigengeen onttrekking">
-        <table>
-          <record x="-1" y="0" />
-          <record x="10" y="0" />
-        </table>
-        <interpolationOption>BLOCK</interpolationOption>
-        <extrapolationOption>BLOCK</extrapolationOption>
-        <input>
-          <x ref="IMPLICIT">input_Stuurpunt_pomp_Water level (op)</x>
-        </input>
-        <output>
-          <y>output_VeesWap1_onttrek_Actual discharge (l)</y>
-        </output>
-      </lookupTable>
-    </rule>
-    <rule>
-      <timeRelative id="RTC Vees-wap blok2Vees-wap open blok 2">
-        <mode>RETAINVALUEWHENINACTIVE</mode>
-        <valueOption>ABSOLUTE</valueOption>
-        <maximumPeriod>0</maximumPeriod>
-        <controlTable>
-          <record time="0" value="5.65" />
-          <record time="12600" value="5.65" />
-          <record time="18000" value="4.6" />
-          <record time="18001" value="4.6" />
-        </controlTable>
-        <output>
-          <y>output_Blok2_Vees_wap_Crest level (s)</y>
-          <timeActive>RTC Vees-wap blok2Vees-wap open blok 2_t</timeActive>
-        </output>
-      </timeRelative>
-    </rule>
-    <rule>
-      <timeRelative id="RTC Vees-wap blok2Vees-wap sluit blok2">
-        <mode>RETAINVALUEWHENINACTIVE</mode>
-        <valueOption>ABSOLUTE</valueOption>
-        <maximumPeriod>0</maximumPeriod>
-        <controlTable>
-          <record time="0" value="4.6" />
-          <record time="21600" value="5.65" />
-          <record time="21601" value="5.65" />
-        </controlTable>
-        <output>
-          <y>output_Blok2_Vees_wap_Crest level (s)</y>
-          <timeActive>RTC Vees-wap blok2Vees-wap sluit blok2_t</timeActive>
-        </output>
-      </timeRelative>
-    </rule>
-    <rule>
-      <timeRelative id="RTC Vees-wap blok2initieel sluiten">
-        <mode>RETAINVALUEWHENINACTIVE</mode>
-        <valueOption>ABSOLUTE</valueOption>
-        <maximumPeriod>0</maximumPeriod>
-        <controlTable>
-          <record time="0" value="5.65" />
-          <record time="1" value="5.65" />
-        </controlTable>
-        <output>
-          <y>output_Blok2_Vees_wap_Crest level (s)</y>
-          <timeActive>RTC Vees-wap blok2initieel sluiten_t</timeActive>
-        </output>
-      </timeRelative>
-    </rule>
-    <rule>
-      <timeRelative id="RTC Vees-wap blok3Vees-wap open blok3">
-        <mode>RETAINVALUEWHENINACTIVE</mode>
-        <valueOption>ABSOLUTE</valueOption>
-        <maximumPeriod>0</maximumPeriod>
-        <controlTable>
-          <record time="0" value="5.65" />
-          <record time="21600" value="5.65" />
-          <record time="25200" value="4.6" />
-          <record time="25201" value="4.6" />
-        </controlTable>
-        <output>
-          <y>output_Blok3_Vees_wap_Crest level (s)</y>
-          <timeActive>RTC Vees-wap blok3Vees-wap open blok3_t</timeActive>
-        </output>
-      </timeRelative>
-    </rule>
-    <rule>
-      <timeRelative id="RTC Vees-wap blok3Vees-wap sluit blok3">
-        <mode>RETAINVALUEWHENINACTIVE</mode>
-        <valueOption>ABSOLUTE</valueOption>
-        <maximumPeriod>0</maximumPeriod>
-        <controlTable>
-          <record time="0" value="4.6" />
-          <record time="21600" value="5.65" />
-          <record time="21601" value="5.65" />
-        </controlTable>
-        <output>
-          <y>output_Blok3_Vees_wap_Crest level (s)</y>
-          <timeActive>RTC Vees-wap blok3Vees-wap sluit blok3_t</timeActive>
-        </output>
-      </timeRelative>
-    </rule>
-    <rule>
-      <timeRelative id="RTC Vees-wap blok3initieel sluiten">
-        <mode>RETAINVALUEWHENINACTIVE</mode>
-        <valueOption>ABSOLUTE</valueOption>
-        <maximumPeriod>0</maximumPeriod>
-        <controlTable>
-          <record time="0" value="5.65" />
-          <record time="1" value="5.65" />
-        </controlTable>
-        <output>
-          <y>output_Blok3_Vees_wap_Crest level (s)</y>
-          <timeActive>RTC Vees-wap blok3initieel sluiten_t</timeActive>
-        </output>
-      </timeRelative>
-    </rule>
-    <rule>
-      <timeRelative id="RTC Vees-wap blok4Vees-wap open blok4">
-        <mode>RETAINVALUEWHENINACTIVE</mode>
-        <valueOption>ABSOLUTE</valueOption>
-        <maximumPeriod>0</maximumPeriod>
-        <controlTable>
-          <record time="0" value="5.65" />
-          <record time="28800" value="5.65" />
-          <record time="37800" value="4.6" />
-          <record time="37801" value="4.6" />
-        </controlTable>
-        <output>
-          <y>output_Blok4_Vees_wap_Crest level (s)</y>
-          <timeActive>RTC Vees-wap blok4Vees-wap open blok4_t</timeActive>
-        </output>
-      </timeRelative>
-    </rule>
-    <rule>
-      <timeRelative id="RTC Vees-wap blok4Vees-wap sluit blok4">
-        <mode>RETAINVALUEWHENINACTIVE</mode>
-        <valueOption>ABSOLUTE</valueOption>
-        <maximumPeriod>0</maximumPeriod>
-        <controlTable>
-          <record time="0" value="4.6" />
-          <record time="21600" value="5.65" />
-          <record time="21601" value="5.65" />
-        </controlTable>
-        <output>
-          <y>output_Blok4_Vees_wap_Crest level (s)</y>
-          <timeActive>RTC Vees-wap blok4Vees-wap sluit blok4_t</timeActive>
-        </output>
-      </timeRelative>
-    </rule>
-    <rule>
-      <timeRelative id="RTC Vees-wap blok4rule01">
-        <mode>RETAINVALUEWHENINACTIVE</mode>
-        <valueOption>ABSOLUTE</valueOption>
-        <maximumPeriod>0</maximumPeriod>
-        <controlTable>
-          <record time="0" value="5.65" />
-          <record time="1" value="5.65" />
-        </controlTable>
-        <output>
-          <y>output_Blok4_Vees_wap_Crest level (s)</y>
-          <timeActive>RTC Vees-wap blok4rule01_t</timeActive>
+          <y>[Output]zwd_BathseSpuisl/Gate lower edge level (s)</y>
+          <timeActive>[RelativeTimeRule]CNTL_Bathsesluis/CloseSluis</timeActive>
         </output>
       </timeRelative>
     </rule>
   </rules>
   <triggers>
     <trigger>
-      <standard id="RTC DrielFEWS_switch_Driel">
+      <standard id="HollandscheIJsselkering/HYK_switch">
         <condition>
-          <x1Series ref="IMPLICIT">RTC DrielTimeseries_FEWS_switch_Driel</x1Series>
+          <x1Series ref="IMPLICIT">[TimeCondition]HollandscheIJsselkering/HYK_switch</x1Series>
           <relationalOperator>Equal</relationalOperator>
           <x2Value>0</x2Value>
         </condition>
         <true>
           <trigger>
-            <standard id="RTC DrielDriel_lobith_test">
+            <ruleReference>HollandscheIJsselkering/HYK_timeseries</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HollandscheIJsselkering/Kenteringsluiting">
               <condition>
-                <x1Series ref="EXPLICIT">input_LMW.Lobith_Water level (op)</x1Series>
-                <relationalOperator>Greater</relationalOperator>
-                <x2Value>10</x2Value>
+                <x1Series ref="IMPLICIT">[TimeCondition]HollandscheIJsselkering/Kenteringsluiting</x1Series>
+                <relationalOperator>Equal</relationalOperator>
+                <x2Value>0</x2Value>
               </condition>
               <true>
                 <trigger>
-                  <ruleReference>RTC DrielDriel_langzaam_open</ruleReference>
-                </trigger>
-              </true>
-              <false>
-                <trigger>
-                  <standard id="RTC DrielDriel_ijsselkop_test">
+                  <standard id="HollandscheIJsselkering/Q(t)">
                     <condition>
-                      <x1Series ref="EXPLICIT">input_LMW.IJsselkop_Water level (op)</x1Series>
+                      <x1Series ref="EXPLICIT">[Input]HolIJsselkering/Discharge (s)</x1Series>
                       <relationalOperator>Less</relationalOperator>
-                      <x2Value>6</x2Value>
+                      <x2Value>0</x2Value>
                     </condition>
                     <true>
                       <trigger>
-                        <ruleReference>RTC DrielDriel_langzaam_open</ruleReference>
+                        <ruleReference>HollandscheIJsselkering/HY_dicht_kent</ruleReference>
                       </trigger>
                     </true>
                     <false>
                       <trigger>
-                        <ruleReference>RTC DrielDriel PID</ruleReference>
-                      </trigger>
-                    </false>
-                    <output>
-                      <status>RTC DrielStatus_Driel_ijsselkop_test</status>
-                    </output>
-                  </standard>
-                </trigger>
-              </false>
-              <output>
-                <status>RTC DrielStatus_Driel_lobith_test</status>
-              </output>
-            </standard>
-          </trigger>
-        </true>
-        <false>
-          <trigger>
-            <ruleReference>RTC DrielFEWS_Driel_Klepstand</ruleReference>
-          </trigger>
-        </false>
-        <output>
-          <status>RTC DrielStatus_FEWS_switch_Driel</status>
-        </output>
-      </standard>
-    </trigger>
-    <trigger>
-      <standard id="RTC DrielFEWS_switch_Driel_breedte">
-        <condition>
-          <x1Series ref="IMPLICIT">RTC DrielTimeseries_FEWS_switch_Driel_breedte</x1Series>
-          <relationalOperator>Equal</relationalOperator>
-          <x2Value>0</x2Value>
-        </condition>
-        <false>
-          <trigger>
-            <ruleReference>RTC DrielFEWS_Driel_Breedte</ruleReference>
-          </trigger>
-        </false>
-        <output>
-          <status>RTC DrielStatus_FEWS_switch_Driel_breedte</status>
-        </output>
-      </standard>
-    </trigger>
-    <trigger>
-      <standard id="RTC AmerongenFEWS_switch_Amerongen">
-        <condition>
-          <x1Series ref="IMPLICIT">RTC AmerongenTimeseries_FEWS_switch_Amerongen</x1Series>
-          <relationalOperator>Equal</relationalOperator>
-          <x2Value>0</x2Value>
-        </condition>
-        <true>
-          <trigger>
-            <standard id="RTC AmerongenAmerongen_lobith_test">
-              <condition>
-                <x1Series ref="EXPLICIT">input_LMW.Lobith_Water level (op)</x1Series>
-                <relationalOperator>Greater</relationalOperator>
-                <x2Value>11.4</x2Value>
-              </condition>
-              <true>
-                <trigger>
-                  <ruleReference>RTC AmerongenAmerongen_langzaam_open</ruleReference>
-                </trigger>
-              </true>
-              <false>
-                <trigger>
-                  <ruleReference>RTC AmerongenAmerongen PID</ruleReference>
-                </trigger>
-              </false>
-              <output>
-                <status>RTC AmerongenStatus_Amerongen_lobith_test</status>
-              </output>
-            </standard>
-          </trigger>
-        </true>
-        <false>
-          <trigger>
-            <ruleReference>RTC AmerongenFEWS_amerongen_klepstand</ruleReference>
-          </trigger>
-        </false>
-        <output>
-          <status>RTC AmerongenStatus_FEWS_switch_Amerongen</status>
-        </output>
-      </standard>
-    </trigger>
-    <trigger>
-      <standard id="RTC AmerongenFEWS_switch_Amerongen_breedte">
-        <condition>
-          <x1Series ref="IMPLICIT">RTC AmerongenTimeseries_FEWS_switch_Amerongen_breedte</x1Series>
-          <relationalOperator>Equal</relationalOperator>
-          <x2Value>0</x2Value>
-        </condition>
-        <false>
-          <trigger>
-            <ruleReference>RTC AmerongenFEWS_amerongen_breedte</ruleReference>
-          </trigger>
-        </false>
-        <output>
-          <status>RTC AmerongenStatus_FEWS_switch_Amerongen_breedte</status>
-        </output>
-      </standard>
-    </trigger>
-    <trigger>
-      <standard id="RTC HagesteinFEWS_switch_hagestein">
-        <condition>
-          <x1Series ref="IMPLICIT">RTC HagesteinTimeseries_FEWS_switch_hagestein</x1Series>
-          <relationalOperator>Equal</relationalOperator>
-          <x2Value>0</x2Value>
-        </condition>
-        <true>
-          <trigger>
-            <standard id="RTC Hagesteincondition01">
-              <condition>
-                <x1Series ref="EXPLICIT">input_LMW.Lobith_Water level (op)</x1Series>
-                <relationalOperator>Greater</relationalOperator>
-                <x2Value>11.4</x2Value>
-              </condition>
-              <true>
-                <trigger>
-                  <ruleReference>RTC HagesteinHagestein_langzaam_open</ruleReference>
-                </trigger>
-              </true>
-              <false>
-                <trigger>
-                  <ruleReference>RTC HagesteinHagestein PID</ruleReference>
-                </trigger>
-              </false>
-              <output>
-                <status>RTC HagesteinStatus_condition01</status>
-              </output>
-            </standard>
-          </trigger>
-        </true>
-        <false>
-          <trigger>
-            <ruleReference>RTC HagesteinFEWS_hagestein_klepstand</ruleReference>
-          </trigger>
-        </false>
-        <output>
-          <status>RTC HagesteinStatus_FEWS_switch_hagestein</status>
-        </output>
-      </standard>
-    </trigger>
-    <trigger>
-      <standard id="RTC HagesteinFEWS_switch_hagestein_breedte">
-        <condition>
-          <x1Series ref="IMPLICIT">RTC HagesteinTimeseries_FEWS_switch_hagestein_breedte</x1Series>
-          <relationalOperator>Equal</relationalOperator>
-          <x2Value>0</x2Value>
-        </condition>
-        <false>
-          <trigger>
-            <ruleReference>RTC HagesteinFEWS_hagestein_breedte</ruleReference>
-          </trigger>
-        </false>
-        <output>
-          <status>RTC HagesteinStatus_FEWS_switch_hagestein_breedte</status>
-        </output>
-      </standard>
-    </trigger>
-    <trigger>
-      <standard id="RTC MarijkeFEWS_switch_Marijke">
-        <condition>
-          <x1Series ref="IMPLICIT">RTC MarijkeTimeseries_FEWS_switch_Marijke</x1Series>
-          <relationalOperator>Equal</relationalOperator>
-          <x2Value>0</x2Value>
-        </condition>
-        <true>
-          <trigger>
-            <ruleReference>RTC MarijkeMarijke</ruleReference>
-          </trigger>
-        </true>
-        <false>
-          <trigger>
-            <ruleReference>RTC MarijkeFEWS_Marijke_deurhoogte</ruleReference>
-          </trigger>
-        </false>
-        <output>
-          <status>RTC MarijkeStatus_FEWS_switch_Marijke</status>
-        </output>
-      </standard>
-    </trigger>
-    <trigger>
-      <standard id="RTC BernhardFEWS_switch_Bernhard">
-        <condition>
-          <x1Series ref="IMPLICIT">RTC BernhardTimeseries_FEWS_switch_Bernhard</x1Series>
-          <relationalOperator>Equal</relationalOperator>
-          <x2Value>0</x2Value>
-        </condition>
-        <true>
-          <trigger>
-            <ruleReference>RTC BernhardBernhard</ruleReference>
-          </trigger>
-        </true>
-        <false>
-          <trigger>
-            <ruleReference>RTC BernhardFEWS_bernhard_deurhoogte</ruleReference>
-          </trigger>
-        </false>
-        <output>
-          <status>RTC BernhardStatus_FEWS_switch_Bernhard</status>
-        </output>
-      </standard>
-    </trigger>
-    <trigger>
-      <standard id="RTC Driel OmlooprioolFEWS_switch_omloopriool_Driel">
-        <condition>
-          <x1Series ref="IMPLICIT">RTC Driel OmlooprioolTimeseries_FEWS_switch_omloopriool_Driel</x1Series>
-          <relationalOperator>Equal</relationalOperator>
-          <x2Value>0</x2Value>
-        </condition>
-        <true>
-          <trigger>
-            <standard id="RTC Driel Omlooprioolcondition01">
-              <condition>
-                <x1Series ref="EXPLICIT">input_LMW.IJsselkop_Water level (op)</x1Series>
-                <relationalOperator>GreaterEqual</relationalOperator>
-                <x2Value>6</x2Value>
-              </condition>
-              <true>
-                <trigger>
-                  <standard id="RTC Driel Omlooprioolcondition02">
-                    <condition>
-                      <x1Series ref="EXPLICIT">input_LMW.IJsselkop_Water level (op)</x1Series>
-                      <relationalOperator>Less</relationalOperator>
-                      <x2Value>8.3</x2Value>
-                    </condition>
-                    <true>
-                      <trigger>
-                        <standard id="RTC Driel Omlooprioolcondition03">
+                        <standard id="HollandscheIJsselkering/HYK Verval">
                           <condition>
-                            <x1Series ref="EXPLICIT">input_ST_Driel_zom_Crest level (s)</x1Series>
-                            <relationalOperator>Greater</relationalOperator>
-                            <x2Value>8.3</x2Value>
-                          </condition>
-                          <true>
-                            <trigger>
-                              <ruleReference>RTC Driel OmlooprioolDriel_sluit_omloopriool</ruleReference>
-                            </trigger>
-                          </true>
-                          <false>
-                            <trigger>
-                              <ruleReference>RTC Driel OmlooprioolDriel_open_omloopriool</ruleReference>
-                            </trigger>
-                          </false>
-                          <output>
-                            <status>RTC Driel OmlooprioolStatus_condition03</status>
-                          </output>
-                        </standard>
-                      </trigger>
-                    </true>
-                    <false>
-                      <trigger>
-                        <ruleReference>RTC Driel OmlooprioolDriel_open_omloopriool</ruleReference>
-                      </trigger>
-                    </false>
-                    <output>
-                      <status>RTC Driel OmlooprioolStatus_condition02</status>
-                    </output>
-                  </standard>
-                </trigger>
-              </true>
-              <false>
-                <trigger>
-                  <ruleReference>RTC Driel OmlooprioolDriel_open_omloopriool</ruleReference>
-                </trigger>
-              </false>
-              <output>
-                <status>RTC Driel OmlooprioolStatus_condition01</status>
-              </output>
-            </standard>
-          </trigger>
-        </true>
-        <false>
-          <trigger>
-            <ruleReference>RTC Driel OmlooprioolFEWS_Driel_omloopriool_klepstand</ruleReference>
-          </trigger>
-        </false>
-        <output>
-          <status>RTC Driel OmlooprioolStatus_FEWS_switch_omloopriool_Driel</status>
-        </output>
-      </standard>
-    </trigger>
-    <trigger>
-      <standard id="RTC Amerongen OmlooprioolFEWS_switch_omloopriool_amerongen">
-        <condition>
-          <x1Series ref="IMPLICIT">RTC Amerongen OmlooprioolTimeseries_FEWS_switch_omloopriool_amerongen</x1Series>
-          <relationalOperator>Equal</relationalOperator>
-          <x2Value>0</x2Value>
-        </condition>
-        <true>
-          <trigger>
-            <standard id="RTC Amerongen Omlooprioolcondition01">
-              <condition>
-                <x1Series ref="EXPLICIT">input_LMW.IJsselkop_Water level (op)</x1Series>
-                <relationalOperator>GreaterEqual</relationalOperator>
-                <x2Value>6</x2Value>
-              </condition>
-              <true>
-                <trigger>
-                  <standard id="RTC Amerongen Omlooprioolcondition02">
-                    <condition>
-                      <x1Series ref="EXPLICIT">input_LMW.IJsselkop_Water level (op)</x1Series>
-                      <relationalOperator>Less</relationalOperator>
-                      <x2Value>8.3</x2Value>
-                    </condition>
-                    <true>
-                      <trigger>
-                        <standard id="RTC Amerongen Omlooprioolcondition03">
-                          <condition>
-                            <x1Series ref="EXPLICIT">input_ST_Amerongen_zom_Crest level (s)</x1Series>
-                            <relationalOperator>Greater</relationalOperator>
-                            <x2Value>6</x2Value>
-                          </condition>
-                          <true>
-                            <trigger>
-                              <standard id="RTC Amerongen Omlooprioolcondition04">
-                                <condition>
-                                  <x1Series ref="EXPLICIT">input_LMW.Amerongenbov_Water level (op)</x1Series>
-                                  <relationalOperator>Greater</relationalOperator>
-                                  <x2Value>5.98</x2Value>
-                                </condition>
-                                <true>
-                                  <trigger>
-                                    <ruleReference>RTC Amerongen OmlooprioolAmerongen_sluit_omloopriool</ruleReference>
-                                  </trigger>
-                                </true>
-                                <false>
-                                  <trigger>
-                                    <standard id="RTC Amerongen Omlooprioolcondition05">
-                                      <condition>
-                                        <x1Series ref="EXPLICIT">input_LMW.Amerongenbov_Water level (op)</x1Series>
-                                        <relationalOperator>Less</relationalOperator>
-                                        <x2Value>5.96</x2Value>
-                                      </condition>
-                                      <false>
-                                        <trigger>
-                                          <ruleReference>RTC Amerongen OmlooprioolAmerongen_open_omloopriool</ruleReference>
-                                        </trigger>
-                                      </false>
-                                      <output>
-                                        <status>RTC Amerongen OmlooprioolStatus_condition05</status>
-                                      </output>
-                                    </standard>
-                                  </trigger>
-                                </false>
-                                <output>
-                                  <status>RTC Amerongen OmlooprioolStatus_condition04</status>
-                                </output>
-                              </standard>
-                            </trigger>
-                          </true>
-                          <false>
-                            <trigger>
-                              <ruleReference>RTC Amerongen OmlooprioolAmerongen_open_omloopriool</ruleReference>
-                            </trigger>
-                          </false>
-                          <output>
-                            <status>RTC Amerongen OmlooprioolStatus_condition03</status>
-                          </output>
-                        </standard>
-                      </trigger>
-                    </true>
-                    <false>
-                      <trigger>
-                        <ruleReference>RTC Amerongen OmlooprioolAmerongen_open_omloopriool</ruleReference>
-                      </trigger>
-                    </false>
-                    <output>
-                      <status>RTC Amerongen OmlooprioolStatus_condition02</status>
-                    </output>
-                  </standard>
-                </trigger>
-              </true>
-              <false>
-                <trigger>
-                  <ruleReference>RTC Amerongen OmlooprioolAmerongen_open_omloopriool</ruleReference>
-                </trigger>
-              </false>
-              <output>
-                <status>RTC Amerongen OmlooprioolStatus_condition01</status>
-              </output>
-            </standard>
-          </trigger>
-        </true>
-        <false>
-          <trigger>
-            <ruleReference>RTC Amerongen OmlooprioolFEWS_omloopriool_Amerongen_klepstand</ruleReference>
-          </trigger>
-        </false>
-        <output>
-          <status>RTC Amerongen OmlooprioolStatus_FEWS_switch_omloopriool_amerongen</status>
-        </output>
-      </standard>
-    </trigger>
-    <trigger>
-      <standard id="RTC Hagestein  omlooprioolFEWS_switch_hagestein_omloopriool">
-        <condition>
-          <x1Series ref="IMPLICIT">RTC Hagestein  omlooprioolTimeseries_FEWS_switch_hagestein_omloopriool</x1Series>
-          <relationalOperator>Equal</relationalOperator>
-          <x2Value>0</x2Value>
-        </condition>
-        <true>
-          <trigger>
-            <standard id="RTC Hagestein  omlooprioolcondition01">
-              <condition>
-                <x1Series ref="EXPLICIT">input_LMW.IJsselkop_Water level (op)</x1Series>
-                <relationalOperator>GreaterEqual</relationalOperator>
-                <x2Value>6</x2Value>
-              </condition>
-              <true>
-                <trigger>
-                  <standard id="RTC Hagestein  omlooprioolcondition02">
-                    <condition>
-                      <x1Series ref="EXPLICIT">input_LMW.IJsselkop_Water level (op)</x1Series>
-                      <relationalOperator>Less</relationalOperator>
-                      <x2Value>8.3</x2Value>
-                    </condition>
-                    <true>
-                      <trigger>
-                        <standard id="RTC Hagestein  omlooprioolcondition03">
-                          <condition>
-                            <x1Series ref="EXPLICIT">input_ST_Hagestein_zom_Crest level (s)</x1Series>
-                            <relationalOperator>Greater</relationalOperator>
-                            <x2Value>3</x2Value>
-                          </condition>
-                          <true>
-                            <trigger>
-                              <standard id="RTC Hagestein  omlooprioolcondition04">
-                                <condition>
-                                  <x1Series ref="EXPLICIT">input_LMW.Hagesteinboven_Water level (op)</x1Series>
-                                  <relationalOperator>Greater</relationalOperator>
-                                  <x2Value>2.98</x2Value>
-                                </condition>
-                                <true>
-                                  <trigger>
-                                    <ruleReference>RTC Hagestein  omlooprioolHagestein_sluit_omloopriool</ruleReference>
-                                  </trigger>
-                                </true>
-                                <false>
-                                  <trigger>
-                                    <standard id="RTC Hagestein  omlooprioolcondition05">
-                                      <condition>
-                                        <x1Series ref="EXPLICIT">input_LMW.Hagesteinboven_Water level (op)</x1Series>
-                                        <relationalOperator>Less</relationalOperator>
-                                        <x2Value>2.96</x2Value>
-                                      </condition>
-                                      <false>
-                                        <trigger>
-                                          <ruleReference>RTC Hagestein  omlooprioolHagestein_open_omloopriool</ruleReference>
-                                        </trigger>
-                                      </false>
-                                      <output>
-                                        <status>RTC Hagestein  omlooprioolStatus_condition05</status>
-                                      </output>
-                                    </standard>
-                                  </trigger>
-                                </false>
-                                <output>
-                                  <status>RTC Hagestein  omlooprioolStatus_condition04</status>
-                                </output>
-                              </standard>
-                            </trigger>
-                          </true>
-                          <false>
-                            <trigger>
-                              <ruleReference>RTC Hagestein  omlooprioolHagestein_open_omloopriool</ruleReference>
-                            </trigger>
-                          </false>
-                          <output>
-                            <status>RTC Hagestein  omlooprioolStatus_condition03</status>
-                          </output>
-                        </standard>
-                      </trigger>
-                    </true>
-                    <false>
-                      <trigger>
-                        <ruleReference>RTC Hagestein  omlooprioolHagestein_open_omloopriool</ruleReference>
-                      </trigger>
-                    </false>
-                    <output>
-                      <status>RTC Hagestein  omlooprioolStatus_condition02</status>
-                    </output>
-                  </standard>
-                </trigger>
-              </true>
-              <false>
-                <trigger>
-                  <ruleReference>RTC Hagestein  omlooprioolHagestein_open_omloopriool</ruleReference>
-                </trigger>
-              </false>
-              <output>
-                <status>RTC Hagestein  omlooprioolStatus_condition01</status>
-              </output>
-            </standard>
-          </trigger>
-        </true>
-        <false>
-          <trigger>
-            <ruleReference>RTC Hagestein  omlooprioolFEWS_omloopriool_hagestein_klepstand</ruleReference>
-          </trigger>
-        </false>
-        <output>
-          <status>RTC Hagestein  omlooprioolStatus_FEWS_switch_hagestein_omloopriool</status>
-        </output>
-      </standard>
-    </trigger>
-    <trigger>
-      <standard id="RTC Vees-wap blok1condition03">
-        <condition>
-          <x1Series ref="EXPLICIT">input_Blok1_Vees_wap_Discharge (s)</x1Series>
-          <relationalOperator>Equal</relationalOperator>
-          <x2Value>0</x2Value>
-        </condition>
-        <true>
-          <trigger>
-            <standard id="RTC Vees-wap blok1condition04">
-              <condition>
-                <x1Series ref="EXPLICIT">input_VeesWap1_892_Water level (op)</x1Series>
-                <relationalOperator>Less</relationalOperator>
-                <x2Value>3</x2Value>
-              </condition>
-              <true>
-                <trigger>
-                  <ruleReference>RTC Vees-wap blok1initieel sluiten</ruleReference>
-                </trigger>
-              </true>
-              <false>
-                <trigger>
-                  <ruleReference>RTC Vees-wap blok1sluiten Vees-wap1</ruleReference>
-                </trigger>
-              </false>
-              <output>
-                <status>RTC Vees-wap blok1Status_condition04</status>
-              </output>
-            </standard>
-          </trigger>
-        </true>
-        <false>
-          <trigger>
-            <standard id="RTC Vees-wap blok1condition01">
-              <condition>
-                <x1Series ref="EXPLICIT">input_stuurp. VeesWap1_Water level (op)</x1Series>
-                <relationalOperator>LessEqual</relationalOperator>
-                <x2Value>4.6</x2Value>
-              </condition>
-              <true>
-                <trigger>
-                  <ruleReference>RTC Vees-wap blok1sluiten Vees-wap1</ruleReference>
-                </trigger>
-              </true>
-              <false>
-                <trigger>
-                  <standard id="RTC Vees-wap blok1Standard Condition">
-                    <condition>
-                      <x1Series ref="EXPLICIT">input_stuurp. VeesWap1_Water level (op)</x1Series>
-                      <relationalOperator>Greater</relationalOperator>
-                      <x2Value>5.65</x2Value>
-                    </condition>
-                    <true>
-                      <trigger>
-                        <ruleReference>RTC Vees-wap blok1Openen Vees-wap1</ruleReference>
-                      </trigger>
-                    </true>
-                    <false>
-                      <trigger>
-                        <standard id="RTC Vees-wap blok1condition02">
-                          <condition>
-                            <x1Series ref="EXPLICIT">input_Blok1_Vees_wap_Discharge (s)</x1Series>
-                            <relationalOperator>Greater</relationalOperator>
+                            <x1Series ref="EXPLICIT">[Input]HolIJsselkering/Head Difference (s)</x1Series>
+                            <relationalOperator>LessEqual</relationalOperator>
                             <x2Value>0</x2Value>
                           </condition>
                           <true>
                             <trigger>
-                              <ruleReference>RTC Vees-wap blok1Openen Vees-wap1</ruleReference>
+                              <standard id="HollandscheIJsselkering/HYK_waterstand">
+                                <condition>
+                                  <x1Series ref="EXPLICIT">[Input]KRIMPADIJSL/Water level (op)</x1Series>
+                                  <relationalOperator>Greater</relationalOperator>
+                                  <x2Value>2</x2Value>
+                                </condition>
+                                <true>
+                                  <trigger>
+                                    <ruleReference>HollandscheIJsselkering/HY_dicht_peil</ruleReference>
+                                  </trigger>
+                                </true>
+                                <output>
+                                  <status>[StandardCondition][Status]HollandscheIJsselkering/HYK_waterstand</status>
+                                </output>
+                              </standard>
                             </trigger>
                           </true>
                           <false>
                             <trigger>
-                              <ruleReference>RTC Vees-wap blok1sluiten Vees-wap1</ruleReference>
+                              <ruleReference>HollandscheIJsselkering/HY_open</ruleReference>
                             </trigger>
                           </false>
                           <output>
-                            <status>RTC Vees-wap blok1Status_condition02</status>
+                            <status>[StandardCondition][Status]HollandscheIJsselkering/HYK Verval</status>
                           </output>
                         </standard>
                       </trigger>
                     </false>
                     <output>
-                      <status>RTC Vees-wap blok1Status_Standard Condition</status>
+                      <status>[StandardCondition][Status]HollandscheIJsselkering/Q(t)</status>
                     </output>
                   </standard>
                 </trigger>
-              </false>
-              <output>
-                <status>RTC Vees-wap blok1Status_condition01</status>
-              </output>
-            </standard>
-          </trigger>
-        </false>
-        <output>
-          <status>RTC Vees-wap blok1Status_condition03</status>
-        </output>
-      </standard>
-    </trigger>
-    <trigger>
-      <standard id="RTC Vees-Wap-ledigencondition01">
-        <condition>
-          <x1Series ref="EXPLICIT">input_stuurp. VeesWap1_Water level (op)</x1Series>
-          <relationalOperator>Less</relationalOperator>
-          <x2Value>4.6</x2Value>
-        </condition>
-        <true>
-          <trigger>
-            <standard id="RTC Vees-Wap-ledigencondition03">
-              <condition>
-                <x1Series ref="EXPLICIT">input_974.00_IJ_Water level (op)</x1Series>
-                <relationalOperator>Less</relationalOperator>
-                <x2Value>2.6</x2Value>
-              </condition>
-              <true>
+              </true>
+              <false>
                 <trigger>
-                  <standard id="RTC Vees-Wap-ledigencondition02">
+                  <standard id="HollandscheIJsselkering/HYK Verval">
                     <condition>
-                      <x1Series ref="EXPLICIT">input_Stuurpunt_pomp_Water level (op)</x1Series>
-                      <relationalOperator>Greater</relationalOperator>
-                      <x2Value>1.25</x2Value>
+                      <x1Series ref="EXPLICIT">[Input]HolIJsselkering/Head Difference (s)</x1Series>
+                      <relationalOperator>LessEqual</relationalOperator>
+                      <x2Value>0</x2Value>
                     </condition>
                     <true>
                       <trigger>
-                        <ruleReference>RTC Vees-Wap-ledigenonttrekken1</ruleReference>
+                        <standard id="HollandscheIJsselkering/HYK_waterstand">
+                          <condition>
+                            <x1Series ref="EXPLICIT">[Input]KRIMPADIJSL/Water level (op)</x1Series>
+                            <relationalOperator>Greater</relationalOperator>
+                            <x2Value>2</x2Value>
+                          </condition>
+                          <true>
+                            <trigger>
+                              <ruleReference>HollandscheIJsselkering/HY_dicht_peil</ruleReference>
+                            </trigger>
+                          </true>
+                          <output>
+                            <status>[StandardCondition][Status]HollandscheIJsselkering/HYK_waterstand</status>
+                          </output>
+                        </standard>
                       </trigger>
                     </true>
                     <false>
                       <trigger>
-                        <ruleReference>RTC Vees-Wap-ledigengeen onttrekking</ruleReference>
+                        <ruleReference>HollandscheIJsselkering/HY_open</ruleReference>
                       </trigger>
                     </false>
                     <output>
-                      <status>RTC Vees-Wap-ledigenStatus_condition02</status>
+                      <status>[StandardCondition][Status]HollandscheIJsselkering/HYK Verval</status>
                     </output>
                   </standard>
                 </trigger>
-              </true>
-              <false>
-                <trigger>
-                  <ruleReference>RTC Vees-Wap-ledigengeen onttrekking</ruleReference>
-                </trigger>
               </false>
               <output>
-                <status>RTC Vees-Wap-ledigenStatus_condition03</status>
+                <status>[TimeCondition][Status]HollandscheIJsselkering/Kenteringsluiting</status>
               </output>
             </standard>
           </trigger>
-        </true>
-        <false>
-          <trigger>
-            <ruleReference>RTC Vees-Wap-ledigengeen onttrekking</ruleReference>
-          </trigger>
         </false>
         <output>
-          <status>RTC Vees-Wap-ledigenStatus_condition01</status>
+          <status>[TimeCondition][Status]HollandscheIJsselkering/HYK_switch</status>
         </output>
       </standard>
     </trigger>
     <trigger>
-      <standard id="RTC Vees-wap blok2condition02">
+      <standard id="HVSL_01/HVSL_01_switch">
         <condition>
-          <x1Series ref="EXPLICIT">input_Blok1_Vees_wap_Discharge (s)</x1Series>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_01/HVSL_01_switch</x1Series>
           <relationalOperator>Equal</relationalOperator>
           <x2Value>0</x2Value>
         </condition>
         <true>
           <trigger>
-            <standard id="RTC Vees-wap blok2condition01">
-              <condition>
-                <x1Series ref="EXPLICIT">input_VeesWap1_892_Water level (op)</x1Series>
-                <relationalOperator>Less</relationalOperator>
-                <x2Value>3</x2Value>
-              </condition>
-              <true>
-                <trigger>
-                  <ruleReference>RTC Vees-wap blok2initieel sluiten</ruleReference>
-                </trigger>
-              </true>
-              <false>
-                <trigger>
-                  <ruleReference>RTC Vees-wap blok2Vees-wap sluit blok2</ruleReference>
-                </trigger>
-              </false>
-              <output>
-                <status>RTC Vees-wap blok2Status_condition01</status>
-              </output>
-            </standard>
+            <ruleReference>HVSL_01/HVSL_01</ruleReference>
           </trigger>
         </true>
         <false>
           <trigger>
-            <ruleReference>RTC Vees-wap blok2Vees-wap open blok 2</ruleReference>
+            <standard id="HVSL_01/HVSL_01_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet1/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_01/HVSL_01</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_01/HVSL_01_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_01/HVSL_01_HeadDifference</status>
+              </output>
+            </standard>
           </trigger>
         </false>
         <output>
-          <status>RTC Vees-wap blok2Status_condition02</status>
+          <status>[TimeCondition][Status]HVSL_01/HVSL_01_switch</status>
         </output>
       </standard>
     </trigger>
     <trigger>
-      <standard id="RTC Vees-wap blok3condition02">
+      <standard id="HVSL_02/HVSL_02_switch">
         <condition>
-          <x1Series ref="EXPLICIT">input_Blok1_Vees_wap_Discharge (s)</x1Series>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_02/HVSL_02_switch</x1Series>
           <relationalOperator>Equal</relationalOperator>
           <x2Value>0</x2Value>
         </condition>
         <true>
           <trigger>
-            <standard id="RTC Vees-wap blok3condition01">
-              <condition>
-                <x1Series ref="EXPLICIT">input_VeesWap1_892_Water level (op)</x1Series>
-                <relationalOperator>Less</relationalOperator>
-                <x2Value>3</x2Value>
-              </condition>
-              <true>
-                <trigger>
-                  <ruleReference>RTC Vees-wap blok3initieel sluiten</ruleReference>
-                </trigger>
-              </true>
-              <false>
-                <trigger>
-                  <ruleReference>RTC Vees-wap blok3Vees-wap sluit blok3</ruleReference>
-                </trigger>
-              </false>
-              <output>
-                <status>RTC Vees-wap blok3Status_condition01</status>
-              </output>
-            </standard>
+            <ruleReference>HVSL_02/HVSL_02</ruleReference>
           </trigger>
         </true>
         <false>
           <trigger>
-            <ruleReference>RTC Vees-wap blok3Vees-wap open blok3</ruleReference>
+            <standard id="HVSL_02/HVSL_02_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet2/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_02/HVSL_02</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_02/HVSL_02_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_02/HVSL_02_HeadDifference</status>
+              </output>
+            </standard>
           </trigger>
         </false>
         <output>
-          <status>RTC Vees-wap blok3Status_condition02</status>
+          <status>[TimeCondition][Status]HVSL_02/HVSL_02_switch</status>
         </output>
       </standard>
     </trigger>
     <trigger>
-      <standard id="RTC Vees-wap blok4condition02">
+      <standard id="HVSL_03/HVSL_03_switch">
         <condition>
-          <x1Series ref="EXPLICIT">input_Blok1_Vees_wap_Discharge (s)</x1Series>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_03/HVSL_03_switch</x1Series>
           <relationalOperator>Equal</relationalOperator>
           <x2Value>0</x2Value>
         </condition>
         <true>
           <trigger>
-            <standard id="RTC Vees-wap blok4condition01">
+            <ruleReference>HVSL_03/HVSL_03</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_03/HVSL_03_HeadDifference">
               <condition>
-                <x1Series ref="EXPLICIT">input_VeesWap1_892_Water level (op)</x1Series>
-                <relationalOperator>Less</relationalOperator>
-                <x2Value>3</x2Value>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet3/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
               </condition>
               <true>
                 <trigger>
-                  <ruleReference>RTC Vees-wap blok4rule01</ruleReference>
+                  <ruleReference>HVSL_03/HVSL_03</ruleReference>
                 </trigger>
               </true>
               <false>
                 <trigger>
-                  <ruleReference>RTC Vees-wap blok4Vees-wap sluit blok4</ruleReference>
+                  <ruleReference>HVSL_03/HVSL_03_sluithoogte</ruleReference>
                 </trigger>
               </false>
               <output>
-                <status>RTC Vees-wap blok4Status_condition01</status>
+                <status>[StandardCondition][Status]HVSL_03/HVSL_03_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_03/HVSL_03_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_04/HVSL_04_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_04/HVSL_04_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_04/HVSL_04</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_04/HVSL_04_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet4/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_04/HVSL_04</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_04/HVSL_04_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_04/HVSL_04_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_04/HVSL_04_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_05/HVSL_05_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_05/HVSL_05_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_05/HVSL_05</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_05/HVSL_05_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet5/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_05/HVSL_05</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_05/HVSL_05_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_05/HVSL_05_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_05/HVSL_05_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_06/HVSL_06_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_06/HVSL_06_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_06/HVSL_06</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_06/HVSL_06_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet6/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_06/HVSL_06</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_06/HVSL_06_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_06/HVSL_06_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_06/HVSL_06_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_07/HVSL_07_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_07/HVSL_07_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_07/HVSL_07</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_07/HVSL_07_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet7/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_07/HVSL_07</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_07/HVSL_07_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_07/HVSL_07_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_07/HVSL_07_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_08/HVSL_08_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_08/HVSL_08_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_08/HVSL_08</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_08/HVSL_08_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet8/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_08/HVSL_08</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_08/HVSL_08_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_08/HVSL_08_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_08/HVSL_08_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_09/HVSL_09_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_09/HVSL_09_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_09/HVSL_09</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_09/HVSL_09_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet9/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_09/HVSL_09</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_09/HVSL_09_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_09/HVSL_09_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_09/HVSL_09_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_10/HVSL_10_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_10/HVSL_10_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_10/HVSL_10</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_10/HVSL_10_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet10/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_10/HVSL_10</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_10/HVSL_10_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_10/HVSL_10_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_10/HVSL_10_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_11/HVSL_11_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_11/HVSL_11_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_11/HVSL_11</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_11/HVSL_11_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet11/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_11/HVSL_11</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_11/HVSL_11_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_11/HVSL_11_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_11/HVSL_11_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_12/HVSL_12_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_12/HVSL_12_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_12/HVSL_12</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_12/HVSL_12_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet12/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_12/HVSL_12</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_12/HVSL_12_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_12/HVSL_12_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_12/HVSL_12_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_13/HVSL_13_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_13/HVSL_13_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_13/HVSL_13</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_13/HVSL_13_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet13/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_13/HVSL_13</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_13/HVSL_13_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_13/HVSL_13_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_13/HVSL_13_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_14/HVSL_14_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_14/HVSL_14_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_14/HVSL_14</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_14/HVSL_14_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet14/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_14/HVSL_14</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_14/HVSL_14_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_14/HVSL_14_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_14/HVSL_14_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_15/HVSL_15_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_15/HVSL_15_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_15/HVSL_15</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_15/HVSL_15_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet15/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_15/HVSL_15</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_15/HVSL_15_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_15/HVSL_15_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_15/HVSL_15_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_16/HVSL_16_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_16/HVSL_16_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_16/HVSL_16</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_16/HVSL_16_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet16/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_16/HVSL_16</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_16/HVSL_16_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_16/HVSL_16_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_16/HVSL_16_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_17/HVSL_17_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_17/HVSL_17_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_17/HVSL_17</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_17/HVSL_17_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet17/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_17/HVSL_17</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_17/HVSL_17_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_17/HVSL_17_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_17/HVSL_17_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="KrommeNolkering/SwitchMethods">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]KrommeNolkering/SwitchMethods</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>KrommeNolkering/Open the gate</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="KrommeNolkering/ClosingCondition">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]HEESBN/Water level (op)</x1Series>
+                <relationalOperator>Greater</relationalOperator>
+                <x2Value>3.42</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>KrommeNolkering/Close the gate</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>KrommeNolkering/Open the gate</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]KrommeNolkering/ClosingCondition</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]KrommeNolkering/SwitchMethods</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="CNTL_Bathsesluis/H_channel">
+        <condition>
+          <x1Series ref="EXPLICIT">[Input]zwd_bathsespui/Water level (op)</x1Series>
+          <relationalOperator>Greater</relationalOperator>
+          <x2Value>-0.05</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <standard id="CNTL_Bathsesluis/Headdifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]zwd_BathseSpuisl/Head Difference (s)</x1Series>
+                <relationalOperator>Greater</relationalOperator>
+                <x2Value>0.05</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>CNTL_Bathsesluis/Spui_naar_Westerschelde</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>CNTL_Bathsesluis/CloseSluis</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]CNTL_Bathsesluis/Headdifference</status>
               </output>
             </standard>
           </trigger>
         </true>
         <false>
           <trigger>
-            <ruleReference>RTC Vees-wap blok4Vees-wap open blok4</ruleReference>
+            <ruleReference>CNTL_Bathsesluis/CloseSluis</ruleReference>
           </trigger>
         </false>
         <output>
-          <status>RTC Vees-wap blok4Status_condition02</status>
+          <status>[StandardCondition][Status]CNTL_Bathsesluis/H_channel</status>
         </output>
       </standard>
     </trigger>
