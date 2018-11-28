@@ -15,10 +15,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
     public static class BasicStructuresOperations
     {
-        public static void ReadCommonRegionElements(IDelftIniCategory structureBranchCategory, IList<IChannel> channelList, IStructure1D weir)
+        public static void ReadCommonRegionElements(IDelftIniCategory structureBranchCategory, IList<IChannel> channelList, IStructure1D structure)
         {
             var name = structureBranchCategory.ReadProperty<string>(StructureRegion.Id.Key);
-            var longName = structureBranchCategory.ReadProperty<string>(StructureRegion.Name.Key, true);
+            var longName = structureBranchCategory.ReadProperty<string>(StructureRegion.Name.Key, true) ?? string.Empty;
             var chainage = structureBranchCategory.ReadProperty<double>(StructureRegion.Chainage.Key);
 
             var branchName = structureBranchCategory.ReadProperty<string>(StructureRegion.BranchId.Key);
@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             {
                 var errorMessage =
                     string.Format("Unable to parse {0} property: {1}, Branch not found in Network.{2}",
-                        structureBranchCategory.Name, LocationRegion.BranchId.Key, Environment.NewLine);
+                        structureBranchCategory.Name, StructureRegion.BranchId.Key, Environment.NewLine);
                 throw new Exception(errorMessage);
             }
 
@@ -36,12 +36,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             var geometry = new Point(
                 LengthLocationMap.GetLocation(branch.Geometry, resultingChainage).GetCoordinate(branch.Geometry));
 
-            weir.Name = name;
-            weir.Chainage = chainage;
-            weir.Branch = branch;
-            weir.Network = branch.Network;
-            weir.Geometry = geometry;
-            weir.LongName = longName;
+            structure.Name = name;
+            structure.Chainage = chainage;
+            structure.Branch = branch;
+            structure.Network = branch.Network;
+            structure.Geometry = geometry;
+            structure.LongName = longName;
         }
 
         public static ICompositeBranchStructure CreateCompositeBranchStructuresIfNeeded

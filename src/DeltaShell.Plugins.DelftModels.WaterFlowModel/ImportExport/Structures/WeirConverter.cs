@@ -7,14 +7,16 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    public class WeirConverter : StructureConverter
+    public class WeirConverter : IStructureConverter
     {
-        public override IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory,
+        public IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory,
             IList<IChannel> channelsList)
         {
+            var weirFormula = new SimpleWeirFormula();
+
             var weir = new Weir
             {
-                WeirFormula = new SimpleWeirFormula()
+                WeirFormula = weirFormula
             };
 
             // Essential Properties (an error will be generated if these fail)
@@ -23,9 +25,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             weir.CrestLevel = structureBranchCategory.ReadProperty<double>(StructureRegion.CrestLevel.Key);
             weir.CrestWidth = structureBranchCategory.ReadProperty<double>(StructureRegion.CrestWidth.Key);
 
-            ((SimpleWeirFormula) (weir.WeirFormula)).DischargeCoefficient =
+            weirFormula.DischargeCoefficient =
                 structureBranchCategory.ReadProperty<double>(StructureRegion.DischargeCoeff.Key);
-            ((SimpleWeirFormula) (weir.WeirFormula)).LateralContraction =
+            weirFormula.LateralContraction =
                 structureBranchCategory.ReadProperty<double>(StructureRegion.LatDisCoeff.Key);
 
             weir.FlowDirection =

@@ -7,9 +7,9 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    public class ExtraResistanceConverter :StructureConverter
+    public class ExtraResistanceConverter : IStructureConverter
     {
-        public override IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory, IList<IChannel> channelsList)
+        public IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory, IList<IChannel> channelsList)
         {
             var extraResistance = new ExtraResistance();
 
@@ -22,10 +22,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
             var check = new int[] { numValues, argumentsLevels.Count, componentsKsi.Count };
 
-            for (int i = 0; i < 2; i++)
+            if (numValues != argumentsLevels.Count || numValues != componentsKsi.Count)
             {
-                if (check[i] != check[i + 1]) throw new Exception(string.Format("For extra resistance {0} the friction table contains an error", extraResistance.Name));
+                throw new Exception(string.Format("For extra resistance {0} the friction table contains an error", extraResistance.Name));
             }
+
+           extraResistance.FrictionTable.Clear();
 
             for (int i = 0; i < numValues; i++)
             {

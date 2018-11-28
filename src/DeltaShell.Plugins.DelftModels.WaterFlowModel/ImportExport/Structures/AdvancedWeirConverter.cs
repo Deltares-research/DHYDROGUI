@@ -7,13 +7,15 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    public class AdvancedWeirConverter : StructureConverter
+    public class AdvancedWeirConverter : IStructureConverter
     {
-        public override IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory, IList<IChannel> channelsList)
+        public IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory, IList<IChannel> channelsList)
         {
+            var weirFormula = new PierWeirFormula();
+
             var weir = new Weir
             {
-                WeirFormula = new GatedWeirFormula()
+                WeirFormula = weirFormula
             };
 
             // Essential Properties (an error will be generated if these fail)
@@ -21,20 +23,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
             weir.CrestLevel = structureBranchCategory.ReadProperty<double>(StructureRegion.CrestLevel.Key);
             weir.CrestWidth = structureBranchCategory.ReadProperty<double>(StructureRegion.CrestWidth.Key);
-            weir.FlowDirection = (FlowDirection)structureBranchCategory.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
+            
+            weirFormula.NumberOfPiers = structureBranchCategory.ReadProperty<int>(StructureRegion.NPiers.Key);
 
-            PierWeirFormula reference = ((PierWeirFormula) (weir.WeirFormula));
-            reference.NumberOfPiers = structureBranchCategory.ReadProperty<int>(StructureRegion.NPiers.Key);
+            weirFormula.UpstreamFacePos = structureBranchCategory.ReadProperty<double>(StructureRegion.PosHeight.Key);
+            weirFormula.DesignHeadPos = structureBranchCategory.ReadProperty<double>(StructureRegion.PosDesignHead.Key);
+            weirFormula.PierContractionPos = structureBranchCategory.ReadProperty<double>(StructureRegion.PosPierContractCoef.Key);
+            weirFormula.AbutmentContractionPos = structureBranchCategory.ReadProperty<double>(StructureRegion.PosAbutContractCoef.Key);
 
-            reference.UpstreamFacePos = structureBranchCategory.ReadProperty<double>(StructureRegion.PosHeight.Key);
-            reference.DesignHeadPos = structureBranchCategory.ReadProperty<double>(StructureRegion.PosDesignHead.Key);
-            reference.PierContractionPos = structureBranchCategory.ReadProperty<double>(StructureRegion.PosPierContractCoef.Key);
-            reference.AbutmentContractionPos = structureBranchCategory.ReadProperty<double>(StructureRegion.PosAbutContractCoef.Key);
-
-            reference.UpstreamFaceNeg = structureBranchCategory.ReadProperty<double>(StructureRegion.NegHeight.Key);
-            reference.DesignHeadNeg = structureBranchCategory.ReadProperty<double>(StructureRegion.NegDesignHead.Key);
-            reference.PierContractionNeg = structureBranchCategory.ReadProperty<double>(StructureRegion.NegPierContractCoef.Key);
-            reference.AbutmentContractionNeg = structureBranchCategory.ReadProperty<double>(StructureRegion.NegAbutContractCoef.Key);
+            weirFormula.UpstreamFaceNeg = structureBranchCategory.ReadProperty<double>(StructureRegion.NegHeight.Key);
+            weirFormula.DesignHeadNeg = structureBranchCategory.ReadProperty<double>(StructureRegion.NegDesignHead.Key);
+            weirFormula.PierContractionNeg = structureBranchCategory.ReadProperty<double>(StructureRegion.NegPierContractCoef.Key);
+            weirFormula.AbutmentContractionNeg = structureBranchCategory.ReadProperty<double>(StructureRegion.NegAbutContractCoef.Key);
             
             return weir;
         }
