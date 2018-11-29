@@ -12,6 +12,8 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using Rhino.Mocks;
+using SharpMap;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 {
@@ -242,7 +244,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 var ncFilePath = Path.Combine(testBaseFolder, ncFileName);
                 destFilePath = Path.Combine(inputPath, Path.GetFileName(ncFilePath));
                 File.Copy(ncFilePath, destFilePath, true);
-
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
                 var model = new WaterFlowFMModel(mduFilePath);
 
                 // Construct Path
