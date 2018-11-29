@@ -321,7 +321,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                     tempWriter.Write("Also this.");
                     tempWriter.Flush();
                 }
-
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
                 var model = new WaterFlowFMModel(mduFilePath);
 
                 // Construct Path
