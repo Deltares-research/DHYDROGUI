@@ -170,7 +170,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
                 return false;
             });
-            var mesh2DName = netCdfFile.GetVariableName(mesh2DNameNetCdfVariableInfo);
+            var mesh2DName = mesh2DNameNetCdfVariableInfo == null ? string.Empty : netCdfFile.GetVariableName(mesh2DNameNetCdfVariableInfo);
 
             var links1d2dNameNetCdfVariableInfo = netCdfVariables.FirstOrDefault(dv =>
             {
