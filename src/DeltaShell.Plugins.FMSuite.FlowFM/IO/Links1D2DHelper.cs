@@ -29,14 +29,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             if (networkDiscretization == null || !networkDiscretization.Locations.Values.Any() || grid == null || !grid.Cells.Any()) return;
 
+            var handledLinks = new List<ILink1D2D>();
             foreach (var link in listOfLinks)
             {
                 var line = link.Geometry as ILineString;
                 if (line == null) continue;
 
-                link.DiscretisationPointIndex = FindCalculationPointIndex(line.EndPoint, networkDiscretization, tolerance);
-                link.FaceIndex = FindCellIndex(line.StartPoint, grid); 
+                link.DiscretisationPointIndex = FindCalculationPointIndex(line.EndPoint, networkDiscretization, handledLinks, tolerance);
+                link.FaceIndex = FindCellIndex(line.StartPoint, grid);
+                handledLinks.Add(link);
             }
+        }
+
+        private static int FindCalculationPointIndex(IPoint startPointLink, IDiscretization networkDiscretization, IList<ILink1D2D> handledLinks, double tolerance = 0.0, IList<bool> locationsMask = null)
+        {
+            var locationIndex = MISSING_INDEX;
+            if (locationsMask == null)
+            {
+                var locations = networkDiscretization.Locations.Values.Where(
+                    networkLocation => IsPointEqual(networkLocation, startPointLink, tolerance)).ToArray();
+
+                if (locations.Length > 1)
+                {
+                    var discretisationPointIndices = locations.Select(loc => networkDiscretization.Locations.Values.IndexOf(loc));
+                    foreach (var index in discretisationPointIndices)
+                    {
+                        if (!handledLinks.Select(link => link.DiscretisationPointIndex).Contains(index))
+                        {
+                            return index;
+                        }
+                    }
+                }
+                
+                locationIndex = networkDiscretization.Locations.Values.IndexOf(locations[0]);
+            }
+            else
+            {
+                var locations = networkDiscretization.Locations.Values.ToList();
+                for (int i = 0; i < locations.Count; i++)
+                {
+                    if (locationsMask[i])
+                    {
+                        if (IsPointEqual(locations[i], startPointLink, tolerance))
+                        {
+                            locationIndex = i;
+                            break;
+                        }
+                    }
+                }
+            }
+            return locationIndex;
         }
 
         public static int FindCalculationPointIndex(IPoint startPointLink, IDiscretization networkDiscretization, double tolerance = 0.0, IList<bool> locationsMask = null)
