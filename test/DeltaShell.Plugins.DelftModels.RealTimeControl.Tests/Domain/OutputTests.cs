@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private static string OriginXml()
         {
             return "<output xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<y>output_" + elementName + "_" + parameterName + "</y>" +
+                   "<y>" + RtcXmlTag.Output + elementName + "/" + parameterName + "</y>" +
                    "<integralPart>" + IntegralPart + "</integralPart>" +
                    //"<active>" + HsRule1 + "</active>" +
                    "</output>";
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private static string OriginXmlSingleVariableFilled()
         {
             return "<output xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<y>output_" + elementName + "_" + parameterName + "</y>" +
+                   "<y>" + RtcXmlTag.Output + elementName + "/" + parameterName + "</y>" +
                    "</output>";
         }
     

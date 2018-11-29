@@ -69,23 +69,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 LongName = rtcBaseObject.LongName;
             }
         }
+    }
 
-        public class RtcXmlTag
-        {
-            public const string DirectionalCondition = "[DirectionalCondition]";
-            public const string FactorRule = "[FactorRule]";
-            public const string HydraulicRule = "[HydraulicRule]";
-            public const string IntervalRule = "[IntervalRule]";
-            public const string LookupSignal = "[LookupSignal]";
-            public const string PIDRule = "[PIDRule]";
-            public const string RelativeTimeRule = "[RelativeTimeRule]";
-            public const string StandardCondition = "[StandardCondition]";
-            public const string TimeCondition = "[TimeCondition]";
-            public const string TimeRule = "[TimeRule]";
+    public class RtcXmlTag
+    {
+        public const string DirectionalCondition = "[DirectionalCondition]";
+        public const string FactorRule = "[FactorRule]";
+        public const string HydraulicRule = "[HydraulicRule]";
+        public const string IntervalRule = "[IntervalRule]";
+        public const string LookupSignal = "[LookupSignal]";
+        public const string PIDRule = "[PIDRule]";
+        public const string RelativeTimeRule = "[RelativeTimeRule]";
+        public const string StandardCondition = "[StandardCondition]";
+        public const string TimeCondition = "[TimeCondition]";
+        public const string TimeRule = "[TimeRule]";
 
-            public const string OutputAsInput = "[AsInputFor]";
-            public const string Status = "[Status]";
+        public const string Input = "[Input]";
+        public const string Output = "[Output]";
 
-        }
+        public const string OutputAsInput = "[AsInputFor]";
+        public const string Status = "[Status]";
+
     }
 }

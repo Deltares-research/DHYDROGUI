@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public override string XmlName
         {
-            get { return "[Output]" + LocationName.Replace("##", "~~") + "/" + ParameterName; }
+            get { return RtcXmlTag.Output + LocationName.Replace("##", "~~") + "/" + ParameterName; }
         }
     }
 }

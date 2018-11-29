@@ -58,25 +58,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
         private string ExpectedXml()
         {
-            var seriesOne = InputName + "_" + InputParameterName;
+            var seriesOne = RtcXmlTag.Input + InputName + "/" + InputParameterName;
             var previousTimeStep = seriesOne + DirectionalCondition.TimeLagPostFix;
 
             return
                 "<trigger xmlns=\"" + Fns.ToString() + "\">" +
-                "<standard id=\"" + directionalCondition.Name + "\">" +
+                "<standard id=\"" + "/" + directionalCondition.Name + "\">" +
                 "<condition>" +
-                "<x1Series ref=\"" + Implicit + "\">input_" + seriesOne + "</x1Series>" +
+                "<x1Series ref=\"" + Implicit + "\">" + seriesOne + "</x1Series>" +
                 "<relationalOperator>Greater</relationalOperator>" +
-                "<x2Series ref=\"" + Implicit + "\">input_" + previousTimeStep + "</x2Series>" +
+                "<x2Series ref=\"" + Implicit + "\">" + previousTimeStep + "</x2Series>" +
                 "</condition>" +
                 "<true>" +
-                "<trigger><ruleReference>" + TrueReference + "</ruleReference></trigger>" +
+                "<trigger><ruleReference>" + "/" + TrueReference + "</ruleReference></trigger>" +
                 "</true>" +
                 "<false>" +
-                "<trigger><ruleReference>" + FalseReference + "</ruleReference></trigger>" +
+                "<trigger><ruleReference>" + "/" + FalseReference + "</ruleReference></trigger>" +
                 "</false>" +
                 "<output>" +
-                "<status>" + directionalCondition.StatusOutputSeriesName + "</status>" +
+                "<status>" + RtcXmlTag.DirectionalCondition + RtcXmlTag.Status + "/" +
+                directionalCondition.Name + "</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>";

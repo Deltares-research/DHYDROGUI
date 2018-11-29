@@ -262,15 +262,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                           "<rule>" +
                           "<unitDelay id=\"PIDRule Test_unitDelay\">" +
                           "<input>" +
-                          "<x>output_WeirdWeir_Crest level</x>" +
+                          "<x>" + RtcXmlTag.Output + "WeirdWeir/Crest level</x>" +
                           "</input>" +
                           "<output>" +
-                          "<y>output_WeirdWeir_Crest level</y>" +
+                          "<y>" + RtcXmlTag.Output + "WeirdWeir/Crest level</y>" +
                           "</output>" +
                           "</unitDelay>" +
                           "</rule>" +
                           "<rule>" +
-                          "<pid id=\"PIDRule Test\">" +
+                          "<pid id=\"/PIDRule Test\">" +
                           "<mode>PIDVEL</mode>" +
                           "<settingMin>1.1</settingMin>" +
                           "<settingMax>1.2</settingMax>" +
@@ -279,11 +279,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                           "<ki>0.2</ki>" +
                           "<kd>0.1</kd>" +
                           "<input>" +
-                          "<x>input_MeasureStationA_Water level</x>" +
+                          "<x>" + RtcXmlTag.Input + "MeasureStationA/Water level</x>" +
                           "<setpointSeries>PIDRule Test_SP</setpointSeries>" +
                           "</input>" +
                           "<output>" +
-                          "<y>output_WeirdWeir_Crest level</y>" +
+                          "<y>" + RtcXmlTag.Output + "WeirdWeir/Crest level</y>" +
                           "<integralPart>PIDRule Test_IP</integralPart>" +
                           "<differentialPart>PIDRule Test_DP</differentialPart>" +
                           "</output>" +
@@ -292,24 +292,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                           "</rules>" +
                           "<triggers>" +
                           "<trigger>" +
-                          "<standard id=\"Trigger31\">" +
+                          "<standard id=\"/Trigger31\">" +
                           "<condition>" +
-                          "<x1Series ref=\"IMPLICIT\">input_CondInputLocation_CondInputQuantityId</x1Series>" +
+                          "<x1Series ref=\"IMPLICIT\">" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId</x1Series>" +
                           "<relationalOperator>Greater</relationalOperator>" +
                           "<x2Value>1.1</x2Value>" +
                           "</condition>" +
                           "<true>" +
                           "<trigger>" +
-                          "<ruleReference>PIDRule Test</ruleReference>" +
+                          "<ruleReference>/PIDRule Test</ruleReference>" +
                           "</trigger>" +
                           "</true>" +
                           "<false>" +
                           "<trigger>" +
-                          "<ruleReference>PIDRule Test</ruleReference>" +
+                          "<ruleReference>/PIDRule Test</ruleReference>" +
                           "</trigger>" +
                           "</false>" +
                           "<output>" +
-                          "<status>Status_Trigger31</status>" +
+                          "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/Trigger31</status>" +
                           "</output>" +
                           "</standard>" +
                           "</trigger>" +
@@ -335,15 +335,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                             "<rule>" +
                             "<unitDelay id=\"PIDRule Test_unitDelay\">" +
                             "<input>" +
-                            "<x>output_WeirdWeir_Crest level</x>" +
+                            "<x>" + RtcXmlTag.Output + "WeirdWeir/Crest level</x>" +
                             "</input>" +
                             "<output>" +
-                            "<y>output_WeirdWeir_Crest level</y>" +
+                            "<y>" + RtcXmlTag.Output + "WeirdWeir/Crest level</y>" +
                             "</output>" +
                             "</unitDelay>" +
                             "</rule>" +
                             "<rule>" +
-                            "<pid id=\"PIDRule Test\">" +
+                            "<pid id=\"/PIDRule Test\">" +
                             "<mode>PIDVEL</mode>" +
                             "<settingMin>1.1</settingMin>" +
                             "<settingMax>1.2</settingMax>" +
@@ -352,18 +352,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                             "<ki>0.2</ki>" +
                             "<kd>0.1</kd>" +
                             "<input>" +
-                            "<x>input_MeasureStationA_Water level</x>" +
+                            "<x>" + RtcXmlTag.Input + "MeasureStationA/Water level</x>" +
                             "<setpointSeries>PIDRule Test_SP</setpointSeries>" +
                             "</input>" +
                             "<output>" +
-                            "<y>output_WeirdWeir_Crest level</y>" +
+                            "<y>" + RtcXmlTag.Output + "WeirdWeir/Crest level</y>" +
                             "<integralPart>PIDRule Test_IP</integralPart>" +
                             "<differentialPart>PIDRule Test_DP</differentialPart>" +
                             "</output>" +
                             "</pid>" +
                             "</rule>" +
                             "<rule>" +
-                            "<pid id=\"PIDRule2 Test\">" +
+                            "<pid id=\"/PIDRule2 Test\">" +
                             "<mode>PIDVEL</mode>" +
                             "<settingMin>1.1</settingMin>" +
                             "<settingMax>1.2</settingMax>" +
@@ -372,11 +372,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                             "<ki>0.2</ki>" +
                             "<kd>0.1</kd>" +
                             "<input>" +
-                            "<x>input_MeasureStationA_Water level</x>" +
+                            "<x>" + RtcXmlTag.Input + "MeasureStationA/Water level</x>" +
                             "<setpointSeries>PIDRule2 Test_SP</setpointSeries>" +
                             "</input>" +
                             "<output>" +
-                            "<y>output_WeirdWeir_Crest level</y>" +
+                            "<y>" + RtcXmlTag.Output + "WeirdWeir/Crest level</y>" +
                             "<integralPart>PIDRule2 Test_IP</integralPart>" +
                             "<differentialPart>PIDRule2 Test_DP</differentialPart>" +
                             "</output>" +
@@ -385,24 +385,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                             "</rules>" +
                             "<triggers>" +
                             "<trigger>" +
-                            "<standard id=\"Trigger31\">" +
+                            "<standard id=\"/Trigger31\">" +
                             "<condition>" +
-                            "<x1Series ref=\"IMPLICIT\">input_CondInputLocation_CondInputQuantityId</x1Series>" +
+                            "<x1Series ref=\"IMPLICIT\">" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId</x1Series>" +
                             "<relationalOperator>Greater</relationalOperator>" +
                             "<x2Value>1.1</x2Value>" +
                             "</condition>" +
                             "<true>" +
                             "<trigger>" +
-                            "<ruleReference>PIDRule Test</ruleReference>" +
+                            "<ruleReference>/PIDRule Test</ruleReference>" +
                             "</trigger>" +
                             "</true>" +
                             "<false>" +
                             "<trigger>" +
-                            "<ruleReference>PIDRule2 Test</ruleReference>" +
+                            "<ruleReference>/PIDRule2 Test</ruleReference>" +
                             "</trigger>" +
                             "</false>" +
                             "<output>" +
-                            "<status>Status_Trigger31</status>" +
+                            "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/Trigger31</status>" +
                             "</output>" +
                             "</standard>" +
                             "</trigger>" +
@@ -433,25 +433,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "<rule>" +
                 "<unitDelay id=\"Interval Test_unitDelay\">" +
                 "<input>" +
-                "<x>output_WeirdWeir_Crest level</x>" +
+                "<x>" + RtcXmlTag.Output + "WeirdWeir/Crest level</x>" +
                 "</input>" +
                 "<output>" +
-                "<y>output_WeirdWeir_Crest level</y>" +
+                "<y>" + RtcXmlTag.Output + "WeirdWeir/Crest level</y>" +
                 "</output>" +
                 "</unitDelay>" +
                 "</rule>" +
                 "<rule>" +
-                "<interval id=\"Interval Test\">" +
+                "<interval id=\"/Interval Test\">" +
                 "<settingBelow>0.2</settingBelow>" +
                 "<settingAbove>0.3</settingAbove>" +
                 "<settingMaxStep>0</settingMaxStep>" +
                 "<deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute>" +
                 "<input>" +
-                "<x ref=\"EXPLICIT\">input_MeasureStationA_Water level</x>" +
+                "<x ref=\"EXPLICIT\">" + RtcXmlTag.Input + "MeasureStationA/Water level</x>" +
                 "<setpoint>Interval Test_SP</setpoint>" +
                 "</input>" +
                 "<output>" +
-                "<y>output_WeirdWeir_Crest level</y>" +
+                "<y>" + RtcXmlTag.Output + "WeirdWeir/Crest level</y>" +
                 "<status>Interval Test_status</status>" + 
                 "</output>" +
                 "</interval>" +
@@ -459,24 +459,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</rules>" +
                 "<triggers>" +
                 "<trigger>" +
-                "<standard id=\"Trigger31\">" +
+                "<standard id=\"/Trigger31\">" +
                 "<condition>" +
-                "<x1Series ref=\"IMPLICIT\">input_CondInputLocation_CondInputQuantityId</x1Series>" +
+                "<x1Series ref=\"IMPLICIT\">" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId</x1Series>" +
                 "<relationalOperator>Greater</relationalOperator>" +
                 "<x2Value>1.1</x2Value>" +
                 "</condition>" +
                 "<true>" +
                 "<trigger>" +
-                "<ruleReference>Interval Test</ruleReference>" +
+                "<ruleReference>/Interval Test</ruleReference>" +
                 "</trigger>" +
                 "</true>" +
                 "<false>" +
                 "<trigger>" +
-                "<ruleReference>Interval Test</ruleReference>" +
+                "<ruleReference>/Interval Test</ruleReference>" +
                 "</trigger>" +
                 "</false>" +
                 "<output>" +
-                "<status>Status_Trigger31</status>" +
+                "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/Trigger31</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
@@ -505,53 +505,53 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</general>" +
                 "<components>" +
                 "<component>" +
-                "<unitDelay id=\"input_MeasureStationA_Water levelDelay\">" +
+                "<unitDelay id=\"" + RtcXmlTag.Input + "MeasureStationA/Water levelDelay\">" +
                 "<input>" +
-                "<x>input_MeasureStationA_Water level</x>" +
+                "<x>" + RtcXmlTag.Input + "MeasureStationA/Water level</x>" +
                 "</input>" +
                 "<output>" +
-                "<yVector>delayedinput_MeasureStationA_Water level</yVector>" +
+                "<yVector>delayed" + RtcXmlTag.Input + "MeasureStationA/Water level</yVector>" +
                 "</output>" +
                 "</unitDelay>" +
                 "</component>" +
                 "</components>" +
                 "<rules>" +
                 "<rule>" +
-                "<lookupTable id=\"HydraulicRule\">" +
+                "<lookupTable id=\"/HydraulicRule\">" +
                 "<table>" +
                 "<record x=\"0\" y=\"0\" />" +
                 "</table>" +
                 "<interpolationOption>BLOCK</interpolationOption>" +
                 "<extrapolationOption>BLOCK</extrapolationOption>" +
                 "<input>" +
-                "<x ref=\"EXPLICIT\">delayedinput_MeasureStationA_Water level[" + index + "]</x>" +
+                "<x ref=\"EXPLICIT\">delayed" + RtcXmlTag.Input + "MeasureStationA/Water level[" + index + "]</x>" +
                 "</input>" +
                 "<output>" +
-                "<y>output_WeirdWeir_Crest level</y>" +
+                "<y>" + RtcXmlTag.Output + "WeirdWeir/Crest level</y>" +
                 "</output>" +
                 "</lookupTable>" +
                 "</rule>" +
                 "</rules>" +
                 "<triggers>" +
                 "<trigger>" +
-                "<standard id=\"Trigger31\">" +
+                "<standard id=\"/Trigger31\">" +
                 "<condition>" +
-                "<x1Series ref=\"IMPLICIT\">input_CondInputLocation_CondInputQuantityId</x1Series>" +
+                "<x1Series ref=\"IMPLICIT\">" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId</x1Series>" +
                 "<relationalOperator>Greater</relationalOperator>" +
                 "<x2Value>1.1</x2Value>" +
                 "</condition>" +
                 "<true>" +
                 "<trigger>" +
-                "<ruleReference>HydraulicRule</ruleReference>" +
+                "<ruleReference>/HydraulicRule</ruleReference>" +
                 "</trigger>" +
                 "</true>" +
                 "<false>" +
                 "<trigger>" +
-                "<ruleReference>HydraulicRule</ruleReference>" +
+                "<ruleReference>/HydraulicRule</ruleReference>" +
                 "</trigger>" +
                 "</false>" +
                 "<output>" +
-                "<status>Status_Trigger31</status>" +
+                "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/Trigger31</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
@@ -574,9 +574,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             var header = "<rtcDataConfig" + FewsXmlheader + RtcDataConfigxsd + ">";
             string strDataConfigWithHydraulicRuleTimeLag =
                 header +
-                "<importSeries><timeSeries id=\"input_MeasureStationA_Water level\"><OpenMIExchangeItem><elementId>MeasureStationA</elementId><quantityId>Water level</quantityId><unit>m</unit></OpenMIExchangeItem></timeSeries></importSeries>" +
-                "<exportSeries><CSVTimeSeriesFile decimalSeparator=\".\" delimiter=\",\" adjointOutput=\"false\"></CSVTimeSeriesFile><PITimeSeriesFile><timeSeriesFile>timeseries_export.xml</timeSeriesFile><useBinFile>false</useBinFile></PITimeSeriesFile><timeSeries id=\"output_WeirdWeir_Crest level\"><OpenMIExchangeItem><elementId>WeirdWeir</elementId><quantityId>Crest level</quantityId><unit>m</unit></OpenMIExchangeItem></timeSeries><timeSeries id=\"Status_Trigger31\" />" +
-                "<timeSeries id=\"delayedinput_MeasureStationA_Water level\" vectorLength=\"" + length +
+                "<importSeries><timeSeries id=\"" + RtcXmlTag.Input + "MeasureStationA/Water level\"><OpenMIExchangeItem><elementId>MeasureStationA</elementId><quantityId>Water level</quantityId><unit>m</unit></OpenMIExchangeItem></timeSeries></importSeries>" +
+                "<exportSeries><CSVTimeSeriesFile decimalSeparator=\".\" delimiter=\",\" adjointOutput=\"false\"></CSVTimeSeriesFile><PITimeSeriesFile><timeSeriesFile>timeseries_export.xml</timeSeriesFile><useBinFile>false</useBinFile></PITimeSeriesFile><timeSeries id=\"" + RtcXmlTag.Output + "WeirdWeir/Crest level\"><OpenMIExchangeItem><elementId>WeirdWeir</elementId><quantityId>Crest level</quantityId><unit>m</unit></OpenMIExchangeItem></timeSeries><timeSeries id=\"" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/Trigger31\" />" +
+                "<timeSeries id=\"delayed" + RtcXmlTag.Input + "MeasureStationA/Water level\" vectorLength=\"" + length +
                 "\"><PITimeSeries><locationId>MeasureStationA</locationId><parameterId>Water level</parameterId></PITimeSeries></timeSeries>" +
                 "</exportSeries></rtcDataConfig>";
 
@@ -629,7 +629,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         {
             var result = "<rtcDataConfig"+ FewsXmlheader + RtcDataConfigxsd +">";
             result += "<importSeries>";
-            result += "<timeSeries id=\"input_" + testInput.Name + "\">" +
+            result += "<timeSeries id=\"" + testInput.XmlName+ "\">" +
                       "<OpenMIExchangeItem>" +
                       "<elementId>" + testInput.LocationName + "</elementId>" +
                       "<quantityId>" + input.ParameterName + "</quantityId>" +
@@ -651,14 +651,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                       "<timeSeriesFile>timeseries_export.xml</timeSeriesFile>" +
                       "<useBinFile>false</useBinFile>" +
                       "</PITimeSeriesFile>";
-            result += "<timeSeries id=\"output_" + testOutput.Name + "\">" +
+            result += "<timeSeries id=\"" + output.XmlName + "\">" +
                       "<OpenMIExchangeItem>" +
                       "<elementId>" + testOutput.LocationName + "</elementId>" +
                       "<quantityId>" + output.ParameterName + "</quantityId>" +
                       "<unit>" + "m" + "</unit>" +
                       "</OpenMIExchangeItem>" +
                       "</timeSeries>" +
-                      "<timeSeries id=\"" + condition.StatusOutputSeriesName + "\" />" +
+                      "<timeSeries id=\"" + RtcXmlTag.StandardCondition + RtcXmlTag.Status +"/"+ condition.Name + "\" />" +
                       //"<timeSeries id=\"" + pidRule.IntegralPart + "\" />" +
                       "<timeSeries id=\"PIDRule Test_IP\" />" +
                       "<timeSeries id=\"PIDRule Test_DP\" />";
@@ -1049,25 +1049,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "<rule>" +
                 "<unitDelay id=\"Interval Test_unitDelay\">" +
                 "<input>" +
-                "<x>output_WeirdWeir_Crest level</x>" +
+                "<x>" + RtcXmlTag.Output + "WeirdWeir/Crest level</x>" +
                 "</input>" +
                 "<output>" +
-                "<y>output_WeirdWeir_Crest level</y>" +
+                "<y>" + RtcXmlTag.Output + "WeirdWeir/Crest level</y>" +
                 "</output>" +
                 "</unitDelay>" +
                 "</rule>" +
                 "<rule>" +
-                "<interval id=\"Interval Test\">" +
+                "<interval id=\"/Interval Test\">" +
                 "<settingBelow>0.2</settingBelow>" +
                 "<settingAbove>0.3</settingAbove>" +
                 "<settingMaxStep>0</settingMaxStep>" +
                 "<deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute>" +
                 "<input>" +
-                "<x ref=\"EXPLICIT\">input_MeasureStationA_Water level</x>" +
+                "<x ref=\"EXPLICIT\">" + RtcXmlTag.Input + "MeasureStationA/Water level</x>" +
                 "<setpoint>Interval Test_SP</setpoint>" +
                 "</input>" +
                 "<output>" +
-                "<y>output_WeirdWeir_Crest level</y>" +
+                "<y>" + RtcXmlTag.Output + "WeirdWeir/Crest level</y>" +
                 "<status>Interval Test_status</status>" +
                 "</output>" +
                 "</interval>" +
@@ -1075,52 +1075,52 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</rules>" +
                 "<triggers>" +
                 "<trigger>" +
-                "<standard id=\"C1\">" +
+                "<standard id=\"/C1\">" +
                 "<condition>" +
-                "<x1Series ref=\"IMPLICIT\">input_CondInputLocation_CondInputQuantityId</x1Series>" +
+                "<x1Series ref=\"IMPLICIT\">" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId</x1Series>" +
                 "<relationalOperator>Greater</relationalOperator>" +
                 "<x2Value>1.1</x2Value>" +
                 "</condition>" +
                 "<true>" +
                     "<trigger>" +
-                    "<standard id=\"C2\">" +
+                    "<standard id=\"/C2\">" +
                     "<condition>" +
-                    "<x1Series ref=\"IMPLICIT\">input_CondInputLocation_CondInputQuantityId</x1Series>" +
+                    "<x1Series ref=\"IMPLICIT\">" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId</x1Series>" +
                     "<relationalOperator>Greater</relationalOperator>" +
                     "<x2Value>2.2</x2Value>" +
                     "</condition>" +
                     "<true>" +
                     "<trigger>" +
-                    "<ruleReference>Interval Test</ruleReference>" +
+                    "<ruleReference>/Interval Test</ruleReference>" +
                     "</trigger>" +
                     "</true>" +
                     "<false>" +
                             "<trigger>" +
-                            "<standard id=\"C3\">" +
+                            "<standard id=\"/C3\">" +
                             "<condition>" +
-                            "<x1Series ref=\"IMPLICIT\">input_CondInputLocation_CondInputQuantityId</x1Series>" +
+                            "<x1Series ref=\"IMPLICIT\">" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId</x1Series>" +
                             "<relationalOperator>Less</relationalOperator>" +
                             "<x2Value>0.5</x2Value>" +
                             "</condition>" +
                             "<true>" +
                             "<trigger>" +
-                            "<ruleReference>Interval Test</ruleReference>" +
+                            "<ruleReference>/Interval Test</ruleReference>" +
                             "</trigger>" +
                             "</true>" +
                             "<output>" +
-                            "<status>Status_C3</status>" +
+                            "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/C3</status>" +
                             "</output>" +
                             "</standard>" +
                             "</trigger>" +
                     "</false>" +
                     "<output>" +
-                    "<status>Status_C2</status>" +
+                    "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/C2</status>" +
                     "</output>" +
                     "</standard>" +
                     "</trigger>" +
                 "</true>" +
                 "<output>" +
-                "<status>Status_C1</status>" +
+                "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/C1</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
@@ -1166,25 +1166,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "<rule>" +
                 "<unitDelay id=\"Interval Test_unitDelay\">" +
                 "<input>" +
-                "<x>output_WeirdWeir_Crest level</x>" +
+                "<x>" + RtcXmlTag.Output + "WeirdWeir/Crest level</x>" +
                 "</input>" +
                 "<output>" +
-                "<y>output_WeirdWeir_Crest level</y>" +
+                "<y>" + RtcXmlTag.Output + "WeirdWeir/Crest level</y>" +
                 "</output>" +
                 "</unitDelay>" +
                 "</rule>" +
                 "<rule>" +
-                "<interval id=\"Interval Test\">" +
+                "<interval id=\"/Interval Test\">" +
                 "<settingBelow>0.2</settingBelow>" +
                 "<settingAbove>0.3</settingAbove>" +
                 "<settingMaxStep>0</settingMaxStep>" +
                 "<deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute>" +
                 "<input>" +
-                "<x ref=\"EXPLICIT\">input_MeasureStationA_Water level</x>" +
+                "<x ref=\"EXPLICIT\">" + RtcXmlTag.Input + "MeasureStationA/Water level</x>" +
                 "<setpoint>Interval Test_SP</setpoint>" +
                 "</input>" +
                 "<output>" +
-                "<y>output_WeirdWeir_Crest level</y>" +
+                "<y>" + RtcXmlTag.Output + "WeirdWeir/Crest level</y>" +
                 "<status>Interval Test_status</status>" +
                 "</output>" +
                 "</interval>" +
@@ -1192,71 +1192,71 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</rules>" +
                 "<triggers>" +
                 "<trigger>" +
-                "<standard id=\"C1\">" +
+                "<standard id=\"/C1\">" +
                 "<condition>" +
-                "<x1Series ref=\"IMPLICIT\">input_CondInputLocation_CondInputQuantityId</x1Series>" +
+                "<x1Series ref=\"IMPLICIT\">" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId</x1Series>" +
                 "<relationalOperator>Greater</relationalOperator>" +
                 "<x2Value>1.1</x2Value>" +
                 "</condition>" +
                 "<true>" +
                     "<trigger>" +
-                    "<standard id=\"C2\">" +
+                    "<standard id=\"/C2\">" +
                     "<condition>" +
-                    "<x1Series ref=\"IMPLICIT\">input_CondInputLocation_CondInputQuantityId</x1Series>" +
+                    "<x1Series ref=\"IMPLICIT\">" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId</x1Series>" +
                     "<relationalOperator>Greater</relationalOperator>" +
                     "<x2Value>2.2</x2Value>" +
                     "</condition>" +
                     "<true>" +
                     "<trigger>" +
-                    "<ruleReference>Interval Test</ruleReference>" +
+                    "<ruleReference>/Interval Test</ruleReference>" +
                     "</trigger>" +
                     "</true>" +
                     "<false>" +
                             "<trigger>" +
-                            "<standard id=\"C3\">" +
+                            "<standard id=\"/C3\">" +
                             "<condition>" +
-                            "<x1Series ref=\"IMPLICIT\">input_CondInputLocation_CondInputQuantityId</x1Series>" +
+                            "<x1Series ref=\"IMPLICIT\">" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId</x1Series>" +
                             "<relationalOperator>Less</relationalOperator>" +
                             "<x2Value>0.5</x2Value>" +
                             "</condition>" +
                             "<true>" +
                             "<trigger>" +
-                            "<ruleReference>Interval Test</ruleReference>" +
+                            "<ruleReference>/Interval Test</ruleReference>" +
                             "</trigger>" +
                             "</true>" +
                             "<output>" +
-                            "<status>Status_C3</status>" +
+                            "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/C3</status>" +
                             "</output>" +
                             "</standard>" +
                             "</trigger>" +
                     "</false>" +
                     "<output>" +
-                    "<status>Status_C2</status>" +
+                    "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/C2</status>" +
                     "</output>" +
                     "</standard>" +
                     "</trigger>" +
                 "</true>" +
                 "<false>" +
                         "<trigger>" +
-                        "<standard id=\"C3\">" +
+                        "<standard id=\"/C3\">" +
                         "<condition>" +
-                        "<x1Series ref=\"IMPLICIT\">input_CondInputLocation_CondInputQuantityId</x1Series>" +
+                        "<x1Series ref=\"IMPLICIT\">" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId</x1Series>" +
                         "<relationalOperator>Less</relationalOperator>" +
                         "<x2Value>0.5</x2Value>" +
                         "</condition>" +
                         "<true>" +
                         "<trigger>" +
-                        "<ruleReference>Interval Test</ruleReference>" +
+                        "<ruleReference>/Interval Test</ruleReference>" +
                         "</trigger>" +
                         "</true>" +
                         "<output>" +
-                        "<status>Status_C3</status>" +
+                        "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/C3</status>" +
                         "</output>" +
                         "</standard>" +
                         "</trigger>" +
                 "</false>" +
                 "<output>" +
-                "<status>Status_C1</status>" +
+                "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/C1</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
@@ -1304,25 +1304,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "<rule>" +
                 "<unitDelay id=\"Interval Test_unitDelay\">" +
                 "<input>" +
-                "<x>output_WeirdWeir_Crest level</x>" +
+                "<x>" + RtcXmlTag.Output + "WeirdWeir/Crest level</x>" +
                 "</input>" +
                 "<output>" +
-                "<y>output_WeirdWeir_Crest level</y>" +
+                "<y>" + RtcXmlTag.Output + "WeirdWeir/Crest level</y>" +
                 "</output>" +
                 "</unitDelay>" +
                 "</rule>" +
                 "<rule>" +
-                "<interval id=\"Interval Test\">" +
+                "<interval id=\"/Interval Test\">" +
                 "<settingBelow>0.2</settingBelow>" +
                 "<settingAbove>0.3</settingAbove>" +
                 "<settingMaxStep>0</settingMaxStep>" +
                 "<deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute>" +
                 "<input>" +
-                "<x ref=\"EXPLICIT\">input_MeasureStationA_Water level</x>" +
+                "<x ref=\"EXPLICIT\">" + RtcXmlTag.Input + "MeasureStationA/Water level</x>" +
                 "<setpoint>Interval Test_SP</setpoint>" +
                 "</input>" +
                 "<output>" +
-                "<y>output_WeirdWeir_Crest level</y>" +
+                "<y>" + RtcXmlTag.Output + "WeirdWeir/Crest level</y>" +
                 "<status>Interval Test_status</status>" +
                 "</output>" +
                 "</interval>" +
@@ -1330,52 +1330,52 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</rules>" +
                 "<triggers>" +
                 "<trigger>" +
-                "<standard id=\"C1\">" +
+                "<standard id=\"/C1\">" +
                 "<condition>" +
-                "<x1Series ref=\"IMPLICIT\">input_CondInputLocation_CondInputQuantityId</x1Series>" +
+                "<x1Series ref=\"IMPLICIT\">" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId</x1Series>" +
                 "<relationalOperator>Greater</relationalOperator>" +
                 "<x2Value>1.1</x2Value>" +
                 "</condition>" +
                 "<true>" +
                     "<trigger>" +
-                    "<standard id=\"C2\">" +
+                    "<standard id=\"/C2\">" +
                     "<condition>" +
-                    "<x1Series ref=\"IMPLICIT\">input_CondInputLocation_CondInputQuantityId</x1Series>" +
+                    "<x1Series ref=\"IMPLICIT\">" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId</x1Series>" +
                     "<relationalOperator>Greater</relationalOperator>" +
                     "<x2Value>2.2</x2Value>" +
                     "</condition>" +
                     "<true>" +
                     "<trigger>" +
-                    "<ruleReference>Interval Test</ruleReference>" +
+                    "<ruleReference>/Interval Test</ruleReference>" +
                     "</trigger>" +
                     "</true>" +
                     "<output>" +
-                    "<status>Status_C2</status>" +
+                    "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/C2</status>" +
                     "</output>" +
                     "</standard>" +
                     "</trigger>" +
                 "</true>" +
                 "<false>" +
                         "<trigger>" +
-                        "<standard id=\"C3\">" +
+                        "<standard id=\"/C3\">" +
                         "<condition>" +
-                        "<x1Series ref=\"IMPLICIT\">input_CondInputLocation_CondInputQuantityId</x1Series>" +
+                        "<x1Series ref=\"IMPLICIT\">" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId</x1Series>" +
                         "<relationalOperator>Less</relationalOperator>" +
                         "<x2Value>0.5</x2Value>" +
                         "</condition>" +
                         "<true>" +
                         "<trigger>" +
-                        "<ruleReference>Interval Test</ruleReference>" +
+                        "<ruleReference>/Interval Test</ruleReference>" +
                         "</trigger>" +
                         "</true>" +
                         "<output>" +
-                        "<status>Status_C3</status>" +
+                        "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/C3</status>" +
                         "</output>" +
                         "</standard>" +
                         "</trigger>" +
                 "</false>" +
                 "<output>" +
-                "<status>Status_C1</status>" +
+                "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/C1</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
@@ -1415,12 +1415,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</general>" +
                 "<components>" +
                 "<component>" +
-                "<unitDelay id=\"input_CondInputLocation_CondInputQuantityIdDelay\">" +
+                "<unitDelay id=\"" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityIdDelay\">" +
                 "<input>" +
-                "<x>input_CondInputLocation_CondInputQuantityId</x>" +
+                "<x>" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId</x>" +
                 "</input>" +
                 "<output>" +
-                "<y>input_CondInputLocation_CondInputQuantityId-1</y>" +
+                "<y>" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId-1</y>" +
                 "</output>" +
                 "</unitDelay>" +
                 "</component>" +
@@ -1429,25 +1429,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "<rule>" +
                 "<unitDelay id=\"Interval Test_unitDelay\">" +
                 "<input>" +
-                "<x>output_WeirdWeir_Crest level</x>" +
+                "<x>" + RtcXmlTag.Output + "WeirdWeir/Crest level</x>" +
                 "</input>" +
                 "<output>" +
-                "<y>output_WeirdWeir_Crest level</y>" +
+                "<y>" + RtcXmlTag.Output + "WeirdWeir/Crest level</y>" +
                 "</output>" +
                 "</unitDelay>" +
                 "</rule>" +
                 "<rule>" +
-                "<interval id=\"Interval Test\">" +
+                "<interval id=\"/Interval Test\">" +
                 "<settingBelow>0.2</settingBelow>" +
                 "<settingAbove>0.3</settingAbove>" +
                 "<settingMaxStep>0</settingMaxStep>" +
                 "<deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute>" +
                 "<input>" +
-                "<x ref=\"EXPLICIT\">input_MeasureStationA_Water level</x>" +
+                "<x ref=\"EXPLICIT\">" + RtcXmlTag.Input + "MeasureStationA/Water level</x>" +
                 "<setpoint>Interval Test_SP</setpoint>" +
                 "</input>" +
                 "<output>" +
-                "<y>output_WeirdWeir_Crest level</y>" +
+                "<y>" + RtcXmlTag.Output + "WeirdWeir/Crest level</y>" +
                 "<status>Interval Test_status</status>" +
                 "</output>" +
                 "</interval>" +
@@ -1455,19 +1455,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</rules>" +
                 "<triggers>" +
                 "<trigger>" +
-                "<standard id=\"C5\">" +
+                "<standard id=\"/C5\">" +
                 "<condition>" +
-                "<x1Series ref=\"EXPLICIT\">input_CondInputLocation_CondInputQuantityId</x1Series>" +
+                "<x1Series ref=\"EXPLICIT\">" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId</x1Series>" +
                 "<relationalOperator>Less</relationalOperator>" +
-                "<x2Series ref=\"EXPLICIT\">input_CondInputLocation_CondInputQuantityId-1</x2Series>" +
+                "<x2Series ref=\"EXPLICIT\">" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId-1</x2Series>" +
                 "</condition>" +
                 "<true>" +
                 "<trigger>" +
-                "<ruleReference>Interval Test</ruleReference>" +
+                "<ruleReference>/Interval Test</ruleReference>" +
                 "</trigger>" +
                 "</true>" +
                 "<output>" +
-                "<status>Status_C5</status>" +
+                "<status>" + RtcXmlTag.DirectionalCondition + RtcXmlTag.Status + "/C5</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
@@ -1512,15 +1512,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "<rule>" +
                 "<unitDelay id=\"PIDRule Test_unitDelay\">" +
                 "<input>" +
-                "<x>output_WeirdWeir_Crest level</x>" +
+                "<x>" + RtcXmlTag.Output + "WeirdWeir/Crest level</x>" +
                 "</input>" +
                 "<output>" +
-                "<y>output_WeirdWeir_Crest level</y>" +
+                "<y>" + RtcXmlTag.Output + "WeirdWeir/Crest level</y>" +
                 "</output>" +
                 "</unitDelay>" +
                 "</rule>" +
                 "<rule>" +
-                "<lookupTable id=\"SetPointForPID\">" +
+                "<lookupTable id=\"/SetPointForPID\">" +
                 "<table>" +
                 "<record x=\"10\" y=\"3\" />" +
                 "<record x=\"100\" y=\"6\" />" +
@@ -1528,7 +1528,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "<interpolationOption>LINEAR</interpolationOption>" +
                 "<extrapolationOption>BLOCK</extrapolationOption>" +
                 "<input>" +
-                "<x ref=\"IMPLICIT\">input_MeasureStationB_Discharge</x>" +
+                "<x ref=\"IMPLICIT\">" + RtcXmlTag.Input + "MeasureStationB/Discharge</x>" +
                 "</input>" +
                 "<output>" +
                 "<y>SetPointForPID</y>" +
@@ -1536,7 +1536,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</lookupTable>" +
                 "</rule>" +
                 "<rule>" +
-                "<pid id=\"PIDRule Test\">" +
+                "<pid id=\"/PIDRule Test\">" +
                 "<mode>PIDVEL</mode>" +
                 "<settingMin>1.1</settingMin>" +
                 "<settingMax>1.2</settingMax>" +
@@ -1545,11 +1545,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "<ki>0.2</ki>" +
                 "<kd>0.1</kd>" +
                 "<input>" +
-                "<x>input_MeasureStationA_Water level</x>" +
+                "<x>" + RtcXmlTag.Input + "MeasureStationA/Water level</x>" +
                 "<setpointSeries>PIDRule Test_SP</setpointSeries>" +
                 "</input>" +
                 "<output>" +
-                "<y>output_WeirdWeir_Crest level</y>" +
+                "<y>" + RtcXmlTag.Output + "WeirdWeir/Crest level</y>" +
                 "<integralPart>PIDRule Test_IP</integralPart>" +
                 "<differentialPart>PIDRule Test_DP</differentialPart>" +
                 "</output>" +
@@ -1558,24 +1558,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</rules>" +
                 "<triggers>" +
                 "<trigger>" +
-                "<standard id=\"Trigger31\">" +
+                "<standard id=\"/Trigger31\">" +
                 "<condition>" +
-                "<x1Series ref=\"IMPLICIT\">input_CondInputLocation_CondInputQuantityId</x1Series>" +
+                "<x1Series ref=\"IMPLICIT\">" + RtcXmlTag.Input + "CondInputLocation/CondInputQuantityId</x1Series>" +
                 "<relationalOperator>Greater</relationalOperator>" +
                 "<x2Value>1.1</x2Value>" +
                 "</condition>" +
                 "<true>" +
                 "<trigger>" +
-                "<ruleReference>PIDRule Test</ruleReference>" +
+                "<ruleReference>/PIDRule Test</ruleReference>" +
                 "</trigger>" +
                 "</true>" +
                 "<false>" +
                 "<trigger>" +
-                "<ruleReference>PIDRule Test</ruleReference>" +
+                "<ruleReference>/PIDRule Test</ruleReference>" +
                 "</trigger>" +
                 "</false>" +
                 "<output>" +
-                "<status>Status_Trigger31</status>" +
+                "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/Trigger31</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +

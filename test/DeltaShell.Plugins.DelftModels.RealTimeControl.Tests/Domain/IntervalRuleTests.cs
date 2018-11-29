@@ -119,17 +119,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private static string OriginXmlIntervalTypeFixedDeadbandTypeAbsolute()
         {
             return "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
-                "<interval id=\"INTERVAL RULE\">" +
+                "<interval id=\"/INTERVAL RULE\">" +
                 "<settingBelow>0</settingBelow>" +
                 "<settingAbove>1</settingAbove>" +
                 "<settingMaxStep>0.1</settingMaxStep>" +
                 "<deadbandSetpointAbsolute>0.4</deadbandSetpointAbsolute>" +
                 "<input>" +
-                "<x>input_element name_parameter name</x>" +
+                "<x>" + RtcXmlTag.Input+ "element name/parameter name</x>" +
                 "<setpoint>INTERVAL RULE_SP</setpoint>" +
                 "</input>" +
                 "<output>" +
-                "<y>output_output_parameter name</y>" +
+                "<y>" + RtcXmlTag.Output + "output/parameter name</y>" +
                 "<status>INTERVAL RULE_status</status>" +
                 "</output>" +
                 "</interval>" +
@@ -139,17 +139,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private static string OriginXmlIntervalTypeVariableDeadbandTypeRelative()
         {
             return "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
-                "<interval id=\"INTERVAL RULE\">" +
+                "<interval id=\"/INTERVAL RULE\">" +
                 "<settingBelow>0</settingBelow>" +
                 "<settingAbove>1</settingAbove>" +
                 "<settingMaxSpeed>0.1</settingMaxSpeed>" +
                 "<deadbandSetpointRelative>0.4</deadbandSetpointRelative>" +
                 "<input>" +
-                "<x>input_element name_parameter name</x>" +
+                   "<x>" + RtcXmlTag.Input + "element name/parameter name</x>" +
                 "<setpoint>INTERVAL RULE_SP</setpoint>" +
                 "</input>" +
                 "<output>" +
-                "<y>output_output_parameter name</y>" +
+                "<y>" + RtcXmlTag.Output + "output/parameter name</y>" +
                 "<status>INTERVAL RULE_status</status>" +
                 "</output>" +
                 "</interval>" +

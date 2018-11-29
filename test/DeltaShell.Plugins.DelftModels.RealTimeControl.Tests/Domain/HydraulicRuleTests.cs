@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private string OriginXml()
         {
             return "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<lookupTable id=\"" + RuleName + "\">" +
+                   "<lookupTable id=\"" + "/" + RuleName + "\">" +
                    "<table>" +
                    "<record x=\"" +
                    ((double) tableFunction.Arguments[0].Values[0]).ToString(CultureInfo.InvariantCulture) + "\" y=\"" +
@@ -84,10 +84,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                    "<interpolationOption>LINEAR</interpolationOption>" +
                    "<extrapolationOption>BLOCK</extrapolationOption>" +
                    "<input>" +
-                   "<x ref=\"IMPLICIT\">input_" + InputName + "_" + InputParameterName + "</x>" +
+                   "<x ref=\"IMPLICIT\">" + RtcXmlTag.Input + InputName + "/" + InputParameterName + "</x>" +
                    "</input>" +
                    "<output>" +
-                   "<y>output_" + OutputName + "_" + OutputParameterName + "</y>" +
+                   "<y>" + RtcXmlTag.Output + OutputName + "/" + OutputParameterName + "</y>" +
                    "</output>" +
                    "</lookupTable>" +
                    "</rule>";
@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private string HydraulicRuleWithTimeLagXml()
         {
             return "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<lookupTable id=\"" + RuleName + "\">" +
+                   "<lookupTable id=\"" + "/" + RuleName + "\">" +
                    "<table>" +
                    "<record x=\"" +
                    ((double)tableFunction.Arguments[0].Values[0]).ToString(CultureInfo.InvariantCulture) + "\" y=\"" +
@@ -114,10 +114,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                    "<interpolationOption>BLOCK</interpolationOption>" +
                    "<extrapolationOption>BLOCK</extrapolationOption>" +
                    "<input>" +
-                   "<x ref=\"EXPLICIT\">delayedinput_" + InputName + "_" + InputParameterName + "[" + (nTimeSteps - 2) + "]</x>" +
+                   "<x ref=\"EXPLICIT\">delayed" + RtcXmlTag.Input + InputName + "/" + InputParameterName + "[" + (nTimeSteps - 2) + "]</x>" +
                    "</input>" +
                    "<output>" +
-                   "<y>output_" + OutputName + "_" + OutputParameterName + "</y>" +
+                   "<y>" + RtcXmlTag.Output + OutputName + "/" + OutputParameterName + "</y>" +
                    "</output>" +
                    "</lookupTable>" +
                    "</rule>";

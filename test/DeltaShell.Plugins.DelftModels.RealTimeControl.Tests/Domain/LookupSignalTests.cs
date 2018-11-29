@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private string OriginXml()
         {
             return "<signal xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<lookupTable id=\"" + SignalName + "\">" +
+                   "<lookupTable id=\"/" + SignalName + "\">" +
                    "<table>" +
                    "<record x=\"" +
                    ((double) tableFunction.Arguments[0].Values[0]).ToString(CultureInfo.InvariantCulture) + "\" y=\"" +
@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                    "<interpolationOption>LINEAR</interpolationOption>" +
                    "<extrapolationOption>BLOCK</extrapolationOption>" +
                    "<input>" +
-                   "<x ref=\"IMPLICIT\">input_" + InputName + "_" + InputParameterName + "</x>" +
+                   "<x ref=\"IMPLICIT\">" + RtcXmlTag.Input + InputName + "/" + InputParameterName + "</x>" +
                    "</input>" +
                    "<output><y>" + SignalName + "</y></output>" +
                    "</lookupTable>" +

@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private static string OriginXml()
         {
             return "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
-                    "<pid id=\"" + RuleName + "\">" +
+                    "<pid id=\"/" + RuleName + "\">" +
                     "<mode>PIDVEL</mode>" +
                     "<settingMin>" + SMin.ToString(CultureInfo.InvariantCulture) + "</settingMin>" +
                     "<settingMax>" + SMax.ToString(CultureInfo.InvariantCulture) + "</settingMax>" +
@@ -121,11 +121,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                     "<ki>" + Ki.ToString(CultureInfo.InvariantCulture) + "</ki>"+
                     "<kd>" + Kd.ToString(CultureInfo.InvariantCulture) + "</kd>" + 
                     "<input>"+
-                    "<x>input_" + IffezheimHin1 + "_" + IffezheimHin2 + "</x>" +
+                    "<x>" + RtcXmlTag.Input + IffezheimHin1 + "/" + IffezheimHin2 + "</x>" +
                     "<setpointValue>" + ConstantSetpointValue.ToString(CultureInfo.InvariantCulture) + "</setpointValue>" + 
                     "</input>" + 
                     "<output>"+
-                    "<y>output_" + IffezheimSout1 + "_" + IffezheimSout2 + "</y>" +
+                    "<y>" + RtcXmlTag.Output + IffezheimSout1 + "/" + IffezheimSout2 + "</y>" +
                     "<integralPart>" + IffezheimKi + "</integralPart>" +
                     "<differentialPart>" + DifferentialPart + "</differentialPart>" +
                     "</output>" +
@@ -147,7 +147,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
         private static string OriginXmlReference()
         {
-            return "<trigger xmlns=\"http://www.wldelft.nl/fews\"><ruleReference>" + RuleName + "</ruleReference></trigger>";
+            return "<trigger xmlns=\"http://www.wldelft.nl/fews\"><ruleReference>/" + RuleName + "</ruleReference></trigger>";
         }
 
         [Test]

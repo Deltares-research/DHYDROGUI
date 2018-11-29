@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private static string OriginXml()
         {
             return "<input xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<x>input_" + Element + "_" + Name + "</x>" +
+                   "<x>" + RtcXmlTag.Input + Element + "/" + Name + "</x>" +
                    "<setpoint>" + Point + "</setpoint>" + //Not sure what setpoint means yet ... Set by the pidRule!!
                    "</input>";
         }
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private static string OriginXmlSingleVariableFilled()
         {
             return "<input xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<x>input_" + Element + "_" + Name + "</x>" +
+                   "<x>" + RtcXmlTag.Input + Element + "/" + Name + "</x>" +
                    "</input>";
         }
 

@@ -49,12 +49,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private string OriginXml()
         {
             return "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<timeAbsolute id=\"" + Name + "\">" +
+                   "<timeAbsolute id=\"/" + Name + "\">" +
                    "<input>" +
-                   "<x ref=\"" + InputReferenceEnumStringType + "\">" + Name + "_TimeSeries" + "</x>" +
+                   "<x ref=\"" + InputReferenceEnumStringType + "\">" + RtcXmlTag.TimeRule +"/"+ Name + "</x>" +
                    "</input>" +
                    "<output>" +
-                   "<y>output_" + OutputLocationName + "_" + OutputParameterName + "</y>" +
+                   "<y>" + RtcXmlTag.Output + OutputLocationName + "/" + OutputParameterName + "</y>" +
                    "</output>" +
                    "</timeAbsolute>" +
                    "</rule>";
@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             return "<series>" +
                    "<header>" +
                    "<type>instantaneous</type>" +
-                   "<locationId>prefixTimeRule</locationId>" +
+                   "<locationId>prefix/TimeRule</locationId>" +
                    "<parameterId>TimeSeries</parameterId>" +
                    "<timeStep unit=\"hour\" multiplier=\"1\" />" +
                    "<startDate date=\"2011-01-01\" time=\"09:30:00\" />" +

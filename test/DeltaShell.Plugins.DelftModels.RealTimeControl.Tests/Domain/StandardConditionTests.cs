@@ -126,22 +126,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private string OriginXml()
         {
             return "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
-                    "<standard id=\"" + standardCondition.Name + "\">" +
+                    "<standard id=\"/" + standardCondition.Name + "\">" +
                     //"<input ref=\"" + Implicit + "\">" + InputName + "_" + InputParameterName + "</input>" +
                     //"<greaterThan>" + Value.ToString(CultureInfo.InvariantCulture) + "</greaterThan>" +
                     "<condition>" +
-                    "<x1Series ref=\"" + Implicit + "\">input_" + InputName + "_" + InputParameterName + "</x1Series>" +
+                    "<x1Series ref=\"" + Implicit + "\">" + RtcXmlTag.Input + InputName + "/" + InputParameterName + "</x1Series>" +
   	                "<relationalOperator>Greater</relationalOperator>"+
                     "<x2Value>" + Value.ToString(CultureInfo.InvariantCulture) + "</x2Value>" +
                     "</condition>" +
                     "<true>" +
-					"<trigger><ruleReference>"+TrueReference+"</ruleReference></trigger>"+
+					"<trigger><ruleReference>/"+TrueReference+"</ruleReference></trigger>"+
 				    "</true>"+
 					"<false>"+
-					"<trigger><ruleReference>"+FalseReference+"</ruleReference></trigger>"+
+					"<trigger><ruleReference>/"+FalseReference+"</ruleReference></trigger>"+
 					"</false>"+
                     "<output>" +
-                    "<status>" + standardCondition.StatusOutputSeriesName + "</status>" +
+                    "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/" + standardCondition.Name + "</status>" +
                     "</output>" +
                     "</standard>" +
                     "</trigger>";
@@ -150,22 +150,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private string SecondaryConditionLessThanXml()
         {
             return "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
-                    "<standard id=\"" + standardCondition.Name + "\">" +
+                    "<standard id=\"/" + standardCondition.Name + "\">" +
                     //"<input ref=\"" + Implicit + "\">" + InputName + "_" + InputParameterName + "</input>" +
                     //"<lessThan>" + Value.ToString(CultureInfo.InvariantCulture) + "</lessThan>" +
                     "<condition>" +
-                    "<x1Series ref=\"" + Implicit + "\">input_" + InputName + "_" + InputParameterName + "</x1Series>" +
+                    "<x1Series ref=\"" + Implicit + "\">" + RtcXmlTag.Input + InputName + "/" + InputParameterName + "</x1Series>" +
                     "<relationalOperator>Less</relationalOperator>" +
                     "<x2Value>" + Value.ToString(CultureInfo.InvariantCulture) + "</x2Value>" +
                     "</condition>" +
                     "<true>" +
-                    "<trigger><ruleReference>" + TrueReference + "</ruleReference></trigger>" +
+                    "<trigger><ruleReference>/" + TrueReference + "</ruleReference></trigger>" +
                     "</true>" +
                     "<false>" +
-                    "<trigger><ruleReference>" + FalseReference + "</ruleReference></trigger>" +
+                    "<trigger><ruleReference>/" + FalseReference + "</ruleReference></trigger>" +
                     "</false>" +
                     "<output>" +
-                    "<status>" + standardCondition.StatusOutputSeriesName + "</status>" +
+                    "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status+ "/" + standardCondition.Name + "</status>" +
                     "</output>" +
                     "</standard>" +
                     "</trigger>";
@@ -174,42 +174,42 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private string xmlConditionToCondition()
         {
             return "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
-                    "<standard id=\"" + standardCondition.Name + "\">" +
+                    "<standard id=\"/" + standardCondition.Name + "\">" +
                     "<condition>" +
-                    "<x1Series ref=\"" + Implicit + "\">input_" + InputName + "_" + InputParameterName + "</x1Series>" +
+                    "<x1Series ref=\"" + Implicit + "\">" + RtcXmlTag.Input + InputName + "/" + InputParameterName + "</x1Series>" +
                     "<relationalOperator>Greater</relationalOperator>" +
                     "<x2Value>" + Value.ToString(CultureInfo.InvariantCulture) + "</x2Value>" +
                     "</condition>" +
                     "<true>" +
                     "<trigger>"+
-                             "<standard id=\"trueCondition\">" +
+                             "<standard id=\"/trueCondition\">" +
                             "<condition>" +
-                            "<x1Series ref=\"" + Implicit + "\">input_" + InputName + "_" + InputParameterName + "</x1Series>" +
+                            "<x1Series ref=\"" + Implicit + "\">" + RtcXmlTag.Input + InputName + "/" + InputParameterName + "</x1Series>" +
                             "<relationalOperator>Greater</relationalOperator>" +
                             "<x2Value>" + Value.ToString(CultureInfo.InvariantCulture) + "</x2Value>" +
                             "</condition>" +
                             "<output>" +
-                            "<status>Status_trueCondition</status>" +
+                            "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/trueCondition</status>" +
                             "</output>" +
                             "</standard>" +
                             "</trigger>" +
                     "</true>" +
                     "<false>" +
                     "<trigger>"+
-                             "<standard id=\"falseCondition\">" +
+                             "<standard id=\"/falseCondition\">" +
                             "<condition>" +
-                            "<x1Series ref=\"" + Implicit + "\">input_" + InputName + "_" + InputParameterName + "</x1Series>" +
+                            "<x1Series ref=\"" + Implicit + "\">" + RtcXmlTag.Input + InputName + "/" + InputParameterName + "</x1Series>" +
                             "<relationalOperator>Greater</relationalOperator>" +
                             "<x2Value>" + Value.ToString(CultureInfo.InvariantCulture) + "</x2Value>" +
                             "</condition>" +
                             "<output>" +
-                            "<status>Status_falseCondition</status>" +
+                            "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status + "/falseCondition</status>" +
                             "</output>" +
                             "</standard>" +
                     "</trigger>" +
                     "</false>" +
                     "<output>" +
-                    "<status>" + standardCondition.StatusOutputSeriesName + "</status>" +
+                    "<status>" + RtcXmlTag.StandardCondition + RtcXmlTag.Status +"/"+ standardCondition.Name + "</status>" +
                     "</output>" +
                     "</standard>" +
                     "</trigger>";
