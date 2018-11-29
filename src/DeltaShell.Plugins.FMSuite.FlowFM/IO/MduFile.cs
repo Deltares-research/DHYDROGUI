@@ -694,6 +694,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 structuresFileWriter.ReferenceDate =
                     (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
             }
+
+            var roofAreaFileWriter = fileWriter as PolFile<RoofArea>;
+            if (roofAreaFileWriter != null)
+            {
+                roofAreaFileWriter.IncludeClosingCoordinate = true;
+            }
             return fileWriter;
         }
 

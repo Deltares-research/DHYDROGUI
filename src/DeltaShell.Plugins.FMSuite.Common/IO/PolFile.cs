@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         var coordinates = lineString.Coordinates.Take(lineString.Coordinates.Length -
                                                                         (IncludeClosingCoordinate ? 0 : 1)).ToList();
 
-                        WriteLine(String.Format("    {0}    {1}", coordinates.Count(), numColumns));
+                        WriteLine(String.Format("    {0}    {1}", coordinates.Count, numColumns));
 
                         foreach (var coordinate in coordinates)
                         {
