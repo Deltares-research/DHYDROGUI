@@ -56,39 +56,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         public static void SetOutputProperties(IEnumerable<DelftIniCategory> modelSettingsCategories,
                                                                              WaterFlowModel1DOutputSettingData outputSettings)
         {
+            var headerMapping = new Dictionary<string, ElementSet>()
+            {
+                [ModelDefinitionsRegion.ResultsNodesHeader] = ElementSet.GridpointsOnBranches,
+                [ModelDefinitionsRegion.ResultsBranchesHeader] = ElementSet.ReachSegElmSet,
+                [ModelDefinitionsRegion.ResultsStructuresHeader] = ElementSet.Structures,
+                [ModelDefinitionsRegion.ResultsPumpsHeader] = ElementSet.Pumps,
+                [ModelDefinitionsRegion.ResultsObservationsPointsHeader] = ElementSet.Observations,
+                [ModelDefinitionsRegion.ResultsRetentionsHeader] = ElementSet.Retentions,
+                [ModelDefinitionsRegion.ResultsLateralsHeader] = ElementSet.Laterals,
+                [ModelDefinitionsRegion.ResultsWaterBalanceHeader] = ElementSet.ModelWide,
+            };
+
             foreach (var cat in modelSettingsCategories)
             {
                 // Determine element set
                 ElementSet elementSet;
-                switch (cat.Name)
-                {
-                    case ModelDefinitionsRegion.ResultsNodesHeader:
-                        elementSet = ElementSet.GridpointsOnBranches;
-                        break;
-                    case ModelDefinitionsRegion.ResultsBranchesHeader:
-                        elementSet = ElementSet.ReachSegElmSet;
-                        break;
-                    case ModelDefinitionsRegion.ResultsStructuresHeader:
-                        elementSet = ElementSet.Structures;
-                        break;
-                    case ModelDefinitionsRegion.ResultsPumpsHeader:
-                        elementSet = ElementSet.Pumps;
-                        break;
-                    case ModelDefinitionsRegion.ResultsWaterBalanceHeader:
-                        elementSet = ElementSet.ModelWide;
-                        break;
-                    case ModelDefinitionsRegion.ResultsObservationsPointsHeader:
-                        elementSet = ElementSet.Observations;
-                        break;
-                    case ModelDefinitionsRegion.ResultsLateralsHeader:
-                        elementSet = ElementSet.Laterals;
-                        break;
-                    case ModelDefinitionsRegion.ResultsRetentionsHeader:
-                        elementSet = ElementSet.Retentions;
-                        break;
-                    default:
-                        continue;
-                }
+                if (!headerMapping.TryGetValue(cat.Name, out elementSet)) continue;
 
                 foreach (var prop in cat.Properties)
                 {
