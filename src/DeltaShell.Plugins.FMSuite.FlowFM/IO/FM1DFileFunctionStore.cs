@@ -34,7 +34,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             OutputFileReader = new FmMapFile1DOutputFileReader();
             sobekStartIndex = 0;
         }
+        public override object Clone()
+        {
+            var clonedStore = new FM1DFileFunctionStore() { Path = this.Path, OutputFileReader = new FmMapFile1DOutputFileReader() };
 
+            foreach (var existingNetworkCoverage in Functions.OfType<INetworkCoverage>())
+            {
+                var newNetworkCoverage = new NetworkCoverage(existingNetworkCoverage.Name, true)
+                {
+                    Network = existingNetworkCoverage.Network,
+                    Store = clonedStore
+                };
+
+                clonedStore.Functions.AddRange(newNetworkCoverage.Arguments);
+                clonedStore.Functions.AddRange(newNetworkCoverage.Components);
+                clonedStore.Functions.Add(newNetworkCoverage);
+            }
+
+            foreach (var existingFeatureCoverage in Functions.OfType<IFeatureCoverage>())
+            {
+                var newFeatureCoverage = new FeatureCoverage(existingFeatureCoverage.Name)
+                {
+                    Features = existingFeatureCoverage.Features,
+                    Store = clonedStore
+                };
+
+                clonedStore.Functions.AddRange(newFeatureCoverage.Arguments);
+                clonedStore.Functions.AddRange(newFeatureCoverage.Components);
+                clonedStore.Functions.Add(newFeatureCoverage);
+            }
+
+            foreach (var function in Functions.Where(f => !(f is ICoverage)))
+            {
+                var matchingFunction = (IVariable)Enumerable.FirstOrDefault<IFunction>(clonedStore.Functions, f => f.Name == function.Name
+                                                                                                                   && f.GetType() == function.GetType());
+
+                if (matchingFunction != null) matchingFunction.CopyFrom(function);
+            }
+
+            return clonedStore;
+        }
         public IHydroNetwork OutputNetwork
         {
             get { return outputNetwork; }
@@ -348,5 +387,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             return "time";
         }
+
     }
 }

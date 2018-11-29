@@ -18,7 +18,7 @@ using ArrayExtensions = DelftTools.Utils.ArrayExtensions;
 
 namespace DeltaShell.NGHS.IO.Store1D
 {
-    public class NetCdfFunctionStore1DBase<T, U> : IFunctionStore, IFileBased where T : ILocationMetaData, new() where U : ITimeDependentVariableMetaDataBase, new()
+    public abstract class NetCdfFunctionStore1DBase<T, U> : IFunctionStore, IFileBased where T : ILocationMetaData, new() where U : ITimeDependentVariableMetaDataBase, new()
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(NetCdfFunctionStore1DBase<T, U>));
         private IEventedList<IFunction> functions;
@@ -118,48 +118,7 @@ namespace DeltaShell.NGHS.IO.Store1D
         {
             return GetType();
         }
-
-        public object Clone()
-        {
-            var clonedStore = new NetCdfFunctionStore1DBase<T, U>(){ Path = this.Path };
-
-            foreach (var existingNetworkCoverage in Functions.OfType<INetworkCoverage>())
-            {
-                var newNetworkCoverage = new NetworkCoverage(existingNetworkCoverage.Name, true)
-                {
-                    Network = existingNetworkCoverage.Network,
-                    Store = clonedStore
-                };
-
-                clonedStore.Functions.AddRange(newNetworkCoverage.Arguments);
-                clonedStore.Functions.AddRange(newNetworkCoverage.Components);
-                clonedStore.Functions.Add(newNetworkCoverage);
-            }
-
-            foreach (var existingFeatureCoverage in Functions.OfType<IFeatureCoverage>())
-            {
-                var newFeatureCoverage = new FeatureCoverage(existingFeatureCoverage.Name)
-                {
-                    Features = existingFeatureCoverage.Features,
-                    Store = clonedStore
-                };
-
-                clonedStore.Functions.AddRange(newFeatureCoverage.Arguments);
-                clonedStore.Functions.AddRange(newFeatureCoverage.Components);
-                clonedStore.Functions.Add(newFeatureCoverage);
-            }
-            
-            foreach (var function in Functions.Where(f => !(f is ICoverage)))
-            {
-                var matchingFunction = (IVariable)Enumerable.FirstOrDefault<IFunction>(clonedStore.Functions, f => f.Name == function.Name 
-                                         && f.GetType() == function.GetType());
-
-                if(matchingFunction != null) matchingFunction.CopyFrom(function);
-            }
-
-            return clonedStore;
-        }
-
+        
         public void SetVariableValues<T>(IVariable function, IEnumerable<T> values, params IVariableFilter[] filters)
         {
             throw new NotSupportedException("Function store is readonly");
@@ -603,5 +562,7 @@ namespace DeltaShell.NGHS.IO.Store1D
             if (FunctionValuesChanged == null) return;
             FunctionValuesChanged(sender, e);
         }
+
+        public abstract object Clone();
     }
 }
