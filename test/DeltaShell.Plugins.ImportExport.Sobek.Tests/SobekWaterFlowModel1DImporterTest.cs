@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                 }
             };
 
-            TestHelper.AssertIsFasterThan(250000, initializeAndRunModel);
+            TestHelper.AssertIsFasterThan(300000, initializeAndRunModel);
 
             LogHelper.ResetLogging();
         }

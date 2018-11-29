@@ -475,7 +475,7 @@ namespace Sobek.IntegrationTests
             var project = projectRepository.GetProject();
             project.RootFolder.Items.Add(importedModel);
 
-            TestHelper.AssertIsFasterThan(750, () => projectRepository.SaveOrUpdate(project));
+            TestHelper.AssertIsFasterThan(800, () => projectRepository.SaveOrUpdate(project));
 
             projectRepository.Close();
         }

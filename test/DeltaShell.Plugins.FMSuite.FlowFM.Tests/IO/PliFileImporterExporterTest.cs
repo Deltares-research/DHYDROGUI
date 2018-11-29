@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 importer.GetEditableObject = parent => model.Area;
 
                 // import the same set twice to include duplicate checking for all items
-                TestHelper.AssertIsFasterThan(9000, () => importer.ImportItem(TestHelper.GetTestFilePath("structures\\testBas2FM_fxw.pliz"), model.Area.FixedWeirs));
+                TestHelper.AssertIsFasterThan(13000, () => importer.ImportItem(TestHelper.GetTestFilePath("structures\\testBas2FM_fxw.pliz"), model.Area.FixedWeirs));
                 Assert.AreEqual(19459, model.Area.FixedWeirs.Count);
             }
         }
