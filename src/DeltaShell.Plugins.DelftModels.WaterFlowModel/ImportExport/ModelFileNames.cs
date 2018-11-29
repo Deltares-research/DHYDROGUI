@@ -16,6 +16,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         private readonly string targetPath;
         private string network;
         private string observationPoint;
+        private string initialDischarge;
+        private string initialSalinity;
+        private string initialTemperature;
+        private string initialWaterLevel;
+        private string dispersion;
+        private string dispersionF3;
+        private string dispersionF4;
+        private string windShielding;
         private string lateralDischarge;
         private string salinity;
         private string boundaryConditions;
@@ -26,10 +34,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         private string logFile;
         private string boundaryLocations;
         private string structures;
-
+        
         private const string CrossSectionDefinitionFilename = "CrossSectionDefinitions.ini";
         private const string CrossSectionLocationFilename = "CrossSectionLocations.ini";
         private const string ObservationPointFilename = "ObservationPoints.ini";
+        private const string InitialDischargeFilename = "InitialDischarge.ini";
+        private const string InitialSalinityFilename = "InitialSalinity.ini";
+        private const string InitialTemperatureFilename = "InitialTemperature.ini";
+        private const string InitialWaterLevelFilename = "InitialWaterLevel.ini";
+        private const string DispersionFilename = "Dispersion.ini";
+        private const string DispersionF3Filename = "DispersionF3.ini";
+        private const string DispersionF4Filename = "DispersionF4.ini";
+        private const string WindShieldingFilename = "WindShielding.ini";
         private const string LateralDischargeFilename = "LateralDischargeLocations.ini";
         private const string SalinityFilename = "Salinity.ini";
         private const string BoundaryLocationFilename = "BoundaryLocations.ini";
@@ -104,6 +120,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             Network = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.NetworkFile.Key);
             Structures = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.StructuresFile.Key);
             ObservationPoints = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.ObservationPointsFile.Key);
+            InitialDischarge = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialDischargeFile.Key);
+            InitialSalinity = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialSalinityFile.Key);
+            InitialTemperature = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialTemperatureFile.Key);
+            InitialWaterLevel = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialWaterLevelFile.Key);
+            Dispersion = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.DispersionFile.Key);
+            DispersionF3 = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.DispersionF3File.Key);
+            DispersionF4 = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.DispersionF4File.Key);
+            WindShielding = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.WindShieldingFile.Key);
             LateralDischarge =
                 fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.LateralDischargeLocationsFile.Key);
             BoundaryConditions =
@@ -141,6 +165,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             targetPath = String.Empty;
             Network = NetworkFilename;
             ObservationPoints = ObservationPointFilename;
+            InitialDischarge = InitialDischargeFilename;
+            InitialSalinity = InitialSalinityFilename;
+            InitialTemperature = InitialTemperatureFilename;
+            InitialWaterLevel = InitialWaterLevelFilename;
+            Dispersion = DispersionFilename;
+            DispersionF3 = DispersionF3Filename;
+            DispersionF4 = DispersionF4Filename;
+            WindShielding = WindShieldingFilename;
             LateralDischarge = LateralDischargeFilename;
             Salinity = SalinityFilename;
             BoundaryConditions = BoundaryConditionsFilename;
@@ -176,6 +208,53 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             get { return Path.Combine(targetPath, observationPoint); }
             private set { observationPoint = value; }
+        }
+
+        public string InitialDischarge
+        {
+            get { return Path.Combine(targetPath, initialDischarge); }
+            private set { initialDischarge = value; }
+        }
+
+        public string InitialSalinity
+        {
+            get { return Path.Combine(targetPath, initialSalinity); }
+            private set { initialSalinity = value; }
+        }
+
+        public string InitialTemperature
+        {
+            get { return Path.Combine(targetPath, initialTemperature); }
+            private set { initialTemperature = value; }
+        }
+
+        public string InitialWaterLevel
+        {
+            get { return Path.Combine(targetPath, initialWaterLevel); }
+            private set { initialWaterLevel = value; }
+        }
+
+        public string Dispersion
+        {
+            get { return Path.Combine(targetPath, dispersion); }
+            private set { dispersion = value; }
+        }
+
+        public string DispersionF3
+        {
+            get { return Path.Combine(targetPath, dispersionF3); }
+            private set { dispersionF3 = value; }
+        }
+
+        public string DispersionF4
+        {
+            get { return Path.Combine(targetPath, dispersionF4); }
+            private set { dispersionF4 = value; }
+        }
+        public string WindShielding
+        {
+            get { return Path.Combine(targetPath, windShielding); }
+            private set { windShielding = value; }
         }
 
         public string LateralDischarge

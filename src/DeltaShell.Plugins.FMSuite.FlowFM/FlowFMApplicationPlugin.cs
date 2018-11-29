@@ -120,7 +120,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     return feature1;
                 },
                 EqualityComparer = new GroupableFeatureComparer<FixedWeir>(),
-                //AfterCreateAction = ,
                 AfterImportAction = featureList =>
                 {
                     var waterFlowFmModel = GetModelFor(featureList, a => a.FixedWeirs);

@@ -15,7 +15,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
     /// </summary>
     public static class BcConverterHelper
     {
-
         /// <summary>
         /// Parse the double values stored as a string in the column as a IEnumerable of actual doubles.
         /// </summary>
@@ -26,10 +25,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// </returns>
         public static IEnumerable<double> ParseDoubleValuesFromTableColumn(IDelftBcQuantityData column)
         {
-            return column.Values.Select(e => double.Parse(e, NumberStyles.AllowExponent | 
-                                                             NumberStyles.AllowDecimalPoint | 
+            return column.Values.Select(e => double.Parse(e, NumberStyles.AllowExponent |
+                                                             NumberStyles.AllowDecimalPoint |
                                                              NumberStyles.AllowLeadingSign,
-                                                             CultureInfo.InvariantCulture));
+                CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -46,9 +45,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         public static IEnumerable<DateTime> ParseDateTimesValuesFromTableColumn(IDelftBcQuantityData column)
         {
             var dateTimeData = ParseDoubleValuesFromTableColumn(column);
-            
+
             // Format of the unit for time as specified by the reference manual: <unit> since <reference date>
-            var data = column.Unit.Value.Split(new [] { " since " }, StringSplitOptions.None); 
+            var data = column.Unit.Value.Split(new[] {" since "}, StringSplitOptions.None);
 
             // Determine factor
             double factor;
@@ -83,9 +82,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// True and null if it does not exist and is optional, False otherwise
         /// </returns>
         public static bool ValidateUniqueProperty(IList<DelftIniProperty> properties,
-                                                  string propertyKey,
-                                                  bool isOptional,
-                                                  out string propertyVal)
+            string propertyKey,
+            bool isOptional,
+            out string propertyVal)
         {
             propertyVal = null;
             var nPropertyEntries = properties.Count(p => p.Name.Equals(propertyKey));
@@ -107,12 +106,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// If True then name contains the found Name.
         /// </returns>
         public static bool ValidateNameProperty(IList<DelftIniProperty> properties,
-                                                out string name)
+            out string name)
         {
             return BcConverterHelper.ValidateUniqueProperty(properties,
-                                                            BoundaryRegion.Name.Key,
-                                                            false,
-                                                            out name) &&
+                       BoundaryRegion.Name.Key,
+                       false,
+                       out name) &&
                    name.Length > 0;
         }
 
@@ -126,15 +125,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// If True then functionType contains the found FunctionType.
         /// </returns>
         public static bool ValidateFunctionProperty(IList<DelftIniProperty> properties,
-                                                    out FunctionType functionType)
+            out FunctionType functionType)
         {
             functionType = FunctionType.Constant;
 
             string functionStr;
-            if (!ValidateUniqueProperty(properties, 
-                                        BoundaryRegion.Function.Key, 
-                                        false, 
-                                        out functionStr))
+            if (!ValidateUniqueProperty(properties,
+                BoundaryRegion.Function.Key,
+                false,
+                out functionStr))
                 return false;
 
             switch (functionStr)
@@ -166,15 +165,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// If True then type contains the found InterpolationType.
         /// </returns>
         public static bool ValidateInterpolation(IList<DelftIniProperty> properties,
-                                                 out InterpolationType type)
+            out InterpolationType type)
         {
             type = InterpolationType.None;
 
             string interpolationTypeString;
-            if (!ValidateUniqueProperty(properties, 
-                                        BoundaryRegion.Interpolation.Key,
-                                        false, 
-                                        out interpolationTypeString))
+            if (!ValidateUniqueProperty(properties,
+                BoundaryRegion.Interpolation.Key,
+                false,
+                out interpolationTypeString))
                 return false;
 
             switch (interpolationTypeString)
@@ -205,14 +204,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
         /// If True then hasPeriodicity contains the found Periodicity.
         /// </returns>
         public static bool ValidatePeriodicity(IList<DelftIniProperty> properties,
-                                               out bool hasPeriodicity)
+            out bool hasPeriodicity)
         {
             hasPeriodicity = false;
             string periodicityStr;
             if (!ValidateUniqueProperty(properties,
-                                        BoundaryRegion.Periodic.Key,
-                                        true,
-                                        out periodicityStr))
+                BoundaryRegion.Periodic.Key,
+                true,
+                out periodicityStr))
             {
                 return false;
             }

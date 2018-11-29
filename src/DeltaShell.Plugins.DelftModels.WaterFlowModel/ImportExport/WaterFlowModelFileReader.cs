@@ -11,12 +11,14 @@ using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.IO.FileReaders.SpatialData;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
+using GeoAPI.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
@@ -36,12 +38,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             var model = new WaterFlowModel1D();
             try
             {
-                const int totalSteps = 10;
+                const int totalSteps = 11;
                 var stepCounter = 1;
 
                 reportProgress($"'Reading model wide parameters from {Path.GetFileName(modelFilename)} file", stepCounter, totalSteps);
                 ReadMd1dFile(modelFilename, model);
-                stepCounter++;
 
                 reportProgress($"Reading filenames from {Path.GetFileName(modelFilename)} file.", stepCounter, totalSteps);
                 var fileNames = new ModelFileNames(modelFilename);
@@ -101,6 +102,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     $"Reading structures from {fileNames.Structures} file and {fileNames.Structures}.",
                     stepCounter, totalSteps);
                 ReadStructuresFile(fileNames.Structures, model.Network, CreateAndAddErrorReport);
+                stepCounter++;
+
+                reportProgress(
+                    $"Reading spatial data from {fileNames} file.",
+                    stepCounter, totalSteps);
+                ReadFileSpatialData(fileNames.InitialDischarge, model, CreateAndAddErrorReport);
+                ReadFileSpatialData(fileNames.InitialSalinity, model, CreateAndAddErrorReport);
+                ReadFileSpatialData(fileNames.InitialTemperature, model, CreateAndAddErrorReport);
+//                ReadFileSpatialData(fileNames.InitialWaterLevel, model, CreateAndAddErrorReport);
+                ReadFileSpatialData(fileNames.Dispersion, model, CreateAndAddErrorReport);
+//                ReadFileSpatialData(fileNames.DispersionF3, model, CreateAndAddErrorReport);
+//                ReadFileSpatialData(fileNames.DispersionF4, model, CreateAndAddErrorReport);
+                ReadFileSpatialData(fileNames.WindShielding, model, CreateAndAddErrorReport);
                 stepCounter++;
             }
             catch (Exception)
@@ -238,6 +252,61 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 }
             }
         }
+
+        private static void ReadFileSpatialData(string locationFilePath, WaterFlowModel1D model,
+            Action<string, IList<string>> createAndAddErrorReport)
+        {
+            var spatialFileDataReader = new SpatialFileDataReader(createAndAddErrorReport);
+
+            var spatialFileData = spatialFileDataReader.ReadSpatialFileData(locationFilePath, model.Network.Channels.ToList());
+
+            SetModelSpatialDataOnModel(locationFilePath, model, spatialFileData);
+        }
+
+        private static void SetModelSpatialDataOnModel(string locationFilePath, WaterFlowModel1D model, INetworkCoverage spatialFileData)
+        {
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(locationFilePath);
+
+            switch (fileNameWithoutExtension)
+            {
+                case "InitialDischarge":
+                    model.InitialFlow.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
+                    model.InitialFlow.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    break;
+                case "InitialSalinity":
+                    model.InitialSaltConcentration.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
+                    model.InitialSaltConcentration.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    break;
+                case "InitialTemperature":
+                    model.InitialTemperature.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
+                    model.InitialTemperature.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    break;
+//                case "InitialWaterLevel":
+//                    model.Water.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
+//                    model.InitialFlow.Components[0].SetValues(spatialFileData.Components[0].Values);
+//                    break;
+                case "Dispersion":
+                    model.DispersionCoverage.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
+                    model.DispersionCoverage.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    break;
+                case "DispersionF3":
+                    model.DispersionF3Coverage.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
+                    model.DispersionF3Coverage.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    break;
+                case "DispersionF4":
+                    model.DispersionF4Coverage.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
+                    model.DispersionF4Coverage.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    break;
+                case "WindShielding":
+                    model.WindShielding.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
+                    model.WindShielding.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    break;
+                default:
+                    Log.Warn("Could not find any spatial data to set on the model.");
+                    break;
+            }
+        }
+
 
         private static void LogErrorReport(List<string> errorReport, Action<string> logAction)
         {
