@@ -24,11 +24,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             channelsList = originalNetwork.Channels.ToList();
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-        }
-
         [Test]
         public void
             GivenAStructureBranchCategoryOfAGeneralStructureWithExtraResistance_WhenConvertingToAGeneralStructure_ThenAWeirOfThisTypeShouldBeCreated()

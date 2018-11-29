@@ -26,12 +26,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         {
             originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch();
             channelsList = originalNetwork.Channels.ToList();
-
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
         }
 
         [Test]
@@ -129,7 +123,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         }
 
         [Test]
-        public void GivenAStructureBranchCategoryAndAStructure_WhenCreatingTheCorrespondingCompositeBranchStructureIfNeeded_ThenFinallyTheCompositeBranchStructureShouldBeCreated()
+        public void GivenAStructureBranchCategoryAndAStructure_WhenCreatingTheCorrespondingCompositeBranchStructure_ThenFinallyTheCompositeBranchStructureShouldBeCreated()
         {
             //Given
             IList<ICompositeBranchStructure> compositeBranchStructures = new List<ICompositeBranchStructure>();
@@ -150,7 +144,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             //Then
             Assert.AreEqual(1, compositeBranchStructures.Count);
             Assert.AreSame(compositeBranchStructure,compositeBranchStructures[0]);
-
         }
 
         [Test]
@@ -186,8 +179,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
                 compositeBranchStructures);
 
             //Then
-            Assert.AreSame(compositeBranchStructure, compositeBranchStructure2);
-
+            Assert.AreEqual(1, compositeBranchStructures.Count);
+            Assert.AreSame(compositeBranchStructure, compositeBranchStructures[0]);
+            Assert.AreSame(compositeBranchStructure2, compositeBranchStructures[0]);
+            Assert.AreEqual("Bla",compositeBranchStructure.Name);
         }
 
         private DelftIniCategory CreatePerfectCategory()

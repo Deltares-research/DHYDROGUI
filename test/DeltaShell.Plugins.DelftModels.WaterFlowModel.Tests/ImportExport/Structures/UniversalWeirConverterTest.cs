@@ -25,12 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             channelsList = originalNetwork.Channels.ToList();
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-        }
-
-        [Test]
+       [Test]
         public void
             GivenAStructureBranchCategoryOfAnUniversalWeir_WhenConvertingToAnUniversalWeir_ThenAWeirOfThisTypeShouldBeCreated()
         {
@@ -113,7 +108,31 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var structure = (Weir)converter.ConvertToStructure1D(category, channelsList);
         }
 
-        private IDelftIniCategory CreatePerfectUniversalWeirCategory()
+        [Test]
+        [TestCase("levelsCount")]
+        [TestCase("yValues")]
+        [TestCase("zValues")]
+        [TestCase("crestlevel")]
+        [TestCase("dischargecoeff")]
+        [TestCase("allowedflowdir")]
+        public void
+            GivenAStructureBranchCategoryOfAnUniversalWeirWithAMissingMandatoryParameter_WhenConvertingToAnUniversalWeir_ThenAnExceptionShouldBeThrown(string propertyName)
+        {
+            //Given
+            var category = CreatePerfectUniversalWeirCategory();
+
+            var removeProperty = category.Properties.FirstOrDefault(p => p.Name == propertyName);
+            category.RemoveProperty(removeProperty);
+
+            //When
+            var converter = new UniversalWeirConverter();
+
+            Assert.That(() => converter.ConvertToStructure1D(category, channelsList), Throws
+                .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(string.Format(
+                    "Property {0} is not found in the file", propertyName)));
+        }
+
+        private DelftIniCategory CreatePerfectUniversalWeirCategory()
         {
             var category = new DelftIniCategory(StructureRegion.Header);
 

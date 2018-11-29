@@ -28,11 +28,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             channelsList = originalNetwork.Channels.ToList();
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-        }
-
         [Test, Category(TestCategory.DataAccess)]
         public void GivenAStructuresFile_WhenReadingIt_ThenAllCompositeBranchStructuresShouldBeCreated()
         {
@@ -76,6 +71,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
                 Assert.AreEqual("Bla", allCompositeBranchStructures[0].Name);
                 Assert.AreEqual("branch", allCompositeBranchStructures[0].Branch.Name);
                 Assert.AreEqual(50, allCompositeBranchStructures[0].Chainage);
+                Assert.AreEqual("Weir1", allCompositeBranchStructures[0].Structures[0].Name);
+                Assert.AreEqual(50, allCompositeBranchStructures[0].Structures[0].Chainage);
+                Assert.AreSame(allCompositeBranchStructures[0].Branch, allCompositeBranchStructures[0].Structures[0].Branch);
                 Assert.AreEqual("Weir1", allCompositeBranchStructures[0].Structures[0].LongName);
 
                 Assert.AreEqual(0, errorReport.Count);

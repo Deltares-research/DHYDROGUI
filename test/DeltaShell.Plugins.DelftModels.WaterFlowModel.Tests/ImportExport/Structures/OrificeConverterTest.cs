@@ -26,15 +26,61 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-        }
-
         [Test]
         public void GivenAStructureBranchCategoryOfASimpleWeir_WhenConvertingToASimpleWeir_ThenAWeirOfThisTypeShouldBeCreated()
         {
             //Given
+            var category = CreatePerfectOrificeCategory();
+
+            //When
+            var converter = new OrificeConverter();
+            var structure = (Weir)converter.ConvertToStructure1D(category, channelsList);
+            var weirFormula = structure.WeirFormula as GatedWeirFormula;
+
+            //Then
+            Assert.NotNull(weirFormula);
+            Assert.AreEqual(2.3, structure.CrestLevel);
+            Assert.AreEqual(100.0, structure.CrestWidth);
+            Assert.AreEqual(0, (int)structure.FlowDirection);
+            Assert.AreEqual(1.0, weirFormula.ContractionCoefficient);
+            Assert.AreEqual(1.2, weirFormula.LateralContraction);
+            Assert.That((4.2-2.3) - weirFormula.GateOpening <Double.Epsilon);
+            Assert.AreEqual(0,Convert.ToInt32(weirFormula.UseMaxFlowPos));
+            Assert.AreEqual(0, Convert.ToInt32(weirFormula.UseMaxFlowNeg));
+            Assert.AreEqual(0, weirFormula.MaxFlowPos);
+            Assert.AreEqual(0, weirFormula.MaxFlowNeg);
+        }
+
+        [Test]
+        [TestCase("openlevel")]
+        [TestCase("contractioncoeff")]
+        [TestCase("latcontrcoeff")]
+        [TestCase("uselimitflowpos")]
+        [TestCase("limitflowpos")]
+        [TestCase("uselimitflowneg")]
+        [TestCase("limitflowneg")]
+        [TestCase("allowedflowdir")]
+        [TestCase("crestlevel")]
+        [TestCase("crestwidth")]
+        public void
+            GivenAStructureBranchCategoryOfAnOrificeWithAMissingMandatoryParameter_WhenConvertingToAnOrifice_ThenAnExceptionShouldBeThrown(string propertyName)
+        {
+            //Given
+            var category = CreatePerfectOrificeCategory();
+
+            var removeProperty = category.Properties.FirstOrDefault(p => p.Name == propertyName);
+            category.RemoveProperty(removeProperty);
+
+            //When
+            var converter = new OrificeConverter();
+
+            Assert.That(() => converter.ConvertToStructure1D(category, channelsList), Throws
+                .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(string.Format(
+                    "Property {0} is not found in the file", propertyName)));
+        }
+
+        private DelftIniCategory CreatePerfectOrificeCategory()
+        {
             var category = new DelftIniCategory(StructureRegion.Header);
 
             category.AddProperty(StructureRegion.Id.Key, "Weir1");
@@ -56,23 +102,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.AddProperty(StructureRegion.LimitFlowPos.Key, "0");
             category.AddProperty(StructureRegion.LimitFlowNeg.Key, "0");
 
-            //When
-            var converter = new OrificeConverter();
-            var structure = (Weir)converter.ConvertToStructure1D(category, channelsList);
-            var weirFormula = structure.WeirFormula as GatedWeirFormula;
-
-            //Then
-            Assert.NotNull(weirFormula);
-            Assert.AreEqual(2.3, structure.CrestLevel);
-            Assert.AreEqual(100.0, structure.CrestWidth);
-            Assert.AreEqual(0, (int)structure.FlowDirection);
-            Assert.AreEqual(1.0, weirFormula.ContractionCoefficient);
-            Assert.AreEqual(1.2, weirFormula.LateralContraction);
-            Assert.That((4.2-2.3) - weirFormula.GateOpening <Double.Epsilon);
-            Assert.AreEqual(0,Convert.ToInt32(weirFormula.UseMaxFlowPos));
-            Assert.AreEqual(0, Convert.ToInt32(weirFormula.UseMaxFlowNeg));
-            Assert.AreEqual(0, weirFormula.MaxFlowPos);
-            Assert.AreEqual(0, weirFormula.MaxFlowNeg);
+            return category;
         }
+
     }
 }

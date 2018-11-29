@@ -24,12 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-        }
-
-        [Test]
+       [Test]
         public void GivenTwoCategoriesOnTheSameCompositeStructure_WhenImporting_ThenACompositeStructureShouldBeCreatedWithTheTwoStructures()
         {
             //Given
@@ -87,6 +82,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             //Then
             Assert.AreEqual(1, errorMessages.Count);
+            Assert.AreEqual(
+                "A bla is found in the structure file and this type is not supported during an import.Therefore it is not imported in the GUI",
+                errorMessages[0]);
         }
 
         private DelftIniCategory CreatePerfectCategory()

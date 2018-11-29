@@ -24,16 +24,51 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             channelsList = originalNetwork.Channels.ToList();
 
         }
-
-        [TearDown]
-        public void TearDown()
-        {
-        }
-
+       
         [Test]
         public void GivenAStructureBranchCategoryOfASimpleWeir_WhenConvertingToASimpleWeir_ThenAWeirOfThisTypeShouldBeCreated()
         {
             //Given
+            var category = CreatePerfectSimpleWeirCategory();
+
+            //When
+            var converter = new WeirConverter();
+            var structure = (Weir)converter.ConvertToStructure1D(category, channelsList);
+            var weirFormula = structure.WeirFormula as SimpleWeirFormula;
+
+            //Then
+            Assert.NotNull(weirFormula);
+            Assert.AreEqual(2.3, structure.CrestLevel);
+            Assert.AreEqual(100.0, structure.CrestWidth);
+            Assert.AreEqual(1.0, weirFormula.DischargeCoefficient);
+            Assert.AreEqual(1.0, weirFormula.LateralContraction);
+            Assert.AreEqual(0, (int)structure.FlowDirection);
+        }
+
+        [Test]
+        [TestCase("crestlevel")]
+        [TestCase("crestwidth")]
+        [TestCase("latdiscoeff")]
+        [TestCase("dischargecoeff")]
+        [TestCase("allowedflowdir")]
+        public void GivenAStructureBranchCategoryOfASimpleWeirWithAMissingMandatoryParameter_WhenConvertingToASimpleWeir_ThenAnExceptionShouldBeThrown(string propertyName)
+        {
+            //Given
+            var category = CreatePerfectSimpleWeirCategory();
+
+            var removeProperty = category.Properties.FirstOrDefault(p => p.Name == propertyName);
+            category.RemoveProperty(removeProperty);
+
+            //When
+            var converter = new WeirConverter();
+
+            Assert.That(() => converter.ConvertToStructure1D(category, channelsList), Throws
+                .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(string.Format(
+                    "Property {0} is not found in the file", propertyName)));
+        }
+
+        private DelftIniCategory CreatePerfectSimpleWeirCategory()
+        {
             var category = new DelftIniCategory(StructureRegion.Header);
 
             category.AddProperty(StructureRegion.Id.Key, "Weir1");
@@ -48,18 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.AddProperty(StructureRegion.LatDisCoeff.Key, "1.0");
             category.AddProperty(StructureRegion.AllowedFlowDir.Key, "0");
 
-            //When
-            var converter = new WeirConverter();
-            var structure = (Weir)converter.ConvertToStructure1D(category, channelsList);
-            var weirFormula = structure.WeirFormula as SimpleWeirFormula;
-
-            //Then
-            Assert.NotNull(weirFormula);
-            Assert.AreEqual(2.3, structure.CrestLevel);
-            Assert.AreEqual(100.0, structure.CrestWidth);
-            Assert.AreEqual(1.0, weirFormula.DischargeCoefficient);
-            Assert.AreEqual(1.0, weirFormula.LateralContraction);
-            Assert.AreEqual(0, (int)structure.FlowDirection);
+            return category;
         }
     }
 }

@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileReaders;
-using DeltaShell.NGHS.IO.FileReaders.Location;
-using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors;
-using static DeltaShell.NGHS.IO.FileWriters.Structure.StructureRegion;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {

@@ -25,40 +25,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             channelsList = originalNetwork.Channels.ToList();
 
         }
-
-        [TearDown]
-        public void TearDown()
-        {
-        }
-
+        
         [Test]
         public void GivenAStructureBranchCategoryOfARiverWeir_WhenConvertingToARiverWeir_ThenAStructureOfThisTypeShouldBeCreated()
         {
             //Given
-            var category = new DelftIniCategory(StructureRegion.Header);
-
-            category.AddProperty(StructureRegion.Id.Key, "RiverWeir1");
-            category.AddProperty(StructureRegion.BranchId.Key, "branch");
-            category.AddProperty(StructureRegion.Chainage.Key, "50");
-            category.AddProperty(StructureRegion.Name.Key, "RiverWeir1");
-            category.AddProperty(StructureRegion.DefinitionType.Key, StructureRegion.StructureTypeName.RiverWeir);
-
-            category.AddProperty(StructureRegion.CrestLevel.Key, "2.3");
-            category.AddProperty(StructureRegion.CrestWidth.Key, " 100.0");
-
-            category.AddProperty(StructureRegion.PosCwCoef.Key, "1.0");
-            category.AddProperty(StructureRegion.PosSlimLimit.Key, "0.820");
-            category.AddProperty(StructureRegion.NegCwCoef.Key, "1.1");
-            category.AddProperty(StructureRegion.NegSlimLimit.Key, "0.920");
-            
-            category.AddProperty(StructureRegion.PosSfCount.Key, "3");
-            category.AddProperty(StructureRegion.PosSf.Key, "0.8 0.9 1.0");
-            category.AddProperty(StructureRegion.PosRed.Key, "1.0 0.7 0.0");
-
-            category.AddProperty(StructureRegion.NegSfCount.Key, "3");
-            category.AddProperty(StructureRegion.NegSf.Key, "0.6 0.7 1.0");
-            category.AddProperty(StructureRegion.NegRed.Key, "1.0 0.9 0.0");
-
+            var category = CreatePerfectRiverWeirCategory();
 
             //When
             var converter = new RiverWeirConverter();
@@ -85,33 +57,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
         [Test]
         [ExpectedException(typeof(Exception), ExpectedMessage = "For river weir RiverWeir1 the reduction table for positive flow direction contains an error")]
-        public void GivenAStructureBranchCategoryOfARiverWeirWithErrorInPosSfCount_WhenConvertingToAnExtraResistance_ThenAStructureOfThisTypeShouldNotBeCreated()
+        public void GivenAStructureBranchCategoryOfARiverWeirWithErrorInPosSfCount_WhenConvertingToAnExtraResistance_ThenAnExceptionShouldBeThrown()
         {
             //Given
-            var category = new DelftIniCategory(StructureRegion.Header);
-
-            category.AddProperty(StructureRegion.Id.Key, "RiverWeir1");
-            category.AddProperty(StructureRegion.BranchId.Key, "branch");
-            category.AddProperty(StructureRegion.Chainage.Key, "50");
-            category.AddProperty(StructureRegion.Name.Key, "RiverWeir1");
-            category.AddProperty(StructureRegion.DefinitionType.Key, StructureRegion.StructureTypeName.RiverWeir);
-
-            category.AddProperty(StructureRegion.CrestLevel.Key, "2.3");
-            category.AddProperty(StructureRegion.CrestWidth.Key, " 100.0");
-
-            category.AddProperty(StructureRegion.PosCwCoef.Key, "1.0");
-            category.AddProperty(StructureRegion.PosSlimLimit.Key, "0.820");
-            category.AddProperty(StructureRegion.NegCwCoef.Key, "1.1");
-            category.AddProperty(StructureRegion.NegSlimLimit.Key, "0.920");
-
-            category.AddProperty(StructureRegion.PosSfCount.Key, "4");
-            category.AddProperty(StructureRegion.PosSf.Key, "0.8 0.9 1.0");
-            category.AddProperty(StructureRegion.PosRed.Key, "1.0 0.7 0.0");
-
-            category.AddProperty(StructureRegion.NegSfCount.Key, "3");
-            category.AddProperty(StructureRegion.NegSf.Key, "0.6 0.7 1.0");
-            category.AddProperty(StructureRegion.NegRed.Key, "1.0 0.9 0.0");
-
+            var category = CreatePerfectRiverWeirCategory();
+            category.SetProperty(StructureRegion.PosSfCount.Key, "4");
 
             //When
             var converter = new RiverWeirConverter();
@@ -120,9 +70,49 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
         [Test]
         [ExpectedException(typeof(Exception), ExpectedMessage = "For river weir RiverWeir1 the reduction table for negative flow direction contains an error")]
-        public void GivenAStructureBranchCategoryOfARiverWeirWithErrorInNegSfCount_WhenConvertingToAnExtraResistance_ThenAStructureOfThisTypeShouldNotBeCreated()
+        public void GivenAStructureBranchCategoryOfARiverWeirWithErrorInNegSfCount_WhenConvertingToAnExtraResistance_ThenAnExceptionShouldBeThrown()
         {
             //Given
+            var category = CreatePerfectRiverWeirCategory();
+            category.SetProperty(StructureRegion.NegSfCount.Key, "5");
+
+            //When
+            var converter = new RiverWeirConverter();
+            var structure = converter.ConvertToStructure1D(category, channelsList);
+        }
+
+        [Test]
+        [TestCase("poscwcoef")]
+        [TestCase("posslimlimit")]
+        [TestCase("negcwcoef")]
+        [TestCase("negslimlimit")]
+        [TestCase("possfcount")]
+        [TestCase("possf")]
+        [TestCase("posred")]
+        [TestCase("negsfcount")]
+        [TestCase("negsf")]
+        [TestCase("negred")]
+        [TestCase("crestlevel")]
+        [TestCase("crestwidth")]
+        public void
+            GivenAStructureBranchCategoryOfARiverWeirWithAMissingMandatoryParameter_WhenConvertingToARiverlWeir_ThenAnExceptionShouldBeThrown(string propertyName)
+        {
+            //Given
+            var category = CreatePerfectRiverWeirCategory();
+
+            var removeProperty = category.Properties.FirstOrDefault(p => p.Name == propertyName);
+            category.RemoveProperty(removeProperty);
+
+            //When
+            var converter = new RiverWeirConverter();
+
+            Assert.That(() => converter.ConvertToStructure1D(category, channelsList), Throws
+                .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(string.Format(
+                    "Property {0} is not found in the file", propertyName)));
+        }
+
+        private DelftIniCategory CreatePerfectRiverWeirCategory()
+        {
             var category = new DelftIniCategory(StructureRegion.Header);
 
             category.AddProperty(StructureRegion.Id.Key, "RiverWeir1");
@@ -143,14 +133,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.AddProperty(StructureRegion.PosSf.Key, "0.8 0.9 1.0");
             category.AddProperty(StructureRegion.PosRed.Key, "1.0 0.7 0.0");
 
-            category.AddProperty(StructureRegion.NegSfCount.Key, "5");
+            category.AddProperty(StructureRegion.NegSfCount.Key, "3");
             category.AddProperty(StructureRegion.NegSf.Key, "0.6 0.7 1.0");
             category.AddProperty(StructureRegion.NegRed.Key, "1.0 0.9 0.0");
 
-
-            //When
-            var converter = new RiverWeirConverter();
-            var structure = converter.ConvertToStructure1D(category, channelsList);
+            return category;
         }
     }
 }
