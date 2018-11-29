@@ -10,6 +10,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
     [TestFixture]
     public class WaterFlowModelPropertySetterTest
     {
+        // SetTimeProperties
         private readonly DateTime defaultStartTime = new DateTime(2018, 11, 30, 15, 15, 0); // 2018-11-30 15:15:00
         private readonly DateTime defaultStopTime = new DateTime(2018, 12, 4, 21, 0, 0); // 2018-12-04 21:00:00
         private readonly TimeSpan defaultTimeStep = new TimeSpan(0, 0, 15, 0); // 15 minutes
@@ -22,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var modelSettingsCategories = GetCorrectTimeSettingsDataModel();
 
             var model = new WaterFlowModel1D();
-            WaterFlowModelPropertySetter.SetProperties(modelSettingsCategories, model);
+            WaterFlowModelPropertySetter.SetTimeProperties(modelSettingsCategories, model);
 
             Assert.That(model.StartTime, Is.EqualTo(defaultStartTime));
             Assert.That(model.StopTime, Is.EqualTo(defaultStopTime));
@@ -43,5 +44,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             timeSettingsCategory.AddProperty(ModelDefinitionsRegion.OutTimeStepStructures.Key, defaultStructuresTimeStep.TotalSeconds);
             return new List<DelftIniCategory> {timeSettingsCategory};
         }
+
+        // SetOutputProperties
+
     }
 }

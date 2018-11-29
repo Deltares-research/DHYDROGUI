@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
         LateralDifference = 112, // difference between Actual and Defined lateral discharge
     }
 
-    // The ElementSets supported by ModelApi; always chaeck with availablity of QuantityType per ElementSet!
+    // The ElementSets supported by ModelApi; always check with availability of QuantityType per ElementSet!
     public enum ElementSet
     {
         BranchNodes = 1,
@@ -165,7 +165,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
         CrossSection = 22
     }
 
-    // availablity of QuantityType per ElementSet from ExchangeItems.f90
+    // availability of QuantityType per ElementSet from ExchangeItems.f90
     // ElementSet::BranchNodes
     //    Waterlevel
     //    WaterDepth
