@@ -834,8 +834,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ReadAreaFeatures(filePath, modelDefinition, hydroArea);
 
             //fix for fixed weirs
-            fixedWeirProperties.Clear();
-
+            fixedWeirProperties?.Clear();
+            
             foreach (var fixedWeir in hydroArea.FixedWeirs)
             {
                 var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir> {Feature = fixedWeir};
