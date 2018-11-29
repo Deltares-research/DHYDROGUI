@@ -20,11 +20,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         [Test]
         public void GivenTimeSettingsDataModel_WhenSettingWaterFlowModelProperties_ThenTimeSettingsAreCorrect()
         {
-            var modelSettingsCategories = GetCorrectTimeSettingsDataModel();
+            // Given
+            var timeSettingsCategories = GetCorrectTimeSettingsDataModel();
 
+            // When
             var model = new WaterFlowModel1D();
-            WaterFlowModelPropertySetter.SetTimeProperties(modelSettingsCategories, model);
+            WaterFlowModelPropertySetter.SetTimeProperties(timeSettingsCategories, model);
 
+            // Then
             Assert.That(model.StartTime, Is.EqualTo(defaultStartTime));
             Assert.That(model.StopTime, Is.EqualTo(defaultStopTime));
             Assert.That(model.TimeStep, Is.EqualTo(defaultTimeStep));
@@ -45,7 +48,68 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             return new List<DelftIniCategory> {timeSettingsCategory};
         }
 
-        // SetOutputProperties
+        [Test]
+        public void GivenDataModelWithoutTimeCategory_WhenSettingWaterFlowModelProperties_ThenTimeSettingsHaveNotChanged()
+        {
+            // Given
+            var notTimeCategory = new DelftIniCategory(ModelDefinitionsRegion.AdvancedOptionsHeader);
+            notTimeCategory.AddProperty(ModelDefinitionsRegion.StartTime.Key, defaultStartTime);
+            var categories = new List<DelftIniCategory> {notTimeCategory};
 
+            // When
+            var model = new WaterFlowModel1D();
+            var startTimeBefore = model.StartTime;
+            var stopTimeBefore = model.StopTime;
+            var timeStepBefore = model.TimeStep;
+            var gridPointsTimeStepBefore = model.OutputSettings.GridOutputTimeStep;
+            var structuresTimeStepBefore = model.OutputSettings.StructureOutputTimeStep;
+
+            WaterFlowModelPropertySetter.SetTimeProperties(categories, model);
+
+            // Then
+            Assert.That(model.StartTime, Is.EqualTo(startTimeBefore));
+            Assert.That(model.StopTime, Is.EqualTo(stopTimeBefore));
+            Assert.That(model.TimeStep, Is.EqualTo(timeStepBefore));
+
+            var modelOutputSettings = model.OutputSettings;
+            Assert.That(modelOutputSettings.GridOutputTimeStep, Is.EqualTo(gridPointsTimeStepBefore));
+            Assert.That(modelOutputSettings.StructureOutputTimeStep, Is.EqualTo(structuresTimeStepBefore));
+        }
+
+        [Test]
+        public void WhenSettingWaterFlowModelPropertiesWithCategoriesEqualToNull_ThenTimeSettingsHaveNotChanged()
+        {
+            // When
+            var model = new WaterFlowModel1D();
+            var startTimeBefore = model.StartTime;
+            var stopTimeBefore = model.StopTime;
+            var timeStepBefore = model.TimeStep;
+            var gridPointsTimeStepBefore = model.OutputSettings.GridOutputTimeStep;
+            var structuresTimeStepBefore = model.OutputSettings.StructureOutputTimeStep;
+
+            WaterFlowModelPropertySetter.SetTimeProperties(null, model);
+
+            // Then
+            Assert.That(model.StartTime, Is.EqualTo(startTimeBefore));
+            Assert.That(model.StopTime, Is.EqualTo(stopTimeBefore));
+            Assert.That(model.TimeStep, Is.EqualTo(timeStepBefore));
+
+            var modelOutputSettings = model.OutputSettings;
+            Assert.That(modelOutputSettings.GridOutputTimeStep, Is.EqualTo(gridPointsTimeStepBefore));
+            Assert.That(modelOutputSettings.StructureOutputTimeStep, Is.EqualTo(structuresTimeStepBefore));
+        }
+
+        [Test]
+        public void WhenSettingWaterFlowModelPropertiesWithoutAModel_ThenNoException()
+        {
+            try
+            {
+                WaterFlowModelPropertySetter.SetTimeProperties(null, null);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("No exception was expected, but got: " + e.Message);
+            }
+        }
     }
 }

@@ -11,9 +11,9 @@ using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using DelftTools.Utils.Collections;
-using DeltaShell.NGHS.IO.FileReaders.SpatialData;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.FileReaders.SpatialData;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 var stepCounter = 1;
 
                 reportProgress($"'Reading model wide parameters from {Path.GetFileName(modelFilename)} file", stepCounter, totalSteps);
-                ReadMd1dFile(modelFilename, model);
+                ReadMd1dFileAndSetModelProperties(modelFilename, model, CreateAndAddErrorReport);
 
                 reportProgress($"Reading filenames from {Path.GetFileName(modelFilename)} file.", stepCounter, totalSteps);
                 var fileNames = new ModelFileNames(modelFilename);
@@ -127,11 +127,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return model;
         }
 
-        private static void ReadMd1dFile(string filePath, WaterFlowModel1D model)
+        private static void ReadMd1dFileAndSetModelProperties(string filePath, WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
         {
-            var modelPropertySettingsCategories = DelftIniFileParser.ReadFile(filePath);
-            WaterFlowModelPropertySetter.SetTimeProperties(modelPropertySettingsCategories, model);
-            WaterFlowModelPropertySetter.SetOutputProperties(modelPropertySettingsCategories, model.OutputSettings);
+            var errorMessages = new List<string>();
+            try
+            {
+                var modelPropertySettingsCategories = DelftIniFileParser.ReadFile(filePath);
+                WaterFlowModelPropertySetter.SetTimeProperties(modelPropertySettingsCategories, model);
+                WaterFlowModelPropertySetter.SetOutputProperties(modelPropertySettingsCategories, model.OutputSettings);
+            }
+            catch (Exception e)
+            {
+                errorMessages.Add(e.Message);
+                createAndAddErrorReport?.Invoke("An error occurred during reading md1d file:", errorMessages);
+            }
 
             model.UseSalt = true;
             model.UseTemperature = true;

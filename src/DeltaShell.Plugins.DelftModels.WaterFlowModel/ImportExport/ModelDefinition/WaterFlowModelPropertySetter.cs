@@ -26,7 +26,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// </remarks>
         public static void SetTimeProperties(IEnumerable<DelftIniCategory> modelSettingsCategories, WaterFlowModel1D model)
         {
-            var timeCategory = modelSettingsCategories.FirstOrDefault(c => c.Name == ModelDefinitionsRegion.TimeHeader);
+            var timeCategory = modelSettingsCategories?.FirstOrDefault(c => c.Name == ModelDefinitionsRegion.TimeHeader);
+            if (timeCategory == null) return;
+
             var startTime = timeCategory.ReadProperty<DateTime>(ModelDefinitionsRegion.StartTime.Key);
             var stopTime = timeCategory.ReadProperty<DateTime>(ModelDefinitionsRegion.StopTime.Key);
             var timeStep = timeCategory.ReadProperty<double>(ModelDefinitionsRegion.TimeStep.Key);
