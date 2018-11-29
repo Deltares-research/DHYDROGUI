@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary;
@@ -25,6 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             const BoundaryType boundaryType = BoundaryType.Level;
 
             var validCategoriesSet = new List<DelftIniCategory>();
+            validCategoriesSet.Add(new DelftIniCategory(GeneralRegion.IniHeader));
 
             var validCategory = new DelftIniCategory(BoundaryRegion.BoundaryHeader);
             validCategory.AddProperty(BoundaryRegion.NodeId.Key, nodeID, BoundaryRegion.NodeId.Description);
@@ -63,6 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             const double thatcherHarlemannCoeff = 4.0;
 
             var validCategoriesSet = new List<DelftIniCategory>();
+            validCategoriesSet.Add(new DelftIniCategory(GeneralRegion.IniHeader));
 
             var validCategory = new DelftIniCategory(BoundaryRegion.BoundaryHeader);
             validCategory.AddProperty(BoundaryRegion.NodeId.Key, nodeID, BoundaryRegion.NodeId.Description);

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
@@ -65,6 +66,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
             if (category == null)
             {
                 errorMessages.Add("Unable to parse null category.");
+                return false;
+            }
+
+            if (category.Name == GeneralRegion.IniHeader)
+            {
                 return false;
             }
 
