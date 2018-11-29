@@ -263,6 +263,7 @@
     <Compile Include="ImportExport\Structures\CompositeBranchStructureConverterTest.cs" />
     <Compile Include="ImportExport\Structures\BasicStructuresOperationsTest.cs" />
     <Compile Include="ImportExport\Structures\ExtraResistanceConverterTest.cs" />
+    <Compile Include="ImportExport\Structures\GeneralStructureConverterTest.cs" />
     <Compile Include="ImportExport\Structures\OrificeConverterTest.cs" />
     <Compile Include="ImportExport\Structures\RiverWeirConverterTest.cs" />
     <Compile Include="ImportExport\Structures\StructureConverterFactoryTest.cs" />
