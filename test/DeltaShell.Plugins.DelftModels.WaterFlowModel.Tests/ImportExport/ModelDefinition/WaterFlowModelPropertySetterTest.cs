@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
@@ -20,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         private readonly TimeSpan defaultStructuresTimeStep = new TimeSpan(0, 0, 5, 0); // 5 minutes
 
         [Test]
-        public void GivenTimeSettingsDataModel_WhenSettingWaterFlowModelProperties_ThenTimeSettingsAreCorrect()
+        public void GivenTimeSettingsDataModel_WhenSettingWaterFlowModelTimeProperties_ThenTimeSettingsAreCorrect()
         {
             // Given
             var timeSettingsCategories = GetCorrectTimeSettingsDataModel();
@@ -39,6 +41,73 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.That(modelOutputSettings.StructureOutputTimeStep, Is.EqualTo(defaultStructuresTimeStep));
         }
 
+        [Test]
+        public void GivenTimeSettingsDataModelWithMissingStartTime_WhenSettingWaterFlowModelTimeProperties_ThenDefaultStartTimeIsSetOnModel()
+        {
+            // Given / When
+            var model = SetTimePropertiesWithMissingProperty(ModelDefinitionsRegion.StartTime.Key);
+
+            // Then
+            var defaultDateTime = default(DateTime);
+            Assert.That(model.StartTime, Is.EqualTo(defaultDateTime));
+        }
+
+        [Test]
+        public void GivenTimeSettingsDataModelWithMissingStopTime_WhenSettingWaterFlowModelTimeProperties_ThenDefaultStopTimeIsSetOnModel()
+        {
+            // Given / When
+            var model = SetTimePropertiesWithMissingProperty(ModelDefinitionsRegion.StopTime.Key);
+
+            // Then
+            var defaultDateTime = default(DateTime);
+            Assert.That(model.StopTime, Is.EqualTo(defaultDateTime));
+        }
+
+        [Test]
+        public void GivenTimeSettingsDataModelWithMissingTimeStep_WhenSettingWaterFlowModelTimeProperties_ThenDefaultTimeStepIsSetOnModel()
+        {
+            // Given / When
+            var model = SetTimePropertiesWithMissingProperty(ModelDefinitionsRegion.TimeStep.Key);
+
+            // Then
+            var defaultTimeSpan = default(TimeSpan);
+            Assert.That(model.TimeStep, Is.EqualTo(defaultTimeSpan));
+        }
+
+        [Test]
+        public void GivenTimeSettingsDataModelWithMissingGridOutputTimeStep_WhenSettingWaterFlowModelTimeProperties_ThenDefaultGridOutputTimeStepIsSetOnModel()
+        {
+            // Given / When
+            var model = SetTimePropertiesWithMissingProperty(ModelDefinitionsRegion.OutTimeStepGridPoints.Key);
+
+            // Then
+            var defaultTimeSpan = default(TimeSpan);
+            Assert.That(model.OutputSettings.GridOutputTimeStep, Is.EqualTo(defaultTimeSpan));
+        }
+
+        [Test]
+        public void GivenTimeSettingsDataModelWithMissingStructureOutputTimeStep_WhenSettingWaterFlowModelTimeProperties_ThenDefaultStructureOutputTimeStepIsSetOnModel()
+        {
+            // Given / When
+            var model = SetTimePropertiesWithMissingProperty(ModelDefinitionsRegion.OutTimeStepStructures.Key);
+
+            // Then
+            var defaultTimeSpan = default(TimeSpan);
+            Assert.That(model.OutputSettings.StructureOutputTimeStep, Is.EqualTo(defaultTimeSpan));
+        }
+
+        private WaterFlowModel1D SetTimePropertiesWithMissingProperty(string missingPropertyNAme)
+        {
+            // Given
+            var timeSettingsCategories = GetCorrectTimeSettingsDataModel().ToArray();
+            timeSettingsCategories.ForEach(c => c.Properties.RemoveAllWhere(p => p.Name == missingPropertyNAme));
+
+            // When
+            var model = new WaterFlowModel1D();
+            WaterFlowModelPropertySetter.SetTimeProperties(timeSettingsCategories, model);
+            return model;
+        }
+
         private IEnumerable<DelftIniCategory> GetCorrectTimeSettingsDataModel()
         {
             var timeSettingsCategory = new DelftIniCategory(ModelDefinitionsRegion.TimeHeader);
@@ -51,7 +120,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         }
 
         [Test]
-        public void GivenDataModelWithoutTimeCategory_WhenSettingWaterFlowModelProperties_ThenTimeSettingsHaveNotChanged()
+        public void GivenDataModelWithoutTimeCategory_WhenSettingWaterFlowModelTimeProperties_ThenTimeSettingsHaveNotChanged()
         {
             // Given
             var notTimeCategory = new DelftIniCategory(ModelDefinitionsRegion.AdvancedOptionsHeader);
@@ -79,7 +148,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         }
 
         [Test]
-        public void WhenSettingWaterFlowModelPropertiesWithCategoriesEqualToNull_ThenTimeSettingsHaveNotChanged()
+        public void WhenSettingWaterFlowModelTimePropertiesWithCategoriesEqualToNull_ThenTimeSettingsHaveNotChanged()
         {
             // When
             var model = new WaterFlowModel1D();
@@ -102,7 +171,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         }
 
         [Test]
-        public void WhenSettingWaterFlowModelPropertiesWithoutAModel_ThenNoException()
+        public void WhenSettingWaterFlowModelTimePropertiesWithoutAModel_ThenNoException()
         {
             try
             {
