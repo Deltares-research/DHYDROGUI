@@ -60,10 +60,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public TimeRule(): this(null){}
 
-        public TimeRule(string name) : base (RtcXmlTag.TimeRule)
+        public TimeRule(string name)
         {
             if (name != null) Name = name;
             Reference = string.Empty; // = default EXPLICIT
+            XmlTag = RtcXmlTag.TimeRule;
         }
 
         public override IEnumerable<IXmlTimeSeries> XmlImportTimeSeries(string prefix, DateTime start, DateTime stop, TimeSpan step)

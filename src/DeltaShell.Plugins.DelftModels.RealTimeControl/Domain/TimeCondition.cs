@@ -26,10 +26,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(StandardCondition));
 
-        public TimeCondition() : base(false, RtcXmlTag.TimeCondition)
+        public TimeCondition() : base(false)
         {
             Reference = "IMPLICIT"; // = IMPLICIT -> timeseries
-
+            XmlTag = RtcXmlTag.TimeCondition;
         }
 
         private TimeSeries timeSeries;

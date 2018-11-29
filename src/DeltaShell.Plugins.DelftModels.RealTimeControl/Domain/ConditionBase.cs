@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         [Aggregation]
         public IEventedList<RtcBaseObject> FalseOutputs { get; protected set; }
 
-        protected ConditionBase(string xmlTag) : base(xmlTag)
+        protected ConditionBase()
         {
             Name = ConditionProvider.GetTitle(GetType());
             TrueOutputs = new EventedList<RtcBaseObject>();

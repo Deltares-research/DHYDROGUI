@@ -31,11 +31,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public StandardCondition(): this(true){}
 
-        public StandardCondition(bool inputRequired, string xmlTag = RtcXmlTag.StandardCondition ) : base (xmlTag)
+        public StandardCondition(bool inputRequired)
         {
             Operation = Operation.Equal;
             Reference = "EXPLICIT"; // = default EXPLICIT
             this.inputRequired = inputRequired;
+            if (string.IsNullOrEmpty(XmlTag))
+            {
+                XmlTag = RtcXmlTag.StandardCondition;
+            }
         }
 
         public override string GetDescription()

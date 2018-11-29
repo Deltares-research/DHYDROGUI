@@ -11,8 +11,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     {
         public static string TimeLagPostFix = "-1";
 
-        public DirectionalCondition() : base(true, RtcXmlTag.DirectionalCondition)
+        public DirectionalCondition()
         {
+            XmlTag = RtcXmlTag.DirectionalCondition;
         }
 
         public override string GetDescription()

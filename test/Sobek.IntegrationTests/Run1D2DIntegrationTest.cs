@@ -459,9 +459,9 @@ namespace Sobek.IntegrationTests
                     var componentItems = targetComponent.ElementsAfterSelf().ToList();
                     Assert.That(componentItems.Count(), Is.EqualTo(3));
                     XElement firstComponentItem = componentItems.First();
-                    xmlDimrCheckCouplerItemNode(firstComponentItem, nameSpace, "FlowFM/observations/ObservationFM/water_level", "input_ObservationFM_water_level");
+                    xmlDimrCheckCouplerItemNode(firstComponentItem, nameSpace, "FlowFM/observations/ObservationFM/water_level", "[Input]ObservationFM/water_level");
                     XElement secondComponentItem = firstComponentItem.ElementsAfterSelf().First();
-                    xmlDimrCheckCouplerItemNode(secondComponentItem, nameSpace, "Flow1D/observations/ObservationF1D/water_level", "input_ObservationF1D_Water level (op)");
+                    xmlDimrCheckCouplerItemNode(secondComponentItem, nameSpace, "Flow1D/observations/ObservationF1D/water_level", "[Input]ObservationF1D/Water level (op)");
                     XElement thirdComponentCoupler = secondComponentItem.ElementsAfterSelf().First();
                     /*Logger for the coupler, the '.' will be replaced in the future by a relative path. So the test is expected to fail here.*/
                     xmlDimrCheckCouplerLoggerNode(thirdComponentCoupler, nameSpace, ".", "1d2d_to_rtc.nc");  

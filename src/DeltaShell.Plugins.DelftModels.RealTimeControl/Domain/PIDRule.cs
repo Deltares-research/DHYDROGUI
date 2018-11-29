@@ -25,11 +25,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         private TimeSeries timeSeries;
 
-        public PIDRule(string name) : base (RtcXmlTag.PIDRule)
+        public PIDRule(string name)
         {
             if (name != null) Name = name;
 
             Setting = new Setting {MaxSpeed = 0};
+            XmlTag = RtcXmlTag.PIDRule;
         }
 
         public PIDRuleSetpointType PidRuleSetpointType { get; set; }
@@ -121,7 +122,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 output.DifferentialPart = prefix + DifferentialPart;  // also in data export and statevector
             }
             result.Add(new XElement(xNamespace + "pid",
-                                    new XAttribute("id", prefix + Name),
+                                    new XAttribute("id", prefix + "/" + Name),
                                     new XElement(xNamespace + "mode", "PIDVEL"),
                                     new XElement(xNamespace + "settingMin", Setting.Min),
                                     new XElement(xNamespace + "settingMax", Setting.Max),
@@ -130,7 +131,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                                     new XElement(xNamespace + "ki", Ki),
                                     new XElement(xNamespace + "kd", Kd),
                                     Inputs.Select(input => PidRuleSetpointType == PIDRuleSetpointType.Constant ?
-                                        GenerateConstantValueSetPointXml(xNamespace, input.Name) :
+                                        GenerateConstantValueSetPointXml(xNamespace, input.XmlName) :
                                         input.ToXml(xNamespace, "x", "setpointSeries")),
                                     Outputs.Select(output => output.ToXml(xNamespace, "y", "integralPart", "differentialPart"))));
             return result;
@@ -139,7 +140,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         private XElement GenerateConstantValueSetPointXml(XNamespace xNamespace, string name)
         {
             var result = new XElement(xNamespace + "input");
-            result.Add(new XElement(xNamespace + "x", "input_" + name));
+            result.Add(new XElement(xNamespace + "x", name));
             result.Add(new XElement(xNamespace + "setpointValue", ConstantValue));
             return result;
         }

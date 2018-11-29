@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         [Aggregation]
         public IEventedList<Output> Outputs { get; set; }
 
-        protected RuleBase(string xmlTag) : base(xmlTag)
+        protected RuleBase() : base()
         {
             Name = RuleProvider.GetTitle(GetType());
             Inputs = new EventedList<Input>();

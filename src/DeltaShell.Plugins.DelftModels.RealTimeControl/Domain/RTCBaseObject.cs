@@ -11,14 +11,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     [Entity(FireOnCollectionChange=false)]
     public abstract class RtcBaseObject : Unique<long>, INameable, ICloneable, ICopyFrom
     {
-        protected RtcBaseObject(string xmlTag)
-        {
-            XmlTag = xmlTag;
-        }
-
         public string Name { get; set; }
         public string LongName { get; set; }
-        protected string XmlTag { get; }
+        protected string XmlTag { get; set; }
 
         /// <summary>
         /// todo refactor this; there not 1 xml attached to a RtcBaseObject

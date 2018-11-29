@@ -121,10 +121,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         {
         }
 
-        public IntervalRule(string name) : base (RtcXmlTag.IntervalRule)
+        public IntervalRule(string name)
         {
             if (name != null) Name = name;
             Setting = new Setting { MaxSpeed = 0 };
+            XmlTag = RtcXmlTag.IntervalRule;
         }
 
         public override XElement ToXml(XNamespace xNamespace, string prefix)
@@ -160,7 +161,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
 
             result.Add(new XElement(xNamespace + "interval",
-                    new XAttribute("id", prefix + Name),
+                    new XAttribute("id", prefix + "/" + Name),
                     new XElement(xNamespace + "settingBelow", Setting.Below.ToString(CultureInfo.InvariantCulture)),
                     new XElement(xNamespace + "settingAbove", Setting.Above.ToString(CultureInfo.InvariantCulture)),
                     new XElement(xNamespace + settingMax, settingMaxValue.ToString(CultureInfo.InvariantCulture)),

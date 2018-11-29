@@ -21,9 +21,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         private int timeLag = 0;
         private int timeLagInTimeSteps = 0;
 
-        public HydraulicRule(string xmlTag = RtcXmlTag.HydraulicRule) : base (xmlTag)
+        public HydraulicRule()
         {
             Function = DefineFunction();
+            XmlTag = RtcXmlTag.HydraulicRule;
         }
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
 
             result.Add(new XElement(xNamespace + "lookupTable",
-                            new XAttribute("id", prefix + Name),
+                            new XAttribute("id", prefix + "/" + Name),
                             new XElement(xNamespace + "table", table.Select(record => record.ToXml(xNamespace))),
                             new XElement(xNamespace + "interpolationOption", Interpolation == InterpolationType.Constant ? "BLOCK" : "LINEAR"),
                             new XElement(xNamespace + "extrapolationOption", Extrapolation == ExtrapolationType.Constant ? "BLOCK" : "LINEAR"),

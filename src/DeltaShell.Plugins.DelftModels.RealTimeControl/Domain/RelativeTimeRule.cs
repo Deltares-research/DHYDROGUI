@@ -76,10 +76,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         {
         }
 
-        public RelativeTimeRule(string name, bool fromValue) : base (RtcXmlTag.RelativeTimeRule)
+        public RelativeTimeRule(string name, bool fromValue)
         {
             if (name != null) Name = name;
             FromValue = fromValue;
+            XmlTag = RtcXmlTag.RelativeTimeRule;
         }
 
         public static Function DefineFunction()
