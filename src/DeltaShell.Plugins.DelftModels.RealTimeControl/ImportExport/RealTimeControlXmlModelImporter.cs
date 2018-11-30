@@ -4,6 +4,7 @@ using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
@@ -32,17 +33,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             var importElements = dataConfigObject.importSeries.timeSeries;
             var exportElements = dataConfigObject.exportSeries.timeSeries;
+            var allElements = importElements.Concat(exportElements).ToList();
 
-            // import
-            var inputs = (IList<Input>)RealTimeControlDataConfigXmlReader.GetConnectionPointsFromXmlElements(importElements, RtcDataConfigTag.Input, targetModel);
-            var timeRules = RealTimeControlDataConfigXmlReader.GetTimeRulesFromXmlElements(importElements);
-            var timeConditions = RealTimeControlDataConfigXmlReader.GetTimeConditionsFromXmlElements(importElements);
-            var outputsAsInputs = RealTimeControlDataConfigXmlReader.GetOutputsAsInputsFromXmlElements(importElements, targetModel);
+            var controlGroups = RealTimeControlDataConfigXmlReader.CreateControlGroupsFromXmlElementIDs(allElements);
 
-            // export
-            var outputs = (IList<Output>)RealTimeControlDataConfigXmlReader.GetConnectionPointsFromXmlElements(exportElements, RtcDataConfigTag.Output, targetModel);
-            var standardConditionsExport = RealTimeControlDataConfigXmlReader.GetStandardConditionsFromXmlElements(exportElements);
-            var relativeTimeRules = RealTimeControlDataConfigXmlReader.GetRelativeTimeRulesFromXmlElements(exportElements);
+            var rules = RealTimeControlDataConfigXmlReader.GetAllRulesFromXmlElementsAndAddToControlGroup(allElements, controlGroups);
+            var conditions = RealTimeControlDataConfigXmlReader.GetAllConditionsFromXmlElementsAndAddToControlGroup(allElements, controlGroups);
+            var inputs = (IList<Input>) RealTimeControlDataConfigXmlReader.GetConnectionPointsFromXmlElements(exportElements, RtcXmlTag.Input, targetModel);
+            var outputs = (IList<Output>)RealTimeControlDataConfigXmlReader.GetConnectionPointsFromXmlElements(exportElements, RtcXmlTag.Output, targetModel);
+
+            RealTimeControlDataConfigXmlReader.AddOutputAsInputForRelativeTimeRule(allElements,
+                rules.OfType<RelativeTimeRule>().ToList(), outputs);
+          
+            // read ToolsConfigFile: couple inputs and outputs etc.
+
+            model.ControlGroups.AddRange(controlGroups);
 
             return model;
         }
