@@ -7,6 +7,8 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
+using SharpMap;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Dimr.Tests
 {
@@ -96,7 +98,7 @@ namespace DeltaShell.Dimr.Tests
         {
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             var localCopy = TestHelper.CreateLocalCopy(mduPath);
-
+            if(Map.CoordinateSystemFactory == null) Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
             using (var model = new WaterFlowFMModel(localCopy))
             {
                 var exporter = new WaterFlowFMFileExporter();
