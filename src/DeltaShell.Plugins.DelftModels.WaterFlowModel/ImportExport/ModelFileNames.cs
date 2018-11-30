@@ -120,14 +120,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             Network = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.NetworkFile.Key);
             Structures = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.StructuresFile.Key);
             ObservationPoints = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.ObservationPointsFile.Key);
-            InitialDischarge = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialDischargeFile.Key);
-            InitialSalinity = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialSalinityFile.Key);
-            InitialTemperature = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialTemperatureFile.Key);
-            InitialWaterLevel = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialWaterLevelFile.Key);
-            Dispersion = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.DispersionFile.Key);
-            DispersionF3 = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.DispersionF3File.Key);
-            DispersionF4 = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.DispersionF4File.Key);
-            WindShielding = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.WindShieldingFile.Key);
+            InitialDischarge = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialDischargeFile.Key, true);
+            InitialSalinity = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialSalinityFile.Key, true);
+            InitialTemperature = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialTemperatureFile.Key, true);
+            InitialWaterLevel = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialWaterLevelFile.Key, true);
+            Dispersion = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.DispersionFile.Key, true);
+            DispersionF3 = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.DispersionF3File.Key, true);
+            DispersionF4 = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.DispersionF4File.Key, true);
+            WindShielding = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.WindShieldingFile.Key, true);
             LateralDischarge =
                 fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.LateralDischargeLocationsFile.Key);
             BoundaryConditions =
