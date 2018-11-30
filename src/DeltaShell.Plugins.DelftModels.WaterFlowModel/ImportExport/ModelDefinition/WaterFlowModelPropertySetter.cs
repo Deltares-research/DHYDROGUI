@@ -82,12 +82,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                     {
                         qType = (QuantityType) Enum.Parse(typeof(QuantityType), prop.Name);
                     }
-                    catch (ArgumentException _)
+                    catch (ArgumentException)
                     {
-                        continue;
+                        // Kernel expects the property Lateral1D2D. GUI defines this as
+                        // QTotal_1d2d. As such we need to explicitly test for this.
+                        if (prop.Name == "Lateral1D2D")
+                            qType = QuantityType.QTotal_1d2d;
+                        else
+                            continue;
                     }
 
-                    var engineParameter = outputSettings.GetEngineParameter(qType, elementSet, DataItemRole.Output);
+                    // Kernel expects Dispersion in ResultsBranchesHeader. GUI puts it
+                    // in ElementSet.GridpointsOnBranches, as such we need to 
+                    // explicitly correct this. 
+                    var engineParameter = outputSettings.GetEngineParameter(qType,
+                        qType == QuantityType.Dispersion && elementSet == ElementSet.ReachSegElmSet
+                            ? ElementSet.GridpointsOnBranches
+                            : elementSet,
+                        DataItemRole.Output);
 
                     if (engineParameter == null) continue;
 
@@ -97,10 +109,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                     {
                         aggregateOption = (AggregationOptions) Enum.Parse(typeof(AggregationOptions), prop.Value);
                     }
-                    catch (ArgumentException _)
+                    catch (ArgumentException)
                     {
                         continue;
                     }
+                    
                     engineParameter.AggregationOptions = aggregateOption;
                 }
             }
