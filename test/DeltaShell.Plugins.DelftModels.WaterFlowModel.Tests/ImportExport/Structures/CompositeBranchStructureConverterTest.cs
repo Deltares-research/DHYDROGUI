@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             Assert.AreEqual(1, errorMessages.Count);
             Assert.AreEqual(
-                "A weir is found in the structure file and this type is not supported during an import.Therefore it is not imported in the GUI",
+                "A weir is found in the structure file (line 55) and this type is not supported during an import.Therefore it is not imported in the GUI",
                 errorMessages[0]);
         }
 
@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             Assert.AreEqual(1, errorMessages.Count);
             Assert.AreEqual(
-                "Failed to create a structure from the structures file",
+                "Failed to create a structure from the structures file (line 55)",
                 errorMessages[0]);
         }
 
@@ -207,7 +207,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             mocks.VerifyAll();
 
             Assert.AreEqual(1, errorMessages.Count);
-            Assert.AreEqual("Failed to create structure Weir from the structures file",
+            Assert.AreEqual("Failed to create structure Weir from the structures file (line 55)",
                 errorMessages[0]);
         }
 
@@ -227,6 +227,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.AddProperty(StructureRegion.DischargeCoeff.Key, "1.1");
             category.AddProperty(StructureRegion.LatDisCoeff.Key, "1.2");
             category.AddProperty(StructureRegion.AllowedFlowDir.Key, "0");
+
+            category.LineNumber = 55;
 
             return category;
         }

@@ -4,10 +4,8 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
-using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
-using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
@@ -47,21 +45,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
                     if (converter == null)
                     {
-                        throw new Exception(string.Format("A {0} is found in the structure file and this type is not supported during an import.Therefore it is not imported in the GUI", type));
+                        throw new Exception(string.Format("A {0} is found in the structure file (line {1}) and this type is not supported during an import.Therefore it is not imported in the GUI", type, structureBranchCategory.LineNumber));
                     }
 
                     var structure = converter.ConvertToStructure1D(structureBranchCategory, channelsList);
 
                     if (structure == null)
                     {
-                        throw new Exception("Failed to create a structure from the structures file");
+                        throw new Exception(string.Format("Failed to create a structure from the structures file (line {0})", structureBranchCategory.LineNumber));
                     }
                     
                     var compositeBranchStructure = getCompositeBranchStructureFunc.Invoke(structureBranchCategory, structure, compositeBranchStructures);
 
                     if (compositeBranchStructure == null)
                     {
-                        throw new Exception(string.Format("Failed to create structure {0} from the structures file", structure.Name));
+                        throw new Exception(string.Format("Failed to create structure {0} from the structures file (line {1})", structure.Name, structureBranchCategory.LineNumber));
                     }
 
                     HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, structure);

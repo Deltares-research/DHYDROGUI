@@ -44,6 +44,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             structure.LongName = longName;
         }
 
+        /*If compound is 0 it means that there is only one structure at a certain location 
+        (for users no composite structure, however in the code behind all structures (alone or groups) are placed in a composite structure
+        Therefore if 0 is given always a new composite structure should be created.
+        For all other numbers, the number indicates the group and the compoundname is the corresponding group name. For these ones only 
+        the first time a composite structure should be created
+        */
         public static ICompositeBranchStructure CreateCompositeBranchStructuresIfNeeded
             (DelftIniCategory structureBranchCategory, IStructure1D structure, IList<ICompositeBranchStructure> compositeBranchStructures)
         {
@@ -75,13 +81,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             {
                 var compoundName = structureBranchCategory.ReadProperty<string>(StructureRegion.CompoundName.Key);
 
-                if (compositeBranchStructures.Any(cbs => cbs.Name == compoundName))
+                var alreadyExistingCompositeBranchStructure =
+                    compositeBranchStructures.FirstOrDefault(bf => bf.Name == compoundName);
+
+                if (alreadyExistingCompositeBranchStructure != null)
                 {
-                    compositeBranchStructure = compositeBranchStructures.FirstOrDefault(bf => bf.Name == compoundName);
-
-                    structure.ParentStructure = compositeBranchStructure;
-
-                    return compositeBranchStructure;
+                    structure.ParentStructure = alreadyExistingCompositeBranchStructure;
+                    return alreadyExistingCompositeBranchStructure;
                 }
                 else
                 {
