@@ -110,12 +110,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 ReadFileSpatialData(fileNames.InitialDischarge, model, CreateAndAddErrorReport);
                 ReadFileSpatialData(fileNames.InitialSalinity, model, CreateAndAddErrorReport);
                 ReadFileSpatialData(fileNames.InitialTemperature, model, CreateAndAddErrorReport);
-//                ReadFileSpatialData(fileNames.InitialWaterLevel, model, CreateAndAddErrorReport);
+                ReadFileSpatialData(fileNames.InitialWaterLevel, model, CreateAndAddErrorReport);
                 ReadFileSpatialData(fileNames.Dispersion, model, CreateAndAddErrorReport);
-//                ReadFileSpatialData(fileNames.DispersionF3, model, CreateAndAddErrorReport);
-//                ReadFileSpatialData(fileNames.DispersionF4, model, CreateAndAddErrorReport);
+                if (model.DispersionFormulationType != DispersionFormulationType.Constant)
+                {
+                    ReadFileSpatialData(fileNames.DispersionF3, model, CreateAndAddErrorReport);
+                    ReadFileSpatialData(fileNames.DispersionF4, model, CreateAndAddErrorReport);
+                }
                 ReadFileSpatialData(fileNames.WindShielding, model, CreateAndAddErrorReport);
-                stepCounter++;
             }
             catch (Exception)
             {
@@ -290,10 +292,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     model.InitialTemperature.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
                     model.InitialTemperature.Components[0].SetValues(spatialFileData.Components[0].Values);
                     break;
-//                case "InitialWaterLevel":
-//                    model.Water.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
-//                    model.InitialFlow.Components[0].SetValues(spatialFileData.Components[0].Values);
-//                    break;
+                case "InitialWaterLevel":
+                    model.InitialConditions.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
+                    model.InitialConditions.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    break;
+                case "InitialWaterDepth":
+                    model.InitialConditions.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
+                    model.InitialConditions.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    break;
                 case "Dispersion":
                     model.DispersionCoverage.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
                     model.DispersionCoverage.Components[0].SetValues(spatialFileData.Components[0].Values);

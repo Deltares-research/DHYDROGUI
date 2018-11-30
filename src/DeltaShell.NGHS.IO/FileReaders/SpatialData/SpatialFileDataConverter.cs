@@ -13,15 +13,14 @@ using NetTopologySuite.LinearReferencing;
 
 namespace DeltaShell.NGHS.IO.FileReaders.SpatialData
 {
-    class SpatialFileDataConverter
+    public static class SpatialFileDataConverter
     {
         public static INetworkCoverage Convert(IList<DelftIniCategory> categories, IList<IChannel> channelsList, IList<string> errorMessages)
         {
             var networkCoverage = new NetworkCoverage();
             //Content tab
             var contentTab = categories.Where(category => category.Name == SpatialDataRegion.ContentIniHeader).ToList();
-            var spatialDataType = contentTab[0].ReadProperty<string>(SpatialDataRegion.Quantity.Key);
-
+           
             var interpolated = contentTab[0].ReadProperty<string>(SpatialDataRegion.Interpolate.Key);
             networkCoverage.Arguments[0].InterpolationType = interpolated == "1" ? InterpolationType.Linear : InterpolationType.Constant;
             
@@ -61,7 +60,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.SpatialData
             
             if (branch == null)
             {
-                var errorMessage = string.Format("Unable to parse {0} property: {1}, Branch not found in Network.{2}", category.Name, LocationRegion.BranchId.Key, Environment.NewLine);
+                var errorMessage =
+                    $"Unable to parse {category.Name} property: {LocationRegion.BranchId.Key}, Branch not found in Network.{Environment.NewLine}";
                 throw new Exception(errorMessage);
             }
 
