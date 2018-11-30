@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Structures
 {
@@ -21,10 +24,41 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         {
             originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch();
             channelsList = originalNetwork.Channels.ToList();
-
         }
 
-       [Test]
+        [Test]
+        public void WhenACompositeBranchStructureConverterIsConstructedWithNoArguments_ThenNoExceptionIsThrown()
+        {
+            Assert.That(new CompositeBranchStructureConverter(), Is.Not.Null);
+        }
+
+        [Test]
+        public void GivenSomeFactoryAndSomeCompositeBranchStructureConverter_WhenACompositeBranchStructureConverterIsConstructed_ThenNoExceptionIsThrown()
+        {
+            Func<string, IStructureConverter> someFactory = a => null;
+            Func<DelftIniCategory, IStructure1D, IList<ICompositeBranchStructure>, ICompositeBranchStructure> someCompositeBranchStructureConverter = (a, b,c) => null;
+           
+            Assert.That(new CompositeBranchStructureConverter(someFactory, someCompositeBranchStructureConverter), Is.Not.Null);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "getCompositeBranchStructureFunc cannot be null.")]
+        public void GivenSomeFactoryAndANullCompositeBranchStructureConverter_WhenACompositeBranchStructureConverterIsConstructed_ThenAnArgumentExceptionIsThrown()
+        {
+            Func<string, IStructureConverter> someFactory = a => null;
+
+            var converter = new CompositeBranchStructureConverter(someFactory, null);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "getTypeConverterFunc cannot be null.")]
+        public void GivenANullFactoryAndSomeCompositeBranchStructureConverter_WhenACompositeBranchStructureConverterIsConstructed_ThenAnArgumentExceptionIsThrown()
+        {
+            Func<DelftIniCategory, IStructure1D, IList<ICompositeBranchStructure>, ICompositeBranchStructure> someCompositeBranchStructureConverter = (a, b, c) => null;
+
+            var converter = new CompositeBranchStructureConverter(null,someCompositeBranchStructureConverter);
+        }
+        [Test]
         public void GivenTwoCategoriesOnTheSameCompositeStructure_WhenImporting_ThenACompositeStructureShouldBeCreatedWithTheTwoStructures()
         {
             //Given
@@ -43,47 +77,137 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             categories.Add(category2);
 
             //When
-            var compositeBranchStructures = CompositeBranchStructureConverter.Convert(categories, channelsList, errorMessages);
-          
+            var compositeBranchStructures = (new CompositeBranchStructureConverter()).Convert(categories, channelsList, errorMessages);
+
             //Then
             Assert.AreEqual(1, compositeBranchStructures.Count);
             Assert.AreEqual(2, compositeBranchStructures[0].Structures.Count);
-            
+            Assert.AreEqual("Weir1",compositeBranchStructures[0].Structures[0].Name);
+            Assert.AreEqual("Weir2", compositeBranchStructures[0].Structures[1].Name);
         }
-
+        
         [Test]
-        public void GivenOneCategoryWithAnUnknownType_WhenConverting_ThenErrorMessagesShoudContainAnError()
+        public void GivenAnUnknownTypeForAStructure_WhenTheConverterFactoryIsCreatingAConverter_ThenAnErrorMessageShouldBeCreated()
         {
             //Given
+            var mocks = new MockRepository();
+
             var errorMessages = new List<string>();
             var categories = new List<DelftIniCategory>();
 
-            var category = new DelftIniCategory(StructureRegion.Header);
-
-            category.AddProperty(StructureRegion.Id.Key, "Weir1");
-            category.AddProperty(StructureRegion.BranchId.Key, "branch");
-            category.AddProperty(StructureRegion.Chainage.Key, "50");
-            category.AddProperty(StructureRegion.Compound.Key, "1");
-            category.AddProperty(StructureRegion.CompoundName.Key, "Bla");
-            category.AddProperty(StructureRegion.Name.Key, "Weir1");
-            category.AddProperty(StructureRegion.DefinitionType.Key, "bla");
-
-            category.AddProperty(StructureRegion.CrestLevel.Key, "1.3");
-            category.AddProperty(StructureRegion.CrestWidth.Key, "100");
-            category.AddProperty(StructureRegion.DischargeCoeff.Key, "1.1");
-            category.AddProperty(StructureRegion.LatDisCoeff.Key, "1.2");
-            category.AddProperty(StructureRegion.AllowedFlowDir.Key, "0");
-
+            var category = CreatePerfectCategory();
             categories.Add(category);
+
+            var someFactoryMock = mocks.DynamicMock<Func<string, IStructureConverter>>();
+            someFactoryMock.Expect(e => e.Invoke("weir"))
+                .Return(null)
+                .Repeat.AtLeastOnce();
             
+            mocks.ReplayAll();
+            
+            // Used for the constructor, but will not be executed.
+            Func<DelftIniCategory, IStructure1D, IList<ICompositeBranchStructure>, ICompositeBranchStructure> compositeBranchStructuresFunc = BasicStructuresOperations.CreateCompositeBranchStructuresIfNeeded;
+
             //When
-            var compositeBranchStructures = CompositeBranchStructureConverter.Convert(categories, channelsList, errorMessages);
-            
+            var converter = new CompositeBranchStructureConverter(someFactoryMock, compositeBranchStructuresFunc );
+            var compositeBranchStructures = converter.Convert(categories, channelsList, errorMessages);
 
             //Then
+
+            mocks.VerifyAll();
+
             Assert.AreEqual(1, errorMessages.Count);
             Assert.AreEqual(
-                "A bla is found in the structure file and this type is not supported during an import.Therefore it is not imported in the GUI",
+                "A weir is found in the structure file and this type is not supported during an import.Therefore it is not imported in the GUI",
+                errorMessages[0]);
+        }
+
+        [Test]
+        public void GivenNullForStructure_WhenCreatingThisStructure_ThenAnErrorMessageShouldBeCreated()
+        {
+            //Given
+            var mocks = new MockRepository();
+
+            var errorMessages = new List<string>();
+            var categories = new List<DelftIniCategory>();
+
+            var category = CreatePerfectCategory();
+            categories.Add(category);
+
+            var convertMock = mocks.StrictMock<IStructureConverter>();
+            convertMock.Expect(e=>e.ConvertToStructure1D(category,channelsList))
+                .Return(null)
+                .Repeat.AtLeastOnce();
+
+            var someFactoryMock = mocks.DynamicMock<Func<string, IStructureConverter>>();
+            someFactoryMock.Expect(e => e.Invoke("weir"))
+                .Return(convertMock)
+                .Repeat.AtLeastOnce();
+
+            mocks.ReplayAll();
+
+            // Used for the constructor, but will not be executed.
+            Func<DelftIniCategory, IStructure1D, IList<ICompositeBranchStructure>, ICompositeBranchStructure> compositeBranchStructuresFunc = BasicStructuresOperations.CreateCompositeBranchStructuresIfNeeded;
+
+            //When
+            var converter = new CompositeBranchStructureConverter(someFactoryMock,compositeBranchStructuresFunc);
+            var compositeBranchStructures = converter.Convert(categories, channelsList, errorMessages);
+
+            //Then
+
+            mocks.VerifyAll();
+
+            Assert.AreEqual(1, errorMessages.Count);
+            Assert.AreEqual(
+                "Failed to create a structure from the structures file",
+                errorMessages[0]);
+        }
+
+        [Test]
+        public void GivenNullForCompositeBranchStructure_WhenCreatingThisCorrespondingCompositeBranchStructureForAStructure_ThenAnErrorMessageShouldBeCreated()
+        {
+            //Given
+            var mocks = new MockRepository();
+
+            var errorMessages = new List<string>();
+            var categories = new List<DelftIniCategory>();
+            
+            var category = CreatePerfectCategory();
+            categories.Add(category);
+            
+            var someStructure = new Weir();
+            
+            var convertMock = mocks.DynamicMock<IStructureConverter>();
+            convertMock.Expect(e => e.ConvertToStructure1D(category, channelsList))
+                .Return(someStructure)
+                .Repeat.AtLeastOnce();
+
+            var someFactoryMock = mocks.DynamicMock<Func<string, IStructureConverter>>();
+            someFactoryMock.Expect(e => e.Invoke("weir"))
+                .Return(convertMock)
+                .IgnoreArguments()
+                .Repeat.AtLeastOnce();
+
+            var someCompositeBranchStructureMock = mocks
+                .DynamicMock<Func<DelftIniCategory, IStructure1D, IList<ICompositeBranchStructure>,
+                    ICompositeBranchStructure>>();
+            someCompositeBranchStructureMock.Expect(e => e.Invoke(null, null, null))
+                .IgnoreArguments()
+                .Return(null)
+                .Repeat.AtLeastOnce();
+
+            mocks.ReplayAll();
+            
+            //When
+            var converter = new CompositeBranchStructureConverter(someFactoryMock, someCompositeBranchStructureMock);
+            var compositeBranchStructures = converter.Convert(categories, channelsList, errorMessages);
+
+            //Then
+
+            mocks.VerifyAll();
+
+            Assert.AreEqual(1, errorMessages.Count);
+            Assert.AreEqual("Failed to create structure Weir from the structures file",
                 errorMessages[0]);
         }
 
@@ -96,7 +220,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.AddProperty(StructureRegion.Chainage.Key, "50");
             category.AddProperty(StructureRegion.Compound.Key, "1");
             category.AddProperty(StructureRegion.CompoundName.Key, "Bla");
-            category.AddProperty(StructureRegion.DefinitionType.Key, StructureRegion.StructureTypeName.Weir);
+            category.AddProperty(StructureRegion.DefinitionType.Key, "weir");
             
             category.AddProperty(StructureRegion.CrestLevel.Key, "1.3");
             category.AddProperty(StructureRegion.CrestWidth.Key, "100");

@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                 errorMessages.Add(e.Message);
             }
             
-           var compositeBranchStructures = CompositeBranchStructureConverter.Convert(categories, channelsList, errorMessages);
+            var compositeBranchStructures = (new CompositeBranchStructureConverter()).Convert(categories, channelsList, errorMessages);
             
             if (errorMessages.Count > 0)
                 createAndAddErrorReport?.Invoke("While reading the structures from file, an error occured", errorMessages);

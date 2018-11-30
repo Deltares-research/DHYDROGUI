@@ -11,10 +11,24 @@ using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    public static class CompositeBranchStructureConverter
+    public class CompositeBranchStructureConverter
         {
+            private readonly Func<string, IStructureConverter> getTypeConverterFunc;
+            private readonly Func<DelftIniCategory, IStructure1D, IList<ICompositeBranchStructure>, ICompositeBranchStructure> getCompositeBranchStructureFunc;
 
-            public static IList<ICompositeBranchStructure> Convert(IList<DelftIniCategory> categories, IList<IChannel> channelsList,
+        public CompositeBranchStructureConverter() : this(StructureConverterFactory.GetSpecificConverter, BasicStructuresOperations.CreateCompositeBranchStructuresIfNeeded)
+            { }
+
+            public CompositeBranchStructureConverter(Func<string, IStructureConverter> getTypeConverter, Func<DelftIniCategory,IStructure1D,IList<ICompositeBranchStructure>, ICompositeBranchStructure> getCompositeBranchStructureFunc)
+            {
+                if (getTypeConverter != null) this.getTypeConverterFunc = getTypeConverter;
+                else throw new ArgumentException("getTypeConverterFunc cannot be null.");
+               
+                if (getCompositeBranchStructureFunc != null) this.getCompositeBranchStructureFunc = getCompositeBranchStructureFunc;
+                else throw new ArgumentException("getCompositeBranchStructureFunc cannot be null.");
+        }
+
+            public IList<ICompositeBranchStructure> Convert(IList<DelftIniCategory> categories, IList<IChannel> channelsList,
                 List<string> errorMessages)
             {
                 
@@ -29,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                 {
                     var type = structureBranchCategory.ReadProperty<string>(StructureRegion.DefinitionType.Key);
 
-                    var converter =  StructureConverterFactory.GetSpecificConverter(type);
+                    var converter =  getTypeConverterFunc.Invoke(type);
 
                     if (converter == null)
                     {
@@ -43,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                         throw new Exception("Failed to create a structure from the structures file");
                     }
                     
-                    var compositeBranchStructure = BasicStructuresOperations.CreateCompositeBranchStructuresIfNeeded(structureBranchCategory, structure, compositeBranchStructures);
+                    var compositeBranchStructure = getCompositeBranchStructureFunc.Invoke(structureBranchCategory, structure, compositeBranchStructures);
 
                     if (compositeBranchStructure == null)
                     {
