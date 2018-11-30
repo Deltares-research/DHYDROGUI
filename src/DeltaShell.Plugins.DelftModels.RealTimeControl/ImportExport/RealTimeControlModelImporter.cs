@@ -6,11 +6,12 @@ using System.Text;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Dimr;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
-    public class RealTimeControlModelImporter : IFileImporter
+    public class RealTimeControlModelImporter : IDimrModelFileImporter
     {
         private static ILog Log = LogManager.GetLogger(typeof(RealTimeControlModelImporter));
 
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public object ImportItem(string path, object target = null)
         {
-            var importer = new RealTimeControlXmlModelImporter(path);
+            var importer = new RealTimeControlModelReader(path);
             return CanImportOn(target) ? importer.ImportOn((IHydroModel)target) : null;
         }
 
@@ -46,5 +47,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
         public bool OpenViewAfterImport { get { return false; } }
+        public string MasterFileExtension
+        {
+            get { return "."; }
+        }
+        public IEnumerable<string> SubFolders
+        {
+            get { yield return "rtc"; }
+        }
     }
 }

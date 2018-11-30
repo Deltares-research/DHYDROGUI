@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
 using DeltaShell.NGHS.IO.FileConverters;
@@ -7,34 +6,47 @@ using log4net;
 
 namespace DeltaShell.NGHS.IO.FileReaders
 {
+    /// <summary>
+    /// Reads the contents of an imported xml configuration file and returns data access model object.
+    /// </summary>
     public static class DelftConfigXmlFileParser
     {
-        public static readonly ILog Log = LogManager.GetLogger(typeof(DelftConfigXmlFileParser));
-        private static readonly Action<string, IList<string>> createAndAddErrorReport;
-        private static object dataAccessModel;
-
+        private static readonly ILog Log = LogManager.GetLogger(typeof(DelftConfigXmlFileParser));
+   
         public static object Read(string xmlFileSource)
         {
             if (string.IsNullOrEmpty(xmlFileSource)) {throw new FileReadingException("Configuration file cannot be found"); }
 
             XDocument xmlConfigFile;
-            string rootName;
-            var errorMessages = new List<string>();
             try
             {
                 xmlConfigFile = XDocument.Load(xmlFileSource);
-                rootName = xmlConfigFile?.Root?.Name.LocalName;
             }
             catch
             {
-                throw new XmlException("Unable to parse file");
+                throw new XmlException("Unable to read the file due to invalid file format");
             }
 
             var reader = xmlConfigFile?.Root?.CreateReader();
+            var rootName = xmlConfigFile?.Root?.Name.LocalName;
 
-            dataAccessModel = DelftXmlFileConverter.Convert(reader, rootName, errorMessages );
+            var unsupportedFeatures = new List<string>();
+            var dataAccessModel = DelftXmlFileConverter.Convert(reader, rootName, unsupportedFeatures);
+
+            LogMissingFeatures(unsupportedFeatures);
 
             return dataAccessModel;
+        }
+
+        private static void LogMissingFeatures(List<string> unsupportedFeatures)
+        {
+            if (unsupportedFeatures.Count != 0)
+            {
+                foreach (var feature in unsupportedFeatures)
+                {
+                    Log.InfoFormat($"The following features are not conforming with the xsd file: {feature}");
+                }
+            }
         }
     }
 }

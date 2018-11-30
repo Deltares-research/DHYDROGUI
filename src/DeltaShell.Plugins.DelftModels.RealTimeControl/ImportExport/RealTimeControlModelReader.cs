@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
-    public class RealTimeControlXmlModelImporter
+    public class RealTimeControlModelReader
     {
         private string runTimeConfigFilePath;
         private string dataConfigFilePath;
@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         private string stateImportConfigFilePath;
         private string timeSeriesFilePath;
 
-        public RealTimeControlXmlModelImporter(string directoryPath)
+        public RealTimeControlModelReader(string directoryPath)
         {
             runTimeConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlRuntime);
             dataConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlData);

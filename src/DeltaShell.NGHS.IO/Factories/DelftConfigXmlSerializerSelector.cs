@@ -6,7 +6,7 @@ namespace DeltaShell.NGHS.IO.Factories
 {
     public class DelftConfigXmlSerializerSelector
     {
-        private Dictionary<string, XmlSerializer> lookupSerializer;
+        private readonly Dictionary<string, XmlSerializer> lookupSerializer;
 
         public XmlSerializer ReturnSerializer(string rootName) => lookupSerializer[rootName];
 
@@ -27,9 +27,6 @@ namespace DeltaShell.NGHS.IO.Factories
 
             var state_importSerializer = new XmlSerializer(typeof(TreeVectorFileXML));
             lookupSerializer.Add("treeVectorFile", state_importSerializer);
-
-            //var timeseries_importSerializer = new XmlSerializer(typeof(TimeSeriesCollectionXML));
-            //lookupSerializer.Add("TimeSeries", timeseries_importSerializer);
         }
     }
 }

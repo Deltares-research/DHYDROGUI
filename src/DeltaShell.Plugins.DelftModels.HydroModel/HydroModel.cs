@@ -22,6 +22,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
+using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
 using GeoAPI.Extensions.Feature;
@@ -358,7 +359,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         {
                             model.Owner = this;
 
-                            if (migrating)
+                            if (migrating || (IsEditing && CurrentEditAction is ImportingFullModelAction))
                             {
                                 // rebuild links and keep related data structure
                                 RebuildModelLinks();

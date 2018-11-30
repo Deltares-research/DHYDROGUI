@@ -8,13 +8,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 {
     public class DHydroConfigXmlImporter: IFileImporter
     {
-        private IEnumerable<IFileImporter> fileImporters;
-
-        private Func<List<IDimrModelFileImporter>> GetDimrModelFileImporters;
+        private readonly Func<List<IDimrModelFileImporter>> _getDimrModelFileImporters;
 
         public DHydroConfigXmlImporter(Func<List<IDimrModelFileImporter>> dimrFileImporters)
         {
-            GetDimrModelFileImporters = dimrFileImporters;
+            _getDimrModelFileImporters = dimrFileImporters;
         }
 
         public bool CanImportOn(object targetObject)
@@ -24,7 +22,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
         public object ImportItem(string path, object target = null)
         {
-            return HydroModelReader.Read(path, GetDimrModelFileImporters);
+            var dimrModelFileImporters = _getDimrModelFileImporters?.Invoke() ?? new List<IDimrModelFileImporter>();
+            return HydroModelReader.Read(path, dimrModelFileImporters );
         }
 
 
@@ -63,11 +62,5 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         {
             get { return true; }
         }
-
-        public IEnumerable<IFileImporter> FileImporters
-        {
-            get { return FileImporters; }
-        }
-
     }
 }

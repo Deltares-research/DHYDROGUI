@@ -113,6 +113,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\BranchConverterTest.cs" />
@@ -122,7 +123,9 @@
     <Compile Include="Converters\ObservationPointConverterTest.cs" />
     <Compile Include="FileReaders\DelftBcFileParserTest.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParserTest.cs" />
+    <Compile Include="FileReaders\DelftConfigXmlSerializerSelectorTest.cs" />
     <Compile Include="FileReaders\DelftIniFileParserTest.cs" />
+    <Compile Include="FileReaders\DelftXsdValidatorTest.cs" />
     <Compile Include="FileReaders\LateralSourceFileReaderTest.cs" />
     <Compile Include="FileReaders\NetworkDefinitionFileReaderTest.cs" />
     <Compile Include="Converters\NetworkDiscretizationConverterTest.cs" />

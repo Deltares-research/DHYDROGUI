@@ -4,53 +4,55 @@ using System.Xml;
 using System.Xml.Serialization;
 using DeltaShell.Dimr.xsd;
 
-public static class DelftXsdValidator
+namespace DeltaShell.NGHS.IO.FileConverters
 {
-    public static XmlSerializer ValidateDataObjectModel(XmlSerializer serializer, List<string> errorMessages)
+    /// <summary>
+    /// Validator that validates xml input based on it's xsd file definition.
+    /// </summary>
+    public static class DelftXsdValidator
     {
-        if (serializer == null) { throw new ArgumentException("Serializer cannot be null"); }
-        if (errorMessages == null) { throw new ArgumentException("Error Report cannot be null"); }
-
-        ValidateAttributes(serializer, errorMessages);
-        ValidateElements(serializer, errorMessages);
-        //errorList = errorReport;
-        
-        //errorList?.Invoke(($"The following items do not match the xsd: "), errorMessages);
-
-        return serializer;
-    }
-
-    private static void ValidateElements(XmlSerializer serializer, List<string> errorMessages)
-    {
-        serializer.UnknownElement += (sender, args) =>
+        public static void CollectUnsupportedFeatures(XmlSerializer serializer, List<string> unsupportedFeatures)
         {
-            errorMessages.Add($" Element: {args.Element.Name} is missing");
+            if (serializer == null) { throw new ArgumentException("Serializer cannot be null"); }
 
-            var xmlParsedObject = args.ObjectBeingDeserialized as IXmlParsedObject;
+            ValidateAttributes(serializer, unsupportedFeatures);
+            ValidateElements(serializer,   
+                
+                unsupportedFeatures);
+        }
 
-            if (xmlParsedObject?.UnKnownElements == null)
-            {
-                xmlParsedObject.UnKnownElements = new List<XmlElement>();
-            }
-
-            xmlParsedObject.UnKnownElements.Add(args.Element);
-        };
-    }
-
-    private static void ValidateAttributes(XmlSerializer serializer, List<string> errorMessages)
-    {
-        serializer.UnknownAttribute += (sender, args) =>
+        private static void ValidateElements(XmlSerializer serializer, List<string> errorMessages)
         {
-            errorMessages.Add($" Attribute: {args.Attr.Name} is missing");
-
-            var xmlParsedObject = args.ObjectBeingDeserialized as IXmlParsedObject;
-
-            if (xmlParsedObject?.UnKnownAttributes == null)
+            serializer.UnknownElement += (sender, args) =>
             {
-                xmlParsedObject.UnKnownAttributes = new List<XmlAttribute>();
-            }
+                errorMessages.Add($"Element: {args.Element.Name}");
 
-            xmlParsedObject.UnKnownAttributes.Add(args.Attr);
-        };
+                var xmlParsedObject = args.ObjectBeingDeserialized as IXmlParsedObject;
+
+                if (xmlParsedObject != null && xmlParsedObject?.UnKnownElements == null)
+                {
+                    xmlParsedObject.UnKnownElements = new List<XmlElement>();
+                }
+
+                xmlParsedObject?.UnKnownElements.Add(args.Element);
+            };
+        }
+
+        private static void ValidateAttributes(XmlSerializer serializer, List<string> errorMessages)
+        {
+            serializer.UnknownAttribute += (sender, args) =>
+            {
+                errorMessages.Add($"Attribute: {args.Attr.Name}");
+
+                var xmlParsedObject = args.ObjectBeingDeserialized as IXmlParsedObject;
+
+                if (xmlParsedObject != null && xmlParsedObject?.UnKnownAttributes == null)
+                {
+                    xmlParsedObject.UnKnownAttributes = new List<XmlAttribute>();
+                }
+
+                xmlParsedObject?.UnKnownAttributes.Add(args.Attr);
+            };
+        }
     }
 }

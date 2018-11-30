@@ -136,7 +136,7 @@
     <Compile Include="ImportExport\RealTimeControlModelExporter.cs" />
     <Compile Include="ImportExport\RealTimeControlModelImporter.cs" />
     <Compile Include="ImportExport\RealTimeControlToolsConfigXmlReader.cs" />
-    <Compile Include="ImportExport\RealTimeControlXmlModelImporter.cs" />
+    <Compile Include="ImportExport\RealTimeControlModelReader.cs" />
     <Compile Include="ImportExport\RealTimeControlDataConfigXmlReader.cs" />
     <Compile Include="ImportExport\RealTimeControlXmlWriter.cs" />
     <Compile Include="ImportExport\RealTimeControlDimrConfigModelCouplerProvider.cs" />

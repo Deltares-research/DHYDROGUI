@@ -83,6 +83,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             var pathWithInvalidConfigurationFile = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), "invalidDimrUnknownRootName.xml"));
             DelftConfigXmlFileParser.Read(pathWithInvalidConfigurationFile);
         }
+        #endregion
 
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -129,11 +130,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
             Assert.IsNotNull(dataAccesModel);
             var dimrXmlObject = (dimrXML)dataAccesModel;
-           
+
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "Attribute");
+
             //Coupler
             Assert.AreEqual(dimrXmlObject.coupler.ElementAt(0).UnKnownAttributes.ElementAt(0).Name, "abc");
             Assert.AreEqual(dimrXmlObject.coupler.ElementAt(0).UnKnownAttributes.ElementAt(0).Value, "2");
-
         }
 
         [Test]
@@ -147,13 +150,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
             var dimrXmlObject = (dimrXML)dataAccesModel;
 
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "Element");
+
             //logger
             Assert.AreEqual(dimrXmlObject.coupler.ElementAt(0).UnKnownElements.ElementAt(0).Name, "logger");
             Assert.AreEqual(dimrXmlObject.coupler.ElementAt(1).UnKnownElements.ElementAt(0).Name, "logger");
             Assert.AreEqual(dimrXmlObject.coupler.ElementAt(0).item.ElementAt(0).UnKnownElements.ElementAt(0).Name, "abcsourcename");
         }
-        #endregion
-
 
         #region RTC tests
         //TODO: RTC tests (use filesnames and sourcespath below for the rtc tests)

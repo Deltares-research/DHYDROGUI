@@ -38,9 +38,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return WaterFlowModel1DFileReader.Read(path, (currentStepName, currentStep, totalSteps) => ProgressChanged(currentStepName, currentStep, totalSteps));
         }
 
-        public string LibraryName
+        public string MasterFileExtension
         {
-            get { return "cf_dll"; }
+            get { return "md1d"; }
+        }
+
+        public IEnumerable<string> SubFolders
+        {
+            get { yield return "dflow1d"; }
         }
     }
 }
