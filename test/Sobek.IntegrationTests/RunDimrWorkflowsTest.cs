@@ -379,7 +379,7 @@ namespace Sobek.IntegrationTests
                       new List<string>(new[] { "rtc_to_flow1d", "RTC Model", "Flow1D" }),
                       new Dictionary<string, string>
                       {
-                          { "output_Weir2_Crest level (s)", "weirs/Weir2/structure_crest_level" },
+                          { RtcXmlTag.Output + "Weir2/Crest level (s)", "weirs/Weir2/structure_crest_level" },
                           { ".", "rtc_to_flow1d.nc" } /*Logger for the coupler, the '.' will be replaced in the future by a relative path. So the test is expected to fail here.*/
                       }
                     },
@@ -387,7 +387,7 @@ namespace Sobek.IntegrationTests
                         new List<string> {"flow1d_to_rtc", "Flow1D", "RTC Model"},
                         new Dictionary<string, string>
                         {
-                            {"weirs/Weir1/water_discharge", "input_Weir1_Discharge (s)"},
+                            {"weirs/Weir1/water_discharge", RtcXmlTag.Input + "Weir1/Discharge (s)"},
                             { ".", "flow1d_to_rtc.nc" } /*Logger for the coupler, the '.' will be replaced in the future by a relative path. So the test is expected to fail here.*/
                         }
                     }
@@ -492,7 +492,7 @@ namespace Sobek.IntegrationTests
                             new List<string>(new[] { "flow_to_rtc", "FlowFM", "RTC Model" }),
                             new Dictionary<string, string>
                             {
-                                {"observations/ObservationFM/water_level", "input_ObservationFM_water_level" },
+                                {"observations/ObservationFM/water_level", RtcXmlTag.Input + "ObservationFM/water_level" },
                                 { ".", "flow_to_rtc.nc" } /*Logger for the coupler, the '.' will be replaced in the future by a relative path. So the test is expected to fail here.*/
                             }
                         }
@@ -630,8 +630,8 @@ namespace Sobek.IntegrationTests
                       new List<string>(new[] {"1d2d_to_rtc", "1d2d", "RTC Model"}),
                       new Dictionary<string, string>
                       {
-                          { "FlowFM/observations/ObservationFM/water_level", "input_ObservationFM_water_level" },
-                          { "Flow1D/observations/ObservationF1D/water_level","input_ObservationF1D_Water level (op)" },
+                          { "FlowFM/observations/ObservationFM/water_level", RtcXmlTag.Input + "ObservationFM/water_level" },
+                          { "Flow1D/observations/ObservationF1D/water_level", RtcXmlTag.Input + "ObservationF1D/Water level (op)" },
                           { ".", "1d2d_to_rtc.nc" } /*Logger for the coupler, the '.' will be replaced in the future by a relative path. So the test is expected to fail here.*/
                       }
                     }
