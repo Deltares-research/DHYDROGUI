@@ -212,48 +212,72 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         public string InitialDischarge
         {
-            get { return Path.Combine(targetPath, initialDischarge); }
+            get
+            {
+                return initialDischarge == null ? null : Path.Combine(targetPath, initialDischarge);
+            }
             private set { initialDischarge = value; }
         }
 
         public string InitialSalinity
         {
-            get { return Path.Combine(targetPath, initialSalinity); }
+            get
+            {
+                return initialSalinity == null ? null : Path.Combine(targetPath, initialSalinity);
+            }
             private set { initialSalinity = value; }
         }
 
         public string InitialTemperature
         {
-            get { return Path.Combine(targetPath, initialTemperature); }
+            get
+            {
+                return initialTemperature == null ? null : Path.Combine(targetPath, initialTemperature);
+            }
             private set { initialTemperature = value; }
         }
 
         public string InitialWaterLevel
         {
-            get { return Path.Combine(targetPath, initialWaterLevel); }
+            get
+            {
+                return initialWaterLevel == null ? null : Path.Combine(targetPath, initialWaterLevel);
+            }
             private set { initialWaterLevel = value; }
         }
 
         public string Dispersion
         {
-            get { return Path.Combine(targetPath, dispersion); }
+            get
+            {
+                return dispersion == null ? null : Path.Combine(targetPath, dispersion);
+            }
             private set { dispersion = value; }
         }
 
         public string DispersionF3
         {
-            get { return Path.Combine(targetPath, dispersionF3); }
+            get
+            {
+                return dispersionF3 == null ? null : Path.Combine(targetPath, dispersionF3);
+            }
             private set { dispersionF3 = value; }
         }
 
         public string DispersionF4
         {
-            get { return Path.Combine(targetPath, dispersionF4); }
+            get
+            {
+                return dispersionF4 == null ? null : Path.Combine(targetPath, dispersionF4);
+            }
             private set { dispersionF4 = value; }
         }
         public string WindShielding
         {
-            get { return Path.Combine(targetPath, windShielding); }
+            get
+            {
+                return windShielding == null ? null : Path.Combine(targetPath, windShielding);
+            }
             private set { windShielding = value; }
         }
 

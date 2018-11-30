@@ -107,17 +107,46 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 reportProgress(
                     $"Reading spatial data from {fileNames} file.",
                     stepCounter, totalSteps);
-                ReadFileSpatialData(fileNames.InitialDischarge, model, CreateAndAddErrorReport);
-                ReadFileSpatialData(fileNames.InitialSalinity, model, CreateAndAddErrorReport);
-                ReadFileSpatialData(fileNames.InitialTemperature, model, CreateAndAddErrorReport);
-                ReadFileSpatialData(fileNames.InitialWaterLevel, model, CreateAndAddErrorReport);
-                ReadFileSpatialData(fileNames.Dispersion, model, CreateAndAddErrorReport);
-                if (model.DispersionFormulationType != DispersionFormulationType.Constant)
+
+                if (fileNames.InitialDischarge != null)
+                {
+                    ReadFileSpatialData(fileNames.InitialDischarge, model, CreateAndAddErrorReport);
+                }
+
+                if (fileNames.InitialSalinity != null)
+                {
+                    ReadFileSpatialData(fileNames.InitialSalinity, model, CreateAndAddErrorReport);
+                }
+
+                if (fileNames.InitialTemperature != null)
+                {
+                    ReadFileSpatialData(fileNames.InitialTemperature, model, CreateAndAddErrorReport);
+                }
+
+                if (fileNames.InitialWaterLevel != null)
+                {
+                    ReadFileSpatialData(fileNames.InitialWaterLevel, model, CreateAndAddErrorReport);
+                }
+                
+                if (fileNames.Dispersion != null)
+                {
+                    ReadFileSpatialData(fileNames.Dispersion, model, CreateAndAddErrorReport);
+                }
+                
+                if ((model.DispersionFormulationType != DispersionFormulationType.Constant) && (fileNames.DispersionF3 != null) && (fileNames.DispersionF4 != null))
                 {
                     ReadFileSpatialData(fileNames.DispersionF3, model, CreateAndAddErrorReport);
+                }
+
+                if ((model.DispersionFormulationType != DispersionFormulationType.Constant) && (fileNames.DispersionF4 != null))
+                {
                     ReadFileSpatialData(fileNames.DispersionF4, model, CreateAndAddErrorReport);
                 }
-                ReadFileSpatialData(fileNames.WindShielding, model, CreateAndAddErrorReport);
+
+                if (fileNames.WindShielding != null)
+                {
+                    ReadFileSpatialData(fileNames.WindShielding, model, CreateAndAddErrorReport);
+                }
             }
             catch (Exception)
             {
@@ -268,7 +297,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             Action<string, IList<string>> createAndAddErrorReport)
         {
             var spatialFileDataReader = new SpatialFileDataReader(createAndAddErrorReport);
-
+            if (!File.Exists(locationFilePath)) return;
             var spatialFileData = spatialFileDataReader.ReadSpatialFileData(locationFilePath, model.Network.Channels.ToList());
 
             SetModelSpatialDataOnModel(locationFilePath, model, spatialFileData);
