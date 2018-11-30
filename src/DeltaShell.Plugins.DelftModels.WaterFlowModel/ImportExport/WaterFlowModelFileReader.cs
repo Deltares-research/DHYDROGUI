@@ -117,11 +117,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 ReadFileSpatialData(fileNames.InitialWaterLevel, model, CreateAndAddErrorReport);
                 
                 ReadFileSpatialData(fileNames.Dispersion, model, CreateAndAddErrorReport);
-                
-                ReadFileSpatialData(fileNames.DispersionF3, model, CreateAndAddErrorReport);
-                
-                ReadFileSpatialData(fileNames.DispersionF4, model, CreateAndAddErrorReport);
-                
+
+                if (model.DispersionFormulationType != DispersionFormulationType.Constant)
+                {
+                    ReadFileSpatialData(fileNames.DispersionF3, model, CreateAndAddErrorReport);
+                    ReadFileSpatialData(fileNames.DispersionF4, model, CreateAndAddErrorReport);
+                }
+
                 ReadFileSpatialData(fileNames.WindShielding, model, CreateAndAddErrorReport);
 
             }
