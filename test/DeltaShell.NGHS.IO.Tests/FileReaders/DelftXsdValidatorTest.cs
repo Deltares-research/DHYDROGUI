@@ -80,7 +80,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             var dimrXml = XDocument.Load(dimrPath);
             var reader = dimrXml?.Root?.CreateReader();
             return reader;
-            Assert.DoesNotThrow();
         }
 
     }
