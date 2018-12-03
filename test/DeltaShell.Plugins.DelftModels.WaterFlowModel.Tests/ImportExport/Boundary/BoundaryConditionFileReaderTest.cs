@@ -1049,7 +1049,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
 
             mocks.VerifyAll();
             // Then
-            BoundaryAssertionTestHelper.AssertThatTimeDependentFunctionIsEqualTo(meteoFuncParameter, meteoFunction);
+            BoundaryAssertionTestHelper.AssertThatTimeDependentFunctionIsEqualTo(windFuncParameter, windFunction);
             BoundaryAssertionTestHelper.AssertThatTimeDependentFunctionIsEqualTo(meteoFuncParameter, meteoFunction);
             Assert.That(boundaryNodes.Count, Is.EqualTo(1));
             BoundaryAssertionTestHelper.AssertThatBoundaryConditionIsEqualTo(boundaryNode, boundaryCondition);
@@ -1153,7 +1153,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
 
             mocks.VerifyAll();
             // Then
-            BoundaryAssertionTestHelper.AssertThatTimeDependentFunctionIsEqualTo(meteoFuncParameter, new WindFunction());
+            BoundaryAssertionTestHelper.AssertThatTimeDependentFunctionIsEqualTo(windFuncParameter, new WindFunction());
             BoundaryAssertionTestHelper.AssertThatTimeDependentFunctionIsEqualTo(meteoFuncParameter, new MeteoFunction());
 
             Assert.That(errorHandlingHasBeenCalled, Is.True);
@@ -1332,7 +1332,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
 
             mocks.VerifyAll();
             // Then
-            BoundaryAssertionTestHelper.AssertThatTimeDependentFunctionIsEqualTo(meteoFuncParameter, meteoFunction);
+            BoundaryAssertionTestHelper.AssertThatTimeDependentFunctionIsEqualTo(windFuncParameter, windFunction);
             BoundaryAssertionTestHelper.AssertThatTimeDependentFunctionIsEqualTo(meteoFuncParameter, meteoFunction);
 
             Assert.That(boundaryNodes.Count, Is.EqualTo(4));
