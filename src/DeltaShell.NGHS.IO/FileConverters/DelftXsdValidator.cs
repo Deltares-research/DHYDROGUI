@@ -14,11 +14,10 @@ namespace DeltaShell.NGHS.IO.FileConverters
         public static void CollectUnsupportedFeatures(XmlSerializer serializer, List<string> unsupportedFeatures)
         {
             if (serializer == null) { throw new ArgumentException("Serializer cannot be null"); }
+            if (unsupportedFeatures == null) { throw new ArgumentException("Unsupported features collection cannot be null"); }
 
             ValidateAttributes(serializer, unsupportedFeatures);
-            ValidateElements(serializer,   
-                
-                unsupportedFeatures);
+            ValidateElements(serializer, unsupportedFeatures);
         }
 
         private static void ValidateElements(XmlSerializer serializer, List<string> errorMessages)
