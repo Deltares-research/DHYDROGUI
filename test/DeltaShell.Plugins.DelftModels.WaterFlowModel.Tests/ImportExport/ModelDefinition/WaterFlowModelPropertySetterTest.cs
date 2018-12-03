@@ -173,14 +173,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         [Test]
         public void WhenSettingWaterFlowModelTimePropertiesWithoutAModel_ThenNoException()
         {
-            try
-            {
-                WaterFlowModelPropertySetter.SetTimeProperties(null, null);
-            }
-            catch (Exception e)
-            {
-                Assert.Fail("No exception was expected, but got: " + e.Message);
-            }
+            TestDelegate testDelegate = () => { WaterFlowModelPropertySetter.SetTimeProperties(null, null); };
+            Assert.DoesNotThrow(testDelegate);
         }
 
         // SetOutputProperties

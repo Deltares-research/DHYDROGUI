@@ -21,8 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// <param name="modelSettingsCategories"> A set of DelftIniCategories describing a md1d file. </param>
         /// <param name="model"> The model whose time variables should be changed. </param>
         /// <remarks>
-        /// Pre-condition: modelSettingsCategories != null && model != null
-        /// Pre-condition: ModelDefinitionsRegion.TimeHeader In modelSettingsCategories
+        /// Pre-condition: model != null
         /// </remarks>
         public static void SetTimeProperties(IEnumerable<DelftIniCategory> modelSettingsCategories, WaterFlowModel1D model)
         {
