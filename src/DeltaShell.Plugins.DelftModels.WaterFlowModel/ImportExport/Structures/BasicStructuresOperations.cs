@@ -4,7 +4,6 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
-using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Geometries;
@@ -44,10 +43,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             structure.LongName = longName;
         }
 
-        /*If compound is 0 it means that there is only one structure at a certain location 
-        (for users no composite structure, however in the code behind all structures (alone or groups) are placed in a composite structure
+        /*If compound is 0 it means that there is only one structure at a certain location. 
+        For users this means no composite structure, however in the code behind all structures (alone or groups) are placed in a composite structure.
         Therefore if 0 is given always a new composite structure should be created.
-        For all other numbers, the number indicates the group and the compoundname is the corresponding group name. For these ones only 
+        For all other numbers, the number indicates the group and the compoundName is the corresponding group name. For these ones only 
         the first time a composite structure should be created
         */
         public static ICompositeBranchStructure CreateCompositeBranchStructuresIfNeeded
@@ -107,9 +106,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                     return compositeBranchStructure;
                 }
             }
-
-            
-            
         }
     }
 

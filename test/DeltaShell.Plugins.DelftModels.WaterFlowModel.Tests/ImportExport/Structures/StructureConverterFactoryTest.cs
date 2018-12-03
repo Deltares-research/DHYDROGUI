@@ -22,8 +22,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             Assert.AreEqual(classConverter, converter.GetType());
         }
-        
 
+        // Not yet implemented, see issue SOBEK3-1569
         [Test]
         [TestCase(StructureRegion.StructureTypeName.Pump)]
         [TestCase(StructureRegion.StructureTypeName.Gate)]

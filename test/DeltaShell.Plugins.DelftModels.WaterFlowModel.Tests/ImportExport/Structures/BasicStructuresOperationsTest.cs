@@ -11,7 +11,6 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using NUnit.Framework;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
-using Rhino.Mocks.Constraints;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Structures
 {
@@ -50,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             Assert.AreEqual("Weir1", weir.Name);
             Assert.AreEqual("branch", weir.Branch.Name);
-            Assert.AreSame(originalNetwork.Channels.ToList()[0].Network,weir.Branch.Network);
+            Assert.AreSame(originalNetwork.Channels.ToList()[0].Network, weir.Branch.Network);
             Assert.AreSame(originalNetwork.Channels.ToList()[0], weir.Branch);
             Assert.AreEqual(50, weir.Chainage);
             Assert.AreEqual("Weir1", weir.LongName);
@@ -70,11 +69,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             };
 
             //When - Then
-            Assert.That(() => BasicStructuresOperations.ReadCommonRegionElements(category, channelsList, weir), Throws
-                .TypeOf<Exception>().With.Message.EqualTo(string.Format(
+            Assert.That(() => BasicStructuresOperations.ReadCommonRegionElements(category, channelsList, weir), 
+                Throws.TypeOf<Exception>().With.Message.EqualTo(string.Format(
                     "Unable to parse {0} property: {1}, Branch not found in Network.{2}", category.Name,
-                    StructureRegion.BranchId.Key,
-                    Environment.NewLine)));
+                    StructureRegion.BranchId.Key,Environment.NewLine)));
         }
 
         [Test]

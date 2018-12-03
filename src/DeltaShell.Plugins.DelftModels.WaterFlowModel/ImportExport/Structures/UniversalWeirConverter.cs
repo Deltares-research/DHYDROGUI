@@ -4,10 +4,8 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
-using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
-using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
@@ -47,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             weirFormula.SetShape(yValues.ToArray(), zValues.ToArray());
             var counterCheck = structureBranchCategory.ReadProperty<int>(StructureRegion.LevelsCount.Key);
 
-            if (counterCheck != ((FreeFormWeirFormula) (weir.WeirFormula)).Y.Count())
+            if (counterCheck != weirFormula.Y.Count())
             {
                 throw new Exception("There are more YZ coordinates given than mentioned in the levelsCount parameter");
             }

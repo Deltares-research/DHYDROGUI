@@ -33,9 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             var posCount = structureBranchCategory.ReadProperty<int>(StructureRegion.PosSfCount.Key);
             var argumentsPos = structureBranchCategory.ReadPropertiesToListOfType<double>(StructureRegion.PosSf.Key);
             var componentsPos = structureBranchCategory.ReadPropertiesToListOfType<double>(StructureRegion.PosRed.Key);
-
-            var check = new int[] { posCount, argumentsPos.Count, componentsPos.Count };
-
+            
             if (posCount != argumentsPos.Count || posCount != componentsPos.Count)
             {
                 throw new Exception(string.Format(
@@ -44,7 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
             weirFormula.SubmergeReductionPos.Clear();
 
-            for (int i = 0; i < posCount; i++)
+            for (var i = 0; i < posCount; i++)
             {
                 weirFormula.SubmergeReductionPos[argumentsPos[i]] = componentsPos[i];
             }
@@ -52,9 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             var negCount = structureBranchCategory.ReadProperty<int>(StructureRegion.NegSfCount.Key);
             var argumentsNeg = structureBranchCategory.ReadPropertiesToListOfType<double>(StructureRegion.NegSf.Key);
             var componentsNeg = structureBranchCategory.ReadPropertiesToListOfType<double>(StructureRegion.NegRed.Key);
-
-            check = new int[] { negCount, argumentsNeg.Count, componentsNeg.Count };
-
+            
             if (negCount != argumentsNeg.Count || negCount != componentsNeg.Count)
             {
                 throw new Exception(string.Format("For river weir {0} the reduction table for negative flow direction contains an error", weir.Name));
@@ -62,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
             weirFormula.SubmergeReductionNeg.Clear();
 
-            for (int i = 0; i < negCount; i++)
+            for (var i = 0; i < negCount; i++)
             {
                 weirFormula.SubmergeReductionNeg[argumentsNeg[i]] = componentsNeg[i];
             }

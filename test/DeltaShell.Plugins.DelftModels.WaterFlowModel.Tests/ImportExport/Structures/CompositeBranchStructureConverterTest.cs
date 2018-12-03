@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
@@ -82,7 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             //Then
             Assert.AreEqual(1, compositeBranchStructures.Count);
             Assert.AreEqual(2, compositeBranchStructures[0].Structures.Count);
-            Assert.AreEqual("Weir1",compositeBranchStructures[0].Structures[0].Name);
+            Assert.AreEqual("Weir1", compositeBranchStructures[0].Structures[0].Name);
             Assert.AreEqual("Weir2", compositeBranchStructures[0].Structures[1].Name);
         }
         

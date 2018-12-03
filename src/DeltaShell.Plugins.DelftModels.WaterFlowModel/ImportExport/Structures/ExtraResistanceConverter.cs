@@ -20,8 +20,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             var argumentsLevels = structureBranchCategory.ReadPropertiesToListOfType<double>(StructureRegion.Levels.Key);
             var componentsKsi = structureBranchCategory.ReadPropertiesToListOfType<double>(StructureRegion.Ksi.Key);
 
-            var check = new int[] { numValues, argumentsLevels.Count, componentsKsi.Count };
-
             if (numValues != argumentsLevels.Count || numValues != componentsKsi.Count)
             {
                 throw new Exception(string.Format("For extra resistance {0} the friction table contains an error", extraResistance.Name));
@@ -29,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
            extraResistance.FrictionTable.Clear();
 
-            for (int i = 0; i < numValues; i++)
+            for (var i = 0; i < numValues; i++)
             {
                 extraResistance.FrictionTable[argumentsLevels[i]] = componentsKsi[i];
             }
