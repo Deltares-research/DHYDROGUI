@@ -253,7 +253,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         [TestCase(HasComponent.TimeDependent, HasComponent.TimeDependent, SaltType.Concentration, HasComponent.None)]
         [TestCase(HasComponent.TimeDependent, HasComponent.TimeDependent, SaltType.Concentration, HasComponent.Constant)]
         [TestCase(HasComponent.TimeDependent, HasComponent.TimeDependent, SaltType.Concentration, HasComponent.TimeDependent)]
-        public void GivenASetOfIDelftBcCategoriesDescribingASingleLateralDischargeAndAnEmptyListOfErrorMessages_WhenLateralDischargeConverterConvertIsCalledWithTheseParameters_ThenASetContainingASingleLateralDischargeCorrespondingWithTheInputIsReturnedAndNoErrorsAreLogged(HasComponent hasWater, HasComponent hasSalt, SaltType saltType, HasComponent hasTemperature)
+        public void 
+            GivenASetWithASingleLateralDischargeAndAnEmptyList_WhenLateralDischargeConverterConvertIsCalledWithTheseParameters_ThenASetWithASingleLateralDischargeIsReturnedAndNoErrorsAreLogged(
+                HasComponent hasWater, HasComponent hasSalt, SaltType saltType, HasComponent hasTemperature)
         {
             const string nodeName = "Bacon";
             var boundaryCondition = GetLateralDischarge(nodeName, hasWater, hasSalt, saltType, hasTemperature);

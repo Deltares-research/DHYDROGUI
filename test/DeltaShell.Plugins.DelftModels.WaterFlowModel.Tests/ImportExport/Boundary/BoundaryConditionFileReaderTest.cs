@@ -1066,6 +1066,105 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
         }
 
         /// <summary>
+        /// GIVEN a BoundaryConditionFileReader
+        ///   AND meteo categories which validate to null
+        ///   AND wind categories which validate to null
+        /// WHEN Convert is called with these parameters
+        /// THEN An error is logged
+        ///  AND The functions are unchanged
+        /// </summary>
+        [Test]
+        public void GivenABoundaryConditionFileReaderAndMeteoCategoriesWhichValidateToNullAndWindCategoriesWhichValidateToNull_WhenConvertIsCalledWithTheseParameters_ThenAnErrorIsLoggedAndTheFunctionsAreUnchanged()
+        {
+            // Given
+            const string filePath = "Venison.Brisket";
+            var errorHandlingHasBeenCalled = false;
+            var loggedErrors = new List<string>();
+            var errorHeader = "";
+
+            var mocks = new MockRepository();
+
+            // Parser
+            var bcCategories = new List<IDelftBcCategory>();
+
+            var someParser = mocks.DynamicMock<Func<string, IList<IDelftBcCategory>>>();
+            someParser.Expect(e => e.Invoke(filePath))
+                .Return(bcCategories)
+                .Repeat.AtLeastOnce();
+
+
+            // Converters
+            const string errorMsgMeteo = "Shankle drumstick sausage hamburger tenderloin strip steak pork chop swine turducken turkey shoulder meatloaf.";
+            var meteoFunctionConverter =
+                mocks.StrictMock<Func<IList<IDelftBcCategory>, IList<string>, MeteoFunction>>();
+            meteoFunctionConverter.Expect(e => e.Invoke(Arg<IList<IDelftBcCategory>>.Matches(arg => bcCategories.Equals(arg)), Arg<IList<string>>.Is.NotNull))
+                .Return(null)
+                .WhenCalled((methodInvocation) => { ((IList<string>)methodInvocation.Arguments[1]).Add(errorMsgMeteo); })
+                .Repeat.AtLeastOnce();
+
+            const string errorMsgWind = "Pork chop tenderloin bacon, tri-tip strip steak salami venison sausage chicken pancetta ribeye.";
+            var windFunctionConverter =
+                mocks.StrictMock<Func<IList<IDelftBcCategory>, IList<string>, WindFunction>>();
+            windFunctionConverter.Expect(e => e.Invoke(Arg<IList<IDelftBcCategory>>.Matches(arg => bcCategories.Equals(arg)), Arg<IList<string>>.Is.NotNull))
+                .Return(null)
+                .WhenCalled((methodInvocation) => { ((IList<string>)methodInvocation.Arguments[1]).Add(errorMsgWind); })
+                .Repeat.AtLeastOnce();
+
+            var boundaryCondition = GetBoundaryCondition(bcNodeName, HasComponent.Constant, BoundaryConditionConverterTest.WaterType.Discharge, HasComponent.Constant, HasComponent.Constant);
+            var bcDict = new Dictionary<string, BoundaryCondition>() { [bcNodeName] = boundaryCondition };
+            var boundaryConditionConverter =
+                mocks.StrictMock<Func<IList<IDelftBcCategory>, IList<string>, IDictionary<string, BoundaryCondition>>>();
+            boundaryConditionConverter.Expect(e => e.Invoke(Arg<IList<IDelftBcCategory>>.Matches(arg => bcCategories.Equals(arg)), Arg<IList<string>>.Is.NotNull))
+                .Return(bcDict)
+                .Repeat.AtLeastOnce();
+
+            var lateralDischarge = GetLateralDischarge(ldNodeName, HasComponent.Constant, HasComponent.Constant, LateralDischargeConverterTest.SaltType.Concentration, HasComponent.Constant);
+            var ldDict = new Dictionary<string, LateralDischarge>() { [ldNodeName] = lateralDischarge };
+            var lateralDischargeConverter =
+                mocks.StrictMock<Func<IList<IDelftBcCategory>, IList<string>, IDictionary<string, LateralDischarge>>>();
+            lateralDischargeConverter.Expect(e => e.Invoke(Arg<IList<IDelftBcCategory>>.Matches(arg => bcCategories.Equals(arg)), Arg<IList<string>>.Is.NotNull))
+                .Return(ldDict)
+                .Repeat.AtLeastOnce();
+
+            // Error Handling
+            Action<string, IList<string>> someErrorReportFunction =
+                (_, msgs) =>
+                {
+                    errorHandlingHasBeenCalled = true;
+                    loggedErrors.AddRange(msgs);
+                };
+
+            // Parameters
+            var meteoFuncParameter = new MeteoFunction();
+            var windFuncParameter = new WindFunction();
+
+            var boundaryNodes = new EventedList<WaterFlowModel1DBoundaryNodeData>() { };
+            var lateralDischargeNodes = new EventedList<WaterFlowModel1DLateralSourceData>() { };
+
+            mocks.ReplayAll();
+            var reader = new BoundaryConditionFileReader(someParser, meteoFunctionConverter, windFunctionConverter, boundaryConditionConverter, lateralDischargeConverter, someErrorReportFunction);
+
+            // When
+            reader.Read(filePath,
+                        meteoFuncParameter,
+                        windFuncParameter,
+                        boundaryNodes,
+                        lateralDischargeNodes);
+
+            mocks.VerifyAll();
+            // Then
+            BoundaryAssertionTestHelper.AssertThatTimeDependentFunctionIsEqualTo(meteoFuncParameter, new WindFunction());
+            BoundaryAssertionTestHelper.AssertThatTimeDependentFunctionIsEqualTo(meteoFuncParameter, new MeteoFunction());
+
+            Assert.That(errorHandlingHasBeenCalled, Is.True);
+            Assert.That(loggedErrors.Count, Is.EqualTo(2));
+
+            Assert.That(loggedErrors.Contains(errorMsgMeteo));
+            Assert.That(loggedErrors.Contains(errorMsgWind));
+        }
+
+
+        /// <summary>
         /// GIVEN a BoundaryConditionFileReader with valid functions
         ///   AND some meteo function
         ///   AND some wind function

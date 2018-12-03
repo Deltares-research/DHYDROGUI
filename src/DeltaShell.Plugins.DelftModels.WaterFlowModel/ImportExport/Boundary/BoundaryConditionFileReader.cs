@@ -105,10 +105,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
             var errorMessagesMeteoData = new List<string>();
             var meteoData = meteoConvertFunc.Invoke(bcCategories, errorMessagesMeteoData);
 
-            modelMeteoData.Arguments[0].SetValues(meteoData.Arguments[0].Values);
-            modelMeteoData.AirTemperature.SetValues(meteoData.AirTemperature.Values);
-            modelMeteoData.Cloudiness.SetValues(meteoData.Cloudiness.Values);
-            modelMeteoData.RelativeHumidity.SetValues(meteoData.RelativeHumidity.Values);
+            if (meteoData != null)
+            {
+                modelMeteoData.Arguments[0].SetValues(meteoData.Arguments[0].Values);
+                modelMeteoData.AirTemperature.SetValues(meteoData.AirTemperature.Values);
+                modelMeteoData.Cloudiness.SetValues(meteoData.Cloudiness.Values);
+                modelMeteoData.RelativeHumidity.SetValues(meteoData.RelativeHumidity.Values);
+            }
 
             if (errorMessagesMeteoData.Count > 0)
                 createAndAddErrorReport?.Invoke("While reading the model wide meteo data from file, the following errors occured:", errorMessagesMeteoData);
@@ -119,9 +122,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary
             var errorMessagesMeteoData = new List<string>();
             var windData = windConvertFunc.Invoke(bcCategories, errorMessagesMeteoData);
 
-            modelWind.Arguments[0].SetValues(windData.Arguments[0].Values);
-            modelWind.Direction.SetValues(windData.Direction.Values);
-            modelWind.Velocity.SetValues(windData.Velocity.Values);
+            if (windData != null)
+            {
+                modelWind.Arguments[0].SetValues(windData.Arguments[0].Values);
+                modelWind.Direction.SetValues(windData.Direction.Values);
+                modelWind.Velocity.SetValues(windData.Velocity.Values);
+            }
 
             if (errorMessagesMeteoData.Count > 0)
                 createAndAddErrorReport?.Invoke("While reading the model wide wind data from file, the following errors occured:", errorMessagesMeteoData);
