@@ -133,11 +133,14 @@
     <Compile Include="Domain\ConnectionPoint.cs" />
     <Compile Include="Domain\FactorRule.cs" />
     <Compile Include="Converters\OperationConverter.cs" />
+    <Compile Include="ImportExport\RealTimeControlDataConfigXmlReader.cs" />
     <Compile Include="ImportExport\RealTimeControlModelExporter.cs" />
     <Compile Include="ImportExport\RealTimeControlModelImporter.cs" />
+    <Compile Include="ImportExport\RealTimeControlToolsConfigComponentConnector.cs" />
     <Compile Include="ImportExport\RealTimeControlToolsConfigXmlReader.cs" />
-    <Compile Include="ImportExport\RealTimeControlModelReader.cs" />
-    <Compile Include="ImportExport\RealTimeControlDataConfigXmlReader.cs" />
+    <Compile Include="ImportExport\RealTimeControlModelXmlReader.cs" />
+    <Compile Include="ImportExport\RealTimeControlDataConfigXmlConverter.cs" />
+    <Compile Include="ImportExport\RealTimeControlXmlReaderHelper.cs" />
     <Compile Include="ImportExport\RealTimeControlXmlWriter.cs" />
     <Compile Include="ImportExport\RealTimeControlDimrConfigModelCouplerProvider.cs" />
     <Compile Include="ImportExport\RealTimeControlOutputFileFunctionStore.cs" />
