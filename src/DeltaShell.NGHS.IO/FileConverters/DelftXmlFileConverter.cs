@@ -29,6 +29,7 @@ namespace DeltaShell.NGHS.IO.FileConverters
 
             var selector = new DelftConfigXmlSerializerSelector();
             var serializer = selector.ReturnSerializer(rootName);
+
             DelftXsdValidator.CollectUnsupportedFeatures(serializer, unsupportedFeatures);
 
             var dataAccessObject = serializer.Deserialize(file);
