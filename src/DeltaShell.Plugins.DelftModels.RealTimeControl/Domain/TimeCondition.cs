@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public TimeCondition() : base(false)
         {
-            Reference = "IMPLICIT"; // = IMPLICIT -> timeseries
+            Reference = ReferenceType.Implicit; // = IMPLICIT -> timeseries
             XmlTag = RtcXmlTag.TimeCondition;
         }
 

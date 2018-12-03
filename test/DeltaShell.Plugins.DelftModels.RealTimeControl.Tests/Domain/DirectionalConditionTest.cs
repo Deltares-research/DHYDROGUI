@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
     {
         private static readonly XNamespace Fns = "http://www.wldelft.nl/fews";
 
-        private const string Implicit = "IMPLICIT";
+        private const string Implicit = StandardCondition.ReferenceType.Implicit;
         private const string Name = "Trigger31";
         private const string InputName = "AlarmREGEN";
         private const string InputParameterName = "DeadBandTime";

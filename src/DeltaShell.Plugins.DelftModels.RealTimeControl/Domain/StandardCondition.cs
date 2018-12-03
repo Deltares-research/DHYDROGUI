@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public StandardCondition(bool inputRequired)
         {
             Operation = Operation.Equal;
-            Reference = "EXPLICIT"; // = default EXPLICIT
+            Reference = ReferenceType.Explicit; // = default EXPLICIT
             this.inputRequired = inputRequired;
             if (string.IsNullOrEmpty(XmlTag))
             {
@@ -144,5 +144,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 Operation = standardCondition.Operation;
             }
         }
+
+        public static class ReferenceType
+        {
+            public const string Explicit = "EXPLICIT";
+            public const string Implicit = "IMPLICIT";
+        }
     }
+
 }
