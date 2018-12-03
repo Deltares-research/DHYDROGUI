@@ -235,6 +235,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         private static void ReadFileBoundaryConditionLocations(string locationFilePath, IEventedList<WaterFlowModel1DBoundaryNodeData> boundaryNodes, Action<string, IList<string>> createAndAddErrorReport)
         {
             var boundaryLocations = (new BoundaryLocationReader(createAndAddErrorReport)).Read(locationFilePath);
+            if (boundaryLocations == null) return; // File could not be read
 
             foreach (var boundaryLocation in boundaryLocations)
             {
