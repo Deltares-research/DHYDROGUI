@@ -27,6 +27,9 @@ namespace DeltaShell.NGHS.IO.Factories
 
             var state_importSerializer = new XmlSerializer(typeof(TreeVectorFileXML));
             lookupSerializer.Add("treeVectorFile", state_importSerializer);
+
+            var importTimeSeriesSerializer = new XmlSerializer(typeof(TimeSeriesCollectionComplexType));
+            lookupSerializer.Add("TimeSeries", importTimeSeriesSerializer);
         }
     }
 }

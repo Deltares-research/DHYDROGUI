@@ -84,9 +84,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             // write xml with reference to xsd
             var xsdPath = DimrApiDataSet.RtcToolsDllPath;
             RealTimeControlXmlWriter.GetRuntimeXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.RtcRuntimeConfigxsd)) ?  path : xsdPath, model, model.LimitMemory, model.LogLevel)
-                .Save(path + RealTimeControlXMLFiles.XmlRuntime);
+                .Save(Path.Combine(path, RealTimeControlXMLFiles.XmlRuntime));
             RealTimeControlXmlWriter.GetToolsConfigXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.RtcToolsConfigXsd)) ? path : xsdPath, model.ControlGroups, model.WriteRestart || model.UseRestart)
-                .Save(path + RealTimeControlXMLFiles.XmlTools);
+                .Save(Path.Combine(path, RealTimeControlXMLFiles.XmlTools));
 
             if (model.UseRestart)
             {
@@ -117,11 +117,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             var timeSeriesDoc = RealTimeControlXmlWriter.GetTimeSeriesXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.PiTimeseriesxsd)) ? path : xsdPath, model, model.ControlGroups);
             if (timeSeriesDoc != null)
             {
-                timeSeriesDoc.Save(path + RealTimeControlXMLFiles.XmlTimeSeries);
+                timeSeriesDoc.Save(Path.Combine(path, RealTimeControlXMLFiles.XmlTimeSeries));
             }
 
             RealTimeControlXmlWriter.GetDataConfigXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.RtcDataConfigXsd)) ? path : xsdPath, model, model.ControlGroups, timeSeriesDoc == null ? null : "timeseries_import.xml")
-                .Save(path + RealTimeControlXMLFiles.XmlData);
+                .Save(Path.Combine(path, RealTimeControlXMLFiles.XmlData));
         }
 
     }
