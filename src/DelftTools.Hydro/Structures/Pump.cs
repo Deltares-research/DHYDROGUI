@@ -33,7 +33,7 @@ namespace DelftTools.Hydro.Structures
             StartSuction = 3.0;
             StopSuction = 2.0;
             DirectionIsPositive = true;
-            ControlDirection = PumpControlDirection.SuctionAndDeliverySideControl;
+            ControlDirection = PumpControlDirection.SuctionSideControl;
             ReductionTable = FunctionHelper.Get1DFunction<double, double>("reduction", "difference", "factor");
 
             CanBeTimedependent = canBeTimeDependent;

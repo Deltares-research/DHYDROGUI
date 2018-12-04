@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string MeteoDataWithRadiation = "humidity_airtemperature_cloudiness_solarradiation";
 
         
-        public const string Precipitation = "rainfall";
+        public const string Precipitation = "rainfall_rate";
 
         // trying to complicate things a bit further :-(, for flooding:
         public const string EmbankmentBnd = "1d2dbnd";
