@@ -12,7 +12,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         public void GivenAMd1dFile_WhenReading_ThenAModelIsReturned()
         {
             var md1dFilePath = TestHelper.GetTestFilePath(@"ImportSpatialData\water flow 1d.md1d");
-            
+
             var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
             Assert.IsNotNull(waterFlowModel1D.Network);
 
@@ -23,10 +23,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         [Test]
         public void GivenAnMd1dFile_WhenReadingAnIncorrectSpatialDataFile_ThenNullIsReturned()
         {
-            var md1dFilePath = TestHelper.GetTestFilePath(@"ImportSpatialData\water flow 1dIncorrect");
+            var md1dFilePath = TestHelper.GetTestFilePath(@"ImportSpatialData\water flow 1dIncorrect.md1d");
 
             var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
             Assert.IsNull(waterFlowModel1D);
         }
+
     }
 }

@@ -41,6 +41,31 @@ namespace DeltaShell.NGHS.IO.TestUtils
             network.Branches.Add(branch);
             return network;
         }
+        public static IHydroNetwork SetupSimpleHydroNetworkWith2NodesAndMaasmondBranch()
+        {
+            // specify your network here
+            var network = new HydroNetwork();
+
+            // add nodes and branches
+            IHydroNode node1 = new HydroNode {Name = "node1", LongName = string.Empty, Network = network};
+            IHydroNode node2 = new HydroNode {Name = "node2", LongName = string.Empty, Network = network};
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node2);
+
+            var branch = new Channel("Maasmond", node1, node2)
+            {
+                LongName = string.Empty,
+                OrderNumber = 0,
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(100, 0)
+                })
+            };
+
+            network.Branches.Add(branch);
+            return network;
+        }
 
         /// <summary>
         /// add a cross section on a branch
