@@ -2,6 +2,9 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using DelftTools.Controls;
 using DelftTools.Hydro;
 using Image = System.Drawing.Image;
@@ -85,6 +88,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             if (string.IsNullOrEmpty(propertyName)) return;
 
             ViewModel.UpdatePropertyValue(propertyName);
+        }
+
+        private void MainTabControlOnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Fixes known issue for committing value when tab selection changes
+            // https://stackoverflow.com/questions/10208861/wpf-data-bound-tabcontrol-doesnt-commit-changes-when-new-tab-is-selected
+
+            Keyboard.FocusedElement?.RaiseEvent(new RoutedEventArgs(LostFocusEvent));
         }
     }
 }

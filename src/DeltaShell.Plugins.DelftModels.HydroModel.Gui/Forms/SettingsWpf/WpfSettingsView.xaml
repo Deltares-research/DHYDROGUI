@@ -7,6 +7,7 @@
              xmlns:valueConverters="clr-namespace:DelftTools.Controls.Wpf.ValueConverters;assembly=DelftTools.Controls.Wpf"
              xmlns:settingsWpf="clr-namespace:DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:attachedProperties="clr-namespace:DelftTools.Controls.Wpf.AttachedProperties;assembly=DelftTools.Controls.Wpf"
              mc:Ignorable="d" 
              x:Name="UserControl"
              d:DesignHeight="300" d:DesignWidth="1000" 
@@ -95,11 +96,10 @@
                             Mode=TwoWay, 
                             ValidatesOnDataErrors=True, 
                             ValidatesOnExceptions=True,
-                            Converter={StaticResource DoubleToStringConverter},
-                            Delay=500, 
-                            UpdateSourceTrigger=PropertyChanged}"
+                            Converter={StaticResource DoubleToStringConverter}}"
                     Style="{StaticResource ControlWithErrorStyle}"
-                    IsEnabled="{Binding Path=IsEditable}" />
+                    IsEnabled="{Binding Path=IsEditable}"
+                    attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"/>
 
                 <TextBlock Grid.Column="2"
                            Text="{Binding UnitSymbol}" 
@@ -301,7 +301,8 @@
     <TabControl 
         x:Name="MainTabControl"
         ItemsSource="{Binding Path=SettingsCategories}"
-        ContentTemplateSelector="{StaticResource TemplateSelector}">
+        ContentTemplateSelector="{StaticResource TemplateSelector}"
+        SelectionChanged="MainTabControlOnSelectionChanged">
         <TabControl.ItemTemplate>
             <DataTemplate>
                 <TextBlock Text="{Binding Path=CategoryName}"/>
