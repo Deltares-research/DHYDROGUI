@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Link1d2d;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Adaptors;
@@ -69,11 +70,12 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 using (var uGrid = new UGrid(path))
                 {
+                    var mesh2DId = uGrid.GetMesh2DIds()[0];
                     switch (location)
                     {
                         case BedLevelLocation.Faces:
                         case BedLevelLocation.FacesMeanLevFromNodes:
-                            zValues = uGrid.ReadZValuesAtFacesForMeshId(1);
+                            zValues = uGrid.ReadZValuesAtFacesForMeshId(mesh2DId);
                             break;
                         case BedLevelLocation.CellEdges:
                             Log.WarnFormat(Resources.UnstructuredGridFileHelper_ReadZValues_Unable_to_read_z_values_at_this_location__CellEdges_are_not_currently_supported);
@@ -81,7 +83,7 @@ namespace DeltaShell.NGHS.IO.Grid
                         case BedLevelLocation.NodesMeanLev:
                         case BedLevelLocation.NodesMinLev:
                         case BedLevelLocation.NodesMaxLev:
-                            zValues = uGrid.ReadZValuesAtNodesForMeshId(1);
+                            zValues = uGrid.ReadZValuesAtNodesForMeshId(mesh2DId);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException("location", location, null);
@@ -103,11 +105,12 @@ namespace DeltaShell.NGHS.IO.Grid
                 case GridApiDataSet.DataSetConventions.CONV_UGRID:
                     using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_write))
                     {
+                        var mesh2DId = uGrid.GetMesh2DIds()[0];
                         switch (location)
                         {
                             case BedLevelLocation.Faces:
                             case BedLevelLocation.FacesMeanLevFromNodes:
-                                uGrid.WriteZValuesAtFacesForMeshId(1, values);
+                                uGrid.WriteZValuesAtFacesForMeshId(mesh2DId, values);
                                 break;
                             case BedLevelLocation.CellEdges:
                                 Log.WarnFormat(Resources.UnstructuredGridFileHelper_WriteZValues_Unable_to_write_z_values_at_this_location__CellEdges_are_not_currently_supported);
@@ -115,7 +118,7 @@ namespace DeltaShell.NGHS.IO.Grid
                             case BedLevelLocation.NodesMeanLev:
                             case BedLevelLocation.NodesMinLev:
                             case BedLevelLocation.NodesMaxLev:
-                                uGrid.WriteZValuesAtNodesForMeshId(1, values);
+                                uGrid.WriteZValuesAtNodesForMeshId(mesh2DId, values);
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException("location", location, null);
