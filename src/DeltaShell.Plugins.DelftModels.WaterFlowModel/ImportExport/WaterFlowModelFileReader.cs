@@ -237,11 +237,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             var boundaryLocations = (new BoundaryLocationReader(createAndAddErrorReport)).Read(locationFilePath);
             if (boundaryLocations == null) return; // File could not be read
 
+            var errorMessages = new List<string>();
             foreach (var boundaryLocation in boundaryLocations)
             {
                 var correspondingNode = boundaryNodes.FirstOrDefault(e => e.Feature.Name == boundaryLocation.Name);
+
+                if (correspondingNode == null)
+                {
+                    errorMessages.Add($"No boundary with nodeId = {boundaryLocation.Name} found in the network.");
+                    continue;
+                }
+
                 correspondingNode.ThatcherHarlemannCoefficient = boundaryLocation.ThatcherHarlemannCoefficient;
             }
+
+            if (errorMessages.Count > 0)
+                createAndAddErrorReport?.Invoke("While adding the boundary locations to the network, the following errors occured", errorMessages);
         }
 
         private static void ReadBoundaryConditionFile(string boundaryConditionsFilePath, WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
