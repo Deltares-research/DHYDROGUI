@@ -318,6 +318,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         [TestCase(ElementSet.ModelWide, QuantityType.BalLatTot        )]
         [TestCase(ElementSet.ModelWide, QuantityType.BalStorage       )]
         [TestCase(ElementSet.ModelWide, QuantityType.BalVolume        )]
+
+        // Output for D-Water Quality / DELWAQ
+        [TestCase(ElementSet.FiniteVolumeGridOnGridPoints, QuantityType.FiniteGridType)]
         public void GivenAWaterFlow1DOutputSettingDataWithAllEngineParametersSetToNoneAndADataAccessModelDescribingASingleEngineParameterWithSomeAggregateOptionNotNone_WhenWaterFlowModelPropertySetterSetOutputPropertiesIsCalledWithTheseParameters_ThenThisEnginePropertyIsSetToTheSpecifiedAggregateOptionAndAllOtherEngineParametersAreNone(ElementSet elementSet, QuantityType qType)
         {
             // Given
@@ -359,6 +362,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 [ElementSet.Retentions] = ModelDefinitionsRegion.ResultsRetentionsHeader,
                 [ElementSet.Laterals] = ModelDefinitionsRegion.ResultsLateralsHeader,
                 [ElementSet.ModelWide] = ModelDefinitionsRegion.ResultsWaterBalanceHeader,
+                [ElementSet.FiniteVolumeGridOnGridPoints] = ElementSet.FiniteVolumeGridOnGridPoints.ToString(), 
             };
 
         /// <summary>

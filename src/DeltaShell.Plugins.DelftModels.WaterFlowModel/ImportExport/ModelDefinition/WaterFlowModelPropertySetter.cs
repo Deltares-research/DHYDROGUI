@@ -65,6 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 [ModelDefinitionsRegion.ResultsRetentionsHeader] = ElementSet.Retentions,
                 [ModelDefinitionsRegion.ResultsLateralsHeader] = ElementSet.Laterals,
                 [ModelDefinitionsRegion.ResultsWaterBalanceHeader] = ElementSet.ModelWide,
+                [ElementSet.FiniteVolumeGridOnGridPoints.ToString()] = ElementSet.FiniteVolumeGridOnGridPoints, // DELWAQ value, currently not defined in ModelDefinitionsRegion.
             };
 
             foreach (var cat in modelSettingsCategories)
