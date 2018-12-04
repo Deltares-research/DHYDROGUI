@@ -44,7 +44,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             DelftXsdValidator.CollectUnsupportedFeatures(dimrSerializer, unsupportedFeatures);
             if (reader != null) dimrSerializer.Deserialize(reader);
 
-            Assert.That(unsupportedFeatures.Count, Is.EqualTo(0));
+            Assert.That(unsupportedFeatures.Count, Is.EqualTo(2));
         }
 
         [Test]

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
@@ -48,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         public bool OpenViewAfterImport { get { return false; } }
         public string MasterFileExtension
         {
-            get { return "."; }
+            get { return "json"; }
         }
         public IEnumerable<string> SubFolders
         {

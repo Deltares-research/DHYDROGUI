@@ -35,7 +35,7 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
         public void ConvertDimrWithExtraElementsOnRootLevel()
         {
             var xmlFilePath = GetXmlFilePath();
-            var xmlConfigFile = XDocument.Load(Path.Combine(xmlFilePath, "dimr.xml"));
+            var xmlConfigFile = XDocument.Load(Path.Combine(xmlFilePath, "dimrwithextrainfo.xml"));
             var reader = xmlConfigFile.CreateReader();
 
             var result = DelftXmlFileConverter.Convert(reader, "dimrConfig", new List<string>());

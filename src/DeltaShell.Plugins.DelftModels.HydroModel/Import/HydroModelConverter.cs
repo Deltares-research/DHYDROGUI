@@ -7,6 +7,7 @@ using DelftTools.Utils.Collections;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.xsd;
 using log4net;
+using Newtonsoft.Json;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 {
@@ -44,8 +45,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     foreach (var fileName in fileGroup)
                     {
                         var pathParts = SortFileParts(rootFolder, importer, fileName);
-
-                        var subModel = importer.ImportItem(Path.Combine(pathParts));
+                        var combinedPath = Path.Combine(pathParts);
+                        var fullPath = Path.GetFullPath(combinedPath);
+                        var subModel = importer.ImportItem(fullPath);
 
                         AddSubModels(subModel, hydroModel);
 
@@ -78,7 +80,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
         private static string[] SortFileParts(string rootFolder, IDimrModelFileImporter importer, string fileName)
         {
-            var pathParts = new[] {rootFolder}
+            string[] pathParts;
+
+            if (importer.MasterFileExtension.Equals("json"))
+            {
+                var subFolder = importer.SubFolders.First();
+                var pathToFile = Path.Combine(rootFolder, subFolder, fileName);
+                var file = File.ReadAllText(pathToFile);
+                var fileObject = JsonConvert.DeserializeObject<RtcXmlDirectoryLookup>(file);
+
+                pathParts = new[] { rootFolder }
+                    .Concat(importer.SubFolders)
+                    .Plus(fileObject.xmlDir)
+                    .ToArray();
+
+                return pathParts;
+            }
+
+            pathParts = new[] { rootFolder }
                 .Concat(importer.SubFolders)
                 .Plus(fileName)
                 .ToArray();
@@ -91,4 +110,5 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             return fileGroups;
         }
     }
+
 }

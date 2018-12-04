@@ -1,11 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DelftTools.Shell.Core;
-using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.HydroModel.Import;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 {
