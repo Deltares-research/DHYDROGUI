@@ -24,8 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public object ImportItem(string path, object target = null)
         {
-            var importer = new RealTimeControlModelXmlReader(path);
-            return CanImportOn(target) ? importer.ImportOn((IHydroModel)target) : null;
+            return RealTimeControlModelXmlReader.Read(path);
         }
 
         public string Name { get { return "RTC-Tools xml files"; } }

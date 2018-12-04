@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
     static class RealTimeControlDataConfigXmlReader
     {
-        public static IList<ConnectionPoint> Read(string dataConfigFilePath, IHydroModel targetModel, RealTimeControlModel rtcModel)
+        public static IList<ConnectionPoint> Read(string dataConfigFilePath, RealTimeControlModel rtcModel)
         {
             var dataConfigObject = (RTCDataConfigXML)DelftConfigXmlFileParser.Read(dataConfigFilePath);
 
@@ -24,8 +24,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             var rules = RealTimeControlDataConfigXmlConverter.GetAllRulesFromXmlElementsAndAddToControlGroup(allElements, controlGroups);
             var conditions = RealTimeControlDataConfigXmlConverter.GetAllConditionsFromXmlElementsAndAddToControlGroup(allElements, controlGroups);
-            var inputs = (IList<Input>)RealTimeControlDataConfigXmlConverter.GetConnectionPointsFromXmlElements(importElements, RtcXmlTag.Input, targetModel);
-            var outputs = (IList<Output>)RealTimeControlDataConfigXmlConverter.GetConnectionPointsFromXmlElements(exportElements, RtcXmlTag.Output, targetModel);
+            var inputs = (IList<Input>)RealTimeControlDataConfigXmlConverter.GetConnectionPointsFromXmlElements(allElements, RtcXmlTag.Input);
+            var outputs = (IList<Output>)RealTimeControlDataConfigXmlConverter.GetConnectionPointsFromXmlElements(allElements, RtcXmlTag.Output);
 
             RealTimeControlDataConfigXmlConverter.AddOutputAsInputForRelativeTimeRule(allElements,
                 rules.OfType<RelativeTimeRule>().ToList(), outputs);

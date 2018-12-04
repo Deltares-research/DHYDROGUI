@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlDataConfigXmlConverter));
 
-        public static void Read(string toolsConfigFilePath, IHydroModel targetModel, IList<ControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints)
+        public static void Read(string toolsConfigFilePath, IList<ControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints)
         {
             var toolsConfigObject = (RtcToolsConfigXML)DelftConfigXmlFileParser.Read(toolsConfigFilePath);
 

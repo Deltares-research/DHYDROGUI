@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return conditions;
         }
 
-        public static IList<ConnectionPoint> GetConnectionPointsFromXmlElements(List<RTCTimeSeriesXML> elements, string tag, IHydroModel model)
+        public static IList<ConnectionPoint> GetConnectionPointsFromXmlElements(List<RTCTimeSeriesXML> elements, string tag)
         {
             if (tag != RtcXmlTag.Input || tag != RtcXmlTag.Output) return null;
 
@@ -82,20 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             foreach (var connectionPointElement in connectionPointElements)
             {
-                var id = connectionPointElement.id;
-
-                var connectionPointItem = connectionPointElement.OpenMIExchangeItem;
-
-                var connectionPointName = id.Substring(tag.Length);
-                var featureName = connectionPointItem.elementId;
-                var parameterName = connectionPointItem.quantityId;
-                var linkedFeature = model.Region.AllHydroObjects.First(o => o.Name == featureName);
-
-                if (string.IsNullOrEmpty(featureName) || string.IsNullOrEmpty(parameterName))
-                    Log.Warn($"The element with id '{id}' needs to have an elementId and quantityId. See file: '{RealTimeControlXMLFiles.XmlData}'.");
-
-                if (linkedFeature == null)
-                    Log.Warn($"Element with id '{id}' does not have a corresponding feature in the model. See file: '{RealTimeControlXMLFiles.XmlData}'.");
+                var temporaryConnectionPointName = connectionPointElement.id;
 
                 ConnectionPoint connectionPoint;
 
@@ -111,10 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                         continue;
                 }
 
-                connectionPoint.Name = connectionPointName;
-                connectionPoint.ParameterName = parameterName;
-                connectionPoint.Feature = linkedFeature;
-
+                connectionPoint.Name = temporaryConnectionPointName;
                 connectionPoints.Add(connectionPoint);
             }
 
@@ -137,7 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 var correspondingRelativeTimeRule = relativeTimeRules.FirstOrDefault(r => r.Name == ruleName);
                 if (correspondingRelativeTimeRule == null)
                 {
-                    Log.Warn($"Output '{outputName}' is input for rule '{ruleName}', but could not be found in the model. See file: '{RealTimeControlXMLFiles.XmlData}'.");
+                    Log.Warn($"Output '{outputName}' is input for rule '{ruleName}', but the rule could not be found. See file: '{RealTimeControlXMLFiles.XmlData}'.");
                     continue;
                 }
 
@@ -150,7 +134,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 var correspondingOutput = outputs.FirstOrDefault(o => o.Name == outputName);
                 if (correspondingOutput == null)
                 {
-                    Log.Warn($"When getting an output as input for rule '{ruleName}', the output '{outputName}' could not be found in the model. See file: '{RealTimeControlXMLFiles.XmlData}'.");
+                    Log.Warn($"When getting an output as input for rule '{ruleName}', the output '{outputName}' could not be found in the file. See file: '{RealTimeControlXMLFiles.XmlData}'.");
                     continue;
                 }
 
