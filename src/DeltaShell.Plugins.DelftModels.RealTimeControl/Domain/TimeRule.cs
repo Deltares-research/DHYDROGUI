@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     /// Time  rule does not use IEventedList<Input> Inputs { get; set; }
     /// </summary>
     [Entity]
-    public class TimeRule : RuleBase, IItemContainer
+    public class TimeRule : RuleBase, IItemContainer, ITimeDependentRtcObject
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(TimeRule));
         private string LocationId

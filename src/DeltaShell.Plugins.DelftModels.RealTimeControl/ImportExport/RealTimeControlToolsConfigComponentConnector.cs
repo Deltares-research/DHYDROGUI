@@ -20,9 +20,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             {
                 var id = timeRuleElement.id;
 
-                var correspondingControlGroup = GetControlGroupByElementId(id, controlGroups);
+                var correspondingControlGroup = RealTimeControlXmlReaderHelper.GetControlGroupByElementId(id, controlGroups);
 
-                var timeRule = GetRuleByElementIdInControlGroup(id, correspondingControlGroup) as TimeRule;
+                var timeRule = RealTimeControlXmlReaderHelper.GetRuleByElementIdInControlGroup(id, correspondingControlGroup) as TimeRule;
                 if (timeRule == null)
                 {
                     Log.Warn("WARNING");
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     continue;
                 }
 
-                var correspondingOutput = (Output)GetConnectionPointByXmlName(ruleOutputElementName, connectionPoints);
+                var correspondingOutput = (Output)RealTimeControlXmlReaderHelper.GetConnectionPointByName(ruleOutputElementName, connectionPoints);
                 timeRule.Outputs.Add(correspondingOutput);
                 AddConnectionPointToControlGroup(correspondingOutput, correspondingControlGroup);
             }
@@ -49,9 +49,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             {
                 var id = relativeTimeRuleElement.id;
 
-                var correspondingControlGroup = GetControlGroupByElementId(id, controlGroups);
+                var correspondingControlGroup = RealTimeControlXmlReaderHelper.GetControlGroupByElementId(id, controlGroups);
 
-                var relativeTimeRule = GetRuleByElementIdInControlGroup(id, correspondingControlGroup) as RelativeTimeRule;
+                var relativeTimeRule = RealTimeControlXmlReaderHelper.GetRuleByElementIdInControlGroup(id, correspondingControlGroup) as RelativeTimeRule;
                 if (relativeTimeRule == null)
                 {
                     Log.Warn("WARNING");
@@ -69,14 +69,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     continue;
                 }
 
-                var correspondingOutput = (Output)GetConnectionPointByXmlName(ruleOutputElementName, connectionPoints);
+                var correspondingOutput = (Output)RealTimeControlXmlReaderHelper.GetConnectionPointByName(ruleOutputElementName, connectionPoints);
 
                 AddConnectionPointToControlGroup(correspondingOutput, correspondingControlGroup);
 
                 relativeTimeRule.FromValue = fromValue;
                 relativeTimeRule.MinimumPeriod = (int)minimumPeriod;
                 DefineFunctionFromXmlTable(table, relativeTimeRule.Function);
-                relativeTimeRule.Outputs.Add(correspondingOutput);
+
+                if (!relativeTimeRule.Outputs.Contains(correspondingOutput))
+                {
+                    relativeTimeRule.Outputs.Add(correspondingOutput);
+                }              
             }
         }
 
@@ -121,8 +125,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         private static StandardCondition GetAndConnectStandardConditionRecursively(StandardTriggerXML standardConditionElement, IList<ControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints)
         {
             var id = standardConditionElement.id;
-            var correspondingControlGroup = GetControlGroupByElementId(id, controlGroups);
-            var correspondingStandardCondition = (StandardCondition)GetConditionByElementIdInControlGroup(id, correspondingControlGroup);
+            var correspondingControlGroup = RealTimeControlXmlReaderHelper.GetControlGroupByElementId(id, controlGroups);
+            var correspondingStandardCondition = (StandardCondition)RealTimeControlXmlReaderHelper.GetConditionByElementIdInControlGroup(id, correspondingControlGroup);
 
 
             var conditionElement = standardConditionElement.condition;
@@ -142,8 +146,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             if (hasExplicitInput)
             {
-                var inputXmlName = inputElement.Value;
-                var correspondingInput = (Input)GetConnectionPointByXmlName(inputXmlName, connectionPoints);
+                var inputName = inputElement.Value;
+                var correspondingInput = (Input)RealTimeControlXmlReaderHelper.GetConnectionPointByName(inputName, connectionPoints);
                 correspondingStandardCondition.Input = correspondingInput;
                 AddConnectionPointToControlGroup(correspondingInput, correspondingControlGroup);
             }
@@ -156,7 +160,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 // Rule
                 if (item is string)
                 {
-                    var ruleAsOutput = GetRuleByElementIdInControlGroup((string)item, correspondingControlGroup);
+                    var ruleAsOutput = RealTimeControlXmlReaderHelper.GetRuleByElementIdInControlGroup((string)item, correspondingControlGroup);
                     correspondingStandardCondition.TrueOutputs.Add(ruleAsOutput);
                 }
 
@@ -173,7 +177,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 // Rule
                 if (item is string)
                 {
-                    var ruleAsOutput = GetRuleByElementIdInControlGroup((string)item, correspondingControlGroup);
+                    var ruleAsOutput = RealTimeControlXmlReaderHelper.GetRuleByElementIdInControlGroup((string)item, correspondingControlGroup);
                     correspondingStandardCondition.FalseOutputs.Add(ruleAsOutput);
                 }
 
@@ -217,57 +221,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             }
 
             return operation;
-        }
-
-        private static ControlGroup GetControlGroupByElementId(string id, IList<ControlGroup> controlGroups)
-        {
-            var groupName = RealTimeControlXmlReaderHelper.GetControlGroupNameFromElementId(id);
-            var controlGroup = controlGroups.FirstOrDefault(g => g.Name == groupName);
-            if (controlGroup == null)
-            {
-                Log.Warn($"Could not find the controlgroup '{groupName}' that is referenced in file '{RealTimeControlXMLFiles.XmlTools}'. The group needs to be referenced in file '{RealTimeControlXMLFiles.XmlData}' too.");
-                return null;
-            }
-            return controlGroup;
-        }
-
-        private static ConnectionPoint GetConnectionPointByXmlName(string xmlName, IList<ConnectionPoint> connectionPoints)
-        {
-            var correspondingConnectionPoint = connectionPoints.FirstOrDefault(o => o.XmlName == xmlName);
-            if (correspondingConnectionPoint == null)
-            {
-                Log.Warn($"Could not find the input/output '{xmlName}' that is referenced in file '{RealTimeControlXMLFiles.XmlTools}'. The input/output needs to be referenced in file '{RealTimeControlXMLFiles.XmlData}' too.");
-            }
-
-            return correspondingConnectionPoint;
-        }
-
-        private static RuleBase GetRuleByElementIdInControlGroup(string id, ControlGroup controlGroup)
-        {
-            var ruleName = RealTimeControlXmlReaderHelper.GetRuleOrConditionNameFromElementId(id);
-
-            var correspondingRule = controlGroup.Rules.FirstOrDefault(r => r.Name == ruleName);
-            if (correspondingRule == null)
-            {
-                Log.Warn($"Could not find the rule '{ruleName}' that is referenced in file '{RealTimeControlXMLFiles.XmlTools}'. The rule needs to be referenced in file '{RealTimeControlXMLFiles.XmlData}' too.");
-                return null;
-            }
-
-            return correspondingRule;
-        }
-
-        private static ConditionBase GetConditionByElementIdInControlGroup(string id, ControlGroup controlGroup)
-        {
-            var conditionName = RealTimeControlXmlReaderHelper.GetRuleOrConditionNameFromElementId(id);
-
-            var correspondingCondition = controlGroup.Conditions.FirstOrDefault(r => r.Name == conditionName);
-            if (correspondingCondition == null)
-            {
-                Log.Warn($"Could not find the condition '{conditionName}' that is referenced in file '{RealTimeControlXMLFiles.XmlTools}'. The condition needs to be referenced in file '{RealTimeControlXMLFiles.XmlData}' too.");
-                return null;
-            }
-
-            return correspondingCondition;
         }
     }
 }

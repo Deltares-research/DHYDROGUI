@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     ///  - timeseries_import.xml : the time series contents
     /// </summary>
     [Entity]
-    public class TimeCondition : StandardCondition, IItemContainer
+    public class TimeCondition : StandardCondition, IItemContainer, ITimeDependentRtcObject
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(StandardCondition));
 

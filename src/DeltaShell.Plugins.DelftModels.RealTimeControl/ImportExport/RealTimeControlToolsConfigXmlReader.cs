@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Hydro;
-using DeltaShell.NGHS.IO;
+﻿using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using log4net;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
@@ -25,13 +24,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             var relativeTimeRuleElements = ruleElements.Where(r => r.Item is TimeRelativeXML).Select(r => r.Item as TimeRelativeXML).ToList();
             var timeRuleElements = ruleElements.Where(r => r.Item is TimeAbsoluteXML).Select(r => r.Item as TimeAbsoluteXML).ToList();
             var standardConditionElements = conditionElements.Where(t => t.Item is StandardTriggerXML).Select(r => r.Item as StandardTriggerXML).ToList();
-            // TODO: time conditions
 
             RealTimeControlToolsConfigComponentConnector.ConnectTimeRules(timeRuleElements, controlGroups, connectionPoints);
             RealTimeControlToolsConfigComponentConnector.ConnectRelativeTimeRules(relativeTimeRuleElements,controlGroups,connectionPoints);
             RealTimeControlToolsConfigComponentConnector.ConnectStandardConditions(standardConditionElements, controlGroups, connectionPoints);
-            // TODO: time conditions
-
         }
     }
 }

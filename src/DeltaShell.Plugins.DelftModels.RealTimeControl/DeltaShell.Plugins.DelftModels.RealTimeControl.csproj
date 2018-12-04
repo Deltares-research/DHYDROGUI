@@ -126,6 +126,7 @@
     <Compile Include="Domain\ExtrapolationHydraulicType.cs" />
     <Compile Include="Domain\FakeRtcTimeSeriesFeature.cs" />
     <Compile Include="Domain\InterpolationHydraulicType.cs" />
+    <Compile Include="Domain\ITimeDependentRtcObject.cs" />
     <Compile Include="Domain\LookupSignal.cs" />
     <Compile Include="Domain\SignalBase.cs" />
     <Compile Include="Domain\SignalProvider.cs" />
@@ -136,6 +137,8 @@
     <Compile Include="ImportExport\RealTimeControlDataConfigXmlReader.cs" />
     <Compile Include="ImportExport\RealTimeControlModelExporter.cs" />
     <Compile Include="ImportExport\RealTimeControlModelImporter.cs" />
+    <Compile Include="ImportExport\RealTimeControlTimeSeriesConnector.cs" />
+    <Compile Include="ImportExport\RealTimeControlTimeSeriesXmlReader.cs" />
     <Compile Include="ImportExport\RealTimeControlToolsConfigComponentConnector.cs" />
     <Compile Include="ImportExport\RealTimeControlToolsConfigXmlReader.cs" />
     <Compile Include="ImportExport\RealTimeControlModelXmlReader.cs" />

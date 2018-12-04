@@ -1,12 +1,11 @@
 ﻿using DelftTools.Functions.Generic;
-using DelftTools.Hydro;
+using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Utils.Collections;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
@@ -72,9 +71,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return conditions;
         }
 
+        public static IList<Input> GetInputsFromXmlElements(List<RTCTimeSeriesXML> elements)
+        {
+            var tag = RtcXmlTag.Input;
+            var connectionPoints = GetConnectionPointsFromXmlElements(elements, tag);
+            return connectionPoints.Cast<Input>().ToList();
+        }
+
+        public static IList<Output> GetOutputsFromXmlElements(List<RTCTimeSeriesXML> elements)
+        {
+            var tag = RtcXmlTag.Output;
+            var connectionPoints = GetConnectionPointsFromXmlElements(elements, tag);
+            return connectionPoints.Cast<Output>().ToList();
+        }
+
         public static IList<ConnectionPoint> GetConnectionPointsFromXmlElements(List<RTCTimeSeriesXML> elements, string tag)
         {
-            if (tag != RtcXmlTag.Input || tag != RtcXmlTag.Output) return null;
+            if (tag != RtcXmlTag.Input && tag != RtcXmlTag.Output) return null;
 
             var connectionPointElements = elements.Where(e => e.id.StartsWith(tag) && !e.id.Contains(RtcXmlTag.OutputAsInput));
 
@@ -115,8 +128,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
                 var splitId = id.Split(new[] { RtcXmlTag.OutputAsInput }, StringSplitOptions.None);
 
-                var outputName = splitId.ElementAt(1).Substring(RtcXmlTag.Output.Length);
-                var ruleName = splitId.ElementAt(2);
+                var outputName = splitId.First();
+                var ruleName = splitId.Last();
 
                 var correspondingRelativeTimeRule = relativeTimeRules.FirstOrDefault(r => r.Name == ruleName);
                 if (correspondingRelativeTimeRule == null)
@@ -148,7 +161,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             var groupNames = new List<string>();
 
             var selectedElementsIDs =
-                elements.Select(e => e.id).Where(id => id != RtcXmlTag.Input && id != RtcXmlTag.Output);
+                elements.Select(e => e.id).Where(id => !id.StartsWith(RtcXmlTag.Input) && !id.StartsWith(RtcXmlTag.Output));
 
             selectedElementsIDs.ForEach(id =>
             {

@@ -1,5 +1,4 @@
-﻿using DelftTools.Hydro;
-using System.IO;
+﻿using System.IO;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
@@ -7,17 +6,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
     {
         public static RealTimeControlModel Read(string directoryPath)
         {
-            var runTimeConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlRuntime);
-            var dataConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlData);
-            var toolsConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlTools);
-            var stateImportConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlImportState);
-            var timeSeriesFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlTimeSeries);
-
             var rtcModel = new RealTimeControlModel();
+            var controlGroups = rtcModel.ControlGroups;
 
-            var connectionPoints = RealTimeControlDataConfigXmlReader.Read(dataConfigFilePath, rtcModel);
+            var dataConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlData);
+            var connectionPoints = RealTimeControlDataConfigXmlReader.Read(dataConfigFilePath, controlGroups);
 
-            RealTimeControlToolsConfigXmlReader.Read(toolsConfigFilePath, rtcModel.ControlGroups, connectionPoints);
+            var toolsConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlTools);
+            RealTimeControlToolsConfigXmlReader.Read(toolsConfigFilePath, controlGroups, connectionPoints);
+
+            var timeSeriesFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlTimeSeries);
+            RealTimeControlTimeSeriesXmlReader.Read(timeSeriesFilePath, controlGroups);
+
+            var runTimeConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlRuntime);
+            var stateImportConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlImportState);
 
             return rtcModel;
         }
