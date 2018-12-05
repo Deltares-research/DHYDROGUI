@@ -51,14 +51,18 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
 
              // Optional Properties (an error will not be generated if these fail)
             var longName = category.ReadProperty<string>(LocationRegion.Name.Key, true) ?? string.Empty;
-            
+
+            var resultingChainage = chainage / branch.Length * branch.Geometry.Length;
+            var geometry = new Point(
+                LengthLocationMap.GetLocation(branch.Geometry, resultingChainage).GetCoordinate(branch.Geometry));
+
             return new ObservationPoint()
             {
                 Branch = branch,
                 Name = name,
                 LongName = longName,
                 Chainage = chainage,
-                Geometry = new Point(LengthLocationMap.GetLocation(branch.Geometry, chainage).GetCoordinate(branch.Geometry)),
+                Geometry = geometry,
             };
         }
 
