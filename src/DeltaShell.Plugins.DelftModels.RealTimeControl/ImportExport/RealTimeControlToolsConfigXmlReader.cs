@@ -15,9 +15,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         {
             var toolsConfigObject = (RtcToolsConfigXML)DelftConfigXmlFileParser.Read(toolsConfigFilePath);
 
-            // TODO: 'general' element
-            // TODO: Unitdelays 
-
             var ruleElements = toolsConfigObject.rules;
             var conditionElements = toolsConfigObject.triggers;
     

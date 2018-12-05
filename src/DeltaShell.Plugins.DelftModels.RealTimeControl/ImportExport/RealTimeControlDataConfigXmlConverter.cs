@@ -30,6 +30,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             RtcXmlTag.StandardCondition,
         };
 
+        private static readonly IList<string> ConnectionPointTags = new List<string>
+        {
+            RtcXmlTag.Input,
+            RtcXmlTag.Output,
+        };
+
         public static IList<ControlGroup> CreateControlGroupsFromXmlElementIDs(IEnumerable<RTCTimeSeriesXML> elements)
         {
             var controlGroups = new List<ControlGroup>();
@@ -45,50 +51,37 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return controlGroups;
         }
 
-        public static IList<RuleBase> GetAllRulesFromXmlElementsAndAddToControlGroup(List<RTCTimeSeriesXML> elements, IList<ControlGroup> controlGroups)
+        public static void CreateRulesFromXmlElementsAndAddToControlGroup(List<RTCTimeSeriesXML> elements, IList<ControlGroup> controlGroups)
         {
-            var rules = new List<RuleBase>();
-
-            foreach (var tag in RuleTags)
+            RuleTags.ForEach(tag =>
             {
-                var rule = GetRulesFromXmlElementsByTagAndAddToControlGroup(elements, tag, controlGroups);
-                rules.AddRange(rule);
+                CreateRulesByTagFromXmlElementsAndAddToControlGroup(elements, tag, controlGroups);
+            });
+        }
+
+        public static void CreateConditionsFromXmlElementsAndAddToControlGroup(List<RTCTimeSeriesXML> elements, IList<ControlGroup> controlGroups)
+        {
+            ConditionTags.ForEach(tag =>
+            {
+                CreateConditionsByTagFromXmlElementsAndAddToControlGroup(elements, tag, controlGroups);
+            });
+        }
+
+        public static IList<ConnectionPoint> GetConnectionPointsFromXmlElements(List<RTCTimeSeriesXML> elements)
+        {
+            var connectionPoints = new List<ConnectionPoint>();
+
+            foreach (var tag in ConnectionPointTags)
+            {
+                var connectionPointsByTag = GetConnectionPointsByTagFromXmlElements(elements, tag);
+                connectionPoints.AddRange(connectionPointsByTag);
             }
 
-            return rules;
+            return connectionPoints;
         }
 
-        public static IList<ConditionBase> GetAllConditionsFromXmlElementsAndAddToControlGroup(List<RTCTimeSeriesXML> elements, IList<ControlGroup> controlGroups)
+        private static IList<ConnectionPoint> GetConnectionPointsByTagFromXmlElements(List<RTCTimeSeriesXML> elements, string tag)
         {
-            var conditions = new List<ConditionBase>();
-
-            foreach (var tag in ConditionTags)
-            {
-                var condition = GetConditionsFromXmlElementsByTagAndAddToControlGroup(elements, tag, controlGroups);
-                conditions.AddRange(condition);
-            }
-
-            return conditions;
-        }
-
-        public static IList<Input> GetInputsFromXmlElements(List<RTCTimeSeriesXML> elements)
-        {
-            var tag = RtcXmlTag.Input;
-            var connectionPoints = GetConnectionPointsFromXmlElements(elements, tag);
-            return connectionPoints.Cast<Input>().ToList();
-        }
-
-        public static IList<Output> GetOutputsFromXmlElements(List<RTCTimeSeriesXML> elements)
-        {
-            var tag = RtcXmlTag.Output;
-            var connectionPoints = GetConnectionPointsFromXmlElements(elements, tag);
-            return connectionPoints.Cast<Output>().ToList();
-        }
-
-        public static IList<ConnectionPoint> GetConnectionPointsFromXmlElements(List<RTCTimeSeriesXML> elements, string tag)
-        {
-            if (tag != RtcXmlTag.Input && tag != RtcXmlTag.Output) return null;
-
             var connectionPointElements = elements.Where(e => e.id.StartsWith(tag) && !e.id.Contains(RtcXmlTag.OutputAsInput));
 
             var connectionPoints = new List<ConnectionPoint>();
@@ -118,7 +111,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return connectionPoints;
         }
 
-        public static void AddOutputAsInputForRelativeTimeRule(List<RTCTimeSeriesXML> elements, IList<RelativeTimeRule> relativeTimeRules, IList<Output> outputs)
+        public static void AddOutputAsInputForRelativeTimeRule(List<RTCTimeSeriesXML> elements, IList<ControlGroup> controlGroups, IEnumerable<Output> outputs)
         {
             var outputAsInputElements = elements.Where(e => e.id.Contains(RtcXmlTag.OutputAsInput));
 
@@ -130,6 +123,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
                 var outputName = splitId.First();
                 var ruleName = splitId.Last();
+
+                var relativeTimeRules = controlGroups.SelectMany(c => c.Rules).OfType<RelativeTimeRule>();
 
                 var correspondingRelativeTimeRule = relativeTimeRules.FirstOrDefault(r => r.Name == ruleName);
                 if (correspondingRelativeTimeRule == null)
@@ -176,13 +171,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return groupNames;
         }
 
-        private static IList<RuleBase> GetRulesFromXmlElementsByTagAndAddToControlGroup(List<RTCTimeSeriesXML> elements, string tag, IList<ControlGroup> controlGroups)
+        private static void CreateRulesByTagFromXmlElementsAndAddToControlGroup(List<RTCTimeSeriesXML> elements, string tag, IList<ControlGroup> controlGroups)
         {
-            if (!RuleTags.Contains(tag)) return null;
+            if (!RuleTags.Contains(tag)) return;
 
             var ruleElements = elements.Where(e => e.id.StartsWith(tag));
-
-            var rules = new List<RuleBase>();
 
             foreach (var ruleElement in ruleElements)
             {
@@ -199,13 +192,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 if (!FindCorrespondingControlGroupAndAddRule(controlGroups, correspondingGroupName, rule))
                 {
                     Log.Warn($"For Rule '{name}', corresponding control group '{correspondingGroupName}' could not be found. See file: {RealTimeControlXMLFiles.XmlData}");
-                    continue;
                 }
-
-                rules.Add(rule);
             }
-
-            return rules;
         }
 
         private static RuleBase CreateRuleByTag(string tag, string name, PITimeSeriesXML ruleItem)
@@ -250,13 +238,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return true;
         }
 
-        private static IList<ConditionBase> GetConditionsFromXmlElementsByTagAndAddToControlGroup(List<RTCTimeSeriesXML> elements, string tag, IList<ControlGroup> controlGroups)
+        private static void CreateConditionsByTagFromXmlElementsAndAddToControlGroup(List<RTCTimeSeriesXML> elements, string tag, IList<ControlGroup> controlGroups)
         {
-            if (!ConditionTags.Contains(tag)) return null;
+            if (!ConditionTags.Contains(tag)) return;
 
             var conditionElements = elements.Where(e => e.id.StartsWith(tag));
-
-            var conditions = new List<ConditionBase>();
 
             foreach (var conditionElement in conditionElements)
             {
@@ -273,13 +259,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 if (!FindCorrespondingControlGroupAndAddCondition(controlGroups, correspondingGroupName, condition))
                 {
                     Log.Warn($"For Condition '{name}', corresponding control group '{correspondingGroupName}' could not be found. See file: {RealTimeControlXMLFiles.XmlData}");
-                    continue;
                 }
-
-                conditions.Add(condition);
             }
-
-            return conditions;
         }
 
         private static bool FindCorrespondingControlGroupAndAddCondition(IList<ControlGroup> controlGroups, string groupName, ConditionBase condition)

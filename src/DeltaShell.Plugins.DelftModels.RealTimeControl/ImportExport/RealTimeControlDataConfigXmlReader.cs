@@ -19,19 +19,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             var createdControlGroups = RealTimeControlDataConfigXmlConverter.CreateControlGroupsFromXmlElementIDs(allElements);
 
-            var rules = RealTimeControlDataConfigXmlConverter.GetAllRulesFromXmlElementsAndAddToControlGroup(allElements, createdControlGroups);
-            var conditions = RealTimeControlDataConfigXmlConverter.GetAllConditionsFromXmlElementsAndAddToControlGroup(allElements, createdControlGroups);
-            var inputs = RealTimeControlDataConfigXmlConverter.GetInputsFromXmlElements(allElements);
-            var outputs = RealTimeControlDataConfigXmlConverter.GetOutputsFromXmlElements(allElements);
+            RealTimeControlDataConfigXmlConverter.CreateRulesFromXmlElementsAndAddToControlGroup(allElements, createdControlGroups);
+            RealTimeControlDataConfigXmlConverter.CreateConditionsFromXmlElementsAndAddToControlGroup(allElements, createdControlGroups);
 
-            RealTimeControlDataConfigXmlConverter.AddOutputAsInputForRelativeTimeRule(allElements,
-                rules.OfType<RelativeTimeRule>().ToList(), outputs);
+            var connectionPoints = RealTimeControlDataConfigXmlConverter.GetConnectionPointsFromXmlElements(allElements);
+
+            RealTimeControlDataConfigXmlConverter.AddOutputAsInputForRelativeTimeRule(allElements, createdControlGroups, connectionPoints.OfType<Output>());
 
             controlGroups.AddRange(createdControlGroups);
-
-            var connectionPoints = new List<ConnectionPoint>();
-            connectionPoints.AddRange(inputs);
-            connectionPoints.AddRange(outputs);
 
             return connectionPoints;
         }

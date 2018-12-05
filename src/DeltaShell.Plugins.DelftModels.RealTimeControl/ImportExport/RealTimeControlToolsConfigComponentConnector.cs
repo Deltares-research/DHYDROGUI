@@ -157,35 +157,48 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             trueOutputItems.ForEach(item =>
             {
-                // Rule
-                if (item is string)
+                var trueOutputs = correspondingStandardCondition.TrueOutputs;
+
+                var rule = item as string;
+                if (rule != null)
                 {
-                    var ruleAsOutput = RealTimeControlXmlReaderHelper.GetRuleByElementIdInControlGroup((string)item, correspondingControlGroup);
-                    correspondingStandardCondition.TrueOutputs.Add(ruleAsOutput);
+                    var ruleAsOutput = RealTimeControlXmlReaderHelper.GetRuleByElementIdInControlGroup(rule, correspondingControlGroup);
+
+                    if (!trueOutputs.Contains(ruleAsOutput))
+                        trueOutputs.Add(ruleAsOutput);
                 }
 
-                // Standard Condition
-                if (item is StandardTriggerXML)
+                var standardCondition = item as StandardTriggerXML;
+                if (standardCondition != null)
                 {
-                    var standardConditionAsOutput = GetAndConnectStandardConditionRecursively((StandardTriggerXML)item, controlGroups, connectionPoints);
-                    correspondingStandardCondition.TrueOutputs.Add(standardConditionAsOutput);
+                    var standardConditionAsOutput = GetAndConnectStandardConditionRecursively(standardCondition, controlGroups, connectionPoints);
+
+                    if (!trueOutputs.Contains(standardConditionAsOutput))
+                        trueOutputs.Add(standardConditionAsOutput);
                 }
             });
 
             falseOutputItems.ForEach(item =>
             {
-                // Rule
-                if (item is string)
+                var falseOutputs = correspondingStandardCondition.FalseOutputs;
+
+                var rule = item as string;
+                if (rule != null)
                 {
-                    var ruleAsOutput = RealTimeControlXmlReaderHelper.GetRuleByElementIdInControlGroup((string)item, correspondingControlGroup);
-                    correspondingStandardCondition.FalseOutputs.Add(ruleAsOutput);
+                    var ruleAsOutput = RealTimeControlXmlReaderHelper.GetRuleByElementIdInControlGroup(rule, correspondingControlGroup);
+
+                    if (!falseOutputs.Contains(ruleAsOutput))
+                        falseOutputs.Add(ruleAsOutput);
                 }
 
                 // Standard Condition
-                if (item is StandardTriggerXML)
+                var standardCondition = item as StandardTriggerXML;
+                if (standardCondition != null)
                 {
-                    var standardConditionAsOutput = GetAndConnectStandardConditionRecursively((StandardTriggerXML)item, controlGroups, connectionPoints);
-                    correspondingStandardCondition.FalseOutputs.Add(standardConditionAsOutput);
+                    var standardConditionAsOutput = GetAndConnectStandardConditionRecursively(standardCondition, controlGroups, connectionPoints);
+
+                    if (!falseOutputs.Contains(standardConditionAsOutput))
+                        falseOutputs.Add(standardConditionAsOutput);
                 }
             });
 
