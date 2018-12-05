@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Utils.Collections;
+using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.ModelDefinition
@@ -14,168 +14,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
     [TestFixture]
     public class WaterFlowModelPropertySetterTest
     {
-        // SetTimeProperties
-        private readonly DateTime defaultStartTime = new DateTime(2018, 11, 30, 15, 15, 0); // 2018-11-30 15:15:00
-        private readonly DateTime defaultStopTime = new DateTime(2018, 12, 4, 21, 0, 0); // 2018-12-04 21:00:00
-        private readonly TimeSpan defaultTimeStep = new TimeSpan(0, 0, 15, 0); // 15 minutes
-        private readonly TimeSpan defaultGridPointsTimeStep = new TimeSpan(0, 0, 10, 0); // 10 minutes
-        private readonly TimeSpan defaultStructuresTimeStep = new TimeSpan(0, 0, 5, 0); // 5 minutes
-
         [Test]
-        public void GivenTimeSettingsDataModel_WhenSettingWaterFlowModelTimeProperties_ThenTimeSettingsAreCorrect()
+        public void GivenDataModelWithCategoryThatHasAnUnknownHeader_WhenSettingProperties_ThenLogMessageIsReturned()
         {
             // Given
-            var timeSettingsCategories = GetCorrectTimeSettingsDataModel();
+            var unkownHeader = "Unkown Header";
+            var unknownCategory = new DelftIniCategory(unkownHeader);
+            var categories = new List<DelftIniCategory> { unknownCategory };
 
             // When
-            var model = new WaterFlowModel1D();
-            WaterFlowModelPropertySetter.SetTimeProperties(timeSettingsCategories, model);
+            Action setWaterFlowModelProperties = () => WaterFlowModelPropertySetter.SetWaterFlowModelProperties(categories, new WaterFlowModel1D());
 
             // Then
-            Assert.That(model.StartTime, Is.EqualTo(defaultStartTime));
-            Assert.That(model.StopTime, Is.EqualTo(defaultStopTime));
-            Assert.That(model.TimeStep, Is.EqualTo(defaultTimeStep));
-
-            var modelOutputSettings = model.OutputSettings;
-            Assert.That(modelOutputSettings.GridOutputTimeStep, Is.EqualTo(defaultGridPointsTimeStep));
-            Assert.That(modelOutputSettings.StructureOutputTimeStep, Is.EqualTo(defaultStructuresTimeStep));
+            var expectedMessage = string.Format(Resources.WaterFlowModelPropertySetter_SetWaterFlowModelProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header___0___, unkownHeader);
+            TestHelper.AssertAtLeastOneLogMessagesContains(setWaterFlowModelProperties, expectedMessage);
         }
 
-        [Test]
-        public void GivenTimeSettingsDataModelWithMissingStartTime_WhenSettingWaterFlowModelTimeProperties_ThenDefaultStartTimeIsSetOnModel()
-        {
-            // Given / When
-            var model = SetTimePropertiesWithMissingProperty(ModelDefinitionsRegion.StartTime.Key);
 
-            // Then
-            var defaultDateTime = default(DateTime);
-            Assert.That(model.StartTime, Is.EqualTo(defaultDateTime));
-        }
-
-        [Test]
-        public void GivenTimeSettingsDataModelWithMissingStopTime_WhenSettingWaterFlowModelTimeProperties_ThenDefaultStopTimeIsSetOnModel()
-        {
-            // Given / When
-            var model = SetTimePropertiesWithMissingProperty(ModelDefinitionsRegion.StopTime.Key);
-
-            // Then
-            var defaultDateTime = default(DateTime);
-            Assert.That(model.StopTime, Is.EqualTo(defaultDateTime));
-        }
-
-        [Test]
-        public void GivenTimeSettingsDataModelWithMissingTimeStep_WhenSettingWaterFlowModelTimeProperties_ThenDefaultTimeStepIsSetOnModel()
-        {
-            // Given / When
-            var model = SetTimePropertiesWithMissingProperty(ModelDefinitionsRegion.TimeStep.Key);
-
-            // Then
-            var defaultTimeSpan = default(TimeSpan);
-            Assert.That(model.TimeStep, Is.EqualTo(defaultTimeSpan));
-        }
-
-        [Test]
-        public void GivenTimeSettingsDataModelWithMissingGridOutputTimeStep_WhenSettingWaterFlowModelTimeProperties_ThenDefaultGridOutputTimeStepIsSetOnModel()
-        {
-            // Given / When
-            var model = SetTimePropertiesWithMissingProperty(ModelDefinitionsRegion.OutTimeStepGridPoints.Key);
-
-            // Then
-            var defaultTimeSpan = default(TimeSpan);
-            Assert.That(model.OutputSettings.GridOutputTimeStep, Is.EqualTo(defaultTimeSpan));
-        }
-
-        [Test]
-        public void GivenTimeSettingsDataModelWithMissingStructureOutputTimeStep_WhenSettingWaterFlowModelTimeProperties_ThenDefaultStructureOutputTimeStepIsSetOnModel()
-        {
-            // Given / When
-            var model = SetTimePropertiesWithMissingProperty(ModelDefinitionsRegion.OutTimeStepStructures.Key);
-
-            // Then
-            var defaultTimeSpan = default(TimeSpan);
-            Assert.That(model.OutputSettings.StructureOutputTimeStep, Is.EqualTo(defaultTimeSpan));
-        }
-
-        private WaterFlowModel1D SetTimePropertiesWithMissingProperty(string missingPropertyNAme)
-        {
-            // Given
-            var timeSettingsCategories = GetCorrectTimeSettingsDataModel().ToArray();
-            timeSettingsCategories.ForEach(c => c.Properties.RemoveAllWhere(p => p.Name == missingPropertyNAme));
-
-            // When
-            var model = new WaterFlowModel1D();
-            WaterFlowModelPropertySetter.SetTimeProperties(timeSettingsCategories, model);
-            return model;
-        }
-
-        private IEnumerable<DelftIniCategory> GetCorrectTimeSettingsDataModel()
-        {
-            var timeSettingsCategory = new DelftIniCategory(ModelDefinitionsRegion.TimeHeader);
-            timeSettingsCategory.AddProperty(ModelDefinitionsRegion.StartTime.Key, defaultStartTime);
-            timeSettingsCategory.AddProperty(ModelDefinitionsRegion.StopTime.Key, defaultStopTime);
-            timeSettingsCategory.AddProperty(ModelDefinitionsRegion.TimeStep.Key, defaultTimeStep.TotalSeconds);
-            timeSettingsCategory.AddProperty(ModelDefinitionsRegion.OutTimeStepGridPoints.Key, defaultGridPointsTimeStep.TotalSeconds);
-            timeSettingsCategory.AddProperty(ModelDefinitionsRegion.OutTimeStepStructures.Key, defaultStructuresTimeStep.TotalSeconds);
-            return new List<DelftIniCategory> {timeSettingsCategory};
-        }
-
-        [Test]
-        public void GivenDataModelWithoutTimeCategory_WhenSettingWaterFlowModelTimeProperties_ThenTimeSettingsHaveNotChanged()
-        {
-            // Given
-            var notTimeCategory = new DelftIniCategory(ModelDefinitionsRegion.AdvancedOptionsHeader);
-            notTimeCategory.AddProperty(ModelDefinitionsRegion.StartTime.Key, defaultStartTime);
-            var categories = new List<DelftIniCategory> {notTimeCategory};
-
-            // When
-            var model = new WaterFlowModel1D();
-            var startTimeBefore = model.StartTime;
-            var stopTimeBefore = model.StopTime;
-            var timeStepBefore = model.TimeStep;
-            var gridPointsTimeStepBefore = model.OutputSettings.GridOutputTimeStep;
-            var structuresTimeStepBefore = model.OutputSettings.StructureOutputTimeStep;
-
-            WaterFlowModelPropertySetter.SetTimeProperties(categories, model);
-
-            // Then
-            Assert.That(model.StartTime, Is.EqualTo(startTimeBefore));
-            Assert.That(model.StopTime, Is.EqualTo(stopTimeBefore));
-            Assert.That(model.TimeStep, Is.EqualTo(timeStepBefore));
-
-            var modelOutputSettings = model.OutputSettings;
-            Assert.That(modelOutputSettings.GridOutputTimeStep, Is.EqualTo(gridPointsTimeStepBefore));
-            Assert.That(modelOutputSettings.StructureOutputTimeStep, Is.EqualTo(structuresTimeStepBefore));
-        }
-
-        [Test]
-        public void WhenSettingWaterFlowModelTimePropertiesWithCategoriesEqualToNull_ThenTimeSettingsHaveNotChanged()
-        {
-            // When
-            var model = new WaterFlowModel1D();
-            var startTimeBefore = model.StartTime;
-            var stopTimeBefore = model.StopTime;
-            var timeStepBefore = model.TimeStep;
-            var gridPointsTimeStepBefore = model.OutputSettings.GridOutputTimeStep;
-            var structuresTimeStepBefore = model.OutputSettings.StructureOutputTimeStep;
-
-            WaterFlowModelPropertySetter.SetTimeProperties(null, model);
-
-            // Then
-            Assert.That(model.StartTime, Is.EqualTo(startTimeBefore));
-            Assert.That(model.StopTime, Is.EqualTo(stopTimeBefore));
-            Assert.That(model.TimeStep, Is.EqualTo(timeStepBefore));
-
-            var modelOutputSettings = model.OutputSettings;
-            Assert.That(modelOutputSettings.GridOutputTimeStep, Is.EqualTo(gridPointsTimeStepBefore));
-            Assert.That(modelOutputSettings.StructureOutputTimeStep, Is.EqualTo(structuresTimeStepBefore));
-        }
-
-        [Test]
-        public void WhenSettingWaterFlowModelTimePropertiesWithoutAModel_ThenNoException()
-        {
-            TestDelegate testDelegate = () => { WaterFlowModelPropertySetter.SetTimeProperties(null, null); };
-            Assert.DoesNotThrow(testDelegate);
-        }
 
         // SetOutputProperties
         /// <summary>

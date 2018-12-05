@@ -454,4 +454,7 @@
   <data name="RoughnessConverter_ReadRoughnessBranchData_no_specific_roughness_was_added_for_this_branch_" xml:space="preserve">
     <value>Branch '{0}' is not available in the model, so there no specific roughness was added for this branch.</value>
   </data>
+  <data name="WaterFlowModelPropertySetter_SetWaterFlowModelProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header___0___" xml:space="preserve">
+    <value>There is unrecognized data read from the md1d file with header '{0}'. This category has been skipped when reading.</value>
+  </data>
 </root>

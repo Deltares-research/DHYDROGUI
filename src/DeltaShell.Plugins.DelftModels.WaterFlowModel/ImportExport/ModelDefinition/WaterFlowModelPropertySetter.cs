@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
+using log4net;
 
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
@@ -14,33 +15,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
     /// </summary>
     public static class WaterFlowModelPropertySetter
     {
-        /// <summary>
-        /// Set the model time properties as specified in the ModelDefinitionsRegion.TimeHeader
-        /// of the <paramref name="modelSettingsCategories"/>
-        /// </summary>
-        /// <param name="modelSettingsCategories"> A set of DelftIniCategories describing a md1d file. </param>
-        /// <param name="model"> The model whose time variables should be changed. </param>
-        /// <remarks>
-        /// Pre-condition: model != null
-        /// </remarks>
-        public static void SetTimeProperties(IEnumerable<DelftIniCategory> modelSettingsCategories, WaterFlowModel1D model)
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowModel1D));
+
+        public static void SetWaterFlowModelProperties(IEnumerable<DelftIniCategory> modelSettingsCategories, WaterFlowModel1D model)
         {
-            var timeCategory = modelSettingsCategories?.FirstOrDefault(c => c.Name == ModelDefinitionsRegion.TimeHeader);
-            if (timeCategory == null) return;
-
-            var startTime = timeCategory.ReadProperty<DateTime>(ModelDefinitionsRegion.StartTime.Key, true);
-            var stopTime = timeCategory.ReadProperty<DateTime>(ModelDefinitionsRegion.StopTime.Key, true);
-            var timeStep = timeCategory.ReadProperty<double>(ModelDefinitionsRegion.TimeStep.Key, true);
-            var gridPointsOutputTimeStep = timeCategory.ReadProperty<double>(ModelDefinitionsRegion.OutTimeStepGridPoints.Key, true);
-            var structuresOutputTimeStep = timeCategory.ReadProperty<double>(ModelDefinitionsRegion.OutTimeStepStructures.Key, true);
-
-            model.StartTime = startTime;
-            model.StopTime = stopTime;
-            model.TimeStep = TimeSpan.FromSeconds(timeStep);
-
-            var modelOutputSettings = model.OutputSettings;
-            modelOutputSettings.GridOutputTimeStep = TimeSpan.FromSeconds(gridPointsOutputTimeStep);
-            modelOutputSettings.StructureOutputTimeStep = TimeSpan.FromSeconds(structuresOutputTimeStep);
+            foreach (var category in modelSettingsCategories)
+            {
+                try
+                {
+                    var propertySetter = WaterFlowModelPropertySetterFactory.GetPropertySetter(category);
+                    propertySetter.SetProperties(category, model);
+                }
+                catch (Exception)
+                {
+                    Log.WarnFormat(Resources.WaterFlowModelPropertySetter_SetWaterFlowModelProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header___0___, category.Name);
+                }
+            }
         }
 
         /// <summary>
@@ -55,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         public static void SetOutputProperties(IEnumerable<DelftIniCategory> modelSettingsCategories,
                                                                              WaterFlowModel1DOutputSettingData outputSettings)
         {
-            var headerMapping = new Dictionary<string, ElementSet>()
+            var headerMapping = new Dictionary<string, ElementSet>
             {
                 [ModelDefinitionsRegion.ResultsNodesHeader] = ElementSet.GridpointsOnBranches,
                 [ModelDefinitionsRegion.ResultsBranchesHeader] = ElementSet.ReachSegElmSet,

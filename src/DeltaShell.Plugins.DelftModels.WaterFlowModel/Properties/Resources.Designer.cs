@@ -1111,6 +1111,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is unrecognized data read from the md1d file with header &apos;{0}&apos;. This category has been skipped when reading..
+        /// </summary>
+        public static string WaterFlowModelPropertySetter_SetWaterFlowModelProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header___0___ {
+            get {
+                return ResourceManager.GetString("WaterFlowModelPropertySetter_SetWaterFlowModelProperties_There_is_unrecognized_da" +
+                        "ta_read_from_the_md1d_file_with_header___0___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Wind {
