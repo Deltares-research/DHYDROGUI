@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
     static public class RealTimeControlXmlReaderHelper
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlDataConfigXmlConverter));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlXmlReaderHelper));
 
         public static string RemoveTagFromElementName(string taggedName, string tag)
         {

@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
     public static class RealTimeControlTimeSeriesConnector
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlDataConfigXmlConverter));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlTimeSeriesConnector));
 
         public static void ConnectTimeSeries(IList<TimeSeriesComplexType> timeSeriesElements, IList<ControlGroup> controlGroups)
         {
@@ -43,7 +43,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             var name = RealTimeControlXmlReaderHelper.GetRuleOrConditionNameFromElementId(locationId);
 
             return controlGroup.Rules.Concat<RtcBaseObject>(controlGroup.Conditions).FirstOrDefault(o => o.Name == name);
-
         }
 
         private static void SetTimeSeriesFromXmlRecords(TimeSeries timeSeries, List<EventComplexType> records,  double missingValue)
@@ -63,8 +62,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 timeSeries.Components[0].SetValues(doubleValues);
                 timeSeries.Components[0].NoDataValue = missingValue;
             }
-
-
         }
 
         private static DateTime CreateDateTimeFromDateAndTime(DateTime date, DateTime time)

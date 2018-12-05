@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
     public static class RealTimeControlToolsConfigComponentConnector
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlDataConfigXmlConverter));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlToolsConfigComponentConnector));
 
         public static void ConnectTimeRules(List<TimeAbsoluteXML> timeRuleElements, IList<ControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints)
         {

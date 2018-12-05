@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
@@ -18,10 +20,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             var timeSeriesFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlTimeSeries);
             RealTimeControlTimeSeriesXmlReader.Read(timeSeriesFilePath, controlGroups);
 
-            var runTimeConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlRuntime);
-
             var stateImportFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlImportState);
-            RealTimeControlStateImportXmlReader.Read(stateImportFilePath, controlGroups);
+            RealTimeControlStateImportXmlReader.Read(stateImportFilePath, connectionPoints.OfType<Output>().ToList());
+
+            var runTimeConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlRuntime);
 
             return rtcModel;
         }
