@@ -11,6 +11,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
     [TestFixture]
     class DelftConfigXmlFileParserTest
     {
+        private const string UnableToReadTheFileDueToInvalidFileFormat = "Unable to read the file due to invalid file format";
         private string dimrSourcePath;
         private string XmlFileDirectory = @"FileReaders\ConfigXmlReader";
 
@@ -36,7 +37,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
-        [ExpectedException(typeof(XmlException), ExpectedMessage = "Unable to read the file due to invalid file format")]
+        [ExpectedException(typeof(XmlException), ExpectedMessage = UnableToReadTheFileDueToInvalidFileFormat)]
         public void ConfigurationFilePathIsUnknown()
         {
             var unknownFilePath = @"\unknowpathtofile";
@@ -48,7 +49,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         #region Dimr tests
         [Test]
         [Category(TestCategory.DataAccess)]
-        [ExpectedException(typeof(XmlException), ExpectedMessage = "Unable to read the file due to invalid file format")]
+        [ExpectedException(typeof(XmlException), ExpectedMessage = UnableToReadTheFileDueToInvalidFileFormat)]
         public void DimrConfigFileWithMissingDocumentationTagThrowsXmlException()
         {
             var pathWithInvalidConfigurationFile = Path.Combine(dimrSourcePath, "dimrWithMissingDocTag.xml");
@@ -57,7 +58,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [ExpectedException(typeof(XmlException), ExpectedMessage = "Unable to read the file due to invalid file format")]
+        [ExpectedException(typeof(XmlException), ExpectedMessage = UnableToReadTheFileDueToInvalidFileFormat)]
         public void InvalidDimrConfigurationFileWithEmptyBodyThrowsXmlException()
         {
             var pathWithInvalidConfigurationFile = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), "invalidDimrEmptyBody.xml"));
@@ -67,7 +68,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [ExpectedException(typeof(XmlException), ExpectedMessage = "Unable to read the file due to invalid file format")]
+        [ExpectedException(typeof(XmlException), ExpectedMessage = UnableToReadTheFileDueToInvalidFileFormat)]
         public void InvalidDimrConfigurationFileWithInvalidHeaderThrowsXmlException()
         {
             var pathWithInvalidConfigurationFile = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), "invalidDimrMissingHeader.xml"));
@@ -76,7 +77,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [ExpectedException(typeof(XmlException), ExpectedMessage = "Unable to read the file due to invalid file format")]
+        [ExpectedException(typeof(XmlException), ExpectedMessage = UnableToReadTheFileDueToInvalidFileFormat)]
         public void InvalidDimrConfigurationFileWithUnknownRootName()
         {
             var pathWithInvalidConfigurationFile = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), "invalidDimrUnknownRootName.xml"));
