@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.FileWriters.General;
-using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
@@ -12,32 +11,39 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.ModelDefinition
 {
     [TestFixture]
-    public class WaterFlowModelPropertySetterTest
+    public class ModelDefinitionFileReaderTest
     {
         [Test]
         public void GivenDataModelWithCategoryThatHasAnUnknownHeader_WhenSettingProperties_ThenLogMessageIsReturned()
         {
             // Given
-            var unkownHeader = "Unkown Header";
-            var unknownCategory = new DelftIniCategory(unkownHeader);
-            var categories = new List<DelftIniCategory> { unknownCategory };
+            var md1dFilePath = TestHelper.GetTestDataPath(Assembly.GetExecutingAssembly(), @"ModelDefinitionFileReaderTest\modelDefinitionWithUnknownCategory.md1d");
+            var testFilePath = TestHelper.CreateLocalCopy(md1dFilePath);
 
             var errorReport = new List<string>();
             Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
                 errorReport.Add($"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
 
-            // When
-            Action setWaterFlowModelProperties = () => WaterFlowModelPropertySetter.SetWaterFlowModelProperties(categories, new WaterFlowModel1D(), CreateAndAddErrorReport);
+            try
+            {
+                // When
+                ModelDefinitionFileReader.SetWaterFlowModelProperties(testFilePath, new WaterFlowModel1D(), CreateAndAddErrorReport);
 
-            // Then
-            var expectedMessage = string.Format(Resources.WaterFlowModelPropertySetter_SetWaterFlowModelProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header___0___, unkownHeader);
-            TestHelper.AssertAtLeastOneLogMessagesContains(setWaterFlowModelProperties, expectedMessage);
+                // Then
+                var expectedMessage = string.Format(Resources.WaterFlowModelPropertySetter_SetWaterFlowModelProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header___0___, "Unknown Header");
+                Assert.That(errorReport.Count, Is.EqualTo(1));
+                Assert.That(errorReport[0].Contains(expectedMessage));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testFilePath);
+            }
         }
 
         /// <summary>
         /// GIVEN a WaterFlow1DOutputSettingData with all EngineParameters set to None
         ///   AND a dataAccessModel describing multiple EngineParameter with some Aggregate options not None
-        /// WHEN WaterFlowModelPropertySetter SetOutputProperties is called with these parameters
+        /// WHEN ModelDefinitionFileReader SetOutputProperties is called with these parameters
         /// THEN These engine property is set to the specified aggregate option
         ///  AND all other engine parameters are None
         /// </summary>
@@ -169,21 +175,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 {QuantityType.SuctionSideLevel  , AggregationOptions.None}
             };
 
-
-            var validCategoriesSet = new List<DelftIniCategory> { new DelftIniCategory(GeneralRegion.IniHeader) };
-            validCategoriesSet.Add(GetResultsCategory(ElementSet.GridpointsOnBranches, resultsNodesProperties));
-            validCategoriesSet[0].AddProperty("Lateral1D2D", (int)AggregationOptions.None, "Tenderloin");
-
-            validCategoriesSet.Add(GetResultsCategory(ElementSet.ReachSegElmSet, resultsBranchesProperties));
-            validCategoriesSet[1].AddProperty(QuantityType.Dispersion.ToString(), (int)AggregationOptions.None, "Dispersion is a bit weird");
-
-            validCategoriesSet.Add(GetResultsCategory(ElementSet.Structures, resultsStructuresProperties));
-            validCategoriesSet.Add(GetResultsCategory(ElementSet.Observations, resultsObservationProperties));
-            validCategoriesSet.Add(GetResultsCategory(ElementSet.Retentions, resultsRetentionsProperties));
-            validCategoriesSet.Add(GetResultsCategory(ElementSet.Laterals, resultsLateralsProperties));
-            validCategoriesSet.Add(GetResultsCategory(ElementSet.ModelWide, resultsWaterBalanceProperties));
-            validCategoriesSet.Add(GetResultsCategory(ElementSet.Pumps, resultsPumps));
-
             var model = new WaterFlowModel1D();
             var outputSettings = model.OutputSettings;
 
@@ -191,7 +182,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 eParam.AggregationOptions = AggregationOptions.None;
 
             // When
-            WaterFlowModelPropertySetter.SetWaterFlowModelProperties(validCategoriesSet, model, (s, list) => {});
+            var md1dFilePath = TestHelper.GetTestDataPath(Assembly.GetExecutingAssembly(), @"ModelDefinitionFileReaderTest\rmm_model.md1d");
+            var testFilePath = TestHelper.CreateLocalCopy(md1dFilePath);
+            ModelDefinitionFileReader.SetWaterFlowModelProperties(testFilePath, model, (s, list) => { });
 
             // Then
             foreach (var t in resultsNodesProperties)
@@ -235,29 +228,5 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 Assert.That(outputSettings.GetEngineParameter(t.Key, ElementSet.Pumps).AggregationOptions,
                     Is.EqualTo(t.Value), $"Property name: {t.Key.ToString()}");
         }
-
-        private static DelftIniCategory GetResultsCategory(ElementSet resultsHeader, Dictionary<QuantityType, AggregationOptions> keyValuePairs)
-        {
-            var category = new DelftIniCategory(MappingElementSetToRegionHeader[resultsHeader]);
-
-            foreach (var keyValuePair in keyValuePairs)
-                category.AddProperty(keyValuePair.Key.ToString(), (int) keyValuePair.Value, "Some really interesting comment.");
-
-            return category;
-        }
-
-        private static readonly IDictionary<ElementSet, string> MappingElementSetToRegionHeader =
-            new Dictionary<ElementSet, string>
-            {
-                [ElementSet.GridpointsOnBranches] = ModelDefinitionsRegion.ResultsNodesHeader,
-                [ElementSet.ReachSegElmSet] = ModelDefinitionsRegion.ResultsBranchesHeader,
-                [ElementSet.Structures] = ModelDefinitionsRegion.ResultsStructuresHeader,
-                [ElementSet.Pumps] = ModelDefinitionsRegion.ResultsPumpsHeader,
-                [ElementSet.Observations] = ModelDefinitionsRegion.ResultsObservationsPointsHeader,
-                [ElementSet.Retentions] = ModelDefinitionsRegion.ResultsRetentionsHeader,
-                [ElementSet.Laterals] = ModelDefinitionsRegion.ResultsLateralsHeader,
-                [ElementSet.ModelWide] = ModelDefinitionsRegion.ResultsWaterBalanceHeader,
-                [ElementSet.FiniteVolumeGridOnGridPoints] = ModelDefinitionsRegion.FiniteVolumeGridOnGridPoints
-            };
     }
 }

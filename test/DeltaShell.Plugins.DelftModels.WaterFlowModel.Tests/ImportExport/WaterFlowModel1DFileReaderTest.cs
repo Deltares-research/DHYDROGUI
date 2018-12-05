@@ -18,7 +18,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         {
            var testFolder = TestHelper.GetTestDataPath(Assembly.GetExecutingAssembly(), @"Md1dReading");
            tempFolderPath = TestHelper.CreateLocalCopy(testFolder);
-
         }
 
         [TestFixtureTearDown]
@@ -73,8 +72,5 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
             Assert.IsNull(waterFlowModel1D);
         }
-
-
-
     }
 }

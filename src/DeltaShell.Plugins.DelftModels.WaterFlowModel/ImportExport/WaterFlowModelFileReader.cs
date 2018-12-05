@@ -12,7 +12,6 @@ using DelftTools.Hydro.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.SpatialData;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary;
@@ -42,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 var stepCounter = 1;
 
                 reportProgress($"'Reading model wide parameters from {Path.GetFileName(modelFilename)} file", stepCounter, totalSteps);
-                ReadMd1dFileAndSetModelProperties(modelFilename, model, CreateAndAddErrorReport);
+                ModelDefinitionFileReader.SetWaterFlowModelProperties(modelFilename, model, CreateAndAddErrorReport);
 
                 reportProgress($"Reading filenames from {Path.GetFileName(modelFilename)} file.", stepCounter, totalSteps);
                 var fileNames = new ModelFileNames(modelFilename);
@@ -137,24 +136,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             LogErrorReport(errorReport, report => Log.Warn(report));
             return model;
-        }
-
-        private static void ReadMd1dFileAndSetModelProperties(string filePath, WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
-        {
-            var errorMessages = new List<string>();
-            try
-            {
-                var modelPropertySettingsCategories = DelftIniFileParser.ReadFile(filePath);
-                WaterFlowModelPropertySetter.SetWaterFlowModelProperties(modelPropertySettingsCategories, model, createAndAddErrorReport);
-            }
-            catch (Exception e)
-            {
-                errorMessages.Add(e.Message);
-                createAndAddErrorReport?.Invoke("An error occurred during reading md1d file:", errorMessages);
-            }
-
-            model.UseSalt = true;
-            model.UseTemperature = true;
         }
 
         private static void ReadStructuresFile(string fileName, IHydroNetwork network,

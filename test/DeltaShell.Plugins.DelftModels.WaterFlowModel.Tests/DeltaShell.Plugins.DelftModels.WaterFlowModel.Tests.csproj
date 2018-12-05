@@ -248,7 +248,7 @@
     <Compile Include="ImportExport\ModelDefinitionsFileWriterTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelOutputSetterTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelPropertySetterFactoryTest.cs" />
-    <Compile Include="ImportExport\ModelDefinition\WaterFlowModelPropertySetterTest.cs" />
+    <Compile Include="ImportExport\ModelDefinition\ModelDefinitionFileReaderTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelTimePropertiesSetterTest.cs" />
     <Compile Include="ImportExport\ModelFileNamesTest.cs" />
     <Compile Include="ImportExport\Roughness\CalibratedRoughnessFileReaderTest.cs" />

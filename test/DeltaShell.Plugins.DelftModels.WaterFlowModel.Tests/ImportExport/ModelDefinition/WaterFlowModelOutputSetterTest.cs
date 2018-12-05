@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         /// <summary>
         /// GIVEN a WaterFlow1DOutputSettingData with all EngineParameters set to None
         ///   AND a dataAccessModel describing a single EngineParameter with some Aggregate option not None
-        /// WHEN WaterFlowModelPropertySetter SetOutputProperties is called with these parameters
+        /// WHEN ModelDefinitionFileReader SetOutputProperties is called with these parameters
         /// THEN This engine property is set to the specified aggregate option
         ///  AND all other engine parameters are None
         /// </summary>
@@ -198,7 +198,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         /// <summary>
         /// GIVEN a WaterFlow1DOutputSettingData with all EngineParameters set to None
         ///   AND a dataAccessModel describing a Dispersion EngineParameter with some Aggregate option not None
-        /// WHEN WaterFlowModelPropertySetter SetOutputProperties is called with these parameters
+        /// WHEN ModelDefinitionFileReader SetOutputProperties is called with these parameters
         /// THEN This engine property is set to the specified aggregate option
         ///  AND all other engine parameters are None
         /// </summary>
@@ -239,7 +239,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         /// <summary>
         /// GIVEN a WaterFlow1DOutputSettingData with all EngineParameters set to None
         ///   AND a dataAccessModel describing a Lateral1D2D EngineParameter with some Aggregate option not None
-        /// WHEN WaterFlowModelPropertySetter SetOutputProperties is called with these parameters
+        /// WHEN ModelDefinitionFileReader SetOutputProperties is called with these parameters
         /// THEN This engine property is set to the specified aggregate option
         ///  AND all other engine parameters are None
         /// </summary>
@@ -278,7 +278,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         /// <summary>
         /// GIVEN a WaterFlow1DOutputSettingData with all EngineParameters set to None
         ///   AND a dataAccessModel describing an EnergyLevel EngineParameter with some Aggregate option
-        /// WHEN WaterFlowModelPropertySetter SetOutputProperties is called with these parameters
+        /// WHEN ModelDefinitionFileReader SetOutputProperties is called with these parameters
         /// THEN all engine parameters are None
         ///  AND No exception is thrown
         /// </summary>
