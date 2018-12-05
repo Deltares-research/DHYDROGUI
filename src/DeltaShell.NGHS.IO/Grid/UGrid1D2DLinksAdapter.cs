@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Link1d2d;
 using log4net;
 
 namespace DeltaShell.NGHS.IO.Grid

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Link1d2d;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;

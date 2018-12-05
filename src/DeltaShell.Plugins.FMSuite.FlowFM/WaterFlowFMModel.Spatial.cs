@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Link1d2d;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;

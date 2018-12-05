@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Link1d2d;
 using SharpMap.Data.Providers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui

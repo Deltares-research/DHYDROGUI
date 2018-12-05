@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using DelftTools.Functions;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Link1d2d;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;

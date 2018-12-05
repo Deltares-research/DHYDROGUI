@@ -197,9 +197,11 @@
     <Compile Include="GroupableFeatureExtensions.cs" />
     <Compile Include="GroupablePointFeature.cs" />
     <Compile Include="Gully.cs" />
-    <Compile Include="ILink1D2D.cs" />
+    <Compile Include="Link1d2d\ILink1D2D.cs" />
     <Compile Include="IStructure2D.cs" />
-    <Compile Include="Link1D2D.cs" />
+    <Compile Include="Link1d2d\ILink1D2DExtensions.cs" />
+    <Compile Include="Link1d2d\Link1D2D.cs" />
+    <Compile Include="Link1d2d\Link1D2DCoverage.cs" />
     <Compile Include="LinkType.cs" />
     <Compile Include="Roughness\IModelWithRoughnessSections.cs" />
     <Compile Include="Roughness\ReverseRoughnessSection.cs" />
