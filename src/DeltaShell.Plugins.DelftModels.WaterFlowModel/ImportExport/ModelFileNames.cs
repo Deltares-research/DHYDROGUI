@@ -20,6 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         private string initialSalinity;
         private string initialTemperature;
         private string initialWaterLevel;
+        private string initialWaterDepth;
         private string dispersion;
         private string dispersionF3;
         private string dispersionF4;
@@ -42,6 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         private const string InitialSalinityFilename = "InitialSalinity.ini";
         private const string InitialTemperatureFilename = "InitialTemperature.ini";
         private const string InitialWaterLevelFilename = "InitialWaterLevel.ini";
+        private const string InitialWaterDepthFilename = "InitialWaterDepth.ini";
         private const string DispersionFilename = "Dispersion.ini";
         private const string DispersionF3Filename = "DispersionF3.ini";
         private const string DispersionF4Filename = "DispersionF4.ini";
@@ -124,6 +126,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             InitialSalinity = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialSalinityFile.Key, true);
             InitialTemperature = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialTemperatureFile.Key, true);
             InitialWaterLevel = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialWaterLevelFile.Key, true);
+            InitialWaterDepth = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialWaterDepthFile.Key, true);
             Dispersion = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.DispersionFile.Key, true);
             DispersionF3 = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.DispersionF3File.Key, true);
             DispersionF4 = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.DispersionF4File.Key, true);
@@ -169,6 +172,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             InitialSalinity = InitialSalinityFilename;
             InitialTemperature = InitialTemperatureFilename;
             InitialWaterLevel = InitialWaterLevelFilename;
+            InitialWaterDepth = InitialWaterDepthFilename;
             Dispersion = DispersionFilename;
             DispersionF3 = DispersionF3Filename;
             DispersionF4 = DispersionF4Filename;
@@ -244,6 +248,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 return initialWaterLevel == null ? null : Path.Combine(targetPath, initialWaterLevel);
             }
             private set { initialWaterLevel = value; }
+        }
+        public string InitialWaterDepth
+        {
+            get
+            {
+                return initialWaterLevel == null ? null : Path.Combine(targetPath, initialWaterDepth);
+            }
+            private set { initialWaterDepth = value; }
         }
 
         public string Dispersion

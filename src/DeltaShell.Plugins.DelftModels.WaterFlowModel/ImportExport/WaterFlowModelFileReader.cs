@@ -115,6 +115,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 ReadFileSpatialData(fileNames.InitialTemperature, model, CreateAndAddErrorReport);
 
                 ReadFileSpatialData(fileNames.InitialWaterLevel, model, CreateAndAddErrorReport);
+
+                ReadFileSpatialData(fileNames.InitialWaterDepth, model, CreateAndAddErrorReport);
                 
                 ReadFileSpatialData(fileNames.Dispersion, model, CreateAndAddErrorReport);
 
@@ -322,10 +324,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 case "InitialWaterLevel":
                     model.InitialConditions.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
                     model.InitialConditions.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    model.InitialConditionsType = InitialConditionsType.WaterLevel;
                     break;
                 case "InitialWaterDepth":
                     model.InitialConditions.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
                     model.InitialConditions.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    model.InitialConditionsType = InitialConditionsType.Depth;
                     break;
                 case "Dispersion":
                     model.DispersionCoverage.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
