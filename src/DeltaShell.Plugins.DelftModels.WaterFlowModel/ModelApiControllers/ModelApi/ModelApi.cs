@@ -137,6 +137,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
         ActualDischarge = 110, // Actual lateral discharge
         DefinedDischarge = 111, // Defined lateral discharge
         LateralDifference = 112, // difference between Actual and Defined lateral discharge
+        UndeterminedValue = 999
     }
 
     // The ElementSets supported by ModelApi; always check with availability of QuantityType per ElementSet!

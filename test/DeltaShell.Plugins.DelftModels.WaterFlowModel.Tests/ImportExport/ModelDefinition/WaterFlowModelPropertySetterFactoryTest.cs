@@ -9,17 +9,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
     [TestFixture]
     public class WaterFlowModelPropertySetterFactoryTest
     {
-        [Test]
-        public void GivenDataModelWithTimeHeader_WhenGettingPropertySetterFromFactory_ThenTimePropertiesSetterIsReturned()
+        [TestCase(ModelDefinitionsRegion.TimeHeader, typeof(WaterFlowModelTimePropertiesSetter))]
+        [TestCase(ModelDefinitionsRegion.ResultsNodesHeader, typeof(WaterFlowModelOutputSetter))]
+        [TestCase(ModelDefinitionsRegion.ResultsBranchesHeader, typeof(WaterFlowModelOutputSetter))]
+        [TestCase(ModelDefinitionsRegion.ResultsStructuresHeader, typeof(WaterFlowModelOutputSetter))]
+        [TestCase(ModelDefinitionsRegion.ResultsPumpsHeader, typeof(WaterFlowModelOutputSetter))]
+        [TestCase(ModelDefinitionsRegion.ResultsObservationsPointsHeader, typeof(WaterFlowModelOutputSetter))]
+        [TestCase(ModelDefinitionsRegion.ResultsRetentionsHeader, typeof(WaterFlowModelOutputSetter))]
+        [TestCase(ModelDefinitionsRegion.ResultsLateralsHeader, typeof(WaterFlowModelOutputSetter))]
+        [TestCase(ModelDefinitionsRegion.ResultsWaterBalanceHeader, typeof(WaterFlowModelOutputSetter))]
+        [TestCase(ModelDefinitionsRegion.FiniteVolumeGridOnGridPoints, typeof(WaterFlowModelOutputSetter))]
+        public void GivenDataModelWithSpecificHeader_WhenGettingPropertySetterFromFactory_ThenCorrectPropertiesSetterIsReturned(string headerText, Type expectedType)
         {
             // Given
-            var timeCategory = new DelftIniCategory(ModelDefinitionsRegion.TimeHeader);
+            var category = new DelftIniCategory(headerText);
 
             // When
-            var propertySetter = WaterFlowModelPropertySetterFactory.GetPropertySetter(timeCategory);
+            var propertySetter = WaterFlowModelPropertySetterFactory.GetPropertySetter(category);
 
             // Then
-            Assert.That(propertySetter.GetType(), Is.EqualTo(typeof(WaterFlowModelTimePropertiesSetter)));
+            Assert.That(propertySetter.GetType(), Is.EqualTo(expectedType));
         }
 
         [Test]

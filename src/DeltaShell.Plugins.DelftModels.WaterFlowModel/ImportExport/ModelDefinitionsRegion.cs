@@ -49,6 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         public const string ResultsObservationsPointsHeader = "ResultsObservationPoints";
         public const string ResultsLateralsHeader = "ResultsLaterals";
         public const string ResultsRetentionsHeader = "ResultsRetentions";
+        public const string FiniteVolumeGridOnGridPoints = "FiniteVolumeGridOnGridPoints";
 
         public const string TimeHeader = "Time";
         public static readonly ConfigurationSetting StartTime = new ConfigurationSetting(key: "StartTime", description: "yyyy-MM-dd HH:mm:ss");

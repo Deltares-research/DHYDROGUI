@@ -144,10 +144,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             {
                 var modelPropertySettingsCategories = DelftIniFileParser.ReadFile(filePath);
                 WaterFlowModelPropertySetter.SetWaterFlowModelProperties(modelPropertySettingsCategories, model, createAndAddErrorReport);
-                
-                //to do refactor model output settings
-                WaterFlowModelPropertySetter.SetOutputProperties(modelPropertySettingsCategories, model.OutputSettings);
-                
             }
             catch (Exception e)
             {
