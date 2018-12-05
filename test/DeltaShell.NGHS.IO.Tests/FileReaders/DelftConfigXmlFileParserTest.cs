@@ -158,13 +158,106 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         #region RTC tests
-        //TODO: RTC tests (use filesnames and sourcespath below for the rtc tests)
-        //"rtcDataConfig.xml";
-        //"rtcRuntimeConfig.xml";
-        //"rtcToolsConfig.xml";
-        //"state_import.xml";
-        //"timeseries_import.xml";
-        //rtcSourcePath = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory, "rtc"));
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadingStateImportXmlFilesDoesNotThrow()
+        {
+            var fileName = "state_import.xml";
+
+            var directory = @"FileReaders\ConfigXmlReader\RtcXmlFiles";
+            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
+
+            Assert.True(File.Exists(path));
+
+            var dataAccesModel = DelftConfigXmlFileParser.Read(path);
+
+            Assert.IsNotNull(dataAccesModel);
+
+            var treeVectorFile = dataAccesModel as TreeVectorFileXML;
+
+            Assert.NotNull(treeVectorFile);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadingTimeSeriesImportXmlFilesDoesNotThrown()
+        {
+            var fileName = "timeseries_import.xml";
+
+            var directory = @"FileReaders\ConfigXmlReader\RtcXmlFiles";
+            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
+
+            Assert.True(File.Exists(path));
+
+            var dataAccesModel = DelftConfigXmlFileParser.Read(path);
+
+            Assert.IsNotNull(dataAccesModel);
+
+            var timeSeriesCollection = dataAccesModel as TimeSeriesCollectionComplexType;
+
+            Assert.NotNull(timeSeriesCollection);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadingToolsConfigXmlFilesDoesNotThrow()
+        {
+            var fileName = "rtcToolsConfig.xml";
+
+            var directory = @"FileReaders\ConfigXmlReader\RtcXmlFiles";
+            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
+
+            Assert.True(File.Exists(path));
+
+            var dataAccesModel = DelftConfigXmlFileParser.Read(path);
+
+            Assert.IsNotNull(dataAccesModel);
+
+            var rtcToolsConfig = dataAccesModel as RtcToolsConfigXML;
+
+            Assert.NotNull(rtcToolsConfig);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadingRuntimeConfigXmlFilesDoesNotThrow()
+        {
+            var fileName = "rtcRuntimeConfig.xml";
+
+            var directory = @"FileReaders\ConfigXmlReader\RtcXmlFiles";
+            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
+
+            Assert.True(File.Exists(path));
+
+            var dataAccesModel = DelftConfigXmlFileParser.Read(path);
+
+            Assert.IsNotNull(dataAccesModel);
+
+            var rtcRuntimeConfig = dataAccesModel as RtcRuntimeConfigXML;
+
+            Assert.NotNull(rtcRuntimeConfig);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadingDataConfigXmlFilesDoesNotThrow()
+        {       
+            var fileName = "rtcDataConfig.xml";
+
+            var directory = @"FileReaders\ConfigXmlReader\RtcXmlFiles";
+            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
+
+            Assert.True(File.Exists(path));
+
+            var dataAccesModel = DelftConfigXmlFileParser.Read(path);
+
+            Assert.IsNotNull(dataAccesModel);
+
+            var rtcDataConfig = (RTCDataConfigXML)dataAccesModel;
+
+            Assert.NotNull(rtcDataConfig);
+        }
         #endregion
 
         #region Helper Methods

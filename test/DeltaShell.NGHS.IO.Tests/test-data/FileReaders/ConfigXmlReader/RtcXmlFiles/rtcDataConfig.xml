@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rtcDataConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews D:\sluis_pa\Documents\WORK\ExportNew\rtc\rtcDataConfig.xsd">
+<rtcDataConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews D:\sluis_pa\Documents\WORK\Export%20files\rtc\rtcDataConfig.xsd">
   <importSeries>
     <PITimeSeriesFile>
       <timeSeriesFile>timeseries_import.xml</timeSeriesFile>
