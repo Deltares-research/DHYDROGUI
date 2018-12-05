@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DelftTools.Hydro;
-using DeltaShell.NGHS.IO.FileReaders.Network;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Location

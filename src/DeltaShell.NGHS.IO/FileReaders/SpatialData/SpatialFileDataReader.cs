@@ -9,9 +9,24 @@ namespace DeltaShell.NGHS.IO.FileReaders.SpatialData
     public class SpatialFileDataReader
     {
         private readonly Action<string, IList<string>> createAndAddErrorReport;
+        private readonly Func<string, IList<DelftIniCategory>> parseFunc;
+        private readonly Func<IList<DelftIniCategory>, IList<IChannel>, IList<string>, INetworkCoverage> convertFunc;
 
-        public SpatialFileDataReader(Action<string, IList<string>> createAndAddErrorReport)
+        public SpatialFileDataReader(Action<string, IList<string>> createAndAddErrorReport) : this(DelftIniFileParser.ReadFile,
+            SpatialFileDataConverter.Convert,
+            createAndAddErrorReport)
+        { }
+
+        public SpatialFileDataReader(Func<string, IList<DelftIniCategory>> parseFunc,
+            Func<IList<DelftIniCategory>, IList<IChannel>, IList<string>, INetworkCoverage> convertFunc,
+            Action<string, IList<string>> createAndAddErrorReport)
         {
+            if (parseFunc != null) this.parseFunc = parseFunc;
+            else throw new ArgumentException("Parser cannot be null.");
+
+            if (convertFunc != null) this.convertFunc = convertFunc;
+            else throw new ArgumentException("Converter cannot be null.");
+
             this.createAndAddErrorReport = createAndAddErrorReport;
         }
 
@@ -21,14 +36,14 @@ namespace DeltaShell.NGHS.IO.FileReaders.SpatialData
             IList<DelftIniCategory> categories = new List<DelftIniCategory>();
             try
             {
-                categories = DelftIniFileParser.ReadFile(filePath);
+                categories = parseFunc.Invoke(filePath);
             }
             catch (Exception e)
             {
                 errorMessages.Add(e.Message);
             }
 
-            var spatialData = SpatialFileDataConverter.Convert(categories, channelsList, errorMessages);
+            var spatialData = convertFunc.Invoke(categories, channelsList, errorMessages);
 
             if (errorMessages.Count > 0)
                 createAndAddErrorReport?.Invoke("While reading the spatial data from the file, an error occured", errorMessages);
