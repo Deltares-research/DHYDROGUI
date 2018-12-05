@@ -24,6 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             RealTimeControlStateImportXmlReader.Read(stateImportFilePath, connectionPoints.OfType<Output>().ToList());
 
             var runTimeConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlRuntime);
+            RealTimeControlRuntimeConfigXmlReader.Read(runTimeConfigFilePath, rtcModel);
 
             return rtcModel;
         }
