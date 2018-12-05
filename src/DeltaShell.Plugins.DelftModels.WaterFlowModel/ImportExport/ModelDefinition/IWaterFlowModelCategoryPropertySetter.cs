@@ -1,9 +1,11 @@
-﻿using DeltaShell.NGHS.IO.Helpers;
+﻿using System;
+using System.Collections.Generic;
+using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
 {
     public interface IWaterFlowModelCategoryPropertySetter
     {
-        void SetProperties(DelftIniCategory category, WaterFlowModel1D model);
+        void SetProperties(DelftIniCategory category, WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport);
     }
 }

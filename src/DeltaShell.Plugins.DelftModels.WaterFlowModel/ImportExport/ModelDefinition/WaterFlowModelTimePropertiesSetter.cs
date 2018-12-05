@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
@@ -14,7 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// <remarks>
         /// Pre-condition: model != null
         /// </remarks>
-        public void SetProperties(DelftIniCategory timeCategory, WaterFlowModel1D model)
+        public void SetProperties(DelftIniCategory timeCategory, WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
         {
             if (timeCategory?.Name != ModelDefinitionsRegion.TimeHeader) return;
 

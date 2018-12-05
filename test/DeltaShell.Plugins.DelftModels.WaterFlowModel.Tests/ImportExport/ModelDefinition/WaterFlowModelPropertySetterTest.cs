@@ -22,8 +22,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var unknownCategory = new DelftIniCategory(unkownHeader);
             var categories = new List<DelftIniCategory> { unknownCategory };
 
+            var errorReport = new List<string>();
+            Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
+                errorReport.Add($"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
+
             // When
-            Action setWaterFlowModelProperties = () => WaterFlowModelPropertySetter.SetWaterFlowModelProperties(categories, new WaterFlowModel1D());
+            Action setWaterFlowModelProperties = () => WaterFlowModelPropertySetter.SetWaterFlowModelProperties(categories, new WaterFlowModel1D(), CreateAndAddErrorReport);
 
             // Then
             var expectedMessage = string.Format(Resources.WaterFlowModelPropertySetter_SetWaterFlowModelProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header___0___, unkownHeader);

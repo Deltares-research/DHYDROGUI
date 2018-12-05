@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
@@ -17,14 +18,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowModel1D));
 
-        public static void SetWaterFlowModelProperties(IEnumerable<DelftIniCategory> modelSettingsCategories, WaterFlowModel1D model)
+        public static void SetWaterFlowModelProperties(IEnumerable<DelftIniCategory> modelSettingsCategories, WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
         {
             foreach (var category in modelSettingsCategories)
             {
                 try
                 {
                     var propertySetter = WaterFlowModelPropertySetterFactory.GetPropertySetter(category);
-                    propertySetter.SetProperties(category, model);
+                    propertySetter.SetProperties(category, model, createAndAddErrorReport);
                 }
                 catch (Exception)
                 {

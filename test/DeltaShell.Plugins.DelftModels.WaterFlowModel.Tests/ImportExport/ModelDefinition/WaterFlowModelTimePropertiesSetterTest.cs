@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
@@ -22,9 +23,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             // Given
             var timeSettingsCategory = GetCorrectTimeSettingsDataModel();
 
+            var errorReport = new List<string>();
+            Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
+                errorReport.Add($"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
+
             // When
             var model = new WaterFlowModel1D();
-            new WaterFlowModelTimePropertiesSetter().SetProperties(timeSettingsCategory, model);
+            new WaterFlowModelTimePropertiesSetter().SetProperties(timeSettingsCategory, model, CreateAndAddErrorReport);
 
             // Then
             Assert.That(model.StartTime, Is.EqualTo(defaultStartTime));
@@ -97,9 +102,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var timeSettingsCategory = GetCorrectTimeSettingsDataModel();
             timeSettingsCategory.Properties.RemoveAllWhere(p => p.Name == missingPropertyName);
 
+            var errorReport = new List<string>();
+            Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
+                errorReport.Add($"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
+
             // When
             var model = new WaterFlowModel1D();
-            new WaterFlowModelTimePropertiesSetter().SetProperties(timeSettingsCategory, model);
+            new WaterFlowModelTimePropertiesSetter().SetProperties(timeSettingsCategory, model, CreateAndAddErrorReport);
             return model;
         }
 
@@ -118,7 +127,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var gridPointsTimeStepBefore = model.OutputSettings.GridOutputTimeStep;
             var structuresTimeStepBefore = model.OutputSettings.StructureOutputTimeStep;
 
-            new WaterFlowModelTimePropertiesSetter().SetProperties(notTimeCategory, model);
+            var errorReport = new List<string>();
+            Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
+                errorReport.Add($"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
+
+            new WaterFlowModelTimePropertiesSetter().SetProperties(notTimeCategory, model, CreateAndAddErrorReport);
 
             // Then
             Assert.That(model.StartTime, Is.EqualTo(startTimeBefore));
@@ -141,7 +154,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var gridPointsTimeStepBefore = model.OutputSettings.GridOutputTimeStep;
             var structuresTimeStepBefore = model.OutputSettings.StructureOutputTimeStep;
 
-            new WaterFlowModelTimePropertiesSetter().SetProperties(null, model);
+            var errorReport = new List<string>();
+            Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
+                errorReport.Add($"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
+
+            new WaterFlowModelTimePropertiesSetter().SetProperties(null, model, CreateAndAddErrorReport);
 
             // Then
             Assert.That(model.StartTime, Is.EqualTo(startTimeBefore));
@@ -156,7 +173,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         [Test]
         public void WhenSettingWaterFlowModelTimePropertiesWithoutAModel_ThenNoException()
         {
-            TestDelegate testDelegate = () => { new WaterFlowModelTimePropertiesSetter().SetProperties(null, null); };
+            TestDelegate testDelegate = () => { new WaterFlowModelTimePropertiesSetter().SetProperties(null, null, null); };
             Assert.DoesNotThrow(testDelegate);
         }
 
