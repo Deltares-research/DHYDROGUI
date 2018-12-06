@@ -188,6 +188,8 @@
     <Compile Include="ImportExport\CrossSections\CrossSectionLocationFileReader.cs" />
     <Compile Include="ImportExport\ModelDefinition\IWaterFlowModelCategoryPropertySetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelOutputSetter.cs" />
+    <Compile Include="ImportExport\ModelDefinition\WaterFlowModelNumericalParametersSetter.cs" />
+    <Compile Include="ImportExport\ModelDefinition\WaterFlowModelSimulationOptionsSetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelTimePropertiesSetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\ModelDefinitionFileReader.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelPropertySetterFactory.cs" />

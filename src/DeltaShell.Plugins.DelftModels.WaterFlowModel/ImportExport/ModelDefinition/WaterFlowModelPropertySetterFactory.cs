@@ -21,6 +21,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 case ModelDefinitionsRegion.ResultsWaterBalanceHeader:
                 case ModelDefinitionsRegion.FiniteVolumeGridOnGridPoints:
                     return new WaterFlowModelOutputSetter();
+                case ModelDefinitionsRegion.NumericalParametersValuesHeader:
+                    return new WaterFlowModelNumericalParametersSetter();
+                case ModelDefinitionsRegion.SimulationOptionsValuesHeader:
+                    return new WaterFlowModelSimulationOptionsSetter();
                 default:
                     throw new NotImplementedException();
             }
