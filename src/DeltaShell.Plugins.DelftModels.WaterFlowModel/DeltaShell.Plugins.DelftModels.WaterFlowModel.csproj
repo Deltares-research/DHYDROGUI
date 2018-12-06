@@ -193,6 +193,7 @@
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelTimePropertiesSetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\ModelDefinitionFileReader.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelPropertySetterFactory.cs" />
+    <Compile Include="ImportExport\ModelDefinition\WaterFlowModelTransportComputationPropertiesSetter.cs" />
     <Compile Include="ImportExport\Roughness\CalibratedRoughnessConverter.cs" />
     <Compile Include="ImportExport\Roughness\CalibratedRoughnessFileReader.cs" />
     <Compile Include="ImportExport\Roughness\CrossSectionSectionTypeConverter.cs" />

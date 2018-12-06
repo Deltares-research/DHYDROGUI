@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
-using log4net;
 
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
