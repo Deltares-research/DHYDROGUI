@@ -4,7 +4,7 @@ from HyDAMOreader import HyDAMOreader
 from FMwriter import FMwriter
 from Logger import Logger
 
-p = 'D:\\source\\nghs-1d2dflooding\\test\\DeltaShell.Plugins.FMSuite.Common.Tests\\test-data\\hydamo\\'
+p = r'D:\source\Branch-1D2D-flooding\test\DeltaShell.Plugins.FMSuite.Common.Tests\test-data\hydamo'
 inputDir = 'gml'
 gridFile = ''
 generate2DGrid = False

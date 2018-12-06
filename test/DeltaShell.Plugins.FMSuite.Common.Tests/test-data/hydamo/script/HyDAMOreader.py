@@ -1,11 +1,10 @@
 # coding: latin-1
 import os
-import ogr as osgeo
+
+from gdal import ogr
 from collections import OrderedDict
 from HyDAMOmodel import HyDAMOmodel
 from UgridReader import UgridReader
-
-
 
 class HyDAMOreader:
     """Reads all HyDAMO gml files"""
@@ -19,7 +18,7 @@ class HyDAMOreader:
         self.inputDir = inputDir
         model = HyDAMOmodel()
         model.network = self.readNetwork2Dict()
-        #model.profiles = self.readProfiles2Dict()
+        model.profiles = self.readProfiles2Dict()
         if gridFile is not None and gridFile != '':
             reader = UgridReader(model)
             filePath = os.path.join(self.dirPath, self.inputDir, gridFile)
@@ -28,7 +27,11 @@ class HyDAMOreader:
 
     def file2Dict(self, filePath):
         dict=OrderedDict()
-        
+        ogr.UseExceptions()
+        gml = ogr.Open(filePath)
+        layer = gml.GetLayer()
+        for feature in layer:
+            f = feature
         return dict
 
     def readNetwork2Dict(self):
@@ -36,6 +39,6 @@ class HyDAMOreader:
         return self.file2Dict(filePath)
 
     def readProfiles2Dict(self):
-        filePath = os.path.join(self.dirPath, self.inputDir,'dwarsprofiel.csv')
+        filePath = os.path.join(self.dirPath, self.inputDir,'dwarsprofiel.gml')
         return self.file2Dict(filePath)
 
