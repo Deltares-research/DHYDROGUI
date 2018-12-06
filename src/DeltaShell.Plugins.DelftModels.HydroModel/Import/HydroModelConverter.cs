@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections;
@@ -31,8 +33,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 foreach (var fileGroup in fileGroups)
                 {
                     var extension = fileGroup.Key;
-                    var importer = fileImporters.FirstOrDefault(f => f.MasterFileExtension == extension);
+                    if (string.IsNullOrEmpty(extension))
+                    {
+                        extension = "json";
+                    }
 
+                    var importer =
+                        fileImporters.FirstOrDefault(f => f.MasterFileExtension == extension);
+                    
                     if (importer == null)
                     {
                         LogUnknownImporter(extension);
@@ -41,10 +49,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     }
 
                     importer.ProgressChanged = (name, step, steps) => { };
-
                     foreach (var fileName in fileGroup)
                     {
-                        var pathParts = SortFileParts(rootFolder, importer, fileName);
+                        string[] pathParts;
+
+                        if (FileNameIsUnknown(fileName))
+                        {
+                            pathParts = SortFileParts(rootFolder, importer, "settings.json");
+                        }
+                        else
+                        {
+                            pathParts = SortFileParts(rootFolder, importer, fileName);
+                        }
+
                         var combinedPath = Path.Combine(pathParts);
                         var fullPath = Path.GetFullPath(combinedPath);
                         var subModel = importer.ImportItem(fullPath);
@@ -61,6 +78,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             }
 
             return hydroModel;
+        }
+
+        private static bool FileNameIsUnknown(string fileName)
+        {
+            return fileName.Equals(".");
         }
 
         private static void LogUnknownImporter(string extension)

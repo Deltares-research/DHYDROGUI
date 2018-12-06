@@ -166,7 +166,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         {
             var fileName = "state_import.xml";
 
-            var directory = @"FileReaders\ConfigXmlReader\RtcXmlFiles";
+            var directory = @"FileReaders\ConfigXmlReader\rtc";
             var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
 
             Assert.True(File.Exists(path));
@@ -186,7 +186,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         {
             var fileName = "timeseries_import.xml";
 
-            var directory = @"FileReaders\ConfigXmlReader\RtcXmlFiles";
+            var directory = @"FileReaders\ConfigXmlReader\rtc";
             var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
 
             Assert.True(File.Exists(path));
@@ -206,7 +206,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         {
             var fileName = "rtcToolsConfig.xml";
 
-            var directory = @"FileReaders\ConfigXmlReader\RtcXmlFiles";
+            var directory = @"FileReaders\ConfigXmlReader\rtc";
             var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
 
             Assert.True(File.Exists(path));
@@ -226,7 +226,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         {
             var fileName = "rtcRuntimeConfig.xml";
 
-            var directory = @"FileReaders\ConfigXmlReader\RtcXmlFiles";
+            var directory = @"FileReaders\ConfigXmlReader\rtc";
             var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
 
             Assert.True(File.Exists(path));
@@ -246,7 +246,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         {       
             var fileName = "rtcDataConfig.xml";
 
-            var directory = @"FileReaders\ConfigXmlReader\RtcXmlFiles";
+            var directory = @"FileReaders\ConfigXmlReader\rtc";
             var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
 
             Assert.True(File.Exists(path));

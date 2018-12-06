@@ -43,7 +43,7 @@
   <component name="real-time control">
     <library>FBCTools_BMI</library>
     <workingDir>rtc</workingDir>
-    <inputFile>settings.json</inputFile>
+    <inputFile>.</inputFile>
   </component>
   <component name="rijn-flow-model">
     <library>cf_dll</library>

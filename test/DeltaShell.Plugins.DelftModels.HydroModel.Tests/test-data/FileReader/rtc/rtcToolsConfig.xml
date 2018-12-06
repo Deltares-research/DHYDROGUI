@@ -1,0 +1,1526 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rtcToolsConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews D:\sluis_pa\Documents\WORK\ExportNew\rtc\rtcToolsConfig.xsd">
+  <general>
+    <description>RTC Model DeltaShell</description>
+    <poolRoutingScheme>Theta</poolRoutingScheme>
+    <theta>0.5</theta>
+  </general>
+  <rules>
+    <rule>
+      <unitDelay id="HY_dicht_peil_unitDelay">
+        <input>
+          <x>[Output]HolIJsselkering/Gate lower edge level (s)</x>
+        </input>
+        <output>
+          <y>[Output]HolIJsselkering/Gate lower edge level (s)</y>
+        </output>
+      </unitDelay>
+    </rule>
+    <rule>
+      <unitDelay id="Spui_naar_Westerschelde_unitDelay">
+        <input>
+          <x>[Output]zwd_BathseSpuisl/Gate lower edge level (s)</x>
+        </input>
+        <output>
+          <y>[Output]zwd_BathseSpuisl/Gate lower edge level (s)</y>
+        </output>
+      </unitDelay>
+    </rule>
+    <rule>
+      <timeAbsolute id="Maeslantkering/timeseries drempel width">
+        <input>
+          <x>[TimeRule]Maeslantkering/timeseries drempel width</x>
+        </input>
+        <output>
+          <y>[Output]Maeslant_drempel/Crest width (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="Maeslantkering/timeseries schuif width">
+        <input>
+          <x>[TimeRule]Maeslantkering/timeseries schuif width</x>
+        </input>
+        <output>
+          <y>[Output]Maeslant_schuif/Crest width (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="Maeslantkering/timeseries overstort width">
+        <input>
+          <x>[TimeRule]Maeslantkering/timeseries overstort width</x>
+        </input>
+        <output>
+          <y>[Output]Maeslant_over/Crest width (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="Maeslantkering/timeseries schuif crest">
+        <input>
+          <x>[TimeRule]Maeslantkering/timeseries schuif crest</x>
+        </input>
+        <output>
+          <y>[Output]Maeslant_schuif/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="Maeslantkering/timeseries overstort crest">
+        <input>
+          <x>[TimeRule]Maeslantkering/timeseries overstort crest</x>
+        </input>
+        <output>
+          <y>[Output]Maeslant_over/Crest level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="Hartelkering/timeseries breed onder">
+        <input>
+          <x>[TimeRule]Hartelkering/timeseries breed onder</x>
+        </input>
+        <output>
+          <y>[Output]Hartel_breed/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="Hartelkering/timeseries smal onder">
+        <input>
+          <x>[TimeRule]Hartelkering/timeseries smal onder</x>
+        </input>
+        <output>
+          <y>[Output]Hartel_smal/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="Hartelkering/hartel smal over">
+        <input>
+          <x>[TimeRule]Hartelkering/hartel smal over</x>
+        </input>
+        <output>
+          <y>[Output]Hartel_smal_ovl/Crest level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="Hartelkering/hartel breed over">
+        <input>
+          <x>[TimeRule]Hartelkering/hartel breed over</x>
+        </input>
+        <output>
+          <y>[Output]Hartel_breed_ovl/Crest level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeRelative id="HollandscheIJsselkering/HY_dicht_peil">
+        <mode>RETAINVALUEWHENINACTIVE</mode>
+        <valueOption>RELATIVE</valueOption>
+        <maximumPeriod>0</maximumPeriod>
+        <controlTable>
+          <record time="0" value="12.1" />
+          <record time="780" value="-3.5" />
+          <record time="960" value="-3.5" />
+          <record time="1020" value="-3.8" />
+          <record time="1200" value="-3.8" />
+          <record time="1260" value="-4.1" />
+          <record time="1440" value="-4.1" />
+          <record time="1500" value="-4.4" />
+          <record time="1680" value="-4.4" />
+          <record time="1740" value="-4.7" />
+          <record time="1920" value="-4.7" />
+          <record time="1980" value="-5" />
+          <record time="2160" value="-5" />
+          <record time="2220" value="-5.3" />
+          <record time="2400" value="-5.3" />
+          <record time="2460" value="-5.6" />
+          <record time="2640" value="-5.6" />
+          <record time="2700" value="-5.9" />
+          <record time="2880" value="-5.9" />
+          <record time="2940" value="-6.2" />
+          <record time="3120" value="-6.2" />
+          <record time="3180" value="-6.458" />
+          <record time="3181" value="-6.458" />
+        </controlTable>
+        <input>
+          <y>[Output]HolIJsselkering/Gate lower edge level (s)[AsInputFor]HY_dicht_peil</y>
+        </input>
+        <output>
+          <y>[Output]HolIJsselkering/Gate lower edge level (s)</y>
+          <timeActive>[RelativeTimeRule]HollandscheIJsselkering/HY_dicht_peil</timeActive>
+        </output>
+      </timeRelative>
+    </rule>
+    <rule>
+      <timeRelative id="HollandscheIJsselkering/HY_open">
+        <mode>RETAINVALUEWHENINACTIVE</mode>
+        <valueOption>RELATIVE</valueOption>
+        <maximumPeriod>0</maximumPeriod>
+        <controlTable>
+          <record time="0" value="-6.5" />
+          <record time="930" value="12.1" />
+          <record time="931" value="12.1" />
+        </controlTable>
+        <input>
+          <y>[Output]HolIJsselkering/Gate lower edge level (s)[AsInputFor]HY_open</y>
+        </input>
+        <output>
+          <y>[Output]HolIJsselkering/Gate lower edge level (s)</y>
+          <timeActive>[RelativeTimeRule]HollandscheIJsselkering/HY_open</timeActive>
+        </output>
+      </timeRelative>
+    </rule>
+    <rule>
+      <timeAbsolute id="HollandscheIJsselkering/HYK_timeseries">
+        <input>
+          <x>[TimeRule]HollandscheIJsselkering/HYK_timeseries</x>
+        </input>
+        <output>
+          <y>[Output]HolIJsselkering/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeRelative id="HollandscheIJsselkering/HY_dicht_kent">
+        <mode>RETAINVALUEWHENINACTIVE</mode>
+        <valueOption>RELATIVE</valueOption>
+        <maximumPeriod>0</maximumPeriod>
+        <controlTable>
+          <record time="0" value="12.1" />
+          <record time="3180" value="-6.458" />
+          <record time="3181" value="-6.458" />
+        </controlTable>
+        <input>
+          <y>[Output]HolIJsselkering/Gate lower edge level (s)[AsInputFor]HY_dicht_kent</y>
+        </input>
+        <output>
+          <y>[Output]HolIJsselkering/Gate lower edge level (s)</y>
+          <timeActive>[RelativeTimeRule]HollandscheIJsselkering/HY_dicht_kent</timeActive>
+        </output>
+      </timeRelative>
+    </rule>
+    <rule>
+      <timeAbsolute id="Volkerakdam/Volkerak_over_crest">
+        <input>
+          <x>[TimeRule]Volkerakdam/Volkerak_over_crest</x>
+        </input>
+        <output>
+          <y>[Output]Volkerak_over/Crest level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="Volkerakdam/Volkerak_schuiven_gate">
+        <input>
+          <x>[TimeRule]Volkerakdam/Volkerak_schuiven_gate</x>
+        </input>
+        <output>
+          <y>[Output]Volkerak_schuiven/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_01/HVSL_01">
+        <input>
+          <x>[TimeRule]HVSL_01/HVSL_01</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet1/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_01/HVSL_01_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_01/HVSL_01_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet1/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_02/HVSL_02">
+        <input>
+          <x>[TimeRule]HVSL_02/HVSL_02</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet2/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_02/HVSL_02_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_02/HVSL_02_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet2/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_03/HVSL_03">
+        <input>
+          <x>[TimeRule]HVSL_03/HVSL_03</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet3/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_03/HVSL_03_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_03/HVSL_03_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet3/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_04/HVSL_04">
+        <input>
+          <x>[TimeRule]HVSL_04/HVSL_04</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet4/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_04/HVSL_04_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_04/HVSL_04_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet4/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_05/HVSL_05">
+        <input>
+          <x>[TimeRule]HVSL_05/HVSL_05</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet5/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_05/HVSL_05_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_05/HVSL_05_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet5/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_06/HVSL_06">
+        <input>
+          <x>[TimeRule]HVSL_06/HVSL_06</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet6/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_06/HVSL_06_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_06/HVSL_06_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet6/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_07/HVSL_07">
+        <input>
+          <x>[TimeRule]HVSL_07/HVSL_07</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet7/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_07/HVSL_07_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_07/HVSL_07_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet7/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_08/HVSL_08">
+        <input>
+          <x>[TimeRule]HVSL_08/HVSL_08</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet8/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_08/HVSL_08_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_08/HVSL_08_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet8/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_09/HVSL_09">
+        <input>
+          <x>[TimeRule]HVSL_09/HVSL_09</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet9/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_09/HVSL_09_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_09/HVSL_09_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet9/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_10/HVSL_10">
+        <input>
+          <x>[TimeRule]HVSL_10/HVSL_10</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet10/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_10/HVSL_10_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_10/HVSL_10_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet10/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_11/HVSL_11">
+        <input>
+          <x>[TimeRule]HVSL_11/HVSL_11</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet11/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_11/HVSL_11_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_11/HVSL_11_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet11/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_12/HVSL_12">
+        <input>
+          <x>[TimeRule]HVSL_12/HVSL_12</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet12/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_12/HVSL_12_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_12/HVSL_12_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet12/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_13/HVSL_13">
+        <input>
+          <x>[TimeRule]HVSL_13/HVSL_13</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet13/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_13/HVSL_13_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_13/HVSL_13_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet13/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_14/HVSL_14">
+        <input>
+          <x>[TimeRule]HVSL_14/HVSL_14</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet14/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_14/HVSL_14_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_14/HVSL_14_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet14/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_15/HVSL_15">
+        <input>
+          <x>[TimeRule]HVSL_15/HVSL_15</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet15/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_15/HVSL_15_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_15/HVSL_15_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet15/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_16/HVSL_16">
+        <input>
+          <x>[TimeRule]HVSL_16/HVSL_16</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet16/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_16/HVSL_16_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_16/HVSL_16_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet16/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_17/HVSL_17">
+        <input>
+          <x>[TimeRule]HVSL_17/HVSL_17</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet17/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="HVSL_17/HVSL_17_sluithoogte">
+        <input>
+          <x>[TimeRule]HVSL_17/HVSL_17_sluithoogte</x>
+        </input>
+        <output>
+          <y>[Output]Haringvliet17/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="KrommeNolkering/Open the gate">
+        <input>
+          <x>[TimeRule]KrommeNolkering/Open the gate</x>
+        </input>
+        <output>
+          <y>[Output]Kromme Nolkering/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeAbsolute id="KrommeNolkering/Close the gate">
+        <input>
+          <x>[TimeRule]KrommeNolkering/Close the gate</x>
+        </input>
+        <output>
+          <y>[Output]Kromme Nolkering/Gate lower edge level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeRelative id="CNTL_Bathsesluis/Spui_naar_Westerschelde">
+        <mode>RETAINVALUEWHENINACTIVE</mode>
+        <valueOption>ABSOLUTE</valueOption>
+        <maximumPeriod>0</maximumPeriod>
+        <controlTable>
+          <record time="0" value="-4.25" />
+          <record time="120" value="0" />
+          <record time="121" value="0" />
+        </controlTable>
+        <output>
+          <y>[Output]zwd_BathseSpuisl/Gate lower edge level (s)</y>
+          <timeActive>[RelativeTimeRule]CNTL_Bathsesluis/Spui_naar_Westerschelde</timeActive>
+        </output>
+      </timeRelative>
+    </rule>
+    <rule>
+      <timeRelative id="CNTL_Bathsesluis/CloseSluis">
+        <mode>RETAINVALUEWHENINACTIVE</mode>
+        <valueOption>ABSOLUTE</valueOption>
+        <maximumPeriod>0</maximumPeriod>
+        <controlTable>
+          <record time="0" value="0" />
+          <record time="120" value="-4.25" />
+          <record time="121" value="-4.25" />
+        </controlTable>
+        <output>
+          <y>[Output]zwd_BathseSpuisl/Gate lower edge level (s)</y>
+          <timeActive>[RelativeTimeRule]CNTL_Bathsesluis/CloseSluis</timeActive>
+        </output>
+      </timeRelative>
+    </rule>
+  </rules>
+  <triggers>
+    <trigger>
+      <standard id="HollandscheIJsselkering/HYK_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HollandscheIJsselkering/HYK_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HollandscheIJsselkering/HYK_timeseries</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HollandscheIJsselkering/Kenteringsluiting">
+              <condition>
+                <x1Series ref="IMPLICIT">[TimeCondition]HollandscheIJsselkering/Kenteringsluiting</x1Series>
+                <relationalOperator>Equal</relationalOperator>
+                <x2Value>0</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <standard id="HollandscheIJsselkering/Q(t)">
+                    <condition>
+                      <x1Series ref="EXPLICIT">[Input]HolIJsselkering/Discharge (s)</x1Series>
+                      <relationalOperator>Less</relationalOperator>
+                      <x2Value>0</x2Value>
+                    </condition>
+                    <true>
+                      <trigger>
+                        <ruleReference>HollandscheIJsselkering/HY_dicht_kent</ruleReference>
+                      </trigger>
+                    </true>
+                    <false>
+                      <trigger>
+                        <standard id="HollandscheIJsselkering/HYK Verval">
+                          <condition>
+                            <x1Series ref="EXPLICIT">[Input]HolIJsselkering/Head Difference (s)</x1Series>
+                            <relationalOperator>LessEqual</relationalOperator>
+                            <x2Value>0</x2Value>
+                          </condition>
+                          <true>
+                            <trigger>
+                              <standard id="HollandscheIJsselkering/HYK_waterstand">
+                                <condition>
+                                  <x1Series ref="EXPLICIT">[Input]KRIMPADIJSL/Water level (op)</x1Series>
+                                  <relationalOperator>Greater</relationalOperator>
+                                  <x2Value>2</x2Value>
+                                </condition>
+                                <true>
+                                  <trigger>
+                                    <ruleReference>HollandscheIJsselkering/HY_dicht_peil</ruleReference>
+                                  </trigger>
+                                </true>
+                                <output>
+                                  <status>[StandardCondition][Status]HollandscheIJsselkering/HYK_waterstand</status>
+                                </output>
+                              </standard>
+                            </trigger>
+                          </true>
+                          <false>
+                            <trigger>
+                              <ruleReference>HollandscheIJsselkering/HY_open</ruleReference>
+                            </trigger>
+                          </false>
+                          <output>
+                            <status>[StandardCondition][Status]HollandscheIJsselkering/HYK Verval</status>
+                          </output>
+                        </standard>
+                      </trigger>
+                    </false>
+                    <output>
+                      <status>[StandardCondition][Status]HollandscheIJsselkering/Q(t)</status>
+                    </output>
+                  </standard>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <standard id="HollandscheIJsselkering/HYK Verval">
+                    <condition>
+                      <x1Series ref="EXPLICIT">[Input]HolIJsselkering/Head Difference (s)</x1Series>
+                      <relationalOperator>LessEqual</relationalOperator>
+                      <x2Value>0</x2Value>
+                    </condition>
+                    <true>
+                      <trigger>
+                        <standard id="HollandscheIJsselkering/HYK_waterstand">
+                          <condition>
+                            <x1Series ref="EXPLICIT">[Input]KRIMPADIJSL/Water level (op)</x1Series>
+                            <relationalOperator>Greater</relationalOperator>
+                            <x2Value>2</x2Value>
+                          </condition>
+                          <true>
+                            <trigger>
+                              <ruleReference>HollandscheIJsselkering/HY_dicht_peil</ruleReference>
+                            </trigger>
+                          </true>
+                          <output>
+                            <status>[StandardCondition][Status]HollandscheIJsselkering/HYK_waterstand</status>
+                          </output>
+                        </standard>
+                      </trigger>
+                    </true>
+                    <false>
+                      <trigger>
+                        <ruleReference>HollandscheIJsselkering/HY_open</ruleReference>
+                      </trigger>
+                    </false>
+                    <output>
+                      <status>[StandardCondition][Status]HollandscheIJsselkering/HYK Verval</status>
+                    </output>
+                  </standard>
+                </trigger>
+              </false>
+              <output>
+                <status>[TimeCondition][Status]HollandscheIJsselkering/Kenteringsluiting</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HollandscheIJsselkering/HYK_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_01/HVSL_01_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_01/HVSL_01_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_01/HVSL_01</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_01/HVSL_01_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet1/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_01/HVSL_01</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_01/HVSL_01_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_01/HVSL_01_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_01/HVSL_01_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_02/HVSL_02_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_02/HVSL_02_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_02/HVSL_02</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_02/HVSL_02_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet2/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_02/HVSL_02</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_02/HVSL_02_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_02/HVSL_02_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_02/HVSL_02_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_03/HVSL_03_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_03/HVSL_03_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_03/HVSL_03</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_03/HVSL_03_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet3/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_03/HVSL_03</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_03/HVSL_03_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_03/HVSL_03_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_03/HVSL_03_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_04/HVSL_04_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_04/HVSL_04_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_04/HVSL_04</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_04/HVSL_04_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet4/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_04/HVSL_04</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_04/HVSL_04_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_04/HVSL_04_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_04/HVSL_04_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_05/HVSL_05_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_05/HVSL_05_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_05/HVSL_05</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_05/HVSL_05_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet5/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_05/HVSL_05</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_05/HVSL_05_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_05/HVSL_05_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_05/HVSL_05_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_06/HVSL_06_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_06/HVSL_06_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_06/HVSL_06</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_06/HVSL_06_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet6/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_06/HVSL_06</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_06/HVSL_06_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_06/HVSL_06_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_06/HVSL_06_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_07/HVSL_07_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_07/HVSL_07_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_07/HVSL_07</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_07/HVSL_07_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet7/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_07/HVSL_07</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_07/HVSL_07_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_07/HVSL_07_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_07/HVSL_07_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_08/HVSL_08_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_08/HVSL_08_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_08/HVSL_08</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_08/HVSL_08_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet8/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_08/HVSL_08</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_08/HVSL_08_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_08/HVSL_08_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_08/HVSL_08_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_09/HVSL_09_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_09/HVSL_09_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_09/HVSL_09</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_09/HVSL_09_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet9/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_09/HVSL_09</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_09/HVSL_09_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_09/HVSL_09_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_09/HVSL_09_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_10/HVSL_10_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_10/HVSL_10_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_10/HVSL_10</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_10/HVSL_10_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet10/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_10/HVSL_10</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_10/HVSL_10_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_10/HVSL_10_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_10/HVSL_10_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_11/HVSL_11_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_11/HVSL_11_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_11/HVSL_11</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_11/HVSL_11_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet11/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_11/HVSL_11</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_11/HVSL_11_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_11/HVSL_11_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_11/HVSL_11_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_12/HVSL_12_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_12/HVSL_12_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_12/HVSL_12</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_12/HVSL_12_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet12/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_12/HVSL_12</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_12/HVSL_12_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_12/HVSL_12_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_12/HVSL_12_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_13/HVSL_13_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_13/HVSL_13_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_13/HVSL_13</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_13/HVSL_13_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet13/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_13/HVSL_13</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_13/HVSL_13_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_13/HVSL_13_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_13/HVSL_13_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_14/HVSL_14_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_14/HVSL_14_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_14/HVSL_14</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_14/HVSL_14_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet14/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_14/HVSL_14</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_14/HVSL_14_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_14/HVSL_14_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_14/HVSL_14_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_15/HVSL_15_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_15/HVSL_15_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_15/HVSL_15</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_15/HVSL_15_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet15/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_15/HVSL_15</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_15/HVSL_15_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_15/HVSL_15_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_15/HVSL_15_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_16/HVSL_16_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_16/HVSL_16_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_16/HVSL_16</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_16/HVSL_16_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet16/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_16/HVSL_16</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_16/HVSL_16_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_16/HVSL_16_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_16/HVSL_16_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="HVSL_17/HVSL_17_switch">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]HVSL_17/HVSL_17_switch</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>HVSL_17/HVSL_17</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="HVSL_17/HVSL_17_HeadDifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]Haringvliet17/Head Difference (s)</x1Series>
+                <relationalOperator>GreaterEqual</relationalOperator>
+                <x2Value>0.12</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>HVSL_17/HVSL_17</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>HVSL_17/HVSL_17_sluithoogte</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]HVSL_17/HVSL_17_HeadDifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]HVSL_17/HVSL_17_switch</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="KrommeNolkering/SwitchMethods">
+        <condition>
+          <x1Series ref="IMPLICIT">[TimeCondition]KrommeNolkering/SwitchMethods</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>KrommeNolkering/Open the gate</ruleReference>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <standard id="KrommeNolkering/ClosingCondition">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]HEESBN/Water level (op)</x1Series>
+                <relationalOperator>Greater</relationalOperator>
+                <x2Value>3.42</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>KrommeNolkering/Close the gate</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>KrommeNolkering/Open the gate</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]KrommeNolkering/ClosingCondition</status>
+              </output>
+            </standard>
+          </trigger>
+        </false>
+        <output>
+          <status>[TimeCondition][Status]KrommeNolkering/SwitchMethods</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="CNTL_Bathsesluis/H_channel">
+        <condition>
+          <x1Series ref="EXPLICIT">[Input]zwd_bathsespui/Water level (op)</x1Series>
+          <relationalOperator>Greater</relationalOperator>
+          <x2Value>-0.05</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <standard id="CNTL_Bathsesluis/Headdifference">
+              <condition>
+                <x1Series ref="EXPLICIT">[Input]zwd_BathseSpuisl/Head Difference (s)</x1Series>
+                <relationalOperator>Greater</relationalOperator>
+                <x2Value>0.05</x2Value>
+              </condition>
+              <true>
+                <trigger>
+                  <ruleReference>CNTL_Bathsesluis/Spui_naar_Westerschelde</ruleReference>
+                </trigger>
+              </true>
+              <false>
+                <trigger>
+                  <ruleReference>CNTL_Bathsesluis/CloseSluis</ruleReference>
+                </trigger>
+              </false>
+              <output>
+                <status>[StandardCondition][Status]CNTL_Bathsesluis/Headdifference</status>
+              </output>
+            </standard>
+          </trigger>
+        </true>
+        <false>
+          <trigger>
+            <ruleReference>CNTL_Bathsesluis/CloseSluis</ruleReference>
+          </trigger>
+        </false>
+        <output>
+          <status>[StandardCondition][Status]CNTL_Bathsesluis/H_channel</status>
+        </output>
+      </standard>
+    </trigger>
+  </triggers>
+</rtcToolsConfig>
