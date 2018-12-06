@@ -40,9 +40,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 const int totalSteps = 11;
                 var stepCounter = 1;
 
-                reportProgress($"'Reading model wide parameters from {Path.GetFileName(modelFilename)} file", stepCounter, totalSteps);
-                ModelDefinitionFileReader.SetWaterFlowModelProperties(modelFilename, model, CreateAndAddErrorReport);
-
                 reportProgress($"Reading filenames from {Path.GetFileName(modelFilename)} file.", stepCounter, totalSteps);
                 var fileNames = new ModelFileNames(modelFilename);
                 stepCounter++;
@@ -55,6 +52,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     throw new Exception(); // If anything goes wrong with reading the network, stop reading.
                 }
                 stepCounter++;
+
+                reportProgress($"'Reading model wide parameters from {Path.GetFileName(modelFilename)} file", stepCounter, totalSteps);
+                ModelDefinitionFileReader.SetWaterFlowModelProperties(modelFilename, model, CreateAndAddErrorReport);
 
                 reportProgress($"Reading lateral discharge locations from {fileNames.LateralDischarge} file.", stepCounter,
                     totalSteps);
