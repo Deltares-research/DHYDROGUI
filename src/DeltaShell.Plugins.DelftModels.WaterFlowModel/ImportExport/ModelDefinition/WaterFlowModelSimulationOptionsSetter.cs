@@ -20,7 +20,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 
                 if (modelParameter != null)
                 {
-                    modelParameter.Value = prop.Value;
+                    if (modelParameter.Type == "typeof(bool)")
+                    {
+                        modelParameter.Value = Convert.ToString(Convert.ToBoolean(Convert.ToInt32(prop.Value)));
+                    }
+                    else
+                    {
+                        modelParameter.Value = prop.Value;
+                    }
                 }
                 else if (prop.Name == ModelDefinitionsRegion.UseRestart.Key)
                 {
