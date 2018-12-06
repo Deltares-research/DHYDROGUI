@@ -41,6 +41,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             network.Branches.Add(branch);
             return network;
         }
+
         public static IHydroNetwork SetupSimpleHydroNetworkWith2NodesAndMaasmondBranch()
         {
             // specify your network here

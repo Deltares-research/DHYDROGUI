@@ -109,25 +109,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     $"Reading spatial data from {fileNames} file.",
                     stepCounter, totalSteps);
 
-                ReadFileSpatialData(fileNames.InitialDischarge, model, CreateAndAddErrorReport);
+                ReadSpatialData(fileNames.InitialDischarge, model, CreateAndAddErrorReport);
                 
-                ReadFileSpatialData(fileNames.InitialSalinity, model, CreateAndAddErrorReport);
+                ReadSpatialData(fileNames.InitialSalinity, model, CreateAndAddErrorReport);
                 
-                ReadFileSpatialData(fileNames.InitialTemperature, model, CreateAndAddErrorReport);
+                ReadSpatialData(fileNames.InitialTemperature, model, CreateAndAddErrorReport);
 
-                ReadFileSpatialData(fileNames.InitialWaterLevel, model, CreateAndAddErrorReport);
+                ReadSpatialData(fileNames.InitialWaterLevel, model, CreateAndAddErrorReport);
 
-                ReadFileSpatialData(fileNames.InitialWaterDepth, model, CreateAndAddErrorReport);
+                ReadSpatialData(fileNames.InitialWaterDepth, model, CreateAndAddErrorReport);
                 
-                ReadFileSpatialData(fileNames.Dispersion, model, CreateAndAddErrorReport);
+                ReadSpatialData(fileNames.Dispersion, model, CreateAndAddErrorReport);
 
                 if (model.DispersionFormulationType != DispersionFormulationType.Constant)
                 {
-                    ReadFileSpatialData(fileNames.DispersionF3, model, CreateAndAddErrorReport);
-                    ReadFileSpatialData(fileNames.DispersionF4, model, CreateAndAddErrorReport);
+                    ReadSpatialData(fileNames.DispersionF3, model, CreateAndAddErrorReport);
+                    ReadSpatialData(fileNames.DispersionF4, model, CreateAndAddErrorReport);
                 }
 
-                ReadFileSpatialData(fileNames.WindShielding, model, CreateAndAddErrorReport);
+                ReadSpatialData(fileNames.WindShielding, model, CreateAndAddErrorReport);
 
             }
             catch (Exception)
@@ -274,12 +274,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         /// <param name="locationFilePath"></param>
         /// <param name="model"></param>
         /// <param name="createAndAddErrorReport"></param>
-        private static void ReadFileSpatialData(string locationFilePath, WaterFlowModel1D model,
+        private static void ReadSpatialData(string locationFilePath, WaterFlowModel1D model,
             Action<string, IList<string>> createAndAddErrorReport)
         {
+            //Necessary because the default value of a string is null and you do not want to continue 
             if (locationFilePath == null) return;
 
-            var spatialFileDataReader = new SpatialFileDataReader(createAndAddErrorReport);
+            var spatialFileDataReader = new SpatialDataReader(createAndAddErrorReport);
             if (!File.Exists(locationFilePath)) return;
             var spatialFileData = spatialFileDataReader.ReadSpatialFileData(locationFilePath, model.Network.Channels.ToList());
 
@@ -293,49 +294,45 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             switch (fileNameWithoutExtension)
             {
                 case "InitialDischarge":
-                    model.InitialFlow.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
-                    model.InitialFlow.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    CopySpatialFileDataToModel(model.InitialFlow, spatialFileData);
                     break;
                 case "InitialSalinity":
-                    model.InitialSaltConcentration.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
-                    model.InitialSaltConcentration.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    CopySpatialFileDataToModel(model.InitialSaltConcentration, spatialFileData);
                     break;
                 case "InitialTemperature":
-                    model.InitialTemperature.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
-                    model.InitialTemperature.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    CopySpatialFileDataToModel(model.InitialTemperature, spatialFileData);
                     break;
                 case "InitialWaterLevel":
-                    model.InitialConditions.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
-                    model.InitialConditions.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    CopySpatialFileDataToModel(model.InitialConditions, spatialFileData);
                     model.InitialConditionsType = InitialConditionsType.WaterLevel;
                     break;
                 case "InitialWaterDepth":
-                    model.InitialConditions.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
-                    model.InitialConditions.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    CopySpatialFileDataToModel(model.InitialConditions, spatialFileData);
                     model.InitialConditionsType = InitialConditionsType.Depth;
                     break;
                 case "Dispersion":
-                    model.DispersionCoverage.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
-                    model.DispersionCoverage.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    CopySpatialFileDataToModel(model.DispersionCoverage, spatialFileData);
                     break;
                 case "DispersionF3":
-                    model.DispersionF3Coverage.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
-                    model.DispersionF3Coverage.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    CopySpatialFileDataToModel(model.DispersionF3Coverage, spatialFileData);
                     break;
                 case "DispersionF4":
-                    model.DispersionF4Coverage.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
-                    model.DispersionF4Coverage.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    CopySpatialFileDataToModel(model.DispersionF4Coverage, spatialFileData);
                     break;
                 case "WindShielding":
-                    model.WindShielding.Arguments[0].SetValues(spatialFileData.Arguments[0].Values);
-                    model.WindShielding.Components[0].SetValues(spatialFileData.Components[0].Values);
+                    CopySpatialFileDataToModel(model.WindShielding, spatialFileData);
                     break;
                 default:
-                    Log.Warn("Could not find any spatial data to set on the model.");
+                    Log.Warn($"Could not find any spatial data to set on the model. The file: {locationFilePath} does not have a correct name.");
                     break;
             }
         }
 
+        private static void CopySpatialFileDataToModel(INetworkCoverage copyTo, INetworkCoverage copyFrom)
+        {
+            copyTo.Arguments[0].SetValues(copyFrom.Arguments[0].Values);
+            copyTo.Components[0].SetValues(copyFrom.Components[0].Values);
+        }
 
         private static void LogErrorReport(List<string> errorReport, Action<string> logAction)
         {

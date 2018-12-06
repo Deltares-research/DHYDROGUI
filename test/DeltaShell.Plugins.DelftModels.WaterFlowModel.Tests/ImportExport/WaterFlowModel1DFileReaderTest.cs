@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Reflection;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -68,6 +69,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         public void GivenAnMd1dFile_WhenReadingTheNetworkDefinitionFileWithABadNetworkDiscretization_ThenNullIsReturned()
         {
             var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExportBadNetworkDiscretization.md1d");
+
+            var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
+            Assert.IsNull(waterFlowModel1D);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAMd1dFile_WhenReading_ThenAModelIsReturned()
+        {
+            var md1dFilePath = TestHelper.GetTestFilePath(@"ImportSpatialData\water flow 1d.md1d");
+
+            var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
+            Assert.IsNotNull(waterFlowModel1D.Network);
+
+            Assert.AreEqual(267, waterFlowModel1D.Network.Branches.Count);
+            Assert.AreEqual(212, waterFlowModel1D.Network.HydroNodes.Count());
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAnMd1dFile_WhenReadingAnIncorrectSpatialDataFile_ThenNullIsReturned()
+        {
+            var md1dFilePath = TestHelper.GetTestFilePath(@"ImportSpatialData\water flow 1dIncorrect.md1d");
 
             var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
             Assert.IsNull(waterFlowModel1D);
