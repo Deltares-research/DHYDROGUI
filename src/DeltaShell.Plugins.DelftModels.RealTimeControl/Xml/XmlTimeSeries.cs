@@ -174,6 +174,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xml
             if ((ExtrapolationType == ExtrapolationTimeSeriesType.Constant) && (times.Count() == 0))
             {
                 returnXElement.Add(new XElement(xNamespace + "event",
+                    new XAttribute("date", StartTime.ToString(strDatePattern, DateTimeFormatInfo.InvariantInfo)),
+                    new XAttribute("time", StartTime.ToString(strTimePattern, DateTimeFormatInfo.InvariantInfo)),
+                    new XAttribute("value", (ConvertToDouble(TimeSeries.Components[0].DefaultValue)).ToString(CultureInfo.InvariantCulture))));
+
+                returnXElement.Add(new XElement(xNamespace + "event",
                     new XAttribute("date", EndTime.ToString(strDatePattern, DateTimeFormatInfo.InvariantInfo)),
                     new XAttribute("time", EndTime.ToString(strTimePattern, DateTimeFormatInfo.InvariantInfo)),
                     new XAttribute("value", (ConvertToDouble(TimeSeries.Components[0].DefaultValue)).ToString(CultureInfo.InvariantCulture))));

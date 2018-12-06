@@ -11,6 +11,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             var rtcModel = new RealTimeControlModel();
             var controlGroups = rtcModel.ControlGroups;
 
+            var runTimeConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlRuntime);
+            RealTimeControlRuntimeConfigXmlReader.Read(runTimeConfigFilePath, rtcModel);
+
             var dataConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlData);
             var connectionPoints = RealTimeControlDataConfigXmlReader.Read(dataConfigFilePath, controlGroups);
 
@@ -22,9 +25,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             var stateImportFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlImportState);
             RealTimeControlStateImportXmlReader.Read(stateImportFilePath, connectionPoints.OfType<Output>().ToList());
-
-            var runTimeConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlRuntime);
-            RealTimeControlRuntimeConfigXmlReader.Read(runTimeConfigFilePath, rtcModel);
 
             return rtcModel;
         }

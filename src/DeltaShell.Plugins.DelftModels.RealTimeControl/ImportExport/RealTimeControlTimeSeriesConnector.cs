@@ -54,7 +54,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             
             if (timeSeries.Components[0].ValueType == typeof(bool))
             {
-                var booleanValues = doubleValues.Select(Convert.ToBoolean);
+                // because we write the opposite ( 0 = true, 1 = false)
+                var booleanValues = doubleValues.Select(e => !Convert.ToBoolean(e));
                 timeSeries.Components[0].SetValues(booleanValues);          
             }
             else
