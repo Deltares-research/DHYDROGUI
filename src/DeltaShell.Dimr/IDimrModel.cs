@@ -19,6 +19,14 @@ namespace DeltaShell.Dimr
 
         string GetItemString(IDataItem value);
 
+        /// <summary>
+        /// Gets the data item by item string.
+        /// </summary>
+        /// <param name="itemString">The item string.</param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        IDataItem GetDataItemByItemString(string itemString);
+
         Type ExporterType { get; }
 
         string GetExporterPath(string directoryName);

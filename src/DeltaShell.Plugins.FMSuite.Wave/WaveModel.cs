@@ -1549,6 +1549,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             return null;
         }
 
+        public virtual IDataItem GetDataItemByItemString(string itemString)
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual Type ExporterType
         {
             get { return typeof(WaveModelFileExporter); }

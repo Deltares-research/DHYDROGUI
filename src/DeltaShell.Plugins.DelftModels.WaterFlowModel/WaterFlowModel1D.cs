@@ -16,6 +16,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
 using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Units;
 using DelftTools.Units.Generics;
@@ -3398,7 +3399,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
             var dataItemName = ((INetworkFeature)((dataItem.ValueConverter).OriginalValue)).Name;
 
-            var parameterName = GetConvertedParameterName(dataItem.GetParameterName());
+            var parameterName = GetConvertedParameterName(dataItem.GetParameterName(), category);
 
             string nameWithoutHashTags = dataItemName.Replace("##", "~~");
             var concatNames = new List<string>(new[] { category, nameWithoutHashTags, parameterName });
@@ -3408,11 +3409,55 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             return string.Join("/", concatNames);
         }
 
-        private string GetConvertedParameterName(string parameterName)
+        public virtual IDataItem GetDataItemByItemString(string itemString)
         {
-            string dhydroParameterName;
-            return WaterFlowModel1DDataSet.DHydroNames.TryGetValue(parameterName, out dhydroParameterName)
-                ? dhydroParameterName
+            var idParts = itemString.Split('/');
+            var category = idParts[0];
+            var featureName = idParts[1].Replace("~~","##");
+            var parameterName = GetConvertedParameterName(idParts[2], category, true);
+
+            var feature = (INetworkFeature) GetFeatureListForCategory(category).FirstOrDefault(n => n.Name == featureName);
+            var childDataItems = GetChildDataItems(feature);
+
+            var dataItem = childDataItems.FirstOrDefault(di => (di.ValueConverter?.OriginalValue as INetworkFeature)?.Name == featureName &&
+                                                               (di.ValueConverter as ParameterValueConverter)?.ParameterName == parameterName);
+
+            return dataItem;
+        }
+
+        private IEnumerable<INameable> GetFeatureListForCategory(string category)
+        {
+            switch (category)
+            {
+                case WaterFlowParametersCategories.Laterals: return Network?.LateralSources;
+                case WaterFlowParametersCategories.ObservationPoints: return Network?.ObservationPoints;
+                case WaterFlowParametersCategories.Culverts: return Network?.Culverts;
+                case WaterFlowParametersCategories.Pumps: return Network?.Pumps;
+                case WaterFlowParametersCategories.Weirs: return Network?.Weirs;
+                case WaterFlowParametersCategories.Retentions: return Network?.Retentions;
+                default:
+                    return null;
+            }
+        }
+
+        private static string GetConvertedParameterName(string parameterName, string category, bool lookForValue = false)
+        {
+            var namesLookup = WaterFlowModel1DDataSet.GetDictionaryForCategory(category);
+            if (namesLookup == null)
+            {
+                return parameterName;
+            }
+
+            if (!lookForValue)
+            {
+                string dhydroParameterName;
+                return namesLookup.TryGetValue(parameterName, out dhydroParameterName)
+                    ? dhydroParameterName
+                    : parameterName;
+            }
+
+            return namesLookup.ContainsValue(parameterName) 
+                ? namesLookup.First(kvp => kvp.Value == parameterName).Key 
                 : parameterName;
         }
 

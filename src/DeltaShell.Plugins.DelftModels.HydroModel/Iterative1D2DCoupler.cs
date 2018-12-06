@@ -476,6 +476,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             return string.Join("/", concatNames);
         }
 
+        public virtual IDataItem GetDataItemByItemString(string itemString)
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual string GetExporterPath(string directoryName)
         {
             return Path.Combine(directoryName, Path.GetFileName(InputFile));

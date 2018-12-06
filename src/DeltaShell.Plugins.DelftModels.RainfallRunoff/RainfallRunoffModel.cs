@@ -1029,6 +1029,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             return null;
         }
 
+        public virtual IDataItem GetDataItemByItemString(string itemString)
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual Type ExporterType { get { return typeof(RainfallRunoffModelExporter); } }
         public virtual string GetExporterPath(string directoryName)
         {

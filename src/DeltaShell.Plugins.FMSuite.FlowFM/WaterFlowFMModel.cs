@@ -2930,6 +2930,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return string.Join("/", concatNames);
         }
 
+        public virtual IDataItem GetDataItemByItemString(string itemString)
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual Type ExporterType
         {
             get { return typeof(WaterFlowFMFileExporter); }

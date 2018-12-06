@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.xsd;
 using log4net;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 {
@@ -29,47 +28,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             hydroModel.BeginEdit(new ImportingFullModelAction("Importing full Dimr model"));
             try
             {
-                var fileGroups = SortFileGroups(dimrObject);
-                foreach (var fileGroup in fileGroups)
+                AddModels(fileImporters, dimrObject, rootFolder, hydroModel);
+
+                var subModels = hydroModel.Activities.OfType<IDimrModel>().ToList();
+                foreach (var dimrCouplerXml in dimrObject.coupler)
                 {
-                    var extension = fileGroup.Key;
-                    if (string.IsNullOrEmpty(extension))
-                    {
-                        extension = "json";
-                    }
+                    var sourceModel = subModels.FirstOrDefault(m => m.Name == dimrCouplerXml.sourceComponent);
+                    var targetModel = subModels.FirstOrDefault(m => m.Name == dimrCouplerXml.targetComponent);
 
-                    var importer =
-                        fileImporters.FirstOrDefault(f => f.MasterFileExtension == extension);
-                    
-                    if (importer == null)
+                    if (sourceModel == null || targetModel == null)
                     {
-                        LogUnknownImporter(extension);
-
+                        Log.Error($"Could not couple models: '{sourceModel.Name}' to '{targetModel.Name}'.");
                         continue;
                     }
 
-                    importer.ProgressChanged = (name, step, steps) => { };
-                    foreach (var fileName in fileGroup)
-                    {
-                        string[] pathParts;
-
-                        if (FileNameIsUnknown(fileName))
-                        {
-                            pathParts = SortFileParts(rootFolder, importer, "settings.json");
-                        }
-                        else
-                        {
-                            pathParts = SortFileParts(rootFolder, importer, fileName);
-                        }
-
-                        var combinedPath = Path.Combine(pathParts);
-                        var fullPath = Path.GetFullPath(combinedPath);
-                        var subModel = importer.ImportItem(fullPath);
-
-                        AddSubModels(subModel, hydroModel);
-
-                        hydroModel.Activities.Add(subModel as IActivity);
-                    }
+                    CoupleModelsByDimrCouplerXml(sourceModel, targetModel, dimrCouplerXml.item);
                 }
             }
             finally
@@ -80,6 +53,90 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             return hydroModel;
         }
 
+        private static void CoupleModelsByDimrCouplerXml(IDimrModel sourceModel, IDimrModel targetModel, dimrCoupledItemXML[] dimrCouplerXml)
+        {
+            foreach (var couplerXml in dimrCouplerXml)
+            {
+                try
+                {
+                    var sourceDataitem = sourceModel.GetDataItemByItemString(couplerXml.sourceName);
+                    var targetDataitem = targetModel.GetDataItemByItemString(couplerXml.targetName);
+
+                    if (sourceDataitem == null || targetDataitem == null)
+                    {
+                        Log.Error($"Could not link {couplerXml.sourceName} to {couplerXml.targetName}");
+                        continue;
+                    }
+
+                    sourceDataitem.LinkTo(targetDataitem);
+                }
+                catch (NotImplementedException exception)
+                {
+                    Log.Error($"Could not link {couplerXml.sourceName} to {couplerXml.targetName} : {exception.Message}");
+                }
+            }
+        }
+
+        private static void AddModels(List<IDimrModelFileImporter> fileImporters, dimrXML dimrObject, string rootFolder, HydroModel hydroModel)
+        {
+            var componentGroups = dimrObject.component
+                .GroupBy(component => Path.GetExtension(component.inputFile)?.TrimStart('.'));
+
+            foreach (var componentGroup in componentGroups)
+            {
+                var extension = componentGroup.Key;
+
+                if (string.IsNullOrEmpty(extension))
+                {
+                    extension = "json";
+                }
+                var importer = fileImporters.FirstOrDefault(f => f.MasterFileExtension == extension);
+
+                if (importer == null)
+                {
+                    LogUnknownImporter(extension);
+
+                    continue;
+                }
+
+                importer.ProgressChanged = (name, step, steps) => { };
+
+                foreach (var component in componentGroup)
+                {
+                    string[] pathParts;
+
+                    var fileName = component.inputFile;
+
+                    pathParts = SortFileParts(rootFolder, importer, FileNameIsUnknown(fileName) ? "settings.json" : fileName);
+
+                    var combinedPath = Path.Combine(pathParts);
+                    var fullPath = Path.GetFullPath(combinedPath);
+                    var importedItem = importer.ImportItem(fullPath);
+
+                    var subModel = importedItem as IActivity;
+                    if (subModel == null)
+                    {
+                        Log.Error($"Could not add {subModel.Name} to integrated model."); 
+                        continue;
+                    }
+
+                    if (subModel.Name != component.name)
+                    {
+                        Log.Debug($"Renamed model {subModel.Name} to {component.name}");
+                        subModel.Name = component.name;
+                    }
+
+                    var hydroModelSubModel = subModel as IHydroModel;
+                    if (hydroModelSubModel != null)
+                    {
+                        hydroModel.Region.SubRegions.Add(hydroModelSubModel.Region);
+                    }
+
+                    hydroModel.Activities.Add(subModel);
+                }
+            }
+        }
+
         private static bool FileNameIsUnknown(string fileName)
         {
             return fileName.Equals(".");
@@ -88,16 +145,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         private static void LogUnknownImporter(string extension)
         {
             Log.Info($"No importer found for extension: {extension}");
-        }
-
-        private static void AddSubModels(object subModel, HydroModel hydroModel)
-        {
-            var hydroModelSubModel = subModel as IHydroModel;
-
-            if (hydroModelSubModel != null)
-            {
-                hydroModel.Region.SubRegions.Add(hydroModelSubModel.Region);
-            }
         }
 
         private static string[] SortFileParts(string rootFolder, IDimrModelFileImporter importer, string fileName)
@@ -124,12 +171,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 .Plus(fileName)
                 .ToArray();
             return pathParts;
-        }
-
-        private static IEnumerable<IGrouping<string, string>> SortFileGroups(dimrXML dimrObject)
-        {
-            var fileGroups = dimrObject.component.Select(c => c.inputFile).GroupBy(f => Path.GetExtension(f)?.TrimStart('.'));
-            return fileGroups;
         }
     }
 
