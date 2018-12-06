@@ -6,9 +6,26 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
 {
+    /// <summary>
+    /// WaterFlowModelOutputSetter is responsible for interpreting Results regions in a .md1d
+    /// data access model and set these on the OutputSettings of a model.
+    /// </summary>
+    /// <remarks>
+    /// The following result regions are currently handled:
+    ///   ResultsNodes
+    ///   ResultsBranches
+    ///   ResultsPumps
+    ///   ResultsObservationPoints
+    ///   ResultsLaterals
+    ///   ResultsWaterBalance
+    ///   FiniteVolumeGridOnGridPoints.
+    ///
+    /// see the D-Flow1d Technical reference manual for all possible options supported by the kernel.
+    /// </remarks>
+    /// <seealso cref="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition.IWaterFlowModelCategoryPropertySetter" />
     public class WaterFlowModelOutputSetter : IWaterFlowModelCategoryPropertySetter
     {
-        private Dictionary<string, ElementSet> headerMapping = new Dictionary<string, ElementSet>
+        private readonly Dictionary<string, ElementSet> headerMapping = new Dictionary<string, ElementSet>
         {
             [ModelDefinitionsRegion.ResultsNodesHeader] = ElementSet.GridpointsOnBranches,
             [ModelDefinitionsRegion.ResultsBranchesHeader] = ElementSet.ReachSegElmSet,
@@ -21,7 +38,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             [ModelDefinitionsRegion.FiniteVolumeGridOnGridPoints] = ElementSet.FiniteVolumeGridOnGridPoints
         };
 
+        /// <summary>
+        /// Set the OutputSettings of <paramref name="model"/> to the values specified in <paramref name="category"/>.
+        /// </summary>
+        /// <param name="category">A set of DelftIniCategory describing a Results region of the md1d file. </param>
+        /// <param name="model"> reference to WaterFlowModel1D containg OuputSettings which will be set.</param>
+        /// <remarks>
+        /// No engine parameters will be changed which are not specified in <paramref name="category"/>.
+        /// If a property is not recognised, it is quietly ignored.
+        /// 
+        /// Pre-condition: categories != null && model.OutputSettings != null
+        /// </remarks>
         public void SetProperties(DelftIniCategory category, WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
+        {
+            SetProperties(category, model.OutputSettings, createAndAddErrorReport);
+        }
+
+        /// <summary>
+        /// Set the engine parameters in <paramref name="outputSettings"/> to the values specified in <paramref name="category"/> 
+        /// </summary>
+        /// <param name="category">A set of DelftIniCategory describing a Results region of the md1d file. </param>
+        /// <param name="outputSettings"> reference to WaterFlowModel1DOutputSettingData of some WaterFlow1DModel.</param>
+        /// <remarks>
+        /// No engine parameters will be changed which are not specified in <paramref name="category"/>.
+        /// If a property is not recognised, it is quietly ignored.
+        /// 
+        /// Pre-condition: categories != null && outputSettings != null
+        /// </remarks>
+        public void SetProperties(DelftIniCategory category, WaterFlowModel1DOutputSettingData outputSettings, Action<string, IList<string>> createAndAddErrorReport)
         {
             // Determine element set
             ElementSet elementSet;
@@ -30,12 +74,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             foreach (var property in category.Properties)
             {
                 var quantityType = GetQuantityType(property);
-                if(quantityType == QuantityType.UndeterminedValue) continue;
+                if (quantityType == QuantityType.UndeterminedValue) continue;
 
                 // Kernel expects Dispersion in ResultsBranchesHeader. GUI puts it
                 // in ElementSet.GridpointsOnBranches, as such we need to 
                 // explicitly correct this. 
-                var engineParameter = model.OutputSettings.GetEngineParameter(quantityType,
+                var engineParameter = outputSettings.GetEngineParameter(quantityType,
                     quantityType == QuantityType.Dispersion && elementSet == ElementSet.ReachSegElmSet
                         ? ElementSet.GridpointsOnBranches
                         : elementSet,

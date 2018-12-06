@@ -173,14 +173,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var resultHeader = new DelftIniCategory(MappingElementSetToRegionHeader[elementSet]);
             resultHeader.AddProperty(qType.ToString(), (int)AggregationOptions.Average, "Tenderloin");
 
-            var model = new WaterFlowModel1D();
-            var outputSettings = model.OutputSettings;
-
+            var outputSettings = new WaterFlowModel1DOutputSettingData();
             foreach (var eParam in outputSettings.EngineParameters)
                 eParam.AggregationOptions = AggregationOptions.None;
 
+
             // When
-            new WaterFlowModelOutputSetter().SetProperties(resultHeader, model, (s, list) => { });
+            new WaterFlowModelOutputSetter().SetProperties(resultHeader, outputSettings, (s, list) => { });
 
             // Then
             Assert.That(outputSettings.GetEngineParameter(qType, elementSet).AggregationOptions,
@@ -214,14 +213,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var resultHeader = new DelftIniCategory(MappingElementSetToRegionHeader[ElementSet.ReachSegElmSet]);
             resultHeader.AddProperty(QuantityType.Dispersion.ToString(), (int)AggregationOptions.Maximum, "Tenderloin");
 
-            var model = new WaterFlowModel1D();
-            var outputSettings = model.OutputSettings;
-
+            var outputSettings = new WaterFlowModel1DOutputSettingData();
             foreach (var eParam in outputSettings.EngineParameters)
                 eParam.AggregationOptions = AggregationOptions.None;
 
             // When
-            new WaterFlowModelOutputSetter().SetProperties(resultHeader, model, (s, list) => { });
+            new WaterFlowModelOutputSetter().SetProperties(resultHeader, outputSettings, (s, list) => { });
 
             // Then
             Assert.That(outputSettings.GetEngineParameter(QuantityType.Dispersion, ElementSet.GridpointsOnBranches).AggregationOptions,
@@ -253,14 +250,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var resultHeader = new DelftIniCategory(MappingElementSetToRegionHeader[ElementSet.GridpointsOnBranches]);
             resultHeader.AddProperty("Lateral1D2D", (int)AggregationOptions.Maximum, "Tenderloin");
 
-            var model = new WaterFlowModel1D();
-            var outputSettings = model.OutputSettings;
-
+            var outputSettings = new WaterFlowModel1DOutputSettingData();
             foreach (var eParam in outputSettings.EngineParameters)
                 eParam.AggregationOptions = AggregationOptions.None;
 
             // When
-            new WaterFlowModelOutputSetter().SetProperties(resultHeader, model, (s, list) => { });
+            new WaterFlowModelOutputSetter().SetProperties(resultHeader, outputSettings, (s, list) => { });
 
             // Then
             Assert.That(outputSettings.GetEngineParameter(QuantityType.QTotal_1d2d, ElementSet.GridpointsOnBranches).AggregationOptions,
@@ -300,14 +295,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var resultHeader = new DelftIniCategory(MappingElementSetToRegionHeader[ElementSet.ReachSegElmSet]);
             resultHeader.AddProperty(QuantityType.EnergyLevels.ToString(), (int)AggregationOptions.Maximum, "Tenderloin");
 
-            var model = new WaterFlowModel1D();
-            var outputSettings = model.OutputSettings;
-
+            var outputSettings = new WaterFlowModel1DOutputSettingData();
             foreach (var eParam in outputSettings.EngineParameters)
                 eParam.AggregationOptions = AggregationOptions.None;
 
             // When
-            new WaterFlowModelOutputSetter().SetProperties(resultHeader, model, (s, list) => { });
+            new WaterFlowModelOutputSetter().SetProperties(resultHeader, outputSettings, (s, list) => { });
 
             // Then
             foreach (var eParam in outputSettings.EngineParameters)
