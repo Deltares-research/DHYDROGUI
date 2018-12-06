@@ -112,7 +112,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     var combinedPath = Path.Combine(pathParts);
                     var fullPath = Path.GetFullPath(combinedPath);
                     var importedItem = importer.ImportItem(fullPath);
-
                     var subModel = importedItem as IActivity;
                     if (subModel == null)
                     {
@@ -130,6 +129,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     if (hydroModelSubModel != null)
                     {
                         hydroModel.Region.SubRegions.Add(hydroModelSubModel.Region);
+                        var controls = dimrObject.control;
+                        var control = (dimrParallelXML)controls.ElementAt(0);
+                        var startGroup = (dimrStartGroupXML)control.Items.ElementAt(0);
+                        var time = startGroup.time;
+                        var startTime = time.Split(' ')[0];
+                        var timeStep = time.Split(' ')[1];
+                        var stopTime = time.Split(' ')[2];
+
+                        var dateTimeStart = new TimeSpan(0,0,int.Parse(startTime),0);
+                        var dateTimeStop = new TimeSpan(0,0,int.Parse(stopTime),0);
+                        var dateTimeTimeStep = new TimeSpan(0, 0, int.Parse(timeStep), 0);
+
+                        hydroModel.StartTime.TimeOfDay.Add(dateTimeStart);
+                        hydroModel.StopTime.TimeOfDay.Add(dateTimeStop);
+                        hydroModel.TimeStep = dateTimeTimeStep;
                     }
 
                     hydroModel.Activities.Add(subModel);
