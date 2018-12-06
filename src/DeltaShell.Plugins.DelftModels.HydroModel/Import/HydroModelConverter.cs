@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
                     if (sourceModel == null || targetModel == null)
                     {
-                        Log.Error($"Could not couple models: '{sourceModel.Name}' to '{targetModel.Name}'.");
+                        Log.Error($"Could not couple models: '{dimrCouplerXml.sourceComponent}' to '{dimrCouplerXml.targetComponent}'.");
                         continue;
                     }
 
