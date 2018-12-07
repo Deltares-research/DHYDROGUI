@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         [TestCase("Debug", "1")]
         [TestCase("DebugTime", "1")]
         [TestCase("DispMaxFactor", "0.85")]
-        [TestCase("DumpInput", "0.1")]
+        [TestCase("DumpInput", "1")]
         [TestCase("Iadvec1D", "3")]
         [TestCase("Limtyphu1D", "4")]
         [TestCase("TimersOutputFrequency", "2")]
@@ -45,7 +45,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 .FirstOrDefault(ps => ps.Name == propertyName);
             //ParameterSetting can never be null here, because in this situation the errorreport has also a message.
             Assert.NotNull(parameterSetting);
-            Assert.AreEqual(value, parameterSetting.Value);
+            
+            if (parameterSetting.Type == "typeof(bool)")
+            {
+                var value2 = Convert.ToBoolean(Convert.ToInt32(value));
+                Assert.AreEqual(value2.ToString(), parameterSetting.Value);
+            }
+            else
+            {
+                Assert.AreEqual(value, parameterSetting.Value);
+            }
         }
 
         [Test]
