@@ -191,6 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 case ShapeType.Point:
                     return typeof(TGeometry) == typeof(IPoint);
                 case ShapeType.PolyLine:
+                case ShapeType.PolyLineZ:
                     return typeof(TGeometry) == typeof(ILineString);
                 case ShapeType.Polygon:
                     return typeof(TGeometry) == typeof(IPolygon);
