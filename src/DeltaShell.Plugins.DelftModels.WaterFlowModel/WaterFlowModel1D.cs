@@ -330,7 +330,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             get
             {
                 var initialSaltDataItem = GetDataItemByTag(WaterFlowModel1DDataSet.InputInitialSaltConcentrationTag);
-                return initialSaltDataItem != null ? (INetworkCoverage)initialSaltDataItem.Value : null;
+                return (INetworkCoverage) initialSaltDataItem?.Value;
             }
         }
 
@@ -339,7 +339,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             get
             {
                 var initialTemperatureDataItem = GetDataItemByTag(WaterFlowModel1DDataSet.InputInitialTemperatureTag);
-                return initialTemperatureDataItem != null ? (INetworkCoverage)initialTemperatureDataItem.Value : null;
+                return (INetworkCoverage) initialTemperatureDataItem?.Value;
             }
         }
 
@@ -348,7 +348,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             get
             {
                 var dispersionDataItem = GetDataItemByTag(WaterFlowModel1DDataSet.InputDispersionCoverageTag);
-                return dispersionDataItem != null ? (INetworkCoverage)dispersionDataItem.Value : null;
+                return (INetworkCoverage) dispersionDataItem?.Value;
             }
         }
 
@@ -357,7 +357,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             get
             {
                 var dispersionF3DataItem = GetDataItemByTag(WaterFlowModel1DDataSet.InputDispersionF3CoverageTag);
-                return dispersionF3DataItem != null ? (INetworkCoverage)dispersionF3DataItem.Value : null;
+                return (INetworkCoverage) dispersionF3DataItem?.Value;
             }
         }
 
@@ -366,7 +366,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             get
             {
                 var dispersionF4DataItem = GetDataItemByTag(WaterFlowModel1DDataSet.InputDispersionF4CoverageTag);
-                return dispersionF4DataItem != null ? (INetworkCoverage)dispersionF4DataItem.Value : null;
+                return (INetworkCoverage) dispersionF4DataItem?.Value;
             }
         }
 

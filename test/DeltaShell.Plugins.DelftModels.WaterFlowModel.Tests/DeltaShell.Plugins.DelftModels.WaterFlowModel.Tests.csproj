@@ -246,6 +246,7 @@
     <Compile Include="ImportExport\IntegrationTests\StructureFileWriterIntegrationTest.cs" />
     <Compile Include="ImportExport\IntegrationTests\WFM1DDsProjTest.cs" />
     <Compile Include="ImportExport\ModelDefinitionsFileWriterTest.cs" />
+    <Compile Include="ImportExport\ModelDefinition\WaterFlowModelGlobalValuesSetterTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelInitialConditionsParameterSetterTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelNumericalParametersSetterTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelOutputSetterTest.cs" />

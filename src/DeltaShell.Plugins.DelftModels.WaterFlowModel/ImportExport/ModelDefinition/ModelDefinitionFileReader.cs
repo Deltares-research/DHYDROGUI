@@ -22,13 +22,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// in the GUI and informs the user about possible errors when reading the md1d file. </param>
         public static void SetWaterFlowModelProperties(string filePath, WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
         {
+            model.UseSalt = true;        // This should be removed as part of issue SOBEK3-1562
+
             var errorMessages = new List<string>();
             var modelSettingsCategories = ReadCategoriesFromFileAndCollectErrorMessages(filePath, errorMessages);
             model.SetInitialModelProperties(createAndAddErrorReport, modelSettingsCategories, errorMessages);
             model.SetSecondaryModelProperties(createAndAddErrorReport, modelSettingsCategories, errorMessages);
 
             createAndAddErrorReport?.Invoke("The following errors occurred when reading the md1d file:", errorMessages);
-            model.UseSalt = true; // TODO: remove this line of code when this property is set in one of the future property setters
         }
 
         private static IList<DelftIniCategory> ReadCategoriesFromFileAndCollectErrorMessages(string filePath, ICollection<string> errorMessages)

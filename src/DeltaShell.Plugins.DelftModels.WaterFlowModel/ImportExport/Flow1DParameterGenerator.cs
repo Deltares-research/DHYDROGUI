@@ -579,8 +579,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         private static DelftIniCategory GenerateGlobalValues(WaterFlowModel1D waterFlowModel1D)
         {
-            DelftIniCategory globalValuesGroup = new DelftIniCategory(ModelDefinitionsRegion.GlobalValuesHeader);
-            int useDepth = waterFlowModel1D.InitialConditionsType == InitialConditionsType.Depth ? 1 : 0;
+            var globalValuesGroup = new DelftIniCategory(ModelDefinitionsRegion.GlobalValuesHeader);
+            var useDepth = waterFlowModel1D.InitialConditionsType == InitialConditionsType.Depth ? 1 : 0;
 
             if (useDepth == 1)
             {
@@ -598,6 +598,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             {
                 globalValuesGroup.AddProperty(ModelDefinitionsRegion.InitialSalinity.Key, waterFlowModel1D.InitialSaltConcentration.DefaultValue,
                     ModelDefinitionsRegion.InitialSalinity.Description, ModelDefinitionsRegion.InitialSalinity.Format);
+            }
+
+            if (waterFlowModel1D.InitialTemperature != null)
+            {
+                globalValuesGroup.AddProperty(ModelDefinitionsRegion.InitialTemperature.Key, waterFlowModel1D.InitialTemperature.DefaultValue,
+                    ModelDefinitionsRegion.InitialTemperature.Description, ModelDefinitionsRegion.InitialTemperature.Format);
             }
 
             if (waterFlowModel1D.DispersionCoverage != null)
