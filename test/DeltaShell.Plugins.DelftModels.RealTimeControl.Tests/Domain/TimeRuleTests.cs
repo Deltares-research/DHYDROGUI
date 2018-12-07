@@ -94,6 +94,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                    "<stationName />" +
                    "<units />" +
                    "</header>" +
+                   "<event date=\"2011-01-01\" time=\"09:30:00\" value=\"0\" />" +
                    "<event date=\"2011-01-01\" time=\"15:30:00\" value=\"0\" />" +
                    "</series>";
         }                      
