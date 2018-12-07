@@ -187,6 +187,7 @@
     <Compile Include="ImportExport\CrossSections\CrossSectionLocationConverter.cs" />
     <Compile Include="ImportExport\CrossSections\CrossSectionLocationFileReader.cs" />
     <Compile Include="ImportExport\ModelDefinition\IWaterFlowModelCategoryPropertySetter.cs" />
+    <Compile Include="ImportExport\ModelDefinition\WaterFlowModelInitialConditionsParameterSetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelOutputSetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelNumericalParametersSetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelSimulationOptionsSetter.cs" />
