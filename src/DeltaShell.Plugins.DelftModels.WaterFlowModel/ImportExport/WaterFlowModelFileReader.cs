@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Hydro.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using DelftTools.Utils.Collections;
@@ -328,8 +329,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
         }
 
-        private static void CopySpatialFileDataToModel(INetworkCoverage copyTo, INetworkCoverage copyFrom)
+        private static void CopySpatialFileDataToModel(IFunction copyTo, IFunction copyFrom)
         {
+            if(copyTo == null || copyFrom == null) return;
             copyTo.Arguments[0].SetValues(copyFrom.Arguments[0].Values);
             copyTo.Components[0].SetValues(copyFrom.Components[0].Values);
         }
