@@ -141,19 +141,16 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition
             var flowArea = category.ReadProperty<double>(DefinitionRegion.FlowAreaSummerdike.Key);
             var totalArea = category.ReadProperty<double>(DefinitionRegion.TotalAreaSummerdike.Key);
             var baseLevel = category.ReadProperty<double>(DefinitionRegion.BaseLevelSummerdike.Key);
-            
-            if (Math.Abs(flowArea) > double.Epsilon && Math.Abs(totalArea) > double.Epsilon)//(flowArea and totalArea are larger than 0, so you can do something with this
+
+            crossSectionDefinition.SummerDike = new SummerDike()
             {
-                crossSectionDefinition.SummerDike = new SummerDike()
-                {
-                    Active = true,
-                    CrestLevel = crestLevel,
-                    FloodPlainLevel = baseLevel,
-                    FloodSurface = flowArea,
-                    TotalSurface = totalArea
-                };
-            }
-            
+                Active = true,
+                CrestLevel = crestLevel,
+                FloodPlainLevel = baseLevel,
+                FloodSurface = flowArea,
+                TotalSurface = totalArea
+            };
+
             return crossSectionDefinition;
         }
     }
