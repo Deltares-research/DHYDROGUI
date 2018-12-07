@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             //Then
             Assert.AreEqual(1, errorReport.Count);
             Assert.AreEqual(
-                "An error occurred during reading the numerical parameters of the md1d file::\r\n Parameter bla found in the md1d file. This parameter will not be imported, since it is not supported by the GUI",
+                "An error occurred during reading the initial conditions of the md1d file::\r\n Parameter bla found in the md1d file. This parameter will not be imported, since it is not supported by the GUI",
                 errorReport[0]);
 
             var parameterSetting = model.ParameterSettings

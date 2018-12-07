@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             if (errorMessages.Count > 0)
             {
                 createAndAddErrorReport?.Invoke(
-                    "An error occurred during reading the numerical parameters of the md1d file:", errorMessages);
+                    "An error occurred during reading the initial conditions of the md1d file:", errorMessages);
             }
         }
     }
