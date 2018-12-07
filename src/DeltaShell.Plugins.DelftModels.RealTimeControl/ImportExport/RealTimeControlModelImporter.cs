@@ -1,23 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using DelftTools.Shell.Core;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
-using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
     public class RealTimeControlModelImporter : IDimrModelFileImporter
     {
-        private static ILog Log = LogManager.GetLogger(typeof(RealTimeControlModelImporter));
-
         public bool CanImportOn(object targetObject)
         {
-            var hydroModel = targetObject as HydroModel.HydroModel;
-            return hydroModel != null ||
-                   hydroModel.Activities.Any(a => a.GetType().Implements(typeof(RealTimeControlModel)));
+            return false;
         }
 
         public object ImportItem(string path, object target = null)
