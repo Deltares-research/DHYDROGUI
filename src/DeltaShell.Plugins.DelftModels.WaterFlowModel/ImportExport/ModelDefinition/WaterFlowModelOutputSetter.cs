@@ -43,15 +43,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// </summary>
         /// <param name="category">A set of DelftIniCategory describing a Results region of the md1d file. </param>
         /// <param name="model"> reference to WaterFlowModel1D containg OuputSettings which will be set.</param>
+        /// <param name="errorMessages"> A collection of error messages that can be added to in case errors occur in this method. </param>
         /// <remarks>
         /// No engine parameters will be changed which are not specified in <paramref name="category"/>.
         /// If a property is not recognised, it is quietly ignored.
         /// 
         /// Pre-condition: categories != null && model.OutputSettings != null
         /// </remarks>
-        public void SetProperties(DelftIniCategory category, WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
+        public void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
         {
-            SetProperties(category, model.OutputSettings, createAndAddErrorReport);
+            SetProperties(category, model.OutputSettings);
         }
 
         /// <summary>
@@ -65,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// 
         /// Pre-condition: categories != null && outputSettings != null
         /// </remarks>
-        public void SetProperties(DelftIniCategory category, WaterFlowModel1DOutputSettingData outputSettings, Action<string, IList<string>> createAndAddErrorReport)
+        public void SetProperties(DelftIniCategory category, WaterFlowModel1DOutputSettingData outputSettings)
         {
             // Determine element set
             ElementSet elementSet;

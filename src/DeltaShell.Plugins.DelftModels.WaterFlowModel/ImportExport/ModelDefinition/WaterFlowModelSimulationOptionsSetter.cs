@@ -7,13 +7,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 {
     public class WaterFlowModelSimulationOptionsSetter : IWaterFlowModelCategoryPropertySetter
     {
-        public void SetProperties(DelftIniCategory simulationOptionsCategory, WaterFlowModel1D model,
-            Action<string, IList<string>> createAndAddErrorReport)
+        public void SetProperties(DelftIniCategory simulationOptionsCategory, WaterFlowModel1D model, IList<string> errorMessages)
         {
             if (simulationOptionsCategory?.Name != ModelDefinitionsRegion.SimulationOptionsValuesHeader) return;
-
-            var errorMessages = new List<string>();
-
+            
             foreach (var prop in simulationOptionsCategory.Properties)
             {
                 var modelParameter = model.ParameterSettings.FirstOrDefault(ps => ps.Name == prop.Name);
@@ -41,15 +38,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 else if (prop.Name != ModelDefinitionsRegion.WriteNetCDF.Key)
                 {
                     errorMessages.Add(string.Format(
-                        "Parameter {0} found in the md1d file. This parameter will not be imported, since it is not supported by the GUI",
-                        prop.Name));
+                        "Line {0}: Parameter {1} found in the md1d file. This parameter will not be imported, since it is not supported by the GUI",
+                        prop.LineNumber, prop.Name));
                 }
-            }
-
-            if (errorMessages.Count > 0)
-            {
-                createAndAddErrorReport?.Invoke(
-                    "An error occurred during reading the simulation options of the md1d file:", errorMessages);
             }
         }
     }

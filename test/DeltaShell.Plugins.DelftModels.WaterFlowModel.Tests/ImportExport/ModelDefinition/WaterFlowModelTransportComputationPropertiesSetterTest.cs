@@ -1,4 +1,5 @@
-﻿using DeltaShell.NGHS.IO.Helpers;
+﻿using System.Collections.Generic;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;
@@ -17,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var model = new WaterFlowModel1D();
 
             // When
-            new WaterFlowModelTransportComputationPropertiesSetter().SetProperties(category, model, (s, list) => { });
+            new WaterFlowModelTransportComputationPropertiesSetter().SetProperties(category, model, new List<string>());
 
             // Then
             Assert.IsTrue(model.UseTemperature);
@@ -25,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.That(model.TemperatureModelType, Is.EqualTo(TemperatureModelType.Excess));
         }
 
-        private DelftIniCategory GetCorrectTransportComputationDataModel()
+        private static DelftIniCategory GetCorrectTransportComputationDataModel()
         {
             var timeSettingsCategory = new DelftIniCategory(ModelDefinitionsRegion.TransportComputationValuesHeader);
             timeSettingsCategory.AddProperty(ModelDefinitionsRegion.UseTemperature.Key, "1");

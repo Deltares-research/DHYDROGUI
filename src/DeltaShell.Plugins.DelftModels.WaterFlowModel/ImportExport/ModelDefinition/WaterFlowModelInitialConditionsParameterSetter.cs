@@ -7,18 +7,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 {
     public class WaterFlowModelInitialConditionsParameterSetter : IWaterFlowModelCategoryPropertySetter
     {
-        public void SetProperties(DelftIniCategory initialConditionsParameterCategory, WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
+        public void SetProperties(DelftIniCategory initialConditionsParameterCategory, WaterFlowModel1D model, IList<string> errorMessages)
         {
             if (initialConditionsParameterCategory?.Name != ModelDefinitionsRegion.InitialConditionsValuesHeader) return;
-
-            var errorMessages = new List<string>();
 
             foreach (var prop in initialConditionsParameterCategory.Properties)
             {
                 var modelParameter = model.ParameterSettings.FirstOrDefault(ps => ps.Name == prop.Name);
                 if (modelParameter == null)
                 {
-                    errorMessages.Add($"Parameter {prop.Name} found in the md1d file. This parameter will not be imported, since it is not supported by the GUI");
+                    errorMessages.Add($"Line {prop.LineNumber}: Parameter {prop.Name} found in the md1d file. This parameter will not be imported, since it is not supported by the GUI");
                     continue;
                 }
 
@@ -30,12 +28,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 {
                     modelParameter.Value = prop.Value;
                 }
-            }
-
-            if (errorMessages.Count > 0)
-            {
-                createAndAddErrorReport?.Invoke(
-                    "An error occurred during reading the initial conditions of the md1d file:", errorMessages);
             }
         }
     }

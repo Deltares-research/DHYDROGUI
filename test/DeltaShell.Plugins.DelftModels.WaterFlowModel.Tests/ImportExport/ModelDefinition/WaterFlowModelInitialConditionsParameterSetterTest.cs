@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
@@ -23,20 +22,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
             // Create ModelParameters
             var model = new WaterFlowModel1D();
-
-            var errorReport = new List<string>();
-
-            Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
-                errorReport.Add($"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
+            var errorMessages = new List<string>();
 
             //When
-            new WaterFlowModelInitialConditionsParameterSetter().SetProperties(category, model, CreateAndAddErrorReport);
+            new WaterFlowModelInitialConditionsParameterSetter().SetProperties(category, model, errorMessages);
 
             //Then
-            Assert.AreEqual(0, errorReport.Count);
+            Assert.AreEqual(0, errorMessages.Count);
 
-            var parameterSetting = model.ParameterSettings
-                .FirstOrDefault(ps => ps.Name == propertyName);
+            var parameterSetting = model.ParameterSettings.FirstOrDefault(ps => ps.Name == propertyName);
+
             //ParameterSetting can never be null here, because in this situation the error report has also a message.
             Assert.NotNull(parameterSetting);
             Assert.AreEqual("True", parameterSetting.Value);
@@ -52,26 +47,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             category.AddProperty("bla", "2");
             category.AddProperty(ModelDefinitionsRegion.InitialEmptyWells.Key, 0);
 
-
             // Create ModelParameters
             var model = new WaterFlowModel1D();
 
-            var errorReport = new List<string>();
-
-            Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
-                errorReport.Add($"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
+            var errorMessages = new List<string>();
 
             //When
-            new WaterFlowModelInitialConditionsParameterSetter().SetProperties(category, model, CreateAndAddErrorReport);
+            new WaterFlowModelInitialConditionsParameterSetter().SetProperties(category, model, errorMessages);
 
             //Then
-            Assert.AreEqual(1, errorReport.Count);
+            Assert.AreEqual(1, errorMessages.Count);
             Assert.AreEqual(
-                "An error occurred during reading the initial conditions of the md1d file::\r\n Parameter bla found in the md1d file. This parameter will not be imported, since it is not supported by the GUI",
-                errorReport[0]);
+                "Line 0: Parameter bla found in the md1d file. This parameter will not be imported, since it is not supported by the GUI",
+                errorMessages[0]);
 
-            var parameterSetting = model.ParameterSettings
-                .FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.InitialEmptyWells.Key);
+            var parameterSetting = model.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.InitialEmptyWells.Key);
+
             //ParameterSetting can never be null here, because in this situation the errorreport has also a message.
             Assert.NotNull(parameterSetting);
             Assert.AreEqual("False", parameterSetting.Value);

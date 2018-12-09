@@ -12,10 +12,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// </summary>
         /// <param name="timeCategory"> A DelftIniCategory holding time settings data read from a md1d file. </param>
         /// <param name="model"> The model whose time variables should be changed. </param>
+        /// <param name="errorMessages"> A collection of error messages that can be added to in case errors occur in this method. </param>
         /// <remarks>
         /// Pre-condition: model != null
         /// </remarks>
-        public void SetProperties(DelftIniCategory timeCategory, WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
+        public void SetProperties(DelftIniCategory timeCategory, WaterFlowModel1D model, IList<string> errorMessages)
         {
             if (timeCategory?.Name != ModelDefinitionsRegion.TimeHeader) return;
 

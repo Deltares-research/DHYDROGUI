@@ -7,11 +7,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 {
     public class WaterFlowModelNumericalParametersSetter : IWaterFlowModelCategoryPropertySetter
     {
-        public void SetProperties(DelftIniCategory numericalParametercategory, WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
+        public void SetProperties(DelftIniCategory numericalParametercategory, WaterFlowModel1D model, IList<string> errorMessages)
         {
             if (numericalParametercategory?.Name != ModelDefinitionsRegion.NumericalParametersValuesHeader) return;
-
-            var errorMessages = new List<string>();
 
             foreach (var prop in numericalParametercategory.Properties)
             {
@@ -19,8 +17,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 if (modelParameter == null)
                 {
                     errorMessages.Add(string.Format(
-                        "Parameter {0} found in the md1d file. This parameter will not be imported, since it is not supported by the GUI",
-                        prop.Name));
+                        "Line {0}: Parameter {1} found in the md1d file. This parameter will not be imported, since it is not supported by the GUI",
+                        prop.LineNumber, prop.Name));
                     continue;
                 }
 
@@ -32,12 +30,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 {
                     modelParameter.Value = prop.Value;
                 }
-            }
-
-            if (errorMessages.Count > 0)
-            {
-                createAndAddErrorReport?.Invoke(
-                    "An error occurred during reading the numerical parameters of the md1d file:", errorMessages);
             }
         }
     }

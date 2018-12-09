@@ -179,7 +179,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
 
             // When
-            new WaterFlowModelOutputSetter().SetProperties(resultHeader, outputSettings, (s, list) => { });
+            new WaterFlowModelOutputSetter().SetProperties(resultHeader, outputSettings);
 
             // Then
             Assert.That(outputSettings.GetEngineParameter(qType, elementSet).AggregationOptions,
@@ -218,7 +218,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 eParam.AggregationOptions = AggregationOptions.None;
 
             // When
-            new WaterFlowModelOutputSetter().SetProperties(resultHeader, outputSettings, (s, list) => { });
+            new WaterFlowModelOutputSetter().SetProperties(resultHeader, outputSettings);
 
             // Then
             Assert.That(outputSettings.GetEngineParameter(QuantityType.Dispersion, ElementSet.GridpointsOnBranches).AggregationOptions,
@@ -255,7 +255,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 eParam.AggregationOptions = AggregationOptions.None;
 
             // When
-            new WaterFlowModelOutputSetter().SetProperties(resultHeader, outputSettings, (s, list) => { });
+            new WaterFlowModelOutputSetter().SetProperties(resultHeader, outputSettings);
 
             // Then
             Assert.That(outputSettings.GetEngineParameter(QuantityType.QTotal_1d2d, ElementSet.GridpointsOnBranches).AggregationOptions,
@@ -300,7 +300,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 eParam.AggregationOptions = AggregationOptions.None;
 
             // When
-            new WaterFlowModelOutputSetter().SetProperties(resultHeader, outputSettings, (s, list) => { });
+            new WaterFlowModelOutputSetter().SetProperties(resultHeader, outputSettings);
 
             // Then
             foreach (var eParam in outputSettings.EngineParameters)

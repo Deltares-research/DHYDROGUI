@@ -23,13 +23,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             // Given
             var timeSettingsCategory = GetCorrectTimeSettingsDataModel();
 
-            var errorReport = new List<string>();
-            Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
-                errorReport.Add($"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
-
             // When
             var model = new WaterFlowModel1D();
-            new WaterFlowModelTimePropertiesSetter().SetProperties(timeSettingsCategory, model, CreateAndAddErrorReport);
+            new WaterFlowModelTimePropertiesSetter().SetProperties(timeSettingsCategory, model, new List<string>());
 
             // Then
             Assert.That(model.StartTime, Is.EqualTo(defaultStartTime));
@@ -102,13 +98,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var timeSettingsCategory = GetCorrectTimeSettingsDataModel();
             timeSettingsCategory.Properties.RemoveAllWhere(p => p.Name == missingPropertyName);
 
-            var errorReport = new List<string>();
-            Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
-                errorReport.Add($"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
-
             // When
             var model = new WaterFlowModel1D();
-            new WaterFlowModelTimePropertiesSetter().SetProperties(timeSettingsCategory, model, CreateAndAddErrorReport);
+            new WaterFlowModelTimePropertiesSetter().SetProperties(timeSettingsCategory, model, new List<string>());
             return model;
         }
 
@@ -127,11 +119,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var gridPointsTimeStepBefore = model.OutputSettings.GridOutputTimeStep;
             var structuresTimeStepBefore = model.OutputSettings.StructureOutputTimeStep;
 
-            var errorReport = new List<string>();
-            Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
-                errorReport.Add($"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
-
-            new WaterFlowModelTimePropertiesSetter().SetProperties(notTimeCategory, model, CreateAndAddErrorReport);
+            new WaterFlowModelTimePropertiesSetter().SetProperties(notTimeCategory, model, new List<string>());
 
             // Then
             Assert.That(model.StartTime, Is.EqualTo(startTimeBefore));
@@ -154,11 +142,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var gridPointsTimeStepBefore = model.OutputSettings.GridOutputTimeStep;
             var structuresTimeStepBefore = model.OutputSettings.StructureOutputTimeStep;
 
-            var errorReport = new List<string>();
-            Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
-                errorReport.Add($"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
-
-            new WaterFlowModelTimePropertiesSetter().SetProperties(null, model, CreateAndAddErrorReport);
+            new WaterFlowModelTimePropertiesSetter().SetProperties(null, model, new List<string>());
 
             // Then
             Assert.That(model.StartTime, Is.EqualTo(startTimeBefore));

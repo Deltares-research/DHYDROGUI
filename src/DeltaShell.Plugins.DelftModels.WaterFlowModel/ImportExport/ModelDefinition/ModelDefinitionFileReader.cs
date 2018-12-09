@@ -26,8 +26,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 
             var errorMessages = new List<string>();
             var modelSettingsCategories = ReadCategoriesFromFileAndCollectErrorMessages(filePath, errorMessages);
-            model.SetInitialModelProperties(createAndAddErrorReport, modelSettingsCategories, errorMessages);
-            model.SetSecondaryModelProperties(createAndAddErrorReport, modelSettingsCategories, errorMessages);
+            model.SetInitialModelProperties(modelSettingsCategories, errorMessages);
+            model.SetSecondaryModelProperties(modelSettingsCategories, errorMessages);
 
             createAndAddErrorReport?.Invoke("The following errors occurred when reading the md1d file:", errorMessages);
         }
@@ -50,19 +50,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// <summary>
         /// There are a few model properties that need to be read and set first, before the other properties are.
         /// </summary>
-        private static void SetInitialModelProperties(this WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport, IEnumerable<DelftIniCategory> modelSettingsCategories, IList<string> errorMessages)
+        private static void SetInitialModelProperties(this WaterFlowModel1D model, IEnumerable<DelftIniCategory> modelSettingsCategories, IList<string> errorMessages)
         {
             var initialCategories = modelSettingsCategories.Where(IsInitialCategory);
-            model.SetProperties(initialCategories, errorMessages, createAndAddErrorReport);
+            model.SetProperties(initialCategories, errorMessages);
         }
 
         /// <summary>
         /// Read and set the model properties that do not have to be read and set in any specific order.
         /// </summary>
-        private static void SetSecondaryModelProperties(this WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport, IEnumerable<DelftIniCategory> modelSettingsCategories, IList<string> errorMessages)
+        private static void SetSecondaryModelProperties(this WaterFlowModel1D model, IEnumerable<DelftIniCategory> modelSettingsCategories, IList<string> errorMessages)
         {
             var secondaryCategories = modelSettingsCategories.Where(category => !IsInitialCategory(category));
-            model.SetProperties(secondaryCategories, errorMessages, createAndAddErrorReport);
+            model.SetProperties(secondaryCategories, errorMessages);
         }
 
         private static bool IsInitialCategory(DelftIniCategory category)
@@ -70,14 +70,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             return category.Name == ModelDefinitionsRegion.TransportComputationValuesHeader;
         }
 
-        private static void SetProperties(this WaterFlowModel1D model, IEnumerable<DelftIniCategory> modelSettingsCategories, IList<string> errorMessages, Action<string, IList<string>> createAndAddErrorReport)
+        private static void SetProperties(this WaterFlowModel1D model, IEnumerable<DelftIniCategory> modelSettingsCategories, IList<string> errorMessages)
         {
             foreach (var category in modelSettingsCategories)
             {
                 try
                 {
                     var propertySetter = WaterFlowModelPropertySetterFactory.GetPropertySetter(category);
-                    propertySetter.SetProperties(category, model, createAndAddErrorReport);
+                    propertySetter.SetProperties(category, model, errorMessages);
                 }
                 catch (Exception)
                 {

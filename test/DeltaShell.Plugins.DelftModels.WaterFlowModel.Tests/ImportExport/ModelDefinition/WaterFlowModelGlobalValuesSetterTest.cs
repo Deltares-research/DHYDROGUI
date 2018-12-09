@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.ModelDefinition
 {
@@ -42,19 +40,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             model.DispersionF4Coverage.DefaultValue = 77.77;
 
             var category = new DelftIniCategory(ModelDefinitionsRegion.GlobalValuesHeader);
-
-            var mocks = new MockRepository();
-
-            var someErrorReportFunction = mocks.StrictMock<Action<string, IList<string>>>();
-            someErrorReportFunction.Expect(e => e.Invoke(null, null))
-                .IgnoreArguments()
-                .Repeat.Never();
-            mocks.ReplayAll();
+            var errorMessages = new List<string>();
 
             // When
-            new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, someErrorReportFunction);
-
-            mocks.VerifyAll();
+            new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
+            
+            Assert.IsEmpty(errorMessages);
             Assert.That(model.InitialConditionsType, Is.EqualTo(InitialConditionsType.WaterLevel));
             Assert.That(model.DefaultInitialWaterLevel, Is.EqualTo(0.0));
             Assert.That(model.DefaultInitialDepth, Is.EqualTo(0.0));
@@ -94,7 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             const double expectedF3Coverage = 128.0;
             const double expectedF4Coverage = 256.0;
 
-            var category = getGlobalCategoryWithCommonElements(expectedConditionsType,
+            var category = GetGlobalCategoryWithCommonElements(expectedConditionsType,
                                                    expectedWaterLevel,
                                                    expectedDepth,
                                                    expectedFlow);
@@ -123,18 +114,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 ModelDefinitionsRegion.InitialTemperature.Format);
 
 
-            var mocks = new MockRepository();
-
-            var someErrorReportFunction = mocks.StrictMock<Action<string, IList<string>>>();
-            someErrorReportFunction.Expect(e => e.Invoke(null, null))
-                .IgnoreArguments()
-                .Repeat.Never();
-            mocks.ReplayAll();
+            var errorMessages = new List<string>();
 
             // When
-            new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, someErrorReportFunction);
+            new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
 
-            mocks.VerifyAll();
+            Assert.IsEmpty(errorMessages);
             Assert.That(model.InitialConditionsType, Is.EqualTo(expectedConditionsType));
             Assert.That(model.DefaultInitialWaterLevel, Is.EqualTo(expectedWaterLevel));
             Assert.That(model.DefaultInitialDepth, Is.EqualTo(expectedDepth));
@@ -175,7 +160,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             model.InitialFlow.DefaultValue = expectedFlow;
             model.InitialTemperature.DefaultValue = expectedTemperature;
 
-            var category = getGlobalCategoryWithCommonElements(expectedConditionsType,
+            var category = GetGlobalCategoryWithCommonElements(expectedConditionsType,
                                           expectedWaterLevel,
                                           expectedDepth,
                                           expectedFlow);
@@ -194,19 +179,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                                  ModelDefinitionsRegion.InitialSalinity.Description,
                                  ModelDefinitionsRegion.InitialSalinity.Format);
 
-            var mocks = new MockRepository();
-
-            var someErrorReportFunction = mocks.StrictMock<Action<string, IList<string>>>();
-            someErrorReportFunction.Expect(e => e.Invoke(null, null))
-                .IgnoreArguments()
-                .Repeat.Never();
-            mocks.ReplayAll();
+            var errorMessages = new List<string>();
 
             // When
-            TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, someErrorReportFunction);
-            Assert.DoesNotThrow(testAction); 
+            TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
+            Assert.DoesNotThrow(testAction);
 
-            mocks.VerifyAll();
+            Assert.IsEmpty(errorMessages);
             Assert.That(model.InitialSaltConcentration, Is.Null);
             Assert.That(model.InitialConditionsType, Is.EqualTo(expectedConditionsType));
             Assert.That(model.DefaultInitialWaterLevel, Is.EqualTo(expectedWaterLevel));
@@ -243,7 +222,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             const double expectedF3Coverage = 128.0;
             const double expectedF4Coverage = 256.0;
 
-            var category = getGlobalCategoryWithCommonElements(expectedConditionsType,
+            var category = GetGlobalCategoryWithCommonElements(expectedConditionsType,
                                                    expectedWaterLevel,
                                                    expectedDepth,
                                                    expectedFlow);
@@ -269,19 +248,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                                  ModelDefinitionsRegion.DispersionF4.Description,
                                  ModelDefinitionsRegion.DispersionF4.Format);
 
-            var mocks = new MockRepository();
-
-            var someErrorReportFunction = mocks.StrictMock<Action<string, IList<string>>>();
-            someErrorReportFunction.Expect(e => e.Invoke(null, null))
-                .IgnoreArguments()
-                .Repeat.Never();
-            mocks.ReplayAll();
+            var errorMessages = new List<string>();
 
             // When
-            TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, someErrorReportFunction);
+            TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
             Assert.DoesNotThrow(testAction);
 
-            mocks.VerifyAll();
+            Assert.IsEmpty(errorMessages);
             Assert.That(model.InitialConditionsType, Is.EqualTo(expectedConditionsType));
             Assert.That(model.DefaultInitialWaterLevel, Is.EqualTo(expectedWaterLevel));
             Assert.That(model.DefaultInitialDepth, Is.EqualTo(expectedDepth));
@@ -322,7 +295,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
             model.InitialFlow.DefaultValue = expectedFlow;
             model.InitialTemperature.DefaultValue = expectedTemperature;
-            var category = getGlobalCategoryWithCommonElements(expectedConditionsType,
+            var category = GetGlobalCategoryWithCommonElements(expectedConditionsType,
                                                                expectedWaterLevel,
                                                                expectedDepth,
                                                                expectedFlow);
@@ -341,19 +314,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                                  ModelDefinitionsRegion.Dispersion.Description,
                                  ModelDefinitionsRegion.Dispersion.Format);
 
-            var mocks = new MockRepository();
-
-            var someErrorReportFunction = mocks.StrictMock<Action<string, IList<string>>>();
-            someErrorReportFunction.Expect(e => e.Invoke(null, null))
-                .IgnoreArguments()
-                .Repeat.Never();
-            mocks.ReplayAll();
+            var errorMessages = new List<string>();
 
             // When
-            TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, someErrorReportFunction);
+            TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
             Assert.DoesNotThrow(testAction);
 
-            mocks.VerifyAll();
+            Assert.IsEmpty(errorMessages);
             Assert.That(model.DispersionCoverage, Is.Null);
 
             Assert.That(model.InitialConditionsType, Is.EqualTo(expectedConditionsType));
@@ -391,7 +358,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
             model.InitialFlow.DefaultValue = expectedFlow;
             model.InitialTemperature.DefaultValue = expectedTemperature;
-            var category = getGlobalCategoryWithCommonElements(expectedConditionsType,
+            var category = GetGlobalCategoryWithCommonElements(expectedConditionsType,
                                                                expectedWaterLevel,
                                                                expectedDepth,
                                                                expectedFlow);
@@ -410,19 +377,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                                  ModelDefinitionsRegion.DispersionF3.Description,
                                  ModelDefinitionsRegion.DispersionF3.Format);
 
-            var mocks = new MockRepository();
-
-            var someErrorReportFunction = mocks.StrictMock<Action<string, IList<string>>>();
-            someErrorReportFunction.Expect(e => e.Invoke(null, null))
-                .IgnoreArguments()
-                .Repeat.Never();
-            mocks.ReplayAll();
+            var errorMessages = new List<string>();
 
             // When
-            TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, someErrorReportFunction);
+            TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
             Assert.DoesNotThrow(testAction);
 
-            mocks.VerifyAll();
+            Assert.IsEmpty(errorMessages);
             Assert.That(model.DispersionF3Coverage, Is.Null);
 
             Assert.That(model.InitialConditionsType, Is.EqualTo(expectedConditionsType));
@@ -460,7 +421,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
             model.InitialFlow.DefaultValue = expectedFlow;
             model.InitialTemperature.DefaultValue = expectedTemperature;
-            var category = getGlobalCategoryWithCommonElements(expectedConditionsType,
+            var category = GetGlobalCategoryWithCommonElements(expectedConditionsType,
                                                                expectedWaterLevel,
                                                                expectedDepth,
                                                                expectedFlow);
@@ -479,19 +440,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                                  ModelDefinitionsRegion.DispersionF4.Description,
                                  ModelDefinitionsRegion.DispersionF4.Format);
 
-            var mocks = new MockRepository();
-
-            var someErrorReportFunction = mocks.StrictMock<Action<string, IList<string>>>();
-            someErrorReportFunction.Expect(e => e.Invoke(null, null))
-                .IgnoreArguments()
-                .Repeat.Never();
-            mocks.ReplayAll();
+            var errorMessages = new List<string>();
 
             // When
-            TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, someErrorReportFunction);
+            TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
             Assert.DoesNotThrow(testAction);
 
-            mocks.VerifyAll();
+            Assert.IsEmpty(errorMessages);
             Assert.That(model.DispersionF4Coverage, Is.Null);
 
             Assert.That(model.InitialConditionsType, Is.EqualTo(expectedConditionsType));
@@ -502,13 +457,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.That(model.InitialTemperature.DefaultValue, Is.EqualTo(expectedTemperature));
         }
 
-        private static DelftIniCategory getGlobalCategoryWithCommonElements(InitialConditionsType conditionsType,
+        private static DelftIniCategory GetGlobalCategoryWithCommonElements(InitialConditionsType conditionsType,
                                                                             double waterLevel,
                                                                             double waterDepth,
                                                                             double flow)
         {
             var category = new DelftIniCategory(ModelDefinitionsRegion.GlobalValuesHeader);
-            // Non dependent components
+            // Non-dependent components
             category.AddProperty(ModelDefinitionsRegion.UseInitialWaterDepth.Key,
                 conditionsType == InitialConditionsType.Depth ? 1 : 0,
                 ModelDefinitionsRegion.UseInitialWaterDepth.Description);

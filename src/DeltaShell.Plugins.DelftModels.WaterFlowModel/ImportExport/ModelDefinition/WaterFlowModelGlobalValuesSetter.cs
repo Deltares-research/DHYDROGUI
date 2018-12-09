@@ -11,23 +11,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
     /// <seealso cref="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition.IWaterFlowModelCategoryPropertySetter" />
     public class WaterFlowModelGlobalValuesSetter : IWaterFlowModelCategoryPropertySetter
     {
-        /// <summary>
-        /// Set the GlobalValues properties of the <paramref name="model"/> as
-        /// described in the GlobalValues <paramref name="category"/>.
-        /// </summary>
-        /// <param name="category">The category.</param>
-        /// <param name="model">The model.</param>
-        /// <param name="createAndAddErrorReport">The create and add error report.</param>
+        ///  <summary>
+        ///  Set the GlobalValues properties of the <paramref name="model"/> as
+        ///  described in the GlobalValues <paramref name="category"/>.
+        ///  </summary>
+        ///  <param name="category">The category.</param>
+        ///  <param name="model">The model.</param>
+        ///  <param name="errorMessages"> A collection of error messages that can be added to in case errors occur in this method. </param>
         /// <remarks>
-        /// In order to this correctly, the UseSalt, UseTemperature and
-        /// DispersionCoefficient need to be correctly set.
-        ///
-        /// pre-condition: category != null && model != null
-        /// This method does not return any errors.
-        /// </remarks>
+        ///  In order to this correctly, the UseSalt, UseTemperature and
+        ///  DispersionCoefficient need to be correctly set.
+        /// 
+        ///  pre-condition: category != null && model != null
+        ///  This method does not return any errors.
+        ///  </remarks>
         public void SetProperties(DelftIniCategory category, 
                                   WaterFlowModel1D model,
-                                  Action<string, IList<string>> createAndAddErrorReport)
+                                  IList<string> errorMessages)
         {
             if (!category.Name.Equals(ModelDefinitionsRegion.GlobalValuesHeader))
                 return;

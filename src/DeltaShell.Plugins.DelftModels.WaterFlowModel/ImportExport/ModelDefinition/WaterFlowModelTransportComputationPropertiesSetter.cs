@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 {
     public class WaterFlowModelTransportComputationPropertiesSetter : IWaterFlowModelCategoryPropertySetter
     {
-        public void SetProperties(DelftIniCategory category, WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
+        public void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
         {
             var useTemperature = category.ReadProperty<string>(ModelDefinitionsRegion.UseTemperature.Key);
             var densityType = category.ReadProperty<string>(ModelDefinitionsRegion.Density.Key);

@@ -4,7 +4,6 @@ using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.ModelDefinition
@@ -39,18 +38,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
             // Create ModelParameters
             var model = new WaterFlowModel1D();
-
-            var errorReport = new List<string>();
-
-            Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
-                errorReport.Add($"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
+            var errorMessages = new List<string>();
 
             //When
-            (new WaterFlowModelNumericalParametersSetter()).SetProperties(category, model, CreateAndAddErrorReport);
+            (new WaterFlowModelNumericalParametersSetter()).SetProperties(category, model, errorMessages);
 
             //Then
 
-            Assert.AreEqual(0, errorReport.Count);
+            Assert.AreEqual(0, errorMessages.Count);
 
             var parameterSetting = model.ParameterSettings
                 .FirstOrDefault(ps => ps.Name == propertyName);
@@ -82,21 +77,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
             // Create ModelParameters
             var model = new WaterFlowModel1D();
-
-            var errorReport = new List<string>();
-
-            Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
-                errorReport.Add($"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
-
+            var errorMessages = new List<string>();
+            
             //When
-            (new WaterFlowModelNumericalParametersSetter()).SetProperties(category, model, CreateAndAddErrorReport);
+            (new WaterFlowModelNumericalParametersSetter()).SetProperties(category, model, errorMessages);
 
             //Then
 
-            Assert.AreEqual(1, errorReport.Count);
+            Assert.AreEqual(1, errorMessages.Count);
             Assert.AreEqual(
-                "An error occurred during reading the numerical parameters of the md1d file::\r\n Parameter bla found in the md1d file. This parameter will not be imported, since it is not supported by the GUI",
-                errorReport[0]);
+                "Line 0: Parameter bla found in the md1d file. This parameter will not be imported, since it is not supported by the GUI",
+                errorMessages[0]);
 
             var parameterSetting = model.ParameterSettings
                 .FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.AccelerationTermFactor.Key);
