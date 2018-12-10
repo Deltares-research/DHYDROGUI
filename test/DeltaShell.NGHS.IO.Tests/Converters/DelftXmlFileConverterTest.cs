@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr.xsd;
 using DeltaShell.NGHS.IO.FileConverters;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DeltaShell.NGHS.IO.Tests.Converters
 {
@@ -56,6 +59,38 @@ namespace DeltaShell.NGHS.IO.Tests.Converters
             var xmlFilePath = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory));
 
             return xmlFilePath;
+        }
+        
+        [Test]
+        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Reader cannot be null")]
+        public void NoFileShouldThrowException()
+        {
+            DelftXmlFileConverter.Convert(null, "abc", new List<string>());
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Rootname cannot be empty")]
+        public void NoRootNodeNameShouldThrowException()
+        {
+            var xmlReader = MockRepository.GenerateStrictMock<XmlReader>();
+            DelftXmlFileConverter.Convert(xmlReader, "", new List<string>());
+        }
+
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Unsupported Features cannot be null")]
+        public void NoUnsupportedFeaturesShouldThrowException()
+        {
+            var xmlReader = MockRepository.GenerateStrictMock<XmlReader>();
+            DelftXmlFileConverter.Convert(xmlReader, "dimrConfig", null);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Can not find serializer for abc")]
+        public void NoSerializerForRootNodeShouldThrowException1()
+        {
+            var xmlReader = MockRepository.GenerateStrictMock<XmlReader>();
+            DelftXmlFileConverter.Convert(xmlReader, "abc", new List<string>());
         }
 
         #region Helper Methods

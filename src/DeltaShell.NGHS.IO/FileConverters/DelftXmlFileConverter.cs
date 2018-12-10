@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
-using DeltaShell.NGHS.IO.Factories;
+using System.Xml.Serialization;
+using DeltaShell.Dimr.xsd;
 
 namespace DeltaShell.NGHS.IO.FileConverters
 {
@@ -10,6 +11,16 @@ namespace DeltaShell.NGHS.IO.FileConverters
     /// </summary>
     public static class DelftXmlFileConverter
     {
+        private static readonly Dictionary<string, Type> LookupSerializer = new Dictionary<string, Type>
+        {
+            {"dimrConfig".ToLower(),       typeof(dimrXML)},
+            {"rtcDataConfig".ToLower(),    typeof(RTCDataConfigXML)},
+            {"rtcRuntimeConfig".ToLower(), typeof(RtcRuntimeConfigXML)},
+            {"rtcToolsConfig".ToLower(),   typeof(RtcToolsConfigXML)},
+            {"treeVectorFile".ToLower(),   typeof(TreeVectorFileXML)},
+            {"TimeSeries".ToLower(),       typeof(TimeSeriesCollectionComplexType)}
+        };
+
         public static object Convert(XmlReader file, string rootName, List<string> unsupportedFeatures)
         {
             if (file == null)
@@ -17,7 +28,7 @@ namespace DeltaShell.NGHS.IO.FileConverters
                 throw new ArgumentException("Reader cannot be null");
             }
 
-            if (rootName == null)
+            if (string.IsNullOrEmpty(rootName))
             {
                 throw new ArgumentException("Rootname cannot be empty");
             }
@@ -27,14 +38,17 @@ namespace DeltaShell.NGHS.IO.FileConverters
                 throw new ArgumentException("Unsupported Features cannot be null");
             }
 
-            var selector = new DelftConfigXmlSerializerSelector();
-            var serializer = selector.ReturnSerializer(rootName);
+            Type serializerType;
+            if (!LookupSerializer.TryGetValue(rootName.ToLower(), out serializerType))
+            {
+                throw new ArgumentException($"Can not find serializer for {rootName}");
+            }
+
+            var serializer = new XmlSerializer(serializerType);
 
             DelftXsdValidator.CollectUnsupportedFeatures(serializer, unsupportedFeatures);
 
-            var dataAccessObject = serializer.Deserialize(file);
-
-            return dataAccessObject;
+            return serializer.Deserialize(file);
         }
     }
 }

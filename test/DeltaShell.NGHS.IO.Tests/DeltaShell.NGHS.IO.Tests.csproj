@@ -123,7 +123,6 @@
     <Compile Include="Converters\ObservationPointConverterTest.cs" />
     <Compile Include="FileReaders\DelftBcFileParserTest.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParserTest.cs" />
-    <Compile Include="FileReaders\DelftConfigXmlSerializerSelectorTest.cs" />
     <Compile Include="FileReaders\DelftIniFileParserTest.cs" />
     <Compile Include="FileReaders\DelftXsdValidatorTest.cs" />
     <Compile Include="FileReaders\LateralSourceFileReaderTest.cs" />

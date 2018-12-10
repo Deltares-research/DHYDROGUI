@@ -116,7 +116,6 @@
     <Compile Include="DelftBcWriter.cs" />
     <Compile Include="DelftIniReader.cs" />
     <Compile Include="DelftIniWriter.cs" />
-    <Compile Include="Factories\DelftConfigXmlSerializerSelector.cs" />
     <Compile Include="FileConverters\DelftXsdValidator.cs" />
     <Compile Include="FileConverters\DelftXmlFileConverter.cs" />
     <Compile Include="FileReaders\Definition\DefinitionReader.cs" />
@@ -260,6 +259,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Factories\" />
     <Folder Include="FileReaders\ConfigXml\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
