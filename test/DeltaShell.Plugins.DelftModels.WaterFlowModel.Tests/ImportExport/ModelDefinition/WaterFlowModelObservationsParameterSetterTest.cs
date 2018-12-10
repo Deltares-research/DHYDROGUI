@@ -8,33 +8,35 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.ModelDefinition
 {
     [TestFixture]
-    public class WaterFlowModelInitialConditionsParameterSetterTest
+    public class WaterFlowModelObservationsParameterSetterTest
     {
-        [Test]
+        [TestCase("InterpolationType", "Linear")]
+        [TestCase("InterpolationType", "Nearest")]
         public void
-            GivenAnInitialConditionCategoryWithOneProperty_WhenSettingThisModelProperty_ThenThisParameterShouldBeSetInTheModel()
+            GivenAnInitialConditionCategoryWithOneProperty_WhenSettingThisModelProperty_ThenThisParameterShouldBeSetInTheModel(string propertyName, string value)
         {
-            const string propertyName = "InitialEmptyWells";
-           
+            
             // Given
-            var category = new DelftIniCategory(ModelDefinitionsRegion.InitialConditionsValuesHeader);
-            category.AddProperty(propertyName, "1");
+            var category = new DelftIniCategory(ModelDefinitionsRegion.ObservationsHeader);
+            category.AddProperty(propertyName, value);
 
             // Create ModelParameters
             var model = new WaterFlowModel1D();
+
             var errorMessages = new List<string>();
 
             // When
-            new WaterFlowModelInitialConditionsParameterSetter().SetProperties(category, model, errorMessages);
+            new WaterFlowModelObservationsParameterSetter().SetProperties(category, model,
+                errorMessages);
 
             // Then
             Assert.AreEqual(0, errorMessages.Count);
 
-            var parameterSetting = model.ParameterSettings.FirstOrDefault(ps => ps.Name == propertyName);
-
+            var parameterSetting = model.ParameterSettings
+                .FirstOrDefault(ps => ps.Name == propertyName);
             // ParameterSetting can never be null here, because in this situation the error report has also a message.
             Assert.NotNull(parameterSetting);
-            Assert.AreEqual("True", parameterSetting.Value);
+            Assert.AreEqual(value, parameterSetting.Value);
         }
 
         [Test]
@@ -42,27 +44,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             GivenANumericalParameterCategoryWithAnUnknownAndKnownProperty_WhenSettingTheseModelProperties_ThenOnlyTheKnownParameterShouldBeSetInTheModel()
         {
             // Given
-            var category = new DelftIniCategory(ModelDefinitionsRegion.InitialConditionsValuesHeader);
+            var category = new DelftIniCategory(ModelDefinitionsRegion.ObservationsHeader);
 
             category.AddProperty("bla", "2");
-            category.AddProperty(ModelDefinitionsRegion.InitialEmptyWells.Key, 0);
+            category.AddProperty(ModelDefinitionsRegion.InterpolationType.Key, "Nearest");
+
 
             // Create ModelParameters
             var model = new WaterFlowModel1D();
 
             var errorMessages = new List<string>();
 
-            // When
-            new WaterFlowModelInitialConditionsParameterSetter().SetProperties(category, model, errorMessages);
+          // When
+            new WaterFlowModelObservationsParameterSetter().SetProperties(category, model,
+                errorMessages);
 
             // Then
-            Assert.AreEqual(1, errorMessages.Count);
             Assert.AreEqual(
                 "Line 0: Parameter bla found in the md1d file. This parameter will not be imported, since it is not supported by the GUI",
                 errorMessages[0]);
 
-            var parameterSetting = model.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.InitialEmptyWells.Key);
-
+            var parameterSetting = model.ParameterSettings
+                .FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.InterpolationType.Key);
             // ParameterSetting can never be null here, because in this situation the errorreport has also a message.
             Assert.NotNull(parameterSetting);
             Assert.AreEqual("False", parameterSetting.Value);
