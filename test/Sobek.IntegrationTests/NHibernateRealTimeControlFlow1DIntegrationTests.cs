@@ -111,8 +111,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Slow)]
-        [Category(TestCategory.Jira)] //TOOLS-9483
+        [Category(TestCategory.Slow)] //TOOLS-9483
         [Category(TestCategory.Integration)]
         [Category(TestCategory.BackwardCompatibility)]
         public void OpenLegacy300ProjectAndCheckNetCdfData()

@@ -260,6 +260,7 @@ namespace Sobek.IntegrationTests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
+        [Category(TestCategory.Jira)] // D3DFMIQ-547 
         public void TestRtcOutput_LoadRunSaveAsLoad()
         {
             // TestSetup is not sufficient for this test... so we do things a little differently
