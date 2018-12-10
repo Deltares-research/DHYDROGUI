@@ -35,6 +35,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                     return new WaterFlowModelInitialConditionsParameterSetter();
                 case ModelDefinitionsRegion.TemperatureValuesHeader:
                     return new WaterFlowModelTemperatureSetter();
+                case ModelDefinitionsRegion.MorphologyValuesHeader:
+                    return new WaterFlowModelMorphologySetter();
                 case ModelDefinitionsRegion.ObservationsHeader:
                     return new WaterFlowModelObservationsParameterSetter();
                 case ModelDefinitionsRegion.RestartHeader:

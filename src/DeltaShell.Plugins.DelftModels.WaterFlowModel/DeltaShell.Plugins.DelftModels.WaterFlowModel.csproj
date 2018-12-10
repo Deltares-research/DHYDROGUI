@@ -190,6 +190,7 @@
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelAdvancedOptionsSetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelGlobalValuesSetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelInitialConditionsParameterSetter.cs" />
+    <Compile Include="ImportExport\ModelDefinition\WaterFlowModelMorphologySetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelObservationsParameterSetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelOutputSetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelNumericalParametersSetter.cs" />
