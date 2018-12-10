@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 if (modelParameter == null)
                 {
                     errorMessages.Add(string.Format(
-                        "Line {0}: Parameter {1} found in the md1d file. This parameter will not be imported, since it is not supported by the GUI",
+                        "Line {0}: Parameter {1} found. This parameter will not be imported, since it is not supported by the GUI",
                         prop.LineNumber, prop.Name));
                     continue;
                 }
