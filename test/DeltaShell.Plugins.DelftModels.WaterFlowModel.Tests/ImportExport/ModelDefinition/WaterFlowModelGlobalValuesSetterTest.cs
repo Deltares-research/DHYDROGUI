@@ -19,7 +19,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         public void GivenASimpleFlowModelAndAGlobalValuesHeaderWithoutAnyValues_WhenSetGlobalValuesIsCalled_ThenTheSimpleFlowModelContainsTheDefaultValues()
         {
             // Given
-            // Given
             var model = new WaterFlowModel1D
             {
                 UseSalt = true,
@@ -62,10 +61,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         /// GIVEN a simple flow model
         ///   AND a GlobalValues header with custom values
         /// WHEN SetGlobalValues is called
-        /// THEN the simple flow model contains the cutom values
+        /// THEN the simple flow model contains the custom values
         /// </summary>
         [Test]
-        public void GivenASimpleFlowModelAndAGlobalValuesHeaderWithCustomValues_WhenSetGlobalValuesIsCalled_ThenTheSimpleFlowModelContainsTheCutomValues()
+        public void GivenASimpleFlowModelAndAGlobalValuesHeaderWithCustomValues_WhenSetGlobalValuesIsCalled_ThenTheSimpleFlowModelContainsTheCustomValues()
         {
             // Given
             var model = new WaterFlowModel1D
