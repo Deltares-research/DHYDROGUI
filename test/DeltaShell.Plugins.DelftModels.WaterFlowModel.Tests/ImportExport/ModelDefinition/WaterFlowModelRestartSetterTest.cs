@@ -38,6 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
             category.AddProperty(ModelDefinitionsRegion.WriteRestart.Key, "1");
             category.AddProperty(ModelDefinitionsRegion.UseRestart.Key, "1");
+            
 
             // Create ModelParameters
             var model = new WaterFlowModel1D();
@@ -51,7 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.AreEqual(model.WriteRestart, true);
 
             Assert.AreEqual(1 , errorMessages.Count);
-            Assert.AreEqual("Parameter UseRestart set to false", errorMessages[0]);
+            Assert.AreEqual("Line 0: Parameter UseRestart set to false", errorMessages[0]);
             
         }
 

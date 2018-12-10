@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                     model.UseRestart = false;
                     if (Convert.ToBoolean(Convert.ToInt32(prop.Value)))
                     {
-                        errorMessages.Add("Parameter UseRestart set to false");
+                        errorMessages.Add(string.Format("Line {0}: Parameter UseRestart set to false", prop.LineNumber));
                     }
                 }
                 else if (prop.Name != ModelDefinitionsRegion.RestartStartTime.Key &&
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                          prop.Name != ModelDefinitionsRegion.RestartTimeStep.Key)
                 {
                     errorMessages.Add(string.Format(
-                        "Parameter {0} found in the md1d file. This parameter will not be imported, since it is not supported by the GUI",
+                        "Line {0}: Parameter {1} found. This parameter will not be imported, since it is not supported by the GUI", prop.LineNumber,
                         prop.Name));
                 }
             }
