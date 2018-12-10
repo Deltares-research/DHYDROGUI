@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using DelftTools.Hydro;
@@ -56,7 +57,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 var edgeCenter = edge.GetEdgeCenter(grid);
                 edgesx.Add(edgeCenter.X);
                 edgesy.Add(edgeCenter.Y);
-                edgesz.Add(edgeCenter.Z);
+                edgesz.Add(double.IsNaN(edgeCenter.Z) ? -999.0 : edgeCenter.Z);
             }
             var faces = new List<int>();
             var facesx = new List<double>();
@@ -101,7 +102,7 @@ namespace DeltaShell.NGHS.IO.Grid
             Marshal.Copy(grid.Vertices.Select(v => v.CoordinateValue.Y).ToArray(), 0, data.nodey, dimensions.numnode);
 
             data.nodez = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * dimensions.numnode);
-            Marshal.Copy(grid.Vertices.Select(v => v.CoordinateValue.Z).ToArray(), 0, data.nodez, dimensions.numnode);
+            Marshal.Copy(grid.Vertices.Select(v => double.IsNaN(v.CoordinateValue.Z) ? -999.0 : v.CoordinateValue.Z).ToArray(), 0, data.nodez, dimensions.numnode);
 
         }
     }

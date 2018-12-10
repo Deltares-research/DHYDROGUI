@@ -98,9 +98,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private void UpdateNetworkAndDiscretisationAfterPathSet()
         {
             if (!File.Exists(Path)) return;
+            int numberOfNetworks;
+            using (var uGridNetwork = new UGridNetwork(Path))
+            {
+                numberOfNetworks = uGridNetwork.GetNumberOfNetworks();
+            }
+            if (numberOfNetworks != 1) return;
+
+            int numberOfNetworkDiscretisations;
+            using (var uGridNetworkDiscretisation = new UGridNetworkDiscretisation(Path))
+            {
+                numberOfNetworkDiscretisations = uGridNetworkDiscretisation.GetNumberOfNetworkDiscretisations();
+            }
+            if (numberOfNetworkDiscretisations != 1) return;
+
             using (ReconnectToMapFile())
             {
                 if (GetNcFileConvention() != GridApiDataSet.DataSetConventions.CONV_UGRID) return;
+
+
+
                 var outputNetworkAndDiscretization = UGridToNetworkAdapter.LoadNetworkAndDiscretisationInOnce(Path);
 
                 outputNetwork = outputNetworkAndDiscretization.Item1;
@@ -163,7 +180,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
                 return false;
             });
-            var mesh1DName = netCdfFile.GetVariableName(mesh1DNameNetCdfVariable);
+            var mesh1DName = mesh1DNameNetCdfVariable == null ? string.Empty : netCdfFile.GetVariableName(mesh1DNameNetCdfVariable);
             var isUgridConvention = true;
 
             return Get1DFunctions(dataVariables, isUgridConvention, mesh1DName);

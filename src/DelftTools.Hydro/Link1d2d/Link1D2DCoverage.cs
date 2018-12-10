@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
+using DelftTools.Units;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
@@ -16,7 +20,7 @@ namespace DelftTools.Hydro.Link1d2d
 {
     public class Links1D2DCoverage : Coverage
     {
-        private IEnumerable<ILink1D2D> links;
+        private IEventedList<ILink1D2D> links;
         private IDiscretization discretization;
         private UnstructuredGrid grid;
         private const string LinkIndexVariableName = "link_index";
@@ -33,7 +37,7 @@ namespace DelftTools.Hydro.Link1d2d
             set { grid = value; }
         }
 
-        public virtual IEnumerable<ILink1D2D> Links
+        public virtual IEventedList<ILink1D2D> Links
         {
             get { return links; }
             set
@@ -50,9 +54,11 @@ namespace DelftTools.Hydro.Link1d2d
         }
         protected Links1D2DCoverage() { }
 
-        protected Links1D2DCoverage(IEnumerable<ILink1D2D> links, bool timeDependent)
+        protected Links1D2DCoverage(IEventedList<ILink1D2D> links, UnstructuredGrid grid, IDiscretization discretization, bool timeDependent)
         {
             Links = links;
+            Grid = grid;
+            Discretization = discretization;
 
             if (timeDependent)
             {
@@ -122,7 +128,7 @@ namespace DelftTools.Hydro.Link1d2d
         }
         public int GetFeatureIndexAtCoordinate(Coordinate coordinate)
         {
-            if (Links == null) return -1;
+            if (Links == null || Grid == null || Discretization == null) return -1;
             var link1D2DIndex = Links.IndexOfNearest1D2DLink(coordinate);
             if (link1D2DIndex < 0) return -1;
             var link1d2d = Links.ElementAt(link1D2DIndex);
@@ -141,8 +147,56 @@ namespace DelftTools.Hydro.Link1d2d
         {
             var clone = (Links1D2DCoverage)base.Clone();
             clone.Links = Links;
+            clone.Grid = Grid;
+            clone.Discretization = Discretization;
             return clone;
         }
 
+        //updaten vanaf hier! deze functies zijn fout!!
+        public override IFunction GetTimeSeries(Coordinate coordinate)
+        {
+            return GetTimeSeries(Grid.IndexOfNearestEdge(coordinate), UnstructuredGridFeatureType.Edge, LinkIndexVariableName, i => Grid.FlowLinks.IndexOf(Grid.GetFlowLinkByEdge(Grid.Edges[i])));
+        }
+
+        public override IFunction GetTimeSeries(IFeature feature)
+        {
+            return GetTimeSeries(feature, LinkIndexVariableName, i => Grid.FlowLinks.IndexOf(Grid.GetFlowLinkByEdge(Grid.Edges[i])));
+        }
+        protected IFunction GetTimeSeries(int variableIndex, UnstructuredGridFeatureType featureType, string indexVariableName, Func<int, int> getVariableIndexFromGridFeatureIndex = null)
+        {
+            return Grid != null
+                ? GetTimeSeries(new UnstructuredGridFeature
+                {
+                    Index = variableIndex,
+                    Type = featureType,
+                    UnstructuredGrid = Grid
+                }, indexVariableName, getVariableIndexFromGridFeatureIndex)
+                : null;
+        }
+
+        protected IFunction GetTimeSeries(IFeature feature, string indexVariableName, Func<int, int> getVariableIndexFromGridFeatureIndex = null)
+        {
+            if (!IsTimeDependent || Time.Values.Count == 0) return null;
+
+            var gridFeature = (UnstructuredGridFeature)feature;
+            if (gridFeature.Index < 0) return null;
+
+            var comp = Components[0];
+            if (comp == null) return null;
+
+            var timeSeries = new TimeSeries { Name = Name };
+
+            var unit = (IUnit)(comp.Unit == null ? null : comp.Unit.Clone());
+            timeSeries.Components.Add(new Variable<double>(comp.Name, unit));
+
+            var indexVariable = Arguments.FirstOrDefault(a => a.Name == indexVariableName) ?? Arguments[1];
+            var featureIdex = getVariableIndexFromGridFeatureIndex != null ? getVariableIndexFromGridFeatureIndex(gridFeature.Index) : gridFeature.Index;
+            var values = GetValues<double>(new VariableValueFilter<int>(indexVariable, featureIdex));
+
+            timeSeries.Time.SetValues(Time.AllValues);
+            timeSeries.SetValues(values);
+
+            return timeSeries;
+        }
     }
 }
