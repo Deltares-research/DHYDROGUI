@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [TestCase(typeof(Enum))]
         public void Test_SelectTemplate_GivenWpfGuiProperty_ReturnsTemplate(Type propertyType)
         {
-            var item = new WpfGuiProperty(new FieldUIDescription(null, null)
+            var item = new WpfGuiProperty(new FieldUIDescription((o) => propertyType.IsValueType ? Activator.CreateInstance(propertyType) : null, (o, o1) => { })
             {
                 ValueType = propertyType
             });

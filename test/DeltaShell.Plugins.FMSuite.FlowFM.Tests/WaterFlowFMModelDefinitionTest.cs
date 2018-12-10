@@ -1134,6 +1134,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(KnownProperties.Wrishp_enc)]
         [TestCase(KnownProperties.Wrishp_src)]
         [TestCase(KnownProperties.Wrishp_pump)] 
+        [Category(TestCategory.Jira)] // D3DFMIQ-278
         public void UpdateMduFileAfterSettingOptionWriteShapeFileTest(string property)
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"outputKnownProperties\FlowFM.mdu");

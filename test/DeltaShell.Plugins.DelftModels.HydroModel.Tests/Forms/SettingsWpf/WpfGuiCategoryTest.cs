@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 
         [Test]
         [TestCase(false, false, true)]
-        [TestCase(true, false, false)]
+        [TestCase(true, false, true)]
         [TestCase(true, true, true)]
         public void Test_WpfGuiCategory_IsVisible_When_AtLeast_One_Property_Without_CustomControl(bool withCustomControl, bool propertyVisible, bool expectedResult)
         {
@@ -58,11 +58,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 
             var fieldUiDescription = new FieldUIDescription(null, null, o => true, o=> propertyVisible);
             category.AddFieldUiDescription(fieldUiDescription);
+
             Assert.IsTrue(category.Properties.Any());
 
             var property = category.Properties.FirstOrDefault();
             Assert.IsNotNull(property);
-            if (withCustomControl) property.CustomControl = new UserControl();
+
+            if (withCustomControl)
+            {
+                property.CustomControl = new UserControl();
+            }
 
             Assert.AreEqual(expectedResult, category.IsVisible);
         }
