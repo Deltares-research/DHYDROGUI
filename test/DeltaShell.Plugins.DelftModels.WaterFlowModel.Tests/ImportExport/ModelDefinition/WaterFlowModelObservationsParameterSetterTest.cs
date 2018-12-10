@@ -20,9 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var category = new DelftIniCategory(ModelDefinitionsRegion.ObservationsHeader);
             category.AddProperty(propertyName, value);
 
-            // Create ModelParameters
             var model = new WaterFlowModel1D();
-
             var errorMessages = new List<string>();
 
             // When
@@ -41,6 +39,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
         [Test]
         public void
+            GivenAWronglyDefinedCategoryHeader_WhenSettingThisModelProperty_ThenThisParameterShouldNotBeSetInTheModel()
+        {
+            const string propertyName = "InterpolationType";
+
+            // Given
+            var category = new DelftIniCategory(ModelDefinitionsRegion.AdvancedOptionsHeader);
+            category.AddProperty(propertyName, "Linear");
+
+            var model = new WaterFlowModel1D();
+            var errorMessages = new List<string>();
+
+            // When
+            new WaterFlowModelObservationsParameterSetter().SetProperties(category, model, errorMessages);
+
+            // Then
+            Assert.AreEqual(0, errorMessages.Count);
+
+            var parameterSetting = model.ParameterSettings.FirstOrDefault(ps => ps.Name == propertyName);
+
+            // ParameterSetting can never be null here, because in this situation the error report has also a message.
+            Assert.NotNull(parameterSetting);
+            // parameter is not set to Linear.
+            Assert.AreEqual("Nearest", parameterSetting.Value);
+        }
+
+        [Test]
+        public void
             GivenANumericalParameterCategoryWithAnUnknownAndKnownProperty_WhenSettingTheseModelProperties_ThenOnlyTheKnownParameterShouldBeSetInTheModel()
         {
             // Given
@@ -49,13 +74,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             category.AddProperty("bla", "2");
             category.AddProperty(ModelDefinitionsRegion.InterpolationType.Key, "Nearest");
 
-
-            // Create ModelParameters
             var model = new WaterFlowModel1D();
-
             var errorMessages = new List<string>();
 
-          // When
+           // When
             new WaterFlowModelObservationsParameterSetter().SetProperties(category, model,
                 errorMessages);
 
@@ -68,7 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 .FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.InterpolationType.Key);
             // ParameterSetting can never be null here, because in this situation the errorreport has also a message.
             Assert.NotNull(parameterSetting);
-            Assert.AreEqual("False", parameterSetting.Value);
+            Assert.AreEqual("Nearest", parameterSetting.Value);
         }
     }
 }
