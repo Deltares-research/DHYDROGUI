@@ -252,6 +252,7 @@
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelOutputSetterTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelPropertySetterFactoryTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\ModelDefinitionFileReaderTest.cs" />
+    <Compile Include="ImportExport\ModelDefinition\WaterFlowModelRestartSetterTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelSimulationOptionsSetterTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelTimePropertiesSetterTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelTransportComputationPropertiesSetterTest.cs" />

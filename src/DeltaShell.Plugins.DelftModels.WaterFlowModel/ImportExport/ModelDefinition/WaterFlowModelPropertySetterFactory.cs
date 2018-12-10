@@ -31,6 +31,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                     return new WaterFlowModelSimulationOptionsSetter();
                 case ModelDefinitionsRegion.InitialConditionsValuesHeader:
                     return new WaterFlowModelInitialConditionsParameterSetter();
+                case ModelDefinitionsRegion.RestartHeader:
+                    return new WaterFlowModelRestartSetter();
                 default:
                     throw new NotImplementedException();
             }
