@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DeltaShell.NGHS.IO.Helpers;
+
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
 {
@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                     GetWithDefault(category, ModelDefinitionsRegion.DispersionF4.Key, 0.0);
         }
 
-        private static T GetWithDefault<T>(DelftIniCategory category,
+        private static T GetWithDefault<T>(IDelftIniCategory category,
                                            string propertyName,
                                            T defaultValue)
         {
