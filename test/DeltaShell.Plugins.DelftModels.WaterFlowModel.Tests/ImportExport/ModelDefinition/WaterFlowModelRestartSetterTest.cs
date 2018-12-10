@@ -163,5 +163,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.AreEqual(0, errorMessages.Count);
             Assert.AreEqual(false, model.UseSaveStateTimeRange);
         }
+
+        [Test]
+        public void GivenARestartCategoryWithAnUnknownProperty_WhenSettingTheseModelProperties_ThenAllPropertiesShouldBeSetExceptTheUnknownProperty()
+        {
+            var category = new DelftIniCategory(ModelDefinitionsRegion.RestartHeader);
+
+            category.AddProperty(ModelDefinitionsRegion.WriteRestart.Key, "1");
+            category.AddProperty(ModelDefinitionsRegion.UseRestart.Key, "0");
+            category.AddProperty("bla", "0");
+
+            // Create ModelParameters
+            var model = new WaterFlowModel1D();
+
+            var errorMessages = new List<string>();
+
+            //When
+            (new WaterFlowModelRestartSetter()).SetProperties(category, model, errorMessages);
+
+            Assert.AreEqual(model.UseRestart, false);
+            Assert.AreEqual(model.WriteRestart, true);
+
+            Assert.AreEqual(1, errorMessages.Count);
+            Assert.AreEqual(false, model.UseSaveStateTimeRange);
+            Assert.AreEqual("Line 0: Parameter bla found. This parameter will not be imported, since it is not supported by the GUI", errorMessages[0]);
+        }
     }
 }
