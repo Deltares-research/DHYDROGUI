@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 }
                 else
                 {
-                    errorMessages.Add($"Line {prop.LineNumber}: Parameter {prop.Name} found in the md1d file. This parameter will not be imported, since it is not supported by the GUI");
+                    errorMessages.Add($"Line {prop.LineNumber}: Parameter '{prop.Name}' found in the md1d file. This parameter will not be imported, since it is not supported by the GUI");
                 }
             }
         }
