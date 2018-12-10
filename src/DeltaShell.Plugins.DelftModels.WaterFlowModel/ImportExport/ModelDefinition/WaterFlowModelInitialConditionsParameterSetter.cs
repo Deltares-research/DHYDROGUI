@@ -11,16 +11,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         {
             if (initialConditionsParameterCategory?.Name != ModelDefinitionsRegion.InitialConditionsValuesHeader) return;
 
-            foreach (var property in initialConditionsParameterCategory.Properties)
+            foreach (var prop in initialConditionsParameterCategory.Properties)
             {
-                var modelParameter = model.ParameterSettings.FirstOrDefault(ps => ps.Name == property.Name);
+                var modelParameter = model.ParameterSettings.FirstOrDefault(ps => ps.Name == prop.Name);
                 if (modelParameter == null)
                 {
-                    errorMessages.Add($"Line {property.LineNumber}: Parameter {property.Name} found in the md1d file. This parameter will not be imported, since it is not supported by the GUI");
+                    errorMessages.Add($"Line {prop.LineNumber}: Parameter {prop.Name} found in the md1d file. This parameter will not be imported, since it is not supported by the GUI");
                     continue;
                 }
 
-                modelParameter.Value = Convert.ToString(Convert.ToBoolean(Convert.ToInt32(property.Value)));
+                if (modelParameter.Type == "typeof(bool)")
+                {
+                    modelParameter.Value = Convert.ToString(Convert.ToBoolean(Convert.ToInt32(prop.Value)));
+                }
+                else
+                {
+                    modelParameter.Value = prop.Value;
+                }
             }
         }
     }

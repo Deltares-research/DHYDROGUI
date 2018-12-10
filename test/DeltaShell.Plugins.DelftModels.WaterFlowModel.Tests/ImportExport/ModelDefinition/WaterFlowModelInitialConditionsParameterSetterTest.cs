@@ -20,6 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var category = new DelftIniCategory(ModelDefinitionsRegion.InitialConditionsValuesHeader);
             category.AddProperty(propertyName, "1");
 
+            // Create ModelParameters
             var model = new WaterFlowModel1D();
             var errorMessages = new List<string>();
 
@@ -38,33 +39,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
         [Test]
         public void
-            GivenAWronglyDefinedCategoryHeader_WhenSettingThisModelProperty_ThenThisParameterShouldNotBeSetInTheModel()
-        {
-            const string propertyName = "InitialEmptyWells";
-
-            // Given
-            var category = new DelftIniCategory(ModelDefinitionsRegion.AdvancedOptionsHeader);
-            category.AddProperty(propertyName, "1");
-
-            var model = new WaterFlowModel1D();
-            var errorMessages = new List<string>();
-
-            // When
-            new WaterFlowModelInitialConditionsParameterSetter().SetProperties(category, model, errorMessages);
-
-            // Then
-            Assert.AreEqual(0, errorMessages.Count);
-
-            var parameterSetting = model.ParameterSettings.FirstOrDefault(ps => ps.Name == propertyName);
-
-            // ParameterSetting can never be null here, because in this situation the error report has also a message.
-            Assert.NotNull(parameterSetting);
-            // parameter is not set to true.
-            Assert.AreEqual("false", parameterSetting.Value);
-        }
-
-        [Test]
-        public void
             GivenANumericalParameterCategoryWithAnUnknownAndKnownProperty_WhenSettingTheseModelProperties_ThenOnlyTheKnownParameterShouldBeSetInTheModel()
         {
             // Given
@@ -73,7 +47,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             category.AddProperty("bla", "2");
             category.AddProperty(ModelDefinitionsRegion.InitialEmptyWells.Key, 0);
 
+            // Create ModelParameters
             var model = new WaterFlowModel1D();
+
             var errorMessages = new List<string>();
 
             // When
