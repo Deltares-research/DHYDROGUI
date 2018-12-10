@@ -195,6 +195,7 @@
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelNumericalParametersSetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelRestartSetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelSimulationOptionsSetter.cs" />
+    <Compile Include="ImportExport\ModelDefinition\WaterFlowModelTemperatureSetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelTimePropertiesSetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\ModelDefinitionFileReader.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelPropertySetterFactory.cs" />
