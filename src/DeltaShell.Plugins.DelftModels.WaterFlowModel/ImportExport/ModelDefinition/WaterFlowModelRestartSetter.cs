@@ -54,12 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 }
                 else if (prop.Name == ModelDefinitionsRegion.UseRestart.Key)
                 {
-                    // Always false, since the exporter is not working. See issue SOBEK3-1603
-                    model.UseRestart = false;
-                    if (Convert.ToBoolean(Convert.ToInt32(prop.Value)))
-                    {
-                        errorMessages.Add(string.Format("Line {0}: Parameter UseRestart set to false", prop.LineNumber));
-                    }
+                    model.UseRestart = Convert.ToBoolean(Convert.ToInt32(prop.Value));
                 }
                 else if (prop.Name != ModelDefinitionsRegion.RestartStartTime.Key &&
                          prop.Name != ModelDefinitionsRegion.RestartStopTime.Key &&

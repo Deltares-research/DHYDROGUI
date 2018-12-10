@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
     public class WaterFlowModelRestartSetterTest
     {
         [Test]
-        public void GivenARestartCategoryWithoutSaveStateTimeRangePropertiesAndUseRestartSetToFalse_WhenSettingTheseModelProperties_ThenTheseParametersShouldBeSetInTheModel()
+        public void GivenARestartCategoryWithoutSaveStateTimeRangePropertiesAndBothPropertiesFalse_WhenSettingTheseModelProperties_ThenTheseParametersShouldBeSetInTheModel()
         {
             var category = new DelftIniCategory(ModelDefinitionsRegion.RestartHeader);
 
@@ -29,10 +29,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.AreEqual(model.UseRestart, false);
             Assert.AreEqual(model.WriteRestart, false);
 
+            Assert.AreEqual(0, errorMessages.Count);
         }
 
         [Test]
-        public void GivenARestartCategoryWithoutSaveStateTimeRangePropertiesAndUseRestartSetToTrue_WhenSettingTheseModelProperties_ThenTheseParametersShouldBeSetInTheModelExceptTheUseRestart()
+        public void GivenARestartCategoryWithoutSaveStateTimeRangePropertiesAndBothPropertiesTrue_WhenSettingTheseModelProperties_ThenTheseParametersShouldBeSetInTheModel()
         {
             var category = new DelftIniCategory(ModelDefinitionsRegion.RestartHeader);
 
@@ -48,12 +49,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             //When
             (new WaterFlowModelRestartSetter()).SetProperties(category, model, errorMessages);
 
-            Assert.AreEqual(model.UseRestart, false);
+            Assert.AreEqual(model.UseRestart, true);
             Assert.AreEqual(model.WriteRestart, true);
 
-            Assert.AreEqual(1 , errorMessages.Count);
-            Assert.AreEqual("Line 0: Parameter UseRestart set to false", errorMessages[0]);
-            
+            Assert.AreEqual(0, errorMessages.Count);
         }
 
         [Test]
