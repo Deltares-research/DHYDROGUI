@@ -1350,7 +1350,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
-        [NUnit.Framework.Category(TestCategory.Jira)]
         public void ExecutePidRuleWithTimeTrigger_Tools7828()
         {
             // Setup rtc model and controlled model

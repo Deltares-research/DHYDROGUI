@@ -514,8 +514,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
         #region ImportHydroData Twice
 
-        [Test]
-        [Category(TestCategory.Jira)] // TOOLS-22039
+        [Test] // TOOLS-22039
         public void Import_SameHydFileData_HasHydroDataImportedIsTrue()
         {
             // setup

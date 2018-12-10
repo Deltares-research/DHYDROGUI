@@ -107,7 +107,6 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.Slow)]
-        [Category(TestCategory.Jira)]
         public void CustomNodePresentersShouldBeRegisteredOnCloseReopen_Tools8350()
         {
             using (var gui = new DeltaShellGui())

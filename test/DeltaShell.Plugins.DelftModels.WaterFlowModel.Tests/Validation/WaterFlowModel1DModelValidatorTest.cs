@@ -503,7 +503,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
         }
 
         [Test]
-        [Category(TestCategory.Jira)]
         public void OutputTimeStepSmallerCalcutionTimeStep()
         {
             var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
@@ -535,7 +534,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
         }
 
         [Test]
-        [Category(TestCategory.Jira)]
         public void StopShouldBePastStart()
         {
             var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();

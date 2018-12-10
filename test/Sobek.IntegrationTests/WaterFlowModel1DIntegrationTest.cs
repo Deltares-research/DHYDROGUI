@@ -625,8 +625,7 @@ namespace Sobek.IntegrationTests
             flowModel1D.Cleanup();
         }
 
-        [Test]
-        [Category(TestCategory.Jira)] //TOOLS-4343
+        [Test] //TOOLS-4343
         [Category(TestCategory.Integration)]
         public void RemoveAllLinksWhenModelHasOutput()
         {
@@ -991,7 +990,6 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category(TestCategory.Jira)]
         [Category(TestCategory.Slow)]
         public void ChangesInSummerdikeDataShouldChangesResult()
         {

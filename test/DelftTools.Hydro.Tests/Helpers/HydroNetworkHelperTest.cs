@@ -2146,7 +2146,6 @@ namespace DelftTools.Hydro.Tests.Helpers
         }
 
         [Test]
-        [Category(TestCategory.Jira)]
         public void MultipleBranchReversalsShouldNotMoveNetworkCoverageLocationsDueToRoundingTools6878()
         {
             var from = new Node();
@@ -2294,7 +2293,6 @@ namespace DelftTools.Hydro.Tests.Helpers
         }
 
         [Test]
-        [Category(TestCategory.Jira)]
         public void RemoveStructureOnDisconnectedStructureShouldNotCrashTools9784()
         {
             var weir = new Weir();

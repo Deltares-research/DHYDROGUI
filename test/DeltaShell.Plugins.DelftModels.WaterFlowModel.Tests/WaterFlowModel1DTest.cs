@@ -1283,8 +1283,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.Jira)] //TOOLS-4869
+        [Category(TestCategory.Integration)] //TOOLS-4869
         public void ExecuteWithLateralSourcesFirstTimeStepShouldNotBeZero()
         {
             // create L shaped network
@@ -2914,7 +2913,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category(TestCategory.Jira)]
         public void PointLateralBetweenCalculationGridPointsTools7106()
         {
             const double branchlength = 1000.0;
@@ -2951,7 +2949,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category(TestCategory.Jira)]
         public void DiffuseLateralSourceOverSingleCalculationGridPointTools7106()
         {
             const double branchlength = 1000.0;
@@ -2988,7 +2985,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category(TestCategory.Jira)]
         public void DiffuseLateralSourceOverMultipleCalculationGridPointsTools7106()
         {
             const double branchlength = 1000.0;
@@ -3025,7 +3021,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category(TestCategory.Jira)]
         public void DiffuseLateralSourceBetweenCalculationGridPointsLeftOfSegmentMidpointTools7106()
         {
             const double branchlength = 1000.0;
@@ -3062,7 +3057,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category(TestCategory.Jira)]
         public void DiffuseLateralSourceBetweenCalculationGridPointsRightOfSegmentMidpointTools7106()
         {
             const double branchlength = 1000.0;
@@ -3099,7 +3093,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category(TestCategory.Jira)]
         public void DiffuseLateralSourceBetweenCalculationGridPointsOverSegmentMidpointTools7106()
         {
             const double branchlength = 1000.0;
@@ -3136,7 +3129,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category(TestCategory.Jira)]
         public void DiffuseLateralSourceBetweenCalculationGridPointsShouldInduceWaterForPositiveQTools7106()
         {
             const double branchlength = 1000.0;
@@ -3789,7 +3781,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category(TestCategory.Jira)]
         public void OutputSettingsPropertyChangedTest_Tools7980()
         {
             using (var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())

@@ -34,7 +34,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Jira)]
         public void ImportCrossSectionsWithScientificNotationTools9637()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"TOOLS963.lit\1\NETWORK.TP");

@@ -57,7 +57,6 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Jira)] //TOOLS-5080
         [Category(TestCategory.WindowsForms)] //TOOLS-5080
         [Category(TestCategory.Slow)]
         public void DeleteClonedCopyOfRtcWithSaltAfterSaveAndSaveAgainShouldNotGiveException()
@@ -104,8 +103,7 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Jira)] //TOOLS-5080
+        [Category(TestCategory.DataAccess)] //TOOLS-5080
         [Category(TestCategory.Slow)]
         public void DeleteClonedCopyOfRtcWithoutSaltAfterSaveAndSaveAgainShouldNotGiveException()
         {
@@ -515,7 +513,6 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        [Category(TestCategory.Jira)]
         [Category(TestCategory.Slow)]
         public void RunRealTimeControlModelWithFlowModelShouldNotMarkFlowOutputOutOfSync_Issue7002()
         {
@@ -576,7 +573,6 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        [Category(TestCategory.Jira)]
         [Category(TestCategory.Slow)]
         public void CopyPasteImportedRtcAndFlowModelAfterRunShouldNotCrash_Issue7010()
         {

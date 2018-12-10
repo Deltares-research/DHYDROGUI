@@ -184,8 +184,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             }
         }
         
-        [Test]
-        [Category(TestCategory.Jira)] //TOOLS-6594
+        [Test]//TOOLS-6594
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void DeleteLocationFromCoverageWithoutSegmentLayerDoesNotCauseCrash()

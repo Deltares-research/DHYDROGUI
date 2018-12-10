@@ -286,8 +286,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
             Assert.AreEqual(dataTable1, dataTableManager.DataTables.ElementAt(1));
         }
 
-        [Test]
-        [Category(TestCategory.Jira)] // TOOLS-22288
+        [Test] // TOOLS-22288
         [TestCase(true)]
         [TestCase(false)]
         public void MoveDataTable_WithFilesOnDisk_FilesShouldRemainOnDisk(bool moveUp)

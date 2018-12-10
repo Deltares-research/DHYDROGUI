@@ -180,7 +180,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         /// </summary>
 
         [Test]
-        [Category(TestCategory.Jira)]
         public void ChangingBranchGeometryShouldUpdateCovarageLocationsCorrectlyTools7439()
         {
             // create network

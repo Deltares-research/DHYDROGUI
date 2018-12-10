@@ -39,7 +39,6 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         /// line end with "<" and not " <"
         /// </summary>
         [Test]
-        [Category(TestCategory.Jira)]
         public void ParseDifferentLineEnding()
         {
             var source = @"3 3 PDIN 1 0 '' pdin CLTT 'h' '0' '2000' cltt TBLE" + Environment.NewLine + 
@@ -63,7 +62,6 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         /// too greedy quantifier
         /// </summary>
         [Test]
-        [Category(TestCategory.Jira)]
         public void ParseTableWithJunkAttached()
         {
             var source = @"3 3 PDIN 1 0 '' pdin CLTT 'h' '0' '2000' cltt TBLE" + Environment.NewLine +

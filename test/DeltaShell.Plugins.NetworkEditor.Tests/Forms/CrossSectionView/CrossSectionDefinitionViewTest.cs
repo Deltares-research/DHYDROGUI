@@ -127,7 +127,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         }
 
         [Test]
-        [Category(TestCategory.Jira)]
         public void PreventDeletionOfRowIfMinimumViolatedFiltered()
         {
             EventedList<CrossSectionSectionType> sectionTypes = GetSectionTypesList(new[] { "Main", "FloodPlain1", "FloodPlain2" });

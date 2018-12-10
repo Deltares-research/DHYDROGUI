@@ -507,8 +507,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             }
         }
 
-        [Test]
-        [Category(TestCategory.Jira)] // TOOLS-22124, repro manual test 31-march-2015 11:01
+        [Test] // TOOLS-22124, repro manual test 31-march-2015 11:01
         [Category(TestCategory.Slow)]
         public void SaveAndRetrieveStandAloneWaterQualityModelWithHydFileImportedAndSpatialProcessCoefficient()
         {

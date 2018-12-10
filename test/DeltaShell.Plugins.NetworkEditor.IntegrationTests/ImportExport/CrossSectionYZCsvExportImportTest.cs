@@ -192,8 +192,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.ImportExport
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Jira)] //TOOLS-5385
+        [Category(TestCategory.DataAccess)] //TOOLS-5385
         public void ExportYZPlainCsvModifyAndImport()
         {
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(4); //contains xyz cs's

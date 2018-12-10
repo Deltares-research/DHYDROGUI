@@ -268,8 +268,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         /// Load a boundary condition that has a uniform boundary with a timeseries.
         /// The support points don't contain data, so the data will be set in the first data point.
         /// </summary>
-        [Test]
-        [Category(TestCategory.Jira)] // TOOLS-20998
+        [Test]// TOOLS-20998
         public void LoadUniformBoundaryWithTimeseries()
         {
             string mdwfilepath = TestHelper.GetTestFilePath(@"uniformBoundaryWithTimeseries\bcw.mdw");
@@ -285,7 +284,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         /// Save a boundary condition that has a uniform boundary with a timeseries.
         /// </summary>
         [Test]
-        [Category(TestCategory.Jira)]
         public void SaveUniformBoundaryWithTimeseries()
         {
             string mdwfilepath = TestHelper.GetTestFilePath(@"uniformBoundaryWithTimeseries\bcw.mdw");
@@ -334,7 +332,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         /// Save it and check that the values are written in sorted order.
         /// </summary>
         [Test]
-        [Category(TestCategory.Jira)]
         public void CreateBoundaryInWrongOrderAndSave()
         {
             var mdwfilepath = TestHelper.GetTestFilePath(@"bcwTimeseriesNotOnFirstAndLast\bcw.mdw");
@@ -369,7 +366,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         /// Test added for jira issue: DELFT3DFM-33
         /// </summary>
         [Test]
-        [Category(TestCategory.Jira)]
         public void SaveMdwFile_SpatiallyVaryingBoundaryConditionWithNoDataDefaultsToUniform()
         {
             var outputPath = WaveTestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"wave_spacevarbnd\DELFT3DFM-33.mdw"));

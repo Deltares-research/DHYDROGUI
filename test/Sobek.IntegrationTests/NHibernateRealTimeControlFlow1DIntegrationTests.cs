@@ -492,7 +492,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Jira)]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void ReloadRtcModelWithLazyLoadedFeaturesInitializesModelCorrectlyTools7140()
@@ -639,7 +638,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Jira)]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void SaveAndLoadRtcModelWhileControllingAHydroNodeTools9625()
@@ -675,7 +673,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Jira)]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void GetChildDataItemsAfterLoad()

@@ -344,8 +344,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(count, freeFormWeirFormula.Z.Count());
         }
 
-        [Test]
-        [Category(TestCategory.Jira)] // TOOLS-4296
+        [Test]// TOOLS-4296
         public void CanBuildFreeFormWeirWithCrossSectionAndCrestLevelShift()
         {
             // hack; when tests are run in sequence builder is broken

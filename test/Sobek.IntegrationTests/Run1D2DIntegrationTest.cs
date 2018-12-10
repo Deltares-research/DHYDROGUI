@@ -521,7 +521,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Jira)]
         // Test added for jira issue: SOBEK3-1012
         public void Given2DModelWithMorphologyEnabledAndSetToTrueWhenAdding1DModelSoItBecomesA1D2DModelThen2DModelWillSetMorphologyDisabledAndForceSetToFalse()
         {

@@ -11,8 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
     {
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
-        [Category(TestCategory.Jira)] // TOOLS-22280
+        [Category(TestCategory.Slow)] // TOOLS-22280
         public void RunDelwaqModelWithDoubleAliasEntries()
         {
             string dataDir = TestHelper.GetDataDir();

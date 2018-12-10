@@ -265,7 +265,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Jira)]
         [Category(TestCategory.Integration)]
         public void DeletingAModelWithNetCDFOutputAfterCreatingANewProjectShouldWork_Tools7636()
         {
@@ -412,7 +411,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category((TestCategory.Jira))]
         [Category(TestCategory.DataAccess)]
         public void ErrorInOutputCoveragesAfterLoadingModelWithItsOutputCleared_Tools7337()
         {
@@ -1257,7 +1255,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Jira)]
         public void OpenStructureViewWhileBoundaryGroupDataViewOpenShouldNotCrash_Tools6939()
         {
             var model = new WaterFlowModel1D();
@@ -1281,7 +1278,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Jira)]
         public void OpenStructureViewWhileLateralGroupDataViewOpenShouldNotCrash_Tools6939()
         {
             var model = new WaterFlowModel1D();

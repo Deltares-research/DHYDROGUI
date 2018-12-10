@@ -63,8 +63,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
-        [Category(TestCategory.Jira)] // TOOLS-3668
+        [Category(TestCategory.WindowsForms)] // TOOLS-3668
         public void ShowRiverWeirViewShouldNotChangeValues()
         {
             var weir = new Weir("TestWeir")
