@@ -32,6 +32,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
             Assert.NotNull(diffusionAtBoundariesParameterSetting);
             Assert.AreEqual(true.ToString(), diffusionAtBoundariesParameterSetting.Value);
+
+            Assert.AreEqual(0, errorMessages.Count);
         }
 
         [Test]
@@ -56,6 +58,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
             Assert.NotNull(diffusionAtBoundariesParameterSetting);
             Assert.AreEqual(false.ToString(), diffusionAtBoundariesParameterSetting.Value);
+
+            Assert.AreEqual(0, errorMessages.Count);
         }
 
         [Test]
