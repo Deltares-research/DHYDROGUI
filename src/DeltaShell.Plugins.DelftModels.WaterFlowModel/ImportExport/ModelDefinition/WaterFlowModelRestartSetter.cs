@@ -42,6 +42,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             else
             {
                 model.UseSaveStateTimeRange = false;
+                if (containsRestartTimeStep || containsRestartStartTime || containsRestartStopTime)
+                {
+                    errorMessages.Add(string.Format("Line {0}: Information about the Save State is not complete and therefore ignored during import", category.LineNumber));
+                }
             }
             
             

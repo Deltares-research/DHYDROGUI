@@ -23,6 +23,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         [TestCase(ModelDefinitionsRegion.AdvancedOptionsHeader, typeof(WaterFlowModelAdvancedOptionsSetter))]
         [TestCase(ModelDefinitionsRegion.TemperatureValuesHeader, typeof(WaterFlowModelTemperatureSetter))]
         [TestCase(ModelDefinitionsRegion.MorphologyValuesHeader, typeof(WaterFlowModelMorphologySetter))]
+        [TestCase(ModelDefinitionsRegion.NumericalParametersValuesHeader, typeof(WaterFlowModelNumericalParametersSetter))]
+        [TestCase(ModelDefinitionsRegion.SimulationOptionsValuesHeader, typeof(WaterFlowModelSimulationOptionsSetter))]
+        [TestCase(ModelDefinitionsRegion.RestartHeader, typeof(WaterFlowModelRestartSetter))]
         public void GivenDataModelWithSpecificHeader_WhenGettingPropertySetterFromFactory_ThenCorrectPropertiesSetterIsReturned(string headerText, Type expectedType)
         {
             // Given

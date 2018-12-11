@@ -107,7 +107,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.AreEqual(model.UseRestart, false);
             Assert.AreEqual(model.WriteRestart, true);
 
-            Assert.AreEqual(0, errorMessages.Count);
+            Assert.AreEqual(1, errorMessages.Count);
+            Assert.AreEqual("Line 0: Information about the Save State is not complete and therefore ignored during import", errorMessages[0]);
+
             Assert.AreEqual(false, model.UseSaveStateTimeRange);
         }
 
@@ -133,7 +135,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.AreEqual(model.UseRestart, false);
             Assert.AreEqual(model.WriteRestart, true);
 
-            Assert.AreEqual(0, errorMessages.Count);
+            Assert.AreEqual(1, errorMessages.Count);
+            Assert.AreEqual("Line 0: Information about the Save State is not complete and therefore ignored during import", errorMessages[0]);
+
             Assert.AreEqual(false, model.UseSaveStateTimeRange);
         }
 
@@ -159,7 +163,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.AreEqual(model.UseRestart, false);
             Assert.AreEqual(model.WriteRestart, true);
 
-            Assert.AreEqual(0, errorMessages.Count);
+            Assert.AreEqual(1, errorMessages.Count);
+            Assert.AreEqual("Line 0: Information about the Save State is not complete and therefore ignored during import", errorMessages[0]);
+
             Assert.AreEqual(false, model.UseSaveStateTimeRange);
         }
 
