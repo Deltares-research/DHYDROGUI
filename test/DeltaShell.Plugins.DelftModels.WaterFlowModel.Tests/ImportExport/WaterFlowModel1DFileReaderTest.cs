@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using NUnit.Framework;
 
@@ -47,6 +49,41 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             Assert.IsTrue(waterFlowModel1D.UseReverseRoughnessInCalculation);
         }
 
+        [TestCase("InitialWaterLevel.ini")]
+        [TestCase("Dispersion.ini")]
+        [TestCase("InitialDischarge.ini")]
+        [TestCase("InitialSalinity.ini")]
+        [TestCase("InitialTemperature.ini")]
+        [TestCase("InitialWaterLevel.ini")]
+        [TestCase("WindShielding.ini")]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAnMd1dFile_WhenReadingAndWriting_ThenTheWrittenFilesAreEqualToReadFiles(string spatialIniFile)
+        {
+            // Given
+            var md1dFilePath = TestHelper.GetTestFilePath(@"ImportSpatialData\water flow 1d.md1d");
+            var testDirectory = FileUtils.CreateTempDirectory();
+            var sourceFile = TestHelper.GetTestFilePath($@"ImportSpatialData\{spatialIniFile}");
+            var errorMessage = "Files not equal";
+            var targetFilePath = Path.Combine(testDirectory, "FileWriters");
+
+            try
+            {
+                //When
+                var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
+                Assert.IsNotNull(waterFlowModel1D);
+                WaterFlowModel1DFileWriter.Write(Path.Combine(targetFilePath, ModelFileNames.ModelDefinitionFilename),
+                    waterFlowModel1D);
+
+                // Then
+                var waterLevelIniFilePath = Path.Combine(targetFilePath, spatialIniFile);
+                Assert.IsTrue(FileComparer.Compare(waterLevelIniFilePath, sourceFile, out errorMessage));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDirectory);
+            }
+        }
+        
         [Test]
         public void GivenAnMd1dFile_WhenReadingTheNetworkDefinitionFileWithABadNode_ThenNullIsReturned()
         {
