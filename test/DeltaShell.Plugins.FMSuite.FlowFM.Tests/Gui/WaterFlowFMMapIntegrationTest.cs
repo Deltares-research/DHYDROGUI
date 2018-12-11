@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 }
 
                 sw.Stop();
-                Assert.Less(sw.ElapsedMilliseconds, 30000);
+                Assert.Less(sw.ElapsedMilliseconds, 40000);
             }
         }
 

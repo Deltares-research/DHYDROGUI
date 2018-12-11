@@ -176,7 +176,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 
                                             var channelTableView = (VectorLayerAttributeTableView)networkEditor.MapView.TabControl.ChildViews.First();
 
-                                            TestHelper.AssertIsFasterThan(1000, "time required to select 20 table view cells, synchronized with map and tree view",() => 
+                                            TestHelper.AssertIsFasterThan(1100, "time required to select 20 table view cells, synchronized with map and tree view",() => 
                                                 channelTableView.TableView.SelectCells(0, 0, 99, 1));
                                         };
 
