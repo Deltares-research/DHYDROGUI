@@ -41,6 +41,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                     return new WaterFlowModelObservationsParameterSetter();
                 case ModelDefinitionsRegion.RestartHeader:
                     return new WaterFlowModelRestartSetter();
+                case ModelDefinitionsRegion.SalinityValuesHeader:
+                    return new WaterFlowModelSalinitySetter();
                 default:
                     throw new NotImplementedException();
             }

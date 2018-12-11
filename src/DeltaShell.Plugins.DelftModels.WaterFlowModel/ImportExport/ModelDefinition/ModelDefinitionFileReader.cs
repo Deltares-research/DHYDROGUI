@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 
         private static bool IsInitialCategory(IDelftIniCategory category)
         {
-            return category.Name == ModelDefinitionsRegion.TransportComputationValuesHeader;
+            return (category.Name == ModelDefinitionsRegion.TransportComputationValuesHeader || category.Name == ModelDefinitionsRegion.SalinityValuesHeader);
         }
 
         private static bool IsSecondaryCategory(IDelftIniCategory category)

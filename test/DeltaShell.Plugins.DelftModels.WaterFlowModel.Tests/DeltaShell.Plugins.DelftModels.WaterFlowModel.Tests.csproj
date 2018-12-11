@@ -256,6 +256,7 @@
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelPropertySetterFactoryTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\ModelDefinitionFileReaderTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelRestartSetterTest.cs" />
+    <Compile Include="ImportExport\ModelDefinition\WaterFlowModelSalinitySetterTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelSimulationOptionsSetterTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelTemperatureSetterTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelTimePropertiesSetterTest.cs" />
