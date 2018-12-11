@@ -457,4 +457,10 @@
   <data name="WaterFlowModelPropertySetter_SetWaterFlowModelProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header___0___" xml:space="preserve">
     <value>There is unrecognized data read from the md1d file with header '{0}'. This category has been skipped when reading.</value>
   </data>
+  <data name="WaterFlowModelTemperatureSetter_SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported__since_it_is_not_supported_by_the_GUI" xml:space="preserve">
+    <value>Line {0}: Parameter '{1}' found in the md1d file. This parameter will not be imported, since it is not supported by the GUI</value>
+  </data>
+  <data name="WaterFlowModelTemperatureSetter_ParseStringToDouble_Line__0___Parameter___1___will_not_be_imported__Valid_values_are_doubles_only_" xml:space="preserve">
+    <value>Line {0}: Parameter '{1}' will not be imported. Valid values are doubles only.</value>
+  </data>
 </root>

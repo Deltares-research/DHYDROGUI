@@ -1,9 +1,14 @@
 ﻿using DeltaShell.NGHS.IO.Helpers;
 using System;
 using System.Collections.Generic;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
 {
+    /// <summary>
+    /// WaterFlowModelTemperatureSetter sets property values described in the Temperature DelftIniCategory on the WaterFlowModel1D.
+    /// </summary>
+    /// <seealso cref="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition.IWaterFlowModelCategoryPropertySetter" />
     public class WaterFlowModelTemperatureSetter : IWaterFlowModelCategoryPropertySetter
     {
         public void SetProperties(DelftIniCategory temperatureCategory, WaterFlowModel1D model, IList<string> errorMessages)
@@ -39,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 else
                 {
                     errorMessages.Add(
-                        $"Line {property.LineNumber}: Parameter '{property.Name}' found in the md1d file. This parameter will not be imported, since it is not supported by the GUI");
+                        string.Format(Resources.WaterFlowModelTemperatureSetter_SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported__since_it_is_not_supported_by_the_GUI, property.LineNumber, property.Name));
                 }
             }
         }
@@ -52,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             }
             catch (Exception)
             {
-                errorMessages.Add($"Line {property.LineNumber}: Parameter '{property.Name}' will not be imported. Valid values are doubles only.");
+                errorMessages.Add(string.Format(Resources.WaterFlowModelTemperatureSetter_ParseStringToDouble_Line__0___Parameter___1___will_not_be_imported__Valid_values_are_doubles_only_, property.LineNumber, property.Name));
                 return GetDefaultValueForProperty(property.Name);
             }           
         }

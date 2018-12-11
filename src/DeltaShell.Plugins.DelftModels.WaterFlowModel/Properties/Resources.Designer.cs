@@ -1121,6 +1121,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Line {0}: Parameter &apos;{1}&apos; will not be imported. Valid values are doubles only..
+        /// </summary>
+        public static string WaterFlowModelTemperatureSetter_ParseStringToDouble_Line__0___Parameter___1___will_not_be_imported__Valid_values_are_doubles_only_ {
+            get {
+                return ResourceManager.GetString("WaterFlowModelTemperatureSetter_ParseStringToDouble_Line__0___Parameter___1___wil" +
+                        "l_not_be_imported__Valid_values_are_doubles_only_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Line {0}: Parameter &apos;{1}&apos; found in the md1d file. This parameter will not be imported, since it is not supported by the GUI.
+        /// </summary>
+        public static string WaterFlowModelTemperatureSetter_SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported__since_it_is_not_supported_by_the_GUI {
+            get {
+                return ResourceManager.GetString("WaterFlowModelTemperatureSetter_SetProperties_Line__0___Parameter___1___found_in_" +
+                        "the_md1d_file__This_parameter_will_not_be_imported__since_it_is_not_supported_by" +
+                        "_the_GUI", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Wind {
