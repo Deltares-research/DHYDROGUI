@@ -357,7 +357,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness
         private static double GetResultingChainage(IBranch branch, string roughnessFunctionName, double chainage)
         {
             var resultingChainage = chainage;
-            if (chainage < branch.Length) return resultingChainage;
+            if (chainage <= branch.Length) return resultingChainage;
 
             resultingChainage = branch.Length;
             var warningMessage = Resources.RoughnessSection_UpdateCoverageForFunction_The_chainage___0___in_the_arguments_of_roughness_function___1____for_branch___2___was_corrected_to___3____to_match_the_branch_length_;
