@@ -28,7 +28,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             model.SetInitialModelProperties(modelSettingsCategories, errorMessages);
             model.SetSecondaryModelProperties(modelSettingsCategories, errorMessages);
 
-            createAndAddErrorReport?.Invoke("The following errors occurred when reading the md1d file", errorMessages);
+            if (errorMessages.Count > 0)
+                createAndAddErrorReport?.Invoke("The following errors occurred when reading the md1d file", errorMessages);
         }
 
         private static IList<DelftIniCategory> ReadCategoriesFromFileAndCollectErrorMessages(string filePath, ICollection<string> errorMessages)
@@ -87,8 +88,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// </returns>
         private static bool IsExcluded(IDelftIniCategory category)
         {
-            return category.Name == GeneralRegion.IniHeader || 
-                   category.Name == ModelDefinitionsRegion.FilesIniHeader;
+            return category.Name == GeneralRegion.IniHeader ||
+                   category.Name == ModelDefinitionsRegion.FilesIniHeader ||
+                   category.Name == ModelDefinitionsRegion.SpecialsValuesHeader || // This needs to be removed as part of issue: SOBEK3-1618
+                   category.Name == ModelDefinitionsRegion.SedimentValuesHeader;   // This needs to be removed as part of issue: SOBEK3-1619
         }
 
         private static void SetProperties(this WaterFlowModel1D model, IEnumerable<DelftIniCategory> modelSettingsCategories, IList<string> errorMessages)

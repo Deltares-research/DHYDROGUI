@@ -14,6 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
     public class ModelDefinitionFileReaderTest
     {
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenDataModelWithCategoryThatHasAnUnknownHeader_WhenSettingProperties_ThenLogMessageIsReturned()
         {
             // Given
@@ -40,6 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             }
         }
 
+
         /// <summary>
         /// GIVEN a WaterFlow1DOutputSettingData with all EngineParameters set to None
         ///   AND a dataAccessModel describing multiple EngineParameter with some Aggregate options not None
@@ -48,6 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         ///  AND all other engine parameters are None
         /// </summary>
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenAWaterFlow1DOutputSettingDataWithAllEngineParametersSetToNoneAndADataAccessModelDescribingMultipleEngineParameterWithSomeAggregateOptionsNotNone_WhenWaterFlowModelPropertySetterSetOutputPropertiesIsCalledWithTheseParameters_ThenTheseEnginePropertyIsSetToTheSpecifiedAggregateOptionAndAllOtherEngineParametersAreNone()
         {
             // Given 
@@ -175,6 +178,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 {QuantityType.SuctionSideLevel  , AggregationOptions.None}
             };
 
+            // Error handling
+            var errorHandlingHasBeenCalled = false;
+            var loggedErrors = new List<string>();
+            var errorHeader = "";
+
+            Action<string, IList<string>> someErrorReportFunction =
+                (_, msgs) =>
+                {
+                    errorHandlingHasBeenCalled = true;
+                    loggedErrors.AddRange(msgs);
+                };
+
+
             var model = new WaterFlowModel1D();
             var outputSettings = model.OutputSettings;
 
@@ -184,7 +200,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             // When
             var md1dFilePath = TestHelper.GetTestDataPath(Assembly.GetExecutingAssembly(), @"ModelDefinitionFileReaderTest\rmm_model.md1d");
             var testFilePath = TestHelper.CreateLocalCopy(md1dFilePath);
-            ModelDefinitionFileReader.SetWaterFlowModelProperties(testFilePath, model, (s, list) => { });
+            ModelDefinitionFileReader.SetWaterFlowModelProperties(testFilePath, model, someErrorReportFunction);
 
             // Then
             foreach (var t in resultsNodesProperties)
@@ -227,6 +243,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             foreach (var t in resultsPumps)
                 Assert.That(outputSettings.GetEngineParameter(t.Key, ElementSet.Pumps).AggregationOptions,
                     Is.EqualTo(t.Value), $"Property name: {t.Key.ToString()}");
+
+            // Check if no errors are reported.
+            Assert.That(errorHandlingHasBeenCalled, Is.False);
         }
     }
 }
