@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
 {
+    /// <summary>
+    /// WaterFlowModelMorphologySetter sets property values described in the Morphology DelftIniCategory on the WaterFlowModel1D.
+    /// </summary>
+    /// <seealso cref="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition.IWaterFlowModelCategoryPropertySetter" />
     public class WaterFlowModelMorphologySetter : IWaterFlowModelCategoryPropertySetter
     {
         public void SetProperties(DelftIniCategory morphologyCategory, WaterFlowModel1D model, IList<string> errorMessages)
