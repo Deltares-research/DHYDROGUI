@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                         continue;
                     }
 
-                    sourceDataitem.LinkTo(targetDataitem);
+                    targetDataitem.LinkTo(sourceDataitem);
                 }
                 catch (NotImplementedException exception)
                 {
