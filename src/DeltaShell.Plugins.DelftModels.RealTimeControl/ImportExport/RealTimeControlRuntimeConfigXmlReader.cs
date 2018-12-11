@@ -3,6 +3,8 @@ using DeltaShell.NGHS.IO.FileReaders;
 using log4net;
 using System;
 using System.Globalization;
+using System.IO;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
@@ -12,13 +14,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public static void Read(string runtimeConfigFilePath, RealTimeControlModel rtcModel)
         {
+            if (!File.Exists(runtimeConfigFilePath))
+                Log.ErrorFormat(Resources.RealTimeControlRuntimeConfigXmlReader_Read_File___0___does_not_exist_, runtimeConfigFilePath);
+
+            if (rtcModel == null) return;
+
             var runtimeConfigObject = (RtcRuntimeConfigXML)DelftConfigXmlFileParser.Read(runtimeConfigFilePath);
             var settings = runtimeConfigObject.period.Item as UserDefinedRuntimeXML;
 
             if (settings == null)
-            {
-                Log.Warn($"There is no time data for the RTC model in the file '{RealTimeControlXMLFiles.XmlRuntime}'. Time data is set with default values.");             
-            }
+                Log.ErrorFormat(Resources.RealTimeControlRuntimeConfigXmlReader_Read_There_is_no_time_data_for_the_RTC_model_in_the_file___0____Time_data_is_set_with_default_values_, RealTimeControlXMLFiles.XmlRuntime);             
 
             else
             {

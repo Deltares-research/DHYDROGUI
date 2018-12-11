@@ -3,7 +3,9 @@ using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using log4net;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
@@ -13,6 +15,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public static void Read(string toolsConfigFilePath, IList<ControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints)
         {
+            if (!File.Exists(toolsConfigFilePath))
+                Log.ErrorFormat(Resources.RealTimeControlToolsConfigXmlReader_Read_File___0___does_not_exist_, toolsConfigFilePath);
+
+            if (controlGroups == null || connectionPoints == null) return;
+
             var toolsConfigObject = (RtcToolsConfigXML)DelftConfigXmlFileParser.Read(toolsConfigFilePath);
 
             var ruleElements = toolsConfigObject.rules;

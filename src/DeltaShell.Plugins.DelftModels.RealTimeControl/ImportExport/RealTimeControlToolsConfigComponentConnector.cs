@@ -1,10 +1,10 @@
 ﻿using DelftTools.Functions;
-using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using log4net;
-using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
@@ -16,6 +16,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public static void ConnectTimeRules(List<TimeAbsoluteXML> timeRuleElements, IList<ControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints)
         {
+            if (timeRuleElements == null || controlGroups == null || connectionPoints == null) return;
+
             foreach (var timeRuleElement in timeRuleElements)
             {
                 var id = timeRuleElement.id;
@@ -25,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 var timeRule = RealTimeControlXmlReaderHelper.GetRuleByElementIdInControlGroup(id, correspondingControlGroup) as TimeRule;
                 if (timeRule == null)
                 {
-                    Log.Warn($"Could not find Time Rule with id '{id}'. See file: '{RealTimeControlXMLFiles.XmlTools}'.");
+                    Log.WarnFormat(Resources.RealTimeControlToolsConfigComponentConnector_ConnectTimeRules_Could_not_find_Time_Rule_with_id___0____See_file____1___, id, RealTimeControlXMLFiles.XmlTools);
                     continue;
                 }
 
@@ -33,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
                 if (!ruleOutputElementName.StartsWith(RtcXmlTag.Output))
                 {
-                    Log.Warn($"The output of a rule should be an output, tagged with '{RtcXmlTag.Output}'. See file: '{RealTimeControlXMLFiles.XmlTools}'.");
+                    Log.WarnFormat(Resources.RealTimeControlToolsConfigComponentConnector_ConnectTimeRules_The_output_of_a_rule_should_be_an_output__tagged_with___0____See_file____1___, RtcXmlTag.Output, RealTimeControlXMLFiles.XmlTools);
                     continue;
                 }
 
@@ -45,6 +47,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public static void ConnectRelativeTimeRules(List<TimeRelativeXML> relativeTimeRuleElements, IList<ControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints)
         {
+            if (relativeTimeRuleElements == null || controlGroups == null || connectionPoints == null) return;
+
             foreach (var relativeTimeRuleElement in relativeTimeRuleElements)
             {
                 var id = relativeTimeRuleElement.id;
@@ -54,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 var relativeTimeRule = RealTimeControlXmlReaderHelper.GetRuleByElementIdInControlGroup(id, correspondingControlGroup) as RelativeTimeRule;
                 if (relativeTimeRule == null)
                 {
-                    Log.Warn($"Could not find Relative Time Rule with id '{id}'. See file: '{RealTimeControlXMLFiles.XmlTools}'.");
+                    Log.WarnFormat(Resources.RealTimeControlToolsConfigComponentConnector_ConnectRelativeTimeRules_Could_not_find_Relative_Time_Rule_with_id___0____See_file____1___, id, RealTimeControlXMLFiles.XmlTools);
                     continue;
                 }
 
@@ -65,7 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 var ruleOutputElementName = relativeTimeRuleElement.output.y;
                 if (!ruleOutputElementName.StartsWith(RtcXmlTag.Output))
                 {
-                    Log.Warn($"The output of relative time rule '{relativeTimeRule.Name}' should be an output (see tag [Output]). See file: '{RealTimeControlXMLFiles.XmlTools}'.");
+                    Log.WarnFormat(Resources.RealTimeControlToolsConfigComponentConnector_ConnectRelativeTimeRules_The_output_of_relative_time_rule___0___should_be_an_output__see_tag__Output____See_file____1___, relativeTimeRule.Name, RealTimeControlXMLFiles.XmlTools);
                     continue;
                 }
 
@@ -86,6 +90,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public static void ConnectStandardConditions(List<StandardTriggerXML> standardConditionElements, IList<ControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints)
         {
+            if (standardConditionElements == null || controlGroups == null || connectionPoints == null) return;
+
             standardConditionElements.ForEach(e =>
                 {
                     GetAndConnectStandardConditionRecursively(e, controlGroups, connectionPoints);
@@ -94,6 +100,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         private static void AddConnectionPointToControlGroup(ConnectionPoint connectionPoint, ControlGroup controlGroup)
         {
+            if (connectionPoint == null || controlGroup == null) return;
+
             var input = connectionPoint as Input;
             if (input != null)
             {
@@ -118,12 +126,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         private static void DefineFunctionFromXmlTable(List<TimeRelativeControlTableRecordXML> records, IFunction function)
         {
+            if (records == null || function == null) return;
+
             function.Arguments[0].SetValues(records.Select(e => e.time));
             function.Components[0].SetValues(records.Select(e => e.value));
         }
 
         private static StandardCondition GetAndConnectStandardConditionRecursively(StandardTriggerXML standardConditionElement, IList<ControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints)
         {
+            if (standardConditionElement == null || controlGroups == null || connectionPoints == null) return null;
+
             var id = standardConditionElement.id;
             var correspondingControlGroup = RealTimeControlXmlReaderHelper.GetControlGroupByElementId(id, controlGroups);
             var correspondingStandardCondition = (StandardCondition)RealTimeControlXmlReaderHelper.GetConditionByElementIdInControlGroup(id, correspondingControlGroup);
@@ -152,7 +164,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             }
 
             correspondingStandardCondition.Operation = GetOperationFromXmlObject(operatorElementValue);
-            correspondingStandardCondition.Value = Double.Parse(valueElementValue, CultureInfo.InvariantCulture);
+
+            if (valueElementValue != null)
+                correspondingStandardCondition.Value = double.Parse(valueElementValue, CultureInfo.InvariantCulture);
 
             foreach (var trueOutputItem in trueOutputItems)
             {
@@ -231,7 +245,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     operation = Operation.Unequal;
                     break;
                 default:
-                    throw new Exception();
+                    throw new InvalidEnumArgumentException();
             }
 
             return operation;

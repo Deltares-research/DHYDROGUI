@@ -265,6 +265,121 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Output &apos;{0}&apos; is input for rule &apos;{1}&apos;, but the rule could not be found. See file: &apos;{2}&apos;..
+        /// </summary>
+        public static string RealTimeControlDataConfigXmlConverter_AddOutputAsInputForRelativeTimeRule_Output___0___is_input_for_rule___1____but_the_rule_could_not_be_found__See_file____2___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlDataConfigXmlConverter_AddOutputAsInputForRelativeTimeRule_Output_" +
+                        "__0___is_input_for_rule___1____but_the_rule_could_not_be_found__See_file____2___" +
+                        "", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Relative Time Rules can only have one output as input. It seems that rule &apos;{0}&apos; has multiple outputs as input. See file: &apos;{1}&apos;..
+        /// </summary>
+        public static string RealTimeControlDataConfigXmlConverter_AddOutputAsInputForRelativeTimeRule_Relative_Time_Rules_can_only_have_one_output_as_input__It_seems_that_rule___0___has_multiple_outputs_as_input__See_file____1___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlDataConfigXmlConverter_AddOutputAsInputForRelativeTimeRule_Relativ" +
+                        "e_Time_Rules_can_only_have_one_output_as_input__It_seems_that_rule___0___has_mul" +
+                        "tiple_outputs_as_input__See_file____1___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When getting an output as input for rule &apos;{0}&apos;, the output &apos;{1}&apos; could not be found in the file. See file: &apos;{2}&apos;..
+        /// </summary>
+        public static string RealTimeControlDataConfigXmlConverter_AddOutputAsInputForRelativeTimeRule_When_getting_an_output_as_input_for_rule___0____the_output___1___could_not_be_found_in_the_file__See_file____2___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlDataConfigXmlConverter_AddOutputAsInputForRelativeTimeRule_When_ge" +
+                        "tting_an_output_as_input_for_rule___0____the_output___1___could_not_be_found_in_" +
+                        "the_file__See_file____2___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Control Group &apos;{0}&apos; already contains a condition with name &apos;{1}&apos;. Names must be unique. See file: {2}..
+        /// </summary>
+        public static string RealTimeControlDataConfigXmlConverter_FindCorrespondingControlGroupAndAddCondition_Control_Group___0___already_contains_a_condition_with_name___1____Names_must_be_unique__See_file___2__ {
+            get {
+                return ResourceManager.GetString("RealTimeControlDataConfigXmlConverter_FindCorrespondingControlGroupAndAddConditio" +
+                        "n_Control_Group___0___already_contains_a_condition_with_name___1____Names_must_b" +
+                        "e_unique__See_file___2__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to For Condition &apos;{0}&apos;, corresponding control group &apos;{1}&apos; could not be found. See file: {2}.
+        /// </summary>
+        public static string RealTimeControlDataConfigXmlConverter_FindCorrespondingControlGroupAndAddCondition_For_Condition___0____corresponding_control_group___1___could_not_be_found__See_file___2_ {
+            get {
+                return ResourceManager.GetString("RealTimeControlDataConfigXmlConverter_FindCorrespondingControlGroupAndAddConditio" +
+                        "n_For_Condition___0____corresponding_control_group___1___could_not_be_found__See" +
+                        "_file___2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Control Group &apos;{0}&apos; already contains a rule with name &apos;{1}&apos;. Names must be unique. See file: {2}..
+        /// </summary>
+        public static string RealTimeControlDataConfigXmlConverter_FindCorrespondingControlGroupAndAddRule_Control_Group___0___already_contains_a_rule_with_name___1____Names_must_be_unique__See_file___2__ {
+            get {
+                return ResourceManager.GetString("RealTimeControlDataConfigXmlConverter_FindCorrespondingControlGroupAndAddRule_Con" +
+                        "trol_Group___0___already_contains_a_rule_with_name___1____Names_must_be_unique__" +
+                        "See_file___2__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to For Rule &apos;{0}&apos;, corresponding control group &apos;{1}&apos; could not be found. See file: {2}.
+        /// </summary>
+        public static string RealTimeControlDataConfigXmlConverter_FindCorrespondingControlGroupAndAddRule_For_Rule___0____corresponding_control_group___1___could_not_be_found__See_file___2_ {
+            get {
+                return ResourceManager.GetString("RealTimeControlDataConfigXmlConverter_FindCorrespondingControlGroupAndAddRule_For" +
+                        "_Rule___0____corresponding_control_group___1___could_not_be_found__See_file___2_" +
+                        "", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read connection points from file &apos;{0}&apos;..
+        /// </summary>
+        public static string RealTimeControlDataConfigXmlReader_Read_Could_not_read_connection_points_from_file___0___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlDataConfigXmlReader_Read_Could_not_read_connection_points_from_fil" +
+                        "e___0___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read control groups from file &apos;{0}&apos;..
+        /// </summary>
+        public static string RealTimeControlDataConfigXmlReader_Read_Could_not_read_control_groups_from_file___0___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlDataConfigXmlReader_Read_Could_not_read_control_groups_from_file__" +
+                        "_0___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File &apos;{0}&apos; does not exist..
+        /// </summary>
+        public static string RealTimeControlDataConfigXmlReader_Read_File___0___does_not_exist_ {
+            get {
+                return ResourceManager.GetString("RealTimeControlDataConfigXmlReader_Read_File___0___does_not_exist_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File &apos;{0}&apos; seems to be empty..
+        /// </summary>
+        public static string RealTimeControlDataConfigXmlReader_Read_File___0___seems_to_be_empty_ {
+            get {
+                return ResourceManager.GetString("RealTimeControlDataConfigXmlReader_Read_File___0___seems_to_be_empty_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Broken DataItem link detected in Model:{0}, Controlgroup:{1}, at the {2} linked to ({3}).{4}Connection to {5} must be manually re-established..
         /// </summary>
         public static string RealTimeControlModel_BrokenDataItemLinkDetected {
@@ -491,6 +606,164 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         public static string RealTimeControlModelProperties_WriteRestart_DisplayName {
             get {
                 return ResourceManager.GetString("RealTimeControlModelProperties_WriteRestart_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Directory &apos;{0}&apos; does not exist..
+        /// </summary>
+        public static string RealTimeControlModelXmlReader_Read_Directory___0___does_not_exist_ {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelXmlReader_Read_Directory___0___does_not_exist_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File &apos;{0}&apos; does not exist..
+        /// </summary>
+        public static string RealTimeControlRuntimeConfigXmlReader_Read_File___0___does_not_exist_ {
+            get {
+                return ResourceManager.GetString("RealTimeControlRuntimeConfigXmlReader_Read_File___0___does_not_exist_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is no time data for the RTC model in the file &apos;{0}&apos;. Time data is set with default values..
+        /// </summary>
+        public static string RealTimeControlRuntimeConfigXmlReader_Read_There_is_no_time_data_for_the_RTC_model_in_the_file___0____Time_data_is_set_with_default_values_ {
+            get {
+                return ResourceManager.GetString("RealTimeControlRuntimeConfigXmlReader_Read_There_is_no_time_data_for_the_RTC_mode" +
+                        "l_in_the_file___0____Time_data_is_set_with_default_values_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find output with name &apos;{0}&apos; that is referenced in file &apos;{1}&apos;. Please check file &apos;{2}&apos;.
+        /// </summary>
+        public static string RealTimeControlStateImportXmlReader_Read_Could_not_find_output_with_name___0___that_is_referenced_in_file___1____Please_check_file___2__ {
+            get {
+                return ResourceManager.GetString("RealTimeControlStateImportXmlReader_Read_Could_not_find_output_with_name___0___th" +
+                        "at_is_referenced_in_file___1____Please_check_file___2__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File &apos;{0}&apos; does not exist..
+        /// </summary>
+        public static string RealTimeControlStateImportXmlReader_Read_File___0___does_not_exist_ {
+            get {
+                return ResourceManager.GetString("RealTimeControlStateImportXmlReader_Read_File___0___does_not_exist_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Object with id &apos;{0}&apos; does not seem to be a Time Rule or Time Condition. See file: &apos;{1}&apos;..
+        /// </summary>
+        public static string RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Object_with_id___0___does_not_seem_to_be_a_Time_Rule_or_Time_Condition__See_file____1___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Object_with_id___0___does_no" +
+                        "t_seem_to_be_a_Time_Rule_or_Time_Condition__See_file____1___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File &apos;{0}&apos; does not exist..
+        /// </summary>
+        public static string RealTimeControlTimeSeriesXmlReader_Read_File___0___does_not_exist_ {
+            get {
+                return ResourceManager.GetString("RealTimeControlTimeSeriesXmlReader_Read_File___0___does_not_exist_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find Relative Time Rule with id &apos;{0}&apos;. See file: &apos;{1}&apos;..
+        /// </summary>
+        public static string RealTimeControlToolsConfigComponentConnector_ConnectRelativeTimeRules_Could_not_find_Relative_Time_Rule_with_id___0____See_file____1___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlToolsConfigComponentConnector_ConnectRelativeTimeRules_Could_not_f" +
+                        "ind_Relative_Time_Rule_with_id___0____See_file____1___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The output of relative time rule &apos;{0}&apos; should be an output (see tag [Output]). See file: &apos;{1}&apos;..
+        /// </summary>
+        public static string RealTimeControlToolsConfigComponentConnector_ConnectRelativeTimeRules_The_output_of_relative_time_rule___0___should_be_an_output__see_tag__Output____See_file____1___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlToolsConfigComponentConnector_ConnectRelativeTimeRules_The_output_" +
+                        "of_relative_time_rule___0___should_be_an_output__see_tag__Output____See_file____" +
+                        "1___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find Time Rule with id &apos;{0}&apos;. See file: &apos;{1}&apos;..
+        /// </summary>
+        public static string RealTimeControlToolsConfigComponentConnector_ConnectTimeRules_Could_not_find_Time_Rule_with_id___0____See_file____1___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlToolsConfigComponentConnector_ConnectTimeRules_Could_not_find_Time" +
+                        "_Rule_with_id___0____See_file____1___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The output of a rule should be an output, tagged with &apos;{0}&apos;. See file: &apos;{1}&apos;..
+        /// </summary>
+        public static string RealTimeControlToolsConfigComponentConnector_ConnectTimeRules_The_output_of_a_rule_should_be_an_output__tagged_with___0____See_file____1___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlToolsConfigComponentConnector_ConnectTimeRules_The_output_of_a_rul" +
+                        "e_should_be_an_output__tagged_with___0____See_file____1___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File &apos;{0}&apos; does not exist..
+        /// </summary>
+        public static string RealTimeControlToolsConfigXmlReader_Read_File___0___does_not_exist_ {
+            get {
+                return ResourceManager.GetString("RealTimeControlToolsConfigXmlReader_Read_File___0___does_not_exist_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find the condition &apos;{0}&apos;. The condition needs to be referenced in file &apos;{1}&apos;..
+        /// </summary>
+        public static string RealTimeControlXmlReaderHelper_GetConditionByElementIdInControlGroup_Could_not_find_the_condition___0____The_condition_needs_to_be_referenced_in_file___1___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlXmlReaderHelper_GetConditionByElementIdInControlGroup_Could_not_fi" +
+                        "nd_the_condition___0____The_condition_needs_to_be_referenced_in_file___1___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find the input/output &apos;{0}&apos;. The input/output needs to be referenced in file &apos;{1}&apos;..
+        /// </summary>
+        public static string RealTimeControlXmlReaderHelper_GetConnectionPointByName_Could_not_find_the_input_output___0____The_input_output_needs_to_be_referenced_in_file___1___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlXmlReaderHelper_GetConnectionPointByName_Could_not_find_the_input_" +
+                        "output___0____The_input_output_needs_to_be_referenced_in_file___1___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find the controlgroup &apos;{0}&apos; that is referenced in id &apos;{1}&apos;. The group needs to be referenced in file &apos;{2}&apos;..
+        /// </summary>
+        public static string RealTimeControlXmlReaderHelper_GetControlGroupByElementId_Could_not_find_the_controlgroup___0___that_is_referenced_in_id___1____The_group_needs_to_be_referenced_in_file___2___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlXmlReaderHelper_GetControlGroupByElementId_Could_not_find_the_cont" +
+                        "rolgroup___0___that_is_referenced_in_id___1____The_group_needs_to_be_referenced_" +
+                        "in_file___2___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find the input/output &apos;{0}&apos; that is referenced in id &apos;{1}&apos;. The input/output needs to be referenced in file &apos;{2}&apos;..
+        /// </summary>
+        public static string RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_input_output___0___that_is_referenced_in_id___1____The_input_output_needs_to_be_referenced_in_file___2___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_th" +
+                        "e_input_output___0___that_is_referenced_in_id___1____The_input_output_needs_to_b" +
+                        "e_referenced_in_file___2___", resourceCulture);
             }
         }
         

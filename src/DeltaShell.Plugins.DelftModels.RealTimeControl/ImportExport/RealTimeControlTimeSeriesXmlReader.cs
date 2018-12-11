@@ -3,6 +3,8 @@ using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using log4net;
 using System.Collections.Generic;
+using System.IO;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
@@ -12,8 +14,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public static void Read(string timeSeriesFilePath, IList<ControlGroup> controlGroups )
         {
+            if (!File.Exists(timeSeriesFilePath)) Log.ErrorFormat(Resources.RealTimeControlTimeSeriesXmlReader_Read_File___0___does_not_exist_, timeSeriesFilePath);
+
+            if (controlGroups == null) return;
+
             var timeSeriesObject = (TimeSeriesCollectionComplexType)DelftConfigXmlFileParser.Read(timeSeriesFilePath);
-            RealTimeControlTimeSeriesConnector.ConnectTimeSeries(timeSeriesObject.series, controlGroups );
+            RealTimeControlTimeSeriesConnector.ConnectTimeSeries(timeSeriesObject?.series, controlGroups );
         }
     }
 }

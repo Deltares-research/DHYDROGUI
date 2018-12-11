@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
@@ -15,6 +16,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public static void ConnectTimeSeries(IList<TimeSeriesComplexType> timeSeriesElements, IList<ControlGroup> controlGroups)
         {
+            if (timeSeriesElements == null || controlGroups == null) return;
+
             foreach(var timeSeriesElement in timeSeriesElements)
             {
                 var timeSeriesItem = timeSeriesElement.header;
@@ -26,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
                 if (timeDependentObject == null)
                 {
-                    Log.Warn("WARNING");
+                    Log.WarnFormat(Resources.RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Object_with_id___0___does_not_seem_to_be_a_Time_Rule_or_Time_Condition__See_file____1___, locationId, RealTimeControlXMLFiles.XmlTimeSeries);
                     continue;
                 }
 
@@ -39,6 +42,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         private static RtcBaseObject GetCorrespondingRuleOrCondition(string locationId, IList<ControlGroup> controlGroups)
         {
+            if (controlGroups == null) return null;
+
             var controlGroup = RealTimeControlXmlReaderHelper.GetControlGroupByElementId(locationId, controlGroups);
             var name = RealTimeControlXmlReaderHelper.GetRuleOrConditionNameFromElementId(locationId);
 
@@ -47,6 +52,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         private static void SetTimeSeriesFromXmlRecords(TimeSeries timeSeries, List<EventComplexType> records,  double missingValue)
         {
+            if (timeSeries == null || records == null) return;
+
             var dates = records.Select(r => CreateDateTimeFromDateAndTime(r.date, r.time));
             var doubleValues = records.Select(r => r.value);
 

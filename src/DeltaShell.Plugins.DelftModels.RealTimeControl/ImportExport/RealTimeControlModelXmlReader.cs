@@ -1,13 +1,19 @@
 ﻿using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using System.IO;
 using System.Linq;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
     public static class RealTimeControlModelXmlReader
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlModelXmlReader));
+
         public static RealTimeControlModel Read(string directoryPath)
         {
+            if (!Directory.Exists(directoryPath)) Log.ErrorFormat(Resources.RealTimeControlModelXmlReader_Read_Directory___0___does_not_exist_, directoryPath);
+
             var rtcModel = new RealTimeControlModel();
             var controlGroups = rtcModel.ControlGroups;
 
@@ -16,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             var dataConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlData);
             var connectionPoints = RealTimeControlDataConfigXmlReader.Read(dataConfigFilePath, controlGroups);
-
+            
             var toolsConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlTools);
             RealTimeControlToolsConfigXmlReader.Read(toolsConfigFilePath, controlGroups, connectionPoints);
 
