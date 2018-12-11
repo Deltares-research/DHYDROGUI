@@ -214,7 +214,7 @@ namespace DeltaShell.NGHS.IO.Grid
             if (grid == null || grid.IsEmpty) return;
             var gridDataModel = new GridUGridDataModel(grid);
             SaveGrid(netFilePath, gridDataModel, metaData, grid.CoordinateSystem);
-
+            WriteZValues(netFilePath, location, zValues);
             if (links?.ToList().Count > 0)
             {
                 Save1D2DLinks(netFilePath, links);

@@ -1,3 +1,4 @@
+
 #,,,,,,,,,,,,,,,
 GUIGroups,(order determines order of appearance),,,,,,,,,,,,,,
 id,caption,,,,,,,,,,,,,,
@@ -164,7 +165,6 @@ restart,RestartFile,,,,FileName,,,,TRUE,,,,,,"Restart netcdf-file, either *_rst.
 restart,RestartDateTime,,,Restart Time,DateTime,,,,TRUE,,,,,,Restart date and time (YYYYMMDDHHMMSS) when restarting from *_map.nc
 external forcing,ExtForceFile,,,,FileName,,,,TRUE,,,,,,"Old format for external forcings file *.ext, link with tim/cmp-format boundary conditions specification"
 external forcing,ExtForceFileNew,,,,FileName,,,,TRUE,,,,,,"New format for external forcings file *.ext, link with bc-format boundary conditions specification"
-external forcing,MeteoExtForceFileNew,,,,FileName,,,,TRUE,,,,,,"New format for external forcings file *.ext, link with bc-format meteo data specification"
 trachytopes,TrtRou,,,Include trachytopes?:Yes (Y)|No (N),Y|N,N,,,TRUE,,,,,,"Include alluvial and vegetation roughness (trachytopes) (Y: yes, N: no)"
 trachytopes,TrtDef,,,,FileName,,,,TRUE,,,,,,File (*.ttd) containing trachytope definitions
 trachytopes,TrtL,,,,FileName,,,,TRUE,,,,,,File (*.arl) containing distribution of trachytope definitions

@@ -361,7 +361,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ExternalForcingsFile.Write(extForceFilePath, modelDefinition,
                 !(newFormatBoundaryConditions || newBoundaries));
 
-            if (newFormatBoundaryConditions || newBoundaries || hasEmbankments)
+            if (newFormatBoundaryConditions || newBoundaries || hasEmbankments || modelDefinition.FmMeteoFields.Any())
             {
                 var bndExtFileName =
                     modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).GetValueAsString();
@@ -381,6 +381,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).SetValueAsString(string.Empty);
             }
+            /*
             if (modelDefinition.FmMeteoFields.Any())
             {
                 var meteoExtFileName =
@@ -396,7 +397,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
 
                 MeteoExtForceFile.Write(meteoExtForceFilePath, modelDefinition);
-            }
+            }*/
         }
 
         private void WriteMorSedFiles(string mduPath, WaterFlowFMModelDefinition modelDefinition, ISedimentModelData sedimentModelData)
@@ -937,17 +938,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             reportProgress("Reading fm meteo external forcings file", 6, totalSteps);
-            var meteoExtForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.MeteoExtForceFile);
-            if (meteoExtForceFileProperty != null)
-            {
-                var forceFilePath = MduFileHelper.GetSubfilePath(filePath, meteoExtForceFileProperty);
-
-                if (forceFilePath != null && File.Exists(forceFilePath))
-                {
-                    MeteoExtForceFile = new MeteoExtForceFile();
-                    MeteoExtForceFile.Read(forceFilePath, modelDefinition);
-                }
-            }
+            
 
             hydroArea.Embankments.AddRange(modelDefinition.Embankments);
         }

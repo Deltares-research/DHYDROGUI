@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var propertyDefinition = new WaterFlowFMPropertyDefinition
                 {
-                    MduPropertyName = KnownProperties.MeteoExtForceFile,
+                    MduPropertyName = KnownProperties.BndExtForceFile,
                     DataType = typeof(IList<string>),
                     IsMultipleFile = true,
                     FileCategoryName = "TestCategory"

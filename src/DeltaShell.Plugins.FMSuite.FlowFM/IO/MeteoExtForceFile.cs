@@ -77,8 +77,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var refDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
 
-            Write(filePath, modelDefinition.ModelName, modelDefinition.FmMeteoFields,
-                modelDefinition.GetModelProperty(KnownProperties.MeteoExtForceFile), refDate);
+            /*Write(filePath, modelDefinition.ModelName, modelDefinition.FmMeteoFields,
+                modelDefinition.GetModelProperty(KnownProperties.MeteoExtForceFile), refDate);*/
         }
 
         private void Write(string filePath, string modelDefinitionModelName, IList<IFmMeteoField> fmMeteoFields, WaterFlowFMProperty modelProperty, DateTime refDate)

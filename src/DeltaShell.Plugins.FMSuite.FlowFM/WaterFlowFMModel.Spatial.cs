@@ -18,6 +18,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
@@ -246,7 +247,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private double[] BedLevelZValues
         {
-            get { return ModelDefinition.Bathymetry.Components[0].GetValues<double>().ToArray(); }
+            get
+            {
+                return ModelDefinition.Bathymetry.Components[0].GetValues<double>()
+                    .Select(v => double.IsNaN(v) ? 999.0 : v).ToArray();
+            }
         }
         private UnstructuredGridFileHelper.BedLevelLocation BedLevelLocation
         {

@@ -54,7 +54,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             };
 
 
-            UnstructuredGridFileHelper.WriteGridToFile(@"c:\test.nc", grid, network, discretization, links, "Luca", "LucaPlugin", "1.0", UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev, new double[1] { 80.1 });
+//            UnstructuredGridFileHelper.WriteGridToFile(@"c:\test.nc", grid, network, discretization, links, "Luca", "LucaPlugin", "1.0", UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev, new double[1] { 80.1 });
+            UnstructuredGridFileHelper.WriteGridToFile(@"c:\test.nc", grid, network, discretization, links, "Luca", "LucaPlugin", "1.0", UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev, new double[5] { 80.1,80.2,80.3,80.4, 80.5 });
 
 
         }

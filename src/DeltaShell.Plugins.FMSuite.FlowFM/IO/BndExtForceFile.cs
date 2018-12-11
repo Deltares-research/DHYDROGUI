@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Helpers;
@@ -18,6 +19,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class BndExtForceFile : FMSuiteFileBase
     {
+        public const string MeteoBlockKey = "[meteo]";
+        public const string LocationTypeKey = "LocationType";
+
         public const string BoundaryBlockKey = "[boundary]";
         public const string QuantityKey = "quantity";
         public const string LocationFileKey = "locationfile";
@@ -89,20 +93,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var refDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
 
-            Write(filePath, modelDefinition.ModelName, modelDefinition.BoundaryConditionSets, modelDefinition.Embankments,
+            Write(filePath, modelDefinition.ModelName, modelDefinition.BoundaryConditionSets, modelDefinition.Embankments, modelDefinition.FmMeteoFields,
                 modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile), refDate);
         }
 
-        private void Write(string filePath, string modelDefinitionModelName, IList<BoundaryConditionSet> boundaryConditionSets, IList<Embankment> embankments, WaterFlowFMProperty modelProperty, DateTime refDate)
+        private void Write(string filePath, string modelDefinitionModelName, IList<BoundaryConditionSet> boundaryConditionSets, IList<Embankment> embankments, IEventedList<IFmMeteoField> fmMeteoFields, WaterFlowFMProperty modelProperty, DateTime refDate)
         {
             FilePath = filePath;
             var bndExtForceFileItems = WriteBndExtForceFileSubFiles(modelDefinitionModelName, boundaryConditionSets, refDate);
             var embankmentForceFileItems = WriteEmbankmentFiles(embankments);
+            var meteoExtForceFileItems = WriteMeteoExtForceFileSubFiles(modelDefinitionModelName, fmMeteoFields, refDate);
 
             var allItems = bndExtForceFileItems.Concat(embankmentForceFileItems).ToList();
             if (allItems.Count > 0)
             {
                 WriteBndExtForceFile(allItems);
+            }
+            if (meteoExtForceFileItems.Count > 0)
+            {
+                WriteMeteoExtForceFile(meteoExtForceFileItems);
+            }
+            if (allItems.Count > 0 || meteoExtForceFileItems.Count > 0)
+            {
                 modelProperty.SetValueAsString(Path.GetFileName(FilePath));
             }
             else
@@ -110,6 +122,85 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 FileUtils.DeleteIfExists(FilePath);
                 modelProperty.SetValueAsString(string.Empty);
             }
+        }
+        private void WriteMeteoExtForceFile(IEnumerable<DelftIniCategory> meteoExtForceFileItems)
+        {
+            OpenOutputFile(FilePath, true);
+            try
+            {
+                foreach (var bndExtForceFileItem in meteoExtForceFileItems)
+                {
+                    WriteLine("");
+                    WriteLine(MeteoBlockKey);
+                    WriteLine(QuantityKey + "=" + bndExtForceFileItem.GetPropertyValue(QuantityKey));
+                    WriteLine(LocationTypeKey + "=" + bndExtForceFileItem.GetPropertyValue(LocationTypeKey));
+                    var locationFile = bndExtForceFileItem.GetPropertyValue(LocationFileKey);
+                    if (!string.IsNullOrEmpty(locationFile))
+                        WriteLine(LocationFileKey + "=" + locationFile);
+                    foreach (var propertyValue in bndExtForceFileItem.GetPropertyValues(ForcingFileKey))
+                    {
+                        WriteLine(ForcingFileKey + "=" + propertyValue);
+                    }
+                }
+            }
+            finally
+            {
+                CloseOutputFile();
+            }
+        }
+        public IList<DelftIniCategory> WriteMeteoExtForceFileSubFiles(string modelDefinitionModelName, IList<IFmMeteoField> fmMeteoFields, DateTime refDate)
+        {
+            //WritePolyLines(fmMeteoFields);
+            var bcFile = new BcFile { MultiFileMode = BcFileWriteMode };
+            var resultingItems = WriteFmMeteo(refDate, bcFile, fmMeteoFields, new BcMeteoFileDataBuilder(), modelDefinitionModelName).Distinct().ToList();
+
+            return resultingItems;
+        }
+        private IEnumerable<DelftIniCategory> WriteFmMeteo(DateTime refDate, BcFile bcFile, IList<IFmMeteoField> fmMeteoFields, BcMeteoFileDataBuilder bcMeteoFileDataBuilder, string modelDefinitionName)
+        {
+            var resultingItems = new List<DelftIniCategory>();
+            var fileName = modelDefinitionName + "_meteo";
+            string path = AddExtension(fileName, BcFile.Extension);
+            foreach (var fmMeteoField in fmMeteoFields)
+            {
+                var quantityName = ExtForceQuantNames.MeteoQuantityNames[fmMeteoField.Quantity];
+
+                var pliFileName = fmMeteoField.FeatureData?.Feature is Feature2D
+                    ? existingPolylineFiles[(Feature2D)fmMeteoField.FeatureData.Feature]
+                    : null;
+
+                var fmMeteoLocationType =
+                    BcMeteoFileDataBuilder.FmMeteoLocationKernelNames[fmMeteoField.FmMeteoLocationType];
+                var bndBlock = CreateMeteoBlock(quantityName, fmMeteoLocationType, pliFileName, path);
+
+                resultingItems.Add(bndBlock);
+            }
+
+
+            if (WriteToDisk)
+            {
+                var fullPath = GetFullPath(path);
+                bcFile.Write(fmMeteoFields, fullPath, bcMeteoFileDataBuilder, refDate);
+            }
+
+            return resultingItems;
+        }
+        private static DelftIniCategory CreateMeteoBlock(string quantity, string fmMeteoLocationType, string locationFilePath, string forcingFilePath)
+        {
+            var block = new DelftIniCategory(MeteoBlockKey);
+            if (!string.IsNullOrEmpty(quantity))
+                block.AddProperty(QuantityKey, quantity);
+
+            if (!string.IsNullOrEmpty(fmMeteoLocationType))
+                block.AddProperty(LocationTypeKey, fmMeteoLocationType);
+
+            if (!string.IsNullOrEmpty(locationFilePath))
+                block.AddProperty(LocationFileKey, locationFilePath);
+
+            if (!string.IsNullOrEmpty(forcingFilePath))
+                block.AddProperty(ForcingFileKey, forcingFilePath);
+
+            return block;
         }
 
         private void WriteBndExtForceFile(IEnumerable<DelftIniCategory> bndExtForceFileItems)

@@ -59,7 +59,38 @@ namespace DeltaShell.NGHS.IO.Grid
             if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
 
             var nVal = zValues.Length;
-            IntPtr zPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nVal);
+            var nCalVal = 0;
+            try
+            {
+                int ierr;
+                switch (locationType)
+                {
+                    case GridApiDataSet.LocationType.UG_LOC_NONE:
+                        break;
+                    case GridApiDataSet.LocationType.UG_LOC_NODE:
+                        ierr = wrapper.GetNodeCount(ioncId, meshId, ref nCalVal);
+                        if (ierr > 0) return ierr;
+                        break;
+                    case GridApiDataSet.LocationType.UG_LOC_EDGE:
+                        break;
+                    case GridApiDataSet.LocationType.UG_LOC_FACE:
+                        ierr = wrapper.GetFaceCount(ioncId, meshId, ref nCalVal);
+                        if (ierr > 0) return ierr;
+                        break;
+                    case GridApiDataSet.LocationType.UG_LOC_VOL:
+                        break;
+                    case GridApiDataSet.LocationType.UG_LOC_ALL2D:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(locationType), locationType, null);
+                }
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+
+            IntPtr zPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCalVal);
 
             try
             {
@@ -74,11 +105,28 @@ namespace DeltaShell.NGHS.IO.Grid
                     wrapper.DefineVariable(ioncId, meshId, varId, GridApiDataSet.GridConstants.NF90_DOUBLE, locationType, varName,
                     GridApiDataSet.UGridApiConstants.Altitude, longName, GridApiDataSet.UGridApiConstants.M, GridApiDataSet.GridConstants.DEFAULT_FILL_VALUE);
                 }
+                int ierr;
+                if (nVal == nCalVal)
+                {
+                    Marshal.Copy(zValues, 0, zPtr, nVal);
 
-                Marshal.Copy(zValues, 0, zPtr, nVal);
+                    // Eventually the idea is to change PutVariable to use varId rather than varName
+                    ierr = wrapper.PutVariable(ioncId, meshId, locationType, varName, zPtr, nVal);
+                    return ierr;
+                }
+                var zCalValues = new double[nCalVal];
+                for (int i = 0; i < nVal; i++)
+                {
+                    zCalValues[i] = zValues[i];
+                }
+                for (int i = nVal; i < nCalVal; i++)
+                {
+                    zCalValues[i] = -999.0;
+                }
+                Marshal.Copy(zCalValues, 0, zPtr, nCalVal);
 
                 // Eventually the idea is to change PutVariable to use varId rather than varName
-                var ierr = wrapper.PutVariable(ioncId, meshId, locationType, varName, zPtr, nVal);
+                ierr = wrapper.PutVariable(ioncId, meshId, locationType, varName, zPtr, nCalVal);
                 return ierr;
             }
             catch
