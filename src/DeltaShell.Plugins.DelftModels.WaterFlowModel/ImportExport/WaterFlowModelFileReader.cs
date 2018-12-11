@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             reportProgress = reportProgress ?? ((s, c, t) => { });
             var errorReport = new List<string>();
             Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
-                errorReport.Add($"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
+                errorReport.Add($"{header}:{Environment.NewLine}    {string.Join($"{Environment.NewLine}    ", errorMessages)}");
 
             var name = Path.GetFileNameWithoutExtension(modelFilename);
             var model = name.Length > 0 ? new WaterFlowModel1D(name) : new WaterFlowModel1D();
