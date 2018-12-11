@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
         public string Name
         {
-            get { return "DIMR Configuration File Importer (dimr.xml)"; }
+            get { return "Integrated Model Configuration File Importer"; }
         }
 
         public string Category
