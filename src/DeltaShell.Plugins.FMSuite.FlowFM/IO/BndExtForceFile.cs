@@ -105,6 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var meteoExtForceFileItems = WriteMeteoExtForceFileSubFiles(modelDefinitionModelName, fmMeteoFields, refDate);
 
             var allItems = bndExtForceFileItems.Concat(embankmentForceFileItems).ToList();
+            FileUtils.DeleteIfExists(FilePath);
             if (allItems.Count > 0)
             {
                 WriteBndExtForceFile(allItems);
