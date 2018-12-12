@@ -189,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
                 }
             }
-            return false;
+            return true;
         }
     }
 }
