@@ -71,7 +71,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             {
                 UseSalt = true,
                 UseTemperature = true,
-                DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic,
             };
 
             const InitialConditionsType expectedConditionsType = InitialConditionsType.WaterLevel;
@@ -208,7 +207,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var model = new WaterFlowModel1D
             {
                 UseSalt = true,
-                DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic,
             };
 
             const InitialConditionsType expectedConditionsType = InitialConditionsType.WaterLevel;

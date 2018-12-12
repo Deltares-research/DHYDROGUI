@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
 
 
@@ -58,13 +59,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 model.DispersionCoverage.DefaultValue =
                     GetWithDefault(category, ModelDefinitionsRegion.Dispersion.Key, 0.0);
 
-            if (model.DispersionF3Coverage != null)
-                model.DispersionF3Coverage.DefaultValue =
-                    GetWithDefault(category, ModelDefinitionsRegion.DispersionF3.Key, 0.0);
+            // Currently, the DispersionFormulaType is not explicitly set. As such, we determine
+            // it here based upon whether the F3 and F4 coverage have been written. 
+            // This can be altered once we explicitly set the DispersionFormulaType.
+            if (model.UseSalt &&
+                category.Properties.Any(e => e.Name == ModelDefinitionsRegion.DispersionF3.Key) && 
+                category.Properties.Any(e => e.Name == ModelDefinitionsRegion.DispersionF4.Key))
+            {
+                model.DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic;
 
-            if (model.DispersionF4Coverage != null)
+                model.DispersionF3Coverage.DefaultValue =
+                    category.ReadProperty<double>(ModelDefinitionsRegion.DispersionF3.Key);
                 model.DispersionF4Coverage.DefaultValue =
-                    GetWithDefault(category, ModelDefinitionsRegion.DispersionF4.Key, 0.0);
+                    category.ReadProperty<double>(ModelDefinitionsRegion.DispersionF4.Key);
+            }
         }
 
         private static T GetWithDefault<T>(IDelftIniCategory category,
