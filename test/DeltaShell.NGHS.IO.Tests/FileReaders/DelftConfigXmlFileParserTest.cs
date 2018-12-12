@@ -106,56 +106,36 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GetDimrConfigurationFileWithExtraElementsOnRootLevel()
+        public void GetDimrConfigurationFileWithExtraElementsOnRootLevelInLogMessage()
         {
             var dimrConfigurationFile = DimrConfigFileWithExtraCategory();
-            var dataAccesModel = DelftConfigXmlFileParser.Read(dimrConfigurationFile);
 
-            Assert.IsNotNull(dataAccesModel);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "test");
 
-            var dimrXmlObject = (dimrXML)dataAccesModel;
-
-            Assert.AreEqual(dimrXmlObject.UnKnownElements.Count, 1);
-
-            //Root level
-            Assert.AreEqual(dimrXmlObject.UnKnownElements.ElementAt(0).Name, "test");
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GetDimrConfigurationFileWithUnknownAttributesOnCoupler()
+        public void GetDimrConfigurationFileWithUnknownAttributesOnCouplerInLogMessages()
         {
             var dimrConfigurationFile = DimrConfigFileWithExtraCategory();
-            var dataAccesModel = DelftConfigXmlFileParser.Read(dimrConfigurationFile);
-
-            Assert.IsNotNull(dataAccesModel);
-            var dimrXmlObject = (dimrXML)dataAccesModel;
-
 
             TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "Attribute");
-
-            //Coupler
-            Assert.AreEqual(dimrXmlObject.coupler.ElementAt(0).UnKnownAttributes.ElementAt(0).Name, "abc");
-            Assert.AreEqual(dimrXmlObject.coupler.ElementAt(0).UnKnownAttributes.ElementAt(0).Value, "2");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "abc");
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GetDimrConfigurationFileWithUnknownElementsOnCoupler()
+        public void GetDimrConfigurationFileWithUnknownElementsOnCouplerInLogMessages()
         {
             var dimrConfigurationFile = DimrConfigFileWithExtraCategory();
-            var dataAccesModel = DelftConfigXmlFileParser.Read(dimrConfigurationFile);
-
-            Assert.IsNotNull(dataAccesModel);
-
-            var dimrXmlObject = (dimrXML)dataAccesModel;
 
             TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "Element");
-
-            //logger
-            Assert.AreEqual(dimrXmlObject.coupler.ElementAt(0).UnKnownElements.ElementAt(0).Name, "logger");
-            Assert.AreEqual(dimrXmlObject.coupler.ElementAt(1).UnKnownElements.ElementAt(0).Name, "logger");
-            Assert.AreEqual(dimrXmlObject.coupler.ElementAt(0).item.ElementAt(0).UnKnownElements.ElementAt(0).Name, "abcsourcename");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "test");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "abc");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "abcsourcename");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "logger");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "dimrwithextrainfo.xml");
         }
 
         #region RTC tests
@@ -174,6 +154,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             var dataAccesModel = DelftConfigXmlFileParser.Read(path);
 
             Assert.IsNotNull(dataAccesModel);
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: xsi:schemaLocation");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), fileName);
 
             var treeVectorFile = dataAccesModel as TreeVectorFileXML;
 
@@ -195,6 +178,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
             Assert.IsNotNull(dataAccesModel);
 
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: xsi:schemaLocation");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), fileName);
+
             var timeSeriesCollection = dataAccesModel as TimeSeriesCollectionComplexType;
 
             Assert.NotNull(timeSeriesCollection);
@@ -214,6 +200,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             var dataAccesModel = DelftConfigXmlFileParser.Read(path);
 
             Assert.IsNotNull(dataAccesModel);
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: xsi:schemaLocation");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), fileName);
 
             var rtcToolsConfig = dataAccesModel as RtcToolsConfigXML;
 
@@ -235,6 +224,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
             Assert.IsNotNull(dataAccesModel);
 
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: xsi:schemaLocation");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), fileName);
+
             var rtcRuntimeConfig = dataAccesModel as RtcRuntimeConfigXML;
 
             Assert.NotNull(rtcRuntimeConfig);
@@ -254,6 +246,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             var dataAccesModel = DelftConfigXmlFileParser.Read(path);
 
             Assert.IsNotNull(dataAccesModel);
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: xsi:schemaLocation");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), fileName);
 
             var rtcDataConfig = (RTCDataConfigXML)dataAccesModel;
 
