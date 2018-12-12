@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using DelftTools.Utils.Reflection;
@@ -41,20 +42,20 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 throw new ArgumentException("Root element cannot be found");
             }
 
-            using (var reader = rootElement.CreateReader())
+            var rootName = rootElement.Name.LocalName;
+
+            if (string.IsNullOrEmpty(rootName))
             {
-                var rootName = rootElement.Name.LocalName;
+                throw new ArgumentException("Rootname cannot be empty");
+            }
 
-                if (string.IsNullOrEmpty(rootName))
-                {
-                    throw new ArgumentException("Rootname cannot be empty");
-                }
+            if (!LookupSerializer.TryGetValue(rootName.ToLower(), out var serializerType))
+            {
+                throw new ArgumentException($"Can not find serializer for {rootName}");
+            }
 
-                if (!LookupSerializer.TryGetValue(rootName.ToLower(), out var serializerType))
-                {
-                    throw new ArgumentException($"Can not find serializer for {rootName}");
-                }
-
+            using (var reader = new StreamReader(xmlFileSource, Encoding.UTF8))
+            {
                 var unsupportedFeatures = new List<string>();
 
                 var dataAccessModel = TypeUtils.CallStaticGenericMethod(typeof(DelftXmlFileConverter), nameof(DelftXmlFileConverter.Convert), serializerType, reader, unsupportedFeatures);
@@ -92,8 +93,8 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
             var fileName = xmlFileSource?.Split('\\').LastOrDefault() ?? "";
             var message = string.Join(Environment.NewLine, unsupportedFeatures);
-                
-            Log.InfoFormat($"The following features in the {fileName} file are not conforming with the xsd file: {message}");
+
+            Log.InfoFormat($"The following features in the {fileName} file are not conforming with the xsd file: {Environment.NewLine + message}");
         }
     }
 }

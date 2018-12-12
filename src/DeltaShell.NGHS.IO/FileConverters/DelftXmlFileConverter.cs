@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml;
+using System.IO;
 using System.Xml.Serialization;
 using DeltaShell.Dimr.xsd;
 
@@ -15,10 +15,10 @@ namespace DeltaShell.NGHS.IO.FileConverters
         /// De-serializes a <typeparam name="T"/> object from the supplied <see cref="file"/> and 
         /// lists all unsupported elements and attributes
         /// </summary>
-        /// <param name="file"><see cref="XmlReader"/> to the xml file</param>
+        /// <param name="file"><see cref="StreamReader"/> to the xml file</param>
         /// <param name="unsupportedFeatures">List of unsupported item messages</param>
         /// <returns>Parsed <see cref="IXmlParsedObject"/> object</returns>
-        public static T Convert<T>(XmlReader file, List<string> unsupportedFeatures) where T : class, IXmlParsedObject
+        public static T Convert<T>(StreamReader file, List<string> unsupportedFeatures) where T : class, IXmlParsedObject
         {
             if (file == null)
             {
@@ -34,15 +34,13 @@ namespace DeltaShell.NGHS.IO.FileConverters
 
             serializer.UnknownElement += (sender, args) =>
             {
-                unsupportedFeatures.Add($"Element: {args.Element.Name} at line {args.LineNumber} position {args.LinePosition}");
-
+                unsupportedFeatures.Add($"Element: \"{args.Element.Name}\" at line {args.LineNumber} position {args.LinePosition}");
                 AddUnknownItem(args.ObjectBeingDeserialized as T, args.Element, o => o.UnKnownElements, (o, l) => o.UnKnownElements = l);
             };
 
             serializer.UnknownAttribute += (sender, args) =>
             {
-                unsupportedFeatures.Add($"Attribute: {args.Attr.Name} at line {args.LineNumber} position {args.LinePosition}" );
-
+                unsupportedFeatures.Add($"Attribute: \"{args.Attr.Name}\" at line {args.LineNumber} position {args.LinePosition}" );
                 AddUnknownItem(args.ObjectBeingDeserialized as T, args.Attr, o => o.UnKnownAttributes, (o, l) => o.UnKnownAttributes = l);
             };
 

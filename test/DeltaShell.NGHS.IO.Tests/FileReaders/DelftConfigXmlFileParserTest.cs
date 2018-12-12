@@ -153,7 +153,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
             Assert.IsNotNull(dataAccesModel);
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: xsi:schemaLocation");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: \"xsi:schemaLocation\"");
             TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), fileName);
 
             var treeVectorFile = dataAccesModel as TreeVectorFileXML;
@@ -176,7 +176,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
             Assert.IsNotNull(dataAccesModel);
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: xsi:schemaLocation");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: \"xsi:schemaLocation\"");
             TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), fileName);
 
             var timeSeriesCollection = dataAccesModel as TimeSeriesCollectionComplexType;
@@ -199,7 +199,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
             Assert.IsNotNull(dataAccesModel);
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: xsi:schemaLocation");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: \"xsi:schemaLocation\"");
             TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), fileName);
 
             var rtcToolsConfig = dataAccesModel as RtcToolsConfigXML;
@@ -222,7 +222,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
             Assert.IsNotNull(dataAccesModel);
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: xsi:schemaLocation");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: \"xsi:schemaLocation\"");
             TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), fileName);
 
             var rtcRuntimeConfig = dataAccesModel as RtcRuntimeConfigXML;
@@ -245,7 +245,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
             Assert.IsNotNull(dataAccesModel);
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: xsi:schemaLocation");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: \"xsi:schemaLocation\"");
             TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), fileName);
 
             var rtcDataConfig = (RTCDataConfigXML)dataAccesModel;
