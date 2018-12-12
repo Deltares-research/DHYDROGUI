@@ -14,7 +14,7 @@ namespace DeltaShell.NGHS.IO.Adaptors
            uGrid = new UGrid(filename);
         }
         
-        public UnstructuredGrid GetUnstructuredGridFromUGridMeshId(int meshId)
+        public UnstructuredGrid GetUnstructuredGridFromUGridMeshId(int meshId, bool oneBased = false)
         {
             if (meshId > uGrid.GetNumberOf2DMeshes() || meshId <=0 ) return null;
 
@@ -26,7 +26,7 @@ namespace DeltaShell.NGHS.IO.Adaptors
                 uGrid.NodeCoordinatesByMeshId[meshId-1].ToList(), 
                 uGrid.EdgeNodesByMeshId[meshId-1], 
                 uGrid.FaceNodesByMeshId[meshId-1], 
-                oneBased: false);
+                oneBased: oneBased);
 
             if (grid != null) grid.CoordinateSystem = uGrid.CoordinateSystem;
             return grid;

@@ -311,7 +311,6 @@
     <Compile Include="IO\ObsFileImporterExporterTest.cs" />
     <Compile Include="IO\PolFileImporterExporterTest.cs" />
     <Compile Include="IO\StructureFileWriteTest.cs" />
-    <Compile Include="IO\UGridToUnstructuredGridAdaptorTest.cs" />
     <Compile Include="IO\Importers\FMRstFileImporterTest.cs" />
     <Compile Include="IO\LdbFileTest.cs" />
     <Compile Include="IO\FMMapFileFunctionStoreTest.cs" />

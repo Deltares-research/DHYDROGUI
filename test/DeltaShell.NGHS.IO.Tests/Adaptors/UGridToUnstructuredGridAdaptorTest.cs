@@ -5,7 +5,7 @@ using DeltaShell.NGHS.IO.Adaptors;
 using DeltaShell.NGHS.IO.Grid;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
+namespace DeltaShell.NGHS.IO.Tests.Adaptors
 {
     [TestFixture]
     public class UGridToUnstructuredGridAdaptorTest
@@ -37,14 +37,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void TestGetUnstructuredGridFromUGridMeshId_WithExportedNetGeomFile()
         {
-            /*
-               Note:
-                    writing net_geom currently produces an 'invalid' UGrid file since the start_index attribute is not written to the following variables:
-                    mesh2d_edge_faces, mesh2d_edge_nodes, mesh2d_face_nodes
-                
-                    the api call ionc_write_geom_ugrid is not actually being used yet in DeltaShell... only in tests
-             */
-
             var testDir = FileUtils.CreateTempDirectory();
             var localCopyOfTestFile = Path.Combine(testDir, "Custom_Ugrid.nc");
             using (var gridApi = GridApiFactory.CreateNew())
@@ -56,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 using (var fmUGridAdaptor = new UGridToUnstructuredGridAdaptor(localCopyOfTestFile))
                 {
-                    var unstructuredGrid = fmUGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
+                    var unstructuredGrid = fmUGridAdaptor.GetUnstructuredGridFromUGridMeshId(1, true);
                     Assert.That(unstructuredGrid, Is.Not.Null);
                 }
             }

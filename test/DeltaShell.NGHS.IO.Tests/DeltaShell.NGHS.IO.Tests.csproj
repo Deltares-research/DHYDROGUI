@@ -116,6 +116,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adaptors\UGridToUnstructuredGridAdaptorTest.cs" />
     <Compile Include="Converters\BranchConverterTest.cs" />
     <Compile Include="FileConverters\DelftXmlFileConverterTest.cs" />
     <Compile Include="Converters\HydroNodeConverterTest.cs" />
