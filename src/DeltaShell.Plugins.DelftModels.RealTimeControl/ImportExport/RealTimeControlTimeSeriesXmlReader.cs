@@ -14,7 +14,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public static void Read(string timeSeriesFilePath, IList<ControlGroup> controlGroups )
         {
-            if (!File.Exists(timeSeriesFilePath)) Log.ErrorFormat(Resources.RealTimeControlTimeSeriesXmlReader_Read_File___0___does_not_exist_, timeSeriesFilePath);
+            if (!File.Exists(timeSeriesFilePath))
+            {
+                Log.ErrorFormat(Resources.RealTimeControlTimeSeriesXmlReader_Read_File___0___does_not_exist_, timeSeriesFilePath);
+                return;
+            }
 
             if (controlGroups == null) return;
 

@@ -16,8 +16,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         public static void Read(string toolsConfigFilePath, IList<ControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints)
         {
             if (!File.Exists(toolsConfigFilePath))
+            {
                 Log.ErrorFormat(Resources.RealTimeControlToolsConfigXmlReader_Read_File___0___does_not_exist_, toolsConfigFilePath);
-
+                return;
+            }
+                
             if (controlGroups == null || connectionPoints == null) return;
 
             var toolsConfigObject = (RtcToolsConfigXML)DelftConfigXmlFileParser.Read(toolsConfigFilePath);

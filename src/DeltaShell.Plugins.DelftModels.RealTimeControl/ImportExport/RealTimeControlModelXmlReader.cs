@@ -12,7 +12,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public static RealTimeControlModel Read(string directoryPath)
         {
-            if (!Directory.Exists(directoryPath)) Log.ErrorFormat(Resources.RealTimeControlModelXmlReader_Read_Directory___0___does_not_exist_, directoryPath);
+            if (!Directory.Exists(directoryPath))
+            {
+                Log.ErrorFormat(Resources.RealTimeControlModelXmlReader_Read_Directory___0___does_not_exist_, directoryPath);
+                return null;
+            }
 
             var rtcModel = new RealTimeControlModel();
             var controlGroups = rtcModel.ControlGroups;

@@ -16,8 +16,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         public static void Read(string stateImportFilePath, IList<Output> outputs)
         {
             if (!File.Exists(stateImportFilePath))
+            {
                 Log.ErrorFormat(Resources.RealTimeControlStateImportXmlReader_Read_File___0___does_not_exist_, stateImportFilePath);
-
+                return;
+            }
+                
             if (outputs == null) return;
 
             var stateImportObject = (TreeVectorFileXML)DelftConfigXmlFileParser.Read(stateImportFilePath);
