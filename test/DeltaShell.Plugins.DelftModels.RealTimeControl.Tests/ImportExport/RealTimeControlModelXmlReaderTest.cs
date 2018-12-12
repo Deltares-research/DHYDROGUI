@@ -13,6 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
     public class RealTimeControlModelXmlReaderTest
     {
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenAValidRtcDirectoryPath_WhenReadingAllTheFiles_TheExpectedRtcModelIsReturned_SimpleModel()
         {
             // Given
@@ -74,6 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenAValidRtcDirectoryPath_WhenReadingAllTheFiles_TheExpectedRtcModelIsReturned_RMM()
         {
             // Given
@@ -143,6 +145,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
         [TestCase("SimpleModel")]
         [TestCase("RMM")]
+        [Category(TestCategory.DataAccess)]
         public void GivenAValidRtcDirectoryPath_WhenReadingAllTheFiles_ThenNoExceptionIsThrown(string directoryName)
         {
             // Given
