@@ -41,9 +41,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         [Test]
         public void GivenAnAdvancedOptionsCategoryWithLatitude_WhenSettingThisModelProperty_ThenThisPropertyShouldBeSetInTheModel()
         {
-            var propertyName = "Latitude";
-            var value = "6.0";
-            var expectedValue = 6.0;
+            var propertyName = ModelDefinitionsRegion.Latitude.Key;
+            const string value = "6.0";
+            const double expectedValue = 6.0;
 
             //Given
             var category = new DelftIniCategory(ModelDefinitionsRegion.AdvancedOptionsHeader);
@@ -63,9 +63,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         [Test]
         public void GivenAnAdvancedOptionsCategoryWithLongitude_WhenSettingThisModelProperty_ThenThisPropertyShouldBeSetInTheModel()
         {
-            var propertyName = "Longitude";
-            var value = "7.0";
-            var expectedValue = 7.0;
+            var propertyName = ModelDefinitionsRegion.Longitude.Key;
+            const string value = "7.0";
+            const double expectedValue = 7.0;
 
             //Given
             var category = new DelftIniCategory(ModelDefinitionsRegion.AdvancedOptionsHeader);
@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         [TestCase("0", false)]
         [Test] public void GivenAnAdvancedOptionsCategoryWithCalculateDelwaqOutput_WhenSettingThisModelProperty_ThenThisPropertyShouldBeSetInTheModel(string value, bool expectedValue)
         {
-            var propertyName = "CalculateDelwaqOutput";
+            var propertyName = ModelDefinitionsRegion.CalculateDelwaqOutput.Key;
 
             //Given
             var category = new DelftIniCategory(ModelDefinitionsRegion.AdvancedOptionsHeader);

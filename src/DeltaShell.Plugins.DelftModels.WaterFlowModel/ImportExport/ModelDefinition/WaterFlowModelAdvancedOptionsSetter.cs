@@ -5,8 +5,23 @@ using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
 {
+    /// <summary>
+    /// WaterFlowModelAdvancedOptionsSetter sets property values described in the Advanced Options DelftIniCategory on the WaterFlowModel1D.
+    /// </summary>
+    /// <seealso cref="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition.IWaterFlowModelCategoryPropertySetter" />
     public class WaterFlowModelAdvancedOptionsSetter : IWaterFlowModelCategoryPropertySetter
     {
+        /// <summary>
+        /// Sets the advanced option settings of <paramref name="model"/> as described in
+        /// the AdvancedOptions DelftIniCategory.
+        /// </summary>
+        ///  <param name="category">The Advanced Options DelftIniCategory.</param>
+        ///  <param name="model">The WaterFlow1D model.</param>
+        ///  <param name="errorMessages"> A collection of error messages that can be added to in case errors occur in this method. </param>
+        /// <remarks>
+        ///  Pre-condition: category != null && model != null
+        ///  If category.Name != AdvancedOptions then nothing happens
+        ///  </remarks>
         public void SetProperties(DelftIniCategory advancedOptionsCategory, WaterFlowModel1D model, IList<string> errorMessages)
         {
             if (advancedOptionsCategory?.Name != ModelDefinitionsRegion.AdvancedOptionsHeader) return;
