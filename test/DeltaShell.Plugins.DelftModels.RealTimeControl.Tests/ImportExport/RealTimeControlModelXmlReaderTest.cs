@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAValidRtcDirectoryPath_WhenReadingAllTheFiles_TheExpectedRtcModelIsReturned_SimpleModel()
         {
             // Given
-            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RealTimeControlModelXmlReader", "SimpleModel" ));
+            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "SimpleModel" ));
             Assert.That(Directory.Exists(directoryPath));
 
             // When
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAValidRtcDirectoryPath_WhenReadingAllTheFiles_TheExpectedRtcModelIsReturned_RMM()
         {
             // Given
-            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RealTimeControlModelXmlReader", "RMM"));
+            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RMM"));
             Assert.That(Directory.Exists(directoryPath));
 
             // When
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAValidRtcDirectoryPath_WhenReadingAllTheFiles_ThenNoExceptionIsThrown(string directoryName)
         {
             // Given
-            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RealTimeControlModelXmlReader", directoryName));
+            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", directoryName));
             Assert.That(Directory.Exists(directoryPath));
 
             // Then
@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAnInvalidRtcDirectoryPath_WhenReading_ThenNoExceptionIsThrownAndNullIsReturned()
         {
             // Given
-            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RealTimeControlModelXmlReader", "Invalid"));
+            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "Invalid"));
             Assert.That(!Directory.Exists(directoryPath));
 
             // Then
