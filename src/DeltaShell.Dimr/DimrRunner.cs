@@ -171,10 +171,12 @@ namespace DeltaShell.Dimr
         {
             get
             {
-                return model!= null && 
-                        model.Status == ActivityStatus.Initialized || model.Status == ActivityStatus.Executing ||
-                        model.Status == ActivityStatus.Executed || model.Status == ActivityStatus.Done 
-                      && dimrApi != null;
+                return (model != null) &&
+                       (model.Status == ActivityStatus.Initialized ||
+                        model.Status == ActivityStatus.Executing ||
+                        model.Status == ActivityStatus.Executed ||
+                        model.Status == ActivityStatus.Done)
+                       && (dimrApi != null);
             }
         }
 
