@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
+using DeltaShell.Dimr.xsd;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -22,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
             var fileImporters = new List<IDimrModelFileImporter>();
 
-            var dimrObject = DelftConfigXmlFileParser.Read(dimrPath);
+            var dimrObject = DelftConfigXmlFileParser.Read(dimrPath) as dimrXML;
             HydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
 
             TestHelper.AssertAtLeastOneLogMessagesContains(() => HydroModelConverter.Convert(dimrObject, dimrPath, fileImporters), "No importer found for extension:");
@@ -37,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 new WaterFlowModel1DFileImporter()
             };
 
-            var dimrObject = DelftConfigXmlFileParser.Read(dimrPath);
+            var dimrObject = DelftConfigXmlFileParser.Read(dimrPath) as dimrXML;
             var result = HydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
 
             Assert.IsNotNull(result);
@@ -56,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 new RealTimeControlModelImporter()
             };
 
-            var dimrObject = DelftConfigXmlFileParser.Read(dimrPath);
+            var dimrObject = DelftConfigXmlFileParser.Read(dimrPath) as dimrXML;
             var result = HydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
 
             Assert.IsNotNull(result);
@@ -76,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 new WaterFlowModel1DFileImporter()
             };
 
-            var dimrObject = DelftConfigXmlFileParser.Read(dimrPath);
+            var dimrObject = DelftConfigXmlFileParser.Read(dimrPath) as dimrXML;
             var result = HydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
             Assert.IsNotNull(result);
             Assert.That(result, Is.TypeOf<HydroModel>());

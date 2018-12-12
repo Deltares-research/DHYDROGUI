@@ -19,9 +19,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModelConverter));
 
-        public static HydroModel Convert(object dataObject, string path, List<IDimrModelFileImporter> fileImporters)
+        /// <summary>
+        /// Converts <see cref="dimrObject"/> to a <see cref="HydroModel"/> using the <param name="fileImporters"/> 
+        /// for importing sub-models
+        /// </summary>
+        /// <param name="dimrObject">Parsed <see cref="dimrXML"/> object</param>
+        /// <param name="path">Path to dimr.xml (used for finding sub-model folders)</param>
+        /// <param name="fileImporters">List of file importers for importing sub-models</param>
+        /// <returns>Converted <see cref="HydroModel"/></returns>
+        /// <exception cref="ArgumentException">When <param name="dimrObject"/> is null</exception>
+        public static HydroModel Convert(dimrXML dimrObject, string path, List<IDimrModelFileImporter> fileImporters)
         {
-            var dimrObject = (dimrXML)dataObject;
+            if (dimrObject == null)
+            {
+                throw new ArgumentException("Can not convert empty dimr data object");
+            }
+
             var rootFolder = Path.GetDirectoryName(path);
             var hydroModel = new HydroModel();
 
@@ -77,7 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             }
         }
 
-        private static void AddModels(List<IDimrModelFileImporter> fileImporters, dimrXML dimrObject, string rootFolder, HydroModel hydroModel)
+        private static void AddModels(ICollection<IDimrModelFileImporter> fileImporters, dimrXML dimrObject, string rootFolder, HydroModel hydroModel)
         {
             var componentGroups = dimrObject.component
                 .GroupBy(component => Path.GetExtension(component.inputFile)?.TrimStart('.'));
@@ -90,12 +103,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 {
                     extension = "json";
                 }
+
                 var importer = fileImporters.FirstOrDefault(f => f.MasterFileExtension == extension);
 
                 if (importer == null)
                 {
                     LogUnknownImporter(extension);
-
                     continue;
                 }
 
@@ -113,6 +126,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     var fullPath = Path.GetFullPath(combinedPath);
                     var importedItem = importer.ImportItem(fullPath);
                     var subModel = importedItem as IActivity;
+
                     if (subModel == null)
                     {
                         Log.Error($"Could not add {subModel.Name} to integrated model."); 
@@ -159,7 +173,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
                 pathParts = new[] { rootFolder }
                     .Concat(importer.SubFolders)
-                    .Plus(fileObject.xmlDir)
+                    .Plus(fileObject.XmlDirectory)
                     .ToArray();
 
                 return pathParts;

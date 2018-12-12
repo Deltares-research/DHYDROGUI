@@ -5,10 +5,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
     [DataContract]
     public class RtcXmlDirectoryLookup
     {
-        [DataMember]
-        public string xmlDir { get; set; }
+        [DataMember(Name = "xmlDir")]
+        public string XmlDirectory { get; set; }
 
-        [DataMember]
-        public string schemaDir { get; set; }
+        [DataMember(Name = "schemaDir")]
+        public string SchemaDirectory { get; set; }
     }
 }

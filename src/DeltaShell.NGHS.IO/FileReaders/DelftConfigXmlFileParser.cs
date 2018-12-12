@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using DelftTools.Utils.Reflection;
+using DeltaShell.Dimr.xsd;
 using DeltaShell.NGHS.IO.FileConverters;
 using log4net;
 
@@ -15,11 +18,62 @@ namespace DeltaShell.NGHS.IO.FileReaders
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(DelftConfigXmlFileParser));
 
-        public static object Read(string xmlFileSource)
+        private static readonly Dictionary<string, Type> LookupSerializer = new Dictionary<string, Type>
         {
-            if (string.IsNullOrEmpty(xmlFileSource)) {throw new FileReadingException("Configuration file cannot be found"); }
+            {"dimrConfig".ToLower(),       typeof(dimrXML)},
+            {"rtcDataConfig".ToLower(),    typeof(RTCDataConfigXML)},
+            {"rtcRuntimeConfig".ToLower(), typeof(RtcRuntimeConfigXML)},
+            {"rtcToolsConfig".ToLower(),   typeof(RtcToolsConfigXML)},
+            {"treeVectorFile".ToLower(),   typeof(TreeVectorFileXML)},
+            {"TimeSeries".ToLower(),       typeof(TimeSeriesCollectionComplexType)}
+        };
+
+        /// <summary>
+        /// Reads an <see cref="IXmlParsedObject"/> from the <param name="xmlFileSource"/> file
+        /// </summary>
+        /// <param name="xmlFileSource">Path to the xml file</param>
+        /// <returns>De-serialized <see cref="IXmlParsedObject"/> object</returns>
+        public static IXmlParsedObject Read(string xmlFileSource)
+        {
+            var rootElement = GetXmlConfigFileRootElement(xmlFileSource);
+            if (rootElement == null)
+            {
+                throw new ArgumentException("Root element cannot be found");
+            }
+
+            using (var reader = rootElement.CreateReader())
+            {
+                var rootName = rootElement.Name.LocalName;
+
+                if (string.IsNullOrEmpty(rootName))
+                {
+                    throw new ArgumentException("Rootname cannot be empty");
+                }
+
+                if (!LookupSerializer.TryGetValue(rootName.ToLower(), out var serializerType))
+                {
+                    throw new ArgumentException($"Can not find serializer for {rootName}");
+                }
+
+                var unsupportedFeatures = new List<string>();
+
+                var dataAccessModel = TypeUtils.CallStaticGenericMethod(typeof(DelftXmlFileConverter), nameof(DelftXmlFileConverter.Convert), serializerType, reader, unsupportedFeatures);
+
+                LogMissingFeatures(unsupportedFeatures, xmlFileSource);
+
+                return (IXmlParsedObject)dataAccessModel;
+            }
+        }
+
+        private static XElement GetXmlConfigFileRootElement(string xmlFileSource)
+        {
+            if (string.IsNullOrEmpty(xmlFileSource))
+            {
+                throw new FileReadingException($"Configuration file {xmlFileSource} cannot be found");
+            }
 
             XDocument xmlConfigFile;
+
             try
             {
                 xmlConfigFile = XDocument.Load(xmlFileSource);
@@ -29,29 +83,17 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 throw new XmlException("Unable to read the file due to invalid file format");
             }
 
-            var reader = xmlConfigFile?.Root?.CreateReader();
-            var rootName = xmlConfigFile?.Root?.Name.LocalName;
-
-            var unsupportedFeatures = new List<string>();
-            var dataAccessModel = DelftXmlFileConverter.Convert(reader, rootName, unsupportedFeatures);
-
-            var fileName = xmlFileSource.Split('\\').Last();
-            LogMissingFeatures(unsupportedFeatures, fileName);
-            return dataAccessModel;
+            return xmlConfigFile?.Root;
         }
 
-        private static void LogMissingFeatures(List<string> unsupportedFeatures, string fileName)
+        private static void LogMissingFeatures(List<string> unsupportedFeatures, string xmlFileSource)
         {
-            string message = string.Empty;
-            if (unsupportedFeatures.Count != 0)
-            {
-                foreach (var feature in unsupportedFeatures)
-                {
-                    message += Environment.NewLine + feature;
-                }
-               
-                Log.InfoFormat($"The following features in the {fileName} file are not conforming with the xsd file: {message}");
-            }
+            if (unsupportedFeatures.Count == 0) return;
+
+            var fileName = xmlFileSource?.Split('\\').LastOrDefault() ?? "";
+            var message = string.Join(Environment.NewLine, unsupportedFeatures);
+                
+            Log.InfoFormat($"The following features in the {fileName} file are not conforming with the xsd file: {message}");
         }
     }
 }

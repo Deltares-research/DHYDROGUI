@@ -89,8 +89,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         [Category(TestCategory.DataAccess)]
         public void GetDimrConfigurationFile()
         {
-
-
             var dimrConfigurationFile = Path.Combine(dimrSourcePath, "dimr.xml");
             var dataAccesModel = DelftConfigXmlFileParser.Read(dimrConfigurationFile);
             Assert.IsNotNull(dataAccesModel);

@@ -11,26 +11,18 @@ namespace DeltaShell.NGHS.IO.FileConverters
     /// </summary>
     public static class DelftXmlFileConverter
     {
-        private static readonly Dictionary<string, Type> LookupSerializer = new Dictionary<string, Type>
-        {
-            {"dimrConfig".ToLower(),       typeof(dimrXML)},
-            {"rtcDataConfig".ToLower(),    typeof(RTCDataConfigXML)},
-            {"rtcRuntimeConfig".ToLower(), typeof(RtcRuntimeConfigXML)},
-            {"rtcToolsConfig".ToLower(),   typeof(RtcToolsConfigXML)},
-            {"treeVectorFile".ToLower(),   typeof(TreeVectorFileXML)},
-            {"TimeSeries".ToLower(),       typeof(TimeSeriesCollectionComplexType)}
-        };
-
-        public static object Convert(XmlReader file, string rootName, List<string> unsupportedFeatures)
+        /// <summary>
+        /// De-serializes a <typeparam name="T"/> object from the supplied <see cref="file"/> and 
+        /// lists all unsupported elements and attributes
+        /// </summary>
+        /// <param name="file"><see cref="XmlReader"/> to the xml file</param>
+        /// <param name="unsupportedFeatures">List of unsupported item messages</param>
+        /// <returns>Parsed <see cref="IXmlParsedObject"/> object</returns>
+        public static T Convert<T>(XmlReader file, List<string> unsupportedFeatures) where T : class, IXmlParsedObject
         {
             if (file == null)
             {
                 throw new ArgumentException("Reader cannot be null");
-            }
-
-            if (string.IsNullOrEmpty(rootName))
-            {
-                throw new ArgumentException("Rootname cannot be empty");
             }
 
             if (unsupportedFeatures == null)
@@ -38,17 +30,37 @@ namespace DeltaShell.NGHS.IO.FileConverters
                 throw new ArgumentException("Unsupported Features cannot be null");
             }
 
-            Type serializerType;
-            if (!LookupSerializer.TryGetValue(rootName.ToLower(), out serializerType))
+            var serializer = new XmlSerializer(typeof(T));
+
+            serializer.UnknownElement += (sender, args) =>
             {
-                throw new ArgumentException($"Can not find serializer for {rootName}");
+                unsupportedFeatures.Add($"Element: {args.Element.Name} at line {args.LineNumber} position {args.LinePosition}");
+
+                AddUnknownItem(args.ObjectBeingDeserialized as T, args.Element, o => o.UnKnownElements, (o, l) => o.UnKnownElements = l);
+            };
+
+            serializer.UnknownAttribute += (sender, args) =>
+            {
+                unsupportedFeatures.Add($"Attribute: {args.Attr.Name} at line {args.LineNumber} position {args.LinePosition}" );
+
+                AddUnknownItem(args.ObjectBeingDeserialized as T, args.Attr, o => o.UnKnownAttributes, (o, l) => o.UnKnownAttributes = l);
+            };
+
+            return (T) serializer.Deserialize(file);
+        }
+
+        private static void AddUnknownItem<T>(IXmlParsedObject xmlParsedObject, T item, Func<IXmlParsedObject, List<T>> getList, Action<IXmlParsedObject, List<T>> setList)
+        {
+            if (xmlParsedObject == null) return;
+
+            var list = getList?.Invoke(xmlParsedObject);
+            if (list == null)
+            {
+                list = new List<T>();
+                setList?.Invoke(xmlParsedObject, list);
             }
 
-            var serializer = new XmlSerializer(serializerType);
-
-            DelftXsdValidator.CollectUnsupportedFeatures(serializer, unsupportedFeatures);
-
-            return serializer.Deserialize(file);
+            list.Add(item);
         }
     }
 }

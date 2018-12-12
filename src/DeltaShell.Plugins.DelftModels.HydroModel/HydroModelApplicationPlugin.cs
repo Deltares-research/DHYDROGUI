@@ -204,8 +204,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
-            yield return new DHydroConfigXmlImporter(() 
-                => Application.FileImporters.OfType<IDimrModelFileImporter>().ToList());
+            yield return new DHydroConfigXmlImporter(() => Application.FileImporters.OfType<IDimrModelFileImporter>().ToList());
         }
 
         private void InitializeModelBuilder()

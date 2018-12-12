@@ -116,7 +116,6 @@
     <Compile Include="DelftBcWriter.cs" />
     <Compile Include="DelftIniReader.cs" />
     <Compile Include="DelftIniWriter.cs" />
-    <Compile Include="FileConverters\DelftXsdValidator.cs" />
     <Compile Include="FileConverters\DelftXmlFileConverter.cs" />
     <Compile Include="FileReaders\Definition\DefinitionReader.cs" />
     <Compile Include="FileReaders\DelftBcFileParser.cs" />
