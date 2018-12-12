@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         public string Category
         {
-            get { return "SOBEK"; }
+            get { return "SOBEK 2"; }
         }
 
         public Bitmap Image

@@ -21,10 +21,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         #region IFileImporter 
 
         [ExcludeFromCodeCoverage]
-        public string Name { get { return "Unstructured Grid"; } }
+        public string Name { get { return "Unstructured Grid (UGRID)"; } }
 
         [ExcludeFromCodeCoverage]
-        public string Category { get { return "2D / 3D"; } }
+        public string Category { get { return "D-Flow FM 2D/3D"; } }
 
         [ExcludeFromCodeCoverage]
         public Bitmap Image { get { return Properties.Resources.unstruc; } }

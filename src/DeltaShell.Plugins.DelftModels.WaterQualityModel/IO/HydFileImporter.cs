@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     public class HydFileImporter : IFileImporter
     {
-        public string Name { get{ return "Hydrodynamics (.hyd)";} }
+        public string Name { get{ return "Hydrodynamics (*.hyd)";} }
 
         public string Category { get { return "Water Quality"; } }
         

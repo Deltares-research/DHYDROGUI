@@ -18,13 +18,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// <inheritdoc />
         public string Name
         {
-            get { return "DIMR configuration File (*.xml)"; }
+            get { return "DIMR Configuration File (*.xml)"; }
         }
 
         /// <inheritdoc />
         public string Category
         {
-            get { return "Dimr Configuration File"; }
+            get { return "DIMR Configuration File"; }
         }
 
         /// <inheritdoc />

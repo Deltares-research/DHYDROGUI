@@ -8,9 +8,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
     public class WaterFlowModel1DFileImporter : IDimrModelFileImporter
     {
-        public string Name { get { return "WaterFlowModel1D Importer (md1d)"; } }
+        public string Name { get { return "Water Flow Model 1D (*.md1d)"; } }
       
-        public string Category { get { return "1D Standalone Models"; } }
+        public string Category { get { return "Water Flow Model 1D"; } }
         
         public Bitmap Image { get; private set; }
         

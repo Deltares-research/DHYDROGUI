@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowModel1DExporter));
 
-        public string Name { get { return "WaterFlowModel1D Exporter"; } }
+        public string Name { get { return "Water Flow Model 1D Exporter"; } }
         public bool Export(object item, string filepath)
         {
             var flow1DModel = item as WaterFlowModel1D;
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         public string Category
         {
-            get { return "1D Standalone Models"; }
+            get { return "Water Flow Model 1D"; }
         }
 
         public IEnumerable<Type> SourceTypes()

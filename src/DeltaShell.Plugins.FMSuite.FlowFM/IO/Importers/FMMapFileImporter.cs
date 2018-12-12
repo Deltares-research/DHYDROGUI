@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public string Category
         {
-            get { return "2D / 3D"; }
+            get { return "D-Flow FM 2D/3D"; }
         }
 
         public Bitmap Image
