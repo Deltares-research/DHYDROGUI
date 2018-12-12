@@ -239,7 +239,7 @@
     <Compile Include="Forms\Properties\StandardConditionPropertiesTest.cs" />
     <Compile Include="Forms\Properties\TimeConditionPropertiesTest.cs" />
     <Compile Include="Forms\TimeConditionPropertiesTest.cs" />
-    <Compile Include="ImportExport\RealTimeControlXmlReaderTest.cs" />
+    <Compile Include="ImportExport\RealTimeControlModelXmlReaderTest.cs" />
     <Compile Include="ImportExport\RealTimeControlXmlWriterTest.cs" />
     <Compile Include="NHibernateRealTimeControlIntegrationTests.cs" />
     <Compile Include="NodePresenters\RealTimeControlModelNodePresenterTest.cs" />
