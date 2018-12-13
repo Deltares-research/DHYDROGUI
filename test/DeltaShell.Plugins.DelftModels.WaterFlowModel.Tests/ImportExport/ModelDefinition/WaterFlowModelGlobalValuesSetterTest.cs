@@ -4,11 +4,23 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
 using NUnit.Framework;
 
+
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.ModelDefinition
 {
     [TestFixture]
     public class WaterFlowModelGlobalValuesSetterTest
     {
+        private const InitialConditionsType ExpectedConditionsType = InitialConditionsType.WaterLevel;
+        private const double ExpectedWaterLevel = 2.0;
+        private const double ExpectedDepth = 4.0;
+        private const double ExpectedFlow = 8.0;
+        private const double ExpectedSalt = 16.0;
+        private const double ExpectedTemperature = 32.0;
+        private const double ExpectedDispersionCoverage = 64.0;
+        private const double ExpectedF3Coverage = 128.0;
+        private const double ExpectedF4Coverage = 256.0;
+
+
         /// <summary>
         /// GIVEN a simple flow model
         ///   AND a GlobalValues header without any values
@@ -25,15 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 UseTemperature = true,
             };
 
-            // set values to something other than default so we can verify they have been properly changed.
-            model.InitialConditionsType = InitialConditionsType.Depth; // Depth == 1, level == 0
-            model.DefaultInitialWaterLevel = 200.0;
-            model.DefaultInitialDepth = 200.0;
-
-            model.InitialFlow.DefaultValue = 77.77;
-            model.InitialSaltConcentration.DefaultValue = 77.77;
-            model.InitialTemperature.DefaultValue = 77.77;
-            model.DispersionCoverage.DefaultValue = 77.77;
+            model.SetCustomInitialValues();
 
             var category = new DelftIniCategory(ModelDefinitionsRegion.GlobalValuesHeader);
             var errorMessages = new List<string>();
@@ -41,6 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             // When
             new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
             
+            // Then
             Assert.IsEmpty(errorMessages);
             Assert.That(model.InitialConditionsType, Is.EqualTo(InitialConditionsType.WaterLevel));
             Assert.That(model.DefaultInitialWaterLevel, Is.EqualTo(0.0));
@@ -68,61 +73,39 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 UseTemperature = true,
             };
 
-            const InitialConditionsType expectedConditionsType = InitialConditionsType.WaterLevel;
-            const double expectedWaterLevel = 2.0;
-            const double expectedDepth = 4.0;
-            const double expectedFlow = 8.0;
-            const double expectedSalt = 16.0;
-            const double expectedTemperature = 32.0;
-            const double expectedDispersionCoverage = 64.0;
-            const double expectedF3Coverage = 128.0;
-            const double expectedF4Coverage = 256.0;
+            var category = GetGlobalCategoryWithCommonElements(ExpectedConditionsType,
+                                                               ExpectedWaterLevel,
+                                                               ExpectedDepth,
+                                                               ExpectedFlow);
 
-            var category = GetGlobalCategoryWithCommonElements(expectedConditionsType,
-                                                   expectedWaterLevel,
-                                                   expectedDepth,
-                                                   expectedFlow);
-            // Salt
-            category.AddProperty(ModelDefinitionsRegion.InitialSalinity.Key,
-                                 expectedSalt,
-                                 ModelDefinitionsRegion.InitialSalinity.Description,
-                                 ModelDefinitionsRegion.InitialSalinity.Format);
-            category.AddProperty(ModelDefinitionsRegion.Dispersion.Key,
-                                 expectedDispersionCoverage,
-                                 ModelDefinitionsRegion.Dispersion.Description,
-                                 ModelDefinitionsRegion.Dispersion.Format);
-            category.AddProperty(ModelDefinitionsRegion.DispersionF3.Key,
-                                 expectedF3Coverage,
-                                 ModelDefinitionsRegion.DispersionF3.Description,
-                                 ModelDefinitionsRegion.DispersionF3.Format);
-            category.AddProperty(ModelDefinitionsRegion.DispersionF4.Key,
-                                 expectedF4Coverage,
-                                 ModelDefinitionsRegion.DispersionF4.Description,
-                                 ModelDefinitionsRegion.DispersionF4.Format);
-
-            // Temperature
-            category.AddProperty(ModelDefinitionsRegion.InitialTemperature.Key,
-                expectedTemperature,
-                ModelDefinitionsRegion.InitialTemperature.Description,
-                ModelDefinitionsRegion.InitialTemperature.Format);
-
+            category.AddProperty(ModelDefinitionsRegion.InitialSalinity,
+                                 ExpectedSalt);
+            category.AddProperty(ModelDefinitionsRegion.Dispersion,
+                                 ExpectedDispersionCoverage);
+            category.AddProperty(ModelDefinitionsRegion.DispersionF3,
+                                 ExpectedF3Coverage);
+            category.AddProperty(ModelDefinitionsRegion.DispersionF4,
+                                 ExpectedF4Coverage);
+            category.AddProperty(ModelDefinitionsRegion.InitialTemperature,
+                                 ExpectedTemperature);
 
             var errorMessages = new List<string>();
 
             // When
             new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
 
+            // Then
             Assert.IsEmpty(errorMessages);
-            Assert.That(model.InitialConditionsType, Is.EqualTo(expectedConditionsType));
-            Assert.That(model.DefaultInitialWaterLevel, Is.EqualTo(expectedWaterLevel));
-            Assert.That(model.DefaultInitialDepth, Is.EqualTo(expectedDepth));
+            Assert.That(model.InitialConditionsType, Is.EqualTo(ExpectedConditionsType));
+            Assert.That(model.DefaultInitialWaterLevel, Is.EqualTo(ExpectedWaterLevel));
+            Assert.That(model.DefaultInitialDepth, Is.EqualTo(ExpectedDepth));
 
-            Assert.That(model.InitialFlow.DefaultValue, Is.EqualTo(expectedFlow));
-            Assert.That(model.InitialSaltConcentration.DefaultValue, Is.EqualTo(expectedSalt));
-            Assert.That(model.InitialTemperature.DefaultValue, Is.EqualTo(expectedTemperature));
-            Assert.That(model.DispersionCoverage.DefaultValue, Is.EqualTo(expectedDispersionCoverage));
-            Assert.That(model.DispersionF3Coverage.DefaultValue, Is.EqualTo(expectedF3Coverage));
-            Assert.That(model.DispersionF4Coverage.DefaultValue, Is.EqualTo(expectedF4Coverage));
+            Assert.That(model.InitialFlow.DefaultValue, Is.EqualTo(ExpectedFlow));
+            Assert.That(model.InitialSaltConcentration.DefaultValue, Is.EqualTo(ExpectedSalt));
+            Assert.That(model.InitialTemperature.DefaultValue, Is.EqualTo(ExpectedTemperature));
+            Assert.That(model.DispersionCoverage.DefaultValue, Is.EqualTo(ExpectedDispersionCoverage));
+            Assert.That(model.DispersionF3Coverage.DefaultValue, Is.EqualTo(ExpectedF3Coverage));
+            Assert.That(model.DispersionF4Coverage.DefaultValue, Is.EqualTo(ExpectedF4Coverage));
         }
 
         /// <summary>
@@ -135,57 +118,44 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         [Test]
         public void GivenASimpleFlowModelWithoutSalinityAndAGlobalValuesHeaderWithASalinityDescription_WhenSetGlobalValuesIsCalled_ThenNoChangesShouldOccurAndNoErrorShouldBeThrown()
         {
-            const InitialConditionsType expectedConditionsType = InitialConditionsType.WaterLevel;
-            const double expectedWaterLevel = 2.0;
-            const double expectedDepth = 4.0;
-            const double expectedFlow = 8.0;
-            const double expectedTemperature = 32.0;
-
             // Given
             var model = new WaterFlowModel1D
             {
                 UseTemperature = true,
-                InitialConditionsType = expectedConditionsType,
-                DefaultInitialWaterLevel = expectedWaterLevel,
-                DefaultInitialDepth = expectedDepth,
+                InitialConditionsType = ExpectedConditionsType,
+                DefaultInitialWaterLevel = ExpectedWaterLevel,
+                DefaultInitialDepth = ExpectedDepth,
             };
 
-            model.InitialFlow.DefaultValue = expectedFlow;
-            model.InitialTemperature.DefaultValue = expectedTemperature;
+            model.InitialFlow.DefaultValue = ExpectedFlow;
+            model.InitialTemperature.DefaultValue = ExpectedTemperature;
 
-            var category = GetGlobalCategoryWithCommonElements(expectedConditionsType,
-                                          expectedWaterLevel,
-                                          expectedDepth,
-                                          expectedFlow);
+            var category = GetGlobalCategoryWithCommonElements(ExpectedConditionsType,
+                                          ExpectedWaterLevel,
+                                          ExpectedDepth,
+                                          ExpectedFlow);
 
-            // Temperature Component
-            category.AddProperty(ModelDefinitionsRegion.InitialTemperature.Key,
-                expectedTemperature,
-                ModelDefinitionsRegion.InitialTemperature.Description,
-                ModelDefinitionsRegion.InitialTemperature.Format);
-
-
-
-            // Salt component
-            category.AddProperty(ModelDefinitionsRegion.InitialSalinity.Key,
-                                 256.0,
-                                 ModelDefinitionsRegion.InitialSalinity.Description,
-                                 ModelDefinitionsRegion.InitialSalinity.Format);
+            category.AddProperty(ModelDefinitionsRegion.InitialTemperature,
+                                 ExpectedTemperature);
+            category.AddProperty(ModelDefinitionsRegion.InitialSalinity,
+                                 256.0);
 
             var errorMessages = new List<string>();
 
             // When
             TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
+
+            // Then
             Assert.DoesNotThrow(testAction);
 
             Assert.IsEmpty(errorMessages);
             Assert.That(model.InitialSaltConcentration, Is.Null);
-            Assert.That(model.InitialConditionsType, Is.EqualTo(expectedConditionsType));
-            Assert.That(model.DefaultInitialWaterLevel, Is.EqualTo(expectedWaterLevel));
-            Assert.That(model.DefaultInitialDepth, Is.EqualTo(expectedDepth));
+            Assert.That(model.InitialConditionsType, Is.EqualTo(ExpectedConditionsType));
+            Assert.That(model.DefaultInitialWaterLevel, Is.EqualTo(ExpectedWaterLevel));
+            Assert.That(model.DefaultInitialDepth, Is.EqualTo(ExpectedDepth));
 
-            Assert.That(model.InitialFlow.DefaultValue, Is.EqualTo(expectedFlow));
-            Assert.That(model.InitialTemperature.DefaultValue, Is.EqualTo(expectedTemperature));
+            Assert.That(model.InitialFlow.DefaultValue, Is.EqualTo(ExpectedFlow));
+            Assert.That(model.InitialTemperature.DefaultValue, Is.EqualTo(ExpectedTemperature));
         }
 
         /// <summary>
@@ -204,58 +174,40 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 UseSalt = true,
             };
 
-            const InitialConditionsType expectedConditionsType = InitialConditionsType.WaterLevel;
-            const double expectedWaterLevel = 2.0;
-            const double expectedDepth = 4.0;
-            const double expectedFlow = 8.0;
-            const double expectedSalt = 16.0;
-            const double expectedTemperature = 32.0;
-            const double expectedDispersionCoverage = 64.0;
-            const double expectedF3Coverage = 128.0;
-            const double expectedF4Coverage = 256.0;
+            var category = GetGlobalCategoryWithCommonElements(ExpectedConditionsType,
+                                                   ExpectedWaterLevel,
+                                                   ExpectedDepth,
+                                                   ExpectedFlow);
 
-            var category = GetGlobalCategoryWithCommonElements(expectedConditionsType,
-                                                   expectedWaterLevel,
-                                                   expectedDepth,
-                                                   expectedFlow);
-
-            category.AddProperty(ModelDefinitionsRegion.InitialSalinity.Key,
-                                 expectedSalt,
-                                 ModelDefinitionsRegion.InitialSalinity.Description,
-                                 ModelDefinitionsRegion.InitialSalinity.Format);
-            category.AddProperty(ModelDefinitionsRegion.InitialTemperature.Key,
-                                 expectedTemperature,
-                                 ModelDefinitionsRegion.InitialTemperature.Description,
-                                 ModelDefinitionsRegion.InitialTemperature.Format);
-            category.AddProperty(ModelDefinitionsRegion.Dispersion.Key,
-                                 expectedDispersionCoverage,
-                                 ModelDefinitionsRegion.Dispersion.Description,
-                                 ModelDefinitionsRegion.Dispersion.Format);
-            category.AddProperty(ModelDefinitionsRegion.DispersionF3.Key,
-                                 expectedF3Coverage,
-                                 ModelDefinitionsRegion.DispersionF3.Description,
-                                 ModelDefinitionsRegion.DispersionF3.Format);
-            category.AddProperty(ModelDefinitionsRegion.DispersionF4.Key,
-                                 expectedF4Coverage,
-                                 ModelDefinitionsRegion.DispersionF4.Description,
-                                 ModelDefinitionsRegion.DispersionF4.Format);
+            category.AddProperty(ModelDefinitionsRegion.InitialSalinity,
+                                 ExpectedSalt);
+            category.AddProperty(ModelDefinitionsRegion.InitialTemperature,
+                                 ExpectedTemperature);
+            category.AddProperty(ModelDefinitionsRegion.Dispersion,
+                                 ExpectedDispersionCoverage);
+            category.AddProperty(ModelDefinitionsRegion.DispersionF3,
+                                 ExpectedF3Coverage);
+            category.AddProperty(ModelDefinitionsRegion.DispersionF4,
+                                 ExpectedF4Coverage);
 
             var errorMessages = new List<string>();
 
             // When
             TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
+
+            // Then
             Assert.DoesNotThrow(testAction);
 
             Assert.IsEmpty(errorMessages);
-            Assert.That(model.InitialConditionsType, Is.EqualTo(expectedConditionsType));
-            Assert.That(model.DefaultInitialWaterLevel, Is.EqualTo(expectedWaterLevel));
-            Assert.That(model.DefaultInitialDepth, Is.EqualTo(expectedDepth));
+            Assert.That(model.InitialConditionsType, Is.EqualTo(ExpectedConditionsType));
+            Assert.That(model.DefaultInitialWaterLevel, Is.EqualTo(ExpectedWaterLevel));
+            Assert.That(model.DefaultInitialDepth, Is.EqualTo(ExpectedDepth));
 
-            Assert.That(model.InitialFlow.DefaultValue, Is.EqualTo(expectedFlow));
-            Assert.That(model.InitialSaltConcentration.DefaultValue, Is.EqualTo(expectedSalt));
-            Assert.That(model.DispersionCoverage.DefaultValue, Is.EqualTo(expectedDispersionCoverage));
-            Assert.That(model.DispersionF3Coverage.DefaultValue, Is.EqualTo(expectedF3Coverage));
-            Assert.That(model.DispersionF4Coverage.DefaultValue, Is.EqualTo(expectedF4Coverage));
+            Assert.That(model.InitialFlow.DefaultValue, Is.EqualTo(ExpectedFlow));
+            Assert.That(model.InitialSaltConcentration.DefaultValue, Is.EqualTo(ExpectedSalt));
+            Assert.That(model.DispersionCoverage.DefaultValue, Is.EqualTo(ExpectedDispersionCoverage));
+            Assert.That(model.DispersionF3Coverage.DefaultValue, Is.EqualTo(ExpectedF3Coverage));
+            Assert.That(model.DispersionF4Coverage.DefaultValue, Is.EqualTo(ExpectedF4Coverage));
 
             Assert.That(model.InitialTemperature, Is.Null);
         }
@@ -270,57 +222,44 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         [Test]
         public void GivenASimpleFlowModelWithoutDispersionAndAGlobalValuesHeaderWithADispersionDescription_WhenSetGlobalValuesIsCalled_ThenNoChangesShouldOccurAndNoErrorShouldBeThrown()
         {
-            const InitialConditionsType expectedConditionsType = InitialConditionsType.WaterLevel;
-            const double expectedWaterLevel = 2.0;
-            const double expectedDepth = 4.0;
-            const double expectedFlow = 8.0;
-            const double expectedTemperature = 32.0;
-
             // Given
             var model = new WaterFlowModel1D
             {
                 UseTemperature = true,
-                InitialConditionsType = expectedConditionsType,
-                DefaultInitialWaterLevel = expectedWaterLevel,
-                DefaultInitialDepth = expectedDepth,
+                InitialConditionsType = ExpectedConditionsType,
+                DefaultInitialWaterLevel = ExpectedWaterLevel,
+                DefaultInitialDepth = ExpectedDepth,
             };
 
-            model.InitialFlow.DefaultValue = expectedFlow;
-            model.InitialTemperature.DefaultValue = expectedTemperature;
-            var category = GetGlobalCategoryWithCommonElements(expectedConditionsType,
-                                                               expectedWaterLevel,
-                                                               expectedDepth,
-                                                               expectedFlow);
+            model.InitialFlow.DefaultValue = ExpectedFlow;
+            model.InitialTemperature.DefaultValue = ExpectedTemperature;
+            var category = GetGlobalCategoryWithCommonElements(ExpectedConditionsType,
+                                                               ExpectedWaterLevel,
+                                                               ExpectedDepth,
+                                                               ExpectedFlow);
 
-            // Temperature Component
-            category.AddProperty(ModelDefinitionsRegion.InitialTemperature.Key,
-                expectedTemperature,
-                ModelDefinitionsRegion.InitialTemperature.Description,
-                ModelDefinitionsRegion.InitialTemperature.Format);
-
-
-
-            // Salt component
-            category.AddProperty(ModelDefinitionsRegion.Dispersion.Key,
-                                 256.0,
-                                 ModelDefinitionsRegion.Dispersion.Description,
-                                 ModelDefinitionsRegion.Dispersion.Format);
+            category.AddProperty(ModelDefinitionsRegion.InitialTemperature,
+                                 ExpectedTemperature);
+            category.AddProperty(ModelDefinitionsRegion.Dispersion,
+                                 256.0);
 
             var errorMessages = new List<string>();
 
             // When
             TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
+
+            // Then
             Assert.DoesNotThrow(testAction);
 
             Assert.IsEmpty(errorMessages);
             Assert.That(model.DispersionCoverage, Is.Null);
 
-            Assert.That(model.InitialConditionsType, Is.EqualTo(expectedConditionsType));
-            Assert.That(model.DefaultInitialWaterLevel, Is.EqualTo(expectedWaterLevel));
-            Assert.That(model.DefaultInitialDepth, Is.EqualTo(expectedDepth));
+            Assert.That(model.InitialConditionsType, Is.EqualTo(ExpectedConditionsType));
+            Assert.That(model.DefaultInitialWaterLevel, Is.EqualTo(ExpectedWaterLevel));
+            Assert.That(model.DefaultInitialDepth, Is.EqualTo(ExpectedDepth));
 
-            Assert.That(model.InitialFlow.DefaultValue, Is.EqualTo(expectedFlow));
-            Assert.That(model.InitialTemperature.DefaultValue, Is.EqualTo(expectedTemperature));
+            Assert.That(model.InitialFlow.DefaultValue, Is.EqualTo(ExpectedFlow));
+            Assert.That(model.InitialTemperature.DefaultValue, Is.EqualTo(ExpectedTemperature));
         }
 
         /// <summary>
@@ -333,57 +272,44 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         [Test]
         public void GivenASimpleFlowModelWithoutDispersionF3AndAGlobalValuesHeaderWithADispersionF3Description_WhenSetGlobalValuesIsCalled_ThenNoChangesShouldOccurAndNoErrorShouldBeThrown()
         {
-            const InitialConditionsType expectedConditionsType = InitialConditionsType.WaterLevel;
-            const double expectedWaterLevel = 2.0;
-            const double expectedDepth = 4.0;
-            const double expectedFlow = 8.0;
-            const double expectedTemperature = 32.0;
-
             // Given
             var model = new WaterFlowModel1D
             {
                 UseTemperature = true,
-                InitialConditionsType = expectedConditionsType,
-                DefaultInitialWaterLevel = expectedWaterLevel,
-                DefaultInitialDepth = expectedDepth,
+                InitialConditionsType = ExpectedConditionsType,
+                DefaultInitialWaterLevel = ExpectedWaterLevel,
+                DefaultInitialDepth = ExpectedDepth,
             };
 
-            model.InitialFlow.DefaultValue = expectedFlow;
-            model.InitialTemperature.DefaultValue = expectedTemperature;
-            var category = GetGlobalCategoryWithCommonElements(expectedConditionsType,
-                                                               expectedWaterLevel,
-                                                               expectedDepth,
-                                                               expectedFlow);
+            model.InitialFlow.DefaultValue = ExpectedFlow;
+            model.InitialTemperature.DefaultValue = ExpectedTemperature;
+            var category = GetGlobalCategoryWithCommonElements(ExpectedConditionsType,
+                                                               ExpectedWaterLevel,
+                                                               ExpectedDepth,
+                                                               ExpectedFlow);
 
-            // Temperature Component
-            category.AddProperty(ModelDefinitionsRegion.InitialTemperature.Key,
-                expectedTemperature,
-                ModelDefinitionsRegion.InitialTemperature.Description,
-                ModelDefinitionsRegion.InitialTemperature.Format);
-
-
-
-            // Salt component
-            category.AddProperty(ModelDefinitionsRegion.DispersionF3.Key,
-                                 256.0,
-                                 ModelDefinitionsRegion.DispersionF3.Description,
-                                 ModelDefinitionsRegion.DispersionF3.Format);
+            category.AddProperty(ModelDefinitionsRegion.InitialTemperature,
+                                 ExpectedTemperature);
+            category.AddProperty(ModelDefinitionsRegion.DispersionF3,
+                                 256.0);
 
             var errorMessages = new List<string>();
 
             // When
             TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
+
+            // Then
             Assert.DoesNotThrow(testAction);
 
             Assert.IsEmpty(errorMessages);
             Assert.That(model.DispersionF3Coverage, Is.Null);
 
-            Assert.That(model.InitialConditionsType, Is.EqualTo(expectedConditionsType));
-            Assert.That(model.DefaultInitialWaterLevel, Is.EqualTo(expectedWaterLevel));
-            Assert.That(model.DefaultInitialDepth, Is.EqualTo(expectedDepth));
+            Assert.That(model.InitialConditionsType, Is.EqualTo(ExpectedConditionsType));
+            Assert.That(model.DefaultInitialWaterLevel, Is.EqualTo(ExpectedWaterLevel));
+            Assert.That(model.DefaultInitialDepth, Is.EqualTo(ExpectedDepth));
 
-            Assert.That(model.InitialFlow.DefaultValue, Is.EqualTo(expectedFlow));
-            Assert.That(model.InitialTemperature.DefaultValue, Is.EqualTo(expectedTemperature));
+            Assert.That(model.InitialFlow.DefaultValue, Is.EqualTo(ExpectedFlow));
+            Assert.That(model.InitialTemperature.DefaultValue, Is.EqualTo(ExpectedTemperature));
         }
 
         /// <summary>
@@ -396,57 +322,44 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         [Test]
         public void GivenASimpleFlowModelWithoutDispersionF4AndAGlobalValuesHeaderWithADispersionF4Description_WhenSetGlobalValuesIsCalled_ThenNoChangesShouldOccurAndNoErrorShouldBeThrown()
         {
-            const InitialConditionsType expectedConditionsType = InitialConditionsType.WaterLevel;
-            const double expectedWaterLevel = 2.0;
-            const double expectedDepth = 4.0;
-            const double expectedFlow = 8.0;
-            const double expectedTemperature = 32.0;
-
             // Given
             var model = new WaterFlowModel1D
             {
                 UseTemperature = true,
-                InitialConditionsType = expectedConditionsType,
-                DefaultInitialWaterLevel = expectedWaterLevel,
-                DefaultInitialDepth = expectedDepth,
+                InitialConditionsType = ExpectedConditionsType,
+                DefaultInitialWaterLevel = ExpectedWaterLevel,
+                DefaultInitialDepth = ExpectedDepth,
             };
 
-            model.InitialFlow.DefaultValue = expectedFlow;
-            model.InitialTemperature.DefaultValue = expectedTemperature;
-            var category = GetGlobalCategoryWithCommonElements(expectedConditionsType,
-                                                               expectedWaterLevel,
-                                                               expectedDepth,
-                                                               expectedFlow);
+            model.InitialFlow.DefaultValue = ExpectedFlow;
+            model.InitialTemperature.DefaultValue = ExpectedTemperature;
+            var category = GetGlobalCategoryWithCommonElements(ExpectedConditionsType,
+                                                               ExpectedWaterLevel,
+                                                               ExpectedDepth,
+                                                               ExpectedFlow);
 
-            // Temperature Component
-            category.AddProperty(ModelDefinitionsRegion.InitialTemperature.Key,
-                expectedTemperature,
-                ModelDefinitionsRegion.InitialTemperature.Description,
-                ModelDefinitionsRegion.InitialTemperature.Format);
-
-
-
-            // Salt component
-            category.AddProperty(ModelDefinitionsRegion.DispersionF4.Key,
-                                 256.0,
-                                 ModelDefinitionsRegion.DispersionF4.Description,
-                                 ModelDefinitionsRegion.DispersionF4.Format);
+            category.AddProperty(ModelDefinitionsRegion.InitialTemperature,
+                                 ExpectedTemperature);
+            category.AddProperty(ModelDefinitionsRegion.DispersionF4,
+                                 256.0);
 
             var errorMessages = new List<string>();
 
             // When
             TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
+            
+            // Then
             Assert.DoesNotThrow(testAction);
 
             Assert.IsEmpty(errorMessages);
             Assert.That(model.DispersionF4Coverage, Is.Null);
 
-            Assert.That(model.InitialConditionsType, Is.EqualTo(expectedConditionsType));
-            Assert.That(model.DefaultInitialWaterLevel, Is.EqualTo(expectedWaterLevel));
-            Assert.That(model.DefaultInitialDepth, Is.EqualTo(expectedDepth));
+            Assert.That(model.InitialConditionsType, Is.EqualTo(ExpectedConditionsType));
+            Assert.That(model.DefaultInitialWaterLevel, Is.EqualTo(ExpectedWaterLevel));
+            Assert.That(model.DefaultInitialDepth, Is.EqualTo(ExpectedDepth));
 
-            Assert.That(model.InitialFlow.DefaultValue, Is.EqualTo(expectedFlow));
-            Assert.That(model.InitialTemperature.DefaultValue, Is.EqualTo(expectedTemperature));
+            Assert.That(model.InitialFlow.DefaultValue, Is.EqualTo(ExpectedFlow));
+            Assert.That(model.InitialTemperature.DefaultValue, Is.EqualTo(ExpectedTemperature));
         }
 
         /// <summary>
@@ -466,55 +379,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 UseTemperature = true,
             };
 
-            const InitialConditionsType expectedConditionsType = InitialConditionsType.WaterLevel;
-            const double expectedWaterLevel = 2.0;
-            const double expectedDepth = 4.0;
-            const double expectedFlow = 8.0;
-            const double expectedSalt = 16.0;
-            const double expectedTemperature = 32.0;
-            const double expectedDispersionCoverage = 64.0;
-            const double expectedF3Coverage = 128.0;
-            const double expectedF4Coverage = 256.0;
+            var category = GetGlobalCategoryWithCommonElements(ExpectedConditionsType,
+                                                   ExpectedWaterLevel,
+                                                   ExpectedDepth,
+                                                   ExpectedFlow);
 
-            var category = GetGlobalCategoryWithCommonElements(expectedConditionsType,
-                                                   expectedWaterLevel,
-                                                   expectedDepth,
-                                                   expectedFlow);
-            // Salt
-            category.AddProperty(ModelDefinitionsRegion.InitialSalinity.Key,
-                                 expectedSalt,
-                                 ModelDefinitionsRegion.InitialSalinity.Description,
-                                 ModelDefinitionsRegion.InitialSalinity.Format);
-            category.AddProperty(ModelDefinitionsRegion.Dispersion.Key,
-                                 expectedDispersionCoverage,
-                                 ModelDefinitionsRegion.Dispersion.Description,
-                                 ModelDefinitionsRegion.Dispersion.Format);
-            category.AddProperty(ModelDefinitionsRegion.DispersionF3.Key,
-                                 expectedF3Coverage,
-                                 ModelDefinitionsRegion.DispersionF3.Description,
-                                 ModelDefinitionsRegion.DispersionF3.Format);
-            category.AddProperty(ModelDefinitionsRegion.DispersionF4.Key,
-                                 expectedF4Coverage,
-                                 ModelDefinitionsRegion.DispersionF4.Description,
-                                 ModelDefinitionsRegion.DispersionF4.Format);
-
-            // Temperature
-            category.AddProperty(ModelDefinitionsRegion.InitialTemperature.Key,
-                expectedTemperature,
-                ModelDefinitionsRegion.InitialTemperature.Description,
-                ModelDefinitionsRegion.InitialTemperature.Format);
-
+            category.AddProperty(ModelDefinitionsRegion.InitialSalinity,
+                                 ExpectedSalt);
+            category.AddProperty(ModelDefinitionsRegion.Dispersion,
+                                 ExpectedDispersionCoverage);
+            category.AddProperty(ModelDefinitionsRegion.DispersionF3,
+                                 ExpectedF3Coverage);
+            category.AddProperty(ModelDefinitionsRegion.DispersionF4,
+                                 ExpectedF4Coverage);
+            category.AddProperty(ModelDefinitionsRegion.InitialTemperature,
+                                 ExpectedTemperature);
 
             var errorMessages = new List<string>();
 
             // When
-            new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
+            TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
 
+            // Then
+            Assert.DoesNotThrow(testAction);
             Assert.IsEmpty(errorMessages);
 
             Assert.That(model.DispersionFormulationType, Is.EqualTo(DispersionFormulationType.KuijperVanRijnPrismatic));
-            Assert.That(model.DispersionF3Coverage.DefaultValue, Is.EqualTo(expectedF3Coverage));
-            Assert.That(model.DispersionF4Coverage.DefaultValue, Is.EqualTo(expectedF4Coverage));
+            Assert.That(model.DispersionF3Coverage.DefaultValue, Is.EqualTo(ExpectedF3Coverage));
+            Assert.That(model.DispersionF4Coverage.DefaultValue, Is.EqualTo(ExpectedF4Coverage));
         }
 
         /// <summary>
@@ -533,45 +425,153 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 UseTemperature = true,
             };
 
-            const InitialConditionsType expectedConditionsType = InitialConditionsType.WaterLevel;
-            const double expectedWaterLevel = 2.0;
-            const double expectedDepth = 4.0;
-            const double expectedFlow = 8.0;
-            const double expectedSalt = 16.0;
-            const double expectedTemperature = 32.0;
-            const double expectedDispersionCoverage = 64.0;
+            var category = GetGlobalCategoryWithCommonElements(ExpectedConditionsType,
+                                                   ExpectedWaterLevel,
+                                                   ExpectedDepth,
+                                                   ExpectedFlow);
 
-            var category = GetGlobalCategoryWithCommonElements(expectedConditionsType,
-                                                   expectedWaterLevel,
-                                                   expectedDepth,
-                                                   expectedFlow);
-            // Salt
-            category.AddProperty(ModelDefinitionsRegion.InitialSalinity.Key,
-                                 expectedSalt,
-                                 ModelDefinitionsRegion.InitialSalinity.Description,
-                                 ModelDefinitionsRegion.InitialSalinity.Format);
-            category.AddProperty(ModelDefinitionsRegion.Dispersion.Key,
-                                 expectedDispersionCoverage,
-                                 ModelDefinitionsRegion.Dispersion.Description,
-                                 ModelDefinitionsRegion.Dispersion.Format);
-
-            // Temperature
-            category.AddProperty(ModelDefinitionsRegion.InitialTemperature.Key,
-                expectedTemperature,
-                ModelDefinitionsRegion.InitialTemperature.Description,
-                ModelDefinitionsRegion.InitialTemperature.Format);
-
+            category.AddProperty(ModelDefinitionsRegion.InitialSalinity,
+                                 ExpectedSalt);
+            category.AddProperty(ModelDefinitionsRegion.Dispersion,
+                                 ExpectedDispersionCoverage);
+            category.AddProperty(ModelDefinitionsRegion.InitialTemperature,
+                                 ExpectedTemperature);
 
             var errorMessages = new List<string>();
 
             // When
-            new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
+            TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
 
+            // Then
+            Assert.DoesNotThrow(testAction);
             Assert.IsEmpty(errorMessages);
 
             Assert.That(model.DispersionFormulationType, Is.EqualTo(DispersionFormulationType.Constant));
         }
 
+        /// <summary>
+        /// GIVEN a simple flow model
+        ///   AND a GlobalValues header without F3 value
+        /// WHEN SetGlobalValues is called
+        /// THEN the simple model has a constant dispersion formula
+        /// </summary>
+        [Test]
+        public void GivenASimpleFlowModelAndAGlobalValuesHeaderWithoutF3Value_WhenSetGlobalValuesIsCalled_ThenTheSimpleModelHasAConstantDispersionFormula()
+        {
+            // Given
+            var model = new WaterFlowModel1D
+            {
+                UseSalt = true,
+                UseTemperature = true,
+            };
+
+            var category = GetGlobalCategoryWithCommonElements(ExpectedConditionsType,
+                                                   ExpectedWaterLevel,
+                                                   ExpectedDepth,
+                                                   ExpectedFlow);
+            
+            category.AddProperty(ModelDefinitionsRegion.InitialSalinity,
+                                 ExpectedSalt);
+            category.AddProperty(ModelDefinitionsRegion.Dispersion,
+                                 ExpectedDispersionCoverage);
+            category.AddProperty(ModelDefinitionsRegion.DispersionF4,
+                                 ExpectedF4Coverage);
+            category.AddProperty(ModelDefinitionsRegion.InitialTemperature,
+                                 ExpectedTemperature);
+
+            var errorMessages = new List<string>();
+
+            // When
+            TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
+
+            // Then
+            Assert.DoesNotThrow(testAction);
+            Assert.IsEmpty(errorMessages);
+            Assert.That(model.DispersionFormulationType, Is.EqualTo(DispersionFormulationType.Constant));
+        }
+
+        /// <summary>
+        /// GIVEN a simple flow model
+        ///   AND a GlobalValues header without F4 value
+        /// WHEN SetGlobalValues is called
+        /// THEN the simple model has a constant dispersion formula
+        /// </summary>
+        [Test]
+        public void GivenASimpleFlowModelAndAGlobalValuesHeaderWithoutF4Value_WhenSetGlobalValuesIsCalled_ThenTheSimpleModelHasAConstantDispersionFormula()
+        {
+            // Given
+            var model = new WaterFlowModel1D
+            {
+                UseSalt = true,
+                UseTemperature = true,
+            };
+
+            var category = GetGlobalCategoryWithCommonElements(ExpectedConditionsType,
+                                                   ExpectedWaterLevel,
+                                                   ExpectedDepth,
+                                                   ExpectedFlow);
+
+            category.AddProperty(ModelDefinitionsRegion.InitialSalinity,
+                                 ExpectedSalt);
+            category.AddProperty(ModelDefinitionsRegion.Dispersion,
+                                 ExpectedDispersionCoverage);
+            category.AddProperty(ModelDefinitionsRegion.DispersionF3,
+                                 ExpectedF3Coverage);
+            category.AddProperty(ModelDefinitionsRegion.InitialTemperature,
+                                 ExpectedTemperature);
+
+            var errorMessages = new List<string>();
+
+            // When
+            TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
+            Assert.DoesNotThrow(testAction);
+
+            // Then
+            Assert.IsEmpty(errorMessages);
+            Assert.That(model.DispersionFormulationType, Is.EqualTo(DispersionFormulationType.Constant));
+        }
+
+        /// <summary>
+        /// GIVEN a simple flow model without UseSalt
+        ///   AND a GlobalValues header with F3 and F4 values
+        /// WHEN SetGlobalValues is called
+        /// THEN the simple model has a constant dispersion formula
+        /// </summary>
+        [Test]
+        public void GivenASimpleFlowModelWithoutUseSaltAndAGlobalValuesHeaderWithF3AndF4Values_WhenSetGlobalValuesIsCalled_ThenTheSimpleModelHasAConstantDispersionFormula()
+        {
+            // Given
+            var model = new WaterFlowModel1D
+            {
+
+                UseTemperature = true,
+            };
+
+            var category = GetGlobalCategoryWithCommonElements(ExpectedConditionsType,
+                ExpectedWaterLevel,
+                ExpectedDepth,
+                ExpectedFlow);
+
+            category.AddProperty(ModelDefinitionsRegion.InitialSalinity,
+                ExpectedSalt);
+            category.AddProperty(ModelDefinitionsRegion.Dispersion,
+                ExpectedDispersionCoverage);
+            category.AddProperty(ModelDefinitionsRegion.DispersionF3,
+                ExpectedF3Coverage);
+            category.AddProperty(ModelDefinitionsRegion.DispersionF4,
+                ExpectedF4Coverage);
+            category.AddProperty(ModelDefinitionsRegion.InitialTemperature,
+                ExpectedTemperature);
+
+            var errorMessages = new List<string>();
+            // When
+            TestDelegate testAction = () => new WaterFlowModelGlobalValuesSetter().SetProperties(category, model, errorMessages);
+
+            // Then
+            Assert.DoesNotThrow(testAction);
+            Assert.IsEmpty(errorMessages);
+            Assert.That(model.DispersionFormulationType, Is.EqualTo(DispersionFormulationType.Constant));
+        }
 
         private static DelftIniCategory GetGlobalCategoryWithCommonElements(InitialConditionsType conditionsType,
                                                                             double waterLevel,
@@ -579,24 +579,45 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                                                                             double flow)
         {
             var category = new DelftIniCategory(ModelDefinitionsRegion.GlobalValuesHeader);
+            
             // Non-dependent components
             category.AddProperty(ModelDefinitionsRegion.UseInitialWaterDepth.Key,
                 conditionsType == InitialConditionsType.Depth ? 1 : 0,
                 ModelDefinitionsRegion.UseInitialWaterDepth.Description);
-            category.AddProperty(ModelDefinitionsRegion.InitialWaterLevel.Key,
-                waterLevel,
-                ModelDefinitionsRegion.InitialWaterLevel.Description,
-                ModelDefinitionsRegion.InitialWaterLevel.Format);
-            category.AddProperty(ModelDefinitionsRegion.InitialWaterDepth.Key,
-                waterDepth,
-                ModelDefinitionsRegion.InitialWaterDepth.Description,
-                ModelDefinitionsRegion.InitialWaterDepth.Format);
-            category.AddProperty(ModelDefinitionsRegion.InitialDischarge.Key,
-                flow,
-                ModelDefinitionsRegion.InitialDischarge.Description,
-                ModelDefinitionsRegion.InitialDischarge.Format);
+            category.AddProperty(ModelDefinitionsRegion.InitialWaterLevel,
+                waterLevel);
+            category.AddProperty(ModelDefinitionsRegion.InitialWaterDepth,
+                                 waterDepth);
+            category.AddProperty(ModelDefinitionsRegion.InitialDischarge,
+                                 flow);
 
             return category;
+        }
+    }
+
+    public static class DelftIniCategoryExtension
+    {
+        public static void AddProperty(this DelftIniCategory category,
+            ConfigurationSetting setting,
+            double value)
+        {
+            category.AddProperty(setting.Key, 
+                                 value, 
+                                 setting.Description, 
+                                 setting.Format);
+        }
+
+        internal static void SetCustomInitialValues(this WaterFlowModel1D model)
+        {
+            // set values to something other than default so we can verify they have been properly changed.
+            model.InitialConditionsType = InitialConditionsType.Depth; // Depth == 1, level == 0
+            model.DefaultInitialWaterLevel = 200.0;
+            model.DefaultInitialDepth = 200.0;
+
+            model.InitialFlow.DefaultValue = 77.77;
+            model.InitialSaltConcentration.DefaultValue = 77.77;
+            model.InitialTemperature.DefaultValue = 77.77;
+            model.DispersionCoverage.DefaultValue = 77.77;
         }
     }
 }

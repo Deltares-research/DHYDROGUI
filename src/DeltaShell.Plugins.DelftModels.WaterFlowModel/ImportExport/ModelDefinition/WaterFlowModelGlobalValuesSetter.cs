@@ -59,9 +59,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 model.DispersionCoverage.DefaultValue =
                     GetWithDefault(category, ModelDefinitionsRegion.Dispersion.Key, 0.0);
 
-            // Currently, the DispersionFormulaType is not explicitly set. As such, we determine
-            // it here based upon whether the F3 and F4 coverage have been written. 
-            // This can be altered once we explicitly set the DispersionFormulaType.
+            // TODO: the DispersionFormulaType is not explicitly set in the md1d file, thus we need to deduce it.
+            // TODO: This can be changed once we explicitly set the DispersionFormulaType (see issue SOBEK3-1622).
             if (model.UseSalt &&
                 category.Properties.Any(e => e.Name == ModelDefinitionsRegion.DispersionF3.Key) && 
                 category.Properties.Any(e => e.Name == ModelDefinitionsRegion.DispersionF4.Key))
