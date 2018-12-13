@@ -74,8 +74,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
                     waterFlowModel1D);
 
                 // Then
-                var waterLevelIniFilePath = Path.Combine(targetFilePath, spatialIniFile);
-                Assert.IsTrue(FileComparer.Compare(waterLevelIniFilePath, sourceFile, out errorMessage));
+                var iniFilePath = Path.Combine(targetFilePath, spatialIniFile);
+                Assert.IsTrue(FileComparer.Compare(iniFilePath, sourceFile, out errorMessage));
             }
             finally
             {

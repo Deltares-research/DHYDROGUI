@@ -121,25 +121,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     $"Reading spatial data from {fileNames}.",
                     stepCounter, totalSteps);
 
-                ReadSpatialData(fileNames.InitialDischarge, model, CreateAndAddErrorReport);
-                
-                ReadSpatialData(fileNames.InitialSalinity, model, CreateAndAddErrorReport);
-                
-                ReadSpatialData(fileNames.InitialTemperature, model, CreateAndAddErrorReport);
+                var spatialDataFileNames = PopulateSpatialDataFileNamesList(fileNames, model.DispersionFormulationType);
 
-                ReadSpatialData(fileNames.InitialWaterLevel, model, CreateAndAddErrorReport);
-
-                ReadSpatialData(fileNames.InitialWaterDepth, model, CreateAndAddErrorReport);
-                
-                ReadSpatialData(fileNames.Dispersion, model, CreateAndAddErrorReport);
-
-                if (model.DispersionFormulationType != DispersionFormulationType.Constant)
+                foreach (var fileName in spatialDataFileNames)
                 {
-                    ReadSpatialData(fileNames.DispersionF3, model, CreateAndAddErrorReport);
-                    ReadSpatialData(fileNames.DispersionF4, model, CreateAndAddErrorReport);
+                    ReadSpatialData(fileName, model, CreateAndAddErrorReport);
                 }
-
-                ReadSpatialData(fileNames.WindShielding, model, CreateAndAddErrorReport);
 
             }
             catch (Exception)
@@ -150,6 +137,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             LogErrorReport(errorReport, report => Log.Warn(report));
             return model;
+        }
+
+        private static IEnumerable<string> PopulateSpatialDataFileNamesList(ModelFileNames fileNames, DispersionFormulationType modelDispersionFormulationType)
+        {
+            var spatialDataFileNames = new List<string>
+            {
+                fileNames.InitialWaterDepth,
+                fileNames.InitialDischarge,
+                fileNames.InitialSalinity,
+                fileNames.InitialTemperature,
+                fileNames.InitialWaterLevel,
+                fileNames.InitialWaterDepth,
+                fileNames.Dispersion,
+                fileNames.WindShielding
+            };
+
+            if (modelDispersionFormulationType != DispersionFormulationType.Constant)
+            {
+                spatialDataFileNames.Add(fileNames.DispersionF3);
+                spatialDataFileNames.Add(fileNames.DispersionF4);
+            }
+
+            return spatialDataFileNames.Where(fn => fn != null);
         }
 
         private static void ReadStructuresFile(string fileName, IHydroNetwork network,

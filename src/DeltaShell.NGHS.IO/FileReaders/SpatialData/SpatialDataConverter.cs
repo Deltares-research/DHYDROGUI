@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.Properties;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Geometries;
@@ -62,7 +63,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.SpatialData
             if (branch == null)
             {
                 var errorMessage =
-                    $"Unable to parse {category.Name} property: {LocationRegion.BranchId.Key}, Branch not found in Network.{Environment.NewLine}";
+                    string.Format(Resources.SpatialDataConverter_ConvertToSpatialData_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_, category.Name, LocationRegion.BranchId.Key, Environment.NewLine);
                 throw new Exception(errorMessage);
             }
 

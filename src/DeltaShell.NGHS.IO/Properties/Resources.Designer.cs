@@ -20,7 +20,7 @@ namespace DeltaShell.NGHS.IO.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -165,6 +165,16 @@ namespace DeltaShell.NGHS.IO.Properties {
             get {
                 return ResourceManager.GetString("SnappedFeatureCollection_GetSnappedFeature_No_snapped_geometry_was_generated_for_" +
                         "type__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to parse {0} property: {1}, Branch not found in Network.{2}.
+        /// </summary>
+        public static string SpatialDataConverter_ConvertToSpatialData_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_ {
+            get {
+                return ResourceManager.GetString("SpatialDataConverter_ConvertToSpatialData_Unable_to_parse__0__property___1___Bran" +
+                        "ch_not_found_in_Network__2_", resourceCulture);
             }
         }
         

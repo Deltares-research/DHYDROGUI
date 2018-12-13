@@ -312,4 +312,7 @@
   <data name="WaterFlowFMModel_DisposeSnapApi_Error_disposing_grid_operation_api___0_" xml:space="preserve">
     <value>Error disposing grid operation api: {0}</value>
   </data>
+  <data name="SpatialDataConverter_ConvertToSpatialData_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_" xml:space="preserve">
+    <value>Unable to parse {0} property: {1}, Branch not found in Network.{2}</value>
+  </data>
 </root>

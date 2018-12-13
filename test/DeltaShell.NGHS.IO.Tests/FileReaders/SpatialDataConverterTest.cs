@@ -7,6 +7,7 @@ using DeltaShell.NGHS.IO.FileReaders.SpatialData;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.NGHS.IO.TestUtils;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
@@ -126,8 +127,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
             SpatialDataConverter.Convert(categories, incorrectChannelsList, errorMessages);
 
-            Assert.That(errorMessages.Contains(
-                $"Unable to parse {categories[1].Name} property: {LocationRegion.BranchId.Key}, Branch not found in Network.{Environment.NewLine}"));
+            Assert.That(errorMessages.Contains(string.Format(
+                Resources.SpatialDataConverter_ConvertToSpatialData_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_,
+                categories[1].Name, LocationRegion.BranchId.Key, Environment.NewLine)));
         }
 
         private static DelftIniCategory CreateValidDefinitionIniHeader(string branchId, double chainage, double value)

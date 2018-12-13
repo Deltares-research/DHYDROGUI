@@ -10,6 +10,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
+using DeltaShell.Plugins.ImportExport.Sobek.Properties;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using GeoAPI.Extensions.Coverages;
@@ -209,14 +210,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 if (!channels.ContainsKey(sobekBedFriction.BranchId))
                 {
                     warningMessagesBranchDoesNotExist.AppendLine(
-                        $"Friction BDFR {sobekBedFriction.Id} is linked to branch that does not exist (id {sobekBedFriction.BranchId}); ignored.");
+                        string.Format(Resources.SobekRoughnessImporter_SetMainAndFloodPlainRoughness_Friction_BDFR__0__is_linked_to_branch_that_does_not_exist__id__1____ignored_, sobekBedFriction.Id, sobekBedFriction.BranchId));
                     continue;
                 }
                 var channel = channels[sobekBedFriction.BranchId];
                 if (! channel.CrossSections.Any(c => c.CrossSectionType == CrossSectionType.ZW || c.CrossSectionType == CrossSectionType.Standard))
                 {
                     warningMessagesBranchDefinitionWithoutProfiles.AppendLine(
-                        $"Friction BDFR {sobekBedFriction.Id} is linked to branch definition {sobekBedFriction.BranchId} without any tabulated,standard or river profiles; ignored.");
+                        string.Format(Resources.SobekRoughnessImporter_SetMainAndFloodPlainRoughness_Friction_BDFR__0__is_linked_to_branch_definition__1__without_any_tabulated_standard_or_river_profiles__ignored_, sobekBedFriction.Id, sobekBedFriction.BranchId));
                     continue;
                 }
 
