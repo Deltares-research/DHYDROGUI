@@ -16,6 +16,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.SpatialData
             }
 
             var estuaryMouthNodeId = mouthCategory.ReadProperty<string>(SalinityRegion.NodeId.Key, true);
+            if (estuaryMouthNodeId == null)
+            {
+                errorMessages.Add($"Expected a property with name '{SalinityRegion.NodeId.Key}' under category {SalinityRegion.MouthHeader} in the file 'Salinity.ini', but it was not present. Reading of this property has been skipped.");
+            }
 
             return estuaryMouthNodeId;
         }
