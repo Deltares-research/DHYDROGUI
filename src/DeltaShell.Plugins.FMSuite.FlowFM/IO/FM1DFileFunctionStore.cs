@@ -193,9 +193,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     var b = v.IsTimeDependent && v.NumDimensions > 1;
                     var attributes = netCdfFile.GetAttributes(v.NetCdfDataVariable);
                     object meshName;
-                    if (attributes.TryGetValue("mesh", out meshName))
+                    object locationName;
+                    if (attributes.TryGetValue("mesh", out meshName) && attributes.TryGetValue("location", out locationName))
                     {
-                        return b && meshName.ToString() == mesh1DName;
+                        return b && meshName.ToString() == mesh1DName && locationName.ToString() == "node";
                     }
                     return false;
                 }) : (v => v.IsTimeDependent && v.NumDimensions > 1 && v.NumDimensions <= 2);
