@@ -213,6 +213,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RealTimeControlXSDs\pi_timeseries.Designer.cs" />
+    <Compile Include="SalinityRegion.cs" />
     <Compile Include="UgridGlobalMetaDataToProtoConverter.cs" />
     <Compile Include="RealTimeControlXSDs\rtcDataConfig.Designer.cs" />
     <Compile Include="RealTimeControlXSDs\rtcRuntimeConfig.Designer.cs" />

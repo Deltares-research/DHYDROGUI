@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Reflection;
 using DelftTools.TestUtils;
@@ -56,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         [TestCase("InitialTemperature.ini")]
         [TestCase("InitialWaterLevel.ini")]
         [TestCase("WindShielding.ini")]
-        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void GivenAnMd1dFile_WhenReadingAndWriting_ThenTheWrittenFilesAreEqualToReadFiles(string spatialIniFile)
         {
             // Given

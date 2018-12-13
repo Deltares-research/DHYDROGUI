@@ -17,7 +17,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.SpatialData
         {
             var errorMessages = new List<string>();
             var categories = ReadCategoriesFromFileAndCollectErrorMessages(filePath, errorMessages);
-            var estuaryMouthNodeId = SalinityConverter.Convert(categories);
+            var estuaryMouthNodeId = SalinityConverter.Convert(categories, errorMessages);
 
             CreateErrorReport("estuary mouth node id", filePath, errorMessages);
             return estuaryMouthNodeId;

@@ -43,12 +43,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 const int totalSteps = 12;
                 var stepCounter = 1;
 
-                reportProgress($"Reading filenames from {Path.GetFileName(modelFilename)} file.", stepCounter, totalSteps);
+                reportProgress($"Reading filenames from {Path.GetFileName(modelFilename)}.", stepCounter, totalSteps);
                 var fileNames = new ModelFileNames(modelFilename);
                 stepCounter++;
 
                 var networkDefinitionFilePath = fileNames.Network;
-                reportProgress($"Reading network from {networkDefinitionFilePath} file.", stepCounter, totalSteps);
+                reportProgress($"Reading network from {networkDefinitionFilePath}.", stepCounter, totalSteps);
                 ReadNetworkDefinitionFile(networkDefinitionFilePath, model, CreateAndAddErrorReport);
                 if (errorReport.Any())
                 {
@@ -56,30 +56,37 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 }
                 stepCounter++;
 
-                reportProgress($"'Reading model wide parameters from {Path.GetFileName(modelFilename)} file", stepCounter, totalSteps);
+                reportProgress($"'Reading model wide parameters from {Path.GetFileName(modelFilename)}", stepCounter, totalSteps);
                 ModelDefinitionFileReader.SetWaterFlowModelProperties(modelFilename, model, CreateAndAddErrorReport);
 
-                reportProgress($"'Reading salinity from {fileNames.Salinity} file", stepCounter, totalSteps);
-                var estuaryMouthNodeId = new SalinityFileReader(CreateAndAddErrorReport).ReadEstuaryMouthNodeId(fileNames.Salinity);
-                model.SalinityEstuaryMouthNodeId = estuaryMouthNodeId;
+                if (fileNames.Salinity == null)
+                {
+                    reportProgress("Skipping reading of Salinity data.", stepCounter, totalSteps);
+                }
+                else
+                {
+                    reportProgress($"'Reading salinity from {fileNames.Salinity}.", stepCounter, totalSteps);
+                    var estuaryMouthNodeId = new SalinityFileReader(CreateAndAddErrorReport).ReadEstuaryMouthNodeId(fileNames.Salinity);
+                    if (estuaryMouthNodeId != null) model.SalinityEstuaryMouthNodeId = estuaryMouthNodeId;
+                }
 
-                reportProgress($"Reading lateral discharge locations from {fileNames.LateralDischarge} file.", stepCounter,
+                reportProgress($"Reading lateral discharge locations from {fileNames.LateralDischarge}.", stepCounter,
                     totalSteps);
                 ReadFileLateralDischargeLocations(fileNames.LateralDischarge, model.Network.Channels, CreateAndAddErrorReport);
                 stepCounter++;
 
-                reportProgress($"Reading boundary condition locations from {fileNames.BoundaryLocations} file.",
+                reportProgress($"Reading boundary condition locations from {fileNames.BoundaryLocations}.",
                     stepCounter, totalSteps);
                 ReadFileBoundaryConditionLocations(fileNames.BoundaryLocations, model.BoundaryConditions, CreateAndAddErrorReport);
                 stepCounter++;
 
                 reportProgress(
-                    $"Reading boundary conditions and lateral sources from {fileNames.BoundaryConditions} file.", stepCounter,
+                    $"Reading boundary conditions and lateral sources from {fileNames.BoundaryConditions}.", stepCounter,
                     totalSteps);
                 ReadBoundaryConditionFile(fileNames.BoundaryConditions, model, CreateAndAddErrorReport);
                 stepCounter++;
 
-                reportProgress($"Reading observation points from {fileNames.ObservationPoints} file.", stepCounter, totalSteps);
+                reportProgress($"Reading observation points from {fileNames.ObservationPoints}.", stepCounter, totalSteps);
                 ReadFileObservationPointLocations(fileNames.ObservationPoints, model.Network.Channels, CreateAndAddErrorReport);
                 stepCounter++;
 
@@ -90,7 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
                 foreach (var roughnessFilePath in fileNames.RoughnessFiles)
                 {
-                    var importUpdateText = $"Reading roughness section from {roughnessFilePath} file. (reading roughness file {i} of {totalRoughnessFiles})";
+                    var importUpdateText = $"Reading roughness section from {roughnessFilePath}. (reading roughness file {i} of {totalRoughnessFiles})";
                     reportProgress(importUpdateText, stepCounter, totalSteps);
                     i++;
                     var roughnessSection = ReadRoughnessFile(roughnessFilePath, model, CreateAndAddErrorReport);
@@ -99,19 +106,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 stepCounter++;
 
                 reportProgress(
-                    $"Reading cross sections from {fileNames.CrossSectionLocations} file and {fileNames.CrossSectionDefinitions}.",
+                    $"Reading cross sections from {fileNames.CrossSectionLocations} and {fileNames.CrossSectionDefinitions}.",
                     stepCounter, totalSteps);
                 ReadCrossSectionsFile(fileNames, model.Network, CreateAndAddErrorReport);
                 stepCounter++;
 
                 reportProgress(
-                    $"Reading structures from {fileNames.Structures} file and {fileNames.Structures}.",
+                    $"Reading structures from {fileNames.Structures} and {fileNames.Structures}.",
                     stepCounter, totalSteps);
                 ReadStructuresFile(fileNames.Structures, model.Network, CreateAndAddErrorReport);
                 stepCounter++;
 
                 reportProgress(
-                    $"Reading spatial data from {fileNames} file.",
+                    $"Reading spatial data from {fileNames}.",
                     stepCounter, totalSteps);
 
                 ReadSpatialData(fileNames.InitialDischarge, model, CreateAndAddErrorReport);

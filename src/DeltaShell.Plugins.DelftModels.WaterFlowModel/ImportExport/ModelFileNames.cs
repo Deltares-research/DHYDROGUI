@@ -301,7 +301,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         public string Salinity
         {
-            get { return Path.Combine(targetPath, salinity); }
+            get { return salinity == null ? null : Path.Combine(targetPath, salinity); }
             set { salinity = value; }
         }
 
