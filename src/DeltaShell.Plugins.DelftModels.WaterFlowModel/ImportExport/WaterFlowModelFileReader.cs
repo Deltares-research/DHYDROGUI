@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             try
             {
-                const int totalSteps = 11;
+                const int totalSteps = 12;
                 var stepCounter = 1;
 
                 reportProgress($"Reading filenames from {Path.GetFileName(modelFilename)} file.", stepCounter, totalSteps);
@@ -58,6 +58,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
                 reportProgress($"'Reading model wide parameters from {Path.GetFileName(modelFilename)} file", stepCounter, totalSteps);
                 ModelDefinitionFileReader.SetWaterFlowModelProperties(modelFilename, model, CreateAndAddErrorReport);
+
+                reportProgress($"'Reading salinity from {fileNames.Salinity} file", stepCounter, totalSteps);
+                var estuaryMouthNodeId = new SalinityFileReader(CreateAndAddErrorReport).ReadEstuaryMouthNodeId(fileNames.Salinity);
+                model.SalinityEstuaryMouthNodeId = estuaryMouthNodeId;
 
                 reportProgress($"Reading lateral discharge locations from {fileNames.LateralDischarge} file.", stepCounter,
                     totalSteps);

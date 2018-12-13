@@ -130,6 +130,8 @@
     <Compile Include="FileReaders\DelftIniFileParser.cs" />
     <Compile Include="FileReaders\Network\NetworkDefinitionFileReader.cs" />
     <Compile Include="FileReaders\Network\NetworkDiscretizationConverter.cs" />
+    <Compile Include="FileReaders\SpatialData\SalinityConverter.cs" />
+    <Compile Include="FileReaders\SpatialData\SalinityFileReader.cs" />
     <Compile Include="FileReaders\SpatialData\SpatialDataConverter.cs" />
     <Compile Include="FileReaders\SpatialData\SpatialDataReader.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryFileWriter.cs" />
