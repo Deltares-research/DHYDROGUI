@@ -692,13 +692,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                                "</period>" +
                                "<mode>" +
                                "<simulation>" +
-                               "<limitedMemory>false</limitedMemory>" +
+                               "<limitedMemory>true</limitedMemory>" +
                                "</simulation>" +
                                "</mode>" +
                                "</rtcRuntimeConfig>";
-            var xDocument = RealTimeControlXmlWriter.GetRuntimeXml(XsdPath, realTimeControlModel, false, 1);
-            Assert.IsNotNull(xDocument);
-            Assert.AreEqual(strOutputXml, xDocument.ToString(SaveOptions.DisableFormatting));
+            TestHelper.AssertAtLeastOneLogMessagesContains(() =>
+                {
+                    var xDocument = RealTimeControlXmlWriter.GetRuntimeXml(XsdPath, realTimeControlModel, false, 1);
+                    Assert.IsNotNull(xDocument);
+                    Assert.AreEqual(strOutputXml, xDocument.ToString(SaveOptions.DisableFormatting));
+                },
+                "Depricated option \"Limited Memory\" of D-RTC model is set to True");
+            
+            
+            
         }
 
         [Test]
@@ -722,7 +729,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                                "</period>" +
                                "<mode>" +
                                "<simulation>" +
-                               "<limitedMemory>false</limitedMemory>" +
+                               "<limitedMemory>true</limitedMemory>" +
                                "</simulation>" +
                                "</mode>" +
                                "<logging>" +
@@ -730,9 +737,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                                "<flushing>true</flushing>" +
                                "</logging>" +
                                "</rtcRuntimeConfig>";
-            var xDocument = RealTimeControlXmlWriter.GetRuntimeXml(XsdPath, realTimeControlModel, false, 4);
-            Assert.IsNotNull(xDocument);
-            Assert.AreEqual(strOutputXml, xDocument.ToString(SaveOptions.DisableFormatting));
+            TestHelper.AssertAtLeastOneLogMessagesContains(() =>
+                {
+                    var xDocument = RealTimeControlXmlWriter.GetRuntimeXml(XsdPath, realTimeControlModel, false, 4);
+                    Assert.IsNotNull(xDocument);
+                    Assert.AreEqual(strOutputXml, xDocument.ToString(SaveOptions.DisableFormatting));
+                },
+                "Depricated option \"Limited Memory\" of D-RTC model is set to True");
         }
 
         [Test]

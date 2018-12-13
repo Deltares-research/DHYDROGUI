@@ -413,6 +413,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         private static XElement GetXmlForLimitedMemoryOption(bool limitMemory)
         {
+            if (limitMemory == false)
+            {
+                limitMemory = true;
+                Log.Warn("Depricated option \"Limited Memory\" of D-RTC model is set to True");
+            }
             var modelElement = new XElement(Fns + "mode", new XElement(Fns + "simulation", new XElement(Fns + "limitedMemory",
                 limitMemory.ToString(CultureInfo.InvariantCulture).ToLower())));
             return modelElement;

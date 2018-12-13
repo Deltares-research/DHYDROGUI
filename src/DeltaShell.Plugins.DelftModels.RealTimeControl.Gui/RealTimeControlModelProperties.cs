@@ -22,18 +22,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             get { return data.Name; }
             set { data.Name = value; }
         }
-
+        
         [PropertyOrder(2)]
-        [ResourcesCategory(typeof(Resources), "Categories_General")]
-        [ResourcesDisplayName(typeof(Resources), "RealTimeControlModelProperties_LimitMemory_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_LimitMemory_Description")]
-        public bool LimitMemory
-        {
-            get { return data.LimitMemory; }
-            set { data.LimitMemory = value; }
-        }
-
-        [PropertyOrder(3)]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "RealTimeControlModelProperties_CoordinateSystem_DisplayName")]
         [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_CoordinateSystem_Description")]
