@@ -10,7 +10,8 @@ using DelftTools.Functions.Generic;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 {
-    class RealTimeControlDataConfigXmlReaderTest
+    [TestFixture]
+    public class RealTimeControlDataConfigXmlReaderTest
     {
         [Test]
         public void GivenANonExistingFile_WhenReading_ThenExpectedMessageIsGiven()
@@ -31,8 +32,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
                     },
                     string.Format(Resources.RealTimeControlDataConfigXmlReader_Read_File___0___does_not_exist_, filePath));
             });
-
-            // Then
         }
 
         [Test]

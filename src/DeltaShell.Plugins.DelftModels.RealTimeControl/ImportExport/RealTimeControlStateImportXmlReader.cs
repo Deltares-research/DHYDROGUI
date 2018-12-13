@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
                 if (correspondingOutput == null)
                 {
-                    Log.WarnFormat(Resources.RealTimeControlStateImportXmlReader_Read_Could_not_find_output_with_name___0___that_is_referenced_in_file___1____Please_check_file___2__, outputName, RealTimeControlXMLFiles.XmlImportState, RealTimeControlXMLFiles.XmlData);
+                    Log.WarnFormat(Resources.RealTimeControlStateImportXmlReader_Read_Could_not_find_output_with_name___0___that_is_referenced_in_file___1____Please_check_file___2__, outputName, stateImportFilePath, RealTimeControlXMLFiles.XmlData);
                     continue;
                 }
 

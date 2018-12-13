@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<treeVectorFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.openda.org" xsi:schemaLocation="http://www.openda.org D:\sluis_pa\Documents\WORK\TestModel\dimr_export\rtc\treeVector.xsd">
+  <treeVector>
+    <treeVectorLeaf id="[Output]a/b">
+      <vector>0</vector>
+    </treeVectorLeaf>
+	<treeVectorLeaf id="[Output]b/c">
+      <vector>0.1</vector>
+    </treeVectorLeaf>
+	<treeVectorLeaf id="[Output]c/d">
+      <vector>2.2</vector>
+    </treeVectorLeaf>
+	<treeVectorLeaf id="[Output]d/e">
+      <vector>303.03</vector>
+    </treeVectorLeaf>
+  </treeVector>
+</treeVectorFile>
