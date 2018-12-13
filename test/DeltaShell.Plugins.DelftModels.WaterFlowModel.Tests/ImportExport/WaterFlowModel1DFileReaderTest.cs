@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GivenAMd1dFile_WhenReading_ThenAModelIsReturned()
+        public void GivenAnMd1dFile_WhenReading_ThenAModelIsReturned()
         {
             var md1dFilePath = TestHelper.GetTestFilePath(@"ImportSpatialData\water flow 1d.md1d");
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Helpers;
@@ -16,15 +15,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         private static readonly Dictionary<string, string> CxDictionaryKuijperVanRijnPrismatic = new Dictionary<string, string>
         {
-            {"c3", "1.0"},
-            {"c4", "1.0"},
-            {"c5", "0.5"},
-            {"c6", "1.0"},
-            {"c7", "0.0"},
-            {"c8", "1.0"},
-            {"c9", "0.0"},
-            {"c10", "0.5"},
-            {"c11", "0.0"}
+            {SalinityRegion.C3.Key, "1.0"},
+            {SalinityRegion.C4.Key, "1.0"},
+            {SalinityRegion.C5.Key, "0.5"},
+            {SalinityRegion.C6.Key, "1.0"},
+            {SalinityRegion.C7.Key, "0.0"},
+            {SalinityRegion.C8.Key, "1.0"},
+            {SalinityRegion.C9.Key, "0.0"},
+            {SalinityRegion.C10.Key, "0.5"},
+            {SalinityRegion.C11.Key, "0.0"}
         };
 
         #endregion
@@ -44,19 +43,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                     cxDictionary = CxDictionaryKuijperVanRijnPrismatic;
                     break;
                 default:
-                    throw new InvalidOperationException(String.Format("Dispersion formulation {0} is not supported.", formulationType));
+                    throw new InvalidOperationException($"Dispersion formulation {formulationType} is not supported.");
             }
 
-            var numericalOptionsCategory = new DelftIniCategory("NumericalOptions");
+            var numericalOptionsCategory = new DelftIniCategory(SalinityRegion.NumericalOptionsHeader);
 
-            numericalOptionsCategory.SetProperty("teta", 1.0);
-            numericalOptionsCategory.SetProperty("tidalPeriod", 12.417);
-            numericalOptionsCategory.SetProperty("advectionScheme", "vanLeer-2");
+            numericalOptionsCategory.SetProperty(SalinityRegion.Teta.Key, 1.0);
+            numericalOptionsCategory.SetProperty(SalinityRegion.TidalPeriod.Key, 12.417);
+            numericalOptionsCategory.SetProperty(SalinityRegion.AdvectionScheme.Key, "vanLeer-2");
             
             cxDictionary.ForEach(kvp => numericalOptionsCategory.SetProperty(kvp.Key, kvp.Value));
 
-            var mouthCategory = new DelftIniCategory("Mouth");
-            mouthCategory.SetProperty("nodeId", nodeId, "Estuary mouth node id");
+            var mouthCategory = new DelftIniCategory(SalinityRegion.MouthHeader);
+            mouthCategory.SetProperty(SalinityRegion.NodeId.Key, nodeId, SalinityRegion.NodeId.Description);
 
             new DelftIniWriter().WriteDelftIniFile(new []{numericalOptionsCategory, mouthCategory}, targetPath); 
         }
