@@ -244,6 +244,7 @@
     <Compile Include="ImportExport\RealTimeControlModelXmlReaderTest.cs" />
     <Compile Include="ImportExport\RealTimeControlRuntimeConfigXmlReaderTest.cs" />
     <Compile Include="ImportExport\RealTimeControlStateImportXmlReaderTest.cs" />
+    <Compile Include="ImportExport\RealTimeControlTimeSeriesXmlReaderTest.cs" />
     <Compile Include="ImportExport\RealTimeControlToolsConfigXmlReaderTest.cs" />
     <Compile Include="ImportExport\RealTimeControlXmlWriterTest.cs" />
     <Compile Include="NHibernateRealTimeControlIntegrationTests.cs" />
