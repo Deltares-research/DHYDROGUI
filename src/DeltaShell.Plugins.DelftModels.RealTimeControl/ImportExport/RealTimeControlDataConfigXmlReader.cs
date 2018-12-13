@@ -10,7 +10,7 @@ using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
-    static class RealTimeControlDataConfigXmlReader
+    public static class RealTimeControlDataConfigXmlReader
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlDataConfigXmlReader));
 

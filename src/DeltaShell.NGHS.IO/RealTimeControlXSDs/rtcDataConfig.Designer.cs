@@ -715,12 +715,12 @@ namespace DeltaShell.NGHS.IO
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
     public enum PIInterpolationOptionEnumStringType
     {
-        
-        /// <remarks/>
-        BLOCK,
-        
+
         /// <remarks/>
         LINEAR,
+
+        /// <remarks/>
+        BLOCK,
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
