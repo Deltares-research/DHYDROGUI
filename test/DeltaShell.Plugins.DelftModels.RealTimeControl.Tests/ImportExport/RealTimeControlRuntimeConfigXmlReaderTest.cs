@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAnExistingFileWithTimeData_WhenReading_ThenCorrectDateTimesAreSetOnModel(string fileName, string expectedTimeSpanString, bool limitedMemory)
         {
             // Given
-            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RuntimeToolsConfigFiles"));
+            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RuntimeConfigFiles"));
             var filePath = Path.Combine(directoryPath, fileName);
 
             Assert.That(Directory.Exists(directoryPath));       
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         {
             // Given
             var fileName = "rtcRuntimeConfig_nosetting.xml";
-            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RuntimeToolsConfigFiles"));
+            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RuntimeConfigFiles"));
             var filePath = Path.Combine(directoryPath, fileName);
 
             Assert.That(Directory.Exists(directoryPath));
@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         {
             // Given
             var fileName = "rtcRuntimeConfig_false_minute.xml";
-            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RuntimeToolsConfigFiles"));
+            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RuntimeConfigFiles"));
             var filePath = Path.Combine(directoryPath, fileName);
 
             Assert.That(Directory.Exists(directoryPath));

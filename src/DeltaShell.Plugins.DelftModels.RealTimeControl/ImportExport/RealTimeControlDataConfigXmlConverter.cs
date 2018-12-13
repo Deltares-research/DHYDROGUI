@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             {
                 var groupName = RealTimeControlXmlReaderHelper.GetControlGroupNameFromElementId(id);
 
-                if (!groupNames.Contains(groupName))
+                if (!groupNames.Contains(groupName) && !string.IsNullOrEmpty(groupName))
                 {
                     groupNames.Add(groupName);
                 }
