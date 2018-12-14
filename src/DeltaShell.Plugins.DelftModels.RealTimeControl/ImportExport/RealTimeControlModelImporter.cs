@@ -28,8 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         public Bitmap Image { get { return Properties.Resources.brick_add; } }
 
         public IEnumerable<Type> SupportedItemTypes { get { yield return typeof(HydroModel.HydroModel); } }
-
-        [ExcludeFromCodeCoverage]
+        
         public bool CanImportOnRootLevel { get { return false; } }
 
         public string FileFilter { get { return "xml files|*.xml"; } }
