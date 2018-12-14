@@ -768,6 +768,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find the rule &apos;{0}&apos; that is referenced in id &apos;{1}&apos;.The rule needs to be referenced in file &apos;{2}&apos;..
+        /// </summary>
+        public static string RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___ {
+            get {
+                return ResourceManager.GetString("RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_th" +
+                        "e_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_f" +
+                        "ile___2___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PIDRule {0} time series will not be included in the DIMR XML as Set Point Type is Constant.
         /// </summary>
         public static string RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_PIDRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Constant {

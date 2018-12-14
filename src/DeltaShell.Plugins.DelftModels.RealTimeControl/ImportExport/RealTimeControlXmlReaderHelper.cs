@@ -6,7 +6,7 @@ using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
-    static public class RealTimeControlXmlReaderHelper
+    public static class RealTimeControlXmlReaderHelper
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlXmlReaderHelper));
 
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             var correspondingRule = controlGroup.Rules.FirstOrDefault(r => r.Name == ruleName);
             if (correspondingRule == null)
-                Log.WarnFormat(Resources.RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_input_output___0___that_is_referenced_in_id___1____The_input_output_needs_to_be_referenced_in_file___2___, ruleName, id, RealTimeControlXMLFiles.XmlData);
+                Log.WarnFormat(Resources.RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___, ruleName, id, RealTimeControlXMLFiles.XmlData);
 
             return correspondingRule;
         }
