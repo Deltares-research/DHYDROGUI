@@ -4,6 +4,7 @@ using log4net;
 using System;
 using System.Globalization;
 using System.IO;
+using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
@@ -31,19 +32,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 return;
             }
 
-            var startDateElement = settings.startDate;
-            var startDate = startDateElement.date;
-            var startTime = startDateElement.time;
+            rtcModel.SetStartTime(settings);
+            rtcModel.SetStopTime(settings);
+            rtcModel.SetTimeStep(settings);
+            rtcModel.SetLimitedMemory(runtimeConfigObject);
+        }
 
-            var endDateElement = settings.endDate;
-            var endDate = endDateElement.date;
-            var endTime = endDateElement.time;
-
+        private static void SetTimeStep(this ITimeDependentModel rtcModel, UserDefinedRuntimeXML settings)
+        {
             var timeStepElement = settings.timeStep;
-            var timeUnit = timeStepElement.unit;
+            var timeStep = GetTimeSpanFromTimeUnit(timeStepElement);
             var timeMultiplier = Convert.ToInt32(timeStepElement.multiplier);
             var timeDivider = Convert.ToInt32(timeStepElement.divider);
 
+            rtcModel.TimeStep = timeStep.MultiplyAndDivideBy(timeMultiplier, timeDivider);
+        }
+
+        private static TimeSpan GetTimeSpanFromTimeUnit(TimeStepXML timeStepXml)
+        {
+            var timeUnit = timeStepXml.unit;
             TimeSpan timeStep;
 
             switch (timeUnit)
@@ -67,14 +74,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     throw new NotImplementedException();
             }
 
-            rtcModel.StartTime = CreateDateTimeFromDateAndTime(startDate, startTime);
-            rtcModel.StopTime = CreateDateTimeFromDateAndTime(endDate, endTime);
-            rtcModel.TimeStep = timeStep.MultiplyAndDivideBy(timeMultiplier, timeDivider);
+            return timeStep;
+        }
 
-            var mode = runtimeConfigObject.Item as ModeXML;
-            var simulationMode = mode?.Item as ModeSimulationXML;
+        private static TimeSpan MultiplyAndDivideBy(this TimeSpan t, int multiplier, int divider)
+        {
+            return new TimeSpan(t.Ticks * multiplier / divider);
+        }
 
-            if (simulationMode != null) rtcModel.LimitMemory = simulationMode.limitedMemory;
+        private static void SetStartTime(this ITimeDependentModel rtcModel, UserDefinedRuntimeXML settings)
+        {
+            var startDateElement = settings.startDate;
+            rtcModel.StartTime = CreateDateTimeFromDateAndTime(startDateElement.date, startDateElement.time);
+        }
+
+        private static void SetStopTime(this ITimeDependentModel rtcModel, UserDefinedRuntimeXML settings)
+        {
+            var endDateElement = settings.endDate;
+            rtcModel.StopTime = CreateDateTimeFromDateAndTime(endDateElement.date, endDateElement.time);
         }
 
         private static DateTime CreateDateTimeFromDateAndTime(DateTime date, DateTime time)
@@ -85,9 +102,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return dateTime;
         }
 
-        private static TimeSpan MultiplyAndDivideBy(this TimeSpan t, int multiplier, int divider)
+        private static void SetLimitedMemory(this RealTimeControlModel rtcModel, RtcRuntimeConfigXML runtimeConfigObject)
         {
-            return new TimeSpan(t.Ticks * multiplier / divider);
+            var mode = runtimeConfigObject.Item as ModeXML;
+            var simulationMode = mode?.Item as ModeSimulationXML;
+
+            if (simulationMode != null) rtcModel.LimitMemory = simulationMode.limitedMemory;
         }
     }
 }

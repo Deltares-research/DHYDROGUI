@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAnExistingFileForRmmModel_WhenReading_ThenNoExceptionIsThrown()
         {
             // Given
-            var fileName = "rtcRuntimeConfig.xml";
+            const string fileName = "rtcRuntimeConfig.xml";
             var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RMM"));
             var filePath = Path.Combine(directoryPath, fileName);
 
@@ -52,6 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
             var rtcModel = new RealTimeControlModel();
 
+            // Then
             Assert.DoesNotThrow(() =>
             {
                 // When
@@ -90,7 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAnExistingFileWithoutTimeSettings_WhenReading_ThenExpectedMessageIsGivenAndModelHasDefaultValues()
         {
             // Given
-            var fileName = "rtcRuntimeConfig_nosetting.xml";
+            const string fileName = "rtcRuntimeConfig_nosetting.xml";
             var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RuntimeConfigFiles"));
             var filePath = Path.Combine(directoryPath, fileName);
 
@@ -118,16 +119,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GivenAnExistingFileAndNullIsGivenAsParameterForModel_WhenReading_ThenMethodIsReturnedAndNothingHappens()
+        public void GivenAnExistingFileAndNullIsGivenAsParameterForModel_WhenReading_ThenMethodDoesNotThrowAnException()
         {
             // Given
-            var fileName = "rtcRuntimeConfig_false_minute.xml";
+            const string fileName = "rtcRuntimeConfig_false_minute.xml";
             var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RuntimeConfigFiles"));
             var filePath = Path.Combine(directoryPath, fileName);
 
-            Assert.That(Directory.Exists(directoryPath));
             Assert.That(File.Exists(filePath));
 
+            // When/Then
             Assert.DoesNotThrow(() =>
             {
                 RealTimeControlRuntimeConfigXmlReader.Read(filePath, null);
