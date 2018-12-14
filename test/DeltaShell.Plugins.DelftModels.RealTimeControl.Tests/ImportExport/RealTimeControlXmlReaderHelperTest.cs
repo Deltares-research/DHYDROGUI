@@ -66,23 +66,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         }
 
         [Test]
-        public void GivenAnIdFromAnRtcXmlElementAndControlGroupsIsNull_WhenGetControlGroupByElementIdIsCalled_ThenNullIsReturnedAndNothingHappens()
+        public void GivenAnIdFromAnRtcXmlElementAndControlGroupsIsNull_WhenGetControlGroupByElementIdIsCalled_ThenNullIsReturned()
         {
             // Given
-            var id = "[TimeRule]control_group_name/time_rule_name";
+            const string id = "[TimeRule]control_group_name/time_rule_name";
 
             // When
-            var resultedControlGroup = RealTimeControlXmlReaderHelper.GetControlGroupByElementId(id, null);
+            var controlGroup = RealTimeControlXmlReaderHelper.GetControlGroupByElementId(id, null);
 
             // Then
-            Assert.AreEqual(null, resultedControlGroup);
+            Assert.IsNull(controlGroup);
         }
 
         [Test]
         public void GivenAnIdFromAnRtcXmlElementWithAControlGroupNameThatDoesNotExist_WhenGetControlGroupByElementIdIsCalled_ThenNullIsReturnedAndExpectedErrorMessageIsGiven()
         {
             // Given
-            var missingControlGroupName = "not_existing_control_group_name";
+            const string missingControlGroupName = "not_existing_control_group_name";
             var id = $"[TimeRule]{missingControlGroupName}/time_rule_name";
             var controlgroups = new List<ControlGroup>
             {
@@ -105,8 +105,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAConnectionPointName_WhenGetConnectionPointByNameIsCalled_ThenExpectedConnectionPointIsReturned()
         {
             // Given
-            var inputName = "[Input]parameter/quantity";
-            var outputName = "[Output]parameter/quantity";
+            const string inputName = "[Input]parameter/quantity";
+            const string outputName = "[Output]parameter/quantity";
             var expectedInput = new Input { Name = inputName };
             var expectedOutput = new Output { Name = outputName };
 
@@ -129,20 +129,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAConnectionPointNameAndConnectionPointsIsNull_WhenGetConnectionPointByNameIsCalled_ThenNullIsReturnedAndNothingHappens()
         {
             // Given
-            var name = "[Input]parameter/quantity";
+            const string name = "[Input]parameter/quantity";
 
             // When
-            var resultedControlGroup = RealTimeControlXmlReaderHelper.GetConnectionPointByName(name, null);
+            var controlGroup = RealTimeControlXmlReaderHelper.GetConnectionPointByName(name, null);
 
             // Then
-            Assert.AreEqual(null, resultedControlGroup);
+            Assert.IsNull(controlGroup);
         }
 
         [Test]
         public void GivenAConnectionPointNameThatDoesNotExist_WhenGetConnectionPointByNameIsCalled_ThenNullIsReturnedAndExpectedErrorMessageIsGiven()
         {
             // Given
-            var missingConnectionPointName = "not_existing_connection_point_name";
+            const string missingConnectionPointName = "not_existing_connection_point_name";
 
             var connectionPoints = new List<ConnectionPoint> {new Output {Name = "some_name"}};
 
@@ -179,23 +179,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         }
 
         [Test]
-        public void GivenAnIdFromAnRuleXmlElementAndControlGroupIsNull_WhenGetRuleByElementIdInControlGroupIsCalled_ThenNullIsReturnedAndNothingHappens()
+        public void GivenAnIdFromAnRuleXmlElementAndControlGroupIsNull_WhenGetRuleByElementIdInControlGroupIsCalled_ThenNullIsReturned()
         {
             // Given
-            var id = "[TimeRule]control_group_name/time_rule_name";
+            const string id = "[TimeRule]control_group_name/time_rule_name";
 
             // When
-            var resultedRule = RealTimeControlXmlReaderHelper.GetRuleByElementIdInControlGroup(id, null);
+            var rule = RealTimeControlXmlReaderHelper.GetRuleByElementIdInControlGroup(id, null);
 
             // Then
-            Assert.AreEqual(null, resultedRule);
+            Assert.IsNull(rule);
         }
 
         [Test]
         public void GivenAnIdFromARuleXmlElementWithARuleThatDoesNotExist_WhenGetRuleByElementIdInControlGroupIsCalled_ThenNullIsReturnedAndExpectedErrorMessageIsGiven()
         {
             // Given
-            var missingRuleName = "not_existing_rule_name";
+            const string missingRuleName = "not_existing_rule_name";
             var id = $"[TimeRule]control_group_name/{missingRuleName}";
            
             var controlGroup = new ControlGroup();
@@ -241,20 +241,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAnIdFromAnConditionXmlElementAndControlGroupIsNull_WhenGetConditionByElementIdInControlGroupIsCalled_ThenNullIsReturnedAndNothingHappens()
         {
             // Given
-            var id = "[TimeCondition]control_group_name/time_condition_name";
+            const string id = "[TimeCondition]control_group_name/time_condition_name";
 
             // When
-            var resultedCondition = RealTimeControlXmlReaderHelper.GetConditionByElementIdInControlGroup(id, null);
+            var condition = RealTimeControlXmlReaderHelper.GetConditionByElementIdInControlGroup(id, null);
 
             // Then
-            Assert.AreEqual(null, resultedCondition);
+            Assert.IsNull(condition);
         }
 
         [Test]
         public void GivenAnIdFromAConditionXmlElementWithAConditionThatDoesNotExist_WhenGetConditionByElementIdInControlGroupIsCalled_ThenNullIsReturnedAndExpectedErrorMessageIsGiven()
         {
             // Given
-            var missingConditionName = "not_existing_condition_name";
+            const string missingConditionName = "not_existing_condition_name";
             var id = $"[TimeCondition]control_group_name/{missingConditionName}";
 
             var controlGroup = new ControlGroup();
