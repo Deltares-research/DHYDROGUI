@@ -239,6 +239,7 @@
     <Compile Include="Forms\Properties\StandardConditionPropertiesTest.cs" />
     <Compile Include="Forms\Properties\TimeConditionPropertiesTest.cs" />
     <Compile Include="Forms\TimeConditionPropertiesTest.cs" />
+    <Compile Include="ImportExport\RealTimeControlDataConfigXmlConverterTest.cs" />
     <Compile Include="ImportExport\RealTimeControlDataConfigXmlReaderTest.cs" />
     <Compile Include="ImportExport\RealTimeControlModelImporterTest.cs" />
     <Compile Include="ImportExport\RealTimeControlModelXmlReaderTest.cs" />
@@ -280,6 +281,10 @@
       <Project>{ad22cec6-2a71-478c-96c3-b7acdfe9b84b}</Project>
       <Name>DeltaShell.Dimr</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
+      <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
+      <Name>DeltaShell.NGHS.IO</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
       <Project>{6F5B9016-2DD7-4148-BA0B-0167B9E57D78}</Project>

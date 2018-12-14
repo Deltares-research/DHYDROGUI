@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public static void CreateRulesFromXmlElementsAndAddToControlGroup(List<RTCTimeSeriesXML> elements, IList<ControlGroup> controlGroups)
         {
-            if (elements == null || controlGroups == null) return;
+            if (elements == null || controlGroups == null) return; 
 
             RuleTags.ForEach(tag =>
             {
@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 var outputName = splitId.First();
                 var ruleName = splitId.Last();
 
-                var relativeTimeRules = controlGroups.SelectMany(c => c.Rules).OfType<RelativeTimeRule>();
+                 var relativeTimeRules = controlGroups.SelectMany(c => c.Rules).OfType<RelativeTimeRule>();
 
                 var correspondingRelativeTimeRule = relativeTimeRules.FirstOrDefault(r => r.Name == ruleName);
                 if (correspondingRelativeTimeRule == null)
