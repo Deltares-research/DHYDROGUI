@@ -22,6 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var controlGroups = new List<ControlGroup>();
             var connectionPoints = new List<ConnectionPoint>();
 
+            // Then
             TestHelper.AssertLogMessageIsGenerated(() =>
             {
                 // When
@@ -35,15 +36,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAnExistingFileAndNullIsGivenAsParameterForControlgroups_WhenReading_ThenMethodIsReturnedAndNothingHappens()
         {
             // Given
-            var fileName = "rtcToolsConfig.xml";
+            const string fileName = "rtcToolsConfig.xml";
             var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "ToolsConfigFiles"));
             var filePath = Path.Combine(directoryPath, fileName);
 
-            Assert.That(Directory.Exists(directoryPath));
             Assert.That(File.Exists(filePath));
 
             var connectionPoints = new List<ConnectionPoint>();
 
+            // Then
             Assert.DoesNotThrow(() =>
             {
                 // When
@@ -53,14 +54,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GivenAnExistingFileAndNullIsGivenAsParameterForConnectionPoints_WhenReading_ThenMethodIsReturnedAndNothingHappens()
+        public void GivenAnExistingFileAndNullIsGivenAsParameterForConnectionPoints_WhenReading_ThenMethodReturnsNoInputsOrOutputs()
         {
             // Given
-            var fileName = "rtcToolsConfig.xml";
+            const string fileName = "rtcToolsConfig.xml";
             var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "ToolsConfigFiles"));
             var filePath = Path.Combine(directoryPath, fileName);
 
-            Assert.That(Directory.Exists(directoryPath));
             Assert.That(File.Exists(filePath));
 
             var controlGroups = new List<ControlGroup>();
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAnExistingFileWithValidData_WhenReading_ThenCorrectOutputValuesAreSet()
         {
             // Given
-            var fileName = "rtcToolsConfig.xml";
+            const string fileName = "rtcToolsConfig.xml";
             var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "ToolsConfigFiles"));
             var filePath = Path.Combine(directoryPath, fileName);
 
