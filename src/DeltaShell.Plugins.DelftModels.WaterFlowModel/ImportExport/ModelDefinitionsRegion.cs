@@ -5,7 +5,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
     public static class ModelDefinitionsRegion
     {
         public const string FilesIniHeader = "Files";
-        public static readonly ConfigurationSetting NetworkFile = new ConfigurationSetting(key: "networkFile", description: "#Name and location of the network file");
+        public static readonly ConfigurationSetting NetworkFile = new ConfigurationSetting(key: "networkFile", description: "Name and location of the network file");
         public static readonly ConfigurationSetting CrossSectionLocationsFile = new ConfigurationSetting(key: "crossLocFile", description: "Name and location of the file containing the locations of the cross sections");
         public static readonly ConfigurationSetting CrossSectionDefinitionsFile = new ConfigurationSetting(key: "crossDefFile", description: "Name and location of the file containing the definitions of the cross sections");
         public static readonly ConfigurationSetting StructuresFile = new ConfigurationSetting(key: "structureFile", description: "Name and location of the structure file");
