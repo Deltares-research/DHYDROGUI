@@ -5,7 +5,7 @@ namespace DeltaShell.NGHS.IO
     public static class SalinityRegion
     {
         public const string MouthHeader = "Mouth";
-        public static readonly ConfigurationSetting NodeId = new ConfigurationSetting(key: "nodeId", description: "#Estuary mouth node id");
+        public static readonly ConfigurationSetting NodeId = new ConfigurationSetting(key: "nodeId", description: "Estuary mouth node id");
 
         //TODO: Give the following ConfigurationSetting objects a correct description
         public const string NumericalOptionsHeader = "NumericalOptions";
