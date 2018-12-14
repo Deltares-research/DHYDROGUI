@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
@@ -25,13 +26,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
             // Then
             Assert.NotNull(rtcModel);
-
             Assert.AreEqual(true, rtcModel.LimitMemory);
 
+            CheckSimpleModelTimeSettings(rtcModel);
+            CheckSimpleModelControlGroupValidity(rtcModel);
+        }
+
+        private static void CheckSimpleModelTimeSettings(ITimeDependentModel rtcModel)
+        {
             Assert.AreEqual(new DateTime(2018, 12, 12, 0, 0, 0), rtcModel.StartTime);
             Assert.AreEqual(new DateTime(2018, 12, 13, 0, 0, 0), rtcModel.StopTime);
             Assert.AreEqual(new TimeSpan(0, 30, 0), rtcModel.TimeStep);
+        }
 
+        private static void CheckSimpleModelControlGroupValidity(IRealTimeControlModel rtcModel)
+        {
             Assert.AreEqual(1, rtcModel.ControlGroups.Count);
 
             var controlGroup = rtcModel.ControlGroups[0];
@@ -90,10 +99,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
             Assert.AreEqual(false, rtcModel.LimitMemory);
 
+            CheckRmmModelTimeSettings(rtcModel);
+
+            CheckRmmModelControlGroups(rtcModel);
+        }
+
+        private static void CheckRmmModelTimeSettings(RealTimeControlModel rtcModel)
+        {
             Assert.AreEqual(new DateTime(1991, 1, 5, 3, 20, 0), rtcModel.StartTime);
             Assert.AreEqual(new DateTime(1991, 1, 9, 0, 0, 0), rtcModel.StopTime);
             Assert.AreEqual(new TimeSpan(0, 1, 0), rtcModel.TimeStep);
+        }
 
+        private static void CheckRmmModelControlGroups(RealTimeControlModel rtcModel)
+        {
             Assert.AreEqual(23, rtcModel.ControlGroups.Count);
 
             var controlGroups = rtcModel.ControlGroups;
@@ -164,17 +183,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         [Test]
         public void GivenAnInvalidRtcDirectoryPath_WhenReading_ThenExpectedErrorMessageIsGiven()
         {
-			// Given
-            var path = "InvalidPath";
+            // Given
+            const string invalidPath = "InvalidPath";
 
-			// Then
+            // Then
             TestHelper.AssertLogMessageIsGenerated(() =>
                 {
 					// When
-                    var model = RealTimeControlModelXmlReader.Read(path);
+                    var model = RealTimeControlModelXmlReader.Read(invalidPath);
                     Assert.IsNull(model);
                 }, 
-                string.Format(Resources.RealTimeControlModelXmlReader_Read_Directory___0___does_not_exist_, path));
+                string.Format(Resources.RealTimeControlModelXmlReader_Read_Directory___0___does_not_exist_, invalidPath));
         }
 
 
