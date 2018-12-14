@@ -143,7 +143,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             var spatialDataFileNames = new List<string>
             {
-                fileNames.InitialWaterDepth,
                 fileNames.InitialDischarge,
                 fileNames.InitialSalinity,
                 fileNames.InitialTemperature,
