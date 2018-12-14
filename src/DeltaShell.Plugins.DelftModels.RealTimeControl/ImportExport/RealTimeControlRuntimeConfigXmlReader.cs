@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 
             if (rtcModel == null) return;
 
-            var runtimeConfigObject = (RtcRuntimeConfigXML)DelftConfigXmlFileParser.Read(runtimeConfigFilePath);
+            var runtimeConfigObject = DelftConfigXmlFileParser.Read<RtcRuntimeConfigXML>(runtimeConfigFilePath);
             var settings = runtimeConfigObject.period.Item as UserDefinedRuntimeXML;
 
             if (settings == null)

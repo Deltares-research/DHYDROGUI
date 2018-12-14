@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 
             if (controlGroups == null || connectionPoints == null) return;
 
-            var toolsConfigObject = (RtcToolsConfigXML)DelftConfigXmlFileParser.Read(toolsConfigFilePath);
+            var toolsConfigObject = DelftConfigXmlFileParser.Read<RtcToolsConfigXML>(toolsConfigFilePath);
 
             var ruleElements = toolsConfigObject.rules;
             var conditionElements = toolsConfigObject.triggers;

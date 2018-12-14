@@ -5,27 +5,23 @@
 //  </auto-generated>
 // ------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Xml;
+using System.Xml.Serialization;
 using DeltaShell.Dimr.xsd;
 
 #pragma warning disable
-namespace DeltaShell.NGHS.IO
+namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
 {
-    using System;
-    using System.Diagnostics;
-    using System.Xml.Serialization;
-    using System.Collections;
-    using System.Xml.Schema;
-    using System.ComponentModel;
-    using System.Xml;
-    using System.Collections.Generic;
-    
-    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.openda.org")]
-    [System.Xml.Serialization.XmlRootAttribute("treeVectorFile", Namespace="http://www.openda.org", IsNullable=false)]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace="http://www.openda.org")]
+    [XmlRoot("treeVectorFile", Namespace="http://www.openda.org", IsNullable=false)]
     public partial class TreeVectorFileXML : IXmlParsedObject
     {
         
@@ -73,10 +69,10 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.openda.org")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace="http://www.openda.org")]
     public partial class DateTimeXML : IXmlParsedObject
     {
         
@@ -88,7 +84,7 @@ namespace DeltaShell.NGHS.IO
         private string _timeZone;
         #endregion
         
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="date")]
+        [XmlAttribute(DataType="date")]
         public System.DateTime date
         {
             get
@@ -101,7 +97,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="time")]
+        [XmlAttribute(DataType="time")]
         public System.DateTime time
         {
             get
@@ -114,7 +110,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string timeZone
         {
             get
@@ -135,10 +131,10 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.openda.org")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace="http://www.openda.org")]
     public partial class PhysicalDimensionXML : IXmlParsedObject
     {
         
@@ -150,7 +146,7 @@ namespace DeltaShell.NGHS.IO
         private string _ref;
         #endregion
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string id
         {
             get
@@ -163,7 +159,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string axes
         {
             get
@@ -176,7 +172,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string @ref
         {
             get
@@ -197,10 +193,10 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.openda.org")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace="http://www.openda.org")]
     public partial class ComputationalDimensionXML : IXmlParsedObject
     {
         
@@ -210,7 +206,7 @@ namespace DeltaShell.NGHS.IO
         private int _length;
         #endregion
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string id
         {
             get
@@ -223,7 +219,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public int length
         {
             get
@@ -244,10 +240,10 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.openda.org")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace="http://www.openda.org")]
     public partial class GridXML : IXmlParsedObject
     {
         
@@ -263,7 +259,7 @@ namespace DeltaShell.NGHS.IO
             this._computationalSpace = new List<ComputationalDimensionXML>();
         }
         
-        [System.Xml.Serialization.XmlArrayItemAttribute("dimension", IsNullable=false)]
+        [XmlArrayItem("dimension", IsNullable=false)]
         public List<ComputationalDimensionXML> computationalSpace
         {
             get
@@ -276,7 +272,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlArrayItemAttribute("dimension", IsNullable=false)]
+        [XmlArrayItem("dimension", IsNullable=false)]
         public List<PhysicalDimensionXML> physicalSpace
         {
             get
@@ -297,10 +293,10 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.openda.org")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace="http://www.openda.org")]
     public partial class DimensionsXML : IXmlParsedObject
     {
         
@@ -312,7 +308,7 @@ namespace DeltaShell.NGHS.IO
         private string _dimSize3;
         #endregion
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string dimSize1
         {
             get
@@ -325,7 +321,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string dimSize2
         {
             get
@@ -338,7 +334,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string dimSize3
         {
             get
@@ -359,10 +355,10 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.openda.org")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace="http://www.openda.org")]
     public partial class TreeVectorLeafXML : IXmlParsedObject
     {
         
@@ -408,8 +404,8 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlElementAttribute("dimensions", typeof(DimensionsXML))]
-        [System.Xml.Serialization.XmlElementAttribute("grid", typeof(GridXML))]
+        [XmlElement("dimensions", typeof(DimensionsXML))]
+        [XmlElement("grid", typeof(GridXML))]
         public object Item
         {
             get
@@ -434,7 +430,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string id
         {
             get
@@ -447,7 +443,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string caption
         {
             get
@@ -460,7 +456,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public bool excludeFromVector
         {
             get
@@ -473,7 +469,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string className
         {
             get
@@ -494,10 +490,10 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.openda.org")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace="http://www.openda.org")]
     public partial class TreeVectorXML : IXmlParsedObject
     {
         
@@ -532,8 +528,8 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlElementAttribute("subTreeVector", typeof(TreeVectorXML))]
-        [System.Xml.Serialization.XmlElementAttribute("treeVectorLeaf", typeof(TreeVectorLeafXML))]
+        [XmlElement("subTreeVector", typeof(TreeVectorXML))]
+        [XmlElement("treeVectorLeaf", typeof(TreeVectorLeafXML))]
         public List<object> Items
         {
             get
@@ -546,7 +542,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string id
         {
             get
@@ -559,7 +555,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string caption
         {
             get
@@ -572,7 +568,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public bool excludeFromVector
         {
             get
@@ -585,7 +581,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string className
         {
             get

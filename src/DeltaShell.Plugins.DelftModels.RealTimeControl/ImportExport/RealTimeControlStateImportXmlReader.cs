@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 
             if (outputs == null) return;
 
-            var stateImportObject = (TreeVectorFileXML)DelftConfigXmlFileParser.Read(stateImportFilePath);
+            var stateImportObject = DelftConfigXmlFileParser.Read<TreeVectorFileXML>(stateImportFilePath);
 
             var outputItems = stateImportObject.treeVector.Items.OfType<TreeVectorLeafXML>();
 

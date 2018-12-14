@@ -2,7 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using DelftTools.Controls;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -10,7 +9,6 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using Mono.Addins;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
 
 namespace DeltaShell.Dimr.Gui
 {
@@ -34,32 +32,15 @@ namespace DeltaShell.Dimr.Gui
         {
             get
             {
-                if (!IsActiveViewMapViewWithRegion()) return false;
-                if(Gui.SelectedModel is IDimrModel) return true;
-                var compositeModel = Gui.SelectedModel as ICompositeActivity;
+                if(Gui?.SelectedModel is IDimrModel)
+                    return true;
 
-                return compositeModel != null && compositeModel.CurrentWorkflow != null && compositeModel.CurrentWorkflow.Activities != null &&
-                        compositeModel.CurrentWorkflow.Activities.GetActivitiesOfType<IModel>().Count() ==
-                        compositeModel.CurrentWorkflow.Activities.GetActivitiesOfType<IDimrModel>().Count();
+                var activities = (Gui?.SelectedModel as ICompositeActivity)?.CurrentWorkflow?.Activities;
 
+                return activities != null &&
+                        activities.GetActivitiesOfType<IModel>().Count() ==
+                        activities.GetActivitiesOfType<IDimrModel>().Count();
             }
-        }
-
-        private bool IsActiveViewMapViewWithRegion()
-        {
-            var mapView = Gui.GetFocusedMapView();
-
-            if (mapView == null || mapView.Map == null)
-            {
-                return false;
-            }
-
-            if (mapView.Map.GetAllLayers(true).Any(l => l is HydroRegionMapLayer))
-            {
-                return true;
-            }
-
-            return false;
         }
 
         public override string DisplayName

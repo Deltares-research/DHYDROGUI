@@ -183,6 +183,11 @@
     <Compile Include="RealTimeControlModelMergeValidator.cs" />
     <Compile Include="RealTimeControlApplicationPlugin.cs" />
     <Compile Include="RealTimeControlXMLFiles.cs" />
+    <Compile Include="Xsd\pi_timeseries.Designer.cs" />
+    <Compile Include="Xsd\rtcDataConfig.Designer.cs" />
+    <Compile Include="Xsd\rtcRuntimeConfig.Designer.cs" />
+    <Compile Include="Xsd\rtcToolsConfig.Designer.cs" />
+    <Compile Include="Xsd\treeVector.Designer.cs" />
     <Compile Include="RtcDataAccessListener.cs" />
     <Compile Include="rtc_kernel\RealTimeControlModelDll.cs" />
     <Compile Include="Validation\ControlGroupValidator.cs" />
@@ -224,6 +229,21 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
+    <None Include="Xsd\pi_timeseries.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Xsd\rtcDataConfig.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Xsd\rtcRuntimeConfig.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Xsd\rtcToolsConfig.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Xsd\treeVector.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Uml\RealTimeControl.cd" />
     <None Include="Uml\RealTimeControlXmlReaderWriter.cd" />
   </ItemGroup>

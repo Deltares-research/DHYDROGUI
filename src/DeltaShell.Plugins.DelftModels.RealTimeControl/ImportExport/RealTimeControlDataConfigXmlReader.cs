@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
@@ -24,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 
             if (controlGroups == null) return null;
          
-            var dataConfigObject = (RTCDataConfigXML)DelftConfigXmlFileParser.Read(dataConfigFilePath);
+            var dataConfigObject = DelftConfigXmlFileParser.Read<RTCDataConfigXML>(dataConfigFilePath);
 
             var importElements = dataConfigObject.importSeries.timeSeries;
             var exportElements = dataConfigObject.exportSeries.timeSeries;

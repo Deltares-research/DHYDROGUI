@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using System.Xml.Serialization;
 using DeltaShell.Dimr.xsd;
 
@@ -18,6 +19,8 @@ namespace DeltaShell.NGHS.IO.FileConverters
         /// <param name="file"><see cref="StreamReader"/> to the xml file</param>
         /// <param name="unsupportedFeatures">List of unsupported item messages</param>
         /// <returns>Parsed <see cref="IXmlParsedObject"/> object</returns>
+        /// <exception cref="ArgumentException">When one of the arguments is null</exception>
+        /// <exception cref="InvalidOperationException">When de-serializing fails</exception>
         public static T Convert<T>(StreamReader file, List<string> unsupportedFeatures) where T : class, IXmlParsedObject
         {
             if (file == null)
@@ -44,7 +47,14 @@ namespace DeltaShell.NGHS.IO.FileConverters
                 AddUnknownItem(args.ObjectBeingDeserialized as T, args.Attr, o => o.UnKnownAttributes, (o, l) => o.UnKnownAttributes = l);
             };
 
-            return (T) serializer.Deserialize(file);
+            try
+            {
+                return (T)serializer.Deserialize(file);
+            }
+            catch (InvalidOperationException e)
+            {
+                throw new XmlException($"Error during parsing : {e.InnerException?.Message}");
+            }
         }
 
         private static void AddUnknownItem<T>(IXmlParsedObject xmlParsedObject, T item, Func<IXmlParsedObject, List<T>> getList, Action<IXmlParsedObject, List<T>> setList)

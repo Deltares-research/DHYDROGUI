@@ -1,5 +1,5 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System;
+using System.IO;
 using System.Xml;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr.xsd;
@@ -11,77 +11,72 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
     [TestFixture]
     class DelftConfigXmlFileParserTest
     {
-        private const string UnableToReadTheFileDueToInvalidFileFormat = "Unable to read the file due to invalid file format";
-        private string dimrSourcePath;
         private string XmlFileDirectory = @"FileReaders\ConfigXmlReader";
-
-        [SetUp]
-        public void Setup()
-        {
-            dimrSourcePath = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory));
-        }
 
         #region General Exception tests
         [Test]
-        [ExpectedException(typeof(FileReadingException))]
+        [ExpectedException(typeof(FileNotFoundException))]
         public void ConfigurationPathDoesNotExist()
         {
-            DelftConfigXmlFileParser.Read(null);
+            DelftConfigXmlFileParser.Read<dimrXML>(null);
         }
 
         [Test]
-        [ExpectedException(typeof(FileReadingException))]
+        [ExpectedException(typeof(FileNotFoundException))]
         public void ConfigurationFilePathIsEmpty()
         {
-            DelftConfigXmlFileParser.Read("");
+            DelftConfigXmlFileParser.Read<dimrXML>("");
         }
 
         [Test]
-        [ExpectedException(typeof(XmlException), ExpectedMessage = UnableToReadTheFileDueToInvalidFileFormat)]
         public void ConfigurationFilePathIsUnknown()
         {
-            var unknownFilePath = @"\unknowpathtofile";
-            var dimrFileSource = Path.Combine(unknownFilePath, dimrSourcePath);
-            DelftConfigXmlFileParser.Read(dimrFileSource);
+            var unknownFilePath = @"unknowpathtofile.xml";
+            var dimrFileSource = Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory, unknownFilePath);
+            
+            var exception = Assert.Throws<FileNotFoundException>(() => { DelftConfigXmlFileParser.Read<dimrXML>(dimrFileSource); });
+            Assert.AreEqual(exception.Message, $"Configuration file {unknownFilePath} cannot be found");
         }
         #endregion
 
         #region Dimr tests
         [Test]
         [Category(TestCategory.DataAccess)]
-        [ExpectedException(typeof(XmlException), ExpectedMessage = UnableToReadTheFileDueToInvalidFileFormat)]
         public void DimrConfigFileWithMissingDocumentationTagThrowsXmlException()
         {
-            var pathWithInvalidConfigurationFile = Path.Combine(dimrSourcePath, "dimrWithMissingDocTag.xml");
-            DelftConfigXmlFileParser.Read(pathWithInvalidConfigurationFile);
+            var pathWithInvalidConfigurationFile = Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory, "dimrWithMissingDocTag.xml");
+            
+            var exception = Assert.Throws<XmlException>(() => { DelftConfigXmlFileParser.Read<dimrXML>(pathWithInvalidConfigurationFile); });
+            Assert.AreEqual("Error during parsing : The 'documentation' start tag on line 3 position 4 does not match the end tag of 'dimrConfig'. Line 192, position 3.", exception.Message);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [ExpectedException(typeof(XmlException), ExpectedMessage = UnableToReadTheFileDueToInvalidFileFormat)]
         public void InvalidDimrConfigurationFileWithEmptyBodyThrowsXmlException()
         {
-            var pathWithInvalidConfigurationFile = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), "invalidDimrEmptyBody.xml"));
-            DelftConfigXmlFileParser.Read(pathWithInvalidConfigurationFile);
+            var pathWithInvalidConfigurationFile = Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory, "invalidDimrEmptyBody.xml");
+            var exception = Assert.Throws<XmlException>(() => { DelftConfigXmlFileParser.Read<dimrXML>(pathWithInvalidConfigurationFile); });
+            Assert.AreEqual("Error during parsing : Root element is missing.", exception.Message);
         }
-
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [ExpectedException(typeof(XmlException), ExpectedMessage = UnableToReadTheFileDueToInvalidFileFormat)]
         public void InvalidDimrConfigurationFileWithInvalidHeaderThrowsXmlException()
         {
-            var pathWithInvalidConfigurationFile = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), "invalidDimrMissingHeader.xml"));
-            DelftConfigXmlFileParser.Read(pathWithInvalidConfigurationFile);
+            var pathWithInvalidConfigurationFile = Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory, "invalidDimrMissingHeader.xml");
+
+            var exception = Assert.Throws<XmlException>(() => { DelftConfigXmlFileParser.Read<dimrXML>(pathWithInvalidConfigurationFile); });
+            Assert.AreEqual("Error during parsing : <abc xmlns='http://schemas.deltares.nl/dimr'> was not expected.", exception.Message);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [ExpectedException(typeof(XmlException), ExpectedMessage = UnableToReadTheFileDueToInvalidFileFormat)]
         public void InvalidDimrConfigurationFileWithUnknownRootName()
         {
-            var pathWithInvalidConfigurationFile = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), "invalidDimrUnknownRootName.xml"));
-            DelftConfigXmlFileParser.Read(pathWithInvalidConfigurationFile);
+            var pathWithInvalidConfigurationFile = Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory, "invalidDimrUnknownRootName.xml");
+
+            var exception = Assert.Throws<XmlException>(() => { DelftConfigXmlFileParser.Read<dimrXML>(pathWithInvalidConfigurationFile); });
+            Assert.AreEqual("Error during parsing : <InvalidRoot xmlns='http://schemas.deltares.nl/dimr'> was not expected.", exception.Message);
         }
         #endregion
 
@@ -89,11 +84,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         [Category(TestCategory.DataAccess)]
         public void GetDimrConfigurationFile()
         {
+            var dimrSourcePath = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory));
             var dimrConfigurationFile = Path.Combine(dimrSourcePath, "dimr.xml");
-            var dataAccesModel = DelftConfigXmlFileParser.Read(dimrConfigurationFile);
-            Assert.IsNotNull(dataAccesModel);
+            var dimrXmlObject = DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile);
+            Assert.IsNotNull(dimrXmlObject);
 
-            var dimrXmlObject = (dimrXML)dataAccesModel;
             Assert.IsNotNull(dimrXmlObject.component);
             Assert.IsNotNull(dimrXmlObject.control);
             Assert.IsNotNull(dimrXmlObject.coupler);
@@ -108,7 +103,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         {
             var dimrConfigurationFile = DimrConfigFileWithExtraCategory();
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "test");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile), "test");
 
         }
 
@@ -118,8 +113,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         {
             var dimrConfigurationFile = DimrConfigFileWithExtraCategory();
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "Attribute");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "abc");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile), "Attribute");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile), "abc");
         }
 
         [Test]
@@ -128,131 +123,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         {
             var dimrConfigurationFile = DimrConfigFileWithExtraCategory();
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "Element");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "test");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "abc");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "abcsourcename");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "logger");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(dimrConfigurationFile), "dimrwithextrainfo.xml");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile), "Element");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile), "test");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile), "abc");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile), "abcsourcename");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile), "logger");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read<dimrXML>(dimrConfigurationFile), "dimrwithextrainfo.xml");
         }
-
-        #region RTC tests
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void ReadingStateImportXmlFilesDoesNotThrow()
-        {
-            var fileName = "state_import.xml";
-
-            var directory = @"FileReaders\ConfigXmlReader\rtc";
-            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
-
-            Assert.True(File.Exists(path));
-
-            var dataAccesModel = DelftConfigXmlFileParser.Read(path);
-
-            Assert.IsNotNull(dataAccesModel);
-
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: \"xsi:schemaLocation\"");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), fileName);
-
-            var treeVectorFile = dataAccesModel as TreeVectorFileXML;
-
-            Assert.NotNull(treeVectorFile);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void ReadingTimeSeriesImportXmlFilesDoesNotThrown()
-        {
-            var fileName = "timeseries_import.xml";
-
-            var directory = @"FileReaders\ConfigXmlReader\rtc";
-            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
-
-            Assert.True(File.Exists(path));
-
-            var dataAccesModel = DelftConfigXmlFileParser.Read(path);
-
-            Assert.IsNotNull(dataAccesModel);
-
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: \"xsi:schemaLocation\"");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), fileName);
-
-            var timeSeriesCollection = dataAccesModel as TimeSeriesCollectionComplexType;
-
-            Assert.NotNull(timeSeriesCollection);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void ReadingToolsConfigXmlFilesDoesNotThrow()
-        {
-            var fileName = "rtcToolsConfig.xml";
-
-            var directory = @"FileReaders\ConfigXmlReader\rtc";
-            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
-
-            Assert.True(File.Exists(path));
-
-            var dataAccesModel = DelftConfigXmlFileParser.Read(path);
-
-            Assert.IsNotNull(dataAccesModel);
-
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: \"xsi:schemaLocation\"");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), fileName);
-
-            var rtcToolsConfig = dataAccesModel as RtcToolsConfigXML;
-
-            Assert.NotNull(rtcToolsConfig);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void ReadingRuntimeConfigXmlFilesDoesNotThrow()
-        {
-            var fileName = "rtcRuntimeConfig.xml";
-
-            var directory = @"FileReaders\ConfigXmlReader\rtc";
-            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
-
-            Assert.True(File.Exists(path));
-
-            var dataAccesModel = DelftConfigXmlFileParser.Read(path);
-
-            Assert.IsNotNull(dataAccesModel);
-
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: \"xsi:schemaLocation\"");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), fileName);
-
-            var rtcRuntimeConfig = dataAccesModel as RtcRuntimeConfigXML;
-
-            Assert.NotNull(rtcRuntimeConfig);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void ReadingDataConfigXmlFilesDoesNotThrow()
-        {       
-            var fileName = "rtcDataConfig.xml";
-
-            var directory = @"FileReaders\ConfigXmlReader\rtc";
-            var path = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), directory, fileName));
-
-            Assert.True(File.Exists(path));
-
-            var dataAccesModel = DelftConfigXmlFileParser.Read(path);
-
-            Assert.IsNotNull(dataAccesModel);
-
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), "Attribute: \"xsi:schemaLocation\"");
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => DelftConfigXmlFileParser.Read(path), fileName);
-
-            var rtcDataConfig = (RTCDataConfigXML)dataAccesModel;
-
-            Assert.NotNull(rtcDataConfig);
-        }
-        #endregion
 
         #region Helper Methods
         private string DimrConfigFileWithExtraCategory()

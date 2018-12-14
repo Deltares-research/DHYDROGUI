@@ -5,6 +5,7 @@ using log4net;
 using System.Collections.Generic;
 using System.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
@@ -22,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             if (controlGroups == null) return;
 
-            var timeSeriesObject = (TimeSeriesCollectionComplexType)DelftConfigXmlFileParser.Read(timeSeriesFilePath);
+            var timeSeriesObject = DelftConfigXmlFileParser.Read<TimeSeriesCollectionComplexType>(timeSeriesFilePath);
             RealTimeControlTimeSeriesConnector.ConnectTimeSeries(timeSeriesObject?.series, controlGroups );
         }
     }

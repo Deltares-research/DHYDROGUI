@@ -21,8 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         {
             if (path == null) { return null;}
             
-            var dataObject = DelftConfigXmlFileParser.Read(path) as dimrXML;
-
+            var dataObject = DelftConfigXmlFileParser.Read<dimrXML>(path);
             return HydroModelConverter.Convert(dataObject, path, fileImporters);
         }
     }

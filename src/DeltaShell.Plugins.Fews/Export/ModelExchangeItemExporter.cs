@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
-using DeltaShell.Plugins.DelftModels.HydroModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 
 namespace DeltaShell.Plugins.Fews.Export
 {
@@ -36,8 +34,7 @@ namespace DeltaShell.Plugins.Fews.Export
 
         public IEnumerable<Type> SourceTypes()
         {
-            yield return typeof (HydroModel);
-            yield return typeof (WaterFlowModel1D);
+            yield return typeof (ITimeDependentModel);
         }
 
         public bool CanExportFor(object item)

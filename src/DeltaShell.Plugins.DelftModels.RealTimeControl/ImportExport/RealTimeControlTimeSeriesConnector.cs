@@ -6,6 +6,7 @@ using DelftTools.Functions;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport

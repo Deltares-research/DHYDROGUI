@@ -5,27 +5,23 @@
 //  </auto-generated>
 // ------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Xml;
+using System.Xml.Serialization;
 using DeltaShell.Dimr.xsd;
 
 #pragma warning disable
-namespace DeltaShell.NGHS.IO
+namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
 {
-    using System;
-    using System.Diagnostics;
-    using System.Xml.Serialization;
-    using System.Collections;
-    using System.Xml.Schema;
-    using System.ComponentModel;
-    using System.Xml;
-    using System.Collections.Generic;
-    
-    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
-    [System.Xml.Serialization.XmlRootAttribute("rtcDataConfig", Namespace="http://www.wldelft.nl/fews", IsNullable=false)]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace="http://www.wldelft.nl/fews")]
+    [XmlRoot("rtcDataConfig", Namespace="http://www.wldelft.nl/fews", IsNullable=false)]
     public partial class RTCDataConfigXML : IXmlParsedObject
     {
         
@@ -73,10 +69,10 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace="http://www.wldelft.nl/fews")]
     public partial class RTCSeriesImportXML : IXmlParsedObject
     {
         
@@ -104,7 +100,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlElementAttribute("timeSeries")]
+        [XmlElement("timeSeries")]
         public List<RTCTimeSeriesXML> timeSeries
         {
             get
@@ -125,10 +121,10 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace="http://www.wldelft.nl/fews")]
     public partial class PITimeSeriesImportFileXML : IXmlParsedObject
     {
         
@@ -155,7 +151,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.ComponentModel.DefaultValueAttribute(false)]
+        [DefaultValue(false)]
         public bool useBinFile
         {
             get
@@ -176,10 +172,10 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace="http://www.wldelft.nl/fews")]
     public partial class PITimeSeriesExportFileXML : IXmlParsedObject
     {
         
@@ -209,7 +205,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.ComponentModel.DefaultValueAttribute(false)]
+        [DefaultValue(false)]
         public bool useBinFile
         {
             get
@@ -222,7 +218,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.ComponentModel.DefaultValueAttribute(false)]
+        [DefaultValue(false)]
         public bool adjointOutput
         {
             get
@@ -243,10 +239,10 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace="http://www.wldelft.nl/fews")]
     public partial class CSVTimeSeriesFileXML : IXmlParsedObject
     {
         
@@ -265,8 +261,8 @@ namespace DeltaShell.NGHS.IO
             this._adjointOutput = false;
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(SeparatorEnumStringType.Item)]
+        [XmlAttribute()]
+        [DefaultValue(SeparatorEnumStringType.Item)]
         public SeparatorEnumStringType decimalSeparator
         {
             get
@@ -279,8 +275,8 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(SeparatorEnumStringType.Item1)]
+        [XmlAttribute()]
+        [DefaultValue(SeparatorEnumStringType.Item1)]
         public SeparatorEnumStringType delimiter
         {
             get
@@ -293,8 +289,8 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(false)]
+        [XmlAttribute()]
+        [DefaultValue(false)]
         public bool adjointOutput
         {
             get
@@ -315,29 +311,29 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
+    [Serializable()]
+    [XmlType(Namespace="http://www.wldelft.nl/fews")]
     public enum SeparatorEnumStringType
     {
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute(".")]
+        [XmlEnum(".")]
         Item,
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute(",")]
+        [XmlEnum(",")]
         Item1,
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute(";")]
+        [XmlEnum(";")]
         Item2,
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace="http://www.wldelft.nl/fews")]
     public partial class RTCSeriesExportXML : IXmlParsedObject
     {
         
@@ -380,7 +376,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlElementAttribute("timeSeries")]
+        [XmlElement("timeSeries")]
         public List<RTCTimeSeriesXML> timeSeries
         {
             get
@@ -401,10 +397,10 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace="http://www.wldelft.nl/fews")]
     public partial class RTCTimeSeriesXML : IXmlParsedObject
     {
         
@@ -450,7 +446,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string id
         {
             get
@@ -463,7 +459,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public int vectorLength
         {
             get
@@ -476,7 +472,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public RTCTimeSeriesXMLValidation validation
         {
             get
@@ -497,10 +493,10 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace="http://www.wldelft.nl/fews")]
     public partial class PITimeSeriesXML : IXmlParsedObject
     {
         
@@ -550,7 +546,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlElementAttribute("qualifierId")]
+        [XmlElement("qualifierId")]
         public List<string> qualifierId
         {
             get
@@ -619,10 +615,10 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace="http://www.wldelft.nl/fews")]
     public partial class TimeStepXMLData : IXmlParsedObject
     {
         
@@ -640,7 +636,7 @@ namespace DeltaShell.NGHS.IO
             this._multiplier = "1";
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public timeStepUnitEnumStringTypeData unit
         {
             get
@@ -653,8 +649,8 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-        [System.ComponentModel.DefaultValueAttribute("1")]
+        [XmlAttribute(DataType="positiveInteger")]
+        [DefaultValue("1")]
         public string divider
         {
             get
@@ -667,8 +663,8 @@ namespace DeltaShell.NGHS.IO
             }
         }
         
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="positiveInteger")]
-        [System.ComponentModel.DefaultValueAttribute("1")]
+        [XmlAttribute(DataType="positiveInteger")]
+        [DefaultValue("1")]
         public string multiplier
         {
             get
@@ -689,8 +685,8 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
+    [Serializable()]
+    [XmlType(Namespace="http://www.wldelft.nl/fews")]
     public enum timeStepUnitEnumStringTypeData
     {
         
@@ -711,21 +707,21 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
+    [Serializable()]
+    [XmlType(Namespace="http://www.wldelft.nl/fews")]
     public enum PIInterpolationOptionEnumStringType
     {
-
-        /// <remarks/>
-        LINEAR,
-
+        
         /// <remarks/>
         BLOCK,
+        
+        /// <remarks/>
+        LINEAR,
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
+    [Serializable()]
+    [XmlType(Namespace="http://www.wldelft.nl/fews")]
     public enum PIExtrapolationOptionEnumStringType
     {
         
@@ -737,10 +733,10 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace="http://www.wldelft.nl/fews")]
     public partial class OpenMIExchangeItemXML : IXmlParsedObject
     {
         
@@ -796,8 +792,8 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.wldelft.nl/fews")]
+    [Serializable()]
+    [XmlType(Namespace="http://www.wldelft.nl/fews")]
     public enum UnitEnumStringType
     {
         
@@ -805,15 +801,15 @@ namespace DeltaShell.NGHS.IO
         m,
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("m^2")]
+        [XmlEnum("m^2")]
         m2,
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("m^3")]
+        [XmlEnum("m^3")]
         m3,
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("m^3/s")]
+        [XmlEnum("m^3/s")]
         m3s,
         
         /// <remarks/>
@@ -821,8 +817,8 @@ namespace DeltaShell.NGHS.IO
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
+    [Serializable()]
+    [XmlType(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
     public enum RTCTimeSeriesXMLValidation
     {
         

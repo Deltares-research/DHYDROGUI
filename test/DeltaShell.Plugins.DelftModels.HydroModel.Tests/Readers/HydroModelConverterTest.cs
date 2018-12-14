@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
             var fileImporters = new List<IDimrModelFileImporter>();
 
-            var dimrObject = DelftConfigXmlFileParser.Read(dimrPath) as dimrXML;
+            var dimrObject = DelftConfigXmlFileParser.Read<dimrXML>(dimrPath);
             HydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
 
             TestHelper.AssertAtLeastOneLogMessagesContains(() => HydroModelConverter.Convert(dimrObject, dimrPath, fileImporters), "No importer found for extension:");
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 new WaterFlowModel1DFileImporter()
             };
 
-            var dimrObject = DelftConfigXmlFileParser.Read(dimrPath) as dimrXML;
+            var dimrObject = DelftConfigXmlFileParser.Read<dimrXML>(dimrPath);
             var result = HydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
 
             Assert.IsNotNull(result);
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 new RealTimeControlModelImporter()
             };
 
-            var dimrObject = DelftConfigXmlFileParser.Read(dimrPath) as dimrXML;
+            var dimrObject = DelftConfigXmlFileParser.Read<dimrXML>(dimrPath);
             var result = HydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
 
             Assert.IsNotNull(result);
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 new WaterFlowModel1DFileImporter()
             };
 
-            var dimrObject = DelftConfigXmlFileParser.Read(dimrPath) as dimrXML;
+            var dimrObject = DelftConfigXmlFileParser.Read<dimrXML>(dimrPath);
             var result = HydroModelConverter.Convert(dimrObject, dimrPath, fileImporters);
             Assert.IsNotNull(result);
             Assert.That(result, Is.TypeOf<HydroModel>());

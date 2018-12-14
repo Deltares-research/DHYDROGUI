@@ -1,5 +1,5 @@
 ﻿
-<dimrConfig xmlns="http://schemas.deltares.nl/dimr" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.deltares.nl/dimr http://content.oss.deltares.nl/schemas/dimr-1.2.xsd">
+<abc xmlns="http://schemas.deltares.nl/dimr" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.deltares.nl/dimr http://content.oss.deltares.nl/schemas/dimr-1.2.xsd">
   <documentation>
     <fileVersion>1.2</fileVersion>
     <createdBy>Deltares, Coupling Team</createdBy>
@@ -179,4 +179,4 @@
       <outputFile>flow1d_to_rtc.nc</outputFile>
     </logger>
   </coupler>
-</dimrConfig>
+</abc>

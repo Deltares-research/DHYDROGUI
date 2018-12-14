@@ -5,27 +5,23 @@
 //  </auto-generated>
 // ------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Xml;
+using System.Xml.Serialization;
 using DeltaShell.Dimr.xsd;
 
 #pragma warning disable
-namespace DeltaShell.NGHS.IO
+namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
 {
-    using System;
-    using System.Diagnostics;
-    using System.Xml.Serialization;
-    using System.Collections;
-    using System.Xml.Schema;
-    using System.ComponentModel;
-    using System.Xml;
-    using System.Collections.Generic;
-
-
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.wldelft.nl/fews/PI")]
-    [System.Xml.Serialization.XmlRootAttribute("TimeSeries", Namespace = "http://www.wldelft.nl/fews/PI", IsNullable = false)]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
+    [XmlRoot("TimeSeries", Namespace = "http://www.wldelft.nl/fews/PI", IsNullable = false)]
     public partial class TimeSeriesCollectionComplexType : IXmlParsedObject
     {
 
@@ -44,7 +40,7 @@ namespace DeltaShell.NGHS.IO
             this._version = versionString.Item12;
         }
 
-        [System.ComponentModel.DefaultValueAttribute(0D)]
+        [DefaultValue(0D)]
         public double timeZone
         {
             get
@@ -57,7 +53,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("series")]
+        [XmlElement("series")]
         public List<TimeSeriesComplexType> series
         {
             get
@@ -70,8 +66,8 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(versionString.Item12)]
+        [XmlAttribute()]
+        [DefaultValue(versionString.Item12)]
         public versionString version
         {
             get
@@ -92,10 +88,10 @@ namespace DeltaShell.NGHS.IO
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.wldelft.nl/fews/PI")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
     public partial class TimeSeriesComplexType : IXmlParsedObject
     {
 
@@ -128,7 +124,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("properties")]
+        [XmlElement("properties")]
         public List<PropertiesComplexType> properties
         {
             get
@@ -141,7 +137,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("event")]
+        [XmlElement("event")]
         public List<EventComplexType> @event
         {
             get
@@ -174,10 +170,10 @@ namespace DeltaShell.NGHS.IO
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.wldelft.nl/fews/PI")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
     public partial class HeaderComplexType : IXmlParsedObject
     {
 
@@ -284,7 +280,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("qualifierId")]
+        [XmlElement("qualifierId")]
         public List<string> qualifierId
         {
             get
@@ -309,9 +305,9 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ensembleMemberId")]
-        [System.Xml.Serialization.XmlElementAttribute("ensembleMemberIndex", DataType = "nonNegativeInteger")]
-        [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemElementName")]
+        [XmlElement("ensembleMemberId")]
+        [XmlElement("ensembleMemberIndex", DataType = "nonNegativeInteger")]
+        [XmlChoiceIdentifier("ItemElementName")]
         public string Item
         {
             get
@@ -324,7 +320,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        [XmlIgnore()]
         public ItemChoiceTypeEnum ItemElementName
         {
             get
@@ -529,7 +525,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute(DataType = "date")]
+        [XmlElement(DataType = "date")]
         public System.DateTime creationDate
         {
             get
@@ -542,7 +538,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute(DataType = "time")]
+        [XmlElement(DataType = "time")]
         public System.DateTime creationTime
         {
             get
@@ -567,7 +563,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlArrayItemAttribute("highLevelThreshold", IsNullable = false)]
+        [XmlArrayItem("highLevelThreshold", IsNullable = false)]
         public List<HighLevelThresholdsComplexType> thresholds
         {
             get
@@ -588,8 +584,8 @@ namespace DeltaShell.NGHS.IO
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.wldelft.nl/fews/PI")]
+    [Serializable()]
+    [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
     public enum timeSeriesType
     {
 
@@ -604,8 +600,8 @@ namespace DeltaShell.NGHS.IO
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.wldelft.nl/fews/PI", IncludeInSchema = false)]
+    [Serializable()]
+    [XmlType(Namespace = "http://www.wldelft.nl/fews/PI", IncludeInSchema = false)]
     public enum ItemChoiceTypeEnum
     {
 
@@ -617,10 +613,10 @@ namespace DeltaShell.NGHS.IO
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.wldelft.nl/fews/PI")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
     public partial class TimeStepComplexType : IXmlParsedObject
     {
 
@@ -638,7 +634,7 @@ namespace DeltaShell.NGHS.IO
             this._multiplier = "1";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public timeStepEnumStringType unit
         {
             get
@@ -651,8 +647,8 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
-        [System.ComponentModel.DefaultValueAttribute("1")]
+        [XmlAttribute(DataType = "positiveInteger")]
+        [DefaultValue("1")]
         public string divider
         {
             get
@@ -665,8 +661,8 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "positiveInteger")]
-        [System.ComponentModel.DefaultValueAttribute("1")]
+        [XmlAttribute(DataType = "positiveInteger")]
+        [DefaultValue("1")]
         public string multiplier
         {
             get
@@ -687,8 +683,8 @@ namespace DeltaShell.NGHS.IO
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.wldelft.nl/fews/PI")]
+    [Serializable()]
+    [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
     public enum timeStepEnumStringType
     {
 
@@ -718,10 +714,10 @@ namespace DeltaShell.NGHS.IO
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.wldelft.nl/fews/PI")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
     public partial class EventComplexType : IXmlParsedObject
     {
 
@@ -741,7 +737,7 @@ namespace DeltaShell.NGHS.IO
         private string _user;
         #endregion
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "date")]
+        [XmlAttribute(DataType = "date")]
         public System.DateTime date
         {
             get
@@ -754,7 +750,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "time")]
+        [XmlAttribute(DataType = "time")]
         public System.DateTime time
         {
             get
@@ -767,7 +763,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public double value
         {
             get
@@ -780,7 +776,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public int flag
         {
             get
@@ -793,7 +789,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string flagSource
         {
             get
@@ -806,7 +802,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string comment
         {
             get
@@ -819,7 +815,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string user
         {
             get
@@ -840,10 +836,10 @@ namespace DeltaShell.NGHS.IO
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.wldelft.nl/fews/PI")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
     public partial class DateTimePropertyComplexType : IXmlParsedObject
     {
 
@@ -869,7 +865,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string key
         {
             get
@@ -882,7 +878,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "date")]
+        [XmlAttribute(DataType = "date")]
         public System.DateTime date
         {
             get
@@ -895,7 +891,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "time")]
+        [XmlAttribute(DataType = "time")]
         public System.DateTime time
         {
             get
@@ -916,10 +912,10 @@ namespace DeltaShell.NGHS.IO
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.wldelft.nl/fews/PI")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
     public partial class BoolPropertyComplexType : IXmlParsedObject
     {
 
@@ -943,7 +939,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string key
         {
             get
@@ -956,7 +952,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public bool value
         {
             get
@@ -977,10 +973,10 @@ namespace DeltaShell.NGHS.IO
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.wldelft.nl/fews/PI")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
     public partial class DoublePropertyComplexType : IXmlParsedObject
     {
 
@@ -1004,7 +1000,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string key
         {
             get
@@ -1017,7 +1013,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public double value
         {
             get
@@ -1038,10 +1034,10 @@ namespace DeltaShell.NGHS.IO
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.wldelft.nl/fews/PI")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
     public partial class FloatPropertyComplexType : IXmlParsedObject
     {
 
@@ -1065,7 +1061,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string key
         {
             get
@@ -1078,7 +1074,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public float value
         {
             get
@@ -1099,10 +1095,10 @@ namespace DeltaShell.NGHS.IO
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.wldelft.nl/fews/PI")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
     public partial class IntPropertyComplexType : IXmlParsedObject
     {
 
@@ -1126,7 +1122,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string key
         {
             get
@@ -1139,7 +1135,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public int value
         {
             get
@@ -1160,10 +1156,10 @@ namespace DeltaShell.NGHS.IO
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.wldelft.nl/fews/PI")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
     public partial class StringPropertyComplexType : IXmlParsedObject
     {
 
@@ -1187,7 +1183,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string key
         {
             get
@@ -1200,7 +1196,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string value
         {
             get
@@ -1221,10 +1217,10 @@ namespace DeltaShell.NGHS.IO
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.wldelft.nl/fews/PI")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
     public partial class PropertiesComplexType : IXmlParsedObject
     {
 
@@ -1251,12 +1247,12 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("bool", typeof(BoolPropertyComplexType))]
-        [System.Xml.Serialization.XmlElementAttribute("dateTime", typeof(DateTimePropertyComplexType))]
-        [System.Xml.Serialization.XmlElementAttribute("double", typeof(DoublePropertyComplexType))]
-        [System.Xml.Serialization.XmlElementAttribute("float", typeof(FloatPropertyComplexType))]
-        [System.Xml.Serialization.XmlElementAttribute("int", typeof(IntPropertyComplexType))]
-        [System.Xml.Serialization.XmlElementAttribute("string", typeof(StringPropertyComplexType))]
+        [XmlElement("bool", typeof(BoolPropertyComplexType))]
+        [XmlElement("dateTime", typeof(DateTimePropertyComplexType))]
+        [XmlElement("double", typeof(DoublePropertyComplexType))]
+        [XmlElement("float", typeof(FloatPropertyComplexType))]
+        [XmlElement("int", typeof(IntPropertyComplexType))]
+        [XmlElement("string", typeof(StringPropertyComplexType))]
         public List<object> Items
         {
             get
@@ -1277,10 +1273,10 @@ namespace DeltaShell.NGHS.IO
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.wldelft.nl/fews/PI")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
     public partial class HighLevelThresholdsComplexType : IXmlParsedObject
     {
 
@@ -1296,7 +1292,7 @@ namespace DeltaShell.NGHS.IO
         private string _groupName;
         #endregion
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string id
         {
             get
@@ -1309,7 +1305,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string name
         {
             get
@@ -1322,7 +1318,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public float value
         {
             get
@@ -1335,7 +1331,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string groupId
         {
             get
@@ -1348,7 +1344,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttribute()]
         public string groupName
         {
             get
@@ -1369,10 +1365,10 @@ namespace DeltaShell.NGHS.IO
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.wldelft.nl/fews/PI")]
+    [Serializable()]
+    [DebuggerStepThrough()]
+    [DesignerCategory("code")]
+    [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
     public partial class DateTimeComplexType : IXmlParsedObject
     {
 
@@ -1382,7 +1378,7 @@ namespace DeltaShell.NGHS.IO
         private System.DateTime _time;
         #endregion
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "date")]
+        [XmlAttribute(DataType = "date")]
         public System.DateTime date
         {
             get
@@ -1395,7 +1391,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "time")]
+        [XmlAttribute(DataType = "time")]
         public System.DateTime time
         {
             get
@@ -1416,61 +1412,61 @@ namespace DeltaShell.NGHS.IO
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.wldelft.nl/fews/PI")]
+    [Serializable()]
+    [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
     public enum versionString
     {
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("1.2")]
+        [XmlEnum("1.2")]
         Item12,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("1.3")]
+        [XmlEnum("1.3")]
         Item13,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("1.4")]
+        [XmlEnum("1.4")]
         Item14,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("1.5")]
+        [XmlEnum("1.5")]
         Item15,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("1.6")]
+        [XmlEnum("1.6")]
         Item16,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("1.7")]
+        [XmlEnum("1.7")]
         Item17,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("1.8")]
+        [XmlEnum("1.8")]
         Item18,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("1.9")]
+        [XmlEnum("1.9")]
         Item19,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("1.10")]
+        [XmlEnum("1.10")]
         Item110,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("1.11")]
+        [XmlEnum("1.11")]
         Item111,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("1.12")]
+        [XmlEnum("1.12")]
         Item112,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("1.13")]
+        [XmlEnum("1.13")]
         Item113,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("1.14")]
+        [XmlEnum("1.14")]
         Item114,
     }
 }
