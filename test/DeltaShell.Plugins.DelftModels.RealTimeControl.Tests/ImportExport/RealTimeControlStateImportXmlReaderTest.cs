@@ -20,6 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
             var outputs = new List<Output>();
 
+            // Then
             TestHelper.AssertLogMessageIsGenerated(() =>
             {
                 // When
@@ -30,18 +31,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GivenAnExistingFileAndNullIsGivenAsParameterForOutputs_WhenReading_ThenMethodIsReturnedAndNothingHappens()
+        public void GivenAnExistingFileAndNullIsGivenAsParameterForOutputs_WhenReading_ThenMethodDoesNotThrowAnException()
         {
             // Given
-            var fileName = "state_import.xml";
+            const string fileName = "state_import.xml";
             var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "StateImportFiles"));
             var filePath = Path.Combine(directoryPath, fileName);
 
-            Assert.That(Directory.Exists(directoryPath));
             Assert.That(File.Exists(filePath));
 
+            // Then
             Assert.DoesNotThrow(() =>
             {
+                // When
                 RealTimeControlStateImportXmlReader.Read(filePath, null);
             });
         }
@@ -51,11 +53,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAnExistingFileWithValidData_WhenReading_ThenCorrectOutputValuesAreSet()
         {
             // Given
-            var fileName = "state_import.xml";
+            const string fileName = "state_import.xml";
             var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "StateImportFiles"));
             var filePath = Path.Combine(directoryPath, fileName);
 
-            Assert.That(Directory.Exists(directoryPath));
             Assert.That(File.Exists(filePath));
           
             var output1 = new Output {Name = "[Output]a/b"};
@@ -78,11 +79,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAnExistingFileWithExtraOutput_WhenReading_ThenExpectedErrorMessageIsGivenAndCorrectOutputValuesAreSetOnOtherOutputs()
         {
             // Given
-            var fileName = "state_import.xml";
+            const string fileName = "state_import.xml";
             var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "StateImportFiles"));
             var filePath = Path.Combine(directoryPath, fileName);
 
-            Assert.That(Directory.Exists(directoryPath));
             Assert.That(File.Exists(filePath));
 
             var output1 = new Output { Name = "[Output]a/b" };
