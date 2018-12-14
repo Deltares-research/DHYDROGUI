@@ -21,6 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
             var controlGroups = new List<ControlGroup>();
 
+            // Then
             TestHelper.AssertLogMessageIsGenerated(() =>
             {
                 // When
@@ -31,14 +32,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GivenAnExistingFileAndNullIsGivenAsParameterForControlgroups_WhenReading_ThenMethodIsReturnedAndNothingHappens()
+        public void GivenAnExistingFileAndNullIsGivenAsParameterForControlgroups_WhenReading_ThenMethodDoesNotThrowAnException()
         {
             // Given
-            var fileName = "timeseries_import.xml";
+            const string fileName = "timeseries_import.xml";
             var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "TimeSeriesFiles"));
             var filePath = Path.Combine(directoryPath, fileName);
 
-            Assert.That(Directory.Exists(directoryPath));
             Assert.That(File.Exists(filePath));
 
             Assert.DoesNotThrow(() =>
@@ -53,11 +53,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAnExistingFileWithValidData_WhenReading_ThenCorrectTimeSeriesAreSet()
         {
             // Given
-            var fileName = "timeseries_import.xml";
+            const string fileName = "timeseries_import.xml";
             var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "TimeSeriesFiles"));
             var filePath = Path.Combine(directoryPath, fileName);
 
-            Assert.That(Directory.Exists(directoryPath));
             Assert.That(File.Exists(filePath));
 
             var controlGroup = new ControlGroup { Name = "control_group" };
