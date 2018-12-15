@@ -6,6 +6,7 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 {
