@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.IO;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using Rhino.Mocks;
 
@@ -27,8 +28,8 @@ namespace DeltaShell.Plugins.Fews.Tests
 
                 Assert.IsTrue(exporter.CanExportFor(modelType));
                 var sourceTypes = exporter.SourceTypes().ToList();
-                Assert.AreEqual( 2, sourceTypes.Count);
-                Assert.IsTrue(sourceTypes.Contains(modelType));
+                Assert.AreEqual(1, sourceTypes.Count);
+                Assert.IsTrue(modelType.Implements(exporter.SourceTypes().First()));
             }
         }
 
