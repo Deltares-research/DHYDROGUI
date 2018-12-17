@@ -178,4 +178,7 @@
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Period__must_be_greater_than_0_" xml:space="preserve">
     <value>Parameter "Period" must be greater than 0.</value>
   </data>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Spreading__must_be_greater_than_0_" xml:space="preserve">
+    <value>Parameter "Spreading" must be greater than 0.</value>
+  </data>
 </root>

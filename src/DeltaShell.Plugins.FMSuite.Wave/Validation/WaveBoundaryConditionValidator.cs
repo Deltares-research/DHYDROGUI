@@ -55,6 +55,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                         Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Period__must_be_greater_than_0_, 
                         boundaryCondition);
                 }
+                if (waveBoundaryParameters.Spreading <= 0)
+                {
+                    yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
+                        Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Spreading__must_be_greater_than_0_,
+                        boundaryCondition);
+                }
             }
 
             if (boundaryCondition.DataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries && boundaryCondition.PointData.Count > 1 &&
