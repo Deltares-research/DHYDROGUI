@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             {
                 var uniqueFileName = model.ImportIntoModelDirectory(path);
                 domain.BedLevelFileName = uniqueFileName;
-                WaveModel.LoadBathymetry(model, Path.GetDirectoryName(path), domain);
+                WaveModel.LoadBathymetry(model, Path.GetDirectoryName(model.MdwFilePath), domain);
             }
             finally
             {
