@@ -160,4 +160,7 @@
   <data name="WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_isn_t_the_same_coordinate_system_as_our_model__The_model_has_co_ordinate_system__0___the_grid_has__1___Setting_the_model_to_the_grid_co_ordinate_system_type__1__" xml:space="preserve">
     <value>Grid is set in project but isn't the same coordinate system as our model. The model has co-ordinate system {0}, the grid has {1}. Setting the model to the grid co-ordinate system type {1}.</value>
   </data>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_internal_geometry_points" xml:space="preserve">
+    <value>Boundary condition contains internal geometry points. These points will be discarded upon saving, exporting or running</value>
+  </data>
 </root>

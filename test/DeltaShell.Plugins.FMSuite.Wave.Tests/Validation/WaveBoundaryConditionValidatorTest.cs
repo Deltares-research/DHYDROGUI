@@ -7,12 +7,35 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 {
     [TestFixture]
     public class WaveBoundaryConditionValidatorTest
     {
+        [Test]
+        public void GivenWaveModelWithWaveBoundaryConditionThatHasGeometryWithMoreThanTwoPoints_WhenValidatingBoundaryConditions_ThenInfoMessageIsGivenToTheUser()
+        {
+            // Given
+            var waveModel = new WaveModel();
+            var feature = new Feature2D { Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2,0) }) };
+            var boundaryCondition = (WaveBoundaryCondition)new WaveBoundaryConditionFactory().CreateBoundaryCondition(feature, string.Empty, BoundaryConditionDataType.ParametrizedSpectrumConstant);
+            waveModel.BoundaryConditions.Add(boundaryCondition);
+
+            // When
+            var validationReport = WaveBoundaryConditionValidator.Validate(waveModel);
+
+            // Then
+            var validationIssues = validationReport.GetAllIssuesRecursive();
+            Assert.That(validationIssues.Count, Is.EqualTo(1));
+
+            var validationIssue = validationIssues.FirstOrDefault();
+            Assert.IsNotNull(validationIssue);
+            Assert.That(validationIssue.Severity, Is.EqualTo(ValidationSeverity.Info));
+            Assert.That(validationIssue.Message, Is.EqualTo(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_internal_geometry_points));
+        }
 
         [Test]
         public void ValidationSynchronizeTimePoints_WhenSpatialDefinitionIsUniform_TimepointsShouldNotBeValidated()

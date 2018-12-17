@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 {
@@ -24,14 +25,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 yield return new ValidationIssue(bc.VariableDescription, ValidationSeverity.Error,
                     "Boundary has no data defined", bc);
             }
-            if (bc.IsHorizontallyUniform && bc.Feature.Geometry.Coordinates.Count() > 2)
+            if (bc.IsHorizontallyUniform && bc.Feature.Geometry.Coordinates.Length > 2)
             {
                 yield return
-                    new ValidationIssue(bc.VariableDescription, ValidationSeverity.Warning,
-                        "Boundary condition contains internal geometry points. These points will be discarded upon saving, exporting or running",
+                    new ValidationIssue(bc.VariableDescription, ValidationSeverity.Info,
+                        Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_internal_geometry_points,
                         bc);
             }
-            else if (!bc.IsHorizontallyUniform && Enumerable.Range(1, bc.Feature.Geometry.Coordinates.Count() - 2).Except(bc.DataPointIndices).Any())
+            else if (!bc.IsHorizontallyUniform && Enumerable.Range(1, bc.Feature.Geometry.Coordinates.Length - 2).Except(bc.DataPointIndices).Any())
 
             {
                 yield return
