@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Linq;
-using System.Windows.Forms;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DeltaShell.Gui;
+using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -53,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             }
         }
 
-/*
+
         [Test]
         public void JumpToSubTabThroughProjectExplorerWithModelViewNotYetOpen()
         {
@@ -79,11 +78,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     var modelNodePresenter = new WaterFlowFMModelNodePresenter(null);
                     var childItems = modelNodePresenter.GetChildNodeObjects(model, null);
 
-                    gui.Selection = childItems.OfType<FlowFMTreeShortcut>().First(s => s.Text == "Numerical Parameters");
+                    gui.Selection = childItems.OfType<FmModelTreeShortcut>().First(s => s.Text == "Numerical Parameters");
                     gui.CommandHandler.OpenViewForSelection();
 
                     Assert.IsNotNull(gui.DocumentViews.ActiveView);
-                    Assert.AreEqual("Numerical Parameters", GetSelectedTab(GetActiveFMModelView()).Text);
+                    var wpfView = (WpfSettingsView)gui.DocumentViews.ActiveView;
+                    var categoriesOnActiveView = wpfView.SettingsCategories;
+                    Assert.That(categoriesOnActiveView.ElementAt(6).CategoryName, Is.EqualTo("Numerical Parameters"));
                 };
 
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
@@ -116,22 +117,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     var childItems = modelNodePresenter.GetChildNodeObjects(model, null);
 
                     // open on 'Domain' tab (first tab)
-                    gui.Selection = childItems.OfType<FlowFMTreeShortcut>().First(s => s.Text == "General");
+                    gui.Selection = childItems.OfType<FmModelTreeShortcut>().First(s => s.Text == "General");
                     gui.CommandHandler.OpenViewForSelection();
 
                     // switch to 'Numerical Parameters' tab
-                    gui.Selection = childItems.OfType<FlowFMTreeShortcut>().First(s => s.Text == "Numerical Parameters");
+                    gui.Selection = childItems.OfType<FmModelTreeShortcut>().First(s => s.Text == "Numerical Parameters");
                     gui.CommandHandler.OpenViewForSelection();
-
+                   
                     // assert the 'Numerical Parameters' tab is in front
                     Assert.IsNotNull(gui.DocumentViews.ActiveView);
-                    Assert.AreEqual("Numerical Parameters", GetSelectedTab(GetActiveFMModelView()).Text);
+                    var wpfView = (WpfSettingsView)gui.DocumentViews.ActiveView;
+                    var categoriesOnActiveView = wpfView.SettingsCategories;
+                    Assert.That(categoriesOnActiveView.ElementAt(6).CategoryName, Is.EqualTo("Numerical Parameters"));
                 };
 
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }
         }
-*/
+
 
         [Test]
         public void CheckEventLeaksThroughDataItemWrappers()

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using DelftTools.Controls;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
@@ -9,7 +10,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetworkEditor;
@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             ShowModelLayers(model);
         }
 
-/*        [Test]
+        [Test]
         public void CheckLayerIsSetCorrectlyWhenOpeningFMItems()
         {
             var mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
@@ -99,22 +99,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     project.RootFolder.Add(model);
 
                     var modelNodePresenter = new WaterFlowFMModelNodePresenter(fmGuiPlugin);
-                    var fmTreeShortcut = modelNodePresenter.GetChildNodeObjects(model, null)
-                                          .OfType<FlowFMTreeShortcut>()
-                                          .First(s => s.Text == "General");
+                    var shortcut = modelNodePresenter.GetChildNodeObjects(model, null);
+                    var fmModelTreeShortCut = shortcut.OfType<FmModelTreeShortcut>().First(s => s.Text == "General");
 
-                    gui.CommandHandler.OpenView(fmTreeShortcut);
+                    gui.CommandHandler.OpenView(fmModelTreeShortCut);
 
                     var activeView = (ProjectItemMapView)gui.DocumentViews.ActiveView;
                     var activeTab = activeView.MapView.TabControl.ActiveView;
 
-                    Assert.IsInstanceOf<WaterFlowFMModelView>(activeTab);
-                    Assert.IsNotNull(((ILayerEditorView) activeTab).Layer);
+                    Assert.IsInstanceOf<IView>(activeTab);
+                    Assert.IsNotNull(((ILayerEditorView)activeTab).Layer);
                 };
 
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }
-        }*/
+        }
 
         [Test]
         public void CheckFMEnclosureLayerIsCreated()

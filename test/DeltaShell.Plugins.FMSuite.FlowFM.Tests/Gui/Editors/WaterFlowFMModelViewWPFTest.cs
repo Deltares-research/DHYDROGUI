@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using DelftTools.TestUtils;
 using NUnit.Framework;
 using System.Linq;
-using System.Windows.Forms.Integration;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
