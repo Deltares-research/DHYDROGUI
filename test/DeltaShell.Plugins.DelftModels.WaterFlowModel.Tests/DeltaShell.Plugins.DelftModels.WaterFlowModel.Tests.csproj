@@ -284,6 +284,7 @@
     <Compile Include="ImportExport\Structures\StructuresFileReaderTest.cs" />
     <Compile Include="ImportExport\Structures\UniversalWeirConverterTest.cs" />
     <Compile Include="ImportExport\Structures\WeirConverterTest.cs" />
+    <Compile Include="ImportExport\WaterFlowModel1DFileImporterTest.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DFileReaderTest.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DImporterHelperTest.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DNetCdfFunctionStoreTest.cs" />
