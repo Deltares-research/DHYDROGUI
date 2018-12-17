@@ -18,40 +18,49 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             return new ValidationReport("Waves Model Boundary Conditions", subReports);
         }
 
-        private static IEnumerable<ValidationIssue> ValidateBoundaryCondition(WaveBoundaryCondition bc)
+        private static IEnumerable<ValidationIssue> ValidateBoundaryCondition(WaveBoundaryCondition boundaryCondition)
         {
-            if (!bc.DataPointIndices.Any())
+            if (!boundaryCondition.DataPointIndices.Any())
             {
-                yield return new ValidationIssue(bc.VariableDescription, ValidationSeverity.Error,
-                    Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_has_no_data_defined, bc);
+                yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
+                    Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_has_no_data_defined, boundaryCondition);
             }
-            if (bc.IsHorizontallyUniform && bc.Feature.Geometry.Coordinates.Length > 2)
+            if (boundaryCondition.IsHorizontallyUniform && boundaryCondition.Feature.Geometry.Coordinates.Length > 2)
             {
                 yield return
-                    new ValidationIssue(bc.VariableDescription, ValidationSeverity.Info,
+                    new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Info,
                         Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_internal_geometry_points,
-                        bc);
+                        boundaryCondition);
             }
-            else if (!bc.IsHorizontallyUniform && Enumerable.Range(1, bc.Feature.Geometry.Coordinates.Length - 2).Except(bc.DataPointIndices).Any())
+            else if (!boundaryCondition.IsHorizontallyUniform && Enumerable.Range(1, boundaryCondition.Feature.Geometry.Coordinates.Length - 2).Except(boundaryCondition.DataPointIndices).Any())
 
             {
                 yield return
-                    new ValidationIssue(bc.VariableDescription, ValidationSeverity.Warning,
+                    new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Warning,
                         Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_unactivated_support_points,
-                        bc);
+                        boundaryCondition);
             }
 
-            if (bc.DataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries && bc.PointData.Count > 1 &&
-                bc.SpatialDefinitionType != WaveBoundaryConditionSpatialDefinitionType.Uniform)
+            foreach (var waveBoundaryParameters in boundaryCondition.SpectrumParameters.Values)
             {
-                var times = bc.PointData[0].Arguments[0].GetValues<DateTime>();
-                foreach (var f in bc.PointData.Skip(1))
+                if (waveBoundaryParameters.Height <= 0)
+                {
+                    yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
+                        "Parameter \"Height\" must be greater than 0.", boundaryCondition);
+                }
+            }
+
+            if (boundaryCondition.DataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries && boundaryCondition.PointData.Count > 1 &&
+                boundaryCondition.SpatialDefinitionType != WaveBoundaryConditionSpatialDefinitionType.Uniform)
+            {
+                var times = boundaryCondition.PointData[0].Arguments[0].GetValues<DateTime>();
+                foreach (var f in boundaryCondition.PointData.Skip(1))
                 {
                     var compareTimes = f.Arguments[0].GetValues<DateTime>().ToList();
                     if (!times.SequenceEqual(compareTimes))
                     {
-                        yield return new ValidationIssue(bc.VariableDescription, ValidationSeverity.Error,
-                            string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Time_points_are_not_synchronized_on_boundary___0_, bc.Name), bc);
+                        yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
+                            string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Time_points_are_not_synchronized_on_boundary___0_, boundaryCondition.Name), boundaryCondition);
                     }
                 }
             }

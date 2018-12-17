@@ -7,6 +7,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
@@ -48,6 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var waveModel = new WaveModel();
             var feature = new Feature2D { Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2,0) }) };
             var boundaryCondition = (WaveBoundaryCondition)new WaveBoundaryConditionFactory().CreateBoundaryCondition(feature, string.Empty, BoundaryConditionDataType.ParametrizedSpectrumConstant);
+            boundaryCondition.SpectrumParameters.Values.ForEach(spectrumParameters => spectrumParameters.Height = 1.0); // Pass validation on spectrum parameters
             waveModel.BoundaryConditions.Add(boundaryCondition);
 
             // When
@@ -110,6 +112,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             var errors = WaveBoundaryConditionValidator.Validate(model).AllErrors;
             Assert.AreEqual(0, errors.Count());
+        }
+
+        [Test]
+        public void GivenWaveModelWithWaveBoundaryConditionThatHasADataPointWithHeightEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned()
+        {
+            // Given
+            var waveModel = new WaveModel();
+            var feature = new Feature2D { Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 0) }) };
+            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumConstant)
+            {
+                Feature = feature,
+            };
+            boundaryCondition.AddPoint(0);
+            waveModel.BoundaryConditions.Add(boundaryCondition);
+
+            // When
+            var validationReport = WaveBoundaryConditionValidator.Validate(waveModel);
+
+            // Then
+            var validationIssues = validationReport.GetAllIssuesRecursive();
+            Assert.That(validationIssues.Count, Is.EqualTo(1));
+
+            var validationIssue = validationIssues.FirstOrDefault();
+            Assert.IsNotNull(validationIssue);
+            Assert.That(validationIssue.Severity, Is.EqualTo(ValidationSeverity.Error));
+            Assert.That(validationIssue.Message, Is.EqualTo("Parameter \"Height\" must be greater than 0."));
         }
 
         [Test]
