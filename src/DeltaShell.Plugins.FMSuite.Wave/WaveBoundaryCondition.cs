@@ -30,7 +30,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public WaveBoundaryCondition(BoundaryConditionDataType bcDataType) : base(bcDataType)
         {
-            SpectralData = new WaveBoundarySpectralData();
+            SpectralData = new WaveBoundarySpectralData
+            {
+                PeakEnhancementFactor = 3.3
+            };
             SpectrumFiles = new Dictionary<int, string>();
             SpectrumParameters = new Dictionary<int, WaveBoundaryParameters>();
         }
