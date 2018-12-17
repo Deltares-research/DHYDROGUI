@@ -163,4 +163,13 @@
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_internal_geometry_points" xml:space="preserve">
     <value>Boundary condition contains internal geometry points. These points will be discarded upon saving, exporting or running</value>
   </data>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_has_no_data_defined" xml:space="preserve">
+    <value>Boundary has no data defined</value>
+  </data>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_unactivated_support_points" xml:space="preserve">
+    <value>Boundary condition contains unactivated support points. These points will be discarded upon saving, exporting or running</value>
+  </data>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Time_points_are_not_synchronized_on_boundary___0_" xml:space="preserve">
+    <value>Time points are not synchronized on boundary: {0}</value>
+  </data>
 </root>

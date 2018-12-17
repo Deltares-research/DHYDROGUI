@@ -81,6 +81,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Boundary condition contains unactivated support points. These points will be discarded upon saving, exporting or running.
+        /// </summary>
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_unactivated_support_points {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_conta" +
+                        "ins_unactivated_support_points", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Boundary has no data defined.
+        /// </summary>
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_has_no_data_defined {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_has_no_data_def" +
+                        "ined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time points are not synchronized on boundary: {0}.
+        /// </summary>
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Time_points_are_not_synchronized_on_boundary___0_ {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Time_points_are_not_sync" +
+                        "hronized_on_boundary___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All the grids Coordinate System should be the same, either Spherical or Cartesian.
         /// </summary>
         public static string WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_All_the_grids_Coordinate_System_should_be_the_same__either_Spherical_or_Cardesian {

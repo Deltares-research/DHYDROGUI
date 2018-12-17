@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             if (!bc.DataPointIndices.Any())
             {
                 yield return new ValidationIssue(bc.VariableDescription, ValidationSeverity.Error,
-                    "Boundary has no data defined", bc);
+                    Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_has_no_data_defined, bc);
             }
             if (bc.IsHorizontallyUniform && bc.Feature.Geometry.Coordinates.Length > 2)
             {
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             {
                 yield return
                     new ValidationIssue(bc.VariableDescription, ValidationSeverity.Warning,
-                        "Boundary condition contains unactivated support points. These points will be discarded upon saving, exporting or running",
+                        Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_unactivated_support_points,
                         bc);
             }
 
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     if (!times.SequenceEqual(compareTimes))
                     {
                         yield return new ValidationIssue(bc.VariableDescription, ValidationSeverity.Error,
-                            string.Format("Time points are not synchronized on boundary: {0}", bc.Name), bc);
+                            string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Time_points_are_not_synchronized_on_boundary___0_, bc.Name), bc);
                     }
                 }
             }
