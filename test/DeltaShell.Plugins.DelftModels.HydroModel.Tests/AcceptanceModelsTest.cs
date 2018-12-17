@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows.Controls;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
@@ -286,8 +287,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         string.Format("Failed to export dimr configuration for model: {0}", rootModel.Name));
 
                     // Step 10: Adjust Time Settings (10 time steps)
-                    Assert.True(TryPerformAction(() => AdjustTimeSettings(rootModel)),
+                    Assert.True(TryPerformAction(() => AdjustTimeSettingsSobek(rootModel)),
                         string.Format("Failed to adjust time settings for model: {0}", rootModel.Name));
+
+                    Assert.True(TryPerformAction(() => GetRootModelAndValidate(app, out rootModel)),
+                        string.Format("Failed to validate model after adjusting the time: {0}", rootModel.Name));
 
                     // Step 11: Run model
                     Assert.True(TryPerformAction(() => RunModel(rootModel)),
@@ -437,8 +441,54 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static void AdjustTimeSettings(ITimeDependentModel timeDependentModel)
         {
-            // Set StopTime to StartTime + 10 TimeSteps
             timeDependentModel.StopTime = timeDependentModel.StartTime.AddHours(timeDependentModel.TimeStep.TotalHours * 10);
+        }
+
+        private static void AdjustTimeSettingsSobek(ITimeDependentModel timeDependentModel)
+        {
+            var outputTimeStep = 0.0;
+            // Set StopTime to StartTime + 10 TimeSteps
+            if (timeDependentModel is HydroModel castedModel)
+            {
+                var modelCounter = castedModel.Activities.GetActivitiesOfType<WaterFlowModel1D>().Count();
+
+                if (modelCounter > 0)
+                {
+                    outputTimeStep = castedModel.Activities.GetActivitiesOfType<WaterFlowModel1D>().ToList()[0]
+                        .OutputTimeStep.TotalSeconds;
+                }
+                else
+                {
+                    Assert.Fail("Not a WaterFlowModel1D found in the Integrated Model.");
+                }
+            }
+            else if (timeDependentModel is WaterFlowModel1D waterModel)
+            {
+                outputTimeStep = waterModel.OutputTimeStep.TotalSeconds;
+            }
+            else
+            {
+                Assert.Fail("Not a WaterFlowModel1D found.");
+            }
+
+            var modelTimeStep = timeDependentModel.TimeStep.TotalSeconds;
+
+            var proposedTimeSeconds = getValidRunTimeSeconds(outputTimeStep, modelTimeStep);
+            timeDependentModel.StopTime = timeDependentModel.StartTime.AddSeconds(proposedTimeSeconds);
+        }
+
+        private static double getValidRunTimeSeconds(double outputTimeStep, double modelTimeStep)
+        {
+            var factor = outputTimeStep > modelTimeStep
+                ? outputTimeStep / modelTimeStep
+                : modelTimeStep / outputTimeStep;
+
+            var nSteps = Math.Ceiling(10.0 / factor) * factor;
+
+            var proposedTimeSeconds =
+                nSteps * (outputTimeStep > modelTimeStep ? modelTimeStep : outputTimeStep);
+
+            return proposedTimeSeconds;
         }
 
         private static void RunModel(IActivity activity)
