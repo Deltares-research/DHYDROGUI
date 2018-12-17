@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         public void GivenAnMd1dFile_WhenImportingFileAndExporting_ThenTheInputFilesAreTheSameAsTheOutputFiles11(
             string spatialIniFile)
         {
-            var md1dFilePath = TestHelper.GetTestFilePath(@"ImportExportTest\TestExport.md1d");
+            var md1dFilePath = TestHelper.GetTestFilePath(@"ImportSpatialData\water flow 1d.md1d");
             var testDirectory = FileUtils.CreateTempDirectory();
             var sourceFile = TestHelper.GetTestFilePath($@"ImportSpatialData\{spatialIniFile}");
             var errorMessage = "Files not equal";
