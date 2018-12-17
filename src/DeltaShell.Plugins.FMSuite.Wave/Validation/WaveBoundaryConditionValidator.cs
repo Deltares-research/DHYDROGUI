@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 if (waveBoundaryParameters.Height <= 0)
                 {
                     yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
-                        "Parameter \"Height\" must be greater than 0.", boundaryCondition);
+                        Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Height__must_be_greater_than_0_, boundaryCondition);
                 }
             }
 

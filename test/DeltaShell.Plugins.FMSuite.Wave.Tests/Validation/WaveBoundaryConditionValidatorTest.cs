@@ -114,8 +114,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             Assert.AreEqual(0, errors.Count());
         }
 
-        [Test]
-        public void GivenWaveModelWithWaveBoundaryConditionThatHasADataPointWithHeightEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned()
+        [TestCase(0.0)]
+        [TestCase(-1.0)]
+        public void GivenWaveModelWithWaveBoundaryConditionThatHasADataPointWithHeightEqualToOrSmallerThanZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double heightValue)
         {
             // Given
             var waveModel = new WaveModel();
@@ -125,6 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 Feature = feature,
             };
             boundaryCondition.AddPoint(0);
+            boundaryCondition.SpectrumParameters.Values.ForEach(spectrumParameters => spectrumParameters.Height = heightValue);
             waveModel.BoundaryConditions.Add(boundaryCondition);
 
             // When
@@ -137,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationIssue = validationIssues.FirstOrDefault();
             Assert.IsNotNull(validationIssue);
             Assert.That(validationIssue.Severity, Is.EqualTo(ValidationSeverity.Error));
-            Assert.That(validationIssue.Message, Is.EqualTo("Parameter \"Height\" must be greater than 0."));
+            Assert.That(validationIssue.Message, Is.EqualTo(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Height__must_be_greater_than_0_));
         }
 
         [Test]
