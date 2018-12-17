@@ -175,4 +175,7 @@
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Height__must_be_greater_than_0_" xml:space="preserve">
     <value>Parameter "Height" must be greater than 0.</value>
   </data>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Period__must_be_greater_than_0_" xml:space="preserve">
+    <value>Parameter "Period" must be greater than 0.</value>
+  </data>
 </root>

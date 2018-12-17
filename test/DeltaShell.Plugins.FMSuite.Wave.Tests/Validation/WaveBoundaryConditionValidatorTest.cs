@@ -49,7 +49,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var waveModel = new WaveModel();
             var feature = new Feature2D { Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2,0) }) };
             var boundaryCondition = (WaveBoundaryCondition)new WaveBoundaryConditionFactory().CreateBoundaryCondition(feature, string.Empty, BoundaryConditionDataType.ParametrizedSpectrumConstant);
-            boundaryCondition.SpectrumParameters.Values.ForEach(spectrumParameters => spectrumParameters.Height = 1.0); // Pass validation on spectrum parameters
+            boundaryCondition.SpectrumParameters.Values.ForEach(spectrumParameters =>
+            {
+                // Pass validation on spectrum parameters
+                spectrumParameters.Height = 1.0;
+                spectrumParameters.Period = 1.0;
+            });
             waveModel.BoundaryConditions.Add(boundaryCondition);
 
             // When
@@ -126,7 +131,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 Feature = feature,
             };
             boundaryCondition.AddPoint(0);
-            boundaryCondition.SpectrumParameters.Values.ForEach(spectrumParameters => spectrumParameters.Height = heightValue);
+            boundaryCondition.SpectrumParameters.Values.ForEach(spectrumParameters =>
+            {
+                spectrumParameters.Height = heightValue;
+                spectrumParameters.Period = 1.0; // Pass validation for period value
+            });
             waveModel.BoundaryConditions.Add(boundaryCondition);
 
             // When
@@ -140,6 +149,38 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             Assert.IsNotNull(validationIssue);
             Assert.That(validationIssue.Severity, Is.EqualTo(ValidationSeverity.Error));
             Assert.That(validationIssue.Message, Is.EqualTo(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Height__must_be_greater_than_0_));
+        }
+
+        [TestCase(0.0)]
+        [TestCase(-1.0)]
+        public void GivenWaveModelWithWaveBoundaryConditionThatHasADataPointWithPeriodEqualToOrSmallerThanZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double periodValue)
+        {
+            // Given
+            var waveModel = new WaveModel();
+            var feature = new Feature2D { Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 0) }) };
+            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumConstant)
+            {
+                Feature = feature,
+            };
+            boundaryCondition.AddPoint(0);
+            boundaryCondition.SpectrumParameters.Values.ForEach(spectrumParameters =>
+            {
+                spectrumParameters.Height = 1.0;
+                spectrumParameters.Period = periodValue;
+            });
+            waveModel.BoundaryConditions.Add(boundaryCondition);
+
+            // When
+            var validationReport = WaveBoundaryConditionValidator.Validate(waveModel);
+
+            // Then
+            var validationIssues = validationReport.GetAllIssuesRecursive();
+            Assert.That(validationIssues.Count, Is.EqualTo(1));
+
+            var validationIssue = validationIssues.FirstOrDefault();
+            Assert.IsNotNull(validationIssue);
+            Assert.That(validationIssue.Severity, Is.EqualTo(ValidationSeverity.Error));
+            Assert.That(validationIssue.Message, Is.EqualTo(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Period__must_be_greater_than_0_));
         }
 
         [Test]
