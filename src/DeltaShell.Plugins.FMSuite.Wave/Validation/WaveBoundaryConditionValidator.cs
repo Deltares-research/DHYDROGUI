@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions.Generic;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
@@ -60,6 +62,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
                         Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Spreading__must_be_greater_than_0_,
                         boundaryCondition);
+                }
+            }
+
+            if (boundaryCondition.DataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries && boundaryCondition.PointData.Count != 0)
+            {
+                foreach (var pointData in boundaryCondition.PointData)
+                {
+                    var heightComponent = pointData.Components.FirstOrDefault(c => c.Name == "Hs");
+                    if (heightComponent?.Values is IMultiDimensionalArray<double> heightComponentValues && heightComponentValues.Any(v => v <= 0.0))
+                    {
+                        yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error, "Values in column \"Hs\" in the time series table must be greater than 0.");
+                    }
                 }
             }
 
