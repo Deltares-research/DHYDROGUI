@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 AddPoint(0);
                 SpectrumFiles[0] = "";
-                SpectrumParameters[0] = new WaveBoundaryParameters();
+                SpectrumParameters[0] = new WaveBoundaryParameters(); // TODO: remove this, because it doe not make sense. Only do it when BoundaryConditionDataType is not time series
             }
 
             EndEdit();

@@ -172,11 +172,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
-        [Test]
-        public void GivenWaveModelWithWaveBoundaryConditionThatHasADataPointWithSpectrumParametersEqualToOrSmallerThanZeroAndHasDataTypeParametrizedSpectrumTimeSeries_WhenValidatingBoundaryConditions_ThenNoErrorMessageIsReturned()
+        [TestCase(BoundaryConditionDataType.ParametrizedSpectrumTimeseries)]
+        [TestCase(BoundaryConditionDataType.SpectrumFromFile)]
+        public void GivenWaveModelWithWaveBoundaryConditionThatHasADataPointWithSpectrumParametersEqualToOrSmallerThanZeroAndHasDataTypeParametrizedSpectrumTimeSeries_WhenValidatingBoundaryConditions_ThenNoErrorMessageIsReturned(BoundaryConditionDataType type)
         {
             // Given
-            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+            var boundaryCondition = new WaveBoundaryCondition(type)
             {
                 Feature = feature,
                 SpectrumParameters =

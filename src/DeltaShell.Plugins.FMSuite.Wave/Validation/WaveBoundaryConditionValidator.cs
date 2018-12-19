@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             foreach (var waveBoundaryParameters in boundaryCondition.SpectrumParameters.Values)
             {
-                if (boundaryCondition.DataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries) continue;
+                if (boundaryCondition.DataType != BoundaryConditionDataType.ParametrizedSpectrumConstant) continue;
 
                 if (waveBoundaryParameters.Height <= 0)
                 {
