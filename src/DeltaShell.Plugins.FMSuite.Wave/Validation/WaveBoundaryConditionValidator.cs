@@ -81,7 +81,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     var heightComponent = pointData.Components.FirstOrDefault(c => c.Name == "Hs");
                     if (heightComponent?.Values is IMultiDimensionalArray<double> heightComponentValues && heightComponentValues.Any(v => v <= 0.0))
                     {
-                        yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error, "Values in column \"Hs\" in the time series table must be greater than 0.");
+                        yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error, 
+                            Resources.WaveBoundaryConditionValidator_Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_,
+                            boundaryCondition);
+                    }
+
+                    var periodComponent = pointData.Components.FirstOrDefault(c => c.Name == "Tp");
+                    if (periodComponent?.Values is IMultiDimensionalArray<double> periodComponentValues && periodComponentValues.Any(v => v <= 0.0))
+                    {
+                        yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
+                            Resources.WaveBoundaryConditionValidator_Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_,
+                            boundaryCondition);
                     }
                 }
             }

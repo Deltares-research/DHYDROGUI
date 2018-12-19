@@ -141,6 +141,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Values in column &quot;Hs&quot; in the time series table must be greater than 0..
+        /// </summary>
+        public static string WaveBoundaryConditionValidator_Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_ {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_Values_in_column__Hs__in_the_time_series_table_mus" +
+                        "t_be_greater_than_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Values in column &quot;Tp&quot; in the time series table must be greater than 0..
+        /// </summary>
+        public static string WaveBoundaryConditionValidator_Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_ {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_Values_in_column__Tp__in_the_time_series_table_mus" +
+                        "t_be_greater_than_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All the grids Coordinate System should be the same, either Spherical or Cartesian.
         /// </summary>
         public static string WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_All_the_grids_Coordinate_System_should_be_the_same__either_Spherical_or_Cardesian {

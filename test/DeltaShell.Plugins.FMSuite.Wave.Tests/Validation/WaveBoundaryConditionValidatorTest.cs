@@ -205,7 +205,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
         [TestCase(0.0)]
         [TestCase(-1.0)]
-        public void GivenWaveModelWithParametrizedSpectrumTimeSeriesBoundaryCondition_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double heightValue)
+        public void GivenWaveModelWithParametrizedSpectrumTimeSeriesBoundaryConditionThatHasHsValueSmallerThanOrEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double heightValue)
         {
             // Given
             var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
@@ -216,7 +216,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             var functionOutput = boundaryCondition.PointData[0].Components;
             boundaryCondition.PointData[0].Arguments[0].SetValues(new[] { DateTime.Now });
-            functionOutput[0].SetValues(new List<double> { heightValue });
+            functionOutput[0].SetValues(new List<double> { heightValue }); // Hs component values
             functionOutput[1].SetValues(new List<double> { 1.0 });
             functionOutput[2].SetValues(new List<double> { 1.0 });
             functionOutput[3].SetValues(new List<double> { 1.0 });
@@ -228,7 +228,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationReport = WaveBoundaryConditionValidator.Validate(model);
 
             // Then
-            CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, "Values in column \"Hs\" in the time series table must be greater than 0.");
+            CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, Resources.WaveBoundaryConditionValidator_Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_);
+        }
+
+        [TestCase(0.0)]
+        [TestCase(-1.0)]
+        public void GivenWaveModelWithParametrizedSpectrumTimeSeriesBoundaryConditionThatHasTpValueSmallerThanOrEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double periodValue)
+        {
+            // Given
+            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+            {
+                Feature = feature
+            };
+            boundaryCondition.AddPoint(0);
+
+            var functionOutput = boundaryCondition.PointData[0].Components;
+            boundaryCondition.PointData[0].Arguments[0].SetValues(new[] { DateTime.Now });
+            functionOutput[0].SetValues(new List<double> { 1.0 });
+            functionOutput[1].SetValues(new List<double> { periodValue }); // Tp component values
+            functionOutput[2].SetValues(new List<double> { 1.0 });
+            functionOutput[3].SetValues(new List<double> { 1.0 });
+
+            var model = new WaveModel();
+            model.BoundaryConditions.Add(boundaryCondition);
+
+            // When
+            var validationReport = WaveBoundaryConditionValidator.Validate(model);
+
+            // Then
+            CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, Resources.WaveBoundaryConditionValidator_Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_);
         }
 
         [Test]
@@ -245,6 +273,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             boundaryCondition.AddPoint(0);
             boundaryCondition.PointData[0].Arguments[0].SetValues(new[] {DateTime.Now, DateTime.Now.AddDays(1)});
             boundaryCondition.PointData[0].Components[0].SetValues(new List<double> {1, 1});
+            boundaryCondition.PointData[0].Components[1].SetValues(new List<double> {1, 1});
 
             boundaryCondition.AddPoint(1);
 
@@ -270,10 +299,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             boundaryCondition.AddPoint(0);
             boundaryCondition.PointData[0].Arguments[0].SetValues(new[] {t1, t2});
             boundaryCondition.PointData[0].Components[0].SetValues(new List<double> {2, 2});
+            boundaryCondition.PointData[0].Components[1].SetValues(new List<double> {2, 2});
 
             boundaryCondition.AddPoint(1);
             boundaryCondition.PointData[1].Arguments[0].SetValues(new[] {t1, t2});
             boundaryCondition.PointData[1].Components[0].SetValues(new List<double> {1, 1});
+            boundaryCondition.PointData[1].Components[1].SetValues(new List<double> {1, 1});
 
             var errors = WaveBoundaryConditionValidator.Validate(model).AllErrors;
             Assert.AreEqual(0, errors.Count());
@@ -281,6 +312,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             boundaryCondition.PointData[1].Arguments[0].Values.Clear();
             boundaryCondition.PointData[1].Arguments[0].SetValues(new[] {t1, t3});
             boundaryCondition.PointData[1].Components[0].SetValues(new List<double> { 1, 1 });
+            boundaryCondition.PointData[1].Components[1].SetValues(new List<double> { 1, 1 });
 
             errors = WaveBoundaryConditionValidator.Validate(model).AllErrors;
             Assert.AreEqual(1, errors.Count());

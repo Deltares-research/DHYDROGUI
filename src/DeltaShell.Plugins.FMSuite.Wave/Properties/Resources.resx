@@ -181,4 +181,10 @@
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Spreading__must_be_greater_than_0_" xml:space="preserve">
     <value>Parameter "Spreading" must be greater than 0.</value>
   </data>
+  <data name="WaveBoundaryConditionValidator_Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_" xml:space="preserve">
+    <value>Values in column "Hs" in the time series table must be greater than 0.</value>
+  </data>
+  <data name="WaveBoundaryConditionValidator_Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_" xml:space="preserve">
+    <value>Values in column "Tp" in the time series table must be greater than 0.</value>
+  </data>
 </root>
