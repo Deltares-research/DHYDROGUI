@@ -93,6 +93,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                             Resources.WaveBoundaryConditionValidator_Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_,
                             boundaryCondition);
                     }
+
+                    var spreadingComponent = pointData.Components.FirstOrDefault(c => c.Name == "Spreading");
+                    if (spreadingComponent?.Values is IMultiDimensionalArray<double> spreadingComponentValues && spreadingComponentValues.Any(v => v <= 0.0))
+                    {
+                        yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
+                            Resources.WaveBoundaryConditionValidator_Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_,
+                            boundaryCondition);
+                    }
                 }
             }
 

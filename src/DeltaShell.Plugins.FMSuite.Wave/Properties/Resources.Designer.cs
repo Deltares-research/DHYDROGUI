@@ -151,6 +151,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Values in column &quot;Spreading&quot; in the time series table must be greater than 0..
+        /// </summary>
+        public static string WaveBoundaryConditionValidator_Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_ {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_Values_in_column__Spreading__in_the_time_series_ta" +
+                        "ble_must_be_greater_than_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Values in column &quot;Tp&quot; in the time series table must be greater than 0..
         /// </summary>
         public static string WaveBoundaryConditionValidator_Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_ {
