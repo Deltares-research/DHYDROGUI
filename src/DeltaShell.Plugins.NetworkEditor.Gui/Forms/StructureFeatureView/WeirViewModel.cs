@@ -542,24 +542,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
                 ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged -= WeirFormulaPropertyChanged;
 
-                if (value == SelectableWeirFormulaType.SimpleWeir)
+                switch (value)
                 {
-                    weir.WeirFormula = new SimpleWeirFormula();
-                    SetSimpleWeirControls();
-                }
+                    case SelectableWeirFormulaType.SimpleWeir:
+                        weir.WeirFormula = new SimpleWeirFormula();
+                        SetSimpleWeirControls();
+                        break;
+                    case SelectableWeirFormulaType.SimpleGate:
+                        weir.WeirFormula = new GatedWeirFormula(true);
+                        SetSimpleGateViewControls();
+                        break;
+                    case SelectableWeirFormulaType.GeneralStructure:
+                        var generalStructureWeirFormula = new GeneralStructureWeirFormula
+                        {
+                            BedLevelStructureCentre = weir.CrestLevel,
+                            WidthStructureCentre = weir.CrestWidth
+                        };
 
-                if (value == SelectableWeirFormulaType.SimpleGate)
-                {
-                    weir.WeirFormula = new GatedWeirFormula(true);
-                    SetSimpleGateViewControls();
-                }
+                        weir.WeirFormula = generalStructureWeirFormula;
+                        SetGeneralStructureViewControls();
 
-                if (value == SelectableWeirFormulaType.GeneralStructure)
-                {
-                    weir.WeirFormula = new GeneralStructureWeirFormula();
-                    SetGeneralStructureViewControls();
-
-                    lowerEdgeLevel = GateOpeningHeight + BedLevelStructureCentre;
+                        lowerEdgeLevel = GateOpeningHeight + BedLevelStructureCentre;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(value), value, "The selected weir type does not exist. Please select simple weir, simple gate or general structure");
                 }
 
                 ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged += WeirFormulaPropertyChanged;
@@ -703,9 +709,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         private void ResetValuesAfterStructureTypeSwitch()
         {
             ExtraResistance = 0.0;
-            BedLevelStructureCentre = 0.0;
-            Weir.CrestLevel = 0.0;
-            Weir.CrestWidth = 0.0;
         }
 
         public Visibility SimpleWeirPropertiesVisibility

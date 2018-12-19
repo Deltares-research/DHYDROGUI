@@ -256,6 +256,42 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             Assert.AreEqual(viewModel.Weir.UseCrestLevelTimeSeries, previousValue);
         }
 
+        [Test]
+        public void
+            GivenWeirViewModel_WhenAddingAStructureAndChangeToAnotherStructure_ThenTheCrestLevelAndCrestWidthArePersisted()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir(true)
+            };
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleWeir;
+            Assert.AreEqual(0.0, viewModel.Weir.CrestLevel);
+            Assert.AreEqual(0.0, viewModel.Weir.CrestWidth);
+
+            viewModel.Weir.CrestLevel = 6.0;
+            viewModel.Weir.CrestWidth = 5.0;
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
+            Assert.AreEqual(6.0, viewModel.Weir.CrestLevel);
+            Assert.AreEqual(5.0, viewModel.Weir.CrestWidth);
+
+            viewModel.Weir.CrestLevel = 10.0;
+            viewModel.Weir.CrestWidth = 4.0;
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleGate;
+            Assert.AreEqual(10.0, viewModel.Weir.CrestLevel);
+            Assert.AreEqual(4.0, viewModel.Weir.CrestWidth);
+
+            viewModel.Weir.CrestLevel = 8.0;
+            viewModel.Weir.CrestWidth = 7.0;
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleWeir;
+            Assert.AreEqual(8.0, viewModel.Weir.CrestLevel);
+            Assert.AreEqual(7.0, viewModel.Weir.CrestWidth);
+
+        }
+
         #endregion
 
         #region BedLevel
