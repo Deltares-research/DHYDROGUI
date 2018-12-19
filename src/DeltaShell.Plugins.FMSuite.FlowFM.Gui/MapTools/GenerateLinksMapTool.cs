@@ -150,14 +150,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             // Talk to the api!
             var linksFrom = new List<int>();
             var linksTo = new List<int>();
-            var startIndex = 1;
+            var startIndex = 0;
             int linksCount = 0;
 
             try
             {
                 if (!MapTool1D2DLinksHelper.Generate1D2DLinks(fmModel, selectedArea, startIndex, ref linksFrom, ref linksTo, ref linksCount, LinkType)) return;
 
-                var created1D2DLinks = Creates1d2dLinks(linksCount, linksFrom, linksTo, fmModel.Grid, fmModel.NetworkDiscretization, LinkType);
+                var created1D2DLinks = Creates1d2dLinks(linksCount, linksFrom, linksTo, fmModel.Grid, fmModel.NetworkDiscretization, LinkType, startIndex);
                 created1D2DLinks = GetNew1D2DLinks(created1D2DLinks, fmModel.Links);
                 fmModel.Links.AddRange(created1D2DLinks);
             }
@@ -181,14 +181,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             return result;
         }
         
-        private IList<Link1D2D> Creates1d2dLinks(int linksCount, List<int> linksFromIndex, List<int> linksToIndex, UnstructuredGrid grid, IDiscretization networkDiscretization, LinkType linkType)
+        private IList<Link1D2D> Creates1d2dLinks(int linksCount, List<int> linksFromIndex, List<int> linksToIndex, UnstructuredGrid grid, IDiscretization networkDiscretization, LinkType linkType, int startIndex)
         {
             var lstNewLinks = new List<Link1D2D>();
             for (int i = 0; i < linksCount; i++)
             {
                 //seems lists are swapt  
-                var pointIndex = linksToIndex[i] - 1;
-                var cellIndex = linksFromIndex[i] - 1;
+                var pointIndex = linksToIndex[i] - startIndex;
+                var cellIndex = linksFromIndex[i] - startIndex;
 
                 var fromCell = grid.Cells[cellIndex];
                 var toNode = networkDiscretization.Locations.Values[pointIndex];

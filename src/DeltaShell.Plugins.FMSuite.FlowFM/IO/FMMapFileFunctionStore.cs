@@ -16,6 +16,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
@@ -74,6 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private IDiscretization discretisation;
         private readonly Dictionary<IVariable, IMultiDimensionalArray> argumentVariableCache = new Dictionary<IVariable, IMultiDimensionalArray>();
         private NetworkLocationTypeConverter networkLocationTypeConverter = new NetworkLocationTypeConverter();
+        private List<FeatureCoverage> linkCoverages;
 
         // nhib
         protected FMMapFileFunctionStore()
@@ -83,6 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public FMMapFileFunctionStore(WaterFlowFMModel waterFlowFmModel)
         {
             this.waterFlowFmModel = waterFlowFmModel;
+            linkCoverages = new List<FeatureCoverage>();
             DisableCaching = true;
         }
 
@@ -105,9 +108,82 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             get { return grid; }
         }
+        public List<FeatureCoverage> LinkCoverages
+        {
+            get
+            {
+                /*if (linkCoverages == null)
+                {
+                    Generate1D2DLinkCoverages();
+                }*/
+                return linkCoverages;
+            }
+        }
+
+        private void Generate1D2DLinkCoverages()
+        {
+            /*var flow2dDimrModel = Flow2DModel as IDimrModel;
+            if (flow2dDimrModel == null) return;
+
+            var timeSeriesList = flow2dDimrModel.GetVar(CellsToFeaturesName) as ITimeSeries[];
+            if (timeSeriesList == null) return;
+            
+            if (!Links1D2D.Any()) return;
+            
+            linkCoverages = new List<FeatureCoverage>();
+
+            var edgeToFeature = Features.ToDictionary(f => f.LinkEdge);
+
+            foreach (var timeSeries in timeSeriesList)
+            {
+                var unit = timeSeries.Components[0].Unit;
+                var linkFeatureCoverage = CreateLinkFeatureCoverage(timeSeries.Name, Links1D2D, (unit != null ? (IUnit)unit.Clone() : null));
+
+                // set times
+                linkFeatureCoverage.Time.SkipUniqueValuesCheck = true;
+                linkFeatureCoverage.Time.SetValues(timeSeries.Time.Values);
+                linkFeatureCoverage.Time.SkipUniqueValuesCheck = false;
+
+                foreach (FlowLink flowLink in timeSeries.Arguments[1].Values)
+                {
+                    if (!edgeToFeature.ContainsKey(flowLink.Edge)) continue;
+
+                    var argumentFeature = edgeToFeature[flowLink.Edge];
+                    var valuesToSet = timeSeries.GetValues<double>(new VariableValueFilter<FlowLink>(timeSeries.Arguments[1], flowLink));
+                    linkFeatureCoverage.SetValues(valuesToSet, new VariableValueFilter<IFeature>(linkFeatureCoverage.FeatureVariable, argumentFeature));
+                }
+
+                linkCoverages.Add(linkFeatureCoverage);
+            }*/
+        }
+
+        private FeatureCoverage CreateLinkFeatureCoverage(string name, IEventedList<ILink1D2D> features, IUnit unit)
+        {
+            var featureCoverage = new FeatureCoverage(name)
+            {
+                IsEditable = false,
+                IsTimeDependent = true,
+                Features = new EventedList<IFeature>(features),
+                CoordinateSystem = CoordinateSystem,
+            };
+
+            var featureVariable = new Variable<IFeature>("FlowLink") { IsAutoSorted = false };
+            featureCoverage.Arguments.Add(featureVariable);
+            featureCoverage.Time.InterpolationType = InterpolationType.Linear;
+            featureCoverage.Components.Add(new Variable<double> { Name = name, InterpolationType = InterpolationType.Linear, Unit = unit });
+            featureVariable.SetValues(features);
+
+            return featureCoverage;
+        }
 
         public ICoordinateSystem CoordinateSystem
         {
+            get
+            {
+                return grid != null
+                    ? grid.CoordinateSystem
+                    : (network != null ? network.CoordinateSystem : discretisation?.CoordinateSystem);
+            }
             set
             {
                 if (grid != null)
@@ -143,21 +219,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             boundaryCellValues.Clear();
             UpdateGrid();
             var netCdfVariables = netCdfFile.GetVariables().ToList();
-           /* var mesh1DNameNetCdfVariable = netCdfVariables.FirstOrDefault(dv =>
-            {
-                var attributes = netCdfFile.GetAttributes(dv);
-                object dimension;
-                if (attributes.TryGetValue("topology_dimension", out dimension) && attributes.ContainsKey("coordinate_space"))
-                {
-                    if (int.Parse(dimension.ToString()) == 1)
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            });
-            var mesh1DName = netCdfFile.GetVariableName(mesh1DNameNetCdfVariable);
-*/
             var mesh2DNameNetCdfVariableInfo = netCdfVariables.FirstOrDefault(dv =>
             {
                 var attributes = netCdfFile.GetAttributes(dv);
@@ -173,6 +234,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             });
             var mesh2DName = mesh2DNameNetCdfVariableInfo == null ? string.Empty : netCdfFile.GetVariableName(mesh2DNameNetCdfVariableInfo);
 
+            var isUgridConvention = GetNcFileConvention() == GridApiDataSet.DataSetConventions.CONV_UGRID;
+            
+            var functions2D = Get2DFunctions(dataVariables, isUgridConvention, mesh2DName);
             var links1d2dNameNetCdfVariableInfo = netCdfVariables.FirstOrDefault(dv =>
             {
                 var attributes = netCdfFile.GetAttributes(dv);
@@ -188,40 +252,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             });
 
             var links1D2DName = links1d2dNameNetCdfVariableInfo == null ? string.Empty : netCdfFile.GetVariableName(links1d2dNameNetCdfVariableInfo);
-
-            var isUgridConvention = GetNcFileConvention() == GridApiDataSet.DataSetConventions.CONV_UGRID;
-
-            //var functions1D = Get1DFunctions(dataVariables, isUgridConvention, mesh1DName);
-            var functions2D = Get2DFunctions(dataVariables, isUgridConvention, mesh2DName, links1D2DName);
+            var functions1D2DLinks = Get1D2DLinkFunctions(dataVariables, isUgridConvention, links1D2DName);
             if (!isUgridConvention)
             {
                 LogWarningsForExcludedTimeDependentVariables(dataVariables);
             }
 
-            return functions2D;//.Cast<IFunction>().Concat(functions1D.Cast<IFunction>());
+            return functions2D.Cast<IFunction>().Concat(functions1D2DLinks.Cast<IFunction>());
         }
-
-        private List<NetworkCoverage> Get1DFunctions(IEnumerable<NetCdfVariableInfo> dataVariables, bool isUgridConvention, string mesh1DName)
-        {
-            var timeDepVarSelectionCriteria = isUgridConvention
-                ? (Func<NetCdfVariableInfo, bool>)(v =>
-                {
-                    var b = v.IsTimeDependent && v.NumDimensions > 1;
-                    var attributes = netCdfFile.GetAttributes(v.NetCdfDataVariable);
-                    object meshName;
-                    if (attributes.TryGetValue("mesh", out meshName))
-                    {
-                        return b && meshName.ToString() == mesh1DName;
-                    }
-                    return false;
-                }) : (v => v.IsTimeDependent && v.NumDimensions > 1 && v.NumDimensions <= 2);
-            var timeDepVariables = dataVariables.Where(timeDepVarSelectionCriteria).ToList();
-            var functions = timeDepVariables.SelectMany(ProcessTimeDependent1DVariable).Where(c => c != null).ToList();
-
-            return functions;
-        }
-
-        private List<UnstructuredGridCoverage> Get2DFunctions(IEnumerable<NetCdfVariableInfo> dataVariables, bool isUgridConvention, string mesh2DName, string links1d2dName)
+        
+        private List<UnstructuredGridCoverage> Get2DFunctions(IEnumerable<NetCdfVariableInfo> dataVariables, bool isUgridConvention, string mesh2DName)
         {
             // Construct UnstructuredGridCoverages from file
             var timeDepVarSelectionCriteria = isUgridConvention
@@ -232,7 +272,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     object meshName;
                     if (attributes.TryGetValue("mesh", out meshName))
                     {
-                        return b && (meshName.ToString() == mesh2DName || meshName.ToString() == links1d2dName);
+                        return b && (meshName.ToString() == mesh2DName);
                     }
                     return false;
                 }) : (v => v.IsTimeDependent && v.NumDimensions > 1 && v.NumDimensions <= 2);
@@ -255,7 +295,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             return functions;
         }
-        
+
+        private List<IFunction> Get1D2DLinkFunctions(IEnumerable<NetCdfVariableInfo> dataVariables, bool isUgridConvention, string links1d2dName)
+        {
+            // Construct UnstructuredGridCoverages from file
+            var timeDepVarSelectionCriteria = isUgridConvention
+                ? (Func<NetCdfVariableInfo, bool>)(v =>
+                {
+                    var b = v.IsTimeDependent && v.NumDimensions > 1;
+                    var attributes = netCdfFile.GetAttributes(v.NetCdfDataVariable);
+                    object meshName;
+                    if (attributes.TryGetValue("mesh", out meshName))
+                    {
+                        return b && (meshName.ToString() == links1d2dName);
+                    }
+                    return false;
+                }) : (v => v.IsTimeDependent && v.NumDimensions > 1 && v.NumDimensions <= 2);
+            var timeDepVariables = dataVariables.Where(timeDepVarSelectionCriteria).ToList();
+            var functions = timeDepVariables.SelectMany(ProcessTimeDependent1D2DLinkVariable).Where(c => c != null).ToList();
+            return functions;
+        }
         private void LogWarningsForExcludedTimeDependentVariables(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
             // When the NetCDF file is not UGRID1+, log a warning for the time dependent variables that have been filtered out
@@ -631,7 +690,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 case NFlowElemName:
                     return new UnstructuredGridCellCoverage(grid, true) { Name = coverageName };
                 case NFlowLinkName:
-                case "contact":
+                //case "contact":
                     return new UnstructuredGridFlowLinkCoverage(grid, true) { Name = coverageName };
                 case NNetLinkName:
                 case NFlowElemBndName:
@@ -712,37 +771,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             boundaryCellValues.Add(function);
         }
-        private void GetNewBoundaryLinkValues(string variableName)
+        private IFunction GetNewBoundaryLinkValues(string variableName, string coverageLongName)
         {
             // some variables need to be read only once
             if (flowLinks1D2D == null)
             {
-                /*
-                var ncFlowlinks = (int[,])netCdfFile.Read(netCdfFile.GetVariableByName("links1d2d"));
-                var ncFlowlink1D2Dlinknrs = (int[])netCdfFile.Read(netCdfFile.GetVariableByName(FlowLinkNrsName));
-                var ncFlowlinkXu = (double[])netCdfFile.Read(netCdfFile.GetVariableByName(FlowlinkXu));
-                var ncFlowlinkYu = (double[])netCdfFile.Read(netCdfFile.GetVariableByName(FlowlinkYu));
-
-                var coordinates = ncFlowlinkXu.Zip(ncFlowlinkYu, (x, y) => new Coordinate(x, y)).ToArray();
-
-                flowLinks1D2D = ncFlowlink1D2Dlinknrs.ConvertMultiThreaded(nr =>
-                {
-                    var cellFromIndex = ncFlowlinks[nr - 1, 0] - 1;
-                    var cellToIndex = ncFlowlinks[nr - 1, 1] - 1;
-
-                    var cellEdges = grid.GetCellEdgeIndices(grid.Cells[cellToIndex])
-                        .Concat(grid.GetCellEdgeIndices(grid.Cells[cellToIndex]))
-                        .Distinct()
-                        .Select(edgeIndex => grid.Edges[edgeIndex])
-                        .ToList();
-
-                    var nearestEdge = grid.Edges[grid.IndexOfNearestEdge(coordinates[nr - 1], cellEdges)];
-                    return new FlowLink(cellFromIndex, cellToIndex, nearestEdge);
-                });*/
                 var link1D2Ds = UGrid1D2DLinksAdapter.Load1D2DLinks(Path).ToList();
                 var discretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(Path);
                 Links1D2DHelper.SetGeometry1D2DLinks(link1D2Ds, discretisation.Locations, grid.Cells);
                 links1D2D = new EventedList<ILink1D2D>(link1D2Ds);
+                //Links1D2DHelper.SetIndexes1D2DLinks(links1D2D, discretisation, grid);
                 flowLinks1D2D = link1D2Ds.ConvertMultiThreaded(l1d2d =>
                 {
                     var startCoordinate = l1d2d.Geometry.Coordinates.First();
@@ -760,6 +798,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     return new FlowLink(cellFromIndex, cellToIndex, gridEdge);
                 });
                 grid.FlowLinks = flowLinks1D2D;
+                linkCoverages = new List<FeatureCoverage>();
             }
 
             if (ncDatetimes == null)
@@ -779,7 +818,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             // create timeseries with a component for every flowlink (cell index)
             var function = new TimeSeries() { Name = variableName };
-            var flowLinkVariable = new Variable<FlowLink>()
+            var flowLinkVariable = new Variable<ILink1D2D>()
             {
                 Name = "FlowLink",
             };
@@ -795,11 +834,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             function.Time.SetValues(ncDatetimes);
             function.Time.SkipUniqueValuesCheck = false;
 
-            function.Arguments[1].SetValues(flowLinks1D2D);
-
+            //function.Arguments[1].SetValues(flowLinks1D2D);
+            function.Arguments[1].SetValues(Links1D2D);
             function.SetValues(totalValuesArray);
 
             boundaryCellValues.Add(function);
+            function.Components[0].Attributes[NcNameAttribute] = "link1d2d";
+            var unit1 = function.Components[0].Unit;
+            var linkFeatureCoverage = CreateLinkFeatureCoverage(coverageLongName, Links1D2D, (unit1 != null ? (IUnit) unit1.Clone() : null));
+            // set times
+            linkFeatureCoverage.Time.SkipUniqueValuesCheck = true;
+            linkFeatureCoverage.Time.SetValues(function.Time.Values);
+            linkFeatureCoverage.Time.SkipUniqueValuesCheck = false;
+
+            foreach (ILink1D2D link in function.Arguments[1].Values)
+            {
+                var valuesToSet = function.GetValues<double>(new VariableValueFilter<ILink1D2D>(function.Arguments[1], link));
+                linkFeatureCoverage.SetValues(valuesToSet, new VariableValueFilter<IFeature>(linkFeatureCoverage.FeatureVariable, link));
+            }
+            linkFeatureCoverage.Components[0].Attributes[NcNameAttribute] = "link1d2d";
+            linkCoverages.Add(linkFeatureCoverage);
+            return linkFeatureCoverage;
         }
 
         public GridApiDataSet.DataSetConventions GetNcFileConvention()
@@ -892,55 +947,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return list.ToArray();
         }
 
-        private IEnumerable<NetworkCoverage> ProcessTimeDependent1DVariable(NetCdfVariableInfo timeDependentVariable)
-        {
-            NetworkCoverage coverage = null;
-            var netcdfVariable = timeDependentVariable.NetCdfDataVariable;
-
-            var netCdfVariableName = netCdfFile.GetVariableName(netcdfVariable);
-            if (DeprecatedVariables.Contains(netCdfVariableName)) yield break;
-
-            var netCdfVariableType = netCdfFile.GetVariableDataType(netcdfVariable);
-            if (netCdfVariableType != NetCdfDataType.NcDoublePrecision)
-            {
-                log.WarnFormat(Resources.FMMapFileFunctionStore_CreateCoverageFromNetCdfVariable_FailedToConstructGridSpatialData,
-                    netCdfVariableName, netCdfVariableType);
-                yield break;
-            }
-
-            var dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
-
-            var secondDimensionName = netCdfFile.GetDimensionName(dimensions[1]);
-
-            var longName = netCdfFile.GetAttributeValue(netcdfVariable, LongNameAttribute) ??
-                           netCdfFile.GetAttributeValue(netcdfVariable, StandardNameAttribute);
-
-            var coverageLongName = (longName != null)
-                ? string.Format("{0} ({1})", longName, netCdfVariableName)
-                : netCdfVariableName;
-
-            var convention = GetNcFileConvention();
-
-            var location = convention == GridApiDataSet.DataSetConventions.CONV_UGRID
-                ? netCdfFile.GetAttributeValue(netcdfVariable, GridApiDataSet.UGridAttributeConstants.Names.Location)
-                : secondDimensionName; // backwards compatibility
-
-            var unitSymbol = netCdfFile.GetAttributeValue(netcdfVariable, UnitAttribute);
-            
-            coverage = CreateNetworkCoverage(location, coverageLongName, unitSymbol);
-
-            //coverage.Arguments[1].SetValues(discretisation.Locations.AllValues);
-            /*var indexes = new Variable<int>{Name = secondDimensionName};
-            indexes.SetValues(Enumerable.Range(0, discretisation.Locations.AllValues.Count));
-            coverage.Arguments.Insert(1, indexes);*/
-            if (coverage != null)
-            {
-                InitializeCoverage(coverage, secondDimensionName, netCdfVariableName, unitSymbol, timeDependentVariable.ReferenceDate, isNetworkCoverage: true);
-            }
-
-            yield return coverage;
-        }
-
         private IEnumerable<UnstructuredGridCoverage> ProcessTimeDependent2DVariable(NetCdfVariableInfo timeDependentVariable)
         {
             UnstructuredGridCoverage coverage = null;
@@ -967,8 +973,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             if (secondDimensionName.Equals("nlinks1d2d_connections")) // UGrid 1d2d links
             {
-                GetNewBoundaryLinkValues(netCdfVariableName);
-                //yield break;
+                //GetNewBoundaryLinkValues(netCdfVariableName);
+                yield break;
             }
 
             var longName = netCdfFile.GetAttributeValue(netcdfVariable, LongNameAttribute) ??
@@ -1015,6 +1021,63 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 velocityCoverages[standardName] = coverage;
             }
 
+            yield return coverage;
+        }
+
+        private IEnumerable<IFunction> ProcessTimeDependent1D2DLinkVariable(NetCdfVariableInfo timeDependentVariable)
+        {
+            UnstructuredGridCoverage coverage = null;
+            var netcdfVariable = timeDependentVariable.NetCdfDataVariable;
+
+            var netCdfVariableName = netCdfFile.GetVariableName(netcdfVariable);
+            if (DeprecatedVariables.Contains(netCdfVariableName)) yield break;
+
+            var netCdfVariableType = netCdfFile.GetVariableDataType(netcdfVariable);
+            if (netCdfVariableType != NetCdfDataType.NcDoublePrecision)
+            {
+                log.WarnFormat(Resources.FMMapFileFunctionStore_CreateCoverageFromNetCdfVariable_FailedToConstructGridSpatialData,
+                    netCdfVariableName, netCdfVariableType);
+                yield break;
+            }
+
+            var dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
+
+            var secondDimensionName = netCdfFile.GetDimensionName(dimensions[1]);
+            if (secondDimensionName.Equals(NBnd1D2DName)) // Not supported by UGrid yet
+            {
+                GetBoundaryLinkValues(netCdfVariableName);
+                yield break;
+            }
+            var longName = netCdfFile.GetAttributeValue(netcdfVariable, LongNameAttribute) ??
+                           netCdfFile.GetAttributeValue(netcdfVariable, StandardNameAttribute);
+
+            var coverageLongName = (longName != null)
+                ? string.Format("{0} ({1})", longName, netCdfVariableName)
+                : netCdfVariableName;
+
+            if (secondDimensionName.Equals("nlinks1d2d_connections")) // UGrid 1d2d links
+            {
+                yield return GetNewBoundaryLinkValues(netCdfVariableName, coverageLongName);
+                yield break;
+            }
+
+            
+            var convention = GetNcFileConvention();
+
+            var location = convention == GridApiDataSet.DataSetConventions.CONV_UGRID
+                ? netCdfFile.GetAttributeValue(netcdfVariable, GridApiDataSet.UGridAttributeConstants.Names.Location)
+                : secondDimensionName; // backwards compatibility
+
+            var unitSymbol = netCdfFile.GetAttributeValue(netcdfVariable, UnitAttribute);
+            if (location != "contact") log.WarnFormat(Resources.FMMapFileFunctionStore_CreateCoverage_UnexpectedLocationDimension, location);
+            //coverage = new Links1D2DCoverage(links1D2D, grid, discretisation, true) { Name = coverageLongName, CoordinateSystem = CoordinateSystem};
+            coverage = new UnstructuredGridFlowLinkCoverage(grid, true) { Name = coverageLongName };
+
+            if (coverage != null)
+            {
+                InitializeCoverage(coverage, secondDimensionName, netCdfVariableName, unitSymbol, timeDependentVariable.ReferenceDate);
+            }
+            
             yield return coverage;
         }
 

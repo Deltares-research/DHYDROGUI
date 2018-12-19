@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -39,6 +40,13 @@ namespace DelftTools.Hydro.Link1d2d
         [FeatureAttribute(Order = 5, ExportName = "Cell index")]
         [ReadOnly(true)]
         int FaceIndex { get; set; }
+
+        [DisplayName("Link1D2D index")]
+        [FeatureAttribute(Order = 6, ExportName = "Link1D2D index")]
+        [ReadOnly(true)]
+        int Link1D2DIndex { get; set; }
         IFeatureAttributeCollection Attributes { get; set; }
+
+        Coordinate GetCenter();
     }
 }

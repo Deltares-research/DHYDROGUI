@@ -1,4 +1,6 @@
-﻿using DelftTools.Utils.Aop;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Utils.Aop;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 
@@ -49,6 +51,16 @@ namespace DelftTools.Hydro.Link1d2d
         public int DiscretisationPointIndex { get; set; }
         
         public int FaceIndex { get; set; }
+        public int Link1D2DIndex { get; set; }
+
+        public Coordinate GetCenter()
+        {
+            var c1 = Geometry?.Coordinates.FirstOrDefault();
+            if (c1 == null) return null;
+            var c2 = Geometry?.Coordinates.LastOrDefault();
+            if (c2 == null) return null;
+            return new Coordinate((c1.X + c2.X) / 2.0, (c1.Y + c2.Y) / 2.0);
+        }
 
         public int Compare(object object1, object object2)
         {

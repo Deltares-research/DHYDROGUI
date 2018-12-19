@@ -31,13 +31,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (networkDiscretization == null || !networkDiscretization.Locations.Values.Any() || grid == null || !grid.Cells.Any()) return;
 
             var handledLinks = new List<ILink1D2D>();
-            foreach (var link in listOfLinks)
+            var link1D2Ds = listOfLinks as IList<ILink1D2D> ?? listOfLinks.ToList();
+            foreach (var link in link1D2Ds)
             {
                 var line = link.Geometry as ILineString;
                 if (line == null) continue;
 
                 link.DiscretisationPointIndex = FindCalculationPointIndex(line.EndPoint, networkDiscretization, handledLinks, tolerance);
                 link.FaceIndex = FindCellIndex(line.StartPoint, grid);
+                link.Link1D2DIndex = link1D2Ds.IndexOf(link);
                 handledLinks.Add(link);
             }
         }

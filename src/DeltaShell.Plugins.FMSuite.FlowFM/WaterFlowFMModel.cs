@@ -215,10 +215,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void LoadLinks()
         {
             if (!File.Exists(NetFilePath)) return;
-            var links = UGrid1D2DLinksAdapter.Load1D2DLinks(NetFilePath);
+            var loadedLinks = UGrid1D2DLinksAdapter.Load1D2DLinks(NetFilePath).ToList();
             if (NetworkDiscretization == null || Grid == null) return;
-            Links1D2DHelper.SetGeometry1D2DLinks(links, NetworkDiscretization.Locations, Grid.Cells);
-            Links = new EventedList<ILink1D2D>(links);
+            Links1D2DHelper.SetGeometry1D2DLinks(loadedLinks, NetworkDiscretization.Locations, Grid.Cells);
+            Links = new EventedList<ILink1D2D>(loadedLinks);
+            RefreshMappings();
         }
 
         public override IBasicModelInterface BMIEngine
@@ -3094,7 +3095,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     OutputMapFileStore.Close();
                     OutputMapFileStore = null;
-                    Output1DFileStore.Close();
+                    Output1DFileStore?.Close();
                     Output1DFileStore = null;
                 }
                 if (hasHisFileStore)

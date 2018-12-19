@@ -530,7 +530,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 //11. get the links: arrayfrom = 2d cell index, arrayto = 1d node index 
                 c_arrayfrom = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * linksCount); //2d cell number
                 c_arrayto = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * linksCount); //1d node
-                ierr = geomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref linksCount, ref intLinkType);
+                ierr = geomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref linksCount, ref intLinkType, ref start_index);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;

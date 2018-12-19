@@ -454,7 +454,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 //4. get the links: arrayfrom = 2d cell index, arrayto = 1d node index 
                 IntPtr c_arrayfrom = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * n1d2dlinks); //2d cell number
                 IntPtr c_arrayto = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * n1d2dlinks); //1d node
-                ierr = gridGeomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref n1d2dlinks, ref linkType);
+                ierr = gridGeomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref n1d2dlinks, ref linkType, ref start_index);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 int[] rc_arrayfrom = new int[n1d2dlinks];
@@ -567,7 +567,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 //4. get the links: arrayfrom = 2d cell index, arrayto = 1d node index 
                 IntPtr c_arrayfrom = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * n1d2dlinks); //2d cell number
                 IntPtr c_arrayto = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * n1d2dlinks); //1d node
-                ierr = gridGeomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref n1d2dlinks, ref linkType);
+                ierr = gridGeomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref n1d2dlinks, ref linkType, ref start_index);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 int[] rc_arrayfrom = new int[n1d2dlinks];

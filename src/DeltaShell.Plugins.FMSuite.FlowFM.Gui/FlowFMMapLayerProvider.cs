@@ -40,6 +40,7 @@ using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
+using GeoAPI.Extensions.Coverages;
 using SharpMap.Api;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
@@ -275,7 +276,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
                 return featureCoverageLayer;
             }
-            
+
+            var link1d2dCoverage = data as Links1D2DCoverage;
+            if (link1d2dCoverage != null)
+            {
+                
+                // Create link 1d2d coverage layer
+                var featureCoverageLayer = new FeatureCoverageLayer()
+                {
+                    FeatureCoverage = link1d2dCoverage,
+                    Name = link1d2dCoverage.Name,
+                    NameIsReadOnly = !link1d2dCoverage.IsEditable,
+                };
+
+                if (link1d2dCoverage.CoordinateSystem != null)
+                {
+                    featureCoverageLayer.DataSource.CoordinateSystem = link1d2dCoverage.CoordinateSystem;
+                }
+
+                return featureCoverageLayer;
+                /*
+                var layer = new Link1D2DCoverageLayer()
+                {
+                    DataSource = new FeatureCollection(link1d2dCoverage.Links.ToList(), typeof(ILink1D2D)) {CoordinateSystem = link1d2dCoverage.CoordinateSystem},
+                    Coverage = link1d2dCoverage,
+                    ReadOnly = !link1d2dCoverage.IsEditable
+                };
+                return layer;*/
+            }
+
             return null;
         }
 
@@ -311,6 +340,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             return data is WaterFlowFMModel
                 // TODO Sil: add check if data is Featurecoverage with a certain name/type (find the breach width coverage)
                    || data is FileBasedFeatureCoverage && IsCoverageLeveeBreachWidth((FileBasedFeatureCoverage)data)
+                   || data is Links1D2DCoverage
                    || data is IEventedList<ILink1D2D> && (parentObject is WaterFlowFMModel || parentObject is FMMapFileFunctionStore)
                    || data is IGrouping<string, IFunction>
                    || data is FMMapFileFunctionStore
@@ -477,6 +507,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return mapStore.Grid;
             if(mapStore.Links1D2D != null)
                 yield return mapStore.Links1D2D;
+            if (mapStore.LinkCoverages != null)
+            {
+                foreach (var fc in mapStore.LinkCoverages.OfType<IFeatureCoverage>())
+                {
+                    yield return fc;
+                }
+                
+            }
 
             var functionGrouping = mapStore.GetFunctionGrouping();
             foreach (IGrouping<string, IFunction> group in functionGrouping)

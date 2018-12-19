@@ -18,7 +18,7 @@ using NetTopologySuite.Geometries;
 
 namespace DelftTools.Hydro.Link1d2d
 {
-    public class Links1D2DCoverage : Coverage
+    public class Links1D2DCoverage : FeatureCoverage
     {
         private IEventedList<ILink1D2D> links;
         private IDiscretization discretization;
@@ -54,7 +54,7 @@ namespace DelftTools.Hydro.Link1d2d
         }
         protected Links1D2DCoverage() { }
 
-        protected Links1D2DCoverage(IEventedList<ILink1D2D> links, UnstructuredGrid grid, IDiscretization discretization, bool timeDependent)
+        public Links1D2DCoverage(IEventedList<ILink1D2D> links, UnstructuredGrid grid, IDiscretization discretization, bool timeDependent)
         {
             Links = links;
             Grid = grid;
@@ -152,34 +152,33 @@ namespace DelftTools.Hydro.Link1d2d
             return clone;
         }
 
-        //updaten vanaf hier! deze functies zijn fout!!
         public override IFunction GetTimeSeries(Coordinate coordinate)
         {
-            return GetTimeSeries(Grid.IndexOfNearestEdge(coordinate), UnstructuredGridFeatureType.Edge, LinkIndexVariableName, i => Grid.FlowLinks.IndexOf(Grid.GetFlowLinkByEdge(Grid.Edges[i])));
+            var featureIndexAtCoordinate = GetFeatureIndexAtCoordinate(coordinate);
+            return GetTimeSeries(Links[featureIndexAtCoordinate].DiscretisationPointIndex, Links[featureIndexAtCoordinate].FaceIndex, featureIndexAtCoordinate, Links[featureIndexAtCoordinate].TypeOfLink, LinkIndexVariableName, (dIndex, fIndex) => links.First(l => l.DiscretisationPointIndex == dIndex && l.FaceIndex == fIndex).Link1D2DIndex);
         }
 
         public override IFunction GetTimeSeries(IFeature feature)
         {
-            return GetTimeSeries(feature, LinkIndexVariableName, i => Grid.FlowLinks.IndexOf(Grid.GetFlowLinkByEdge(Grid.Edges[i])));
+            return GetTimeSeries(feature, LinkIndexVariableName, (dIndex, fIndex) => links.First(l => l.DiscretisationPointIndex == dIndex && l.FaceIndex == fIndex).Link1D2DIndex);
         }
-        protected IFunction GetTimeSeries(int variableIndex, UnstructuredGridFeatureType featureType, string indexVariableName, Func<int, int> getVariableIndexFromGridFeatureIndex = null)
+        protected IFunction GetTimeSeries(int discretisationPointIndex, int faceIndex, int variableIndex, LinkType featureType, string indexVariableName, Func<int, int, int> getVariableIndexFromGridFeatureIndex = null)
         {
-            return Grid != null
-                ? GetTimeSeries(new UnstructuredGridFeature
+            return Grid != null && Discretization != null && Links?.Count == 0
+                ? GetTimeSeries(new Link1D2D(discretisationPointIndex, faceIndex, indexVariableName)
                 {
-                    Index = variableIndex,
-                    Type = featureType,
-                    UnstructuredGrid = Grid
+                    Link1D2DIndex = variableIndex,
+                    TypeOfLink = featureType
                 }, indexVariableName, getVariableIndexFromGridFeatureIndex)
                 : null;
         }
 
-        protected IFunction GetTimeSeries(IFeature feature, string indexVariableName, Func<int, int> getVariableIndexFromGridFeatureIndex = null)
+        protected IFunction GetTimeSeries(IFeature feature, string indexVariableName, Func<int, int, int> getVariableIndexFromDiscretizationPointIndexAndFaceIndex = null)
         {
             if (!IsTimeDependent || Time.Values.Count == 0) return null;
 
-            var gridFeature = (UnstructuredGridFeature)feature;
-            if (gridFeature.Index < 0) return null;
+            var link1D2D = (ILink1D2D)feature;
+            if (link1D2D.Link1D2DIndex < 0 || link1D2D.DiscretisationPointIndex < 0 || link1D2D.FaceIndex < 0 ) return null;
 
             var comp = Components[0];
             if (comp == null) return null;
@@ -190,7 +189,7 @@ namespace DelftTools.Hydro.Link1d2d
             timeSeries.Components.Add(new Variable<double>(comp.Name, unit));
 
             var indexVariable = Arguments.FirstOrDefault(a => a.Name == indexVariableName) ?? Arguments[1];
-            var featureIdex = getVariableIndexFromGridFeatureIndex != null ? getVariableIndexFromGridFeatureIndex(gridFeature.Index) : gridFeature.Index;
+            var featureIdex = getVariableIndexFromDiscretizationPointIndexAndFaceIndex != null ? getVariableIndexFromDiscretizationPointIndexAndFaceIndex(link1D2D.DiscretisationPointIndex, link1D2D.FaceIndex) : link1D2D.Link1D2DIndex;
             var values = GetValues<double>(new VariableValueFilter<int>(indexVariable, featureIdex));
 
             timeSeries.Time.SetValues(Time.AllValues);
