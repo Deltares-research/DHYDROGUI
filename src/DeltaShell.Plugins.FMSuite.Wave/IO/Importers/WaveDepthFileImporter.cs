@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -18,13 +19,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             getModels = getModelsFunc;
         }
 
-        public string Name 
-        {
-            get { return "Delft3D Depth File"; }
-        }
+        public string Name => "Delft3D Depth File";
 
         public string Category { get; private set; }
 
+        [ExcludeFromCodeCoverage]
         public Bitmap Image { get; private set; }
 
         public IEnumerable<Type> SupportedItemTypes
@@ -37,16 +36,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             return true;
         }
 
-        public bool CanImportOnRootLevel
-        {
-            get { return false; }
-        }
+        public bool CanImportOnRootLevel => false;
 
-        public string FileFilter
-        {
-            get { return "Delft3D Depth File (*.dep)|*.dep|All Files (*.*)|*.*"; }
-        }
+        public string FileFilter => "Delft3D Depth File (*.dep)|*.dep|All Files (*.*)|*.*";
 
+        /// <summary>
+        /// Imports the Bathymetry data from the file with path <paramref name="path" />.
+        /// </summary>
+        /// <param name="path">The path to the Delft3D Depth File.</param>
+        /// <param name="target">The target CurvilinearCoverage to which the specified file should be loaded.</param>
+        /// <returns>The updated target. </returns>
+        /// <exception cref="T:System.NotSupportedException">target == null =&gt; Need a target bed level to import depth file</exception>
         public object ImportItem(string path, object target = null)
         {
             var bathymetry = target as CurvilinearCoverage;

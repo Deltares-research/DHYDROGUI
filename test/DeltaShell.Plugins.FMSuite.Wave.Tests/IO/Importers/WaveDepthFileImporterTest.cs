@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions.Generic;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 {
@@ -24,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         [Test]
         public void NamePropertyTest()
         {
-            var expected = "Delft3D Depth File";
+            const string expected = "Delft3D Depth File";
             importer = new WaveDepthFileImporter("Waves Model", null);
             Assert.AreEqual(expected, importer.Name);
         }
@@ -32,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         [Test]
         public void CategoryPropertyTest()
         {
-            var expected = "Waves Model";
+            const string expected = "Waves Model";
             importer = new WaveDepthFileImporter("Waves Model", null);
             Assert.AreEqual(expected, importer.Category);
         }
@@ -56,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         [Test]
         public void FileFilterTest()
         {
-            var expected = "Delft3D Depth File (*.dep)|*.dep|All Files (*.*)|*.*";
+            const string expected = "Delft3D Depth File (*.dep)|*.dep|All Files (*.*)|*.*";
             importer = new WaveDepthFileImporter("Waves Model", null);
             Assert.AreEqual(expected, importer.FileFilter);
         }
@@ -83,9 +84,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         public void ImportItemTest_BathymetryIsCorrectlyImported()
         {
             var saveDirPath = FileUtils.CreateTempDirectory();
-            var projectName = "MyProject";
+            const string projectName = "MyProject";
             var savePath = Path.Combine(saveDirPath, projectName + ".dsproj");
-            var size = 3;
+            const int size = 3;
             var oldBathymetry = CreateCurvilinearCoverageWithValues(size, size);
 
             try
@@ -133,7 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         [Test]
         public void TargetDataDirectory()
         {
-            string targetDataDirectory = "dir";
+            const string targetDataDirectory = "dir";
             importer = new WaveDepthFileImporter("Waves Model", null) { TargetDataDirectory = targetDataDirectory };
             Assert.AreEqual(targetDataDirectory, importer.TargetDataDirectory);
         }
@@ -151,10 +152,72 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         public void ProgressChangedTest()
         {
             importer = new WaveDepthFileImporter("Waves Model", null);
-            bool succes = false;
-            importer.ProgressChanged = (name, current, total) => { succes = true; };
+            var success = false;
+            importer.ProgressChanged = (name, current, total) => { success = true; };
             importer.ProgressChanged("Importing depth file...", 1, 2);
-            Assert.IsTrue(succes);
+            Assert.IsTrue(success);
+        }
+
+        /// <summary>
+        /// GIVEN a bathymetry file
+        ///   AND a wave model with this bathymetry file loaded
+        /// WHEN this bathymetry file is loaded again
+        /// THEN the values of the bathymetry should be unchanged.
+        /// </summary>
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void
+            GivenABathymetryFileAndAWaveModelWithThisBathymetryFileLoaded_WhenThisBathymetryFileIsLoadedAgain_ThenTheValuesOfTheBathymetryShouldBeUnchanged()
+        {
+            // Given
+            var model = new WaveModel();
+            Func<IEnumerable<WaveModel>> getModelsFunc = () => new List<WaveModel>() {model};
+            var importerWithFunc = new WaveDepthFileImporter("Waves Model", getModelsFunc);
+            var fileDataPath = Path.Combine(TestHelper.GetDataDir(), "SimpleBathemetry");
+
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                // Save created model
+                var modelDirPath = Path.Combine(tempDir, "waves-model");
+                FileUtils.CreateDirectoryIfNotExists(modelDirPath);
+
+                const string fileName = "muffins.mdw";
+                var filePath = Path.Combine(modelDirPath, fileName);
+                model.ModelSaveTo(filePath, true);
+
+                // Copy relevant data
+                FileUtils.CopyDirectory(fileDataPath, modelDirPath);
+                FileUtils.CopyDirectory(fileDataPath, tempDir);
+
+                // Load relevant data onto the model
+                model.OuterDomain.BedLevelGridFileName = "Outer.grd";
+                WaveModel.LoadGrid(modelDirPath, model.OuterDomain);
+
+                model.OuterDomain.BedLevelFileName = "Outer.dep";
+                WaveModel.LoadBathymetry(model, modelDirPath, model.OuterDomain);
+
+                model.ModelSaveTo(filePath, true);
+
+                // Make a copy of the relevant data to compare later
+                var bathymetryDataBefore = 
+                    (IMultiDimensionalArray<double>)
+                    model.OuterDomain.Bathymetry.Components[0].Values.Clone();
+
+                // When
+                importerWithFunc.ImportItem(Path.Combine(tempDir, "Outer.dep"), 
+                                    model.OuterDomain.Bathymetry);
+                
+                // Then
+                var bathymetryDataAfter =
+                    model.OuterDomain.Bathymetry.Components[0].Values;
+
+                Assert.That(bathymetryDataAfter.Count, 
+                    Is.EqualTo(bathymetryDataBefore.Count));
+
+                for (var i = 0; i < bathymetryDataAfter.Count; i++)
+                    Assert.That(bathymetryDataAfter[i],
+                        Is.EqualTo(bathymetryDataBefore[i]));
+            });
         }
 
         private static DeltaShellApplication GetRunningApplication(string savePath)
@@ -170,12 +233,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 
         private static CurvilinearCoverage CreateCurvilinearCoverageWithValues(int length, int width)
         {
-            int size = length * width;
+            var size = length * width;
             var bathymetry = new CurvilinearCoverage();
             var x = new double[size];
             var y = new double[size];
             var values = new double[size];
-            for (int i = 0; i < size; i++)
+            for (var i = 0; i < size; i++)
             {
                 x[i] = i;
                 y[i] = i;
@@ -188,11 +251,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 
         private static CurvilinearGrid CreateCurvilinearGrid(int length, int width)
         {
-            int size = length * width;
+            var size = length * width;
 
             var x = new double[size];
             var y = new double[size];
-            for (int i = 0; i < size; i++)
+            for (var i = 0; i < size; i++)
             {
                 x[i] = i;
                 y[i] = i;

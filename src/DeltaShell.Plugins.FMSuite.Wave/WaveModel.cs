@@ -746,6 +746,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
+        /// <summary>
+        /// Load the grid specified in <paramref name="domain"/> from the <paramref name="workingDirectory"/>.
+        /// </summary>
+        /// <param name="workingDirectory">The working directory.</param>
+        /// <param name="domain">The domain.</param>
+        /// <remarks>
+        /// If no file exists, a default grid will be created.
+        /// </remarks>
         public static void LoadGrid(string workingDirectory, WaveDomainData domain)
         {
             var grdFilePath = Path.Combine(workingDirectory, domain.GridFileName);
@@ -753,17 +761,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             var grid = File.Exists(grdFilePath)
                            ? Delft3DGridFileReader.Read(grdFilePath)
                            : CurvilinearGrid.CreateDefault();
-            grid.Name = "Grid (" + Path.GetFileNameWithoutExtension(grdFilePath) + ")";
+            grid.Name = $"Grid ({Path.GetFileNameWithoutExtension(grdFilePath)})";
             grid.CoordinateSystem = grid.Attributes[CurvilinearGrid.CoordinateSystemKey] == "Spherical" ? new OgrCoordinateSystemFactory().CreateFromEPSG(4326) : null;
             domain.Grid = grid;
         }
 
+        /// <summary>
+        /// Load the bathymetry of the specified <paramref name="domain"/> and
+        /// update the <paramref name="model"/>.
+        /// </summary>
+        /// <param name="model">The model which will be updated.</param>
+        /// <param name="directory">The working directory in which the Bathymetry of the <paramref name="domain"/> resides.</param>
+        /// <param name="domain">The domain.</param>
+        /// <remarks>
+        /// If no file of domain.BedLevelFileName exists in the <paramref name="directory"/> then
+        /// an error is logged, and the an empty bathymetry will be loaded on the <paramref name="domain"/>.
+        /// </remarks>
         public static void LoadBathymetry(WaveModel model, string directory, WaveDomainData domain)
         {
             var grid = domain.Grid;
             var bathymetry = new CurvilinearCoverage(grid.Size1, grid.Size2, grid.X.Values, grid.Y.Values)
                 {
-                    Name = "Bathymetry (" + Path.GetFileNameWithoutExtension(domain.BedLevelFileName) + ")"
+                    Name = $"Bathymetry ({Path.GetFileNameWithoutExtension(domain.BedLevelFileName)})"
                 };
             bathymetry.Components[0].NoDataValue = -999.0;
             bathymetry.Components[0].DefaultValue = bathymetry.Components[0].NoDataValue;
