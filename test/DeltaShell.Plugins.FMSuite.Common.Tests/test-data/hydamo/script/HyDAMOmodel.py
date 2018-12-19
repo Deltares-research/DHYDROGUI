@@ -2,9 +2,10 @@
 class HyDAMOmodel:
     """HyDAMO model"""
 
-    network = {}        # collection nodes
+    network = {}        # branches
 
     profiles = {}       # connection profiles
 
-    grid = {}           # 2d grid
+
+
 

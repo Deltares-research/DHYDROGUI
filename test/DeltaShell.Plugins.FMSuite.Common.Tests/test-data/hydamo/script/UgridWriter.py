@@ -10,37 +10,23 @@ class UgridWriter:
     idstrlength = 40
     longstrlength = 80
 
-    def __init__(self, model):
-        self.model = model
+    def __init__(self):
+        return
 
-    def write(self, dirPath, outputDir, gridFileAvailable = False, generate2DGrid = True):  # write ugrid file from GWSW model
-        ncfile = self.create_netcdf(dirPath, outputDir, "sewer_system")
-
-        print("start generating 1d data")
-        networkdata = self.generate_networkdata()
-
-        if gridFileAvailable:
-            print("using import 2d data")
-            data_2dmesh = self.model.grid
-        elif generate2DGrid:
-            print("start generating 2d data")
-            data_2dmesh = self.generate_2dmesh_data()
-        else:
-            print("start generating 2d DUMMY data")
-            data_2dmesh = self.generate_dummy2dmesh_2columnsrightside()
-
+    def write(self, dirPath, outputDir, networkdata, griddata):  # write ugrid file from GWSW model
+        ncfile = self.create_netcdf(dirPath, outputDir, "hydamo")
 
         print("init ugrid 1d")
         self.init_1dnetwork(ncfile,networkdata)
 
         print("init ugrid 2d")
-        self.init_2dmesh(ncfile,data_2dmesh)
+        self.init_2dmesh(ncfile, griddata)
 
         print("set ugrid 1d data")
         self.set_1dnetwork(ncfile,networkdata)
 
         print("set ugrid 2d data")
-        self.set_2dmesh(ncfile,data_2dmesh)
+        self.set_2dmesh(ncfile, griddata)
 
         print("finished ugrid section")
 
@@ -59,7 +45,7 @@ class UgridWriter:
         ncfile.history = "Created on {} D-Flow 1D, D-Flow FM".format(datetime.now())
         ncfile.institution = "Deltares"
         ncfile.reference = "http://www.deltares.nl"
-        ncfile.source = "Python script to prepare D-Flow FM 1D network"
+        ncfile.source = "Python script to prepare HyDAMO import"
 
         return ncfile
 
@@ -71,9 +57,10 @@ class UgridWriter:
         ncfile.createDimension("nnetwork_branches", len(data["branch_ids"]))
         ncfile.createDimension("nnetwork_nodes", len(data["node_ids"]))
         ncfile.createDimension("nnetwork_geometry", len(data["geom_x"]))
+        ncfile.createDimension("nnetwork_edges", len(data["edge_node"]))
         ncfile.createDimension("idstrlength", self.idstrlength)
         ncfile.createDimension("longstrlength", self.longstrlength)
-        ncfile.createDimension("nmesh1d_edges", len(data["edge_node"]))
+        ncfile.createDimension("nmesh1d_edges", len(data["edge_point"]))
         ncfile.createDimension("nmesh1d_nodes", len(data["point_branch_id"]))
         ncfile.createDimension("Two", 2)
 
@@ -153,7 +140,7 @@ class UgridWriter:
         ntw_branch_order.long_name = "The order of the branches for interpolation"
         ntw_branch_order[:] = data["branch_order"]
 
-        ntw_edge_node = ncfile.createVariable("network_edge_nodes", "i4", ("nmesh1d_edges", "Two"))
+        ntw_edge_node = ncfile.createVariable("network_edge_nodes", "i4", ("nnetwork_edges", "Two"))
         ntw_edge_node.cf_role = 'edge_node_connectivity'
         ntw_edge_node.long_name = 'start and end nodes of each branch in the network'
         ntw_edge_node.start_index = 1
@@ -316,209 +303,6 @@ class UgridWriter:
         #link1d2d.start_index = 1
         #link1d2d[:,:] = None
 
-    # generate sewer system
-    def generate_networkdata(self):
-        networkdata = {}
-        networkdata["node_ids"] = []
-        networkdata["node_x"] = []
-        networkdata["node_y"] = []
-        networkdata["geom_x"] = []
-        networkdata["geom_y"] = []
-        networkdata["branch_ids"] = []
-        networkdata["branch_names"] = []
-        networkdata["edge_node"] = []
-        networkdata["point_ids"] = []
-        networkdata["point_longnames"] = []
-        networkdata["point_branch_id"] = []
-        networkdata["point_branch_offset"] = []
-        networkdata["edge_point"] = []
-        networkdata["node_longnames"] = []
-        networkdata["branch_longnames"] = []
-        networkdata["branch_length"] = []
-        networkdata["branch_order"] = []
-        networkdata["branch_ngeometrypoints"] = []
-
-        # Temporary dictionary to store the id number of the nodes and branches
-        node_order = OrderedDict()
-        con_order = OrderedDict()
-
-        i = 0
-        for key, value in self.model.nodes.items():
-            networkdata["node_ids"].append(self.str2chars(value[0],self.idstrlength))
-            networkdata["node_longnames"].append(self.str2chars(str(value[0]) + " longname",self.longstrlength))
-            networkdata["node_x"].append(value[3])
-            networkdata["node_y"].append(value[4])
-            node_order[key] = i + 1
-            i += 1
-
-        i = 1
-        for key,value in self.model.connections.items():
-            con_order[key] = i
-            networkdata["branch_ids"].append(i)
-            networkdata["branch_names"].append(self.str2chars(key,self.idstrlength))
-            networkdata["branch_longnames"].append(self.str2chars(str(key) + " longname",self.longstrlength))
-            networkdata["branch_order"].append(-1)
-            networkdata["branch_ngeometrypoints"].append(2)
-
-            #2 claculation points - start & end branch
-            networkdata["point_ids"].extend([self.str2chars('calc ' + key + ' begin',self.idstrlength),self.str2chars('calc ' + key + ' end',self.idstrlength)])
-            networkdata["point_longnames"].extend([self.str2chars('calc ' + key + ' begin longname',self.longstrlength),self.str2chars('calc ' + key + ' end longname',self.longstrlength)])
-            networkdata["point_branch_id"].extend([i]*2)
-            networkdata["point_branch_offset"].append(0.0)
-            i_edge = 2 * i
-            networkdata["edge_point"].append([i_edge-1,i_edge])
-
-            node1Id = value[1]
-            node1 = self.model.nodes[node1Id]
-            node1Index = node_order[node1Id]
-            node2Id = value[2]
-            node2 = self.model.nodes[node2Id]
-            node2Index = node_order[node2Id]
-
-            try:
-                length = float(value[8])
-                networkdata["point_branch_offset"].append(length)
-                networkdata["branch_length"].append(length)
-            except:
-                # print("Empty or not a number in a cell")
-                l = 1.0
-                width = float(node2[3])-float(node1[3])
-                height = float(node2[4])-float(node1[4])
-                if width > 0.0 or height > 0.0:
-                    l = round(math.sqrt(math.pow(width,2) + math.pow(height,2)))
-                networkdata["point_branch_offset"].append(l)
-                networkdata["branch_length"].append(l)
-
-            #edge-nodes (
-            networkdata["edge_node"].append([node1Index, node2Index])
-            #node1
-            networkdata["geom_x"].append(node1[3])
-            networkdata["geom_y"].append(node1[4])
-            #node2
-            networkdata["geom_x"].append(node2[3])
-            networkdata["geom_y"].append(node2[4])
-            i += 1
-
-        return networkdata
-
-    # generate a street grid based on the manholes
-    def generate_2dmesh_data(self):
-        rasterSize = 10.0
-        margin = 5.0
-        minX = sys.float_info.max
-        minY = sys.float_info.max
-        maxX = sys.float_info.min
-        maxY = sys.float_info.min
-
-        for keyvalue in self.model.nodes.items():
-            value = keyvalue[1]
-            x = float(value[3])
-            y = float(value[4])
-            if x < minX: minX = x
-            if y < minY: minY = y
-            if x > maxX: maxX = x
-            if y > maxY: maxY = y
-
-        minX = int(round(minX - margin))
-        minY = int(round(minY - margin))
-        maxX = int(round(maxX + rasterSize + margin))
-        maxY = int(round(maxY + rasterSize + margin))
-        xElements = range(minX, maxX, int(rasterSize))
-        yElements = range(minY, maxY, int(rasterSize))
-        n_xElements = len(xElements)
-        n_yElements = len(yElements)
-
-        return self.get_2dmesh_grid(xElements, yElements, n_xElements, n_yElements, rasterSize)
-
-    # generate dummy 2d data just right from the 1d area
-    def generate_dummy2dmesh_2columnsrightside(self):
-        rasterSize = 10.0
-        margin = 5.0
-        minX = sys.float_info.max
-        minY = sys.float_info.max
-        maxX = sys.float_info.min
-        maxY = sys.float_info.min
-
-        for keyvalue in self.model.nodes.items():
-            value = keyvalue[1]
-            x = float(value[3])
-            y = float(value[4])
-            if x < minX: minX = x
-            if y < minY: minY = y
-            if x > maxX: maxX = x
-            if y > maxY: maxY = y
-
-        minX = int(round(maxX + rasterSize + margin))
-        minY = int(round(minY - margin))
-        maxX = int(round(maxX + 3* rasterSize + margin))
-        maxY = int(round(maxY + rasterSize + margin))
-        xElements = range(minX, maxX, int(rasterSize))
-        yElements = range(minY, maxY, int(rasterSize))
-        n_xElements = len(xElements)
-        n_yElements = len(yElements)
-
-        return self.get_2dmesh_grid(xElements, yElements, n_xElements, n_yElements, rasterSize)
-
-    # fills the 2d grid object
-    def get_2dmesh_grid(self, xElements, yElements, n_xElements, n_yElements, rasterSize):
-        grid = {}
-
-        grid["node_x"] = []
-        grid["node_y"] = []
-        grid["edge_node"] = []
-        grid["edge_x"] = []
-        grid["edge_y"] = []
-        grid["face_node"] = []
-        grid["face_x"] = []
-        grid["face_y"] = []
-        grid["edge_faces"] = []
-
-        for y in yElements:
-            grid["node_x"].extend(xElements)
-            grid["node_y"].extend([y]*n_xElements)
-
-        iy = 1
-        while iy < n_yElements:
-            y0 = yElements[iy-1]
-            y1 = yElements[iy]
-            ix = 1
-            while ix < n_xElements:
-                x0 = xElements[ix-1]
-                x1 = xElements[ix]
-                inode0 = (((iy-1) * n_xElements) + ix)
-                inode1 = inode0 + 1
-                inode2 = inode1 + n_xElements
-                inode3 = inode0 + n_xElements
-
-                if ix == 1:
-                    grid["edge_node"].extend([inode0,inode3])
-                    grid["edge_x"].append(x0)
-                    grid["edge_y"].append(y0 + (0.5 * rasterSize))
-
-                grid["edge_node"].extend([inode0,inode1,inode1, inode2])
-                grid["edge_x"].extend([x0 + (0.5 * rasterSize),x1])
-                grid["edge_y"].extend([y0, y0 + (0.5 * rasterSize)])
-                grid["face_node"].append([inode0, inode1, inode2, inode3])
-                grid["face_x"].append(x0 + (0.5 * rasterSize))
-                grid["face_y"].append(y0 + (0.5 * rasterSize))
-                ix += 1
-            iy += 1
-
-        # finish edges on top of the raster
-        ix = 1
-        while ix < n_xElements:
-            x0 = xElements[ix-1]
-            x1 = xElements[ix]
-            inode0 = ((iy-1)* n_xElements) + ix
-            inode1 = inode0 + 1
-            grid["edge_node"].extend([inode0, inode1])
-            grid["edge_x"].append(x0 + (0.5 * rasterSize))
-            grid["edge_y"].append(y1)
-            ix += 1
-
-        # fill edge - face
-
-        return grid
 
     # generate a street grid based on the manholes and street grid
     def generate_1d2dlinks(self):

@@ -1,5 +1,50 @@
-FlushFlushSucceeded = True
-FlushFlushSucceeded = True
-FlushFlushSucceeded = True
-FlushFlushFlushFlushFlushFlushFlushFlushFlushFlushSucceeded = True
+FlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushFlushinit ugrid 1d
+FlushFlushinit ugrid 1d
+FlushFlushinit ugrid 1d
+FlushFlushinit ugrid 1d
+init ugrid 2d
+set ugrid 1d data
+FlushFlushinit ugrid 1d
+init ugrid 2d
+set ugrid 1d data
+FlushFlushinit ugrid 1d
+init ugrid 2d
+set ugrid 1d data
+FlushFlushinit ugrid 1d
+init ugrid 2d
+set ugrid 1d data
+FlushFlushFlushFlushFlushFlushinit ugrid 1d
+init ugrid 2d
+set ugrid 1d data
+FlushFlushinit ugrid 1d
+init ugrid 2d
+set ugrid 1d data
+FlushFlushinit ugrid 1d
+init ugrid 2d
+set ugrid 1d data
+FlushFlushinit ugrid 1d
+init ugrid 2d
+set ugrid 1d data
+FlushFlushinit ugrid 1d
+init ugrid 2d
+set ugrid 1d data
+set ugrid 2d data
+FlushFlushinit ugrid 1d
+init ugrid 2d
+set ugrid 1d data
+set ugrid 2d data
+finished ugrid section
+********************************************
+                 THE END                    
+********************************************
+Succeeded = True
+FlushFlushFlushFlushFlushFlushinit ugrid 1d
+init ugrid 2d
+set ugrid 1d data
+set ugrid 2d data
+finished ugrid section
+********************************************
+                 THE END                    
+********************************************
+Succeeded = True
 FlushFlush

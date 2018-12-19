@@ -8,8 +8,8 @@ MDUFormatVersion                  = 1.06                # File format version (d
 AutoStart                         = 0                   # Autostart simulation after loading MDU (0: no, 1: autostart, 2: autostartstop)
 
 [geometry]
-NetFile                           = sewer_system_net.nc # Unstructured grid file *_net.nc
-OneDNetworkFile                   = sewer_system.md1d   # 1d networkfile
+NetFile                           = hydamo_net.nc # Unstructured grid file *_net.nc
+OneDNetworkFile                   = hydamo.md1d   # 1d networkfile
 BedlevelFile                      =                     # street_level.xyz , Bedlevels points file e.g. *.xyz, only needed for bedlevtype not equal 3
 DryPointsFile                     =                     # Dry points file *.xyz (third column dummy z values), or dry areas polygon file *.pol (third column 1/-1: inside/outside)
 WaterLevIniFile                   =                     # Initial water levels sample file *.xyz
@@ -29,7 +29,7 @@ ShipdefFile                       =                     # File *.shd containing 
 StructureFile                     =                     # File *.ini containing structures
 CrossLocFile                      = cross_section_locations.ini  # Name and location of the file containing the locations of the cross sections
 CrossDefFile                      = cross_section_definitions.ini  # Name and location of the file containing the definitions of the cross sections
-RoughnessFile                     = roughness_sewer_system.ini # Name and location of the file containing the roughness data
+RoughnessFile                     = roughness_hydamo.ini # Name and location of the file containing the roughness data
 WaterLevIni                       = -10.                # Initial water level at missing s0 values
 BedlevUni                         = -5.                 # Uniform bed level used at missing z values if BedlevType > 2
 BedlevType                        = 1                   # Bathymetry specification
