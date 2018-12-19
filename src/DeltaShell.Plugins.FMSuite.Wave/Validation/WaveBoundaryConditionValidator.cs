@@ -42,35 +42,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                         boundaryCondition);
             }
 
-            foreach (var waveBoundaryParameters in boundaryCondition.SpectrumParameters.Values)
+            if (boundaryCondition.DataType == BoundaryConditionDataType.ParametrizedSpectrumConstant)
             {
-                if (boundaryCondition.DataType != BoundaryConditionDataType.ParametrizedSpectrumConstant) continue;
-
-                if (waveBoundaryParameters.Height <= 0)
+                foreach (var waveBoundaryParameters in boundaryCondition.SpectrumParameters.Values)
                 {
-                    yield return new ValidationIssue(boundaryCondition.VariableDescription,
-                        ValidationSeverity.Error,
-                        Resources
-                            .WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Height__must_be_greater_than_0_,
-                        boundaryCondition);
-                }
+                    if (waveBoundaryParameters.Height <= 0)
+                    {
+                        yield return new ValidationIssue(boundaryCondition.VariableDescription,
+                            ValidationSeverity.Error,
+                            Resources
+                                .WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Height__must_be_greater_than_0_,
+                            boundaryCondition);
+                    }
 
-                if (waveBoundaryParameters.Period <= 0)
-                {
-                    yield return new ValidationIssue(boundaryCondition.VariableDescription,
-                        ValidationSeverity.Error,
-                        Resources
-                            .WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Period__must_be_greater_than_0_,
-                        boundaryCondition);
-                }
+                    if (waveBoundaryParameters.Period <= 0)
+                    {
+                        yield return new ValidationIssue(boundaryCondition.VariableDescription,
+                            ValidationSeverity.Error,
+                            Resources
+                                .WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Period__must_be_greater_than_0_,
+                            boundaryCondition);
+                    }
 
-                if (waveBoundaryParameters.Spreading <= 0)
-                {
-                    yield return new ValidationIssue(boundaryCondition.VariableDescription,
-                        ValidationSeverity.Error,
-                        Resources
-                            .WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Spreading__must_be_greater_than_0_,
-                        boundaryCondition);
+                    if (waveBoundaryParameters.Spreading <= 0)
+                    {
+                        yield return new ValidationIssue(boundaryCondition.VariableDescription,
+                            ValidationSeverity.Error,
+                            Resources
+                                .WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Spreading__must_be_greater_than_0_,
+                            boundaryCondition);
+                    }
                 }
             }
 
@@ -78,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             {
                 foreach (var pointData in boundaryCondition.PointData)
                 {
-                    var heightComponent = pointData.Components.FirstOrDefault(c => c.Name == "Hs");
+                    var heightComponent = pointData.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName);
                     if (heightComponent?.Values is IMultiDimensionalArray<double> heightComponentValues && heightComponentValues.Any(v => v <= 0.0))
                     {
                         yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error, 
@@ -86,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                             boundaryCondition);
                     }
 
-                    var periodComponent = pointData.Components.FirstOrDefault(c => c.Name == "Tp");
+                    var periodComponent = pointData.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.PeriodVariableName);
                     if (periodComponent?.Values is IMultiDimensionalArray<double> periodComponentValues && periodComponentValues.Any(v => v <= 0.0))
                     {
                         yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
@@ -94,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                             boundaryCondition);
                     }
 
-                    var spreadingComponent = pointData.Components.FirstOrDefault(c => c.Name == "Spreading");
+                    var spreadingComponent = pointData.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName);
                     if (spreadingComponent?.Values is IMultiDimensionalArray<double> spreadingComponentValues && spreadingComponentValues.Any(v => v <= 0.0))
                     {
                         yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,

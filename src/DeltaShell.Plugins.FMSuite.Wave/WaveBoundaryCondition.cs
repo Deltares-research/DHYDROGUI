@@ -185,15 +185,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
+
+        public const string HeightVariableName = "Hs";
+        public const string PeriodVariableName = "Tp";
+        public const string DirectionVariableName = "Dir";
+        public const string SpreadingVariableName = "Spreading";
+
         public static IFunction CreateEmptyWaveEnergyFunction()
         {
             // todo: add as variable name definition
             var function = new Function(WaveQuantityName);
             function.Arguments.Add(new Variable<DateTime>("Time"));
-            function.Components.Add(new Variable<double>("Hs", new Unit("meter", "m")));
-            function.Components.Add(new Variable<double>("Tp", new Unit("second", "s")));
-            function.Components.Add(new Variable<double>("Dir", new Unit("degree", "deg")));
-            function.Components.Add(new Variable<double>("Spreading", new Unit("", "-")));
+            function.Components.Add(new Variable<double>(HeightVariableName, new Unit("meter", "m")));
+            function.Components.Add(new Variable<double>(PeriodVariableName, new Unit("second", "s")));
+            function.Components.Add(new Variable<double>(DirectionVariableName, new Unit("degree", "deg")));
+            function.Components.Add(new Variable<double>(SpreadingVariableName, new Unit("", "-")));
 
             function.Attributes[BcwFile.TimeFunctionAttributeName] = "non-equidistant";
             function.Attributes[BcwFile.RefDateAttributeName] = new DateTime().ToString(BcwFile.DateFormatString);
