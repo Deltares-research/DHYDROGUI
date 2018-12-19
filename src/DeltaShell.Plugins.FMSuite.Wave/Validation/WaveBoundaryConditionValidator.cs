@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions.Generic;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
@@ -45,22 +44,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             foreach (var waveBoundaryParameters in boundaryCondition.SpectrumParameters.Values)
             {
+                if (boundaryCondition.DataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries) continue;
+
                 if (waveBoundaryParameters.Height <= 0)
                 {
-                    yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
-                        Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Height__must_be_greater_than_0_, 
+                    yield return new ValidationIssue(boundaryCondition.VariableDescription,
+                        ValidationSeverity.Error,
+                        Resources
+                            .WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Height__must_be_greater_than_0_,
                         boundaryCondition);
                 }
+
                 if (waveBoundaryParameters.Period <= 0)
                 {
-                    yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
-                        Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Period__must_be_greater_than_0_, 
+                    yield return new ValidationIssue(boundaryCondition.VariableDescription,
+                        ValidationSeverity.Error,
+                        Resources
+                            .WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Period__must_be_greater_than_0_,
                         boundaryCondition);
                 }
+
                 if (waveBoundaryParameters.Spreading <= 0)
                 {
-                    yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
-                        Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Spreading__must_be_greater_than_0_,
+                    yield return new ValidationIssue(boundaryCondition.VariableDescription,
+                        ValidationSeverity.Error,
+                        Resources
+                            .WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Spreading__must_be_greater_than_0_,
                         boundaryCondition);
                 }
             }

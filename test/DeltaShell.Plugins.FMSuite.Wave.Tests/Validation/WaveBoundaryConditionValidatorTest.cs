@@ -172,15 +172,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
-        private static void CheckForValidationIssueWithMessage(ValidationReport validationReport, ValidationSeverity severity, string expectedMessage)
+        [Test]
+        public void GivenWaveModelWithWaveBoundaryConditionThatHasADataPointWithSpectrumParametersEqualToOrSmallerThanZeroAndHasDataTypeParametrizedSpectrumTimeSeries_WhenValidatingBoundaryConditions_ThenNoErrorMessageIsReturned()
         {
-            var validationIssues = validationReport.GetAllIssuesRecursive();
-            Assert.That(validationIssues.Count, Is.EqualTo(1));
+            // Given
+            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+            {
+                Feature = feature,
+                SpectrumParameters =
+                {
+                    [0] = new WaveBoundaryParameters()
+                }
+            };
+            boundaryCondition.AddPoint(0);
+            boundaryCondition.SpectrumParameters.Values.ForEach(spectrumParameters =>
+            {
+                spectrumParameters.Height = -1.0;
+                spectrumParameters.Period = -1.0;
+                spectrumParameters.Spreading = -1.0;
+            });
 
-            var validationIssue = validationIssues.FirstOrDefault();
-            Assert.IsNotNull(validationIssue);
-            Assert.That(validationIssue.Severity, Is.EqualTo(severity));
-            Assert.That(validationIssue.Message, Is.EqualTo(expectedMessage));
+            var waveModel = new WaveModel();
+            waveModel.BoundaryConditions.Add(boundaryCondition);
+
+            // When
+            var validationReport = WaveBoundaryConditionValidator.Validate(waveModel);
+
+            // Then
+            Assert.IsEmpty(validationReport.GetAllIssuesRecursive());
         }
 
         [TestCase(0.0)]
@@ -267,5 +286,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             Assert.That(errors.FirstOrDefault().Message.Contains("Time points are not synchronized on boundary"));
         }
 
+        private static void CheckForValidationIssueWithMessage(ValidationReport validationReport, ValidationSeverity severity, string expectedMessage)
+        {
+            var validationIssues = validationReport.GetAllIssuesRecursive();
+            Assert.That(validationIssues.Count, Is.EqualTo(1));
+
+            var validationIssue = validationIssues.FirstOrDefault();
+            Assert.IsNotNull(validationIssue);
+            Assert.That(validationIssue.Severity, Is.EqualTo(severity));
+            Assert.That(validationIssue.Message, Is.EqualTo(expectedMessage));
+        }
     }
 }
