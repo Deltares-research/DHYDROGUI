@@ -76,10 +76,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             if (boundaryCondition.DataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries && boundaryCondition.PointData.Count != 0)
             {
-                for(var n = 0; n < boundaryCondition.PointData.Count; n++)
+                for(var i = 0; i < boundaryCondition.PointData.Count; i++)
                 {
-                    var function = boundaryCondition.PointData[n];
-                    var pointIndex = boundaryCondition.DataPointIndices[n] + 1;
+                    var function = boundaryCondition.PointData[i];
+                    var pointIndex = boundaryCondition.DataPointIndices[i] + 1;
 
                     var heightComponent = function.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName);
                     if (heightComponent?.Values is IMultiDimensionalArray<double> heightComponentValues && heightComponentValues.Any(v => v <= 0.0))

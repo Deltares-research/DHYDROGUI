@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             // Then
             var expectedMessage = Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_has_no_data_defined;
-            CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
+            ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             // Then
             var expectedMessage = Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_internal_geometry_points;
-            CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Info, expectedMessage);
+            ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Info, expectedMessage);
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             // Then
             var expectedMessage = Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_unactivated_support_points;
-            CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Warning, expectedMessage);
+            ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Warning, expectedMessage);
         }
 
         [TestCase(0.0)]
@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             // Then
             var expectedMessage = string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Height__must_be_greater_than_0_, 1);
-            CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
+            ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
         [TestCase(0.0)]
@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             // Then
             var expectedMessage = string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Period__must_be_greater_than_0_, 1);
-            CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
+            ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
         [TestCase(0.0)]
@@ -169,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             // Then
             var expectedMessage = string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Spreading__must_be_greater_than_0_, 1);
-            CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
+            ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
         [TestCase(BoundaryConditionDataType.ParametrizedSpectrumTimeseries)]
@@ -229,7 +229,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             // Then
             var expectedMessage = string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_, 1);
-            CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
+            ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
         [TestCase(0.0)]
@@ -258,7 +258,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             // Then
             var expectedMessage = string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_, 1);
-            CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
+            ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
         [TestCase(0.0)]
@@ -287,7 +287,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             // Then
             var expectedMessage = string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_, 1);
-            CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
+            ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
         [Test]
@@ -357,7 +357,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             Assert.That(errors.FirstOrDefault().Message.Contains("Time points are not synchronized on boundary"));
         }
 
-        private static void CheckForValidationIssueWithMessage(ValidationReport validationReport, ValidationSeverity severity, string expectedMessage)
+        private static void ContainsOnlyOneIssueWithMessage(ValidationReport validationReport, ValidationSeverity severity, string expectedMessage)
         {
             var validationIssues = validationReport.GetAllIssuesRecursive();
             Assert.That(validationIssues.Count, Is.EqualTo(1));
