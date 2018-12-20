@@ -101,32 +101,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Parameter &quot;Height&quot; must be greater than 0..
+        ///   Looks up a localized string similar to Point {0}: Parameter &quot;Height&quot; must be greater than 0..
         /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Height__must_be_greater_than_0_ {
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Height__must_be_greater_than_0_ {
             get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Height__must_" +
-                        "be_greater_than_0_", resourceCulture);
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__He" +
+                        "ight__must_be_greater_than_0_", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Parameter &quot;Period&quot; must be greater than 0..
+        ///   Looks up a localized string similar to Point {0}: Parameter &quot;Period&quot; must be greater than 0..
         /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Period__must_be_greater_than_0_ {
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Period__must_be_greater_than_0_ {
             get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Period__must_" +
-                        "be_greater_than_0_", resourceCulture);
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Pe" +
+                        "riod__must_be_greater_than_0_", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Parameter &quot;Spreading&quot; must be greater than 0..
+        ///   Looks up a localized string similar to Point {0}: Parameter &quot;Spreading&quot; must be greater than 0..
         /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Spreading__must_be_greater_than_0_ {
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Spreading__must_be_greater_than_0_ {
             get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Spreading__mu" +
-                        "st_be_greater_than_0_", resourceCulture);
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Sp" +
+                        "reading__must_be_greater_than_0_", resourceCulture);
             }
         }
         

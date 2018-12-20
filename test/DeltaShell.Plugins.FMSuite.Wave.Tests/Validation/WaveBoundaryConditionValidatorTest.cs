@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationReport = WaveBoundaryConditionValidator.Validate(waveModel);
 
             // Then
-            var expectedMessage = Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Height__must_be_greater_than_0_;
+            var expectedMessage = string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Height__must_be_greater_than_0_, 1);
             CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationReport = WaveBoundaryConditionValidator.Validate(waveModel);
 
             // Then
-            var expectedMessage = Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Period__must_be_greater_than_0_;
+            var expectedMessage = string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Period__must_be_greater_than_0_, 1);
             CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationReport = WaveBoundaryConditionValidator.Validate(waveModel);
 
             // Then
-            var expectedMessage = Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Parameter__Spreading__must_be_greater_than_0_;
+            var expectedMessage = string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Spreading__must_be_greater_than_0_, 1);
             CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
