@@ -181,22 +181,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
                 var modelDirPath = Path.Combine(tempDir, "waves-model");
                 FileUtils.CreateDirectoryIfNotExists(modelDirPath);
 
-                const string fileName = "muffins.mdw";
-                var filePath = Path.Combine(modelDirPath, fileName);
-                model.ModelSaveTo(filePath, true);
+                const string mdwFileName = "muffins.mdw";
+                var mdwFilePath = Path.Combine(modelDirPath, mdwFileName);
+                model.ModelSaveTo(mdwFilePath, true);
 
                 // Copy relevant data
                 FileUtils.CopyDirectory(fileDataPath, modelDirPath);
                 FileUtils.CopyDirectory(fileDataPath, tempDir);
 
                 // Load relevant data onto the model
-                model.OuterDomain.BedLevelGridFileName = "Outer.grd";
+                const string grdFileName = "Outer.grd";
+                model.OuterDomain.BedLevelGridFileName = grdFileName;
                 WaveModel.LoadGrid(modelDirPath, model.OuterDomain);
 
-                model.OuterDomain.BedLevelFileName = "Outer.dep";
+                const string depFileName = "Outer.dep";
+                model.OuterDomain.BedLevelFileName = depFileName;
                 WaveModel.LoadBathymetry(model, modelDirPath, model.OuterDomain);
 
-                model.ModelSaveTo(filePath, true);
+                model.ModelSaveTo(mdwFilePath, true);
 
                 // Make a copy of the relevant data to compare later
                 var bathymetryDataBefore = 
@@ -204,8 +206,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
                     model.OuterDomain.Bathymetry.Components[0].Values.Clone();
 
                 // When
-                importerWithFunc.ImportItem(Path.Combine(tempDir, "Outer.dep"), 
-                                    model.OuterDomain.Bathymetry);
+                var depImportPath = Path.Combine(tempDir, depFileName);
+                importerWithFunc.ImportItem(depImportPath, 
+                                            model.OuterDomain.Bathymetry);
                 
                 // Then
                 var bathymetryDataAfter =

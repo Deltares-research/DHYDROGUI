@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
         public string FileFilter => "Delft3D Depth File (*.dep)|*.dep|All Files (*.*)|*.*";
 
         /// <summary>
-        /// Imports the Bathymetry data from the file with path <paramref name="path" />.
+        /// Imports the Bathymetry data from the file at the path <paramref name="path" />.
         /// </summary>
         /// <param name="path">The path to the Delft3D Depth File.</param>
         /// <param name="target">The target CurvilinearCoverage to which the specified file should be loaded.</param>
