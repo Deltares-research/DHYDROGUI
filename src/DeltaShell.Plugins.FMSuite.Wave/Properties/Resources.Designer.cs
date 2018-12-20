@@ -131,42 +131,42 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Point {0}:Values in column &quot;Hs&quot; in the time series table must be greater than 0..
+        /// </summary>
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_ {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_colu" +
+                        "mn__Hs__in_the_time_series_table_must_be_greater_than_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Point {0}:Values in column &quot;Spreading&quot; in the time series table must be greater than 0..
+        /// </summary>
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_ {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_colu" +
+                        "mn__Spreading__in_the_time_series_table_must_be_greater_than_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Point {0}:Values in column &quot;Tp&quot; in the time series table must be greater than 0..
+        /// </summary>
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_ {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_colu" +
+                        "mn__Tp__in_the_time_series_table_must_be_greater_than_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Time points are not synchronized on boundary: {0}.
         /// </summary>
         public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Time_points_are_not_synchronized_on_boundary___0_ {
             get {
                 return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Time_points_are_not_sync" +
                         "hronized_on_boundary___0_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Values in column &quot;Hs&quot; in the time series table must be greater than 0..
-        /// </summary>
-        public static string WaveBoundaryConditionValidator_Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_ {
-            get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_Values_in_column__Hs__in_the_time_series_table_mus" +
-                        "t_be_greater_than_0_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Values in column &quot;Spreading&quot; in the time series table must be greater than 0..
-        /// </summary>
-        public static string WaveBoundaryConditionValidator_Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_ {
-            get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_Values_in_column__Spreading__in_the_time_series_ta" +
-                        "ble_must_be_greater_than_0_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Values in column &quot;Tp&quot; in the time series table must be greater than 0..
-        /// </summary>
-        public static string WaveBoundaryConditionValidator_Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_ {
-            get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_Values_in_column__Tp__in_the_time_series_table_mus" +
-                        "t_be_greater_than_0_", resourceCulture);
             }
         }
         

@@ -76,29 +76,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             if (boundaryCondition.DataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries && boundaryCondition.PointData.Count != 0)
             {
-                foreach (var pointData in boundaryCondition.PointData)
+                for(var n = 0; n < boundaryCondition.PointData.Count; n++)
                 {
-                    var heightComponent = pointData.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName);
+                    var function = boundaryCondition.PointData[n];
+                    var pointIndex = boundaryCondition.DataPointIndices[n] + 1;
+
+                    var heightComponent = function.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName);
                     if (heightComponent?.Values is IMultiDimensionalArray<double> heightComponentValues && heightComponentValues.Any(v => v <= 0.0))
                     {
                         yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error, 
-                            Resources.WaveBoundaryConditionValidator_Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_,
+                            string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_, pointIndex),
                             boundaryCondition);
                     }
 
-                    var periodComponent = pointData.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.PeriodVariableName);
+                    var periodComponent = function.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.PeriodVariableName);
                     if (periodComponent?.Values is IMultiDimensionalArray<double> periodComponentValues && periodComponentValues.Any(v => v <= 0.0))
                     {
                         yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
-                            Resources.WaveBoundaryConditionValidator_Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_,
+                            string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_, pointIndex),
                             boundaryCondition);
                     }
 
-                    var spreadingComponent = pointData.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName);
+                    var spreadingComponent = function.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName);
                     if (spreadingComponent?.Values is IMultiDimensionalArray<double> spreadingComponentValues && spreadingComponentValues.Any(v => v <= 0.0))
                     {
                         yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
-                            Resources.WaveBoundaryConditionValidator_Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_,
+                            string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_, pointIndex),
                             boundaryCondition);
                     }
                 }

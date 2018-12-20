@@ -228,7 +228,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationReport = WaveBoundaryConditionValidator.Validate(model);
 
             // Then
-            CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, Resources.WaveBoundaryConditionValidator_Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_);
+            var expectedMessage = string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_, 1);
+            CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
         [TestCase(0.0)]
@@ -256,7 +257,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationReport = WaveBoundaryConditionValidator.Validate(model);
 
             // Then
-            CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, Resources.WaveBoundaryConditionValidator_Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_);
+            var expectedMessage = string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_, 1);
+            CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
         [TestCase(0.0)]
@@ -284,7 +286,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationReport = WaveBoundaryConditionValidator.Validate(model);
 
             // Then
-            CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, Resources.WaveBoundaryConditionValidator_Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_);
+            var expectedMessage = string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_, 1);
+            CheckForValidationIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
         [Test]
