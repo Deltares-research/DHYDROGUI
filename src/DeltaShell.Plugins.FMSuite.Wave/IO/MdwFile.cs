@@ -13,6 +13,7 @@ using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using GeoAPI.Geometries;
 using log4net;
@@ -641,6 +642,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                         new WaveModelProperty(definition, propertyValue));
                 }
             }
+
+            foreach (var propertyDefinition in modelDefinition.ModelSchema.PropertyDefinitions)
+            {
+                if (propertyDefinition.Value.MultipleDefaultValuesAvailable)
+                {
+                    var nameOfDependentOnProperty = propertyDefinition.Value.DefaultValueDependentOn;
+                    var nameOfPropertyWithMultipleDefaultValues = propertyDefinition.Value.FilePropertyName;
+                    var categoryNameWithPropertyWithMultipleDefaultValues = propertyDefinition.Value.FileCategoryName;
+
+                    //Both available
+                    var categoryOfDependentOnProperty = mdwCategories.Where(mc => mc.Properties.Any(p => p.Name.Equals(nameOfDependentOnProperty))).ToList();
+                    var categoryOfPropertyWithMultipleDefaultValues = mdwCategories.Where(mc => mc.Properties.Any(p => p.Name.Equals(nameOfPropertyWithMultipleDefaultValues))).ToList();
+                    
+                    //Situation in which property with multiple default values is missing and corresponding default value will be set.
+                    if (!categoryOfPropertyWithMultipleDefaultValues.Any() && categoryOfDependentOnProperty.Any())
+                    {
+                        Log.Warn(string.Format("In the MDW file the property {0} is missing. Based on property {1} the default value is set", nameOfPropertyWithMultipleDefaultValues, nameOfDependentOnProperty));
+
+                        var categoryNameOfDependentOnProperty = categoryOfDependentOnProperty[0].Name;
+                        var dependentOnProperty = modelDefinition.GetModelProperty(categoryNameOfDependentOnProperty, nameOfDependentOnProperty);
+                        var propertyWithMultipleDefaultValues = modelDefinition.GetModelProperty(categoryNameWithPropertyWithMultipleDefaultValues, nameOfPropertyWithMultipleDefaultValues);
+                        var index = (int)dependentOnProperty.Value;
+                        propertyWithMultipleDefaultValues.SetValueAsString(propertyWithMultipleDefaultValues.PropertyDefinition.MultipleDefaultValues[index]);
+                    }
+                }
+            }
+
         }
 
         private IEnumerable<WaveDomainData> CreateWaveDomainData(IEnumerable<DelftIniCategory> categories)

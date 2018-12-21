@@ -41,9 +41,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
             foreach (var propertyDefinition in ModelSchema.PropertyDefinitions.Values)
             {
                 if (MdwFile.ExcludedCategories.Contains(propertyDefinition.Category)) continue;
+                
+                if (propertyDefinition.MultipleDefaultValuesAvailable)
+                {
+                    var defaultValueDependentOn = propertyDefinition.DefaultValueDependentOn;
+                    var prop = Properties.FirstOrDefault(p =>
+                        p.PropertyDefinition.FilePropertyName.Equals(defaultValueDependentOn));
+                    var propValue = (int)prop.Value;
+
+                   propertyDefinition.DefaultValueAsString = propertyDefinition.MultipleDefaultValues[propValue];
+                }
+
+                var waveProp = new WaveModelProperty(propertyDefinition, propertyDefinition.DefaultValueAsString);
 
                 SetModelProperty(propertyDefinition.FileCategoryName, propertyDefinition.FilePropertyName,
-                                 new WaveModelProperty(propertyDefinition, propertyDefinition.DefaultValueAsString));
+                    waveProp);
             }
 
             Dependencies.CompileEnabledDependencies(Properties);

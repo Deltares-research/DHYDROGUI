@@ -6,6 +6,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
+using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
@@ -137,6 +138,51 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 .WaveModel_WaveSetup_With_WaveSetup_set_to_True_parallel_runs_will_fail__normal_runs_with_lakes_will_produce_unreliable_values_;
             TestHelper.AssertAtLeastOneLogMessagesContains( () => waveModel.ModelDefinition.WaveSetup = true, expectedMssg);
             Assert.IsTrue(waveModel.ModelDefinition.WaveSetup);
+        }
+
+        [Test]
+        public void GivenAWaveModel_WhenSettingBedfrictionToCollins_ThenTheBedfrictionCoefficientShouldAlsoBeChanged()
+        {
+            var waveModel = new WaveModel();
+            
+            var prop = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
+                KnownWaveProperties.BedFriction);
+            var prop2 = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
+                KnownWaveProperties.BedFrictionCoef);
+
+            Assert.AreEqual("0.038", prop2.GetValueAsString());
+            prop.SetValueAsString("collins");
+            Assert.AreEqual("0.015", prop2.GetValueAsString());
+        }
+
+        [Test]
+        public void GivenAWaveModel_WhenSettingBedfrictionToMadsenetal_ThenTheBedfrictionCoefficientShouldAlsoBeChanged()
+        {
+            var waveModel = new WaveModel();
+
+            var prop = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
+                KnownWaveProperties.BedFriction);
+            var prop2 = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
+                KnownWaveProperties.BedFrictionCoef);
+
+            Assert.AreEqual("0.038", prop2.GetValueAsString());
+            prop.SetValueAsString("madsen et al.");
+            Assert.AreEqual("0.05", prop2.GetValueAsString());
+        }
+
+        [Test]
+        public void GivenAWaveModel_WhenSettingSimModeToNonStationary_ThenTheMaxIterationPropertyShouldAlsoBeChanged()
+        {
+            var waveModel = new WaveModel();
+
+            var prop = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory,
+                KnownWaveProperties.SimulationMode);
+            var prop2 = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.NumericsCategory,
+                KnownWaveProperties.MaxIter);
+
+            Assert.AreEqual("50", prop2.GetValueAsString());
+            prop.SetValueAsString("non-stationary");
+            Assert.AreEqual("15", prop2.GetValueAsString());
         }
 
         [Test]

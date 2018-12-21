@@ -65,6 +65,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// The default value of this property, represented in string format.
         /// </summary>
         public string DefaultValueAsString { get; set; }
+        
+        public bool MultipleDefaultValuesAvailable { get; set; }
+
+        public string DefaultValueDependentOn { get; set; }
+
+        public string[] MultipleDefaultValues { get; set; }
 
         /// <summary>
         /// The minimum value allowed for this property, represented in string format.
@@ -134,5 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         public int FromRevision { get; set; }
 
         public int UntilRevision { get; set; }
+
+        
     }
 }

@@ -58,7 +58,7 @@ Processes,Triads,Physical Processes,Triads,Triads,true|false,false,,,,,,,,,Inclu
 Processes,TriadsAlpha,Physical Processes,Triads,TrFac,Double,0.05,,,,,Triads,,,,Alpha coefficient for triads,
 Processes,TriadsBeta,Physical Processes,Triads,CutFr,Double,2.5,,,,,Triads,,,,Beta coefficient for triads,
 Processes,BedFriction,Physical Processes,Bed friction,Bed friction:none|jonswap|collins|madsen et al.,none|jonswap|collins|madsen et al.,jonswap,,,,,,,,,Bed friction type,
-Processes,BedFricCoef,Physical Processes,Bed friction,Bed friction coef.,Double,0.0,,,,,BedFriction=1|2|3,,,,Bed friction coefficient (default: 0.067 for jonswap; 0.015 for collings: 0.05 for madsen et al.),
+Processes,BedFricCoef,Physical Processes,Bed friction,Bed friction coef.,Double,BedFriction:0|0.038|0.015|0.05,,,,,BedFriction=1|2|3,,,,Bed friction coefficient (default: 0.067 for jonswap; 0.015 for collings: 0.05 for madsen et al.)
 Processes,Diffraction,Physical Processes,Diffraction,Diffraction,true|false,false,,,,,,,,,Diffraction,
 Processes,DiffracSteps,Physical Processes,Diffraction,Diffraction steps,Integer,0,,,,,Diffraction,,,,Number of diffraction smoothing steps,
 Processes,DiffracProp,Physical Processes,Diffraction,Diffraction prop.,true|false,true,,,,,Diffraction,,,,Include adaption of propagation velocities due to diffraction,
@@ -76,7 +76,7 @@ Numerics,RChHsTm01,Numerical Parameters,Numerical Parameters,RChHsTm01,Double,0.
 Numerics,RChMeanHs,Numerical Parameters,Numerical Parameters,RChMeanHs,Double,0.02,,,,,,,,,Relative change of wave height with respect to model-wide average wave height,
 Numerics,RChMeanTm01,Numerical Parameters,Numerical Parameters,RChMeanTm01,Double,0.02,,,,,,,,,Relative change of mean wave period with respect to model-wide average mean wave period,
 Numerics,PercWet,Numerical Parameters,Numerical Parameters,Convergence percentage,Double,98.0,0.0,100.0,,,,,,,Percentage of points included in simulation at which convergence criteria must be satisfied,
-Numerics,MaxIter,Numerical Parameters,Numerical Parameters,Max. nr. of iterations,Integer,15,,,,,,,,,Maximum number of iterations for convergence,
+Numerics,MaxIter,Numerical Parameters,Numerical Parameters,Max. nr. of iterations,Integer,SimMode:50|15 ,,,,,,,,,Maximum number of iterations for convergence,
 Output,MapWriteInterval,Output,Map,Map file interval,Double,60.0,,,,,,,,,Interval for writing data to map file(s) in minutes,
 Output,WriteTable,Output,Tables,Write tables,true|false,false,,,,,,,,,Write tables for output locations,
 Output,WriteSpec1D,Output,Tables,1D spectra,true|false,,,,,WriteTable,,,,,Write 1D spectra for output locations,

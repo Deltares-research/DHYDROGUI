@@ -16,6 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         public const string DomainCategory = "Domain";
         public const string ObstacleCategory = "Obstacle";
         public const string ObstacleFileInfoCategory = "ObstacleFileInformation";
+        public const string NumericsCategory = "Numerics";
 
         public const string GuiOnlyCategory = "GUIOnly";
     }
@@ -34,6 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         public const string Quadruplets = "Quadruplets";
         public const string Diffraction = "Diffraction";
         public const string BedFriction = "BedFriction";
+        public const string BedFrictionCoef = "BedFricCoef";
         public const string TimeSeriesFile = "TSeriesFile";
         public const string ObstacleFile = "ObstacleFile";
         public const string ReferenceDate = "ReferenceDate";
@@ -64,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         public const string FlowVelocityUsage = "FlowVelocity";
         public const string FlowVelocityUsageType = "FlowVelocityType";
         public const string FlowWindUsage = "FlowWind";
+        public const string MaxIter = "MaxIter";
 
-        
     }
 }

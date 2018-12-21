@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 // don't don anything, used for events
             }
         }
-
+        
         public bool WriteCOM
         {
             get
@@ -561,10 +561,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             var prop = (WaveModelProperty)sender;
             if (e.PropertyName == TypeUtils.GetMemberName(() => prop.Value))
             {
+                if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.BedFriction,
+                    StringComparison.InvariantCultureIgnoreCase))
+                {
+                    BeginEdit(new DefaultEditAction("Switching bed friction coefficient"));
+                    
+                    var bedFrictionProperty = ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
+                        KnownWaveProperties.BedFriction);
+                    var bedFrictionCoefficientProperty = ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
+                        KnownWaveProperties.BedFrictionCoef);
+
+                    bedFrictionCoefficientProperty.SetValueAsString(bedFrictionCoefficientProperty.PropertyDefinition.MultipleDefaultValues[(int)bedFrictionProperty.Value]);
+                   
+                    BedFriction = BedFriction;
+                    EndEdit();
+                }
                 if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.SimulationMode,
                                                                    StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching simulation mode"));
+                    var simulationModeProperty = modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory,
+                        KnownWaveProperties.SimulationMode);
+
+                    var maxNrIterationsProperty = modelDefinition.GetModelProperty(KnownWaveCategories.NumericsCategory,
+                        KnownWaveProperties.MaxIter);
+
+                    maxNrIterationsProperty.SetValueAsString(maxNrIterationsProperty.PropertyDefinition.MultipleDefaultValues[(int)simulationModeProperty.Value]);
+                    
                     SimulationMode = SimulationMode;
                     EndEdit();
                 }
@@ -618,13 +641,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 {
                     BeginEdit(new DefaultEditAction("Switching Diffraction"));
                     Diffraction = Diffraction;
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.BedFriction,
-                                                                         StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching BedFriction"));
-                    BedFriction = BedFriction;
                     EndEdit();
                 }
                 else if(prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.WaveSetup, 
