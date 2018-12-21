@@ -19,6 +19,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         private IWeir weir;
         private SelectableWeirFormulaType selectedWeirType;
         private double lowerEdgeLevel;
+        private double upstream1CrestLevel;
+        private double upstream2CrestLevel;
+        private double upstream1CrestWidth;
+        private double upstream2CrestWidth;
+        private double downstream1CrestLevel;
+        private double downstream2CrestLevel;
+        private double downstream1CrestWidth;
+        private double downstream2CrestWidth;
         private double horizontalDoorOpeningWidth;
         private double previousCrestLevel;
         private bool previousCrestLevelTimeSeriesValue;
@@ -238,176 +246,112 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         public double Upstream1CrestWidth
         {
-            get
-            {
-                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
-                if (generalStructureFormula != null)
-                {
-                    return generalStructureFormula.WidthLeftSideOfStructure;
-                }
-
-                return -1.0;
-            }
+            get { return upstream1CrestWidth; }
             set
             {
                 var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
                 if (generalStructureFormula != null)
                 {
                     generalStructureFormula.WidthLeftSideOfStructure = value;
+                    upstream1CrestWidth = value;
                 }
             }
         }
 
         public double Upstream1CrestLevel
         {
-            get
-            {
-                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
-                if (generalStructureFormula != null)
-                {
-                    return generalStructureFormula.BedLevelLeftSideOfStructure;
-                }
-
-                return -1.0;
-            }
+            get { return upstream1CrestLevel; }
             set
             {
                 var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
                 if (generalStructureFormula != null)
                 {
                     generalStructureFormula.BedLevelLeftSideOfStructure = value;
+                    upstream1CrestLevel = value;
                 }
             }
         }
 
         public double Upstream2CrestWidth
         {
-            get
-            {
-                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
-                if (generalStructureFormula != null)
-                {
-                    return generalStructureFormula.WidthStructureLeftSide;
-                }
-
-                return -1.0;
-            }
+            get { return upstream2CrestWidth; }
             set
             {
                 var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
                 if (generalStructureFormula != null)
                 {
                     generalStructureFormula.WidthStructureLeftSide = value;
+                    upstream2CrestWidth = value;
                 }
             }
         }
 
         public double Upstream2CrestLevel
         {
-            get
-            {
-                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
-                if (generalStructureFormula != null)
-                {
-                    return generalStructureFormula.BedLevelLeftSideStructure;
-                }
-
-                return -1.0;
-            }
+            get { return upstream2CrestLevel; }
             set
             {
                 var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
                 if (generalStructureFormula != null)
                 {
                     generalStructureFormula.BedLevelLeftSideStructure = value;
+                    upstream2CrestLevel = value;
                 }
             }
         }
 
         public double Downstream1CrestWidth
         {
-            get
-            {
-                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
-                if (generalStructureFormula != null)
-                {
-                    return generalStructureFormula.WidthStructureRightSide;
-                }
-
-                return -1.0;
-            }
+            get { return downstream1CrestWidth; }
             set
             {
                 var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
                 if (generalStructureFormula != null)
                 {
                     generalStructureFormula.WidthStructureRightSide = value;
+                    downstream1CrestWidth = value;
                 }
             }
         }
 
         public double Downstream1CrestLevel
         {
-            get
-            {
-                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
-                if (generalStructureFormula != null)
-                {
-                    return generalStructureFormula.BedLevelRightSideStructure;
-                }
-
-                return -1.0;
-            }
+            get { return downstream1CrestLevel; }
             set
             {
                 var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
                 if (generalStructureFormula != null)
                 {
                     generalStructureFormula.BedLevelRightSideStructure = value;
+                    downstream1CrestLevel = value;
                 }
             }
         }
 
         public double Downstream2CrestWidth
         {
-            get
-            {
-                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
-                if (generalStructureFormula != null)
-                {
-                    return generalStructureFormula.WidthRightSideOfStructure;
-                }
-
-                return -1.0;
-            }
+            get { return downstream2CrestWidth; }
             set
             {
                 var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
                 if (generalStructureFormula != null)
                 {
                     generalStructureFormula.WidthRightSideOfStructure = value;
+                    downstream2CrestWidth = value;
                 }
             }
         }
 
         public double Downstream2CrestLevel
         {
-            get
-            {
-                var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
-                if (generalStructureFormula != null)
-                {
-                    return generalStructureFormula.BedLevelRightSideOfStructure;
-                }
-
-                return -1.0;
-            }
+            get { return downstream2CrestLevel; }
             set
             {
                 var generalStructureFormula = Weir?.WeirFormula as GeneralStructureWeirFormula;
                 if (generalStructureFormula != null)
                 {
                     generalStructureFormula.BedLevelRightSideOfStructure = value;
+                    downstream2CrestLevel = value;
                 }
             }
         }
@@ -556,7 +500,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                         var generalStructureWeirFormula = new GeneralStructureWeirFormula
                         {
                             BedLevelStructureCentre = weir.CrestLevel,
-                            WidthStructureCentre = weir.CrestWidth
+                            WidthStructureCentre = weir.CrestWidth,
                         };
 
                         weir.WeirFormula = generalStructureWeirFormula;

@@ -141,7 +141,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             Assert.That(viewModel.Weir.WeirFormula is SimpleWeirFormula);
             Assert.IsFalse(viewModel.GateGroupboxEnabled);
             Assert.That(viewModel.SimpleWeirPropertiesVisibility, Is.EqualTo(System.Windows.Visibility.Visible));
-            Assert.AreEqual(4, count);
+            Assert.AreEqual(1, count);
         }
 
         [Test]
@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             }
 
-            Assert.AreEqual(8, count);
+            Assert.AreEqual(2, count);
         }
 
         [Test]
@@ -192,7 +192,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             }
 
-            Assert.AreEqual(4, count);
+            Assert.AreEqual(1, count);
         }
 
         [Test]
@@ -289,7 +289,40 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleWeir;
             Assert.AreEqual(8.0, viewModel.Weir.CrestLevel);
             Assert.AreEqual(7.0, viewModel.Weir.CrestWidth);
+        }
 
+        [Test]
+        public void
+            GivenWeirViewModel_WhenChangingValuesOfGeneralStructure_SwitchToAnotherStructureAndBackToAGeneralStructure_ThenValuesArePersisted()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir(true)
+            };
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
+            viewModel.Upstream1CrestLevel = 1.0;
+            viewModel.Upstream2CrestLevel = 2.0;
+            viewModel.Upstream1CrestWidth = 3.0;
+            viewModel.Upstream2CrestWidth = 4.0;
+
+            viewModel.Downstream1CrestLevel = 5.0;
+            viewModel.Downstream2CrestLevel = 6.0;
+            viewModel.Downstream1CrestWidth = 7.0;
+            viewModel.Downstream2CrestWidth = 8.0;
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleGate;
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
+
+            Assert.AreEqual(1.0, viewModel.Upstream1CrestLevel);
+            Assert.AreEqual(2.0, viewModel.Upstream2CrestLevel);
+            Assert.AreEqual(3.0, viewModel.Upstream1CrestWidth);
+            Assert.AreEqual(4.0, viewModel.Upstream2CrestWidth);
+            Assert.AreEqual(5.0, viewModel.Downstream1CrestLevel);
+            Assert.AreEqual(6.0, viewModel.Downstream2CrestLevel);
+            Assert.AreEqual(7.0, viewModel.Downstream1CrestWidth);
+            Assert.AreEqual(8.0, viewModel.Downstream2CrestWidth);
         }
 
         #endregion
