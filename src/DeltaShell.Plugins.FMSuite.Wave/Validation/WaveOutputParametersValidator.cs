@@ -7,6 +7,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 {
     public static class WaveOutputParametersValidator
     {
+        /// <summary>
+        /// Validates wave model settings that are shown in the output parameters window of wave models.
+        /// </summary>
+        /// <param name="waveModel"> The wave model that is being validated. </param>
+        /// <returns></returns>
         public static ValidationReport Validate(WaveModel waveModel)
         {
             var validationIssues = new List<ValidationIssue>();
