@@ -7,11 +7,11 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 {
     [TestFixture]
+    [Category(TestCategory.DataAccess)]
+    [Category(TestCategory.Slow)]
     public class WaveModelRunTest
     {
         [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
         public void RunBasicWaveModelTest()
         {
             var path = TestHelper.GetTestFilePath(@"obw\obw.mdw");
@@ -28,8 +28,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
         public void RunBasicWaveModelWithTimePointsTest()
         {
             var path = TestHelper.GetTestFilePath(@"obw\obw.mdw");

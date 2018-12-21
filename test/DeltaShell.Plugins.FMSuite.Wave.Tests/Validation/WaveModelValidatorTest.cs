@@ -6,12 +6,27 @@ using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 {
     [TestFixture]
     public class WaveModelValidatorTest
     {
+        [Test]
+        public void GivenWaveModel_WhenValidatingModel_ThenOutputParametersValidationReportIsGenerated()
+        {
+            // Given
+            var waveModel = new WaveModel();
+
+            // When
+            var validationReport = new WaveModelValidator().Validate(waveModel);
+
+            // Then
+            var outputParameterReportIncluded = validationReport.SubReports.Any(report => report.Category == "Output parameters");
+            Assert.IsTrue(outputParameterReportIncluded);
+        }
+
         [Test]
         public void CheckWaveDomainValidation()
         {

@@ -16,7 +16,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     WaveBoundaryConditionValidator.Validate(model),
                     WaveAreaValidator.Validate(model),
                     WaveCouplingValidator.Validate(model),
-                    WavePropertiesValidator.Validate(model)
+                    WavePropertiesValidator.Validate(model),
+                    WaveOutputParametersValidator.Validate(model)
                 });
         }
     }

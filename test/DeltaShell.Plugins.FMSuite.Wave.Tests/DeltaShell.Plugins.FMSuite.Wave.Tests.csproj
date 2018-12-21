@@ -219,6 +219,7 @@
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="Validation\WaveBoundaryConditionValidatorTest.cs" />
     <Compile Include="Validation\WaveModelValidatorTest.cs" />
+    <Compile Include="Validation\WaveOutputParametersValidatorTest.cs" />
     <Compile Include="Validation\WavePropertiesValidatorTest.cs" />
     <Compile Include="WaveBoundaryConditionTest.cs" />
     <Compile Include="WaveGridOperationApiTest.cs" />
