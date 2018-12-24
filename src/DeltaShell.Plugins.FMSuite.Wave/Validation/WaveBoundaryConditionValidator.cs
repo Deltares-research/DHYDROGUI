@@ -26,6 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
                     Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_has_no_data_defined, boundaryCondition);
             }
+
             if (boundaryCondition.IsHorizontallyUniform && boundaryCondition.Feature.Geometry.Coordinates.Length > 2)
             {
                 yield return
@@ -37,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             {
                 yield return
-                    new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Warning,
+                    new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Info,
                         Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_unactivated_support_points,
                         boundaryCondition);
             }

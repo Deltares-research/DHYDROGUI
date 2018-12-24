@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             // Then
             var expectedMessage = Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_unactivated_support_points;
-            ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Warning, expectedMessage);
+            ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Info, expectedMessage);
         }
 
         [TestCase(0.0)]
