@@ -172,14 +172,14 @@
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Time_points_are_not_synchronized_on_boundary___0_" xml:space="preserve">
     <value>Time points are not synchronized on boundary: {0}</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Height__must_be_greater_than_0_" xml:space="preserve">
-    <value>Point {0}: Parameter "Height" must be greater than 0.</value>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_greater_than_0_" xml:space="preserve">
+    <value>Parameter "Height" must be greater than 0.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Period__must_be_greater_than_0_" xml:space="preserve">
-    <value>Point {0}: Parameter "Period" must be greater than 0.</value>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_greater_than_0_" xml:space="preserve">
+    <value>Parameter "Period" must be greater than 0.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Spreading__must_be_greater_than_0_" xml:space="preserve">
-    <value>Point {0}: Parameter "Spreading" must be greater than 0.</value>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_greater_than_0_" xml:space="preserve">
+    <value>Parameter "Spreading" must be greater than 0.</value>
   </data>
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_" xml:space="preserve">
     <value>Point {0}:Values in column "Hs" in the time series table must be greater than 0.</value>

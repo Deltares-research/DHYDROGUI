@@ -48,12 +48,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 foreach (var spectrumParameters in boundaryCondition.SpectrumParameters)
                 {
                     var spectrumValues = spectrumParameters.Value;
-                    var pointIndex = spectrumParameters.Key + 1;
+
+                    var precedingText = string.Empty;
+                    if (boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)
+                    {
+                        var pointIndex = spectrumParameters.Key + 1;
+                        precedingText = $"Point {pointIndex}: ";
+                    }
+
                     if (spectrumValues.Height <= 0)
                     {
                         yield return new ValidationIssue(boundaryCondition.VariableDescription,
                             ValidationSeverity.Error,
-                            string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Height__must_be_greater_than_0_, pointIndex),
+                            precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_greater_than_0_,
                             boundaryCondition);
                     }
 
@@ -61,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     {
                         yield return new ValidationIssue(boundaryCondition.VariableDescription,
                             ValidationSeverity.Error,
-                            string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Period__must_be_greater_than_0_, pointIndex),
+                            precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_greater_than_0_,
                             boundaryCondition);
                     }
 
@@ -69,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     {
                         yield return new ValidationIssue(boundaryCondition.VariableDescription,
                             ValidationSeverity.Error,
-                            string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Spreading__must_be_greater_than_0_, pointIndex),
+                            precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_greater_than_0_,
                             boundaryCondition);
                     }
                 }

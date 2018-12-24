@@ -71,6 +71,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parameter &quot;Height&quot; must be greater than 0..
+        /// </summary>
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_greater_than_0_ {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must" +
+                        "_be_greater_than_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter &quot;Period&quot; must be greater than 0..
+        /// </summary>
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_greater_than_0_ {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must" +
+                        "_be_greater_than_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter &quot;Spreading&quot; must be greater than 0..
+        /// </summary>
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_greater_than_0_ {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__m" +
+                        "ust_be_greater_than_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Boundary condition contains internal geometry points. These points will be discarded upon saving, exporting or running.
         /// </summary>
         public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_internal_geometry_points {
@@ -97,36 +127,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
             get {
                 return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_has_no_data_def" +
                         "ined", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Point {0}: Parameter &quot;Height&quot; must be greater than 0..
-        /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Height__must_be_greater_than_0_ {
-            get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__He" +
-                        "ight__must_be_greater_than_0_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Point {0}: Parameter &quot;Period&quot; must be greater than 0..
-        /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Period__must_be_greater_than_0_ {
-            get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Pe" +
-                        "riod__must_be_greater_than_0_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Point {0}: Parameter &quot;Spreading&quot; must be greater than 0..
-        /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Spreading__must_be_greater_than_0_ {
-            get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Sp" +
-                        "reading__must_be_greater_than_0_", resourceCulture);
             }
         }
         

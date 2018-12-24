@@ -85,14 +85,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Info, expectedMessage);
         }
 
-        [TestCase(0.0)]
-        [TestCase(-1.0)]
-        public void GivenWaveModelWithWaveBoundaryConditionThatHasADataPointWithHeightEqualToOrSmallerThanZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double heightValue)
+        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        public void GivenWaveModelWithWaveBoundaryConditionThatHasADataPointWithHeightEqualToOrSmallerThanZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double heightValue, WaveBoundaryConditionSpatialDefinitionType type)
         {
             // Given
             var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumConstant)
             {
-                Feature = feature
+                Feature = feature,
+                SpatialDefinitionType = type
             };
             boundaryCondition.AddPoint(0);
             boundaryCondition.SpectrumParameters.Values.ForEach(spectrumParameters =>
@@ -110,18 +113,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationReport = WaveBoundaryConditionValidator.Validate(waveModel);
 
             // Then
-            var expectedMessage = string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Height__must_be_greater_than_0_, 1);
+            var precedingText = boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying ? "Point 1: " : string.Empty;
+            var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_greater_than_0_;
             ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
-        [TestCase(0.0)]
-        [TestCase(-1.0)]
-        public void GivenWaveModelWithWaveBoundaryConditionThatHasADataPointWithPeriodEqualToOrSmallerThanZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double periodValue)
+        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        public void GivenWaveModelWithWaveBoundaryConditionThatHasADataPointWithPeriodEqualToOrSmallerThanZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double periodValue, WaveBoundaryConditionSpatialDefinitionType type)
         {
             // Given
             var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumConstant)
             {
-                Feature = feature
+                Feature = feature,
+                SpatialDefinitionType = type
             };
             boundaryCondition.AddPoint(0);
             boundaryCondition.SpectrumParameters.Values.ForEach(spectrumParameters =>
@@ -139,18 +146,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationReport = WaveBoundaryConditionValidator.Validate(waveModel);
 
             // Then
-            var expectedMessage = string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Period__must_be_greater_than_0_, 1);
+            var precedingText = boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying ? "Point 1: " : string.Empty;
+            var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_greater_than_0_;
             ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
-        [TestCase(0.0)]
-        [TestCase(-1.0)]
-        public void GivenWaveModelWithWaveBoundaryConditionThatHasADataPointWithSpreadingEqualToOrSmallerThanZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double spreadingValue)
+        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        public void GivenWaveModelWithWaveBoundaryConditionThatHasADataPointWithSpreadingEqualToOrSmallerThanZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double spreadingValue, WaveBoundaryConditionSpatialDefinitionType type)
         {
             // Given
             var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumConstant)
             {
-                Feature = feature
+                Feature = feature,
+                SpatialDefinitionType = type
             };
             boundaryCondition.AddPoint(0);
             boundaryCondition.SpectrumParameters.Values.ForEach(spectrumParameters =>
@@ -168,7 +179,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationReport = WaveBoundaryConditionValidator.Validate(waveModel);
 
             // Then
-            var expectedMessage = string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0___Parameter__Spreading__must_be_greater_than_0_, 1);
+            var precedingText = boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying ? "Point 1: " : string.Empty;
+            var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_greater_than_0_;
             ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
