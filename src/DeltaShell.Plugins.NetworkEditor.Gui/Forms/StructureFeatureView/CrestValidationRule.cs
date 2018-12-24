@@ -30,10 +30,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 return new ValidationResult(false, "The entered value is either too large or too small, please enter a number between -1.79769313486232E+308 & 1.79769313486232E+308");
             }
-            catch (Exception)
-            {
-                return new ValidationResult(false, "An error occured, please enter a number greater than 0");
-            }
 
             return result > 0.0 ? ValidationResult.ValidResult : new ValidationResult(false, "The entered value must be greater than 0");
         }
