@@ -82,7 +82,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     var pointIndex = boundaryCondition.DataPointIndices[i] + 1;
 
                     var heightComponent = function.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName);
-                    if (heightComponent?.Values is IMultiDimensionalArray<double> heightComponentValues && heightComponentValues.Any(v => v <= 0.0))
+                    var heightComponentValues = heightComponent?.Values as IMultiDimensionalArray<double>;
+                    if (heightComponentValues != null && heightComponentValues.Any(v => v <= 0.0))
                     {
                         yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error, 
                             string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_, pointIndex),
@@ -90,7 +91,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     }
 
                     var periodComponent = function.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.PeriodVariableName);
-                    if (periodComponent?.Values is IMultiDimensionalArray<double> periodComponentValues && periodComponentValues.Any(v => v <= 0.0))
+                    var periodComponentValues = periodComponent?.Values as IMultiDimensionalArray<double>;
+                    if (periodComponentValues != null && periodComponentValues.Any(v => v <= 0.0))
                     {
                         yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
                             string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_, pointIndex),
@@ -98,7 +100,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     }
 
                     var spreadingComponent = function.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName);
-                    if (spreadingComponent?.Values is IMultiDimensionalArray<double> spreadingComponentValues && spreadingComponentValues.Any(v => v <= 0.0))
+                    var spreadingComponentValues = spreadingComponent?.Values as IMultiDimensionalArray<double>;
+                    if (spreadingComponentValues != null && spreadingComponentValues.Any(v => v <= 0.0))
                     {
                         yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
                             string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_, pointIndex),
