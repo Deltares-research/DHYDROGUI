@@ -87,14 +87,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 for(var i = 0; i < boundaryCondition.PointData.Count; i++)
                 {
                     var function = boundaryCondition.PointData[i];
-                    var pointIndex = boundaryCondition.DataPointIndices[i] + 1;
+
+                    var precedingText = string.Empty;
+                    if (boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)
+                    {
+                        var pointIndex = boundaryCondition.DataPointIndices[i] + 1;
+                        precedingText = $"Point {pointIndex}: ";
+                    }
 
                     var heightComponent = function.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName);
                     var heightComponentValues = heightComponent?.Values as IMultiDimensionalArray<double>;
                     if (heightComponentValues != null && heightComponentValues.Any(v => v <= 0.0))
                     {
                         yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error, 
-                            string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_, pointIndex),
+                            precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_,
                             boundaryCondition);
                     }
 
@@ -103,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     if (periodComponentValues != null && periodComponentValues.Any(v => v <= 0.0))
                     {
                         yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
-                            string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_, pointIndex),
+                            precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_,
                             boundaryCondition);
                     }
 
@@ -112,7 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     if (spreadingComponentValues != null && spreadingComponentValues.Any(v => v <= 0.0))
                     {
                         yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
-                            string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_, pointIndex),
+                            precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_,
                             boundaryCondition);
                     }
                 }

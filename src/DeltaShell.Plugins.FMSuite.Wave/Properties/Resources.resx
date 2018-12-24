@@ -181,14 +181,14 @@
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_greater_than_0_" xml:space="preserve">
     <value>Parameter "Spreading" must be greater than 0.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_" xml:space="preserve">
-    <value>Point {0}:Values in column "Hs" in the time series table must be greater than 0.</value>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_" xml:space="preserve">
+    <value>Values in column "Hs" in the time series table must be greater than 0.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_" xml:space="preserve">
-    <value>Point {0}:Values in column "Tp" in the time series table must be greater than 0.</value>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_" xml:space="preserve">
+    <value>Values in column "Tp" in the time series table must be greater than 0.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_" xml:space="preserve">
-    <value>Point {0}:Values in column "Spreading" in the time series table must be greater than 0.</value>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_" xml:space="preserve">
+    <value>Values in column "Spreading" in the time series table must be greater than 0.</value>
   </data>
   <data name="WaveOutputParametersValidator_Validate_Option__Write_Tables__is_selected_but_there_are_no_Observation_Points_in_your_model_" xml:space="preserve">
     <value>Option "Write Tables" is selected but there are no Observation Points in your model.</value>

@@ -215,14 +215,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             Assert.IsEmpty(validationReport.GetAllIssuesRecursive());
         }
 
-        [TestCase(0.0)]
-        [TestCase(-1.0)]
-        public void GivenWaveModelWithParametrizedSpectrumTimeSeriesBoundaryConditionThatHasHsValueSmallerThanOrEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double heightValue)
+        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        public void GivenWaveModelWithParametrizedSpectrumTimeSeriesBoundaryConditionThatHasHsValueSmallerThanOrEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double heightValue, WaveBoundaryConditionSpatialDefinitionType type)
         {
             // Given
             var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
             {
-                Feature = feature
+                Feature = feature,
+                SpatialDefinitionType = type
             };
             boundaryCondition.AddPoint(0);
 
@@ -240,18 +243,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationReport = WaveBoundaryConditionValidator.Validate(model);
 
             // Then
-            var expectedMessage = string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_, 1);
+            var precedingText = boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying ? "Point 1: " : string.Empty;
+            var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_;
             ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
-        [TestCase(0.0)]
-        [TestCase(-1.0)]
-        public void GivenWaveModelWithParametrizedSpectrumTimeSeriesBoundaryConditionThatHasTpValueSmallerThanOrEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double periodValue)
+        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        public void GivenWaveModelWithParametrizedSpectrumTimeSeriesBoundaryConditionThatHasTpValueSmallerThanOrEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double periodValue, WaveBoundaryConditionSpatialDefinitionType type)
         {
             // Given
             var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
             {
-                Feature = feature
+                Feature = feature,
+                SpatialDefinitionType = type
             };
             boundaryCondition.AddPoint(0);
 
@@ -269,18 +276,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationReport = WaveBoundaryConditionValidator.Validate(model);
 
             // Then
-            var expectedMessage = string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_, 1);
+            var precedingText = boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying ? "Point 1: " : string.Empty;
+            var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_;
             ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
-        [TestCase(0.0)]
-        [TestCase(-1.0)]
-        public void GivenWaveModelWithParametrizedSpectrumTimeSeriesBoundaryConditionThatHasSpreadingValueSmallerThanOrEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double spreadingValue)
+        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        public void GivenWaveModelWithParametrizedSpectrumTimeSeriesBoundaryConditionThatHasSpreadingValueSmallerThanOrEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double spreadingValue, WaveBoundaryConditionSpatialDefinitionType type)
         {
             // Given
             var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
             {
-                Feature = feature
+                Feature = feature,
+                SpatialDefinitionType = type
             };
             boundaryCondition.AddPoint(0);
 
@@ -298,7 +309,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationReport = WaveBoundaryConditionValidator.Validate(model);
 
             // Then
-            var expectedMessage = string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Point__0__Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_, 1);
+            var precedingText = boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying ? "Point 1: " : string.Empty;
+            var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_;
             ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
