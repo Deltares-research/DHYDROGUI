@@ -555,7 +555,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                                         ? feature2D.Geometry
                                         : null;
         }
-
+        /// <summary>
+        /// Method describing how to react on changes in the model definition properties.
+        /// For BedFrictionCoef and MaxIter, this method is needed for setting the correct default values
+        /// after selecting another BedFriction or Sim Mode option.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnModelDefinitionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var prop = (WaveModelProperty)sender;

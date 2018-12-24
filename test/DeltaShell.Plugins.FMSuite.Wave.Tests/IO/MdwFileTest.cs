@@ -15,6 +15,7 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -695,6 +696,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                     .GetValueAsString());
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAMdwFileWithMissingBedFrictionCoefAndMaxIter_WhenImportingThisModel_ThenTheCorrectDefaultValuesShouldBeSetBasedOnBedFrictionAndSimMode()
+        {
+            var mdwFile = new MdwFile();
+            var importedMdwFilePath = TestHelper.GetTestFilePath(@"ModelWithMissingMultipleDefaultValues\Waves.mdw");
+
+            List<string> expectedMessages= new List<string>();
+            expectedMessages.Add(
+                "In the MDW file the property BedFricCoef is missing. Based on property BedFriction the default value is set");
+            expectedMessages.Add(
+                "In the MDW file the property MaxIter is missing. Based on property SimMode the default value is set");
+
+            IEnumerable<string> messages = expectedMessages;
+
+            TestHelper.AssertLogMessagesAreGenerated(() =>
+                {
+                    var modelDefinition = mdwFile.Load(importedMdwFilePath);
+                    var propertyBedFrictionCoef = modelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
+                        KnownWaveProperties.BedFrictionCoef);
+                    Assert.IsNotNull(propertyBedFrictionCoef);
+                    Assert.AreEqual("0.05", propertyBedFrictionCoef.GetValueAsString());
+
+                    var propertyMaxIter = modelDefinition.GetModelProperty(KnownWaveCategories.NumericsCategory,
+                        KnownWaveProperties.MaxIter);
+                    Assert.IsNotNull(propertyMaxIter);
+                    Assert.AreEqual("15", propertyMaxIter.GetValueAsString());
+                }
+                ,messages);
+        }
         private DeltaShellApplication GetConfiguredApplication(string savePath)
         {
             var app = new DeltaShellApplication();

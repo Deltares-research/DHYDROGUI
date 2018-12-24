@@ -13,7 +13,6 @@ using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
-using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using GeoAPI.Geometries;
 using log4net;
@@ -611,7 +610,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             return modelDefinition;
         }
-
+        /// <summary>
+        /// Converting mdw categories to model definition properties.
+        /// Second part is for linked properties, since the default value of a property can be dependent on another property value
+        /// and this part will be used in situations if the property with multiple default values is missing in the mdw file.
+        /// Based on the other property the correct one will be set. Otherwise the default value is based on the default value of the other property.
+        /// </summary>
+        /// <param name="modelDefinition"></param>
+        /// <param name="mdwCategories"></param>
         private void ConvertMdwCategoriesToModeldefinitionProperties(WaveModelDefinition modelDefinition, IEnumerable<DelftIniCategory> mdwCategories)
         {
             foreach (var category in mdwCategories)
@@ -658,7 +664,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     //Situation in which property with multiple default values is missing and corresponding default value will be set.
                     if (!categoryOfPropertyWithMultipleDefaultValues.Any() && categoryOfDependentOnProperty.Any())
                     {
-                        Log.Warn(string.Format("In the MDW file the property {0} is missing. Based on property {1} the default value is set", nameOfPropertyWithMultipleDefaultValues, nameOfDependentOnProperty));
+                        Log.WarnFormat("In the MDW file the property {0} is missing. Based on property {1} the default value is set", nameOfPropertyWithMultipleDefaultValues, nameOfDependentOnProperty);
 
                         var categoryNameOfDependentOnProperty = categoryOfDependentOnProperty[0].Name;
                         var dependentOnProperty = modelDefinition.GetModelProperty(categoryNameOfDependentOnProperty, nameOfDependentOnProperty);

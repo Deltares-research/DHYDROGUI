@@ -7,12 +7,14 @@ using DeltaShell.Plugins.FMSuite.Common.Dependency;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
+using log4net;
 using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 {
     public class WaveModelDefinition
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WaveModelDefinition));
         public IEventedList<WaveModelProperty>  Properties { get; set; }
         public ModelSchema<WaveModelPropertyDefinition> ModelSchema { get; private set; }
         
@@ -32,7 +34,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 
         public WaveInputFieldData TimePointData { get; set; }
 
-        // create default/empty model
+        // 
+
+        /// <summary>
+        /// Create default/empty model definition and set the correct default values depending on other properties. 
+        /// </summary>
         public WaveModelDefinition()
         {
             LoadSchema();
@@ -47,9 +53,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
                     var defaultValueDependentOn = propertyDefinition.DefaultValueDependentOn;
                     var prop = Properties.FirstOrDefault(p =>
                         p.PropertyDefinition.FilePropertyName.Equals(defaultValueDependentOn));
-                    var propValue = (int)prop.Value;
-
-                   propertyDefinition.DefaultValueAsString = propertyDefinition.MultipleDefaultValues[propValue];
+                    if (prop != null)
+                    {
+                        var propValue = (int) prop.Value;
+                        propertyDefinition.DefaultValueAsString = propertyDefinition.MultipleDefaultValues[propValue];
+                    }
+                    else
+                    {
+                        propertyDefinition.DefaultValueAsString = "0";
+                        Log.WarnFormat("In file dwave-properties.csv multiple default values are defined dependent on the non-existing property {0}", defaultValueDependentOn);
+                    }
                 }
 
                 var waveProp = new WaveModelProperty(propertyDefinition, propertyDefinition.DefaultValueAsString);
