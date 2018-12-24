@@ -289,17 +289,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public bool ModelInspection { get; set; }
         */
 
-        [PropertyGrid]
-        [DisplayName("Use RPC")]
-        [Description("For development only--remove at release")]
-        [Category("Run mode")]
-        public bool UseRPC
-        {
-            get { return !UseLocalApi; }
-            set { UseLocalApi = !value; }
-        }
-
-       protected override void OnAfterDataItemsSet()
+        protected override void OnAfterDataItemsSet()
         {
             base.OnAfterDataItemsSet();
 
@@ -1312,9 +1302,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         private IList<ExplicitValueConverterLookupItem> explicitValueConverterLookupItems;
-
-        public bool UseLocalApi { get; set; }
-        
+                
         // Do not remove...used in HydroModelBuilder.py
         public void SetWaveForcing()
         {

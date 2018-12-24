@@ -150,7 +150,6 @@ namespace DeltaShell.Plugins.DeveloperTools.Commands.IntegratedDemoModels
         {
             fmModel.ModelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.Caption == "Initial water level").Value = -2.0;
             fmModel.OutputTimeStep = new TimeSpan(0, 0, 0, 20);
-            fmModel.UseLocalApi = false;
         }
 
         private static void GenerateGrid(WaterFlowModel1D flowModel, WaterFlowFMModel fmModel)

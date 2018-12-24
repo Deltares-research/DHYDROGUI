@@ -49,7 +49,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 var flowFmModel = new WaterFlowFMModel(mduPath);
                 app.Project.RootFolder.Add(flowFmModel);
                 flowFmModel.ReloadGrid();
-                flowFmModel.UseRPC = false;
 
                 var rtcModel = new RealTimeControlModel("Real-Time Control");
                 Assert.That(rtcModel, Is.Not.Null);
