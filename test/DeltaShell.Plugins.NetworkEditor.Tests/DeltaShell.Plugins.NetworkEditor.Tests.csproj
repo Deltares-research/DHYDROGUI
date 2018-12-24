@@ -239,6 +239,7 @@
     <Compile Include="Forms\GridProperties\WasteWaterTreatmentPlantPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\WeirPropertiesTest.cs" />
     <Compile Include="Export\HydroRegionToShapeFileExporterTest.cs" />
+    <Compile Include="Forms\StructureFeatureView\CrestValidationRuleTest.cs" />
     <Compile Include="Forms\StructureFeatureView\FMWeirViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\GateViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirViewModelTest.cs" />
