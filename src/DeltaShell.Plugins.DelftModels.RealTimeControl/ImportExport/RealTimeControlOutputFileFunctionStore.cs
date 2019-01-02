@@ -15,6 +15,7 @@ using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Coverages;
 
+
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
     public class RealTimeControlOutputFileFunctionStore : ReadOnlyNetCdfFunctionStoreBase, IFileBased
@@ -25,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public ICoordinateSystem CoordinateSystem
         {
-            get { return coordinateSystem; }
+            get => coordinateSystem;
             set
             {
                 coordinateSystem = value;
@@ -33,9 +34,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             }
         }
 
-        public IList<IFeature> Features
+        /// <summary>
+        /// Gets or sets the features of this RealtimeControlOutputFileFunctionStore.
+        /// </summary>
+        /// <value>
+        /// A readonly list of features which are stored in this FunctionStore.
+        /// </value>
+        public IReadOnlyList<IFeature> Features
         {
-            get { return features ?? new List<IFeature>(); }
+            get => features ?? new List<IFeature>();
             set
             {
                 features = value;
@@ -46,8 +53,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             }
         }
 
+        /// <summary>
+        /// Clear all features of this RealTimeControlOutputFileFunctionStore.
+        /// </summary>
+        /// <remarks>
+        /// post-condition: !(new this).Features.Any()
+        /// </remarks>
+        public void ClearFeatures()
+        {
+            if (Features != null)
+                Features = new List<IFeature>();
+        }
+
         private Dictionary<string, IMultiDimensionalArray<IFeature>> cachedFeatureArrays = new Dictionary<string, IMultiDimensionalArray<IFeature>>();
-        private IList<IFeature> features;
+        private IReadOnlyList<IFeature> features;
         private ICoordinateSystem coordinateSystem;
 
         public RealTimeControlOutputFileFunctionStore()

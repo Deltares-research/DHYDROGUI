@@ -57,9 +57,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         protected virtual IList<ExplicitValueConverterLookupItem> explicitValueConverterLookupItems { get; set; }
 
+        /// <summary>
+        /// Gets or sets the output file function store.
+        /// </summary>
+        /// <value>
+        /// The output file function store.
+        /// </value>
         public virtual RealTimeControlOutputFileFunctionStore OutputFileFunctionStore
         {
-            get { return outputFileFunctionStore; }
+            get => outputFileFunctionStore;
             set
             {
                 outputFileFunctionStore = value;
@@ -495,7 +501,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             if (outputFileFunctionStore == null) return;
 
             outputFileFunctionStore.Functions?.Clear();
-            outputFileFunctionStore.Features?.Clear();
+            outputFileFunctionStore.ClearFeatures();
             outputFileFunctionStore.Close();
             outputFileFunctionStore = null;
         }
@@ -848,7 +854,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             var childDataItemLocationsFromControlledModels = ControlledModels.SelectMany(m => m.GetChildDataItemLocations(role)).Distinct();
             // The childDataItemLocationsFromControlledModels list may contain features that are wrapped in data-items that
-            // provide/consuming value types other that typeif(double), e.g. Flow1D's network-coverages for waterlevel's,
+            // provide/consuming value types other than typeif(double), e.g. Flow1D's network-coverages for waterlevel's,
             // discharges, etc (Flow1D exposes these network-coverages data items for e.g. the OpenMI wrapper).
             // RTC only can handle values on one single location, so return only the single value locations
             // (i.e. data item value type is double, see GetChildDataItemsFromControlledModelsForLocation(...) below).
