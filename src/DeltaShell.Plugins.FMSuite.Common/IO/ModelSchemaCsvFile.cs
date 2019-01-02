@@ -10,6 +10,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         public const string DefaultGUIGroupCaption = "Miscellaneous";
         const int NumberOfColumnsBeforeDescription = 15;
 
+        /// <summary>
+        /// Method for reading the csv's and creating the corresponding model schema with the property definitions.
+        /// </summary>
+        /// <typeparam name="TDef"></typeparam>
+        /// <param name="propertiesDefinitionFile"></param>
+        /// <param name="fileGroupName"></param>
+        /// <returns></returns>
         public ModelSchema<TDef> ReadModelSchema<TDef>(string propertiesDefinitionFile, string fileGroupName) 
             where TDef:ModelPropertyDefinition,new()
         {

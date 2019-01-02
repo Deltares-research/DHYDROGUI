@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NUnit.Framework;
@@ -10,6 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
     public class WaveModelSchemaCsvFileTest
     {
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenADwavePropertiesCsvWithPropertiesUsingMultipleDefaultValues_WhenReadingThisFile_ThenThePropertyDefinitionShouldBeSetCorrectly()
         {
             var modelPropertySchema =
@@ -30,6 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenADwavePropertiesCsvWithPropertiesUsingOneDefaultValue_WhenReadingThisFile_ThenThePropertyDefinitionShouldBeSetCorrectly()
         {
             var model = new WaveModel();
