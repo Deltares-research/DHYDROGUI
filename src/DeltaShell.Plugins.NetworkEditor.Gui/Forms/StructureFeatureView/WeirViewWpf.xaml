@@ -140,9 +140,9 @@
                                             </Grid.ColumnDefinitions>
                                             <TextBox Grid.Column="0">
                                                 <TextBox.Text>
-                                                    <Binding Path ="BedLevelStructureCentre" Mode="TwoWay">
+                                                    <Binding Path="BedLevelStructureCentre" Mode="TwoWay">
                                                         <Binding.ValidationRules>
-                                                            <structureFeatureView:CrestValidationRule/>
+                                                            <structureFeatureView:CrestValidationRule ValidationStep="UpdatedValue"/>
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </TextBox.Text>

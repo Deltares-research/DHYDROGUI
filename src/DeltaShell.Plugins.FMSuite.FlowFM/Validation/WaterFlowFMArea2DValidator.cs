@@ -78,7 +78,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             foreach (var weir in area.Weirs)
             {
-                var weirName = String.Format("structure {0}: '{1}'", weir.WeirFormula.Name, weir.Name);
+                var weirName = $"'{weir.Name}'";
+                var weirType = $"{weir.WeirFormula.Name}";
                 if (!model.SnapsToGrid(weir.Geometry))
                 {
                     var msg = String.Format("{0} is not within grid extend.", weirName);
@@ -186,36 +187,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     }
                 }
 
+                if (weir.CrestLevel <= 0.0)
+                {
+                    var msg = $"Crest Level for {weirName}, structure type: {weirType} must be greater than 0.";
+                    issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
+                }
+                if (weir.CrestWidth <= 0.0)
+                {
+                    var msg = $"Crest Width for {weirName}, structure type: {weirType} must be greater than 0.";
+                    issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
+                }
+
                 var generalStructureFormula = weir.WeirFormula as GeneralStructureWeirFormula;
                 if (generalStructureFormula != null)
                 {
                     if (generalStructureFormula.HorizontalDoorOpeningDirection != GateOpeningDirection.Symmetric)
                     {
-                        var msg = String.Format("{0}: only symmetric horizontal door opening direction is supported for general structures.", weirName);
+                        var msg = $"{weirName}: only symmetric horizontal door opening direction is supported for general structures.";
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
 
                     if (generalStructureFormula.WidthStructureLeftSide <= 0.0)
                     {
-                        var msg = String.Format("{0}: Upstream 2 must be greater than 0.", weirName);
+                        var msg = $"Upstream 2 for {weirName}, structure type {weirType} must be greater than 0.";
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
 
                     if (generalStructureFormula.WidthLeftSideOfStructure <= 0.0)
                     {
-                        var msg = String.Format("{0}: Upstream 1 must be greater than 0.", weirName);
+                        var msg = $"Upstream 1 for {weirName}, structure type {weirType} must be greater than 0.";
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
 
                     if (generalStructureFormula.WidthStructureRightSide <= 0.0)
                     {
-                        var msg = String.Format("{0}: Downstream 1 must be greater than 0.", weirName);
+                        var msg = $"Downstream 1 for {weirName}, structure type {weirType} must be greater than 0.";
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
 
                     if (generalStructureFormula.WidthRightSideOfStructure <= 0.0)
                     {
-                        var msg = String.Format("{0}: Downstream 2 must be greater than 0.", weirName);
+                        var msg = $"Downstream 2 for {weirName}, structure type {weirType} must be greater than 0.";
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
                 }
