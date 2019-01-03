@@ -368,6 +368,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             get { return GetFilePathFromProperty("HisFile", ModelName + "_his.nc"); }
         }
 
+        public string RelativeClassMapFilePath
+        {
+            get { return GetFilePathFromProperty("ClassMapFile", ModelName + "_clm.nc"); }
+        }
+
         private string GetFilePathFromProperty(string propertyName, string defaultName)
         {
             var property = Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName == propertyName);
@@ -453,31 +458,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                              GuiProperties.WaqOutputDeltaT, GuiProperties.SpecifyWaqOutputStartTime,
                              GuiProperties.WaqOutputStartTime, GuiProperties.SpecifyWaqOutputStopTime,
                              GuiProperties.WaqOutputStopTime);
+
+            SetMduIntervalFromGuiProperty(KnownProperties.ClassMapInterval, GuiProperties.WriteClassMapFile, GuiProperties.ClassMapOutputDeltaT);
         }
 
-        private void SetMduStartStopDeltaTFromGui(string intervalPropName, string doWritePropName, string deltaTPropName,
-                                                  string specifyStartPropName, string startTimePropName, string specifyStopPropName, 
-                                                  string stopTimePropName)
+        private void SetMduIntervalFromGuiProperty(string intervalPropName, string doWritePropName, string deltaTPropName)
         {
             var timeFrame = new List<double>();
-            if ((bool)GetModelProperty(doWritePropName).Value)
+            var writePropName = (bool) GetModelProperty(doWritePropName).Value;
+            if (writePropName)
             {
-                double deltaT = ((double)((TimeSpan)GetModelProperty(deltaTPropName).Value).Ticks / TimeSpan.TicksPerSecond);
-                if (deltaT > 0)
+                var timeSpan = (TimeSpan) GetModelProperty(deltaTPropName).Value;
+                double secondsInInterval = (double)timeSpan.Ticks / TimeSpan.TicksPerSecond;
+                if (secondsInInterval > 0)
                 {
-                    // delta t specified
-                    timeFrame.Add(deltaT);
-                }
-                if ((bool)GetModelProperty(specifyStartPropName).Value)
-                {
-                    // output start time specified
-                    timeFrame.Add(GetRelativeDateTime((DateTime)GetModelProperty(startTimePropName).Value, false));
-
-                    if ((bool)GetModelProperty(specifyStopPropName).Value)
-                    {
-                        // output stop time specified
-                        timeFrame.Add(GetRelativeDateTime((DateTime)GetModelProperty(stopTimePropName).Value, false));
-                    }
+                    timeFrame.Add(secondsInInterval);
                 }
             }
             else
@@ -485,6 +480,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 timeFrame.Add(0.0);
             }
             GetModelProperty(intervalPropName).Value = timeFrame;
+        }
+
+        private void SetMduStartStopDeltaTFromGui(string intervalPropName, string doWritePropName, string deltaTPropName, 
+                                                  string specifyStartPropName, string startTimePropName, 
+                                                  string specifyStopPropName, string stopTimePropName)
+        {
+            SetMduIntervalFromGuiProperty(intervalPropName, doWritePropName, deltaTPropName);
+
+            var timeFrame = (List<double>)GetModelProperty(intervalPropName).Value;
+
+            var writePropName = (bool)GetModelProperty(doWritePropName).Value;
+            var specifyStartTime = (bool) GetModelProperty(specifyStartPropName).Value;
+            if (writePropName && specifyStartTime)
+            {
+                AddRelativeTimeFromPropertyToList(startTimePropName, timeFrame);
+
+                var specifyStopTime = (bool) GetModelProperty(specifyStopPropName).Value;
+                if (specifyStopTime)
+                {
+                    AddRelativeTimeFromPropertyToList(stopTimePropName, timeFrame);
+                }
+            }
+            GetModelProperty(intervalPropName).Value = timeFrame;
+        }
+
+        private void AddRelativeTimeFromPropertyToList(string timePropName, List<double> timeFrame)
+        {
+            var time = (DateTime) GetModelProperty(timePropName).Value;
+            timeFrame.Add(GetRelativeDateTime(time, false));
         }
 
         public void SetGuiTimePropertiesFromMduProperties()
@@ -515,6 +539,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                                          GuiProperties.WaqOutputStartTime, GuiProperties.SpecifyWaqOutputStopTime,
                                          GuiProperties.WaqOutputStopTime);
 
+            SetDefaultGuiIntervalFromMdu(KnownProperties.ClassMapInterval, GuiProperties.WriteClassMapFile, GuiProperties.ClassMapOutputDeltaT);
+        }
+
+        private void SetDefaultGuiIntervalFromMdu(string intervalPropName, string doWritePropName, string deltaTPropName)
+        {
+            var timeFrame = (IList<double>)GetModelProperty(intervalPropName).Value;
+            if (timeFrame.Count == 0)
+            {
+                GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 5, 0);
+                GetModelProperty(doWritePropName).Value = true;
+            }
+            else
+            {
+                // interval is present
+                SetGuiIntervalFromMduProperty(doWritePropName, deltaTPropName, timeFrame);
+            }
         }
 
         private void SetGuiStartStopDeltaTFromMdu(string intervalPropName, string doWritePropName, string deltaTPropName,
@@ -530,7 +570,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 }
                 if (intervalPropName == KnownProperties.HisInterval)
                 {
-                    GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 2, 0);
+                    GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 5, 0);
                     GetModelProperty(doWritePropName).Value = true;
                 }
                 if (intervalPropName == KnownProperties.RstInterval)
@@ -548,12 +588,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             if (timeFrame.Count > 0)
             {
                 // interval is present
-                var seconds = (int) Math.Floor(timeFrame[0]);
-                var millis = (int) ((timeFrame[0] - seconds)*1000d);
-                var interval = new TimeSpan(0, 0, 0, seconds, millis);
-                GetModelProperty(deltaTPropName).Value = interval;
-                GetModelProperty(doWritePropName).Value = interval.Ticks > 0;
-                    // 0 = off (for backward compatibility only)
+                SetGuiIntervalFromMduProperty(doWritePropName, deltaTPropName, timeFrame);
             }
 
             if (timeFrame.Count > 1)
@@ -579,6 +614,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 // output start time not specified, set to model stop time
                 GetModelProperty(stopTimePropName).Value = GetModelProperty(GuiProperties.StopTime).Value;
             }
+        }
+
+        private void SetGuiIntervalFromMduProperty(string doWritePropName, string deltaTPropName, IList<double> timeFrame)
+        {                 
+            var seconds = (int) Math.Floor(timeFrame[0]);
+            var millis = (int) ((timeFrame[0] - seconds) * 1000d);
+            var interval = new TimeSpan(0, 0, 0, seconds, millis);
+            GetModelProperty(deltaTPropName).Value = interval;
+            GetModelProperty(doWritePropName).Value = interval.Ticks > 0;
+            // 0 = off (for backward compatibility only)
         }
 
         private DateTime GetAbsoluteDateTime(double relativeTime, bool useTUnit)

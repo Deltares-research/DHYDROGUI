@@ -1081,6 +1081,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     SpecifyMapStop = SpecifyMapStop;
                     EndEdit();
                 }
+                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteClassMapFile,
+                    StringComparison.InvariantCultureIgnoreCase))
+                {
+                    BeginEdit(new DefaultEditAction("Switching WriteClassMapFile"));
+                    WriteClassMapFile = WriteClassMapFile;
+                    EndEdit();
+                }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteRstFile,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -1597,6 +1604,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
+        public string ClassMapSavePath
+        {
+            get
+            {
+                if (ModelDefinition == null) return null;
+                if (ModelDefinition.ModelName.Equals(Name))
+                    return ClassMapFilePath;
+                return Name + "_clm.nc";
+            }
+        }
+
         public IEnumerable<KeyValuePair<WaterFlowFMProperty, string>> SubFiles
         {
             get
@@ -1729,6 +1747,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
+        private string ClassMapFilePath
+        {
+            get
+            {
+                return !String.IsNullOrEmpty(MduFilePath)
+                    ? Path.Combine(Path.GetDirectoryName(MduFilePath), ModelDefinition.RelativeClassMapFilePath)
+                    : null;
+            }
+        }
+
         public bool WriteHisFile
         {
             get { return (bool) ModelDefinition.GetModelProperty(GuiProperties.WriteHisFile).Value; }
@@ -1777,6 +1805,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public bool SpecifyMapStop
         {
             get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyMapStop).Value; }
+            private set
+            {
+                // empty, but just used for event bubbling
+            }
+        }
+
+        public bool WriteClassMapFile
+        {
+            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.WriteClassMapFile).Value; }
             private set
             {
                 // empty, but just used for event bubbling
@@ -2210,7 +2247,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        
+        public virtual FMClassMapFileFunctionStore OutputClassMapFileStore { get; protected set; }
+
         public virtual FMHisFileFunctionStore OutputHisFileStore { get; protected set; }
         private string WaqHydFilePath { get; set; }
 
@@ -2218,34 +2256,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             var oldMapFilePath = OutputMapFileStore == null ? null : OutputMapFileStore.Path;
             var oldHisFilePath = OutputHisFileStore == null ? null : OutputHisFileStore.Path;
+            var oldClassMapFilePath = OutputClassMapFileStore == null ? null : OutputClassMapFileStore.Path;
 
-            if (oldMapFilePath != null && Path.GetFullPath(oldMapFilePath).ToLower() != Path.GetFullPath(MapFilePath).ToLower())
-            {
-                var directory = Path.GetDirectoryName(MapFilePath);
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-                File.Copy(oldMapFilePath, MapFilePath, true);
-            }
-            else if (oldMapFilePath == null && File.Exists(MapFilePath))
-            {
-                File.Delete(MapFilePath);
-            }
-
-            if (oldHisFilePath != null && Path.GetFullPath(oldHisFilePath).ToLower() != Path.GetFullPath(HisFilePath).ToLower())
-            {
-                var directory = Path.GetDirectoryName(HisFilePath);
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-                File.Copy(oldHisFilePath, HisFilePath, true);
-            }
-            else if (oldHisFilePath == null && File.Exists(HisFilePath))
-            {
-                File.Delete(HisFilePath);
-            }
+            SaveOutputFile(oldMapFilePath, MapFilePath);
+            SaveOutputFile(oldHisFilePath, HisFilePath);
+            SaveOutputFile(oldClassMapFilePath, ClassMapFilePath);
 
             // copy the complete delwaq output folder
             string waqOutputDir = Path.Combine(Path.GetDirectoryName(MduFilePath), DelwaqHydFolderName);
@@ -2256,7 +2271,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 FileUtils.CopyDirectory(WaqHydFilePath, waqOutputDir);
             }
 
-            ReconnectOutputFiles(MapFilePath, HisFilePath, waqOutputDir, switchTo: true);
+            ReconnectOutputFiles(MapFilePath, HisFilePath, ClassMapFilePath, waqOutputDir, switchTo: true);
+        }
+
+        private void SaveOutputFile(string oldFilePath, string currentFilePath)
+        {
+            if (oldFilePath != null && Path.GetFullPath(oldFilePath).ToLower() != Path.GetFullPath(currentFilePath).ToLower())
+            {
+                var directory = Path.GetDirectoryName(currentFilePath);
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                File.Copy(oldFilePath, currentFilePath, true);
+            }
+            else if (oldFilePath == null && File.Exists(currentFilePath))
+            {
+                File.Delete(currentFilePath);
+            }
         }
 
         public string DelwaqHydFolderName
@@ -2266,17 +2299,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         protected virtual void ReconnectOutputFiles(string outputDirectory)
         {
-            ReconnectOutputFiles(Path.Combine(outputDirectory, ModelDefinition.RelativeMapFilePath),
-                Path.Combine(outputDirectory, ModelDefinition.RelativeHisFilePath), Path.Combine(outputDirectory, DelwaqHydFolderName));
+            var mapFilePath = Path.Combine(outputDirectory, ModelDefinition.RelativeMapFilePath);
+            var hisFilePath = Path.Combine(outputDirectory, ModelDefinition.RelativeHisFilePath);
+            var classMapFilePath = Path.Combine(outputDirectory, ModelDefinition.RelativeClassMapFilePath);
+            var waqFilePath = Path.Combine(outputDirectory, DelwaqHydFolderName);
+
+            ReconnectOutputFiles(mapFilePath, hisFilePath, classMapFilePath, waqFilePath);
         }
 
-        private void ReconnectOutputFiles(string mapFilePath, string hisFilePath, string waqFolderPath, bool switchTo = false)
+        private void ReconnectOutputFiles(string mapFilePath, string hisFilePath, string classMapFilePath, string waqFolderPath, bool switchTo = false)
         {
-            var existsMapFile = File.Exists(mapFilePath);
+             var existsMapFile = File.Exists(mapFilePath);
             var existsHisFile = File.Exists(hisFilePath);
+            var existsClassMapFile = File.Exists(classMapFilePath);
             var existsWaqFolder = Directory.Exists(waqFolderPath);
 
-            if (!existsMapFile && !existsHisFile && !existsWaqFolder) return;
+            if (!existsMapFile && !existsHisFile && !existsClassMapFile && !existsWaqFolder) return;
 
             FireImportProgressChanged(this, "Reading output files - Reading Map file", 1, 2);
             BeginEdit(new DefaultEditAction("Reconnect output files"));
@@ -2318,6 +2356,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         Area.ObservationPoints,
                         Area.ObservationCrossSections,
                         Area.Weirs.Where( w => w.WeirFormula is GeneralStructureWeirFormula));
+                }
+            }
+
+            if (existsClassMapFile)
+            {
+                ReportProgressText("Reading class map file");
+
+                if (switchTo && OutputClassMapFileStore != null)
+                {
+                    OutputClassMapFileStore.Path = classMapFilePath;
+                }
+                else
+                {
+                    OutputClassMapFileStore = new FMClassMapFileFunctionStore(classMapFilePath);
+                    OutputClassMapFileStore.Path = classMapFilePath;
                 }
             }
 

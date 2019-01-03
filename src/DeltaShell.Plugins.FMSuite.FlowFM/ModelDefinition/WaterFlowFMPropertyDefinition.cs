@@ -24,6 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string EnclosureFile = "gridenclosurefile";
         public const string ManholeFile = "manholefile";
         public const string MapInterval = "mapinterval";
+        public const string ClassMapInterval = "classmapinterval";
         public const string NetFile = "netfile";
         public const string ObsFile = "obsfile";
         public const string OutDir = "outputdir";
@@ -119,6 +120,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string MapOutputStartTime = "mapoutputstarttime";
         public const string SpecifyMapStop = "specifymapstop";
         public const string MapOutputStopTime = "mapoutputstoptime";
+
+        public const string WriteClassMapFile = "writeclassmapfile";
+        public const string ClassMapOutputDeltaT = "classmapoutputdeltat";
 
         public const string WriteRstFile = "writerstfile";
         public const string RstOutputDeltaT = "rstoutputdeltat";

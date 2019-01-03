@@ -162,6 +162,7 @@
     <Compile Include="IO\Exporters\GeometryZipExporter.cs" />
     <Compile Include="IO\Exporters\ImportedNetFileXyzExporter.cs" />
     <Compile Include="IO\Exporters\WindItemExporter.cs" />
+    <Compile Include="IO\FMClassMapFileFunctionStore.cs" />
     <Compile Include="IO\Importers\BcmFileImporter.cs" />
     <Compile Include="IO\Importers\ObsFileImporterExporter.cs" />
     <Compile Include="IO\Importers\PlizFileImporterExporter.cs" />
