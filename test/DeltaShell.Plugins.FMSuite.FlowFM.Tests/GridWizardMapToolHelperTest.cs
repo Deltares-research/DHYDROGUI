@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using DelftTools.Hydro;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
 using NUnit.Framework;
@@ -178,6 +181,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             
             Assert.IsTrue(polygon1.Equals(polygons[0]));
             Assert.IsTrue(polygon2.Equals(polygons[1]));
+        }
+
+        [Test]
+        public void GivenEmbankmentsWithTooLessCoordinatesInItsGeometry_WhenComputingPolygons_ThenNullIsReturned()
+        {
+            // Given
+            var embankment = new Embankment
+            {
+                Geometry = new Point(0, 0)
+            };
+            IList<Feature2D> embankments = new List<Feature2D> { embankment };
+
+            var linearRing = new LinearRing(new[]
+            {
+                new Coordinate(-1, -1),
+                new Coordinate(-1, 1),
+                new Coordinate(1, 1),
+                new Coordinate(1, -1),
+                new Coordinate(-1, -1)
+            });
+            var userPolygon = new Polygon(linearRing);
+
+            // When
+            var polygons =
+                GridWizardMapToolHelper.ComputePolygons(new Discretization(), embankments, userPolygon, 0.0, 0.0);
+
+            // Then
+            const string failureMessage = "Polygons should not have been created, because of the embankment with just one point in its geometry.";
+            Assert.IsNull(polygons, failureMessage);
         }
     }
 }
