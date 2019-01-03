@@ -245,10 +245,10 @@ output,Wrimap_heat_fluxes,output,Map,Write heat fluxes,0|1,0,,,FALSE,,WriteMapFi
 output,MapOutputTimeVector,output,Map,Specific Map output times,FileName,,,,FALSE,,WriteMapFile,,,,File (*.mpt) containing fixed map output times (s) w.r.t. RefDate
 output,FullGridOutput,output,Map,Full grid output,0|1,0,0,1,TRUE,,,,,,"Full grid output mode (0: compact, 1: full time-varying grid data)"
 output,EulerVelocities,output,Map,Full grid output,0|1,0,0,1,TRUE,,,,,,"Euler velocities output (0: GLM, 1: Euler velocities)"
-output,ClassMapFile,,,,FileName,,,,TRUE,,,,,,Class map file *_clm.nc
+output,ClassMapFile,,,,FileName,,,,TRUE,,,,,,"Class map file *_clm.nc"
 output,WaterlevelClasses,output,Class,Water level classes,String,0.0,,,,,WriteClassMapFile,,,,"Water level classes (m)"
 output,WaterdepthClasses,output,Class,Water depth classes,String,0.0,,,,,WriteClassMapFile,,,,"Water depth classes (m)"
-output,ClassMapInterval,,,Class map interval,DoubleArray,300,0,,TRUE,,WriteClassMapFile,,,,"Class Map file output times, given as 'interval' 'start period' 'end period' (s)"
+output,ClassMapInterval,,,Class map interval,DoubleArray,300,0,,TRUE,,WriteClassMapFile,,,,"Class output interval (s)"
 GUIOnly,WriteSnappedFeatures,output,Others,Write Snapped Features,0|1,0,,,FALSE,,,,,,Write generated output snapped features
 GUIOnly,SpecifyWaqOutputInterval, output, Others,Specify WAQ interval output,0|1,0,,,FALSE,,,,,,"Specify WAQ interval output"
 GUIOnly,WaqOutputDeltaT,output,Others,WAQ output interval,Interval,0,,,FALSE,SpecifyWaqOutputInterval,,,,,Interval (in s) between DELWAQ file outputs

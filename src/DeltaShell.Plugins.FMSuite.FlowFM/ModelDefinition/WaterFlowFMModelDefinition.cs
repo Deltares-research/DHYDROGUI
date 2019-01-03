@@ -368,6 +368,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             get { return GetFilePathFromProperty("HisFile", ModelName + "_his.nc"); }
         }
 
+        /// <summary>Gets the relative class map file path.</summary>
+        /// <value>The relative class map file path.</value>
         public string RelativeClassMapFilePath
         {
             get { return GetFilePathFromProperty("ClassMapFile", ModelName + "_clm.nc"); }
@@ -425,6 +427,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         // Enable when kernel supports non-equidistant layering
         public static bool CanSpecifyLayerThicknesses { get { return false; } }
 
+        /// <summary>
+        /// Sets the mdu time properties from GUI properties for writing his, map, class map, restart and waq files. 
+        /// </summary>
         public void SetMduTimePropertiesFromGuiProperties()
         {
             var originalStartTime = GetAbsoluteDateTime((double)GetModelProperty(KnownProperties.TStart).Value, true);
@@ -511,6 +516,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             timeFrame.Add(GetRelativeDateTime(time, false));
         }
 
+        /// <summary>
+        /// Sets the GUI time properties from mdu properties for writing his, map, class map, restart and waq files. 
+        /// </summary>
         public void SetGuiTimePropertiesFromMduProperties()
         {
             var mduStartTime = (double) GetModelProperty(KnownProperties.TStart).Value;
