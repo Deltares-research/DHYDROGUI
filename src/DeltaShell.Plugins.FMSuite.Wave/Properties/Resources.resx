@@ -163,8 +163,8 @@
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_internal_geometry_points" xml:space="preserve">
     <value>Boundary condition contains internal geometry points. These points will be discarded upon saving, exporting or running</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_has_no_data_defined" xml:space="preserve">
-    <value>Boundary has no data defined</value>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_does_not_contain_a_boundary_condition" xml:space="preserve">
+    <value>Boundary does not contain a boundary condition</value>
   </data>
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_unactivated_support_points" xml:space="preserve">
     <value>Boundary condition contains unactivated support points. These points will be discarded upon saving, exporting or running</value>

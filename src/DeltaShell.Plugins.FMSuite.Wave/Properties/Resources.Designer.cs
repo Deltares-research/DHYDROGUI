@@ -151,12 +151,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Boundary has no data defined.
+        ///   Looks up a localized string similar to Boundary does not contain a boundary condition.
         /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_has_no_data_defined {
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_does_not_contain_a_boundary_condition {
             get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_has_no_data_def" +
-                        "ined", resourceCulture);
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_does_not_contai" +
+                        "n_a_boundary_condition", resourceCulture);
             }
         }
         

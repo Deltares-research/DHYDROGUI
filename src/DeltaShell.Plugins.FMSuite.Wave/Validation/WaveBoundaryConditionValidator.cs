@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             if (!boundaryCondition.DataPointIndices.Any())
             {
                 yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
-                    Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_has_no_data_defined, boundaryCondition);
+                    Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_does_not_contain_a_boundary_condition, boundaryCondition);
             }
         }
 
