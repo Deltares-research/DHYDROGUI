@@ -118,8 +118,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var writer = new BndExtForceFile();
             writer.Write("testbnd.ext", modelDefinition);
 
-            int boundaryCounter = 0;
-            int openBoundaryToleranceCounter = 0;
+            var boundaryCounter = 0;
+            var openBoundaryToleranceCounter = 0;
 
             using (var file = new StreamReader("testbnd.ext"))
             {
@@ -134,6 +134,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.AreEqual(3, boundaryCounter, "File testbnd.ext should contain 3 boundaries");
             Assert.AreEqual(1, openBoundaryToleranceCounter, "File testbnd.ext should only contain an OpenBoundaryTolerance for each embankment");
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenEmbankmentFileWithOneCoordinateAndEmbankmentFileWithTwoCoordinates_WhenReadingBoundaryFile_ThenOneEmbankmentIsReturnedAndWarningMessageIsReturned()
+        {
+            // Given
+            var boundaryFilePath = TestHelper.GetTestFilePath(@"BndExtForceFileTest\FlowFM_bnd.ext");
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            // When
+            var reader = new BndExtForceFile();
+            var embankmentFilePath = Path.Combine(Directory.GetParent(boundaryFilePath).FullName, "Embankment01_bnk.pliz");
+            var warningMessage = $"Embankment file '{embankmentFilePath}' with only 1 point detected and it will not be imported.";
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => reader.Read(boundaryFilePath, modelDefinition), warningMessage);
+
+            // Then
+            Assert.That(modelDefinition.Embankments.Count, Is.EqualTo(1), "Embankments with just one coordinate in its geometry should not end up in an FM model.");
         }
 
         [Test]
@@ -164,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var reader = new BndExtForceFile();
             reader.Read(testFilePath, modelDefinition);
 
-            Assert.AreEqual(1,modelDefinition.BoundaryConditionSets.Count);
+            Assert.AreEqual(1, modelDefinition.BoundaryConditionSets.Count);
             Assert.AreEqual(2, modelDefinition.BoundaryConditionSets[0].BoundaryConditions.Count);
 
             var salinityBoundaryCondition = modelDefinition.BoundaryConditionSets[0].BoundaryConditions[1] as FlowBoundaryCondition;
@@ -234,11 +252,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void WriteReadThatcherHarlemanTimelag()
+        public void WriteReadThatcherHarlemanTimeLag()
         {
             var modelDefinition = CreateModelDefinitionWithTwoBoundaries();
 
-            TimeSpan thatcherHarlemanTimeLag = new TimeSpan(0,0,40);
+            var thatcherHarlemanTimeLag = new TimeSpan(0, 0, 40);
             var firstBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
                 BoundaryConditionDataType.TimeSeries) { Feature = modelDefinition.Boundaries[0], ThatcherHarlemanTimeLag = thatcherHarlemanTimeLag};
             firstBoundaryCondition.AddPoint(0);
@@ -735,11 +753,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var modelDefinition = CreateModelDefinitionWithTwoBoundaries();
             modelDefinition.ModelName = "MyModelName";
 
-            var morbc1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed,
+            var morphologyBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed,
                     BoundaryConditionDataType.TimeSeries)
                 { Feature = modelDefinition.Boundaries[0] };
 
-            modelDefinition.BoundaryConditionSets[0].BoundaryConditions.AddRange(new[] { morbc1 });
+            modelDefinition.BoundaryConditionSets[0].BoundaryConditions.AddRange(new[] { morphologyBoundaryCondition });
 
             var writer = new BndExtForceFile();
             writer.Write("testbnd.ext", modelDefinition);
@@ -753,11 +771,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             //Note, for the moment we assume these type of sediments are compatible with waterflowfm.
             var testFilePath = TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu");
             testFilePath = TestHelper.CreateLocalCopy(testFilePath);
-            var model = new WaterFlowFMModel(testFilePath);
-            model.Name = "newname";
+            var model = new WaterFlowFMModel(testFilePath)
+            {
+                Name = "newname", ModelDefinition = {UseMorphologySediment = true}
+            };
 
-            model.ModelDefinition.UseMorphologySediment = true;
-            var sedFrac = new SedimentFraction() { Name = "frac1" };
+            var sedFrac = new SedimentFraction { Name = "frac1" };
             model.SedimentFractions.Add(sedFrac);
 
             var boundary = new Feature2D
@@ -767,8 +786,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
             model.Boundaries.Add(boundary);
 
-            var fbcFactory = new FlowBoundaryConditionFactory();
-            fbcFactory.Model = model;
+            var fbcFactory = new FlowBoundaryConditionFactory {Model = model};
             var bCond = fbcFactory.CreateBoundaryCondition(boundary,
                 sedFrac.Name,
                 BoundaryConditionDataType.TimeSeries,
@@ -818,7 +836,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             model.Name = "newname";
 
             model.ModelDefinition.UseMorphologySediment = true;
-            var sedFrac = new SedimentFraction() { Name = "frac1" };
+            var sedFrac = new SedimentFraction { Name = "frac1" };
             model.SedimentFractions.Add(sedFrac);
 
             var boundary = new Feature2D
@@ -828,8 +846,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
             model.Boundaries.Add(boundary);
 
-            var fbcFactory = new FlowBoundaryConditionFactory();
-            fbcFactory.Model = model;
+            var fbcFactory = new FlowBoundaryConditionFactory {Model = model};
             var bCond = fbcFactory.CreateBoundaryCondition(boundary,
                 sedFrac.Name,
                 BoundaryConditionDataType.TimeSeries,
@@ -909,9 +926,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             //Make sure only one boundary has been added (double check from the test WriteBndExtForceFileSubFilesReturnsNoItemsIfMissingName above)
             Assert.AreEqual(1, lines.Count( l => l.Contains("[boundary]")));
             Assert.IsTrue(lines.Any( l => l.Contains("TestName.pli")));
-
-            
-
             FileUtils.DeleteIfExists(filePath);
         }
     }

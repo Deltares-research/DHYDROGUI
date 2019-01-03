@@ -368,11 +368,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             foreach (var delftIniCategory in bndBlocks)
             {
                 var locationFile = delftIniCategory.GetPropertyValue(LocationFileKey);
-                var isEmbankment = delftIniCategory.GetPropertyValue(QuantityKey) == ExtForceQuantNames.EmbankmentBnd;
-          
-                if (existingPolylineFiles.Values.Contains(locationFile)) continue;
-
-                if (locationFile == null) continue;
+                if (existingPolylineFiles.Values.Contains(locationFile) || locationFile == null) continue;
 
                 if (string.IsNullOrEmpty(locationFile))
                 {
@@ -388,12 +384,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
 
 
-                if (isEmbankment)
+                if (IsEmbankmentCategory(delftIniCategory))
                 {
-                    var reader = new PlizFile<Embankment>();
-                    var features = reader.Read(pliFilePath);
-                    if (!features.Any()) continue;
-                    modelDefinition.Embankments.Add(features.First());
+                    var plizFileReader = new PlizFile<Embankment>();
+                    var embankments = plizFileReader.Read(pliFilePath);
+                    LogWarningMessagesForOnePointGeometryEmbankments(embankments, pliFilePath);
+
+                    var validEmbankments = embankments.Where(e => e.Geometry.Coordinates.Length > 1).ToArray();
+                    if (!validEmbankments.Any()) continue;
+
+                    modelDefinition.Embankments.Add(validEmbankments.First());
                 }
                 else
                 {                
@@ -408,6 +408,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
                 }
             }
+        }
+
+        private static void LogWarningMessagesForOnePointGeometryEmbankments(IList<Embankment> embankments, string pliFilePath)
+        {
+            var onePointEmbankments = embankments.Where(e => e.Geometry.Coordinates.Length == 1);
+            var directory = Directory.GetParent(pliFilePath).FullName;
+            onePointEmbankments.ForEach(e =>
+            {
+                var embankmentFilePath = Path.Combine(directory, $"{e.Name}_bnk.pliz");
+                Log.Warn($"Embankment file '{embankmentFilePath}' with only 1 point detected and it will not be imported.");
+            });
+        }
+
+        private static bool IsEmbankmentCategory(DelftIniCategory delftIniCategory)
+        {
+            return delftIniCategory.GetPropertyValue(QuantityKey) == ExtForceQuantNames.EmbankmentBnd;
         }
 
         private void ReadBoundaryConditions(IList<DelftIniCategory> bndBlocks, WaterFlowFMModelDefinition modelDefinition)
