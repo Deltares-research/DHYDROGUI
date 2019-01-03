@@ -13,7 +13,8 @@ namespace DelftTools.Hydro.Structures
         {
         }
 
-        public Weir2D(bool allowTimeVaryingData = true) :this("Weir", allowTimeVaryingData) { }
+        //The default name "Structure" will be overwritten due to the initialization of a HydroAreaFeature2DCollection object for weirs2D in the NetworkEditorMapLayerProvider class. 
+        public Weir2D(bool allowTimeVaryingData = true) :this("Structure", allowTimeVaryingData) { }
 
 
         public Weir2D(string name, bool allowTimeVaryingData = true) : base(name, allowTimeVaryingData)

@@ -81,12 +81,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 if (weir == value) return;
 
+                if (weir != null)
+                {
+                    ((INotifyPropertyChanged)weir).PropertyChanged -= WeirPropertyChanged;
+                    ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged -= WeirFormulaPropertyChanged;
+                }
                 weir = value;
 
                 if (weir != null)
                 {
-                    SynchronizeWeirAndFormula();
-
                     selectedWeirType = GetSelectableWeirFormulaType(weir.WeirFormula);
 
                     SetPreviousCrestLevelTimeSeries();
@@ -103,6 +106,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                     SynchronizeCommonProperties();
 
                     SynchronizeGatedOrGeneralStructureProperties();
+
+                    ((INotifyPropertyChanged)weir).PropertyChanged += WeirPropertyChanged;
+                    ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged += WeirFormulaPropertyChanged;
                 }
             }
         }
@@ -959,12 +965,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void SynchronizeWeirAndFormula()
-        {
-            ((INotifyPropertyChanged)weir).PropertyChanged -= WeirPropertyChanged;
-            ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged -= WeirFormulaPropertyChanged;
-        }
-
         private void WeirPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == TypeUtils.GetMemberName<IWeir>(vm => vm.WeirFormula))
@@ -977,6 +977,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
             }
+
+            if (e.PropertyName == TypeUtils.GetMemberName<IWeir>(vm => vm.CrestLevel))
+            {
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.BedLevelStructureCentre));
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
+            }
+
+
         }
 
         private void WeirFormulaPropertyChanged(object sender, PropertyChangedEventArgs e)

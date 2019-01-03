@@ -462,7 +462,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var weirs2d = data as IEventedList<Weir2D>;
             if (weirs2d != null && area2DParent != null && Equals(weirs2d, area2DParent.Weirs))
             {
-                var feature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(weirs2d, "weir", modelName,
+                var feature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(weirs2d, "structure", modelName,
                                                                          area2DParent.CoordinateSystem);
                 feature2DCollection.FeatureType = typeof(Weir2D); // Override so we can use FeatureAttributes!
                 return new VectorLayer(HydroArea.WeirsPluralName)

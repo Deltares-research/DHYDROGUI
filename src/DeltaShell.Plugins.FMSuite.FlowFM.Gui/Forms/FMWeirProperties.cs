@@ -57,8 +57,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         }
 
         [Category("General")]        
-        [DisplayName("Lateral contraction coefficient")]
-        [Description("Lateral contraction coefficient (0-1)")]
+        [DisplayName("Contraction coefficient")]
+        [Description("Contraction coefficient")]
         [PropertyOrder(5)]
         public double LateralContraction
         {
