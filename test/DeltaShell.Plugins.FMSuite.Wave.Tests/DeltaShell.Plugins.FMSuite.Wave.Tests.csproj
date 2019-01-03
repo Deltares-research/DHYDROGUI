@@ -222,6 +222,7 @@
     <Compile Include="Validation\WaveModelValidatorTest.cs" />
     <Compile Include="Validation\WaveOutputParametersValidatorTest.cs" />
     <Compile Include="Validation\WavePropertiesValidatorTest.cs" />
+    <Compile Include="Gui\WaveTimePointValidatorTest.cs" />
     <Compile Include="WaveBoundaryConditionTest.cs" />
     <Compile Include="WaveGridOperationApiTest.cs" />
     <Compile Include="WaveModelApiTest.cs" />

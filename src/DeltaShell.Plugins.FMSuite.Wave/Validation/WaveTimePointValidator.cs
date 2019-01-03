@@ -15,6 +15,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                                                model.TimePointData));
             }
 
+            if (model.TimePointData.TimePoints.Count > 0)
+            {
+                foreach (var timePoint in model.TimePointData.TimePoints)
+                {
+                  
+                    if (timePoint < model.ModelDefinition.ModelReferenceDateTime)
+                    {
+                        issues.Add(new ValidationIssue(model, ValidationSeverity.Error, "Model Start time precedes Reference Time",
+                            model.TimePointData));
+                    }
+                }
+            }
             return new ValidationReport("Waves Model Time Points", issues);
         }
     }
