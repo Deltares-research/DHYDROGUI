@@ -99,6 +99,12 @@ namespace DeltaShell.Dimr.Tests
 
             using (var model = new WaterFlowFMModel(localCopy))
             {
+                // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
+                // This is due to that this model has no values for Crest Width in the ini file.
+                // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
+                // Since this test is not meant to test the CrestWidth getting and setting, we can make a Hack to set alle the CrestWidths any value > 0.0.
+                model.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
+
                 var exporter = new WaterFlowFMFileExporter();
                 exporter.Export(model, Path.Combine(tmpDir, model.DirectoryName, model.Name + ".mdu"));
                 DimrRunner.GenerateDimrXML(model, tmpDir);
