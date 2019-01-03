@@ -20,9 +20,9 @@ namespace DelftTools.Hydro
         
         public virtual IEventedList<HydroLink> Links { get; set; }
         
-        public virtual bool CanBeLinkSource { get { return true; } }
-        
-        public virtual bool CanBeLinkTarget { get { return false; } }
+        public virtual bool CanBeLinkSource => true;
+
+        public virtual bool CanBeLinkTarget => false;
 
         public virtual HydroLink LinkTo(IHydroObject target)
         {

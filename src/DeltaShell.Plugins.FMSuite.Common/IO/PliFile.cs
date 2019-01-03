@@ -43,12 +43,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             if (coordinates.Count < 2)
             {
-                throw new ArgumentException(string.Format("Cannot create polyline for {0} with less than 2 points.", typeof (T).Name));
+                throw new ArgumentException($"Cannot create polyline for {typeof(T).Name} with less than 2 points.");
             }
 
             if (checkOpen && coordinates[0].Equals2D(coordinates[coordinates.Count -1]))
             {
-                throw new ArgumentException(string.Format("Cannot create closed polyline for {0}.", typeof (T).Name));
+                throw new ArgumentException($"Cannot create closed polyline for {typeof(T).Name}.");
             }
 
             return new LineString(coordinates.ToArray());
@@ -85,11 +85,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         }
 
                         WriteLine(feature2D.Name);
-                        WriteLine(String.Format("    {0}    {1}", feature2D.Geometry.NumPoints, numColumns));
+                        WriteLine($"    {feature2D.Geometry.NumPoints}    {numColumns}");
                         for (var i = 0; i < feature2D.Geometry.Coordinates.Length; i++)
                         {
-                            var coord = feature2D.Geometry.Coordinates[i];
-                            var line = string.Format("{0:E15}  {1:E15}", coord.X, coord.Y);
+                            var coordinate = feature2D.Geometry.Coordinates[i];
+                            var line = $"{coordinate.X:E15}  {coordinate.Y:E15}";
                             ConstructLineContent(i, numericColumnValues, 0.0, NumericColumnAttributesKeys, ref line, feature2D.Name);
                             ConstructLineContent(i, stringColumnValues, "T", StringColumnAttributesKeys, ref line, feature2D.Name);
 
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                             {
                                 if (i < locationNames.Count)
                                 {
-                                    line += string.Format(" {0}", locationNames[i]);
+                                    line += $" {locationNames[i]}";
                                 }
                             }
                             WriteLine(line);
@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         }
 
         /// <summary>
-        /// Reads a polyline file and cerates a collection of features
+        /// Reads a polyline file and creates a collection of features
         /// </summary>
         public virtual IList<T> Read(string pliFilePath, Action<string, int,int> progress)
         {
@@ -197,9 +197,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                             catch (Exception e)
                             {
                                 throw new FormatException(
-                                    string.Format("Failed feature construction for {0} on line {1} in file {2}: {3}",
-                                        featureName, LineNumber,
-                                        pliFilePath, e.Message));
+                                    $"Failed feature construction for {featureName} on line {LineNumber} in file {pliFilePath}: {e.Message}");
                             }
                             points.Clear();
                             foreach (var columnValues in columnNumericalValuesList)
@@ -221,7 +219,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                                 }
                                 catch (Exception e)
                                 {
-                                    throw new FormatException(string.Format("Invalid placement of string value '{0}' on line {1} in file {2}: {3}", lineFields[j], LineNumber, pliFilePath, e.Message));
+                                    throw new FormatException(
+                                        $"Invalid placement of string value '{lineFields[j]}' on line {LineNumber} in file {pliFilePath}: {e.Message}");
                                 }
                             }
 
@@ -247,9 +246,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         catch (Exception e)
                         {
                             throw new FormatException(
-                                string.Format("Failed feature construction for {0} on line {1} in file {2}: {3}",
-                                    actualFeatureName, LineNumber,
-                                    pliFilePath, e.Message));
+                                $"Failed feature construction for {actualFeatureName} on line {LineNumber} in file {pliFilePath}: {e.Message}");
                         }
                         points.Clear();
                         foreach (var columnValues in columnNumericalValuesList)
@@ -355,7 +352,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 if (lineNumber < columnValueList.Count)
                 {
-                    lineContent += string.Format("  {0:E15}", columnValueList[lineNumber]);
+                    lineContent += $"  {columnValueList[lineNumber]:E15}";
                 }
                 else
                 {
@@ -364,7 +361,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         featureName,
                         columnAttributeKeys[columnValues.IndexOf(columnValueList)]);
 
-                    lineContent += string.Format("  {0:E15}", defaultValue);
+                    lineContent += $"  {defaultValue:E15}";
                 }
             }
         }
