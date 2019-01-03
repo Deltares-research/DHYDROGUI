@@ -25,19 +25,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             {
                 WeirFormula = new SimpleWeirFormula(),
                 UseCrestLevelTimeSeries = true,
+                CrestWidth = 1.0,
+                CrestLevel = 1.0
             };
             model.Area.Weirs.Add(weir);
-
+            
+            
             // When 
-            //   Validate is called
+            // Validate is called
             var validationReport = WaterFlowFMArea2DValidator.Validate(model);
 
             // Then
-            //   The correct issues are added.
-            var expectedIssue = 
-                String.Format("structure {0}: '{1}': crest level time series does not contain any values.",
-                    weir.WeirFormula.Name,
-                    weir.Name);
+            // The correct issues are added.
+            var expectedIssue =
+                $"'{weir.Name}': crest level time series does not contain any values.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -52,6 +53,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             {
                 WeirFormula = new SimpleWeirFormula(),
                 UseCrestLevelTimeSeries = true,
+                CrestWidth = 1.0,
+                CrestLevel = 1.0
             };
 
             var t = DateTime.Today;
@@ -63,15 +66,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             model.Area.Weirs.Add(weir);
 
             // When 
-            //   Validate is called
+            // Validate is called
             var validationReport = WaterFlowFMArea2DValidator.Validate(model);
 
             // Then
-            //   The correct issues are added.
+            // The correct issues are added.
             var expectedIssue =
-                String.Format("structure {0}: '{1}': crest level time series does not span the model run interval.",
-                    weir.WeirFormula.Name,
-                    weir.Name);
+                $"'{weir.Name}': crest level time series does not span the model run interval.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -84,21 +85,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Given
             var weir = new Weir2D(true)
             {
-                WeirFormula = new SimpleWeirFormula() { LateralContraction = -1.0 },
+                WeirFormula = new SimpleWeirFormula { LateralContraction = -1.0 },
+                CrestWidth = 1.0,
+                CrestLevel = 1.0
             };
 
             model.Area.Weirs.Add(weir);
 
             // When 
-            //   Validate is called
+            // Validate is called
             var validationReport = WaterFlowFMArea2DValidator.Validate(model);
 
             // Then
-            //   The correct issues are added.
+            // The correct issues are added.
             var expectedIssue =
-                String.Format("structure {0}: '{1}': lateral contraction coefficient must be greater than or equal to zero.",
-                    weir.WeirFormula.Name,
-                    weir.Name);
+                $"'{weir.Name}': lateral contraction coefficient must be greater than or equal to zero.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -111,7 +112,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Given
             var weir = new Weir2D(true)
             {
-                WeirFormula = new GatedWeirFormula() { DoorHeight = -1.0 },
+                WeirFormula = new GatedWeirFormula { DoorHeight = -1.0 },
+                CrestWidth = 1.0,
+                CrestLevel = 1.0
             };
 
             model.Area.Weirs.Add(weir);
@@ -121,11 +124,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var validationReport = WaterFlowFMArea2DValidator.Validate(model);
 
             // Then
-            //   The correct issues are added.
-            var expectedIssue =
-                String.Format("structure {0}: '{1}': door height must be greater than or equal to 0.",
-                    weir.WeirFormula.Name,
-                    weir.Name);
+            // The correct issues are added.
+            var expectedIssue = $"'{weir.Name}': door height must be greater than or equal to 0.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -140,6 +140,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
+                CrestWidth = 1.0,
+                CrestLevel = 1.0
             };
 
             var t = DateTime.Today;
@@ -152,15 +154,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             model.Area.Weirs.Add(weir);
 
             // When 
-            //   Validate is called
+            // Validate is called
             var validationReport = WaterFlowFMArea2DValidator.Validate(model);
 
             // Then
-            //   The correct issues are added.
+            // The correct issues are added.
             var expectedIssue =
-                String.Format("structure {0}: '{1}': opening width time series values must be greater than or equal to 0.",
-                    weir.WeirFormula.Name,
-                    weir.Name);
+                $"'{weir.Name}': opening width time series values must be greater than or equal to 0.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -176,6 +176,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
+                CrestWidth = 1.0,
+                CrestLevel = 1.0
             };
 
             var t = DateTime.Today;
@@ -187,15 +189,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             model.Area.Weirs.Add(weir);
 
             // When 
-            //   Validate is called
+            // Validate is called
             var validationReport = WaterFlowFMArea2DValidator.Validate(model);
 
             // Then
-            //   The correct issues are added.
-            var expectedIssue =
-                String.Format("structure {0}: '{1}': opening width time series does not span the model run interval.",
-                    weir.WeirFormula.Name,
-                    weir.Name);
+            // The correct issues are added.
+            var expectedIssue = $"'{weir.Name}': opening width time series does not span the model run interval.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -210,19 +209,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
+                CrestWidth = 1.0,
+                CrestLevel = 1.0
             };
             model.Area.Weirs.Add(weir);
 
             // When 
-            //   Validate is called
+            // Validate is called
             var validationReport = WaterFlowFMArea2DValidator.Validate(model);
 
             // Then
-            //   The correct issues are added.
-            var expectedIssue =
-                String.Format("structure {0}: '{1}': opening width time series does not contain any values.",
-                    weir.WeirFormula.Name,
-                    weir.Name);
+            // The correct issues are added.
+            var expectedIssue = $"'{weir.Name}': opening width time series does not contain any values.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -237,19 +235,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
+                CrestWidth = 1.0,
+                CrestLevel = 1.0
             };
             model.Area.Weirs.Add(weir);
 
             // When 
-            //   Validate is called
+            // Validate is called
             var validationReport = WaterFlowFMArea2DValidator.Validate(model);
 
             // Then
-            //   The correct issues are added.
-            var expectedIssue =
-                String.Format("structure {0}: '{1}': opening width must be greater than or equal to 0.",
-                    weir.WeirFormula.Name,
-                    weir.Name);
+            // The correct issues are added.
+            var expectedIssue = $"'{weir.Name}': opening width must be greater than or equal to 0.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -264,6 +261,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
+                CrestWidth = 1.0,
+                CrestLevel = 1.0
             };
 
             var t = DateTime.Today;
@@ -275,15 +274,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             model.Area.Weirs.Add(weir);
 
             // When 
-            //   Validate is called
+            // Validate is called
             var validationReport = WaterFlowFMArea2DValidator.Validate(model);
 
             // Then
-            //   The correct issues are added.
-            var expectedIssue =
-                String.Format("structure {0}: '{1}': lower edge level time series does not span the model run interval.",
-                    weir.WeirFormula.Name,
-                    weir.Name);
+            // The correct issues are added.
+            var expectedIssue = $"'{weir.Name}': lower edge level time series does not span the model run interval.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -298,19 +294,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
+                CrestWidth = 1.0,
+                CrestLevel = 1.0
             };
             model.Area.Weirs.Add(weir);
 
             // When 
-            //   Validate is called
+            // Validate is called
             var validationReport = WaterFlowFMArea2DValidator.Validate(model);
 
             // Then
-            //   The correct issues are added.
-            var expectedIssue =
-                String.Format("structure {0}: '{1}': lower edge level time series does not contain any values.",
-                    weir.WeirFormula.Name,
-                    weir.Name);
+            // The correct issues are added.
+            var expectedIssue = $"'{weir.Name}': lower edge level time series does not contain any values.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -331,20 +326,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
+                CrestWidth = 1.0,
+                CrestLevel = 1.0
             };
             model.Area.Weirs.Add(weir);
 
             // When 
-            //   Validate is called
+            // Validate is called
             var validationReport = WaterFlowFMArea2DValidator.Validate(model);
 
             // Then
-            //   The correct issues are added.
-            var expectedIssue =
-                String.Format("structure {0}: '{1}': only symmetric horizontal door opening direction is supported for general structures.",
-                    weir.WeirFormula.Name,
-                    weir.Name);
-
+            // The correct issues are added.
+            var expectedIssue = $"'{weir.Name}': only symmetric horizontal door opening direction is supported for general structures.";
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
             Assert.That(n_messages, Is.EqualTo(1));
@@ -364,19 +357,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
+                CrestWidth = 1.0,
+                CrestLevel = 1.0
             };
             model.Area.Weirs.Add(weir);
 
             // When 
-            //   Validate is called
+            // Validate is called
             var validationReport = WaterFlowFMArea2DValidator.Validate(model);
 
             // Then
-            //   The correct issues are added.
+            // The correct issues are added.
             var expectedIssue =
-                String.Format("structure {0}: '{1}': Upstream 2 must be greater than 0.",
-                    weir.WeirFormula.Name,
-                    weir.Name);
+                $"Upstream 2 for '{weir.Name}', structure type {weir.WeirFormula.Name} must be greater than 0.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -397,19 +390,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
+                CrestWidth = 1.0,
+                CrestLevel = 1.0
             };
             model.Area.Weirs.Add(weir);
 
             // When 
-            //   Validate is called
+            // Validate is called
             var validationReport = WaterFlowFMArea2DValidator.Validate(model);
 
             // Then
-            //   The correct issues are added.
+            // The correct issues are added.
             var expectedIssue =
-                String.Format("structure {0}: '{1}': Upstream 1 must be greater than 0.",
-                    weir.WeirFormula.Name,
-                    weir.Name);
+                $"Upstream 1 for '{weir.Name}', structure type {weir.WeirFormula.Name} must be greater than 0.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -430,19 +423,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
+                CrestWidth = 1.0,
+                CrestLevel = 1.0
             };
             model.Area.Weirs.Add(weir);
 
             // When 
-            //   Validate is called
+            // Validate is called
             var validationReport = WaterFlowFMArea2DValidator.Validate(model);
 
             // Then
-            //   The correct issues are added.
+            // The correct issues are added.
             var expectedIssue =
-                String.Format("structure {0}: '{1}': Downstream 1 must be greater than 0.",
-                    weir.WeirFormula.Name,
-                    weir.Name);
+                $"Downstream 1 for '{weir.Name}', structure type {weir.WeirFormula.Name} must be greater than 0.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -463,19 +456,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
+                CrestWidth = 1.0,
+                CrestLevel = 1.0
             };
             model.Area.Weirs.Add(weir);
 
             // When 
-            //   Validate is called
+            // Validate is called
             var validationReport = WaterFlowFMArea2DValidator.Validate(model);
 
             // Then
-            //   The correct issues are added.
+            // The correct issues are added.
             var expectedIssue =
-                String.Format("structure {0}: '{1}': Downstream 2 must be greater than 0.",
-                    weir.WeirFormula.Name,
-                    weir.Name);
+                $"Downstream 2 for '{weir.Name}', structure type {weir.WeirFormula.Name} must be greater than 0.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;

@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             foreach (var weir in area.Weirs)
             {
-                var weirName = $"'{weir.Name}'";
+                var weirName = $"{weir.Name}";
                 var weirType = $"{weir.WeirFormula.Name}";
                 if (!model.SnapsToGrid(weir.Geometry))
                 {
@@ -101,14 +101,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                         if (startTime > model.StartTime || stopTime < model.StopTime)
                         {
-                            var msg = String.Format(
-                                "{0}: crest level time series does not span the model run interval.", weirName);
+                            var msg = $"'{weirName}': crest level time series does not span the model run interval.";
                             issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                         }
                     }
                     else
                     {
-                        var msg = String.Format("{0}: crest level time series does not contain any values.", weirName);
+                        var msg = $"'{weirName}': crest level time series does not contain any values.";
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
                 }
@@ -116,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 {
                     if (((SimpleWeirFormula) weir.WeirFormula).LateralContraction < 0.0)
                     {
-                        var msg = String.Format("{0}: lateral contraction coefficient must be greater than or equal to zero.", weirName);
+                        var msg = $"'{weirName}': lateral contraction coefficient must be greater than or equal to zero.";
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
                 }
@@ -127,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     // DoorHeight
                     if (gatedWeirFormula.DoorHeight < 0.0)
                     {
-                        var msg = String.Format("{0}: door height must be greater than or equal to 0.", weirName);
+                        var msg = $"'{weirName}': door height must be greater than or equal to 0.";
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
 
@@ -138,7 +137,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         if (doorOpeningTimeSeries.Components[0].Values.Cast<object>()
                                 .Any(value => (double)value < 0.0))
                         {
-                            var msg = String.Format("{0}: opening width time series values must be greater than or equal to 0.", weirName);
+                            var msg =
+                                $"'{weirName}': opening width time series values must be greater than or equal to 0.";
                             issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                         }
                         if (doorOpeningTimeSeries.Time.Values.Any())
@@ -148,19 +148,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                             if (startTime > model.StartTime || stopTime < model.StopTime)
                             {
-                                var msg = String.Format("{0}: opening width time series does not span the model run interval.", weirName);
+                                var msg =
+                                    $"'{weirName}': opening width time series does not span the model run interval.";
                                 issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                             }
                         }
                         else
                         {
-                            var msg = String.Format("{0}: opening width time series does not contain any values.", weirName);
+                            var msg = $"'{weirName}': opening width time series does not contain any values.";
                             issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                         }
                     }
                     else if (gatedWeirFormula.HorizontalDoorOpeningWidth < 0.0)
                     {
-                        var msg = String.Format("{0}: opening width must be greater than or equal to 0.", weirName);
+                        var msg = $"'{weirName}': opening width must be greater than or equal to 0.";
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
 
@@ -175,13 +176,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                             if (startTime > model.StartTime || stopTime < model.StopTime)
                             {
-                                var msg = String.Format("{0}: lower edge level time series does not span the model run interval.", weirName);
+                                var msg =
+                                    $"'{weirName}': lower edge level time series does not span the model run interval.";
                                 issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                             }
                         }
                         else
                         {
-                            var msg = String.Format("{0}: lower edge level time series does not contain any values.", weirName);
+                            var msg = $"'{weirName}': lower edge level time series does not contain any values.";
                             issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                         }
                     }
@@ -203,31 +205,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 {
                     if (generalStructureFormula.HorizontalDoorOpeningDirection != GateOpeningDirection.Symmetric)
                     {
-                        var msg = $"{weirName}: only symmetric horizontal door opening direction is supported for general structures.";
+                        var msg = $"'{weirName}': only symmetric horizontal door opening direction is supported for general structures.";
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
 
                     if (generalStructureFormula.WidthStructureLeftSide <= 0.0)
                     {
-                        var msg = $"Upstream 2 for {weirName}, structure type {weirType} must be greater than 0.";
+                        var msg = $"Upstream 2 for '{weirName}', structure type {weirType} must be greater than 0.";
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
 
                     if (generalStructureFormula.WidthLeftSideOfStructure <= 0.0)
                     {
-                        var msg = $"Upstream 1 for {weirName}, structure type {weirType} must be greater than 0.";
+                        var msg = $"Upstream 1 for '{weirName}', structure type {weirType} must be greater than 0.";
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
 
                     if (generalStructureFormula.WidthStructureRightSide <= 0.0)
                     {
-                        var msg = $"Downstream 1 for {weirName}, structure type {weirType} must be greater than 0.";
+                        var msg = $"Downstream 1 for '{weirName}', structure type {weirType} must be greater than 0.";
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
 
                     if (generalStructureFormula.WidthRightSideOfStructure <= 0.0)
                     {
-                        var msg = $"Downstream 2 for {weirName}, structure type {weirType} must be greater than 0.";
+                        var msg = $"Downstream 2 for '{weirName}', structure type {weirType} must be greater than 0.";
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
                 }
