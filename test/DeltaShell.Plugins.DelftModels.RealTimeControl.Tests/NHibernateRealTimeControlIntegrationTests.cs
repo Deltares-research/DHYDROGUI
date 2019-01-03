@@ -42,7 +42,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             {
                 OutputFileFunctionStore = new RealTimeControlOutputFileFunctionStore
                 {
-                    Features = new List<IFeature>(),
                     Path = @"C:\SomeDirectory\SomeFile.nc",
                 }
             };

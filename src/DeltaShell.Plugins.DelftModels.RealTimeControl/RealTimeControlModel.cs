@@ -71,73 +71,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             {
                 outputFileFunctionStore = value;
 
-                UnsubscribeToFeatureContainingDataItems();
-
                 if (outputFileFunctionStore == null) return;
                 
-                // Refresh values of the OutputFunction Store
                 RefreshOutputFunctionStore();
-                SubscribeToFeatureContainingDataItems();
             }
         }
 
         /// <summary>
-        /// Gets the feature containing data items.
-        /// </summary>
-        /// <returns>
-        /// A list containing the data items upon which the features are dependent, ie HydroNetwork
-        /// </returns>
-        private IEnumerable<IDataItem> GetFeatureContainingDataItems()
-        {
-            return ControlledModels?.SelectMany(m => m.AllDataItems)
-                                    .Where(di => di.ValueType == typeof(HydroNetwork)) ??
-                   new List<IDataItem>();
-        }
-
-        /// <summary>
-        /// Subscribes to feature containing data items.
-        /// </summary>
-        /// <remarks>
-        /// feature containing data items == this.GetFeatureContainingDataItems()
-        /// </remarks>
-        private void SubscribeToFeatureContainingDataItems()
-        {
-            GetFeatureContainingDataItems()
-                .ForEach(di => di.Linked += OnFeatureContainingDataItemLink);
-        }
-
-        /// <summary>
-        /// Unsubscribes to feature containing data items.
-        /// </summary>
-        /// <remarks>
-        /// feature containing data items == this.GetFeatureContainingDataItems()
-        /// </remarks>
-        private void UnsubscribeToFeatureContainingDataItems()
-        {
-            GetFeatureContainingDataItems()
-                .ForEach(di => di.Linked -= OnFeatureContainingDataItemLink);
-        }
-
-        /// <summary>
-        /// Called when a FeatureContainingDataItem is linked to a new value.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        /// <remarks> Refreshes the OutputFunctionStore. </remarks>
-        private void OnFeatureContainingDataItemLink(object sender, EventArgs e)
-        {
-            RefreshOutputFunctionStore();
-        }
-
-        /// <summary>
-        /// Refreshes the output function store by recalculating the Features and resetting the CoordinateSystem.
+        /// Refreshes the output function store by resetting the Features and the CoordinateSystem.
         /// </summary>
         /// <remarks> If outputFileFunctionStore == null Then nothing happens </remarks>
         private void RefreshOutputFunctionStore()
         {
             if (outputFileFunctionStore == null) return;
+
             outputFileFunctionStore.CoordinateSystem = CoordinateSystem;
-            outputFileFunctionStore.Features = GetChildDataItemLocationsFromControlledModels(DataItemRole.Output).ToList();
+            outputFileFunctionStore.SetFeaturesWith(
+                () => GetChildDataItemLocationsFromControlledModels(DataItemRole.Output)?.ToList());
         }
 
         public virtual int LogLevel { get; set; }
@@ -397,10 +347,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         [NoNotifyPropertyChange]
         public override DateTime StartTime
         {
-            get
-            {
-                return (TimeProvider != null) ? TimeProvider.StartTime : base.StartTime;
-            }
+            get => TimeProvider?.StartTime ?? base.StartTime;
             set
             {
                 if (TimeProvider != null)
@@ -530,27 +477,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             return dataItem;
         }
 
-        public virtual Type ExporterType
-        {
-            get { return typeof(RealTimeControlModelExporter); }
-        }
+        public virtual Type ExporterType => typeof(RealTimeControlModelExporter);
 
         public virtual string GetExporterPath(string directoryName)
         {
             return directoryName;
         }
 
-        public virtual string KernelDirectoryLocation
-        {
-            get { return DimrApiDataSet.RtcToolsDllPath; }
-        }
+        public virtual string KernelDirectoryLocation => DimrApiDataSet.RtcToolsDllPath;
 
         public virtual void DisconnectOutput()
         {
             if (outputFileFunctionStore == null) return;
 
             outputFileFunctionStore.Functions?.Clear();
-            outputFileFunctionStore.ClearFeatures();
+            outputFileFunctionStore.SetFeaturesWith(null);
             outputFileFunctionStore.Close();
             outputFileFunctionStore = null;
         }
@@ -594,8 +535,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         [NoNotifyPropertyChange]
         public new virtual DateTime CurrentTime
         {
-            get { return base.CurrentTime; }
-            set { base.CurrentTime = value; }
+            get => base.CurrentTime;
+            set => base.CurrentTime = value;
         }
         public virtual Array GetVar(string category, string itemName = null, string parameter = null)
         {
@@ -668,7 +609,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual ICoordinateSystem CoordinateSystem
         {
-            get { return coordinateSystem; }
+            get => coordinateSystem;
             set
             {
                 coordinateSystem = value;
@@ -723,15 +664,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         protected virtual IEventedList<IModel> InternalControlledModelsList
         {
-            get { return internalControlledModelsList; }
+            get => internalControlledModelsList;
             set
             {
                 if (internalControlledModelsList != null)
                 {
                     ((INotifyPropertyChanged) internalControlledModelsList).PropertyChanged -= ModelsPropertyChanged;
                     internalControlledModelsList.CollectionChanged -= ControlledModelsCollectionChanged;
-
-                    UnsubscribeToFeatureContainingDataItems();
                 }
 
                 internalControlledModelsList = value;
@@ -755,11 +694,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             ReconnectOutputFiles(outputFileFunctionStore.Path);
         }
 
-        public virtual IEnumerable<IModel> ControlledModels
-        {
-            get { return internalControlledModelsList; }
-        }
-        
+        /// <summary>
+        /// Gets the controlled models of this RealTimeControlModel.
+        /// </summary>
+        /// <value>
+        /// The controlled models.
+        /// </value>
+        public virtual IEnumerable<IModel> ControlledModels => internalControlledModelsList;
+
         private void ModelsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var model = sender as IModel;
