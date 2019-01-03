@@ -1156,7 +1156,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 throw new InvalidOperationException("Number of regions does not match after clone");
             }
 
-            for (int i = 0; i < sourceDataItems.Count; i++)
+            for (var i = 0; i < sourceDataItems.Count; i++)
             {
                 var source = sourceDataItems[i];
                 var clone = clonedDataItems[i];

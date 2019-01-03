@@ -34,6 +34,7 @@ using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 
+
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 {
     /// <summary>
@@ -69,12 +70,74 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             set
             {
                 outputFileFunctionStore = value;
-                if (outputFileFunctionStore != null)
-                {
-                    outputFileFunctionStore.CoordinateSystem = CoordinateSystem;
-                    outputFileFunctionStore.Features = GetChildDataItemLocationsFromControlledModels(DataItemRole.Output).ToList();
-                }
+
+                UnsubscribeToFeatureContainingDataItems();
+
+                if (outputFileFunctionStore == null) return;
+                
+                // Refresh values of the OutputFunction Store
+                RefreshOutputFunctionStore();
+                SubscribeToFeatureContainingDataItems();
             }
+        }
+
+        /// <summary>
+        /// Gets the feature containing data items.
+        /// </summary>
+        /// <returns>
+        /// A list containing the data items upon which the features are dependent, ie HydroNetwork
+        /// </returns>
+        private IEnumerable<IDataItem> GetFeatureContainingDataItems()
+        {
+            return ControlledModels?.SelectMany(m => m.AllDataItems)
+                                    .Where(di => di.ValueType == typeof(HydroNetwork)) ??
+                   new List<IDataItem>();
+        }
+
+        /// <summary>
+        /// Subscribes to feature containing data items.
+        /// </summary>
+        /// <remarks>
+        /// feature containing data items == this.GetFeatureContainingDataItems()
+        /// </remarks>
+        private void SubscribeToFeatureContainingDataItems()
+        {
+            GetFeatureContainingDataItems()
+                .ForEach(di => di.Linked += OnFeatureContainingDataItemLink);
+        }
+
+        /// <summary>
+        /// Unsubscribes to feature containing data items.
+        /// </summary>
+        /// <remarks>
+        /// feature containing data items == this.GetFeatureContainingDataItems()
+        /// </remarks>
+        private void UnsubscribeToFeatureContainingDataItems()
+        {
+            GetFeatureContainingDataItems()
+                .ForEach(di => di.Linked -= OnFeatureContainingDataItemLink);
+        }
+
+        /// <summary>
+        /// Called when a FeatureContainingDataItem is linked to a new value.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks> Refreshes the OutputFunctionStore. </remarks>
+        private void OnFeatureContainingDataItemLink(object sender, EventArgs e)
+        {
+            RefreshOutputFunctionStore();
+        }
+
+        /// <summary>
+        /// Refreshes the output function store by recalculating the Features and resetting the CoordinateSystem.
+        /// </summary>
+        /// <remarks> If outputFileFunctionStore == null Then nothing happens </remarks>
+        private void RefreshOutputFunctionStore()
+        {
+            if (outputFileFunctionStore == null) return;
+            outputFileFunctionStore.CoordinateSystem = CoordinateSystem;
+            outputFileFunctionStore.Features = GetChildDataItemLocationsFromControlledModels(DataItemRole.Output).ToList();
         }
 
         public virtual int LogLevel { get; set; }
@@ -399,6 +462,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 ResubscribeToOwner();
             }
         }
+
         private string workDirectory;
 
         public virtual bool LimitMemory { get; set; }
@@ -415,30 +479,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         #endregion
 
-        public virtual string LibraryName
-        {
-            get { return "FBCTools_BMI"; }
-        }
+        public virtual string LibraryName => "FBCTools_BMI";
 
-        public virtual string InputFile
-        {
-            get { return "."; }
-        }
+        public virtual string InputFile => ".";
 
-        public virtual string DirectoryName
-        {
-            get { return "rtc"; }
-        }
+        public virtual string DirectoryName => "rtc";
 
-        public virtual bool IsMasterTimeStep
-        {
-            get { return false; }
-        }
+        public virtual bool IsMasterTimeStep => false;
 
-        public virtual string ShortName
-        {
-            get { return "rtc"; }
-        }
+        public virtual string ShortName => "rtc";
 
         public virtual string GetItemString(IDataItem dataItem)
         {
@@ -522,12 +571,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             DisconnectOutput();
 
             if (!File.Exists(outputFilePath)) return;
-            
-            var features = GetChildDataItemLocationsFromControlledModels(DataItemRole.Output).ToList();
-            outputFileFunctionStore = new RealTimeControlOutputFileFunctionStore()
+
+            OutputFileFunctionStore = new RealTimeControlOutputFileFunctionStore()
             {
-                Features = features,
-                CoordinateSystem = this.CoordinateSystem, 
                 Path = outputFilePath
             };
         }
@@ -684,6 +730,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 {
                     ((INotifyPropertyChanged) internalControlledModelsList).PropertyChanged -= ModelsPropertyChanged;
                     internalControlledModelsList.CollectionChanged -= ControlledModelsCollectionChanged;
+
+                    UnsubscribeToFeatureContainingDataItems();
                 }
 
                 internalControlledModelsList = value;
