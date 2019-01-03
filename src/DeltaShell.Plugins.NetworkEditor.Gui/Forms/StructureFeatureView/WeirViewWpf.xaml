@@ -140,11 +140,7 @@
                                             </Grid.ColumnDefinitions>
                                             <TextBox Grid.Column="0">
                                                 <TextBox.Text>
-                                                    <Binding Path="BedLevelStructureCentre" Mode="TwoWay">
-                                                        <Binding.ValidationRules>
-                                                            <structureFeatureView:CrestValidationRule ValidationStep="UpdatedValue"/>
-                                                        </Binding.ValidationRules>
-                                                    </Binding>
+                                                    <Binding Path="BedLevelStructureCentre" Mode="TwoWay"/>
                                                 </TextBox.Text>
                                             </TextBox>
                                             <TextBlock Grid.Column="1" Text="m AD" Style="{StaticResource UnitLabelStyle}" />
@@ -166,38 +162,22 @@
                     <CheckBox  Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding EnableCrestLevelTimeSeries}"/>
                     <TextBox Grid.Row="1" Grid.Column="3" Visibility="{Binding GeneralStructurePropertiesVisibility}">
                         <TextBox.Text>
-                            <Binding Path ="Upstream2CrestLevel">
-                                <Binding.ValidationRules>
-                                    <structureFeatureView:CrestValidationRule/>
-                                </Binding.ValidationRules>
-                            </Binding>
+                            <Binding Path ="Upstream2CrestLevel"/>
                         </TextBox.Text>
                         </TextBox>
                     <TextBox Grid.Row="1" Grid.Column="4" Visibility="{Binding GeneralStructurePropertiesVisibility}">
                         <TextBox.Text>
-                            <Binding Path ="Upstream1CrestLevel">
-                                <Binding.ValidationRules>
-                                    <structureFeatureView:CrestValidationRule/>
-                                </Binding.ValidationRules>
-                            </Binding>
+                            <Binding Path ="Upstream1CrestLevel"/>
                         </TextBox.Text>
                     </TextBox>
                     <TextBox Grid.Row="1" Grid.Column="5" Visibility="{Binding GeneralStructurePropertiesVisibility}">
                         <TextBox.Text>
-                            <Binding Path ="Downstream1CrestLevel">
-                                <Binding.ValidationRules>
-                                    <structureFeatureView:CrestValidationRule/>
-                                </Binding.ValidationRules>
-                            </Binding>
+                            <Binding Path ="Downstream1CrestLevel"/>
                         </TextBox.Text>
                     </TextBox>
                     <TextBox Grid.Row="1" Grid.Column="6" Visibility="{Binding GeneralStructurePropertiesVisibility}">
                         <TextBox.Text>
-                            <Binding Path ="Downstream2CrestLevel">
-                                <Binding.ValidationRules>
-                                    <structureFeatureView:CrestValidationRule/>
-                                </Binding.ValidationRules>
-                            </Binding>
+                            <Binding Path ="Downstream2CrestLevel"/>
                         </TextBox.Text>
                     </TextBox>
 

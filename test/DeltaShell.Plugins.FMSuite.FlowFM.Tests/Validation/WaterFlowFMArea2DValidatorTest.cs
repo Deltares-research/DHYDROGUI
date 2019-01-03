@@ -25,8 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             {
                 WeirFormula = new SimpleWeirFormula(),
                 UseCrestLevelTimeSeries = true,
-                CrestWidth = 1.0,
-                CrestLevel = 1.0
+                CrestWidth = 1.0
             };
             model.Area.Weirs.Add(weir);
             
@@ -53,8 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             {
                 WeirFormula = new SimpleWeirFormula(),
                 UseCrestLevelTimeSeries = true,
-                CrestWidth = 1.0,
-                CrestLevel = 1.0
+                CrestWidth = 1.0
             };
 
             var t = DateTime.Today;
@@ -86,8 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = new SimpleWeirFormula { LateralContraction = -1.0 },
-                CrestWidth = 1.0,
-                CrestLevel = 1.0
+                CrestWidth = 1.0
             };
 
             model.Area.Weirs.Add(weir);
@@ -113,8 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = new GatedWeirFormula { DoorHeight = -1.0 },
-                CrestWidth = 1.0,
-                CrestLevel = 1.0
+                CrestWidth = 1.0
             };
 
             model.Area.Weirs.Add(weir);
@@ -140,8 +136,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
-                CrestWidth = 1.0,
-                CrestLevel = 1.0
+                CrestWidth = 1.0
             };
 
             var t = DateTime.Today;
@@ -176,8 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
-                CrestWidth = 1.0,
-                CrestLevel = 1.0
+                CrestWidth = 1.0
             };
 
             var t = DateTime.Today;
@@ -209,8 +203,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
-                CrestWidth = 1.0,
-                CrestLevel = 1.0
+                CrestWidth = 1.0
             };
             model.Area.Weirs.Add(weir);
 
@@ -235,8 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
-                CrestWidth = 1.0,
-                CrestLevel = 1.0
+                CrestWidth = 1.0
             };
             model.Area.Weirs.Add(weir);
 
@@ -261,8 +253,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
-                CrestWidth = 1.0,
-                CrestLevel = 1.0
+                CrestWidth = 1.0
             };
 
             var t = DateTime.Today;
@@ -294,8 +285,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
-                CrestWidth = 1.0,
-                CrestLevel = 1.0
+                CrestWidth = 1.0
             };
             model.Area.Weirs.Add(weir);
 
@@ -313,33 +303,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
-        public void GivenAWaterFlowFMModelContainingASingleWeirWhichHasACrestLevelOfZero_WhenValidateIsCalledThenTheCorrectIssueIsAdded()
-        {
-            // Given
-            var weir = new Weir2D(true)
-            {
-                WeirFormula = new SimpleWeirFormula(),
-                UseCrestLevelTimeSeries = false,
-                CrestWidth = 1.0,
-                CrestLevel = 0.0
-            };
-            model.Area.Weirs.Add(weir);
-
-
-            // When 
-            // Validate is called
-            var validationReport = WaterFlowFMArea2DValidator.Validate(model);
-
-            // Then
-            // The correct issues are added.
-            var expectedIssue = $"Crest Level for {weir.Name}, structure type: {weir.WeirFormula.Name} must be greater than 0.";
-
-            Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
-            var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
-            Assert.That(n_messages, Is.EqualTo(1));
-        }
-
-        [Test]
         public void GivenAWaterFlowFMModelContainingASingleWeirWhichHasACrestWidthOfZero_WhenValidateIsCalledThenTheCorrectIssueIsAdded()
         {
             // Given
@@ -347,11 +310,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             {
                 WeirFormula = new SimpleWeirFormula(),
                 UseCrestLevelTimeSeries = false,
-                CrestWidth = 0.0,
-                CrestLevel = 1.0
+                CrestWidth = 0.0
             };
             model.Area.Weirs.Add(weir);
-
 
             // When 
             // Validate is called
@@ -359,7 +320,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            var expectedIssue = $"Crest Width for {weir.Name}, structure type: {weir.WeirFormula.Name} must be greater than 0.";
+            var expectedIssue = $"Crest Width for '{weir.Name}' structure type: {weir.WeirFormula.Name}, must be greater than 0.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -380,8 +341,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
-                CrestWidth = 1.0,
-                CrestLevel = 1.0
+                CrestWidth = 1.0
             };
             model.Area.Weirs.Add(weir);
 
@@ -411,8 +371,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
-                CrestWidth = 1.0,
-                CrestLevel = 1.0
+                CrestWidth = 1.0
             };
             model.Area.Weirs.Add(weir);
 
@@ -444,8 +403,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
-                CrestWidth = 1.0,
-                CrestLevel = 1.0
+                CrestWidth = 1.0
             };
             model.Area.Weirs.Add(weir);
 
@@ -477,8 +435,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
-                CrestWidth = 1.0,
-                CrestLevel = 1.0
+                CrestWidth = 1.0
             };
             model.Area.Weirs.Add(weir);
 
@@ -510,8 +467,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var weir = new Weir2D(true)
             {
                 WeirFormula = formula,
-                CrestWidth = 1.0,
-                CrestLevel = 1.0
+                CrestWidth = 1.0
             };
             model.Area.Weirs.Add(weir);
 

@@ -189,14 +189,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     }
                 }
 
-                if (weir.CrestLevel <= 0.0)
-                {
-                    var msg = $"Crest Level for {weirName}, structure type: {weirType} must be greater than 0.";
-                    issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
-                }
                 if (weir.CrestWidth <= 0.0)
                 {
-                    var msg = $"Crest Width for {weirName}, structure type: {weirType} must be greater than 0.";
+                    var msg = $"Crest Width for '{weirName}' structure type: {weirType}, must be greater than 0.";
                     issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                 }
 
