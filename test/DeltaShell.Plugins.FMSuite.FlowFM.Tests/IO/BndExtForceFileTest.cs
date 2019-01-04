@@ -156,10 +156,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void WriteReadEmptyBoundaries()
+        public void GivenWaterFlowFMModelDefinitionWithTwoBoundaries_WhenWriteReadingWithBndExtForceFile_ThenTheTwoBoundariesArePreserved()
         {
+            // Given
             var modelDefinition = CreateModelDefinitionWithTwoBoundaries();
 
+            // When
             var writer = new BndExtForceFile();
             writer.Write("testbnd.ext", modelDefinition);
 
@@ -168,6 +170,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var reader = new BndExtForceFile();
             reader.Read("testbnd.ext", newModelDefinition);
 
+            // Then
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
         }
@@ -252,8 +255,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void WriteReadThatcherHarlemanTimeLag()
+        public void GivenFlowBoundaryConditionWithThatcherHarlemanTimeLag_WhenWriteReadingWithBndExtForceFile_ThenThatcherHarlemanTimeLagIsPreserved()
         {
+            // Given
             var modelDefinition = CreateModelDefinitionWithTwoBoundaries();
 
             var thatcherHarlemanTimeLag = new TimeSpan(0, 0, 40);
@@ -282,6 +286,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             data = secondBoundaryCondition.GetDataAtPoint(9);
             FillTimeSeries(data, i => 0.75 * Math.Sin(0.6 * Math.PI * i), startTime, stopTime, 10);
 
+            // When
             var writer = new BndExtForceFile();
             writer.Write("testbnd.ext", modelDefinition);
 
@@ -290,6 +295,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var reader = new BndExtForceFile();
             reader.Read("testbnd.ext", newModelDefinition);
 
+            // Then
             Assert.AreEqual(thatcherHarlemanTimeLag,
                 ((FlowBoundaryCondition)newModelDefinition.BoundaryConditionSets[0].BoundaryConditions[0])
                     .ThatcherHarlemanTimeLag);
