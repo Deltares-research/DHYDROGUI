@@ -38,27 +38,30 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public const string Extension = "pli";
 
-        // Better exception message...
-        public static IGeometry CreatePolyLineGeometry(IList<Coordinate> coordinates, bool checkOpen = false)
+        /// <summary>
+        /// Creates and returns a <see cref="LineString"/> object with the provided coordinates.
+        /// </summary>
+        /// <param name="coordinates"> The collection of coordinates to put into the <see cref="LineString"/> object. </param>
+        /// <returns> An <see cref="IGeometry"/> object with the provided collection of coordinates. </returns>
+        /// <exception cref="ArgumentException"> Thrown when the amount of coordinates is smaller than 2. </exception>
+        public static IGeometry CreatePolyLineGeometry(IList<Coordinate> coordinates)
         {
             if (coordinates.Count < 2)
             {
                 throw new ArgumentException($"Cannot create polyline for {typeof(T).Name} with less than 2 points.");
             }
 
-            if (checkOpen && coordinates[0].Equals2D(coordinates[coordinates.Count -1]))
-            {
-                throw new ArgumentException($"Cannot create closed polyline for {typeof(T).Name}.");
-            }
-
             return new LineString(coordinates.ToArray());
         }
-
+        
         public Func<List<Coordinate>, string, T> CreateDelegate { private get; set; }
 
         /// <summary>
-        /// Writes a polyline file for the collection of features <see cref="features"/>.
+        /// Writes a polyline file for the collection of features <see cref="features"/>
         /// </summary>
+        /// <param name="pliFilePath"> The target file path to write the .pli file to. </param>
+        /// <param name="features"> The features of type <typeparamref name="T"/> that are used to write data to file
+        /// at path <paramref name="pliFilePath"/></param>
         public virtual void Write(string pliFilePath, IEnumerable<T> features)
         {
             using (CultureUtils.SwitchToInvariantCulture())
@@ -111,27 +114,36 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
         }
 
-
+        /// <summary>
+        /// Reads a polyline file and creates a collection of features of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <param name="pliFilePath"> File path to the .pli file that is being read. </param>
+        /// <returns> A collection of features of type <typeparamref name="T"/>. </returns>
         public virtual IList<T> Read(string pliFilePath)
         {
             return Read(pliFilePath, null);
         }
 
         /// <summary>
-        /// Reads a polyline file and creates a collection of features
+        /// Reads a polyline file and creates a collection of features of type <typeparamref name="T"/> and optionally
+        /// reports reading progress information to the user.
         /// </summary>
+        /// <param name="pliFilePath"> File path to the .pli file that is being read. </param>
+        /// <param name="progress"> Action that is invoked when reading a line in the .pli file.
+        /// This informs the user about the reading progress. </param>
+        /// <returns> A collection of features of type <typeparamref name="T"/>. </returns>
         public virtual IList<T> Read(string pliFilePath, Action<string, int,int> progress)
         {
             var features = new EventedList<T>();
 
             OpenInputFile(pliFilePath);
-            int lineCount = 0;
-            int numberOfLines = File.ReadLines(pliFilePath).Count();
+            var lineCount = 0;
+            var numberOfLines = File.ReadLines(pliFilePath).Count();
             try
             {
                 var line = GetNextLine();
                 lineCount++;
-                int maxColumns = 0;
+                var maxColumns = 0;
 
                 while (line != null)
                 {

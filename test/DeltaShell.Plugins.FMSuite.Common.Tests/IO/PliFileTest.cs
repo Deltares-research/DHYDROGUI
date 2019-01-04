@@ -10,7 +10,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using NetTopologySuite.Extensions.Geometries;
+using NetTopologySuite.Extensions.Networks;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
@@ -314,6 +316,31 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         {
             var sources = ReadPliFile("structures/SourceSink01.pli");
             Assert.That(sources.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void GivenCollectionOfCoordinates_WhenCreatingPolyLineGeometry_ThenLineStringWithTheSameCoordinatesIsReturned()
+        {
+            // Given
+            var coordinates = new[] {new Coordinate(0, 0), new Coordinate(1, 1)};
+
+            // When
+            var lineString = PliFile<Branch>.CreatePolyLineGeometry(coordinates) as LineString;
+
+            // Then
+            Assert.IsNotNull(lineString, "Returned IGeometry is not a LineString object.");
+            Assert.That(lineString.Coordinates, Is.EqualTo(coordinates));
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Cannot create polyline for Embankment with less than 2 points.")]
+        public void GivenCollectionOfCoordinatesSmallerThan2_WhenCreatingPolyLineGeometry_ThenArgumentExceptionIsThrown()
+        {
+            // Given
+            var coordinates = new[] { new Coordinate(0, 0) };
+
+            // When/Then
+            PliFile<Embankment>.CreatePolyLineGeometry(coordinates);
         }
 
         #region Test helper methods
