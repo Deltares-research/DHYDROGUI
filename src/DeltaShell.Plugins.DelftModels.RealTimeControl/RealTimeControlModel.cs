@@ -513,10 +513,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             if (!File.Exists(outputFilePath)) return;
 
-            OutputFileFunctionStore = new RealTimeControlOutputFileFunctionStore()
-            {
-                Path = outputFilePath
-            };
+            OutputFileFunctionStore = new RealTimeControlOutputFileFunctionStore();
+            
+            // This triggers an event and thus should be explicitly done after the function store 
+            // has been initialized.
+            OutputFileFunctionStore.Path = outputFilePath;
         }
 
         public virtual ValidationReport Validate() // NOTE: Do not re
