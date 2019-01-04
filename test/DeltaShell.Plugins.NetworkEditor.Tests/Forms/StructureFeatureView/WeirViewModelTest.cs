@@ -797,7 +797,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         [Test]
         public void GivenAWeirViewModel_WhenChangingTheCrestLevel_ThenTwoEventsShouldBeFiredForRefreshingTwoBoxesInTheView()
         {
-            List<string> receivedEvents = new List<string>();
+            List<string> raisedEvents = new List<string>();
       
             var viewModel = new WeirViewModel()
             {
@@ -807,16 +807,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             viewModel.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
 
             {
-                receivedEvents.Add(e.PropertyName);
+                raisedEvents.Add(e.PropertyName);
             };
-            Assert.AreEqual(0, receivedEvents.Count);
+            Assert.AreEqual(0, raisedEvents.Count);
             
             // Change property needed for firing the event
             viewModel.Weir.CrestLevel = 10;
 
-            Assert.AreEqual(2, receivedEvents.Count);
-            Assert.AreEqual("BedLevelStructureCentre", receivedEvents[0]);
-            Assert.AreEqual("GateOpeningHeight", receivedEvents[1]);
+            Assert.AreEqual(2, raisedEvents.Count);
+            Assert.That(raisedEvents.Contains("BedLevelStructureCentre"));
+            Assert.That(raisedEvents.Contains("GateOpeningHeight"));
+
         }
     }
 }
