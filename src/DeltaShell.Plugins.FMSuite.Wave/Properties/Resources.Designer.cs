@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -302,6 +302,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
             get {
                 return ResourceManager.GetString("WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_q" +
                         "uadruple_is_true_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model Start time precedes Reference Time.
+        /// </summary>
+        public static string WaveTimePointValidator_Validate_Model_Start_time_precedes_Reference_Time {
+            get {
+                return ResourceManager.GetString("WaveTimePointValidator_Validate_Model_Start_time_precedes_Reference_Time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No time points defined.
+        /// </summary>
+        public static string WaveTimePointValidator_Validate_No_time_points_defined {
+            get {
+                return ResourceManager.GetString("WaveTimePointValidator_Validate_No_time_points_defined", resourceCulture);
             }
         }
     }

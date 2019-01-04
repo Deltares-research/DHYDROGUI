@@ -193,4 +193,10 @@
   <data name="WaveOutputParametersValidator_Validate_Option__Write_Tables__is_selected_but_there_are_no_Observation_Points_in_your_model_" xml:space="preserve">
     <value>Option "Write Tables" is selected but there are no Observation Points in your model.</value>
   </data>
+  <data name="WaveTimePointValidator_Validate_No_time_points_defined" xml:space="preserve">
+    <value>No time points defined</value>
+  </data>
+  <data name="WaveTimePointValidator_Validate_Model_Start_time_precedes_Reference_Time" xml:space="preserve">
+    <value>Model Start time precedes Reference Time</value>
+  </data>
 </root>

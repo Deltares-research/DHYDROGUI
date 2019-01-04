@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
     public class WaveTimePointValidatorTest
     {
         [Test]
-        public void GivenWaveModelWithNoTimePointsDefinedAndNotCoupledToFlowWhenValidatingThenValidationErrorIsGiven()
+        public void GivenWaveModelWithNoTimePointsDefinedAndNotCoupledToFlow_WhenValidating_ThenValidationErrorIsGiven()
         {
             var waveModel = new WaveModel {IsCoupledToFlow = false};
 
@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         }
 
         [Test]
-        public void GivenWaveModelWithNoTimePointsDefinedAndCoupledToFlowWhenValidatingThenValidationErrorIsNotGiven()
+        public void GivenWaveModelWithNoTimePointsDefinedAndCoupledToFlow_WhenValidating_ThenValidationErrorIsNotGiven()
         {
             var waveModel = new WaveModel { IsCoupledToFlow = true };
 
@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         }
 
         [Test]
-        public void GivenWaveModelWithStartTimePrecedingTheReferenceTimeWhenValidatingThenValidationErrorIsGiven()
+        public void GivenWaveModelWithStartTimePrecedingTheReferenceTime_WhenValidating_ThenValidationErrorIsGiven()
         {
             var waveModel = new WaveModel();
             var timePoint = new DateTime(2000, 01, 01);
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         }
 
         [Test]
-        public void GivenWaveModelWithStartTimePrecedingTheReferenceTimeWhenValidatingThenValidationErrorIsNotGiven()
+        public void GivenWaveModelWithStartTimePrecedingTheReferenceTime_WhenValidating_ThenValidationErrorIsNotGiven()
         {
             var waveModel = new WaveModel();
             var timePoint = waveModel.ModelDefinition.ModelReferenceDateTime.AddYears(1);

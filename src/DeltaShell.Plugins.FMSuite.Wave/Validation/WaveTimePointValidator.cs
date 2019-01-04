@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 {
-    /// <summary>
-    /// Validator class for wave model time point editing.
-    /// <param name="model">A wave model entity</param>
-    /// <returns>A validation report regarding wave model time points</returns>
-    /// </summary>
     public static class WaveTimePointValidator
     {
+        /// <summary>
+        /// Validation for wave model time point editing.
+        /// <param name="model">A wave model entity</param>
+        /// <returns>A validation report regarding wave model time points</returns>
+        /// </summary>
         public static ValidationReport Validate(WaveModel model)
         {
             var issues = new List<ValidationIssue>();
@@ -18,17 +19,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             if (!model.IsCoupledToFlow && timePoints.Count == 0)
             {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Error, "No time points defined",
+                issues.Add(new ValidationIssue(model, ValidationSeverity.Error, Resources.WaveTimePointValidator_Validate_No_time_points_defined,
                                                model.TimePointData));
             }
 
             if (timePoints.Count > 0)
             {
-               var hasInvalidTimePoint = timePoints.Select(tp => tp < model.ModelDefinition.ModelReferenceDateTime).FirstOrDefault();
+               var hasInvalidTimePoint = timePoints.Any(tp => tp < model.ModelDefinition.ModelReferenceDateTime);
 
                if (hasInvalidTimePoint)
                {
-                   issues.Add(new ValidationIssue(null, ValidationSeverity.Error, "Model Start time precedes Reference Time",
+                   issues.Add(new ValidationIssue(null, ValidationSeverity.Error, Resources.WaveTimePointValidator_Validate_Model_Start_time_precedes_Reference_Time,
                        model.TimePointData));
                 }
             }
