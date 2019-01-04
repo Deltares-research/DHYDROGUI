@@ -359,7 +359,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             ReadBoundaryConditions(bndBlocks, modelDefinition);
         }
-
         
         private void ReadPolyLines(IEnumerable<DelftIniCategory> bndBlocks, WaterFlowFMModelDefinition modelDefinition)
         {
@@ -368,7 +367,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             foreach (var delftIniCategory in bndBlocks)
             {
                 var locationFile = delftIniCategory.GetPropertyValue(LocationFileKey);
-                if (existingPolylineFiles.Values.Contains(locationFile) || locationFile == null) continue;
+                var locationFileHasAlreadyBeenRead = existingPolylineFiles.Values.Contains(locationFile);
+                if (locationFile == null || locationFileHasAlreadyBeenRead) continue;
 
                 if (string.IsNullOrEmpty(locationFile))
                 {
