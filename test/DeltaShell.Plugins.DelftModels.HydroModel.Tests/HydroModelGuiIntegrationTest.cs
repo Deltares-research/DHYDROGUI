@@ -379,7 +379,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var mainWindow = (MainWindow)gui.MainWindow;
 
             // wait until gui starts
-            mainWindow.Loaded += delegate
+            Action mainWindowShown = delegate
             {
                 ActivityRunner.RunActivity(hydroModel);
                 gui.Selection = flow;
@@ -395,7 +395,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 }
                 Console.WriteLine("1");
             };
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
         }
 
         private IEnumerable<IFileExporter> GetApplicationFileExportersForDimr()
