@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                     new LineString(new [] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) })
             };
 
-            var bc1 = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+            var bc1 = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
             {
                 Feature = f1,
                 SpatialDefinitionType = WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                     new LineString(new [] { new Coordinate(0, 0), new Coordinate(1, 0) })
             };
 
-            var bc2 = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+            var bc2 = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
             {
                 Feature = f2,
                 SpatialDefinitionType = WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                 Geometry = new LineString(new [] {new Coordinate(0, 0), new Coordinate(-1, 0)})
             };
 
-            var bc3 = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumConstant)
+            var bc3 = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumConstant)
             {
                 Feature = f3,
                 SpatialDefinitionType = WaveBoundaryConditionSpatialDefinitionType.Uniform

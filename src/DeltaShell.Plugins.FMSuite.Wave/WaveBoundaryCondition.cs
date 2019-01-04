@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 SpectrumFiles[i] = "";
             }
-            if (DataType == BoundaryConditionDataType.ParametrizedSpectrumConstant)
+            if (DataType == BoundaryConditionDataType.ParameterizedSpectrumConstant)
             {
                 SpectrumParameters[i] = new WaveBoundaryParameters();
             }
@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 SpectrumFiles.Remove(i);
             }
-            if (DataType == BoundaryConditionDataType.ParametrizedSpectrumConstant)
+            if (DataType == BoundaryConditionDataType.ParameterizedSpectrumConstant)
             {
                 SpectrumParameters.Remove(i);
             }
@@ -175,9 +175,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             switch (DataType)
             {
-                case BoundaryConditionDataType.ParametrizedSpectrumTimeseries:
+                case BoundaryConditionDataType.ParameterizedSpectrumTimeseries:
                     return CreateEmptyWaveEnergyFunction();
-                case BoundaryConditionDataType.ParametrizedSpectrumConstant:
+                case BoundaryConditionDataType.ParameterizedSpectrumConstant:
                 case BoundaryConditionDataType.SpectrumFromFile:
                     return new Function("dummy");
                 default:

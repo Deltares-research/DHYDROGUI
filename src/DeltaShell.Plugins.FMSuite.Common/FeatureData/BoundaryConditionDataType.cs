@@ -22,10 +22,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         Constant,
         [Description("Empty")]
         Empty,
-        [Description("Parametrized (Constant)")]
-        ParametrizedSpectrumConstant,
-        [Description("Parametrized (Timeseries)")]
-        ParametrizedSpectrumTimeseries,
+        [Description("Parameterized (Constant)")]
+        ParameterizedSpectrumConstant,
+        [Description("Parameterized (Timeseries)")]
+        ParameterizedSpectrumTimeseries,
         [Description("Filebased Spectrum")]
         SpectrumFromFile
     }

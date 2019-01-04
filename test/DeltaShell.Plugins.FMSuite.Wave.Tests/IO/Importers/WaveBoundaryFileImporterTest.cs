@@ -157,7 +157,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
                         Assert.AreEqual(model.BoundaryConditions.Count, 0);
 
                         var newBoundaryCondition =
-                            new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumConstant)
+                            new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumConstant)
                             {
                                 Name = boundaryName
                             };
@@ -165,7 +165,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
                         model.BoundaryConditions.Add(newBoundaryCondition);
 
                         var message =
-                            $"Could not import boundary condition; boundary {boundaryName} is not of type {BoundaryConditionDataType.ParametrizedSpectrumTimeseries}";
+                            $"Could not import boundary condition; boundary {boundaryName} is not of type {BoundaryConditionDataType.ParameterizedSpectrumTimeseries}";
                         TestHelper.AssertAtLeastOneLogMessagesContains(
                             () => importer.ImportItem(bcwFilePath, model.BoundaryConditions), message);
                     }
@@ -214,7 +214,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
                         Assert.AreEqual(model.BoundaryConditions.Count, 0);
 
                         var newBoundaryCondition =
-                            new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+                            new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
                             {
                                 Name = boundaryName,
                                 Feature = boundary
@@ -272,7 +272,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
                         Assert.AreEqual(model.BoundaryConditions.Count, 0);
 
                         var newBoundaryCondition =
-                            new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+                            new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
                             {
                                 Name = boundaryName,
                                 Feature = boundary
@@ -352,7 +352,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         {
             var boundaryCondition = (WaveBoundaryCondition) new WaveBoundaryConditionFactory().CreateBoundaryCondition(
                 boundary, "",
-                BoundaryConditionDataType.ParametrizedSpectrumTimeseries);
+                BoundaryConditionDataType.ParameterizedSpectrumTimeseries);
             boundaryCondition.AddPoint(1);
             return boundaryCondition;
         }

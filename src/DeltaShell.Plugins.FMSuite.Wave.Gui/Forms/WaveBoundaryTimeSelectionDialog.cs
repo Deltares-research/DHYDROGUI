@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Forms
             {
                 boundaryConditions =
                     ((IList<WaveBoundaryCondition>) value).Where(
-                        bc => bc.DataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries).ToList();
+                        bc => bc.DataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries).ToList();
 
                 boundaryListBox.DataSource = new BindingList<WaveBoundaryCondition>(boundaryConditions);
             }

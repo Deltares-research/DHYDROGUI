@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             var tSeriesFile = modelName + ".bcw";
             modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeSeriesFile)
                 .SetValueAsString(modelDefinition.BoundaryConditions.Any(bc =>
-                    bc.DataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+                    bc.DataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
                     ? tSeriesFile
                     : string.Empty);
 
@@ -282,10 +282,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 bc.PointData.ForEach(f => f.Attributes[BcwFile.RefDateAttributeName] = refDate.ToString(BcwFile.DateFormatString));
             }
 
-            // get the bcwconditions with parametrizedspectrumtimeseries.
+            // get the bcwconditions with parameterizedspectrumtimeseries.
             // Make it a dictionary, but make sure to order the datapointindices while writing, because rekenhart demands it.
             var bcwConditions = boundaryConditions
-                .Where(bc => bc.DataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+                .Where(bc => bc.DataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
                 .ToDictionary(b => b.Name, b => b.DataPointIndices.OrderBy(di => di).Select(b.GetDataAtPoint).ToList());
                                                                       
             // write bcw file                                    
@@ -509,7 +509,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     {
                         boundaryCategory.AddProperty("Spectrum", bc.SpectrumFiles[0]);
                     }
-                    if (bc.DataType == BoundaryConditionDataType.ParametrizedSpectrumConstant)
+                    if (bc.DataType == BoundaryConditionDataType.ParameterizedSpectrumConstant)
                     {
                         var parameters = bc.SpectrumParameters[0];
                         boundaryCategory.AddProperty("WaveHeight", parameters.Height);
@@ -539,7 +539,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                             boundaryCategory.AddProperty("Spectrum", bc.SpectrumFiles[dataPointIdx]);
                             continue;
                         }
-                        if (bc.DataType == BoundaryConditionDataType.ParametrizedSpectrumConstant)
+                        if (bc.DataType == BoundaryConditionDataType.ParameterizedSpectrumConstant)
                         {
                             var parameters = bc.SpectrumParameters[dataPointIdx];
                             boundaryCategory.AddProperty("WaveHeight", parameters.Height);
@@ -791,8 +791,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 var name = boundaryData.GetPropertyValue("Name");
                 var dataType = boundaryData.GetPropertyValue("SpectrumSpec") == "parametric"
                                    ? (functionLookup != null && functionLookup.ContainsKey(name) // check if timeseries
-                                          ? BoundaryConditionDataType.ParametrizedSpectrumTimeseries
-                                          : BoundaryConditionDataType.ParametrizedSpectrumConstant)
+                                          ? BoundaryConditionDataType.ParameterizedSpectrumTimeseries
+                                          : BoundaryConditionDataType.ParameterizedSpectrumConstant)
                                    : BoundaryConditionDataType.SpectrumFromFile; // "from file"
 
                 var definition = GetImportDefinition(boundaryData.GetPropertyValue("Definition"));
@@ -867,7 +867,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 {
                     boundaryCondition.SpectralData = GetSpectralData(boundaryData);
 
-                    if (dataType == BoundaryConditionDataType.ParametrizedSpectrumConstant)
+                    if (dataType == BoundaryConditionDataType.ParameterizedSpectrumConstant)
                     {
                         // get parameters for distances or uniform from mdw file
                         var waveHeight =
@@ -931,7 +931,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                         }
                     }
 
-                    if (dataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+                    if (dataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
                     {
                         // from timeseries file (.bcw for now..)
                         if (functionLookup == null || !functionLookup.ContainsKey(name))

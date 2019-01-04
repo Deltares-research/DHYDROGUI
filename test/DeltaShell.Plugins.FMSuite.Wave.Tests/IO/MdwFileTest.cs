@@ -143,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual("Boundary 1", bc.Feature.Name);
             Assert.AreEqual("Boundary 1", bc.Name);
 
-            Assert.AreEqual(BoundaryConditionDataType.ParametrizedSpectrumConstant, bc.DataType);
+            Assert.AreEqual(BoundaryConditionDataType.ParameterizedSpectrumConstant, bc.DataType);
             Assert.AreEqual(WaveSpectrumShapeType.Jonswap, bc.SpectralData.ShapeType);
             Assert.AreEqual(WavePeriodType.Peak, bc.SpectralData.PeriodType);
             Assert.AreEqual(WaveDirSpreadType.Power, bc.SpectralData.DirectionalSpreadingType);
@@ -163,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual("Boundary 2", bc.Feature.Name);
             Assert.AreEqual("Boundary 2", bc.Name);
 
-            Assert.AreEqual(BoundaryConditionDataType.ParametrizedSpectrumConstant, bc.DataType);
+            Assert.AreEqual(BoundaryConditionDataType.ParameterizedSpectrumConstant, bc.DataType);
             Assert.AreEqual(WaveSpectrumShapeType.PiersonMoskowitz, bc.SpectralData.ShapeType);
             Assert.AreEqual(WavePeriodType.Mean, bc.SpectralData.PeriodType);
             Assert.AreEqual(WaveDirSpreadType.Degrees, bc.SpectralData.DirectionalSpreadingType);
@@ -323,7 +323,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(modelDef.BoundaryConditions[1].Feature.Geometry.Coordinates.Length, 2);
             Assert.AreEqual(modelDef.BoundaryConditions[1].SpatialDefinitionType,
                             WaveBoundaryConditionSpatialDefinitionType.Uniform);
-            Assert.AreEqual(modelDef.BoundaryConditions[1].DataType, BoundaryConditionDataType.ParametrizedSpectrumTimeseries);
+            Assert.AreEqual(modelDef.BoundaryConditions[1].DataType, BoundaryConditionDataType.ParameterizedSpectrumTimeseries);
             return modelDef;
         }
 
@@ -427,7 +427,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
                         var boundaryConditionFactory = new WaveBoundaryConditionFactory();
                         var boundaryCondition = boundaryConditionFactory.CreateBoundaryCondition(boundary, "",
-                            BoundaryConditionDataType.ParametrizedSpectrumTimeseries);
+                            BoundaryConditionDataType.ParameterizedSpectrumTimeseries);
 
                         var refTime = model.ModelDefinition.ModelReferenceDateTime;
                         boundaryCondition.DataPointIndices.Add(1);
@@ -494,7 +494,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
                         var boundaryConditionFactory = new WaveBoundaryConditionFactory();
                         var boundaryCondition = boundaryConditionFactory.CreateBoundaryCondition(boundary, "",
-                            BoundaryConditionDataType.ParametrizedSpectrumTimeseries);
+                            BoundaryConditionDataType.ParameterizedSpectrumTimeseries);
 
                         var refTime = model.ModelDefinition.ModelReferenceDateTime;
                         boundaryCondition.DataPointIndices.Add(1);

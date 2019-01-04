@@ -62,8 +62,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
         public override IEnumerable<BoundaryConditionDataType> GetSupportedDataTypesForVariable(string variable)
         {
-            yield return BoundaryConditionDataType.ParametrizedSpectrumConstant;
-            yield return BoundaryConditionDataType.ParametrizedSpectrumTimeseries;
+            yield return BoundaryConditionDataType.ParameterizedSpectrumConstant;
+            yield return BoundaryConditionDataType.ParameterizedSpectrumTimeseries;
             yield return BoundaryConditionDataType.SpectrumFromFile;
         }
     }

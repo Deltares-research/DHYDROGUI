@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
                 spectralFileSelection.SelectedPointIndex = SelectedPointIndex;
                 spectralPanel.Controls.Add(spectralFileSelection);
             }
-            else if (boundaryCondition.DataType == BoundaryConditionDataType.ParametrizedSpectrumConstant)
+            else if (boundaryCondition.DataType == BoundaryConditionDataType.ParameterizedSpectrumConstant)
             {
                 spectralParametersEditor.Data = boundaryCondition;
                 spectralPanel.Controls.Add(spectralParametersEditor);
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
                                                     : null;
                 functionViewPanel.Controls.Add(constantParametersEditor);
             }
-            else if (boundaryCondition.DataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+            else if (boundaryCondition.DataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
             {
                 spectralParametersEditor.Data = boundaryCondition;
                 spectralPanel.Controls.Add(spectralParametersEditor);
@@ -158,13 +158,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             {
                 spectralFileSelection.SelectedPointIndex = SelectedPointIndex;
             }
-            else if (boundaryCondition.DataType == BoundaryConditionDataType.ParametrizedSpectrumConstant)
+            else if (boundaryCondition.DataType == BoundaryConditionDataType.ParameterizedSpectrumConstant)
             {
                 constantParametersEditor.Data = boundaryCondition.DataPointIndices.Contains(SelectedPointIndex)
                                                     ? boundaryCondition.SpectrumParameters[SelectedPointIndex]
                                                     : null;
             }
-            else if (boundaryCondition.DataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+            else if (boundaryCondition.DataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
             {
                 functionView.Data = null;
                 functionView.Data = boundaryCondition.GetDataAtPoint(SelectedPointIndex);

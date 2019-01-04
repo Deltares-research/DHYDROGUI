@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             var fac = new WaveBoundaryConditionFactory();
             var waveBoundaryCondition =
                 (WaveBoundaryCondition) fac.CreateBoundaryCondition(feature2D, WaveBoundaryCondition.WaveQuantityName,
-                                                                    BoundaryConditionDataType.ParametrizedSpectrumConstant);
+                                                                    BoundaryConditionDataType.ParameterizedSpectrumConstant);
 
             return waveBoundaryCondition;
         }

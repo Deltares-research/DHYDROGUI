@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         {
             // Given
             var waveModel = new WaveModel();
-            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
             {
                 Feature = featureWithTwoPoints,
                 SpatialDefinitionType = spatialDefinitionType
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         public void GivenWaveModelWithWaveBoundaryConditionThatHasGeometryWithMoreThanTwoPoints_WhenValidatingBoundaryConditions_ThenInfoMessageIsReturned()
         {
             // Given
-            var boundaryCondition = (WaveBoundaryCondition)new WaveBoundaryConditionFactory().CreateBoundaryCondition(featureWithThreePoints, string.Empty, BoundaryConditionDataType.ParametrizedSpectrumConstant);
+            var boundaryCondition = (WaveBoundaryCondition)new WaveBoundaryConditionFactory().CreateBoundaryCondition(featureWithThreePoints, string.Empty, BoundaryConditionDataType.ParameterizedSpectrumConstant);
             boundaryCondition.SpectrumParameters.Values.ForEach(spectrumParameters =>
             {
                 // Pass validation on spectrum parameters
@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         public void GivenWaveModelWithWaveBoundaryConditionThatHasADataPointWithHeightEqualToOrSmallerThanZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double heightValue, WaveBoundaryConditionSpatialDefinitionType type)
         {
             // Given
-            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumConstant)
+            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumConstant)
             {
                 Feature = featureWithTwoPoints,
                 SpatialDefinitionType = type
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         public void GivenWaveModelWithWaveBoundaryConditionThatHasADataPointWithPeriodEqualToOrSmallerThanZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double periodValue, WaveBoundaryConditionSpatialDefinitionType type)
         {
             // Given
-            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumConstant)
+            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumConstant)
             {
                 Feature = featureWithTwoPoints,
                 SpatialDefinitionType = type
@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         public void GivenWaveModelWithWaveBoundaryConditionThatHasADataPointWithSpreadingEqualToOrSmallerThanZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double spreadingValue, WaveBoundaryConditionSpatialDefinitionType type)
         {
             // Given
-            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumConstant)
+            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumConstant)
             {
                 Feature = featureWithTwoPoints,
                 SpatialDefinitionType = type
@@ -208,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        public void GivenWaveModelWithWaveBoundaryConditionThatHasADataPointWithSpectrumParametersEqualToOrSmallerThanZeroAndHasDataTypeParametrizedSpectrumTimeSeries_WhenValidatingBoundaryConditions_ThenNoErrorMessageIsReturned()
+        public void GivenWaveModelWithWaveBoundaryConditionThatHasADataPointWithSpectrumParametersEqualToOrSmallerThanZeroAndHasDataTypeParameterizedSpectrumTimeSeries_WhenValidatingBoundaryConditions_ThenNoErrorMessageIsReturned()
         {
             // Given
             var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.SpectrumFromFile)
@@ -241,10 +241,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
         [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
         [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
-        public void GivenWaveModelWithParametrizedSpectrumTimeSeriesBoundaryConditionThatHasHsValueSmallerThanOrEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double heightValue, WaveBoundaryConditionSpatialDefinitionType type)
+        public void GivenWaveModelWithParameterizedSpectrumTimeSeriesBoundaryConditionThatHasHsValueSmallerThanOrEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double heightValue, WaveBoundaryConditionSpatialDefinitionType type)
         {
             // Given
-            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
             {
                 Feature = featureWithTwoPoints,
                 SpatialDefinitionType = type
@@ -274,10 +274,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
         [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
         [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
-        public void GivenWaveModelWithParametrizedSpectrumTimeSeriesBoundaryConditionThatHasTpValueSmallerThanOrEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double periodValue, WaveBoundaryConditionSpatialDefinitionType type)
+        public void GivenWaveModelWithParameterizedSpectrumTimeSeriesBoundaryConditionThatHasTpValueSmallerThanOrEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double periodValue, WaveBoundaryConditionSpatialDefinitionType type)
         {
             // Given
-            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
             {
                 Feature = featureWithTwoPoints,
                 SpatialDefinitionType = type
@@ -307,10 +307,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
         [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
         [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
-        public void GivenWaveModelWithParametrizedSpectrumTimeSeriesBoundaryConditionThatHasSpreadingValueSmallerThanOrEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double spreadingValue, WaveBoundaryConditionSpatialDefinitionType type)
+        public void GivenWaveModelWithParameterizedSpectrumTimeSeriesBoundaryConditionThatHasSpreadingValueSmallerThanOrEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double spreadingValue, WaveBoundaryConditionSpatialDefinitionType type)
         {
             // Given
-            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
             {
                 Feature = featureWithTwoPoints,
                 SpatialDefinitionType = type
@@ -343,7 +343,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             var factory = new WaveBoundaryConditionFactory();
             var boundaryCondition = (WaveBoundaryCondition) factory.CreateBoundaryCondition(featureWithTwoPoints, string.Empty,
-                BoundaryConditionDataType.ParametrizedSpectrumTimeseries);
+                BoundaryConditionDataType.ParameterizedSpectrumTimeseries);
             model.BoundaryConditions.Add(boundaryCondition);
             boundaryCondition.SpatialDefinitionType = WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying;
 

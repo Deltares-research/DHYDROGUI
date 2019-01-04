@@ -257,7 +257,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             var timeDepBoundaries =
                 model.BoundaryConditions.Where(
-                    bc => bc.DataType == BoundaryConditionDataType.ParametrizedSpectrumTimeseries);
+                    bc => bc.DataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries);
 
             foreach (var boundary in timeDepBoundaries)
             {

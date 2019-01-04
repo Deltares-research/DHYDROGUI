@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 bc.AddPoint(0);
                 bc.SpectrumFiles[0] = "";
             }
-            if (dataType == BoundaryConditionDataType.ParametrizedSpectrumConstant)
+            if (dataType == BoundaryConditionDataType.ParameterizedSpectrumConstant)
             {
                 bc.AddPoint(0);
                 bc.SpectrumParameters[0] = new WaveBoundaryParameters();

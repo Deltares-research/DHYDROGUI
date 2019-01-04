@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
         private static IEnumerable<ValidationIssue> ValidateSpectrumParameters(WaveBoundaryCondition boundaryCondition)
         {
-            if (boundaryCondition.DataType != BoundaryConditionDataType.ParametrizedSpectrumConstant) yield break;
+            if (boundaryCondition.DataType != BoundaryConditionDataType.ParameterizedSpectrumConstant) yield break;
 
             foreach (var spectrumParameters in boundaryCondition.SpectrumParameters)
             {
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
         private static IEnumerable<ValidationIssue> ValidateTimeSeriesValues(WaveBoundaryCondition boundaryCondition)
         {
-            if (boundaryCondition.DataType != BoundaryConditionDataType.ParametrizedSpectrumTimeseries) yield break;
+            if (boundaryCondition.DataType != BoundaryConditionDataType.ParameterizedSpectrumTimeseries) yield break;
 
             for (var i = 0; i < boundaryCondition.PointData.Count; i++)
             {
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
         private static IEnumerable<ValidationIssue> ValidateTimePoints(WaveBoundaryCondition boundaryCondition)
         {
-            if (boundaryCondition.DataType != BoundaryConditionDataType.ParametrizedSpectrumTimeseries ||
+            if (boundaryCondition.DataType != BoundaryConditionDataType.ParameterizedSpectrumTimeseries ||
                 boundaryCondition.PointData.Count <= 1 || 
                 boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.Uniform)
                 yield break;

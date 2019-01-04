@@ -66,10 +66,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
                     continue;
                 }
 
-                if (bc.DataType != BoundaryConditionDataType.ParametrizedSpectrumTimeseries)
+                if (bc.DataType != BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
                 {
                     Log.WarnFormat("Could not import boundary condition; boundary {0} is not of type {1}", name,
-                                   BoundaryConditionDataType.ParametrizedSpectrumTimeseries);
+                                   BoundaryConditionDataType.ParameterizedSpectrumTimeseries);
                     continue;
                 }
 

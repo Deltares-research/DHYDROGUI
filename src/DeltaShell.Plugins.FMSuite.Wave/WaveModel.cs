@@ -721,11 +721,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private static WaveBoundaryCondition CreateWaveBoundaryCondition(Feature2D f, WaveModel model)
         {
-            // default condition: parametrized and uniform
+            // default condition: parameterized and uniform
             var waveBoundaryCondition = (WaveBoundaryCondition)
                      (new WaveBoundaryConditionFactory().CreateBoundaryCondition(f, WaveBoundaryCondition.WaveQuantityName,
                                                                                  BoundaryConditionDataType
-                                                                                     .ParametrizedSpectrumConstant));
+                                                                                     .ParameterizedSpectrumConstant));
             waveBoundaryCondition.Name = NamingHelper.GetUniqueName("BoundaryCondition" + "{0:D2}",
                                                                     model.BoundaryConditions.OfType<INameable>());
             return waveBoundaryCondition;

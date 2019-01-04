@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(68, 13);
             this.label2.TabIndex = 11;
-            this.label2.Text = "Forcing type:";
+            this.label2.Text = "Forcing Type:";
             // 
             // label1
             // 
@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             this.dataTypeComboBox.FormattingEnabled = true;
             this.dataTypeComboBox.Location = new System.Drawing.Point(160, 25);
             this.dataTypeComboBox.Name = "dataTypeComboBox";
-            this.dataTypeComboBox.Size = new System.Drawing.Size(140, 21);
+            this.dataTypeComboBox.Size = new System.Drawing.Size(150, 21);
             this.dataTypeComboBox.TabIndex = 14;
             // 
             // BoundaryConditionPropertiesControl
