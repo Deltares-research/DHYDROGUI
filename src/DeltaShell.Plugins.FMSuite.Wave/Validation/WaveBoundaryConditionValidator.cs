@@ -97,8 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
         private static IEnumerable<ValidationIssue> ValidateTimeSeriesValues(WaveBoundaryCondition boundaryCondition)
         {
-            if (boundaryCondition.DataType != BoundaryConditionDataType.ParametrizedSpectrumTimeseries ||
-                boundaryCondition.PointData.Count == 0) yield break;
+            if (boundaryCondition.DataType != BoundaryConditionDataType.ParametrizedSpectrumTimeseries) yield break;
 
             for (var i = 0; i < boundaryCondition.PointData.Count; i++)
             {
@@ -109,6 +108,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 {
                     var pointIndex = boundaryCondition.DataPointIndices[i] + 1;
                     precedingText = $"Point {pointIndex}: ";
+                }
+
+                var timeArgument = function.Arguments.FirstOrDefault(a => a.Name == WaveBoundaryCondition.TimeVariableName);
+                if (timeArgument?.Values.Count == 0)
+                {
+                    yield return new ValidationIssue(null, ValidationSeverity.Error,
+                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_does_not_contain_a_boundary_condition, boundaryCondition);
+                    continue;
                 }
 
                 var heightComponent = function.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName);
