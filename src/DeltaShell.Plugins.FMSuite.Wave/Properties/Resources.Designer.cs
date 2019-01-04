@@ -306,7 +306,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Model Start time precedes Reference Time.
+        ///   Looks up a localized string similar to Model start time precedes reference time.
         /// </summary>
         public static string WaveTimePointValidator_Validate_Model_Start_time_precedes_Reference_Time {
             get {

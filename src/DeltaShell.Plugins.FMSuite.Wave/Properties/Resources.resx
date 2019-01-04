@@ -197,6 +197,6 @@
     <value>No time points defined</value>
   </data>
   <data name="WaveTimePointValidator_Validate_Model_Start_time_precedes_Reference_Time" xml:space="preserve">
-    <value>Model Start time precedes Reference Time</value>
+    <value>Model start time precedes reference time</value>
   </data>
 </root>
