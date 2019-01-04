@@ -382,7 +382,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Then
             // The correct issues are added.
             var expectedIssue =
-                $"Upstream 2 for '{weir.Name}', structure type {weir.WeirFormula.Name} must be greater than 0.";
+                $"Upstream 2 Crest Width for '{weir.Name}', structure type {weir.WeirFormula.Name} must be greater than 0.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -414,7 +414,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Then
             // The correct issues are added.
             var expectedIssue =
-                $"Upstream 1 for '{weir.Name}', structure type {weir.WeirFormula.Name} must be greater than 0.";
+                $"Upstream 1 Crest Width for '{weir.Name}', structure type {weir.WeirFormula.Name} must be greater than 0.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -446,7 +446,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Then
             // The correct issues are added.
             var expectedIssue =
-                $"Downstream 1 for '{weir.Name}', structure type {weir.WeirFormula.Name} must be greater than 0.";
+                $"Downstream 1 Crest Width for '{weir.Name}', structure type {weir.WeirFormula.Name} must be greater than 0.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -478,7 +478,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Then
             // The correct issues are added.
             var expectedIssue =
-                $"Downstream 2 for '{weir.Name}', structure type {weir.WeirFormula.Name} must be greater than 0.";
+                $"Downstream 2 Crest Width for '{weir.Name}', structure type {weir.WeirFormula.Name} must be greater than 0.";
 
             Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
             var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;

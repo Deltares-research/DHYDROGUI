@@ -206,25 +206,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                     if (generalStructureFormula.WidthStructureLeftSide <= 0.0)
                     {
-                        var msg = $"Upstream 2 for '{weirName}', structure type {weirType} must be greater than 0.";
+                        var msg = $"Upstream 2 Crest Width for '{weirName}', structure type {weirType} must be greater than 0.";
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
 
                     if (generalStructureFormula.WidthLeftSideOfStructure <= 0.0)
                     {
-                        var msg = $"Upstream 1 for '{weirName}', structure type {weirType} must be greater than 0.";
+                        var msg = $"Upstream 1 Crest Width for '{weirName}', structure type {weirType} must be greater than 0.";
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
 
                     if (generalStructureFormula.WidthStructureRightSide <= 0.0)
                     {
-                        var msg = $"Downstream 1 for '{weirName}', structure type {weirType} must be greater than 0.";
+                        var msg = $"Downstream 1 Crest Width for '{weirName}', structure type {weirType} must be greater than 0.";
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
 
                     if (generalStructureFormula.WidthRightSideOfStructure <= 0.0)
                     {
-                        var msg = $"Downstream 2 for '{weirName}', structure type {weirType} must be greater than 0.";
+                        var msg = $"Downstream 2 Crest Width for '{weirName}', structure type {weirType} must be greater than 0.";
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
                 }
