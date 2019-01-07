@@ -805,7 +805,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             };
             
             viewModel.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
-
             {
                 raisedEvents.Add(e.PropertyName);
             };
@@ -818,6 +817,54 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             Assert.That(raisedEvents.Contains("BedLevelStructureCentre"));
             Assert.That(raisedEvents.Contains("GateOpeningHeight"));
 
+        }
+
+        [Test]
+        public void GivenAWeirViewModel_WhenChangingTheWeirFormulaToGatedWeir_ThenTwoEventsShouldBeFired()
+        {
+            List<string> raisedEvents = new List<string>();
+
+            var viewModel = new WeirViewModel()
+            {
+                Weir = new Weir2D { WeirFormula = new SimpleWeirFormula() }
+            };
+
+            var count = 0;
+            ((INotifyPropertyChanged)viewModel.Weir).PropertyChanged += (s, e) => count++;
+         
+            Assert.AreEqual(0, count);
+
+            // Change property needed for firing the event
+            viewModel.Weir.WeirFormula = new GatedWeirFormula(true);
+
+            Assert.AreEqual(2, count);
+        }
+
+        [Test]
+        public void GivenAWeirViewModel_WhenChangingTheWeirFormulaToGeneralStructure_ThenThreeEventsShouldBeFired()
+        {
+            List<string> raisedEvents = new List<string>();
+
+            var viewModel = new WeirViewModel()
+            {
+                Weir = new Weir2D { WeirFormula = new SimpleWeirFormula() }
+            };
+
+            var count = 0;
+            ((INotifyPropertyChanged)viewModel.Weir).PropertyChanged += (s, e) => count++;
+
+            Assert.AreEqual(0, count);
+
+            // Change property needed for firing the event
+            var generalStructureWeirFormula = new GeneralStructureWeirFormula
+            {
+                BedLevelStructureCentre = viewModel.Weir.CrestLevel,
+                WidthStructureCentre = viewModel.Weir.CrestWidth,
+            };
+
+            viewModel.Weir.WeirFormula = generalStructureWeirFormula;
+
+            Assert.AreEqual(3, count);
         }
     }
 }
