@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 {
                     WaveDomainValidator.Validate(model),
                     WaveTimePointValidator.Validate(model),
-                    WaveBoundaryConditionValidator.Validate(model),
+                    WaveBoundaryConditionValidator.Validate(model.BoundaryConditions),
                     WaveAreaValidator.Validate(model),
                     WaveCouplingValidator.Validate(model),
                     WavePropertiesValidator.Validate(model),

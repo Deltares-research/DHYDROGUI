@@ -10,9 +10,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 {
     public static class WaveBoundaryConditionValidator
     {
-        public static ValidationReport Validate(WaveModel model)
+        /// <summary>
+        /// Validates the specified wave boundary conditions.
+        /// </summary>
+        /// <param name="waveBoundaryConditions">The wave boundary conditions to validate.</param>
+        /// <returns> A validation report about the wave boundary conditions. </returns>
+        public static ValidationReport Validate(IEnumerable<WaveBoundaryCondition> waveBoundaryConditions)
         {
-            var subReports = model.BoundaryConditions
+            var subReports = waveBoundaryConditions
                 .Select(bc => new ValidationReport(bc.Name, ValidateBoundaryCondition(bc)));
 
             return new ValidationReport("Waves Model Boundary Conditions", subReports);
