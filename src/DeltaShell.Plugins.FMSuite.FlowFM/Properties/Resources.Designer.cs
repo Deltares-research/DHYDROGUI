@@ -956,6 +956,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to thin dam &apos;{0}&apos; not within grid extent.
+        /// </summary>
+        public static string WaterFlowFMArea2DValidator_Validate_thin_dam___0___not_within_grid_extent {
+            get {
+                return ResourceManager.GetString("WaterFlowFMArea2DValidator_Validate_thin_dam___0___not_within_grid_extent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Boundary &apos;{0}&apos; does not contain a boundary condition.
         /// </summary>
         public static string WaterFlowFMBoundaryConditionValidator_Validate_Boundary___0___does_not_contain_a_boundary_condition {

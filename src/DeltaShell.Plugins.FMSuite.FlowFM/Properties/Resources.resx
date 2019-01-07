@@ -500,4 +500,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMModelDefinition_GetTabName_Invalid_gui_group_id_for___0___in_the_scheme_of_dflowfmmorpropertiescsv___1_" xml:space="preserve">
     <value>Invalid gui group id for {0} in the scheme of dflowfm-mor-properties.csv: '{1}'</value>
   </data>
+  <data name="WaterFlowFMArea2DValidator_Validate_thin_dam___0___not_within_grid_extent" xml:space="preserve">
+    <value>thin dam '{0}' not within grid extent</value>
+  </data>
 </root>

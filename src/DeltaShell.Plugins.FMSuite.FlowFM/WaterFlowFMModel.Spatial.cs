@@ -647,8 +647,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public bool SnapsToGrid(IGeometry geometry)
         {
             if (GridExtent == null) return true;
-            var extentsPlusMargin = new Envelope(0.9 * GridExtent.MinX, 1.1 * GridExtent.MaxX, 0.9 * GridExtent.MinY,
-                1.1 * GridExtent.MaxY);
+            var extentsPlusMargin = new Envelope(0.9 * GridExtent.MinX, 1.1 * GridExtent.MaxX, 0.9 * GridExtent.MinY, 1.1 * GridExtent.MaxY);
             return extentsPlusMargin.Intersects(geometry.EnvelopeInternal);
         }
 

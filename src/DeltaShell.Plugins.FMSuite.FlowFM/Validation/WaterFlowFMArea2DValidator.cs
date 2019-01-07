@@ -5,6 +5,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using ValidationAspects;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
@@ -20,8 +21,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             {
                 if (!model.SnapsToGrid(thinDam.Geometry))
                 {
-                    issues.Add(new ValidationIssue(thinDam, ValidationSeverity.Warning,
-                                                   "thin dam '" + thinDam.Name + "' not within grid extent", area.ThinDams));
+                    issues.Add(new ValidationIssue(thinDam, ValidationSeverity.Warning, 
+                        string.Format(Resources.WaterFlowFMArea2DValidator_Validate_thin_dam___0___not_within_grid_extent, thinDam.Name), area.ThinDams));
                 }
             }
 
@@ -36,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 if (timeArgument.Values.Any())
                 {
                     var startTime = timeArgument.Values.First();
-                    var stopTime =timeArgument.Values.Last();
+                    var stopTime = timeArgument.Values.Last();
 
                     if (startTime > model.StartTime || stopTime < model.StopTime)
                     {
