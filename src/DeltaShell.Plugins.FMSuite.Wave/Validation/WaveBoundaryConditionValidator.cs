@@ -11,7 +11,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
     public static class WaveBoundaryConditionValidator
     {
         /// <summary>
-        /// Validates the specified wave boundary conditions.
+        /// Validates the specified wave boundary conditions. Wave boundary condition that are equal
+        /// to null will not be validated.
         /// </summary>
         /// <param name="waveBoundaryConditions">The wave boundary conditions to validate.</param>
         /// <returns> A validation report about the wave boundary conditions. </returns>
