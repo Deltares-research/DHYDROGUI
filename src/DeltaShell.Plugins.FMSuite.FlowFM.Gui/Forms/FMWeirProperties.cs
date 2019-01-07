@@ -7,6 +7,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
@@ -19,6 +20,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         {
             get { return data.Name; }
             set { data.Name = value; }
+        }
+
+        [Category("General")]
+        [DisplayName("Structure Type")]
+        [Description("Structure Type")]
+        [PropertyOrder(1)]
+        public SelectableWeirFormulaType WeirFormula
+        {
+            get
+            {
+                if (data.WeirFormula is SimpleWeirFormula)
+                {
+                    return SelectableWeirFormulaType.SimpleWeir;
+                }
+                else if (data.WeirFormula is GatedWeirFormula)
+                {
+                    return SelectableWeirFormulaType.SimpleGate;
+                }
+                else 
+                {
+                    return SelectableWeirFormulaType.GeneralStructure;
+                }
+            }
+            set
+            {
+                if (value == SelectableWeirFormulaType.SimpleWeir)
+                {
+                    data.WeirFormula = new SimpleWeirFormula();
+                }
+                else if (value == SelectableWeirFormulaType.SimpleGate)
+                {
+                    data.WeirFormula = new GatedWeirFormula(true);
+                }
+                else
+                {
+                    var generalStructureWeirFormula = new GeneralStructureWeirFormula()
+                    {
+                        BedLevelStructureCentre = data.CrestLevel,
+                        WidthStructureCentre = data.CrestWidth,
+                    };
+
+                    data.WeirFormula = generalStructureWeirFormula;
+                }
+            }
         }
 
         [Category("General")]
@@ -49,37 +94,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         [Category("General")]
         [DisplayName("Crest level input")]
         [Description("Use a time series for the crest level or use a time constant value")]
-        [PropertyOrder(1)]
+        [PropertyOrder(3)]
         public TimeDependency UseCrestLevelTimeSeries
         {
             get { return data.UseCrestLevelTimeSeries ? TimeDependency.TimeDependent : TimeDependency.Constant; }
             set { data.UseCrestLevelTimeSeries = value == TimeDependency.TimeDependent; }
         }
 
-        [Category("General")]        
-        [DisplayName("Contraction coefficient")]
-        [Description("Contraction coefficient")]
-        [PropertyOrder(5)]
-        public double LateralContraction
-        {
-            get
-            {
-                var formula = data.WeirFormula as SimpleWeirFormula;
-                return formula == null ? 0 : formula.LateralContraction;
-            }
-            set
-            {
-                var formula = data.WeirFormula as SimpleWeirFormula;
-                if (formula != null)
-                {
-                    formula.LateralContraction = value;
-                }
-            }
-        }
+        
 
         [Category("General")]
         [DisplayName("Crest width")]
-        [PropertyOrder(3)]
+        [PropertyOrder(4)]
         [Description("Width (in [m]) of the weir crest")]
         [DynamicReadOnly]
         public double CrestWidth
@@ -90,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         [Category("General")]
         [DisplayName("Use crest width")]
-        [PropertyOrder(4)]
+        [PropertyOrder(5)]
         [Description("Use crest width or use weir geometry")]
         public bool UseCrestWidth
         {

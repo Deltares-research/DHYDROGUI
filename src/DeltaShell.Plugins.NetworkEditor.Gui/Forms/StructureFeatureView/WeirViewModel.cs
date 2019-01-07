@@ -970,7 +970,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             if (e.PropertyName == TypeUtils.GetMemberName<IWeir>(vm => vm.WeirFormula))
             {
                 selectedWeirType = GetSelectableWeirFormulaType(weir.WeirFormula);
-                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.SelectedWeirType));
+
+                ((INotifyPropertyChanged)weir).PropertyChanged -= WeirPropertyChanged;
+                ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged -= WeirFormulaPropertyChanged;
+
+                SelectedWeirType = selectedWeirType;
+
+                ((INotifyPropertyChanged)weir).PropertyChanged += WeirPropertyChanged;
+                ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged += WeirFormulaPropertyChanged;
             }
 
             if (e.PropertyName == TypeUtils.GetMemberName<IWeir>(vm => vm.UseCrestLevelTimeSeries))
@@ -983,8 +990,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.BedLevelStructureCentre));
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
             }
-
-
         }
 
         private void WeirFormulaPropertyChanged(object sender, PropertyChangedEventArgs e)
