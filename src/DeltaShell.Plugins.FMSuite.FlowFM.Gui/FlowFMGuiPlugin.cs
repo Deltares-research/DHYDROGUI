@@ -76,6 +76,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             get { return "1.1.0.0"; }
         }
 
+        /// <summary>
+        /// Gets the project TreeView node presenters.
+        /// </summary>
+        /// <returns></returns>
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
             yield return new WaterFlowFMModelNodePresenter(this);
@@ -84,6 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new SourceSinkNodePresenter {GuiPlugin = this};
             yield return new FMMapFileFunctionStoreNodePresenter {GuiPlugin = this};
             yield return new FMHisFileFunctionStoreNodePresenter();
+            yield return new FMClassMapFileFunctionStoreNodePresenter {GuiPlugin = this};
             yield return new ImportedFMNetFileNodePresenter {GuiPlugin = this};
             yield return new HeatFluxModelNodePresenter {GuiPlugin = this};
             yield return new WindItemListNodePresenter {GuiPlugin = this};

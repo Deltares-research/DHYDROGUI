@@ -1,0 +1,75 @@
+﻿using DelftTools.Controls;
+using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Shell.Gui.Swf;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using NetTopologySuite.Extensions.Coverages;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
+{
+    /// <summary>
+    /// Presents the nodes for the Class Map file function store.
+    /// </summary>
+    /// <seealso cref="DelftTools.Shell.Gui.Swf.TreeViewNodePresenterBaseForPluginGui{FMClassMapFileFunctionStore}" />
+    public class FMClassMapFileFunctionStoreNodePresenter : TreeViewNodePresenterBaseForPluginGui<FMClassMapFileFunctionStore>
+    {
+        /// <summary>
+        /// Updates the node.
+        /// </summary>
+        /// <param name="parentNode">The parent node.</param>
+        /// <param name="node">The node.</param>
+        /// <param name="nodeData">The node data.</param>
+        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, FMClassMapFileFunctionStore nodeData)
+        {
+            node.Text = Path.GetFileName(nodeData.Path);
+            node.Image = Properties.Resources.unstrucWater;
+        }
+
+        /// <summary>
+        /// Gets the child node objects.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
+        /// <param name="node">The node.</param>
+        /// <returns></returns>
+        public override IEnumerable GetChildNodeObjects(FMClassMapFileFunctionStore parent, ITreeNode node)
+        {
+            var model =
+                Gui.Application.Project.RootFolder.Models.OfType<WaterFlowFMModel>()
+                    .FirstOrDefault(m => Equals(m.OutputClassMapFileStore, parent));
+
+            if (model == null)
+            {
+                var coverage = parent.Functions.OfType<UnstructuredGridCoverage>().FirstOrDefault();
+                if (coverage != null)
+                {
+                    yield return WrapIntoOutputItem(coverage.Grid, parent, "grid");
+                }
+            }
+            foreach (var function in parent.Functions)
+            {
+                yield return WrapIntoOutputItem(function, parent, function.Name);
+            }
+        }
+
+        private IDataItem WrapIntoOutputItem(object o, FMClassMapFileFunctionStore store, string tag)
+        {
+            var model =
+                Gui.Application.Project.RootFolder.Models.OfType<WaterFlowFMModel>()
+                    .FirstOrDefault(m => Equals(m.OutputClassMapFileStore, store));
+
+            var existingItem = DataItems.FirstOrDefault(di => Equals(di.Tag, tag) && Equals(di.Owner, model));
+            if (existingItem == null)
+            {
+                var newItem = new DataItem(o, DataItemRole.Output) { Tag = tag, Owner = model };
+                DataItems.Add(newItem);
+                return newItem;
+            }
+            return existingItem;
+        }
+
+        private static readonly IList<DataItem> DataItems = new List<DataItem>();
+    }
+}

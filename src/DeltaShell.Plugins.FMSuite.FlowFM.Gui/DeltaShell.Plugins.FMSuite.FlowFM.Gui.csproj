@@ -325,6 +325,7 @@
     <Compile Include="MapTools\GridWizardMapToolHelper.cs" />
     <Compile Include="MapTools\MergeEmbankmentsMapTool.cs" />
     <Compile Include="NodePresenters\BoundaryConditionSetNodePresenter.cs" />
+    <Compile Include="NodePresenters\FMClassMapFileFunctionStoreNodePresenter.cs" />
     <Compile Include="NodePresenters\FMHisFileFunctionStoreNodePresenter.cs" />
     <Compile Include="NodePresenters\FMMapFileFunctionStoreNodePresenter.cs" />
     <Compile Include="NodePresenters\FmModelTreeShortcutNodePresenter.cs" />

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using DelftTools.Functions;
+﻿using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
@@ -21,6 +14,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using GeoAPI.Geometries;
 using log4net;
@@ -34,7 +28,12 @@ using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
@@ -57,6 +56,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         public const string OutputSnappedFeaturesLayerName = "Output Snapped features";
         public const string GridSnappedFeaturesLayerName = "Estimated Grid-snapped features";
 
+        /// <summary>
+        /// Creates a maplayer. 
+        /// </summary>
+        /// <param name="data">The data object for which the layer is created.</param>
+        /// <param name="parent">The parent object.</param>
+        /// <returns></returns>
         public ILayer CreateLayer(object data, object parent)
         {
             var waterFlowFmModel = data as WaterFlowFMModel;
@@ -148,6 +153,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     };
             }
 
+            if (data is FMClassMapFileFunctionStore)
+            {
+                var groupLayer = new GroupLayer("Output (class)")
+                {
+                    LayersReadOnly = true,
+                    NameIsReadOnly = true
+                };
+                return groupLayer;
+            }
+
             var outputSnappedGroupLayerData = data as FMOutputSnappedFeaturesGroupLayerData;
             if (outputSnappedGroupLayerData != null)
             {
@@ -219,12 +234,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             layer.GridColor = Color.Gray;
         }
 
+        /// <summary>
+        /// Determines whether this instance can create a layer the specified data object.
+        /// </summary>
+        /// <param name="data">The data object for which will be determined whether a layer can be created.</param>
+        /// <param name="parentObject">The parent object.</param>
+        /// <returns>
+        ///   <c>true</c> if this instance [can create layer for] the specified data; otherwise, <c>false</c>.
+        /// </returns>
         public bool CanCreateLayerFor(object data, object parentObject)
         {
             return data is WaterFlowFMModel
                    || data is IGrouping<string, IFunction>
                    || data is FMMapFileFunctionStore
                    || data is FMHisFileFunctionStore
+                   || data is FMClassMapFileFunctionStore
                    || data is ImportedFMNetFile
                    || (data is IEventedList<BoundaryConditionSet> && parentObject is WaterFlowFMModel)
                    || data is FMSnappedFeaturesGroupLayerData
@@ -233,6 +257,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                    || data is IEventedList<Feature2D>;  // Boundaries and sources&sinks
         }
 
+        /// <summary>
+        /// Child objects for <paramref name="data" />. Objects will be used to create child layers
+        /// for the group layer (<paramref name="data" />)
+        /// </summary>
+        /// <param name="data">Group layer data</param>
+        /// <returns>
+        /// Child objects for <paramref name="data" />
+        /// </returns>
         public IEnumerable<object> ChildLayerObjects(object data)
         {
             var model = data as WaterFlowFMModel;
@@ -319,6 +351,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 
                 if (model.OutputHisFileStore != null)
                     yield return model.OutputHisFileStore;
+
+                if (model.OutputClassMapFileStore != null)
+                    yield return model.OutputClassMapFileStore;
             }
 
             var coverageDepthLayersList = data as CoverageDepthLayersList;
@@ -333,10 +368,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var outputStore = data as FMNetCdfFileFunctionStore;
             if (outputStore != null)
             {
-                var mapStore = outputStore as FMMapFileFunctionStore;
-                if (mapStore != null)
+                if (outputStore is FMMapFileFunctionStore fmMapFileFunctionStore)
                 {
-                    foreach (var output in GetMapOutputFunctions(mapStore))
+                    foreach (var output in GetMapOutputFunctions(fmMapFileFunctionStore))
+                        yield return output;
+                }
+                else if (outputStore is FMClassMapFileFunctionStore fmClassMapFileFunctionStore)
+                {
+                    yield return fmClassMapFileFunctionStore.Grid;
+
+                    foreach (var output in outputStore.Functions)
                         yield return output;
                 }
                 else

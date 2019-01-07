@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using BasicModelInterface;
+using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
@@ -1182,6 +1183,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
         #region TimedependentModelBase
 
+        /// <summary>
+        /// Gets the direct children of the parent object
+        /// </summary>
+        /// <returns></returns>
         public override IEnumerable<object> GetDirectChildren()
         {
             foreach (var item in base.GetDirectChildren())
@@ -1231,12 +1236,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return InitialFractions;
 
             // for QueryTimeSeries tool:
-            if (OutputHisFileStore != null)
-                foreach (var featureCoverage in OutputHisFileStore.Functions)
-                    yield return featureCoverage;
+            yield return GetFunctions(OutputMapFileStore);
+            yield return GetFunctions(OutputHisFileStore);
+            yield return GetFunctions(OutputClassMapFileStore);
+        }
 
-            if (OutputMapFileStore != null)
-                foreach (var function in OutputMapFileStore.Functions)
+        private IEnumerable<object> GetFunctions(FMNetCdfFileFunctionStore functionStore)
+        {
+            if (functionStore != null)
+                foreach (var function in OutputHisFileStore.Functions)
                     yield return function;
         }
 
@@ -1325,6 +1333,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
         }
 
+        /// <summary>
+        /// Called when [clear output]. Clears all output of the model.
+        /// </summary>
         protected override void OnClearOutput()
         {
             if (OutputMapFileStore != null)
@@ -1338,6 +1349,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 OutputHisFileStore.Functions.Clear();
                 OutputHisFileStore.Close();
                 OutputHisFileStore = null;
+            }
+            if (OutputClassMapFileStore != null)
+            {
+                OutputClassMapFileStore.Functions.Clear();
+                OutputClassMapFileStore.Close();
+                OutputClassMapFileStore = null;
             }
         }
        
@@ -2362,7 +2379,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (existsClassMapFile)
             {
                 ReportProgressText("Reading class map file");
-
+                FireImportProgressChanged(this, "Reading output files - Reading Class Map file", 1, 2);
                 if (switchTo && OutputClassMapFileStore != null)
                 {
                     OutputClassMapFileStore.Path = classMapFilePath;
@@ -2370,7 +2387,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 else
                 {
                     OutputClassMapFileStore = new FMClassMapFileFunctionStore(classMapFilePath);
-                    OutputClassMapFileStore.Path = classMapFilePath;
                 }
             }
 
@@ -3001,11 +3017,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get { return DimrApiDataSet.DFlowFmDllPath; }
         }
 
+
+        /// <summary>
+        /// Disconnects the output.
+        /// </summary>
         public virtual void DisconnectOutput()
         {
             var hasMapFileStore = OutputMapFileStore != null;
             var hasHisFileStore = OutputHisFileStore != null;
-            if (hasMapFileStore || hasHisFileStore)
+            var hasClassMapFileStore = OutputClassMapFileStore != null;
+
+            if (hasMapFileStore || hasHisFileStore || hasClassMapFileStore )
             {
                 BeginEdit(new DefaultEditAction("Disconnecting from output files"));
 
@@ -3018,6 +3040,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     OutputHisFileStore.Close();
                     OutputHisFileStore = null;
+                }
+                if (hasClassMapFileStore)
+                {
+                    OutputClassMapFileStore.Close();
+                    OutputClassMapFileStore = null;
                 }
                 EndEdit();
             }
