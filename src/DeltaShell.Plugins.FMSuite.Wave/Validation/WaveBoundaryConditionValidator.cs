@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         /// <returns> A validation report about the wave boundary conditions. </returns>
         public static ValidationReport Validate(IEnumerable<WaveBoundaryCondition> waveBoundaryConditions)
         {
-            var subReports = waveBoundaryConditions
+            var subReports = waveBoundaryConditions.Where(bc => bc != null)
                 .Select(bc => new ValidationReport(bc.Name, ValidateBoundaryCondition(bc)));
 
             return new ValidationReport("Waves Model Boundary Conditions", subReports);

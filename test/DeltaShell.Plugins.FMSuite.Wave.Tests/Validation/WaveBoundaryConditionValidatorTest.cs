@@ -20,6 +20,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         private readonly Feature2D featureWithThreePoints = new Feature2D { Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) }) };
 
         [Test]
+        public void GivenNullWaveBoundaryCondition_WhenValidatingBoundaryConditions_ThenValidationReportIsEmpty()
+        {
+            // Given
+            IList<WaveBoundaryCondition> waveBoundaryConditions  = new List<WaveBoundaryCondition> {null};
+
+            // When
+            var validationReport = WaveBoundaryConditionValidator.Validate(waveBoundaryConditions);
+
+            // Then
+            var validationIssues = validationReport.GetAllIssuesRecursive();
+            Assert.IsEmpty(validationIssues, "Wave boundary conditions equal to null should not be validated.");
+        }
+
+        [Test]
         public void GivenWaveBoundaryConditionThatHasNoDataPoints_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned()
         {
             // Given
