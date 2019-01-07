@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = fmModel.TimeStep;
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = fmModel.TimeStep;
             var observationPointFm = new GroupableFeature2DPoint { Name = "ObservationFM" };
-            var weirFm = new Weir2D { Name = "Weir1", Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) }) };
+            var weirFm = new Weir2D { Name = "Weir1", Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100)  }), CrestWidth = 1.0};
 
             fmModel.Area.ObservationPoints.Add(observationPointFm);
             fmModel.Area.Weirs.Add(weirFm);
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = fmModel.TimeStep;
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = fmModel.TimeStep;
             var observationPointFm = new GroupableFeature2DPoint { Name = "ObservationFM" };
-            var weirFm = new Weir2D { Name = "Weir1", Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) }) };
+            var weirFm = new Weir2D { Name = "Weir1", Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) }), CrestWidth = 1.0};
 
             fmModel.Area.ObservationPoints.Add(observationPointFm);
             fmModel.Area.Weirs.Add(weirFm);
