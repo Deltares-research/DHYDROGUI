@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -211,6 +211,35 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("CopyHS", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The entered value is either too large or too small, please enter a number between -1.79769313486232E+308 &amp; 1.79769313486232E+308.
+        /// </summary>
+        public static string CrestValidationRule_Validate_The_entered_value_is_either_too_large_or_too_small__please_enter_a_number_between__1_79769313486232E_308___1_79769313486232E_308 {
+            get {
+                return ResourceManager.GetString("CrestValidationRule_Validate_The_entered_value_is_either_too_large_or_too_small__" +
+                        "please_enter_a_number_between__1_79769313486232E_308___1_79769313486232E_308", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The entered value is not a number, please enter a number greater than 0.
+        /// </summary>
+        public static string CrestValidationRule_Validate_The_entered_value_is_not_a_number__please_enter_a_number_greater_than_0 {
+            get {
+                return ResourceManager.GetString("CrestValidationRule_Validate_The_entered_value_is_not_a_number__please_enter_a_nu" +
+                        "mber_greater_than_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The entered value must be greater than 0.
+        /// </summary>
+        public static string CrestValidationRule_Validate_The_entered_value_must_be_greater_than_0 {
+            get {
+                return ResourceManager.GetString("CrestValidationRule_Validate_The_entered_value_must_be_greater_than_0", resourceCulture);
             }
         }
         

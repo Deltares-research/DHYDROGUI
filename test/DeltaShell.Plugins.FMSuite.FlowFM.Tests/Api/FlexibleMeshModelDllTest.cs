@@ -61,9 +61,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             using (var model = new WaterFlowFMModel(localCopy))
             {
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
-                // This is due to that this model has no values for Crest Width in the ini file.
+                // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
-                // Since this test is not meant to test the CrestWidth getting and setting, we can make a Hack to set alle the CrestWidths any value > 0.0.
+                // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
                 model.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
                 model.Initialize();
                 model.Execute();
@@ -150,9 +150,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             using (var model = new WaterFlowFMModel(localCopy))
             {
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
-                // This is due to that this model has no values for Crest Width in the ini file.
+                // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
-                // Since this test is not meant to test the CrestWidth getting and setting, we can make a Hack to set alle the CrestWidths any value > 0.0.
+                // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
                 model.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
                 model.Initialize();
                 var pump = model.Area.Pumps.First(o => o.Name == "pump01");
@@ -178,9 +178,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             using (var model = new WaterFlowFMModel(localCopy))
             {
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
-                // This is due to that this model has no values for Crest Width in the ini file.
+                // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
-                // Since this test is not meant to test the CrestWidth getting and setting, we can make a Hack to set all the CrestWidths any value > 0.0.
+                // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
                 model.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
                 model.Initialize();
                 // get weir02
@@ -251,9 +251,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             using (var model = new WaterFlowFMModel(localCopy))
             {
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
-                // This is due to that this model has no values for Crest Width in the ini file.
+                // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
-                // Since this test is not meant to test the CrestWidth getting and setting, we can make a Hack to set all the CrestWidths any value > 0.0.
+                // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
                 model.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
                 model.Initialize();
                 Assert.AreEqual(Dimr.DimrApiDataSet.DIMR_FILL_VALUE, ((double[])model.GetVar("party", "at", "myplace"))[0], 0.01d);
@@ -695,9 +695,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             using (var model = new WaterFlowFMModel(localCopy))
             {
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
-                // This is due to that this model has no values for Crest Width in the ini file.
+                // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
-                // Since this test is not meant to test the CrestWidth getting and setting, we can make a Hack to set alle the CrestWidths any value > 0.0.
+                // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
                 model.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
                 var obsSeg9 = model.Area.ObservationPoints.First(o => o.Name == "9_040.seg_9");
                 var obCrWeir02 = model.Area.ObservationCrossSections.First(o => o.Name == "weir02");

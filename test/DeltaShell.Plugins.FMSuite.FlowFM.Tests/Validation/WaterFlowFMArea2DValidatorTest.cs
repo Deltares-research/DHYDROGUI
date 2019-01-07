@@ -67,7 +67,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             };
             model.Area.Weirs.Add(weir);
             
-            
             // When 
             // Validate is called
             var validationReport = WaterFlowFMArea2DValidator.Validate(model);
@@ -77,9 +76,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var expectedIssue =
                 $"'{weir.Name}': crest level time series does not contain any values.";
 
-            Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
-            var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
-            Assert.That(n_messages, Is.EqualTo(1));
+            Assert.That(validationReport.ContainsError(expectedIssue));
+            var numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
+            Assert.That(numberOfMessages, Is.EqualTo(1));
         }
 
         [Test]
@@ -110,9 +109,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var expectedIssue =
                 $"'{weir.Name}': crest level time series does not span the model run interval.";
 
-            Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
-            var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
-            Assert.That(n_messages, Is.EqualTo(1));
+            Assert.That(validationReport.ContainsError(expectedIssue));
+            var numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
+            Assert.That(numberOfMessages, Is.EqualTo(1));
         }
 
         [Test]
@@ -136,9 +135,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var expectedIssue =
                 $"'{weir.Name}': lateral contraction coefficient must be greater than or equal to zero.";
 
-            Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
-            var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
-            Assert.That(n_messages, Is.EqualTo(1));
+            Assert.That(validationReport.ContainsError(expectedIssue));
+            var numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
+            Assert.That(numberOfMessages, Is.EqualTo(1));
         }
 
         [Test]
@@ -161,9 +160,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // The correct issues are added.
             var expectedIssue = $"'{weir.Name}': door height must be greater than or equal to 0.";
 
-            Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
-            var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
-            Assert.That(n_messages, Is.EqualTo(1));
+            Assert.That(validationReport.ContainsError(expectedIssue));
+            var numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
+            Assert.That(numberOfMessages, Is.EqualTo(1));
         }
 
         [Test]
@@ -195,9 +194,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var expectedIssue =
                 $"'{weir.Name}': opening width time series values must be greater than or equal to 0.";
 
-            Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
-            var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
-            Assert.That(n_messages, Is.EqualTo(1));
+            Assert.That(validationReport.ContainsError(expectedIssue));
+            var numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
+            Assert.That(numberOfMessages, Is.EqualTo(1));
         }
 
 
@@ -228,9 +227,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // The correct issues are added.
             var expectedIssue = $"'{weir.Name}': opening width time series does not span the model run interval.";
 
-            Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
-            var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
-            Assert.That(n_messages, Is.EqualTo(1));
+            Assert.That(validationReport.ContainsError(expectedIssue));
+            var numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
+            Assert.That(numberOfMessages, Is.EqualTo(1));
         }
 
         [Test]
@@ -253,9 +252,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // The correct issues are added.
             var expectedIssue = $"'{weir.Name}': opening width time series does not contain any values.";
 
-            Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
-            var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
-            Assert.That(n_messages, Is.EqualTo(1));
+            Assert.That(validationReport.ContainsError(expectedIssue));
+            var numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
+            Assert.That(numberOfMessages, Is.EqualTo(1));
         }
 
         [Test]
@@ -278,9 +277,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // The correct issues are added.
             var expectedIssue = $"'{weir.Name}': opening width must be greater than or equal to 0.";
 
-            Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
-            var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
-            Assert.That(n_messages, Is.EqualTo(1));
+            Assert.That(validationReport.ContainsError(expectedIssue));
+            var numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
+            Assert.That(numberOfMessages, Is.EqualTo(1));
         }
 
         [Test]
@@ -310,9 +309,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // The correct issues are added.
             var expectedIssue = $"'{weir.Name}': lower edge level time series does not span the model run interval.";
 
-            Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
-            var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
-            Assert.That(n_messages, Is.EqualTo(1));
+            Assert.That(validationReport.ContainsError(expectedIssue));
+            var numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
+            Assert.That(numberOfMessages, Is.EqualTo(1));
         }
 
         [Test]
@@ -335,9 +334,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // The correct issues are added.
             var expectedIssue = $"'{weir.Name}': lower edge level time series does not contain any values.";
 
-            Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
-            var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
-            Assert.That(n_messages, Is.EqualTo(1));
+            Assert.That(validationReport.ContainsError(expectedIssue));
+            var numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
+            Assert.That(numberOfMessages, Is.EqualTo(1));
         }
 
         [Test]
@@ -360,9 +359,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // The correct issues are added.
             var expectedIssue = $"Crest Width for '{weir.Name}' structure type: {weir.WeirFormula.Name}, must be greater than 0.";
 
-            Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
-            var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
-            Assert.That(n_messages, Is.EqualTo(1));
+            Assert.That(validationReport.ContainsError(expectedIssue));
+            var numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
+            Assert.That(numberOfMessages, Is.EqualTo(1));
         }
 
         [Test]
@@ -390,9 +389,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Then
             // The correct issues are added.
             var expectedIssue = $"'{weir.Name}': only symmetric horizontal door opening direction is supported for general structures.";
-            Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
-            var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
-            Assert.That(n_messages, Is.EqualTo(1));
+            Assert.That(validationReport.ContainsError(expectedIssue));
+            var numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
+            Assert.That(numberOfMessages, Is.EqualTo(1));
         }
 
         [Test]
@@ -420,11 +419,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Then
             // The correct issues are added.
             var expectedIssue =
-                $"Upstream 2 Crest Width for '{weir.Name}', structure type {weir.WeirFormula.Name} must be greater than 0.";
+                $"Upstream 2 Crest Width for '{weir.Name}' structure type: {weir.WeirFormula.Name} must be greater than 0.";
 
-            Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
-            var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
-            Assert.That(n_messages, Is.EqualTo(1));
+            Assert.That(validationReport.ContainsError(expectedIssue));
+            var numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
+            Assert.That(numberOfMessages, Is.EqualTo(1));
         }
 
         [Test]
@@ -452,11 +451,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Then
             // The correct issues are added.
             var expectedIssue =
-                $"Upstream 1 Crest Width for '{weir.Name}', structure type {weir.WeirFormula.Name} must be greater than 0.";
+                $"Upstream 1 Crest Width for '{weir.Name}' structure type: {weir.WeirFormula.Name} must be greater than 0.";
 
-            Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
-            var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
-            Assert.That(n_messages, Is.EqualTo(1));
+            Assert.That(validationReport.ContainsError(expectedIssue));
+            var numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
+            Assert.That(numberOfMessages, Is.EqualTo(1));
         }
 
         [Test]
@@ -484,11 +483,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Then
             // The correct issues are added.
             var expectedIssue =
-                $"Downstream 1 Crest Width for '{weir.Name}', structure type {weir.WeirFormula.Name} must be greater than 0.";
+                $"Downstream 1 Crest Width for '{weir.Name}' structure type: {weir.WeirFormula.Name} must be greater than 0.";
 
-            Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
-            var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
-            Assert.That(n_messages, Is.EqualTo(1));
+            Assert.That(validationReport.ContainsError(expectedIssue));
+            var numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
+            Assert.That(numberOfMessages, Is.EqualTo(1));
         }
 
         [Test]
@@ -516,11 +515,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Then
             // The correct issues are added.
             var expectedIssue =
-                $"Downstream 2 Crest Width for '{weir.Name}', structure type {weir.WeirFormula.Name} must be greater than 0.";
+                $"Downstream 2 Crest Width for '{weir.Name}' structure type: {weir.WeirFormula.Name} must be greater than 0.";
 
-            Assert.That(FlowFMTestHelper.ContainsError(validationReport, expectedIssue));
-            var n_messages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
-            Assert.That(n_messages, Is.EqualTo(1));
+            Assert.That(validationReport.ContainsError(expectedIssue));
+            var numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
+            Assert.That(numberOfMessages, Is.EqualTo(1));
         }
     }
 }

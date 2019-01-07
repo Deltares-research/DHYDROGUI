@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions.Generic;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Validation;
@@ -12,6 +13,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
     public static class WaterFlowFMArea2DValidator
     {
+    /// <summary>
+    /// Validates all entities that can occur in an Area2D of a WaterFlow Model. The anomalies are returned as messages in the ValidationReport.
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns>ValidationReport that contains the validationmessages which can be Info, Warning or Error</returns>
         public static ValidationReport Validate(WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
@@ -205,29 +211,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
 
-                    if (generalStructureFormula.WidthStructureLeftSide <= 0.0)
-                    {
-                        var msg = $"Upstream 2 Crest Width for '{weirName}', structure type {weirType} must be greater than 0.";
-                        issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
-                    }
-
-                    if (generalStructureFormula.WidthLeftSideOfStructure <= 0.0)
-                    {
-                        var msg = $"Upstream 1 Crest Width for '{weirName}', structure type {weirType} must be greater than 0.";
-                        issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
-                    }
-
-                    if (generalStructureFormula.WidthStructureRightSide <= 0.0)
-                    {
-                        var msg = $"Downstream 1 Crest Width for '{weirName}', structure type {weirType} must be greater than 0.";
-                        issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
-                    }
-
-                    if (generalStructureFormula.WidthRightSideOfStructure <= 0.0)
-                    {
-                        var msg = $"Downstream 2 Crest Width for '{weirName}', structure type {weirType} must be greater than 0.";
-                        issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
-                    }
+                   CheckForGreaterThanZero(generalStructureFormula.WidthStructureLeftSide, weir, issues, "Upstream 2");
+                   CheckForGreaterThanZero(generalStructureFormula.WidthLeftSideOfStructure, weir, issues, "Upstream 1");
+                   CheckForGreaterThanZero(generalStructureFormula.WidthStructureRightSide, weir, issues, "Downstream 1");
+                   CheckForGreaterThanZero(generalStructureFormula.WidthRightSideOfStructure, weir, issues, "Downstream 2");
                 }
             }
 
@@ -300,7 +287,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return new ValidationReport("Structures", issues);
         }
 
-        private static void ValidatePumpSuctionSide(IPump sobekPump, ICollection<ValidationIssue> issues)
+    private static void CheckForGreaterThanZero(double generalStructureFormulaStream, IStructure1D weir, ICollection<ValidationIssue> issues, string streamName = "")
+    {
+        if (generalStructureFormulaStream > 0.0) return;
+        var msg =
+            $"{streamName} Crest Width for '{weir.Name}' structure type: General structure must be greater than 0.";
+        issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
+    }
+
+    private static void ValidatePumpSuctionSide(IPump sobekPump, ICollection<ValidationIssue> issues)
         {
             if (sobekPump.StartSuction < sobekPump.StopSuction)
             {
