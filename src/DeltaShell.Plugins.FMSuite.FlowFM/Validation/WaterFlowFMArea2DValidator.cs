@@ -211,10 +211,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
                     }
 
-                   CheckForGreaterThanZero(generalStructureFormula.WidthStructureLeftSide, weir, issues, "Upstream 2");
-                   CheckForGreaterThanZero(generalStructureFormula.WidthLeftSideOfStructure, weir, issues, "Upstream 1");
-                   CheckForGreaterThanZero(generalStructureFormula.WidthStructureRightSide, weir, issues, "Downstream 1");
-                   CheckForGreaterThanZero(generalStructureFormula.WidthRightSideOfStructure, weir, issues, "Downstream 2");
+                   issues.AddIfNotNull(CheckForGreaterThanZero(generalStructureFormula.WidthStructureLeftSide, weir, "Upstream 2"));
+                   issues.AddIfNotNull(CheckForGreaterThanZero(generalStructureFormula.WidthLeftSideOfStructure, weir, "Upstream 1"));
+                   issues.AddIfNotNull(CheckForGreaterThanZero(generalStructureFormula.WidthStructureRightSide, weir, "Downstream 1"));
+                   issues.AddIfNotNull(CheckForGreaterThanZero(generalStructureFormula.WidthRightSideOfStructure, weir, "Downstream 2"));
                 }
             }
 
@@ -287,12 +287,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return new ValidationReport("Structures", issues);
         }
 
-    private static void CheckForGreaterThanZero(double generalStructureFormulaStream, IStructure1D weir, ICollection<ValidationIssue> issues, string streamName = "")
+    private static void AddIfNotNull<T>(this ICollection<T> validationList, T validationIssue)
     {
-        if (generalStructureFormulaStream > 0.0) return;
+        if (validationIssue != null)
+        {
+            validationList.Add(validationIssue);
+        }
+    }
+
+    private static ValidationIssue CheckForGreaterThanZero(double generalStructureFormulaStream, IStructure1D weir,
+        string streamName = "")
+    {
+        if (generalStructureFormulaStream > 0.0) return null;
         var msg =
             $"{streamName} Crest Width for '{weir.Name}' structure type: General structure must be greater than 0.";
-        issues.Add(new ValidationIssue(weir, ValidationSeverity.Error, msg, weir));
+        return new ValidationIssue(weir, ValidationSeverity.Error, msg, weir);
     }
 
     private static void ValidatePumpSuctionSide(IPump sobekPump, ICollection<ValidationIssue> issues)
