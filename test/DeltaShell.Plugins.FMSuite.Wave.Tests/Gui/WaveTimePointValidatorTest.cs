@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
 using NUnit.Framework;
 
@@ -47,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
 
             Assert.That(validationReport, Is.Not.Null);
             Assert.That(validationReport.ErrorCount, Is.EqualTo(1));
-            Assert.That(validationReport.AllErrors.ElementAt(0).Message.Equals("Model Start time precedes Reference Time"));
+            Assert.That(validationReport.AllErrors.ElementAt(0).Message.Equals("Model start time precedes reference time"));
         }
 
         [Test]
