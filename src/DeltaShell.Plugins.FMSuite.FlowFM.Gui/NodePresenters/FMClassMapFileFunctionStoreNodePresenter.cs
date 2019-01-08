@@ -36,9 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         /// <returns></returns>
         public override IEnumerable GetChildNodeObjects(FMClassMapFileFunctionStore parent, ITreeNode node)
         {
-            var model =
-                Gui.Application.Project.RootFolder.Models.OfType<WaterFlowFMModel>()
-                    .FirstOrDefault(m => Equals(m.OutputClassMapFileStore, parent));
+            var model = GetModelByFunctionStore(parent);
 
             if (model == null)
             {
@@ -56,9 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         private IDataItem WrapIntoOutputItem(object o, FMClassMapFileFunctionStore store, string tag)
         {
-            var model =
-                Gui.Application.Project.RootFolder.Models.OfType<WaterFlowFMModel>()
-                    .FirstOrDefault(m => Equals(m.OutputClassMapFileStore, store));
+            var model = GetModelByFunctionStore(store);
 
             var existingItem = DataItems.FirstOrDefault(di => Equals(di.Tag, tag) && Equals(di.Owner, model));
             if (existingItem == null)
@@ -68,6 +64,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 return newItem;
             }
             return existingItem;
+        }
+
+        private WaterFlowFMModel GetModelByFunctionStore(FMClassMapFileFunctionStore store)
+        {
+            return Gui?.Application?.Project?.RootFolder?.Models?.OfType<WaterFlowFMModel>()
+                .FirstOrDefault(m => Equals(m.OutputClassMapFileStore, store));
         }
 
         private static readonly IList<DataItem> DataItems = new List<DataItem>();

@@ -1,19 +1,17 @@
-﻿using System;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using DelftTools.Controls;
+﻿using DelftTools.Controls;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
+using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
@@ -24,8 +22,12 @@ using NUnit.Framework;
 using SharpMap;
 using SharpMap.Api.Layers;
 using SharpMap.UI.Forms;
+using System;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 using Control = System.Windows.Controls.Control;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
@@ -181,6 +183,82 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Assert.IsNotNull(layer); //assert it got injected 
                 Assert.AreEqual(typeof(BridgePillar), layer.DataSource.FeatureType);
             }
+        }
+
+        [Test]
+        public void GivenAFlowFMMapLayerProviderAndAClassMapFileFunctionStore_WhenCreateLayerIsCalled_ThenCorrectLayerIsCreated()
+        {
+            // Given
+            var mapLayerProvider = new FlowFMMapLayerProvider();
+            var fmClassMapFileFunctionStore = new FMClassMapFileFunctionStore(string.Empty);
+
+            // When
+            var layer = mapLayerProvider.CreateLayer(fmClassMapFileFunctionStore, null);
+
+            // Then
+            Assert.IsNotNull(layer);
+            Assert.AreEqual("Output (class)", layer.Name);
+            Assert.IsTrue(layer is IGroupLayer);
+        }
+
+        [Test]
+        public void GivenAFlowFMMapLayerProviderAndAClassMapFileFunctionStore_WhenCanCreateLayerForIsCalle_ThenTrueIsReturned()
+        {
+            // Given
+            var mapLayerProvider = new FlowFMMapLayerProvider();
+            var fmClassMapFileFunctionStore = new FMClassMapFileFunctionStore(string.Empty);
+
+            // When
+            var result = mapLayerProvider.CanCreateLayerFor(fmClassMapFileFunctionStore, null);
+
+            // Then
+            Assert.IsTrue(result);
+        }
+
+        [Test, Category(TestCategory.DataAccess)]
+        public void GivenAFlowFmMapLayerProviderAndAModelWithAClassMapFileFunctionStore_WhenChildLayerObjectsIsCalled_ThenTheFunctionStoreIsReturned()
+        {
+            // Given
+            var outputDirectoryPath = TestHelper.GetTestFilePath("output_classmapfiles");
+            var filePath = Path.Combine(outputDirectoryPath, "DFM_OUTPUT_FlowFM\\FlowFM_clm.nc");       
+            Assert.IsTrue(File.Exists(filePath));
+
+            var model = new WaterFlowFMModel();
+            model.ConnectOutput(outputDirectoryPath);
+            var outputClassMapFileStore = model.OutputClassMapFileStore;
+            Assert.NotNull(outputClassMapFileStore);
+            Assert.AreEqual(filePath, outputClassMapFileStore.Path);
+
+            var mapLayerProvider = new FlowFMMapLayerProvider();
+
+            // When
+            var childLayerObjects = mapLayerProvider.ChildLayerObjects(model).ToArray();
+
+            // Then
+            var classMapFileFunctionStoreLayer = childLayerObjects.OfType<FMClassMapFileFunctionStore>().SingleOrDefault();
+            Assert.IsNotNull(classMapFileFunctionStoreLayer);
+            Assert.AreSame(classMapFileFunctionStoreLayer, outputClassMapFileStore);
+        }
+
+        [Test, Category(TestCategory.DataAccess)]
+        public void GivenAFlowFmMapLayerProviderAndAClassMapFileFunctionStore_WhenChildLayerObjectsIsCalled_ThenTheFunctionsAndGridAreReturned()
+        {
+            // Given
+            var filePath = TestHelper.GetTestFilePath("output_classmapfiles\\DFM_OUTPUT_FlowFM\\FlowFM_clm.nc");
+            Assert.IsTrue(File.Exists(filePath));
+
+            var classMapFileStore = new FMClassMapFileFunctionStore(filePath);
+            Assert.NotNull(classMapFileStore);
+            Assert.IsNotEmpty(classMapFileStore.Functions);
+            Assert.IsNotNull(classMapFileStore.Grid);
+            var mapLayerProvider = new FlowFMMapLayerProvider();
+
+            // When
+            var childLayerObjects = mapLayerProvider.ChildLayerObjects(classMapFileStore).ToArray();
+
+            // Then
+            Assert.IsTrue(classMapFileStore.Functions.All(f=> childLayerObjects.Contains(f)));
+            Assert.IsTrue(childLayerObjects.Contains(classMapFileStore.Grid));
         }
 
         [Test]

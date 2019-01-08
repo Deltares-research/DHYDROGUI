@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DelftTools.Functions;
+﻿using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
@@ -15,19 +11,23 @@ using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
-using NUnit.Framework;
 using NetTopologySuite.Extensions.Geometries;
+using NetTopologySuite.Geometries;
+using NUnit.Framework;
 using SharpMap.Data.Providers;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
@@ -1492,5 +1492,61 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Dictionary<string, ModelPropertyGroup> dummyVar;
             Assert.DoesNotThrow(() => dummyVar = WaterFlowFMModelDefinition.GuiPropertyGroups );
          }
+
+        [Test]
+        public void GivenAModelDefinition_WhenRelativeClassMapFilePath_ThenCorrectStringIsReturned()
+        {
+            // Given
+            var modelDefinition = new WaterFlowFMModelDefinition {ModelName = "FlowFM"};
+
+            // When
+            var resultedRelativePath = modelDefinition.RelativeClassMapFilePath;
+
+            //Then
+            Assert.AreEqual("DFM_OUTPUT_FlowFM\\FlowFM_clm.nc", resultedRelativePath);
+        }
+
+        [Test]
+        public void GivenAModelDefinitionWithClassMapIntervalProperty_WhensSetGuiTimePropertiesFromMduPropertiesIsCalled_ThenCorrectIntervalGuiIsSet()
+        {
+            // Given
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var classMapOutputDeltaTProperty = modelDefinition.GetModelProperty(GuiProperties.ClassMapOutputDeltaT);
+            var classMapIntervalProperty = modelDefinition.GetModelProperty(KnownProperties.ClassMapInterval);
+
+            classMapIntervalProperty.Value = new List<double> {120};
+            Assert.IsTrue(new TimeSpan(0, 0, 5, 0).Equals((TimeSpan)classMapOutputDeltaTProperty.Value));
+
+            // When 
+            modelDefinition.SetGuiTimePropertiesFromMduProperties();
+
+            // Then
+            Assert.IsTrue(new TimeSpan(0, 0, 2, 0).Equals((TimeSpan)classMapOutputDeltaTProperty.Value));
+            var writeClassMapFilePropertyValue = modelDefinition.GetModelProperty(GuiProperties.WriteClassMapFile).Value;
+            Assert.AreEqual(true, (bool)writeClassMapFilePropertyValue);
+        }
+
+        [Test]
+        public void GivenAModelDefinitionWithAClassMapIntervalPropertyWithEmptyValue_WhensSetGuiTimePropertiesFromMduPropertiesIsCalled_ThenCorrectDefaultValuesForGuiAreSet()
+        {
+            // Given
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            var classMapIntervalProperty = modelDefinition.GetModelProperty(KnownProperties.ClassMapInterval);
+            var classMapOutputDeltaTProperty = modelDefinition.GetModelProperty(GuiProperties.ClassMapOutputDeltaT);
+            var writeClassMapFileProperty = modelDefinition.GetModelProperty(GuiProperties.WriteClassMapFile);
+
+            classMapIntervalProperty.Value = new List<double>();          
+            classMapOutputDeltaTProperty.Value = new TimeSpan(0,0,10,0);        
+            writeClassMapFileProperty.Value = false;
+
+            // When 
+            modelDefinition.SetGuiTimePropertiesFromMduProperties();
+
+            // Then
+            Assert.IsEmpty((IList<double>)classMapIntervalProperty.Value);
+            Assert.AreEqual(0, new TimeSpan(0,0,5,0).CompareTo((TimeSpan)classMapOutputDeltaTProperty.Value));
+            Assert.AreEqual(true, (bool) writeClassMapFileProperty.Value);
+        }
     }
 }

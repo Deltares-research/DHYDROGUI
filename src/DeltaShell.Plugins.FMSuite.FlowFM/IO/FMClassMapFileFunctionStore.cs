@@ -108,29 +108,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return base.GetVariableValuesCore<T>(function, filters);
         }
 
-        private UnstructuredGridCoverage CreateCoverage(string location, string coverageLongName, Type outputType, int number = -1)
+        private UnstructuredGridCoverage CreateCoverage(string location, string coverageLongName, Type outputType)
         {
-            UnstructuredGridCoverage coverage;
-
-            switch (location)
+            if (location != GridApiDataSet.UGridAttributeConstants.LocationValues.Face)
             {
-                case GridApiDataSet.UGridAttributeConstants.LocationValues.Face:
-                    coverage = new UnstructuredGridCellCoverage(grid, true) { Name = coverageLongName };
-                    break;
-                case GridApiDataSet.UGridAttributeConstants.LocationValues.Edge:
-                    coverage = new UnstructuredGridEdgeCoverage(grid, true) { Name = coverageLongName };
-                    break;
-                case GridApiDataSet.UGridAttributeConstants.LocationValues.Node:
-                    coverage = new UnstructuredGridVertexCoverage(grid, true) { Name = coverageLongName };
-                    break;
-                case GridApiDataSet.UGridAttributeConstants.LocationValues.Volume:
-                    Log.WarnFormat($"Cannot create coverage on a volume location. See '{coverageLongName}' in the class map file: {Path}.");
-                    return null;
-                default:
-                    Log.WarnFormat($"Cannot create coverage: did not recognize location type. See '{coverageLongName}' in the class map file: {Path}.");
-                    return null;
+                Log.WarnFormat($"Cannot create coverage: can only create coverages for cell faces. See '{coverageLongName}' in the class map file: {Path}.");
+                return null;
             }
 
+            var coverage = new UnstructuredGridCellCoverage(grid, true) { Name = coverageLongName };  
+            
             coverage.Components.RemoveAt(0);
             coverage.Components.Add((IVariable) TypeUtils.CreateGeneric(typeof(Variable<>), outputType));
             coverage.Components[0].Name = "value";

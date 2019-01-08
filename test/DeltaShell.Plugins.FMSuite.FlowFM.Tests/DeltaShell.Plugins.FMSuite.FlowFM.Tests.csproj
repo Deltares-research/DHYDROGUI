@@ -253,6 +253,7 @@
     <Compile Include="Gui\Editors\WaterFlowFMModelViewWPFTest.cs" />
     <Compile Include="Gui\FlowBoundaryConditionDataViewTest.cs" />
     <Compile Include="Gui\FlowFMGuiPluginTest.cs" />
+    <Compile Include="Gui\FMClassMapFileFunctionStoreNodePresenterTest.cs" />
     <Compile Include="Gui\FMFileBasedTreeViewTest.cs" />
     <Compile Include="Gui\FMOutputSnappedFeaturesGroupLayerDataTest.cs" />
     <Compile Include="Gui\FMSnappedFeaturesGroupLayerDataTest.cs" />
@@ -295,6 +296,7 @@
     <Compile Include="IO\Exporters\WaterFlowFMFileExporterTest.cs" />
     <Compile Include="IO\ExtForceFileHelperTest.cs" />
     <Compile Include="IO\ExtForceFileTest.cs" />
+    <Compile Include="IO\FMClassMapFileFunctionStoreTest.cs" />
     <Compile Include="IO\FMHisFileFunctionStoreTest.cs" />
     <Compile Include="IO\FMPartitionExporterTest.cs" />
     <Compile Include="IO\GroupablePointCloudImporterTest.cs" />

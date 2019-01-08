@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using DelftTools.Functions;
+﻿using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
@@ -35,6 +29,12 @@ using Rhino.Mocks;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -1706,7 +1706,91 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 FileUtils.DeleteIfExists(mduDir);
             }
+        }
 
+        [Test, NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void GivenAnFmModelWithAClassMapFunctionStore_WhenGetDirectChilderenIsCalled_ExpectedChildrenObjectsAreReturned()
+        {
+            // Given
+            var outputDirectoryPath = TestHelper.GetTestFilePath("output_classmapfiles");
+            var filePath = Path.Combine(outputDirectoryPath, "DFM_OUTPUT_FlowFM\\FlowFM_clm.nc");
+            Assert.IsTrue(File.Exists(filePath));
+
+            var model = new WaterFlowFMModel();
+            model.ConnectOutput(outputDirectoryPath);
+            var outputClassMapFileStore = model.OutputClassMapFileStore;
+            Assert.NotNull(outputClassMapFileStore);
+            Assert.AreEqual(filePath, outputClassMapFileStore.Path);
+
+            // When
+            var directChildren = model.GetDirectChildren().ToArray();
+
+            // Then
+            Assert.IsTrue(outputClassMapFileStore.Functions.All(f => directChildren.Contains(f)));
+        }
+
+        [Test]
+        public void GivenAnFmModel_WhenClassMapSavePathPropertyIsCalled_ExpectedStringIsReturned()
+        {
+            // Given
+            var model = new WaterFlowFMModel();
+            var modelName = "some_model_name";
+            model.Name = modelName;
+          
+            // When
+            var resultedPath = model.ClassMapSavePath;
+
+            // Then
+            var expectedPath = modelName + "_clm.nc";
+            Assert.AreEqual(expectedPath, resultedPath);
+        }
+
+        [Test]
+        public void GivenAnFmModelWithAnMduFilePathAndModelDefinitionWithEqualName_WhenClassMapSavePathPropertyIsCalled_ExpectedStringIsReturned()
+        {
+            // Given
+            var model = new WaterFlowFMModel("mdufile.mdu");
+            const string modelName = "some_model_name";
+            model.Name = modelName;
+            model.ModelDefinition.ModelName = modelName;
+
+            // When
+            var resultedPath = model.ClassMapSavePath;
+
+            // Then
+            var expectedPath = "DFM_OUTPUT_" + modelName + "\\" + modelName + "_clm.nc";
+            Assert.AreEqual(expectedPath, resultedPath);
+        }
+
+        [Test]
+        public void GivenAnFmModelWithoutAMduFilePathAndModelDefinitionWithEqualName_WhenClassMapSavePathPropertyIsCalled_ThenNullIsReturned()
+        {
+            // Given
+            var model = new WaterFlowFMModel();
+            const string modelName = "some_model_name";
+            model.Name = modelName;
+            model.ModelDefinition.ModelName = modelName;
+
+            // When
+            var resultedPath = model.ClassMapSavePath;
+
+            // Then         
+            Assert.AreEqual(null, resultedPath);
+        }
+
+        [TestCase (true)]
+        [TestCase (false)]
+        public void GivenAnFmModelWithAWriteClassMapFileProperty_WhenWriteClassMapFileIsCalled_ThenCorrectValueIsReturned(bool expectedValue)
+        {
+            // Given
+            var model = new WaterFlowFMModel();
+            model.ModelDefinition.GetModelProperty(GuiProperties.WriteClassMapFile).Value = expectedValue;
+
+            // When
+            var resultedValue = model.WriteClassMapFile;
+
+            // Then
+            Assert.AreEqual(expectedValue, resultedValue);
         }
     }
 }

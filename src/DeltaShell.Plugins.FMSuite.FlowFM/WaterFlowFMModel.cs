@@ -1,11 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
 using BasicModelInterface;
-using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
@@ -41,8 +34,8 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
-using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using log4net;
@@ -54,6 +47,12 @@ using SharpMap.Api;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 using INotifyCollectionChanged = DelftTools.Utils.Collections.INotifyCollectionChanged;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
@@ -1235,16 +1234,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return InitialTracers;
             yield return InitialFractions;
 
-            // for QueryTimeSeries tool:
-            yield return GetFunctions(OutputMapFileStore);
-            yield return GetFunctions(OutputHisFileStore);
-            yield return GetFunctions(OutputClassMapFileStore);
-        }
+            //for QueryTimeSeries tool:
+            if (OutputHisFileStore != null)
+                    foreach (var function in OutputHisFileStore.Functions)
+                        yield return function;
 
-        private IEnumerable<object> GetFunctions(FMNetCdfFileFunctionStore functionStore)
-        {
-            if (functionStore != null)
-                foreach (var function in OutputHisFileStore.Functions)
+            if (OutputMapFileStore != null)
+                foreach (var function in OutputMapFileStore.Functions)
+                    yield return function;
+
+            if (OutputClassMapFileStore != null)
+                foreach (var function in OutputClassMapFileStore.Functions)
                     yield return function;
         }
 

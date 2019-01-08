@@ -4,6 +4,9 @@ using DelftTools.Utils.IO;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
 using System.IO;
+using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
@@ -48,6 +51,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             Assert.IsTrue(model.Grid.CoordinateSystem.EqualsTo(expectedCoordinateSystem));
 
             FileUtils.DeleteIfExists(workDir);
+        }
+
+        [Test]
+        public void GivenAFlowFMGuiPlugin_WhenGetProjectTreeViewNodePresentersIsCalled_AnEnumerableContainingAnFMClassMapFileFunctionStoreNodePresenterIsReturned()
+        {
+            // Given
+            var guiPlugin = new FlowFMGuiPlugin();
+
+            // When
+            var nodePresenters = guiPlugin.GetProjectTreeViewNodePresenters().ToArray();
+
+            // Then
+            var fmClassMapFileFunctionStoreNodePresenter = nodePresenters.OfType<FMClassMapFileFunctionStoreNodePresenter>().SingleOrDefault();
+            Assert.NotNull(fmClassMapFileFunctionStoreNodePresenter);
+            Assert.AreSame(guiPlugin, fmClassMapFileFunctionStoreNodePresenter.GuiPlugin);
         }
 
         private static string GetEditedNetFilePath(string editedNetFile)
