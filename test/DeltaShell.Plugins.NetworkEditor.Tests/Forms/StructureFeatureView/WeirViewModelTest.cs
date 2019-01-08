@@ -142,7 +142,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             Assert.That(viewModel.Weir.WeirFormula is SimpleWeirFormula);
             Assert.IsFalse(viewModel.GateGroupboxEnabled);
             Assert.That(viewModel.SimpleWeirPropertiesVisibility, Is.EqualTo(System.Windows.Visibility.Visible));
-            Assert.AreEqual(2, count);
+            Assert.AreEqual(2, count,
+                $"Expected 2 INotifyPropertyChanged.PropertyChanged events instead of {count} when setting the selected weir");
         }
 
         [Test]
@@ -168,7 +169,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             }
 
-            Assert.AreEqual(4, count);
+            Assert.AreEqual(4, count,
+                $"Expected 4 INotifyPropertyChanged.PropertyChanged events instead of {count} when setting the selected weir");
         }
 
         [Test]
@@ -192,8 +194,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                 Assert.That(viewModel.SimpleWeirPropertiesVisibility, Is.EqualTo(System.Windows.Visibility.Visible));
 
             }
-
-            Assert.AreEqual(2, count);
+            Assert.AreEqual(2, count,
+                $"Expected 2 INotifyPropertyChanged.PropertyChanged events instead of {count} when setting the selected weir");
         }
 
         [Test]
@@ -830,7 +832,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             // Change property needed for firing the event
             viewModel.Weir.CrestLevel = 10;
 
-            Assert.AreEqual(2, raisedEvents.Count);
+            Assert.AreEqual(2, raisedEvents.Count,
+                $"Expected 2 INotifyPropertyChanged.PropertyChanged events instead of {raisedEvents.Count} when setting the selected weir");
             Assert.That(raisedEvents.Contains("BedLevelStructureCentre"));
             Assert.That(raisedEvents.Contains("GateOpeningHeight"));
 
@@ -839,29 +842,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         [Test]
         public void GivenAWeirViewModel_WhenChangingTheWeirFormulaToGatedWeir_ThenTwoEventsShouldBeFired()
         {
-            List<string> raisedEvents = new List<string>();
-
             var viewModel = new WeirViewModel()
             {
-                Weir = new Weir2D { WeirFormula = new SimpleWeirFormula() }
+                Weir = new Weir2D {WeirFormula = new SimpleWeirFormula()}
             };
 
             var count = 0;
-            ((INotifyPropertyChanged)viewModel.Weir).PropertyChanged += (s, e) => count++;
-         
+            ((INotifyPropertyChanged) viewModel.Weir).PropertyChanged += (s, e) => count++;
+
             Assert.AreEqual(0, count);
 
             // Change property needed for firing the event
             viewModel.Weir.WeirFormula = new GatedWeirFormula(true);
 
-            Assert.AreEqual(2, count);
+            Assert.AreEqual(2, count,
+                $"Expected 2 INotifyPropertyChanged.PropertyChanged events instead of {count} when setting the selected weir");
         }
 
         [Test]
         public void GivenAWeirViewModel_WhenChangingTheWeirFormulaToGeneralStructure_ThenThreeEventsShouldBeFired()
         {
-            List<string> raisedEvents = new List<string>();
-
             var viewModel = new WeirViewModel()
             {
                 Weir = new Weir2D { WeirFormula = new SimpleWeirFormula() }
@@ -881,7 +881,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             viewModel.Weir.WeirFormula = generalStructureWeirFormula;
 
-            Assert.AreEqual(3, count);
+            Assert.AreEqual(3, count,
+                $"Expected 3 INotifyPropertyChanged.PropertyChanged events instead of {count} when setting the selected weir");
         }
     }
 }

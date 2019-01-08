@@ -22,6 +22,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             set { data.Name = value; }
         }
 
+        /// <summary>
+        /// Property for changing/showing the weir formula by using the properties box.
+        /// </summary>
         [Category("General")]
         [DisplayName("Structure Type")]
         [Description("Structure Type")]
@@ -30,38 +33,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         {
             get
             {
-                if (data.WeirFormula is SimpleWeirFormula)
-                {
-                    return SelectableWeirFormulaType.SimpleWeir;
-                }
-                else if (data.WeirFormula is GatedWeirFormula)
+                if (data.WeirFormula is GatedWeirFormula)
                 {
                     return SelectableWeirFormulaType.SimpleGate;
                 }
-                else 
+
+                if (data.WeirFormula is GeneralStructureWeirFormula)
                 {
                     return SelectableWeirFormulaType.GeneralStructure;
                 }
+
+                    return SelectableWeirFormulaType.SimpleWeir;
             }
             set
             {
-                if (value == SelectableWeirFormulaType.SimpleWeir)
+                switch (value)
                 {
-                    data.WeirFormula = new SimpleWeirFormula();
-                }
-                else if (value == SelectableWeirFormulaType.SimpleGate)
-                {
-                    data.WeirFormula = new GatedWeirFormula(true);
-                }
-                else
-                {
-                    var generalStructureWeirFormula = new GeneralStructureWeirFormula()
-                    {
-                        BedLevelStructureCentre = data.CrestLevel,
-                        WidthStructureCentre = data.CrestWidth,
-                    };
-
-                    data.WeirFormula = generalStructureWeirFormula;
+                    case SelectableWeirFormulaType.SimpleWeir:
+                        data.WeirFormula = new SimpleWeirFormula();
+                        break;
+                    case SelectableWeirFormulaType.SimpleGate:
+                        data.WeirFormula = new GatedWeirFormula(true);
+                        break;
+                    case SelectableWeirFormulaType.GeneralStructure:
+                        var generalStructureWeirFormula = new GeneralStructureWeirFormula()
+                        {
+                            BedLevelStructureCentre = data.CrestLevel,
+                            WidthStructureCentre = data.CrestWidth,
+                        };
+                        data.WeirFormula = generalStructureWeirFormula;
+                        break;
                 }
             }
         }
