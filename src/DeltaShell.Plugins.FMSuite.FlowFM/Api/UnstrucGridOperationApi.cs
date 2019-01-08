@@ -203,8 +203,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                     yin.Add(coord.Y);
                 }
 
-                // no separators for point geometries (obs points):
-                if (geom.Coordinates.Length != 1)
+                // no separators for point geometries, like obs points. However for source and sinks they are needed.
+                if (geom.Coordinates.Length != 1 || featureType == SourceSink)
                 {
                     xin.Add(MissingValue);
                     yin.Add(MissingValue);
