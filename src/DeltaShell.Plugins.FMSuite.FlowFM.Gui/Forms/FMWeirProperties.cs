@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                     return SelectableWeirFormulaType.GeneralStructure;
                 }
 
-                    return SelectableWeirFormulaType.SimpleWeir;
+                return SelectableWeirFormulaType.SimpleWeir;
             }
             set
             {
