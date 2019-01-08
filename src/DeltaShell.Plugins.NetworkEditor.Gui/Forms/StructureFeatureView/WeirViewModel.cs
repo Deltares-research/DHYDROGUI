@@ -19,6 +19,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         private IWeir weir;
         private SelectableWeirFormulaType selectedWeirType;
         private double lowerEdgeLevel;
+        private double doorHeight;
+        private double horizontalDoorOpeningWidth;
+        private GateOpeningDirection selectedDoorOpeningHeightDirectionType;
         private double upstream1CrestLevel;
         private double upstream2CrestLevel;
         private double upstream1CrestWidth;
@@ -27,8 +30,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         private double downstream2CrestLevel;
         private double downstream1CrestWidth;
         private double downstream2CrestWidth;
-        private double horizontalDoorOpeningWidth;
-        private double previousCrestLevel;
         private bool previousCrestLevelTimeSeriesValue;
         private bool previousLowerEdgeLevelTimeSeriesValue;
         private bool gatedWeirPropertiesEnabled;
@@ -168,17 +169,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         {
             get
             {
-                gateOpeningHeight = LowerEdgeLevel - BedLevelStructureCentre;
-                return gateOpeningHeight;
-            }
-
-            set
-            {
-                gateOpeningHeight = value;
-                lowerEdgeLevel = value + BedLevelStructureCentre;
-
-                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
-                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.LowerEdgeLevel));
+                return LowerEdgeLevel - BedLevelStructureCentre;
             }
         }
 
@@ -189,9 +180,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 if(weir?.WeirFormula == null) {return 0;}
 
-                var gatedWeirFormula = Weir?.WeirFormula as IGatedWeirFormula;
-
-                return gatedWeirFormula.DoorHeight;
+                return doorHeight;
             }
             set
             {
@@ -204,12 +193,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                     return;
                 }
 
-                if (gatedWeirFormula.DoorHeight != value)
-                {
-                    gatedWeirFormula.DoorHeight = value;
-
-                    OnPropertyChanged();
-                }
+                if (gatedWeirFormula.DoorHeight == value) return;
+                gatedWeirFormula.DoorHeight = value;
+                doorHeight = value;
+                OnPropertyChanged();
             }
         }
 
@@ -221,15 +208,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 gatedWeirFormula = Weir?.WeirFormula as IGatedWeirFormula;
                 if (gatedWeirFormula != null)
                 {
-                    if (gatedWeirFormula is GatedWeirFormula)
-                    {
-                        return gatedWeirFormula.HorizontalDoorOpeningDirection;
-                    }
-
-                    if (gatedWeirFormula is GeneralStructureWeirFormula)
-                    {
-                        return GateOpeningDirection.Symmetric;
-                    }
+                    return selectedDoorOpeningHeightDirectionType;
                 }
 
                 return GateOpeningDirection.Symmetric;
@@ -242,6 +221,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                     if (gatedWeirFormula is GatedWeirFormula)
                     {
                         gatedWeirFormula.HorizontalDoorOpeningDirection = value;
+                        selectedDoorOpeningHeightDirectionType = value;
                     }
                 }
 
@@ -384,23 +364,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         public double LowerEdgeLevel
         {
-            get
-            {
-                if (weir?.WeirFormula == null) { return 0; }
-
-                var gatedWeirFormula = Weir?.WeirFormula as IGatedWeirFormula;
-                if (gatedWeirFormula == null) return 0;
-
-
-
-                return gatedWeirFormula.LowerEdgeLevel;
-            }
+            get { return lowerEdgeLevel; }
             set
             {
                 var gatedWeirFormula = Weir?.WeirFormula as IGatedWeirFormula;
                 if (gatedWeirFormula != null)
                 {
                     gatedWeirFormula.LowerEdgeLevel = value;
+                    lowerEdgeLevel = value;
                 }
 
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.LowerEdgeLevel));
@@ -413,23 +384,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         {
             get
             {
-                if (weir?.WeirFormula == null) { return 0; }
-
-
                 var gatedWeirFormula = Weir?.WeirFormula as IGatedWeirFormula;
                 if (gatedWeirFormula == null) return 0;
 
-                return gatedWeirFormula.HorizontalDoorOpeningWidth;
+                return horizontalDoorOpeningWidth;
             }
             set
             {
                 var gatedWeirFormula = Weir?.WeirFormula as IGatedWeirFormula;
-                if (gatedWeirFormula != null)
-                {
-                    gatedWeirFormula.HorizontalDoorOpeningWidth = value;
+                if (gatedWeirFormula == null) return;
+                gatedWeirFormula.HorizontalDoorOpeningWidth = value;
+                horizontalDoorOpeningWidth = value;
 
-                    OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.HorizontalDoorOpeningWidth));
-                }
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.HorizontalDoorOpeningWidth));
             }
         }
 
@@ -512,7 +479,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                         weir.WeirFormula = generalStructureWeirFormula;
                         SetGeneralStructureViewControls();
 
-                        lowerEdgeLevel = GateOpeningHeight + BedLevelStructureCentre;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(value), value, "The selected weir type does not exist. Please select simple weir, simple gate or general structure");
@@ -1001,9 +967,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 {
                     return;
                 }
-
-                lowerEdgeLevel += (BedLevelStructureCentre - previousCrestLevel);
-                previousCrestLevel = BedLevelStructureCentre;
 
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.LowerEdgeLevel));
             }

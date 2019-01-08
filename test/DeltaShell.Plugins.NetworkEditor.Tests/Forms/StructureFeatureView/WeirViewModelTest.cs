@@ -466,7 +466,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         }
 
         [Test]
-        public void GivenWeirViewModelWhenWeirFormulaIsGeneralStructureThenSetBedLevelAndLowerEdgeLevelChanges()
+        public void GivenWeirViewModel_WhenWeirFormulaIsGeneralStructure_ThenSetBedLevelAndLowerEdgeLevelChanges()
         {
             var setValue = 4;
             var viewModel = new WeirViewModel
@@ -485,7 +485,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(0.0d));
             Assert.That(viewModel.BedLevelStructureCentre, Is.EqualTo(0.0d));
 
-            formula.BedLevelStructureCentre = setValue;
+            viewModel.BedLevelStructureCentre = setValue;
 
             Assert.That(viewModel.LowerEdgeLevel, Is.EqualTo(0.0d));
             Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(-4.0d));
@@ -803,14 +803,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         public void
             GivenAWeirViewModel_WhenSwitchingWeirFormula_ThenValuesShouldBePersisted()
         {
+            // Given
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir(),
+                SelectedWeirType = SelectableWeirFormulaType.SimpleGate,
+                LowerEdgeLevel = 2.0,
+                DoorHeight = 4.0,
+                HorizontalDoorOpeningWidth = 3.0,
+                SelectedDoorOpeningHeightDirectionType = GateOpeningDirection.FromRight
+            };
+            
+            // When
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
 
-
+            // Then
+            Assert.That(viewModel.LowerEdgeLevel == 2.0);
+            Assert.That(viewModel.DoorHeight == 4.0);
+            Assert.That(viewModel.HorizontalDoorOpeningWidth == 3.0);
+            Assert.That(viewModel.SelectedDoorOpeningHeightDirectionType == GateOpeningDirection.FromRight);
         }
-
-
-
-
-
+        
         #endregion
 
         [Test]
