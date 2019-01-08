@@ -104,6 +104,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 app.OpenProject(filePath); // save to initialize file repository..
                 var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
 
+                // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
+                // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
+                // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
+                // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
+                loadedModel.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
+
                 // Should re-run activity since this project may be migrated (clears output)
                 app.RunActivity(loadedModel);
 
@@ -164,6 +170,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 app.OpenProject(filePath); // save to initialize file repository..
                 app.SaveProject();
                 var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+
+                // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
+                // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
+                // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
+                // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
+                loadedModel.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
 
                 gui.CommandHandler.OpenView(loadedModel, typeof(ProjectItemMapView));
                 var mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
@@ -317,6 +329,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     app.SaveProjectAs(newSavePath);
                 }
                 var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
+                // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
+                // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
+                // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
+                loadedModel.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
 
                 try
                 {
@@ -389,6 +406,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     app.SaveProject();
 
                 var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
+                // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
+                // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
+                // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
+                loadedModel.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
 
                 // Should re-run activity since this project may be migrated (clears output)
                 app.RunActivity(loadedModel);

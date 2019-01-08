@@ -224,7 +224,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var weir = new Weir2D("weir", true)
             {
                 Geometry = new LineString(new[] {new Coordinate(51.0, -180.0), new Coordinate(150.0, -180.0)}),
-                CrestWidth = 0.0,
+                CrestWidth = 42.0,
                 UseCrestLevelTimeSeries = true
             };
             weir.CrestLevelTimeSeries[model.StartTime] = 10.0;
@@ -241,7 +241,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     UseHorizontalDoorOpeningWidthTimeSeries = true,
                     UseLowerEdgeLevelTimeSeries = true
                 },
-                CrestLevel = 102.0
+                CrestLevel = 102.0,
+                CrestWidth = 42.0
             };
 
             var gatedWeirFormula = gate.WeirFormula as GatedWeirFormula;

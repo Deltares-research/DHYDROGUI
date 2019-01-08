@@ -762,6 +762,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var mduPath = TestHelper.GetTestFilePath(@"structures_gate\structsFM.dsproj_data\har\har.mdu");
 
                 var model = new WaterFlowFMModel(mduPath);
+                // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
+                // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
+                // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
+                // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
+                model.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
                 model.StopTime = model.StartTime.AddMinutes(15);
 
                 Assert.IsTrue(model.Area.Weirs.Where(w =>w.WeirFormula is GatedWeirFormula).ToList().Count>0);
