@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     public class WaveBoundaryParameters
     {
         public double Height { get; set; }
-        public double Period { get; set; }
+        public double Period { get; set; } = 1.0;
         public double Direction { get; set; }
         public double Spreading { get; set; }
     }

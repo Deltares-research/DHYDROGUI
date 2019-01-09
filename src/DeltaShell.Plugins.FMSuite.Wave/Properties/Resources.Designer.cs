@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -81,12 +81,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Parameter &quot;Period&quot; must be greater than 0..
+        ///   Looks up a localized string similar to Parameter &quot;Period&quot; must be a value within the range 0,1 - 20..
         /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_greater_than_0_ {
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_a_value_within_the_range_ {
             get {
                 return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must" +
-                        "_be_greater_than_0_", resourceCulture);
+                        "_be_a_value_within_the_range_", resourceCulture);
             }
         }
         

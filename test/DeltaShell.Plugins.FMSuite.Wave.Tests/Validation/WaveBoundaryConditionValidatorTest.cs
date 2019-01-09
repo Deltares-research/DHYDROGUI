@@ -147,11 +147,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
-        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
-        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
-        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
-        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
-        public void GivenWaveBoundaryConditionThatHasADataPointWithPeriodEqualToOrSmallerThanZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double periodValue, WaveBoundaryConditionSpatialDefinitionType type)
+        [TestCase(0.09, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(20.01, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(0.09, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        [TestCase(20.01, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        public void GivenWaveBoundaryConditionThatHasADataPointWithPeriodBetweenExpectedValues_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double periodValue, WaveBoundaryConditionSpatialDefinitionType type)
         {
             // Given
             var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumConstant)
@@ -174,7 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             // Then
             var precedingText = boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying ? "Point 1: " : string.Empty;
-            var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_greater_than_0_;
+            var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_a_value_within_the_range_;
             ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 

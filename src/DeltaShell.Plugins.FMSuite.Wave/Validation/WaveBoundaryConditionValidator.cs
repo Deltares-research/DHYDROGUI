@@ -84,11 +84,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                         boundaryCondition);
                 }
 
-                if (spectrumValues.Period <= 0)
+                if (spectrumValues.Period <= 0.09 || spectrumValues.Period >= 20.0)
                 {
                     yield return new ValidationIssue(boundaryCondition.VariableDescription,
                         ValidationSeverity.Error,
-                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_greater_than_0_,
+                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_a_value_within_the_range_,
                         boundaryCondition);
                 }
 

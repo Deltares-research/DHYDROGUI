@@ -175,8 +175,8 @@
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_greater_than_0_" xml:space="preserve">
     <value>Parameter "Height" must be greater than 0.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_greater_than_0_" xml:space="preserve">
-    <value>Parameter "Period" must be greater than 0.</value>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_a_value_within_the_range_" xml:space="preserve">
+    <value>Parameter "Period" must be a value within the range 0,1 - 20.</value>
   </data>
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_greater_than_0_" xml:space="preserve">
     <value>Parameter "Spreading" must be greater than 0.</value>
