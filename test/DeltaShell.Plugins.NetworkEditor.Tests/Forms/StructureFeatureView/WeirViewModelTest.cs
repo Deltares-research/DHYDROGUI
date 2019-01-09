@@ -477,7 +477,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                 }
             };
 
-            var formula = (GeneralStructureWeirFormula) viewModel.Weir.WeirFormula;
             var count = 0;
             ((INotifyPropertyChanged) viewModel.Weir.WeirFormula).PropertyChanged += (s, e) => count++;
 
@@ -801,9 +800,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
         [Test]
         public void
-            GivenAWeirViewModel_WhenSwitchingWeirFormula_ThenValuesShouldBePersisted()
+            GivenAWeirViewModelWithASimpleGate_WhenSwitchingWeirFormulaToGeneralStructure_ThenValuesShouldBePersisted()
         {
-            // Given
             var viewModel = new WeirViewModel
             {
                 Weir = new Weir(),
@@ -814,10 +812,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                 SelectedDoorOpeningHeightDirectionType = GateOpeningDirection.FromRight
             };
             
-            // When
             viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
 
-            // Then
             Assert.That(viewModel.LowerEdgeLevel == 2.0);
             Assert.That(viewModel.DoorHeight == 4.0);
             Assert.That(viewModel.HorizontalDoorOpeningWidth == 3.0);
