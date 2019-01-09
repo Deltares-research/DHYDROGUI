@@ -84,11 +84,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                         boundaryCondition);
                 }
 
-                if (spectrumValues.Period <= 0.09 || spectrumValues.Period >= 20.0)
+                if (spectrumValues.Period.IsInRange(0.1, 20.0))
                 {
                     yield return new ValidationIssue(boundaryCondition.VariableDescription,
                         ValidationSeverity.Error,
                         precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_a_value_within_the_range_,
+                        boundaryCondition);
+                }
+
+                if (spectrumValues.Direction.IsInRange(-360.0, 360.0))
+                {
+                    yield return new ValidationIssue(boundaryCondition.VariableDescription,
+                        ValidationSeverity.Error,
+                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateSpectrumParameters_Parameter__Direction__must_be_a_value_within_the_range__360___360_,
                         boundaryCondition);
                 }
 
@@ -100,6 +108,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                         boundaryCondition);
                 }
             }
+        }
+
+        private static bool IsInRange(this double value, double lowerLimit, double upperLimit)
+        {
+            return value - lowerLimit <= -double.Epsilon || value - upperLimit >= double.Epsilon;
         }
 
         private static IEnumerable<ValidationIssue> ValidateTimeSeriesValues(WaveBoundaryCondition boundaryCondition)

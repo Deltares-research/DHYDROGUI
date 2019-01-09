@@ -199,4 +199,7 @@
   <data name="WaveTimePointValidator_Validate_Model_Start_time_precedes_Reference_Time" xml:space="preserve">
     <value>Model start time precedes reference time</value>
   </data>
+  <data name="WaveBoundaryConditionValidator_ValidateSpectrumParameters_Parameter__Direction__must_be_a_value_within_the_range__360___360_" xml:space="preserve">
+    <value>Parameter "Direction" must be a value within the range -360 - 360.</value>
+  </data>
 </root>

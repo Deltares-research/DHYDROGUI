@@ -171,6 +171,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parameter &quot;Direction&quot; must be a value within the range -360 - 360..
+        /// </summary>
+        public static string WaveBoundaryConditionValidator_ValidateSpectrumParameters_Parameter__Direction__must_be_a_value_within_the_range__360___360_ {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateSpectrumParameters_Parameter__Direction__m" +
+                        "ust_be_a_value_within_the_range__360___360_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All the grids Coordinate System should be the same, either Spherical or Cartesian.
         /// </summary>
         public static string WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_All_the_grids_Coordinate_System_should_be_the_same__either_Spherical_or_Cardesian {

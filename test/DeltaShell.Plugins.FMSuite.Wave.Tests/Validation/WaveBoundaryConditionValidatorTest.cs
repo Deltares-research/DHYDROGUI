@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         [TestCase(20.01, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
         [TestCase(0.09, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
         [TestCase(20.01, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
-        public void GivenWaveBoundaryConditionThatHasADataPointWithPeriodBetweenExpectedValues_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double periodValue, WaveBoundaryConditionSpatialDefinitionType type)
+        public void GivenWaveBoundaryConditionThatHasADataPointWithPeriodNotInExpectedRange_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double periodValue, WaveBoundaryConditionSpatialDefinitionType type)
         {
             // Given
             var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumConstant)
@@ -175,6 +175,38 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             // Then
             var precedingText = boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying ? "Point 1: " : string.Empty;
             var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_a_value_within_the_range_;
+            ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
+        }
+
+        [TestCase(-360.01, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(360.01, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(-360.01, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        [TestCase(360.01, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        public void GivenWaveBoundaryConditionThatHasADataPointWithDirectionNotInExpectedRange_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double directionValue, WaveBoundaryConditionSpatialDefinitionType type)
+        {
+            // Given
+            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumConstant)
+            {
+                Feature = featureWithTwoPoints,
+                SpatialDefinitionType = type
+            };
+            boundaryCondition.AddPoint(0);
+            boundaryCondition.SpectrumParameters.Values.ForEach(spectrumParameters =>
+            {
+                spectrumParameters.Direction = directionValue;
+                // Pass validation for other spectrum parameters
+                spectrumParameters.Period = 1.0;
+                spectrumParameters.Height = 1.0;
+                spectrumParameters.Spreading = 1.0;
+            });
+            var waveBoundaryConditions = new List<WaveBoundaryCondition> { boundaryCondition };
+
+            // When
+            var validationReport = WaveBoundaryConditionValidator.Validate(waveBoundaryConditions);
+
+            // Then
+            var precedingText = boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying ? "Point 1: " : string.Empty;
+            var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateSpectrumParameters_Parameter__Direction__must_be_a_value_within_the_range__360___360_;
             ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
@@ -360,8 +392,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             functionTwoComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName)?.SetValues(new List<double> {1, 1});
 
             var waveBoundaryConditions = new List<WaveBoundaryCondition> { boundaryCondition };
-            var errors = WaveBoundaryConditionValidator.Validate(waveBoundaryConditions).AllErrors;
-            Assert.AreEqual(0, errors.Count());
+            var errors = WaveBoundaryConditionValidator.Validate(waveBoundaryConditions).AllErrors.ToArray();
+            Assert.AreEqual(0, errors.Length);
 
             boundaryCondition.PointData[1].Arguments[0].Values.Clear();
             boundaryCondition.PointData[1].Arguments[0].SetValues(new[] {t1, t3});
@@ -369,9 +401,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             functionTwoComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.PeriodVariableName)?.SetValues(new List<double> { 1, 1 });
             functionTwoComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName)?.SetValues(new List<double> { 1, 1 });
 
-            errors = WaveBoundaryConditionValidator.Validate(waveBoundaryConditions).AllErrors;
-            Assert.AreEqual(1, errors.Count());
-            Assert.That(errors.FirstOrDefault().Message.Contains("Time points are not synchronized on boundary"));
+            errors = WaveBoundaryConditionValidator.Validate(waveBoundaryConditions).AllErrors.ToArray();
+            Assert.That(errors.Length, Is.EqualTo(1));
+            Assert.That(errors[0].Message.Contains("Time points are not synchronized on boundary"));
         }
 
         private static void ContainsOnlyOneIssueWithMessage(ValidationReport validationReport, ValidationSeverity severity, string expectedMessage)
