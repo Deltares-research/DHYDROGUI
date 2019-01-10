@@ -175,6 +175,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                         boundaryCondition);
                 }
 
+                var directionComponent = function.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.DirectionVariableName);
+                var directionComponentValues = directionComponent?.Values as IMultiDimensionalArray<double>;
+                if (directionComponentValues != null && directionComponentValues.Any(v => v.IsInRange(-360.0, 360.0)))
+                {
+                    yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
+                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Direction__in_the_time_series_table_must_be_within_expected_range,
+                        boundaryCondition);
+                }
+
                 var spreadingComponent = function.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName);
                 var spreadingComponentValues = spreadingComponent?.Values as IMultiDimensionalArray<double>;
                 if (spreadingComponentValues != null && spreadingComponentValues.Any(v => v <= 0.0))

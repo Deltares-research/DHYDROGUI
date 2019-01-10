@@ -391,6 +391,38 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
+        [TestCase(-360.001, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(360.001, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(-360.001, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        [TestCase(360.001, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        public void GivenParameterizedSpectrumTimeSeriesBoundaryConditionThatHasDirectionValueSmallerThanOrEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double directionValue, WaveBoundaryConditionSpatialDefinitionType type)
+        {
+            // Given
+            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
+            {
+                Feature = featureWithTwoPoints,
+                SpatialDefinitionType = type
+            };
+            boundaryCondition.AddPoint(0);
+
+            var functionComponents = boundaryCondition.PointData[0].Components;
+            boundaryCondition.PointData[0].Arguments[0].SetValues(new[] { DateTime.Now });
+            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName)?.SetValues(new List<double> { 1.0 });
+            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.PeriodVariableName)?.SetValues(new List<double> { 1.0 });
+            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.DirectionVariableName)?.SetValues(new List<double> { directionValue }); // Direction component values
+            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName)?.SetValues(new List<double> { 1.0 });
+
+            var waveBoundaryConditions = new List<WaveBoundaryCondition> { boundaryCondition };
+
+            // When
+            var validationReport = WaveBoundaryConditionValidator.Validate(waveBoundaryConditions);
+
+            // Then
+            var precedingText = boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying ? "Point 1: " : string.Empty;
+            var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Direction__in_the_time_series_table_must_be_within_expected_range;
+            ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
+        }
+
         [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
         [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
         [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]

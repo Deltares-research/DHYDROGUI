@@ -111,6 +111,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Values in column &quot;Dir&quot; in the time series table must be within the range -360 - 360..
+        /// </summary>
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Direction__in_the_time_series_table_must_be_within_expected_range {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Direc" +
+                        "tion__in_the_time_series_table_must_be_within_expected_range", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Values in column &quot;Hs&quot; in the time series table must be greater than 0 and smaller than or equal to 25..
         /// </summary>
         public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Hs__in_the_time_series_table_must_be_within_expected_range {

@@ -190,6 +190,9 @@
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Tp__in_the_time_series_table_must_be_within_expected_range" xml:space="preserve">
     <value>Values in column "Tp" in the time series table must be within the range 0,1 - 20.</value>
   </data>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Direction__in_the_time_series_table_must_be_within_expected_range" xml:space="preserve">
+    <value>Values in column "Dir" in the time series table must be within the range -360 - 360.</value>
+  </data>
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_" xml:space="preserve">
     <value>Values in column "Spreading" in the time series table must be greater than 0.</value>
   </data>
