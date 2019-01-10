@@ -65,6 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                         {
                             function.Components.Where(c => c.Name == SpreadingVariableName).ForEach(c =>
                                 c.DefaultValue = GetDefaultSpreadingValue(DirectionalSpreadingType));
+                            UpdateDirectionVariableUnit(function);
                         });
                         break;
                 }
@@ -187,6 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     var function = CreateEmptyWaveEnergyFunction();
                     function.Components.Where(c => c.Name == PeriodVariableName).ForEach(c => c.DefaultValue = 1.0);
                     function.Components.Where(c => c.Name == SpreadingVariableName).ForEach(c => c.DefaultValue = GetDefaultSpreadingValue(DirectionalSpreadingType));
+                    UpdateDirectionVariableUnit(function);
                     return function;
                 case BoundaryConditionDataType.ParameterizedSpectrumConstant:
                 case BoundaryConditionDataType.SpectrumFromFile:
@@ -194,6 +196,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 default:
                     return base.CreateFunction();
             }
+        }
+
+        private void UpdateDirectionVariableUnit(IFunction function)
+        {
+            function.Components.Where(c => c.Name == DirectionVariableName)
+                .ForEach(c =>
+                    c.Unit = new Unit(
+                        DirectionalSpreadingType == WaveDirectionalSpreadingType.Degrees ? "degree" : "power",
+                        DirectionalSpreadingType == WaveDirectionalSpreadingType.Degrees ? "deg" : "-"));
         }
 
         public const string TimeVariableName = "Time";
