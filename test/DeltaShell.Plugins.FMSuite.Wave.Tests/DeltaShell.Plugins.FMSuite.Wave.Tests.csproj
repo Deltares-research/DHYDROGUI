@@ -225,6 +225,7 @@
     <Compile Include="Gui\WaveTimePointValidatorTest.cs" />
     <Compile Include="WaveBoundaryConditionTest.cs" />
     <Compile Include="WaveBoundaryParametersTest.cs" />
+    <Compile Include="WaveBoundarySpectralDataTest.cs" />
     <Compile Include="WaveGridOperationApiTest.cs" />
     <Compile Include="WaveModelApiTest.cs" />
     <Compile Include="WaveModelRunTest.cs" />

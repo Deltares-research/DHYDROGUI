@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public WavePeriodType PeriodType { get; set; }
         public WaveDirSpreadType DirectionalSpreadingType { get; set; }
         public double PeakEnhancementFactor { get; set; }
-        public double GaussianSpreadingValue { get; set; }
+        public double GaussianSpreadingValue { get; set; } = 0.1;
     }
 
     public class WaveBoundaryParameters
