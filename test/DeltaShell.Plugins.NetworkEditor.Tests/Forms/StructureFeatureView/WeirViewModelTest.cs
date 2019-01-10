@@ -292,40 +292,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleWeir;
             Assert.AreEqual(8.0, viewModel.Weir.CrestLevel);
             Assert.AreEqual(7.0, viewModel.Weir.CrestWidth);
-        }
 
-        [Test]
-        public void
-            GivenWeirViewModel_WhenChangingValuesOfGeneralStructure_SwitchToAnotherStructureAndBackToAGeneralStructure_ThenValuesArePersisted()
-        {
-            var viewModel = new WeirViewModel
-            {
-                Weir = new Weir(true)
-            };
-
-            viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
-            viewModel.Upstream1CrestLevel = 1.0;
-            viewModel.Upstream2CrestLevel = 2.0;
-            viewModel.Upstream1CrestWidth = 3.0;
-            viewModel.Upstream2CrestWidth = 4.0;
-
-            viewModel.Downstream1CrestLevel = 5.0;
-            viewModel.Downstream2CrestLevel = 6.0;
-            viewModel.Downstream1CrestWidth = 7.0;
-            viewModel.Downstream2CrestWidth = 8.0;
-
-            viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleGate;
-
-            viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
-
-            Assert.AreEqual(1.0, viewModel.Upstream1CrestLevel);
-            Assert.AreEqual(2.0, viewModel.Upstream2CrestLevel);
-            Assert.AreEqual(3.0, viewModel.Upstream1CrestWidth);
-            Assert.AreEqual(4.0, viewModel.Upstream2CrestWidth);
-            Assert.AreEqual(5.0, viewModel.Downstream1CrestLevel);
-            Assert.AreEqual(6.0, viewModel.Downstream2CrestLevel);
-            Assert.AreEqual(7.0, viewModel.Downstream1CrestWidth);
-            Assert.AreEqual(8.0, viewModel.Downstream2CrestWidth);
         }
 
         #endregion
@@ -466,7 +433,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         }
 
         [Test]
-        public void GivenWeirViewModel_WhenWeirFormulaIsGeneralStructure_ThenSetBedLevelAndLowerEdgeLevelChanges()
+        public void GivenWeirViewModelWhenWeirFormulaIsGeneralStructureThenSetBedLevelAndLowerEdgeLevelChanges()
         {
             var setValue = 4;
             var viewModel = new WeirViewModel
@@ -477,6 +444,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                 }
             };
 
+            var formula = (GeneralStructureWeirFormula) viewModel.Weir.WeirFormula;
             var count = 0;
             ((INotifyPropertyChanged) viewModel.Weir.WeirFormula).PropertyChanged += (s, e) => count++;
 
@@ -484,7 +452,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(0.0d));
             Assert.That(viewModel.BedLevelStructureCentre, Is.EqualTo(0.0d));
 
-            viewModel.BedLevelStructureCentre = setValue;
+            formula.BedLevelStructureCentre = setValue;
 
             Assert.That(viewModel.LowerEdgeLevel, Is.EqualTo(0.0d));
             Assert.That(viewModel.GateOpeningHeight, Is.EqualTo(-4.0d));
@@ -800,26 +768,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
         [Test]
         public void
-            GivenAWeirViewModelWithASimpleGate_WhenSwitchingWeirFormulaToGeneralStructure_ThenValuesShouldBePersisted()
+            GivenAWeirViewModel_WhenSwitchingWeirFormula_ThenValuesShouldBePersisted()
         {
-            var viewModel = new WeirViewModel
-            {
-                Weir = new Weir(),
-                SelectedWeirType = SelectableWeirFormulaType.SimpleGate,
-                LowerEdgeLevel = 2.0,
-                DoorHeight = 4.0,
-                HorizontalDoorOpeningWidth = 3.0,
-                SelectedDoorOpeningHeightDirectionType = GateOpeningDirection.FromRight
-            };
-            
-            viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
 
-            Assert.That(viewModel.LowerEdgeLevel == 2.0);
-            Assert.That(viewModel.DoorHeight == 4.0);
-            Assert.That(viewModel.HorizontalDoorOpeningWidth == 3.0);
-            Assert.That(viewModel.SelectedDoorOpeningHeightDirectionType == GateOpeningDirection.FromRight);
+
         }
-        
+
+
+
+
+
         #endregion
 
         [Test]
