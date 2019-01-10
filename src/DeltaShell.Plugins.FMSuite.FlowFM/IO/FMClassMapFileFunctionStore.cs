@@ -56,28 +56,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             grid = UnstructuredGridFileHelper.LoadFromFile(netCdfFile.Path, true);
             var timeDepVariables = dataVariables.Where(v => v.IsTimeDependent && v.NumDimensions > 1);
-            var functions = timeDepVariables.SelectMany(ProcessTimeDependentVariable).Where(c => c != null).ToList();
+            var functions = timeDepVariables.Select(CreateCoverageForTimeDependentVariable).Where(c => c != null);
 
             return functions;
         }
 
-        private IEnumerable<UnstructuredGridCoverage> ProcessTimeDependentVariable(NetCdfVariableInfo timeDependentVariable)
+        private UnstructuredGridCoverage CreateCoverageForTimeDependentVariable(NetCdfVariableInfo timeDependentVariable)
         {
-            var netcdfVariable = timeDependentVariable.NetCdfDataVariable;
-            var netCdfVariableName = netCdfFile.GetVariableName(netcdfVariable);
-            var netCdfVariableType = netCdfFile.GetVariableDataType(netcdfVariable);
+            var netCdfVariable = timeDependentVariable.NetCdfDataVariable;
+            var netCdfVariableName = netCdfFile.GetVariableName(netCdfVariable);
+            var netCdfVariableType = netCdfFile.GetVariableDataType(netCdfVariable);
 
             if (netCdfVariableType != NetCdfDataType.NcByte)
             {
-                Log.Info($"Time dependent functions in the class map file are expected to be of type Byte. Please check the value type for variable '{netCdfVariableName}'.");
+                Log.Warn($"Time dependent functions in the class map file are expected to be of type Byte. Please check the value type for variable '{netCdfVariableName}'.");
+                return null;
             }
 
-            var secondDimension = netCdfFile.GetDimensions(netcdfVariable).ElementAt(1);
+            var secondDimension = netCdfFile.GetDimensions(netCdfVariable).ElementAt(1);
             var secondDimensionName = netCdfFile.GetDimensionName(secondDimension);
-            var location = netCdfFile.GetAttributeValue(netcdfVariable, LocationAttributeName);
-            var longName = netCdfFile.GetAttributeValue(netcdfVariable, LongNameAttributeName) ??
-                           netCdfFile.GetAttributeValue(netcdfVariable, StandardNameAttributeName);
-            var unit = netCdfFile.GetAttributeValue(netcdfVariable, UnitsAttributeName);
+            var location = netCdfFile.GetAttributeValue(netCdfVariable, LocationAttributeName);
+            var longName = netCdfFile.GetAttributeValue(netCdfVariable, LongNameAttributeName) ??
+                           netCdfFile.GetAttributeValue(netCdfVariable, StandardNameAttributeName);
+            var unit = netCdfFile.GetAttributeValue(netCdfVariable, UnitsAttributeName);
             var coverageLongName = longName != null? $"{longName} ({netCdfVariableName})" : netCdfVariableName;
 
             var dotNetType = NetCdfConstants.GetClrDataType(netCdfVariableType);
@@ -87,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 InitializeCoverage(coverage, secondDimensionName, netCdfVariableName, unit, timeDependentVariable.ReferenceDate);
             }
 
-            yield return coverage;
+            return coverage;
         }
 
         /// <summary>

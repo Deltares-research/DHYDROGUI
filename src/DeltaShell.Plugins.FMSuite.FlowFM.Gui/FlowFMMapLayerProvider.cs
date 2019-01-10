@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         /// </summary>
         /// <param name="data">The data object for which the layer is created.</param>
         /// <param name="parent">The parent object.</param>
-        /// <returns></returns>
+        /// <returns>The layer that is created for the data object.</returns>
         public ILayer CreateLayer(object data, object parent)
         {
             var waterFlowFmModel = data as WaterFlowFMModel;
@@ -235,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         }
 
         /// <summary>
-        /// Determines whether this instance can create a layer the specified data object.
+        /// Determines whether this instance can create a layer for the specified data object.
         /// </summary>
         /// <param name="data">The data object for which will be determined whether a layer can be created.</param>
         /// <param name="parentObject">The parent object.</param>

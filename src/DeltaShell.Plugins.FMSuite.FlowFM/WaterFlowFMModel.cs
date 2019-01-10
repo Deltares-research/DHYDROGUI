@@ -1606,7 +1606,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (ModelDefinition == null) return null;
                 if (ModelDefinition.ModelName.Equals(Name))
                     return HisFilePath;
-                return Name + "_his.nc";
+                return Name + WaterFlowFMModelDefinition.HisFileExtension;
             }
         }
 
@@ -1617,7 +1617,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (ModelDefinition == null) return null;
                 if (ModelDefinition.ModelName.Equals(Name))
                     return MapFilePath;
-                return Name + "_map.nc";
+                return Name + WaterFlowFMModelDefinition.MapFileExtension;
             }
         }
 
@@ -1628,7 +1628,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (ModelDefinition == null) return null;
                 if (ModelDefinition.ModelName.Equals(Name))
                     return ClassMapFilePath;
-                return Name + "_clm.nc";
+                return Name + WaterFlowFMModelDefinition.ClassMapFileExtension;
             }
         }
 

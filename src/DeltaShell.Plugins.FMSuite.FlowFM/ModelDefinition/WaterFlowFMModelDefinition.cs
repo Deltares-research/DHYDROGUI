@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using DelftTools.Functions.Generic;
+﻿using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -17,11 +13,9 @@ using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
-using DelftTools.Utils;
-using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
@@ -29,6 +23,11 @@ using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {
@@ -42,6 +41,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string RoughnessDataItemName = "Roughness";
         public const string ViscosityDataItemName = "Viscosity";
         public const string DiffusivityDataItemName = "Diffusivity";
+        private const string ClassMapFilePropertyName = "ClassMapFile";
+        private const string HisFilePropertyName = "HisFile";
+        private const string MapFilePropertyName = "MapFile";
+        public const string MapFileExtension = "_map.nc";
+        public const string HisFileExtension = "_his.nc";
+        public const string ClassMapFileExtension = "_clm.nc";
 
         public static readonly string[] SpatialDataItemNames =
         {
@@ -360,19 +365,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public string RelativeMapFilePath
         {
-            get { return GetFilePathFromProperty("MapFile", ModelName + "_map.nc"); }
+            get { return GetFilePathFromProperty(MapFilePropertyName, ModelName + MapFileExtension); }
         }
 
         public string RelativeHisFilePath
         {
-            get { return GetFilePathFromProperty("HisFile", ModelName + "_his.nc"); }
+            get { return GetFilePathFromProperty(HisFilePropertyName, ModelName + HisFileExtension); }
         }
 
         /// <summary>Gets the relative class map file path.</summary>
         /// <value>The relative class map file path.</value>
         public string RelativeClassMapFilePath
         {
-            get { return GetFilePathFromProperty("ClassMapFile", ModelName + "_clm.nc"); }
+            get { return GetFilePathFromProperty(ClassMapFilePropertyName, ModelName + ClassMapFileExtension); }
         }
 
         private string GetFilePathFromProperty(string propertyName, string defaultName)
