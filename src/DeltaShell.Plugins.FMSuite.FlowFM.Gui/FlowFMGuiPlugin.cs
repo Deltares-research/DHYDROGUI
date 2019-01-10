@@ -180,16 +180,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             };
 
             // Validation
-            yield return new ViewInfo<WaterFlowFMModel, ValidationView>
-            {
-                Description = "Validation Report",
-                Image = Common.Gui.Properties.Resources.validation,
-                AfterCreate = (v, o) =>
+                yield return new ViewInfo<WaterFlowFMModel, ValidationView>
                 {
-                    v.Gui = Gui;
-                    v.OnValidate = d => (d as WaterFlowFMModel)?.Validate();
-                }
-            };
+                    Description = "Validation Report",
+                    Image = Common.Gui.Properties.Resources.validation,
+                    AfterCreate = (v, o) =>
+                    {
+                      v.Gui = Gui;
+                      v.OnValidate = d => (d as WaterFlowFMModel)?.Validate();
+                    }
+                };
 
             // Boundary conditions
             var boundaryConditionSetViewInfo = new ViewInfo<BoundaryConditionSet, BoundaryConditionEditor>
@@ -675,9 +675,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             }
 
-            if (!(sender is WaterFlowFMModel) || activityStatusChangedEventArgs.NewStatus != ActivityStatus.Failed) return;
-
-            Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
+            var fmModel = sender as WaterFlowFMModel;
+            if (fmModel != null && fmModel.ValidateBeforeRun && activityStatusChangedEventArgs.NewStatus == ActivityStatus.Failed)
+                Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
         }
 
         [InvokeRequired]
