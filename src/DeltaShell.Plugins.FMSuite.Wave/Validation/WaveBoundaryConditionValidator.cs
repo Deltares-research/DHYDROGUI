@@ -168,10 +168,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
                 var periodComponent = function.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.PeriodVariableName);
                 var periodComponentValues = periodComponent?.Values as IMultiDimensionalArray<double>;
-                if (periodComponentValues != null && periodComponentValues.Any(v => v <= 0.0))
+                if (periodComponentValues != null && periodComponentValues.Any(v => v.IsInRange(0.1, 20.0)))
                 {
                     yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
-                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Tp__in_the_time_series_table_must_be_greater_than_0_,
+                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Tp__in_the_time_series_table_must_be_within_expected_range,
                         boundaryCondition);
                 }
 
