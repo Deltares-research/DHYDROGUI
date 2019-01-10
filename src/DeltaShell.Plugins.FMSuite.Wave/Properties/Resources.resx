@@ -202,4 +202,7 @@
   <data name="WaveBoundaryConditionValidator_ValidateSpectrumParameters_Parameter__Direction__must_be_a_value_within_the_range__360___360_" xml:space="preserve">
     <value>Parameter "Direction" must be a value within the range -360 - 360.</value>
   </data>
+  <data name="WaveBoundaryConditionValidator_ValidateSpectralData_Peak_Enhancement_Factor_must_be_a_value_within_the_range_1___10_" xml:space="preserve">
+    <value>Peak Enhancement Factor must be a value within the range 1 - 10.</value>
+  </data>
 </root>

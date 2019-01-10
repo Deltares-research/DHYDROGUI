@@ -29,6 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         {
             return ValidateDataPoints(boundaryCondition)
                 .Concat(ValidateGeometry(boundaryCondition))
+                .Concat(ValidateSpectralData(boundaryCondition))
                 .Concat(ValidateSpectrumParameters(boundaryCondition))
                 .Concat(ValidateTimeSeriesValues(boundaryCondition))
                 .Concat(ValidateTimePoints(boundaryCondition));
@@ -58,6 +59,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Info,
                         Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_unactivated_support_points,
                         boundaryCondition);
+            }
+        }
+
+        private static IEnumerable<ValidationIssue> ValidateSpectralData(WaveBoundaryCondition boundaryCondition)
+        {
+            if(boundaryCondition.SpectralData.PeakEnhancementFactor.IsInRange(1.0, 10.0))
+            {
+                yield return new ValidationIssue(null, ValidationSeverity.Error,
+                    Resources.WaveBoundaryConditionValidator_ValidateSpectralData_Peak_Enhancement_Factor_must_be_a_value_within_the_range_1___10_,
+                    boundaryCondition);
             }
         }
 
