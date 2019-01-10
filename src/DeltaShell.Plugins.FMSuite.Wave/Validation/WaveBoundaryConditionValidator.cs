@@ -76,11 +76,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     precedingText = $"Point {pointIndex}: ";
                 }
 
-                if (spectrumValues.Height <= 0)
+                if (spectrumValues.Height <= 0.0 || spectrumValues.Height - 25.0 >= double.Epsilon)
                 {
                     yield return new ValidationIssue(boundaryCondition.VariableDescription,
                         ValidationSeverity.Error,
-                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_greater_than_0_,
+                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_larger_than_0_and_smaller_or_equal_to_25_,
                         boundaryCondition);
                 }
 

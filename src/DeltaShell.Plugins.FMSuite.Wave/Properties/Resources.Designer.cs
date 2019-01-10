@@ -71,12 +71,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Parameter &quot;Height&quot; must be greater than 0..
+        ///   Looks up a localized string similar to Parameter &quot;Height&quot; must be larger than 0 and smaller or equal to 25..
         /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_greater_than_0_ {
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_larger_than_0_and_smaller_or_equal_to_25_ {
             get {
                 return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must" +
-                        "_be_greater_than_0_", resourceCulture);
+                        "_be_larger_than_0_and_smaller_or_equal_to_25_", resourceCulture);
             }
         }
         

@@ -172,8 +172,8 @@
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Time_points_are_not_synchronized_on_boundary___0_" xml:space="preserve">
     <value>Time points are not synchronized on boundary: {0}</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_greater_than_0_" xml:space="preserve">
-    <value>Parameter "Height" must be greater than 0.</value>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_larger_than_0_and_smaller_or_equal_to_25_" xml:space="preserve">
+    <value>Parameter "Height" must be larger than 0 and smaller or equal to 25.</value>
   </data>
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_a_value_within_the_range_" xml:space="preserve">
     <value>Parameter "Period" must be a value within the range 0,1 - 20.</value>
