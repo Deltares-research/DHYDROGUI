@@ -54,7 +54,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 SpectralData.DirectionalSpreadingType = value;
 
                 var defaultSpreadingValue = GetDefaultSpreadingValue(value);
-                SpectrumParameters.Values.ForEach(parameters => parameters.Spreading = defaultSpreadingValue);
+
+                switch (DataType)
+                {
+                    case BoundaryConditionDataType.ParameterizedSpectrumConstant:
+                        SpectrumParameters.Values.ForEach(parameters => parameters.Spreading = defaultSpreadingValue);
+                        break;
+                    case BoundaryConditionDataType.ParameterizedSpectrumTimeseries:
+                        PointData.ForEach(function =>
+                        {
+                            function.Components.Where(c => c.Name == SpreadingVariableName).ForEach(c =>
+                                c.DefaultValue = GetDefaultSpreadingValue(DirectionalSpreadingType));
+                        });
+                        break;
+                }
             }
         }
 
@@ -171,7 +184,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             switch (DataType)
             {
                 case BoundaryConditionDataType.ParameterizedSpectrumTimeseries:
-                    return CreateEmptyWaveEnergyFunction();
+                    var function = CreateEmptyWaveEnergyFunction();
+                    function.Components.Where(c => c.Name == PeriodVariableName).ForEach(c => c.DefaultValue = 1.0);
+                    function.Components.Where(c => c.Name == SpreadingVariableName).ForEach(c => c.DefaultValue = GetDefaultSpreadingValue(DirectionalSpreadingType));
+                    return function;
                 case BoundaryConditionDataType.ParameterizedSpectrumConstant:
                 case BoundaryConditionDataType.SpectrumFromFile:
                     return new Function("dummy");
