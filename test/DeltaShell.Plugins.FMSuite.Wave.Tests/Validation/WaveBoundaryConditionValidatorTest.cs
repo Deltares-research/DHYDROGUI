@@ -117,9 +117,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
-        //[TestCase(25.001, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
-        //[TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
-        //[TestCase(25.001, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        [TestCase(25.001, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        [TestCase(25.001, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
         public void GivenWaveBoundaryConditionThatHasADataPointWithHeightNotInExpectedRange_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double heightValue, WaveBoundaryConditionSpatialDefinitionType type)
         {
             // Given
