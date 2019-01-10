@@ -498,7 +498,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                                      bc.SpectralData.PeriodType).ToLower());
                     boundaryCategory.AddProperty("DirSpreadType",
                                                  EnumDescriptionAttributeTypeConverter.GetEnumDescription(
-                                                     bc.SpectralData.DirectionalSpreadingType).ToLower());
+                                                     bc.DirectionalSpreadingType).ToLower());
                     boundaryCategory.AddProperty("PeakEnhanceFac", bc.SpectralData.PeakEnhancementFactor);
                     boundaryCategory.AddProperty("GaussSpread", bc.SpectralData.GaussianSpreadingValue);
                 }
@@ -977,7 +977,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
         }
 
-        private WaveBoundarySpectralData GetSpectralData(DelftIniCategory boundaryData)
+        private WaveBoundarySpectralData GetSpectralData(IDelftIniCategory boundaryData)
         {
             return new WaveBoundarySpectralData
                 {
@@ -986,8 +986,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                      ? WavePeriodType.Peak
                                      : WavePeriodType.Mean,
                     DirectionalSpreadingType = boundaryData.GetPropertyValue("DirSpreadType") == "power"
-                                                   ? WaveDirSpreadType.Power
-                                                   : WaveDirSpreadType.Degrees,
+                                                   ? WaveDirectionalSpreadingType.Power
+                                                   : WaveDirectionalSpreadingType.Degrees,
                     PeakEnhancementFactor = double.Parse(boundaryData.GetPropertyValue("PeakEnhanceFac"), NumberStyles.Any, CultureInfo.InvariantCulture),
                     GaussianSpreadingValue = double.Parse(boundaryData.GetPropertyValue("GaussSpread"), NumberStyles.Any, CultureInfo.InvariantCulture)
                 };

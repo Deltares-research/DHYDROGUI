@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     {
         public WaveSpectrumShapeType ShapeType { get; set; }
         public WavePeriodType PeriodType { get; set; }
-        public WaveDirSpreadType DirectionalSpreadingType { get; set; }
+        public WaveDirectionalSpreadingType DirectionalSpreadingType { get; set; }
         public double PeakEnhancementFactor { get; set; }
         public double GaussianSpreadingValue { get; set; } = 0.1;
     }
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         Mean
     }
 
-    public enum WaveDirSpreadType
+    public enum WaveDirectionalSpreadingType
     {
         [Description("Power")]
         Power,

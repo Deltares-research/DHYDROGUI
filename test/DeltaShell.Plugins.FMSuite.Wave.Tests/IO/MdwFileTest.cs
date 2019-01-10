@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(BoundaryConditionDataType.ParameterizedSpectrumConstant, bc.DataType);
             Assert.AreEqual(WaveSpectrumShapeType.Jonswap, bc.SpectralData.ShapeType);
             Assert.AreEqual(WavePeriodType.Peak, bc.SpectralData.PeriodType);
-            Assert.AreEqual(WaveDirSpreadType.Power, bc.SpectralData.DirectionalSpreadingType);
+            Assert.AreEqual(WaveDirectionalSpreadingType.Power, bc.DirectionalSpreadingType);
             Assert.AreEqual(3.3, bc.SpectralData.PeakEnhancementFactor);
             Assert.AreEqual(0.01, bc.SpectralData.GaussianSpreadingValue, 1e-06);
 
@@ -166,7 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(BoundaryConditionDataType.ParameterizedSpectrumConstant, bc.DataType);
             Assert.AreEqual(WaveSpectrumShapeType.PiersonMoskowitz, bc.SpectralData.ShapeType);
             Assert.AreEqual(WavePeriodType.Mean, bc.SpectralData.PeriodType);
-            Assert.AreEqual(WaveDirSpreadType.Degrees, bc.SpectralData.DirectionalSpreadingType);
+            Assert.AreEqual(WaveDirectionalSpreadingType.Degrees, bc.DirectionalSpreadingType);
             Assert.AreEqual(3.3, bc.SpectralData.PeakEnhancementFactor);
             Assert.AreEqual(0.01, bc.SpectralData.GaussianSpreadingValue, 1e-06);
 

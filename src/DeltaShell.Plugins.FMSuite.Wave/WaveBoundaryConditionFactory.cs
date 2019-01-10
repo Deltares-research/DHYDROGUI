@@ -27,7 +27,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             if (dataType == BoundaryConditionDataType.ParameterizedSpectrumConstant)
             {
                 bc.AddPoint(0);
-                bc.SpectrumParameters[0] = new WaveBoundaryParameters();
             }
             return bc;
         }

@@ -178,8 +178,11 @@
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_a_value_within_the_range_" xml:space="preserve">
     <value>Parameter "Period" must be a value within the range 0,1 - 20.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_greater_than_0_" xml:space="preserve">
-    <value>Parameter "Spreading" must be greater than 0.</value>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_a_value_within_the_range_1_800" xml:space="preserve">
+    <value>Parameter "Spreading" must be a value within the range 1 - 800 when Directional Spreading type is equal to Power.</value>
+  </data>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_a_value_within_the_range_2_180" xml:space="preserve">
+    <value>Parameter "Spreading" must be a value within the range 2 - 180 when Directional Spreading type is equal to Degrees.</value>
   </data>
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_" xml:space="preserve">
     <value>Values in column "Hs" in the time series table must be greater than 0.</value>

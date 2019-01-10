@@ -231,17 +231,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
-        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
-        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
-        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
-        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
-        public void GivenWaveBoundaryConditionThatHasADataPointWithSpreadingEqualToOrSmallerThanZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double spreadingValue, WaveBoundaryConditionSpatialDefinitionType type)
+        [TestCase(WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying, 0.999)]
+        [TestCase(WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying, 800.001)]
+        [TestCase(WaveBoundaryConditionSpatialDefinitionType.Uniform, 0.999)]
+        [TestCase(WaveBoundaryConditionSpatialDefinitionType.Uniform, 800.001)]
+        public void
+            GivenWaveBoundaryConditionWithPowerDirectionalSpreadingThatHasSpreadingNotWithinExpectedRange_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(
+                WaveBoundaryConditionSpatialDefinitionType type, double spreadingValue)
         {
             // Given
             var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumConstant)
             {
                 Feature = featureWithTwoPoints,
-                SpatialDefinitionType = type
+                SpatialDefinitionType = type,
+                DirectionalSpreadingType = WaveDirectionalSpreadingType.Power
             };
             boundaryCondition.AddPoint(0);
             boundaryCondition.SpectrumParameters.Values.ForEach(spectrumParameters =>
@@ -258,7 +261,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             // Then
             var precedingText = boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying ? "Point 1: " : string.Empty;
-            var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_greater_than_0_;
+            var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_a_value_within_the_range_1_800;
+            ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
+        }
+
+        [TestCase(WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying, 1.999)]
+        [TestCase(WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying, 180.001)]
+        [TestCase(WaveBoundaryConditionSpatialDefinitionType.Uniform, 1.999)]
+        [TestCase(WaveBoundaryConditionSpatialDefinitionType.Uniform, 180.001)]
+        public void
+            GivenWaveBoundaryConditionWithDegreesDirectionalSpreadingThatHasSpreadingNotWithinExpectedRange_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(
+                WaveBoundaryConditionSpatialDefinitionType type, double spreadingValue)
+        {
+            // Given
+            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumConstant)
+            {
+                Feature = featureWithTwoPoints,
+                SpatialDefinitionType = type,
+                DirectionalSpreadingType = WaveDirectionalSpreadingType.Degrees
+            };
+            boundaryCondition.AddPoint(0);
+            boundaryCondition.SpectrumParameters.Values.ForEach(spectrumParameters =>
+            {
+                spectrumParameters.Spreading = spreadingValue;
+                // Pass validation for other spectrum parameters
+                spectrumParameters.Height = 1.0;
+                spectrumParameters.Period = 1.0;
+            });
+            var waveBoundaryConditions = new List<WaveBoundaryCondition> { boundaryCondition };
+
+            // When
+            var validationReport = WaveBoundaryConditionValidator.Validate(waveBoundaryConditions);
+
+            // Then
+            var precedingText = boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying ? "Point 1: " : string.Empty;
+            var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_a_value_within_the_range_2_180;
             ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 

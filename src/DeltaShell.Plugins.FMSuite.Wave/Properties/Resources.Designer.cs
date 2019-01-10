@@ -91,12 +91,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Parameter &quot;Spreading&quot; must be greater than 0..
+        ///   Looks up a localized string similar to Parameter &quot;Spreading&quot; must be a value within the range 1 - 800 when Directional Spreading type is equal to Power..
         /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_greater_than_0_ {
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_a_value_within_the_range_1_800 {
             get {
                 return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__m" +
-                        "ust_be_greater_than_0_", resourceCulture);
+                        "ust_be_a_value_within_the_range_1_800", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter &quot;Spreading&quot; must be a value within the range 2 - 180 when Directional Spreading type is equal to Degrees..
+        /// </summary>
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_a_value_within_the_range_2_180 {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__m" +
+                        "ust_be_a_value_within_the_range_2_180", resourceCulture);
             }
         }
         

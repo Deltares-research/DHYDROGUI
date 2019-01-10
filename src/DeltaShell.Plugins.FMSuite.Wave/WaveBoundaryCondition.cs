@@ -6,6 +6,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Units;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
@@ -44,6 +45,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
         
         public WaveBoundarySpectralData SpectralData { get; set; }
+
+        public WaveDirectionalSpreadingType DirectionalSpreadingType
+        {
+            get => SpectralData.DirectionalSpreadingType;
+            set
+            {
+                SpectralData.DirectionalSpreadingType = value;
+
+                var defaultSpreadingValue = GetDefaultSpreadingValue(value);
+                SpectrumParameters.Values.ForEach(parameters => parameters.Spreading = defaultSpreadingValue);
+            }
+        }
+
+        private static double GetDefaultSpreadingValue(WaveDirectionalSpreadingType directionalSpreadingType)
+        {
+            return directionalSpreadingType == WaveDirectionalSpreadingType.Power ? 2.0 : 30.0;
+        }
+
         public IDictionary<int, string> SpectrumFiles { get; }
         public IDictionary<int, WaveBoundaryParameters> SpectrumParameters { get; }
 
@@ -124,7 +143,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
             if (DataType == BoundaryConditionDataType.ParameterizedSpectrumConstant)
             {
-                SpectrumParameters[i] = new WaveBoundaryParameters();
+                SpectrumParameters[i] = new WaveBoundaryParameters
+                {
+                    Spreading = GetDefaultSpreadingValue(DirectionalSpreadingType)
+                };
             }
             base.AddPoint(i);
         }

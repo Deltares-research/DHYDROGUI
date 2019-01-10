@@ -111,11 +111,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                         boundaryCondition);
                 }
 
-                if (spectrumValues.Spreading <= 0)
+                if (boundaryCondition.DirectionalSpreadingType == WaveDirectionalSpreadingType.Power && spectrumValues.Spreading.IsInRange(1.0, 800.0))
                 {
                     yield return new ValidationIssue(boundaryCondition.VariableDescription,
                         ValidationSeverity.Error,
-                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_greater_than_0_,
+                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_a_value_within_the_range_1_800,
+                        boundaryCondition);
+                }
+
+                if (boundaryCondition.DirectionalSpreadingType == WaveDirectionalSpreadingType.Degrees && spectrumValues.Spreading.IsInRange(2.0, 180.0))
+                {
+                    yield return new ValidationIssue(boundaryCondition.VariableDescription,
+                        ValidationSeverity.Error,
+                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_a_value_within_the_range_2_180,
                         boundaryCondition);
                 }
             }

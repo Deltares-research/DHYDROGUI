@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             periodTypeBox.DataSource = EnumBindingHelper.ToList<WavePeriodType>();
             periodTypeBox.DisplayMember = "Value";
             periodTypeBox.ValueMember = "Key";
-            spreadingTypeBox.DataSource = EnumBindingHelper.ToList<WaveDirSpreadType>();
+            spreadingTypeBox.DataSource = EnumBindingHelper.ToList<WaveDirectionalSpreadingType>();
             spreadingTypeBox.DisplayMember = "Value";
             spreadingTypeBox.ValueMember = "Key";
 
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
         private WaveBoundaryCondition data;
         public WaveBoundaryCondition Data
         {
-            get { return data; }
+            get => data;
             set
             {
                 UnbindControls();
@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             
             shapeTypeBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "SpectralData.ShapeType"));
             periodTypeBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "SpectralData.PeriodType"));
-            spreadingTypeBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "SpectralData.DirectionalSpreadingType"));
+            spreadingTypeBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "DirectionalSpreadingType"));
             peakEnhBox.DataBindings.Add(new Binding("Text", bindingSource, "SpectralData.PeakEnhancementFactor"));
             gaussSpreadBox.DataBindings.Add(new Binding("Text", bindingSource, "SpectralData.GaussianSpreadingValue"));
         }
