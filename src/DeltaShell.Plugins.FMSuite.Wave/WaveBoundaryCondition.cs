@@ -44,13 +44,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
         
         public WaveBoundarySpectralData SpectralData { get; set; }
-        public IDictionary<int, string> SpectrumFiles { get; set; }
-        public IDictionary<int, WaveBoundaryParameters> SpectrumParameters { get; set; }
+        public IDictionary<int, string> SpectrumFiles { get; }
+        public IDictionary<int, WaveBoundaryParameters> SpectrumParameters { get; }
 
         private WaveBoundaryConditionSpatialDefinitionType spatialDefinitionType;
         public WaveBoundaryConditionSpatialDefinitionType SpatialDefinitionType
         {
-            get { return spatialDefinitionType; }
+            get => spatialDefinitionType;
             set
             {
                 if (spatialDefinitionType == value) return;
@@ -61,13 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        public Coordinate StartCoordinate
-        {
-            get
-            {
-                return Feature.Geometry.Coordinates[0];
-            }
-        }
+        public Coordinate StartCoordinate => Feature.Geometry.Coordinates[0];
 
         public Coordinate EndCoordinate
         {
@@ -110,36 +104,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             EndEdit();
         }
 
-        public override string ProcessName
-        {
-            get { return WaveProcessName; }
-        }
+        public override string ProcessName => WaveProcessName;
 
-        public override string VariableName
-        {
-            get { return WaveQuantityName; }
-        }
+        public override string VariableName => WaveQuantityName;
 
-        public override string VariableDescription
-        {
-            get { return "Wave Energy Density"; }
-        }
+        public override string VariableDescription => "Wave Energy Density";
 
-        public override IUnit VariableUnit
-        {
-            get { return new Unit("mHummel"); }
-        }
+        public override IUnit VariableUnit => new Unit("mHummel");
 
-        public override bool IsHorizontallyUniform
-        {
-            get { return spatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.Uniform; }
-        }
+        public override bool IsHorizontallyUniform => spatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.Uniform;
 
-        public override bool IsVerticallyUniform
-        {
-            get { return true; }
-        }
-        
+        public override bool IsVerticallyUniform => true;
+
         public override void AddPoint(int i)
         {
             if (DataType == BoundaryConditionDataType.SpectrumFromFile)
@@ -166,11 +142,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             base.RemovePoint(i);
         }
 
-        public override int VariableDimension
-        {
-            get { return 1; }
-        }
-        
+        public override int VariableDimension => 1;
+
         protected override IFunction CreateFunction()
         {
             switch (DataType)
@@ -209,13 +182,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
 
         // TODO: Somehow you cannot call this methods for a second time if you haven't cleared the index. Function and Variable will throw an exception. This should be resolved in the framework.
-        public void SetTimeseriesToSupportPoint(int dataPointIndex, IFunction f)
+        public void SetTimeSeriesToSupportPoint(int dataPointIndex, IFunction f)
         {
             AddPoint(dataPointIndex);
 
             var func = GetDataAtPoint(dataPointIndex);
             func.Arguments[0].SetValues(f.Arguments[0].GetValues());
-            for (int j = 0; j < func.Components.Count; ++j)
+            for (var j = 0; j < func.Components.Count; ++j)
             {
                 func.Components[j].SetValues(f.Components[j].GetValues());
                 func.Components[j].Unit = (IUnit) f.Components[j].Unit.Clone();
@@ -228,8 +201,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public IGeometry Geometry
         {
-            get { return Feature.Geometry.Centroid; }
-            set { throw new Exception("Cannot move wave boundary condition"); }
+            get => Feature.Geometry.Centroid;
+            set => throw new Exception("Cannot move wave boundary condition");
         }
 
         public IFeatureAttributeCollection Attributes { get; set; }

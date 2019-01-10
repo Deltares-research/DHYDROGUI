@@ -933,7 +933,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
                     if (dataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
                     {
-                        // from timeseries file (.bcw for now..)
+                        // from time series file (.bcw for now..)
                         if (functionLookup == null || !functionLookup.ContainsKey(name))
                         {
                             Log.ErrorFormat("Unexpected missing data in bcw file for boundary {0}, excluding boundary", name);
@@ -946,22 +946,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                         {
                             // add distances, functions will follow from bcw fil3
                             var offset = condSpecAtDists[0] > 0.0 ? 1 : 0;
-                            for (int i = 0; i < condSpecAtDists.Count; ++i)
+                            for (var i = 0; i < condSpecAtDists.Count; ++i)
                             {
-                                boundaryCondition.SetTimeseriesToSupportPoint(i + offset, functions[i]);
+                                boundaryCondition.SetTimeSeriesToSupportPoint(i + offset, functions[i]);
                             }
                         }
                         else
                         {
-                            // ASSUMPTION: There will be no condSpecAtDist in a uniform timeseries, because points without data aren't saved in the file format.
+                            // ASSUMPTION: There will be no condSpecAtDist in a uniform time series, because points without data aren't saved in the file format.
                             // if there are no condSpecAtDists, we need to add the information of the boundary to the first point.
                             // first try to get the function.
                             var func = functions.FirstOrDefault();
                             
                             if (func != null)
                             {
-                                // add it to the timeseries' first support point.
-                                boundaryCondition.SetTimeseriesToSupportPoint(0, func);
+                                // add it to the time series' first support point.
+                                boundaryCondition.SetTimeSeriesToSupportPoint(0, func);
                             }
                             else
                             {
