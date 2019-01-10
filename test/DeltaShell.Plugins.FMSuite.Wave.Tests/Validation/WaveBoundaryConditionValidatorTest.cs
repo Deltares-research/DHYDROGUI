@@ -328,9 +328,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
-        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(25.001, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
         [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
-        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        [TestCase(25.001, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
         public void GivenParameterizedSpectrumTimeSeriesBoundaryConditionThatHasHsValueSmallerThanOrEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double heightValue, WaveBoundaryConditionSpatialDefinitionType type)
         {
             // Given
@@ -355,7 +355,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             // Then
             var precedingText = boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying ? "Point 1: " : string.Empty;
-            var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_;
+            var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Hs__in_the_time_series_table_must_be_within_expected_range;
             ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 

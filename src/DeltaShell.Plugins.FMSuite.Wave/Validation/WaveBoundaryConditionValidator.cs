@@ -159,10 +159,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
                 var heightComponent = function.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName);
                 var heightComponentValues = heightComponent?.Values as IMultiDimensionalArray<double>;
-                if (heightComponentValues != null && heightComponentValues.Any(v => v <= 0.0))
+                if (heightComponentValues != null && heightComponentValues.Any(v => v <= 0.0 || v - 25.0 >= double.Epsilon))
                 {
                     yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
-                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Hs__in_the_time_series_table_must_be_greater_than_0_,
+                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Hs__in_the_time_series_table_must_be_within_expected_range,
                         boundaryCondition);
                 }
 
