@@ -53,18 +53,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 SpectralData.DirectionalSpreadingType = value;
 
-                var defaultSpreadingValue = GetDefaultSpreadingValue(value);
-
                 switch (DataType)
                 {
                     case BoundaryConditionDataType.ParameterizedSpectrumConstant:
+                        var defaultSpreadingValue = GetDefaultSpreadingValue(value);
                         SpectrumParameters.Values.ForEach(parameters => parameters.Spreading = defaultSpreadingValue);
                         break;
                     case BoundaryConditionDataType.ParameterizedSpectrumTimeseries:
                         PointData.ForEach(function =>
                         {
-                            UpdateSpreadingDefaultValue(function);
-                            UpdateDirectionVariableUnit(function);
+                            UpdateSpreadingComponentDefaultValue(function);
+                            UpdateDirectionComponentVariableUnit(function);
                         });
                         break;
                 }
@@ -185,8 +184,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 case BoundaryConditionDataType.ParameterizedSpectrumTimeseries:
                     var function = CreateEmptyWaveEnergyFunction();
                     function.Components.Where(c => c.Name == PeriodVariableName).ForEach(c => c.DefaultValue = 1.0);
-                    UpdateSpreadingDefaultValue(function);
-                    UpdateDirectionVariableUnit(function);
+                    UpdateSpreadingComponentDefaultValue(function);
+                    UpdateDirectionComponentVariableUnit(function);
                     return function;
                 case BoundaryConditionDataType.ParameterizedSpectrumConstant:
                 case BoundaryConditionDataType.SpectrumFromFile:
@@ -196,19 +195,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        private void UpdateSpreadingDefaultValue(IFunction function)
+        private void UpdateSpreadingComponentDefaultValue(IFunction function)
         {
             function.Components.Where(c => c.Name == SpreadingVariableName)
                 .ForEach(c => c.DefaultValue = GetDefaultSpreadingValue(DirectionalSpreadingType));
         }
 
-        private void UpdateDirectionVariableUnit(IFunction function)
+        private void UpdateDirectionComponentVariableUnit(IFunction function)
         {
             function.Components.Where(c => c.Name == DirectionVariableName)
                 .ForEach(c =>
                     c.Unit = new Unit(
-                        DirectionalSpreadingType == WaveDirectionalSpreadingType.Degrees ? "degree" : "power",
-                        DirectionalSpreadingType == WaveDirectionalSpreadingType.Degrees ? "deg" : "-"));
+                        DirectionalSpreadingType == WaveDirectionalSpreadingType.Degrees ? DegreesUnitName : PowerUnitName,
+                        DirectionalSpreadingType == WaveDirectionalSpreadingType.Degrees ? DegreesUnitSymbol : PowerUnitSymbol));
         }
 
         public const string TimeVariableName = "Time";
@@ -217,6 +216,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public const string DirectionVariableName = "Dir";
         public const string SpreadingVariableName = "Spreading";
 
+        private const string DegreesUnitName = "degrees";
+        public const string DegreesUnitSymbol = "deg";
+        private const string PowerUnitName = "power";
+        public const string PowerUnitSymbol = "-";
+
         public static IFunction CreateEmptyWaveEnergyFunction()
         {
             // todo: add as variable name definition
@@ -224,7 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             function.Arguments.Add(new Variable<DateTime>(TimeVariableName));
             function.Components.Add(new Variable<double>(HeightVariableName, new Unit("meter", "m")));
             function.Components.Add(new Variable<double>(PeriodVariableName, new Unit("second", "s")));
-            function.Components.Add(new Variable<double>(DirectionVariableName, new Unit("degree", "deg")));
+            function.Components.Add(new Variable<double>(DirectionVariableName, new Unit(DegreesUnitName, DegreesUnitSymbol)));
             function.Components.Add(new Variable<double>(SpreadingVariableName, new Unit("", "-")));
 
             function.Attributes[BcwFile.TimeFunctionAttributeName] = "non-equidistant";
