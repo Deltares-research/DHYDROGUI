@@ -244,7 +244,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             {
                 Feature = featureWithTwoPoints,
                 SpatialDefinitionType = type,
-                DirectionalSpreadingType = WaveDirectionalSpreadingType.Power
+                DirectionalSpreadingType = WaveDirectionalSpreadingType.Power // Power directional spreading
             };
             boundaryCondition.AddPoint(0);
             boundaryCondition.SpectrumParameters.Values.ForEach(spectrumParameters =>
@@ -278,7 +278,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             {
                 Feature = featureWithTwoPoints,
                 SpatialDefinitionType = type,
-                DirectionalSpreadingType = WaveDirectionalSpreadingType.Degrees
+                DirectionalSpreadingType = WaveDirectionalSpreadingType.Degrees // Degrees directional spreading
             };
             boundaryCondition.AddPoint(0);
             boundaryCondition.SpectrumParameters.Values.ForEach(spectrumParameters =>
@@ -423,17 +423,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 
-        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
-        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
-        [TestCase(0.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
-        [TestCase(-1.0, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
-        public void GivenParameterizedSpectrumTimeSeriesBoundaryConditionThatHasSpreadingValueSmallerThanOrEqualToZero_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double spreadingValue, WaveBoundaryConditionSpatialDefinitionType type)
+        [TestCase(0.999, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(800.001, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(0.999, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        [TestCase(800.001, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        public void GivenParameterizedSpectrumTimeSeriesBoundaryConditionWithPowerDirectionalSpreadingThatHasSpreadingValueNotWithinExpectedRange_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double spreadingValue, WaveBoundaryConditionSpatialDefinitionType type)
         {
             // Given
             var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
             {
                 Feature = featureWithTwoPoints,
-                SpatialDefinitionType = type
+                SpatialDefinitionType = type,
+                DirectionalSpreadingType = WaveDirectionalSpreadingType.Power // Power directional spreading
             };
             boundaryCondition.AddPoint(0);
 
@@ -451,7 +452,40 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             // Then
             var precedingText = boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying ? "Point 1: " : string.Empty;
-            var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_;
+            var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_1_800;
+            ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
+        }
+
+        [TestCase(1.999, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(180.001, WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)]
+        [TestCase(1.999, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        [TestCase(180.001, WaveBoundaryConditionSpatialDefinitionType.Uniform)]
+        public void GivenParameterizedSpectrumTimeSeriesBoundaryConditionWithDegreesDirectionalSpreadingThatHasSpreadingValueNotWithinExpectedRange_WhenValidatingBoundaryConditions_ThenErrorMessageIsReturned(double spreadingValue, WaveBoundaryConditionSpatialDefinitionType type)
+        {
+            // Given
+            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
+            {
+                Feature = featureWithTwoPoints,
+                SpatialDefinitionType = type,
+                DirectionalSpreadingType = WaveDirectionalSpreadingType.Degrees // Degrees directional spreading
+            };
+            boundaryCondition.AddPoint(0);
+
+            var functionComponents = boundaryCondition.PointData[0].Components;
+            boundaryCondition.PointData[0].Arguments[0].SetValues(new[] { DateTime.Now });
+            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName)?.SetValues(new List<double> { 1.0 });
+            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.PeriodVariableName)?.SetValues(new List<double> { 1.0 });
+            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.DirectionVariableName)?.SetValues(new List<double> { 1.0 });
+            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName)?.SetValues(new List<double> { spreadingValue }); // Spreading component values
+
+            var waveBoundaryConditions = new List<WaveBoundaryCondition> { boundaryCondition };
+
+            // When
+            var validationReport = WaveBoundaryConditionValidator.Validate(waveBoundaryConditions);
+
+            // Then
+            var precedingText = boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying ? "Point 1: " : string.Empty;
+            var expectedMessage = precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_2_180;
             ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 

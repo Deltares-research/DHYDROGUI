@@ -186,10 +186,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
                 var spreadingComponent = function.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName);
                 var spreadingComponentValues = spreadingComponent?.Values as IMultiDimensionalArray<double>;
-                if (spreadingComponentValues != null && spreadingComponentValues.Any(v => v <= 0.0))
+                if (boundaryCondition.DirectionalSpreadingType == WaveDirectionalSpreadingType.Power && spreadingComponentValues != null && spreadingComponentValues.Any(v => v.IsInRange(1.0, 800.0)))
                 {
                     yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
-                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_,
+                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_1_800,
+                        boundaryCondition);
+                }
+
+                if (boundaryCondition.DirectionalSpreadingType == WaveDirectionalSpreadingType.Degrees && spreadingComponentValues != null && spreadingComponentValues.Any(v => v.IsInRange(2.0, 180.0)))
+                {
+                    yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
+                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_2_180,
                         boundaryCondition);
                 }
             }

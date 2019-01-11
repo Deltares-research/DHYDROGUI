@@ -131,12 +131,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Values in column &quot;Spreading&quot; in the time series table must be greater than 0..
+        ///   Looks up a localized string similar to Values in column &quot;Spreading&quot; in the time series table must be within the range 1 - 800 when Directional Spreading type is equal to Power..
         /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_ {
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_1_800 {
             get {
                 return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Sprea" +
-                        "ding__in_the_time_series_table_must_be_greater_than_0_", resourceCulture);
+                        "ding__in_the_time_series_table_must_be_a_value_within_the_range_1_800", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Values in column &quot;Spreading&quot; in the time series table must be within the range 2 - 180 when Directional Spreading type is equal to Degrees..
+        /// </summary>
+        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_2_180 {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Sprea" +
+                        "ding__in_the_time_series_table_must_be_a_value_within_the_range_2_180", resourceCulture);
             }
         }
         

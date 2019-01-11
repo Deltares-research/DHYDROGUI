@@ -193,8 +193,11 @@
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Direction__in_the_time_series_table_must_be_within_expected_range" xml:space="preserve">
     <value>Values in column "Dir" in the time series table must be within the range -360 - 360.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_greater_than_0_" xml:space="preserve">
-    <value>Values in column "Spreading" in the time series table must be greater than 0.</value>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_1_800" xml:space="preserve">
+    <value>Values in column "Spreading" in the time series table must be within the range 1 - 800 when Directional Spreading type is equal to Power.</value>
+  </data>
+  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_2_180" xml:space="preserve">
+    <value>Values in column "Spreading" in the time series table must be within the range 2 - 180 when Directional Spreading type is equal to Degrees.</value>
   </data>
   <data name="WaveOutputParametersValidator_Validate_Option__Write_Tables__is_selected_but_there_are_no_Observation_Points_in_your_model_" xml:space="preserve">
     <value>Option "Write Tables" is selected but there are no Observation Points in your model.</value>
