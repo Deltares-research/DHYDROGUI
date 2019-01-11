@@ -6,14 +6,13 @@ using SharpMap.Extensions.CoordinateSystems;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
-using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
     [TestFixture]
-    public class FlowFMGuiPluginTest
+    public class FlowFmGuiPluginTest
     {
         //[TestCase(@"ReloadGrid\netfile_projected_unassigned.nc", 0, @"ReloadGrid\netfile_projected_unassigned.nc", 0)]
         //[TestCase(@"ReloadGrid\netfile_projected_unassigned.nc", 0, @"ReloadGrid\netfile_spherical_assigned.nc", 4326)] // wgs84
@@ -26,6 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         public void ReloadGridTest(string originalNetFile, int originalEpsg, string editedNetFile, int expectedEpsg)
         {
+            //Given
             var mduFilePath = GetMduFilePathWithoutGrid();
             var originalNetFilePath = GetOriginalNetFilePath(originalNetFile);
             var workDir = GetWorkingDirectory(mduFilePath);
@@ -43,8 +43,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             FileUtils.CopyFile(editedNetFilePath, Path.Combine(workDir, "grid.nc"));
          
+            //When
             model.ReloadGrid();
 
+            //Then
             var expectedCoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(expectedEpsg);
 
             Assert.IsTrue(model.CoordinateSystem.EqualsTo(expectedCoordinateSystem));
@@ -55,8 +57,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenAFmModelWithoutGridAndNotInitializing_WhenValidatingModelWithValidationBeforeRunSwitchedOff_ThenModelIsValidated()
         {
+            //Given
             var mduFilePath = GetMduFilePathWithoutGrid();
             var model = new WaterFlowFMModel(mduFilePath)
             {
@@ -64,16 +68,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Status = ActivityStatus.None
             };
 
+            //When
             var result = model.Validate();
 
+            //Then
             Assert.That(result, Is.Not.Null);
             var errors = result.AllErrors.ToList();
             Assert.That(errors.ElementAt(0).Message, Is.EqualTo("Grid is empty"));
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenAFmModelWithoutGridAndInitializing_WhenValidatingModelWithValidationBeforeRunSwitchedOff_ThenModelIsNotValidated()
         {
+            //Given
             var mduFilePath = GetMduFilePathWithoutGrid();
             var model = new WaterFlowFMModel(mduFilePath)
             {
@@ -81,14 +89,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Status = ActivityStatus.Initializing
             };
 
+            //When
             var result = model.Validate();
 
+            //Then
             Assert.That(result, Is.Not.Null);
             var errors = result.AllErrors.ToList();
-            Assert.That(errors, Is.Empty);
+            //We assert that there are no errors because the model is initializing,
+            //this means we do not validate the model.
+            Assert.That(errors, Is.Empty, "The model is validated");
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenAFlowFMGuiPlugin_WhenGetProjectTreeViewNodePresentersIsCalled_AnEnumerableContainingAnFMClassMapFileFunctionStoreNodePresenterIsReturned()
         {
             // Given

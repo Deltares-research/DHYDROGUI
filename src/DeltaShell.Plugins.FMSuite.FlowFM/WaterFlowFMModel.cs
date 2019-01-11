@@ -280,15 +280,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         [Category("Run mode")]
         public bool ShowModelRunConsole { get; set; }
 
-        // DELFT3DFM-371: Disable Model Inspection
-
-        [PropertyGrid]
-        [DisplayName("Model inspection")]
-        [Description("Run with model inspection")]
-        [Category("Run mode")]
-        public bool ModelInspection { get; set; }
-
-
         protected override void OnAfterDataItemsSet()
         {
             base.OnAfterDataItemsSet();
