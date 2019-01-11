@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
     /// </summary>
     /// <seealso cref="DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.CrestValidationRule" />
     /// <inheritdoc cref="CrestValidationRule"/>
-    class CrestWidthValidationRule : CrestValidationRule
+    public class CrestWidthValidationRule : CrestValidationRule
     {
         /// <summary>
         /// Perform a validation check on the specified value.
