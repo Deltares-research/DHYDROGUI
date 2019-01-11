@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         //[TestCase(@"ReloadGrid\netfile_spherical_assigned.nc", 4326, @"ReloadGrid\netfile_spherical_assigned.nc", 4326)]
         //[TestCase(@"ReloadGrid\netfile_spherical_assigned.nc", 4326, @"ReloadGrid\netfile_projected_unassigned.nc", 0)]
-
+        [Category(TestCategory.DataAccess)]
         public void ReloadGridTest(string originalNetFile, int originalEpsg, string editedNetFile, int expectedEpsg)
         {
             //Given
@@ -101,7 +101,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void GivenAFlowFMGuiPlugin_WhenGetProjectTreeViewNodePresentersIsCalled_AnEnumerableContainingAnFMClassMapFileFunctionStoreNodePresenterIsReturned()
         {
             // Given
