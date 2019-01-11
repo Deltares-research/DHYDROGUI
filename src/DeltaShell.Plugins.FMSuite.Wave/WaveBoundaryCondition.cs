@@ -63,8 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     case BoundaryConditionDataType.ParameterizedSpectrumTimeseries:
                         PointData.ForEach(function =>
                         {
-                            function.Components.Where(c => c.Name == SpreadingVariableName).ForEach(c =>
-                                c.DefaultValue = GetDefaultSpreadingValue(DirectionalSpreadingType));
+                            UpdateSpreadingDefaultValue(function);
                             UpdateDirectionVariableUnit(function);
                         });
                         break;
@@ -131,7 +130,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 AddPoint(0);
                 SpectrumFiles[0] = "";
-                SpectrumParameters[0] = new WaveBoundaryParameters();
             }
 
             EndEdit();
@@ -187,7 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 case BoundaryConditionDataType.ParameterizedSpectrumTimeseries:
                     var function = CreateEmptyWaveEnergyFunction();
                     function.Components.Where(c => c.Name == PeriodVariableName).ForEach(c => c.DefaultValue = 1.0);
-                    function.Components.Where(c => c.Name == SpreadingVariableName).ForEach(c => c.DefaultValue = GetDefaultSpreadingValue(DirectionalSpreadingType));
+                    UpdateSpreadingDefaultValue(function);
                     UpdateDirectionVariableUnit(function);
                     return function;
                 case BoundaryConditionDataType.ParameterizedSpectrumConstant:
@@ -196,6 +194,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 default:
                     return base.CreateFunction();
             }
+        }
+
+        private void UpdateSpreadingDefaultValue(IFunction function)
+        {
+            function.Components.Where(c => c.Name == SpreadingVariableName)
+                .ForEach(c => c.DefaultValue = GetDefaultSpreadingValue(DirectionalSpreadingType));
         }
 
         private void UpdateDirectionVariableUnit(IFunction function)
