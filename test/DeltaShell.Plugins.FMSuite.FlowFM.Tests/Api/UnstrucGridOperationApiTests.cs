@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Core;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
@@ -58,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 model.ModelDefinition.GetModelProperty(KnownProperties.TrtRou).SetValueAsString("Y");
 
                 var api = new UnstrucGridOperationApi(model, false);
-                var tempMduPath = (string)TypeUtils.GetField<UnstrucGridOperationApi, String>(api, "mduFilePath");
+                var tempMduPath = (string)TypeUtils.GetField<UnstrucGridOperationApi, string>(api, "mduFilePath");
 
                 var mduFileDir = Path.GetDirectoryName(tempMduPath);
                 var name = Path.GetFileNameWithoutExtension(tempMduPath);
@@ -98,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 model.ModelDefinition.GetModelProperty(knownProperties).SetValueAsString(file);
 
                 var api = new UnstrucGridOperationApi(model, false);
-                var tempMduPath = (string)TypeUtils.GetField<UnstrucGridOperationApi, String>(api, "mduFilePath");
+                var tempMduPath = (string)TypeUtils.GetField<UnstrucGridOperationApi, string>(api, "mduFilePath");
 
                 var mduFileDir = Path.GetDirectoryName(tempMduPath);
                 var name = Path.GetFileNameWithoutExtension(tempMduPath);
@@ -125,7 +116,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             Assert.IsTrue(File.Exists(netFile));
             var tempFolder = FileUtils.CreateTempDirectory();
             try
-
             {
                 var model = new WaterFlowFMModel();
                 model.ExportTo(Path.Combine(tempFolder, TestHelper.GetCurrentMethodName() + ".mdu"), true, false,
@@ -181,7 +171,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             Assert.IsTrue(File.Exists(netFile));
             var tempFolder = FileUtils.CreateTempDirectory();
             try
-
             {
                 var model = new WaterFlowFMModel();
                 model.ExportTo(Path.Combine(tempFolder, TestHelper.GetCurrentMethodName() + ".mdu"), true, false,
@@ -240,7 +229,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             Assert.IsTrue(File.Exists(netFile));
             var tempFolder = FileUtils.CreateTempDirectory();
             try
-
             {
                 var model = new WaterFlowFMModel();
                 model.ExportTo(Path.Combine(tempFolder, TestHelper.GetCurrentMethodName() + ".mdu"), true, false,
