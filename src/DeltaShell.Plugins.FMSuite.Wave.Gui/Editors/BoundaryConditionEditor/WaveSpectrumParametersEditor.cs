@@ -59,11 +59,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             // https://connect.microsoft.com/VisualStudio/feedback/details/683913/binding-to-a-nested-property-does-not-work-in-net-4#
             var bindingSource = new BindingSource(data, ""); 
             
-            shapeTypeBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "SpectralData.ShapeType", false, DataSourceUpdateMode.OnPropertyChanged));
-            periodTypeBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "SpectralData.PeriodType", false, DataSourceUpdateMode.OnPropertyChanged));
+            shapeTypeBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "ShapeType", false, DataSourceUpdateMode.OnPropertyChanged));
+            periodTypeBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "PeriodType", false, DataSourceUpdateMode.OnPropertyChanged));
             spreadingTypeBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "DirectionalSpreadingType", false, DataSourceUpdateMode.OnPropertyChanged));
-            peakEnhBox.DataBindings.Add(new Binding("Text", bindingSource, "SpectralData.PeakEnhancementFactor", false, DataSourceUpdateMode.OnPropertyChanged));
-            gaussSpreadBox.DataBindings.Add(new Binding("Text", bindingSource, "SpectralData.GaussianSpreadingValue", false, DataSourceUpdateMode.OnPropertyChanged));
+            peakEnhBox.DataBindings.Add(new Binding("Text", bindingSource, "PeakEnhancementFactor", false, DataSourceUpdateMode.OnPropertyChanged));
+            gaussSpreadBox.DataBindings.Add(new Binding("Text", bindingSource, "GaussianSpreadingValue", false, DataSourceUpdateMode.OnPropertyChanged));
         }
 
         private void UnbindControls()

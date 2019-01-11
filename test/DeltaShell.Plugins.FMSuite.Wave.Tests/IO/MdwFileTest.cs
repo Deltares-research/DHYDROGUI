@@ -144,11 +144,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual("Boundary 1", bc.Name);
 
             Assert.AreEqual(BoundaryConditionDataType.ParameterizedSpectrumConstant, bc.DataType);
-            Assert.AreEqual(WaveSpectrumShapeType.Jonswap, bc.SpectralData.ShapeType);
-            Assert.AreEqual(WavePeriodType.Peak, bc.SpectralData.PeriodType);
+            Assert.AreEqual(WaveSpectrumShapeType.Jonswap, bc.ShapeType);
+            Assert.AreEqual(WavePeriodType.Peak, bc.PeriodType);
             Assert.AreEqual(WaveDirectionalSpreadingType.Power, bc.DirectionalSpreadingType);
-            Assert.AreEqual(3.3, bc.SpectralData.PeakEnhancementFactor);
-            Assert.AreEqual(0.01, bc.SpectralData.GaussianSpreadingValue, 1e-06);
+            Assert.AreEqual(3.3, bc.PeakEnhancementFactor);
+            Assert.AreEqual(0.01, bc.GaussianSpreadingValue, 1e-06);
 
             var waveheight = bc.SpectrumParameters[0].Height;
             var period = bc.SpectrumParameters[0].Period;
@@ -164,11 +164,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual("Boundary 2", bc.Name);
 
             Assert.AreEqual(BoundaryConditionDataType.ParameterizedSpectrumConstant, bc.DataType);
-            Assert.AreEqual(WaveSpectrumShapeType.PiersonMoskowitz, bc.SpectralData.ShapeType);
-            Assert.AreEqual(WavePeriodType.Mean, bc.SpectralData.PeriodType);
+            Assert.AreEqual(WaveSpectrumShapeType.PiersonMoskowitz, bc.ShapeType);
+            Assert.AreEqual(WavePeriodType.Mean, bc.PeriodType);
             Assert.AreEqual(WaveDirectionalSpreadingType.Degrees, bc.DirectionalSpreadingType);
-            Assert.AreEqual(3.3, bc.SpectralData.PeakEnhancementFactor);
-            Assert.AreEqual(0.01, bc.SpectralData.GaussianSpreadingValue, 1e-06);
+            Assert.AreEqual(3.3, bc.PeakEnhancementFactor);
+            Assert.AreEqual(0.01, bc.GaussianSpreadingValue, 1e-06);
 
             waveheight = bc.SpectrumParameters[1].Height;
             period = bc.SpectrumParameters[1].Period;

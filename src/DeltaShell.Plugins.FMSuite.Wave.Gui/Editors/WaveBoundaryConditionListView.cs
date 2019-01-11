@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             tableView.AddColumn("SpatialDefinitionType", "Spatial Definition");
             spectralDefColumn = tableView.AddColumn("DataType", "Spectral Specification");
             spectralDefColumn.ReadOnly = true;
-            spectrumShapeColumn = tableView.AddColumn("SpectralData.ShapeType", "Spectral Shape");
+            spectrumShapeColumn = tableView.AddColumn("ShapeType", "Spectral Shape");
 
             tableView.Dock = DockStyle.Fill;
             tableView.AllowAddNewRow = false;

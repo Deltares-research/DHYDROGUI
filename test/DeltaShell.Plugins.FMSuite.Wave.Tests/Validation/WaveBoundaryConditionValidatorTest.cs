@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.Constant)
             {
                 Feature = featureWithTwoPoints,
-                SpectralData = {PeakEnhancementFactor = peakEnhancementFactor}
+                PeakEnhancementFactor = peakEnhancementFactor
             };
             boundaryCondition.AddPoint(0);
             var waveBoundaryConditions = new List<WaveBoundaryCondition> { boundaryCondition };

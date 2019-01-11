@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             var waveBoundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.Harmonics);
 
             // Then
-            Assert.That(waveBoundaryCondition.SpectralData.PeakEnhancementFactor, Is.EqualTo(3.3));
+            Assert.That(waveBoundaryCondition.PeakEnhancementFactor, Is.EqualTo(3.3));
         }
 
         [TestCase(WaveDirectionalSpreadingType.Power, 2.0)]

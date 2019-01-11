@@ -44,7 +44,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             // to avoid the name setting in FeatureData... 
         }
         
-        public WaveBoundarySpectralData SpectralData { get; set; }
+        public WaveBoundarySpectralData SpectralData { private get; set; }
+
+        public WaveSpectrumShapeType ShapeType => SpectralData.ShapeType;
+        public WavePeriodType PeriodType => SpectralData.PeriodType;
+        public double PeakEnhancementFactor
+        {
+            get => SpectralData.PeakEnhancementFactor;
+            set => SpectralData.PeakEnhancementFactor = value;
+        }
+
+        public double GaussianSpreadingValue => SpectralData.GaussianSpreadingValue;
 
         public WaveDirectionalSpreadingType DirectionalSpreadingType
         {

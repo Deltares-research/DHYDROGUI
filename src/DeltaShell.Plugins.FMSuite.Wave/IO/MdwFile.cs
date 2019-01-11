@@ -492,15 +492,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 {
                     boundaryCategory.AddProperty("SpShapeType",
                                                  EnumDescriptionAttributeTypeConverter.GetEnumDescription(
-                                                     bc.SpectralData.ShapeType).ToLower());
+                                                     bc.ShapeType).ToLower());
                     boundaryCategory.AddProperty("PeriodType",
                                                  EnumDescriptionAttributeTypeConverter.GetEnumDescription(
-                                                     bc.SpectralData.PeriodType).ToLower());
+                                                     bc.PeriodType).ToLower());
                     boundaryCategory.AddProperty("DirSpreadType",
                                                  EnumDescriptionAttributeTypeConverter.GetEnumDescription(
                                                      bc.DirectionalSpreadingType).ToLower());
-                    boundaryCategory.AddProperty("PeakEnhanceFac", bc.SpectralData.PeakEnhancementFactor);
-                    boundaryCategory.AddProperty("GaussSpread", bc.SpectralData.GaussianSpreadingValue);
+                    boundaryCategory.AddProperty("PeakEnhanceFac", bc.PeakEnhancementFactor);
+                    boundaryCategory.AddProperty("GaussSpread", bc.GaussianSpreadingValue);
                 }
 
                 if (bc.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.Uniform)
