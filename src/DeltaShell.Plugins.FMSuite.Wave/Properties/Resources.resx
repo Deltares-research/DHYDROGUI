@@ -214,4 +214,7 @@
   <data name="WaveBoundaryConditionValidator_ValidateSpectralData_Peak_Enhancement_Factor_must_be_a_value_within_the_range_1___10_" xml:space="preserve">
     <value>Peak Enhancement Factor must be a value within the range 1 - 10.</value>
   </data>
+  <data name="WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_start_time_does_not_precedes_any_of_Boundary_Condition_time_points_" xml:space="preserve">
+    <value>Model start time does not precedes any of Boundary Condition time points.</value>
+  </data>
 </root>

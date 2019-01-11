@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -352,6 +352,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
             get {
                 return ResourceManager.GetString("WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_q" +
                         "uadruple_is_true_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model start time does not precedes any of Boundary Condition time points..
+        /// </summary>
+        public static string WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_start_time_does_not_precedes_any_of_Boundary_Condition_time_points_ {
+            get {
+                return ResourceManager.GetString("WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_st" +
+                        "art_time_does_not_precedes_any_of_Boundary_Condition_time_points_", resourceCulture);
             }
         }
         

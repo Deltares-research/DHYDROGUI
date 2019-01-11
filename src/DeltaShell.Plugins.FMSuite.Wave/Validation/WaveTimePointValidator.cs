@@ -1,12 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 {
     public static class WaveTimePointValidator
     {
+        public static List<ValidationIssue> Issues { get; private set; }
+        public static IList<DateTime> TimePoints { get; private set; }
+        public static WaveModel Model { get; private set; }
+
         /// <summary>
         /// Validation for wave model time point editing.
         /// <param name="model">A wave model entity</param>
@@ -14,27 +20,58 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         /// </summary>
         public static ValidationReport Validate(WaveModel model)
         {
-            var issues = new List<ValidationIssue>();
-            var timePoints = model.TimePointData.TimePoints;
+            Model = model;
+            Issues = new List<ValidationIssue>();
+            TimePoints = model.TimePointData.TimePoints;
 
-            if (!model.IsCoupledToFlow && timePoints.Count == 0)
+            BoundaryConditionTimePointsPrecedesModelStartTime();
+            NoTimePointsDefined();
+            ModelStartTimePrecedesReferenceTime();
+
+            return new ValidationReport("Waves Model Time Points", Issues);
+        }
+
+        private static void BoundaryConditionTimePointsPrecedesModelStartTime()
+        {
+            if (Model.BoundaryConditions.Any(b=>b.DataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries))
             {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Error, Resources.WaveTimePointValidator_Validate_No_time_points_defined,
-                                               model.TimePointData));
-            }
+                var boundaryConditionPointData = Model.ModelDefinition.BoundaryConditions.SelectMany(bc => bc.PointData).ToList();
+                var boundaryConditionTimePoints = boundaryConditionPointData.SelectMany(b => b.Arguments[0].GetValues<DateTime>()).ToList();
+                var modelStartTimeIsPreceded = boundaryConditionTimePoints.All(btp => btp.Date < TimePoints.FirstOrDefault());
 
-            if (timePoints.Count > 0)
-            {
-               var hasInvalidTimePoint = timePoints.Any(tp => tp < model.ModelDefinition.ModelReferenceDateTime);
-
-               if (hasInvalidTimePoint)
-               {
-                   issues.Add(new ValidationIssue(null, ValidationSeverity.Error, Resources.WaveTimePointValidator_Validate_Model_Start_time_precedes_Reference_Time,
-                       model.TimePointData));
+                if (modelStartTimeIsPreceded)
+                {
+                    Issues.Add(new ValidationIssue(null, ValidationSeverity.Error,
+                        Resources.WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_start_time_does_not_precedes_any_of_Boundary_Condition_time_points_,
+                        Model.TimePointData));
                 }
             }
 
-            return new ValidationReport("Waves Model Time Points", issues);
+        }
+
+        private static void ModelStartTimePrecedesReferenceTime()
+        {
+            if (TimePoints.Count > 0)
+            {
+                var hasInvalidTimePoint = TimePoints.Any(tp => tp < Model.ModelDefinition.ModelReferenceDateTime);
+
+                if (hasInvalidTimePoint)
+                {
+                    Issues.Add(new ValidationIssue(null, ValidationSeverity.Error,
+                               Resources.WaveTimePointValidator_Validate_Model_Start_time_precedes_Reference_Time,
+                       Model.TimePointData));
+                }
+            }
+        }
+
+        private static void NoTimePointsDefined()
+        {
+            if (!Model.IsCoupledToFlow && TimePoints.Count == 0)
+            {
+                Issues.Add(new ValidationIssue(Model, ValidationSeverity.Error,
+                    Resources.WaveTimePointValidator_Validate_No_time_points_defined,
+                    Model.TimePointData));
+            }
         }
     }
 }
