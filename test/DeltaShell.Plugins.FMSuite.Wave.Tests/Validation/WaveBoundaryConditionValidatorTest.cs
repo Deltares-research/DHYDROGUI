@@ -7,6 +7,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
@@ -333,15 +334,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 Feature = featureWithTwoPoints,
                 SpatialDefinitionType = type
             };
-            boundaryCondition.AddPoint(0);
+            AddWaveEnergyFunction(boundaryCondition, heightValue, 1.0, 1.0, 1.0);
 
-            var functionComponents = boundaryCondition.PointData[0].Components;
-            boundaryCondition.PointData[0].Arguments[0].SetValues(new[] { DateTime.Now });
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName)?.SetValues(new List<double> { heightValue }); // Hs component values
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.PeriodVariableName)?.SetValues(new List<double> { 1.0 });
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.DirectionVariableName)?.SetValues(new List<double> { 1.0 });
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName)?.SetValues(new List<double> { 1.0 });
-            
             var waveBoundaryConditions = new List<WaveBoundaryCondition> { boundaryCondition };
 
             // When
@@ -364,14 +358,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 Feature = featureWithTwoPoints,
                 SpatialDefinitionType = type
             };
-            boundaryCondition.AddPoint(0);
-
-            var functionComponents = boundaryCondition.PointData[0].Components;
-            boundaryCondition.PointData[0].Arguments[0].SetValues(new[] { DateTime.Now });
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName)?.SetValues(new List<double> { 1.0 });
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.PeriodVariableName)?.SetValues(new List<double> { periodValue }); // Tp component values
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.DirectionVariableName)?.SetValues(new List<double> { 1.0 });
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName)?.SetValues(new List<double> { 1.0 });
+            AddWaveEnergyFunction(boundaryCondition, 1.0, periodValue, 1.0, 1.0);
 
             var waveBoundaryConditions = new List<WaveBoundaryCondition> { boundaryCondition };
 
@@ -395,14 +382,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 Feature = featureWithTwoPoints,
                 SpatialDefinitionType = type
             };
-            boundaryCondition.AddPoint(0);
-
-            var functionComponents = boundaryCondition.PointData[0].Components;
-            boundaryCondition.PointData[0].Arguments[0].SetValues(new[] { DateTime.Now });
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName)?.SetValues(new List<double> { 1.0 });
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.PeriodVariableName)?.SetValues(new List<double> { 1.0 });
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.DirectionVariableName)?.SetValues(new List<double> { directionValue }); // Direction component values
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName)?.SetValues(new List<double> { 1.0 });
+            AddWaveEnergyFunction(boundaryCondition, 1.0, 1.0, directionValue, 1.0);
 
             var waveBoundaryConditions = new List<WaveBoundaryCondition> { boundaryCondition };
 
@@ -427,14 +407,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 SpatialDefinitionType = type,
                 DirectionalSpreadingType = WaveDirectionalSpreadingType.Power // Power directional spreading
             };
-            boundaryCondition.AddPoint(0);
-
-            var functionComponents = boundaryCondition.PointData[0].Components;
-            boundaryCondition.PointData[0].Arguments[0].SetValues(new[] { DateTime.Now });
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName)?.SetValues(new List<double> { 1.0 });
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.PeriodVariableName)?.SetValues(new List<double> { 1.0 });
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.DirectionVariableName)?.SetValues(new List<double> { 1.0 });
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName)?.SetValues(new List<double> { spreadingValue }); // Spreading component values
+            AddWaveEnergyFunction(boundaryCondition, 1.0, 1.0, 1.0, spreadingValue);
 
             var waveBoundaryConditions = new List<WaveBoundaryCondition> { boundaryCondition };
 
@@ -459,14 +432,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 SpatialDefinitionType = type,
                 DirectionalSpreadingType = WaveDirectionalSpreadingType.Degrees // Degrees directional spreading
             };
-            boundaryCondition.AddPoint(0);
-
-            var functionComponents = boundaryCondition.PointData[0].Components;
-            boundaryCondition.PointData[0].Arguments[0].SetValues(new[] { DateTime.Now });
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName)?.SetValues(new List<double> { 1.0 });
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.PeriodVariableName)?.SetValues(new List<double> { 1.0 });
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.DirectionVariableName)?.SetValues(new List<double> { 1.0 });
-            functionComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName)?.SetValues(new List<double> { spreadingValue }); // Spreading component values
+            AddWaveEnergyFunction(boundaryCondition, 1.0, 1.0, 1.0, spreadingValue);
 
             var waveBoundaryConditions = new List<WaveBoundaryCondition> { boundaryCondition };
 
@@ -493,16 +459,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             boundaryCondition.AddPoint(0);
             boundaryCondition.PointData[0].Arguments[0].SetValues(new[] {t1, t2});
             var functionOneComponents = boundaryCondition.PointData[0].Components;
-            functionOneComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName)?.SetValues(new List<double> {2, 2});
-            functionOneComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.PeriodVariableName)?.SetValues(new List<double> {2, 2});
-            functionOneComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName)?.SetValues(new List<double> {2, 2});
+            SetComponentValues(functionOneComponents, WaveBoundaryCondition.HeightVariableName, 2, 2);
+            SetComponentValues(functionOneComponents, WaveBoundaryCondition.PeriodVariableName, 2, 2);
+            SetComponentValues(functionOneComponents, WaveBoundaryCondition.SpreadingVariableName, 2, 2);
 
             boundaryCondition.AddPoint(1);
             boundaryCondition.PointData[1].Arguments[0].SetValues(new[] {t1, t2});
             var functionTwoComponents = boundaryCondition.PointData[1].Components;
-            functionTwoComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName)?.SetValues(new List<double> {1, 1});
-            functionTwoComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.PeriodVariableName)?.SetValues(new List<double> {1, 1});
-            functionTwoComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName)?.SetValues(new List<double> {1, 1});
+            SetComponentValues(functionTwoComponents, WaveBoundaryCondition.HeightVariableName, 1, 1);
+            SetComponentValues(functionTwoComponents, WaveBoundaryCondition.PeriodVariableName, 1, 1);
+            SetComponentValues(functionTwoComponents, WaveBoundaryCondition.SpreadingVariableName, 1, 1);
 
             var waveBoundaryConditions = new List<WaveBoundaryCondition> { boundaryCondition };
             var errors = WaveBoundaryConditionValidator.Validate(waveBoundaryConditions).AllErrors.ToArray();
@@ -510,13 +476,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             boundaryCondition.PointData[1].Arguments[0].Values.Clear();
             boundaryCondition.PointData[1].Arguments[0].SetValues(new[] {t1, t3});
-            functionTwoComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName)?.SetValues(new List<double> { 1, 1 });
-            functionTwoComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.PeriodVariableName)?.SetValues(new List<double> { 1, 1 });
-            functionTwoComponents.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName)?.SetValues(new List<double> { 1, 1 });
+            SetComponentValues(functionTwoComponents, WaveBoundaryCondition.HeightVariableName, 1, 1);
+            SetComponentValues(functionTwoComponents, WaveBoundaryCondition.PeriodVariableName, 1, 1);
+            SetComponentValues(functionTwoComponents, WaveBoundaryCondition.SpreadingVariableName, 1, 1);
 
             errors = WaveBoundaryConditionValidator.Validate(waveBoundaryConditions).AllErrors.ToArray();
             Assert.That(errors.Length, Is.EqualTo(1));
             Assert.That(errors[0].Message.Contains("Time points are not synchronized on boundary"));
+        }
+
+        private static void AddWaveEnergyFunction(WaveBoundaryCondition boundaryCondition, double heightValue, double periodValue, double directionValue, double spreadingValue)
+        {
+            boundaryCondition.AddPoint(0);
+            var functionComponents = boundaryCondition.PointData[0].Components;
+            boundaryCondition.PointData[0].Arguments[0].SetValues(new[] {DateTime.Now});
+            SetComponentValues(functionComponents, WaveBoundaryCondition.HeightVariableName, heightValue);
+            SetComponentValues(functionComponents, WaveBoundaryCondition.PeriodVariableName, periodValue);
+            SetComponentValues(functionComponents, WaveBoundaryCondition.DirectionVariableName, directionValue);
+            SetComponentValues(functionComponents, WaveBoundaryCondition.SpreadingVariableName, spreadingValue);
+        }
+
+        private static void SetComponentValues(IEnumerable<IVariable> functionComponents, string componentName, double heightValue)
+        {
+            functionComponents.FirstOrDefault(c => c.Name == componentName)?.SetValues(new List<double> {heightValue});
+        }
+
+        private static void SetComponentValues(IEnumerable<IVariable> functionComponents, string componentName, params double[] heightValues)
+        {
+            functionComponents.FirstOrDefault(c => c.Name == componentName)?.SetValues(heightValues.ToList());
         }
 
         private static string ConstructExpectedMessage(WaveBoundaryConditionSpatialDefinitionType spatialDefinitionType, string expectedErrorMessage)
