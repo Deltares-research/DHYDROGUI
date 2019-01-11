@@ -29,9 +29,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public const string WaveProcessName = "wave";
         public const string WaveQuantityName = "wave_energy_density";
 
+        private readonly WaveBoundarySpectralData spectralData;
+
         public WaveBoundaryCondition(BoundaryConditionDataType bcDataType) : base(bcDataType)
         {
-            SpectralData = new WaveBoundarySpectralData
+            spectralData = new WaveBoundarySpectralData
             {
                 PeakEnhancementFactor = 3.3
             };
@@ -43,25 +45,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             // to avoid the name setting in FeatureData... 
         }
-        
-        public WaveBoundarySpectralData SpectralData { private get; set; }
 
-        public WaveSpectrumShapeType ShapeType => SpectralData.ShapeType;
-        public WavePeriodType PeriodType => SpectralData.PeriodType;
-        public double PeakEnhancementFactor
+        public WaveSpectrumShapeType ShapeType
         {
-            get => SpectralData.PeakEnhancementFactor;
-            set => SpectralData.PeakEnhancementFactor = value;
+            get => spectralData.ShapeType;
+            set => spectralData.ShapeType = value;
         }
 
-        public double GaussianSpreadingValue => SpectralData.GaussianSpreadingValue;
+        public WavePeriodType PeriodType
+        {
+            get => spectralData.PeriodType;
+            set => spectralData.PeriodType = value;
+        }
+
+        public double PeakEnhancementFactor
+        {
+            get => spectralData.PeakEnhancementFactor;
+            set => spectralData.PeakEnhancementFactor = value;
+        }
+
+        public double GaussianSpreadingValue
+        {
+            get => spectralData.GaussianSpreadingValue;
+            set => spectralData.GaussianSpreadingValue = value;
+        }
 
         public WaveDirectionalSpreadingType DirectionalSpreadingType
         {
-            get => SpectralData.DirectionalSpreadingType;
+            get => spectralData.DirectionalSpreadingType;
             set
             {
-                SpectralData.DirectionalSpreadingType = value;
+                spectralData.DirectionalSpreadingType = value;
 
                 switch (DataType)
                 {

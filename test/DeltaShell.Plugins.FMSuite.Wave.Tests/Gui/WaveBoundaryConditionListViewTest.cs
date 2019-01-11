@@ -37,18 +37,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
 
             Assert.AreEqual(3, model.BoundaryConditions.Count);
 
-            model.BoundaryConditions[0].SpectralData = new WaveBoundarySpectralData
-                {
-                    ShapeType = WaveSpectrumShapeType.Gauss
-                };
-            model.BoundaryConditions[1].SpectralData = new WaveBoundarySpectralData
-                {
-                    ShapeType = WaveSpectrumShapeType.Jonswap
-                };
-            model.BoundaryConditions[2].SpectralData = new WaveBoundarySpectralData
-                {
-                    ShapeType = WaveSpectrumShapeType.PiersonMoskowitz
-                };
+            model.BoundaryConditions[0].ShapeType = WaveSpectrumShapeType.Gauss;
+            model.BoundaryConditions[1].ShapeType = WaveSpectrumShapeType.Jonswap;
+            model.BoundaryConditions[2].ShapeType = WaveSpectrumShapeType.PiersonMoskowitz;
 
             var view = new WaveBoundaryConditionListView {Data = model};
             WindowsFormsTestHelper.ShowModal(view);

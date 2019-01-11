@@ -857,7 +857,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 if (dataType == BoundaryConditionDataType.SpectrumFromFile)
                 {
                     var spectrumFiles = boundaryData.GetPropertyValues("Spectrum").ToList();
-                    for (int i = 0; i < spectrumFiles.Count; ++i)
+                    for (var i = 0; i < spectrumFiles.Count; ++i)
                     {
                         boundaryCondition.AddPoint(i);
                         boundaryCondition.SpectrumFiles[i] = spectrumFiles[i];
@@ -865,7 +865,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 }
                 else
                 {
-                    boundaryCondition.SpectralData = GetSpectralData(boundaryData);
+                    var spectralData = GetSpectralData(boundaryData);
+                    CopySpectralDataToWaveBoundaryCondition(boundaryCondition, spectralData);
 
                     if (dataType == BoundaryConditionDataType.ParameterizedSpectrumConstant)
                     {
@@ -991,6 +992,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     PeakEnhancementFactor = double.Parse(boundaryData.GetPropertyValue("PeakEnhanceFac"), NumberStyles.Any, CultureInfo.InvariantCulture),
                     GaussianSpreadingValue = double.Parse(boundaryData.GetPropertyValue("GaussSpread"), NumberStyles.Any, CultureInfo.InvariantCulture)
                 };
+        }
+
+        private static void CopySpectralDataToWaveBoundaryCondition(WaveBoundaryCondition boundaryCondition, WaveBoundarySpectralData spectralData)
+        {
+            boundaryCondition.ShapeType = spectralData.ShapeType;
+            boundaryCondition.PeriodType = spectralData.PeriodType;
+            boundaryCondition.DirectionalSpreadingType = spectralData.DirectionalSpreadingType;
+            boundaryCondition.PeakEnhancementFactor = spectralData.PeakEnhancementFactor;
+            boundaryCondition.GaussianSpreadingValue = spectralData.GaussianSpreadingValue;
         }
 
 
