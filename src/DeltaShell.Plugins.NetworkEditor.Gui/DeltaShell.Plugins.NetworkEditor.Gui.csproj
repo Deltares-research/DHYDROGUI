@@ -193,6 +193,7 @@
     <Compile Include="Export\HydroRegionShapeFileExporter.cs" />
     <Compile Include="Forms\CrossSectionView\SimplifiedCoordinate.cs" />
     <Compile Include="Forms\StructureFeatureView\CrestValidationRule.cs" />
+    <Compile Include="Forms\StructureFeatureView\CrestWidthValidationRule.cs" />
     <Compile Include="Forms\StructureFeatureView\CulvertViewWpf.xaml.cs">
       <DependentUpon>CulvertViewWpf.xaml</DependentUpon>
     </Compile>
@@ -200,6 +201,7 @@
     <Compile Include="Forms\StructureFeatureView\DoubleTextBoxWithLabelAndUnitControl.xaml.cs">
       <DependentUpon>DoubleTextBoxWithLabelAndUnitControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Forms\StructureFeatureView\EmptyDoubleValueConverter.cs" />
     <Compile Include="Forms\StructureFeatureView\SingleTextBoxWithLabelAndUnitControl.xaml.cs">
       <DependentUpon>SingleTextBoxWithLabelAndUnitControl.xaml</DependentUpon>
     </Compile>

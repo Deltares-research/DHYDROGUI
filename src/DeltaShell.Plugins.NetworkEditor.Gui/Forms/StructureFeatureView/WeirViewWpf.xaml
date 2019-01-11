@@ -44,6 +44,7 @@
         </ObjectDataProvider>
         <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <structureFeatureView:EmptyDoubleValueConverter x:Key="NullableValueConverter" />
     </UserControl.Resources>
 
     <!--DATACONTEXT RESOURCE-->
@@ -189,9 +190,9 @@
                         </Grid.ColumnDefinitions>
                         <TextBox Grid.Column="0">
                             <TextBox.Text>
-                                <Binding Path ="Weir.CrestWidth">
+                                <Binding Path ="Weir.CrestWidth" Converter="{StaticResource NullableValueConverter}">
                                     <Binding.ValidationRules>
-                                        <structureFeatureView:CrestValidationRule/>
+                                        <structureFeatureView:CrestWidthValidationRule/> 
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox.Text>
@@ -201,36 +202,36 @@
 
                     <TextBox Grid.Row="2" Grid.Column="3" Visibility="{Binding GeneralStructurePropertiesVisibility}">
                         <TextBox.Text>
-                            <Binding Path ="Upstream2CrestWidth">
+                            <Binding Path ="Upstream2CrestWidth" Converter="{StaticResource NullableValueConverter}">
                                 <Binding.ValidationRules>
-                                    <structureFeatureView:CrestValidationRule/>
+                                    <structureFeatureView:CrestWidthValidationRule/>
                                 </Binding.ValidationRules>
                             </Binding>
                         </TextBox.Text>
                     </TextBox>
                     <TextBox Grid.Row="2" Grid.Column="4" Visibility="{Binding GeneralStructurePropertiesVisibility}">
                         <TextBox.Text>
-                            <Binding Path ="Upstream1CrestWidth">
+                            <Binding Path ="Upstream1CrestWidth" Converter="{StaticResource NullableValueConverter}">
                                 <Binding.ValidationRules>
-                                    <structureFeatureView:CrestValidationRule/>
+                                    <structureFeatureView:CrestWidthValidationRule/>
                                 </Binding.ValidationRules>
                             </Binding>
                         </TextBox.Text>
                     </TextBox>
                     <TextBox Grid.Row="2" Grid.Column="5" Visibility="{Binding GeneralStructurePropertiesVisibility}">
                         <TextBox.Text>
-                            <Binding Path ="Downstream1CrestWidth">
+                            <Binding Path ="Downstream1CrestWidth" Converter="{StaticResource NullableValueConverter}">
                                 <Binding.ValidationRules>
-                                    <structureFeatureView:CrestValidationRule/>
+                                    <structureFeatureView:CrestWidthValidationRule/>
                                 </Binding.ValidationRules>
                             </Binding>
                         </TextBox.Text>
                     </TextBox>
                     <TextBox Grid.Row="2" Grid.Column="6" Visibility="{Binding GeneralStructurePropertiesVisibility}">
                         <TextBox.Text>
-                            <Binding Path ="Downstream2CrestWidth">
+                            <Binding Path ="Downstream2CrestWidth" Converter="{StaticResource NullableValueConverter}">
                                 <Binding.ValidationRules>
-                                    <structureFeatureView:CrestValidationRule/>
+                                    <structureFeatureView:CrestWidthValidationRule/>
                                 </Binding.ValidationRules>
                             </Binding>
                         </TextBox.Text>

@@ -20,6 +20,7 @@ namespace DelftTools.Hydro.Structures
 
         public Weir2D(string name, bool allowTimeVaryingData = true) : base(name, allowTimeVaryingData)
         {
+            CrestWidth = double.NaN;
         }
 
         /// <summary>

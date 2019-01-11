@@ -84,8 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             }
             set
             {
-                double crestLevel;
-                if (double.TryParse(value, out crestLevel))
+                if (double.TryParse(value, out var crestLevel))
                 {
                     data.CrestLevel = crestLevel;
                 }
@@ -102,29 +101,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             set { data.UseCrestLevelTimeSeries = value == TimeDependency.TimeDependent; }
         }
 
-        
-
+        /// <summary>
+        /// Gets or sets the crest width to display in the FMWeirProperties.
+        /// </summary>
+        /// <value>
+        /// The crest width.
+        /// </value>
+        /// <remarks>
+        /// data.CrestWidth is not nullable, as such, null is mapped to NaN
+        /// in order to obtain an empty field.
+        /// </remarks>
         [Category("General")]
         [DisplayName("Crest width")]
         [PropertyOrder(4)]
         [Description("Width (in [m]) of the weir crest")]
         [DynamicReadOnly]
-        public double CrestWidth
+        public double? CrestWidth
         {
-            get { return data.CrestWidth; }
-            set { data.CrestWidth = value; }
+            get
+            {
+                if (double.IsNaN(data.CrestWidth))
+                    return null;
+                return data.CrestWidth;
+            }
+            set { data.CrestWidth = value ?? double.NaN; }
         }
 
         [Category("General")]
         [DisplayName("Use crest width")]
         [PropertyOrder(5)]
-        [Description("Use crest width or use weir geometry")]
+        [Description("If true then use the crest width value else calculate with the weir geometry")]
         public bool UseCrestWidth
         {
             get { return data.CrestWidth > 0; }
-            set { data.CrestWidth = (value ? data.Geometry.Length : 0.0); }
+            set { data.CrestWidth = (value ? data.Geometry.Length : double.NaN); }
         }
 
+        /// <summary>
+        /// Determines whether the specified property name is readonly.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified property name is readonly; otherwise, <c>false</c>.
+        /// </returns>
         [DynamicReadOnlyValidationMethod]
         public bool IsReadonly(string propertyName)
         {
@@ -134,7 +153,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             }
             if (propertyName == "CrestWidth")
             {
-                return data.CrestWidth <= 0.0;
+                return double.IsNaN(data.CrestWidth) || data.CrestWidth <= 0.0;
             }
             return false;
         }

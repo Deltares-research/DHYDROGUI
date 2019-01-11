@@ -334,7 +334,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var crestWidthProperty = structure2D.GetProperty(EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthCenter));
             var crestWidthString = crestWidthProperty == null ? null : crestWidthProperty.GetValueAsString();
             weir.CrestWidth = string.IsNullOrEmpty(crestWidthString)
-                ? 0.0
+                ? Double.NaN
                 : FMParser.FromString<double>(crestWidthString);
 
             SetTimeSeriesProperty(structure2D, EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelCenter), path, refDate, weir,
@@ -346,7 +346,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         private static IWeirFormula CreateGeneralStructureWeirFormula(Structure2D structure2D,string path, DateTime refDate)
         {
-            var gsWeirFormula = new GeneralStructureWeirFormula();
+            var gsWeirFormula = new GeneralStructureWeirFormula()
+            {
+                // Set default values for Structure2D general structures.
+                WidthStructureLeftSide    = double.NaN
+              , WidthStructureRightSide   = double.NaN
+              , WidthLeftSideOfStructure  = double.NaN
+              , WidthRightSideOfStructure = double.NaN
+            };
 
             foreach (var property in Enum.GetValues(typeof(KnownGeneralStructureProperties)).Cast<KnownGeneralStructureProperties>())
             {

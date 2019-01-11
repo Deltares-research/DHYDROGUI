@@ -3,15 +3,16 @@ using System.Globalization;
 using System.Windows.Controls;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 
+
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 {
     /// <summary>
     /// This class is used for validating data from the WeirViewWpf.xaml.
     /// It only validates the text boxes where this ValidationRule is bound to the Textbox "Text" property.
     /// </summary>
+    /// <inheritdoc cref="ValidationRule"/>
     public class CrestValidationRule : ValidationRule
     {
-
         /// <summary>Performs validation checks on a value.</summary>
         /// <param name="value">The value from the binding target to check.</param>
         /// <param name="cultureInfo">The culture to use in this rule.</param>

@@ -279,11 +279,30 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var generalStructureFormula = weirStructure.WeirFormula as GeneralStructureWeirFormula;
 
             // Width
-            properties.Add(ConstructProperty(StructureRegion.WidthLeftW1.Key,    generalStructureFormula.WidthLeftSideOfStructure,  structureType));
-            properties.Add(ConstructProperty(StructureRegion.WidthLeftWsdl.Key,  generalStructureFormula.WidthStructureLeftSide,    structureType));
-            properties.Add(ConstructProperty(StructureRegion.WidthCenter.Key,    weirStructure.CrestWidth,                          structureType));
-            properties.Add(ConstructProperty(StructureRegion.WidthRightWsdr.Key, generalStructureFormula.WidthStructureRightSide,   structureType));
-            properties.Add(ConstructProperty(StructureRegion.WidthRightW2.Key,   generalStructureFormula.WidthRightSideOfStructure, structureType));
+            AddDoubleOrEmptyPropertyConditionally(properties
+                                                , StructureRegion.WidthLeftW1.Key
+                                                , generalStructureFormula
+                                                      .WidthLeftSideOfStructure
+                                                , structureType);
+            AddDoubleOrEmptyPropertyConditionally(properties
+                                                , StructureRegion.WidthLeftWsdl.Key
+                                                , generalStructureFormula
+                                                      .WidthStructureLeftSide
+                                                , structureType);
+            AddDoubleOrEmptyPropertyConditionally(properties
+                                                , StructureRegion.WidthCenter.Key
+                                                , weirStructure.CrestWidth
+                                                , structureType);
+            AddDoubleOrEmptyPropertyConditionally(properties
+                                                , StructureRegion.WidthRightWsdr.Key
+                                                , generalStructureFormula
+                                                      .WidthStructureRightSide
+                                                , structureType);
+            AddDoubleOrEmptyPropertyConditionally(properties
+                                                , StructureRegion.WidthRightW2.Key
+                                                , generalStructureFormula
+                                                      .WidthRightSideOfStructure
+                                                , structureType);
 
             // Level
             properties.Add(ConstructProperty(StructureRegion.LevelLeftZb1.Key,   generalStructureFormula.BedLevelLeftSideOfStructure,  structureType));
@@ -420,16 +439,38 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 properties.Add(ConstructProperty(KnownStructureProperties.CrestLevel, weir.CrestLevel, structureType));
             }
 
-            if (weir.CrestWidth > 0)
-            {
-                properties.Add(ConstructProperty(KnownStructureProperties.CrestWidth, weir.CrestWidth, structureType));
-            }
+            AddDoubleOrEmptyPropertyConditionally(properties, KnownStructureProperties.CrestWidth, weir.CrestWidth, structureType);
 
             var formula = (SimpleWeirFormula)((IWeir)structure).WeirFormula;
             properties.Add(ConstructProperty(KnownStructureProperties.LateralContractionCoefficient, formula.LateralContraction, structureType));
             return properties;
         }
-        
+
+        /// <summary>
+        /// Add the specified <paramref name="value"/> property with name
+        /// <paramref name="propertyName"/> to <paramref name="properties"/> if
+        /// <paramref name="value"/> is NaN or greater than zero.
+        /// </summary>
+        /// <param name="properties">The properties.</param>
+        /// <param name="propertyName">The name of the new property.</param>
+        /// <param name="value">The value to be added as property.</param>
+        /// <param name="structureType">Type of the structure.</param>
+        /// <remarks>
+        /// If <paramref name="value"/> is NaN then an empty value field will be written.
+        /// Properties is not null
+        /// </remarks>
+        private void AddDoubleOrEmptyPropertyConditionally(ICollection<DelftIniProperty> properties, 
+                                                           string propertyName,
+                                                           double value, 
+                                                           string structureType)
+        {
+            if (double.IsNaN(value))
+                // we do not want to add an empty string as it will be filtered out in the write step.
+                properties.Add(ConstructProperty(propertyName, " ", structureType));
+            else if (value > 0)
+                properties.Add(ConstructProperty(propertyName, value, structureType));
+        }
+
         private IEnumerable<DelftIniProperty> ConstructGateProperties(IStructure1D structure, string structureType, string path, DateTime refDate)
         {
             var gate = (IGate)structure;
@@ -582,12 +623,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             properties.Add(ConstructProperty(KnownStructureProperties.GateHorizontalOpeningDirection, 
                                              horizontalDoorOpeningDirection, 
                                              structureType));
-            if (gatedWeir.CrestWidth > 0.0)
-            {
-                properties.Add(ConstructProperty(KnownStructureProperties.GateSillWidth, 
-                                                 gatedWeir.CrestWidth, 
-                                                 structureType));
-            }
+
+            AddDoubleOrEmptyPropertyConditionally(properties, KnownStructureProperties.GateSillWidth, gatedWeir.CrestWidth, structureType);
             return properties;
         }
 

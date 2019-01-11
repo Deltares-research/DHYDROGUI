@@ -562,7 +562,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                         var generalStructureWeirFormula = new GeneralStructureWeirFormula
                         {
                             BedLevelStructureCentre = weir.CrestLevel,
-                            WidthStructureCentre = weir.CrestWidth
+                            WidthStructureCentre = weir.CrestWidth,
+
+                            WidthStructureLeftSide    = double.NaN,
+                            WidthStructureRightSide   = double.NaN,
+                            WidthLeftSideOfStructure  = double.NaN,
+                            WidthRightSideOfStructure = double.NaN,
                         };
 
                         weir.WeirFormula = generalStructureWeirFormula;
