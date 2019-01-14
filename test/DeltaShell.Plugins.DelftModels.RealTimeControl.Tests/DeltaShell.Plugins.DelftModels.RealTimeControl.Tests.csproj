@@ -243,7 +243,6 @@
     <Compile Include="ImportExport\RealTimeControlDataConfigXmlReaderTest.cs" />
     <Compile Include="ImportExport\RealTimeControlModelImporterTest.cs" />
     <Compile Include="ImportExport\RealTimeControlModelXmlReaderTest.cs" />
-    <Compile Include="ImportExport\RealTimeControlOutputFileFunctionStoreTest.cs" />
     <Compile Include="ImportExport\RealTimeControlRuntimeConfigXmlReaderTest.cs" />
     <Compile Include="ImportExport\RealTimeControlStateImportXmlReaderTest.cs" />
     <Compile Include="ImportExport\RealTimeControlTimeSeriesXmlReaderTest.cs" />

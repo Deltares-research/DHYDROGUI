@@ -15,7 +15,6 @@ using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Coverages;
 
-
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
     public class RealTimeControlOutputFileFunctionStore : ReadOnlyNetCdfFunctionStoreBase, IFileBased
@@ -24,16 +23,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         private const string TimeDimensionName = "time";
         protected const string LongNameAttribute = "long_name";
 
-        /// <summary>
-        /// Gets or sets the coordinate system of this
-        /// RealTimeControlOutputFileFunctionStore.
-        /// </summary>
-        /// <value>
-        /// The coordinate system.
-        /// </value>
         public ICoordinateSystem CoordinateSystem
         {
-            get => coordinateSystem;
+            get { return coordinateSystem; }
             set
             {
                 coordinateSystem = value;
@@ -41,43 +33,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             }
         }
 
-        /// <summary> The coordinate system of this RealTimeControlOutputFileFunctionStore. </summary>
-        private ICoordinateSystem coordinateSystem;
-
-        /// <summary>
-        /// Gets the Features of this RealtimeControlOutputFileFunctionStore.
-        /// </summary>
-        /// <value>
-        /// A readonly list of features which are stored in this FunctionStore.
-        /// </value>
-        public IEnumerable<IFeature> Features => features?.Value ?? Enumerable.Empty<IFeature>();
-
-
-        /// <summary>
-        /// Set the features of this RealTimeControlOutputFileFunctionStore with the specified <paramref name="featuresFunc"/>.
-        /// </summary>
-        /// <param name="featuresFunc">A Func providing the features to be added to this FunctionStore.</param>
-        public void SetFeaturesWith(Func<IEnumerable<IFeature>> featuresFunc = null)
+        public IList<IFeature> Features
         {
-            if (featuresFunc == null)
-                featuresFunc = () => Enumerable.Empty<IFeature>();
+            get { return features ?? new List<IFeature>(); }
+            set
+            {
+                features = value;
 
-            features = new Lazy<IEnumerable<IFeature>>(featuresFunc);
+                var featureCoverages = Functions.OfType<FeatureCoverage>().ToList();
+                if (featureCoverages.Any())
+                    featureCoverages.ForEach(c => SetFeatureCoverageFeatures(c));
+            }
         }
 
-        /// <summary> A lazy loaded set of features. </summary>
-        private Lazy<IEnumerable<IFeature>> features;
-
         private Dictionary<string, IMultiDimensionalArray<IFeature>> cachedFeatureArrays = new Dictionary<string, IMultiDimensionalArray<IFeature>>();
+        private IList<IFeature> features;
+        private ICoordinateSystem coordinateSystem;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RealTimeControlOutputFileFunctionStore"/>
-        /// class without any features.
-        /// </summary>
         public RealTimeControlOutputFileFunctionStore()
         {
             dateTimeFormat = DateTimeFormat;
-            SetFeaturesWith();
         }
 
         protected override string GetTimeVariableName(string dimName)
@@ -213,9 +188,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         }
 
 
-        protected override IList<string> TimeVariableNames => new[] { GetTimeVariableName(TimeDimensionName) };
-        protected override IList<string> TimeDimensionNames => new[] { TimeDimensionName };
-
+        protected override IList<string> TimeVariableNames
+        {
+            get { return new[] { GetTimeVariableName(TimeDimensionName) }; }
+        }
+        protected override IList<string> TimeDimensionNames
+        {
+            get { return new[] { TimeDimensionName }; }
+        }
+ 
         protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(IVariable function, IVariableFilter[] filters)
         {
             if (function.Attributes[NcUseVariableSizeAttribute] == "false") // has no explicit variable
@@ -277,11 +258,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             FileUtils.DeleteIfExists(Path);
         }
 
-        public IEnumerable<string> Paths => new[] { Path };
+        public IEnumerable<string> Paths { get { return new[] { Path }; } }
 
-        public bool IsFileCritical => false;
+        public bool IsFileCritical { get { return false; } }
 
-        public bool IsOpen => false;
+        public bool IsOpen { get { return false; } }
 
         #endregion
 

@@ -34,7 +34,6 @@ using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 
-
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 {
     /// <summary>
@@ -58,36 +57,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         protected virtual IList<ExplicitValueConverterLookupItem> explicitValueConverterLookupItems { get; set; }
 
-        /// <summary>
-        /// Gets or sets the output file function store.
-        /// </summary>
-        /// <value>
-        /// The output file function store.
-        /// </value>
         public virtual RealTimeControlOutputFileFunctionStore OutputFileFunctionStore
         {
-            get => outputFileFunctionStore;
+            get { return outputFileFunctionStore; }
             set
             {
                 outputFileFunctionStore = value;
-
-                if (outputFileFunctionStore == null) return;
-                
-                RefreshOutputFunctionStore();
+                if (outputFileFunctionStore != null)
+                {
+                    outputFileFunctionStore.CoordinateSystem = CoordinateSystem;
+                    outputFileFunctionStore.Features = GetChildDataItemLocationsFromControlledModels(DataItemRole.Output).ToList();
+                }
             }
-        }
-
-        /// <summary>
-        /// Refreshes the output function store by resetting the Features and the CoordinateSystem.
-        /// </summary>
-        /// <remarks> If outputFileFunctionStore == null Then nothing happens </remarks>
-        private void RefreshOutputFunctionStore()
-        {
-            if (outputFileFunctionStore == null) return;
-
-            outputFileFunctionStore.CoordinateSystem = CoordinateSystem;
-            outputFileFunctionStore.SetFeaturesWith(
-                () => GetChildDataItemLocationsFromControlledModels(DataItemRole.Output)?.ToList());
         }
 
         public virtual int LogLevel { get; set; }
@@ -347,7 +328,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         [NoNotifyPropertyChange]
         public override DateTime StartTime
         {
-            get => TimeProvider?.StartTime ?? base.StartTime;
+            get
+            {
+                return (TimeProvider != null) ? TimeProvider.StartTime : base.StartTime;
+            }
             set
             {
                 if (TimeProvider != null)
@@ -409,7 +393,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 ResubscribeToOwner();
             }
         }
-
         private string workDirectory;
 
         public virtual bool LimitMemory { get; set; }
@@ -426,15 +409,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         #endregion
 
-        public virtual string LibraryName => "FBCTools_BMI";
+        public virtual string LibraryName
+        {
+            get { return "FBCTools_BMI"; }
+        }
 
-        public virtual string InputFile => ".";
+        public virtual string InputFile
+        {
+            get { return "."; }
+        }
 
-        public virtual string DirectoryName => "rtc";
+        public virtual string DirectoryName
+        {
+            get { return "rtc"; }
+        }
 
-        public virtual bool IsMasterTimeStep => false;
+        public virtual bool IsMasterTimeStep
+        {
+            get { return false; }
+        }
 
-        public virtual string ShortName => "rtc";
+        public virtual string ShortName
+        {
+            get { return "rtc"; }
+        }
 
         public virtual string GetItemString(IDataItem dataItem)
         {
@@ -477,21 +475,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             return dataItem;
         }
 
-        public virtual Type ExporterType => typeof(RealTimeControlModelExporter);
+        public virtual Type ExporterType
+        {
+            get { return typeof(RealTimeControlModelExporter); }
+        }
 
         public virtual string GetExporterPath(string directoryName)
         {
             return directoryName;
         }
 
-        public virtual string KernelDirectoryLocation => DimrApiDataSet.RtcToolsDllPath;
+        public virtual string KernelDirectoryLocation
+        {
+            get { return DimrApiDataSet.RtcToolsDllPath; }
+        }
 
         public virtual void DisconnectOutput()
         {
             if (outputFileFunctionStore == null) return;
 
             outputFileFunctionStore.Functions?.Clear();
-            outputFileFunctionStore.SetFeaturesWith(null);
+            outputFileFunctionStore.Features?.Clear();
             outputFileFunctionStore.Close();
             outputFileFunctionStore = null;
         }
@@ -512,12 +516,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             DisconnectOutput();
 
             if (!File.Exists(outputFilePath)) return;
-
-            OutputFileFunctionStore = new RealTimeControlOutputFileFunctionStore();
             
-            // This triggers an event and thus should be explicitly done after the function store 
-            // has been initialized.
-            OutputFileFunctionStore.Path = outputFilePath;
+            var features = GetChildDataItemLocationsFromControlledModels(DataItemRole.Output).ToList();
+            outputFileFunctionStore = new RealTimeControlOutputFileFunctionStore()
+            {
+                Features = features,
+                CoordinateSystem = this.CoordinateSystem, 
+                Path = outputFilePath
+            };
         }
 
         public virtual ValidationReport Validate() // NOTE: Do not re
@@ -536,8 +542,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         [NoNotifyPropertyChange]
         public new virtual DateTime CurrentTime
         {
-            get => base.CurrentTime;
-            set => base.CurrentTime = value;
+            get { return base.CurrentTime; }
+            set { base.CurrentTime = value; }
         }
         public virtual Array GetVar(string category, string itemName = null, string parameter = null)
         {
@@ -610,7 +616,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual ICoordinateSystem CoordinateSystem
         {
-            get => coordinateSystem;
+            get { return coordinateSystem; }
             set
             {
                 coordinateSystem = value;
@@ -665,7 +671,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         protected virtual IEventedList<IModel> InternalControlledModelsList
         {
-            get => internalControlledModelsList;
+            get { return internalControlledModelsList; }
             set
             {
                 if (internalControlledModelsList != null)
@@ -695,14 +701,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             ReconnectOutputFiles(outputFileFunctionStore.Path);
         }
 
-        /// <summary>
-        /// Gets the controlled models of this RealTimeControlModel.
-        /// </summary>
-        /// <value>
-        /// The controlled models.
-        /// </value>
-        public virtual IEnumerable<IModel> ControlledModels => internalControlledModelsList;
-
+        public virtual IEnumerable<IModel> ControlledModels
+        {
+            get { return internalControlledModelsList; }
+        }
+        
         private void ModelsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var model = sender as IModel;
@@ -845,7 +848,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             var childDataItemLocationsFromControlledModels = ControlledModels.SelectMany(m => m.GetChildDataItemLocations(role)).Distinct();
             // The childDataItemLocationsFromControlledModels list may contain features that are wrapped in data-items that
-            // provide/consuming value types other than typeif(double), e.g. Flow1D's network-coverages for waterlevel's,
+            // provide/consuming value types other that typeif(double), e.g. Flow1D's network-coverages for waterlevel's,
             // discharges, etc (Flow1D exposes these network-coverages data items for e.g. the OpenMI wrapper).
             // RTC only can handle values on one single location, so return only the single value locations
             // (i.e. data item value type is double, see GetChildDataItemsFromControlledModelsForLocation(...) below).
