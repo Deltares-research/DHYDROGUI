@@ -88,6 +88,7 @@
     </Content>
     <Content Include="D-HYDRO_Manuals\D-Flow_FM_Technical_Reference_Manual.pdf" />
     <Content Include="D-HYDRO_Manuals\D-Flow_FM_User_Manual.pdf" />
+    <Content Include="D-HYDRO_Manuals\D-Morphology_User_Manual.pdf" />
     <Content Include="D-HYDRO_Manuals\RGFGRID_User_Manual.pdf" />
     <Content Include="D-HYDRO_Resources\License.rtf" />
     <Content Include="D-HYDRO_Resources\setup_banner.jpg" />

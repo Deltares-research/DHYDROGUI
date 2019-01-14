@@ -85,6 +85,7 @@
     </Content>
     <Content Include="Delft3D FM HM_Manuals\D-Flow_FM_Technical_Reference_Manual.pdf" />
     <Content Include="Delft3D FM HM_Manuals\D-Flow_FM_User_Manual.pdf" />
+    <Content Include="Delft3D FM HM_Manuals\D-Morphology_User_Manual.pdf" />
     <Content Include="Delft3D FM HM_Manuals\RGFGRID_User_Manual.pdf" />
     <Content Include="Delft3D FM HM_Resources\License.rtf" />
     <Content Include="Delft3D FM HM_Resources\setup_banner.jpg" />
