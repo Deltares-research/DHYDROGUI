@@ -13,21 +13,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public override IBoundaryCondition CreateBoundaryCondition(Feature2D feature2D, string quantity, BoundaryConditionDataType dataType, string quantityType = null)
         {
             var bc = new WaveBoundaryCondition(dataType)
-                {
-                    Feature = feature2D,
-                    Name = feature2D.Name,
-                    SpatialDefinitionType = WaveBoundaryConditionSpatialDefinitionType.Uniform
-                };
+            {
+                Feature = feature2D,
+                Name = feature2D.Name,
+                SpatialDefinitionType = WaveBoundaryConditionSpatialDefinitionType.Uniform
+            };
 
-            if (dataType == BoundaryConditionDataType.SpectrumFromFile)
+            switch (dataType)
             {
-                bc.AddPoint(0);
-                bc.SpectrumFiles[0] = "";
+                case BoundaryConditionDataType.SpectrumFromFile:
+                case BoundaryConditionDataType.ParameterizedSpectrumConstant:
+                    bc.AddPoint(0);
+                    break;
             }
-            if (dataType == BoundaryConditionDataType.ParameterizedSpectrumConstant)
-            {
-                bc.AddPoint(0);
-            }
+
             return bc;
         }
     }

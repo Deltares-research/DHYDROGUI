@@ -163,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationReport = WaveBoundaryConditionValidator.Validate(waveBoundaryConditions);
 
             // Then
-            var expectedMessage = ConstructExpectedMessage(boundaryCondition.SpatialDefinitionType, Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_larger_than_0_and_smaller_or_equal_to_25_);
+            var expectedMessage = ConstructExpectedMessage(boundaryCondition.SpatialDefinitionType, Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_greater_than_0_and_smaller_or_equal_to_25_);
             ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
         }
 

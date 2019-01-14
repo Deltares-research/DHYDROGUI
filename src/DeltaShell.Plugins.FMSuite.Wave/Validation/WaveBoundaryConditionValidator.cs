@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -64,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
         private static IEnumerable<ValidationIssue> ValidateSpectralData(WaveBoundaryCondition boundaryCondition)
         {
-            if(boundaryCondition.PeakEnhancementFactor.IsInRange(1.0, 10.0))
+            if(boundaryCondition.PeakEnhancementFactor.IsOutsideOfRange(1.0, 10.0))
             {
                 yield return new ValidationIssue(null, ValidationSeverity.Error,
                     Resources.WaveBoundaryConditionValidator_ValidateSpectralData_Peak_Enhancement_Factor_must_be_a_value_within_the_range_1___10_,
@@ -91,11 +92,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 {
                     yield return new ValidationIssue(boundaryCondition.VariableDescription,
                         ValidationSeverity.Error,
-                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_larger_than_0_and_smaller_or_equal_to_25_,
+                        precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_greater_than_0_and_smaller_or_equal_to_25_,
                         boundaryCondition);
                 }
 
-                if (spectrumValues.Period.IsInRange(0.1, 20.0))
+                if (spectrumValues.Period.IsOutsideOfRange(0.1, 20.0))
                 {
                     yield return new ValidationIssue(boundaryCondition.VariableDescription,
                         ValidationSeverity.Error,
@@ -103,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                         boundaryCondition);
                 }
 
-                if (spectrumValues.Direction.IsInRange(-360.0, 360.0))
+                if (spectrumValues.Direction.IsOutsideOfRange(-360.0, 360.0))
                 {
                     yield return new ValidationIssue(boundaryCondition.VariableDescription,
                         ValidationSeverity.Error,
@@ -111,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                         boundaryCondition);
                 }
 
-                if (boundaryCondition.DirectionalSpreadingType == WaveDirectionalSpreadingType.Power && spectrumValues.Spreading.IsInRange(1.0, 800.0))
+                if (boundaryCondition.DirectionalSpreadingType == WaveDirectionalSpreadingType.Power && spectrumValues.Spreading.IsOutsideOfRange(1.0, 800.0))
                 {
                     yield return new ValidationIssue(boundaryCondition.VariableDescription,
                         ValidationSeverity.Error,
@@ -119,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                         boundaryCondition);
                 }
 
-                if (boundaryCondition.DirectionalSpreadingType == WaveDirectionalSpreadingType.Degrees && spectrumValues.Spreading.IsInRange(2.0, 180.0))
+                if (boundaryCondition.DirectionalSpreadingType == WaveDirectionalSpreadingType.Degrees && spectrumValues.Spreading.IsOutsideOfRange(2.0, 180.0))
                 {
                     yield return new ValidationIssue(boundaryCondition.VariableDescription,
                         ValidationSeverity.Error,
@@ -127,11 +128,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                         boundaryCondition);
                 }
             }
-        }
-
-        private static bool IsInRange(this double value, double lowerLimit, double upperLimit)
-        {
-            return value - lowerLimit <= -double.Epsilon || value - upperLimit >= double.Epsilon;
         }
 
         private static IEnumerable<ValidationIssue> ValidateTimeSeriesValues(WaveBoundaryCondition boundaryCondition)
@@ -157,49 +153,51 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     continue;
                 }
 
-                var heightComponent = function.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.HeightVariableName);
-                var heightComponentValues = heightComponent?.Values as IMultiDimensionalArray<double>;
+                var heightComponentValues = GetComponentValues(function, WaveBoundaryCondition.HeightVariableName);
                 if (heightComponentValues != null && heightComponentValues.Any(v => v <= 0.0 || v - 25.0 >= double.Epsilon))
                 {
-                    yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
+                    yield return new ValidationIssue(null, ValidationSeverity.Error,
                         precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Hs__in_the_time_series_table_must_be_within_expected_range,
                         boundaryCondition);
                 }
 
-                var periodComponent = function.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.PeriodVariableName);
-                var periodComponentValues = periodComponent?.Values as IMultiDimensionalArray<double>;
-                if (periodComponentValues != null && periodComponentValues.Any(v => v.IsInRange(0.1, 20.0)))
+                var periodComponentValues = GetComponentValues(function, WaveBoundaryCondition.PeriodVariableName);
+                if (periodComponentValues != null && periodComponentValues.Any(v => v.IsOutsideOfRange(0.1, 20.0)))
                 {
-                    yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
+                    yield return new ValidationIssue(null, ValidationSeverity.Error,
                         precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Tp__in_the_time_series_table_must_be_within_expected_range,
                         boundaryCondition);
                 }
 
-                var directionComponent = function.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.DirectionVariableName);
-                var directionComponentValues = directionComponent?.Values as IMultiDimensionalArray<double>;
-                if (directionComponentValues != null && directionComponentValues.Any(v => v.IsInRange(-360.0, 360.0)))
+                var directionComponentValues = GetComponentValues(function, WaveBoundaryCondition.DirectionVariableName);
+                if (directionComponentValues != null && directionComponentValues.Any(v => v.IsOutsideOfRange(-360.0, 360.0)))
                 {
-                    yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
+                    yield return new ValidationIssue(null, ValidationSeverity.Error,
                         precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Direction__in_the_time_series_table_must_be_within_expected_range,
                         boundaryCondition);
                 }
 
-                var spreadingComponent = function.Components.FirstOrDefault(c => c.Name == WaveBoundaryCondition.SpreadingVariableName);
-                var spreadingComponentValues = spreadingComponent?.Values as IMultiDimensionalArray<double>;
-                if (boundaryCondition.DirectionalSpreadingType == WaveDirectionalSpreadingType.Power && spreadingComponentValues != null && spreadingComponentValues.Any(v => v.IsInRange(1.0, 800.0)))
+                var spreadingComponentValues = GetComponentValues(function, WaveBoundaryCondition.SpreadingVariableName);
+                if (boundaryCondition.DirectionalSpreadingType == WaveDirectionalSpreadingType.Power && spreadingComponentValues != null && spreadingComponentValues.Any(v => v.IsOutsideOfRange(1.0, 800.0)))
                 {
-                    yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
+                    yield return new ValidationIssue(null, ValidationSeverity.Error,
                         precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_1_800,
                         boundaryCondition);
                 }
 
-                if (boundaryCondition.DirectionalSpreadingType == WaveDirectionalSpreadingType.Degrees && spreadingComponentValues != null && spreadingComponentValues.Any(v => v.IsInRange(2.0, 180.0)))
+                if (boundaryCondition.DirectionalSpreadingType == WaveDirectionalSpreadingType.Degrees && spreadingComponentValues != null && spreadingComponentValues.Any(v => v.IsOutsideOfRange(2.0, 180.0)))
                 {
                     yield return new ValidationIssue(boundaryCondition.VariableDescription, ValidationSeverity.Error,
                         precedingText + Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_2_180,
                         boundaryCondition);
                 }
             }
+        }
+
+        private static IMultiDimensionalArray<double> GetComponentValues(IFunction function, string componentName)
+        {
+            var component = function.Components.FirstOrDefault(c => c.Name == componentName);
+            return component?.Values as IMultiDimensionalArray<double>;
         }
 
         private static IEnumerable<ValidationIssue> ValidateTimePoints(WaveBoundaryCondition boundaryCondition)
@@ -219,6 +217,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                         string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Time_points_are_not_synchronized_on_boundary___0_, boundaryCondition.Name), boundaryCondition);
                 }
             }
+        }
+
+        private static bool IsOutsideOfRange(this double value, double lowerLimit, double upperLimit)
+        {
+            return value - lowerLimit <= -double.Epsilon || value - upperLimit >= double.Epsilon;
         }
     }
 }

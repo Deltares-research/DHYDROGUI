@@ -952,7 +952,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                             var offset = condSpecAtDists[0] > 0.0 ? 1 : 0;
                             for (var i = 0; i < condSpecAtDists.Count; ++i)
                             {
-                                boundaryCondition.SetTimeSeriesToSupportPoint(i + offset, functions[i]);
+                                boundaryCondition.SetTimeSeriesAtSupportPoint(i + offset, functions[i]);
                             }
                         }
                         else
@@ -965,7 +965,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                             if (func != null)
                             {
                                 // add it to the time series' first support point.
-                                boundaryCondition.SetTimeSeriesToSupportPoint(0, func);
+                                boundaryCondition.SetTimeSeriesAtSupportPoint(0, func);
                             }
                             else
                             {

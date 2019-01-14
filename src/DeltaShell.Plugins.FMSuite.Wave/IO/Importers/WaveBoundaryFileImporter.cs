@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             int functionIndex = 0;
             foreach (var index in dpindices)
             {
-                bc.SetTimeSeriesToSupportPoint(index, functions[functionIndex++]);
+                bc.SetTimeSeriesAtSupportPoint(index, functions[functionIndex++]);
             }
         }
 
