@@ -1,7 +1,0 @@
-event.*   \sbk21204\fixed\default.bui
-evapor.*  \sbk21204\fixed\3b\evapor.gem
-wind.*    \sbk21204\fixed\default.wdc
-delwaq.*  \sbk21204\fixed\default.qsc
-wq_wind.* \sbk21204\fixed\default.qwc
-temp.*    \sbk21204\fixed\default.tmp
-rnff.*    \sbk21204\fixed\default.rnf
