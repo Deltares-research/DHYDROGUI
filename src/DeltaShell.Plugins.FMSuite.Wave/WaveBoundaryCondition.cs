@@ -23,6 +23,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         SpatiallyVarying
     }
 
+    /// <summary>
+    /// A class that represents boundary conditions that are used in wave models.
+    /// </summary>
+    /// <seealso cref="DeltaShell.Plugins.FMSuite.Common.FeatureData.BoundaryCondition" />
+    /// <seealso cref="GeoAPI.Extensions.Feature.IFeature" />
     [Entity]
     public class WaveBoundaryCondition : BoundaryCondition, IFeature
     {
@@ -31,6 +36,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private readonly WaveBoundarySpectralData spectralData;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WaveBoundaryCondition"/> class.
+        /// </summary>
+        /// <param name="bcDataType">The data type of the wave boundary condition.</param>
         public WaveBoundaryCondition(BoundaryConditionDataType bcDataType) : base(bcDataType)
         {
             spectralData = new WaveBoundarySpectralData
@@ -80,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 switch (DataType)
                 {
                     case BoundaryConditionDataType.ParameterizedSpectrumConstant:
-                        var defaultSpreadingValue = GetDefaultSpreadingValue(value);
+                        var defaultSpreadingValue = GetDefaultSpreadingValue();
                         SpectrumParameters.Values.ForEach(parameters => parameters.Spreading = defaultSpreadingValue);
                         break;
                     case BoundaryConditionDataType.ParameterizedSpectrumTimeseries:
@@ -94,9 +103,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        private static double GetDefaultSpreadingValue(WaveDirectionalSpreadingType directionalSpreadingType)
+        private double GetDefaultSpreadingValue()
         {
-            return directionalSpreadingType == WaveDirectionalSpreadingType.Power ? 2.0 : 30.0;
+            return DirectionalSpreadingType == WaveDirectionalSpreadingType.Power 
+                ? 2.0 
+                : 30.0;
         }
 
         public IDictionary<int, string> SpectrumFiles { get; }
@@ -111,7 +122,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 if (spatialDefinitionType == value) return;
 
                 spatialDefinitionType = value;
-
                 ClearData();
             }
         }
@@ -127,6 +137,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
+        /// <summary>
+        /// Gets the distance from first data point measured over the wave boundary.
+        /// </summary>
+        /// <param name="dataPointIndex">Index of the data point.</param>
+        /// <returns> The requested distance as a double value. </returns>
         public double GetDistanceFromFirstDataPointOverWaveBoundary(int dataPointIndex)
         {
             var coordinates = Feature.Geometry.Coordinates;
@@ -170,6 +185,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public override bool IsVerticallyUniform => true;
 
+        /// <summary>
+        /// Adds a data point to the wave boundary condition and additionally adds related default values to it.
+        /// </summary>
+        /// <param name="i">The index of the data point in <see cref="BoundaryCondition.DataPointIndices"/>.</param>
         public override void AddPoint(int i)
         {
             if (DataType == BoundaryConditionDataType.SpectrumFromFile)
@@ -180,12 +199,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 SpectrumParameters[i] = new WaveBoundaryParameters
                 {
-                    Spreading = GetDefaultSpreadingValue(DirectionalSpreadingType)
+                    Spreading = GetDefaultSpreadingValue()
                 };
             }
             base.AddPoint(i);
         }
 
+        /// <summary>
+        /// Removes the point at index <param name="i"/> and removes all related data to it.
+        /// </summary>
+        /// <param name="i">The index of the data point in <see cref="BoundaryCondition.DataPointIndices"/>.</param>
         public override void RemovePoint(int i)
         {
             if (DataType == BoundaryConditionDataType.SpectrumFromFile)
@@ -222,7 +245,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private void UpdateSpreadingComponentDefaultValue(IFunction function)
         {
             function.Components.Where(c => c.Name == SpreadingVariableName)
-                .ForEach(c => c.DefaultValue = GetDefaultSpreadingValue(DirectionalSpreadingType));
+                .ForEach(c => c.DefaultValue = GetDefaultSpreadingValue());
         }
 
         private void UpdateDirectionComponentVariableUnit(IFunction function)
@@ -262,19 +285,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             return function;
         }
 
+        /// <summary>
+        /// Will set the function values of <param name="timeSeries"/> to the function of the data point at
+        /// index <param name="dataPointIndex"/>.
+        /// </summary>
+        /// <param name="dataPointIndex">The index of the data point in <see cref="BoundaryCondition.DataPointIndices"/>.</param>
+        /// <param name="timeSeries">The <see cref="IFunction"/> object that represents a time series.</param>
         // TODO: Somehow you cannot call this methods for a second time if you haven't cleared the index. Function and Variable will throw an exception. This should be resolved in the framework.
-        public void SetTimeSeriesToSupportPoint(int dataPointIndex, IFunction f)
+        public void SetTimeSeriesAtSupportPoint(int dataPointIndex, IFunction timeSeries)
         {
             AddPoint(dataPointIndex);
 
             var func = GetDataAtPoint(dataPointIndex);
-            func.Arguments[0].SetValues(f.Arguments[0].GetValues());
+            func.Arguments[0].SetValues(timeSeries.Arguments[0].GetValues());
             for (var j = 0; j < func.Components.Count; ++j)
             {
-                func.Components[j].SetValues(f.Components[j].GetValues());
-                func.Components[j].Unit = (IUnit) f.Components[j].Unit.Clone();
+                func.Components[j].SetValues(timeSeries.Components[j].GetValues());
+                func.Components[j].Unit = (IUnit) timeSeries.Components[j].Unit.Clone();
             }
-            foreach (var att in f.Attributes)
+            foreach (var att in timeSeries.Attributes)
             {
                 func.Attributes[att.Key] = att.Value;
             }
