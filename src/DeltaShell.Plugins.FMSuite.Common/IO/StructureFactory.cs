@@ -332,9 +332,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             weir.WeirFormula = CreateGeneralStructureWeirFormula(structure2D, path, refDate);
 
             var crestWidthProperty = structure2D.GetProperty(EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthCenter));
-            var crestWidthString = crestWidthProperty == null ? null : crestWidthProperty.GetValueAsString();
+            var crestWidthString = crestWidthProperty?.GetValueAsString();
             weir.CrestWidth = string.IsNullOrEmpty(crestWidthString)
-                ? Double.NaN
+                ? double.NaN
                 : FMParser.FromString<double>(crestWidthString);
 
             SetTimeSeriesProperty(structure2D, EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelCenter), path, refDate, weir,
@@ -406,9 +406,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             var weir = new Weir2D(true);
             var crestWidthProperty = structure2D.GetProperty(KnownStructureProperties.CrestWidth);
-            var crestWidthString = crestWidthProperty == null ? null : crestWidthProperty.GetValueAsString();
+            var crestWidthString = crestWidthProperty?.GetValueAsString();
             weir.CrestWidth = string.IsNullOrEmpty(crestWidthString)
-                ? 0.0
+                ? double.NaN
                 : FMParser.FromString<double>(crestWidthString);
             SetTimeSeriesProperty(structure2D, KnownStructureProperties.CrestLevel, path, refDate, weir,
                                   TypeUtils.GetMemberName(() => weir.UseCrestLevelTimeSeries),
@@ -441,17 +441,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             weir.WeirFormula = CreateGateWeirFormula(structure2D, path, refDate);
 
             var crestWidthProperty = structure2D.GetProperty(KnownStructureProperties.GateSillWidth);
-            var crestWidthString = crestWidthProperty == null ? null : crestWidthProperty.GetValueAsString();
+            var crestWidthString = crestWidthProperty?.GetValueAsString();
             weir.CrestWidth = string.IsNullOrEmpty(crestWidthString)
-                ? 0.0
+                ? double.NaN
                 : FMParser.FromString<double>(crestWidthString);
 
             SetTimeSeriesProperty(structure2D, KnownStructureProperties.GateSillLevel, path, refDate, weir,
                 TypeUtils.GetMemberName(() => weir.UseCrestLevelTimeSeries),
                 TypeUtils.GetMemberName(() => weir.CrestLevel), weir.CrestLevelTimeSeries);
-
-
-            
 
             return weir;
         }

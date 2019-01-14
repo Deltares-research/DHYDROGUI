@@ -525,11 +525,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 default:
                     throw new ArgumentException("We can't write " + gate.HorizontalOpeningDirection);
             }
+
             properties.Add(ConstructProperty(KnownStructureProperties.GateHorizontalOpeningDirection, horizontalDirection, structureType));
-            if (gate.SillWidth > 0.0)
-            {
-                properties.Add(ConstructProperty(KnownStructureProperties.GateSillWidth, gate.SillWidth, structureType));
-            }
+            AddDoubleOrEmptyPropertyConditionally(properties, KnownStructureProperties.GateSillWidth, gate.SillWidth, structureType);
+
             return properties;
         }
 
