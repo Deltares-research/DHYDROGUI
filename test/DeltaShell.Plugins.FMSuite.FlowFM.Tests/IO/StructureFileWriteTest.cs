@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.Tests.IO;
 using NUnit.Framework;
@@ -15,20 +20,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class StructureFileWriteTest
     {
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-        }
-
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void StructuresFileWriteGeneralStructureGivesExpectedResultTest()
         {
-            List<IStructure1D> structs = new List<IStructure1D>();
+            var structs = new List<IStructure1D>();
 
             var generalStructureWeir = new Weir("weir01")
             {
@@ -134,5 +130,200 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 FileUtils.DeleteIfExists(exportFilePath);
             }
         }
+
+        /// <summary>
+        /// GIVEN a structures file
+        ///   AND a simple weir with an empty crest width
+        /// WHEN these structures are exported
+        /// THEN no exceptions are thrown
+        ///  AND the corresponding width fields are empty
+        /// </summary>
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenASimpleWeirWithAnEmptyCrestWidth_WhenTheseStructuresAreExported_ThenNoExceptionsAreThrownAndTheCorrespondingWidthFieldsAreEmpty()
+        {
+            // Given
+            // - structures file
+            var structuresFile = GetStructuresFile();
+
+            // - simple weir with an empty crest width
+            var simpleWeir = new Weir2D("Its weir-d")
+            {
+                WeirFormula = new SimpleWeirFormula(),
+                CrestWidth = double.NaN
+            };
+
+            var structures = new List<IStructure>() {simpleWeir};
+
+            // When | Then
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                var exportFilePath = Path.Combine(tempDir, "FlowFM_structures.ini");
+
+                Assert.DoesNotThrow(() =>
+                {
+                    structuresFile.Write(exportFilePath, structures);
+                });
+
+                // Read file with ini reader again.
+                AssertThatStructureCategoryExists(exportFilePath, out var category);
+                AssertThatPropertyExistsAndIsEmpty(category, KnownStructureProperties.CrestWidth);
+            });
+        }
+
+        /// <summary>
+        /// GIVEN a structures file
+        ///   AND a gated weir with an empty crest width
+        /// WHEN these structures are exported
+        /// THEN no exceptions are thrown
+        ///  AND the corresponding width fields are empty
+        /// </summary>
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAGatedWeirWithAnEmptyCrestWidth_WhenTheseStructuresAreExported_ThenNoExceptionsAreThrownAndTheCorrespondingWidthFieldsAreEmpty()
+        {
+            // Given
+            // - structures file
+            var structuresFile = GetStructuresFile();
+
+            // - simple weir with an empty crest width
+            var gatedWeir = new Weir2D("Its weir-d")
+            {
+                WeirFormula = new GatedWeirFormula(true),
+                CrestWidth = double.NaN
+            };
+
+            var structures = new List<IStructure>() { gatedWeir };
+
+            // When | Then
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                var exportFilePath = Path.Combine(tempDir, "FlowFM_structures.ini");
+
+                Assert.DoesNotThrow(() =>
+                {
+                    structuresFile.Write(exportFilePath, structures);
+                });
+
+                // Read file with ini reader again.
+                AssertThatStructureCategoryExists(exportFilePath, out var category);
+                AssertThatPropertyExistsAndIsEmpty(category, KnownStructureProperties.GateSillWidth);
+            });
+        }
+
+        /// <summary>
+        /// GIVEN a structures file
+        ///   AND a general structure with empty width fields
+        /// WHEN these structures are exported
+        /// THEN no exceptions are thrown
+        ///  AND the corresponding width fields are empty
+        /// </summary>
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAGeneralStructureWithEmptyWidthFields_WhenTheseStructuresAreExported_ThenNoExceptionsAreThrownAndTheCorrespondingWidthFieldsAreEmpty()
+        {
+            // Given
+            // - structures file
+            var structuresFile = GetStructuresFile();
+
+            // - simple weir with an empty crest width
+            var generalStructureFormula = new GeneralStructureWeirFormula()
+            {
+                WidthLeftSideOfStructure = double.NaN,
+                WidthRightSideOfStructure = double.NaN,
+                WidthStructureCentre = double.NaN,
+                WidthStructureLeftSide = double.NaN,
+                WidthStructureRightSide = double.NaN,
+            };
+
+            var generalWeir = new Weir2D("Weir-d salute")
+            {
+                WeirFormula = generalStructureFormula,
+                CrestWidth = double.NaN
+            };
+
+            var structures = new List<IStructure>() { generalWeir };
+
+            // When | Then
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                var exportFilePath = Path.Combine(tempDir, "FlowFM_structures.ini");
+
+                Assert.DoesNotThrow(() =>
+                {
+                    structuresFile.Write(exportFilePath, structures);
+                });
+
+                // Read file with ini reader again.
+                AssertThatStructureCategoryExists(exportFilePath, out var category);
+
+                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.WidthLeftW1));
+                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.WidthLeftWsdl));
+                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.WidthCenter));
+                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.WidthRightWsdr));
+                AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.WidthRightW2));
+            });
+        }
+
+        #region TestHelpers
+
+        private static string GetName(KnownGeneralStructureProperties prop)
+        {
+            return EnumDescriptionAttributeTypeConverter.GetEnumDescription(prop);
+        }
+
+        /// <summary>
+        /// Gets the structures file.
+        /// </summary>
+        /// <returns> A new StructuresFile with the a default schema.</returns>
+        private static StructuresFile GetStructuresFile()
+        {
+            var schema = new StructureSchemaCsvFile().ReadStructureSchema(
+                StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
+
+            var structuresFile = new StructuresFile()
+            {
+                StructureSchema = schema,
+            };
+            return structuresFile;
+        }
+
+        /// <summary>
+        /// Assert the that structure category exists and puts in the out <paramref name="category"/>.
+        /// </summary>
+        /// <param name="exportFilePath">The export file path.</param>
+        /// <param name="category">The category.</param>
+        private static void AssertThatStructureCategoryExists(string exportFilePath, out IDelftIniCategory category)
+        {
+            var categories = DelftIniFileParser.ReadFile(exportFilePath);
+
+            Assert.That(categories.Count, Is.EqualTo(1)
+                        , "The number of categories does not match the expectation:");
+            category = categories[0];
+            Assert.That(category, Is.Not.Null
+                        , "The structure category is not expected to be null.");
+            Assert.That(category.Name, Is.EqualTo("structure")
+                        , "The name of the category does not match the expectation:");
+        }
+
+        /// <summary>
+        /// Assert the that property with the name <paramref name="propertyName"/> exists and has an empty value.
+        /// </summary>
+        /// <param name="category">The category.</param>
+        /// <param name="propertyName">Name of the property.</param>
+        private static void AssertThatPropertyExistsAndIsEmpty(IDelftIniCategory category, string propertyName)
+        {
+            Assert.That(category.Properties, Is.Not.Null
+                        , "The Properties of the structure category should not be null.");
+            var obtainedProperties = category.Properties.Where(p => p.Name == propertyName);
+            Assert.That(obtainedProperties.Count()
+                        , Is.EqualTo(1)
+                        , "Expected a single crest_width element in structure properties:");
+
+            var prop = obtainedProperties.First();
+            Assert.That(prop.Value, Is.EqualTo(string.Empty), "crest_width value does not meet expectation:");
+        }
+
+        #endregion
     }
 }
