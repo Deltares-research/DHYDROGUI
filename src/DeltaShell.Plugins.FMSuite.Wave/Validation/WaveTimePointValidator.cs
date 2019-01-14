@@ -12,6 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         public static List<ValidationIssue> Issues { get; private set; }
         public static IList<DateTime> TimePoints { get; private set; }
         public static WaveModel Model { get; private set; }
+        public static List<WaveBoundaryCondition> BoundaryConditions { get; private set; }
 
         /// <summary>
         /// Validation for wave model time point editing.
@@ -23,6 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             Model = model;
             Issues = new List<ValidationIssue>();
             TimePoints = model.TimePointData.TimePoints;
+            BoundaryConditions = model.BoundaryConditions.ToList();
 
             ValidateBoundaryConditionTimePoints();
             ValidateTimePoints();
@@ -33,11 +35,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
         private static void ValidateBoundaryConditionTimePoints()
         {
-            if (Model.BoundaryConditions.Any(b=>b.DataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries))
+            if (BoundaryConditions.Any(b=> b.DataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries))
             {
-                var boundaryConditionPointData = Model.ModelDefinition.BoundaryConditions.SelectMany(bc => bc.PointData).ToList();
-                var boundaryConditionTimePoints = boundaryConditionPointData.SelectMany(b => b.Arguments[0].GetValues<DateTime>()).ToList();
-                var allTimePointsPrecedeModelStartTime = boundaryConditionTimePoints.All(btp => btp.Date < TimePoints.FirstOrDefault());
+                var boundaryConditionWithParameterizedSpectrumTimeSeries = BoundaryConditions.Where(bc =>
+                    bc.DataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries);
+
+                var boundaryConditionPointData = boundaryConditionWithParameterizedSpectrumTimeSeries.SelectMany(bc => bc.PointData).ToList();
+                var boundaryConditionTimePoints = boundaryConditionPointData.SelectMany(b => b.Arguments[0].GetValues<DateTime>().ToList());
+                var allTimePointsPrecedeModelStartTime = boundaryConditionTimePoints.All(b => b.Date < TimePoints.FirstOrDefault());
 
                 if (allTimePointsPrecedeModelStartTime)
                 {
