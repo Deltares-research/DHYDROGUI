@@ -7,6 +7,7 @@ using DelftTools.Units;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO
@@ -175,19 +176,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             var dateTimes =
                 timeParameter.Values.Select(v => ConvertToDateTime(v, header.TimeUnit, referenceDate)).ToList();
-            var waveheights = parameterData.Where(pd => pd.Name == "WaveHeight").ToList();
-            var periods = parameterData.Where(pd => pd.Name == "Period").ToList();
-            var directions = parameterData.Where(pd => pd.Name == "Direction").ToList();
-            var spreadings = parameterData.Where(pd => pd.Name == "DirSpreading").ToList();
+            var waveHeights = parameterData.Where(pd => pd.Name == KnownWaveProperties.WaveHeight).ToList();
+            var periods = parameterData.Where(pd => pd.Name == KnownWaveProperties.Period).ToList();
+            var directions = parameterData.Where(pd => pd.Name == KnownWaveProperties.Direction).ToList();
+            var spreadings = parameterData.Where(pd => pd.Name == KnownWaveProperties.DirectionalSpreadingValue).ToList();
 
-            for (int i = 0; i < waveheights.Count; ++i)
+            for (var i = 0; i < waveHeights.Count; ++i)
             {
                 var func = WaveBoundaryCondition.CreateEmptyWaveEnergyFunction();
 
                 func.Arguments[0].SetValues(dateTimes);
                 func.Arguments[0].Unit = null;
-                func.Components[0].SetValues(waveheights[i].Values);
-                func.Components[0].Unit = GetUnitFromString(waveheights[i].Unit);
+                func.Components[0].SetValues(waveHeights[i].Values);
+                func.Components[0].Unit = GetUnitFromString(waveHeights[i].Unit);
                 func.Components[1].SetValues(periods[i].Values);
                 func.Components[1].Unit = GetUnitFromString(periods[i].Unit);
                 func.Components[2].SetValues(directions[i].Values);
@@ -312,12 +313,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             foreach (var f in functions)
             {
                 
-                var waveheight = CreateBcwParameter(f.Components[0], "WaveHeight");
-                var period = CreateBcwParameter(f.Components[1], "Period");
-                var direction = CreateBcwParameter(f.Components[2], "Direction");
-                var spreading = CreateBcwParameter(f.Components[3], "DirSpreading");
+                var waveHeight = CreateBcwParameter(f.Components[0], KnownWaveProperties.WaveHeight);
+                var period = CreateBcwParameter(f.Components[1], KnownWaveProperties.Period);
+                var direction = CreateBcwParameter(f.Components[2], KnownWaveProperties.Direction);
+                var spreading = CreateBcwParameter(f.Components[3], KnownWaveProperties.DirectionalSpreadingValue);
                 
-                parameters.Add(waveheight);
+                parameters.Add(waveHeight);
                 parameters.Add(period);
                 parameters.Add(direction);
                 parameters.Add(spreading);
@@ -325,10 +326,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             var sortedParameters = new List<BcwParameter>();
             sortedParameters.Add(parameters.First());
-            sortedParameters.AddRange(parameters.Where(p => p.Name == "WaveHeight"));
-            sortedParameters.AddRange(parameters.Where(p => p.Name == "Period"));
-            sortedParameters.AddRange(parameters.Where(p => p.Name == "Direction"));
-            sortedParameters.AddRange(parameters.Where(p => p.Name == "DirSpreading"));
+            sortedParameters.AddRange(parameters.Where(p => p.Name == KnownWaveProperties.WaveHeight));
+            sortedParameters.AddRange(parameters.Where(p => p.Name == KnownWaveProperties.Period));
+            sortedParameters.AddRange(parameters.Where(p => p.Name == KnownWaveProperties.Direction));
+            sortedParameters.AddRange(parameters.Where(p => p.Name == KnownWaveProperties.DirectionalSpreadingValue));
 
             return sortedParameters;
         }

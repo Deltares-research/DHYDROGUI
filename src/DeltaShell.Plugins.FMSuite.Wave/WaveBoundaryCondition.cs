@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        public double GetCondSpecAtDist(int dataPointIndex)
+        public double GetDistanceFromFirstDataPointOverWaveBoundary(int dataPointIndex)
         {
             var coordinates = Feature.Geometry.Coordinates;
             return Enumerable.Range(1, dataPointIndex)

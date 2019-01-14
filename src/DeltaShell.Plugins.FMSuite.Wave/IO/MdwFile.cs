@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             // timepoints
             CreateTimePointCategories(modelDefinition, ref mdwCategories);
 
-            CreateBoundaryCategories(modelDefinition.BoundaryConditions, ref mdwCategories);
+            mdwCategories.AddRange(CreateBoundaryCategories(modelDefinition.BoundaryConditions));
             SaveBoundaryConditions(modelDefinition, Path.Combine(targetDir, tSeriesFile),
                 modelDefinition.ModelReferenceDateTime);
 
@@ -147,14 +147,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 CopyGridFiles(allDomains.Select(d => d.GridFileName), sourceDir, targetDir);
 
                 var boundarySpectralFiles = mdwCategories.Where(c => c.Name == KnownWaveCategories.BoundaryCategory)
-                    .SelectMany(c => c.GetPropertyValues("Spectrum"));
+                    .SelectMany(c => c.GetPropertyValues(KnownWaveProperties.Spectrum));
                 boundarySpectralFiles.ForEach(f => CopyModelFile(f, sourceDir, targetDir));
 
                 if (modelDefinition.BoundaryIsDefinedBySpecFile)
                 {
                     var sp2Boundary = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
-                    sp2Boundary.AddProperty("Definition", "fromsp2file");
-                    sp2Boundary.AddProperty("OverallSpecfile", modelDefinition.OverallSpecFile);
+                    sp2Boundary.AddProperty(KnownWaveProperties.Definition, "fromsp2file");
+                    sp2Boundary.AddProperty(KnownWaveProperties.OverallSpecFile, modelDefinition.OverallSpecFile);
                     mdwCategories.Add(sp2Boundary);
 
                     // here spec file should always be relative
@@ -447,7 +447,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             foreach (var time in times)
             {
                 var timeCategory = new DelftIniCategory(KnownWaveCategories.TimePointCategory);
-                timeCategory.AddProperty("Time", (time - modelDefinition.ModelReferenceDateTime).TotalMinutes);
+                timeCategory.AddProperty(KnownWaveProperties.Time, (time - modelDefinition.ModelReferenceDateTime).TotalMinutes);
 
                 var values = timepointData.InputFields.GetAllComponentValues(time).Cast<double>().ToArray();
                 
@@ -472,85 +472,88 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             mdwCategories.InsertRange(afterGeneralIndex + 1, categories);
         }
 
-        private void CreateBoundaryCategories(IList<WaveBoundaryCondition> boundaryConditions, ref List<DelftIniCategory> mdwCategories)
+        private static IEnumerable<DelftIniCategory> CreateBoundaryCategories(IEnumerable<WaveBoundaryCondition> boundaryConditions)
         {
             foreach (var bc in boundaryConditions)
             {
-                var boundaryCategory = new DelftIniCategory("Boundary");
-                boundaryCategory.AddProperty("Name", bc.Name);
-                boundaryCategory.AddProperty("Definition", "xy-coordinates");
-                boundaryCategory.AddProperty("StartCoordX", bc.StartCoordinate.X);
-                boundaryCategory.AddProperty("EndCoordX", bc.EndCoordinate.X);
-                boundaryCategory.AddProperty("StartCoordY", bc.StartCoordinate.Y);
-                boundaryCategory.AddProperty("EndCoordY", bc.EndCoordinate.Y);
-                boundaryCategory.AddProperty("SpectrumSpec", bc.DataType == BoundaryConditionDataType.SpectrumFromFile
+                var boundaryCategory = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+                boundaryCategory.AddProperty(KnownWaveProperties.Name, bc.Name);
+                boundaryCategory.AddProperty(KnownWaveProperties.Definition, "xy-coordinates");
+                boundaryCategory.AddProperty(KnownWaveProperties.StartCoordinateX, bc.StartCoordinate.X);
+                boundaryCategory.AddProperty(KnownWaveProperties.EndCoordinateX, bc.EndCoordinate.X);
+                boundaryCategory.AddProperty(KnownWaveProperties.StartCoordinateY, bc.StartCoordinate.Y);
+                boundaryCategory.AddProperty(KnownWaveProperties.EndCoordinateY, bc.EndCoordinate.Y);
+                boundaryCategory.AddProperty(KnownWaveProperties.SpectrumSpec, bc.DataType == BoundaryConditionDataType.SpectrumFromFile
                                                                  ? "from file"
                                                                  : "parametric");
 
                 // write spectral data:
                 if (bc.DataType != BoundaryConditionDataType.SpectrumFromFile)
                 {
-                    boundaryCategory.AddProperty("SpShapeType",
+                    boundaryCategory.AddProperty(KnownWaveProperties.ShapeType,
                                                  EnumDescriptionAttributeTypeConverter.GetEnumDescription(
                                                      bc.ShapeType).ToLower());
-                    boundaryCategory.AddProperty("PeriodType",
+                    boundaryCategory.AddProperty(KnownWaveProperties.PeriodType,
                                                  EnumDescriptionAttributeTypeConverter.GetEnumDescription(
                                                      bc.PeriodType).ToLower());
-                    boundaryCategory.AddProperty("DirSpreadType",
+                    boundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingType,
                                                  EnumDescriptionAttributeTypeConverter.GetEnumDescription(
                                                      bc.DirectionalSpreadingType).ToLower());
-                    boundaryCategory.AddProperty("PeakEnhanceFac", bc.PeakEnhancementFactor);
-                    boundaryCategory.AddProperty("GaussSpread", bc.GaussianSpreadingValue);
+                    boundaryCategory.AddProperty(KnownWaveProperties.PeakEnhancementFactor, bc.PeakEnhancementFactor);
+                    boundaryCategory.AddProperty(KnownWaveProperties.GaussianSpreading, bc.GaussianSpreadingValue);
                 }
 
                 if (bc.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.Uniform)
                 {
-                    if (bc.DataType == BoundaryConditionDataType.SpectrumFromFile)
+                    switch (bc.DataType)
                     {
-                        boundaryCategory.AddProperty("Spectrum", bc.SpectrumFiles[0]);
-                    }
-                    if (bc.DataType == BoundaryConditionDataType.ParameterizedSpectrumConstant)
-                    {
-                        var parameters = bc.SpectrumParameters[0];
-                        boundaryCategory.AddProperty("WaveHeight", parameters.Height);
-                        boundaryCategory.AddProperty("Period", parameters.Period);
-                        boundaryCategory.AddProperty("Direction", parameters.Direction);
-                        boundaryCategory.AddProperty("DirSpreading", parameters.Spreading);
+                        case BoundaryConditionDataType.SpectrumFromFile:
+                            boundaryCategory.AddProperty(KnownWaveProperties.Spectrum, bc.SpectrumFiles[0]);
+                            break;
+                        case BoundaryConditionDataType.ParameterizedSpectrumConstant:
+                        {
+                            var parameters = bc.SpectrumParameters[0];
+                            boundaryCategory.AddProperty(KnownWaveProperties.WaveHeight, parameters.Height);
+                            boundaryCategory.AddProperty(KnownWaveProperties.Period, parameters.Period);
+                            boundaryCategory.AddProperty(KnownWaveProperties.Direction, parameters.Direction);
+                            boundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, parameters.Spreading);
+                            break;
+                        }
                     }
                 }
                 else if (bc.DataPointIndices.Count == 0) // spatially varying, no data points
                 {
                     Log.WarnFormat("No data points found for boundary \'{0}\', saved boundary will default to Uniform spatial definition type", bc.Name);
                     const double defaultValue = 0.0;
-                    boundaryCategory.AddProperty("WaveHeight", defaultValue);
-                    boundaryCategory.AddProperty("Period", defaultValue);
-                    boundaryCategory.AddProperty("Direction", defaultValue);
-                    boundaryCategory.AddProperty("DirSpreading", defaultValue);
+                    boundaryCategory.AddProperty(KnownWaveProperties.WaveHeight, defaultValue);
+                    boundaryCategory.AddProperty(KnownWaveProperties.Period, defaultValue);
+                    boundaryCategory.AddProperty(KnownWaveProperties.Direction, defaultValue);
+                    boundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, defaultValue);
                 }
                 else // spatially varying, with data points
                 {
-                    // order the datapointindices or it will give an error in rekenhart.
+                    // order the DataPointIndices or it will give an error in the computational core.
                     foreach (var dataPointIdx in bc.DataPointIndices.OrderBy(di => di))
                     {
-                        boundaryCategory.AddProperty("CondSpecAtDist", bc.GetCondSpecAtDist(dataPointIdx));
+                        boundaryCategory.AddProperty(KnownWaveProperties.CondSpecAtDist, bc.GetDistanceFromFirstDataPointOverWaveBoundary(dataPointIdx));
 
                         if (bc.DataType == BoundaryConditionDataType.SpectrumFromFile)
                         {
-                            boundaryCategory.AddProperty("Spectrum", bc.SpectrumFiles[dataPointIdx]);
+                            boundaryCategory.AddProperty(KnownWaveProperties.Spectrum, bc.SpectrumFiles[dataPointIdx]);
                             continue;
                         }
                         if (bc.DataType == BoundaryConditionDataType.ParameterizedSpectrumConstant)
                         {
                             var parameters = bc.SpectrumParameters[dataPointIdx];
-                            boundaryCategory.AddProperty("WaveHeight", parameters.Height);
-                            boundaryCategory.AddProperty("Period", parameters.Period);
-                            boundaryCategory.AddProperty("Direction", parameters.Direction);
-                            boundaryCategory.AddProperty("DirSpreading", parameters.Spreading);
+                            boundaryCategory.AddProperty(KnownWaveProperties.WaveHeight, parameters.Height);
+                            boundaryCategory.AddProperty(KnownWaveProperties.Period, parameters.Period);
+                            boundaryCategory.AddProperty(KnownWaveProperties.Direction, parameters.Direction);
+                            boundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, parameters.Spreading);
                         }
                     }
                 }
-                
-                mdwCategories.Add(boundaryCategory);
+
+                yield return boundaryCategory;
             }
         }
         
@@ -771,10 +774,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
 
             var boundaries = categories.Where(c => c.Name == KnownWaveCategories.BoundaryCategory).ToList();
-            if (boundaries.Count == 1 && boundaries[0].GetPropertyValue("Definition") == "fromsp2file")
+            if (boundaries.Count == 1 && boundaries[0].GetPropertyValue(KnownWaveProperties.Definition) == "fromsp2file")
             {
                 // sp2 file
-                var sp2File = boundaries[0].GetPropertyValue("OverallSpecfile");
+                var sp2File = boundaries[0].GetPropertyValue(KnownWaveProperties.OverallSpecFile);
                 if (sp2File == null)
                 {
                     Log.ErrorFormat("Error loading boundary: \'OverallSpecfile\' should be defined");
@@ -788,14 +791,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             foreach (var boundaryData in boundaries)
             {
-                var name = boundaryData.GetPropertyValue("Name");
-                var dataType = boundaryData.GetPropertyValue("SpectrumSpec") == "parametric"
+                var name = boundaryData.GetPropertyValue(KnownWaveProperties.Name);
+                var dataType = boundaryData.GetPropertyValue(KnownWaveProperties.SpectrumSpec) == "parametric"
                                    ? (functionLookup != null && functionLookup.ContainsKey(name) // check if timeseries
                                           ? BoundaryConditionDataType.ParameterizedSpectrumTimeseries
                                           : BoundaryConditionDataType.ParameterizedSpectrumConstant)
                                    : BoundaryConditionDataType.SpectrumFromFile; // "from file"
 
-                var definition = GetImportDefinition(boundaryData.GetPropertyValue("Definition"));
+                var definition = GetImportDefinition(boundaryData.GetPropertyValue(KnownWaveProperties.Definition));
 
                 if (definition == WaveBoundaryImportDefinitionType.FromSp2File ||
                     definition == WaveBoundaryImportDefinitionType.FromWaveWatchFile ||
@@ -807,7 +810,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 }
 
                 var condSpecAtDists =
-                    boundaryData.GetPropertyValues("CondSpecAtDist")
+                    boundaryData.GetPropertyValues(KnownWaveProperties.CondSpecAtDist)
                                 .Select(s => double.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture))
                                 .ToList();
 
@@ -828,15 +831,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 {
                     var startCoordinate =
                         new Coordinate(
-                            double.Parse(boundaryData.GetPropertyValue("StartCoordX"), NumberStyles.Any,
+                            double.Parse(boundaryData.GetPropertyValue(KnownWaveProperties.StartCoordinateX), NumberStyles.Any,
                                          CultureInfo.InvariantCulture),
-                            double.Parse(boundaryData.GetPropertyValue("StartCoordY"), NumberStyles.Any,
+                            double.Parse(boundaryData.GetPropertyValue(KnownWaveProperties.StartCoordinateY), NumberStyles.Any,
                                          CultureInfo.InvariantCulture));
                     var endCoordinate =
                         new Coordinate(
-                            double.Parse(boundaryData.GetPropertyValue("EndCoordX"), NumberStyles.Any,
+                            double.Parse(boundaryData.GetPropertyValue(KnownWaveProperties.EndCoordinateX), NumberStyles.Any,
                                          CultureInfo.InvariantCulture),
-                            double.Parse(boundaryData.GetPropertyValue("EndCoordY"), NumberStyles.Any,
+                            double.Parse(boundaryData.GetPropertyValue(KnownWaveProperties.EndCoordinateY), NumberStyles.Any,
                                          CultureInfo.InvariantCulture));
 
                     feature.Geometry = WaveBoundaryImportHelper.CreateBoundaryGeometry(startCoordinate, endCoordinate,
@@ -856,7 +859,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 // spectral data
                 if (dataType == BoundaryConditionDataType.SpectrumFromFile)
                 {
-                    var spectrumFiles = boundaryData.GetPropertyValues("Spectrum").ToList();
+                    var spectrumFiles = boundaryData.GetPropertyValues(KnownWaveProperties.Spectrum).ToList();
                     for (var i = 0; i < spectrumFiles.Count; ++i)
                     {
                         boundaryCondition.AddPoint(i);
@@ -872,19 +875,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     {
                         // get parameters for distances or uniform from mdw file
                         var waveHeight =
-                            boundaryData.GetPropertyValues("WaveHeight")
+                            boundaryData.GetPropertyValues(KnownWaveProperties.WaveHeight)
                                         .Select(s => double.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture))
                                         .ToList();
                         var period =
-                            boundaryData.GetPropertyValues("Period")
+                            boundaryData.GetPropertyValues(KnownWaveProperties.Period)
                                         .Select(s => double.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture))
                                         .ToList();
                         var direction =
-                            boundaryData.GetPropertyValues("Direction")
+                            boundaryData.GetPropertyValues(KnownWaveProperties.Direction)
                                         .Select(s => double.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture))
                                         .ToList();
-                        var dirspreading =
-                            boundaryData.GetPropertyValues("DirSpreading")
+                        var directionalSpreading =
+                            boundaryData.GetPropertyValues(KnownWaveProperties.DirectionalSpreadingValue)
                                         .Select(s => double.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture))
                                         .ToList();
 
@@ -892,7 +895,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                         if (waveHeight.Count != expectedMultiplicity ||
                             period.Count != expectedMultiplicity ||
                             direction.Count != expectedMultiplicity ||
-                            dirspreading.Count != expectedMultiplicity)
+                            directionalSpreading.Count != expectedMultiplicity)
                         {
                             Log.ErrorFormat(
                                 "Inconsistent parameter specification for boundary \'{0}\', boundary excluded", name);
@@ -909,7 +912,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                     Height = waveHeight[0],
                                     Period = period[0],
                                     Direction = direction[0],
-                                    Spreading = dirspreading[0]
+                                    Spreading = directionalSpreading[0]
                                 };
                         }
                         else
@@ -926,7 +929,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                     Height = waveHeight[i],
                                     Period = period[i],
                                     Direction = direction[i],
-                                    Spreading = dirspreading[i]
+                                    Spreading = directionalSpreading[i]
                                 };
                             }
                         }
@@ -982,15 +985,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         {
             return new WaveBoundarySpectralData
                 {
-                    ShapeType = GetSpectrumShapeType(boundaryData.GetPropertyValue("SpShapeType")),
-                    PeriodType = boundaryData.GetPropertyValue("PeriodType") == "peak"
+                    ShapeType = GetSpectrumShapeType(boundaryData.GetPropertyValue(KnownWaveProperties.ShapeType)),
+                    PeriodType = boundaryData.GetPropertyValue(KnownWaveProperties.PeriodType) == "peak"
                                      ? WavePeriodType.Peak
                                      : WavePeriodType.Mean,
-                    DirectionalSpreadingType = boundaryData.GetPropertyValue("DirSpreadType") == "power"
+                    DirectionalSpreadingType = boundaryData.GetPropertyValue(KnownWaveProperties.DirectionalSpreadingType) == "power"
                                                    ? WaveDirectionalSpreadingType.Power
                                                    : WaveDirectionalSpreadingType.Degrees,
-                    PeakEnhancementFactor = double.Parse(boundaryData.GetPropertyValue("PeakEnhanceFac"), NumberStyles.Any, CultureInfo.InvariantCulture),
-                    GaussianSpreadingValue = double.Parse(boundaryData.GetPropertyValue("GaussSpread"), NumberStyles.Any, CultureInfo.InvariantCulture)
+                    PeakEnhancementFactor = double.Parse(boundaryData.GetPropertyValue(KnownWaveProperties.PeakEnhancementFactor), NumberStyles.Any, CultureInfo.InvariantCulture),
+                    GaussianSpreadingValue = double.Parse(boundaryData.GetPropertyValue(KnownWaveProperties.GaussianSpreading), NumberStyles.Any, CultureInfo.InvariantCulture)
                 };
         }
 
@@ -1055,7 +1058,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             foreach (var timepoint in timePointCategories)
             {
-                var time = referenceDate.AddMinutes(double.Parse(timepoint.GetPropertyValue("Time", "0.0"),
+                var time = referenceDate.AddMinutes(double.Parse(timepoint.GetPropertyValue(KnownWaveProperties.Time, "0.0"),
                                                                  NumberStyles.Any,
                                                                  CultureInfo.InvariantCulture));
                 times.Add(time);
@@ -1149,7 +1152,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         private IEnumerable<WaveObstacle> CreateObstacleData(DelftIniCategory generalCategory, WaveModelDefinition modelDefinition)
         {
-            var obstacleFile = generalCategory.GetPropertyValue("ObstacleFile", string.Empty);
+            var obstacleFile = generalCategory.GetPropertyValue(KnownWaveProperties.ObstacleFile, string.Empty);
             if (obstacleFile == string.Empty)
             {
                 yield break;
