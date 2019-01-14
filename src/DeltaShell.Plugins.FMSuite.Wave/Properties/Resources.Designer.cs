@@ -356,12 +356,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Model start time does not precedes any of Boundary Condition time points..
+        ///   Looks up a localized string similar to Model start time does not precede any of Boundary Condition time points..
         /// </summary>
-        public static string WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_start_time_does_not_precedes_any_of_Boundary_Condition_time_points_ {
+        public static string WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_ {
             get {
                 return ResourceManager.GetString("WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_st" +
-                        "art_time_does_not_precedes_any_of_Boundary_Condition_time_points_", resourceCulture);
+                        "art_time_does_not_precede_any_of_Boundary_Condition_time_points_", resourceCulture);
             }
         }
         

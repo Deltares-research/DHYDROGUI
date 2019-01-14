@@ -24,32 +24,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             Issues = new List<ValidationIssue>();
             TimePoints = model.TimePointData.TimePoints;
 
-            BoundaryConditionTimePointsPrecedesModelStartTime();
-            NoTimePointsDefined();
-            ModelStartTimePrecedesReferenceTime();
+            ValidateBoundaryConditionTimePoints();
+            ValidateTimePoints();
+            ValidateReferenceTime();
 
             return new ValidationReport("Waves Model Time Points", Issues);
         }
 
-        private static void BoundaryConditionTimePointsPrecedesModelStartTime()
+        private static void ValidateBoundaryConditionTimePoints()
         {
             if (Model.BoundaryConditions.Any(b=>b.DataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries))
             {
                 var boundaryConditionPointData = Model.ModelDefinition.BoundaryConditions.SelectMany(bc => bc.PointData).ToList();
                 var boundaryConditionTimePoints = boundaryConditionPointData.SelectMany(b => b.Arguments[0].GetValues<DateTime>()).ToList();
-                var modelStartTimeIsPreceded = boundaryConditionTimePoints.All(btp => btp.Date < TimePoints.FirstOrDefault());
+                var allTimePointsPrecedeModelStartTime = boundaryConditionTimePoints.All(btp => btp.Date < TimePoints.FirstOrDefault());
 
-                if (modelStartTimeIsPreceded)
+                if (allTimePointsPrecedeModelStartTime)
                 {
                     Issues.Add(new ValidationIssue(null, ValidationSeverity.Error,
-                        Resources.WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_start_time_does_not_precedes_any_of_Boundary_Condition_time_points_,
+                        Resources.WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_,
                         Model.TimePointData));
                 }
             }
 
         }
 
-        private static void ModelStartTimePrecedesReferenceTime()
+        private static void ValidateReferenceTime()
         {
             if (TimePoints.Count > 0)
             {
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             }
         }
 
-        private static void NoTimePointsDefined()
+        private static void ValidateTimePoints()
         {
             if (!Model.IsCoupledToFlow && TimePoints.Count == 0)
             {

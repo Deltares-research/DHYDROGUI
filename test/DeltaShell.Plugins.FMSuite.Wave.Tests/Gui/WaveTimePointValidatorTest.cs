@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             Assert.That(validationReport, Is.Not.Null, "The validation report is null");
             var errorCount = 1;
             Assert.That(validationReport.ErrorCount, Is.EqualTo(errorCount), $"Total amount of errors is not equal to {errorCount}");
-            Assert.That(validationReport.AllErrors.ElementAt(0).Message, Is.EqualTo("Model start time does not precedes any of Boundary Condition time points."));
+            Assert.That(validationReport.AllErrors.ElementAt(0).Message, Is.EqualTo("Model start time does not precede any of Boundary Condition time points."));
         }
 
 
