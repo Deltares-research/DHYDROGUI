@@ -462,29 +462,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
         #endregion
 
-        #region EnableAdvancedSettings
-
-        [Test]
-        public void GivenWeirViewModelWhenGettingEnableAdvanceSettingsThenReturnDefaultValueFalse()
-        {
-            var vm = new WeirViewModel();
-            Assert.That(vm.EnableAdvancedSettings, Is.EqualTo(false));
-        }
-
-        [Test]
-        public void GivenWeirViewModelWhenSettingEnableAdvanceSettingsThenPropertyChanged()
-        {
-            var vm = new WeirViewModel();
-
-            var count = 0;
-            ((INotifyPropertyChanged) vm).PropertyChanged += (s, e) => count++;
-            vm.EnableAdvancedSettings = !vm.EnableAdvancedSettings;
-
-            Assert.That(count, Is.EqualTo(1));
-        }
-
-        #endregion
-
         #region
 
         [Test]

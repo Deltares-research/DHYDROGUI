@@ -75,8 +75,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
                 if (weir != null)
                 {
-                    ((INotifyPropertyChanged)weir).PropertyChanged -= WeirPropertyChanged;
-                    ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged -= WeirFormulaPropertyChanged;
+                    UnSubscribe();
                 }
                 weir = value;
 
@@ -99,8 +98,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
                     SynchronizeGatedOrGeneralStructureProperties();
 
-                    ((INotifyPropertyChanged)weir).PropertyChanged += WeirPropertyChanged;
-                    ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged += WeirFormulaPropertyChanged;
+                    Subscribe();
                 }
             }
         }
@@ -166,14 +164,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
             set
             {
+                if (gateGroupboxEnabled != null)
+                {
+                    UnSubscribe();
+                }
                 gateOpeningHeight = value;
                 lowerEdgeLevel = value + BedLevelStructureCentre;
+
+                if (gateGroupboxEnabled != null)
+                {
+                    Subscribe();
+                }
 
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.LowerEdgeLevel));
             }
         }
-
+    
 
         public double DoorHeight
         {
@@ -187,9 +194,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
             set
             {
+                var gatedWeirFormula = Weir.WeirFormula as IGatedWeirFormula;
+
+                if (gatedWeirFormula?.DoorHeight != null)
+                {
+                   UnSubscribe();
+                }
+
                 if (weir?.WeirFormula == null) { return; }
 
-                var gatedWeirFormula = Weir.WeirFormula as IGatedWeirFormula;
 
                 if (gatedWeirFormula == null)
                 {
@@ -199,7 +212,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 if (gatedWeirFormula.DoorHeight != value)
                 {
                     gatedWeirFormula.DoorHeight = value;
-
+                    Subscribe();
                     OnPropertyChanged();
                 }
             }
@@ -229,11 +242,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             set
             {
                 gatedWeirFormula = Weir?.WeirFormula as IGatedWeirFormula;
-                if (gatedWeirFormula != null)
+
+                if (gatedWeirFormula?.HorizontalDoorOpeningDirection != null)
                 {
-                    if (gatedWeirFormula is GatedWeirFormula)
+                    UnSubscribe();
+                }
+
+                if (gatedWeirFormula is GatedWeirFormula)
+                {
+                    gatedWeirFormula.HorizontalDoorOpeningDirection = value;
+                    if (gatedWeirFormula.HorizontalDoorOpeningDirection != null)
                     {
-                        gatedWeirFormula.HorizontalDoorOpeningDirection = value;
+                        Subscribe();
                     }
                 }
 
@@ -428,9 +448,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
             set
             {
+                if (weir?.CrestLevel != null)
+                {
+                    UnSubscribe();
+                }
                 if (weir?.WeirFormula != null)
                 {
                     Weir.CrestLevel = value;
+
+                    if (weir?.CrestLevel != null)
+                    {
+                        Subscribe();
+                    }
                 }
 
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.BedLevelStructureCentre));
@@ -454,9 +483,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             set
             {
                 var gatedWeirFormula = Weir?.WeirFormula as IGatedWeirFormula;
+
+                if (gatedWeirFormula?.LowerEdgeLevel != null)
+                {
+                   UnSubscribe();
+                }
+
                 if (gatedWeirFormula != null)
                 {
                     gatedWeirFormula.LowerEdgeLevel = value;
+                    if (gatedWeirFormula?.LowerEdgeLevel != null)
+                    {
+                        Subscribe();
+                    }
                 }
 
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.LowerEdgeLevel));
@@ -479,11 +518,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
             set
             {
+                if (HorizontalDoorOpeningWidth != null)
+                {
+                    UnSubscribe();
+                }
                 var gatedWeirFormula = Weir?.WeirFormula as IGatedWeirFormula;
+
                 if (gatedWeirFormula != null)
                 {
                     gatedWeirFormula.HorizontalDoorOpeningWidth = value;
-
+                    if (HorizontalDoorOpeningWidth != null)
+                    {
+                        Subscribe();
+                    }
                     OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.HorizontalDoorOpeningWidth));
                 }
             }
@@ -841,7 +888,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             get { return gateGroupboxEnabled; }
             set
             {
+                if (!GateGroupboxEnabled)
+                {
+                    UnSubscribe();
+                }
+
                 gateGroupboxEnabled = value;
+                if (!GateGroupboxEnabled)
+                {
+                    Subscribe();
+                }
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateGroupboxEnabled));
             }
         }
@@ -851,8 +907,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             get { return enableAdvancedSettings; }
             set
             {
+                if (!EnableAdvancedSettings)
+                {
+                    UnSubscribe();
+                }
+
                 enableAdvancedSettings = value;
-                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableAdvancedSettings));
+                if (!GateGroupboxEnabled)
+                {
+                    Subscribe();
+
+                    OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableAdvancedSettings));
+
+                }
             }
         }
 
@@ -878,11 +945,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             get { return weir?.UseCrestLevelTimeSeries ?? false; }
             set
             {
+                if (!EnableCrestLevelTimeSeries)
+                {
+                    UnSubscribe();
+                }
                 if (weir.UseCrestLevelTimeSeries == value) { return;}
                 //Avoid useless propagation of events.
              
                  weir.UseCrestLevelTimeSeries = value;
-
+                 if (!EnableCrestLevelTimeSeries)
+                 {
+                     Subscribe();
+                 }
                 if (EnableLowerEdgeLevelTimeSeries || EnableCrestLevelTimeSeries)
                 {
                     TimeSeriesEnabled = true;
@@ -907,6 +981,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
             set
             {
+                if (!EnableLowerEdgeLevelTimeSeries)
+                {
+                   UnSubscribe();
+                }
                 var gatedWeir = weir?.WeirFormula as IGatedWeirFormula;
                 if (gatedWeir?.UseLowerEdgeLevelTimeSeries == value) return;
                 
@@ -914,6 +992,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 try
                 {
                     gatedWeir.UseLowerEdgeLevelTimeSeries = value;
+                    if (!EnableLowerEdgeLevelTimeSeries)
+                    {
+                        Subscribe();
+                    }
 
                 }
                 catch (Exception)
@@ -945,6 +1027,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
             set
             {
+                if (!EnableHorizontalDoorOpeningWidthTimeSeries)
+                {
+                    UnSubscribe();
+                }
                 var gatedWeir = weir?.WeirFormula as IGatedWeirFormula;
                 if (gatedWeir?.UseHorizontalDoorOpeningWidthTimeSeries == value) return;
                 
@@ -954,6 +1040,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                     if (gatedWeir != null)
                     {
                         gatedWeir.UseHorizontalDoorOpeningWidthTimeSeries = value;
+                        if (!EnableHorizontalDoorOpeningWidthTimeSeries)
+                        {
+                            Subscribe();
+                        }
                     }
                 }
                 catch (Exception)
@@ -1015,8 +1105,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         #endregion
 
         #region Methods: Eventing
+
         public void Dispose()
         {
+        }
+
+        private void UnSubscribe()
+        {
+            ((INotifyPropertyChanged)weir).PropertyChanged -= WeirPropertyChanged;
+            ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged -= WeirFormulaPropertyChanged;
+        }
+
+        private void Subscribe()
+        {
+            ((INotifyPropertyChanged)weir).PropertyChanged += WeirPropertyChanged;
+            ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged += WeirFormulaPropertyChanged;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -1032,13 +1135,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 selectedWeirType = GetSelectableWeirFormulaType(weir.WeirFormula);
 
-                ((INotifyPropertyChanged)weir).PropertyChanged -= WeirPropertyChanged;
-                ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged -= WeirFormulaPropertyChanged;
-
+                if (weir != null)
+                {
+                    UnSubscribe();
+                }
+                
                 SelectedWeirType = selectedWeirType;
 
-                ((INotifyPropertyChanged)weir).PropertyChanged += WeirPropertyChanged;
-                ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged += WeirFormulaPropertyChanged;
+                if (weir != null)
+                {
+                    Subscribe();
+                }
             }
 
             if (e.PropertyName == TypeUtils.GetMemberName<IWeir>(vm => vm.UseCrestLevelTimeSeries))
