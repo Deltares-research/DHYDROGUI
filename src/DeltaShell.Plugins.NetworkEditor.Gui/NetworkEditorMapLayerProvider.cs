@@ -109,6 +109,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 if (network != null)
                 {
                     // The order below is also the order in which the layers will be stacked (layer order)
+                    yield return network.HydroNodes;
                     yield return network.Channels;
                     yield return network.Bridges;
                     yield return network.CompositeBranchStructures;
@@ -118,7 +119,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     yield return network.Gates;
                     yield return network.LateralSources;
                     yield return network.Manholes;
-                    yield return network.HydroNodes;
                     yield return network.ObservationPoints;
                     yield return network.Orifices;
                     yield return network.OutletCompartments;

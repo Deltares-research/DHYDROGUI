@@ -200,7 +200,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             var branchGeom = new LineString(coordinates);
 
-            return (IChannel)branchLayer.DataSource.Add(branchGeom);
+            var addBranch = (IChannel)branchLayer.DataSource.Add(branchGeom);
+            return addBranch;
         }
 
         private Catchment AddCatchment(Coordinate center, CatchmentType catchmentType)
