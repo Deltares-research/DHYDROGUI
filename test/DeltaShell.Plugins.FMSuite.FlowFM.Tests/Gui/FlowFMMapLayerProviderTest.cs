@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
                 gui.Plugins.Add(new SharpMapGisGuiPlugin());
                 gui.Plugins.Add(fmGuiPlugin);
-
+                
                 gui.Run();
 
                 Action mainWindowShown = delegate
@@ -103,14 +103,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     var modelNodePresenter = new WaterFlowFMModelNodePresenter(fmGuiPlugin);
                     var shortcut = modelNodePresenter.GetChildNodeObjects(model, null);
                     var fmModelTreeShortCut = shortcut.OfType<FmModelTreeShortcut>().First(s => s.Text == "General");
-
                     gui.CommandHandler.OpenView(fmModelTreeShortCut);
+                    var activeView = gui.DocumentViews.ActiveView;
 
-                    var activeView = (ProjectItemMapView)gui.DocumentViews.ActiveView;
-                    var activeTab = activeView.MapView.TabControl.ActiveView;
+                    var providers = new IMapLayerProvider[] { new FlowFMMapLayerProvider(), new SharpMapLayerProvider() };
 
-                    Assert.IsInstanceOf<IView>(activeTab);
-                    Assert.IsNotNull(((ILayerEditorView)activeTab).Layer);
+                    var layer = (IGroupLayer)MapLayerProviderHelper.CreateLayersRecursive(fmModelTreeShortCut.FlowFmModel, null, providers);
+
+                    Assert.IsInstanceOf<IView>(activeView);
+                    Assert.IsNotNull((layer.Layers));
+                    Assert.IsNotNull((layer.Layers.Any()));
                 };
 
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
