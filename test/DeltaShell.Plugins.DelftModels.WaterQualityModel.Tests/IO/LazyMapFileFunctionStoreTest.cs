@@ -24,14 +24,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [TestFixtureSetUp]
         public void SetUpTests()
         {
-             mapFilePath = Path.Combine(TestHelper.GetDataDir(), "IO", "deltashell.map");
+            mapFilePath = Path.Combine(TestHelper.GetDataDir(), "IO", "deltashell.map");
         }
 
         [Test]
         public void CopyTo_IsSuccessfulWhenCopyingToNonExistantDirectory()
         {
             var mapFilePath = Path.Combine(TestHelper.GetDataDir(), "FunctionStores", "deltashell.map");
-            var store = new LazyMapFileFunctionStore { Path = mapFilePath };
+            var store = new LazyMapFileFunctionStore {Path = mapFilePath};
 
             var directoryPath = Path.Combine(TestHelper.GetDataDir(), "DirectoryDoesNotExist");
             FileUtils.DeleteIfExists(directoryPath);
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             var dtVariable = new Variable<DateTime>();
 
-            var store = new LazyMapFileFunctionStore { Path = mapFilePath };
+            var store = new LazyMapFileFunctionStore {Path = mapFilePath};
             var times = store.GetVariableValues<DateTime>(dtVariable);
 
             Assert.AreEqual(25, times.Count);
@@ -55,18 +55,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.IsTrue(times[0].CompareTo(startTime) == 0);
             Assert.IsTrue(times[24].CompareTo(endTime) == 0);
 
-            Assert.AreEqual(endTime,store.GetMaxValue<DateTime>(dtVariable));
+            Assert.AreEqual(endTime, store.GetMaxValue<DateTime>(dtVariable));
             Assert.AreEqual(startTime, store.GetMinValue<DateTime>(dtVariable));
         }
 
         [Test]
         public void ReadTimeStepValuesFromStore()
         {
-            var store = new LazyMapFileFunctionStore { Path = mapFilePath };
+            var store = new LazyMapFileFunctionStore {Path = mapFilePath};
             var timeFilter = new VariableValueFilter<DateTime>
-                {
-                    Values = new[] {timeStep7}
-                };
+            {
+                Values = new[] {timeStep7}
+            };
 
             var component = new Variable<double>("Salinity");
             var funtion = new Function("Salinity");
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(19.767536163330078, values[0]);
             Assert.AreEqual(27.733558654785156, values[1]);
 
-            timeFilter.Values = new[] { lastTimeStep };
+            timeFilter.Values = new[] {lastTimeStep};
             values = store.GetVariableValues(component, timeFilter);
 
             Assert.AreEqual(2, values.Count);
@@ -95,16 +95,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void ReadTimeSeriesValuesFromStore()
         {
-            var store = new LazyMapFileFunctionStore { Path = mapFilePath };
-            var segmentFilter = new VariableValueFilter<int>{Values = new []{1}};
+            var store = new LazyMapFileFunctionStore {Path = mapFilePath};
+            var segmentFilter = new VariableValueFilter<int> {Values = new[] {1}};
 
             var timeFilter = new VariableValueFilter<DateTime>
             {
                 Values = new[]
-                    {
-                        timeStep7, 
-                        lastTimeStep
-                    }
+                {
+                    timeStep7,
+                    lastTimeStep
+                }
             };
 
             var component = new Variable<double>("Salinity");
@@ -125,10 +125,132 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void ReadTimeStepsFromStoreUsingCoverage()
         {
-            var store = new LazyMapFileFunctionStore { Path = mapFilePath};
+            var store = new LazyMapFileFunctionStore {Path = mapFilePath};
             var unstrCellCoverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), true) {Store = store};
-            
+
             Assert.AreEqual(25, unstrCellCoverage.Time.Values.Count);
+        }
+
+        [Test]
+        public void GivenAFunctionStoreCall_WhenDelWaqFilePathIsEmpty_ThenAnEmptyMultiDimensionalArrayShouldBeReturned()
+        {
+            var store = new LazyMapFileFunctionStore {Path = ""};
+
+            var timeFilter = new VariableValueFilter<DateTime>
+            {
+                Values = new[] {timeStep7}
+            };
+
+            var component = new Variable<double>("Salinity");
+
+            var values = store.GetVariableValues(component, timeFilter);
+            Assert.AreEqual(0, values.Count);
+        }
+
+        [Test]
+        [ExpectedException(typeof(NotImplementedException))]
+        public void
+            GivenAFunctionStoreCall_WhenTheFunctionIsIndependentAndNotDateTimeAsType_ThenANotImplementedExceptionShouldBeThrown()
+        {
+            var store = new LazyMapFileFunctionStore {Path = mapFilePath};
+
+            var timeFilter = new VariableValueFilter<DateTime>
+            {
+                Values = new[] {timeStep7}
+            };
+
+            var component = new Variable<double>("Salinity");
+            var function = new Function("Salinity");
+
+            function.Components.Add(component);
+
+            var values = store.GetVariableValues(component, timeFilter);
+        }
+
+        [Test]
+        [ExpectedException(typeof(NotImplementedException))]
+        public void
+            GivenAFunctionStoreCall_WhenTheFilterContainsMultipleValuesAndTheFunctionIsNotADoubleAndTheFunctionIsIndependentOfTime_ThenANotImplementedExceptionShouldBeThrown()
+        {
+            var store = new LazyMapFileFunctionStore {Path = mapFilePath};
+
+            var timeFilter = new VariableValueFilter<DateTime>
+            {
+                Values = new[] {timeStep7, timeStep7}
+            };
+
+            var component = new Variable<int>("Salinity");
+            var function = new Function("Salinity");
+
+            function.Arguments.Add(new Variable<int>("cell_index"));
+            function.Components.Add(component);
+
+            var values = store.GetVariableValues(component, timeFilter);
+        }
+
+        [Test]
+        public void
+            GivenAFunctionStoreCall_WhenTheFunctionNameIsMissing_ThenAnEmptyMultiDimensionalArrayShouldBeReturned()
+        {
+            var store = new LazyMapFileFunctionStore {Path = mapFilePath};
+
+            var timeFilter = new VariableValueFilter<DateTime>
+            {
+                Values = new[] {timeStep7}
+            };
+
+            var component = new Variable<double>("");
+            var function = new Function("Salinity");
+
+            function.Arguments.Add(new Variable<DateTime>("datetime"));
+            function.Arguments.Add(new Variable<int>("cell_index"));
+            function.Components.Add(component);
+
+            var values = store.GetVariableValues(component, timeFilter);
+            Assert.AreEqual(0, values.Count);
+        }
+
+        [Test]
+        public void
+            GivenAFunctionStoreCall_WhenTheFunctionIsIndependentOfLocation_ThenAnEmptyMultiDimensionalArrayShouldBeReturned()
+        {
+            var store = new LazyMapFileFunctionStore {Path = mapFilePath};
+
+            var timeFilter = new VariableValueFilter<DateTime>
+            {
+                Values = new[] {timeStep7}
+            };
+
+            var component = new Variable<double>("Salinity");
+            var function = new Function("Salinity");
+
+            function.Arguments.Add(new Variable<DateTime>("datetime"));
+            function.Components.Add(component);
+
+            var values = store.GetVariableValues(component, timeFilter);
+            Assert.AreEqual(0, values.Count);
+        }
+
+        [Test]
+        [ExpectedException(typeof(NotImplementedException))]
+        public void
+            GivenAFunctionStoreCall_WhenFiltersAreMissingForLocationAndTime_ThenANotImplementedExceptionShouldBeThrown()
+        {
+            var store = new LazyMapFileFunctionStore {Path = mapFilePath};
+
+            var timeFilter = new VariableValueFilter<double>
+            {
+                Values = new[] {1.2}
+            };
+
+            var component = new Variable<double>("Salinity");
+            var function = new Function("Salinity");
+
+            function.Arguments.Add(new Variable<DateTime>("datetime"));
+            function.Arguments.Add(new Variable<int>("cell_index"));
+            function.Components.Add(component);
+
+            var values = store.GetVariableValues(component, timeFilter);
         }
     }
 }

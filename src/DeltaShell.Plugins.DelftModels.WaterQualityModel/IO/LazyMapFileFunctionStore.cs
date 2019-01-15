@@ -109,58 +109,51 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             return MemberwiseClone();
         }
 
+        /// <summary>
+        /// Get data from the DelwaqOutputFile by using the function store.
+        /// </summary>
+        /// <param name="function"></param>
+        /// <param name="filters"></param>
+        /// <returns></returns>
         public IMultiDimensionalArray GetVariableValues(IVariable function, params IVariableFilter[] filters)
         {
             var type = function.ValueType;
             if (!HasValidMapFile)
+            {
                 return CreateEmptyArrayForType(type);
+            }
 
             if (function.IsIndependent)
             {
-                var argumentTimeFilter = filters.OfType<VariableValueFilter<DateTime>>().FirstOrDefault();
-                if (function.ValueType == typeof(DateTime))
-                {
-                    return new MultiDimentionalArrayAdapter<DateTime>(argumentTimeFilter == null
-                        ? MetaData.Times
-                        : argumentTimeFilter.Values);
-                }
-                throw new NotImplementedException();
+                return GetArgumentValues(function, filters);
             }
 
             var timeVariable = function.Arguments.FirstOrDefault(a => a.ValueType == typeof(DateTime));
 
-            if (function.ValueType != typeof(double) || timeVariable == null || filters.OfType<IVariableValueFilter>().Any(f => f.Values.Count > 1))
+            if (type != typeof(double) || timeVariable == null ||
+                filters.OfType<IVariableValueFilter>().Any(f => f.Values.Count > 1))
+            {
                 throw new NotImplementedException();
+            }
 
             if (string.IsNullOrEmpty(function.Name))
             {
-                return CreateEmptyArrayForType(function.ValueType);
+                return CreateEmptyArrayForType(type);
             }
-
-            var timeFilter = filters.OfType<VariableValueFilter<DateTime>>()
-                .FirstOrDefault();
-
+            
             var locationIndexVariable = function.Arguments.FirstOrDefault(a => a.ValueType == typeof(int));
 
             List<double> data = null;
             
             if (locationIndexVariable != null)
             {
-                var locationFilter = filters.OfType<VariableValueFilter<int>>().FirstOrDefault();
-
-                if (locationFilter == null && timeFilter == null)
-                    throw new NotImplementedException();
-
-                var locationIndex = locationFilter != null ? locationFilter.Values[0] : -1;
-                var timeIndex = timeFilter != null ? MetaData.Times.IndexOf(timeFilter.Values[0]) : -1;
-
-                data = timeIndex != -1
-                    ? DelwaqMapFileReader.GetTimeStepData(path, MetaData, timeIndex, function.Name, locationIndex)
-                    : DelwaqMapFileReader.GetTimeSeriesData(path, MetaData, function.Name, locationIndex);
+                data = GetTimeDataForSpecificLocation(function, filters);
             }
 
             if (data == null)
+            {
                 return new MultiDimentionalArrayAdapter<double>(new List<double>());
+            }
 
             UpdateMinMax(data, function.Name, (double)(function.NoDataValue ?? 0.0));
             return new MultiDimentionalArrayAdapter<double>(data);
@@ -170,7 +163,40 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             return (IMultiDimensionalArray<T>)GetVariableValues(function, filters);
         }
-        
+
+        private MultiDimentionalArrayAdapter<DateTime> GetArgumentValues(IVariable function, IVariableFilter[] filters)
+        {
+            var argumentTimeFilter = filters.OfType<VariableValueFilter<DateTime>>().FirstOrDefault();
+            if (function.ValueType == typeof(DateTime))
+            {
+                return new MultiDimentionalArrayAdapter<DateTime>(argumentTimeFilter == null
+                    ? MetaData.Times
+                    : argumentTimeFilter.Values);
+            }
+            throw new NotImplementedException();
+        }
+
+        private List<double> GetTimeDataForSpecificLocation(IVariable function, IVariableFilter[] filters)
+        {
+            var locationFilter = filters.OfType<VariableValueFilter<int>>().FirstOrDefault();
+            var timeFilter = filters.OfType<VariableValueFilter<DateTime>>()
+                .FirstOrDefault();
+
+            if (locationFilter == null && timeFilter == null)
+            {
+                throw new NotImplementedException();
+            }
+            
+            var locationIndex = locationFilter != null ? locationFilter.Values[0] : -1;
+            var timeIndex = timeFilter != null ? MetaData.Times.IndexOf(timeFilter.Values[0]) : -1;
+
+            var data = timeIndex != -1
+                ? DelwaqMapFileReader.GetTimeStepData(path, MetaData, timeIndex, function.Name, locationIndex)
+                : DelwaqMapFileReader.GetTimeSeriesData(path, MetaData, function.Name, locationIndex);
+
+            return data;
+        }
+
         public T GetMaxValue<T>(IVariable variable)
         {
             if (typeof (T) == typeof (double))
