@@ -38,8 +38,8 @@
 
         #region Levee breach
 
-        public const string BreachLocationX = "Start_Location_X";
-        public const string BreachLocationY = "Start_Location_Y";
+        public const string BreachLocationX = "StartLocationX";
+        public const string BreachLocationY = "StartLocationY";
         public const string Algorithm = "Algorithm";
         public const string InitialCrestLevel = "CrestLevelIni";
         public const string InitalBreachWidth = "BreachWidthIni";
@@ -50,7 +50,7 @@
         public const string CriticalFlowVelocity = "Ucrit";
         public const string StartTimeBreachGrowth = "T0";
         public const string BreachGrowthActivated = "State";
-        public const string TimeFilePath = "TimeFile";
+        public const string TimeFilePath = "DambreakLevelsAndWidths";
 
         #endregion
     }

@@ -18,10 +18,10 @@ namespace DeltaShell.NGHS.IO.Grid
                 Resources.UGridNetworkDiscretisation_CreateNetworkDiscretisationInFile_Couldn_t_create_new_network_in_ + filename);
         }
 
-        public void WriteNetworkDiscretisationPoints(int[] branchIdx, double[] offset, string[] ids, string[] names)
+        public void WriteNetworkDiscretisationPoints(int[] branchIdx, double[] offset, double[] discretisationPointsX, double[] discretisationPointsY, string[] ids, string[] names)
         {
             DoWithValidGridApi(
-                uGridApi => uGridApi.WriteNetworkDiscretisationPoints(branchIdx, offset, ids, names),
+                uGridApi => uGridApi.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY, ids, names),
                 Resources.UGridNetworkDiscretisation_WriteNetworkDiscretisationPoints_Couldn_t_write_the_network_discretisation_points);
         }
 
@@ -85,10 +85,10 @@ namespace DeltaShell.NGHS.IO.Grid
             return numberOfDiscretisationPoints;
         }
 
-        public void ReadNetworkDiscretisationPointsForMeshId(int meshId, out int[] branchIdx, out double[] offset, out string[] ids, out string[] names)
+        public void ReadNetworkDiscretisationPointsForMeshId(int meshId, out int[] branchIdx, out double[] offset, out double[] discretisationPointsX, out double[] discretisationPointsY, out string[] ids, out string[] names)
         {
             var uGridApi = GetValidGridApi(Resources.UGridNetworkDiscretisation_ReadNetworkDiscretisationPointsForMeshId_Couldn_t_read_the_network_discretisation_points);
-            var ierr = uGridApi.ReadNetworkDiscretisationPoints(meshId, out branchIdx, out offset, out ids, out names);
+            var ierr = uGridApi.ReadNetworkDiscretisationPoints(meshId, out branchIdx, out offset, out discretisationPointsX, out discretisationPointsY, out ids, out names);
             ThrowIfError(ierr, Resources.UGridNetworkDiscretisation_ReadNetworkDiscretisationPointsForMeshId_Couldn_t_read_the_network_discretisation_points);
         }
         #endregion

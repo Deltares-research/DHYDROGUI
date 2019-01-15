@@ -84,13 +84,15 @@ namespace DeltaShell.NGHS.IO.Grid
 
                     int[] branchIndices;
                     double[] offset;
+                    double[] discretisationPointsX;
+                    double[] discretisationPointsY;
                     string[] ids;
                     string[] names;
-                    uGridNetworkDiscretisation.ReadNetworkDiscretisationPointsForMeshId(meshId, out branchIndices, out offset, out ids, out names);
+                    uGridNetworkDiscretisation.ReadNetworkDiscretisationPointsForMeshId(meshId, out branchIndices, out offset, out discretisationPointsX, out discretisationPointsY, out ids, out names);
 
                     var networkId = uGridNetworkDiscretisation.GetNetworkIdForMeshId(meshId);
                     var meshDiscretisationName = uGridNetworkDiscretisation.GetNetworkDiscretisationNameForMeshId(meshId);
-                    return new NetworkDiscretisationUGridDataModel(meshDiscretisationName, branchIndices, offset, networkId, ids, names);
+                    return new NetworkDiscretisationUGridDataModel(meshDiscretisationName, branchIndices, offset, discretisationPointsX, discretisationPointsY, networkId, ids, names);
                 }
                 
             }
@@ -304,7 +306,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 {
                     uGridNetworkDiscretisation.Initialize();
                     uGridNetworkDiscretisation.CreateNetworkDiscretisationInFile(discretisationDataModel.NumberOfDiscretisationPoints);
-                    uGridNetworkDiscretisation.WriteNetworkDiscretisationPoints(discretisationDataModel.BranchIdx, discretisationDataModel.Offsets, discretisationDataModel.DiscretisationPointIds, discretisationDataModel.DiscretisationPointDescriptions);
+                    uGridNetworkDiscretisation.WriteNetworkDiscretisationPoints(discretisationDataModel.BranchIdx, discretisationDataModel.Offsets, discretisationDataModel.DiscretisationPointsX, discretisationDataModel.DiscretisationPointsY, discretisationDataModel.DiscretisationPointIds, discretisationDataModel.DiscretisationPointDescriptions);
                 }
             }
             catch (Exception ex)

@@ -2234,6 +2234,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             int[] branchIdx = new int[1];
             double[] offset = new double[1];
+            double[] discretisationPointsX = new double[1];
+            double[] discretisationPointsY = new double[1];
             string[] ids = new[] {"point"};
             string[] names = new[] {"pointname"};
 
@@ -2243,17 +2245,17 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uRemoteGridApNetwork
             uRemoteUGridNetworkDiscretisationApi.Expect(
-                a => a.WriteNetworkDiscretisationPoints(branchIdx, offset, ids, names))
+                a => a.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY, ids, names))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
             // uGridNetworkApi
-            var result = uGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset, ids, names);
+            var result = uGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY, ids, names);
             Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, result);
 
             // uRemoteNetworkApi
-            var remoteResult = uRemoteUGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset,
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY,
                 ids, names);
             Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, remoteResult);
         }
@@ -2268,6 +2270,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // Length offsets; 
             string[] ids = new[] {"point"};
             string[] names = new[] {"pointname"};
+            double[] discretisationPointsX = new double[1];
+            double[] discretisationPointsY = new double[1];
+
 
 
             // uGridNetworkApi
@@ -2279,17 +2284,17 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uRemoteGridNetworkApi
             uRemoteUGridNetworkDiscretisationApi.Expect(
-                a => a.WriteNetworkDiscretisationPoints(branchIdx, offset, ids, names))
+                a => a.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY, ids, names))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
             // uGridNetworkApi
-            var result = uGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset, ids, names);
+            var result = uGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY, ids, names);
             Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_ARRAY_LENGTH_FATAL_ERR, result);
 
             // uRemoteGridNetworkApi
-            var remoteResult = uRemoteUGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset,
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY,
                 ids, names);
             Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_ARRAY_LENGTH_FATAL_ERR, remoteResult);
         }
@@ -2299,6 +2304,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             int[] branchIdx = new int[] {1, 1,};
             double[] offset = new double[] {0.5, 1.2,};
+            double[] discretisationPointsX = new double[] {0, 10.0};
+            double[] discretisationPointsY = new double[] {0, 10.0};
+
             string[] ids = new[] {"point", "point"};
             string[] names = new[] {"pointname", "pointname"};
 
@@ -2309,7 +2317,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             wrapper.Expect(
                 w =>
                     w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything,
-                        Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
+                        Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
                         Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything,
                         Arg<int>.Is.Anything))
                 .IgnoreArguments()
@@ -2319,17 +2327,17 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uRemoteGridNetworkApi
             uRemoteUGridNetworkDiscretisationApi.Expect(
-                a => a.WriteNetworkDiscretisationPoints(branchIdx, offset, ids, names))
+                a => a.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY, ids, names))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
             // uGridNetworkApi
-            var result = uGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset, ids, names);
+            var result = uGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY, ids, names);
             Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, result);
 
             // uRemoteGridNetworkApi
-            var remoteResult = uRemoteUGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset,
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY,
                 ids, names);
             Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, remoteResult);
         }
@@ -2339,6 +2347,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             int[] branchIdx = new int[] {1, 1,};
             double[] offset = new double[] {0.5, 1.2,};
+            double[] discretisationPointsX = new double[] {0, 10.0};
+            double[] discretisationPointsY = new double[] {0, 10.0};
             string[] ids = new[] {"point", "point"};
             string[] names = new[] {"pointname", "pointname"};
 
@@ -2351,6 +2361,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             wrapper.Expect(
                 w =>
                     w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything,
+                            Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
                             Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
                             Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything,
                             Arg<int>.Is.Anything))
@@ -2362,7 +2373,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uRemoteGridNetworkApi
             uRemoteUGridNetworkDiscretisationApi.Expect(
-                a => a.WriteNetworkDiscretisationPoints(branchIdx, offset, ids, names))
+                a => a.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY, ids, names))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             int nPoints;
             uRemoteUGridNetworkDiscretisationApi.Expect(a => a.GetNumberOfNetworkDiscretisationPoints(1, out nPoints))
@@ -2371,11 +2382,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             // uGridNetworkApi
-            var result = uGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset, ids, names);
+            var result = uGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY, ids, names);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, result);
 
             // uRemoteGridNetworkApi
-            var remoteResult = uRemoteUGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset,
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY,
                 ids, names);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, remoteResult);
         }
@@ -2385,6 +2396,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             int[] branchIdx = new int[] {1, 1,};
             double[] offset = new double[] {0.5, 1.2,};
+            double[] discretisationPointsX = new double[] { 0, 10.0 };
+            double[] discretisationPointsY = new double[] { 0, 10.0 };
             string[] ids = new[] {"point", "point"};
             string[] names = new[] {"pointname", "pointname"};
 
@@ -2396,6 +2409,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 w =>
                     w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything,
                             Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
+                            Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
                             Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything,
                             Arg<int>.Is.Anything))
                 .IgnoreArguments()
@@ -2406,17 +2420,17 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uRemoteGridNetworkApi
             uRemoteUGridNetworkDiscretisationApi.Expect(
-                a => a.WriteNetworkDiscretisationPoints(branchIdx, offset, ids, names))
+                a => a.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY, ids, names))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
             // uGridNetworkApi
-            var result = uGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset, ids, names);
+            var result = uGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY, ids, names);
             Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, result);
 
             // uRemoteGridNetworkApi
-            var remoteResult = uRemoteUGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset,
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY,
                 ids, names);
             Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, remoteResult);
         }
@@ -2632,6 +2646,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             int[] branchIdx = new int[] {1, 1,};
             double[] offset = new double[] {0.5, 1.2,};
+            double[] discretisationPointsX = new double[] { 0, 10.0 };
+            double[] discretisationPointsY = new double[] { 0, 10.0 };
             string[] ids = new[] {"point", "point"};
             string[] names = new[] {"pointname", "pointname"};
 
@@ -2643,6 +2659,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 w =>
                     w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything,
                             Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
+                            Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
                             Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything,
                             Arg<int>.Is.Anything))
                 .IgnoreArguments()
@@ -2652,17 +2669,17 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uRemoteGridNetworkApi
             uRemoteUGridNetworkDiscretisationApi.Expect(
-                a => a.WriteNetworkDiscretisationPoints(branchIdx, offset, ids, names))
+                a => a.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY, ids, names))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
             // uGridNetworkApi
-            var result = uGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset, ids, names);
+            var result = uGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY, ids, names);
             Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, result);
 
             // uRemoteGridNetworkApi
-            var remoteResult = uRemoteUGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset,
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.WriteNetworkDiscretisationPoints(branchIdx, offset, discretisationPointsX, discretisationPointsY,
                 ids, names);
             Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, remoteResult);
         }

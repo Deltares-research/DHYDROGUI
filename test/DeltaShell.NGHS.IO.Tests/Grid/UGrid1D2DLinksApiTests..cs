@@ -36,7 +36,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.VerifyAll();
         }
 
-        [Test]
+        [Test, RequiresThread]
         [TestCase(false)]
         [TestCase(true)]
         public void Create1D2DLinksApiCallTest(bool remote)

@@ -204,19 +204,19 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         #region Levee Breach Elements
         
-        public static readonly ConfigurationSetting BreachLocationX = new ConfigurationSetting(key: "start_location_x");
-        public static readonly ConfigurationSetting BreachLocationY = new ConfigurationSetting(key: "start_location_y");
-        public static readonly ConfigurationSetting StartTimeBreachGrowth = new ConfigurationSetting(key: "t0");
+        public static readonly ConfigurationSetting BreachLocationX = new ConfigurationSetting(key: "StartLocationX");
+        public static readonly ConfigurationSetting BreachLocationY = new ConfigurationSetting(key: "StartLocationY");
+        public static readonly ConfigurationSetting StartTimeBreachGrowth = new ConfigurationSetting(key: "T0");
         public static readonly ConfigurationSetting BreachGrowthActivated = new ConfigurationSetting(key: "State");
-        public static readonly ConfigurationSetting Algorithm = new ConfigurationSetting(key: "algorithm", description: "# 1 VdKnaap ,2 Verheij-vdKnaap");
-        public static readonly ConfigurationSetting InitialCrestLevel = new ConfigurationSetting(key: "crestlevelini");
-        public static readonly ConfigurationSetting MinimumCrestLevel = new ConfigurationSetting(key: "crestlevelmin");
-        public static readonly ConfigurationSetting InitalBreachWidth = new ConfigurationSetting(key: "breachwidthini");
-        public static readonly ConfigurationSetting TimeToReachMinimumCrestLevel = new ConfigurationSetting(key: "timetobreachtomaximumdepth");
-        public static readonly ConfigurationSetting Factor1 = new ConfigurationSetting(key: "f1");
-        public static readonly ConfigurationSetting Factor2 = new ConfigurationSetting(key: "f2");
-        public static readonly ConfigurationSetting CriticalFlowVelocity = new ConfigurationSetting(key: "ucrit");
-        public static readonly ConfigurationSetting TimeFileName = new ConfigurationSetting(key: "breachwidthandlevel");
+        public static readonly ConfigurationSetting Algorithm = new ConfigurationSetting(key: "Algorithm", description: "# 1 VdKnaap ,2 Verheij-vdKnaap");
+        public static readonly ConfigurationSetting InitialCrestLevel = new ConfigurationSetting(key: "CrestLevelIni");
+        public static readonly ConfigurationSetting MinimumCrestLevel = new ConfigurationSetting(key: "CrestLevelMin");
+        public static readonly ConfigurationSetting InitalBreachWidth = new ConfigurationSetting(key: "BreachWidthIni");
+        public static readonly ConfigurationSetting TimeToReachMinimumCrestLevel = new ConfigurationSetting(key: "TimeToBreachToMaximumDepth");
+        public static readonly ConfigurationSetting Factor1 = new ConfigurationSetting(key: "F1");
+        public static readonly ConfigurationSetting Factor2 = new ConfigurationSetting(key: "F2");
+        public static readonly ConfigurationSetting CriticalFlowVelocity = new ConfigurationSetting(key: "Ucrit");
+        public static readonly ConfigurationSetting TimeFileName = new ConfigurationSetting(key: "DambreakLevelsAndWidths");
 
         #endregion
     }

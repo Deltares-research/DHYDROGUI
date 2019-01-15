@@ -185,10 +185,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             return networkDiscretisation;
         }
 
+        //[Ignore("This test will be disabled (and moved to UGridToNetworkAdapterTest)")]
         [Test]
-        [Ignore("This test will be disabled (and moved to UGridToNetworkAdapterTest)")]
         [Category(TestCategory.DataAccess)]
-        private static void WriteRead1DNetworkAndTest()
+        public static void WriteRead1DNetworkAndTest()
         {
 
             var testFilePath =
@@ -286,7 +286,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     for (int i = 0; i < network.Nodes.Count; ++i)
                     {
                         // test node names
-                        string inNodeName = network.Nodes[i].Name.Trim().Replace(" ", "_");
+                        string inNodeName = network.Nodes[i].Name.Trim();//.Replace(" ", "_");
                         string outNodeName = nodesIds[i].Trim();
                         Assert.AreEqual(inNodeName, outNodeName);
 
@@ -302,7 +302,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
                         // test node description
                         var description = network.Nodes[i].Description;
-                        string inNodeDescription = description != null ? description.Trim().Replace(" ", "_") : "";
+                        string inNodeDescription = description != null ? description.Trim():"";//.Replace(" ", "_") : "";
                         string outNodeDescription = nodesLongnames[i].Trim();
                         Assert.AreEqual(inNodeDescription, outNodeDescription);
                     }
@@ -352,13 +352,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                         Assert.AreEqual(inBranchGeoPointsCount, outBranchGeoPointsCount);
 
                         // test branch names
-                        var inBranchName = branch.Name.Trim().Replace(" ", "_");
+                        var inBranchName = branch.Name.Trim();//.Replace(" ", "_");
                         var outBranchName = branchIds[i].Trim();
                         Assert.AreEqual(inBranchName, outBranchName);
 
                         // test branch descriptions
                         var description = branch.Description;
-                        var inBranchDescription = description != null ? description.Trim().Replace(" ", "_") : "";
+                        var inBranchDescription = description != null ? description.Trim():"";//.Replace(" ", "_") : "";
                         var outBranchDescription = branchLongnames[i].Trim();
                         Assert.AreEqual(inBranchDescription, outBranchDescription);
 
@@ -432,10 +432,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     Assert.AreEqual(expNrDiscrPoints, meshPointsIdx.Length);
 
                     double[] offset = discretisationPoints.Select(l => l.Chainage).ToArray();
+                    double[] discretisationPointsX = discretisationPoints.Select(l => l.Geometry.Coordinate.X).ToArray();
+                    double[] discretisationPointsY = discretisationPoints.Select(l => l.Geometry.Coordinate.Y).ToArray();
 
                     uGrid1DMesh.WriteNetworkDiscretisationPoints(
                         meshPointsIdx,
                         offset,
+                        discretisationPointsX,
+                        discretisationPointsY,
                         meshPointsIds,
                         meshPointsNames
                     );
@@ -445,10 +449,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
                     int[] loadedBranchIdx;
                     double[] loadedOffset;
+                    double[] pointsX;
+                    double[] pointsY;
                     string[] ids;
                     string[] names;
 
-                    uGrid1DMesh.ReadNetworkDiscretisationPointsForMeshId(1, out loadedBranchIdx, out loadedOffset, out ids, out names);
+                    uGrid1DMesh.ReadNetworkDiscretisationPointsForMeshId(1, out loadedBranchIdx, out loadedOffset, out pointsX, out pointsY, out ids, out names);
                     
                     Assert.AreEqual(discretisationPoints.Length, loadedBranchIdx.Length);
                     Assert.AreEqual(discretisationPoints.Length, loadedOffset.Length);

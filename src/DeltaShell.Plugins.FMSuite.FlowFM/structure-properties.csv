@@ -37,19 +37,19 @@ generalstructure,neg_drownweirflowcoeff,Negative drown weir flow,Double,,,,FALSE
 generalstructure,neg_contrcoeffreegate,Negative flow contraction,Double,,,,FALSE,Negative flow contraction coefficient (-)
 generalstructure,extraresistance,Extra resistance,Double,,,,FALSE,Extra resistance (-)
 generalstructure,gatedoorheight,Gate door height,Double,,,,FALSE,Gate opening height (m)
-dambreak,start_location_x,Breach start location-X,Double,,,,FALSE,X-position of the breach growth
-dambreak,start_location_y,Breach start location-Y,Double,,,,FALSE,Y-position of the breach growth
-dambreak,algorithm,Algorithm:Verheij - vd Knaap (2002)|User defined breach,2|3,,,,FALSE,0 = unknown 2 = Verheij - vd Knaap (2002) 3 = User defined
-dambreak,crestlevelini,Initial crest level,Double,,,,FALSE,Initial crest level [m]
-dambreak,crestlevelmin,Minimum crest level,Double,,,,FALSE,Minimum crest level [m]
-dambreak,breachwidthini,Initial breach width,Double,,,,FALSE,Initial breach width [m]
-dambreak,timetobreachtomaximumdepth, Time to reach maximum breach depth,Double,,,,FALSE,Time to reach maximum breach depth (in seconds) [s]
-dambreak,f1,Factor 1,Double,,,,FALSE,Factor 1, Alfa [-]
-dambreak,f2,Factor 2,Double,,,,FALSE,Factor 2, Beta [-]
-dambreak,ucrit,Critical flow velocity,Double,,,,FALSE,Critical flow velocity [m/s]
-dambreak,t0,Breach start time,Double,,,,FALSE,Start time of the breach (in seconds) [s]
-dambreak,state,State of the growth,1|0,,,,FALSE,0 = off 1 = on (typically set via BMI)
-dambreak,timeFile,Path to the user defined breach,String,,,,FALSE,Path to the user defined breach 
+dambreak,StartLocationX,Breach start location-X,Double,,,,FALSE,X-position of the breach growth
+dambreak,StartLocationY,Breach start location-Y,Double,,,,FALSE,Y-position of the breach growth
+dambreak,Algorithm,Algorithm:Verheij - vd Knaap (2002)|User defined breach,2|3,,,,FALSE,0 = unknown 2 = Verheij - vd Knaap (2002) 3 = User defined
+dambreak,CrestLevelIni,Initial crest level,Double,,,,FALSE,Initial crest level [m]
+dambreak,CrestLevelMin,Minimum crest level,Double,,,,FALSE,Minimum crest level [m]
+dambreak,BreachWidthIni,Initial breach width,Double,,,,FALSE,Initial breach width [m]
+dambreak,TimeToBreachToMaximumDepth, Time to reach maximum breach depth,Double,,,,FALSE,Time to reach maximum breach depth (in seconds) [s]
+dambreak,F1,Factor 1,Double,,,,FALSE,Factor 1, Alfa [-]
+dambreak,F2,Factor 2,Double,,,,FALSE,Factor 2, Beta [-]
+dambreak,Ucrit,Critical flow velocity,Double,,,,FALSE,Critical flow velocity [m/s]
+dambreak,T0,Breach start time,Double,,,,FALSE,Start time of the breach (in seconds) [s]
+dambreak,State,State of the growth,1|0,,,,FALSE,0 = off 1 = on (typically set via BMI)
+dambreak,DambreakLevelsAndWidths,Path to the user defined breach,String,,,,FALSE,Path to the user defined breach 
 
 
 

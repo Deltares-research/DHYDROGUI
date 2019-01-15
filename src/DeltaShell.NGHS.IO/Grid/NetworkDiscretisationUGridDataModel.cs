@@ -11,6 +11,8 @@ namespace DeltaShell.NGHS.IO.Grid
         public int NumberOfDiscretisationPoints;
         public int[] BranchIdx = new int[0];
         public double[] Offsets = new double[0];
+        public double[] DiscretisationPointsX = new double[0];
+        public double[] DiscretisationPointsY = new double[0];
         public string[] DiscretisationPointIds = new string[0];
         public string[] DiscretisationPointDescriptions = new string[0];
 
@@ -19,11 +21,13 @@ namespace DeltaShell.NGHS.IO.Grid
             SetNetworkDiscretisationData(discretisation);
         }
 
-        public NetworkDiscretisationUGridDataModel(string name, int[] branchIndices, double[] offsets, int networkId, string[] discretisationPointIds, string[] discretisationPointDescriptions)
+        public NetworkDiscretisationUGridDataModel(string name, int[] branchIndices, double[] offsets, double[] discretisationPointsX, double[] discretisationPointsY, int networkId, string[] discretisationPointIds, string[] discretisationPointDescriptions)
         {
             Name = name;
             BranchIdx = branchIndices;
             Offsets = offsets;
+            DiscretisationPointsX = discretisationPointsX;
+            DiscretisationPointsY = discretisationPointsY;
             NetworkId = networkId;
             DiscretisationPointIds = discretisationPointIds;
             DiscretisationPointDescriptions = discretisationPointDescriptions;
@@ -54,6 +58,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
             DiscretisationPointIds = discretisationPoints.Select(p => p.Name).ToArray();
             DiscretisationPointDescriptions = discretisationPoints.Select(p => p.LongName).ToArray();
+            DiscretisationPointsX = discretisationPoints.Select(dp => dp.Geometry.Coordinate.X).ToArray();
+            DiscretisationPointsY = discretisationPoints.Select(dp => dp.Geometry.Coordinate.Y).ToArray();
         }
     }
 }

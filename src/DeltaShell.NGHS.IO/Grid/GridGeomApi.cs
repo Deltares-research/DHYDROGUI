@@ -157,10 +157,18 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             finally
             {
-                Marshal.FreeCoTaskMem(intPtrXValuesRoofs);
-                Marshal.FreeCoTaskMem(intPtrYValuesRoofs);
-                Marshal.FreeCoTaskMem(intPtrZValuesRoofs);
-                Marshal.FreeCoTaskMem(intPtrfilterMesh1DPoints);
+                if (intPtrXValuesRoofs != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(intPtrXValuesRoofs);
+                intPtrXValuesRoofs = IntPtr.Zero;
+                if (intPtrYValuesRoofs != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(intPtrYValuesRoofs);
+                intPtrYValuesRoofs = IntPtr.Zero;
+                if (intPtrZValuesRoofs != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(intPtrZValuesRoofs);
+                intPtrZValuesRoofs = IntPtr.Zero;
+                if (intPtrfilterMesh1DPoints != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(intPtrfilterMesh1DPoints);
+                intPtrfilterMesh1DPoints = IntPtr.Zero;
             }
 
             return GridApiDataSet.GridConstants.NOERR;
@@ -203,9 +211,15 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             finally
             {
-                Marshal.FreeCoTaskMem(intPtrXValuesGullies);
-                Marshal.FreeCoTaskMem(intPtrYValuesGullies);
-                Marshal.FreeCoTaskMem(intPtrfilterMesh1DPoints);
+                if (intPtrXValuesGullies != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(intPtrXValuesGullies);
+                intPtrXValuesGullies = IntPtr.Zero;
+                if (intPtrYValuesGullies != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(intPtrYValuesGullies);
+                intPtrYValuesGullies = IntPtr.Zero;
+                if (intPtrfilterMesh1DPoints != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(intPtrfilterMesh1DPoints);
+                intPtrfilterMesh1DPoints = IntPtr.Zero;
             }
 
             return GridApiDataSet.GridConstants.NOERR;
@@ -268,13 +282,27 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             finally
             {
-                Marshal.FreeCoTaskMem(intPtrXValuesSelectedArea);
-                Marshal.FreeCoTaskMem(intPtrYValuesSelectedArea);
-                Marshal.FreeCoTaskMem(intPtrZValuesSelectedArea);
-                Marshal.FreeCoTaskMem(intPtrfilterMesh1DPoints);
-                Marshal.FreeCoTaskMem(intPtrXValuesFilterMesh2D);
-                Marshal.FreeCoTaskMem(intPtrYValuesFilterMesh2D);
-                Marshal.FreeCoTaskMem(intPtrZValuesFilterMesh2D);
+                if (intPtrXValuesSelectedArea != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(intPtrXValuesSelectedArea);
+                intPtrXValuesSelectedArea = IntPtr.Zero;
+                if (intPtrYValuesSelectedArea != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(intPtrYValuesSelectedArea);
+                intPtrYValuesSelectedArea = IntPtr.Zero;
+                if (intPtrZValuesSelectedArea != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(intPtrZValuesSelectedArea);
+                intPtrZValuesSelectedArea = IntPtr.Zero;
+                if (intPtrfilterMesh1DPoints != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(intPtrfilterMesh1DPoints);
+                intPtrfilterMesh1DPoints = IntPtr.Zero;
+                if (intPtrXValuesFilterMesh2D != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(intPtrXValuesFilterMesh2D);
+                intPtrXValuesFilterMesh2D = IntPtr.Zero;
+                if (intPtrYValuesFilterMesh2D != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(intPtrYValuesFilterMesh2D);
+                intPtrYValuesFilterMesh2D = IntPtr.Zero;
+                if (intPtrZValuesFilterMesh2D != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(intPtrZValuesFilterMesh2D);
+                intPtrZValuesFilterMesh2D = IntPtr.Zero;
             }
 
             return GridApiDataSet.GridConstants.NOERR;
@@ -325,10 +353,18 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             finally
             {
-                Marshal.FreeCoTaskMem(intPtrXValuesSelectedArea);
-                Marshal.FreeCoTaskMem(intPtrYValuesSelectedArea);
-                Marshal.FreeCoTaskMem(intPtrZValuesSelectedArea);
-                Marshal.FreeCoTaskMem(intPtrfilterMesh1DPoints);
+                if (intPtrXValuesSelectedArea != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(intPtrXValuesSelectedArea);
+                intPtrXValuesSelectedArea = IntPtr.Zero;
+                if (intPtrYValuesSelectedArea != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(intPtrYValuesSelectedArea);
+                intPtrYValuesSelectedArea = IntPtr.Zero;
+                if (intPtrZValuesSelectedArea != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(intPtrZValuesSelectedArea);
+                intPtrZValuesSelectedArea = IntPtr.Zero;
+                if (intPtrfilterMesh1DPoints != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(intPtrfilterMesh1DPoints);
+                intPtrfilterMesh1DPoints = IntPtr.Zero;
             }
 
             return GridApiDataSet.GridConstants.NOERR;
@@ -552,23 +588,48 @@ namespace DeltaShell.NGHS.IO.Grid
             finally
             {
                 //Free 2d arrays
-                Marshal.FreeCoTaskMem(meshtwod.nodex);
-                Marshal.FreeCoTaskMem(meshtwod.nodey);
-                Marshal.FreeCoTaskMem(meshtwod.nodez);
-                Marshal.FreeCoTaskMem(meshtwod.edge_nodes);
+                if (meshtwod.nodex != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(meshtwod.nodex);
+                meshtwod.nodex = IntPtr.Zero;
+                if (meshtwod.nodey != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(meshtwod.nodey);
+                meshtwod.nodey = IntPtr.Zero;
+                if (meshtwod.nodez != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(meshtwod.nodez);
+                meshtwod.nodez = IntPtr.Zero;
+                if (meshtwod.edge_nodes != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(meshtwod.edge_nodes);
 
                 //Free 1d arrays
-                Marshal.FreeCoTaskMem(c_meshXCoords);
-                Marshal.FreeCoTaskMem(c_meshYCoords);
-                Marshal.FreeCoTaskMem(c_branchids);
-                Marshal.FreeCoTaskMem(c_sourcenodeid);
-                Marshal.FreeCoTaskMem(c_targetnodeid);
-                Marshal.FreeCoTaskMem(c_branchlength);
-                Marshal.FreeCoTaskMem(c_branchoffset);
+                if (c_meshXCoords != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(c_meshXCoords);
+                c_meshXCoords = IntPtr.Zero;
+                if (c_meshYCoords != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(c_meshYCoords);
+                c_meshYCoords = IntPtr.Zero;
+                if (c_branchids != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(c_branchids);
+                c_branchids = IntPtr.Zero;
+                if (c_sourcenodeid != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(c_sourcenodeid);
+                c_sourcenodeid = IntPtr.Zero;
+                if (c_targetnodeid != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(c_targetnodeid);
+                c_targetnodeid = IntPtr.Zero;
+                if (c_branchlength != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(c_branchlength);
+                c_branchlength = IntPtr.Zero;
+                if (c_branchoffset != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(c_branchoffset);
+                c_branchoffset = IntPtr.Zero;
 
                 //Free from and to arrays describing the links 
-                Marshal.FreeCoTaskMem(c_arrayfrom);
-                Marshal.FreeCoTaskMem(c_arrayto);
+                if (c_arrayfrom != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(c_arrayfrom);
+                c_arrayfrom = IntPtr.Zero;
+                if (c_arrayto != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(c_arrayto);
+                c_arrayto = IntPtr.Zero;
             }
 
             return GridApiDataSet.GridConstants.NOERR;

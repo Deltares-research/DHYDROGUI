@@ -250,18 +250,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                  "    type                  = dambreak            # Type of structure" + Environment.NewLine +
                  "    id                    = lb_01               # Name of the structure" + Environment.NewLine +
                  "    polylinefile          = lb_01.pli           # *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
-                 "    start_location_x      = 125                 # X-position of the breach growth" + Environment.NewLine +
-                 "    start_location_y      = 250                 # Y-position of the breach growth" + Environment.NewLine +
-                 "    t0                    = 31622400            # Start time of the breach (in seconds) [s]" + Environment.NewLine +
-                 "    state                 = 1                   # 0 = off 1 = on (typically set via BMI)" + Environment.NewLine +
-                 "    algorithm             = 2                   # 0 = unknown 2 = Verheij - vd Knaap (2002) 3 = User defined" + Environment.NewLine +
-                 "    crestlevelini         = 2.25                # Initial crest level [m]" + Environment.NewLine +
-                 "    crestlevelmin         = 0.69                # Minimum crest level [m]" + Environment.NewLine +
-                 "    breachwidthini        = 2.38                # Initial breach width [m]" + Environment.NewLine +
-                 "    timetobreachtomaximumdepth= 4271                # Time to reach maximum breach depth (in seconds) [s]" + Environment.NewLine +
-                 "    f1                    = 0.88                # Factor 1 Alfa [-]" + Environment.NewLine +
-                 "    f2                    = 0.73                # Factor 2 Beta [-]" + Environment.NewLine +
-                 "    ucrit                 = 1.22                # Critical flow velocity [m/s]" + Environment.NewLine;
+                 "    StartLocationX        = 125                 # X-position of the breach growth" + Environment.NewLine +
+                 "    StartLocationY        = 250                 # Y-position of the breach growth" + Environment.NewLine +
+                 "    T0                    = 31622400            # Start time of the breach (in seconds) [s]" + Environment.NewLine +
+                 "    State                 = 1                   # 0 = off 1 = on (typically set via BMI)" + Environment.NewLine +
+                 "    Algorithm             = 2                   # 0 = unknown 2 = Verheij - vd Knaap (2002) 3 = User defined" + Environment.NewLine +
+                 "    CrestLevelIni         = 2.25                # Initial crest level [m]" + Environment.NewLine +
+                 "    CrestLevelMin         = 0.69                # Minimum crest level [m]" + Environment.NewLine +
+                 "    BreachWidthIni        = 2.38                # Initial breach width [m]" + Environment.NewLine +
+                 "    TimeToBreachToMaximumDepth= 4271                # Time to reach maximum breach depth (in seconds) [s]" + Environment.NewLine +
+                 "    F1                    = 0.88                # Factor 1 Alfa [-]" + Environment.NewLine +
+                 "    F2                    = 0.73                # Factor 2 Beta [-]" + Environment.NewLine +
+                 "    Ucrit                 = 1.22                # Critical flow velocity [m/s]" + Environment.NewLine;
 
                 Assert.AreEqual(expectedText, text);
 

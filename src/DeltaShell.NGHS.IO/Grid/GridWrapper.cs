@@ -1,11 +1,46 @@
 using System;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Text;
+using DelftTools.Utils.Interop;
+using Microsoft.Win32.SafeHandles;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
+    public class DynamiclyNativeLibrary : NativeLibrary
+    {
+        public DynamiclyNativeLibrary(string fileName) : base(fileName)
+        {
+        }
+        public IntPtr Lib {
+            get { return Library; }
+        }
+
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
+    }
+
     public class GridWrapper
     {
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate int Write1DMeshDiscretisationPoints_v1(int ioncid, int mesh1did, IntPtr c_branchidx, IntPtr c_offset, IntPtr c_discretisationPointsX, IntPtr c_discretisationPointsY, interop_charinfo[] nodeinfo, int nmeshpoints, int startIndex);
+        private static DynamiclyNativeLibrary IO_NetcdfLib;
+        public static Write1DMeshDiscretisationPoints_v1 Write1DMeshDiscretisationPoints_v1Method { get; set; }
+        static GridWrapper()
+        {
+            /*
+            IO_NetcdfLib = new DynamiclyNativeLibrary(GridApiDataSet.GRIDDLL_NAME);
+            
+            IntPtr pAddressOfFunctionToCall = DynamiclyNativeLibrary.GetProcAddress(IO_NetcdfLib.Lib, "Connect1");
+            Write1DMeshDiscretisationPoints_v1Method = (Write1DMeshDiscretisationPoints_v1)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(Write1DMeshDiscretisationPoints_v1));
+            */
+        }
+
+        ~GridWrapper()
+        {
+            //IO_NetcdfLib.Dispose();
+        }
+        
         private const int StartIndex = 0;
         /// <summary>
         /// Checks whether the specified data set adheres to a specific set of conventions.
@@ -891,7 +926,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_create_1d_mesh_dll(ref ioncId, networkName, ref meshId, meshName, ref numberOfMeshPoints);
         }
 
-        public virtual int Write1DMeshDiscretisationPoints(int ioncid, int mesh1did, IntPtr c_branchidx, IntPtr c_offset, interop_charinfo[] nodeinfo, int nmeshpoints, int startIndex)
+        public virtual int Write1DMeshDiscretisationPoints(int ioncid, int mesh1did, IntPtr c_branchidx, IntPtr c_offset, IntPtr c_discretisationPointsX, IntPtr c_discretisationPointsY, interop_charinfo[] nodeinfo, int nmeshpoints, int startIndex)
         {
             return ionc_put_1d_mesh_discretisation_points_dll(ref ioncid, ref mesh1did, ref c_branchidx, ref c_offset, nodeinfo, ref nmeshpoints, ref startIndex);
         }
@@ -936,7 +971,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_get_1d_mesh_discretisation_points_count_dll(ref ioncId, ref meshId, ref numberOfMeshPoints);
         }
 
-        public virtual int Read1DMeshDiscretisationPoints(int ioncId, int meshId, ref IntPtr xBranchIndicesPtr, ref IntPtr offsetPtr, interop_charinfo[] discretisationPointInfo, int numberOfDiscretisationPoints)
+        public virtual int Read1DMeshDiscretisationPoints(int ioncId, int meshId, ref IntPtr xBranchIndicesPtr, ref IntPtr offsetPtr, ref IntPtr discretisationPointsXPtr, ref IntPtr discretisationPointsYPtr, interop_charinfo[] discretisationPointInfo, int numberOfDiscretisationPoints)
         {
             int startIndex = 0;
             return ionc_get_1d_mesh_discretisation_points_dll(ref ioncId, ref meshId, ref xBranchIndicesPtr, ref offsetPtr, discretisationPointInfo, ref numberOfDiscretisationPoints, ref startIndex);
