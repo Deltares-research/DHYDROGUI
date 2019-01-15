@@ -215,6 +215,6 @@
     <value>Peak Enhancement Factor must be a value within the range 1 - 10.</value>
   </data>
   <data name="WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_" xml:space="preserve">
-    <value>Model start time does not precede any of Boundary Condition time points.</value>
+    <value>Model start time does not precede any of the time points of</value>
   </data>
 </root>
