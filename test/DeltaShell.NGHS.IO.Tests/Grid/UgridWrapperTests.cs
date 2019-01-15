@@ -206,7 +206,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
                 //9. Get the coordinates of the mesh points
                 GridWrapper.interop_charinfo[] meshpointsinfo = new GridWrapper.interop_charinfo[rnmeshpoints];
-                ierr = wrapper.Read1DMeshDiscretisationPoints(ioncId, networkId, ref c_branchidx, ref c_offset, ref c_discretisationPointsX, ref c_discretisationPointsY,  meshpointsinfo, rnmeshpoints);
+                ierr = wrapper.Read1DMeshDiscretisationPoints(ioncId, networkId, ref c_branchidx, ref c_offset, ref c_discretisationPointsX, ref c_discretisationPointsY,  meshpointsinfo, rnmeshpoints, startIndex);
                 Assert.That(ierr, Is.EqualTo(0));
                 int[] rc_branchidx = new int[rnmeshpoints];
                 double[] rc_offset = new double[rnmeshpoints];

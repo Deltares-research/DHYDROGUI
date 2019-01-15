@@ -204,7 +204,8 @@ namespace DeltaShell.NGHS.IO.Grid
                 discretisationPointsYPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfDiscretisationPoints);
 
                 var meshpointsinfo = new GridWrapper.interop_charinfo[numberOfDiscretisationPoints];
-                ierr = wrapper.Read1DMeshDiscretisationPoints(ioncId, meshId, ref branchIdxPtr, ref offsetPtr, ref discretisationPointsXPtr, ref discretisationPointsYPtr, meshpointsinfo, numberOfDiscretisationPoints);
+                var startIndex = 0;
+                ierr = wrapper.Read1DMeshDiscretisationPoints(ioncId, meshId, ref branchIdxPtr, ref offsetPtr, ref discretisationPointsXPtr, ref discretisationPointsYPtr, meshpointsinfo, numberOfDiscretisationPoints, startIndex);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
