@@ -60,8 +60,8 @@ namespace Sobek.IntegrationTests
         private static void EnsureAllCrossSectionDefinitionsHaveAtLeastOneSection(IHydroNetwork network)
         {
             var crossSectionDefinitionsWithoutSections = network.CrossSections.Select(cs => cs.Definition)
-                .Union(network.SharedCrossSectionDefinitions)
-                .Where(csd => !csd.Sections.Any())
+                .Where(cs => cs.GetType() != typeof(CrossSectionDefinitionProxy))
+                .Concat(network.SharedCrossSectionDefinitions).Where(csd => !csd.Sections.Any())
                 .ToList();
 
             if (!crossSectionDefinitionsWithoutSections.Any()) return;

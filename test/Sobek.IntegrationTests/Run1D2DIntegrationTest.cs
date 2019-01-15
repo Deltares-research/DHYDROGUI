@@ -124,6 +124,8 @@ namespace Sobek.IntegrationTests
 
                 ActivityRunner.RunActivity(hydroModel);
 
+                Assert.AreEqual(ActivityStatus.Cleaned, hydroModel.Status);
+
                 var coupler = hydroModel.CurrentWorkflow as Iterative1D2DCoupler;
                 Assert.NotNull(coupler);
 
@@ -156,6 +158,8 @@ namespace Sobek.IntegrationTests
                 ICompositeActivity hydroModel = app.Project.RootFolder.Models.Cast<ICompositeActivity>().First();
 
                 ActivityRunner.RunActivity(hydroModel);
+
+                Assert.AreEqual(ActivityStatus.Cleaned, hydroModel.Status);
 
                 var coupler = hydroModel.CurrentWorkflow as Iterative1D2DCoupler;
                 Assert.NotNull(coupler);
