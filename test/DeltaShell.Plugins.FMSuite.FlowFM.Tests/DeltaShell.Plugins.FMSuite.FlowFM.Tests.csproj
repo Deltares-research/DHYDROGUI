@@ -309,10 +309,12 @@
     <Compile Include="IO\MduFileHelperTest.cs" />
     <Compile Include="IO\MduFileTest.cs" />
     <Compile Include="IO\PlizFileImporterExporterTest.cs" />
+    <Compile Include="IO\StructuresFileIntegrationTest.cs" />
+    <Compile Include="IO\StructuresFileReadTest.cs" />
     <Compile Include="IO\WaterFlowFMMduFileTestHelper.cs" />
     <Compile Include="IO\ObsFileImporterExporterTest.cs" />
     <Compile Include="IO\PolFileImporterExporterTest.cs" />
-    <Compile Include="IO\StructureFileWriteTest.cs" />
+    <Compile Include="IO\StructuresFileWriteTest.cs" />
     <Compile Include="IO\Importers\FMRstFileImporterTest.cs" />
     <Compile Include="IO\LdbFileTest.cs" />
     <Compile Include="IO\FMMapFileFunctionStoreTest.cs" />

@@ -18,7 +18,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
     [TestFixture]
-    public class StructureFileWriteTest
+    public class StructuresFileWriteTest
     {
         [Test]
         [Category(TestCategory.DataAccess)]
