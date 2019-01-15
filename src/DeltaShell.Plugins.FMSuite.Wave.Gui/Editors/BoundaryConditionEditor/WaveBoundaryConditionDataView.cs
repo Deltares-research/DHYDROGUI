@@ -182,15 +182,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
         }
         public ViewInfo ViewInfo { get; set; }
 
-        public IEventedList<IView> ChildViews
-        {
-            get { return functionView.ChildViews; }
-        }
+        public IEventedList<IView> ChildViews => functionView.ChildViews;
 
-        public bool HandlesChildViews
-        {
-            get { return true; }
-        }
+        public bool HandlesChildViews => true;
 
         public void ActivateChildView(IView childView)
         {
@@ -204,9 +198,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
         private void TimeSeriesDialog()
         {
             var generateDialog = new TimeSeriesGeneratorDialog { ApplyOnAccept = false };
-
             generateDialog.SetData(null, StartTime, StopTime, Timestep);
-
             generateDialog.ShowDialog(this);
 
             if (generateDialog.DialogResult != DialogResult.OK)
@@ -214,20 +206,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
                 return;
             }
 
-            var supportPointsDialog = new SupportPointSelectionForm();
-            supportPointsDialog.ShowDialog(this);
+            SupportPointMode supportPointOperationMode;
+            if (boundaryCondition.SpatialDefinitionType == WaveBoundaryConditionSpatialDefinitionType.Uniform)
+            {
+                // When the spatial definition type of a wave boundary condition is equal to Uniform, there is only
+                // one data point with a function (point data) on it. This point data represents the point data on
+                // all points. Thus, only the data on the first point (which is always selected) should be altered.
+                supportPointOperationMode = SupportPointMode.SelectedPoint;
+            }
+            else
+            {
+                var supportPointsDialog = new SupportPointSelectionForm();
+                supportPointsDialog.ShowDialog(this);
+                supportPointOperationMode = supportPointsDialog.SupportPointOperationMode;
+            }
 
             functionView.Data = null;
 
             boundaryCondition.BeginEdit(new DefaultEditAction("Generate/modify timeseries"));
 
-            var count = boundaryCondition.Feature.Geometry.Coordinates.Count();
-            var boundaryConditionData = boundaryCondition.GetDataAtPoint(SelectedPointIndex);
-            switch (supportPointsDialog.SupportPointOperationMode)
+            var numberOfCoordinates = boundaryCondition.Feature.Geometry.NumPoints;
+            switch (supportPointOperationMode)
             {
                 case SupportPointMode.NoPoints:
                     return;
                 case SupportPointMode.SelectedPoint:
+                    var boundaryConditionData = boundaryCondition.GetDataAtPoint(SelectedPointIndex);
                     if (boundaryConditionData == null)
                     {
                         boundaryCondition.AddPoint(SelectedPointIndex);
@@ -252,7 +256,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
                     break;
                 case SupportPointMode.InactivePoints:
 
-                    for (var i = 0; i < count; ++i)
+                    for (var i = 0; i < numberOfCoordinates; ++i)
                     {
                         if (boundaryCondition.DataPointIndices.Contains(i)) continue;
                         boundaryCondition.AddPoint(i);
@@ -270,7 +274,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
                     break;
                 case SupportPointMode.AllPoints:
 
-                    for (var i = 0; i < count; ++i)
+                    for (var i = 0; i < numberOfCoordinates; ++i)
                     {
                         if (!boundaryCondition.DataPointIndices.Contains(i))
                         {
