@@ -51,6 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         public static string CellsToFeaturesName = "CellsToFeatures";
 
         private Iterative1D2DCouplerData iterative1D2DCouplerData;
+        private bool isRefreshing= false;
 
         public Iterative1D2DCoupler()
         {
@@ -290,10 +291,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private void FlowModel2DDiscretizationChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender != Flow2DModel || e.PropertyName != GridPropertyName) return;
-
+            if (sender != Flow2DModel || e.PropertyName != GridPropertyName || isRefreshing) return;
+            isRefreshing = true;
             Console.WriteLine("Sync links");
             RefreshMappings();
+            isRefreshing = false;
         }
 
         private void RefreshMappings(bool forceMapping = false)
