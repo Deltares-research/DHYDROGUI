@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             {
                 issues.Add(new ValidationIssue(null, ValidationSeverity.Error,
                     Resources.WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_,
-                    boundaryConditionWithParameterizedSpectrumTimeSeries));
+                    waveModel.TimePointData));
             }
         }
 
