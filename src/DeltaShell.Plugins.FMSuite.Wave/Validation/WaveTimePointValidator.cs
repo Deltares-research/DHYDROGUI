@@ -9,10 +9,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 {
     public static class WaveTimePointValidator
     {
-        public static List<ValidationIssue> Issues { get; private set; }
-        public static IList<DateTime> TimePoints { get; private set; }
-        public static WaveModel Model { get; private set; }
-        public static List<WaveBoundaryCondition> BoundaryConditions { get; private set; }
+        private static List<ValidationIssue> issues;
+        private static IList<DateTime> timePoints;
+        private static WaveModel waveModel;
 
         /// <summary>
         /// Validation for wave model time point editing.
@@ -21,61 +20,58 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         /// </summary>
         public static ValidationReport Validate(WaveModel model)
         {
-            Model = model;
-            Issues = new List<ValidationIssue>();
-            TimePoints = model.TimePointData.TimePoints;
-            BoundaryConditions = model.BoundaryConditions.ToList();
+            waveModel = model;
+            issues = new List<ValidationIssue>();
+            timePoints = model.TimePointData.TimePoints;
 
             ValidateBoundaryConditionTimePoints();
             ValidateTimePoints();
             ValidateReferenceTime();
 
-            return new ValidationReport("Waves Model Time Points", Issues);
+            return new ValidationReport("Waves Model Time Points", issues);
         }
 
         private static void ValidateBoundaryConditionTimePoints()
         {
-            if (BoundaryConditions.Any(b=> b.DataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries))
+            var boundaryConditionWithParameterizedSpectrumTimeSeries = waveModel.BoundaryConditions.Where(bc =>
+                bc.DataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries).ToList();
+
+            if (boundaryConditionWithParameterizedSpectrumTimeSeries.Count == 0) return;
+
+            var boundaryConditionPointData = boundaryConditionWithParameterizedSpectrumTimeSeries.SelectMany(bc => bc.PointData).ToList();
+            var boundaryConditionTimePoints = boundaryConditionPointData.SelectMany(b => b.Arguments[0].GetValues<DateTime>().ToList());
+            var allTimePointsPrecedeModelStartTime = boundaryConditionTimePoints.All(b => b.Date < timePoints.FirstOrDefault());
+
+            if (allTimePointsPrecedeModelStartTime)
             {
-                var boundaryConditionWithParameterizedSpectrumTimeSeries = BoundaryConditions.Where(bc =>
-                    bc.DataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries);
-
-                var boundaryConditionPointData = boundaryConditionWithParameterizedSpectrumTimeSeries.SelectMany(bc => bc.PointData).ToList();
-                var boundaryConditionTimePoints = boundaryConditionPointData.SelectMany(b => b.Arguments[0].GetValues<DateTime>().ToList());
-                var allTimePointsPrecedeModelStartTime = boundaryConditionTimePoints.All(b => b.Date < TimePoints.FirstOrDefault());
-
-                if (allTimePointsPrecedeModelStartTime)
-                {
-                    Issues.Add(new ValidationIssue(null, ValidationSeverity.Error,
-                        Resources.WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_,
-                        Model.TimePointData));
-                }
+                issues.Add(new ValidationIssue(null, ValidationSeverity.Error,
+                    Resources.WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_,
+                    boundaryConditionWithParameterizedSpectrumTimeSeries));
             }
-
         }
 
         private static void ValidateReferenceTime()
         {
-            if (TimePoints.Count > 0)
+            if (timePoints.Count > 0)
             {
-                var hasInvalidTimePoint = TimePoints.Any(tp => tp < Model.ModelDefinition.ModelReferenceDateTime);
+                var hasInvalidTimePoint = timePoints.Any(tp => tp < waveModel.ModelDefinition.ModelReferenceDateTime);
 
                 if (hasInvalidTimePoint)
                 {
-                    Issues.Add(new ValidationIssue(null, ValidationSeverity.Error,
+                    issues.Add(new ValidationIssue(null, ValidationSeverity.Error,
                                Resources.WaveTimePointValidator_Validate_Model_Start_time_precedes_Reference_Time,
-                       Model.TimePointData));
+                               waveModel.TimePointData));
                 }
             }
         }
 
         private static void ValidateTimePoints()
         {
-            if (!Model.IsCoupledToFlow && TimePoints.Count == 0)
+            if (!waveModel.IsCoupledToFlow && timePoints.Count == 0)
             {
-                Issues.Add(new ValidationIssue(Model, ValidationSeverity.Error,
+                issues.Add(new ValidationIssue(waveModel, ValidationSeverity.Error,
                     Resources.WaveTimePointValidator_Validate_No_time_points_defined,
-                    Model.TimePointData));
+                    waveModel.TimePointData));
             }
         }
     }

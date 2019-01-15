@@ -13,20 +13,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
     [TestFixture]
     public class WaveTimePointValidatorTest
     {
-        private WaveModel WaveModel;
+        private WaveModel waveModel;
 
         [SetUp]
         public void Initialize()
         {
-            WaveModel = new WaveModel();
+            waveModel = new WaveModel();
         }
 
         [Test]
         public void GivenWaveModelWithNoTimePointsDefinedAndNotCoupledToFlow_WhenValidating_ThenValidationErrorIsGiven()
         {
-            WaveModel.IsCoupledToFlow = false;
+            waveModel.IsCoupledToFlow = false;
 
-            var validationReport = WaveTimePointValidator.Validate(WaveModel);
+            var validationReport = WaveTimePointValidator.Validate(waveModel);
 
             Assert.That(validationReport, Is.Not.Null);
             Assert.That(validationReport.ErrorCount, Is.EqualTo(1));
@@ -36,9 +36,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         [Test]
         public void GivenWaveModelWithNoTimePointsDefinedAndCoupledToFlow_WhenValidating_ThenValidationErrorIsNotGiven()
         {
-            WaveModel.IsCoupledToFlow = true;
+            waveModel.IsCoupledToFlow = true;
 
-            var validationReport = WaveTimePointValidator.Validate(WaveModel);
+            var validationReport = WaveTimePointValidator.Validate(waveModel);
 
             Assert.That(validationReport, Is.Not.Null);
             Assert.That(validationReport.ErrorCount, Is.EqualTo(0), "A validation error(s) is given");
@@ -48,13 +48,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         public void GivenWaveModelWithStartTimePrecedingTheReferenceTime_WhenValidating_ThenValidationErrorIsGiven()
         {
             var timePoint = new DateTime(2000, 01, 01);
-            WaveModel.TimePointData = new WaveInputFieldData();
+            waveModel.TimePointData = new WaveInputFieldData();
             var timePoints = new List<DateTime> {timePoint};
-            var timePointData = WaveModel.TimePointData;
+            var timePointData = waveModel.TimePointData;
             timePointData.InputFields.Arguments[0].AddValues(timePoints);
             Assert.That(timePointData.TimePoints, Is.Not.Empty);
 
-            var validationReport = WaveTimePointValidator.Validate(WaveModel);
+            var validationReport = WaveTimePointValidator.Validate(waveModel);
 
             Assert.That(validationReport, Is.Not.Null);
             Assert.That(validationReport.ErrorCount, Is.EqualTo(1));
@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             var timeToBeAddedToReferenceTime = 1;
             SetupModelWithTimePoints(timeToBeAddedToReferenceTime);
 
-            var validationReport = WaveTimePointValidator.Validate(WaveModel);
+            var validationReport = WaveTimePointValidator.Validate(waveModel);
 
             Assert.That(validationReport, Is.Not.Null);
             Assert.That(validationReport.ErrorCount, Is.EqualTo(0));
@@ -83,13 +83,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             var boundaryCondition = CreateBoundaryConditionWithParameterizedTimeSeries();
             AddBoundaryCondition(boundaryCondition);
 
-            var boundaryConditionWithTimeSeries = WaveModel.ModelDefinition.BoundaryConditions.ElementAt(0);
+            var boundaryConditionWithTimeSeries = waveModel.ModelDefinition.BoundaryConditions.ElementAt(0);
             var pointData = boundaryConditionWithTimeSeries.PointData[0].Components;
             pointData[0].Arguments[0].SetValues(new[]
-                {WaveModel.ModelDefinition.ModelReferenceDateTime.AddYears(1)});
+                {waveModel.ModelDefinition.ModelReferenceDateTime.AddYears(1)});
 
             //When
-            var validationReport = WaveTimePointValidator.Validate(WaveModel);
+            var validationReport = WaveTimePointValidator.Validate(waveModel);
 
             //Then
             Assert.That(validationReport, Is.Not.Null, "The validation report is null");
@@ -110,12 +110,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             AddBoundaryCondition(boundaryConditionDataType1);
             AddBoundaryCondition(boundaryConditionDataType2);
 
-            var boundaryConditionWithTimeSeries = WaveModel.ModelDefinition.BoundaryConditions.ElementAt(0);
+            var boundaryConditionWithTimeSeries = waveModel.ModelDefinition.BoundaryConditions.ElementAt(0);
             var pointData = boundaryConditionWithTimeSeries.PointData[0].Components;
-            pointData[0].Arguments[0].SetValues(new[] {WaveModel.ModelDefinition.ModelReferenceDateTime.AddYears(1)});
+            pointData[0].Arguments[0].SetValues(new[] {waveModel.ModelDefinition.ModelReferenceDateTime.AddYears(1)});
           
             //When
-            var validationReport = WaveTimePointValidator.Validate(WaveModel);
+            var validationReport = WaveTimePointValidator.Validate(waveModel);
 
             //Then
             Assert.That(validationReport, Is.Not.Null, "The validation report is null");
@@ -134,13 +134,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             var boundaryCondition = CreateBoundaryConditionWithParameterizedTimeSeries();
             AddBoundaryCondition(boundaryCondition);
 
-            var boundaryConditionWithTimeSeries = WaveModel.ModelDefinition.BoundaryConditions.ElementAt(0);
+            var boundaryConditionWithTimeSeries = waveModel.ModelDefinition.BoundaryConditions.ElementAt(0);
             var pointData = boundaryConditionWithTimeSeries.PointData[0].Components;
             pointData[0].Arguments[0].SetValues(new[]
-                {WaveModel.ModelDefinition.ModelReferenceDateTime.AddYears(3)});
+                {waveModel.ModelDefinition.ModelReferenceDateTime.AddYears(3)});
 
             //When
-            var validationReport = WaveTimePointValidator.Validate(WaveModel);
+            var validationReport = WaveTimePointValidator.Validate(waveModel);
 
             //Then
             Assert.That(validationReport, Is.Not.Null, "The validation report is null");
@@ -158,17 +158,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             var boundaryCondition = CreateBoundaryConditionWithParameterizedTimeSeries();
             boundaryCondition.AddPoint(0);
             boundaryCondition.AddPoint(1);
-            WaveModel.ModelDefinition.BoundaryConditions.Add(boundaryCondition);
+            waveModel.ModelDefinition.BoundaryConditions.Add(boundaryCondition);
 
-            var boundaryConditionWithTimeSeries = WaveModel.ModelDefinition.BoundaryConditions.ElementAt(0);
+            var boundaryConditionWithTimeSeries = waveModel.ModelDefinition.BoundaryConditions.ElementAt(0);
             var precedingPointData = boundaryConditionWithTimeSeries.PointData[0].Components;
-            precedingPointData[0].Arguments[0].SetValues(new[] { WaveModel.ModelDefinition.ModelReferenceDateTime.AddYears(1) });
+            precedingPointData[0].Arguments[0].SetValues(new[] { waveModel.ModelDefinition.ModelReferenceDateTime.AddYears(1) });
 
             var nonPrecedingPointData = boundaryConditionWithTimeSeries.PointData[1].Components;
-            nonPrecedingPointData[0].Arguments[0].SetValues(new[] { WaveModel.ModelDefinition.ModelReferenceDateTime.AddYears(3) });
+            nonPrecedingPointData[0].Arguments[0].SetValues(new[] { waveModel.ModelDefinition.ModelReferenceDateTime.AddYears(3) });
            
             //When
-            var validationReport = WaveTimePointValidator.Validate(WaveModel);
+            var validationReport = WaveTimePointValidator.Validate(waveModel);
 
             //Then
             Assert.That(validationReport, Is.Not.Null, "The validation report is null");
@@ -186,14 +186,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             var boundaryCondition = CreateBoundaryConditionWithParameterizedTimeSeries();
             boundaryCondition.AddPoint(0);
             boundaryCondition.AddPoint(1);
-            WaveModel.ModelDefinition.BoundaryConditions.Add(boundaryCondition);
+            waveModel.ModelDefinition.BoundaryConditions.Add(boundaryCondition);
 
-            var boundaryConditionWithTimeSeries = WaveModel.ModelDefinition.BoundaryConditions.ElementAt(0);
+            var boundaryConditionWithTimeSeries = waveModel.ModelDefinition.BoundaryConditions.ElementAt(0);
             var precedingPointData = boundaryConditionWithTimeSeries.PointData[0].Components;
-            precedingPointData[0].Arguments[0].SetValues(new[] { WaveModel.ModelDefinition.ModelReferenceDateTime.AddYears(2) });
+            precedingPointData[0].Arguments[0].SetValues(new[] { waveModel.ModelDefinition.ModelReferenceDateTime.AddYears(2) });
 
             //When
-            var validationReport = WaveTimePointValidator.Validate(WaveModel);
+            var validationReport = WaveTimePointValidator.Validate(waveModel);
 
             //Then
             Assert.That(validationReport, Is.Not.Null, "The validation report is null");
@@ -232,15 +232,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         private void AddBoundaryCondition(WaveBoundaryCondition boundaryCondition)
         {
             boundaryCondition.AddPoint(0);
-            WaveModel.ModelDefinition.BoundaryConditions.Add(boundaryCondition);
+            waveModel.ModelDefinition.BoundaryConditions.Add(boundaryCondition);
         }
 
         private void SetupModelWithTimePoints(int addedTimeForModelStartTime)
         {
-            var timePoint = WaveModel.ModelDefinition.ModelReferenceDateTime.AddYears(addedTimeForModelStartTime);
-            WaveModel.TimePointData = new WaveInputFieldData();
+            var timePoint = waveModel.ModelDefinition.ModelReferenceDateTime.AddYears(addedTimeForModelStartTime);
+            waveModel.TimePointData = new WaveInputFieldData();
             var timePoints = new List<DateTime> { timePoint };
-            var timePointsData = WaveModel.TimePointData;
+            var timePointsData = waveModel.TimePointData;
             timePointsData.InputFields.Arguments[0].AddValues(timePoints);
 
             Assert.That(timePointsData.TimePoints, Is.Not.Empty);
