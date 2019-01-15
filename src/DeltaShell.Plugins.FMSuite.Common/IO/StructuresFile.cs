@@ -279,30 +279,30 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var generalStructureFormula = weirStructure.WeirFormula as GeneralStructureWeirFormula;
 
             // Width
-            AddDoubleOrEmptyPropertyConditionally(properties
-                                                , StructureRegion.WidthLeftW1.Key
-                                                , generalStructureFormula
-                                                      .WidthLeftSideOfStructure
-                                                , structureType);
-            AddDoubleOrEmptyPropertyConditionally(properties
-                                                , StructureRegion.WidthLeftWsdl.Key
-                                                , generalStructureFormula
-                                                      .WidthStructureLeftSide
-                                                , structureType);
-            AddDoubleOrEmptyPropertyConditionally(properties
-                                                , StructureRegion.WidthCenter.Key
-                                                , weirStructure.CrestWidth
-                                                , structureType);
-            AddDoubleOrEmptyPropertyConditionally(properties
-                                                , StructureRegion.WidthRightWsdr.Key
-                                                , generalStructureFormula
-                                                      .WidthStructureRightSide
-                                                , structureType);
-            AddDoubleOrEmptyPropertyConditionally(properties
-                                                , StructureRegion.WidthRightW2.Key
-                                                , generalStructureFormula
-                                                      .WidthRightSideOfStructure
-                                                , structureType);
+            AddDoubleOrEmptyPropertyConditionally(properties, 
+                                                  StructureRegion.WidthLeftW1.Key, 
+                                                  generalStructureFormula
+                                                      .WidthLeftSideOfStructure, 
+                                                  structureType);
+            AddDoubleOrEmptyPropertyConditionally(properties, 
+                                                  StructureRegion.WidthLeftWsdl.Key, 
+                                                  generalStructureFormula
+                                                      .WidthStructureLeftSide, 
+                                                  structureType);
+            AddDoubleOrEmptyPropertyConditionally(properties, 
+                                                  StructureRegion.WidthCenter.Key, 
+                                                  weirStructure.CrestWidth, 
+                                                  structureType);
+            AddDoubleOrEmptyPropertyConditionally(properties,
+                                                  StructureRegion.WidthRightWsdr.Key, 
+                                                  generalStructureFormula
+                                                      .WidthStructureRightSide, 
+                                                  structureType);
+            AddDoubleOrEmptyPropertyConditionally(properties, 
+                                                  StructureRegion.WidthRightW2.Key, 
+                                                  generalStructureFormula
+                                                      .WidthRightSideOfStructure, 
+                                                  structureType);
 
             // Level
             properties.Add(ConstructProperty(StructureRegion.LevelLeftZb1.Key,   generalStructureFormula.BedLevelLeftSideOfStructure,  structureType));

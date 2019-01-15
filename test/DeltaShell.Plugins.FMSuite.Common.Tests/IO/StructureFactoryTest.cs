@@ -233,7 +233,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual(new Point(680, 360), weir.Geometry);
             Assert.IsFalse(weir.UseCrestLevelTimeSeries);
             Assert.AreEqual(2.0, weir.CrestLevel);
-            Assert.AreEqual(0.0, weir.CrestWidth);
+            Assert.AreEqual(double.NaN, weir.CrestWidth);
             Assert.AreEqual(0, weir.CrestLevelTimeSeries.Time.Values.Count);
             Assert.IsInstanceOf<SimpleWeirFormula>(weir.WeirFormula);
             var simpleWeirFormula = (SimpleWeirFormula) weir.WeirFormula;
@@ -349,7 +349,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual(2, gate.CrestLevelTimeSeries.Time.Values.Count);
             Assert.AreEqual(1.2, gate.CrestLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
             Assert.AreEqual(3.4, gate.CrestLevelTimeSeries[new DateTime(2013, 1, 1, 1, 1, 0)]);
-            Assert.AreEqual(0.0, gate.CrestWidth);
+            Assert.AreEqual(double.NaN, gate.CrestWidth);
 
             Assert.IsTrue(gateWeirFormula.UseLowerEdgeLevelTimeSeries);
             Assert.AreEqual(2, gateWeirFormula.LowerEdgeLevelTimeSeries.Time.Values.Count);

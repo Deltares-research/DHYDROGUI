@@ -83,25 +83,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         private static void SetTimeSeriesProperty(Structure2D structure2D, string propertyName, string path, DateTime refDate, IStructure1D structure, string useTimeSeriesProperty, string constantValueProperty, TimeSeries timeSeries)
         {
-            ModelProperty property = structure2D.GetProperty(propertyName);
-            if (property != null)
+            var property = structure2D.GetProperty(propertyName);
+            if (property == null) return;
+
+            var steerable = (Steerable)property.Value;
+            switch (steerable.Mode)
             {
-                var steerable = (Steerable)property.Value;
-                switch (steerable.Mode)
-                {
-                    case SteerableMode.ConstantValue:
-                        TypeUtils.SetPropertyValue(structure, useTimeSeriesProperty, false);
-                        TypeUtils.SetPropertyValue(structure, constantValueProperty, steerable.ConstantValue);
-                        break;
-                    case SteerableMode.TimeSeries:
-                        TypeUtils.SetPropertyValue(structure, useTimeSeriesProperty, true);
-                        var filePath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(path, steerable.TimeSeriesFilename);
-                        var reader = new TimFile();
-                        reader.Read(filePath, timeSeries, refDate);
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
+                case SteerableMode.ConstantValue:
+                    TypeUtils.SetPropertyValue(structure, useTimeSeriesProperty, false);
+                    TypeUtils.SetPropertyValue(structure, constantValueProperty, steerable.ConstantValue);
+                    break;
+                case SteerableMode.TimeSeries:
+                    TypeUtils.SetPropertyValue(structure, useTimeSeriesProperty, true);
+                    var filePath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(path, steerable.TimeSeriesFilename);
+                    var reader = new TimFile();
+                    reader.Read(filePath, timeSeries, refDate);
+                    break;
+                default:
+                    throw new NotImplementedException();
             }
         }
 
@@ -349,10 +348,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var gsWeirFormula = new GeneralStructureWeirFormula()
             {
                 // Set default values for Structure2D general structures.
-                WidthStructureLeftSide    = double.NaN
-              , WidthStructureRightSide   = double.NaN
-              , WidthLeftSideOfStructure  = double.NaN
-              , WidthRightSideOfStructure = double.NaN
+                WidthStructureLeftSide    = double.NaN,
+                WidthStructureRightSide   = double.NaN,
+                WidthLeftSideOfStructure  = double.NaN,
+                WidthRightSideOfStructure = double.NaN
             };
 
             foreach (var property in Enum.GetValues(typeof(KnownGeneralStructureProperties)).Cast<KnownGeneralStructureProperties>())

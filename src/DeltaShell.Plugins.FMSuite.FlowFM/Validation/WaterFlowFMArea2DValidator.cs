@@ -60,10 +60,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             {
                 if (!model.SnapsToGrid(sourceAndSink.Feature.Geometry))
                 {
-                    issues.Add(new ValidationIssue(sourceAndSink
-                                                 , ValidationSeverity.Warning
-                                                 , $"source/sink '{sourceAndSink.Name}' not within grid extent"
-                                                 , model.Pipes));
+                    issues.Add(new ValidationIssue(sourceAndSink, 
+                                                   ValidationSeverity.Warning,
+                                                   $"source/sink '{sourceAndSink.Name}' not within grid extent",
+                                                   model.Pipes));
                 }
 
                 var timeArgument = sourceAndSink
@@ -76,18 +76,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                     if (startTime > model.StartTime || stopTime < model.StopTime)
                     {
-                        issues.Add(new ValidationIssue(sourceAndSink
-                                                     , ValidationSeverity.Error
-                                                     , $"source/sink '{sourceAndSink.Name}': discharge time series does not span the model run interval."
-                                                     , sourceAndSink));
+                        issues.Add(new ValidationIssue(sourceAndSink,
+                                                       ValidationSeverity.Error,
+                                                       $"source/sink '{sourceAndSink.Name}': discharge time series does not span the model run interval.",
+                                                       sourceAndSink));
                     }
                 }
                 else
                 {
-                    issues.Add(new ValidationIssue(sourceAndSink
-                                                 , ValidationSeverity.Error
-                                                 , $"source/sink '{sourceAndSink.Name}': discharge time series does not contain any values."
-                                                 , sourceAndSink));
+                    issues.Add(new ValidationIssue(sourceAndSink,
+                                                   ValidationSeverity.Error,
+                                                   $"source/sink '{sourceAndSink.Name}': discharge time series does not contain any values.",
+                                                   sourceAndSink));
                 }
             }
 
@@ -107,10 +107,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             {
                 if (!model.SnapsToGrid(fixedWeir.Geometry))
                 {
-                    issues.Add(new ValidationIssue(fixedWeir
-                                                 , ValidationSeverity.Warning
-                                                 , $"fixed weir '{fixedWeir.Name}' not within grid extent"
-                                                 , fixedWeirs));
+                    issues.Add(new ValidationIssue(fixedWeir, 
+                                                   ValidationSeverity.Warning,
+                                                   $"fixed weir '{fixedWeir.Name}' not within grid extent",
+                                                   fixedWeirs));
                 }
 
                 var dataToCheck =
@@ -118,13 +118,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 var counter = dataToCheck.DataColumns[1].ValueList.Count;
                 for (var i = 0; i < counter; i++)
                 {
-                    if (((double)dataToCheck.DataColumns[1].ValueList[i] <= 0.0) ||
-                        ((double)dataToCheck.DataColumns[2].ValueList[i] <= 0.0))
+                    if ((double)dataToCheck.DataColumns[1].ValueList[i] <= 0.0 ||
+                        (double)dataToCheck.DataColumns[2].ValueList[i] <= 0.0)
                     {
-                        issues.Add(new ValidationIssue(fixedWeir
-                                                     , ValidationSeverity.Warning
-                                                     , $"fixed weir '{fixedWeir.Name}' has unphysical sill depths, parts will be ignored by dflow-fm"
-                                                     , fixedWeirs));
+                        issues.Add(new ValidationIssue(fixedWeir, 
+                                                       ValidationSeverity.Warning,
+                                                       $"fixed weir '{fixedWeir.Name}' has unphysical sill depths, parts will be ignored by dflow-fm",
+                                                       fixedWeirs));
                     }
                 }
             }
@@ -146,19 +146,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             {
                 if (!model.SnapsToGrid(weir.Geometry))
                 {
-                    issues.Add(new ValidationIssue(weir
-                                                 , ValidationSeverity.Warning
-                                                 , $"{weir.Name} is not within grid extend."
-                                                 , weirs));
+                    issues.Add(new ValidationIssue(weir, 
+                                                   ValidationSeverity.Warning,
+                                                   $"{weir.Name} is not within grid extend.", 
+                                                   weirs));
                 }
 
                 var result = weir.Validate();
                 if (!result.IsValid)
                 {
-                    issues.Add(new ValidationIssue(weir
-                                                 , ValidationSeverity.Error
-                                                 , $"{weir.Name}: {result.ValidationException.Messages}"
-                                                 , weir));
+                    issues.Add(new ValidationIssue(weir,
+                                                   ValidationSeverity.Error,
+                                                   $"{weir.Name}: {result.ValidationException.Messages}",
+                                                   weir));
                 }
 
                 if (weir.UseCrestLevelTimeSeries)
@@ -170,28 +170,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                         if (startTime > model.StartTime || stopTime < model.StopTime)
                         {
-                            issues.Add(new ValidationIssue(weir
-                                                         , ValidationSeverity.Error
-                                                         , $"'{weir.Name}': crest level time series does not span the model run interval."
-                                                         , weir));
+                            issues.Add(new ValidationIssue(weir,
+                                                           ValidationSeverity.Error,
+                                                           $"'{weir.Name}': crest level time series does not span the model run interval.",
+                                                           weir));
                         }
                     }
                     else
                     {
-                        issues.Add(new ValidationIssue(weir
-                                                     , ValidationSeverity.Error
-                                                     , $"'{weir.Name}': crest level time series does not contain any values."
-                                                     , weir));
+                        issues.Add(new ValidationIssue(weir,
+                                                       ValidationSeverity.Error,
+                                                       $"'{weir.Name}': crest level time series does not contain any values.",
+                                                       weir));
                     }
                 }
 
                 if (weir.WeirFormula is SimpleWeirFormula weirFormula &&
                     weirFormula.LateralContraction < 0.0)
                 {
-                    issues.Add(new ValidationIssue(weir
-                                                 , ValidationSeverity.Error
-                                                 , $"'{weir.Name}': lateral contraction coefficient must be greater than or equal to zero."
-                                                 , weir));
+                    issues.Add(new ValidationIssue(weir, 
+                                                   ValidationSeverity.Error,
+                                                   $"'{weir.Name}': lateral contraction coefficient must be greater than or equal to zero.",
+                                                   weir));
                 }
 
                 if (weir.WeirFormula is IGatedWeirFormula gatedWeirFormula)
@@ -199,10 +199,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     // DoorHeight
                     if (gatedWeirFormula.DoorHeight < 0.0)
                     {
-                        issues.Add(new ValidationIssue(weir
-                                                     , ValidationSeverity.Error
-                                                     , $"'{weir.Name}': door height must be greater than or equal to 0."
-                                                     , weir));
+                        issues.Add(new ValidationIssue(weir,
+                                                       ValidationSeverity.Error,
+                                                       $"'{weir.Name}': door height must be greater than or equal to 0.",
+                                                       weir));
                     }
 
                     // HorizontalDoorOpeningWidth
@@ -213,10 +213,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         if (doorOpeningTimeSeries.Components[0].Values.Cast<object>()
                                                  .Any(value => (double)value < 0.0))
                         {
-                            issues.Add(new ValidationIssue(weir
-                                                         , ValidationSeverity.Error
-                                                         , $"'{weir.Name}': opening width time series values must be greater than or equal to 0."
-                                                         , weir));
+                            issues.Add(new ValidationIssue(weir,
+                                                           ValidationSeverity.Error,
+                                                           $"'{weir.Name}': opening width time series values must be greater than or equal to 0.",
+                                                           weir));
                         }
 
                         if (doorOpeningTimeSeries.Time.Values.Any())
@@ -226,26 +226,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                             if (startTime > model.StartTime || stopTime < model.StopTime)
                             {
-                                issues.Add(new ValidationIssue(weir
-                                                             , ValidationSeverity.Error
-                                                             , $"'{weir.Name}': opening width time series does not span the model run interval."
-                                                             , weir));
+                                issues.Add(new ValidationIssue(weir,
+                                                               ValidationSeverity.Error,
+                                                               $"'{weir.Name}': opening width time series does not span the model run interval.",
+                                                               weir));
                             }
                         }
                         else
                         {
-                            issues.Add(new ValidationIssue(weir
-                                                         , ValidationSeverity.Error
-                                                         , $"'{weir.Name}': opening width time series does not contain any values."
-                                                         , weir));
+                            issues.Add(new ValidationIssue(weir,
+                                                           ValidationSeverity.Error,
+                                                           $"'{weir.Name}': opening width time series does not contain any values.",
+                                                           weir));
                         }
                     }
                     else if (gatedWeirFormula.HorizontalDoorOpeningWidth < 0.0)
                     {
-                        issues.Add(new ValidationIssue(weir
-                                                     , ValidationSeverity.Error
-                                                     , $"'{weir.Name}': opening width must be greater than or equal to 0."
-                                                     , weir));
+                        issues.Add(new ValidationIssue(weir,
+                                                       ValidationSeverity.Error,
+                                                       $"'{weir.Name}': opening width must be greater than or equal to 0.",
+                                                       weir));
                     }
 
                     // LowerEdgeLevel
@@ -259,18 +259,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                             if (startTime > model.StartTime || stopTime < model.StopTime)
                             {
-                                issues.Add(new ValidationIssue(weir
-                                                             , ValidationSeverity.Error
-                                                             , $"'{weir.Name}': lower edge level time series does not span the model run interval."
-                                                             , weir));
+                                issues.Add(new ValidationIssue(weir,
+                                                               ValidationSeverity.Error,
+                                                               $"'{weir.Name}': lower edge level time series does not span the model run interval.",
+                                                               weir));
                             }
                         }
                         else
                         {
-                            issues.Add(new ValidationIssue(weir
-                                                         , ValidationSeverity.Error
-                                                         , $"'{weir.Name}': lower edge level time series does not contain any values."
-                                                         , weir));
+                            issues.Add(new ValidationIssue(weir,
+                                                           ValidationSeverity.Error,
+                                                           $"'{weir.Name}': lower edge level time series does not contain any values.",
+                                                           weir));
                         }
                     }
                 }
@@ -282,10 +282,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     if (generalStructureFormula.HorizontalDoorOpeningDirection !=
                         GateOpeningDirection.Symmetric)
                     {
-                        issues.Add(new ValidationIssue(weir
-                                                     , ValidationSeverity.Error
-                                                     , $"'{weir.Name}': only symmetric horizontal door opening direction is supported for general structures."
-                                                     , weir));
+                        issues.Add(new ValidationIssue(weir,
+                                                       ValidationSeverity.Error,
+                                                       $"'{weir.Name}': only symmetric horizontal door opening direction is supported for general structures.",
+                                                       weir));
                     }
 
                     // CrestWidth
@@ -313,15 +313,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                                                              string crestWidthPropertyName)
         {
             if (double.IsNaN(crestWidthValue))
-                issues.Add(new ValidationIssue(subjectWeir
-                                             , ValidationSeverity.Info
-                                             , $"{crestWidthPropertyName} for '{subjectWeir.Name}' structure type: {subjectWeir.WeirFormula.GetName2D()}, will be calculated by the computational core."
-                                             , subjectWeir));
+                issues.Add(new ValidationIssue(subjectWeir,
+                                               ValidationSeverity.Info,
+                                               $"{crestWidthPropertyName} for '{subjectWeir.Name}' structure type: {subjectWeir.WeirFormula.GetName2D()}, will be calculated by the computational core.",
+                                               subjectWeir));
             else if (crestWidthValue <= 0.0)
-                issues.Add(new ValidationIssue(subjectWeir
-                                             , ValidationSeverity.Error
-                                             , $"{crestWidthPropertyName} for '{subjectWeir.Name}' structure type: {subjectWeir.WeirFormula.GetName2D()}, must be greater than 0."
-                                             , subjectWeir));
+                issues.Add(new ValidationIssue(subjectWeir,
+                                               ValidationSeverity.Error,
+                                               $"{crestWidthPropertyName} for '{subjectWeir.Name}' structure type: {subjectWeir.WeirFormula.GetName2D()}, must be greater than 0.",
+                                               subjectWeir));
         }
 
         /// <summary>
@@ -337,19 +337,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             {
                 if (!model.SnapsToGrid(sobekPump.Geometry))
                 {
-                    issues.Add(new ValidationIssue(sobekPump
-                                                 , ValidationSeverity.Warning
-                                                 , $"pump '{sobekPump.Name}' not within grid extent"
-                                                 , pumps));
+                    issues.Add(new ValidationIssue(sobekPump,
+                                                   ValidationSeverity.Warning,
+                                                   $"pump '{sobekPump.Name}' not within grid extent",
+                                                   pumps));
                 }
 
                 var result = sobekPump.Validate();
                 if (!result.IsValid)
                 {
-                    issues.Add(new ValidationIssue(sobekPump
-                                                 , ValidationSeverity.Error
-                                                 , $"pump '{sobekPump.Name}': {result.ValidationException.Message}"
-                                                 , sobekPump));
+                    issues.Add(new ValidationIssue(sobekPump,
+                                                   ValidationSeverity.Error,
+                                                   $"pump '{sobekPump.Name}': {result.ValidationException.Message}",
+                                                   sobekPump));
                 }
 
                 // Capacity must be >= 0
@@ -358,10 +358,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     if (sobekPump.CapacityTimeSeries.Components[0].Values.Cast<object>()
                                  .Any(value => (double)value < 0.0))
                     {
-                        issues.Add(new ValidationIssue(sobekPump
-                                                     , ValidationSeverity.Error
-                                                     , $"pump '{sobekPump.Name}': capacity time series values must be greater than or equal to 0."
-                                                     , sobekPump));
+                        issues.Add(new ValidationIssue(sobekPump,
+                                                       ValidationSeverity.Error,
+                                                       $"pump '{sobekPump.Name}': capacity time series values must be greater than or equal to 0.",
+                                                       sobekPump));
                     }
 
                     if (sobekPump.CapacityTimeSeries.Time.Values.Any())
@@ -371,28 +371,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                         if (startTime > model.StartTime || stopTime < model.StopTime)
                         {
-                            issues.Add(new ValidationIssue(sobekPump
-                                                         , ValidationSeverity.Error
-                                                         , $"pump '{sobekPump.Name}': capacity time series does not span the model run interval."
-                                                         , sobekPump));
+                            issues.Add(new ValidationIssue(sobekPump,
+                                                           ValidationSeverity.Error,
+                                                           $"pump '{sobekPump.Name}': capacity time series does not span the model run interval.",
+                                                           sobekPump));
                         }
                     }
                     else
                     {
-                        issues.Add(new ValidationIssue(sobekPump
-                                                     , ValidationSeverity.Error
-                                                     , $"pump '{sobekPump.Name}': capacity time series does not contain any values."
-                                                     , sobekPump));
+                        issues.Add(new ValidationIssue(sobekPump,
+                                                       ValidationSeverity.Error,
+                                                       $"pump '{sobekPump.Name}': capacity time series does not contain any values.",
+                                                       sobekPump));
                     }
                 }
                 else
                 {
                     if (sobekPump.Capacity < 0)
                     {
-                        issues.Add(new ValidationIssue(sobekPump
-                                                     , ValidationSeverity.Error
-                                                     , $"pump '{sobekPump.Name}': Capacity must be greater than or equal to 0."
-                                                     , sobekPump));
+                        issues.Add(new ValidationIssue(sobekPump,
+                                                       ValidationSeverity.Error,
+                                                       $"pump '{sobekPump.Name}': Capacity must be greater than or equal to 0.",
+                                                       sobekPump));
                     }
                 }
 
@@ -418,9 +418,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             if (sobekPump.StartSuction < sobekPump.StopSuction)
             {
-                issues.Add(new ValidationIssue(sobekPump, ValidationSeverity.Error,
-                    "pump '" + sobekPump.Name +
-                    "': Suction start level must be greater than or equal to suction stop level.", sobekPump));
+                issues.Add(new ValidationIssue(sobekPump, 
+                                               ValidationSeverity.Error,
+                                               $"pump '{sobekPump.Name}': Suction start level must be greater than or equal to suction stop level.",
+                                               sobekPump));
             }
         }
 
@@ -428,9 +429,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             if (sobekPump.StartDelivery > sobekPump.StopDelivery)
             {
-                issues.Add(new ValidationIssue(sobekPump, ValidationSeverity.Error,
-                    "pump '" + sobekPump.Name +
-                    "': Delivery start level must be less than or equal to delivery stop level.", sobekPump));
+                issues.Add(new ValidationIssue(sobekPump, 
+                                               ValidationSeverity.Error,
+                                               $"pump '{sobekPump.Name}': Delivery start level must be less than or equal to delivery stop level.",
+                                               sobekPump));
             }
         }
     }
