@@ -62,8 +62,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             shapeTypeBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "ShapeType", false, DataSourceUpdateMode.OnPropertyChanged));
             periodTypeBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "PeriodType", false, DataSourceUpdateMode.OnPropertyChanged));
             spreadingTypeBox.DataBindings.Add(new Binding("SelectedValue", bindingSource, "DirectionalSpreadingType", false, DataSourceUpdateMode.OnPropertyChanged));
-            peakEnhBox.DataBindings.Add(new Binding("Text", bindingSource, "PeakEnhancementFactor", false, DataSourceUpdateMode.OnPropertyChanged));
-            gaussSpreadBox.DataBindings.Add(new Binding("Text", bindingSource, "GaussianSpreadingValue", false, DataSourceUpdateMode.OnPropertyChanged));
+            peakEnhBox.DataBindings.Add(new Binding("Text", bindingSource, "PeakEnhancementFactor"));
+            gaussSpreadBox.DataBindings.Add(new Binding("Text", bindingSource, "GaussianSpreadingValue"));
         }
 
         private void UnbindControls()

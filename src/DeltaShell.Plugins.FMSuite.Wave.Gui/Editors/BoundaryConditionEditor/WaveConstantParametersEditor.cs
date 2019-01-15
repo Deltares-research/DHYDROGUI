@@ -31,10 +31,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
 
             if (data != null)
             {
-                waveHeightBox.DataBindings.Add(new Binding("Text", data, "Height", false, DataSourceUpdateMode.OnPropertyChanged));
-                wavePeriodBox.DataBindings.Add(new Binding("Text", data, "Period", false, DataSourceUpdateMode.OnPropertyChanged));
-                waveDirectionBox.DataBindings.Add(new Binding("Text", data, "Direction", false, DataSourceUpdateMode.OnPropertyChanged));
-                waveSpreadingBox.DataBindings.Add(new Binding("Text", data, "Spreading", false, DataSourceUpdateMode.OnPropertyChanged));
+                waveHeightBox.DataBindings.Add(new Binding("Text", data, "Height"));
+                wavePeriodBox.DataBindings.Add(new Binding("Text", data, "Period"));
+                waveDirectionBox.DataBindings.Add(new Binding("Text", data, "Direction"));
+                waveSpreadingBox.DataBindings.Add(new Binding("Text", data, "Spreading"));
             }
         }
     }
