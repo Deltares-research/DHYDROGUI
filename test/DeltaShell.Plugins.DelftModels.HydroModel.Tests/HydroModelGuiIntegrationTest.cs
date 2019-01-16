@@ -569,35 +569,40 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Category(TestCategory.Slow)]
         public void FmModelShouldBeReplacedWhenImportedInIntegratedModel()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-            mduPath = TestHelper.CreateLocalCopy(mduPath);
-
-            /* create a integrated model */
-            var hydroModel = HydroModel.BuildModel(ModelGroup.FMWaveRtcModels);
-            var project = app.Project;
-
-            /* add it to you project */
-            project.RootFolder.Add(hydroModel);
-
-            var mainWindow = (MainWindow)gui.MainWindow;
-
-            // wait until gui starts
-            mainWindow.Loaded += delegate
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                /* get the water flow fm model */
-                var waterFlowFmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
-                Assert.NotNull(waterFlowFmModel);
-                Assert.That(waterFlowFmModel.Name, Is.StringContaining("FlowFM"));
+                const string modelName = "har";
+                var mduPath = Path.Combine(tempDir, $"{modelName}.mdu");
+                var fmModel = new WaterFlowFMModel(modelName);
+                fmModel.ExportTo(mduPath, false, false, false);
 
-                var fmImporter = app.FileImporters.OfType<WaterFlowFMFileImporter>().FirstOrDefault();
-                Assert.IsNotNull(fmImporter);
-                fmImporter.ImportItem(mduPath, waterFlowFmModel);
+                /* create a integrated model */
+                var hydroModel = HydroModel.BuildModel(ModelGroup.FMWaveRtcModels);
+                var project = app.Project;
 
-                var targetFmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
-                Assert.IsNotNull(targetFmModel);
-                Assert.That(targetFmModel.Name, Is.StringContaining("har"));
-            };
-            WpfTestHelper.ShowModal(mainWindow);
+                /* add it to you project */
+                project.RootFolder.Add(hydroModel);
+
+                var mainWindow = (MainWindow)gui.MainWindow;
+
+                // wait until gui starts
+                mainWindow.Loaded += delegate
+                {
+                    /* get the water flow fm model */
+                    var waterFlowFmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
+                    Assert.NotNull(waterFlowFmModel);
+                    Assert.That(waterFlowFmModel.Name, Is.StringContaining("FlowFM"));
+
+                    var fmImporter = app.FileImporters.OfType<WaterFlowFMFileImporter>().FirstOrDefault();
+                    Assert.IsNotNull(fmImporter);
+                    fmImporter.ImportItem(mduPath, waterFlowFmModel);
+
+                    var targetFmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
+                    Assert.IsNotNull(targetFmModel);
+                    Assert.That(targetFmModel.Name, Is.StringContaining(modelName));
+                };
+                WpfTestHelper.ShowModal(mainWindow);
+            });
         }
 
         [Test]
