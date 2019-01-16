@@ -265,7 +265,6 @@
     <Compile Include="ViewModels\HydroModelTimeSettingsViewModelTest.cs" />
     <Compile Include="ViewModels\TimeDependentModelBaseViewModelUnitTests.cs" />
     <Compile Include="WaterFlowFmModelDirectoryStructureTest.cs" />
-    <Compile Include="WaterFlowFMModelRtcTest.cs" />
     <Compile Include="WaterFlowFMModelWaveTest.cs" />
     <Compile Include="WaterFlowModel1DBuilder.cs" />
   </ItemGroup>
