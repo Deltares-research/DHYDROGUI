@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions.Filters;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.ImportExport.Sobek.HisData;
 using DeltaShell.Sobek.Readers.Readers;
@@ -141,31 +142,40 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
 
         }
 
-        [Test, Category(TestCategory.WorkInProgress)] // crashes in Test All System.IO.IOException : The process cannot access the file 'C:\BuildAgent\work\DeltaShell\test-d
+        [Test] // crashes in Test All System.IO.IOException : The process cannot access the file 'C:\BuildAgent\work\DeltaShell\test-d
         public void HisFunctionStoreWithNetworkCoverage()
         {
-            string uri = Path.Combine("HisData", "HisAndNetwork");
-            uri = Path.Combine(uri, "CALCPNT.HIS");
-            string path = Path.Combine(TestHelper.GetDataDir(), uri);
-            var componentName = "Waterlevel  (m AD)";
-            var indexLocation = 5;
+            var dataDir = TestHelper.GetDataDir();
 
-            var hisFileReader = new HisFileReader(path);
-            var location = hisFileReader.GetHisFileHeader.Locations[indexLocation];
-            var values = hisFileReader.ReadLocation(location, componentName).Select(row => row.Value).ToArray();
-            hisFileReader.Close();
-
-            using (var hisFunctionStore = new HisFunctionStore(path))
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var function = hisFunctionStore.Functions.OfType<INetworkCoverage>().First();
-                var variableLocations = function.Arguments.First(c => c.Name == "locations");
-                var variableWaterLevel = function.Components.First(c => c.Name == componentName);
-                var locationFilter = new VariableValueFilter<INetworkLocation>(variableLocations,
-                                                                              (INetworkLocation)
-                                                                              variableLocations.Values[indexLocation]);
+                // Get actual files.
+                var srcDirPath = Path.Combine(dataDir, "HisData", "HisAndNetwork");
+                FileUtils.CopyDirectory(srcDirPath, tempDir);
 
-                Assert.AreEqual(values, variableWaterLevel.GetValues(locationFilter));
-            }
+                const string fileName = "CALCPNT.HIS";
+                var targetFilePath = Path.Combine(tempDir, fileName);
+
+                const string componentName = "Waterlevel  (m AD)";
+                const int indexLocation = 5;
+
+                var hisFileReader = new HisFileReader(targetFilePath);
+                var location = hisFileReader.GetHisFileHeader.Locations[indexLocation];
+                var values = hisFileReader.ReadLocation(location, componentName).Select(row => row.Value).ToArray();
+                hisFileReader.Close();
+
+                using (var hisFunctionStore = new HisFunctionStore(targetFilePath))
+                {
+                    var function = hisFunctionStore.Functions.OfType<INetworkCoverage>().First();
+                    var variableLocations = function.Arguments.First(c => c.Name   == "locations");
+                    var variableWaterLevel = function.Components.First(c => c.Name == componentName);
+                    var locationFilter = new VariableValueFilter<INetworkLocation>(variableLocations,
+                                                                                   (INetworkLocation)
+                                                                                   variableLocations.Values[indexLocation]);
+
+                    Assert.AreEqual(values, variableWaterLevel.GetValues(locationFilter));
+                }
+            });
         }
     }
 }
