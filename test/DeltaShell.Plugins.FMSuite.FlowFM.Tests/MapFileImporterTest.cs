@@ -47,13 +47,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(gridNc.Cells, gridApi.Cells, "cell order");
             Assert.AreEqual(gridNc.Edges, gridApi.Edges, "edge order");
         }
-
-        [Test, Ignore]
-        public void ErrorReadingFile() //DELFT3DFM-908
-        {
-            var mapPath = TestHelper.GetTestFilePath(@"data\Testrun5000_mk1d2d_map.nc");
-            var gridNc = NetFileImporter.ImportModelGrid(mapPath);
-            Assert.AreEqual("No Error: The given key was not present in the dictionary", "No Error: The given key was not present in the dictionary");
-        }
     }
 }
