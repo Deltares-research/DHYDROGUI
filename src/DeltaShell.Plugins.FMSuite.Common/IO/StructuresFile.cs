@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             foreach (var category in categories)
             {
                 // Filter out unexpected .ini categories:
-                if (category.Name != StructureCategoryName)
+                if (category.Name.ToLower() != StructureCategoryName.ToLower())
                 {
                     Log.WarnFormat("Category [{0}] not supported for structures and is skipped.", category.Name);
                     continue;

@@ -154,6 +154,11 @@ namespace DelftTools.Hydro.SewerFeatures
             Geometry = new Point(averageXCoordinate, averageYCoordinate);
         }
 
+        protected override void OnGeometryChanged()
+        {
+            compartments?.ForEach(c => c.Geometry = Geometry);
+        }
+
         private void CopyGeometryToCompartments()
         {
             compartments?.ForEach(c => c.Geometry = Geometry);
