@@ -740,23 +740,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
         #endregion
 
-
-        #region Persistence 
-
-        [Test]
-        public void
-            GivenAWeirViewModel_WhenSwitchingWeirFormula_ThenValuesShouldBePersisted()
-        {
-
-
-        }
-
-
-
-
-
-        #endregion
-
         [Test]
         public void GivenAWeirViewModel_WhenChangingTheCrestLevel_ThenTwoEventsShouldBeFiredForRefreshingTwoBoxesInTheView()
         {

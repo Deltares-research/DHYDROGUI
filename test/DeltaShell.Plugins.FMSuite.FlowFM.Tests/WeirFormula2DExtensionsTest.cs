@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro.Structures.WeirFormula;
+﻿using System;
+using DelftTools.Hydro.Structures.WeirFormula;
 using NUnit.Framework;
 
 
@@ -41,6 +42,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var obtainedName = formula.GetName2D();
 
             Assert.That(obtainedName, Is.EqualTo("General structure"));
+        }
+
+        [Test]
+        public void WhenGetName2DIsCalledWithNull_ThenANullReferenceExceptionIsRaised()
+        {
+            SimpleWeirFormula nullFormula = null;
+            Assert.Throws<ArgumentNullException>(() => nullFormula.GetName2D());
+        }
+
+        [Test]
+        public void GivenAFormulaNotSupportedWithinFM_WhenGetName2DIsCalled_ThenANotImplementedExceptionIsRaised()
+        {
+            var notSupportedFormula = new FreeFormWeirFormula();
+            Assert.Throws<NotImplementedException>(() => notSupportedFormula.GetName2D());
         }
     }
 }

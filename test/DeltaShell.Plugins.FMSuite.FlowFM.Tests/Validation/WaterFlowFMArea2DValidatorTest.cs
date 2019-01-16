@@ -15,7 +15,7 @@ using SharpMapTestUtils;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 {
     [TestFixture]
-    class WaterFlowFMArea2DValidatorTest
+    public class WaterFlowFMArea2DValidatorTest
     {
         private WaterFlowFMModel model;
 

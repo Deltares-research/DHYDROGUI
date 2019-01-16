@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         /// Validate all entities that can occur in an Area2D of a WaterFlow Model. The anomalies are returned as messages in the ValidationReport.
         /// </summary>
         /// <param name="model"></param>
-        /// <returns>ValidationReport that contains the validationmessages which can be Info, Warning or Error</returns>
+        /// <returns>ValidationReport that contains the validation messages which can be Info, Warning or Error</returns>
         public static ValidationReport Validate(WaterFlowFMModel model)
         {
             var area = model.Area;
@@ -115,6 +115,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                 var dataToCheck =
                     model.FixedWeirsProperties.FirstOrDefault(d => d.Feature == fixedWeir);
+
+                if (dataToCheck == null) continue;
+
                 var counter = dataToCheck.DataColumns[1].ValueList.Count;
                 for (var i = 0; i < counter; i++)
                 {
