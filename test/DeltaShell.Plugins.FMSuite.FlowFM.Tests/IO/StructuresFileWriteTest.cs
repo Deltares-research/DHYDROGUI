@@ -166,7 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 });
 
                 // Read file with ini reader again.
-                AssertThatStructureCategoryExists(exportFilePath, out var category);
+                var category = AssertThatStructureCategoryExistsInFileAndReturn(exportFilePath);
                 AssertThatPropertyExistsAndIsEmpty(category, KnownStructureProperties.CrestWidth);
             });
         }
@@ -206,7 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 });
 
                 // Read file with ini reader again.
-                AssertThatStructureCategoryExists(exportFilePath, out var category);
+                var category = AssertThatStructureCategoryExistsInFileAndReturn(exportFilePath);
                 AssertThatPropertyExistsAndIsEmpty(category, KnownStructureProperties.GateSillWidth);
             });
         }
@@ -255,7 +255,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 });
 
                 // Read file with ini reader again.
-                AssertThatStructureCategoryExists(exportFilePath, out var category);
+                var category = AssertThatStructureCategoryExistsInFileAndReturn(exportFilePath);
 
                 AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.WidthLeftW1));
                 AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.WidthLeftWsdl));
@@ -293,17 +293,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         /// </summary>
         /// <param name="exportFilePath">The export file path.</param>
         /// <param name="category">The category.</param>
-        private static void AssertThatStructureCategoryExists(string exportFilePath, out IDelftIniCategory category)
+        private static IDelftIniCategory AssertThatStructureCategoryExistsInFileAndReturn(string exportFilePath)
         {
             var categories = DelftIniFileParser.ReadFile(exportFilePath);
 
             Assert.That(categories.Count, Is.EqualTo(1)
                         , "The number of categories does not match the expectation:");
-            category = categories[0];
+            var category = categories[0];
             Assert.That(category, Is.Not.Null
                         , "The structure category is not expected to be null.");
             Assert.That(category.Name, Is.EqualTo("structure")
                         , "The name of the category does not match the expectation:");
+
+            return category;
         }
 
         /// <summary>

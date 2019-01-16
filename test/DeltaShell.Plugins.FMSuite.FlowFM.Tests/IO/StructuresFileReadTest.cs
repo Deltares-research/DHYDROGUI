@@ -57,8 +57,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     structures = structuresFile.Read(fileIniPath);
                 });
 
-                AssertThatStructureExists(structures, out var weirdStructure);
-                AssertThatStructureIsCorrect(weirdStructure, typeof(SimpleWeirFormula));
+                AssertThatOnlyOneStructureExistsWithin(structures);
+
+                var weirStructure = structures[0];
+                AssertThatStructureIsCorrect(weirStructure, typeof(SimpleWeirFormula));
             });
         }
 
@@ -100,8 +102,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     structures = structuresFile.Read(fileIniPath);
                 });
 
-                AssertThatStructureExists(structures, out var weirdStructure);
-                AssertThatStructureIsCorrect(weirdStructure, typeof(GatedWeirFormula));
+                AssertThatOnlyOneStructureExistsWithin(structures);
+
+                var weirStructure = structures[0];
+                AssertThatStructureIsCorrect(weirStructure, typeof(GatedWeirFormula));
             });
         }
 
@@ -149,9 +153,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     structures = structuresFile.Read(fileIniPath);
                 });
 
-                AssertThatStructureExists(structures, out var weirdStructure);
-                AssertThatStructureIsCorrect(weirdStructure, typeof(GeneralStructureWeirFormula));
-                var generalStructureFormula = ((Weir2D) weirdStructure).WeirFormula as GeneralStructureWeirFormula;
+                AssertThatOnlyOneStructureExistsWithin(structures);
+
+                var weirStructure = structures[0];
+                AssertThatStructureIsCorrect(weirStructure, typeof(GeneralStructureWeirFormula));
+                var generalStructureFormula = ((Weir2D) weirStructure).WeirFormula as GeneralStructureWeirFormula;
                 AssertThatAdditionalGeneralStructureIsCorrect(generalStructureFormula);
             });
         }
@@ -282,11 +288,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(weirdStructure.CrestWidth, Is.NaN, "Expected weir's crest width to be Empty:");
         }
 
-        private static void AssertThatStructureExists(IList<IStructure> structures, out IStructure weirStructure)
+        private static void AssertThatOnlyOneStructureExistsWithin(IList<IStructure> structures)
         {
             Assert.That(structures, Is.Not.Null, "Expected the list of read structures to not be null.");
             Assert.That(structures.Count, Is.EqualTo(1), "Expected a different number of read structures:");
-            weirStructure = structures[0];
+            var weirStructure = structures[0];
             Assert.That(weirStructure, Is.Not.Null, "Expected read structure to not be null.");
         }
 

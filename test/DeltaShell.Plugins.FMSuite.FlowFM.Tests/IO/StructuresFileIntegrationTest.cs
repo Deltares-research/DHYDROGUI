@@ -34,10 +34,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var simpleWeir = GetSimpleWeir(simpleWeirName);
 
             const string gatedWeirName = "Open-the-gate-a-little";
-            var gatedWeir = getGatedWeir(gatedWeirName);
+            var gatedWeir = GetGatedWeir(gatedWeirName);
 
             const string generalStructureName = "general-structure-sir";
-            var generalStructure = getGeneralStructure(generalStructureName);
+            var generalStructure = GetGeneralStructure(generalStructureName);
 
             var writtenStructures = new List<IStructure>() {simpleWeir, gatedWeir, generalStructure};
 
@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
-        private static Weir2D getGeneralStructure(string generalWeirdName)
+        private static Weir2D GetGeneralStructure(string weirName)
         {
             var generalStructureFormula = new GeneralStructureWeirFormula()
             {
@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 WidthStructureRightSide = double.NaN,
             };
 
-            var generalStructure = new Weir2D(generalWeirdName)
+            var generalStructure = new Weir2D(weirName)
             {
                 WeirFormula = generalStructureFormula,
                 CrestWidth = double.NaN,
@@ -130,9 +130,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             return generalStructure;
         }
 
-        private static Weir2D getGatedWeir(string gatelyWeirdName)
+        private static Weir2D GetGatedWeir(string weirName)
         {
-            var gatedWeir = new Weir2D(gatelyWeirdName)
+            var gatedWeir = new Weir2D(weirName)
             {
                 WeirFormula = new GatedWeirFormula(true),
                 CrestWidth = double.NaN,
@@ -141,9 +141,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             return gatedWeir;
         }
 
-        private static Weir2D GetSimpleWeir(string simplyWeirdName)
+        private static Weir2D GetSimpleWeir(string weirName)
         {
-            var simpleWeir = new Weir2D(simplyWeirdName)
+            var simpleWeir = new Weir2D(weirName)
             {
                 WeirFormula = new SimpleWeirFormula(),
                 CrestWidth = double.NaN,
