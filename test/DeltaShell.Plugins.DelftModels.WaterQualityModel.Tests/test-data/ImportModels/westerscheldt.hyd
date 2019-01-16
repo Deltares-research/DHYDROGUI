@@ -23,19 +23,19 @@ hydrodynamic-file           'westerscheldt'
 aggregation-file            none
 boundaries-file             'westerscheldt.bnd'
 waqgeom-file                'westerscheldt_waqgeom.nc'
-grid-indices-file           'westerscheldt.bnd'
-grid-coordinates-file       'westerscheldt_waqgeom.nc'
-volumes-file                'westerscheldt.vol'
-areas-file                  'westerscheldt.are'
-flows-file                  'westerscheldt.flo'
-pointers-file               'westerscheldt.poi'
-lengths-file                'westerscheldt.len'
+grid-indices-file           none
+grid-coordinates-file       none
+volumes-file                none
+areas-file                  none
+flows-file                  none
+pointers-file               none
+lengths-file                none
 salinity-file               none
 temperature-file            none
 vert-diffusion-file         none
-horizontal-surfaces-file    'westerscheldt.srf'
-surfaces-file               'westerscheldt.srfold'
-shear-stresses-file         'westerscheldt.tau'
+horizontal-surfaces-file    none
+surfaces-file               none
+shear-stresses-file         none
 attributes-file             'westerscheldt.atr'
 hydrodynamic-layers
        1.000000

@@ -11,6 +11,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 {
     [TestFixture]
+    [Category(TestCategory.DataAccess)]
     public class AttributesFileReaderTest
     {
         [Test]

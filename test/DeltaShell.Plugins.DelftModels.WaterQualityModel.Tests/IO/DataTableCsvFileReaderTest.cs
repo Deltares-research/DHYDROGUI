@@ -13,6 +13,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 {
     [TestFixture]
+    [Category(TestCategory.DataAccess)]
     public class DataTableCsvFileReaderTest
     {
         private readonly string timeBlockCsvPath =
