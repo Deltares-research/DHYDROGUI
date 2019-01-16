@@ -55,8 +55,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         #region RepositorySettings
         private const string Delft3DFM_AcceptanceModelsRepository = "https://repos.deltares.nl/repos/DSCTestbench/trunk/cases/e110_delft3dfm_suite/f01_acceptance_models/";
         private const string SOBEK3_AcceptanceModelsRepository = "https://repos.deltares.nl/repos/DSCTestbench/trunk/cases/e111_sobek3_suite/f01_acceptance_models/";
-        private const string CredentialsUser = "dscbuildserver";
-        private const string CredentialsPwd = "Bu1lds3rv3r";
+        private const string CredentialsUser = "%svn_buildserver_user%";
+        private const string CredentialsPwd = "%svn_buildserver_password%";
         #endregion
 
         #region TestFixture
