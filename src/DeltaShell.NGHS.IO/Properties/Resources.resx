@@ -132,9 +132,6 @@
   <data name="AGrid_Couldn_t_get_the_network_ids" xml:space="preserve">
     <value>Couldn't get the network ids</value>
   </data>
-  <data name="AGrid___because_the_API_was_not_instantiated_" xml:space="preserve">
-    <value>, because the API was not instantiated.</value>
-  </data>
   <data name="AGrid_ThrowIfError__because_of_error_number___0_" xml:space="preserve">
     <value>, because of error number: {0}</value>
   </data>
@@ -377,5 +374,8 @@
   </data>
   <data name="RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_roughness_network_coverage_is_not_created" xml:space="preserve">
     <value>While creating the roughnes section from the roughness file the roughness network coverage is not created</value>
+  </data>
+  <data name="AGrid_GetValidGridApi___because_the_API_was_not_instantiated_or_Grid_not_valid_Ugrid_" xml:space="preserve">
+    <value>, because the API was not instantiated or Grid not valid Ugrid.</value>
   </data>
 </root>

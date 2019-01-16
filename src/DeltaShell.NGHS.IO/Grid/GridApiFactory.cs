@@ -13,16 +13,24 @@ namespace DeltaShell.NGHS.IO.Grid
                 : new UGridApi();
         }
 
-        public static IUGridNetworkApi CreateNewNetwork()
+        public static IUGridNetworkApi CreateNewNetwork(bool runRemote = true)
         {
+            return runRemote
+                ? (IUGridNetworkApi)new RemoteUGridNetworkApi()
+                : new UGridNetworkApi();
+
             // TODO: consider allowing remote running explicitly (like the 'CreateNew' function above)
             return (Environment.Is64BitProcess != Environment.Is64BitOperatingSystem)
                     ? (IUGridNetworkApi)new RemoteUGridNetworkApi()
                     : new UGridNetworkApi();
         }
 
-        public static IUGridNetworkDiscretisationApi CreateNewNetworkDiscretisation()
+        public static IUGridNetworkDiscretisationApi CreateNewNetworkDiscretisation(bool runRemote = true)
         {
+            return runRemote
+                ? (IUGridNetworkDiscretisationApi)new RemoteUGridNetworkDiscretisationApi()
+                : new UGridNetworkDiscretisationApi();
+
             // TODO: consider allowing remote running explicitly (like the 'CreateNew' function above)
             return (Environment.Is64BitProcess != Environment.Is64BitOperatingSystem)
                    ? (IUGridNetworkDiscretisationApi)new RemoteUGridNetworkDiscretisationApi()

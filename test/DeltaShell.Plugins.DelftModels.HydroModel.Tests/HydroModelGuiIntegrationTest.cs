@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private void InitializeGui()
         {
-            new RunningActivityLogAppender();
+            //new RunningActivityLogAppender();
             //HACK: inside this constructor singleton magic happens, this should not be required
 
             gui = new DeltaShellGui();

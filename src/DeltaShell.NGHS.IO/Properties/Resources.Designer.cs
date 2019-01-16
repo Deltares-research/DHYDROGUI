@@ -61,15 +61,6 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to , because the API was not instantiated..
-        /// </summary>
-        public static string AGrid___because_the_API_was_not_instantiated_ {
-            get {
-                return ResourceManager.GetString("AGrid___because_the_API_was_not_instantiated_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t close grid nc file.
         /// </summary>
         public static string AGrid_CleanUp_Couldn_t_close_grid_nc_file {
@@ -102,6 +93,16 @@ namespace DeltaShell.NGHS.IO.Properties {
         public static string AGrid_CreateFile_Couldn_t_create_new_NetCDF_file_at_location_ {
             get {
                 return ResourceManager.GetString("AGrid_CreateFile_Couldn_t_create_new_NetCDF_file_at_location_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to , because the API was not instantiated or Grid not valid Ugrid..
+        /// </summary>
+        public static string AGrid_GetValidGridApi___because_the_API_was_not_instantiated_or_Grid_not_valid_Ugrid_ {
+            get {
+                return ResourceManager.GetString("AGrid_GetValidGridApi___because_the_API_was_not_instantiated_or_Grid_not_valid_Ug" +
+                        "rid_", resourceCulture);
             }
         }
         

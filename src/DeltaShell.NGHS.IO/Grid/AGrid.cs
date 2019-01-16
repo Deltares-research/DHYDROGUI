@@ -2,16 +2,19 @@
 using System.IO;
 using DeltaShell.NGHS.IO.Properties;
 using GeoAPI.Extensions.CoordinateSystems;
+using log4net;
 using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
     public abstract class AGrid<T> : IDisposable where T : class, IGridApi
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(AGrid<T>));
         protected readonly string filename;
         private readonly GridApiDataSet.NetcdfOpenMode mode;
         private bool disposed;
         private T gridApi;
+        private bool cleaning = false;
 
         public AGrid()
         {
@@ -120,19 +123,23 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int GetNumberOfNetworks()
         {
-            if (!IsInitialized()) Initialize(); 
-            int numberOfNetworks;
-            var ierr = GridApi.GetNumberOfNetworks(out numberOfNetworks);
-            ThrowIfError(ierr, Resources.AGrid_Couldn_t_get_the_number_of_networks);
+            int numberOfNetworks = 0;
+            try
+            {
+                DoWithValidGridApi(api => api.GetNumberOfNetworks(out numberOfNetworks), Resources.AGrid_Couldn_t_get_the_number_of_networks);
+            }
+            catch (Exception e)
+            {
+                log.Warn(e.Message);
+            }
+            
             return numberOfNetworks;
         }
 
         public int[] GetNetworkIds()
         {
-            if (!IsInitialized()) Initialize();
-            int[] networkIds;
-            var ierr = GridApi.GetNetworkIds(out networkIds);
-            ThrowIfError(ierr, Resources.AGrid_Couldn_t_get_the_network_ids);
+            int[] networkIds = new int[0];
+            DoWithValidGridApi( api => api.GetNetworkIds(out networkIds), Resources.AGrid_Couldn_t_get_the_network_ids);
             return networkIds;
         }
 
@@ -142,7 +149,10 @@ namespace DeltaShell.NGHS.IO.Grid
             var uGridApi = GridApi as T;
             var isValid = uGridApi != null && IsValid();
             if (!isValid)
-                throw new Exception(errormessage + Resources.AGrid___because_the_API_was_not_instantiated_);
+            {
+                CleanUp();
+                throw new Exception(errormessage + Resources.AGrid_GetValidGridApi___because_the_API_was_not_instantiated_or_Grid_not_valid_Ugrid_);
+            }
             return uGridApi;
         }
 
@@ -169,6 +179,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             if (ierr != GridApiDataSet.GridConstants.NOERR)
             {
+                CleanUp();
                 throw new Exception(string.Format(exceptionText + Resources.AGrid_ThrowIfError__because_of_error_number___0_, ierr));
             }
         }
@@ -196,8 +207,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
         private void CleanUp()
         {
-            if (disposed) return;
-
+            if (disposed || cleaning) return;
+            cleaning = true;
             try
             {
                 if (GridApi != null)
@@ -218,13 +229,21 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             finally
             {
-                // dispose GridApi if IDisposable
-                var disposableGridApi = GridApi as IDisposable;
-                if (disposableGridApi != null)
+                try
                 {
-                    disposableGridApi.Dispose();
+                    // dispose GridApi if IDisposable
+                    var disposableGridApi = GridApi as IDisposable;
+                    if (disposableGridApi != null)
+                    {
+                        disposableGridApi.Dispose();
+                    }
+                }
+                catch 
+                {
+                    //ignore    
                 }
                 GridApi = null;
+                cleaning = false;
             }
 
             disposed = true;

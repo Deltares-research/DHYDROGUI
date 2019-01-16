@@ -1,9 +1,13 @@
-﻿using DeltaShell.NGHS.IO.Properties;
+﻿using System;
+using DeltaShell.NGHS.IO.Properties;
+using log4net;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
     public class UGridNetworkDiscretisation : AGrid<IUGridNetworkDiscretisationApi>
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(UGridNetworkDiscretisation));
+
         public UGridNetworkDiscretisation(string filename, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite) : base(filename, mode)
         {
             GridApi = GridApiFactory.CreateNewNetworkDiscretisation();
@@ -57,21 +61,24 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int GetNumberOfNetworkDiscretisations()
         {
-            int numberOfNetworkDiscretisations;
-            var uGridApi = GetValidGridApi(Resources.UGridNetworkDiscretisation_GetNumberOfNetworkDiscretisations_Couldn_t_get_the_number_of_network_discretisations);
-            var ierr = uGridApi.GetNumberOfMeshByType(UGridMeshType.Mesh1D, out numberOfNetworkDiscretisations);
-            ThrowIfError(ierr, Resources.UGridNetworkDiscretisation_GetNumberOfNetworkDiscretisations_Couldn_t_get_the_number_of_network_discretisations);
-
+            int numberOfNetworkDiscretisations = 0;
+            DoWithValidGridApi(api => api.GetNumberOfMeshByType(UGridMeshType.Mesh1D, out numberOfNetworkDiscretisations), Resources.UGridNetworkDiscretisation_GetNumberOfNetworkDiscretisations_Couldn_t_get_the_number_of_network_discretisations);
             return numberOfNetworkDiscretisations;
         }
 
         public int[] GetNetworkDiscretisationIds(int numberOfMeshes)
         {
-            int[] meshIds;
-            var uGridApi = GetValidGridApi(Resources.UGridNetworkDiscretisation_GetNetworkDiscretisationIds_Couldn_t_get_the_network_discretisation_IDs);
-            var ierr = uGridApi.GetMeshIdsByMeshType(UGridMeshType.Mesh1D, numberOfMeshes, out meshIds);
-            ThrowIfError(ierr, Resources.UGridNetworkDiscretisation_GetNetworkDiscretisationIds_Couldn_t_get_the_network_discretisation_IDs);
-
+            int[] meshIds = new int[0];
+            try
+            {
+                DoWithValidGridApi(api => api.GetMeshIdsByMeshType(UGridMeshType.Mesh1D, numberOfMeshes, out meshIds),
+                    Resources
+                        .UGridNetworkDiscretisation_GetNetworkDiscretisationIds_Couldn_t_get_the_network_discretisation_IDs);
+            }
+            catch (Exception e)
+            {
+                log.Warn(e.Message);
+            }
             return meshIds;
         }
 

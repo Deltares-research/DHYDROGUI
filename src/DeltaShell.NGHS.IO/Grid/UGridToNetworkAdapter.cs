@@ -172,7 +172,16 @@ namespace DeltaShell.NGHS.IO.Grid
             uGridNetwork.Initialize();
 
             // There can be multiple networks stored in the NetCDF file
-            var numberOfNetworks = uGridNetwork.GetNumberOfNetworks();
+            int numberOfNetworks =0;
+            try
+            {
+                numberOfNetworks = uGridNetwork.GetNumberOfNetworks();
+            }
+            catch (Exception e)
+            {
+                Log.Warn(e.Message);
+                return new NetworkUGridDataModel(new HydroNetwork());
+            }
             if (!uGridNetwork.HasUgridDataSetConvention() || numberOfNetworks < 1)
             {
                 return new NetworkUGridDataModel(new HydroNetwork());
