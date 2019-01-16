@@ -390,6 +390,10 @@
       <Name>DeltaShell.Plugins.NetworkEditor</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj">
+      <Project>{4A0F7700-AA64-463F-A602-8C15E3886EC5}</Project>
+      <Name>DeltaShell.NGHS.TestUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.ImportExport.Sobek.Tests\DeltaShell.Plugins.ImportExport.Sobek.Tests.csproj">
       <Project>{e476da30-9e23-4529-8c1e-903c2380f7c8}</Project>
       <Name>DeltaShell.Plugins.ImportExport.Sobek.Tests</Name>

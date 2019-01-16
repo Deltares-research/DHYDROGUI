@@ -13,6 +13,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr.Gui;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -46,7 +47,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
-    [Category("Build.Acceptance")]
+    [Category(NghsTestCategory.AcceptanceTests)]
     [Category(TestCategory.Slow)]
     [Category(TestCategory.WindowsForms)]
     [TestFixture]

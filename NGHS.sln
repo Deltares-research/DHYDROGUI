@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.NGHS.IO", "src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj", "{E22A9330-5EE9-4C26-A014-3269BCF78DED}"
 EndProject
@@ -112,6 +112,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Dimr.Gui", "src\DeltaShell.Dimr.Gui\DeltaShell.Dimr.Gui.csproj", "{52847CB2-6A62-4B5A-8302-67198745D073}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Dimr.Tests", "test\DeltaShell.Dimr.Tests\DeltaShell.Dimr.Tests.csproj", "{F5E4F533-E9BB-4656-AB51-CCDE96EA57A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.NGHS.TestUtils", "test\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj", "{4A0F7700-AA64-463F-A602-8C15E3886EC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -331,6 +333,10 @@ Global
 		{F5E4F533-E9BB-4656-AB51-CCDE96EA57A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5E4F533-E9BB-4656-AB51-CCDE96EA57A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5E4F533-E9BB-4656-AB51-CCDE96EA57A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A0F7700-AA64-463F-A602-8C15E3886EC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A0F7700-AA64-463F-A602-8C15E3886EC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A0F7700-AA64-463F-A602-8C15E3886EC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A0F7700-AA64-463F-A602-8C15E3886EC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -389,6 +395,7 @@ Global
 		{92776540-7179-4C98-A37A-B5FD385D2592} = {09A651A9-1AA6-4534-860E-35C1302737FA}
 		{52847CB2-6A62-4B5A-8302-67198745D073} = {CE217C53-5027-48E1-BE6E-2978691F6BCE}
 		{F5E4F533-E9BB-4656-AB51-CCDE96EA57A5} = {09A651A9-1AA6-4534-860E-35C1302737FA}
+		{4A0F7700-AA64-463F-A602-8C15E3886EC5} = {09A651A9-1AA6-4534-860E-35C1302737FA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {08DB0000-7081-4B90-A760-F1705EB6D46A}
