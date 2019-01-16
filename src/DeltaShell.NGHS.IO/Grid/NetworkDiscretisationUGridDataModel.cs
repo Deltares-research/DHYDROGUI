@@ -45,14 +45,17 @@ namespace DeltaShell.NGHS.IO.Grid
 
             NumberOfDiscretisationPoints = discretisationPoints.Length;
 
-            NumberOfMeshEdges = discretisationPoints.Length
-                                - discretisation.Network.Nodes.Count
-                                + discretisation.Network.Branches.Count;
+            if (discretisation.Network != null)
+            {
+                NumberOfMeshEdges = discretisationPoints.Length
+                                    - discretisation.Network.Nodes.Count
+                                    + discretisation.Network.Branches.Count;
 
-            BranchIdx = discretisationPoints.Select(l => l.Branch)
-                .ToArray()
-                .Select(b => discretisation.Network.Branches.IndexOf(b))
-                .ToArray();
+                BranchIdx = discretisationPoints.Select(l => l.Branch)
+                    .ToArray()
+                    .Select(b => discretisation.Network.Branches.IndexOf(b))
+                    .ToArray();
+            }
 
             Offsets = discretisationPoints.Select(l => l.Chainage).ToArray();
 

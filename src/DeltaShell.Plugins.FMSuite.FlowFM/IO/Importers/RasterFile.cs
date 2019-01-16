@@ -268,6 +268,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                         Y = yValues[i] + deltaY,
                         Value = values[j + i * xValues.Count]
                     };
+                    if(gridCoverage.Components[0].NoDataValues.Contains(pointValue.Value)) continue;
                     yield return pointValue;
                 }
             }

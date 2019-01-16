@@ -892,6 +892,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)] //TOOLS-5082
+        [Ignore]
         public void RunModelWithNegativeDischargeLateralSourceHasCorrectOutputDischargeWhenNearSourceNode()
         {
             using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
