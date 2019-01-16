@@ -332,7 +332,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 using (var app = GetConfiguredApplication(tempProjectFilePath))
                 {
-                    using (var model = new WaterFlowFMModel())
+                    using (var model = new WaterFlowFMModel() {MduFilePath = tempDirPath})
                     {
                         model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                         var cellsValue = ((int)UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
@@ -340,7 +340,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                         model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
                         model.SedimentFractions.Add(new SedimentFraction { Name = "Fraction" });
-
+                        
                         model.ExportTo(tempMduFilePath);
                         model.ReloadGrid(true, true);
                     }

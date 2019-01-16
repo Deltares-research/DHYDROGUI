@@ -185,7 +185,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             return networkDiscretisation;
         }
 
-        //[Ignore("This test will be disabled (and moved to UGridToNetworkAdapterTest)")]
+        [Ignore("This test will be disabled (and moved to UGridToNetworkAdapterTest)")]
         [Test]
         [Category(TestCategory.DataAccess)]
         public static void WriteRead1DNetworkAndTest()

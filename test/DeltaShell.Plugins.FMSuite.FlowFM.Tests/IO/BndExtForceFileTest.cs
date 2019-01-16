@@ -17,12 +17,19 @@ using System.Text.RegularExpressions;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
+using SharpMap;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
     [TestFixture]
     public class BndExtForceFileTest
     {
+        [SetUp]
+        public void Setup()
+        {
+            Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+        }
         private static WaterFlowFMModelDefinition CreateModelDefinitionWithTwoBoundaries()
         {
             var modelDefinition = new WaterFlowFMModelDefinition();

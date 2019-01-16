@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 var fileCoordinateSystem = NetFile.ReadCoordinateSystem(targetFile);
                 var fileProjectedCSName = GetProjectedCoordinateSystemNameFromNetFile(targetFile);
 
-                if (fileCoordinateSystem == null ||
+                if (fileCoordinateSystem == null || (coordinateSystem == null && fileCoordinateSystem != null) ||
                     fileCoordinateSystem.AuthorityCode != coordinateSystem.AuthorityCode ||
                     (!String.IsNullOrEmpty(fileProjectedCSName) && fileProjectedCSName != coordinateSystem.Name))
                 {

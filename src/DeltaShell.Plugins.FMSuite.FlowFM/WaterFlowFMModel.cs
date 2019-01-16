@@ -2029,8 +2029,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             InitializeAreaDataColumns();
-
-            ReloadGrid();
+            if (Path.GetDirectoryName(NetFilePath) != Path.GetDirectoryName(mduPath) && !switchTo)
+            {
+                var orgMduFilePath = MduFilePath;
+                MduFilePath = Path.GetDirectoryName(mduPath);
+                ReloadGrid();
+                MduFilePath = orgMduFilePath;
+            }
+            else
+            {
+                ReloadGrid();
+            }
 
             FeatureFile1D2DWriter.Write1D2DFeatures(mduPath, this);
             mduFile.Write(mduPath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null);
