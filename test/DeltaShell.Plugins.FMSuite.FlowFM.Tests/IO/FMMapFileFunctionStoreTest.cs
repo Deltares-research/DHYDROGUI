@@ -62,12 +62,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var store = new FMMapFileFunctionStore(null)
             {
-                Path = TestHelper.GetTestFilePath("output_mapfiles\\r07f_map.nc")
+                Path = TestHelper.GetTestFilePath(@"output_mapfiles\zm_dfm_map.nc")
             };
 
-            // 1.5 is the lowest and 5.2698 the highest value of the first time slice
-            Assert.AreEqual(1.5, store.GetMinValue<double>(store.Functions[0].Components[0]), 0.001);
-            Assert.AreEqual(5.2698, store.GetMaxValue<double>(store.Functions[0].Components[0]), 0.001);
+            // 0.0 is the lowest and 17.8562 the highest value of the first time slice
+            var storeFunction = store.Functions[0];
+            Assert.AreEqual(0.0, store.GetMinValue<double>(storeFunction.Components[0]), 0.001);
+            Assert.AreEqual(17.8562, store.GetMaxValue<double>(storeFunction.Components[0]), 0.001);
         }
         
         [Test]
@@ -129,25 +130,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var store = new FMMapFileFunctionStore(null)
             {
-                Path = TestHelper.GetTestFilePath("output_mapfiles\\r07f_map.nc")
+                Path = TestHelper.GetTestFilePath(@"output_mapfiles\zm_dfm_map.nc")
             };
 
             var waterLevelFunction = (UnstructuredGridCellCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "s1");
 
             Assert.IsNotNull(waterLevelFunction);
             Assert.IsNotNull(waterLevelFunction.Grid);
-            Assert.AreEqual("waterlevel (s1)", waterLevelFunction.Name);
-            Assert.AreEqual(63802, waterLevelFunction.Grid.Cells.Count);
-            Assert.AreEqual(49, waterLevelFunction.Time.Values.Count);
-            Assert.AreEqual(3126298, waterLevelFunction.GetValues().Count);
-            Assert.AreEqual(new DateTime(2003, 10, 01, 0, 0, 0), waterLevelFunction.Time.Values.First());
-            Assert.AreEqual(new DateTime(2003, 10, 01, 4, 0, 0), waterLevelFunction.Time.Values.Last());
-            Assert.AreEqual(1.5d, (double) waterLevelFunction.Components[0].Values[0], 0.001);
+            Assert.AreEqual("water level (s1)", waterLevelFunction.Name);
+            Assert.AreEqual(19456, waterLevelFunction.Grid.Cells.Count);
+            Assert.AreEqual(2, waterLevelFunction.Time.Values.Count);
+            Assert.AreEqual(38912, waterLevelFunction.GetValues().Count);
+            Assert.AreEqual(new DateTime(2011, 8, 1, 0, 0, 0), waterLevelFunction.Time.Values.First());
+            Assert.AreEqual(new DateTime(2011, 8, 1, 2, 0, 0), waterLevelFunction.Time.Values.Last());
+            Assert.AreEqual(0.0d, (double) waterLevelFunction.Components[0].Values[0], 0.001);
             Assert.AreEqual("m", waterLevelFunction.Components[0].Unit.Symbol);
 
             var filter = new VariableValueFilter<DateTime>(waterLevelFunction.Time, waterLevelFunction.Time.Values.First());
-            Assert.AreEqual(63802, waterLevelFunction.GetValues(filter).Count);
-            Assert.AreEqual(new DateTime(2003, 10, 01, 0, 0, 0), waterLevelFunction.Time.GetValues(filter)[0]);
+            Assert.AreEqual(19456, waterLevelFunction.GetValues(filter).Count);
+            Assert.AreEqual(new DateTime(2011, 8, 1, 0, 0, 0), waterLevelFunction.Time.GetValues(filter)[0]);
         }
 
         [Test]
