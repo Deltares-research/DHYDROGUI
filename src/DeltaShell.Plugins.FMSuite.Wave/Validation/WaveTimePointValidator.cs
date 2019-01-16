@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Utils;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
@@ -43,13 +42,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             var boundaryConditionPointData = boundaryConditionWithParameterizedSpectrumTimeSeries.SelectMany(bc => bc.PointData).ToList();
             var boundaryConditionTimePoints = boundaryConditionPointData.SelectMany(b => b.Arguments[0].GetValues<DateTime>()).ToList();
 
-            if (boundaryConditionTimePoints.Count == 0) return;
-
             var allTimePointsPrecedeModelStartTime = boundaryConditionTimePoints.All(b => b.Date < timePoints.FirstOrDefault());
           
             if (allTimePointsPrecedeModelStartTime)
             {
-                var boundaryConditionNames = GetBoundaryConditionNames(boundaryConditionWithParameterizedSpectrumTimeSeries).ToList();
+                var boundaryConditionNames = boundaryConditionWithParameterizedSpectrumTimeSeries.Select(bc => bc.Name);
 
                 foreach (var name in boundaryConditionNames)
                 {
@@ -58,11 +55,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                         waveModel));
                 }
              }
-        }
-
-        private static IEnumerable<string> GetBoundaryConditionNames(List<WaveBoundaryCondition> boundaryConditions)
-        {
-            return boundaryConditions.Select(bc => bc.Name);
         }
 
         private static void ValidateReferenceTime()

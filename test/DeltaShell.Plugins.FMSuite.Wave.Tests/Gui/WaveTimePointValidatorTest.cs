@@ -64,8 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         [Test]
         public void GivenWaveModelWithStartTimePrecedingTheReferenceTime_WhenValidating_ThenValidationErrorIsNotGiven()
         {
-            var timeToBeAddedToReferenceTime = 1;
-            SetupModelWithTimePoints(timeToBeAddedToReferenceTime);
+            SetupModelWithTimePoints(1);
 
             var validationReport = WaveTimePointValidator.Validate(waveModel);
 
@@ -77,8 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         public void GivenWaveModelWithBoundaryConditionWithoutStartTime_WhenValidatingModelTimePoints_ThenValidationErrorIsNotGiven()
         {
             //Given
-            var addedTimeForModelStartTime = 2;
-            SetupModelWithTimePoints(addedTimeForModelStartTime);
+            SetupModelWithTimePoints(2);
 
             var boundaryCondition = CreateSpatiallyVaryingBoundaryConditionWithParameterizedTimeSeries();
             AddBoundaryCondition(boundaryCondition);
@@ -97,8 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         public void GivenWaveModelWithBoundaryConditionStartTimesNotPrecedingWaveModelStartTime_WhenValidatingModelTimePoints_ThenValidationErrorIsNotGiven()
         {
             //Given
-            var addedTimeForModelStartTime = 2;
-            SetupModelWithTimePoints(addedTimeForModelStartTime);
+            SetupModelWithTimePoints(2);
 
             var boundaryCondition = CreateSpatiallyVaryingBoundaryConditionWithParameterizedTimeSeries();
             AddBoundaryCondition(boundaryCondition);
@@ -122,8 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         public void GivenWaveModelWithAtLeastOneBoundaryConditionStartTimesNotPrecedingWaveModelStartTime_WhenValidatingModelTimePoints_ThenValidationErrorIsNotGiven()
         {
             //Given
-            var additionalTime = 2;
-            SetupModelWithTimePoints(additionalTime);
+            SetupModelWithTimePoints(2);
 
             var boundaryCondition = CreateSpatiallyVaryingBoundaryConditionWithParameterizedTimeSeries();
             boundaryCondition.AddPoint(0);
@@ -151,8 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         public void GivenWaveModelWithTwoBoundaryConditionStartTimesEqualToWaveModelStartTime_WhenValidatingModelTimePoints_ThenValidationErrorIsNotGiven()
         {
             //Given
-            var additionalTime = 2;
-            SetupModelWithTimePoints(additionalTime);
+            SetupModelWithTimePoints(2);
 
             var boundaryCondition = CreateSpatiallyVaryingBoundaryConditionWithParameterizedTimeSeries();
             boundaryCondition.AddPoint(0);
@@ -177,8 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         public void GivenWaveModelWithMultipleBoundaryConditionStartTimesPrecedingWaveModelStartTime_WhenValidatingModelTimePoints_ThenValidationErrorIsGiven()
         {
             //Given
-            var addedTimeForModelStartTime = 4;
-            SetupModelWithTimePoints(addedTimeForModelStartTime);
+            SetupModelWithTimePoints(4);
  
             var boundaryCondition = CreateUniformBoundaryConditionWithParameterizedTimeSeries();
             var boundaryCondition2 = CreateUniformBoundaryConditionWithParameterizedTimeSeries();
@@ -220,13 +214,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             Assert.That(validationReport.AllErrors.ElementAt(2).Message, Is.EqualTo($"Model start time does not precede any of the time points of {boundaryConditionName3}"));
         }
 
-        //todo
         [Test]
         public void GivenWaveModelWithMultipleBoundaryConditionStartTimesPrecedingWaveModelStartTimeWithOnlyOneMissingBoundaryConditionStartTime_WhenValidatingModelTimePoints_ThenValidationErrorIsGiven()
         {
             //Given
-            var addedTimeForModelStartTime = 4;
-            SetupModelWithTimePoints(addedTimeForModelStartTime);
+            SetupModelWithTimePoints(2);
 
             var boundaryCondition = CreateUniformBoundaryConditionWithParameterizedTimeSeries();
             var boundaryCondition2 = CreateUniformBoundaryConditionWithParameterizedTimeSeries();
@@ -265,8 +257,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         public void GivenWaveModelWithDifferentBoundaryConditionDataTypeStartTimesPrecedingWaveModelStartTime_WhenValidatingModelTimePoints_ThenValidationErrorIsGiven()
         {
             //Given
-            var addedTimeForModelStartTime = 2;
-            SetupModelWithTimePoints(addedTimeForModelStartTime);
+            SetupModelWithTimePoints(2);
 
             var boundaryConditionDataType1 = CreateSpatiallyVaryingBoundaryConditionWithParameterizedTimeSeries();
             var boundaryConditionDataType2 = CreateBoundaryConditionWitOtherDataType();
@@ -287,7 +278,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             var boundaryConditionName = waveModel.BoundaryConditions.ElementAt(0).Name;
             Assert.That(validationReport.ErrorCount, Is.EqualTo(errorCount), $"Total amount of errors is not equal to {errorCount}");
             Assert.That(validationReport.AllErrors.ElementAt(0).Message, Is.EqualTo($"Model start time does not precede any of the time points of {boundaryConditionName}"));
-
         }
 
         #region Helper methods
@@ -336,9 +326,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             waveModel.ModelDefinition.BoundaryConditions.Add(boundaryCondition);
         }
 
-        private void SetupModelWithTimePoints(int addedTimeForModelStartTime)
+        private void SetupModelWithTimePoints(int yearsToAdd)
         {
-            var timePoint = waveModel.ModelDefinition.ModelReferenceDateTime.AddYears(addedTimeForModelStartTime);
+            var timePoint = waveModel.ModelDefinition.ModelReferenceDateTime.AddYears(yearsToAdd);
             waveModel.TimePointData = new WaveInputFieldData();
             var timePoints = new List<DateTime> { timePoint };
             var timePointsData = waveModel.TimePointData;
