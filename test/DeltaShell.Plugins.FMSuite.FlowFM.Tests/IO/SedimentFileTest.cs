@@ -17,6 +17,7 @@ using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Data.Providers;
+using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
 using SharpMapTestUtils;
 
@@ -26,6 +27,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [Category(TestCategory.DataAccess)]
     public class SedimentFileTest
     {
+        [SetUp]
+        public void Setup()
+        {
+            Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+        }
+
         [Test]
         public void LoadAndSaveSedFlowFMWithCustomProperties()
         {

@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
         public IList<DelftIniCategory> WriteMeteoExtForceFileSubFiles(string modelDefinitionModelName, IList<IFmMeteoField> fmMeteoFields, DateTime refDate)
         {
-            WritePolyLines(fmMeteoFields);
+            WritePolyLinesMeteo(fmMeteoFields);
             var bcFile = new BcFile { MultiFileMode = BcFileWriteMode };
             var resultingItems = WriteFmMeteo(refDate, bcFile, fmMeteoFields, new BcMeteoFileDataBuilder(), modelDefinitionModelName).Distinct().ToList();
 
@@ -313,7 +313,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
         }
-        private void WritePolyLines(IEnumerable<IFmMeteoField> fmMeteoFields)
+        private void WritePolyLinesMeteo(IEnumerable<IFmMeteoField> fmMeteoFields)
         {
             foreach (var fmMeteoField in fmMeteoFields.Where(fmMeteoField => fmMeteoField.FeatureData?.Feature is Feature2D && fmMeteoField.FmMeteoLocationType == FmMeteoLocationType.Polygon))
             {
