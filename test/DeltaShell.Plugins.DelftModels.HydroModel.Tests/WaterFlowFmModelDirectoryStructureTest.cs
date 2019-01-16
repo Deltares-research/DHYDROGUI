@@ -1094,7 +1094,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
 
         [TestCase(TrachytopesModelProjectDirName)]
-        [TestCase(NoordzeeModelProjectDirName)]
+        //[TestCase(NoordzeeModelProjectDirName)] JIRA issue: D3DFMIQ-627 | original files too big, need to be replaced before uncommenting
         //5.1 & 5.2
         public void GivenAnFMModelWithInputAndOutput_WhenOpeningTheProject_ThenDirectoryStructureShouldBeMigratedToNewVersion(string projectFolder)
         {
