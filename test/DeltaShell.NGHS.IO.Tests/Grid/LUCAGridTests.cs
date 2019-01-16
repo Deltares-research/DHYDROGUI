@@ -103,6 +103,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         }
         [Test]
+        [Ignore]
         public void Runnetworkanddiscr()
         {
             var network = new HydroNetwork();

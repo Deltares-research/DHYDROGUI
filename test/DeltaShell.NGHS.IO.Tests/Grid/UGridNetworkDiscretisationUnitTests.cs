@@ -169,16 +169,18 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get the network discretisation IDs" + standardErrorMessage)]
-        public void WhenInvoking_GetNetworkDiscretisationIds_AndApiReturnsAnErrorValueThenThrowException()
+        public void WhenInvoking_GetNetworkDiscretisationIds_AndApiReturnsAnErrorValueThenLogsMessage()
         {
             int[] ids = {1, 1, 2, 3, 5, 8};
             uGridNetworkDiscretisationApi.Expect(api => api.GetMeshIdsByMeshType(Arg<UGridMeshType>.Is.Anything, Arg<int>.Is.Anything, out Arg<int[]>.Out(ids).Dummy))
                 .Return(errorValue).Repeat.Once();
 
             mocks.ReplayAll();
+            //[ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get the network discretisation IDs" + standardErrorMessage)]
+            var expecteWarningMessage = "Couldn't get the network discretisation IDs" + standardErrorMessage;
+            TestHelper.AssertAtLeastOneLogMessagesContains(()=> gridNetworkDiscretisation.GetNetworkDiscretisationIds(Arg<int>.Is.Anything),expecteWarningMessage);
 
-            gridNetworkDiscretisation.GetNetworkDiscretisationIds(Arg<int>.Is.Anything);
+            
         }
 
         [Test]

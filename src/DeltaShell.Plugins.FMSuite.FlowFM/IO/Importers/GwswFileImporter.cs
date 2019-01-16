@@ -156,14 +156,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         private static FlowBoundaryCondition CreateOutletCompartmentBoundaryCondition(WaterFlowFMModel fmModel, OutletCompartment outletCompartment)
         {
+            if (outletCompartment.OutletCompartmentBoundaryFeature.Geometry == null)
+                outletCompartment.OutletCompartmentBoundaryFeature.Geometry = outletCompartment.Geometry;
             var boundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
             {
                 Feature = outletCompartment.OutletCompartmentBoundaryFeature
             };
 
             boundaryCondition.AddPoint(0);
-            boundaryCondition.PointData[0][fmModel.StartTime] = -1000.0;
-            boundaryCondition.PointData[0][fmModel.StopTime] = -1000.0;
+            var dataAtZero = boundaryCondition.GetDataAtPoint(0);
+
+            dataAtZero[fmModel.StartTime] = -1000.0;
+            dataAtZero[fmModel.StopTime] = -1000.0;
             return boundaryCondition;
         }
 

@@ -45,8 +45,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
                 {
                     {1, 2}, {2, 3}, {3, 4}, {4, 1}, {1, 3}
                 };
+            var cells = new[,]
+            {
+                {1, 2, 3},
+                {1, 3, 4}
+            };
 
-            fmModel.Grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges);
+            fmModel.Grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges, cells);
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = fmModel.TimeStep;
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = fmModel.TimeStep;
             var observationPointFm = new GroupableFeature2DPoint { Name = "ObservationFM" };
@@ -145,7 +150,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
                 {
                     {1, 2}, {2, 3}, {3, 4}, {4, 1}, {1, 3}
                 };
-            fmModel.Grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges);
+            var cells = new[,]
+            {
+                {1, 2, 3},
+                {1, 3, 4}
+            };
+
+            fmModel.Grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges, cells);
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = fmModel.TimeStep;
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = fmModel.TimeStep;
             var observationPointFm = new GroupableFeature2DPoint { Name = "ObservationFM" };
@@ -222,7 +233,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
                 {
                     {1, 2}, {2, 3}, {3, 4}, {4, 1}, {1, 3}
                 };
-            waterFlowFmModel.Grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges);
+            var cells = new[,]
+            {
+                {1, 2, 3},
+                {1, 3, 4}
+            };
+
+            waterFlowFmModel.Grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges, cells);
             exporter.Export(waterFlowFmModel, null);
 
             Assert.IsTrue(File.Exists(Path.Combine(dirInfo.FullName, "dimr.xml")));
