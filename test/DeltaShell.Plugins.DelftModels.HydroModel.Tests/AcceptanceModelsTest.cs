@@ -53,13 +53,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     [TestFixture]
     public class AcceptanceModelsTest
     {
-        #region RepositorySettings
-        private const string Delft3DFM_AcceptanceModelsRepository = "https://repos.deltares.nl/repos/DSCTestbench/trunk/cases/e110_delft3dfm_suite/f01_acceptance_models/";
-        private const string SOBEK3_AcceptanceModelsRepository = "https://repos.deltares.nl/repos/DSCTestbench/trunk/cases/e111_sobek3_suite/f01_acceptance_models/";
-        private const string CredentialsUser = "%svn_buildserver_user%";
-        private const string CredentialsPwd = "%svn_buildserver_password%";
-        #endregion
-
         #region TestFixture
         private static string TestFixtureDirectory = string.Empty;
 
@@ -86,17 +79,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [TestCase("c05_Oosterschelde/Oosterschelde.zip", @"Filebased\e02.mdu", TestName = "c05_Oosterschelde")]
         public void Delft3DFM_AcceptanceModelTest(string relativeZipFilePath, string relativeMduFilePath)
         {
-            // Step 1: Download
-            var localZipFilePath = string.Empty;
-            Assert.True(TryPerformAction(() => DownloadZip(Delft3DFM_AcceptanceModelsRepository, relativeZipFilePath, out localZipFilePath)),
-                string.Format("Failed to download zip file: {0}", relativeZipFilePath));
+            // Step 1: Unzip 
+            var testDataFolder = new DirectoryInfo(TestHelper.GetDataDir()).Parent?.FullName;
+            var testCaseZipFilePath = Path.Combine(testDataFolder, "AcceptanceModels", "Delft3DFM", relativeZipFilePath);
 
-            // Step 2: Unzip
-            var localExtractedZipDir = string.Empty;
-            Assert.True(TryPerformAction(() => UnzipModel(localZipFilePath, out localExtractedZipDir)),
-                string.Format("Failed to unzip file: {0}", localZipFilePath));
+            Assert.IsTrue(File.Exists(testCaseZipFilePath), "Failed to find acceptance model test-data");
 
-            // Step 3: using(running GUI) add correct plugins for Delft3DFM
+            var testDirectory = Path.Combine(TestFixtureDirectory, TestHelper.GetCurrentMethodName()); 
+            FileUtils.DeleteIfExists(testDirectory);
+
+            Assert.True(TryPerformAction(() => ZipFileUtils.Extract(testCaseZipFilePath, testDirectory)),
+                string.Format("Failed to unzip file: {0}", testCaseZipFilePath));
+
+            // Step 2: using(running GUI) add correct plugins for Delft3DFM
             using (var gui = new DeltaShellGui())
             {
                 //load the plugins
@@ -131,8 +126,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 Action mainWindowShown = delegate
                 {
-                    // Step 3.5: Find root project path in zip folder
-                    var projectRootPath = GetProjectRootInUnzippedFolder(localExtractedZipDir, relativeMduFilePath);
+                    // Step 3: Find root project path in zip folder
+                    var projectRootPath = GetProjectRootInUnzippedFolder(testDirectory, relativeMduFilePath);
                     Assert.That(projectRootPath, Is.Not.Null);
 
                     // Step 4: Import MDU
@@ -141,7 +136,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         string.Format("Failed to import model: {0}", mduPath));
 
                     // Step 5: Save Project As
-                    var projectPath = Path.Combine(localExtractedZipDir, @"TestProjectFolder\TestProject.dsproj");
+                    var projectPath = Path.Combine(testDirectory, @"TestProjectFolder\TestProject.dsproj");
                     Assert.True(TryPerformAction(() => app.SaveProjectAs(projectPath)),
                         string.Format("Failed to save project before running the model: {0}", projectPath));
 
@@ -159,7 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         string.Format("Failed to validate model: {0}", rootModel.Name));
 
                     // Step 9: Dimr Export of FM model
-                    Assert.True(TryPerformAction(() => ExportDimrConfiguration(localExtractedZipDir, rootModel)),
+                    Assert.True(TryPerformAction(() => ExportDimrConfiguration(testDirectory, rootModel)),
                         string.Format("Failed to export dimr configuration for model: {0}", rootModel.Name));
 
                     // Step 10: Adjust Time Settings (10 time steps)
@@ -182,6 +177,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }
         }
+
 
         [TestCase("c01_sobek-rijn-j17_5-v1/sobek-rijn-j17_5-v1.zip", @"sobek-rijn-j17_5-v1.dsproj", TestName = "c01_sobek-rijn-j17_5-v1")]
         [TestCase("c02_sobek-maas-j17_5-v1/sobek-maas-j17_5-v1.zip", @"sobek-maas-j17_5-v1.dsproj", TestName = "c02_sobek-maas-j17_5-v1")]
@@ -207,17 +203,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [TestCase("c16_coupled_sobek-ovd_dv-j14_5-v1/sobek-ovd_dv-j14_5-v1.zip", @"sobek-ovd_dv-j14_5-v1.dsproj", TestName = "c16_coupled_sobek-ovd_dv-j14_5-v1")]
         public void SOBEK3_AcceptanceModelTest(string relativeZipFilePath, string relativeDsProjFilePath)
         {
-            // Step 1: Download
-            var localZipFilePath = string.Empty;
-            Assert.True(TryPerformAction(() => DownloadZip(SOBEK3_AcceptanceModelsRepository, relativeZipFilePath, out localZipFilePath)),
-                string.Format("Failed to download zip file: {0}", relativeZipFilePath));
+            // Step 1: Unzip 
+            var testDataFolder = new DirectoryInfo(TestHelper.GetDataDir()).Parent?.FullName;
+            var testCaseZipFilePath = Path.Combine(testDataFolder, "AcceptanceModels", "Sobek", relativeZipFilePath);
 
-            // Step 2: Unzip
-            var localExtractedZipDir = string.Empty;
-            Assert.True(TryPerformAction(() => UnzipModel(localZipFilePath, out localExtractedZipDir)),
-                string.Format("Failed to unzip file: {0}", localZipFilePath));
+            Assert.IsTrue(File.Exists(testCaseZipFilePath), "Failed to find acceptance model test-data");
 
-            // Step 3: using(running GUI) add correct plugins for SOBEK3
+            var testDirectory = Path.Combine(TestFixtureDirectory, TestHelper.GetCurrentMethodName());
+            FileUtils.DeleteIfExists(testDirectory);
+
+            Assert.True(TryPerformAction(() => ZipFileUtils.Extract(testCaseZipFilePath, testDirectory)),
+                string.Format("Failed to unzip file: {0}", testCaseZipFilePath));
+            
+            // Step 2: using(running GUI) add correct plugins for SOBEK3
             using (var gui = new DeltaShellGui())
             {
                 //load the plugins
@@ -257,8 +255,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 Action mainWindowShown = delegate
                 {
-                    // Step 3.5: Find root project path in zip folder
-                    var projectRootPath = GetProjectRootInUnzippedFolder(localExtractedZipDir, relativeDsProjFilePath);
+                    // Step 3: Find root project path in zip folder
+                    var projectRootPath = GetProjectRootInUnzippedFolder(testDirectory, relativeDsProjFilePath);
                     Assert.That(projectRootPath, Is.Not.Null);
 
                     // Step 4: Open Project
@@ -284,7 +282,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         string.Format("Failed to validate model: {0}", rootModel.Name));
 
                     // Step 9: Dimr Export of HydroModel
-                    Assert.True(TryPerformAction(() => ExportDimrConfiguration(localExtractedZipDir, rootModel)),
+                    Assert.True(TryPerformAction(() => ExportDimrConfiguration(testDirectory, rootModel)),
                         string.Format("Failed to export dimr configuration for model: {0}", rootModel.Name));
 
                     // Step 10: Adjust Time Settings (10 time steps)
@@ -311,6 +309,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
         #endregion
+
 
         #region HelperFunctions
         
@@ -366,36 +365,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         #endregion
 
         #region CommonOperations
-        private static void DownloadZip(string repositoryAddress, string relativeZipFilePath, out string localZipFilePath)
-        {
-            var zipFileName = Path.GetFileName(relativeZipFilePath);
-            if(string.IsNullOrEmpty(zipFileName))
-                throw new ArgumentException(string.Format("Unable to retrieve Zip File Name: {0}", relativeZipFilePath));
-
-            localZipFilePath = Path.Combine(TestFixtureDirectory, zipFileName);
-
-            if (!File.Exists(localZipFilePath))
-            {
-                using (var client = new WebClient() {Credentials = new NetworkCredential(CredentialsUser, CredentialsPwd)})
-                {
-                    var repositoryZipFilePath = Path.Combine(repositoryAddress, relativeZipFilePath);
-                    client.DownloadFile(repositoryZipFilePath, localZipFilePath);
-                }
-            }
-
-            if(!File.Exists(localZipFilePath))
-                throw new FileNotFoundException(string.Format("File does not exist: {0}", localZipFilePath));
-        }
-
-        private static void UnzipModel(string localZipFilePath, out string localExtractedZipPath)
-        {
-            var randomFileName = Path.GetRandomFileName().Substring(0, 5);
-            var zipFileInfo = new FileInfo(localZipFilePath);
-            localExtractedZipPath = Path.Combine(zipFileInfo.Directory.FullName, randomFileName);
-            FileUtils.DeleteIfExists(localExtractedZipPath);
-            ZipFileUtils.Extract(localZipFilePath, localExtractedZipPath);
-        }
-
         private static void ImportFlowFMModelAndAddToProject(IApplication app, string mduPath)
         {
             var fmModel = new WaterFlowFMModel(mduPath);
