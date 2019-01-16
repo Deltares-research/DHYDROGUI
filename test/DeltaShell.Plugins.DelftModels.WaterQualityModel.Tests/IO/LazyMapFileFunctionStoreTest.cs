@@ -134,6 +134,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void GivenAFunctionStoreCall_WhenDelWaqFilePathIsEmpty_ThenAnEmptyMultiDimensionalArrayShouldBeReturned()
         {
+            //Given
             var store = new LazyMapFileFunctionStore {Path = ""};
 
             var timeFilter = new VariableValueFilter<DateTime>
@@ -143,7 +144,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             var component = new Variable<double>("Salinity");
 
+            //When
             var values = store.GetVariableValues(component, timeFilter);
+
+            //Then
             Assert.AreEqual(0, values.Count);
         }
 
@@ -152,6 +156,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void
             GivenAFunctionStoreCall_WhenTheFunctionIsIndependentAndNotDateTimeAsType_ThenANotImplementedExceptionShouldBeThrown()
         {
+            //Given
             var store = new LazyMapFileFunctionStore {Path = mapFilePath};
 
             var timeFilter = new VariableValueFilter<DateTime>
@@ -164,7 +169,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             function.Components.Add(component);
 
+            //When
             var values = store.GetVariableValues(component, timeFilter);
+
+            //Then NotImplementedException
         }
 
         [Test]
@@ -172,6 +180,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void
             GivenAFunctionStoreCall_WhenTheFilterContainsMultipleValuesAndTheFunctionIsNotADoubleAndTheFunctionIsIndependentOfTime_ThenANotImplementedExceptionShouldBeThrown()
         {
+            //Given
             var store = new LazyMapFileFunctionStore {Path = mapFilePath};
 
             var timeFilter = new VariableValueFilter<DateTime>
@@ -185,13 +194,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             function.Arguments.Add(new Variable<int>("cell_index"));
             function.Components.Add(component);
 
+            //When
             var values = store.GetVariableValues(component, timeFilter);
+
+            //Then NotImplementedException
         }
 
         [Test]
         public void
             GivenAFunctionStoreCall_WhenTheFunctionNameIsMissing_ThenAnEmptyMultiDimensionalArrayShouldBeReturned()
         {
+            //Given
             var store = new LazyMapFileFunctionStore {Path = mapFilePath};
 
             var timeFilter = new VariableValueFilter<DateTime>
@@ -206,7 +219,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             function.Arguments.Add(new Variable<int>("cell_index"));
             function.Components.Add(component);
 
+            //When
             var values = store.GetVariableValues(component, timeFilter);
+
+            //Then
             Assert.AreEqual(0, values.Count);
         }
 
@@ -214,6 +230,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void
             GivenAFunctionStoreCall_WhenTheFunctionIsIndependentOfLocation_ThenAnEmptyMultiDimensionalArrayShouldBeReturned()
         {
+            //Given
             var store = new LazyMapFileFunctionStore {Path = mapFilePath};
 
             var timeFilter = new VariableValueFilter<DateTime>
@@ -226,8 +243,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             function.Arguments.Add(new Variable<DateTime>("datetime"));
             function.Components.Add(component);
-
+            
+            //When
             var values = store.GetVariableValues(component, timeFilter);
+            
+            //Then
             Assert.AreEqual(0, values.Count);
         }
 
@@ -236,6 +256,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void
             GivenAFunctionStoreCall_WhenFiltersAreMissingForLocationAndTime_ThenANotImplementedExceptionShouldBeThrown()
         {
+            //Given
             var store = new LazyMapFileFunctionStore {Path = mapFilePath};
 
             var timeFilter = new VariableValueFilter<double>
@@ -250,7 +271,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             function.Arguments.Add(new Variable<int>("cell_index"));
             function.Components.Add(component);
 
+            //When
             var values = store.GetVariableValues(component, timeFilter);
+
+            //Then NotImplementedException
         }
     }
 }

@@ -112,9 +112,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <summary>
         /// Get data from the DelwaqOutputFile by using the function store.
         /// </summary>
-        /// <param name="function"></param>
-        /// <param name="filters"></param>
-        /// <returns></returns>
+        /// <param name="function">Determines which parameter is needed from the delwaq output file</param>
+        /// <param name="filters">Determines which data for the parameter is filtered out </param>
+        /// <returns>
+        /// An IMultiDimensionalArray of double values.
+        /// Which is empty in case of:
+        /// - File is not valid
+        /// - Required parameter is dependent, but location is not an argument
+        /// </returns>
+        /// <exception cref="NotImplementedException">
+        /// In case of:
+        /// - Required parameter is called with the wrong/not supported expected type (should be double).
+        /// - Required parameter is independent of time.
+        /// - A filter contains more than 1 value.
+        /// - Required parameter is dependent and there are no filters for time and location given.
+        /// - Required parameter is independent and type is not DateTime.
+        /// </exception>
         public IMultiDimensionalArray GetVariableValues(IVariable function, params IVariableFilter[] filters)
         {
             var type = function.ValueType;
