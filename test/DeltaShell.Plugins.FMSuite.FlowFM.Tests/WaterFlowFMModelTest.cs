@@ -584,8 +584,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
         public void CheckIfBcmFileIsReferencedInMorFileAfterRunningAnImportedMduFile()
         {
             //arrange
@@ -661,7 +661,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
          
             //assert
             Assert.AreEqual(countedLines, 1);
-
         }
 
         [Test]

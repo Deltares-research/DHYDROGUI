@@ -827,11 +827,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void ImportTwenteModelAndCheckInitialConditions()
         {
             var modelImporter = new SobekHydroModelImporter(false);
-            string pathToSobekNetwork = TestHelper.GetTestFilePath(@"TwenteKanaal.lit\3\network.tp");
+            var pathToSobekNetwork = TestHelper.GetTestFilePath(@"TwenteKanaal.lit\3\network.tp");
             var hydroModel = (HydroModel)modelImporter.ImportItem(pathToSobekNetwork);
 
             var flowModel = hydroModel.Activities.OfType<WaterFlowModel1D>().First();
@@ -862,7 +862,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void ImportZwolleModelAndCheckLateralSources()
         {
             //runs the test with a altered version of the sw_max model.
@@ -888,23 +887,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
-        [Category(TestCategory.WorkInProgress)]
-        [Category(TestCategory.Integration)]
-        public void ImportVancouverNetwork_GenerateGridPointsAtCrossSectionsAndRunModel()
-        {
-            ImportVancouverNetworkAndRun(false);
-        }
-
-        [Test]
-        [Category(TestCategory.WorkInProgress)]
-        [Category(TestCategory.Integration)]
-        public void ImportVancouverNetwork_GenerateGridAtFixedChainagesAndRunModel()
-        {
-            ImportVancouverNetworkAndRun(true);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void ReadNetworkWithChineseNames()
         {
@@ -1287,63 +1269,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(0.22, formula.NegativeContractionCoefficient,0.001);
             Assert.AreEqual(0.23, formula.ExtraResistance,0.001);
             
-        }
-
-        /// <summary>
-        /// DelftShel.Plugins.DelftModels.Tests.FlowModel.DelftFlowModel1DTest
-        /// </summary>
-        private static void ImportVancouverNetworkAndRun(bool fixedSegments)
-        {
-            // import model and network.
-            var path = TestHelper.GetTestFilePath(@"Coquitlam-Vancouver-Canada\Network\NETWORK.TP");
-
-            //import existing network and model + default boundary conditions
-            var importer = new SobekWaterFlowModel1DImporter();
-            var flowModel1D = (WaterFlowModel1D)importer.ImportItem(path);
-
-            // set initial conditions
-            flowModel1D.DefaultInitialWaterLevel = 0.1;
-            flowModel1D.DefaultInitialDepth = 0.1;
-
-            // generate grid cells (on cross-sections) using HydroNetworkHelper
-            flowModel1D.NetworkDiscretization = new Discretization
-            {
-                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered,
-                Network = flowModel1D.Network
-            };
-            foreach (var branch in flowModel1D.Network.Channels)
-            {
-                NetworkHelper.ClearLocations(flowModel1D.NetworkDiscretization, branch);
-                if (fixedSegments)
-                {
-                    HydroNetworkHelper.GenerateDiscretization(flowModel1D.NetworkDiscretization, branch, 0, true, 0.5, true, false, true, 500);
-                }
-                else
-                {
-                    IList<double> offsets = new List<double> { 0 };
-
-                    foreach (var crossSection in branch.CrossSections)
-                    {
-                        offsets.Add(crossSection.Chainage);
-                    }
-                    offsets.Add(branch.Geometry.Length);
-                    HydroNetworkHelper.GenerateDiscretization(flowModel1D.NetworkDiscretization, branch, offsets);
-                }
-            }
-
-            Assert.IsTrue(File.Exists(WaterFlowModel1D.TemplateDataZipFile), "Cannot find template dir");
-            // WaterFlowModel1D.ServerExecutablePath = @"DelftModelServer.exe";
-            //flowModel1D.RunInSeparateProcess = true;
-
-            var t = DateTime.Now;
-
-            flowModel1D.StartTime = t;
-            flowModel1D.StopTime = t.AddMinutes(60);
-            flowModel1D.TimeStep = new TimeSpan(0, 10, 0);
-
-            flowModel1D.OutputTimeStep = flowModel1D.TimeStep;
-
-            RunModel(flowModel1D);
         }
 
         [Test]

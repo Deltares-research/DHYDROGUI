@@ -103,8 +103,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void DoubleClickingOutputItemProjectShouldEnableMapLayer()
         {
             var mdwPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"outputMapView\Waves.mdw"));
@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                 gui.Run();
 
                 // reimport model 
-                for (int i = 0; i < 2; i++)
+                for (var i = 0; i < 2; i++)
                 {
                     var model = new WaveModel(mdwPath);
 

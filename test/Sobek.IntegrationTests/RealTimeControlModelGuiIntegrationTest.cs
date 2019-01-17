@@ -448,12 +448,13 @@ namespace Sobek.IntegrationTests
         
         [Test]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void DisconnectingItemsDoesNotUnlinkDataItemTools7412()
         {
             // create flow1d model
-            var weir = new Weir() {Geometry = new Point(new Coordinate(10,0))};
-            var from = new HydroNode() { Geometry = new Point(new Coordinate(0, 0)) };
-            var to = new HydroNode() { Geometry = new Point(new Coordinate(100, 0)) };
+            var weir = new Weir {Geometry = new Point(new Coordinate(10,0))};
+            var from = new HydroNode { Geometry = new Point(new Coordinate(0, 0)) };
+            var to = new HydroNode { Geometry = new Point(new Coordinate(100, 0)) };
             var network = new HydroNetwork { Branches = { new Channel { BranchFeatures = { weir }, Source = from, Target = to } }, Nodes = { from, to } };
             var flowModel = new WaterFlowModel1D { Network = network };
 
@@ -465,7 +466,7 @@ namespace Sobek.IntegrationTests
 
             gui.Application.Project.RootFolder.Add(hydroModel);
 
-            // attach models to eacht other
+            // attach models to each other
             var target = rtcModel.GetDataItemByValue(input);
             var source = flowModel.GetChildDataItems(weir).First();
 

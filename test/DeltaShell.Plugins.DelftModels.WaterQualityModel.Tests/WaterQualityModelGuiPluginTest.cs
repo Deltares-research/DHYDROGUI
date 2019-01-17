@@ -224,7 +224,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         [Category(TestCategory.WindowsForms)]
         public void Check_When_NewWaqModel_Created_And_HydFileImported_Then_ZoomToExtents()
         {

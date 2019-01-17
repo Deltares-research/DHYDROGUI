@@ -31,10 +31,11 @@ namespace Sobek.IntegrationTests
 {
     [TestFixture]
     [Category(TestCategory.Integration)]
+    [Category(TestCategory.Slow)]
     public class RunDimrWorkflowsTest
     {
         [Test]
-        public void TestDimrConfigurationExport_BrdigePillar()
+        public void TestDimrConfigurationExport_BridgePillar()
         {
             // Create a basic FlowFM with bridge pillars and check 
             // their content was correctly added.

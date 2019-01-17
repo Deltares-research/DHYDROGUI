@@ -38,12 +38,13 @@ using Control = System.Windows.Controls.Control;
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
     [TestFixture]
+    [Category(TestCategory.Integration)]
     public class NetworkEditorGuiPluginTest
     {
         private static readonly MockRepository Mocks = new MockRepository();
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void PluginGuiUpdatesCoverageViewViewContextsOnNetworkCoverageNetworkPropertyChanged()
         {
             using (var gui = new DeltaShellGui())
@@ -99,7 +100,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void RenamingNetworkCoverageNodesWrappedWithDataItems()
         {
             using (var gui = new DeltaShellGui())
@@ -143,7 +143,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void SelectingSubElementOfNetworkWithNoNetworkViewOpenDoesNotCauseException()
         {
             using (var gui = new DeltaShellGui())
@@ -179,7 +178,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void ReleaseCopiedBranchFeatureOnProjectClosing()
         {
             var gui = Mocks.DynamicMock<IGui>();
@@ -217,7 +215,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void SelectingAnotherCrossSectionInNetworkTreeCleansViewCorrectly_Tools7425()
         {
             using (var gui = new DeltaShellGui())

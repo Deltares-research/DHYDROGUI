@@ -238,7 +238,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
         public void Test_Export_WaterFlowFmModel_WithPillarBridges()
         {
@@ -317,9 +316,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
-        public void GivenAnFMModelWithMorpholy_WhenExporting_ThenOnlyOneSetOfMorphologyFilesIsExported()
+        [Category(TestCategory.VerySlow)]
+        public void GivenAnFMModelWithMorphology_WhenExporting_ThenOnlyOneSetOfMorphologyFilesIsExported()
         {
             var tempDirPath = FileUtils.CreateTempDirectory();
             var tempProjectFilePath = Path.Combine(tempDirPath, "Project.dsproj");
@@ -521,8 +520,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void GivenAnFMModelWithAMorphologyBoundaryCondition_WhenSavedAndLoaded_ThenOnlyOneBoundaryIsCreated()
         {
             var tempDirPath = FileUtils.CreateTempDirectory();

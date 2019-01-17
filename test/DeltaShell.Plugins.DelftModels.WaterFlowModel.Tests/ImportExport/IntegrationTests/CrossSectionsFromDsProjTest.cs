@@ -37,16 +37,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void VariousCrossSectionsFromDsProj()
         {
-            string testDataDirName = "VariousCrossSects";
-            string sourcePath = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), @"FileWriters\IntegrationTests", testDataDirName));
+            const string testDataDirName = "VariousCrossSects";
+            var sourcePath = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), @"FileWriters\IntegrationTests", testDataDirName));
             FileUtils.CopyDirectory(sourcePath, testDataDirName, ".svn");
 
-            string dsProjPath = Path.Combine(testDataDirName, "VariousCrossSects.dsproj");
+            var dsProjPath = Path.Combine(testDataDirName, "VariousCrossSects.dsproj");
             app.OpenProject(dsProjPath);
 
-            WaterFlowModel1D waterFlowModel1D = app.Project.RootFolder.Models.OfType<WaterFlowModel1D>().ToList()[0];
+            var waterFlowModel1D = app.Project.RootFolder.Models.OfType<WaterFlowModel1D>().ToList()[0];
             waterFlowModel1D.Initialize();
             waterFlowModel1D.Finish();
             waterFlowModel1D.Cleanup();

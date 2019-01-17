@@ -528,6 +528,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void Test_CreateNewDataTable_ImportDifferentFile_ThenImportFirstFileAgain_DataRow_Is_StillCreated_And_WarningMessage_IsThrown()
         {
             const string bacteriaCopy = "bacteria(1)";
@@ -589,7 +590,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
                     Resources.DataTableManager_WriteTableContentsToNewTextDocumentFromFile_File___0___already_exists_within_the_database__The_file_that_is_being_imported_will_be_renamed_to___1____Note_that_your_results_may_be_affected_by_the_new_import,
                     "bacteria", bacteriaCopy));
 
-                //Assert rowname has been incremented by one and is now bacteria2
+                //Assert row name has been incremented by one and is now bacteria2
                 Assert.AreEqual(bacteriaCopy, dataTableManager.DataTables.Select(table => table.Name).Last());
             }
         }
