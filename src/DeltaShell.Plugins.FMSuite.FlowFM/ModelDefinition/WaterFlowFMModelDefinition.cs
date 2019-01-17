@@ -189,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 {GuiProperties.WriteSnappedFeatures.ToLower(), OnWriteSnappedFeaturesPropertyChanged},
             };
 
-            SetGuiTimePropertiesFromMduProperties();
+            SetDefaultGuiTimeProperties();
 
             Boundaries = new EventedList<Feature2D>();
             BoundaryConditionSets = new EventedList<BoundaryConditionSet>();
@@ -204,7 +204,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             UpdateWriteOutputSnappedFeatures();
         }
 
-       private void OnWaterFlowFMCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        /// <summary>Sets the default GUI time properties that are derived from the properties (.csv) file.</summary>
+        private void SetDefaultGuiTimeProperties()
+        {
+            var modelStartTime = (double)GetModelProperty(KnownProperties.TStart).Value;
+            GetModelProperty(GuiProperties.StartTime).Value = GetAbsoluteDateTime(modelStartTime, true);
+
+            var modelStopTime = (double)GetModelProperty(KnownProperties.TStop).Value;
+            GetModelProperty(GuiProperties.StopTime).Value = GetAbsoluteDateTime(modelStopTime, true);
+
+            SetDefaultTimeProperties(KnownProperties.HisInterval, GuiProperties.HisOutputDeltaT, GuiProperties.HisOutputStartTime, GuiProperties.HisOutputStopTime);
+            SetDefaultTimeProperties(KnownProperties.MapInterval, GuiProperties.MapOutputDeltaT, GuiProperties.MapOutputStartTime, GuiProperties.MapOutputStopTime);
+            SetDefaultTimeProperties(KnownProperties.ClassMapInterval, GuiProperties.ClassMapOutputDeltaT);
+            SetDefaultTimeProperties(KnownProperties.RstInterval, GuiProperties.RstOutputDeltaT, GuiProperties.RstOutputStartTime, GuiProperties.RstOutputStopTime);
+            SetDefaultTimeProperties(KnownProperties.WaqInterval, GuiProperties.WaqOutputDeltaT, GuiProperties.WaqOutputStartTime, GuiProperties.WaqOutputStopTime);
+        }
+
+        private void SetDefaultTimeProperties(string intervalPropertyName,
+                                  string deltaTPropertyName,
+                                  string startTimePropertyName = null,
+                                  string stopTimePropertyName = null)
+        {
+            var intervalInSeconds = ((IList<double>)GetModelProperty(intervalPropertyName).Value)[0];
+            if (intervalInSeconds > 0)
+            {
+                var seconds = (int) Math.Floor(intervalInSeconds);
+                GetModelProperty(deltaTPropertyName).Value = new TimeSpan(0, 0, 0, seconds);
+            }
+
+            if (startTimePropertyName != null)
+            {
+                GetModelProperty(startTimePropertyName).Value = GetModelProperty(GuiProperties.StartTime).Value;
+            }
+
+            if (stopTimePropertyName != null)
+            {
+                GetModelProperty(stopTimePropertyName).Value = GetModelProperty(GuiProperties.StopTime).Value;
+            }
+        }
+
+        private void OnWaterFlowFMCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (e.Action == NotifyCollectionChangeAction.Add)
             {

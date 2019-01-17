@@ -63,6 +63,61 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        public void WhenCreatingANewWaterFlowFMModelDefinition_GuiTimeIntervalsForWritingClassMapFilesAreSetAccordingToPropertiesFile()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            var writeClassMapFile = (bool) modelDefinition.GetModelProperty(GuiProperties.WriteClassMapFile).Value;
+            Assert.IsFalse(writeClassMapFile);
+            var classMapOutputInterval = (TimeSpan) modelDefinition.GetModelProperty(GuiProperties.ClassMapOutputDeltaT).Value;
+            Assert.IsTrue(new TimeSpan(0, 0, 5, 0).Equals(classMapOutputInterval));
+        }
+
+        [Test]
+        public void WhenCreatingANewWaterFlowFMModelDefinition_GuiTimeIntervalsForWritingMapFilesAreSetAccordingToPropertiesFile()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            var writeMapFile = (bool)modelDefinition.GetModelProperty(GuiProperties.WriteMapFile).Value;
+            Assert.IsTrue(writeMapFile);
+            var mapOutputInterval = (TimeSpan)modelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value;
+            Assert.IsTrue(new TimeSpan(0, 0, 20, 0).Equals(mapOutputInterval));
+        }
+
+        [Test]
+        public void WhenCreatingANewWaterFlowFMModelDefinition_GuiTimeIntervalsForWritingHisFilesAreSetAccordingToPropertiesFile()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            var writeHisFile = (bool)modelDefinition.GetModelProperty(GuiProperties.WriteHisFile).Value;
+            Assert.IsTrue(writeHisFile);
+            var hisOutputInterval = (TimeSpan)modelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value;
+            Assert.IsTrue(new TimeSpan(0, 0, 5, 0).Equals(hisOutputInterval));
+        }
+
+        [Test]
+        public void WhenCreatingANewWaterFlowFMModelDefinition_GuiTimeIntervalsForWritingRestartFilesAreSetAccordingToPropertiesFile()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            var writeRestartFile = (bool)modelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value;
+            Assert.IsFalse(writeRestartFile);
+            var restartOutputInterval = (TimeSpan)modelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value;
+            Assert.IsTrue(new TimeSpan(1, 0, 0, 0).Equals(restartOutputInterval));
+        }
+
+        [Test]
+        public void WhenCreatingANewWaterFlowFMModelDefinition_GuiTimeIntervalsForWritingWaqFilesAreSetAccordingToPropertiesFile()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            var writeWaqFile = (bool)modelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputInterval).Value;
+            Assert.IsFalse(writeWaqFile);
+            var waqOutputInterval = (TimeSpan)modelDefinition.GetModelProperty(GuiProperties.WaqOutputDeltaT).Value;
+            Assert.IsTrue(new TimeSpan(0, 0, 0, 0).Equals(waqOutputInterval));
+        }
+
+        [Test]
         [Category(TestCategory.DataAccess)]
         public void WriteMduFile_UpdatesCoordinateSystemInNetFileIfNecessary()
         {
