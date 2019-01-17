@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
         [TestCase(WaveSpectrumShapeType.PiersonMoskowitz, 0.0)]
         [TestCase(WaveSpectrumShapeType.Gauss, 0.0)]
-        public void GivenNonJonswapWaveBoundaryConditionWithPeakEnhancementFactorNotWithinExpectedRange_WhenValidatingBoundaryConditions_ThenValidationErrorIsReturned
+        public void GivenNonJonswapWaveBoundaryConditionWithPeakEnhancementFactorNotWithinExpectedRange_WhenValidatingBoundaryConditions_ThenNoValidationErrorIsReturned
             (WaveSpectrumShapeType shapeType, double peakEnhancementFactor)
         {
             // Given
