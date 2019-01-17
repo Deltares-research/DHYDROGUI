@@ -11,6 +11,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     public class WaterFlowFMModelRestartTest
     {
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void WaterFlowFMModelRestartCoverageTest()
         {
             var model = LoadBendProfModelWithWriteRestart();
@@ -32,11 +34,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel(mduPath)
+            {
+                WriteRestart = true,
+                OutputTimeStep = new TimeSpan(0, 0, 15)
+            };
 
-            model.WriteRestart = true;
             model.StopTime = model.StartTime.AddMinutes(2); //6 sec timestep
-            model.OutputTimeStep = new TimeSpan(0, 0, 15);
             model.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = model.TimeStep;
             model.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = model.TimeStep;
 
