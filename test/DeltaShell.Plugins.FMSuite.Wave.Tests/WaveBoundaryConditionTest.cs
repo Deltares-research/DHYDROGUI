@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             Assert.That(waveBoundaryCondition.PeakEnhancementFactor, Is.EqualTo(3.3));
         }
 
-        [TestCase(WaveDirectionalSpreadingType.Power, 2.0)]
+        [TestCase(WaveDirectionalSpreadingType.Power, 4.0)]
         [TestCase(WaveDirectionalSpreadingType.Degrees, 30.0)]
         public void GivenWaveBoundaryConditionWithParameterizedConstantDataType_WhenDataPointsAreAdded_ThenSpreadingValueIsDependentOnDirectionalSpreadingType
             (WaveDirectionalSpreadingType directionalSpreadingType, double expectedSpreadingValue)
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [TestCase(WaveDirectionalSpreadingType.Power, WaveDirectionalSpreadingType.Degrees, 30.0)]
-        [TestCase(WaveDirectionalSpreadingType.Degrees, WaveDirectionalSpreadingType.Power, 2.0)]
+        [TestCase(WaveDirectionalSpreadingType.Degrees, WaveDirectionalSpreadingType.Power, 4.0)]
         public void GivenWaveBoundaryConditionWithParameterizedConstantDataType_WhenDirectionalSpreadingTypeIsChanged_ThenSpreadingValueIsDependentOnNewDirectionalSpreadingType
             (WaveDirectionalSpreadingType initialDirectionalSpreadingType, WaveDirectionalSpreadingType newDirectionalSpreadingType, double expectedSpreadingValue)
         {
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             waveBoundaryCondition.SpectrumParameters.Values.ForEach(p => Assert.That(p.Spreading, Is.EqualTo(expectedSpreadingValue)));
         }
 
-        [TestCase(WaveDirectionalSpreadingType.Power, 2.0, WaveBoundaryCondition.PowerUnitSymbol)]
+        [TestCase(WaveDirectionalSpreadingType.Power, 4.0, WaveBoundaryCondition.PowerUnitSymbol)]
         [TestCase(WaveDirectionalSpreadingType.Degrees, 30.0, WaveBoundaryCondition.DegreesUnitSymbol)]
         public void GivenWaveBoundaryConditionWithParameterizedTimeSeriesDataType_WhenDirectionalSpreadingTypeIsChanged_ThenFunctionDefaultValuesAreAsExpected
             (WaveDirectionalSpreadingType directionalSpreadingType, double expectedDefaultSpreadingValue, string expectedDirectionUnitSymbol)
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [TestCase(WaveDirectionalSpreadingType.Power, WaveDirectionalSpreadingType.Degrees, 30.0, WaveBoundaryCondition.DegreesUnitSymbol)]
-        [TestCase(WaveDirectionalSpreadingType.Degrees, WaveDirectionalSpreadingType.Power, 2.0, WaveBoundaryCondition.PowerUnitSymbol)]
+        [TestCase(WaveDirectionalSpreadingType.Degrees, WaveDirectionalSpreadingType.Power, 4.0, WaveBoundaryCondition.PowerUnitSymbol)]
         public void GivenWaveBoundaryConditionWithParameterizedTimeSeriesDataType_WhenDataPointsAreAdded_ThenFunctionDefaultValuesAreAsExpected
             (WaveDirectionalSpreadingType initialDirectionalSpreadingType, WaveDirectionalSpreadingType newDirectionalSpreadingType, double expectedDefaultSpreadingValue, string expectedDirectionUnitSymbol)
         {
@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             });
         }
 
-        [TestCase(WaveDirectionalSpreadingType.Power, 2.0)]
+        [TestCase(WaveDirectionalSpreadingType.Power, 4.0)]
         [TestCase(WaveDirectionalSpreadingType.Degrees, 30.0)]
         public void GivenWaveBoundaryConditionWithUniformSpatialDefinitionType_WhenChangingDataTypeToParameterizedConstant_ThenSpectrumParameterValuesAreAsExpected
             (WaveDirectionalSpreadingType directionalSpreadingType, double expectedSpreadingValue)

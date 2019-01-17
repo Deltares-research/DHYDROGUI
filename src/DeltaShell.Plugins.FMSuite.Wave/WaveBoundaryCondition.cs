@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private double GetDefaultSpreadingValue()
         {
             return DirectionalSpreadingType == WaveDirectionalSpreadingType.Power 
-                ? 2.0 
+                ? 4.0
                 : 30.0;
         }
 
