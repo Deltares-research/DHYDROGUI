@@ -2,8 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Functions.Filters;
-using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
@@ -13,7 +11,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
-using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Core;
@@ -27,7 +24,6 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation;
 using DeltaShell.Plugins.ImportExport.Sobek;
@@ -189,8 +185,9 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.Jira)] // SOBEK3-1644
         [Category(TestCategory.Integration)]
-        [Category(TestCategory.VerySlow)]
+        [Category(TestCategory.Slow)]
         public void RunImportedAndCopiedModel()
         {
             var modelImporter = new SobekWaterFlowModel1DImporter();
