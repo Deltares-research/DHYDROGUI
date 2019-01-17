@@ -752,17 +752,10 @@ namespace Sobek.IntegrationTests
                         // load project
                         gui.Application.OpenProject(path);
 
-                        // open region view
-                        //gui.CommandHandler.OpenView(hydroModel.Region);
-
                         // open control group view
                         var retrievedHydroModel = (HydroModel)gui.Application.Project.RootFolder.Models.First();
                         var retrievedRtcModel = retrievedHydroModel.Models.OfType<RealTimeControlModel>().First();
                         gui.CommandHandler.OpenView(retrievedRtcModel.ControlGroups.First());
-
-                        var currentView = gui.DocumentViews.First() as ControlGroupEditor;
-
-                        //run the model
 
                         //check that the lookupsignal has effect
                     };
@@ -772,7 +765,8 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ExportIntegratedModelWithRunfallRunoffSetsBoundaryConditionCorrectly()
+        [Category(TestCategory.Slow)]
+        public void ExportIntegratedModelWithRainfallRunoffSetsBoundaryConditionCorrectly()
         {
             var path = TestHelper.GetTestFilePath("SOBEK3-1313\\Flow1D_RR_IntegratedModel.dsproj");
             path = TestHelper.CreateLocalCopy(path);

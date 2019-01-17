@@ -573,6 +573,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void SaveSedFileWithSpatiallyVaryingPropertiesAndAddValuesOperation()
         {
             var sedFile = Path.GetTempFileName();
@@ -681,6 +682,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void LoadSedFileWithSpatiallyVaryingProperties_MudFraction()
         {
             var mduPath = TestHelper.GetTestFilePath(@"SpatiallyVarying_MudFraction\FlowFM.mdu");
@@ -865,6 +867,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void CloneLoadedSedFileWithSpatiallyVaryingProperties()
         {
             var mduPath =
