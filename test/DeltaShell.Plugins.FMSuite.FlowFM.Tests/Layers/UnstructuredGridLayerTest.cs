@@ -155,64 +155,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         }
 
         [Test]
-        [Ignore("too big, local data")]
-        [Category(TestCategory.Performance)]
-        public void ProfileElbeGridLayerExtensive()
-        {
-            // to make sure OpenGL etc have been loaded into the process already (takes up quite some mbs)
-            RenderBendProfGridOnce();
-
-            var grid = NetFileImporter.ImportGrid(@"D:\schre_tn\Desktop\Elbe\elbe_big_net.nc");
-
-            TestHelper.AssertIsFasterThan(40000, () =>
-                {
-                    Map map = null;
-                    UnstructuredGridLayer gridLayer = null;
-                    const int numTimes = 10;
-                    var stopwatch = new Stopwatch();
-
-                    var elapsed = new long[numTimes];
-                    var mem = new long[numTimes];
-                    for (var i = 0; i < numTimes; i++)
-                    {
-                        var before = GC.GetTotalMemory(true);
-                        stopwatch.Restart();
-
-                        if (i == 0)
-                        {
-                            gridLayer = new UnstructuredGridLayer { Grid = grid };
-                            map = new Map { Layers = { gridLayer }, Size = new Size { Width = 800, Height = 800 } };
-                            map.ZoomToExtents();
-                            map.Zoom *= 2; //zoom out
-                        }
-                        else
-                        {
-                            map.Zoom /= 1.5; // zoom in
-                            gridLayer.RenderRequired = true;
-                        }
-                        map.Render();
-
-                        stopwatch.Stop();
-                        elapsed[i] = stopwatch.ElapsedMilliseconds;
-                        mem[i] = GC.GetTotalMemory(true) - before;
-                    }
-
-                    // log results:
-                    var line0 = ""; var line1 = ""; var line2 = "";
-                    for (int i = 0; i < numTimes; i++)
-                    {
-                        line0 = string.Format("{0} {1,8}", line0, i);
-                        line1 = string.Format("{0} {1,6}ms", line1, elapsed[i]);
-                        line2 = string.Format("{0} {1,6}kb", line2, mem[i]/1024);
-                    }
-
-                    Console.WriteLine(line0);
-                    Console.WriteLine(line1);
-                    Console.WriteLine(line2);
-                });
-        }
-
-        [Test]
         public void CreateUnstructuredGridCellForPointOnGetFeatures()
         {
             var map = new Map{ Zoom = 100.0 };
