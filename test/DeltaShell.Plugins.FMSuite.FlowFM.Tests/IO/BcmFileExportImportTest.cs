@@ -101,6 +101,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
         
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void ExportImportSedimentBedLoadToSingleFile()
         {
             //Note, for the moment we assume these type of sediments are compatible with waterflowfm.
@@ -167,7 +169,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var frac2 = data.Components.FirstOrDefault(a => a.Name == "frac2");
             Assert.IsNotNull(frac2);
             Assert.That(frac2.GetValues<double>().First(), Is.EqualTo(1.2).Within(0.01));
-
         }
     }
 }

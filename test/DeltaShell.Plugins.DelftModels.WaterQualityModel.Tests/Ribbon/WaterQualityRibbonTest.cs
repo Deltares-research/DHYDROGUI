@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
+using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using NUnit.Framework;
@@ -12,6 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Ribbon
     public class WaterQualityRibbonTest
     {
         [Test]
+        [Category(TestCategory.Slow)]
         public void GetCommandsInRibbonTest()
         {
             MockRepository mocks = new MockRepository();

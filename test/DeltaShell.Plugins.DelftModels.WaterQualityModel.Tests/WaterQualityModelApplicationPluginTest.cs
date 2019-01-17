@@ -50,14 +50,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var appPlugin = new WaterQualityModelApplicationPlugin();
 
             // call
-            var listerners = appPlugin.CreateDataAccessListeners().ToArray();
+            var listeners = appPlugin.CreateDataAccessListeners().ToArray();
 
             // assert
-            Assert.AreEqual(1, listerners.Count());
-            Assert.IsInstanceOf<WaterQualityModelDataAccessListener>(listerners[0]);
+            Assert.AreEqual(1, listeners.Length);
+            Assert.IsInstanceOf<WaterQualityModelDataAccessListener>(listeners[0]);
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         public void GetFileImportersTest()
         {
             // setup
@@ -76,15 +77,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         public void GivenAModel_WhenModelIsRenamed_DataDirectoryPathIsChanged()
         {
             using (var app = new DeltaShellApplication())
             {
                 var waqPlugin = new WaterQualityModelApplicationPlugin();
-                var waqModel = new WaterQualityModel()
+                var waqModel = new WaterQualityModel
                 {
-                    Name = "WAQ1",
-                   
+                    Name = "WAQ1"
                 };
 
                 app.Plugins.Add(waqPlugin);
@@ -117,6 +118,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
 
         [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void ImportCorrectSubFileAndThenCorruptItAndExpectExceptionMessage()
         {
             var app = new DeltaShellApplication();
@@ -146,8 +149,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [TestCase("deltashell.lst")]
         [TestCase("deltashell.lsp")]
         [TestCase("deltashell.mon")]
-        [Category(TestCategory.Slow)]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void Check_When_RunningTwice_WaqModel_OutputFiles_AreNot_Duplicated(string outputFile)
         {
             var app = new DeltaShellApplication();
@@ -168,8 +171,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [TestCase("deltashell.lst")]
         [TestCase("deltashell.lsp")]
         [TestCase("deltashell.mon")]
-        [Category(TestCategory.Slow)]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void Check_When_RunningTwice_WaqModel_OutputFiles_And_Saving_TheFilesArePersisted(string outputFileName)
         {
             var app = new DeltaShellApplication();

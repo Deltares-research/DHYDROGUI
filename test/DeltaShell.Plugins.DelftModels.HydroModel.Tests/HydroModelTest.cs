@@ -189,6 +189,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void GetCompositeWorkFlowDataForHydroModelWorkFlows()
         {
             var mocks = new MockRepository();
