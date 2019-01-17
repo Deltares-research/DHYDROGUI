@@ -133,28 +133,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         }
 
         [Test]
-        [Ignore("too big, local data")]
-        [Category(TestCategory.Performance)]
-        public void ProfileElbeGridLayer()
-        {
-            var grid = NetFileImporter.ImportGrid(@"D:\schre_tn\Desktop\Elbe\elbe_big_net.nc");
-            var gridLayer = new UnstructuredGridLayer {Grid = grid};
-
-            var map = new Map {Layers = {gridLayer}, Size = new Size {Width = 800, Height = 800}};
-            map.ZoomToExtents();
-            map.Render();
-
-            TestHelper.AssertIsFasterThan(10000, () =>
-                {
-                    for (var i = 0; i < 5; i++)
-                    {
-                        gridLayer.RenderRequired = true;
-                        map.Render();
-                    }
-                });
-        }
-
-        [Test]
         public void CreateUnstructuredGridCellForPointOnGetFeatures()
         {
             var map = new Map{ Zoom = 100.0 };
