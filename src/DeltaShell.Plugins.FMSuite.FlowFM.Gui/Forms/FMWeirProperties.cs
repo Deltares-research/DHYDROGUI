@@ -60,6 +60,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                         {
                             BedLevelStructureCentre = data.CrestLevel,
                             WidthStructureCentre = data.CrestWidth,
+
+                            WidthStructureLeftSide    = double.NaN,
+                            WidthStructureRightSide   = double.NaN,
+                            WidthLeftSideOfStructure  = double.NaN,
+                            WidthRightSideOfStructure = double.NaN,
                         };
                         data.WeirFormula = generalStructureWeirFormula;
                         break;
