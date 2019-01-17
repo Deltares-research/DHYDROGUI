@@ -1559,7 +1559,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void CreateFixedWeirAndChangeSchemeAndNumberOfCoordinates()
         {
-            var lineGeomery = new LineString(new[]
+            var lineGeometry = new LineString(new[]
             {
                 new Coordinate(0, 0),
                 new Coordinate(10, 10),
@@ -1567,7 +1567,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(0, 0)
             });
 
-            var fixedWeir = new DelftTools.Hydro.Structures.FixedWeir { Geometry = lineGeomery };
+            var fixedWeir = new DelftTools.Hydro.Structures.FixedWeir { Geometry = lineGeometry };
 
             var fmModel = new WaterFlowFMModel();
 
@@ -1642,7 +1642,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     Assert.That(dataColumn.IsActive, Is.True);
             }
 
-            fixedWeir.Geometry = lineGeomery;
+            fixedWeir.Geometry = lineGeometry;
 
             allData = fmModel.FixedWeirsProperties;
 
@@ -1665,6 +1665,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
         public void GivenAnFMModel_WhenCloningThisModel_ThenTheNewFixedWeirPropertiesShouldBeLinkedToTheNewFixedWeirs()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFMFixedWeirs\FlowFM.mdu"); //model with two fixed weirs and every fixed weir has two coordinates.
@@ -1689,7 +1691,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.That(clonedFmModel.FixedWeirsProperties.ElementAt(0).Feature, Is.SameAs(clonedFmModel.Area.FixedWeirs[0]));
                 Assert.That(clonedFmModel.FixedWeirsProperties.ElementAt(1).Feature, Is.SameAs(clonedFmModel.Area.FixedWeirs[1]));
 
-                var lineGeomery = new LineString(new[]
+                var lineGeometry = new LineString(new[]
                 {
                     new Coordinate(0, 0),
                     new Coordinate(10, 10),
@@ -1697,7 +1699,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     new Coordinate(0, 0)
                 });
 
-                fmModel.Area.FixedWeirs[0].Geometry = lineGeomery;
+                fmModel.Area.FixedWeirs[0].Geometry = lineGeometry;
 
                 Assert.AreEqual(4,fmModel.FixedWeirsProperties.ElementAt(0).DataColumns[0].ValueList.Count);
                 Assert.AreEqual(2,clonedFmModel.FixedWeirsProperties.ElementAt(0).DataColumns[0].ValueList.Count);

@@ -39,6 +39,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
         [TestCase("simplebox_hex7_map.nc", "mesh2d_node_z")] // UGrid
         [TestCase("boundcond_test_map.nc", "NetNode_z")] // Non-UGrid
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void TestExportNetFileWritesZValuesAtNodes(string netFile, string zValueVariableName)
         {
             const string testDir = "TestExport";
@@ -79,6 +81,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void TestExportNetFileWriteZValuesAtCellCenters()
         {
             const string testDir = "TestExport";
@@ -124,6 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenImportedFMNetFileWhenExportingWithSamePathThenReturnTrue()
         {
             var nonExistingFilePath = "NonExistingFile.nc";
@@ -134,6 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenImportedFMNetFileWhenExportingWithDifferentPathThenCreateFileCopyAndReturnTrue()
         {
             var fileFolder = "output_mapfiles";
@@ -149,6 +155,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenImportedFMNetFileWhenExportingWithUnstructuredGridWithEmptyGridThenReturnFalse()
         {
             var unstructuredGrid = new UnstructuredGrid();
@@ -158,6 +165,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void GivenWaterFlowFMModelWithNonEmptyGridWhenExportingThenWriteNetFileAndReturnTrue()
         {
             const string testDir = "TestExport";

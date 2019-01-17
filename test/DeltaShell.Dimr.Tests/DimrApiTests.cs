@@ -10,7 +10,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 
 namespace DeltaShell.Dimr.Tests
 {
-    [TestFixture()]
+    [TestFixture]
     public class DimrApiTests
     {
         private string dimrConfig;
@@ -32,7 +32,7 @@ namespace DeltaShell.Dimr.Tests
             FileUtils.DeleteIfExists(dimrConfig);
         }
 
-        [Test()]
+        [Test]
         public void TestDimrApi()
         {
             var dimrRefDate = new DateTime(1981,8,31,0,0,0);
@@ -48,7 +48,7 @@ namespace DeltaShell.Dimr.Tests
             }
         }
 
-        [Test()]
+        [Test]
         public void TestDimrApiWithOutMessageBuffering()
         {
             using (var api = new DimrApi(false))
@@ -59,7 +59,7 @@ namespace DeltaShell.Dimr.Tests
             
         }
 
-        [Test()]
+        [Test]
         public void Testset_feedback_logger()
         {
             using (var dimrApi = new DimrApi())
@@ -75,7 +75,7 @@ namespace DeltaShell.Dimr.Tests
             }
         }
 
-        [Test()]
+        [Test]
         public void Testset_logger()
         {
             using (var dimrApi = new DimrApi())
@@ -91,7 +91,9 @@ namespace DeltaShell.Dimr.Tests
             }
         }
 
-        [Test()]
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void TestInitializeUpdateFinishAndGetValues()
         {
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
@@ -118,18 +120,18 @@ namespace DeltaShell.Dimr.Tests
                     dimrApi.Initialize(dimrConfig);
                     TestHelper.AssertAtLeastOneLogMessagesContains(dimrApi.ProcessMessages, "Run");
                     dimrApi.Update(dimrApi.TimeStep.TotalSeconds);
-                    Array waterlevels = dimrApi.GetValues(model.Name + "/s0");
-                    Assert.AreEqual(0.0, (double) waterlevels.GetValue(0), 0.1);
+                    var waterLevels = dimrApi.GetValues(model.Name + "/s0");
+                    Assert.AreEqual(0.0, (double) waterLevels.GetValue(0), 0.1);
                     dimrApi.SetValues(model.Name + "/s0", null);
-                    waterlevels = dimrApi.GetValues(model.Name + "/s0");
-                    Assert.AreEqual(0.0d, (double) waterlevels.GetValue(0), 0.01);
+                    waterLevels = dimrApi.GetValues(model.Name + "/s0");
+                    Assert.AreEqual(0.0d, (double) waterLevels.GetValue(0), 0.01);
                     dimrApi.SetValuesDouble(model.Name + "/s0", null);
-                    waterlevels = dimrApi.GetValues(model.Name + "/s0");
-                    Assert.AreEqual(0.0d, (double) waterlevels.GetValue(0), 0.01);
+                    waterLevels = dimrApi.GetValues(model.Name + "/s0");
+                    Assert.AreEqual(0.0d, (double) waterLevels.GetValue(0), 0.01);
                     var newValues = new[] {80.1d};
                     dimrApi.SetValues(model.Name + "/s0", newValues);
-                    waterlevels = dimrApi.GetValues(model.Name + "/s0");
-                    Assert.AreEqual(80.1d, (double) waterlevels.GetValue(0), 0.01);
+                    waterLevels = dimrApi.GetValues(model.Name + "/s0");
+                    Assert.AreEqual(80.1d, (double) waterLevels.GetValue(0), 0.01);
                     dimrApi.Finish();
                 }
             }

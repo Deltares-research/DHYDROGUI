@@ -33,6 +33,8 @@ using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
     [TestFixture]
+    [Category(TestCategory.DataAccess)]
+    [Category(TestCategory.Slow)]
     public class FMSnappedFeaturesGroupLayerDataTest
     {
         [Test]
@@ -60,6 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 gui.CommandHandler.OpenView(fmModel, typeof(ProjectItemMapView));
                 var mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
+                Assert.IsNotNull(mapView);
                 var modelLayer = (GroupLayer)mapView.MapView.GetLayerForData(fmModel);
 
                 var snappedLayer = modelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.GridSnappedFeaturesLayerName) as GroupLayer;

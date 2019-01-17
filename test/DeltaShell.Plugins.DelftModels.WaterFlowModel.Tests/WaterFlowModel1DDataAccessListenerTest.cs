@@ -24,6 +24,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
     public class WaterFlowModel1DDataAccessListenerTest
     {
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void TestOnPostLoad_CrossSectionDefinitionsWithNoSectionsFix() // SOBEK3-1392
         {
             var testProjectPath = TestHelper.GetTestFilePath(@"DataAccess\MissingCrossSectionDefinitionSections.dsproj");
@@ -58,6 +60,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void TestOnPostLoad_SyncAggregationOptionsForExistingOutputCoverages_ResultsPumps()
         {
             var testProjectPath = TestHelper.GetTestFilePath(@"DataAccess\OutOfSyncAggregationOptions.dsproj");
