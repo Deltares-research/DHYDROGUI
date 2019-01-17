@@ -85,10 +85,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             Assert.IsTrue(File.Exists(testCaseZipFilePath), "Failed to find acceptance model test-data");
 
-            var testDirectory = Path.Combine(TestFixtureDirectory, TestHelper.GetCurrentMethodName()); 
-            FileUtils.DeleteIfExists(testDirectory);
+            var testDirectory = string.Empty;
 
-            Assert.True(TryPerformAction(() => ZipFileUtils.Extract(testCaseZipFilePath, testDirectory)),
+            Assert.True(TryPerformAction(() => UnzipModel(relativeZipFilePath, testCaseZipFilePath, out testDirectory)),
                 string.Format("Failed to unzip file: {0}", testCaseZipFilePath));
 
             // Step 2: using(running GUI) add correct plugins for Delft3DFM
@@ -209,12 +208,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             Assert.IsTrue(File.Exists(testCaseZipFilePath), "Failed to find acceptance model test-data");
 
-            var testDirectory = Path.Combine(TestFixtureDirectory, TestHelper.GetCurrentMethodName());
-            FileUtils.DeleteIfExists(testDirectory);
+            var testDirectory = string.Empty;
 
-            Assert.True(TryPerformAction(() => ZipFileUtils.Extract(testCaseZipFilePath, testDirectory)),
+            Assert.True(TryPerformAction(() => UnzipModel(relativeZipFilePath, testCaseZipFilePath, out testDirectory)),
                 string.Format("Failed to unzip file: {0}", testCaseZipFilePath));
-            
+
             // Step 2: using(running GUI) add correct plugins for SOBEK3
             using (var gui = new DeltaShellGui())
             {
@@ -365,6 +363,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         #endregion
 
         #region CommonOperations
+
+        private static void UnzipModel(string relativeZipFilePath, string testCaseZipFilePath, out string testDirectory)
+        {
+            var zipFileName = Path.GetFileName(relativeZipFilePath);
+            if (string.IsNullOrEmpty(zipFileName))
+                throw new ArgumentException(string.Format("Unable to retrieve Zip File Name: {0}", relativeZipFilePath));
+
+            var localZipFilePath = Path.Combine(TestFixtureDirectory, zipFileName);
+
+            FileUtils.DeleteIfExists(localZipFilePath);
+            FileUtils.CopyFile(testCaseZipFilePath, localZipFilePath);
+
+            var randomFileName = Path.GetRandomFileName().Substring(0, 5);
+            testDirectory = Path.Combine(TestFixtureDirectory, randomFileName);
+            FileUtils.DeleteIfExists(testDirectory);
+            ZipFileUtils.Extract(localZipFilePath, testDirectory);
+        }
+
         private static void ImportFlowFMModelAndAddToProject(IApplication app, string mduPath)
         {
             var fmModel = new WaterFlowFMModel(mduPath);
