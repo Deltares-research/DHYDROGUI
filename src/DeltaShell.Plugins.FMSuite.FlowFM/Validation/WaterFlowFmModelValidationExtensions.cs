@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 WaterFlowFMWindValidator.Validate(model),
                 WaterFlowFMModelDefinitionValidator.Validate(model),
                 WaterFlowFMBoundaryConditionValidator.Validate(model),
-                WaterFlowFMArea2DValidator.Validate(model),
+                FMStructuresValidator.Validate(model),
                 ValidateRestartInput(model),
                 WaterFlowFMEmbankmentValidator.Validate(model),
                 WaterFlowFMEnclosureValidator.Validate(model),

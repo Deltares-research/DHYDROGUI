@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             
             // When 
             // Validate is called
-            var validationReport = WaterFlowFMArea2DValidator.Validate(model);
+            var validationReport = FMStructuresValidator.Validate(model);
 
             // Then
             // The correct issues are added.
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // When 
             // Validate is called
-            var validationReport = WaterFlowFMArea2DValidator.Validate(model);
+            var validationReport = FMStructuresValidator.Validate(model);
 
             // Then
             // The correct issues are added.
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // When 
             // Validate is called
-            var validationReport = WaterFlowFMArea2DValidator.Validate(model);
+            var validationReport = FMStructuresValidator.Validate(model);
 
             // Then
             // The correct issues are added.
@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // When 
             //   Validate is called
-            var validationReport = WaterFlowFMArea2DValidator.Validate(model);
+            var validationReport = FMStructuresValidator.Validate(model);
 
             // Then
             // The correct issues are added.
@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // When 
             // Validate is called
-            var validationReport = WaterFlowFMArea2DValidator.Validate(model);
+            var validationReport = FMStructuresValidator.Validate(model);
 
             // Then
             // The correct issues are added.
@@ -184,7 +184,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // When 
             // Validate is called
-            var validationReport = WaterFlowFMArea2DValidator.Validate(model);
+            var validationReport = FMStructuresValidator.Validate(model);
 
             // Then
             // The correct issues are added.
@@ -209,7 +209,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // When 
             // Validate is called
-            var validationReport = WaterFlowFMArea2DValidator.Validate(model);
+            var validationReport = FMStructuresValidator.Validate(model);
 
             // Then
             // The correct issues are added.
@@ -234,7 +234,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // When 
             // Validate is called
-            var validationReport = WaterFlowFMArea2DValidator.Validate(model);
+            var validationReport = FMStructuresValidator.Validate(model);
 
             // Then
             // The correct issues are added.
@@ -266,7 +266,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // When 
             // Validate is called
-            var validationReport = WaterFlowFMArea2DValidator.Validate(model);
+            var validationReport = FMStructuresValidator.Validate(model);
 
             // Then
             // The correct issues are added.
@@ -291,7 +291,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // When 
             // Validate is called
-            var validationReport = WaterFlowFMArea2DValidator.Validate(model);
+            var validationReport = FMStructuresValidator.Validate(model);
 
             // Then
             // The correct issues are added.
@@ -316,7 +316,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // When 
             // Validate is called
-            var validationReport = WaterFlowFMArea2DValidator.Validate(model);
+            var validationReport = FMStructuresValidator.Validate(model);
 
             // Then
             // The correct issues are added.
@@ -347,7 +347,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // When 
             // Validate is called
-            var validationReport = WaterFlowFMArea2DValidator.Validate(model);
+            var validationReport = FMStructuresValidator.Validate(model);
 
             // Then
             // The correct issues are added.
@@ -377,7 +377,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // When 
             // Validate is called
-            var validationReport = WaterFlowFMArea2DValidator.Validate(model);
+            var validationReport = FMStructuresValidator.Validate(model);
 
             // Then
             // The correct issues are added.
@@ -409,7 +409,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // When 
             // Validate is called
-            var validationReport = WaterFlowFMArea2DValidator.Validate(model);
+            var validationReport = FMStructuresValidator.Validate(model);
 
             // Then
             // The correct issues are added.
@@ -441,7 +441,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // When 
             // Validate is called
-            var validationReport = WaterFlowFMArea2DValidator.Validate(model);
+            var validationReport = FMStructuresValidator.Validate(model);
 
             // Then
             // The correct issues are added.
@@ -473,7 +473,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // When 
             // Validate is called
-            var validationReport = WaterFlowFMArea2DValidator.Validate(model);
+            var validationReport = FMStructuresValidator.Validate(model);
 
             // Then
             // The correct issues are added.
