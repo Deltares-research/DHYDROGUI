@@ -339,6 +339,8 @@
     <Compile Include="Layers\UnstructuredGridVertexCoverageLayerTest.cs" />
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="UnstructuredGridCoverageExtensionsTest.cs" />
+    <Compile Include="Validation\Area\ThinDamValidatorTest.cs" />
+    <Compile Include="Validation\Area\WeirValidatorTest.cs" />
     <Compile Include="Validation\VerticalProfileValidatorTests.cs" />
     <Compile Include="Validation\WaterFlowFMArea2DValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidatorTest.cs" />
