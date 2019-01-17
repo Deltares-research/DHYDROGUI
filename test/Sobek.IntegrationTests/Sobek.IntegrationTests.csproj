@@ -230,6 +230,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HydroModelPerformanceTest.cs" />
     <Compile Include="Model1D2DBuilder.cs" />
     <Compile Include="NHibernateWaterFlowModel1DPerformanceTest.cs" />
     <Compile Include="NHibernateWaterFlowModel1DWinFormsTest.cs" />

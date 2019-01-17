@@ -504,6 +504,7 @@ namespace Sobek.IntegrationTests
         [TestFixture]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.UndoRedo)]
+        [Category(TestCategory.Slow)]
         public class ShotgunTest
         {
             [Test]
@@ -514,6 +515,5 @@ namespace Sobek.IntegrationTests
                 UndoRedoSideEffectTester.TestAssembly(typeof(RealTimeControlModel).Assembly);
             }
         }
-
     }
 }

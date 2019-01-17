@@ -18,6 +18,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.IntegrationTests
 {
     [TestFixture]
+    [Category(TestCategory.Integration)]
     public class RoughnessesFromDsProjTest
     {
         private DeltaShellApplication app;
@@ -39,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void VariousSpatialRoughnessesFromDsProj()
         {
             const string testDataDirName = "VariousRoughnesses";
@@ -74,7 +75,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
         }
         
         [Test]
-        [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void VariousSpatialRoughnessesFromDsProjWriteReadWrite()
         {

@@ -541,34 +541,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Performance)]
-        public void RunRRInDWAQ_AC1()
-        {
-            string path = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"DWAQ_AC1.lit\14\NETWORK.TP");
-            
-            var hydroModelImporter = new SobekHydroModelImporter(true, false);
-            var hydroModel = (HydroModel) hydroModelImporter.ImportItem(path);
-
-            var rr = hydroModel.Activities.OfType<RainfallRunoffModel>().First();
-
-            // fill missing(?) evap data
-            new TimeSeriesGenerator().GenerateTimeSeries((ITimeSeries) rr.Evaporation.Data, rr.StartTime, rr.StopTime,
-                                                         new TimeSpan(1, 0, 0));
-
-            //about 4800ms locally
-            TestHelper.AssertIsFasterThan(10000, () =>
-                {
-                    // run rr model
-                    ActivityRunner.RunActivity(rr);
-
-                    if (rr.Status == ActivityStatus.Failed)
-                    {
-                        throw new InvalidOperationException("Execute failed");
-                    }
-                });
-        }
-
-        [Test]
         [Category(TestCategory.Slow)]
         [Category(TestCategory.WorkInProgress)]
         public void RunDWAQ_AC1TwiceAndExpectSameResultsTools9586()

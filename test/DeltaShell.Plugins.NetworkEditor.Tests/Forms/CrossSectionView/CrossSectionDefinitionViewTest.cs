@@ -734,7 +734,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void ShowHistory()
         {
             var mainType = new CrossSectionSectionType { Name = "Main" };

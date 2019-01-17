@@ -100,6 +100,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void RenamingNetworkCoverageNodesWrappedWithDataItems()
         {
             using (var gui = new DeltaShellGui())
@@ -178,6 +179,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void ReleaseCopiedBranchFeatureOnProjectClosing()
         {
             var gui = Mocks.DynamicMock<IGui>();
@@ -215,6 +217,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void SelectingAnotherCrossSectionInNetworkTreeCleansViewCorrectly_Tools7425()
         {
             using (var gui = new DeltaShellGui())
