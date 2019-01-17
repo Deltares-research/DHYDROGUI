@@ -36,13 +36,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
         [TestCase(0.999)]
         [TestCase(10.001)]
-        public void GivenWaveBoundaryConditionWithPeakEnhancementFactorNotWithinExpectedRange_WhenValidatingBoundaryConditions_ThenValidationErrorIsReturned(double peakEnhancementFactor)
+        public void GivenJonswapWaveBoundaryConditionWithPeakEnhancementFactorNotWithinExpectedRange_WhenValidatingBoundaryConditions_ThenValidationErrorIsReturned(double peakEnhancementFactor)
         {
             // Given
             var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.Constant)
             {
                 Feature = featureWithTwoPoints,
-                PeakEnhancementFactor = peakEnhancementFactor
+                PeakEnhancementFactor = peakEnhancementFactor,
+                ShapeType = WaveSpectrumShapeType.Jonswap
             };
             boundaryCondition.AddPoint(0);
             var waveBoundaryConditions = new List<WaveBoundaryCondition> { boundaryCondition };
@@ -53,6 +54,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             // Then
             var expectedMessage = Resources.WaveBoundaryConditionValidator_ValidateSpectralData_Peak_Enhancement_Factor_must_be_a_value_within_the_range_1___10_;
             ContainsOnlyOneIssueWithMessage(validationReport, ValidationSeverity.Error, expectedMessage);
+        }
+
+        [TestCase(WaveSpectrumShapeType.PiersonMoskowitz, 0.0)]
+        [TestCase(WaveSpectrumShapeType.Gauss, 0.0)]
+        public void GivenNonJonswapWaveBoundaryConditionWithPeakEnhancementFactorNotWithinExpectedRange_WhenValidatingBoundaryConditions_ThenValidationErrorIsReturned
+            (WaveSpectrumShapeType shapeType, double peakEnhancementFactor)
+        {
+            // Given
+            var boundaryCondition = new WaveBoundaryCondition(BoundaryConditionDataType.Constant)
+            {
+                Feature = featureWithTwoPoints,
+                PeakEnhancementFactor = peakEnhancementFactor,
+                ShapeType = shapeType
+            };
+            boundaryCondition.AddPoint(0);
+            var waveBoundaryConditions = new List<WaveBoundaryCondition> { boundaryCondition };
+
+            // When
+            var validationReport = WaveBoundaryConditionValidator.Validate(waveBoundaryConditions);
+
+            // Then
+            Assert.That(validationReport.ErrorCount, Is.EqualTo(0));
         }
 
         [Test]

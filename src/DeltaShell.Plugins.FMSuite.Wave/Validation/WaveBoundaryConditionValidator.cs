@@ -65,7 +65,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
         private static IEnumerable<ValidationIssue> ValidateSpectralData(WaveBoundaryCondition boundaryCondition)
         {
-            if(boundaryCondition.PeakEnhancementFactor.IsOutsideOfRange(1.0, 10.0))
+            if(boundaryCondition.ShapeType == WaveSpectrumShapeType.Jonswap 
+               && boundaryCondition.PeakEnhancementFactor.IsOutsideOfRange(1.0, 10.0))
             {
                 yield return new ValidationIssue(null, ValidationSeverity.Error,
                     Resources.WaveBoundaryConditionValidator_ValidateSpectralData_Peak_Enhancement_Factor_must_be_a_value_within_the_range_1___10_,
