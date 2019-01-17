@@ -93,8 +93,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
-        [Category(TestCategory.Slow)]
+        [Category(TestCategory.Jira)] //SOBEK3-1644
         public void ShowSideViewForProblematicRoute()
         {
             var modelImporter = new SobekWaterFlowModel1DImporter();
@@ -107,7 +106,7 @@ namespace Sobek.IntegrationTests
                 //reduce stoptime to make test faster.
                 waterFlowModel1D.StopTime = waterFlowModel1D.StartTime.AddHours(1);
                 ModelTestHelper.RefreshCrossSectionDefinitionSectionWidths(waterFlowModel1D.Network);
-                var report = waterFlowModel1D.Validate();
+                waterFlowModel1D.Validate();
                 RunModel(waterFlowModel1D);
                 Assert.AreEqual(ActivityStatus.Cleaned, waterFlowModel1D.Status);
 
