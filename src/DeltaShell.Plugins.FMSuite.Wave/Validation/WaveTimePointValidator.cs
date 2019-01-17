@@ -39,22 +39,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             if (boundaryConditionWithParameterizedSpectrumTimeSeries.Count == 0) return;
 
-            var boundaryConditionPointData = boundaryConditionWithParameterizedSpectrumTimeSeries.SelectMany(bc => bc.PointData).ToList();
-            var boundaryConditionTimePoints = boundaryConditionPointData.SelectMany(b => b.Arguments[0].GetValues<DateTime>()).ToList();
-
-            var allTimePointsPrecedeModelStartTime = boundaryConditionTimePoints.All(b => b.Date < timePoints.FirstOrDefault());
-          
-            if (allTimePointsPrecedeModelStartTime)
+            foreach (var bc in boundaryConditionWithParameterizedSpectrumTimeSeries)
             {
-                var boundaryConditionNames = boundaryConditionWithParameterizedSpectrumTimeSeries.Select(bc => bc.Name);
+                var boundaryConditionPointData = bc.PointData;
+                var boundaryConditionTimePoints = boundaryConditionPointData.SelectMany(b => b.Arguments[0].GetValues<DateTime>()).ToList();
+                var allTimePointsPrecedeModelStartTime = boundaryConditionTimePoints.All(b => b.Date < timePoints.FirstOrDefault());
 
-                foreach (var name in boundaryConditionNames)
+                if (allTimePointsPrecedeModelStartTime)
                 {
                     issues.Add(new ValidationIssue(null, ValidationSeverity.Error,
-                        string.Join(" ",$"{Resources.WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_}", $"{name}"),
+                        string.Join(" ", $"{Resources.WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_}", $"{bc.Name}"),
                         waveModel));
                 }
-             }
+            }
+
         }
 
         private static void ValidateReferenceTime()

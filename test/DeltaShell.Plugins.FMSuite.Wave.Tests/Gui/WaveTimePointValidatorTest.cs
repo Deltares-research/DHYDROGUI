@@ -215,18 +215,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         }
 
         [Test]
-        public void GivenWaveModelWithMultipleBoundaryConditionStartTimesPrecedingWaveModelStartTimeWithOnlyOneMissingBoundaryConditionStartTime_WhenValidatingModelTimePoints_ThenValidationErrorIsGiven()
+        public void GivenWaveModelWithTwoBoundaryConditionStartTimesPrecedingWaveModelStartTimeWithOnlyOneMissingBoundaryConditionStartTime_WhenValidatingModelTimePoints_ThenValidationErrorIsGiven()
         {
             //Given
-            SetupModelWithTimePoints(2);
+            SetupModelWithTimePoints(3);
 
             var boundaryCondition = CreateUniformBoundaryConditionWithParameterizedTimeSeries();
             var boundaryCondition2 = CreateUniformBoundaryConditionWithParameterizedTimeSeries();
-            var boundaryCondition3 = CreateUniformBoundaryConditionWithParameterizedTimeSeries();
 
             AddBoundaryCondition(boundaryCondition);
             AddBoundaryCondition(boundaryCondition2);
-            AddBoundaryCondition(boundaryCondition3);
 
             var boundaryConditionWithTimeSeries = waveModel.ModelDefinition.BoundaryConditions.ElementAt(0);
             var boundaryConditionWithTimeSeries2 = waveModel.ModelDefinition.BoundaryConditions.ElementAt(1);
@@ -251,6 +249,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             Assert.That(validationReport.ErrorCount, Is.EqualTo(errorCount), $"Total amount of errors is not equal to {errorCount}");
             Assert.That(validationReport.AllErrors.ElementAt(0).Message, Is.EqualTo($"Model start time does not precede any of the time points of {boundaryConditionName1}"));
             Assert.That(validationReport.AllErrors.ElementAt(1).Message, Is.EqualTo($"Model start time does not precede any of the time points of {boundaryConditionName2}"));
+        }
+
+        [Test]
+        public void GivenWaveModelWithTwoBoundaryConditionStartTimesPrecedingWaveModelStartTimeWithOneNotPrecedingStartTime_WhenValidatingModelTimePoints_ThenValidationErrorIsGiven()
+        {
+            //Given
+            SetupModelWithTimePoints(3);
+
+            var boundaryCondition = CreateUniformBoundaryConditionWithParameterizedTimeSeries();
+            var boundaryCondition2 = CreateUniformBoundaryConditionWithParameterizedTimeSeries();
+
+            AddBoundaryCondition(boundaryCondition);
+            AddBoundaryCondition(boundaryCondition2);
+
+            var boundaryConditionWithTimeSeries = waveModel.ModelDefinition.BoundaryConditions.ElementAt(0);
+            var boundaryConditionWithTimeSeries2 = waveModel.ModelDefinition.BoundaryConditions.ElementAt(1);
+
+            var pointData = boundaryConditionWithTimeSeries.PointData[0].Components;
+            pointData[0].Arguments[0].SetValues(new[]
+                {waveModel.ModelDefinition.ModelReferenceDateTime.AddYears(1)});
+
+            var pointData2 = boundaryConditionWithTimeSeries2.PointData[0].Components;
+            pointData2[0].Arguments[0].SetValues(new[]
+                {waveModel.ModelDefinition.ModelReferenceDateTime.AddYears(4)});
+
+            //When
+            var validationReport = WaveTimePointValidator.Validate(waveModel);
+
+            //Then
+            Assert.That(validationReport, Is.Not.Null, "The validation report is null");
+
+            var boundaryConditionName2 = waveModel.BoundaryConditions.ElementAt(1).Name;
+            var errorCount = 1;
+            Assert.That(validationReport.ErrorCount, Is.EqualTo(errorCount), $"Total amount of errors is not equal to {errorCount}");
+            Assert.That(validationReport.AllErrors.ElementAt(0).Message, Is.EqualTo($"Model start time does not precede any of the time points of {boundaryConditionName2}"));
         }
 
         [Test]
