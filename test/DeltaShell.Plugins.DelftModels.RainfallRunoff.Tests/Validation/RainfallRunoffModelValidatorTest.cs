@@ -111,6 +111,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ValidateWithConsistentState()
         {
             var validRestartFilePath = TestHelper.GetTestFilePath("valid_state_RR.zip");
@@ -127,6 +128,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void ValidateConsistentStateWithoutMetadataFile()
         {
@@ -144,6 +146,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ValidateWithInconsistentState()
         {
             var invalidRestartFilePath = TestHelper.GetTestFilePath("invalid_state_RR.zip");
@@ -171,6 +174,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ValidateStateWithInvalidModelType()
         {
             var invalidRestartFilePath = TestHelper.GetTestFilePath("invalid_ModelType_state_RR.zip");
@@ -188,6 +192,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ValidateStateWithInvalidVersion()
         {
             var invalidRestartFilePath = TestHelper.GetTestFilePath("invalid_Version_state_RR.zip");
@@ -205,6 +210,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void ValidateRainfallRunoffModelInputRestartStatePathIncorect()
         {
             var model = CreateValidMiniModel();
@@ -225,6 +232,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ValidateRainfallRunoffModelInputRestartStatePathToNonZip()
         {
             var filePathToNonZipFile =
@@ -246,6 +254,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ValidateRainfallRunoffWithoutHydroLinkReportError()
         {
             var model = CreateValidMiniModel();

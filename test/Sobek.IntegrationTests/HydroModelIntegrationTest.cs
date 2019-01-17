@@ -65,6 +65,7 @@ using QuantityType = DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiContr
 namespace Sobek.IntegrationTests
 {
     [TestFixture]
+    [Category(TestCategory.Integration)]
     public class HydroModelIntegrationTest : NHibernateIntegrationTestBase
     {
         [TestFixtureSetUp]
@@ -134,7 +135,6 @@ namespace Sobek.IntegrationTests
         
         [Test]
         [Category(TestCategory.Slow)]
-        [Category(TestCategory.Integration)]
         public void TestControlGroupsWithLocationsAtDeprecatedOutputParametersAreReset_DischargeAtLaterals()
         {
             // SOBEK3-115: Existing projects can have ControlGroups with locations at the deprecated output parameter 'Discharge (l)'
@@ -182,7 +182,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void CloneHydroModelWithFlow1DDoesNotLoseRoughnessData() // Issue #: SOBEK3-705
         {
             // setup
@@ -254,7 +253,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         [Category("DIMR_Introduction")]
         [Category(TestCategory.WorkInProgress)]
         public void RunFlowAloneAndThenFlowAndRRCombinedTools9662()
@@ -271,7 +269,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         [Ignore("You cannot run RR and FLow sequentially anymore in dimr")]
         public void RunRRAndFlowSequentially()
         {
@@ -286,7 +283,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void RunRRAndFlowParallel()
         {
             RainfallRunoffModel rr;
@@ -300,7 +296,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         [Category(TestCategory.WorkInProgress)]   // Will be obsolete anyway with introduction of DIMR. 
         public void RunFlowAndRRWithValueExchange()
         {
@@ -432,7 +427,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void CreateWithFlowAndRainfallRunoff()
         {
             var network = new HydroNetwork();
@@ -453,7 +447,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void DeepCloneHydroModelAndCheckCatchment()
         {
             var builder = new HydroModelBuilder();
@@ -478,7 +471,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void DeepCloneHydroModelWithFlow1dModel()
         {
             // create network
@@ -520,7 +512,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void DeepCloneHydroModelAndCheckHydroLinks()
         {
             var builder = new HydroModelBuilder();
@@ -579,7 +570,6 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.Slow)]
-        [Category(TestCategory.Integration)]
         [Category(TestCategory.WorkInProgress)]
         public void RunDWAQ_AC1TwiceAndExpectSameResultsTools9586()
         {
@@ -620,7 +610,6 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.Slow)]
-        [Category(TestCategory.Integration)]
         [Category(TestCategory.WorkInProgress)]
         public void RunRRAndFlowSequentialAndSimultaneousAndExpectDifferentResults()
         {
@@ -656,7 +645,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void ImportRunAndCloneDWAQ_AC1()
         {
@@ -700,7 +688,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void UndoRedoDeleteRTCModel()
         {
             var model = new HydroModel() {Activities = {new WaterFlowModel1D(), new RealTimeControlModel()}};
@@ -716,7 +703,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void UndoRedoDeleteRTCModelShouldPreserveControlledModels()
         {
             var model = new HydroModel() { Activities = { new WaterFlowModel1D(), new RealTimeControlModel() } };
@@ -892,7 +878,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void WorkDirectoriesAreCreatedInsideProjectFolder_HydroModelRR()
         {
@@ -954,7 +939,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
         public void ImportSaveLoadRunNoExceptionHydroModelRRTools22551()
         {
@@ -1034,7 +1018,6 @@ namespace Sobek.IntegrationTests
         #region Flow1D_RTC_ModelMerge
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void TestMergingTwoIntegratedModelsRelinksDataItemsAsExpected()
         {
             // Setup Models
@@ -1079,7 +1062,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void TestMergingTwoIntegratedModelsRelinksDataItemsAsExpected_SameBranchFeaturePropertyUsedForRTCInputAndOutput() // Issue#: SOBEK3-561
         {
             // Setup Models
@@ -1121,7 +1103,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void TestMergingTwoIntegratedModelsRelinksDataItemsAsExpected_AfterRenamingOfControlGroupAndFeatures() // Issue#: SOBEK3-597
         {
             // Setup Models
@@ -1235,7 +1216,6 @@ namespace Sobek.IntegrationTests
         #region RTC FLOW (RR) models
 
         //[Test]
-        //[Category(TestCategory.Integration)]
         //[Category(TestCategory.Slow)]
         //public void RtcModelCheckPIDRuleSetpointValue()
         //{
@@ -1285,7 +1265,6 @@ namespace Sobek.IntegrationTests
         //}
 
         //[Test]
-        //[Category(TestCategory.Integration)]
         //[Category(TestCategory.Slow)]
         //public void RtcModelCheckPIDRuleSetpointSeries()
         //{
@@ -1337,7 +1316,6 @@ namespace Sobek.IntegrationTests
         #endregion
 
         [Test]
-        [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void CanRunFlowRtcRRModel() // https://issuetracker.deltares.nl/browse/SOBEK3-611
         {
@@ -1369,7 +1347,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void Given1D2DHydroModelWhenUseMorSedValueSetToTrueThenMapFormatEqualToNetCdfMapFormatType()
         {
             var hydroModel = GetHydroModelWithFmSubModel(true);
@@ -1413,7 +1391,7 @@ namespace Sobek.IntegrationTests
             var isPartOf1D2DModelGuiProperty = fmModel.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel);
             isPartOf1D2DModelGuiProperty.Value = isPartOf1D2DModel;
 
-            var hydroModel = new HydroModel()
+            var hydroModel = new HydroModel
             {
                 Activities = {fmModel}
             };

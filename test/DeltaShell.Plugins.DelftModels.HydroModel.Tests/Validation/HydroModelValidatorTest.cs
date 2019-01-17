@@ -2,6 +2,7 @@
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
@@ -215,6 +216,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void ValidateIntegratedModelFlowFMAndWaveBothModelsHaveTheSameTypeOfGrid()
         {
             var fmModel = new WaterFlowFMModel();
@@ -240,7 +242,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
             SetFmGridCoordinateType(fmModel, fmIsSpherical = true);
             SetWaveGridCoordinateType(waveModel, waveIsSpherical = false);
             ValidateUnconsistentGridTypeErrorInReport(hydroModel, 2);
-
 
             //FM model has cartesian grid and Wave model has spherical grid -NOT OK!
             SetFmGridCoordinateType(fmModel, fmIsSpherical = false);

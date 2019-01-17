@@ -16,10 +16,12 @@ using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.Toolbox;
 using NUnit.Framework;
 using System.Linq;
+using DelftTools.TestUtils;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
     [TestFixture]
+    [Category(TestCategory.Integration)]
     public class HydroModelApplicationPluginTest
     {
         private void SetUpApplication(DeltaShellApplication app, ApplicationPlugin appPlugin)

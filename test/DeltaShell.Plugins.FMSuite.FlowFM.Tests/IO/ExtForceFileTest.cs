@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,6 +27,7 @@ using SharpMapTestUtils;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
     [TestFixture]
+    [Category(TestCategory.DataAccess)]
     public class ExtForceFileTest
     {
         private void CheckInternalTidesFrictionCoefficient(WaterFlowFMModelDefinition def)
@@ -64,7 +64,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void ReadPolygonForcings()
         {
@@ -97,7 +96,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ReadSampleForcings()
         {
             var def = new WaterFlowFMModelDefinition();
@@ -120,7 +118,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ReadXyzFile_WithUnknownSpatiallyVaryingProperties_ShouldGiveAWarningMessage()
         {
             var def = new WaterFlowFMModelDefinition();
@@ -142,7 +139,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ReadXyzFile_WithKnownSpatiallyVaryingProperties_ShouldNotGiveAWarningMessage()
         {
             var def = new WaterFlowFMModelDefinition();
@@ -166,7 +162,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ReadExtFileWithUnknownQuantityShowsLogMessage()
         {
             var def = new WaterFlowFMModelDefinition();
@@ -182,7 +177,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ReadExtFileWithUnknownQuantityImportsTheOtherQuantities()
         {
             var def = new WaterFlowFMModelDefinition();
@@ -206,7 +200,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void GivenAnExtFileWithInternalTidesFrictionCoefficient_WhenImportingItAndExportingIt_ThenThisQuantityShouldBeReadAndWritten()
         {
             var def = new WaterFlowFMModelDefinition();
@@ -249,12 +242,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             newExtFile.Read(newPath, newDef); // load written definition back
             // Check if the internaltidesfrictioncoefficient is in memory again, so that the write method is correct.
             CheckInternalTidesFrictionCoefficient(newDef);
-
-            
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void GivenAnExtFileWithInternalTidesFrictionCoefficient_WhenImportingItAndCorrespondingFileIsMissing_ThenThisQuantityShouldNotBeImported()
         {
             var def = new WaterFlowFMModelDefinition();
@@ -295,7 +285,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ReadCorrectSpatialVaryingPropertiesShouldBeOk()
         {
             //LogHelper.ConfigureLogging(|Level);
@@ -306,7 +295,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ExtFileDoesNotSaveSedimentSpatiallyVaryingOperationsButSedConc()
         {
             //define model
@@ -458,6 +446,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void SaveExtFileWithSpatiallyVaryingSedConcButNoOperationsGeneratesWarningMessage()
         {
             var sedFile = Path.GetTempFileName();
@@ -467,12 +456,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel(sedFile);
-                fmModel.ModelDefinition.UseMorphologySediment = true;
                 var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-                fmModel.Grid = grid;
+                var fmModel = new WaterFlowFMModel(sedFile)
+                {
+                    ModelDefinition = {UseMorphologySediment = true},
+                    Grid = grid
+                };
 
-                var fraction = new SedimentFraction() { Name = "Frac1" };
+                var fraction = new SedimentFraction { Name = "Frac1" };
                 fmModel.SedimentFractions.Add(fraction);
 
                 /* Save ext file */
@@ -532,7 +523,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void CheckReadWriteOfSampleForcingsWithAOperator()
         {
             var def = new WaterFlowFMModelDefinition();
@@ -565,7 +555,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ReadWriteSampleForcingsWaterLevel()
         {
             var def = new WaterFlowFMModelDefinition();
@@ -627,7 +616,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void ExportImportBoundaryConditionWithOffsetAndFactor()
         {
@@ -684,7 +672,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ExportImportMultipleBoundaryConditionsOnSameFeature()
         {
             var model = new WaterFlowFMModel();
@@ -756,7 +743,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ExportImportSummedWaterLevelsOnSameFeature()
         {
             var model = new WaterFlowFMModel() {Name = "test"};
@@ -816,7 +802,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ReadAndWriteSourcesAndSinksTest()
         {
             var def = new WaterFlowFMModelDefinition();

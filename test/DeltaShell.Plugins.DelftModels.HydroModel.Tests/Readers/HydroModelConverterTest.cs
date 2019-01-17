@@ -15,6 +15,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 {
     [TestFixture]
+    [Category(TestCategory.DataAccess)]
     public class HydroModelConverterTest
     {
         [Test]
@@ -33,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         public void ConvertFlow1DModelAndAddToHydroModel()
         {
             var dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
-            var fileImporters = new List<IDimrModelFileImporter>()
+            var fileImporters = new List<IDimrModelFileImporter>
             {
                 new WaterFlowModel1DFileImporter()
             };
@@ -52,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         public void ConvertRtcModelAndAddToHydroModel()
         {
             var dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
-            var fileImporters = new List<IDimrModelFileImporter>()
+            var fileImporters = new List<IDimrModelFileImporter>
             {
                 new RealTimeControlModelImporter()
             };
@@ -68,10 +69,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void ConvertFlow1DAndRtcModelAndAddToHydroModel()
         {
             var dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
-            var fileImporters = new List<IDimrModelFileImporter>()
+            var fileImporters = new List<IDimrModelFileImporter>
             {
                 new RealTimeControlModelImporter(),
                 new WaterFlowModel1DFileImporter()

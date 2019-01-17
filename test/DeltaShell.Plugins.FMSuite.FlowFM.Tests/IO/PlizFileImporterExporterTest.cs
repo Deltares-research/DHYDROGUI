@@ -354,16 +354,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         #region Import BridgePillars
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void Test_PliFileImporterExporter_ImportBridgePillars()
         {
             var importPath = TestHelper.GetTestFilePath(@"BridgePillarsImport\bridge-1.pliz");
             importPath = TestHelper.CreateLocalCopy(importPath);
             Assert.IsTrue(File.Exists(importPath));
 
-            using (var app = new DeltaShellApplication() {IsProjectCreatedInTemporaryDirectory = true})
+            using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
             {
                 //We need to initialize the application as the PlizFile requires to have the custom delegate
-                //methods for the bridgepillars in the Importer/Exporter.
+                //methods for the bridge pillars in the Importer/Exporter.
 
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
@@ -386,15 +387,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var bp = model.Area.BridgePillars.First();
                 Assert.IsNotNull(bp);
 
-                var DiameterList = new List<double>() { 555, 555, 555, 555 };
-                var CoeffList = new List<double>() { 323, 323, 323, 323 };
+                var diameterList = new List<double> { 555, 555, 555, 555 };
+                var coeffList = new List<double> { 323, 323, 323, 323 };
 
                 /* Check contents of the Bridge Pillar */
                 var loadedBpDataModel = model.BridgePillarsDataModel[0];
                 
-                Assert.AreEqual(DiameterList, loadedBpDataModel.DataColumns[0].ValueList);
-                Assert.AreEqual(CoeffList, loadedBpDataModel.DataColumns[1].ValueList);
-
+                Assert.AreEqual(diameterList, loadedBpDataModel.DataColumns[0].ValueList);
+                Assert.AreEqual(coeffList, loadedBpDataModel.DataColumns[1].ValueList);
             }
         }
         

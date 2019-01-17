@@ -118,6 +118,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void Load_FlowFM_Model_With_BridgePillars_Pillar_Is_Imported()
         {
             using (var app = new DeltaShellApplication())

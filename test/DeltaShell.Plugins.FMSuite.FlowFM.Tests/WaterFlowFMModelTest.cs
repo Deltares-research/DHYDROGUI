@@ -912,7 +912,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void ReloadGridShouldSetNoDataValueForBathemetry()
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
+        public void ReloadGridShouldSetNoDataValueForBathymetry()
         {
             var model = new WaterFlowFMModel();
             Assert.That(model.Grid.Cells.Count, Is.EqualTo(0));
@@ -1490,6 +1492,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         
         
         [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
         public void GivenModelForImporting_WhenThereAreFixedWeirs_ThenTheseFixedWeirsShouldBeCorrectlyImported()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFMFixedWeirs\FlowFM.mdu");
@@ -1504,12 +1508,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 var featureCoordinateData = model.FixedWeirsProperties.ElementAt(0);
 
-                var modelvalue = featureCoordinateData.DataColumns[0].ValueList[0];
-                Assert.AreEqual(1.2 , modelvalue);
-                modelvalue = featureCoordinateData.DataColumns[0].ValueList[1];
-                Assert.AreEqual(6.4, modelvalue);
-                modelvalue = featureCoordinateData.DataColumns[1].ValueList[0];
-                Assert.AreEqual(3.5, modelvalue);
+                var modelValue = featureCoordinateData.DataColumns[0].ValueList[0];
+                Assert.AreEqual(1.2 , modelValue);
+                modelValue = featureCoordinateData.DataColumns[0].ValueList[1];
+                Assert.AreEqual(6.4, modelValue);
+                modelValue = featureCoordinateData.DataColumns[1].ValueList[0];
+                Assert.AreEqual(3.5, modelValue);
 
                 //To do test write function also
 

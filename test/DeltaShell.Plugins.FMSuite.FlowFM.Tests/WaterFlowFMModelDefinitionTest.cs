@@ -1191,6 +1191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void UpdateWriteOutputSnappedFeaturesWaterfallFromFileTest()
         {
             var mduPath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj_data\FlowFM\FlowFM.mdu");
