@@ -201,6 +201,7 @@
     <Compile Include="RTCModelImporterTest.cs" />
     <Compile Include="ControlGroupBuilderTest.cs" />
     <Compile Include="SobekHydroModelImporterTest.cs" />
+    <Compile Include="SobekNetworkImporterPerformanceTest.cs" />
     <Compile Include="SobekRainfallRunoffModelImporterTest.cs" />
     <Compile Include="SobekRRBoundaryConditionsImporterTest.cs" />
     <Compile Include="SobekRRMeteoDataImporterTest.cs" />
