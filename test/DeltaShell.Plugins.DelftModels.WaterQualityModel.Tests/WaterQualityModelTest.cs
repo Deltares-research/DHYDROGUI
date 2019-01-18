@@ -1361,56 +1361,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void Test_When_HydFile_IsImported_InWaqModel_SimulationTimers_AreUpdated()
         {
-            var hydPath =
-                TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFile\westernscheldt01.hyd");
+            var hydPath = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFile\westernscheldt01.hyd");
             hydPath = TestHelper.CreateLocalCopy(hydPath);
             Assert.IsFalse(string.IsNullOrEmpty(hydPath));
             Assert.IsTrue(File.Exists(hydPath));
 
-            var expectedStartTime = "2014-01-01 00:00:00";
-            var expectedEndTime = "2014-01-08 00:00:00";
-
-            using (var app = new DeltaShellApplication())
+            const string expectedStartTime = "2014-01-01 00:00:00";
+            const string expectedEndTime = "2014-01-08 00:00:00";
+            
+            var model = new WaterQualityModel
             {
-                var waqPlugin = new WaterQualityModelApplicationPlugin();
+                StartTime = DateTime.Now,
+                StopTime = DateTime.Now.AddDays(3)
+            };
 
-                app.Plugins.Add(waqPlugin);
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetCdfApplicationPlugin());
-                app.Plugins.Add(new ScriptingApplicationPlugin());
-                app.Plugins.Add(new ToolboxApplicationPlugin());
+            //Check correct initial test state
+            Assert.AreNotEqual(expectedStartTime, model.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            Assert.AreNotEqual(expectedEndTime, model.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
 
-                app.Run();
-
-                // Initialize Project by saving it.
-                var tempDirectory = FileUtils.CreateTempDirectory();
-                app.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
-
-                //Initialize WAQ Model and add it to the project.
-                var model = new WaterQualityModel();
-                app.Project.RootFolder.Items.Add(model);
-
-                //Change Simulation Timers
-                model.StartTime = DateTime.Now;
-                model.StopTime = DateTime.Now.AddDays(3);
-
-                //Check the timers are different from the expected
-                Assert.AreNotEqual(expectedStartTime, model.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
-                Assert.AreNotEqual(expectedEndTime, model.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
-
-                //Import hyd file
-                var importer = new HydFileImporter();
-                var importedModel = importer.ImportItem(hydPath, model) as WaterQualityModel;
-                Assert.IsNotNull(importedModel);
-
-                Assert.AreEqual(expectedStartTime, importedModel.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
-                Assert.AreEqual(expectedEndTime, importedModel.StopTime.ToString("yyyy-MM-dd HH:mm:ss"));
-            }
+            //Import hyd file
+            var importer = new HydFileImporter();
+            var importedModel = importer.ImportItem(hydPath, model) as WaterQualityModel;
+            Assert.IsNotNull(importedModel);
+            
+            Assert.That(importedModel.StartTime.ToString("yyyy-MM-dd HH:mm:ss"), Is.EqualTo(expectedStartTime));
+            Assert.AreEqual(importedModel.StopTime.ToString("yyyy-MM-dd HH:mm:ss"), Is.EqualTo(expectedEndTime));
         }
 
         [Test]
