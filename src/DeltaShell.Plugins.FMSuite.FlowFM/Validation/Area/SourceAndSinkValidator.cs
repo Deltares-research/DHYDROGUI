@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
 {
@@ -14,18 +16,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         /// <param name="model">The model to which the source and sinks belong.</param>
         /// <param name="sourcesAndSinks">The the set of sources and sinks to be evaluated.</param>
         /// <returns> A set of validation issues encountered. </returns>
-        public static IEnumerable<ValidationIssue> Validate(WaterFlowFMModel model, IEnumerable<FeatureData.SourceAndSink> sourcesAndSinks)
+        public static IEnumerable<ValidationIssue> Validate(WaterFlowFMModel model, IEnumerable<SourceAndSink> sourcesAndSinks)
         {
             var issues = new List<ValidationIssue>();
             foreach (var sourceAndSink in sourcesAndSinks)
             {
-                if (!model.SnapsToGrid(sourceAndSink.Feature.Geometry))
-                {
-                    issues.Add(new ValidationIssue(sourceAndSink,
-                                                   ValidationSeverity.Warning,
-                                                   $"source/sink '{sourceAndSink.Name}' not within grid extent",
-                                                   model.Pipes));
-                }
+                issues.AddRange(sourceAndSink.SnapsToModelGrid(model));
 
                 var timeArgument = sourceAndSink
                                    .Function.Arguments.OfType<IVariable<DateTime>>()
@@ -53,6 +49,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
             }
 
             return issues;
+        }
+
+        private static IEnumerable<ValidationIssue> SnapsToModelGrid(this SourceAndSink sourceAndSink, WaterFlowFMModel model)
+        {
+            if (!model.SnapsToGrid(sourceAndSink.Feature.Geometry))
+            {
+                yield return new ValidationIssue(sourceAndSink, ValidationSeverity.Warning,
+                    string.Format(Resources.SourceAndSinkValidator_Validate_source_sink___0___not_within_grid_extent,
+                        sourceAndSink.Name), sourceAndSink);
+            }
         }
     }
 }

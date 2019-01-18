@@ -503,4 +503,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMArea2DValidator_Validate_thin_dam___0___not_within_grid_extent" xml:space="preserve">
     <value>thin dam '{0}' not within grid extent</value>
   </data>
+  <data name="SourceAndSinkValidator_Validate_source_sink___0___not_within_grid_extent" xml:space="preserve">
+    <value>source/sink '{0}' not within grid extent</value>
+  </data>
 </root>

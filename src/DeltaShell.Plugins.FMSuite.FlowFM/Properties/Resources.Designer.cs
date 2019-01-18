@@ -810,6 +810,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to source/sink &apos;{0}&apos; not within grid extent.
+        /// </summary>
+        public static string SourceAndSinkValidator_Validate_source_sink___0___not_within_grid_extent {
+            get {
+                return ResourceManager.GetString("SourceAndSinkValidator_Validate_source_sink___0___not_within_grid_extent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap StructureFeatureSmall {

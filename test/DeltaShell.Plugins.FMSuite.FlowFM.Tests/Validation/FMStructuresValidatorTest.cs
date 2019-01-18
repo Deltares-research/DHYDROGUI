@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 {
     [TestFixture]
-    public class WaterFlowFMArea2DValidatorTest
+    public class FMStructuresValidatorTest
     {
         private WaterFlowFMModel model;
 
