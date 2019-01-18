@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Validation;
+using GeoAPI.Geometries;
 using ValidationAspects;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
@@ -10,28 +12,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
     public static class WeirValidator
     {
         private static IList<ValidationIssue> issues;
+        private static DateTime modelStartTime;
+        private static DateTime modelStopTime;
 
         /// <summary>
         /// Validate the weirs and return any encountered issues.
         /// </summary>
-        /// <param name="model">The model to which the weirs belong.</param>
         /// <param name="weirs">The set of weirs to be evaluated.</param>
+        /// <param name="gridExtent">The Envelope that describes the extent of the FM model grid.</param>
+        /// <param name="startTime">The model start time.</param>
+        /// <param name="stopTime">The model stop time.</param>
         /// <returns> A set of validation issues encountered. </returns>
-        public static IEnumerable<ValidationIssue> Validate(WaterFlowFMModel model, IEnumerable<Weir2D> weirs)
+        public static IEnumerable<ValidationIssue> Validate(IEnumerable<Weir2D> weirs, Envelope gridExtent, DateTime startTime, DateTime stopTime)
         {
             issues = new List<ValidationIssue>();
+
+            modelStartTime = startTime;
+            modelStopTime = stopTime;
 
             foreach (var weir in weirs)
             {
                 weir.ValidateWeirObject();
-                weir.ValidateSnapping(model);
+                weir.ValidateSnapping(gridExtent);
                 weir.ValidateLateralContraction();
-                weir.ValidateCrestLevel(model);
+                weir.ValidateCrestLevel();
                 weir.ValidateCrestWidth(weir.CrestWidth, "Crest Width");
 
                 if (weir.WeirFormula is IGatedWeirFormula gatedWeirFormula)
                 {
-                    weir.ValidateGatedWeir(gatedWeirFormula, model);
+                    weir.ValidateGatedWeir(gatedWeirFormula);
                 }
 
                 if (weir.WeirFormula is GeneralStructureWeirFormula generalStructureFormula)
@@ -80,9 +89,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
             }
         }
 
-        private static void ValidateSnapping(this Weir2D weir, WaterFlowFMModel model)
+        private static void ValidateSnapping(this Weir2D weir, Envelope gridExtent)
         {
-            if (!weir.Geometry.SnapsToFlowFmGrid(model.GridExtent))
+            if (!weir.Geometry.SnapsToFlowFmGrid(gridExtent))
             {
                 issues.Add(new ValidationIssue(weir,
                     ValidationSeverity.Warning,
@@ -103,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
             }
         }
 
-        private static void ValidateCrestLevel(this Weir2D weir, WaterFlowFMModel model)
+        private static void ValidateCrestLevel(this Weir2D weir)
         {
             if (!weir.UseCrestLevelTimeSeries) return;
 
@@ -112,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
                 var startTime = weir.CrestLevelTimeSeries.Time.Values.First();
                 var stopTime = weir.CrestLevelTimeSeries.Time.Values.Last();
 
-                if (startTime > model.StartTime || stopTime < model.StopTime)
+                if (startTime > modelStartTime || stopTime < modelStopTime)
                 {
                     issues.Add(new ValidationIssue(weir,
                         ValidationSeverity.Error,
@@ -129,11 +138,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
             }
         }
 
-        private static void ValidateGatedWeir(this Weir2D weir, IGatedWeirFormula gatedWeirFormula, WaterFlowFMModel model)
+        private static void ValidateGatedWeir(this Weir2D weir, IGatedWeirFormula gatedWeirFormula)
         {
             weir.ValidateDoorHeight(gatedWeirFormula);
-            weir.ValidateHorizontalDoorOpeningWidth(gatedWeirFormula, model);
-            weir.ValidateLowerEdgeLevel(gatedWeirFormula, model);
+            weir.ValidateHorizontalDoorOpeningWidth(gatedWeirFormula);
+            weir.ValidateLowerEdgeLevel(gatedWeirFormula);
         }
 
         private static void ValidateGeneralStructure(this Weir2D weir, GeneralStructureWeirFormula generalStructureFormula)
@@ -157,7 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
             }
         }
 
-        private static void ValidateLowerEdgeLevel(this Weir2D weir, IGatedWeirFormula gatedWeirFormula, WaterFlowFMModel model)
+        private static void ValidateLowerEdgeLevel(this Weir2D weir, IGatedWeirFormula gatedWeirFormula)
         {
             if (!gatedWeirFormula.UseLowerEdgeLevelTimeSeries) return;
 
@@ -167,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
                 var startTime = lowerEdgeLevelTimeSeries.Time.Values.First();
                 var stopTime = lowerEdgeLevelTimeSeries.Time.Values.Last();
 
-                if (startTime > model.StartTime || stopTime < model.StopTime)
+                if (startTime > modelStartTime || stopTime < modelStopTime)
                 {
                     issues.Add(new ValidationIssue(weir,
                         ValidationSeverity.Error,
@@ -184,7 +193,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
             }
         }
 
-        private static void ValidateHorizontalDoorOpeningWidth(this Weir2D weir, IGatedWeirFormula gatedWeirFormula, WaterFlowFMModel model)
+        private static void ValidateHorizontalDoorOpeningWidth(this Weir2D weir, IGatedWeirFormula gatedWeirFormula)
         {
             if (gatedWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries)
             {
@@ -204,7 +213,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
                     var startTime = doorOpeningTimeSeries.Time.Values.First();
                     var stopTime = doorOpeningTimeSeries.Time.Values.Last();
 
-                    if (startTime > model.StartTime || stopTime < model.StopTime)
+                    if (startTime > modelStartTime || stopTime < modelStopTime)
                     {
                         issues.Add(new ValidationIssue(weir,
                             ValidationSeverity.Error,

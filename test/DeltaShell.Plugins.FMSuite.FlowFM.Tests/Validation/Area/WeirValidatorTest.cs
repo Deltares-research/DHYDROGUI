@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Functions;
-using DelftTools.Hydro.Structures;
+﻿using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
-using DelftTools.TestUtils;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Rhino.Mocks;
-using SharpMap.Extensions.CoordinateSystems;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
 {
@@ -23,12 +19,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         private const string MessageOneValidationIssueExpected = "Exactly one log message was expected when validating this weir.";
         private const string MessageDifferentLogMessageExpected = "A different log message for this issue was expected.";
 
-        private WaterFlowFMModel model;
+        private static DateTime modelStartTime;
+        private static DateTime modelStopTime;
+        private IList<Weir2D> weirs;
 
         [SetUp]
         public void SetUp()
         {
-            model = new WaterFlowFMModel();
+            modelStartTime = DateTime.Today;
+            modelStopTime = DateTime.Today.AddDays(1);
+            weirs = new List<Weir2D>();
         }
 
         /// <summary>
@@ -67,11 +67,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 WeirFormula = formula,
                 CrestWidth = validCrestWidth ? 1.0 : -1.0,
             };
-
-            model.Area.Weirs.Add(weir);
+            weirs.Add(weir);
 
             // When 
-            var validationIssues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+            var validationIssues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
 
             // Then
             AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, "Crest", weir, validCrestWidth);
@@ -138,11 +137,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 WeirFormula = formula,
                 CrestWidth = emptyCrestWidth ? double.NaN : 1.0,
             };
-
-            model.Area.Weirs.Add(weir);
+            weirs.Add(weir);
 
             // When
-            var validationIssues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+            var validationIssues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
 
             // Then
             AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, "Crest", weir, emptyCrestWidth);
@@ -175,7 +173,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         }
 
         [Test]
-        public void GivenAWeirWithAGeometryThatDoesNotSnapToGrid_WhenValidateIsCalled_ThenExpectedValidationIsssueIsReturned()
+        public void GivenAWeirWithAGeometryThatDoesNotSnapToGrid_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
         {
             // Given
             var weir = new Weir2D
@@ -183,11 +181,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 CrestWidth = 1.0d,
                 Geometry = new Point(new Coordinate(10, 10))
             };
-            model.Area.Weirs.Add(weir);
-            model.Grid = new UnstructuredGrid {Vertices = new[] {new Coordinate(0, 0)}};
+            weirs.Add(weir);
+            var gridExtent = new UnstructuredGrid {Vertices = new[] {new Coordinate(0, 0)}}.GetExtents();
 
             // When
-            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+            var issues = WeirValidator.Validate(weirs, gridExtent, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -205,10 +203,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 CrestWidth = 1.0d,
                 WeirFormula = new SimpleWeirFormula {LateralContraction = -1.0d}
             };
-            model.Area.Weirs.Add(weir);
+            weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -226,10 +224,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 CrestWidth = 1.0d,
                 UseCrestLevelTimeSeries = true
             };
-            model.Area.Weirs.Add(weir);
+            weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -243,10 +241,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         {
             // Given
             var weir = new Weir2D {CrestWidth = 0.0d};
-            model.Area.Weirs.Add(weir);
+            weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -260,10 +258,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         {
             // Given
             var weir = new Weir2D {CrestWidth = double.NaN};
-            model.Area.Weirs.Add(weir);
+            weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -281,11 +279,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 CrestWidth = 1.0d,
                 UseCrestLevelTimeSeries = true
             };
-            weir.CrestLevelTimeSeries.Time.Values.Add(model.StartTime.AddHours(1));
-            model.Area.Weirs.Add(weir);
+            weir.CrestLevelTimeSeries.Time.Values.Add(modelStartTime.AddHours(1));
+            weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -310,10 +308,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                     HorizontalDoorOpeningDirection = GateOpeningDirection.FromLeft
                 },
             };
-            model.Area.Weirs.Add(weir);
+            weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -337,10 +335,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                     WidthStructureRightSide = -1.0d,
                 },
             };
-            model.Area.Weirs.Add(weir);
+            weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(5, issues.Count, "Exactly 5 log messages were expected when validating this weir.");
@@ -359,10 +357,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 CrestWidth = 1.0d,
                 WeirFormula = new GatedWeirFormula {DoorHeight = -1.0d}
             };
-            model.Area.Weirs.Add(weir);
+            weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -380,10 +378,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 CrestWidth = 1.0d,
                 WeirFormula = new GatedWeirFormula {HorizontalDoorOpeningWidth = -1.0d},
             };
-            model.Area.Weirs.Add(weir);
+            weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -397,7 +395,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         {
             // Given
             var gatedWeirFormula = new GatedWeirFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
-            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries.Time.AddValues(new[] {model.StartTime, model.StopTime});
+            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries.Time.AddValues(new[] {modelStartTime, modelStopTime});
             gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries.SetValues(new[] {-1.0d, 1.0d});
 
             var weir = new Weir2D(true)
@@ -405,10 +403,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 CrestWidth = 1.0d,
                 WeirFormula = gatedWeirFormula
             };
-            model.Area.Weirs.Add(weir);
+            weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -426,10 +424,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 CrestWidth = 1.0d,
                 WeirFormula = new GatedWeirFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true}
             };
-            model.Area.Weirs.Add(weir);
+            weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -443,17 +441,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         {
             // Given
             var gatedWeirFormula = new GatedWeirFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
-            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries.Time.Values.Add(model.StartTime.AddHours(1));
+            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries.Time.Values.Add(modelStartTime.AddHours(1));
 
             var weir = new Weir2D(true)
             {
                 CrestWidth = 1.0d,
                 WeirFormula = gatedWeirFormula
             };
-            model.Area.Weirs.Add(weir);
+            weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -467,17 +465,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         {
             // Given
             var gatedWeirFormula = new GatedWeirFormula(true) {UseLowerEdgeLevelTimeSeries = true};
-            gatedWeirFormula.LowerEdgeLevelTimeSeries.Time.Values.Add(model.StartTime.AddHours(1));
+            gatedWeirFormula.LowerEdgeLevelTimeSeries.Time.Values.Add(modelStartTime.AddHours(1));
 
             var weir = new Weir2D(true)
             {
                 CrestWidth = 1.0d,
                 WeirFormula = gatedWeirFormula
             };
-            model.Area.Weirs.Add(weir);
+            weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -495,10 +493,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 CrestWidth = 1.0d,
                 WeirFormula = new GatedWeirFormula(true) {UseLowerEdgeLevelTimeSeries = true}
             };
-            model.Area.Weirs.Add(weir);
+            weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
