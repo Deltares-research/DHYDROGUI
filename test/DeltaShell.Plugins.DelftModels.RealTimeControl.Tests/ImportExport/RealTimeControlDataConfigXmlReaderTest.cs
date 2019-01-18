@@ -56,7 +56,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         }
 
         [Test]
-        [Category(TestCategory.Jira)] // SOBEK3-1651
         [Category(TestCategory.DataAccess)]
         public void GivenAnExistingFileWithValidData_WhenReading_ThenCorrectConnectionPointsAreReturnedAndObjectsAreSetInControlgroups()
         {
