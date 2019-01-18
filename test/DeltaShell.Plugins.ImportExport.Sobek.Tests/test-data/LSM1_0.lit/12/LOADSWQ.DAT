@@ -1,0 +1,823 @@
+ 
+ 
+ITEM
+USEFOR 'CLAUSCENTRALE' 'CLAUSCENTRALE'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              1             0             14.51
+ 
+ITEM
+USEFOR 'NUONBUGGE' 'NUONBUGGE'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             31.67
+ 
+ITEM
+USEFOR 'KAPPA ROERMOND' 'KAPPA ROERMOND'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             1.19
+ 
+ITEM
+USEFOR 'SABIC' 'SABIC'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             8.7
+ 
+ITEM
+USEFOR 'SAPPI' 'SAPPI'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             1.31
+ 
+ITEM
+USEFOR 'AEB1415' 'AEB1415'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             30.66
+ 
+ITEM
+USEFOR 'ALBEMARLE' 'ALBEMARLE'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             2.02
+ 
+ITEM
+USEFOR 'CARGILL SOJA' 'CARGILL SOJA'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             1.96
+ 
+ITEM
+USEFOR 'CROWN GELDER' 'CROWN GELDER'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             1.75
+ 
+ITEM
+USEFOR 'DSM AGRO 0300' 'DSM AGRO 0300'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             13.12
+ 
+ITEM
+USEFOR 'HEMWEG' 'HEMWEG'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             185.45
+ 
+ITEM
+USEFOR 'DIEMEN IJMEER' 'DIEMEN IJMEER'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             21.03
+ 
+ITEM
+USEFOR 'NUON VELSEN24' 'NUON VELSEN24'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             47.27
+ 
+ITEM
+USEFOR 'NUON VELSEN25' 'NUON VELSEN25'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             85.83
+ 
+ITEM
+USEFOR 'GELDERLAND' 'GELDERLAND'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             133.51
+ 
+ITEM
+USEFOR 'HARCULO' 'HARCULO'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             31.62
+ 
+ITEM
+USEFOR 'KLEEFSE' 'KLEEFSE'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             1.06
+ 
+ITEM
+USEFOR 'NORSKE' 'NORSKE'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             4.29
+ 
+ITEM
+USEFOR 'NUON LAGERWEIDE' 'NUON LAGERWEIDE'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             27.56
+ 
+ITEM
+USEFOR 'NUON MERWEDE' 'NUON MERWEDE'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             25.67
+ 
+ITEM
+USEFOR 'AIRPROD' 'AIRPROD'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             1.79
+ 
+ITEM
+USEFOR 'AIRPRPERNIS' 'AIRPRPERNIS'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             20.98
+ 
+ITEM
+USEFOR 'CABOT' 'CABOT'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             9.34
+ 
+ITEM
+USEFOR 'HOEKLOOS' 'HOEKLOOS'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             18.12
+ 
+ITEM
+USEFOR 'CARBLANE' 'CARBLANE'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             7.62
+ 
+ITEM
+USEFOR 'EONGALILEI' 'EONGALILEI'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             7.29
+ 
+ITEM
+USEFOR 'EPZAMER' 'EPZAMER'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             264.58
+ 
+ITEM
+USEFOR 'EXXONCHEMICAL' 'EXXONCHEMICAL'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             10.64
+ 
+ITEM
+USEFOR 'EZHROCA' 'EZHROCA'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             .01
+ 
+ITEM
+USEFOR 'KUWAITOIL' 'KUWAITOIL'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             7.55
+ 
+ITEM
+USEFOR 'AVRNV NWATERWEG' 'AVRNV NWATERWEG'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             22.57
+ 
+ITEM
+USEFOR 'RESOPER' 'RESOPER'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             23.68
+ 
+ITEM
+USEFOR 'ROTEBKW' 'ROTEBKW'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             11.88
+ 
+ITEM
+USEFOR 'SHELLMOERDIJK' 'SHELLMOERDIJK'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             190
+ 
+ITEM
+USEFOR 'SHELLPERNIS CH1' 'SHELLPERNIS CH1'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             3.1
+ 
+ITEM
+USEFOR 'SHELLPERNIS CH2' 'SHELLPERNIS CH2'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             2.62
+ 
+ITEM
+USEFOR 'SHINBOT' 'SHINBOT'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             15.85
+ 
+ITEM
+USEFOR 'SHINPER' 'SHINPER'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             4.77
+ 
+ITEM
+USEFOR 'SNR SNC' 'SNR SNC'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             49.11
+ 
+ITEM
+USEFOR 'SUIKERUNIE' 'SUIKERUNIE'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             1.7
+ 
+ITEM
+USEFOR 'TIOFINE' 'TIOFINE'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             11.95
+ 
+ITEM
+USEFOR 'UNICHEMA' 'UNICHEMA'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             .82
+ 
+ITEM
+USEFOR 'UNIMILLS' 'UNIMILLS'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             2.36
+ 
+ITEM
+USEFOR 'WKCMOERDIJK' 'WKCMOERDIJK'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             37.11
+ 
+ITEM
+USEFOR 'AQUALON' 'AQUALON'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             2.84
+ 
+ITEM
+USEFOR 'AKZONOBEL_N' 'AKZONOBEL_N'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             12.39
+ 
+ITEM
+USEFOR 'AKZONOBEL_z' 'AKZONOBEL_z'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             4.3
+ 
+ITEM
+USEFOR 'DIEMEN AMS' 'DIEMEN AMS'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             .45
+ 
+ITEM
+USEFOR 'SHEELPERNIS RAFF1' 'SHEELPERNIS RAFF1'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             71.51
+ 
+ITEM
+USEFOR 'SHEELPERNIS RAFF2' 'SHEELPERNIS RAFF2'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+LINEAR DATA    'Continuity'                'NatTemp'     'TotTemp'
+              0             0             5.96
+ 
+ITEM
+USEFOR 'ATM' 'ATM'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             1.072706      0
+ 
+ 
+ITEM
+USEFOR 'ATOFINA' 'ATOFINA'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             .977354       0
+ 
+ 
+ITEM
+USEFOR 'SVIMOE' 'SVIMOE'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             .357569       0
+ 
+ITEM
+USEFOR 'AZN' 'AZN'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             1.454112      0
+ 
+ 
+ITEM
+USEFOR 'BOSDOLMAN' 'BOSDOLMAN'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             .595948       0
+ 
+ 
+ITEM
+USEFOR 'AMSFERTILIZERS' 'AMSFERTILIZERS'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             .834327       0
+ 
+ 
+ITEM
+USEFOR 'CARMARGARINE' 'CARMARGARINE'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             1.907032      0
+ 
+ 
+ITEM
+USEFOR 'CARMULTI' 'CARMULTI'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             .238379       0
+ 
+ 
+ITEM
+USEFOR 'CORUSTUBES' 'CORUSTUBES'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             1.072706      0
+ 
+ 
+ITEM
+USEFOR 'DSMFOOD' 'DSMFOOD'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             .238379       0
+ 
+ 
+ITEM
+USEFOR 'DSMSPECIAL' 'DSMSPECIAL'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             .90584        0
+ 
+ 
+ITEM
+USEFOR 'EONMAAS' 'EONMAAS'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             1.668653      0
+ 
+ 
+ITEM
+USEFOR 'ENCI' 'ENCI'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             1.381645      0
+ 
+ 
+ITEM
+USEFOR 'FUNDIA' 'FUNDIA'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             4.76758       0
+ 
+ 
+ITEM
+USEFOR 'GROOTINT' 'GROOTINT'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             1.907032      0
+ 
+ 
+ITEM
+USEFOR 'HIWA' 'HIWA'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             1.001192      0
+ 
+ 
+ITEM
+USEFOR 'HUNDOUGLAS' 'HUNDOUGLAS'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             2.38379       0
+ 
+ 
+ITEM
+USEFOR 'HUNTSMAN' 'HUNTSMAN'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             1.191895      0
+ 
+ 
+ITEM
+USEFOR 'NLGASUNI' 'NLGASUNI'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             4.88677       0
+ 
+ 
+ITEM
+USEFOR 'NESTLE' 'NESTLE'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             1.311085      0
+ 
+ 
+ITEM
+USEFOR 'ODFJELL' 'ODFJELL'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             3.575685      0
+ 
+ 
+ITEM
+USEFOR 'RECV' 'RECV'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             2.145411      0
+ 
+ 
+ITEM
+USEFOR 'ROMI' 'ROMI'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             1.029797      0
+ 
+ 
+ITEM
+USEFOR 'UNILEVER' 'UNILEVER'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'TotTemp' 'TotTemp'
+USEFOR 'NatTemp' 'NatTemp'
+DATA           'Continuity'                'TotTemp'     'NatTemp'
+              0             3.718713      0
+ 
+ 
+ITEM
+USEFOR 'AVRNV  LAUREN' 'AVRNV  LAUREN'
+CONCENTRATION
+USEFOR 'Continuity' 'Continuity'
+USEFOR 'NatTemp' 'NatTemp'
+USEFOR 'TotTemp' 'TotTemp'
+DATA           'Continuity'                'NatTemp'     'TotTemp'
+              1             0             13.93
+ 
+ 
+ 
+ITEM
+USEFOR 'RWSdistrict1067' 'RWSdistrict1067'
+CONCENTRATION
+USEFOR
+DATA           'Continuity'                'NatTemp'     'TotTemp'
+              -999          -999          -999
+ 
+ 
+ITEM
+USEFOR 'RWSdistrict1011' 'RWSdistrict1011'
+CONCENTRATION
+USEFOR
+DATA           'Continuity'                'NatTemp'     'TotTemp'
+              -999          -999          -999
+ 
+ 
+ 
+ITEM
+USEFOR 'RWSdistrict1117' 'RWSdistrict1117'
+CONCENTRATION
+USEFOR
+DATA           'Continuity'                'NatTemp'     'TotTemp'
+              -999          -999          -999
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

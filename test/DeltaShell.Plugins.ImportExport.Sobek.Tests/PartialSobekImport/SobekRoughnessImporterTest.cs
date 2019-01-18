@@ -1,10 +1,8 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
@@ -198,29 +196,21 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.Slow)]
         public void ImportRoughnessShouldBeEfficient()
         {
-            var zipSourcePath = TestHelper.GetDataDir() + @"\LSM1_0.lit\12.zip";
-            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
-            {
-                // Unzip actual into new temporary directory
-                ZipFileUtils.Extract(zipSourcePath, tempDir);
-                var pathToSobekNetwork = Path.Combine(tempDir, "12", "NETWORK.TP");
+            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\LSM1_0.lit\12\network.tp";
 
-                // Perform test instructions on unzipped model
-                var flowModel = new WaterFlowModel1D("water flow 1d");
-                var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, flowModel,
-                                                                                     new IPartialSobekImporter[]
+            var flowModel = new WaterFlowModel1D("water flow 1d");
+
+            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, flowModel,
+                                                                                 new IPartialSobekImporter[]
                                                                                      {
                                                                                          new SobekBranchesImporter(),
-                                                                                         new SobekRoughnessImporter(),
+                                                                                         new SobekRoughnessImporter(), 
                                                                                      });
+            
+            // since upgrade to framework 1.2, takes approx. 15 secs locally - much longer on build server
+            TestHelper.AssertIsFasterThan(38000, importer.Import); //on my pc: 13sec, was 75sec.. more to gain though
 
-                // since upgrade to framework 1.2, takes approx. 15 secs locally - much longer on build server
-                TestHelper.AssertIsFasterThan(
-                    38000, importer.Import); //on my pc: 13sec, was 75sec.. more to gain though
-
-                Assert.AreEqual(
-                    10960, flowModel.RoughnessSections.MainChannel().RoughnessNetworkCoverage.Locations.Values.Count);
-            });
+            Assert.AreEqual(10960, flowModel.RoughnessSections.MainChannel().RoughnessNetworkCoverage.Locations.Values.Count);
         }
     }
 }
