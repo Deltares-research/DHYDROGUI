@@ -506,4 +506,10 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="SourceAndSinkValidator_Validate_source_sink___0___not_within_grid_extent" xml:space="preserve">
     <value>source/sink '{0}' not within grid extent</value>
   </data>
+  <data name="SourceAndSinkValidator_Validate_source_sink___0____discharge_time_series_does_not_contain_any_values_" xml:space="preserve">
+    <value>source/sink '{0}': discharge time series does not contain any values.</value>
+  </data>
+  <data name="SourceAndSinkValidator_Validate_source_sink___0____discharge_time_series_does_not_span_the_model_run_interval_" xml:space="preserve">
+    <value>source/sink '{0}': discharge time series does not span the model run interval.</value>
+  </data>
 </root>

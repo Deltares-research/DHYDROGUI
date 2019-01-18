@@ -810,6 +810,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to source/sink &apos;{0}&apos;: discharge time series does not contain any values..
+        /// </summary>
+        public static string SourceAndSinkValidator_Validate_source_sink___0____discharge_time_series_does_not_contain_any_values_ {
+            get {
+                return ResourceManager.GetString("SourceAndSinkValidator_Validate_source_sink___0____discharge_time_series_does_not" +
+                        "_contain_any_values_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to source/sink &apos;{0}&apos;: discharge time series does not span the model run interval..
+        /// </summary>
+        public static string SourceAndSinkValidator_Validate_source_sink___0____discharge_time_series_does_not_span_the_model_run_interval_ {
+            get {
+                return ResourceManager.GetString("SourceAndSinkValidator_Validate_source_sink___0____discharge_time_series_does_not" +
+                        "_span_the_model_run_interval_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to source/sink &apos;{0}&apos; not within grid extent.
         /// </summary>
         public static string SourceAndSinkValidator_Validate_source_sink___0___not_within_grid_extent {

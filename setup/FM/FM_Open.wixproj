@@ -101,6 +101,7 @@
     <Content Include="Delft3D FM HMWQ_Resources\Welcome.htm" />
     <Content Include="Extras.wxi" />
     <Content Include="Features.wxi" />
+    <Content Include="FMOpenDimrKernels.xsl" />
     <Content Include="FMPlugin.wxi" />
     <Content Include="FMPlugin_FeatureContent.wxi" />
     <Content Include="FMSuiteCommonPlugin.wxi" />
