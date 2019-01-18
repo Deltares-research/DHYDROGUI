@@ -1,16 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.TestUtils;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area;
+using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Grids;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using Rhino.Mocks;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
 {
     [TestFixture]
     public class WeirValidatorTest
     {
+        private const string MessageValidationSeverityErrorExpected = "The severity of this validation issue should have been of type Error.";
+        private const string MessageOneValidationIssueExpected = "Exactly one log message was expected when validating this weir.";
+        private const string MessageDifferentLogMessageExpected = "A different log message for this issue was expected.";
+
         private WaterFlowFMModel model;
 
         [SetUp]
@@ -35,10 +47,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         [TestCase(false, false, true, true, false)]
         [TestCase(false, false, false, false, false)]
         public void GivenAGeneralStructureWithAnInvalidCrestWidthAndAWaterFlowFMModelContainingThisGeneralStructure_WhenValidateWeirsIsCalledWithTheseValues_ThenTheCorrectValidationIssuesAreReturned(bool validCrestWidth,
-                                                                                                                                                                                                       bool validUpstream2,
-                                                                                                                                                                                                       bool validUpstream1,
-                                                                                                                                                                                                       bool validDownstream1,
-                                                                                                                                                                                                       bool validDownstream2)
+            bool validUpstream2,
+            bool validUpstream1,
+            bool validDownstream1,
+            bool validDownstream2)
         {
             // Given
             var formula = new GeneralStructureWeirFormula()
@@ -76,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             Assert.That(validationIssues.Count, Is.EqualTo(nExpectedMessages));
         }
 
-        private static void AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(IEnumerable<ValidationIssue> issues , string propertyName , Weir2D weir , bool isValid)
+        private static void AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(IEnumerable<ValidationIssue> issues, string propertyName, Weir2D weir, bool isValid)
         {
             var expectedIssue = new ValidationIssue(weir
                 , ValidationSeverity.Error
@@ -106,10 +118,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         [TestCase(false, false, false, false, false)]
         [TestCase(true, true, true, true, true)]
         public void GivenAGeneralStructureWithAnEmptyCrestWidthAndAWaterFlowFMModelContainingThisGeneralStructure_WhenValidateWeirsIsCalledWithTheseValues_ThenTheCorrectValidationIssuesAreReturned(bool emptyCrestWidth,
-                                                                                                                                                                                                     bool emptyUpstream2,
-                                                                                                                                                                                                     bool emptyUpstream1,
-                                                                                                                                                                                                     bool emptyDownstream1,
-                                                                                                                                                                                                     bool emptyDownstream2)
+            bool emptyUpstream2,
+            bool emptyUpstream1,
+            bool emptyDownstream1,
+            bool emptyDownstream2)
         {
             // Given
             var formula = new GeneralStructureWeirFormula()
@@ -129,7 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
 
             model.Area.Weirs.Add(weir);
 
-            // When 
+            // When
             var validationIssues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
 
             // Then
@@ -162,5 +174,337 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             return values.Count(e => e);
         }
 
+        [Test]
+        public void GivenAWeirWithAGeometryThatDoesNotSnapToGrid_WhenValidateIsCalled_ThenExpectedValidationIsssueIsReturned()
+        {
+            // Given
+            var weir = new Weir2D
+            {
+                CrestWidth = 1.0d,
+                Geometry = new Point(new Coordinate(10, 10))
+            };
+            model.Area.Weirs.Add(weir);
+            model.Grid = new UnstructuredGrid {Vertices = new[] {new Coordinate(0, 0)}};
+
+            // When
+            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+
+            // Then
+            Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
+            var issue = issues.Single();
+            Assert.AreEqual(ValidationSeverity.Warning, issue.Severity, "The severity of this validation issue should have been of type Warning.");
+            Assert.AreEqual("Structure is not within grid extend.", issue.Message, MessageDifferentLogMessageExpected);
+        }
+
+        [Test]
+        public void GivenAWeirWithAnInvalidLateralContraction_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
+        {
+            // Given
+            var weir = new Weir2D
+            {
+                CrestWidth = 1.0d,
+                WeirFormula = new SimpleWeirFormula {LateralContraction = -1.0d}
+            };
+            model.Area.Weirs.Add(weir);
+
+            // When
+            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+
+            // Then
+            Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
+            var issue = issues.Single();
+            Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
+            Assert.AreEqual("'Structure': lateral contraction coefficient must be greater than or equal to zero.", issue.Message, MessageDifferentLogMessageExpected);
+        }
+
+        [Test]
+        public void GivenAWeirWithThatUsesCrestLevelTimeSeriesAndCrestLevelHasNoTimeSeries_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
+        {
+            // Given
+            var weir = new Weir2D
+            {
+                CrestWidth = 1.0d,
+                UseCrestLevelTimeSeries = true
+            };
+            model.Area.Weirs.Add(weir);
+
+            // When
+            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+
+            // Then
+            Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
+            var issue = issues.Single();
+            Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
+            Assert.AreEqual("'Structure': crest level time series does not contain any values.", issue.Message, MessageDifferentLogMessageExpected);
+        }
+
+        [Test]
+        public void GivenAWeirWithACrestWidthWithAValueOfZero_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
+        {
+            // Given
+            var weir = new Weir2D {CrestWidth = 0.0d};
+            model.Area.Weirs.Add(weir);
+
+            // When
+            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+
+            // Then
+            Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
+            var issue = issues.Single();
+            Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
+            Assert.AreEqual("Crest Width for 'Structure' structure type: Simple weir, must be greater than 0.", issue.Message, MessageDifferentLogMessageExpected);
+        }
+
+        [Test]
+        public void GivenAWeirWithACrestWidthWithANaNValue_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
+        {
+            // Given
+            var weir = new Weir2D {CrestWidth = double.NaN};
+            model.Area.Weirs.Add(weir);
+
+            // When
+            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+
+            // Then
+            Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
+            var issue = issues.Single();
+            Assert.AreEqual(ValidationSeverity.Info, issue.Severity, "The severity of this validation issue should have been of type Error.");
+            Assert.AreEqual("Crest Width for 'Structure' structure type: Simple weir, will be calculated by the computational core.", issue.Message, MessageDifferentLogMessageExpected);
+        }
+
+        [Test]
+        public void GivenAWeirWithCrestLevelTimeSeriesThatDoesNotSpanTheModelRunInterval_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
+        {
+            // Given
+            var weir = new Weir2D
+            {
+                CrestWidth = 1.0d,
+                UseCrestLevelTimeSeries = true
+            };
+            weir.CrestLevelTimeSeries.Time.Values.Add(model.StartTime.AddHours(1));
+            model.Area.Weirs.Add(weir);
+
+            // When
+            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+
+            // Then
+            Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
+            var issue = issues.Single();
+            Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
+            Assert.AreEqual("'Structure': crest level time series does not span the model run interval.", issue.Message, MessageDifferentLogMessageExpected);
+        }
+
+        [Test]
+        public void GivenAGeneralStructureWithAnInvalidHorizontalDoorOpeningDirection_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
+        {
+            // Given
+            var weir = new Weir2D
+            {
+                WeirFormula = new GeneralStructureWeirFormula
+                {
+                    WidthStructureCentre = 1.0,
+                    WidthLeftSideOfStructure = 1.0,
+                    WidthStructureLeftSide = 1.0,
+                    WidthRightSideOfStructure = 1.0,
+                    WidthStructureRightSide = 1.0,
+                    HorizontalDoorOpeningDirection = GateOpeningDirection.FromLeft
+                },
+            };
+            model.Area.Weirs.Add(weir);
+
+            // When
+            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+
+            // Then
+            Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
+            var issue = issues.Single();
+            Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
+            Assert.AreEqual("'Structure': only symmetric horizontal door opening direction is supported for general structures.", issue.Message, MessageDifferentLogMessageExpected);
+        }
+
+        [Test]
+        public void GivenAGeneralStructureWithInvalidCrestWidths_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
+        {
+            // Given
+            var weir = new Weir2D
+            {
+                WeirFormula = new GeneralStructureWeirFormula
+                {
+                    WidthStructureCentre = -1.0d,
+                    WidthLeftSideOfStructure = -1.0d,
+                    WidthStructureLeftSide = -1.0d,
+                    WidthRightSideOfStructure = -1.0d,
+                    WidthStructureRightSide = -1.0d,
+                },
+            };
+            model.Area.Weirs.Add(weir);
+
+            // When
+            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+
+            // Then
+            Assert.AreEqual(5, issues.Count, "Exactly 5 log messages were expected when validating this weir.");
+            Assert.IsTrue(issues.All(i => i.Severity == ValidationSeverity.Error), "The severity of all these validation issues should have been of type Error.");
+            var messages = issues.Select(i => i.Message);
+            const string expectedMessageWithoutPropertyName = "for 'Structure' structure type: General structure, must be greater than 0.";
+            Assert.IsTrue(messages.All(m => m.EndsWith(expectedMessageWithoutPropertyName, StringComparison.Ordinal)), "All log messages of these issues should have ended with the same expected message.");
+        }
+
+        [Test]
+        public void GivenAGatedWeirWithAnInvalidDoorHeight_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
+        {
+            // Given
+            var weir = new Weir2D
+            {
+                CrestWidth = 1.0d,
+                WeirFormula = new GatedWeirFormula {DoorHeight = -1.0d}
+            };
+            model.Area.Weirs.Add(weir);
+
+            // When
+            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+
+            // Then
+            Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
+            var issue = issues.Single();
+            Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
+            Assert.AreEqual("'Structure': door height must be greater than or equal to 0.", issue.Message, MessageDifferentLogMessageExpected);
+        }
+
+        [Test]
+        public void GivenAGatedWeirWithAnInvalidHorizontalDoorOpeningWidth_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
+        {
+            // Given
+            var weir = new Weir2D
+            {
+                CrestWidth = 1.0d,
+                WeirFormula = new GatedWeirFormula {HorizontalDoorOpeningWidth = -1.0d},
+            };
+            model.Area.Weirs.Add(weir);
+
+            // When
+            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+
+            // Then
+            Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
+            var issue = issues.Single();
+            Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
+            Assert.AreEqual("'Structure': opening width must be greater than or equal to 0.", issue.Message, MessageDifferentLogMessageExpected);
+        }
+
+        [Test]
+        public void GivenAGatedWeirWithHorizontalDoorOpeningWidthTimeSeriesWithAtLeastOneValueSmallerThanZero_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
+        {
+            // Given
+            var gatedWeirFormula = new GatedWeirFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
+            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries.Time.AddValues(new[] {model.StartTime, model.StopTime});
+            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries.SetValues(new[] {-1.0d, 1.0d});
+
+            var weir = new Weir2D(true)
+            {
+                CrestWidth = 1.0d,
+                WeirFormula = gatedWeirFormula
+            };
+            model.Area.Weirs.Add(weir);
+
+            // When
+            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+
+            // Then
+            Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
+            var issue = issues.Single();
+            Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
+            Assert.AreEqual("'Structure': opening width time series values must be greater than or equal to 0.", issue.Message, MessageDifferentLogMessageExpected);
+        }
+
+        [Test]
+        public void GivenAGatedWeirWithHorizontalDoorOpeningWidthTimeSeriesWithoutValues_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
+        {
+            // Given
+            var weir = new Weir2D(true)
+            {
+                CrestWidth = 1.0d,
+                WeirFormula = new GatedWeirFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true}
+            };
+            model.Area.Weirs.Add(weir);
+
+            // When
+            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+
+            // Then
+            Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
+            var issue = issues.Single();
+            Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
+            Assert.AreEqual("'Structure': opening width time series does not contain any values.", issue.Message, MessageDifferentLogMessageExpected);
+        }
+
+        [Test]
+        public void GivenAGatedWeirWithHorizontalDoorOpeningWidthTimeSeriesThatDoesNotSpanTheModelRunInterval_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
+        {
+            // Given
+            var gatedWeirFormula = new GatedWeirFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
+            gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries.Time.Values.Add(model.StartTime.AddHours(1));
+
+            var weir = new Weir2D(true)
+            {
+                CrestWidth = 1.0d,
+                WeirFormula = gatedWeirFormula
+            };
+            model.Area.Weirs.Add(weir);
+
+            // When
+            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+
+            // Then
+            Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
+            var issue = issues.Single();
+            Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
+            Assert.AreEqual("'Structure': opening width time series does not span the model run interval.", issue.Message, MessageDifferentLogMessageExpected);
+        }
+
+        [Test]
+        public void GivenAGatedWeirWithLowerEdgeLevelTimeSeriesThatDoesNotSpanTheModelRunInterval_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
+        {
+            // Given
+            var gatedWeirFormula = new GatedWeirFormula(true) {UseLowerEdgeLevelTimeSeries = true};
+            gatedWeirFormula.LowerEdgeLevelTimeSeries.Time.Values.Add(model.StartTime.AddHours(1));
+
+            var weir = new Weir2D(true)
+            {
+                CrestWidth = 1.0d,
+                WeirFormula = gatedWeirFormula
+            };
+            model.Area.Weirs.Add(weir);
+
+            // When
+            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+
+            // Then
+            Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
+            var issue = issues.Single();
+            Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
+            Assert.AreEqual("'Structure': lower edge level time series does not span the model run interval.", issue.Message, MessageDifferentLogMessageExpected);
+        }
+
+        [Test]
+        public void GivenAGatedWeirWithLowerEdgeLevelTimeSeriesWithoutValues_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
+        {
+            // Given
+            var weir = new Weir2D(true)
+            {
+                CrestWidth = 1.0d,
+                WeirFormula = new GatedWeirFormula(true) {UseLowerEdgeLevelTimeSeries = true}
+            };
+            model.Area.Weirs.Add(weir);
+
+            // When
+            var issues = WeirValidator.Validate(model, model.Area.Weirs).ToList();
+
+            // Then
+            Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
+            var issue = issues.Single();
+            Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
+            Assert.AreEqual("'Structure': lower edge level time series does not contain any values.", issue.Message, MessageDifferentLogMessageExpected);
+        }
     }
 }
