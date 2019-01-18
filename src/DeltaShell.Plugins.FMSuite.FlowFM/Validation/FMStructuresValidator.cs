@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             var area = model.Area;
             
             var issues = ThinDamValidator.Validate(model)
-                .Concat(SourceAndSinkValidator.Validate(model, model.SourcesAndSinks))
+                .Concat(SourceAndSinkValidator.Validate(model.SourcesAndSinks, model.GridExtent, model.StartTime, model.StopTime))
                 .Concat(FixedWeirValidator.Validate(model, area.FixedWeirs))
                 .Concat(WeirValidator.Validate(model, area.Weirs))
                 .Concat(PumpValidator.ValidatePumps(model, area.Pumps));

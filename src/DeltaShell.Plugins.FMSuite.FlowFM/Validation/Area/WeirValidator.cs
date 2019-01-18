@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
 
         private static void ValidateSnapping(this Weir2D weir, WaterFlowFMModel model)
         {
-            if (!model.SnapsToGrid(weir.Geometry))
+            if (!weir.Geometry.SnapsToFlowFmGrid(model.GridExtent))
             {
                 issues.Add(new ValidationIssue(weir,
                     ValidationSeverity.Warning,

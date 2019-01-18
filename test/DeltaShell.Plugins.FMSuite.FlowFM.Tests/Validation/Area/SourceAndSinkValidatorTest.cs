@@ -7,6 +7,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMapTestUtils;
@@ -20,10 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenSourceAndSinkThatDoesNotSnapToGrid_WhenValidating_ThenValidationWarningIsReturned()
         {
             // Given
-            var fmModel = new WaterFlowFMModel
-            {
-                Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2)
-            };
+            var envelope = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2).GetExtents();
             var sourceAndSink = new SourceAndSink
             {
                 Name = "mySourceAndSink",
@@ -33,10 +31,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                     Geometry = new LineString(new[] { new Coordinate(10, 10), new Coordinate(20, 20) })
                 }
             };
-            fmModel.SourcesAndSinks.Add(sourceAndSink);
+            var sourcesAndSinks = new List<SourceAndSink> {sourceAndSink};
 
             // When
-            var validationIssues = SourceAndSinkValidator.Validate(fmModel, fmModel.SourcesAndSinks);
+            var validationIssues = SourceAndSinkValidator.Validate(sourcesAndSinks, envelope, new DateTime(), new DateTime());
 
             // Then
             var validationWarnings = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Warning).ToArray();
@@ -63,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             fmModel.SourcesAndSinks.Add(sourceAndSink);
 
             // When
-            var validationIssues = SourceAndSinkValidator.Validate(fmModel, fmModel.SourcesAndSinks);
+            var validationIssues = SourceAndSinkValidator.Validate(fmModel.SourcesAndSinks, fmModel.GridExtent, fmModel.StartTime, fmModel.StopTime);
 
             // Then
             var validationErrors = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
@@ -102,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             fmModel.SourcesAndSinks.Add(sourceAndSink);
 
             // When
-            var validationIssues = SourceAndSinkValidator.Validate(fmModel, fmModel.SourcesAndSinks);
+            var validationIssues = SourceAndSinkValidator.Validate(fmModel.SourcesAndSinks, fmModel.GridExtent, fmModel.StartTime, fmModel.StopTime);
 
             // Then
             var validationErrors = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
@@ -136,7 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             fmModel.SourcesAndSinks.Add(sourceAndSink);
 
             // When
-            var validationIssues = SourceAndSinkValidator.Validate(fmModel, fmModel.SourcesAndSinks);
+            var validationIssues = SourceAndSinkValidator.Validate(fmModel.SourcesAndSinks, fmModel.GridExtent, fmModel.StartTime, fmModel.StopTime);
 
             // Then
             var validationErrors = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();

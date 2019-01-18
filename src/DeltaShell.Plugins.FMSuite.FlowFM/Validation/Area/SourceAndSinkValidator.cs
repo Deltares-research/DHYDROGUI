@@ -5,6 +5,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
 {
@@ -16,24 +17,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         /// <summary>
         /// Validate the source and sinks and return any issues encountered.
         /// </summary>
-        /// <param name="model">The model to which the source and sinks belong.</param>
         /// <param name="sourcesAndSinks">The the set of sources and sinks to be evaluated.</param>
+        /// <param name="gridExtent">The Envelope that describes the extent of the FM model grid.</param>
+        /// <param name="modelStartTime">The model start time.</param>
+        /// <param name="modelStopTime">The model stop time.</param>
         /// <returns> A set of validation issues encountered. </returns>
-        public static IEnumerable<ValidationIssue> Validate(WaterFlowFMModel model, IEnumerable<SourceAndSink> sourcesAndSinks)
+        public static IEnumerable<ValidationIssue> Validate(IEnumerable<SourceAndSink> sourcesAndSinks, Envelope gridExtent, DateTime modelStartTime, DateTime modelStopTime)
         {
             var issues = new List<ValidationIssue>();
             foreach (var sourceAndSink in sourcesAndSinks)
             {
-                issues.AddRange(sourceAndSink.SnapsToModelGrid(model));
-                issues.AddRange(sourceAndSink.ValidateTimeArgument(model.StartTime, model.StopTime));
+                issues.AddRange(sourceAndSink.SnapsToModelGrid(gridExtent));
+                issues.AddRange(sourceAndSink.ValidateTimeArgument(modelStartTime, modelStopTime));
             }
 
             return issues;
         }
 
-        private static IEnumerable<ValidationIssue> SnapsToModelGrid(this SourceAndSink sourceAndSink, WaterFlowFMModel model)
+        private static IEnumerable<ValidationIssue> SnapsToModelGrid(this SourceAndSink sourceAndSink, Envelope gridExtent)
         {
-            if (!model.SnapsToGrid(sourceAndSink.Feature.Geometry))
+            if (!sourceAndSink.Feature.Geometry.SnapsToFlowFmGrid(gridExtent))
             {
                 yield return new ValidationIssue(sourceAndSink, ValidationSeverity.Warning,
                     string.Format(Resources.SourceAndSinkValidator_Validate_source_sink___0___not_within_grid_extent, sourceAndSink.Name), 

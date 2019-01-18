@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
 
         private static void ValidateSnapping(this FixedWeir fixedWeir, WaterFlowFMModel model)
         {
-            if (!model.SnapsToGrid(fixedWeir.Geometry))
+            if (!fixedWeir.Geometry.SnapsToFlowFmGrid(model.GridExtent))
             {
                 issues.Add(new ValidationIssue(fixedWeir,
                     ValidationSeverity.Warning,

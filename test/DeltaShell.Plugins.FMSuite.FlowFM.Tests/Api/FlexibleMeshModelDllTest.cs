@@ -342,17 +342,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                         model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                             .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
 
-                Assert.IsTrue(model.SnapsToGrid(snappedPoint));
-                Assert.IsTrue(model.SnapsToGrid(snappedThinDam));
-                Assert.IsTrue(model.SnapsToGrid(snappedFixedWeir));
-                Assert.IsTrue(model.SnapsToGrid(snappedCrossSection));
-                Assert.IsTrue(model.SnapsToGrid(snappedWeir));
-                Assert.IsTrue(model.SnapsToGrid(snappedGate));
-                Assert.IsTrue(model.SnapsToGrid(snappedPump));
-                //Assert.IsTrue(model.SnapsToGrid(snappedEmbankment)); // UNST-1769 
-                Assert.IsTrue(model.SnapsToGrid(snappedWaterLevelBnd));
-                Assert.IsTrue(model.SnapsToGrid(snappedVelocityBnd));
-                Assert.IsTrue(model.SnapsToGrid(snappedDischargeBnd));
+                Assert.IsTrue(snappedPoint.SnapsToFlowFmGrid(model.GridExtent));
+                Assert.IsTrue(snappedThinDam.SnapsToFlowFmGrid(model.GridExtent));
+                Assert.IsTrue(snappedFixedWeir.SnapsToFlowFmGrid(model.GridExtent));
+                Assert.IsTrue(snappedCrossSection.SnapsToFlowFmGrid(model.GridExtent));
+                Assert.IsTrue(snappedWeir.SnapsToFlowFmGrid(model.GridExtent));
+                Assert.IsTrue(snappedGate.SnapsToFlowFmGrid(model.GridExtent));
+                Assert.IsTrue(snappedPump.SnapsToFlowFmGrid(model.GridExtent));
+                //Assert.IsTrue(snappedEmbankment.SnapsToFlowFmGrid(model.GridExtent)); // UNST-1769 
+                Assert.IsTrue(snappedWaterLevelBnd.SnapsToFlowFmGrid(model.GridExtent));
+                Assert.IsTrue(snappedVelocityBnd.SnapsToFlowFmGrid(model.GridExtent));
+                Assert.IsTrue(snappedDischargeBnd.SnapsToFlowFmGrid(model.GridExtent));
             }
         }
 
@@ -430,7 +430,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var snappedThinDam = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
                 
-                Assert.IsTrue(model.SnapsToGrid(snappedThinDam));
+                Assert.IsTrue(snappedThinDam.SnapsToFlowFmGrid(model.GridExtent));
             }
         }
 
@@ -452,7 +452,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var snappedFixedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.FixedWeir,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
-                Assert.IsTrue(model.SnapsToGrid(snappedFixedWeir));
+                Assert.IsTrue(snappedFixedWeir.SnapsToFlowFmGrid(model.GridExtent));
             }
         }
 
@@ -474,7 +474,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var snappedCrossSection = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsCrossSection,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
-                Assert.IsTrue(model.SnapsToGrid(snappedCrossSection));
+                Assert.IsTrue(snappedCrossSection.SnapsToFlowFmGrid(model.GridExtent));
             }
         }
 
@@ -496,7 +496,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var snappedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Weir,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
-                Assert.IsTrue(model.SnapsToGrid(snappedWeir));
+                Assert.IsTrue(snappedWeir.SnapsToFlowFmGrid(model.GridExtent));
             }
         }
 
@@ -518,7 +518,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var snappedGate = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Gate,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
-                Assert.IsTrue(model.SnapsToGrid(snappedGate));
+                Assert.IsTrue(snappedGate.SnapsToFlowFmGrid(model.GridExtent));
             }
         }
 
@@ -540,7 +540,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var snappedPump = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Pump,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
-                Assert.IsTrue(model.SnapsToGrid(snappedPump));
+                Assert.IsTrue(snappedPump.SnapsToFlowFmGrid(model.GridExtent));
             }
         }
 
@@ -563,7 +563,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
-                Assert.IsTrue(model.SnapsToGrid(snappedEmbankment));
+                Assert.IsTrue(snappedEmbankment.SnapsToFlowFmGrid(model.GridExtent));
             }
         }
 
@@ -583,7 +583,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 var center = gridExtent.Centre;
                 var snappedPoint = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsPoint, new Point(center));
-                Assert.IsTrue(model.SnapsToGrid(snappedPoint));
+
+                Assert.IsTrue(snappedPoint.SnapsToFlowFmGrid(model.GridExtent));
             }
         }
 
@@ -603,8 +604,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.WaterLevelBnd,
                         model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                             .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
-                
-                Assert.IsTrue(model.SnapsToGrid(snappedWaterLevelBnd));
+
+                Assert.IsTrue(snappedWaterLevelBnd.SnapsToFlowFmGrid(model.GridExtent));
             }
         }
 
@@ -625,7 +626,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                         model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                             .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
 
-                 Assert.IsTrue(model.SnapsToGrid(snappedVelocityBnd));
+                Assert.IsTrue(snappedVelocityBnd.SnapsToFlowFmGrid(model.GridExtent));
             }
         }
 
@@ -646,7 +647,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                         model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                             .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
 
-                 Assert.IsTrue(model.SnapsToGrid(snappedDischargeBnd));
+                Assert.IsTrue(snappedDischargeBnd.SnapsToFlowFmGrid(model.GridExtent));
             }
         }
 
@@ -675,7 +676,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.SourceSink,
                         model.SourcesAndSinks.First().Feature.Geometry);
 
-                Assert.IsTrue(model.SnapsToGrid(snappedSourceAndSink));
+                Assert.IsTrue(snappedSourceAndSink.SnapsToFlowFmGrid(model.GridExtent));
             }
         }
 

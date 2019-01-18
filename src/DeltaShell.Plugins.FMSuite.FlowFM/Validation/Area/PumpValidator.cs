@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
             var issues = new List<ValidationIssue>();
             foreach (var sobekPump in pumps)
             {
-                if (!model.SnapsToGrid(sobekPump.Geometry))
+                if (!sobekPump.Geometry.SnapsToFlowFmGrid(model.GridExtent))
                 {
                     issues.Add(new ValidationIssue(sobekPump,
                                                    ValidationSeverity.Warning,

@@ -152,6 +152,7 @@
     <Compile Include="FeatureData\FixedWeirFmModelFeatureCoordinateDataSyncExtensions.cs" />
     <Compile Include="FixedWeirSchemes.cs" />
     <Compile Include="FlowFMApplicationPlugin.cs" />
+    <Compile Include="GridSnappingExtensions.cs" />
     <Compile Include="IO\BcmFile.cs" />
     <Compile Include="IO\BcmFileFlowBoundaryDataBuilder.cs" />
     <Compile Include="IO\DelftIniCategoryExtension.cs" />

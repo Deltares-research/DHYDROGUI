@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         public static IEnumerable<ValidationIssue> Validate(WaterFlowFMModel model)
         {
             var thinDams = model.Area.ThinDams;
-            var thinDamsNotSnappingToGrid = thinDams.Where(td => !model.SnapsToGrid(td.Geometry));
+            var thinDamsNotSnappingToGrid = thinDams.Where(td => !td.Geometry.SnapsToFlowFmGrid(model.GridExtent));
 
             foreach (var thinDam in thinDamsNotSnappingToGrid)
             {
