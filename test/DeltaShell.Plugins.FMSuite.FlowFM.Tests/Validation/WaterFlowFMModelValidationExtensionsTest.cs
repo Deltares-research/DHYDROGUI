@@ -1,21 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
-using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
-using Rhino.Mocks;
-using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
-using SharpMap.SpatialOperations;
 using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation

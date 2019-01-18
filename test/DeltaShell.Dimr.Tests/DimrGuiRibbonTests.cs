@@ -1,9 +1,5 @@
 ﻿using NUnit.Framework;
-using DeltaShell.Dimr.Gui;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using DelftTools.Utils.Reflection;
 using Fluent;
 
@@ -32,7 +28,7 @@ namespace DeltaShell.Dimr.Gui.Tests
             ribbon.ValidateItems();//hmm does nothing now...
         }
 
-        [Test()]
+        [Test]
         public void TestIsContextualTabVisible()
         {
             var ribbon = new Ribbon();
@@ -43,7 +39,7 @@ namespace DeltaShell.Dimr.Gui.Tests
             Assert.True(ribbon.IsContextualTabVisible(configContextualGroup.Name, tabDimr.Name));
         }
         
-        [Test()]
+        [Test]
         public void TestGetRibbonControl()
         {
             var ribbon = new Ribbon();

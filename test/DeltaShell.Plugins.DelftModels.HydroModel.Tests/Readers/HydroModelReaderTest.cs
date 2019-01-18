@@ -29,6 +29,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void ConstructHydroModelWithFlow1DAndRtc()
         {
             var dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));

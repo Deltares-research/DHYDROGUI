@@ -26,6 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void HydroModelAddsItsSelfToIHydroModelWorkFlow()
         {
             var mocks = new MockRepository();
