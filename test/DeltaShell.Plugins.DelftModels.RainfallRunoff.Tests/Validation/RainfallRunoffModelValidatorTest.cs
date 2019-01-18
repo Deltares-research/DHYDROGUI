@@ -233,6 +233,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void ValidateRainfallRunoffModelInputRestartStatePathToNonZip()
         {
             var filePathToNonZipFile =

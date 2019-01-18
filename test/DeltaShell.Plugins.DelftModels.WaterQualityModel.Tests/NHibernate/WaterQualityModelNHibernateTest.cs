@@ -251,7 +251,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         }
 
         [Test]
-        
+        [Category(TestCategory.Slow)]
         public void SaveAndLoadWaterQualityLoad()
         {
             var entity = CreateLoad();
@@ -265,8 +265,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             Assert.AreEqual(LOADNAME, retrievedEntity.Name);
             Assert.AreEqual(LOADTYPE, retrievedEntity.LoadType);
         }
-        [Category(TestCategory.Slow)]
+       
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void SaveAndRetrieveFunctionFromHydroDynamics()
         {
             // setup

@@ -17,6 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
         }
 
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         [Test]
         public void TestChangeFlowDataTypeInViewModelIsReflectedInObjectModel()
         {

@@ -295,6 +295,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void ExtFileDoesNotSaveSedimentSpatiallyVaryingOperationsButSedConc()
         {
             //define model
@@ -439,10 +441,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 FileUtils.DeleteIfExists(sedConcXyzFile);
                 FileUtils.DeleteIfExists(customPropXyzFile);
             }
-
-            //save model
-            //check no custom spatially varying op is saved.
-            //check sed conc spatially varying is saved.
         }
 
         [Test]
