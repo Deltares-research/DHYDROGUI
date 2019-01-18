@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         /// <summary>
         /// Validate the weirs and return any encountered issues.
         /// </summary>
-        /// <param name="model">The model to which the pumps belong.</param>
+        /// <param name="model">The model to which the weirs belong.</param>
         /// <param name="weirs">The set of weirs to be evaluated.</param>
         /// <returns> A set of validation issues encountered. </returns>
         public static IEnumerable<ValidationIssue> Validate(WaterFlowFMModel model, IEnumerable<Weir2D> weirs)
