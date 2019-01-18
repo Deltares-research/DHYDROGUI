@@ -144,6 +144,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void SelectingSubElementOfNetworkWithNoNetworkViewOpenDoesNotCauseException()
         {
             using (var gui = new DeltaShellGui())

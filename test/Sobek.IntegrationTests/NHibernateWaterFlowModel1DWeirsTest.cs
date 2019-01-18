@@ -99,6 +99,7 @@ namespace Sobek.IntegrationTests
         }
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void SaveLoadRiverWeirFormula()
         {
             TestSimplePropertiesAreSavedForWeirFormula<RiverWeirFormula>();

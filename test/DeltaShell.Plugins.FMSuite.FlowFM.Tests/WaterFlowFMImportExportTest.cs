@@ -34,6 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     {
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void ImportModelWithSedimentSpatiallyVaryingOperations()
         {
             /* This test is relevant because when we are importing a model we do not load the state from the DB

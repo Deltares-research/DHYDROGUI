@@ -755,6 +755,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void LoadSedFileWithSpatiallyVaryingProperties()
         {
             var mduPath = TestHelper.GetTestFilePath(@"spatially_varying_sediment_properties_in_model\FlowFM.mdu");

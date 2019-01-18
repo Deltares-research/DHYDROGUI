@@ -337,6 +337,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void ImportZBOtestCheckGreenhouseDataCount()
         {
             SetUpZBOtest();

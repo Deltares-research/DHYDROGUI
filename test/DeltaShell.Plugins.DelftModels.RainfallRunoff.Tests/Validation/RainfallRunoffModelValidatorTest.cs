@@ -256,6 +256,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void ValidateRainfallRunoffWithoutHydroLinkReportError()
         {
             var model = CreateValidMiniModel();
