@@ -31,10 +31,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                     Geometry = new LineString(new[] { new Coordinate(10, 10), new Coordinate(20, 20) })
                 }
             };
-            var sourcesAndSinks = new List<SourceAndSink> {sourceAndSink};
 
             // When
-            var validationIssues = SourceAndSinkValidator.Validate(sourcesAndSinks, envelope, new DateTime(), new DateTime());
+            var validationIssues = SourceAndSinkValidator.Validate(new List<SourceAndSink> { sourceAndSink }, envelope, new DateTime(), new DateTime());
 
             // Then
             var validationWarnings = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Warning).ToArray();
@@ -49,7 +48,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenSourceAndSinkWithoutFunctionValuesDefined_WhenValidating_ThenValidationErrorIsReturned()
         {
             // Given
-            var fmModel = new WaterFlowFMModel();
             var sourceAndSink = new SourceAndSink
             {
                 Name = "mySourceAndSink",
@@ -58,10 +56,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                     Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 1) })
                 }
             };
-            fmModel.SourcesAndSinks.Add(sourceAndSink);
 
             // When
-            var validationIssues = SourceAndSinkValidator.Validate(fmModel.SourcesAndSinks, fmModel.GridExtent, fmModel.StartTime, fmModel.StopTime);
+            var validationIssues = SourceAndSinkValidator.Validate(new List<SourceAndSink>{sourceAndSink}, null, new DateTime(), new DateTime());
 
             // Then
             var validationErrors = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
@@ -82,11 +79,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         {
             // Given
             var dateTimeNow = DateTime.Now;
-            var fmModel = new WaterFlowFMModel
-            {
-                StartTime = dateTimeNow.AddDays(2),
-                StopTime = dateTimeNow.AddDays(5)
-            };
+
+            var startTime = dateTimeNow.AddDays(2);
+            var stopTime = dateTimeNow.AddDays(5);
+            
             var sourceAndSink = new SourceAndSink
             {
                 Name = "mySourceAndSink",
@@ -95,12 +91,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                     Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 1) })
                 }
             };
-
             sourceAndSink.Function.Arguments[0].SetValues(new List<DateTime> { dateTimeNow.AddDays(addedDaysToStartTime), dateTimeNow.AddDays(addedDaysToStopTime) });
-            fmModel.SourcesAndSinks.Add(sourceAndSink);
 
             // When
-            var validationIssues = SourceAndSinkValidator.Validate(fmModel.SourcesAndSinks, fmModel.GridExtent, fmModel.StartTime, fmModel.StopTime);
+            var validationIssues = SourceAndSinkValidator.Validate(new List<SourceAndSink> { sourceAndSink }, null, startTime, stopTime);
 
             // Then
             var validationErrors = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
@@ -116,11 +110,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         {
             // Given
             var dateTimeNow = DateTime.Now;
-            var fmModel = new WaterFlowFMModel
-            {
-                StartTime = dateTimeNow.AddDays(2),
-                StopTime = dateTimeNow.AddDays(5)
-            };
+            var startTime = dateTimeNow.AddDays(2);
+            var stopTime = dateTimeNow.AddDays(5);
+
             var sourceAndSink = new SourceAndSink
             {
                 Name = "mySourceAndSink",
@@ -129,12 +121,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                     Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 1) })
                 }
             };
-
             sourceAndSink.Function.Arguments[0].SetValues(new List<DateTime> { dateTimeNow, dateTimeNow.AddDays(6) });
-            fmModel.SourcesAndSinks.Add(sourceAndSink);
 
             // When
-            var validationIssues = SourceAndSinkValidator.Validate(fmModel.SourcesAndSinks, fmModel.GridExtent, fmModel.StartTime, fmModel.StopTime);
+            var validationIssues = SourceAndSinkValidator.Validate(new List<SourceAndSink> { sourceAndSink }, null, startTime, stopTime);
 
             // Then
             var validationErrors = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
