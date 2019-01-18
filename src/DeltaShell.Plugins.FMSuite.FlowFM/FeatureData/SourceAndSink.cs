@@ -51,12 +51,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public SourceAndSink()
         {
-            Function = CreateEmptyFunction();
+            Function = CreateData();
             SedimentFractionNames = new EventedList<string>();
             TracerNames = new EventedList<string>();
         }
 
-        public bool IsPointSource => Feature.Geometry.Coordinates.Length == 1;
+        public bool IsPointSource
+        {
+            get { return Feature.Geometry.Coordinates.Count() == 1; }
+        }
 
         public double Area { get; set; }
 
@@ -140,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
         }
 
-        private void SedimentFractionNamesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        public void SedimentFractionNamesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             var sedimentFractionName = e.Item as string;
 
@@ -198,7 +201,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             };
         }
 
-        private void TracerNamesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        public void TracerNamesCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             var tracerName = e.Item as string;
             if (tracerName == null) return;
@@ -235,7 +238,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             Function.Name = Name;
         }
 
-        private static IFunction CreateEmptyFunction()
+        private static IFunction CreateData()
         {
             var function = new Function();
             function.Arguments.Add(new Variable<DateTime>(TimeVariableName));

@@ -31,6 +31,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
             return issues;
         }
 
+        private static IEnumerable<ValidationIssue> SnapsToModelGrid(this SourceAndSink sourceAndSink, WaterFlowFMModel model)
+        {
+            if (!model.SnapsToGrid(sourceAndSink.Feature.Geometry))
+            {
+                yield return new ValidationIssue(sourceAndSink, ValidationSeverity.Warning,
+                    string.Format(Resources.SourceAndSinkValidator_Validate_source_sink___0___not_within_grid_extent, sourceAndSink.Name), 
+                    sourceAndSink);
+            }
+        }
+
         private static IEnumerable<ValidationIssue> ValidateTimeArgument(this SourceAndSink sourceAndSink, DateTime modelStartTime, DateTime modelStopTime)
         {
             var timeArgument = sourceAndSink.Function.Arguments.OfType<IVariable<DateTime>>().First();
@@ -58,16 +68,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
             {
                 yield return new ValidationIssue(sourceAndSink, ValidationSeverity.Error,
                     string.Format(Resources.SourceAndSinkValidator_Validate_source_sink___0____discharge_time_series_does_not_span_the_model_run_interval_, sourceAndSink.Name),
-                    sourceAndSink);
-            }
-        }
-
-        private static IEnumerable<ValidationIssue> SnapsToModelGrid(this SourceAndSink sourceAndSink, WaterFlowFMModel model)
-        {
-            if (!model.SnapsToGrid(sourceAndSink.Feature.Geometry))
-            {
-                yield return new ValidationIssue(sourceAndSink, ValidationSeverity.Warning,
-                    string.Format(Resources.SourceAndSinkValidator_Validate_source_sink___0___not_within_grid_extent, sourceAndSink.Name), 
                     sourceAndSink);
             }
         }
