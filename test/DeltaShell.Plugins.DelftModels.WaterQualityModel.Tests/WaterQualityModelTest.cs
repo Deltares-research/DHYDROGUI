@@ -1388,7 +1388,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.IsNotNull(importedModel);
             
             Assert.That(importedModel.StartTime.ToString("yyyy-MM-dd HH:mm:ss"), Is.EqualTo(expectedStartTime));
-            Assert.AreEqual(importedModel.StopTime.ToString("yyyy-MM-dd HH:mm:ss"), Is.EqualTo(expectedEndTime));
+            Assert.That(importedModel.StopTime.ToString("yyyy-MM-dd HH:mm:ss"), Is.EqualTo(expectedEndTime));
         }
 
         [Test]
