@@ -39,7 +39,6 @@
 	<xsl:key name="dimr-folder-search" match="wix:Directory[@Name = 'dimr']" use="descendant::wix:Component/@Id" />
 	<xsl:key name="dwaq-folder-search" match="wix:Directory[@Name = 'dwaq']" use="descendant::wix:Component/@Id" />
 	<xsl:key name="scripts-folder-search" match="wix:Directory[@Name = 'scripts']" use="descendant::wix:Component/@Id" />
-	<xsl:key name="share-folder-search" match="wix:Directory[@Name = 'share']" use="descendant::wix:Component/@Id" />
 
 	
 	<!-- Remove directories. -->
@@ -54,7 +53,6 @@
 	<xsl:template match="wix:Directory[@Name='dimr']" />
 	<xsl:template match="wix:Directory[@Name='dwaq']" />
 	<xsl:template match="wix:Directory[@Name='scripts']" />
-	<xsl:template match="wix:Directory[@Name='share']" />
 
 	<!-- Remove Components referencing those directories & files. -->
 	<xsl:template match="wix:Component[key('dflowfm-folder-search', @Directory)]" />
@@ -68,7 +66,6 @@
 	<xsl:template match="wix:Component[key('dimr-folder-search', @Directory)]" />
 	<xsl:template match="wix:Component[key('dwaq-folder-search', @Directory)]" />
 	<xsl:template match="wix:Component[key('scripts-folder-search', @Directory)]" />
-	<xsl:template match="wix:Component[key('share-folder-search', @Directory)]" />
 
 
 	<!-- Remove DirectoryRefs (and their parent Fragments) referencing those directories. -->
@@ -83,7 +80,6 @@
 	<xsl:template match="wix:Fragment[wix:DirectoryRef[key('dimr-folder-search', @Id)]]" />
 	<xsl:template match="wix:Fragment[wix:DirectoryRef[key('dwaq-folder-search', @Id)]]" />
 	<xsl:template match="wix:Fragment[wix:DirectoryRef[key('scripts-folder-search', @Id)]]" />
-	<xsl:template match="wix:Fragment[wix:DirectoryRef[key('share-folder-search', @Id)]]" />
 
 	<!--Remove ComponentRefs referencing those directories & files.-->
 	<xsl:template match="wix:ComponentRef[key('dflowfm-folder-search', @Id)]" />
@@ -97,6 +93,5 @@
 	<xsl:template match="wix:ComponentRef[key('dimr-folder-search', @Id)]" />
 	<xsl:template match="wix:ComponentRef[key('dwaq-folder-search', @Id)]" />
 	<xsl:template match="wix:ComponentRef[key('scripts-folder-search', @Id)]" />
-	<xsl:template match="wix:ComponentRef[key('share-folder-search', @Id)]" />
 		
 </xsl:stylesheet>
