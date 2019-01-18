@@ -436,6 +436,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Set StopTime to StartTime + 10 TimeSteps
             if (timeDependentModel is HydroModel castedModel)
             {
+                // Turn these settings on (most of the times they are already selected), otherwise your new stop time will not be taken into account
+                castedModel.OverrideStartTime = true;
+                castedModel.OverrideStopTime = true;
+                castedModel.OverrideTimeStep = true;
+
                 var modelCounter = castedModel.Activities.GetActivitiesOfType<WaterFlowModel1D>().Count();
 
                 if (modelCounter > 0)
