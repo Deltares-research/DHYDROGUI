@@ -340,6 +340,7 @@
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="UnstructuredGridCoverageExtensionsTest.cs" />
     <Compile Include="Validation\Area\FixedWeirValidatorTest.cs" />
+    <Compile Include="Validation\Area\PumpValidatorTest.cs" />
     <Compile Include="Validation\Area\SourceAndSinkValidatorTest.cs" />
     <Compile Include="Validation\Area\ThinDamValidatorTest.cs" />
     <Compile Include="Validation\Area\WeirValidatorTest.cs" />
