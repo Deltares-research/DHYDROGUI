@@ -158,6 +158,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to fixed weir &apos;{0}&apos; has unphysical sill depths, parts will be ignored by dflow-fm..
+        /// </summary>
+        public static string FixedWeirValidator_ValidateSillDepths_fixed_weir___0___has_unphysical_sill_depths__parts_will_be_ignored_by_dflow_fm_ {
+            get {
+                return ResourceManager.GetString("FixedWeirValidator_ValidateSillDepths_fixed_weir___0___has_unphysical_sill_depths" +
+                        "__parts_will_be_ignored_by_dflow_fm_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to fixed weir &apos;{0}&apos; not within grid extent..
+        /// </summary>
+        public static string FixedWeirValidator_ValidateSnapping_fixed_weir___0___not_within_grid_extent_ {
+            get {
+                return ResourceManager.GetString("FixedWeirValidator_ValidateSnapping_fixed_weir___0___not_within_grid_extent_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allows to simulate 2D/3D flow of water in rivers, channels, lakes, estuarine &amp; coastal areas and seas..
         /// </summary>
         public static string FlowFMApplicationPlugin_Description {
@@ -1332,6 +1351,145 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 object obj = ResourceManager.GetObject("WeirSmall", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos;: crest level time series does not contain any values..
+        /// </summary>
+        public static string WeirValidator_ValidateCrestLevel___0____crest_level_time_series_does_not_contain_any_values_ {
+            get {
+                return ResourceManager.GetString("WeirValidator_ValidateCrestLevel___0____crest_level_time_series_does_not_contain_" +
+                        "any_values_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos;: crest level time series does not span the model run interval..
+        /// </summary>
+        public static string WeirValidator_ValidateCrestLevel___0____crest_level_time_series_does_not_span_the_model_run_interval_ {
+            get {
+                return ResourceManager.GetString("WeirValidator_ValidateCrestLevel___0____crest_level_time_series_does_not_span_the" +
+                        "_model_run_interval_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} for &apos;{1}&apos; structure type: {2}, must be greater than 0..
+        /// </summary>
+        public static string WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___must_be_greater_than_0_ {
+            get {
+                return ResourceManager.GetString("WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___must_be_great" +
+                        "er_than_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} for &apos;{1}&apos; structure type: {2}, will be calculated by the computational core..
+        /// </summary>
+        public static string WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___will_be_calculated_by_the_computational_core_ {
+            get {
+                return ResourceManager.GetString("WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___will_be_calcu" +
+                        "lated_by_the_computational_core_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos;: door height must be greater than or equal to 0..
+        /// </summary>
+        public static string WeirValidator_ValidateDoorHeight___0____door_height_must_be_greater_than_or_equal_to_0_ {
+            get {
+                return ResourceManager.GetString("WeirValidator_ValidateDoorHeight___0____door_height_must_be_greater_than_or_equal" +
+                        "_to_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos;: only symmetric horizontal door opening direction is supported for general structures..
+        /// </summary>
+        public static string WeirValidator_ValidateHorizontalDoorOpeningDirection___0____only_symmetric_horizontal_door_opening_direction_is_supported_for_general_structures_ {
+            get {
+                return ResourceManager.GetString("WeirValidator_ValidateHorizontalDoorOpeningDirection___0____only_symmetric_horizo" +
+                        "ntal_door_opening_direction_is_supported_for_general_structures_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos;: opening width must be greater than or equal to 0..
+        /// </summary>
+        public static string WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_must_be_greater_than_or_equal_to_0_ {
+            get {
+                return ResourceManager.GetString("WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_must_be_gre" +
+                        "ater_than_or_equal_to_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos;: opening width time series does not contain any values..
+        /// </summary>
+        public static string WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series_does_not_contain_any_values_ {
+            get {
+                return ResourceManager.GetString("WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series" +
+                        "_does_not_contain_any_values_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos;: opening width time series does not span the model run interval..
+        /// </summary>
+        public static string WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series_does_not_span_the_model_run_interval_ {
+            get {
+                return ResourceManager.GetString("WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series" +
+                        "_does_not_span_the_model_run_interval_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos;: opening width time series values must be greater than or equal to 0..
+        /// </summary>
+        public static string WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series_values_must_be_greater_than_or_equal_to_0_ {
+            get {
+                return ResourceManager.GetString("WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series" +
+                        "_values_must_be_greater_than_or_equal_to_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos;: lateral contraction coefficient must be greater than or equal to zero..
+        /// </summary>
+        public static string WeirValidator_ValidateLateralContraction___0____lateral_contraction_coefficient_must_be_greater_than_or_equal_to_zero_ {
+            get {
+                return ResourceManager.GetString("WeirValidator_ValidateLateralContraction___0____lateral_contraction_coefficient_m" +
+                        "ust_be_greater_than_or_equal_to_zero_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos;: lower edge level time series does not contain any values..
+        /// </summary>
+        public static string WeirValidator_ValidateLowerEdgeLevel___0____lower_edge_level_time_series_does_not_contain_any_values_ {
+            get {
+                return ResourceManager.GetString("WeirValidator_ValidateLowerEdgeLevel___0____lower_edge_level_time_series_does_not" +
+                        "_contain_any_values_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos;: lower edge level time series does not span the model run interval..
+        /// </summary>
+        public static string WeirValidator_ValidateLowerEdgeLevel___0____lower_edge_level_time_series_does_not_span_the_model_run_interval_ {
+            get {
+                return ResourceManager.GetString("WeirValidator_ValidateLowerEdgeLevel___0____lower_edge_level_time_series_does_not" +
+                        "_span_the_model_run_interval_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is not within grid extend..
+        /// </summary>
+        public static string WeirValidator_ValidateSnapping__0__is_not_within_grid_extend_ {
+            get {
+                return ResourceManager.GetString("WeirValidator_ValidateSnapping__0__is_not_within_grid_extend_", resourceCulture);
             }
         }
     }

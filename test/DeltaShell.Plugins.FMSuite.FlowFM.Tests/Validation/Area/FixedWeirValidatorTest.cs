@@ -7,6 +7,7 @@ using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
 {
@@ -18,16 +19,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         private const string MessageValidationSeverityWarningExpected = "The severity of this validation issue should have been of type Warning.";
 
         private IEnumerable<FixedWeir> fixedWeirs;
+        private FixedWeir fixedWeir;
 
         [SetUp]
         public void SetUp()
         {
-            var fixedWeir = new FixedWeir
+            fixedWeir = new FixedWeir
             {
                 Name = "fixed_weir",
                 Geometry = new Point(new Coordinate(10, 10))
             };
-            fixedWeirs = new List<FixedWeir>() {fixedWeir};
+            fixedWeirs = new List<FixedWeir> {fixedWeir};
         }
 
         [Test]
@@ -47,7 +49,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
             var issue = issues.Single();
             Assert.AreEqual(ValidationSeverity.Warning, issue.Severity, MessageValidationSeverityWarningExpected);
-            Assert.AreEqual("fixed weir 'fixed_weir' not within grid extent.", issue.Message, MessageDifferentLogMessageExpected);
+            var expectedMessage = string.Format(Resources.FixedWeirValidator_ValidateSnapping_fixed_weir___0___not_within_grid_extent_, fixedWeir.Name);
+            Assert.AreEqual(expectedMessage, issue.Message, MessageDifferentLogMessageExpected);
         }
 
         [Test]
@@ -68,7 +71,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
             var issue = issues.Single();
             Assert.AreEqual(ValidationSeverity.Warning, issue.Severity, MessageValidationSeverityWarningExpected);
-            Assert.AreEqual("fixed weir 'fixed_weir' has unphysical sill depths, parts will be ignored by dflow-fm.", issue.Message, MessageDifferentLogMessageExpected);
+            var expectedMessage = string.Format(Resources.FixedWeirValidator_ValidateSillDepths_fixed_weir___0___has_unphysical_sill_depths__parts_will_be_ignored_by_dflow_fm_,
+                fixedWeir.Name);
+            Assert.AreEqual(expectedMessage, issue.Message, MessageDifferentLogMessageExpected);
         }
 
         private static List<ModelFeatureCoordinateData<FixedWeir>> CreateModelFeatureCoordinateDataWithInvalidValues(FixedWeir fixedWeir)

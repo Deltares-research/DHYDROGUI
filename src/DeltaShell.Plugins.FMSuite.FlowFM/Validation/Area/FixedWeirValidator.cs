@@ -4,13 +4,12 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using GeoAPI.Geometries;
 using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
 {
     public static class FixedWeirValidator
     {
-        private static IList<ValidationIssue> issues;
-
         /// <summary>
         /// Validate the fixed weirs and return any encountered issues.
         /// </summary>
@@ -20,34 +19,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         /// <returns> A set of validation issues encountered. </returns>
         public static IEnumerable<ValidationIssue> Validate(IEnumerable<FixedWeir> fixedWeirs, Envelope gridExtent, IEnumerable<ModelFeatureCoordinateData<FixedWeir>> fixedWeirsProperties)
         {
-            issues = new List<ValidationIssue>();
+            var issues = new List<ValidationIssue>();
             var fixedWeirsPropertyList = fixedWeirsProperties.ToList();
 
             foreach (var fixedWeir in fixedWeirs)
             {
-                fixedWeir.ValidateSnapping(gridExtent);
-                fixedWeir.ValidateSillDepths(fixedWeirsPropertyList);
+                issues.AddRange(fixedWeir.ValidateSnapping(gridExtent));
+                issues.AddRange(fixedWeir.ValidateSillDepths(fixedWeirsPropertyList));
             }
 
             return issues;
         }
 
-        private static void ValidateSnapping(this FixedWeir fixedWeir, Envelope gridExtent)
+        private static IEnumerable<ValidationIssue> ValidateSnapping(this FixedWeir fixedWeir, Envelope gridExtent)
         {
             if (!fixedWeir.Geometry.SnapsToFlowFmGrid(gridExtent))
             {
-                issues.Add(new ValidationIssue(fixedWeir,
+                yield return new ValidationIssue(fixedWeir,
                     ValidationSeverity.Warning,
-                    $"fixed weir '{fixedWeir.Name}' not within grid extent.",
-                    fixedWeir));
+                    string.Format(Resources.FixedWeirValidator_ValidateSnapping_fixed_weir___0___not_within_grid_extent_, fixedWeir.Name),
+                    fixedWeir);
             }
         }
 
-        private static void ValidateSillDepths(this FixedWeir fixedWeir, IEnumerable<ModelFeatureCoordinateData<FixedWeir>> fixedWeirsProperties)
+        private static IEnumerable<ValidationIssue> ValidateSillDepths(this FixedWeir fixedWeir, IEnumerable<ModelFeatureCoordinateData<FixedWeir>> fixedWeirsProperties)
         {
             var dataToCheck = fixedWeirsProperties.FirstOrDefault(d => d.Feature == fixedWeir);
 
-            if (dataToCheck == null) return;
+            if (dataToCheck == null) yield break;
 
             var counter = dataToCheck.DataColumns[1].ValueList.Count;
             for (var i = 0; i < counter; i++)
@@ -55,10 +54,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
                 if ((double) dataToCheck.DataColumns[1].ValueList[i] <= 0.0 ||
                     (double) dataToCheck.DataColumns[2].ValueList[i] <= 0.0)
                 {
-                    issues.Add(new ValidationIssue(fixedWeir,
+                    yield return new ValidationIssue(fixedWeir,
                         ValidationSeverity.Warning,
-                        $"fixed weir '{fixedWeir.Name}' has unphysical sill depths, parts will be ignored by dflow-fm.",
-                        fixedWeir));
+                        string.Format(Resources.FixedWeirValidator_ValidateSillDepths_fixed_weir___0___has_unphysical_sill_depths__parts_will_be_ignored_by_dflow_fm_, fixedWeir.Name),
+                        fixedWeir);
                 }
             }
         }

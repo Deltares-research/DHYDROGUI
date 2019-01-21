@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Utils.Collections.Extensions;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
 using ValidationAspects;
 
@@ -11,9 +14,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
 {
     public static class WeirValidator
     {
-        private static IList<ValidationIssue> issues;
         private static DateTime modelStartTime;
         private static DateTime modelStopTime;
+
+        public const string CrestWidthPropertyName = "Crest Width";
+        public const string Upstream1WidthPropertyName = "Upstream 1 Width";
+        public const string Upstream2WidthPropertyName = "Upstream 2 Width";
+        public const string Downstream1WidthPropertyName = "Downstream 1 Width";
+        public const string Downstream2WidthPropertyName = "Downstream 2 Width";
 
         /// <summary>
         /// Validate the weirs and return any encountered issues.
@@ -25,27 +33,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         /// <returns> A set of validation issues encountered. </returns>
         public static IEnumerable<ValidationIssue> Validate(IEnumerable<Weir2D> weirs, Envelope gridExtent, DateTime startTime, DateTime stopTime)
         {
-            issues = new List<ValidationIssue>();
+            var issues = new List<ValidationIssue>();
 
             modelStartTime = startTime;
             modelStopTime = stopTime;
 
             foreach (var weir in weirs)
             {
-                weir.ValidateWeirObject();
-                weir.ValidateSnapping(gridExtent);
-                weir.ValidateLateralContraction();
-                weir.ValidateCrestLevel();
-                weir.ValidateCrestWidth(weir.CrestWidth, "Crest Width");
+                issues.AddRange(weir.ValidateWeirObject());
+                issues.AddRange(weir.ValidateSnapping(gridExtent));
+                issues.AddRange(weir.ValidateLateralContraction());
+                issues.AddRange(weir.ValidateCrestLevel());
+                issues.AddRange(weir.ValidateCrestWidth(weir.CrestWidth, CrestWidthPropertyName));
 
                 if (weir.WeirFormula is IGatedWeirFormula gatedWeirFormula)
                 {
-                    weir.ValidateGatedWeir(gatedWeirFormula);
+                    issues.AddRange(weir.ValidateGatedWeir(gatedWeirFormula));
                 }
 
                 if (weir.WeirFormula is GeneralStructureWeirFormula generalStructureFormula)
                 {
-                    weir.ValidateGeneralStructure(generalStructureFormula);
+                    issues.AddRange(weir.ValidateGeneralStructure(generalStructureFormula));
                 }
             }
 
@@ -59,62 +67,62 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         /// <param name="crestWidthValue">The crest width value to be evaluated.</param>
         /// <param name="crestWidthPropertyName">The name of the crest width property to be evaluated.</param>
         /// <remarks> Issues is not null. </remarks>
-        private static void ValidateCrestWidth(this IWeir subjectWeir, double crestWidthValue, string crestWidthPropertyName)
+        private static IEnumerable<ValidationIssue> ValidateCrestWidth(this IWeir subjectWeir, double crestWidthValue, string crestWidthPropertyName)
         {
             if (double.IsNaN(crestWidthValue))
             {
-                issues.Add(new ValidationIssue(subjectWeir,
+                yield return new ValidationIssue(subjectWeir,
                     ValidationSeverity.Info,
-                    $"{crestWidthPropertyName} for '{subjectWeir.Name}' structure type: {subjectWeir.WeirFormula.GetName2D()}, will be calculated by the computational core.",
-                    subjectWeir));
+                    string.Format(Resources.WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___will_be_calculated_by_the_computational_core_, crestWidthPropertyName, subjectWeir.Name, subjectWeir.WeirFormula.GetName2D()),
+                    subjectWeir);
             }
             else if (crestWidthValue <= 0.0)
             {
-                issues.Add(new ValidationIssue(subjectWeir,
+                yield return new ValidationIssue(subjectWeir,
                     ValidationSeverity.Error,
-                    $"{crestWidthPropertyName} for '{subjectWeir.Name}' structure type: {subjectWeir.WeirFormula.GetName2D()}, must be greater than 0.",
-                    subjectWeir));
+                    string.Format(Resources.WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___must_be_greater_than_0_, crestWidthPropertyName, subjectWeir.Name, subjectWeir.WeirFormula.GetName2D()),
+                    subjectWeir);
             }
         }
 
-        private static void ValidateWeirObject(this Weir2D weir)
+        private static IEnumerable<ValidationIssue> ValidateWeirObject(this Weir2D weir)
         {
             var result = weir.Validate();
             if (!result.IsValid)
             {
-                issues.Add(new ValidationIssue(weir,
+                yield return new ValidationIssue(weir,
                     ValidationSeverity.Error,
                     $"{weir.Name}: {result.ValidationException.Messages}",
-                    weir));
+                    weir);
             }
         }
 
-        private static void ValidateSnapping(this Weir2D weir, Envelope gridExtent)
+        private static IEnumerable<ValidationIssue> ValidateSnapping(this Weir2D weir, Envelope gridExtent)
         {
             if (!weir.Geometry.SnapsToFlowFmGrid(gridExtent))
             {
-                issues.Add(new ValidationIssue(weir,
+                yield return new ValidationIssue(weir,
                     ValidationSeverity.Warning,
-                    $"{weir.Name} is not within grid extend.",
-                    weir));
+                    string.Format(Resources.WeirValidator_ValidateSnapping__0__is_not_within_grid_extend_, weir.Name),
+                    weir);
             }
         }
 
-        private static void ValidateLateralContraction(this Weir2D weir)
+        private static IEnumerable<ValidationIssue> ValidateLateralContraction(this Weir2D weir)
         {
             if (weir.WeirFormula is SimpleWeirFormula weirFormula &&
                 weirFormula.LateralContraction < 0.0)
             {
-                issues.Add(new ValidationIssue(weir,
+                yield return new ValidationIssue(weir,
                     ValidationSeverity.Error,
-                    $"'{weir.Name}': lateral contraction coefficient must be greater than or equal to zero.",
-                    weir));
+                    string.Format(Resources.WeirValidator_ValidateLateralContraction___0____lateral_contraction_coefficient_must_be_greater_than_or_equal_to_zero_, weir.Name),
+                    weir);
             }
         }
 
-        private static void ValidateCrestLevel(this Weir2D weir)
+        private static IEnumerable<ValidationIssue> ValidateCrestLevel(this Weir2D weir)
         {
-            if (!weir.UseCrestLevelTimeSeries) return;
+            if (!weir.UseCrestLevelTimeSeries) yield break;
 
             if (weir.CrestLevelTimeSeries.Time.Values.Any())
             {
@@ -123,52 +131,60 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
 
                 if (startTime > modelStartTime || stopTime < modelStopTime)
                 {
-                    issues.Add(new ValidationIssue(weir,
+                    yield return new ValidationIssue(weir,
                         ValidationSeverity.Error,
-                        $"'{weir.Name}': crest level time series does not span the model run interval.",
-                        weir));
+                        string.Format(Resources.WeirValidator_ValidateCrestLevel___0____crest_level_time_series_does_not_span_the_model_run_interval_, weir.Name),
+                        weir);
                 }
             }
             else
             {
-                issues.Add(new ValidationIssue(weir,
+                yield return new ValidationIssue(weir,
                     ValidationSeverity.Error,
-                    $"'{weir.Name}': crest level time series does not contain any values.",
-                    weir));
+                    string.Format(Resources.WeirValidator_ValidateCrestLevel___0____crest_level_time_series_does_not_contain_any_values_, weir.Name),
+                    weir);
             }
         }
 
-        private static void ValidateGatedWeir(this Weir2D weir, IGatedWeirFormula gatedWeirFormula)
+        private static IEnumerable<ValidationIssue> ValidateGatedWeir(this Weir2D weir, IGatedWeirFormula gatedWeirFormula)
         {
-            weir.ValidateDoorHeight(gatedWeirFormula);
-            weir.ValidateHorizontalDoorOpeningWidth(gatedWeirFormula);
-            weir.ValidateLowerEdgeLevel(gatedWeirFormula);
+            var issues = new List<ValidationIssue>();
+
+            issues.AddRange(weir.ValidateDoorHeight(gatedWeirFormula));
+            issues.AddRange(weir.ValidateHorizontalDoorOpeningWidth(gatedWeirFormula));
+            issues.AddRange(weir.ValidateLowerEdgeLevel(gatedWeirFormula));
+
+            return issues;
         }
 
-        private static void ValidateGeneralStructure(this Weir2D weir, GeneralStructureWeirFormula generalStructureFormula)
+        private static IEnumerable<ValidationIssue> ValidateGeneralStructure(this Weir2D weir, GeneralStructureWeirFormula generalStructureFormula)
         {
-            weir.ValidateHorizontalDoorOpeningDirection(generalStructureFormula);
-            weir.ValidateCrestWidth(generalStructureFormula.WidthStructureLeftSide, "Upstream 2 Width");
-            weir.ValidateCrestWidth(generalStructureFormula.WidthLeftSideOfStructure, "Upstream 1 Width");
-            weir.ValidateCrestWidth(generalStructureFormula.WidthStructureRightSide, "Downstream 1 Width");
-            weir.ValidateCrestWidth(generalStructureFormula.WidthRightSideOfStructure, "Downstream 2 Width");
+            var issues = new List<ValidationIssue>();
+
+            issues.AddRange(weir.ValidateHorizontalDoorOpeningDirection(generalStructureFormula));
+            issues.AddRange(weir.ValidateCrestWidth(generalStructureFormula.WidthStructureLeftSide, Upstream2WidthPropertyName));
+            issues.AddRange(weir.ValidateCrestWidth(generalStructureFormula.WidthLeftSideOfStructure, Upstream1WidthPropertyName));
+            issues.AddRange(weir.ValidateCrestWidth(generalStructureFormula.WidthStructureRightSide, Downstream1WidthPropertyName));
+            issues.AddRange(weir.ValidateCrestWidth(generalStructureFormula.WidthRightSideOfStructure, Downstream2WidthPropertyName));
+
+            return issues;
         }
 
-        private static void ValidateHorizontalDoorOpeningDirection(this Weir2D weir, GeneralStructureWeirFormula generalStructureFormula)
+        private static IEnumerable<ValidationIssue> ValidateHorizontalDoorOpeningDirection(this Weir2D weir, GeneralStructureWeirFormula generalStructureFormula)
         {
             if (generalStructureFormula.HorizontalDoorOpeningDirection
                 != GateOpeningDirection.Symmetric)
             {
-                issues.Add(new ValidationIssue(weir,
+                yield return new ValidationIssue(weir,
                     ValidationSeverity.Error,
-                    $"'{weir.Name}': only symmetric horizontal door opening direction is supported for general structures.",
-                    weir));
+                    string.Format(Resources.WeirValidator_ValidateHorizontalDoorOpeningDirection___0____only_symmetric_horizontal_door_opening_direction_is_supported_for_general_structures_, weir.Name),
+                    weir);
             }
         }
 
-        private static void ValidateLowerEdgeLevel(this Weir2D weir, IGatedWeirFormula gatedWeirFormula)
+        private static IEnumerable<ValidationIssue> ValidateLowerEdgeLevel(this Weir2D weir, IGatedWeirFormula gatedWeirFormula)
         {
-            if (!gatedWeirFormula.UseLowerEdgeLevelTimeSeries) return;
+            if (!gatedWeirFormula.UseLowerEdgeLevelTimeSeries) yield break;
 
             var lowerEdgeLevelTimeSeries = gatedWeirFormula.LowerEdgeLevelTimeSeries;
             if (lowerEdgeLevelTimeSeries.Time.Values.Any())
@@ -178,22 +194,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
 
                 if (startTime > modelStartTime || stopTime < modelStopTime)
                 {
-                    issues.Add(new ValidationIssue(weir,
+                    yield return new ValidationIssue(weir,
                         ValidationSeverity.Error,
-                        $"'{weir.Name}': lower edge level time series does not span the model run interval.",
-                        weir));
+                        string.Format(Resources.WeirValidator_ValidateLowerEdgeLevel___0____lower_edge_level_time_series_does_not_span_the_model_run_interval_, weir.Name),
+                        weir);
                 }
             }
             else
             {
-                issues.Add(new ValidationIssue(weir,
+                yield return new ValidationIssue(weir,
                     ValidationSeverity.Error,
-                    $"'{weir.Name}': lower edge level time series does not contain any values.",
-                    weir));
+                    string.Format(Resources.WeirValidator_ValidateLowerEdgeLevel___0____lower_edge_level_time_series_does_not_contain_any_values_, weir.Name),
+                    weir);
             }
         }
 
-        private static void ValidateHorizontalDoorOpeningWidth(this Weir2D weir, IGatedWeirFormula gatedWeirFormula)
+        private static IEnumerable<ValidationIssue> ValidateHorizontalDoorOpeningWidth(this Weir2D weir, IGatedWeirFormula gatedWeirFormula)
         {
             if (gatedWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries)
             {
@@ -202,10 +218,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
                 if (doorOpeningTimeSeries.Components[0].Values.Cast<object>()
                     .Any(value => (double) value < 0.0))
                 {
-                    issues.Add(new ValidationIssue(weir,
+                    yield return new ValidationIssue(weir,
                         ValidationSeverity.Error,
-                        $"'{weir.Name}': opening width time series values must be greater than or equal to 0.",
-                        weir));
+                        string.Format(Resources.WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series_values_must_be_greater_than_or_equal_to_0_, weir.Name),
+                        weir);
                 }
 
                 if (doorOpeningTimeSeries.Time.Values.Any())
@@ -215,37 +231,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
 
                     if (startTime > modelStartTime || stopTime < modelStopTime)
                     {
-                        issues.Add(new ValidationIssue(weir,
+                        yield return new ValidationIssue(weir,
                             ValidationSeverity.Error,
-                            $"'{weir.Name}': opening width time series does not span the model run interval.",
-                            weir));
+                            string.Format(Resources.WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series_does_not_span_the_model_run_interval_, weir.Name),
+                            weir);
                     }
                 }
                 else
                 {
-                    issues.Add(new ValidationIssue(weir,
+                    yield return new ValidationIssue(weir,
                         ValidationSeverity.Error,
-                        $"'{weir.Name}': opening width time series does not contain any values.",
-                        weir));
+                        string.Format(Resources.WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_time_series_does_not_contain_any_values_, weir.Name),
+                        weir);
                 }
             }
             else if (gatedWeirFormula.HorizontalDoorOpeningWidth < 0.0)
             {
-                issues.Add(new ValidationIssue(weir,
+                yield return new ValidationIssue(weir,
                     ValidationSeverity.Error,
-                    $"'{weir.Name}': opening width must be greater than or equal to 0.",
-                    weir));
+                    string.Format(Resources.WeirValidator_ValidateHorizontalDoorOpeningWidth___0____opening_width_must_be_greater_than_or_equal_to_0_, weir.Name),
+                    weir);
             }
         }
 
-        private static void ValidateDoorHeight(this Weir2D weir, IGatedWeirFormula gatedWeirFormula)
+        private static IEnumerable<ValidationIssue> ValidateDoorHeight(this Weir2D weir, IGatedWeirFormula gatedWeirFormula)
         {
             if (gatedWeirFormula.DoorHeight < 0.0)
             {
-                issues.Add(new ValidationIssue(weir,
+                yield return new ValidationIssue(weir,
                     ValidationSeverity.Error,
-                    $"'{weir.Name}': door height must be greater than or equal to 0.",
-                    weir));
+                    string.Format(Resources.WeirValidator_ValidateDoorHeight___0____door_height_must_be_greater_than_or_equal_to_0_, weir.Name),
+                    weir);
             }
         }
     }
