@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 Geometry = new Point(new Coordinate(10, 10))
             };
             weirs.Add(weir);
-            var gridExtent = new UnstructuredGrid {Vertices = new[] {new Coordinate(0, 0)}}.GetExtents();
+            var gridExtent = new Envelope();
 
             // When
             var issues = WeirValidator.Validate(weirs, gridExtent, modelStartTime, modelStopTime).ToList();
