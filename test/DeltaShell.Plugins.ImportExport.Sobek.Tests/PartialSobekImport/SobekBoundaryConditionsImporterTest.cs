@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
@@ -97,17 +99,27 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.Slow)]
         public void ImportInitialConditionsLandelijkSobekModel()
         {
-            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\LSM1_0.lit\12\NETWORK.TP";
-            var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
+            var zipPath = TestHelper.GetDataDir() + @"\LSM1_0.lit\12.zip";
 
-            var partialSobekImporters = new IPartialSobekImporter[]
-                                            {
-                                                new SobekBranchesImporter(), // 7,5 sec
-                                                new SobekBoundaryConditionsImporter()
-                                            };
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                // Unzip LSM1_0.lit/12/ into temporary directory
+                ZipFileUtils.Extract(zipPath, tempDir);
 
-            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowModel1DModel, partialSobekImporters);
-            TestHelper.AssertIsFasterThan(80000, importer.Import);
+                // Actual test
+                var pathToSobekNetwork = Path.Combine(tempDir, "12", "NETWORK.TP");
+
+                var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
+
+                var partialSobekImporters = new IPartialSobekImporter[]
+                {
+                    new SobekBranchesImporter(), // 7,5 sec
+                    new SobekBoundaryConditionsImporter()
+                };
+
+                var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowModel1DModel, partialSobekImporters);
+                TestHelper.AssertIsFasterThan(80000, importer.Import);
+            });
         }
     }
 }
