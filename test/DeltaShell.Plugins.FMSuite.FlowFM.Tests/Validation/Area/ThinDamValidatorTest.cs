@@ -5,10 +5,8 @@ using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
 {
@@ -19,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenFmModelWithThinDamsThatDoNotIntersectWithModelGrid_WhenValidatingThinDams_ThenValidationWarningIsReturned()
         {
             // Given
-            var grid = new Envelope(0, 4, 0, 4);
+            var envelope = new Envelope(0, 4, 0, 4);
             var thinDam = new ThinDam2D
             {
                 Name = "myThinDam",
@@ -28,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             };
 
             // When
-            var validationIssues = ThinDamValidator.Validate(new List<ThinDam2D> {thinDam}, grid);
+            var validationIssues = ThinDamValidator.Validate(new List<ThinDam2D> {thinDam}, envelope);
 
             // Then
             var validationWarnings = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Warning).ToArray();
