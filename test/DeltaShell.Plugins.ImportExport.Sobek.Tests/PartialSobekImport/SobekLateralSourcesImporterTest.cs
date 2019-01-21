@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using NUnit.Framework;
@@ -134,26 +136,35 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void ImportModelShouldNotResultInMultipleLateralsWithIdenticalId_Tools8812()
         {
-            string pathToSobekNetwork = TestHelper.GetDataDir() + @"\LSM1_0.lit\3\network.tp";
+            var zipPath = Path.Combine(TestHelper.GetDataDir(), "LSM1_0.lit", "3.zip");
 
-            var network = new HydroNetwork();
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                // Export value to zip.
+                ZipFileUtils.Extract(zipPath, tempDir);
+                var pathToSobekNetwork = Path.Combine(tempDir, "3", "NETWORK.TP");
 
-            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, network,
-                                                                                 new IPartialSobekImporter[]
+
+                var network = new HydroNetwork();
+
+                var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, network,
+                                                                                     new IPartialSobekImporter[]
                                                                                      {
                                                                                          new SobekBranchesImporter(),
                                                                                          new SobekLateralSourcesImporter
-                                                                                     ()
+                                                                                             ()
                                                                                      });
-            importer.Import();
+                importer.Import();
 
-            Assert.AreEqual(3, network.LateralSources.Count());
-            Assert.DoesNotThrow(() =>
+                Assert.AreEqual(3, network.LateralSources.Count());
+                Assert.DoesNotThrow(() =>
                 {
                     network.LateralSources.ToDictionary(ls => ls.Name, ls => ls);
                 });
+            });
         }
     }
 }
