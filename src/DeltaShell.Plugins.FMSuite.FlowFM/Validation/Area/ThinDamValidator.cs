@@ -1,21 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
 {
     public static class ThinDamValidator
     {
         /// <summary>
-        /// Validate the thin dams and return any issues encountered.
+        /// Validates the thin dams and return any issues encountered.
         /// </summary>
-        /// <param name="model">The model to which the thinDams belong.</param>
+        /// <param name="thinDams">The <see cref="ThinDam2D"/> objects that are being validated.</param>
+        /// <param name="gridExtent">The <see cref="Envelope"/> object that describes the extent of the FM model grid.</param>
         /// <returns> A set of validation issues encountered. </returns>
-        public static IEnumerable<ValidationIssue> Validate(WaterFlowFMModel model)
+        public static IEnumerable<ValidationIssue> Validate(IEnumerable<ThinDam2D> thinDams, Envelope gridExtent)
         {
-            var thinDams = model.Area.ThinDams;
-            var thinDamsNotSnappingToGrid = thinDams.Where(td => !td.Geometry.SnapsToFlowFmGrid(model.GridExtent));
+            var thinDamsNotSnappingToGrid = thinDams.Where(td => !td.Geometry.SnapsToFlowFmGrid(gridExtent));
 
             foreach (var thinDam in thinDamsNotSnappingToGrid)
             {

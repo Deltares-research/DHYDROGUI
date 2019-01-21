@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMapTestUtils;
@@ -17,20 +19,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenFmModelWithThinDamsThatDoNotIntersectWithModelGrid_WhenValidatingThinDams_ThenValidationWarningIsReturned()
         {
             // Given
-            var fmModel = new WaterFlowFMModel
-            {
-                Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2)
-            };
+            var grid = new Envelope(0, 4, 0, 4);
             var thinDam = new ThinDam2D
             {
                 Name = "myThinDam",
                 // Thin dam geometry is far outside of grid extent
                 Geometry = new LineString(new[] { new Coordinate(10, 10), new Coordinate(20, 20) })
             };
-            fmModel.Area.ThinDams.Add(thinDam);
 
             // When
-            var validationIssues = ThinDamValidator.Validate(fmModel);
+            var validationIssues = ThinDamValidator.Validate(new List<ThinDam2D> {thinDam}, grid);
 
             // Then
             var validationWarnings = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Warning).ToArray();
