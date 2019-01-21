@@ -44,19 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 AddModels(fileImporters, dimrObject, rootFolder, hydroModel);
 
                 var subModels = hydroModel.Activities.OfType<IDimrModel>().ToList();
-                foreach (var dimrCouplerXml in dimrObject.coupler)
-                {
-                    var sourceModel = subModels.FirstOrDefault(m => m.Name == dimrCouplerXml.sourceComponent);
-                    var targetModel = subModels.FirstOrDefault(m => m.Name == dimrCouplerXml.targetComponent);
-
-                    if (sourceModel == null || targetModel == null)
-                    {
-                        Log.Error($"Could not couple models: '{dimrCouplerXml.sourceComponent}' to '{dimrCouplerXml.targetComponent}'.");
-                        continue;
-                    }
-
-                    CoupleModelsByDimrCouplerXml(sourceModel, targetModel, dimrCouplerXml.item);
-                }
+                if(dimrObject.coupler != null) CoupleSubModels(dimrObject, subModels);
             }
             finally
             {
@@ -64,30 +52,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             }
 
             return hydroModel;
-        }
-
-        private static void CoupleModelsByDimrCouplerXml(IDimrModel sourceModel, IDimrModel targetModel, dimrCoupledItemXML[] dimrCouplerXml)
-        {
-            foreach (var couplerXml in dimrCouplerXml)
-            {
-                try
-                {
-                    var sourceDataitem = sourceModel.GetDataItemByItemString(couplerXml.sourceName);
-                    var targetDataitem = targetModel.GetDataItemByItemString(couplerXml.targetName);
-
-                    if (sourceDataitem == null || targetDataitem == null)
-                    {
-                        Log.Error($"Could not link {couplerXml.sourceName} to {couplerXml.targetName}");
-                        continue;
-                    }
-
-                    targetDataitem.LinkTo(sourceDataitem);
-                }
-                catch (NotImplementedException exception)
-                {
-                    Log.Error($"Could not link {couplerXml.sourceName} to {couplerXml.targetName} : {exception.Message}");
-                }
-            }
         }
 
         private static void AddModels(ICollection<IDimrModelFileImporter> fileImporters, dimrXML dimrObject, string rootFolder, HydroModel hydroModel)
@@ -146,6 +110,48 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     }
 
                     hydroModel.Activities.Add(subModel);
+                }
+            }
+        }
+
+        private static void CoupleSubModels(dimrXML dimrObject, List<IDimrModel> subModels)
+        {
+            foreach (var dimrCouplerXml in dimrObject.coupler)
+            {
+                var sourceModel = subModels.FirstOrDefault(m => m.Name == dimrCouplerXml.sourceComponent);
+                var targetModel = subModels.FirstOrDefault(m => m.Name == dimrCouplerXml.targetComponent);
+
+                if (sourceModel == null || targetModel == null)
+                {
+                    Log.Error(
+                        $"Could not couple models: '{dimrCouplerXml.sourceComponent}' to '{dimrCouplerXml.targetComponent}'.");
+                    continue;
+                }
+
+                CoupleModelsByDimrCouplerXml(sourceModel, targetModel, dimrCouplerXml.item);
+            }
+        }
+
+        private static void CoupleModelsByDimrCouplerXml(IDimrModel sourceModel, IDimrModel targetModel, dimrCoupledItemXML[] dimrCouplerXml)
+        {
+            foreach (var couplerXml in dimrCouplerXml)
+            {
+                try
+                {
+                    var sourceDataitem = sourceModel.GetDataItemByItemString(couplerXml.sourceName);
+                    var targetDataitem = targetModel.GetDataItemByItemString(couplerXml.targetName);
+
+                    if (sourceDataitem == null || targetDataitem == null)
+                    {
+                        Log.Error($"Could not link {couplerXml.sourceName} to {couplerXml.targetName}");
+                        continue;
+                    }
+
+                    targetDataitem.LinkTo(sourceDataitem);
+                }
+                catch (NotImplementedException exception)
+                {
+                    Log.Error($"Could not link {couplerXml.sourceName} to {couplerXml.targetName} : {exception.Message}");
                 }
             }
         }

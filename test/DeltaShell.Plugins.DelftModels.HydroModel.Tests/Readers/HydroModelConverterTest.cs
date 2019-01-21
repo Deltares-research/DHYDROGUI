@@ -15,10 +15,10 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 {
     [TestFixture]
-    [Category(TestCategory.DataAccess)]
     public class HydroModelConverterTest
     {
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void IfNoFileImporterIsFoundLogInfoMessage()
         {
             var dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
@@ -31,6 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ConvertFlow1DModelAndAddToHydroModel()
         {
             var dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
@@ -50,6 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ConvertRtcModelAndAddToHydroModel()
         {
             var dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
@@ -69,6 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void ConvertFlow1DAndRtcModelAndAddToHydroModel()
         {
@@ -86,6 +89,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             Assert.That(result.Activities.Count, Is.EqualTo(2));
             Assert.That(result.Activities.ElementAt(0), Is.TypeOf<RealTimeControlModel>());
             Assert.That(result.Activities.ElementAt(1), Is.TypeOf<WaterFlowModel1D>());
+        }
+
+        [Test]
+        public void GivenDimrXmlObjectWithNullCoupler_WhenConvertingToHydroModel_ThenNoExceptionIsThrown()
+        {
+            // Given
+            var tempFilePath = Path.Combine("myDirectory", "myFile.here");
+            var dimrXml = new dimrXML
+            {
+                component = new dimrComponentXML[] { }
+            };
+            Assert.IsNull(dimrXml.coupler); // Test initial requirement
+
+            // When/Then
+            Assert.DoesNotThrow(() => HydroModelConverter.Convert(dimrXml, tempFilePath, new List<IDimrModelFileImporter>()));
         }
     }
 }
