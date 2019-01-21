@@ -9,7 +9,6 @@ using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
@@ -25,21 +24,17 @@ using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using SharpMap.Api.Layers;
 using SharpMap.Layers;
 using SharpMap.SpatialOperations;
 using SharpMap.UI.Tools;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using Control = System.Windows.Controls.Control;
-using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
@@ -47,12 +42,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
     [TestFixture]
     public class WaterFlowFMModelGuiIntegrationTest
     {
+
         [Test]
         [Category(TestCategory.WindowsForms)]
-        public void RunModelShouldNotCrashWithOldOutputOpen()
+        public void GivenWaterFlowFmModel_WhenRunningModel_ThenShouldNotCrashWithOldOutputOpen()
         {
-            var mduPath =
-                TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(mduPath);
@@ -102,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        public void FmModelShouldBeReplacedWhenImportedInRootFolder()
+        public void GivenWaterFlowFmModel_WhenImportedInRootFolder_ThenShouldBeReplaced()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
@@ -145,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        public void FmModelShouldBeReplacedWhenImportedInFolder()
+        public void GivenWaterFlowFmModel_WhenImportedInFolder_ThenShouldBeReplaced()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
@@ -200,7 +195,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         /// </summary>
         [Test]
         [Category(TestCategory.WindowsForms)]
-        public void TestCloseHeatFluxModelViewOnChange()
+        public void GivenWaterFlowFmModel_WhenOnChange_CloseHeatFluxModelViewIsTested()
         {
             var model = new WaterFlowFMModel();
 
@@ -241,10 +236,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        public void DoubleClickingOnMapOutputCoverageShouldEnableLayerInCentralMap()
+        public void GivenWaterFlowFmModel_WhenDoubleClickingOnMap_ThenOutputCoverageShouldEnableLayerInCentralMap()
         {
-            var mduPath =
-                TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(mduPath);
@@ -288,7 +282,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        public void DoubleClickingOnHisOutputCoverageShouldEnableLayerInCentralMap()
+        public void GivenWaterFlowFmModel_WhenDoubleClickingOnHis_ThenOutputCoverageShouldEnableLayerInCentralMap()
         {
             var mduPath =
                 TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
@@ -338,7 +332,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         [Category(TestCategory.WindowsForms)]
-        public void ShowSnappedFeatureLayersInMap()
+        public void GivenWaterFlowFmModel_WhenShowSnapped_ThenFeatureLayersInMap()
         {
             var mduPath =
                 TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -380,7 +374,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
-        public void RunningFMModelShouldGiveVectorVelocityLayer()
+        public void GivenWaterFlowFmModel_WhenRunning_ThenShouldGiveVectorVelocityLayer()
         {
             var mduPath =
                 TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -422,35 +416,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             }
         }
 
-        private static void DoubleClickOutputItemAndAssertLayerIsOn(WaterFlowFMModel model, IGui gui, string itemName)
-        {
-            // retrieve the data object for the output waterlevel through the node 
-            // presenter (to make sure we use the path double clicking would follow):
-            var nodePresenter = new WaterFlowFMModelNodePresenter(null);
-            var childItems = nodePresenter.GetChildNodeObjects(model, null).OfType<TreeFolder>();
-            var outputFolder = childItems.Last();
-            var outputItemNode =
-                outputFolder.ChildItems.OfType<object>().First(i => i.ToString().Contains(itemName));
-
-            // mimic double click:
-            gui.Selection = outputItemNode;
-            gui.CommandHandler.OpenViewForSelection(typeof (ProjectItemMapView));
-
-            Assert.AreEqual(1, gui.DocumentViews.Count);
-            var activeMapView = FlowFMGuiPlugin.ActiveMapView;
-            Assert.IsNotNull(activeMapView, "fm active map view");
-
-            var coverageLayer = activeMapView.Map.GetAllLayers(false).FirstOrDefault(l => l.Name.Contains(itemName));
-
-            Assert.IsNotNull(coverageLayer, "coverage layer not found");
-            Assert.IsTrue(coverageLayer.Visible, "not visible");
-        }
-
-
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.WindowsForms)]
-        //[Ignore("Gives out of memory error on build server")]
         public void ImportModelWithBigNetfileGridIntoProject()
         {
             using (var gui = new DeltaShellGui())
@@ -480,23 +448,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         FileUtils.CopyDirectory(modelFolder, tempDir, uGridFilePath);
                         ZipFileUtils.Extract(netCdfFilePath, tempDir);
 
-                        var timer = new Stopwatch();
-                        timer.Start();
+                        var timer = StartTimer();
 
                         var mduFileName = "FlowFM.mdu";
-                        var mduPath = Path.Combine(tempDir, mduFileName);
-                        var model = new WaterFlowFMModel(mduPath);
+                        var model = ImportModelFromTemporaryDirectory(tempDir, mduFileName);
 
-                        timer.Stop();
-                        Console.WriteLine("Import time = : " + timer.Elapsed);
+                        StopTimer(timer);
 
                         timer.Restart();
                         app.Project.RootFolder.Add(model);
 
-                        timer.Stop();
-                        Console.WriteLine("Import time = : " + timer.Elapsed);
+                        StopTimer(timer);
                     });
                 };
+
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
         }
@@ -504,7 +469,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.WindowsForms)]
-        //[Ignore("Gives out of memory error on build server")]
         public void ImportModelWithBigUgridIntoProject()
         {
             using (var gui = new DeltaShellGui())
@@ -534,23 +498,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         FileUtils.CopyDirectory(modelFolder, tempDir, netCdfFilePath);
                         ZipFileUtils.Extract(uGridFilePath, tempDir);
 
-                        var timer = new Stopwatch();
-                        timer.Start();
+                        var timer = StartTimer();
 
                         var mduFileName = "FlowFMUgrid.mdu";
-                        var mduPath = Path.Combine(tempDir, mduFileName);
-                        var model = new WaterFlowFMModel(mduPath);
+                        var model = ImportModelFromTemporaryDirectory(tempDir, mduFileName);
 
-                        timer.Stop();
-                        Console.WriteLine("Import time = : " + timer.Elapsed);
+                        StopTimer(timer);
 
                         timer.Restart();
                         app.Project.RootFolder.Add(model);
 
-                        timer.Stop();
-                        Console.WriteLine("Import time = : " + timer.Elapsed);
+                        StopTimer(timer);
                     });
                 };
+
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }
         }
@@ -702,118 +663,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             }
         }
 
-        private static SnappedFeatureCollection GetSnappedFeatureCollectionFromLayers(IList<ILayer> layers, string layerName)
+        #region Helper methods
+        private static Stopwatch StartTimer()
         {
-            var layer = layers.FirstOrDefault(l => l.Name == layerName);
-            return layer?.DataSource as SnappedFeatureCollection;
+            var timer = new Stopwatch();
+            timer.Start();
+            return timer;
         }
 
-        private static WaterFlowFMModel ImportLdbAndGrid(IApplication app, string landBoundaryPath, string netFile)
+        private static void StopTimer(Stopwatch timer)
         {
-            var targetModel = AddFMModelToProject(app);
-
-            // Import Land boundaries
-            var importerLDB = app.FileImporters.OfType<LdbFileImporterExporter>().FirstOrDefault();
-            Assert.IsNotNull(importerLDB);
-
-            var ldbImported = importerLDB.ImportItem(landBoundaryPath, targetModel.Area.LandBoundaries);
-            Assert.IsNotNull(ldbImported as IList<LandBoundary2D>);
-            Assert.IsTrue((ldbImported as IList<LandBoundary2D>).Any());
-            Assert.IsTrue(targetModel.Area.LandBoundaries.Any());
-
-            ImportGrid(app, netFile, targetModel);
-
-            return targetModel;
+            timer.Stop();
+            Console.WriteLine($"Import time = : {timer.Elapsed}");
         }
 
-        private static WaterFlowFMModel AddFMModelToProject(IApplication app)
+        private static WaterFlowFMModel ImportModelFromTemporaryDirectory(string tempDir, string mduFileName)
         {
-            // Add water flow model to project
-            var project = app.Project;
-            project.RootFolder.Add(new WaterFlowFMModel());
-
-            // Check model name
-            var targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
-            Assert.IsNotNull(targetModel);
-            Assert.IsFalse(targetModel.Area.LandBoundaries.Any());
-            return targetModel;
+            var mduPath = Path.Combine(tempDir, mduFileName);
+            var model = new WaterFlowFMModel(mduPath);
+            return model;
         }
 
-        private static void ImportGrid(IApplication app, string netFile, WaterFlowFMModel targetModel)
+        private static void DoubleClickOutputItemAndAssertLayerIsOn(WaterFlowFMModel model, IGui gui, string itemName)
         {
-            //Import grid
-            var importerGrid = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
-            Assert.IsNotNull(importerGrid);
-            var gridImported = importerGrid.ImportItem(netFile, targetModel.Grid);
-            Assert.IsNotNull(gridImported);
+            // retrieve the data object for the output waterlevel through the node 
+            // presenter (to make sure we use the path double clicking would follow):
+            var nodePresenter = new WaterFlowFMModelNodePresenter(null);
+            var childItems = nodePresenter.GetChildNodeObjects(model, null).OfType<TreeFolder>();
+            var outputFolder = childItems.Last();
+            var outputItemNode =
+                outputFolder.ChildItems.OfType<object>().First(i => i.ToString().Contains(itemName));
+
+            // mimic double click:
+            gui.Selection = outputItemNode;
+            gui.CommandHandler.OpenViewForSelection(typeof(ProjectItemMapView));
+
+            Assert.AreEqual(1, gui.DocumentViews.Count);
+            var activeMapView = FlowFMGuiPlugin.ActiveMapView;
+            Assert.IsNotNull(activeMapView, "fm active map view");
+
+            var coverageLayer = activeMapView.Map.GetAllLayers(false).FirstOrDefault(l => l.Name.Contains(itemName));
+
+            Assert.IsNotNull(coverageLayer, "coverage layer not found");
+            Assert.IsTrue(coverageLayer.Visible, "not visible");
         }
+        #endregion
 
-        /// <summary>
-        /// Wraps Action in a Try-Catch, returns false if Action results in an exception
-        /// </summary>
-        /// <param name="action"></param>
-        /// <returns>Success or Failure of Action</returns>
-        private static bool TryPerformAction(Action action)
-        {
-            try
-            {
-                action.Invoke();
-                return true;
-            }
-            catch (Exception debug)
-            {
-                if (!string.IsNullOrEmpty(debug.Message)) Console.WriteLine(debug.Message);
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Get the absolute path to the folder in <paramref name="unzipFolder"/> that directly contains
-        /// <paramref name="projectPath"/>. If no such path exists, null is returned.
-        /// </summary>
-        /// <param name="unzipFolder"> The basefolder in which to look for the projectPath. </param>
-        /// <param name="projectPath"> The file path which is matched within the <paramref name="unzipFolder"/></param>
-        /// <returns> The path to the parent directory of <paramref name="projectPath"/> if it exists, null otherwise. </returns>
-        private static string GetProjectRootInUnzippedFolder(string unzipFolder, string projectPath)
-        {
-            var rootFolder = unzipFolder;
-            IList<string> subFolders = new List<string>();
-            while (true)
-            {
-                if (File.Exists(Path.Combine(rootFolder, projectPath)))
-                    return rootFolder;
-
-                subFolders.AddRange(Directory.GetDirectories(rootFolder));
-
-                if (subFolders.Count > 0)
-                {
-                    rootFolder = subFolders.First();
-                    subFolders.RemoveAt(0);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        private static void UnzipModel(string relativeZipFilePath, string testCaseZipFilePath, out string testDirectory)
-        {
-            var testFixtureDirectory = FileUtils.CreateTempDirectory();
-
-            var zipFileName = Path.GetFileName(relativeZipFilePath);
-            if (string.IsNullOrEmpty(zipFileName))
-                throw new ArgumentException(string.Format("Unable to retrieve Zip File Name: {0}", relativeZipFilePath));
-
-            var localZipFilePath = Path.Combine(testFixtureDirectory, zipFileName);
-
-            FileUtils.DeleteIfExists(localZipFilePath);
-            FileUtils.CopyFile(testCaseZipFilePath, localZipFilePath);
-
-            var randomFileName = Path.GetRandomFileName().Substring(0, 5);
-            testDirectory = Path.Combine(testFixtureDirectory, randomFileName);
-            FileUtils.DeleteIfExists(testDirectory);
-            ZipFileUtils.Extract(localZipFilePath, testDirectory);
-        }
     }
 }
