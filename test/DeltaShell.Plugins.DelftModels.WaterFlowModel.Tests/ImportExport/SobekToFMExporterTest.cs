@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using DeltaShell.Plugins.ImportExport.Sobek;
@@ -37,17 +38,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         [Test]
         public void ExportSloterplasSobekGridToFMGrid()
         {
-            const string ncPath = "sloterplas_net.nc"; // D:\\
+            const string ncPath = "sloterplas_net.nc";
 
             var modelImporter = new SobekWaterFlowModel1DImporter { TargetItem = new WaterFlowModel1D() };
 
-            var modelPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ExpSBI.lit\1\NETWORK.TP");
-            var model = (WaterFlowModel1D)modelImporter.ImportItem(modelPath);
-            
-            var exporter = new SobekToFMExporter();
-            exporter.Export(model, ncPath);
+            var zipFile = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ExpSBI.lit.zip");
 
-            Assert.IsTrue(File.Exists(ncPath));
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                ZipFileUtils.Extract(zipFile, tempDir);
+
+                var modelPath = Path.Combine(tempDir, "ExpSBI.lit", "1", "NETWORK.TP");
+                var exportPath = Path.Combine(tempDir, ncPath);
+
+                var model = (WaterFlowModel1D)modelImporter.ImportItem(modelPath);
+                var exporter = new SobekToFMExporter();
+                exporter.Export(model, exportPath);
+
+                Assert.IsTrue(File.Exists(exportPath));
+            });
         }
 
         [Test]

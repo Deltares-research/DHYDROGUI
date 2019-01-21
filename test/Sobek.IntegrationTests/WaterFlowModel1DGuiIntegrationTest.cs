@@ -27,6 +27,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.IO;
 using DeltaShell.Core;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
@@ -1012,50 +1013,58 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.Slow)]
         public void ImportSloterplasSobekIntoNetworkExportToSobekFilebased()
         {
-            WpfTestHelper.ShowModal((Control)gui.MainWindow, (() =>
+            // file paths
+            var zipPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                                                     @"ExpSBI.lit.zip");
+            var exportPath = TestHelper.GetTestDataPath(typeof(WaterFlowModel1DGuiIntegrationTest).Assembly,
+                                                        "BridgeExport_SOBEK3-54.md1d");
+
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                Application.DoEvents();
+                ZipFileUtils.Extract(zipPath, tempDir);
+                var modelPath = Path.Combine(tempDir, "ExpSBI.lit", "1", "NETWORK.TP");
 
-                var modelPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,@"ExpSBI.lit\1\NETWORK.TP");
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, (() =>
+                {
+                    Application.DoEvents();
 
-                var modelImporter = new SobekWaterFlowModel1DImporter { TargetItem = new WaterFlowModel1D() };
-                var model = (WaterFlowModel1D)modelImporter.ImportItem(modelPath);
-                gui.Application.Project.RootFolder.Add(model);
-                var network = model.Network;
-                
-                var toNetworkImported = new SobekNetworkToNetworkImporter { TargetObject = network };
-                gui.CommandHandler.OpenView(network, typeof(ProjectItemMapView));
+                    var modelImporter = new SobekWaterFlowModel1DImporter { TargetItem = new WaterFlowModel1D() };
+                    var model = (WaterFlowModel1D)modelImporter.ImportItem(modelPath);
+                    gui.Application.Project.RootFolder.Add(model);
+                    var network = model.Network;
 
-                toNetworkImported.ImportItem(modelPath);
-                gui.CommandHandler.OpenView(network, typeof(ProjectItemMapView));
-                
-                var modelNetworkItem = model.DataItems.First(i => i.Value is IHydroNetwork);
+                    var toNetworkImported = new SobekNetworkToNetworkImporter { TargetObject = network };
+                    gui.CommandHandler.OpenView(network, typeof(ProjectItemMapView));
 
-                // open view for network
-                gui.DocumentViewsResolver.OpenViewForData(modelNetworkItem, typeof(ProjectItemMapView));
-                
-                // give delayed event handler some time
-                Thread.Sleep(100);
-                Application.DoEvents();
-                Thread.Sleep(100);
+                    toNetworkImported.ImportItem(modelPath);
+                    gui.CommandHandler.OpenView(network, typeof(ProjectItemMapView));
 
-                // add cross sections which were not imported correctly so that our model is valid
-                AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "2");
-                AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "CH120");
-                AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "CH410");
-                AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "CH479");
+                    var modelNetworkItem = model.DataItems.First(i => i.Value is IHydroNetwork);
 
-                var validation = model.Validate();
-                Assert.AreEqual(0, validation.ErrorCount);
+                    // open view for network
+                    gui.DocumentViewsResolver.OpenViewForData(modelNetworkItem, typeof(ProjectItemMapView));
 
-                var exporter = new WaterFlowModel1DExporter();
+                    // give delayed event handler some time
+                    Thread.Sleep(100);
+                    Application.DoEvents();
+                    Thread.Sleep(100);
 
-                string filepath = TestHelper.GetTestDataPath(typeof(WaterFlowModel1DGuiIntegrationTest).Assembly, "BridgeExport_SOBEK3-54.md1d"); 
-                TestHelper.AssertIsFasterThan(6150, () => exporter.Export(model, filepath));
+                    // add cross sections which were not imported correctly so that our model is valid
+                    AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "2");
+                    AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "CH120");
+                    AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "CH410");
+                    AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "CH479");
 
-                Assert.IsTrue(File.Exists(filepath));
-                
-            }));
+                    var validation = model.Validate();
+                    Assert.AreEqual(0, validation.ErrorCount);
+
+                    var exporter = new WaterFlowModel1DExporter();
+
+                    TestHelper.AssertIsFasterThan(6150, () => exporter.Export(model, exportPath));
+
+                    Assert.IsTrue(File.Exists(exportPath));
+                }));
+            });
         }
 
         private static void AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(IHydroNetwork network, string channelName)

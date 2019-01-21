@@ -749,42 +749,48 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.Performance)]
         public void ImportSloterplasSobekIntoNetworkExportToSobekFilebasedWithOutGUI()
         {
-            using (var app = new DeltaShellApplication())
+            // file paths
+            var zipPath = TestHelper.GetTestDataPath(typeof(SobekWaterFlowModel1DImporterTest).Assembly,
+                                                     @"ExpSBI.lit.zip");
+            var exportPath = TestHelper.GetTestDataPath(typeof(WaterFlowModel1DGuiIntegrationTest).Assembly,
+                                                        "BridgeExport_SOBEK3-54.md1d");
+
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                ZipFileUtils.Extract(zipPath, tempDir);
+                var modelPath = Path.Combine(tempDir, "ExpSBI.lit", "1", "NETWORK.TP");
 
-                app.Run();
+                using (var app = new DeltaShellApplication())
+                {
+                    app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
+                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
 
-                var modelPath = TestHelper.GetTestDataPath(typeof (SobekWaterFlowModel1DImporterTest).Assembly,
-                    @"ExpSBI.lit\1\NETWORK.TP");
+                    app.Run();
 
-                var modelImporter = new SobekWaterFlowModel1DImporter {TargetItem = new WaterFlowModel1D()};
-                var model = (WaterFlowModel1D) modelImporter.ImportItem(modelPath);
-                app.Project.RootFolder.Add(model);
-                var network = model.Network;
+                    var modelImporter = new SobekWaterFlowModel1DImporter {TargetItem = new WaterFlowModel1D()};
+                    var model = (WaterFlowModel1D) modelImporter.ImportItem(modelPath);
+                    app.Project.RootFolder.Add(model);
+                    var network = model.Network;
 
-                var toNetworkImported = new SobekNetworkToNetworkImporter {TargetObject = network};
-                toNetworkImported.ImportItem(modelPath);
-                
-                // add cross sections which were not imported correctly so that our model is valid
-                AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "2");
-                AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "CH120");
-                AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "CH410");
-                AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "CH479");
+                    var toNetworkImported = new SobekNetworkToNetworkImporter {TargetObject = network};
+                    toNetworkImported.ImportItem(modelPath);
 
-                var validation = model.Validate();
-                Assert.AreEqual(0, validation.ErrorCount);
+                    // add cross sections which were not imported correctly so that our model is valid
+                    AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "2");
+                    AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "CH120");
+                    AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "CH410");
+                    AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "CH479");
 
-                var exporter = new WaterFlowModel1DExporter();
+                    var validation = model.Validate();
+                    Assert.AreEqual(0, validation.ErrorCount);
 
-                string filepath = TestHelper.GetTestDataPath(typeof (WaterFlowModel1DGuiIntegrationTest).Assembly,
-                    "BridgeExport_SOBEK3-54.md1d");
-                TestHelper.AssertIsFasterThan(5000, () => exporter.Export(model, filepath));
+                    var exporter = new WaterFlowModel1DExporter();
 
-                Assert.IsTrue(File.Exists(filepath));
+                    TestHelper.AssertIsFasterThan(5000, () => exporter.Export(model, exportPath));
 
-            }
+                    Assert.IsTrue(File.Exists(exportPath));
+                }
+            });
         }
 
         private static void AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(IHydroNetwork network, string channelName)
