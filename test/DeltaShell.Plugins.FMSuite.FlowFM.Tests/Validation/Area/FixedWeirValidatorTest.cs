@@ -3,7 +3,6 @@ using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -35,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenAFixedWeirWithAGeometryThatDoesNotSnapToGrid_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
         {
             // Given
-            var gridExtent = new UnstructuredGrid {Vertices = new[] {new Coordinate(0, 0)}}.GetExtents();
+            var gridExtent = new Envelope();
 
             // When
             var issues = FixedWeirValidator.Validate(
@@ -55,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenAFixedWeirAnWithInvalidSillDepth_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
         {
             // Given
-            var gridExtent = new UnstructuredGrid {Vertices = new[] {new Coordinate(10, 10)}}.GetExtents();
+            var gridExtent = new Envelope(new Coordinate(10, 10));
             var fixedWeirsProperties = CreateModelFeatureCoordinateDataWithInvalidValues(fixedWeirs.First());
 
             // When
