@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using NetTopologySuite.Extensions.Networks;
@@ -67,48 +69,76 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Category(TestCategory.Slow)]
         public void ImportNetworkWithLinkageNodesCheckNumberOfBranchesAndOrderNumbers()
         {
-            string pathToSobekNetwork = TestHelper.GetTestFilePath(@"LMW_LinkageNodes\Network.TP");
+            var zipFilePath = TestHelper.GetTestFilePath("LMW_LinkageNodes.zip");
 
-            var networkNotBeenSplitBranches = new HydroNetwork();
-            var branchesImporter = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, networkNotBeenSplitBranches, new IPartialSobekImporter[] { new SobekBranchesImporter() });
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                ZipFileUtils.Extract(zipFilePath, tempDir);
+                var pathToSobekNetwork = Path.Combine(tempDir, "LMW_LinkageNodes", "NETWORK.TP");
 
-            branchesImporter.Import();
+                var networkNotBeenSplitBranches = new HydroNetwork();
+                var branchesImporter = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, networkNotBeenSplitBranches, new IPartialSobekImporter[] { new SobekBranchesImporter() });
+
+                branchesImporter.Import();
 
 
-            var networkBranchesSplitByLinkageNode = new HydroNetwork();
-            var branchesSplitByLinkageNodeImporter = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, networkBranchesSplitByLinkageNode, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLinkageNodeImporter() });
+                var networkBranchesSplitByLinkageNode = new HydroNetwork();
+                var branchesSplitByLinkageNodeImporter = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, networkBranchesSplitByLinkageNode, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLinkageNodeImporter() });
 
-            branchesSplitByLinkageNodeImporter.Import();
+                branchesSplitByLinkageNodeImporter.Import();
 
-            Assert.AreEqual(networkNotBeenSplitBranches.Nodes.Count, networkBranchesSplitByLinkageNode.Nodes.Count);
+                Assert.AreEqual(networkNotBeenSplitBranches.Nodes.Count, networkBranchesSplitByLinkageNode.Nodes.Count);
 
-            Assert.Less(networkNotBeenSplitBranches.Branches.Count,networkBranchesSplitByLinkageNode.Branches.Count);
+                Assert.Less(networkNotBeenSplitBranches.Branches.Count, networkBranchesSplitByLinkageNode.Branches.Count);
 
-            Assert.AreEqual(322, networkBranchesSplitByLinkageNode.Branches.Select(b => b.OrderNumber).Distinct().Count());
+                Assert.AreEqual(322, networkBranchesSplitByLinkageNode.Branches.Select(b => b.OrderNumber).Distinct().Count());
+            });
         }
 
         [Test]
         [Category(TestCategory.VerySlow)]
         public void ImportModelWithLinkageNodesCheckUpdateDiscretization()
         {
-            string pathToSobekNetwork = TestHelper.GetTestFilePath(@"LMW_LinkageNodes\Network.TP");
+            var zipFilePath = TestHelper.GetTestFilePath("LMW_LinkageNodes.zip");
 
-            var model = new WaterFlowModel1D();
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                ZipFileUtils.Extract(zipFilePath, tempDir);
+                var pathToSobekNetwork = Path.Combine(tempDir, "LMW_LinkageNodes", "NETWORK.TP");
 
-            var branchesComputationalGridAndLinkageNodeImporter = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, model, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekComputationalGridImporter(), new SobekLinkageNodeImporter() });
+                var model = new WaterFlowModel1D();
 
-            branchesComputationalGridAndLinkageNodeImporter.Import();
+                var branchesComputationalGridAndLinkageNodeImporter =
+                    PartialSobekImporterBuilder.BuildPartialSobekImporter(
+                        pathToSobekNetwork, model,
+                        new IPartialSobekImporter[]
+                        {
+                            new SobekBranchesImporter(), new SobekComputationalGridImporter(),
+                            new SobekLinkageNodeImporter()
+                        });
 
-            var nBranches = model.Network.Branches.Count;
+                branchesComputationalGridAndLinkageNodeImporter.Import();
 
-            //test if branches has been split
-            Assert.Greater(nBranches, model.Network.Branches.GroupBy(b => b.OrderNumber).Count()); // Should be true for any network with at least 1 linkage Node
+                var nBranches = model.Network.Branches.Count;
 
-            //check calculation points at the end of each branch
-            Assert.AreEqual(nBranches, model.NetworkDiscretization.Locations.Values.Count(l => Math.Abs(l.Chainage - l.Branch.Length) < BranchFeature.Epsilon));
+                //test if branches has been split
+                Assert.Greater(
+                    nBranches,
+                    model.Network.Branches.GroupBy(b => b.OrderNumber)
+                         .Count()); // Should be true for any network with at least 1 linkage Node
 
-            //check calculation points at the begin of each branch
-            Assert.AreEqual(nBranches, model.NetworkDiscretization.Locations.Values.Count(l => Math.Abs(l.Chainage) < BranchFeature.Epsilon));
+                //check calculation points at the end of each branch
+                Assert.AreEqual(
+                    nBranches,
+                    model.NetworkDiscretization.Locations.Values.Count(
+                        l => Math.Abs(l.Chainage - l.Branch.Length) < BranchFeature.Epsilon));
+
+                //check calculation points at the begin of each branch
+                Assert.AreEqual(
+                    nBranches,
+                    model.NetworkDiscretization.Locations.Values.Count(
+                        l => Math.Abs(l.Chainage) < BranchFeature.Epsilon));
+            });
         }
     }
 }
