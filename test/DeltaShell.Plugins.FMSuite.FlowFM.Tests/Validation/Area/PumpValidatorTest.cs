@@ -16,11 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         [Test]
         public void GivenFmModelWithAValidPump_WhenValidatingPumps_ThenNoValidationWarningsAreReturned()
         {
-            // Given
-            var fmModel = new WaterFlowFMModel
-            {
-                Grid = UnstructuredGridTestHelper.GenerateRegularGrid(3, 3, 2, 2)
-            };
+            var fmModel = GenerateFmModelWithARegularGrid();
             var pump = new Pump2D
             {
                 Name = "myPump",
@@ -29,10 +25,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             fmModel.Area.Pumps.Add(pump);
             var listOfPumps = new List<Pump2D> { pump };
 
-            // When
             var validationIssues = PumpValidator.ValidatePumps(fmModel, listOfPumps);
 
-            // Then
             var validationWarnings =
                 validationIssues.Where(issue => issue.Severity == ValidationSeverity.Warning).ToArray();
             Assert.That(validationWarnings.Length, Is.EqualTo(0));
@@ -42,11 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void
             GivenFmModelWithAPumpThatDoNotIntersectWithModelGrid_WhenValidatingPumps_ThenValidationWarningIsReturned()
         {
-            // Given
-            var fmModel = new WaterFlowFMModel
-            {
-                Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2)
-            };
+            var fmModel = GenerateFmModelWithARegularGrid();
             var pump = new Pump2D
             {
                 Name = "myPump",
@@ -56,10 +46,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             fmModel.Area.Pumps.Add(pump);
             var listOfPumps = new List<Pump2D> { pump };
 
-            // When
             var validationIssues = PumpValidator.ValidatePumps(fmModel, listOfPumps);
 
-            // Then
             var validationWarnings =
                 validationIssues.Where(issue => issue.Severity == ValidationSeverity.Warning).ToArray();
             Assert.That(validationWarnings.Length, Is.EqualTo(1));
@@ -71,11 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         [Test]
         public void GivenFmModelWithAPumpWithANegativeCapacity_WhenValidatingPumps_ThenValidationErrorIsReturned()
         {
-            // Given
-            var fmModel = new WaterFlowFMModel
-            {
-                Grid = UnstructuredGridTestHelper.GenerateRegularGrid(3, 3, 2, 2)
-            };
+            var fmModel = GenerateFmModelWithARegularGrid();
             var pump = new Pump2D
             {
                 Name = "myPump",
@@ -85,10 +69,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             fmModel.Area.Pumps.Add(pump);
             var listOfPumps = new List<Pump2D> { pump };
 
-            // When
             var validationIssues = PumpValidator.ValidatePumps(fmModel, listOfPumps);
 
-            // Then
             var validationWarnings =
                 validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
             Assert.That(validationWarnings.Length, Is.EqualTo(1));
@@ -101,11 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         [Test]
         public void GivenFmModelWithAStartSuctionLevelThatIsSmallerThen_WhenValidatingPumps_ThenValidationErrorIsReturned()
         {
-            // Given
-            var fmModel = new WaterFlowFMModel
-            {
-                Grid = UnstructuredGridTestHelper.GenerateRegularGrid(3, 3, 2, 2)
-            };
+            var fmModel = GenerateFmModelWithARegularGrid();
             var pump = new Pump2D
             {
                 Name = "myPump",
@@ -117,10 +95,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             fmModel.Area.Pumps.Add(pump);
             var listOfPumps = new List<Pump2D> { pump };
 
-            // When
             var validationIssues = PumpValidator.ValidatePumps(fmModel, listOfPumps);
 
-            // Then
             var validationWarnings =
                 validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
             Assert.That(validationWarnings.Length, Is.EqualTo(1));
@@ -128,6 +104,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             var expectedMessage =
                 $"pump '{pump.Name}': Suction start level must be greater than or equal to suction stop level.";
             Assert.That(validationWarnings[0].Message, Is.EqualTo(expectedMessage));
+        }
+
+        private static WaterFlowFMModel GenerateFmModelWithARegularGrid()
+        {
+            var fmModel = new WaterFlowFMModel
+            {
+                Grid = UnstructuredGridTestHelper.GenerateRegularGrid(3, 3, 2, 2)
+            };
+
+            return fmModel;
         }
     }
 }
