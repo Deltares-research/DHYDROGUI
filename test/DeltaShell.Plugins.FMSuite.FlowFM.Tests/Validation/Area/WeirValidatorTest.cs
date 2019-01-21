@@ -266,7 +266,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
             var issue = issues.Single();
-            Assert.AreEqual(ValidationSeverity.Info, issue.Severity, "The severity of this validation issue should have been of type Error.");
+            Assert.AreEqual(ValidationSeverity.Info, issue.Severity, "The severity of this validation issue should have been of type Info.");
             Assert.AreEqual("Crest Width for 'Structure' structure type: Simple weir, will be calculated by the computational core.", issue.Message, MessageDifferentLogMessageExpected);
         }
 
