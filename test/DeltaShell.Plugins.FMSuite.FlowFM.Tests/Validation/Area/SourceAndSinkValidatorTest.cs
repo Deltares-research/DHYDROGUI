@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenSourceAndSinkThatDoesNotSnapToGrid_WhenValidating_ThenValidationWarningIsReturned()
         {
             // Given
-            var envelope = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2).GetExtents();
+            var envelope = new Envelope(0, 4, 0, 4);
             var sourceAndSink = new SourceAndSink
             {
                 Name = "mySourceAndSink",
