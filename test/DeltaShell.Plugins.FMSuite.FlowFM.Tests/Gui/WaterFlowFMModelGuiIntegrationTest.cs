@@ -36,6 +36,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using DelftTools.Utils.Collections.Extensions;
+using DelftTools.Utils.IO;
 using Control = System.Windows.Controls.Control;
 using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
@@ -448,10 +450,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.WindowsForms)]
-        [Ignore("Gives out of memory error on build server")]
+        //[Ignore("Gives out of memory error on build server")]
         public void ImportModelWithBigNetfileGridIntoProject()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"ModelWithBigGrid\FlowFM.mdu");
             using (var gui = new DeltaShellGui())
             {
                 var app = gui.Application;
@@ -466,17 +467,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 Action mainWindowShown = delegate
                 {
-                    var timer = new Stopwatch();
-                    timer.Start();
-                    var model = new WaterFlowFMModel(mduPath);
-                    timer.Stop();
-                    Console.WriteLine("Import time = : " + timer.Elapsed);
+                    TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+                    {
+                        var modelFolderName = "ModelWithBigGrid";
+                        var netCdfZipFileName = "FlowFM.zip";
+                        var uGridZipFileName = "FlowFM_Ugrid.zip";
 
-                    timer.Restart();
-                    // creates a copy in the temp folder
-                    app.Project.RootFolder.Add(model);
-                    timer.Stop();
-                    Console.WriteLine("Import time = : " + timer.Elapsed);
+                        var modelFolder = TestHelper.GetTestFilePath(modelFolderName);
+                        var netCdfFilePath = Path.Combine(tempDir, netCdfZipFileName);
+                        var uGridFilePath = Path.Combine(modelFolder, uGridZipFileName);
+
+                        FileUtils.CopyDirectory(modelFolder, tempDir, uGridFilePath);
+                        ZipFileUtils.Extract(netCdfFilePath, tempDir);
+
+                        var timer = new Stopwatch();
+                        timer.Start();
+
+                        var mduFileName = "FlowFM.mdu";
+                        var mduPath = Path.Combine(tempDir, mduFileName);
+                        var model = new WaterFlowFMModel(mduPath);
+
+                        timer.Stop();
+                        Console.WriteLine("Import time = : " + timer.Elapsed);
+
+                        timer.Restart();
+                        app.Project.RootFolder.Add(model);
+
+                        timer.Stop();
+                        Console.WriteLine("Import time = : " + timer.Elapsed);
+                    });
                 };
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
@@ -485,10 +504,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.WindowsForms)]
-        [Ignore("Gives out of memory error on build server")]
+        //[Ignore("Gives out of memory error on build server")]
         public void ImportModelWithBigUgridIntoProject()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"ModelWithBigGrid\FlowFMUgrid.mdu");
             using (var gui = new DeltaShellGui())
             {
                 var app = gui.Application;
@@ -503,19 +521,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 Action mainWindowShown = delegate
                 {
-                    var timer = new Stopwatch();
-                    timer.Start();
-                    var model = new WaterFlowFMModel(mduPath);
-                    timer.Stop();
-                    Console.WriteLine("Import time = : " + timer.Elapsed);
+                    TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+                    {
+                        var modelFolderName = "ModelWithBigGrid";
+                        var uGridZipFileName = "FlowFM_Ugrid.zip";
+                        var netCdfZipFileName = "FlowFM.zip";
 
-                    timer.Restart();
-                    // creates a copy in the temp folder
-                    app.Project.RootFolder.Add(model);
-                    timer.Stop();
-                    Console.WriteLine("Import time = : " + timer.Elapsed);
+                        var modelFolder = TestHelper.GetTestFilePath(modelFolderName);
+                        var netCdfFilePath = Path.Combine(tempDir, netCdfZipFileName);
+                        var uGridFilePath = Path.Combine(modelFolder, uGridZipFileName);
+
+                        FileUtils.CopyDirectory(modelFolder, tempDir, netCdfFilePath);
+                        ZipFileUtils.Extract(uGridFilePath, tempDir);
+
+                        var timer = new Stopwatch();
+                        timer.Start();
+
+                        var mduFileName = "FlowFMUgrid.mdu";
+                        var mduPath = Path.Combine(tempDir, mduFileName);
+                        var model = new WaterFlowFMModel(mduPath);
+
+                        timer.Stop();
+                        Console.WriteLine("Import time = : " + timer.Elapsed);
+
+                        timer.Restart();
+                        app.Project.RootFolder.Add(model);
+
+                        timer.Stop();
+                        Console.WriteLine("Import time = : " + timer.Elapsed);
+                    });
                 };
-                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }
         }
 
@@ -710,6 +746,74 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             Assert.IsNotNull(importerGrid);
             var gridImported = importerGrid.ImportItem(netFile, targetModel.Grid);
             Assert.IsNotNull(gridImported);
+        }
+
+        /// <summary>
+        /// Wraps Action in a Try-Catch, returns false if Action results in an exception
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns>Success or Failure of Action</returns>
+        private static bool TryPerformAction(Action action)
+        {
+            try
+            {
+                action.Invoke();
+                return true;
+            }
+            catch (Exception debug)
+            {
+                if (!string.IsNullOrEmpty(debug.Message)) Console.WriteLine(debug.Message);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the absolute path to the folder in <paramref name="unzipFolder"/> that directly contains
+        /// <paramref name="projectPath"/>. If no such path exists, null is returned.
+        /// </summary>
+        /// <param name="unzipFolder"> The basefolder in which to look for the projectPath. </param>
+        /// <param name="projectPath"> The file path which is matched within the <paramref name="unzipFolder"/></param>
+        /// <returns> The path to the parent directory of <paramref name="projectPath"/> if it exists, null otherwise. </returns>
+        private static string GetProjectRootInUnzippedFolder(string unzipFolder, string projectPath)
+        {
+            var rootFolder = unzipFolder;
+            IList<string> subFolders = new List<string>();
+            while (true)
+            {
+                if (File.Exists(Path.Combine(rootFolder, projectPath)))
+                    return rootFolder;
+
+                subFolders.AddRange(Directory.GetDirectories(rootFolder));
+
+                if (subFolders.Count > 0)
+                {
+                    rootFolder = subFolders.First();
+                    subFolders.RemoveAt(0);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        private static void UnzipModel(string relativeZipFilePath, string testCaseZipFilePath, out string testDirectory)
+        {
+            var testFixtureDirectory = FileUtils.CreateTempDirectory();
+
+            var zipFileName = Path.GetFileName(relativeZipFilePath);
+            if (string.IsNullOrEmpty(zipFileName))
+                throw new ArgumentException(string.Format("Unable to retrieve Zip File Name: {0}", relativeZipFilePath));
+
+            var localZipFilePath = Path.Combine(testFixtureDirectory, zipFileName);
+
+            FileUtils.DeleteIfExists(localZipFilePath);
+            FileUtils.CopyFile(testCaseZipFilePath, localZipFilePath);
+
+            var randomFileName = Path.GetRandomFileName().Substring(0, 5);
+            testDirectory = Path.Combine(testFixtureDirectory, randomFileName);
+            FileUtils.DeleteIfExists(testDirectory);
+            ZipFileUtils.Extract(localZipFilePath, testDirectory);
         }
     }
 }
