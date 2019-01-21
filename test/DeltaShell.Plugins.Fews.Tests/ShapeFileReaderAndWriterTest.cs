@@ -121,31 +121,6 @@ namespace DeltaShell.Plugins.Fews.Tests
             ShapeFileWriter.Create(@"", fileName, featureCollection);
         }
 
-        
-        [Test]
-        [Ignore(TestCategory.WorkInProgress)]
-        [ExpectedException(typeof(NotSupportedException))]        
-        public void CreateFile_FeatureCollectionContainsNotSupportedFeature_Throws()
-        {
-            var feature = CreateFeature("POLYGON (( 10 10, 10 20, 20 20, 20 15, 10 10))", new Dictionary<string, object>());
-            featureCollection.Add(feature);
-            ShapeFileWriter.Create(@"", fileName, featureCollection);
-        }
-
-        [Test]
-        [Ignore(TestCategory.WorkInProgress)]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void CreateFile_FeatureCollectionContainsDifferentGeometryTypes_Throws()
-        {
-            var emptyLineString = CreateFeature("LINESTRING EMPTY", new Dictionary<string, object>());
-            var emptyPoint = CreateFeature("POINT EMPTY", new Dictionary<string, object>());
-
-            featureCollection.Add(emptyLineString);
-            featureCollection.Add(emptyPoint);
-
-            ShapeFileWriter.Create(OutputFolder, fileName, featureCollection);
-        }
-
         [Test]
         [Ignore("Could not fix this test yet, I dont know if this is allowed")]
         public void CreateFile_FeatureCollectionContainsEmptyPoint_ShapeFileIsCreated()
