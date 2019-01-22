@@ -221,7 +221,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
+        [Category(TestCategory.VerySlow)]
         public void ReadWriteModelWithSpatialOperationsTest()
         {
             using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
@@ -251,7 +251,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var maskFeatureColl = new FeatureCollection(
                     new[]
                     {
-                        new Feature()
+                        new Feature
                         {
                             Geometry = new Polygon(
                                 new LinearRing(new []
@@ -438,14 +438,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         /// This breaks currently, because the mapping is upgraded while it shouldn't.
         /// </summary>
         [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
-        [Category(TestCategory.Slow)]
+        [Category(TestCategory.VerySlow)]
         public void ReadFlowFMModelWithDifferentPluginConfiguration()
         {
             string dsprojName = "FM_Only.dsproj";
             // the temporary project is required in order to set the path on the model. Else, it saves null in the Path property of the fm model.
-            using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true})
+            using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true})
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -481,9 +480,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
-        [Category(TestCategory.Slow)]
+        [Category(TestCategory.VerySlow)]
         public void ReadFlowFMModelWithDifferentPluginConfigurationGui()
         {
             var dir = Path.GetDirectoryName(Assembly.GetAssembly(typeof (WaterFlowFMNHibernateIntegrationTest)).Location);
@@ -542,7 +540,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         /// Then read it in an environment that only contains FM.
         /// </summary>
         [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
         public void ReadFlowFMModelWithLessPluginConfigurations()
