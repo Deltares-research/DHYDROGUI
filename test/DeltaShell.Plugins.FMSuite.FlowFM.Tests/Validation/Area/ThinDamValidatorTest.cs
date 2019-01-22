@@ -30,11 +30,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
 
             // Then
             var validationWarnings = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Warning).ToArray();
-            Assert.That(validationWarnings.Length, Is.EqualTo(1));
+            Assert.That(validationWarnings.Length, Is.EqualTo(1), "No validation warning was returned for grid snapping, while we expect to see one validation warning here.");
 
             var expectedMessage =
                 string.Format(Resources.WaterFlowFMArea2DValidator_Validate_thin_dam___0___not_within_grid_extent, thinDam.Name);
-            Assert.That(validationWarnings[0].Message, Is.EqualTo(expectedMessage));
+            Assert.That(validationWarnings[0].Message, Is.EqualTo(expectedMessage), "The validation message was different than expected.");
         }
     }
 }
