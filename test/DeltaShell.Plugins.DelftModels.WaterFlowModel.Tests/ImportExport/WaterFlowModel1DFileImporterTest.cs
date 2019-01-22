@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -59,8 +58,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
                 foreach (var file in fileCollection)
                 {
                     var iniFilePath = Path.Combine(targetFilePath, file);
-                    Assert.IsTrue(FileComparer.Compare(iniFilePath,
-                        TestHelper.GetTestFilePath($@"ImportSpatialData\{file}"), out errorMessage));
+                    Assert.That(() => FileComparer.Compare(iniFilePath,
+                            TestHelper.GetTestFilePath($@"ImportSpatialData\{file}"), out errorMessage), Is.True,
+                        $"processed file:{file} not equal to the model counterpart. This means that the file has not been correctly imported or written");
                 }
             }
             finally
