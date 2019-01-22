@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             hydroModel.BeginEdit(new ImportingFullModelAction("Importing full Dimr model"));
             try
             {
-                AddModels(fileImporters, dimrObject, rootFolder, hydroModel);
+                hydroModel.AddModels(fileImporters, dimrObject, rootFolder);
 
                 var subModels = hydroModel.Activities.OfType<IDimrModel>().ToList();
                 if(dimrObject.coupler != null) CoupleSubModels(dimrObject, subModels);
@@ -54,22 +54,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             return hydroModel;
         }
 
-        private static void AddModels(ICollection<IDimrModelFileImporter> fileImporters, dimrXML dimrObject, string rootFolder, HydroModel hydroModel)
+        private static void AddModels(this HydroModel hydroModel, ICollection<IDimrModelFileImporter> fileImporters, dimrXML dimrObject, string rootFolder)
         {
             var componentGroups = dimrObject.component
                 .GroupBy(component => Path.GetExtension(component.inputFile)?.TrimStart('.'));
 
             foreach (var componentGroup in componentGroups)
             {
-                var extension = componentGroup.Key;
-
-                if (string.IsNullOrEmpty(extension))
-                {
-                    extension = "json";
-                }
+                var extension = componentGroup.GetExtension();
 
                 var importer = fileImporters.FirstOrDefault(f => f.MasterFileExtension == extension);
-
                 if (importer == null)
                 {
                     LogUnknownImporter(extension);
@@ -80,20 +74,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
                 foreach (var component in componentGroup)
                 {
-                    string[] pathParts;
-
-                    var fileName = component.inputFile;
-
-                    pathParts = SortFileParts(rootFolder, importer, FileNameIsUnknown(fileName) ? "settings.json" : fileName);
-
-                    var combinedPath = Path.Combine(pathParts);
-                    var fullPath = Path.GetFullPath(combinedPath);
-                    var importedItem = importer.ImportItem(fullPath);
+                    var fileName = GetFileName(component.inputFile);
+                    var filePath = ComposeFilePath(rootFolder, importer, fileName);
+                    var importedItem = importer.ImportItem(Path.GetFullPath(filePath));
                     var subModel = importedItem as IActivity;
 
                     if (subModel == null)
                     {
-                        Log.Error($"Could not add {subModel.Name} to integrated model."); 
+                        Log.Error($"Could not import sub model defined at location {filePath} to integrated model."); 
                         continue;
                     }
 
@@ -103,8 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                         subModel.Name = component.name;
                     }
 
-                    var hydroModelSubModel = subModel as IHydroModel;
-                    if (hydroModelSubModel != null)
+                    if (subModel is IHydroModel hydroModelSubModel)
                     {
                         hydroModel.Region.SubRegions.Add(hydroModelSubModel.Region);
                     }
@@ -114,51 +101,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             }
         }
 
-        private static void CoupleSubModels(dimrXML dimrObject, List<IDimrModel> subModels)
+        private static string GetExtension(this IGrouping<string, dimrComponentXML> componentGroup)
         {
-            foreach (var dimrCouplerXml in dimrObject.coupler)
+            var extension = componentGroup.Key;
+
+            if (string.IsNullOrEmpty(extension))
             {
-                var sourceModel = subModels.FirstOrDefault(m => m.Name == dimrCouplerXml.sourceComponent);
-                var targetModel = subModels.FirstOrDefault(m => m.Name == dimrCouplerXml.targetComponent);
-
-                if (sourceModel == null || targetModel == null)
-                {
-                    Log.Error(
-                        $"Could not couple models: '{dimrCouplerXml.sourceComponent}' to '{dimrCouplerXml.targetComponent}'.");
-                    continue;
-                }
-
-                CoupleModelsByDimrCouplerXml(sourceModel, targetModel, dimrCouplerXml.item);
+                extension = "json";
             }
-        }
 
-        private static void CoupleModelsByDimrCouplerXml(IDimrModel sourceModel, IDimrModel targetModel, dimrCoupledItemXML[] dimrCouplerXml)
-        {
-            foreach (var couplerXml in dimrCouplerXml)
-            {
-                try
-                {
-                    var sourceDataitem = sourceModel.GetDataItemByItemString(couplerXml.sourceName);
-                    var targetDataitem = targetModel.GetDataItemByItemString(couplerXml.targetName);
-
-                    if (sourceDataitem == null || targetDataitem == null)
-                    {
-                        Log.Error($"Could not link {couplerXml.sourceName} to {couplerXml.targetName}");
-                        continue;
-                    }
-
-                    targetDataitem.LinkTo(sourceDataitem);
-                }
-                catch (NotImplementedException exception)
-                {
-                    Log.Error($"Could not link {couplerXml.sourceName} to {couplerXml.targetName} : {exception.Message}");
-                }
-            }
-        }
-
-        private static bool FileNameIsUnknown(string fileName)
-        {
-            return fileName.Equals(".");
+            return extension;
         }
 
         private static void LogUnknownImporter(string extension)
@@ -166,7 +118,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             Log.Info($"No importer found for extension: {extension}");
         }
 
-        private static string[] SortFileParts(string rootFolder, IDimrModelFileImporter importer, string fileName)
+        private static string GetFileName(string fileName)
+        {
+            return fileName.Equals(".") 
+                ? "settings.json"
+                : fileName;
+        }
+
+        private static string ComposeFilePath(string rootFolder, IDimrModelFileImporter importer, string fileName)
         {
             string[] pathParts;
 
@@ -181,15 +140,58 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     .Concat(importer.SubFolders)
                     .Plus(fileObject.XmlDirectory)
                     .ToArray();
+            }
+            else
+            {
 
-                return pathParts;
+                pathParts = new[] {rootFolder}
+                    .Concat(importer.SubFolders)
+                    .Plus(fileName)
+                    .ToArray();
             }
 
-            pathParts = new[] { rootFolder }
-                .Concat(importer.SubFolders)
-                .Plus(fileName)
-                .ToArray();
-            return pathParts;
+            return Path.Combine(pathParts);
+        }
+
+        private static void CoupleSubModels(dimrXML dimrObject, IList<IDimrModel> subModels)
+        {
+            foreach (var dimrCouplerXml in dimrObject.coupler)
+            {
+                var sourceModel = subModels.FirstOrDefault(m => m.Name == dimrCouplerXml.sourceComponent);
+                var targetModel = subModels.FirstOrDefault(m => m.Name == dimrCouplerXml.targetComponent);
+
+                if (sourceModel == null || targetModel == null)
+                {
+                    Log.Error($"Could not couple models: '{dimrCouplerXml.sourceComponent}' to '{dimrCouplerXml.targetComponent}'.");
+                    continue;
+                }
+
+                CoupleModelsByDimrCouplerXml(sourceModel, targetModel, dimrCouplerXml.item);
+            }
+        }
+
+        private static void CoupleModelsByDimrCouplerXml(IDimrModel sourceModel, IDimrModel targetModel, dimrCoupledItemXML[] dimrCouplerXml)
+        {
+            foreach (var couplerXml in dimrCouplerXml)
+            {
+                try
+                {
+                    var sourceDataItem = sourceModel.GetDataItemByItemString(couplerXml.sourceName);
+                    var targetDataItem = targetModel.GetDataItemByItemString(couplerXml.targetName);
+
+                    if (sourceDataItem == null || targetDataItem == null)
+                    {
+                        Log.Error($"Could not link {couplerXml.sourceName} to {couplerXml.targetName}");
+                        continue;
+                    }
+
+                    targetDataItem.LinkTo(sourceDataItem);
+                }
+                catch (NotImplementedException exception)
+                {
+                    Log.Error($"Could not link {couplerXml.sourceName} to {couplerXml.targetName} : {exception.Message}");
+                }
+            }
         }
     }
 
