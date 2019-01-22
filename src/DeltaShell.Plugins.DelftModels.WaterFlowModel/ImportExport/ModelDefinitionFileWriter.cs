@@ -44,12 +44,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 }
             }
 
-            Flow1DParameterGenerator parameterGenerator = new Flow1DParameterGenerator();
-            IEnumerable<DelftIniCategory> parameterCategories = parameterGenerator.GenerateParameterCategories(waterFlowModel1D);
-            if (parameterCategories != null)
-            {
-                categories.AddRange(parameterCategories);
-            }
+            var parameterCategories = Flow1DParameterGenerator.GenerateParameterCategories(waterFlowModel1D);
+            categories.AddRange(parameterCategories);
 
             MoveSalinityParameterToBranchResults(categories);
             

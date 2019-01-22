@@ -597,16 +597,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
     public static class DelftIniCategoryExtension
     {
-        public static void AddProperty(this DelftIniCategory category,
-            ConfigurationSetting setting,
-            double value)
-        {
-            category.AddProperty(setting.Key, 
-                                 value, 
-                                 setting.Description, 
-                                 setting.Format);
-        }
-
         internal static void SetCustomInitialValues(this WaterFlowModel1D model)
         {
             // set values to something other than default so we can verify they have been properly changed.

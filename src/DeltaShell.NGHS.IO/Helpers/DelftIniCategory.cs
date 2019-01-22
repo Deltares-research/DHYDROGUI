@@ -63,6 +63,21 @@ namespace DeltaShell.NGHS.IO.Helpers
             Properties.Add(new DelftIniProperty { Name = property.Name, Value = property.Value, Comment = property.Comment });
         }
 
+        /// <summary>
+        /// Add a DateTime property with the specified ConfigurationSettings
+        /// <paramref name="settings"/> and the specified value <paramref name="time"/>.
+        /// </summary>
+        /// <param name="settings">The ConfigurationSetting of the time.</param>
+        /// <param name="time">The DateTime value.</param>
+        /// <remarks>
+        /// This uses the format specified in the <paramref name="settings"/>,
+        /// and not the default "yyyy-MM-dd HH:mm:ss"
+        /// </remarks>
+        public void AddProperty(ConfigurationSetting settings, DateTime time)
+        {
+            AddProperty(settings.Key, time, settings.Description, settings.Format);
+        }
+
         public void AddProperty(string name, DateTime time, string comment = null, string format = "yyyy-MM-dd HH:mm:ss")
         {
             AddProperty(name, time.ToString(format, CultureInfo.InvariantCulture), comment);
@@ -72,6 +87,19 @@ namespace DeltaShell.NGHS.IO.Helpers
         {
             var valuesString = string.Join(" ", values.Select(value => value.ToString(format, CultureInfo.InvariantCulture)));
             AddProperty(name, valuesString, comment);
+        }
+
+        /// <summary>
+        /// Add a double property with the specified ConfigurationSettings.
+        /// </summary>
+        /// <param name="settings">The ConfigurationSetting of the value.</param>
+        /// <param name="value">The value.</param>
+        /// <remarks>
+        /// This uses the format specified in <paramref name="settings"/> and not the default "e7".
+        /// </remarks>
+        public void AddProperty(ConfigurationSetting settings, double value)
+        {
+            AddProperty(settings.Key, value, settings.Description, settings.Format);
         }
 
         public void AddProperty(string name, double value,  string comment = null, string format = "e7")

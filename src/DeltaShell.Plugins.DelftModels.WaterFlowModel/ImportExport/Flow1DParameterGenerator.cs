@@ -6,93 +6,104 @@ using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 
+
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
-    public class Flow1DParameterGenerator
+    /// <summary>
+    /// Flow1DParameterGenerator is responsible for generating a set of Parameter cateegories from a
+    /// WaterFlowModel1D. 
+    /// </summary>
+    public static class Flow1DParameterGenerator
     {
-        public IList<DelftIniCategory> GenerateParameterCategories(WaterFlowModel1D waterFlowModel1D)
+        /// <summary>
+        /// Generates the set of parameter categories from the specified <paramref name="waterFlowModel1D"/>.
+        /// </summary>
+        /// <param name="waterFlowModel1D">The WaterFlowModel1D of which the parameters should be retrieved.</param>
+        /// <returns>
+        /// An enumeration of DelftIniCategories describing the Parameters of the specified
+        /// <paramref name="waterFlowModel1D"/>.
+        /// </returns>
+        /// <remarks>  <paramref name="waterFlowModel1D"/> == null -> not return.any() </remarks>
+        public static IEnumerable<DelftIniCategory> GenerateParameterCategories(WaterFlowModel1D waterFlowModel1D)
         {
-            if (waterFlowModel1D == null) return null;
+            if (waterFlowModel1D == null) yield break;
 
-            IList<DelftIniCategory> parameterGroups = new List<DelftIniCategory>();
-            
             // Global values
-            var globalValuesGroup = GenerateGlobalValues(waterFlowModel1D);
+            yield return Flow1DParameterCategoryGenerator.GenerateGlobalValues(waterFlowModel1D);
 
             // Initial Conditions
-            var initialConditionsValuesGroup = GenerateInitialConditionsValues(waterFlowModel1D);
+            yield return Flow1DParameterCategoryGenerator.GenerateInitialConditionsValues(waterFlowModel1D);
 
             // Time values
-            var timeValuesGroup = GenerateTimeValues(waterFlowModel1D);
-            
+            yield return Flow1DParameterCategoryGenerator.GenerateTimeValues(waterFlowModel1D);
+
             //Sediment
-            var sedimentValuesGroup = GenerateSedimentValues(waterFlowModel1D);
-            
+            yield return Flow1DParameterCategoryGenerator.GenerateSedimentValues(waterFlowModel1D);
+
             //Specials
-            var specialsValuesGroup = GenerateSpecialsValues(waterFlowModel1D);
+            yield return Flow1DParameterCategoryGenerator.GenerateSpecialsValues(waterFlowModel1D);
 
             //Numerical Parameters
-            var numericalParametersValuesGroup = GenerateNumericalParametersValues(waterFlowModel1D);
-            
+            yield return Flow1DParameterCategoryGenerator.GenerateNumericalParametersValues(waterFlowModel1D);
+
             //Simulation Options
-            var simulationOptionsValuesGroup = GenerateSimulationOptionsValues(waterFlowModel1D);
+            yield return Flow1DParameterCategoryGenerator.GenerateSimulationOptionsValues(waterFlowModel1D);
 
             // TransportComputation Options
-            var transportComputationOptionsValuesGroup = GenerateTransportComputationOptionsValues(waterFlowModel1D);
-            
+            yield return Flow1DParameterCategoryGenerator.GenerateTransportComputationOptionsValues(waterFlowModel1D);
+
             // Advanced Options
-            var advancedOptionsValuesGroup = GenerateAdvancedOptionsValues(waterFlowModel1D);
-            
+            yield return Flow1DParameterCategoryGenerator.GenerateAdvancedOptionsValues(waterFlowModel1D);
+
             //Salinity
-            var salinityValuesGroup = GenerateSalinityValues(waterFlowModel1D);
+            yield return Flow1DParameterCategoryGenerator.GenerateSalinityValues(waterFlowModel1D);
 
             // Temperature
-            var temperatureValuesGroup = GenerateTemperatureValues(waterFlowModel1D);
+            yield return Flow1DParameterCategoryGenerator.GenerateTemperatureValues(waterFlowModel1D);
 
             // Morphology
-            var morphologyValuesGroup = GenerateMorphologyValues(waterFlowModel1D);
+            yield return Flow1DParameterCategoryGenerator.GenerateMorphologyValues(waterFlowModel1D);
 
             //Observation points
-            var obsPointsGroup = GenerateObservationValues(waterFlowModel1D);
+            yield return Flow1DParameterCategoryGenerator.GenerateObservationValues(waterFlowModel1D);
 
             //Restart Options
-            var restartOptionsValuesGroup = GenerateRestartOptionsValues(waterFlowModel1D);
-
-
-            parameterGroups.Add(globalValuesGroup);
-            parameterGroups.Add(initialConditionsValuesGroup);
-            parameterGroups.Add(timeValuesGroup);
-            parameterGroups.Add(sedimentValuesGroup);
-            parameterGroups.Add(specialsValuesGroup);
-            parameterGroups.Add(numericalParametersValuesGroup);
-            parameterGroups.Add(simulationOptionsValuesGroup);
-            parameterGroups.Add(transportComputationOptionsValuesGroup);
-            parameterGroups.Add(advancedOptionsValuesGroup);
-            parameterGroups.Add(salinityValuesGroup);
-            parameterGroups.Add(temperatureValuesGroup);
-            parameterGroups.Add(morphologyValuesGroup);
-            parameterGroups.Add(obsPointsGroup);
-            parameterGroups.Add(restartOptionsValuesGroup);
-            
-            return parameterGroups;
+            yield return Flow1DParameterCategoryGenerator.GenerateRestartOptionsValues(waterFlowModel1D);
         }
+    }
 
-        private static DelftIniCategory GenerateTimeValues(WaterFlowModel1D waterFlowModel1D)
+
+    /// <summary>
+    /// Flow1DParameterCategoryGenerator provides the methods to generate the different parameter
+    /// categories returned by Flow1DParameterGenerator.
+    /// </summary>
+    public static class Flow1DParameterCategoryGenerator {
+        /// <summary>
+        /// Generates the time values category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
+        /// </summary>
+        /// <param name="waterFlowModel1D">The water flow model1 d.</param>
+        /// <returns>A DelftIniCategory describing the time values of the specified <paramref name="waterFlowModel1D"/></returns>
+        public static DelftIniCategory GenerateTimeValues(WaterFlowModel1D waterFlowModel1D)
         {
             var timeValues = new DelftIniCategory(ModelDefinitionsRegion.TimeHeader);
 
-            timeValues.AddProperty(ModelDefinitionsRegion.StartTime.Key, waterFlowModel1D.StartTime, ModelDefinitionsRegion.StartTime.Description);
-            timeValues.AddProperty(ModelDefinitionsRegion.StopTime.Key, waterFlowModel1D.StopTime, ModelDefinitionsRegion.StopTime.Description);
-            timeValues.AddProperty(ModelDefinitionsRegion.TimeStep.Key, waterFlowModel1D.TimeStep.TotalSeconds, ModelDefinitionsRegion.TimeStep.Description, ModelDefinitionsRegion.TimeStep.Format);
+            timeValues.AddProperty(ModelDefinitionsRegion.StartTime, waterFlowModel1D.StartTime);
+            timeValues.AddProperty(ModelDefinitionsRegion.StopTime, waterFlowModel1D.StopTime);
+            timeValues.AddProperty(ModelDefinitionsRegion.TimeStep, waterFlowModel1D.TimeStep.TotalSeconds);
 
             var modelOutputSettings = waterFlowModel1D.OutputSettings;
-            timeValues.AddProperty(ModelDefinitionsRegion.OutTimeStepGridPoints.Key, modelOutputSettings.GridOutputTimeStep.TotalSeconds, ModelDefinitionsRegion.OutTimeStepGridPoints.Description, ModelDefinitionsRegion.OutTimeStepGridPoints.Format);
-            timeValues.AddProperty(ModelDefinitionsRegion.OutTimeStepStructures.Key, modelOutputSettings.StructureOutputTimeStep.TotalSeconds, ModelDefinitionsRegion.OutTimeStepStructures.Description, ModelDefinitionsRegion.OutTimeStepStructures.Format);
+            timeValues.AddProperty(ModelDefinitionsRegion.MapOutputTimeStep, modelOutputSettings.GridOutputTimeStep.TotalSeconds);
+            timeValues.AddProperty(ModelDefinitionsRegion.HisOutputTimeStep, modelOutputSettings.StructureOutputTimeStep.TotalSeconds);
             
             return timeValues;
         }
 
-        private DelftIniCategory GenerateTransportComputationOptionsValues(WaterFlowModel1D waterFlowModel1D)
+        /// <summary>
+        /// Generates the TransportComputation values category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
+        /// </summary>
+        /// <param name="waterFlowModel1D">The water flow model1 d.</param>
+        /// <returns>A DelftIniCategory describing the transport computation values of the specified <paramref name="waterFlowModel1D"/></returns>
+        public static DelftIniCategory GenerateTransportComputationOptionsValues(WaterFlowModel1D waterFlowModel1D)
         {
             var transportComputationValues = new DelftIniCategory(ModelDefinitionsRegion.TransportComputationValuesHeader);
 
@@ -107,7 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return transportComputationValues;
         }
 
-        private DelftIniCategory GenerateAdvancedOptionsValues(WaterFlowModel1D waterFlowModel1D)
+        public static DelftIniCategory GenerateAdvancedOptionsValues(WaterFlowModel1D waterFlowModel1D)
         {
             var advancedOptionsValues = new DelftIniCategory(ModelDefinitionsRegion.AdvancedOptionsHeader);
 
@@ -166,7 +177,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return advancedOptionsValues;
         }
 
-        private DelftIniCategory GenerateSimulationOptionsValues(WaterFlowModel1D waterFlowModel1D)
+        public static DelftIniCategory GenerateSimulationOptionsValues(WaterFlowModel1D waterFlowModel1D)
         {
             DelftIniCategory simulationOptionsValues = new DelftIniCategory(ModelDefinitionsRegion.SimulationOptionsValuesHeader);
 
@@ -313,7 +324,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         }
 
-        private DelftIniCategory GenerateNumericalParametersValues(WaterFlowModel1D waterFlowModel1D)
+        public static DelftIniCategory GenerateNumericalParametersValues(WaterFlowModel1D waterFlowModel1D)
         {
             DelftIniCategory numericalParametersValues = new DelftIniCategory(ModelDefinitionsRegion.NumericalParametersValuesHeader);
 
@@ -450,7 +461,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return numericalParametersValues;
         }
 
-        private DelftIniCategory GenerateSpecialsValues(WaterFlowModel1D waterFlowModel1D)
+        public static DelftIniCategory GenerateSpecialsValues(WaterFlowModel1D waterFlowModel1D)
         {
             DelftIniCategory specialsValuesGroup = new DelftIniCategory(ModelDefinitionsRegion.SpecialsValuesHeader);
 
@@ -460,7 +471,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         }
 
-        private DelftIniCategory GenerateSedimentValues(WaterFlowModel1D waterFlowModel1D)
+        public static DelftIniCategory GenerateSedimentValues(WaterFlowModel1D waterFlowModel1D)
         {
             DelftIniCategory resultsGeneralValuesGroup = new DelftIniCategory(ModelDefinitionsRegion.SedimentValuesHeader);
             
@@ -473,7 +484,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return resultsGeneralValuesGroup;
         }
 
-        private DelftIniCategory GenerateInitialConditionsValues(WaterFlowModel1D waterFlowModel1D)
+        public static DelftIniCategory GenerateInitialConditionsValues(WaterFlowModel1D waterFlowModel1D)
         {
             DelftIniCategory initialConditionsValuesGroup = new DelftIniCategory(ModelDefinitionsRegion.InitialConditionsValuesHeader);
             var emptyWells = waterFlowModel1D.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.InitialEmptyWells.Key);
@@ -485,7 +496,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return initialConditionsValuesGroup;
         }
 
-        private DelftIniCategory GenerateSalinityValues(WaterFlowModel1D waterFlowModel1D)
+        public static DelftIniCategory GenerateSalinityValues(WaterFlowModel1D waterFlowModel1D)
         {
             DelftIniCategory salinityValuesGroup = new DelftIniCategory(ModelDefinitionsRegion.SalinityValuesHeader);
             salinityValuesGroup.AddProperty(ModelDefinitionsRegion.SaltComputation.Key, waterFlowModel1D.UseSaltInCalculation ? 1:0,
@@ -500,7 +511,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return salinityValuesGroup;
         }
 
-        private DelftIniCategory GenerateTemperatureValues(WaterFlowModel1D waterFlowModel1D)
+        public static DelftIniCategory GenerateTemperatureValues(WaterFlowModel1D waterFlowModel1D)
         {
             var temperatureValues = new DelftIniCategory(ModelDefinitionsRegion.TemperatureValuesHeader);
 
@@ -525,7 +536,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return temperatureValues;
         }
 
-        private DelftIniCategory GenerateMorphologyValues(WaterFlowModel1D waterFlowModel1D)
+        public static DelftIniCategory GenerateMorphologyValues(WaterFlowModel1D waterFlowModel1D)
         {
             var morphologyValues = new DelftIniCategory(ModelDefinitionsRegion.MorphologyValuesHeader);
 
@@ -544,7 +555,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return morphologyValues;
         }
 
-        private DelftIniCategory GenerateObservationValues(WaterFlowModel1D waterFlowModel1D)
+        public static DelftIniCategory GenerateObservationValues(WaterFlowModel1D waterFlowModel1D)
         {
             DelftIniCategory observationValues = new DelftIniCategory(ModelDefinitionsRegion.ObservationsHeader);
             ModelApiParameter interpolParameter = waterFlowModel1D.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.InterpolationType.Key);
@@ -556,7 +567,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             
             return observationValues;
         }
-        private DelftIniCategory GenerateRestartOptionsValues(WaterFlowModel1D waterFlowModel1D)
+        public static DelftIniCategory GenerateRestartOptionsValues(WaterFlowModel1D waterFlowModel1D)
         {
             DelftIniCategory restartValues = new DelftIniCategory(ModelDefinitionsRegion.RestartHeader);
             if (waterFlowModel1D.UseSaveStateTimeRange)
@@ -577,7 +588,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return restartValues;
         }
 
-        private static DelftIniCategory GenerateGlobalValues(WaterFlowModel1D waterFlowModel1D)
+        public static DelftIniCategory GenerateGlobalValues(WaterFlowModel1D waterFlowModel1D)
         {
             var globalValuesGroup = new DelftIniCategory(ModelDefinitionsRegion.GlobalValuesHeader);
             var useDepth = waterFlowModel1D.InitialConditionsType == InitialConditionsType.Depth ? 1 : 0;
