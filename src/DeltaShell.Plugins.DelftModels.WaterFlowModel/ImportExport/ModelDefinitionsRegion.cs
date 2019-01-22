@@ -56,11 +56,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         public static readonly ConfigurationSetting StartTime = new ConfigurationSetting(key: "StartTime", description: "yyyy-MM-dd HH:mm:ss", format: "yyyy-MM-dd HH:mm:ss");
         public static readonly ConfigurationSetting StopTime = new ConfigurationSetting(key: "StopTime", description: "yyyy-MM-dd HH:mm:ss", format: "yyyy-MM-dd HH:mm:ss");
         public static readonly ConfigurationSetting TimeStep = new ConfigurationSetting(key: "TimeStep", description: "in seconds");
-        public static readonly ConfigurationSetting OutTimeStepGridPoints = new ConfigurationSetting(key: "OutTimeStepGridPoints", description: "in seconds"); // Deprecated in the computational core, here for backwards compatibility
-        public static readonly ConfigurationSetting OutTimeStepStructures = new ConfigurationSetting(key: "OutTimeStepStructures", description: "in seconds"); // Deprecated in the computational core, here for backwards compatibility
-
         public static readonly ConfigurationSetting MapOutputTimeStep = new ConfigurationSetting(key: "MapOutputTimeStep", description: "in seconds for gridpoints.nc and reachsegments.nc"); // Replaces OutTimeStepGridPoints
         public static readonly ConfigurationSetting HisOutputTimeStep = new ConfigurationSetting(key: "HisOutputTimeStep", description: "in seconds for all other output files");             // Replaces OutTimeStepStructures
+
+        public static readonly ConfigurationSetting OutTimeStepGridPoints = new ConfigurationSetting(key: "OutTimeStepGridPoints", description: "in seconds"); // Deprecated in the computational core, here for backwards compatibility
+        public static readonly ConfigurationSetting OutTimeStepStructures = new ConfigurationSetting(key: "OutTimeStepStructures", description: "in seconds"); // Deprecated in the computational core, here for backwards compatibility
 
         public const string ResultsGeneralValuesHeader = "ResultsGeneral";
         public static readonly ConfigurationSetting DelwaqNoStaggeredGrid = new ConfigurationSetting(key: "DelwaqNoStaggeredGrid", description: "0=false, 1=true");

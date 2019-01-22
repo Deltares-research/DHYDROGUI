@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
@@ -23,8 +24,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             var startTime = timeCategory.ReadProperty<DateTime>(ModelDefinitionsRegion.StartTime.Key, true);
             var stopTime = timeCategory.ReadProperty<DateTime>(ModelDefinitionsRegion.StopTime.Key, true);
             var timeStep = timeCategory.ReadProperty<double>(ModelDefinitionsRegion.TimeStep.Key, true);
-            var gridPointsOutputTimeStep = timeCategory.ReadProperty<double>(ModelDefinitionsRegion.OutTimeStepGridPoints.Key, true);
-            var structuresOutputTimeStep = timeCategory.ReadProperty<double>(ModelDefinitionsRegion.OutTimeStepStructures.Key, true);
+            var gridPointsOutputTimeStep = GetCategoryWithDeprecation<double>(timeCategory,
+                                                                              ModelDefinitionsRegion.MapOutputTimeStep,
+                                                                              ModelDefinitionsRegion.OutTimeStepGridPoints,
+                                                                              errorMessages,
+                                                                              true);
+            var structuresOutputTimeStep = GetCategoryWithDeprecation<double>(timeCategory,
+                                                                              ModelDefinitionsRegion.HisOutputTimeStep,
+                                                                              ModelDefinitionsRegion
+                                                                                  .OutTimeStepStructures,
+                                                                              errorMessages,
+                                                                              true);
+
 
             model.StartTime = startTime;
             model.StopTime = stopTime;
@@ -33,6 +44,39 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             var modelOutputSettings = model.OutputSettings;
             modelOutputSettings.GridOutputTimeStep = TimeSpan.FromSeconds(gridPointsOutputTimeStep);
             modelOutputSettings.StructureOutputTimeStep = TimeSpan.FromSeconds(structuresOutputTimeStep);
+        }
+
+        /// <summary>
+        /// Gets the category specified with <paramref name="currentProperty"/> or
+        /// with the deprecated <paramref name="previousProperty"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the specified property. </typeparam>
+        /// <param name="category">The category.</param>
+        /// <param name="currentProperty">The current property.</param>
+        /// <param name="previousProperty">The previous property.</param>
+        /// <param name="errorMessages">The error messages.</param>
+        /// <param name="isOptional">if set to <c>true</c> [is optional].</param>
+        /// <returns> The specified property read from the <paramref name="category"/> </returns>
+        private static T GetCategoryWithDeprecation<T>(IDelftIniCategory category,
+                                                       ConfigurationSetting currentProperty,
+                                                       ConfigurationSetting previousProperty,
+                                                       IList<string> errorMessages,
+                                                       bool isOptional)
+        {
+            var hasPrevious = category.Properties.Any(prop => prop.Name == previousProperty.Key);
+            var hasCurrent = category.Properties.Any(prop => prop.Name  == currentProperty.Key);
+
+            if (hasPrevious && hasCurrent)
+            {
+                errorMessages.Add($"Detected both {currentProperty.Key} and deprecated {previousProperty.Key}, using {currentProperty.Key}, {previousProperty.Key} will be removed upon saving.");
+            }
+            else if (hasPrevious)
+            {
+                errorMessages.Add($"{previousProperty.Key} has been deprecated and will be replaced with {currentProperty.Key} upon saving.");
+                return category.ReadProperty<T>(previousProperty.Key, isOptional);
+            }
+
+            return category.ReadProperty<T>(currentProperty.Key, isOptional);
         }
     }
 }

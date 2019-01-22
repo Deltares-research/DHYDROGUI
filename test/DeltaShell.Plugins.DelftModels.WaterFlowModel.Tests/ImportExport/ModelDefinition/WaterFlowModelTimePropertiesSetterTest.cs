@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         public void GivenTimeSettingsDataModelWithMissingGridOutputTimeStep_WhenSettingWaterFlowModelTimeProperties_ThenDefaultGridOutputTimeStepIsSetOnModel()
         {
             // Given / When
-            var model = SetTimePropertiesWithMissingProperty(ModelDefinitionsRegion.OutTimeStepGridPoints.Key);
+            var model = SetTimePropertiesWithMissingProperty(ModelDefinitionsRegion.MapOutputTimeStep.Key);
 
             // Then
             var defaultTimeSpan = default(TimeSpan);
@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         public void GivenTimeSettingsDataModelWithMissingStructureOutputTimeStep_WhenSettingWaterFlowModelTimeProperties_ThenDefaultStructureOutputTimeStepIsSetOnModel()
         {
             // Given / When
-            var model = SetTimePropertiesWithMissingProperty(ModelDefinitionsRegion.OutTimeStepStructures.Key);
+            var model = SetTimePropertiesWithMissingProperty(ModelDefinitionsRegion.HisOutputTimeStep.Key);
 
             // Then
             var defaultTimeSpan = default(TimeSpan);
@@ -161,14 +161,132 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.DoesNotThrow(testDelegate);
         }
 
+        /// <summary>
+        /// GIVEN a DataModel with previous MapOutputTimeStep
+        /// WHEN setting the WaterFlowModel time properties
+        /// THEN the settings are correct
+        ///  AND a warning for using deprecated properties is logged
+        /// </summary>
+        [Test]
+        public void GivenADataModelWithPreviousMapOutputTimeStep_WhenSettingTheWaterFlowModelTimeProperties_ThenTheSettingsAreCorrectAndAWarningForUsingDeprecatedPropertiesIsLogged()
+        {
+            // Given
+            var timeSettingsCategory = GetCorrectTimeSettingsDataModel();
+            timeSettingsCategory.Properties.RemoveAllWhere(p => p.Name == ModelDefinitionsRegion.MapOutputTimeStep.Key);
+            timeSettingsCategory.AddProperty(ModelDefinitionsRegion.OutTimeStepGridPoints, defaultGridPointsTimeStep.TotalSeconds);
+
+            var errorMessages = new List<string>();
+
+            // When
+            var model = new WaterFlowModel1D();
+            new WaterFlowModelTimePropertiesSetter().SetProperties(timeSettingsCategory, model, errorMessages);
+
+            // Then
+            var modelOutputSettings = model.OutputSettings;
+            Assert.That(modelOutputSettings.GridOutputTimeStep, Is.EqualTo(defaultGridPointsTimeStep), $"Expected {ModelDefinitionsRegion.MapOutputTimeStep.Key} to have a different value:");
+
+            Assert.That(errorMessages.Count, Is.EqualTo(1), "Expected only a single warning when reading a deprecated property.");
+
+            var expectedErrorMessage = $"{ModelDefinitionsRegion.OutTimeStepGridPoints.Key} has been deprecated and will be replaced with {ModelDefinitionsRegion.MapOutputTimeStep.Key} upon saving.";
+            Assert.That(errorMessages, Has.Member(expectedErrorMessage), $"Expected a different error message when reading {ModelDefinitionsRegion.OutTimeStepGridPoints.Key}:");
+        }
+
+        /// <summary>
+        /// GIVEN a DataModel with previous HisOutputTimeStep
+        /// WHEN setting the WaterFlowModel time properties
+        /// THEN the settings are correct
+        ///  AND a warning for using deprecated properties is logged
+        /// </summary>
+        [Test]
+        public void GivenADataModelWithPreviousHisOutputTimeStep_WhenSettingTheWaterFlowModelTimeProperties_ThenTheSettingsAreCorrectAndAWarningForUsingDeprecatedPropertiesIsLogged()
+        {
+            // Given
+            var timeSettingsCategory = GetCorrectTimeSettingsDataModel();
+            timeSettingsCategory.Properties.RemoveAllWhere(p => p.Name == ModelDefinitionsRegion.HisOutputTimeStep.Key);
+            timeSettingsCategory.AddProperty(ModelDefinitionsRegion.OutTimeStepStructures, defaultStructuresTimeStep.TotalSeconds);
+
+            var errorMessages = new List<string>();
+
+            // When
+            var model = new WaterFlowModel1D();
+            new WaterFlowModelTimePropertiesSetter().SetProperties(timeSettingsCategory, model, errorMessages);
+
+            // Then
+            var modelOutputSettings = model.OutputSettings;
+            Assert.That(modelOutputSettings.StructureOutputTimeStep, Is.EqualTo(defaultStructuresTimeStep), $"Expected {ModelDefinitionsRegion.HisOutputTimeStep.Key} to have a different value:");
+
+            Assert.That(errorMessages.Count, Is.EqualTo(1), "Expected only a single warning when reading a deprecated property.");
+
+            var expectedErrorMessage = $"{ModelDefinitionsRegion.OutTimeStepStructures.Key} has been deprecated and will be replaced with {ModelDefinitionsRegion.HisOutputTimeStep.Key} upon saving.";
+            Assert.That(errorMessages, Contains.Item(expectedErrorMessage), $"Expected a different error message when reading {ModelDefinitionsRegion.OutTimeStepStructures.Key}:");
+        }
+
+        /// <summary>
+        /// GIVEN a DataModel with previous MapOutputTimeStep and MapOutputTimeStep
+        /// WHEN setting the WaterFlowModel time properties
+        /// THEN the settings are correct
+        ///  AND a warning for using two similar values
+        /// </summary>
+        [Test]
+        public void GivenADataModelWithPreviousMapOutputTimeStepAndMapOutputTimeStep_WhenSettingTheWaterFlowModelTimeProperties_ThenTheSettingsAreCorrectAndAWarningForUsingTwoSimilarValues()
+        {
+            // Given
+            var timeSettingsCategory = GetCorrectTimeSettingsDataModel();
+            timeSettingsCategory.AddProperty(ModelDefinitionsRegion.OutTimeStepGridPoints, 50.0);
+
+            var errorMessages = new List<string>();
+
+            // When
+            var model = new WaterFlowModel1D();
+            new WaterFlowModelTimePropertiesSetter().SetProperties(timeSettingsCategory, model, errorMessages);
+
+            // Then
+            var modelOutputSettings = model.OutputSettings;
+            Assert.That(modelOutputSettings.GridOutputTimeStep, Is.EqualTo(defaultGridPointsTimeStep), $"Expected {ModelDefinitionsRegion.MapOutputTimeStep.Key} to have a different value:");
+
+            Assert.That(errorMessages.Count, Is.EqualTo(1), "Expected only a single warning when reading a two similar properties.");
+
+            var expectedErrorMessage = $"Detected both {ModelDefinitionsRegion.MapOutputTimeStep.Key} and deprecated {ModelDefinitionsRegion.OutTimeStepGridPoints.Key}, using {ModelDefinitionsRegion.MapOutputTimeStep.Key}, {ModelDefinitionsRegion.OutTimeStepGridPoints.Key} will be removed upon saving.";
+            Assert.That(errorMessages, Contains.Item(expectedErrorMessage), $"Expected a different error message when reading {ModelDefinitionsRegion.OutTimeStepGridPoints.Key} and {ModelDefinitionsRegion.MapOutputTimeStep.Key}:");
+        }
+
+        /// <summary>
+        /// GIVEN a DataModel with previous HisOutputTimeStep and HisOutputTimeStep
+        /// WHEN setting the WaterFlowModel time properties
+        /// THEN the settings are correct
+        ///  AND a warning for using two similar values
+        /// </summary>
+        [Test]
+        public void GivenADataModelWithPreviousHisOutputTimeStepAndHisOutputTimeStep_WhenSettingTheWaterFlowModelTimeProperties_ThenTheSettingsAreCorrectAndAWarningForUsingTwoSimilarValues()
+        {
+            // Given
+            var timeSettingsCategory = GetCorrectTimeSettingsDataModel();
+            timeSettingsCategory.AddProperty(ModelDefinitionsRegion.OutTimeStepStructures, 50.0);
+
+            var errorMessages = new List<string>();
+
+            // When
+            var model = new WaterFlowModel1D();
+            new WaterFlowModelTimePropertiesSetter().SetProperties(timeSettingsCategory, model, errorMessages);
+
+            // Then
+            var modelOutputSettings = model.OutputSettings;
+            Assert.That(modelOutputSettings.StructureOutputTimeStep, Is.EqualTo(defaultStructuresTimeStep), $"Expected {ModelDefinitionsRegion.HisOutputTimeStep.Key} to have a different value:");
+
+            Assert.That(errorMessages.Count, Is.EqualTo(1), "Expected only a single warning when reading a two similar properties.");
+
+            var expectedErrorMessage = $"Detected both {ModelDefinitionsRegion.HisOutputTimeStep.Key} and deprecated {ModelDefinitionsRegion.OutTimeStepStructures.Key}, using {ModelDefinitionsRegion.HisOutputTimeStep.Key}, {ModelDefinitionsRegion.OutTimeStepStructures.Key} will be removed upon saving.";
+            Assert.That(errorMessages, Contains.Item(expectedErrorMessage), $"Expected a different error message when reading {ModelDefinitionsRegion.OutTimeStepStructures.Key} and {ModelDefinitionsRegion.HisOutputTimeStep.Key}:");
+        }
+
         private DelftIniCategory GetCorrectTimeSettingsDataModel()
         {
             var timeSettingsCategory = new DelftIniCategory(ModelDefinitionsRegion.TimeHeader);
             timeSettingsCategory.AddProperty(ModelDefinitionsRegion.StartTime.Key, defaultStartTime);
             timeSettingsCategory.AddProperty(ModelDefinitionsRegion.StopTime.Key, defaultStopTime);
             timeSettingsCategory.AddProperty(ModelDefinitionsRegion.TimeStep.Key, defaultTimeStep.TotalSeconds);
-            timeSettingsCategory.AddProperty(ModelDefinitionsRegion.OutTimeStepGridPoints.Key, defaultGridPointsTimeStep.TotalSeconds);
-            timeSettingsCategory.AddProperty(ModelDefinitionsRegion.OutTimeStepStructures.Key, defaultStructuresTimeStep.TotalSeconds);
+            timeSettingsCategory.AddProperty(ModelDefinitionsRegion.MapOutputTimeStep.Key, defaultGridPointsTimeStep.TotalSeconds);
+            timeSettingsCategory.AddProperty(ModelDefinitionsRegion.HisOutputTimeStep.Key, defaultStructuresTimeStep.TotalSeconds);
 
             return timeSettingsCategory;
         }

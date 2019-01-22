@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// in the GUI and informs the user about possible errors when reading the md1d file. </param>
         public static void SetWaterFlowModelProperties(string filePath, WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
         {
-           var errorMessages = new List<string>();
+            var errorMessages = new List<string>();
             var modelSettingsCategories = ReadCategoriesFromFileAndCollectErrorMessages(filePath, errorMessages);
             model.SetInitialModelProperties(modelSettingsCategories, errorMessages);
             model.SetSecondaryModelProperties(modelSettingsCategories, errorMessages);
