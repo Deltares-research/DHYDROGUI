@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -124,6 +124,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         public static string HydroModelApplicationPlugin_Description {
             get {
                 return ResourceManager.GetString("HydroModelApplicationPlugin_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not import sub model defined at location {0} to integrated model..
+        /// </summary>
+        public static string HydroModelConverter_AddModels_Could_not_import_sub_model_defined_at_location__0__to_integrated_model_ {
+            get {
+                return ResourceManager.GetString("HydroModelConverter_AddModels_Could_not_import_sub_model_defined_at_location__0__" +
+                        "to_integrated_model_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Renamed model {0} to {1}..
+        /// </summary>
+        public static string HydroModelConverter_AddModels_Renamed_model__0__to__1_ {
+            get {
+                return ResourceManager.GetString("HydroModelConverter_AddModels_Renamed_model__0__to__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot convert empty dimr data object..
+        /// </summary>
+        public static string HydroModelConverter_Convert_Cannot_convert_empty_dimr_data_object {
+            get {
+                return ResourceManager.GetString("HydroModelConverter_Convert_Cannot_convert_empty_dimr_data_object", resourceCulture);
             }
         }
         

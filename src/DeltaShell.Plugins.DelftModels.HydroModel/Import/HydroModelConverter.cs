@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 {
@@ -28,11 +29,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// <param name="fileImporters">List of file importers for importing sub-models</param>
         /// <returns>Converted <see cref="HydroModel"/></returns>
         /// <exception cref="ArgumentException">When <param name="dimrObject"/> is null</exception>
-        public static HydroModel Convert(dimrXML dimrObject, string path, List<IDimrModelFileImporter> fileImporters)
+        public static HydroModel Convert(dimrXML dimrObject, string path, IList<IDimrModelFileImporter> fileImporters)
         {
             if (dimrObject == null)
             {
-                throw new ArgumentException("Can not convert empty dimr data object");
+                throw new ArgumentException(Resources.HydroModelConverter_Convert_Cannot_convert_empty_dimr_data_object);
             }
 
             var rootFolder = Path.GetDirectoryName(path);
@@ -62,7 +63,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             foreach (var componentGroup in componentGroups)
             {
                 var extension = componentGroup.GetExtension();
-
                 var importer = fileImporters.FirstOrDefault(f => f.MasterFileExtension == extension);
                 if (importer == null)
                 {
@@ -74,29 +74,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
                 foreach (var component in componentGroup)
                 {
-                    var fileName = GetFileName(component.inputFile);
-                    var filePath = ComposeFilePath(rootFolder, importer, fileName);
+                    var filePath = GetFilePath(rootFolder, component.inputFile, importer);
                     var importedItem = importer.ImportItem(Path.GetFullPath(filePath));
-                    var subModel = importedItem as IActivity;
 
-                    if (subModel == null)
+                    if (!(importedItem is IActivity subModel))
                     {
-                        Log.Error($"Could not import sub model defined at location {filePath} to integrated model."); 
+                        Log.ErrorFormat(Resources.HydroModelConverter_AddModels_Could_not_import_sub_model_defined_at_location__0__to_integrated_model_, filePath); 
                         continue;
                     }
 
-                    if (subModel.Name != component.name)
-                    {
-                        Log.Debug($"Renamed model {subModel.Name} to {component.name}");
-                        subModel.Name = component.name;
-                    }
-
-                    if (subModel is IHydroModel hydroModelSubModel)
-                    {
-                        hydroModel.Region.SubRegions.Add(hydroModelSubModel.Region);
-                    }
-
-                    hydroModel.Activities.Add(subModel);
+                    RenameSubModelWhenNeeded(subModel, component.name);
+                    SetHydroModelProperties(hydroModel, subModel);
                 }
             }
         }
@@ -118,6 +106,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             Log.Info($"No importer found for extension: {extension}");
         }
 
+        private static string GetFilePath(string rootFolder, string inputFileName, IDimrModelFileImporter importer)
+        {
+            var fileName = GetFileName(inputFileName);
+            var filePath = ComposeFilePath(rootFolder, fileName, importer);
+            return filePath;
+        }
+
         private static string GetFileName(string fileName)
         {
             return fileName.Equals(".") 
@@ -125,7 +120,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 : fileName;
         }
 
-        private static string ComposeFilePath(string rootFolder, IDimrModelFileImporter importer, string fileName)
+        private static string ComposeFilePath(string rootFolder, string fileName, IDimrModelFileImporter importer)
         {
             string[] pathParts;
 
@@ -151,6 +146,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             }
 
             return Path.Combine(pathParts);
+        }
+
+        private static void RenameSubModelWhenNeeded(IActivity subModel, string componentName)
+        {
+            if (subModel.Name == componentName) return;
+
+            Log.DebugFormat(Resources.HydroModelConverter_AddModels_Renamed_model__0__to__1_, subModel.Name, componentName);
+            subModel.Name = componentName;
+        }
+
+        private static void SetHydroModelProperties(HydroModel hydroModel, IActivity subModel)
+        {
+            if (subModel is IHydroModel hydroModelSubModel)
+            {
+                hydroModel.Region.SubRegions.Add(hydroModelSubModel.Region);
+            }
+
+            hydroModel.Activities.Add(subModel);
         }
 
         private static void CoupleSubModels(dimrXML dimrObject, IList<IDimrModel> subModels)
