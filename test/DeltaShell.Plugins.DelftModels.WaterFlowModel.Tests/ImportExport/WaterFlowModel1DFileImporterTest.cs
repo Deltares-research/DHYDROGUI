@@ -30,6 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         [TestCase("SobekSim.ini")]
         [TestCase("Structures.ini")]
         [TestCase("WindShielding.ini")]
+        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void GivenAnMd1dFile_WhenImportingFileAndExporting_ThenTheInputFilesAreTheSameAsTheOutputFiles11(
             string spatialIniFile)
