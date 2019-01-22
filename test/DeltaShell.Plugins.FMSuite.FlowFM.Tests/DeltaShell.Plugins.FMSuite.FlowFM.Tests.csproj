@@ -452,6 +452,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Gui\MapTools\" />
+    <Folder Include="test-data\MorphologySpatialVarying_Project\FM_model_Zandmotor_MOR1.dsproj_data\zm_dfm\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

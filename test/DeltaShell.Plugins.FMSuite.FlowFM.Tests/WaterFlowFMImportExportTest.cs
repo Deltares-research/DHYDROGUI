@@ -59,15 +59,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
-        //[Ignore("outofmemory")]
         public void ModelImportTestDcsm()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"dcsm\par16.mdu");
-            var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
-            
-            var model = new WaterFlowFMModel(localMduFilePath);
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                var testDataFilePath = TestHelper.GetTestFilePath(@"dcsm");
+                var dcsmZipFileName = "dcsm.zip";
+                var dcsmZipFilePath = Path.Combine(testDataFilePath, dcsmZipFileName);
 
-            Assert.IsNotNull(model);
+                FileUtils.CopyDirectory(testDataFilePath, tempDir);
+                ZipFileUtils.Extract(dcsmZipFilePath, tempDir);
+
+                var mduFileName = "par16.mdu";
+                var localMduFilePath = Path.Combine(tempDir, mduFileName);
+            
+                 var model = new WaterFlowFMModel(localMduFilePath);
+
+                 Assert.IsNotNull(model);
+            });
         }
 
         [Test]

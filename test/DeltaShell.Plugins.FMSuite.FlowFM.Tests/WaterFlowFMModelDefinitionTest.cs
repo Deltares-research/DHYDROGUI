@@ -121,38 +121,54 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         public void WriteMduFile_UpdatesCoordinateSystemInNetFileIfNecessary()
         {
-            const string netFileName = "bendprof_map.nc";
-            const string outputDirName = "readWriteMdu";
-            if (Directory.Exists(outputDirName)) Directory.Delete(outputDirName, true);
-            
-            // setup
-            var mduFilePath = TestHelper.GetTestFilePath(TestFilePath);
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var modelName = Path.GetFileName(mduFilePath);
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                const string netFileName = "bendprof_map.nc";
+                const string outputDirName = "readWriteMdu";
+                if (Directory.Exists(outputDirName)) Directory.Delete(outputDirName, true);
 
-            var area = new HydroArea();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
-            var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
-            var mduFile = new MduFile();
-            mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
+                // setup
+                var mduFilePath = TestHelper.GetTestFilePath(TestFilePath);
+                var mduDir = Path.GetDirectoryName(mduFilePath);
+                var modelName = Path.GetFileName(mduFilePath);
 
-            // set coordinate system
-            var coordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(4326); //wsg84
-            modelDefinition.CoordinateSystem = coordinateSystem;
+                var area = new HydroArea();
+                var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+                var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
+                var mduFile = new MduFile();
+                mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
 
-            // setup test netfile
-            modelDefinition.Properties.First(p => p.PropertyDefinition.MduPropertyName == "NetFile").Value = netFileName;
-            var existingNetFile = TestHelper.GetTestFilePath(@"output_mapfiles\" + netFileName);
-            var outputDir = Directory.CreateDirectory(outputDirName);
-            var netFile = Path.Combine(outputDir.FullName, netFileName);
-            File.Copy(existingNetFile, netFile);
+                // set coordinate system
+                var coordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(4326); //wsg84
+                modelDefinition.CoordinateSystem = coordinateSystem;
 
-            // write mdu file
-            mduFile.Write(outputDirName+@"/fm_files.mdu", modelDefinition, area, allFixedWeirsAndCorrespondingProperties.Values);
+                // setup test netfile
+                modelDefinition.Properties.First(p => p.PropertyDefinition.MduPropertyName == "NetFile").Value = netFileName;
 
-            // read coordinate system from file
-            var fileCoordinateSystem = NetFile.ReadCoordinateSystem(netFile);
-            Assert.AreEqual(coordinateSystem.AuthorityCode, fileCoordinateSystem.AuthorityCode);
+                var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+                var zmDfmZipFileName = "zm_dfm_map.zip";
+                var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+
+                FileUtils.CopyDirectory(testDataFilePath, tempDir);
+                ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
+
+                var simpleBoxMapFileName = "bendprof_map.nc";
+                var mapFilePath = Path.Combine(tempDir, simpleBoxMapFileName);
+
+                var outputDir = Directory.CreateDirectory(outputDirName);
+                var netFile = Path.Combine(outputDir.FullName, netFileName);
+                File.Copy(mapFilePath, netFile);
+
+                // write mdu file
+                mduFile.Write(outputDirName + @"/fm_files.mdu", modelDefinition, area, allFixedWeirsAndCorrespondingProperties.Values);
+
+                // read coordinate system from file
+                var fileCoordinateSystem = NetFile.ReadCoordinateSystem(netFile);
+                Assert.AreEqual(coordinateSystem.AuthorityCode, fileCoordinateSystem.AuthorityCode);
+            });
+
+
+
         }
 
         [Test]
