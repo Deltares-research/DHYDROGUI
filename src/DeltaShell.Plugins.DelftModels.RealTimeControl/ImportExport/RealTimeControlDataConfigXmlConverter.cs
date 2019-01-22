@@ -221,7 +221,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     rule = CreateRelativeTimeRule(name, ruleItem);
                     break;
                 case RtcXmlTag.TimeRule:
-                    rule = new TimeRule { Name = name };
+                    rule = CreateTimeRule(name, ruleItem);
                     break;
                 case RtcXmlTag.FactorRule:
                     rule = new FactorRule { Name = name };
@@ -326,6 +326,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             }
 
             return condition;
+        }
+
+        private static TimeRule CreateTimeRule(string name, PITimeSeriesXML ruleItem)
+        {
+            if (ruleItem == null) return null;
+
+            var interpolation = GetInterpolation(ruleItem.interpolationOption);
+            var extrapolation = GetExtrapolation(ruleItem.extrapolationOption);
+
+            var timeRule = new TimeRule
+            {
+                Name = name,
+                InterpolationOptionsTime = interpolation,
+                Periodicity = extrapolation,
+            };
+
+            return timeRule;
         }
 
         private static RelativeTimeRule CreateRelativeTimeRule(string name, PITimeSeriesXML ruleItem)

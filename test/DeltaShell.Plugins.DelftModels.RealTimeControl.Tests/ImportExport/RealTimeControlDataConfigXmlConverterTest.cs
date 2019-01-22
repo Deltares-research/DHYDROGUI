@@ -3,6 +3,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
@@ -143,9 +144,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             {
                 CreateRelativeTimeRuleElement(relativeTimeRuleName, groupName1),
                 CreateRelativeTimeRuleElement(relativeTimeRuleName, groupName2),
-                CreateTimeRuleElement(timeRuleName, groupName1),
-                CreateTimeRuleElement(timeRuleName, groupName2),
-                CreateTimeRuleElement(extraTimeRuleName, groupName2)
+                CreateTimeRuleElement(timeRuleName, groupName1, PIInterpolationOptionEnumStringType.LINEAR, PIExtrapolationOptionEnumStringType.PERIODIC),
+                CreateTimeRuleElement(timeRuleName, groupName2, PIInterpolationOptionEnumStringType.BLOCK, PIExtrapolationOptionEnumStringType.BLOCK),
+                CreateTimeRuleElement(extraTimeRuleName, groupName2, PIInterpolationOptionEnumStringType.LINEAR, PIExtrapolationOptionEnumStringType.PERIODIC),
             };
 
             var controlGroup2 = new ControlGroup {Name = groupName2};
@@ -156,10 +157,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             RealTimeControlDataConfigXmlConverter.CreateRulesFromXmlElementsAndAddToControlGroup(elements, controlGroups);
 
             // Then
-            Assert.NotNull(controlGroup1.Rules.Select(r => r is TimeRule && r.Name == timeRuleName));
-            Assert.NotNull(controlGroup2.Rules.Select(r => r is TimeRule && r.Name == timeRuleName));
             Assert.NotNull(controlGroup1.Rules.Select(r => r is RelativeTimeRule && r.Name == relativeTimeRuleName));
             Assert.NotNull(controlGroup1.Rules.Select(r => r is RelativeTimeRule && r.Name == relativeTimeRuleName));
+
+            Assert.NotNull(controlGroup1.Rules.Select(r =>
+                r is TimeRule timeRule && r.Name == timeRuleName && timeRule.InterpolationOptionsTime == InterpolationType.Linear &&
+                timeRule.Periodicity == ExtrapolationType.Periodic));
+            Assert.NotNull(controlGroup2.Rules.Select(r =>
+                r is TimeRule timeRule2 && r.Name == timeRuleName &&
+                timeRule2.InterpolationOptionsTime == InterpolationType.Constant &&
+                timeRule2.Periodicity == ExtrapolationType.Constant));
+            Assert.NotNull(controlGroup2.Rules.Select(r =>
+                r is TimeRule timeRule2 && r.Name == extraTimeRuleName &&
+                timeRule2.InterpolationOptionsTime == InterpolationType.Linear &&
+                timeRule2.Periodicity == ExtrapolationType.Periodic));
         }
 
         [Test]
@@ -444,7 +455,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             return element;
         }
 
-        private static RTCTimeSeriesXML CreateTimeRuleElement(string ruleName, string controlGroupName, PIInterpolationOptionEnumStringType interpolation = PIInterpolationOptionEnumStringType.BLOCK)
+        private static RTCTimeSeriesXML CreateTimeRuleElement(string ruleName, string controlGroupName, PIInterpolationOptionEnumStringType interpolation = PIInterpolationOptionEnumStringType.BLOCK, PIExtrapolationOptionEnumStringType extrapolation = PIExtrapolationOptionEnumStringType.BLOCK)
         {
             var element = new RTCTimeSeriesXML {id = $"{RtcXmlTag.TimeRule}{controlGroupName}/{ruleName}"};
             var piTimeSeries = new PITimeSeriesXML
@@ -452,7 +463,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
                 locationId = $"{controlGroupName}/{ruleName}",
                 parameterId = "TimeSeries",
                 interpolationOption = interpolation,
-                extrapolationOption = PIExtrapolationOptionEnumStringType.BLOCK
+                extrapolationOption = extrapolation,
             };
             element.PITimeSeries = piTimeSeries;
             return element;
