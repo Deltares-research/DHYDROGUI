@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xml
         DateTime EndTime { get; set; }
         TimeSpan TimeStep{get;set;}
         TimeSeries TimeSeries { get; set; }
-        XElement ToDataConfigXml(XNamespace xNamespace, bool headerOnly);
-        XElement ToTimeSeriesXml(XNamespace xNamespace, TimeSpan timeStep);
+        XElement GetTimeSeriesXElementForDataConfigFile(XNamespace xNamespace, bool headerOnly);
+        XElement GetTimeSeriesXElementForTimeSeriesFile(XNamespace xNamespace, TimeSpan timeStep);
     }
 }

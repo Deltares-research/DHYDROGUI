@@ -395,7 +395,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             userDefinedElement.Add(DateTimeToXElement("startDate", timeDependentModel.StartTime));
             userDefinedElement.Add(DateTimeToXElement("endDate", timeDependentModel.StopTime));
 
-            userDefinedElement.Add(TimeStepToXml(Fns, timeDependentModel.TimeStep));
+            userDefinedElement.Add(GetTimeStepXElement(Fns, timeDependentModel.TimeStep));
 
             periodElement.Add(userDefinedElement);
 
@@ -406,7 +406,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             var restartStateFromModel = new XElement(Fns + "stateFiles");
             restartStateFromModel.Add(DateTimeToXElement("startDate", realTimeControlModel.SaveStateStartTime));
             restartStateFromModel.Add(DateTimeToXElement("endDate", realTimeControlModel.SaveStateStopTime));
-            restartStateFromModel.Add(TimeStepToXml(Fns, realTimeControlModel.SaveStateTimeStep, "stateTimeStep", true));
+            restartStateFromModel.Add(GetTimeStepXElement(Fns, realTimeControlModel.SaveStateTimeStep, "stateTimeStep", true));
             
             return restartStateFromModel;
         }
@@ -431,7 +431,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return loggingElement;
         }
 
-        public static XElement TimeStepToXml(XNamespace xNamespace, TimeSpan timeStep, string timestepName = "timeStep", bool noAttributes = false)
+        public static XElement GetTimeStepXElement(XNamespace xNamespace, TimeSpan timeStep, string timestepName = "timeStep", bool noAttributes = false)
         {
             var units = new[]
                             {
@@ -557,7 +557,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     // add tines series that are part of the rules to the xml
                     foreach (var timeSeries in ruleBase.XmlImportTimeSeries(@group.Name, timeDependentModel.StartTime, timeDependentModel.StopTime, timeDependentModel.TimeStep))
                     {
-                        import.Add(timeSeries.ToDataConfigXml(Fns, false));
+                        import.Add(timeSeries.GetTimeSeriesXElementForDataConfigFile(Fns, false));
                     }
                 }
 
@@ -627,7 +627,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 {
                     foreach (var timeSeries in ruleBase.XmlExportTimeSeries(@group.Name))
                     {
-                        export.Add(timeSeries.ToDataConfigXml(Fns, true));
+                        export.Add(timeSeries.GetTimeSeriesXElementForDataConfigFile(Fns, true));
                     }
                 }
 
@@ -635,7 +635,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 {
                     foreach (var timeSeries in signal.XmlExportTimeSeries(@group.Name))
                     {
-                        export.Add(timeSeries.ToDataConfigXml(Fns, true));
+                        export.Add(timeSeries.GetTimeSeriesXElementForDataConfigFile(Fns, true));
                     }
                 }
             }
@@ -721,7 +721,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                             continue;
                         }
 
-                        root.Add(timeSeries.ToTimeSeriesXml(Pi, timeDependentModel.TimeStep));
+                        root.Add(timeSeries.GetTimeSeriesXElementForTimeSeriesFile(Pi, timeDependentModel.TimeStep));
 
                         seriesNames.Add(key);
                     }
@@ -737,7 +737,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                             continue;
                         }
 
-                        root.Add(timeSeries.ToTimeSeriesXml(Pi, timeDependentModel.TimeStep));
+                        root.Add(timeSeries.GetTimeSeriesXElementForTimeSeriesFile(Pi, timeDependentModel.TimeStep));
 
                         seriesNames.Add(key);
                     }

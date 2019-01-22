@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
@@ -9,7 +10,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xml
 {
-    public class XmlTimeSeries: IXmlTimeSeries
+    public class XmlTimeSeries : IXmlTimeSeries
     {
         public string Name { get; set; }
         public string LocationId { get; set; }
@@ -18,6 +19,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xml
         public DateTime EndTime { get; set; }
         public TimeSpan TimeStep { get; set; }
         public TimeSeries TimeSeries { get; set; }
+
+        private const string StrDatePattern = "yyyy-MM-dd";
+        private const string StrTimePattern = "HH:mm:ss";
 
         /// <summary>
         /// InterpolationType = Constant, Linear, None
@@ -33,56 +37,81 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xml
 
         public TimeSpan PeriodSpan { get; set; }
 
-        public XElement ToDataConfigXml(XNamespace xNamespace, bool headerOnly)
+        public XElement GetTimeSeriesXElementForDataConfigFile(XNamespace xNamespace, bool headerOnly)
         {
-            if (headerOnly)
-            {
-                return new XElement(xNamespace + "timeSeries", new XAttribute("id", Name));
-            }
             var timeSeriesElement = new XElement(xNamespace + "timeSeries", new XAttribute("id", Name));
-            var piTimeSeriesElement = new XElement(xNamespace + "PITimeSeries",
-                                                   new XElement(xNamespace + "locationId", LocationId),
-                                                   new XElement(xNamespace + "parameterId", ParameterId));
-            timeSeriesElement.Add(piTimeSeriesElement);
-            if ((InterpolationType == InterpolationType.Constant) || (InterpolationType == InterpolationType.Linear))
-            {
-                piTimeSeriesElement.Add(new XElement(xNamespace + "interpolationOption",
-                                                   (InterpolationType == InterpolationType.Constant)
-                                                       ? "BLOCK"
-                                                       : "LINEAR"));
-            }
-            if ((ExtrapolationType == ExtrapolationTimeSeriesType.Constant) || (ExtrapolationType == ExtrapolationTimeSeriesType.Periodic))
-            {
-                piTimeSeriesElement.Add(new XElement(xNamespace + "extrapolationOption",
-                                                   (ExtrapolationType == ExtrapolationTimeSeriesType.Constant)
-                                                       ? "BLOCK"
-                                                       : "PERIODIC"));
-            }
+
+            if (headerOnly) return timeSeriesElement;
+
+            timeSeriesElement.Add(GetPiTimeSeriesXElement(xNamespace));
+
             return timeSeriesElement;
         }
 
-        public XElement ToTimeSeriesXml(XNamespace xNamespace, TimeSpan timeStep)
+        public XElement GetTimeSeriesXElementForTimeSeriesFile(XNamespace xNamespace, TimeSpan timeStep)
         {
-            const string strDatePattern = "yyyy-MM-dd";
-            const string strTimePattern = "HH:mm:ss";
+            var seriesXElement = new XElement(xNamespace + "series");
 
-            string missingValue = GetMissingValue();
+            seriesXElement.Add(GetHeaderXElement(xNamespace, timeStep));
+            seriesXElement.Add(GetEventXElements(xNamespace));
 
+            return seriesXElement;
+        }
+
+        private IEnumerable<XElement> GetEventXElements(XNamespace xNamespace)
+        {
+            if (TimeSeries.Time.Values.Any())
+            {
+                foreach (var dateTime in TimeSeries.Time.GetValues())
+                {
+                    yield return GetEventXElement(xNamespace, dateTime);
+                }
+            }
+
+            // no times and constant extrapolation is constant time series.
+            else
+                if (ExtrapolationType == ExtrapolationTimeSeriesType.Constant)
+                {
+                    yield return GetEventXElement(xNamespace, StartTime, true);
+                    yield return GetEventXElement(xNamespace, EndTime, true);
+                }
+        }
+
+        private XElement GetHeaderXElement(XNamespace xNamespace, TimeSpan timeSpan)
+        {
+            var timeStep = DetermineTimeStepAndEndDate(timeSpan, out var endDate);
+
+            var headerXElement = new XElement(xNamespace + "header");
+
+            headerXElement.Add(new XElement(xNamespace + "type", "instantaneous"));
+            headerXElement.Add(new XElement(xNamespace + "locationId", LocationId));
+            headerXElement.Add(new XElement(xNamespace + "parameterId", ParameterId));
+            headerXElement.Add(RealTimeControlXmlWriter.GetTimeStepXElement(xNamespace, timeStep));
+            headerXElement.Add(new XElement(xNamespace + "startDate", GetDateTimeAttributes(StartTime)));
+            headerXElement.Add(new XElement(xNamespace + "endDate", GetDateTimeAttributes(endDate)));
+            headerXElement.Add(new XElement(xNamespace + "missVal", GetMissingValue()));
+            headerXElement.Add(new XElement(xNamespace + "stationName"));
+            headerXElement.Add(new XElement(xNamespace + "units"));
+
+            return headerXElement;
+        }
+
+        private TimeSpan DetermineTimeStepAndEndDate(TimeSpan timeStep, out DateTime tableEnd)
+        {
             var xTimeStep = timeStep;
-            var tableEnd = EndTime;
+
+            tableEnd = EndTime;
 
             var times = TimeSeries.Time.GetValues().ToArray();
 
-            if (ExtrapolationType == ExtrapolationTimeSeriesType.Periodic  &&
-                PeriodSpan.Ticks > 0)
+            if (ExtrapolationType == ExtrapolationTimeSeriesType.Periodic && PeriodSpan.Ticks > 0)
             {
-
                 // Check Time Steps
                 var minTableStep = PeriodSpan;
 
-                for (var i = 0; i < times.Count() - 1; i++)
+                for (var i = 0; i < times.Length - 1; i++)
                 {
-                    var tableStep = (times[i + 1] - times[i]);
+                    var tableStep = times[i + 1] - times[i];
                     var bufStep = new TimeSpan();
 
                     if (tableStep.Seconds > 0)
@@ -127,7 +156,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xml
                     }
 
                     minTableStep = bufStep < minTableStep ? bufStep : minTableStep;
-
                 }
 
                 if (minTableStep.Days < 3650)
@@ -136,78 +164,86 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xml
                     xTimeStep = minTableStep;
                 }
             }
-            else
+
+            return xTimeStep;
+        }
+
+        private XElement GetPiTimeSeriesXElement(XNamespace xNamespace)
+        {
+            var piTimeSeriesXElement = new XElement(xNamespace + "PITimeSeries",
+                new XElement(xNamespace + "locationId", LocationId),
+                new XElement(xNamespace + "parameterId", ParameterId),
+                GetInterpolationXElement(xNamespace),
+                GetExtrapolationXElement(xNamespace)
+            );
+
+            return piTimeSeriesXElement;
+        }
+
+        private XElement GetInterpolationXElement(XNamespace xNamespace)
+        {
+            if (InterpolationType == InterpolationType.None) return null;
+
+            var interpolationString = InterpolationType == InterpolationType.Constant ? "BLOCK" : "LINEAR";
+
+            var interpolationXElement = new XElement(xNamespace + "interpolationOption", interpolationString);
+
+            return interpolationXElement;
+        }
+
+        private XElement GetExtrapolationXElement(XNamespace xNamespace)
+        {
+            if (ExtrapolationType != ExtrapolationTimeSeriesType.Constant &&
+                ExtrapolationType != ExtrapolationTimeSeriesType.Periodic) return null;
+
+            var extrapolationString = ExtrapolationType == ExtrapolationTimeSeriesType.Constant ? "BLOCK" : "PERIODIC";
+
+            var extrapolationXElement = new XElement(xNamespace + "extrapolationOption", extrapolationString);
+
+            return extrapolationXElement;
+        }
+
+        private XElement GetEventXElement(XNamespace xNamespace, DateTime dateTime, bool useDefault = false)
+        {
+            var valueAttribute = useDefault
+                ? new XAttribute("value", ConvertToDouble(TimeSeries.Components[0].DefaultValue).ToString(CultureInfo.InvariantCulture))
+                : new XAttribute("value", ConvertToDouble(TimeSeries[dateTime]).ToString(CultureInfo.InvariantCulture));
+
+            var eventElement = new XElement(xNamespace + "event", GetDateTimeAttributes(dateTime), valueAttribute);
+
+            return eventElement;
+        }
+
+        private IList<XAttribute> GetDateTimeAttributes(DateTime dateTime)
+        {
+            var attributes = new List<XAttribute>
             {
-                xTimeStep = timeStep;
-                tableEnd = EndTime;
-            }
+                new XAttribute("date", dateTime.ToString(StrDatePattern, DateTimeFormatInfo.InvariantInfo)),
+                new XAttribute("time", dateTime.ToString(StrTimePattern, DateTimeFormatInfo.InvariantInfo))
+            };
 
-            var xElementHeader = new XElement(xNamespace + "header",
-                                        new XElement(xNamespace + "type", "instantaneous"),
-                                        new XElement(xNamespace + "locationId", LocationId),
-                                        new XElement(xNamespace + "parameterId", ParameterId),
-                                        // time in time series has to match time step in model
-                                        RealTimeControlXmlWriter.TimeStepToXml(xNamespace, xTimeStep),
-                                        new XElement(xNamespace + "startDate",
-                                            new XAttribute("date", StartTime.ToString(strDatePattern, DateTimeFormatInfo.InvariantInfo)),
-                                            new XAttribute("time", StartTime.ToString(strTimePattern, DateTimeFormatInfo.InvariantInfo))),
-                                        new XElement(xNamespace + "endDate",
-                                            new XAttribute("date", tableEnd.ToString(strDatePattern, DateTimeFormatInfo.InvariantInfo)),
-                                            new XAttribute("time", tableEnd.ToString(strTimePattern, DateTimeFormatInfo.InvariantInfo))),
-                                        new XElement(xNamespace + "missVal", missingValue),
-                                        new XElement(xNamespace + "stationName"),
-                                        new XElement(xNamespace + "units")
-                                        );
-
-            var returnXElement = new XElement(xNamespace + "series");
-            returnXElement.Add(xElementHeader);
-
-            // TimeSeries Data
-            var xElementEvents = TimeSeries.Time.GetValues().Select(timestep =>
-                new XElement(xNamespace + "event", 
-                    new XAttribute("date", timestep.ToString(strDatePattern, DateTimeFormatInfo.InvariantInfo)),
-                    new XAttribute("time", timestep.ToString(strTimePattern, DateTimeFormatInfo.InvariantInfo)),
-                    new XAttribute("value", (ConvertToDouble(TimeSeries[timestep])).ToString(CultureInfo.InvariantCulture)))).ToList();
-            returnXElement.Add(xElementEvents);
-
-            // No times and constant extrapolation is constant time series.
-            if ((ExtrapolationType == ExtrapolationTimeSeriesType.Constant) && (times.Count() == 0))
-            {
-                returnXElement.Add(new XElement(xNamespace + "event",
-                    new XAttribute("date", StartTime.ToString(strDatePattern, DateTimeFormatInfo.InvariantInfo)),
-                    new XAttribute("time", StartTime.ToString(strTimePattern, DateTimeFormatInfo.InvariantInfo)),
-                    new XAttribute("value", (ConvertToDouble(TimeSeries.Components[0].DefaultValue)).ToString(CultureInfo.InvariantCulture))));
-
-                returnXElement.Add(new XElement(xNamespace + "event",
-                    new XAttribute("date", EndTime.ToString(strDatePattern, DateTimeFormatInfo.InvariantInfo)),
-                    new XAttribute("time", EndTime.ToString(strTimePattern, DateTimeFormatInfo.InvariantInfo)),
-                    new XAttribute("value", (ConvertToDouble(TimeSeries.Components[0].DefaultValue)).ToString(CultureInfo.InvariantCulture))));
-            }
-
-            return returnXElement;
+            return attributes;
         }
 
         private string GetMissingValue()
         {
-            var missingValue = (ConvertToDouble(TimeSeries.Components[0].NoDataValue)).ToString("0.0",
-                                                                                                CultureInfo.
-                                                                                                    InvariantCulture);
-            if(TimeSeries.Components[0].ValueType == typeof(bool))
+            if (TimeSeries.Components[0].ValueType == typeof(bool))
             {
-                missingValue = "-999.0";
+                return "-999.0";
             }
+
+            var missingValue = ConvertToDouble(TimeSeries.Components[0].NoDataValue)
+                .ToString("0.0", CultureInfo.InvariantCulture);
+
             return missingValue;
         }
 
-        private double ConvertToDouble(object value)
+        private static double ConvertToDouble(object value)
         {
-            if(value is bool)
+            if (value is bool boolean)
             {
-                //   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                //   rtcTools -> boolean true = 0, boolean false = 1
-                //   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-                return ((bool) value) ? 0.0 : 1.0;
+                // rtcTools -> boolean true = 0, boolean false = 1
+                return boolean ? 0.0 : 1.0;
             }
 
             return Convert.ToDouble(value);

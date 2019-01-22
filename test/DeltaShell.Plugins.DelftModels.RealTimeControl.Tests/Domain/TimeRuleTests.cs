@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             var step = new TimeSpan(0, 6, 0, 0);
 
             var xmlTimeSeries = timeRule.XmlImportTimeSeries("prefix", start, stop, step)
-                    .FirstOrDefault().ToTimeSeriesXml("", new TimeSpan(0, 1, 0, 0)).ToString(SaveOptions.DisableFormatting);
+                    .FirstOrDefault().GetTimeSeriesXElementForTimeSeriesFile("", new TimeSpan(0, 1, 0, 0)).ToString(SaveOptions.DisableFormatting);
 
             Assert.AreEqual(TimeSeriesXml(), xmlTimeSeries);
         }

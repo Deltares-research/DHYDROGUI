@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Xml
                                   "</PITimeSeries>" +
                                   "</timeSeries>";
 
-            var xElement = xmlTimeSeries.ToDataConfigXml("", false);
+            var xElement = xmlTimeSeries.GetTimeSeriesXElementForDataConfigFile("", false);
 
             Assert.AreEqual(refXml, xElement.ToString(SaveOptions.DisableFormatting));
         }
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Xml
             var currentCulture = Thread.CurrentThread.CurrentCulture;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("EN-US");
 
-            var xElement = xmlTimeSeries.ToTimeSeriesXml("", new TimeSpan(0, 1, 0, 0));
+            var xElement = xmlTimeSeries.GetTimeSeriesXElementForTimeSeriesFile("", new TimeSpan(0, 1, 0, 0));
 
             Thread.CurrentThread.CurrentCulture = currentCulture;
 
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Xml
             var currentCulture = Thread.CurrentThread.CurrentCulture;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("NL-NL");
 
-            var xElement = xmlTimeSeries.ToTimeSeriesXml("", new TimeSpan(0, 1, 0, 0));
+            var xElement = xmlTimeSeries.GetTimeSeriesXElementForTimeSeriesFile("", new TimeSpan(0, 1, 0, 0));
 
             Thread.CurrentThread.CurrentCulture = currentCulture;
 
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Xml
             timeSeries.Components.Add(boolComponent);
             boolComponent.SetValues(lstEvenIndexIsTrue.ToArray());            
 
-            var xElement = xmlTimeSeries.ToTimeSeriesXml("", new TimeSpan(0, 1, 0, 0));
+            var xElement = xmlTimeSeries.GetTimeSeriesXElementForTimeSeriesFile("", new TimeSpan(0, 1, 0, 0));
 
             Assert.AreEqual(GetBooleanRefXml(), xElement.ToString(SaveOptions.DisableFormatting));
         }

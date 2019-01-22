@@ -86,9 +86,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public static Function DefineFunction()
         {
             var function = new Function();
-            function.Arguments.Add(new Variable<double>("seconds"){
-                InterpolationType = InterpolationType.Constant,
-                ExtrapolationType = ExtrapolationType.None}
+            function.Arguments.Add(
+                new Variable<double>("seconds")
+                {
+                    InterpolationType = InterpolationType.Constant,
+                    ExtrapolationType = ExtrapolationType.None}
                 );
             function.Components.Add(new Variable<double>("value"));
             function.Name = LookupTable;
