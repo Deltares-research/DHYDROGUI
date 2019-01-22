@@ -7,10 +7,8 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
-using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
 {

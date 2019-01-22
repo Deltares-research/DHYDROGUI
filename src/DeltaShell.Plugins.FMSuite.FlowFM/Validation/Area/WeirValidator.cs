@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
-using DelftTools.Utils.Collections.Extensions;
-using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
