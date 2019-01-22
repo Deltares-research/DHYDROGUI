@@ -33,24 +33,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 
         [PropertyOrder(1)]
         [TypeConverter(typeof(DeltaShellTimeSpanWithMilliSecondsConverter))]
-        [Description("Output time step for grid points and reach segments")]
+        [Description("Output time step for grid points (gridpoints.nc)  and reach segments (reachsegments.nc).\nThis value is written to MapOutputTimeStep.")]
         [Category(TimeCategoryName)]
-        [DisplayName("Gridpoints")]
+        [DisplayName("Map files")]
         public TimeSpan LocationOutputTimeStep
         {
-            get { return data.OutputSettings.GridOutputTimeStep; }
-            set { data.OutputSettings.GridOutputTimeStep = value; }
+            get => data.OutputSettings.GridOutputTimeStep;
+            set => data.OutputSettings.GridOutputTimeStep = value;
         }
 
         [TypeConverter(typeof(DeltaShellTimeSpanWithMilliSecondsConverter))]
         [Category(TimeCategoryName)]
-        [Description("Output time step for structures, lateral sources observation points. Value is ignored for now.")]
-        [DisplayName("Structures c.s.")]
+        [Description("Output time step for all other output files, including structures, lateral sources observation points.\nThis value is written to HisOutputTimeStep.")]
+        [DisplayName("His files")]
         [PropertyOrder(3)]
         public TimeSpan StructureOutputTimeStep
         {
-            get { return data.OutputSettings.StructureOutputTimeStep; }
-            set { data.OutputSettings.StructureOutputTimeStep = value; }
+            get => data.OutputSettings.StructureOutputTimeStep;
+            set => data.OutputSettings.StructureOutputTimeStep = value;
         }
 
         # endregion
