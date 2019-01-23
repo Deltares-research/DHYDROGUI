@@ -198,8 +198,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             Assert.IsTrue(resultFileContent.Contains("StopTime=" + formattedStopTime));
 
             Assert.IsTrue(resultFileContent.Contains("TimeStep=" + timeStep.TotalSeconds.ToString(ModelDefinitionsRegion.TimeStep.Format, CultureInfo.InvariantCulture)));
-            Assert.IsTrue(resultFileContent.Contains("OutTimeStepGridPoints=" + timeStep.TotalSeconds.ToString(ModelDefinitionsRegion.OutTimeStepGridPoints.Format, CultureInfo.InvariantCulture)));
-            Assert.IsTrue(resultFileContent.Contains("OutTimeStepStructures=" + timeStep.TotalSeconds.ToString(ModelDefinitionsRegion.OutTimeStepStructures.Format, CultureInfo.InvariantCulture)));
+            Assert.IsTrue(resultFileContent.Contains("MapOutputTimeStep=" + timeStep.TotalSeconds.ToString(ModelDefinitionsRegion.MapOutputTimeStep.Format, CultureInfo.InvariantCulture)));
+            Assert.IsTrue(resultFileContent.Contains("HisOutputTimeStep=" + timeStep.TotalSeconds.ToString(ModelDefinitionsRegion.HisOutputTimeStep.Format, CultureInfo.InvariantCulture)));
         }
 
         [Test]

@@ -245,7 +245,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                     Is.EqualTo(t.Value), $"Property name: {t.Key.ToString()}");
 
             // Check if no errors are reported.
-            Assert.That(errorHandlingHasBeenCalled, Is.False);
+            Assert.That(errorHandlingHasBeenCalled, Is.False, "Expected no calls to the error handling, but found at least one.");
         }
     }
 }

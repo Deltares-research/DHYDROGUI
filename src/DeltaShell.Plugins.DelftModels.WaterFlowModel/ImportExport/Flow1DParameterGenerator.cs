@@ -79,10 +79,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
     /// </summary>
     public static class Flow1DParameterCategoryGenerator {
         /// <summary>
-        /// Generates the time values category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
+        /// Generate the Time category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
         /// </summary>
-        /// <param name="waterFlowModel1D">The water flow model1 d.</param>
-        /// <returns>A DelftIniCategory describing the time values of the specified <paramref name="waterFlowModel1D"/></returns>
+        /// <param name="waterFlowModel1D">The WaterFlowModel1D.</param>
+        /// <returns>A DelftIniCategory describing the <c>[Time]</c> header of the specified <paramref name="waterFlowModel1D"/></returns>
         public static DelftIniCategory GenerateTimeValues(WaterFlowModel1D waterFlowModel1D)
         {
             var timeValues = new DelftIniCategory(ModelDefinitionsRegion.TimeHeader);
@@ -99,10 +99,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         }
 
         /// <summary>
-        /// Generates the TransportComputation values category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
+        /// Generate the TransportComputation category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
         /// </summary>
-        /// <param name="waterFlowModel1D">The water flow model1 d.</param>
-        /// <returns>A DelftIniCategory describing the transport computation values of the specified <paramref name="waterFlowModel1D"/></returns>
+        /// <param name="waterFlowModel1D">The WaterFlowModel1D.</param>
+        /// <returns>A DelftIniCategory describing the <c>[TransportComputation]</c> header of the specified <paramref name="waterFlowModel1D"/></returns>
         public static DelftIniCategory GenerateTransportComputationOptionsValues(WaterFlowModel1D waterFlowModel1D)
         {
             var transportComputationValues = new DelftIniCategory(ModelDefinitionsRegion.TransportComputationValuesHeader);
@@ -118,6 +118,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return transportComputationValues;
         }
 
+        /// <summary>
+        /// Generate the AdvancedOptions category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
+        /// </summary>
+        /// <param name="waterFlowModel1D">The WaterFlowModel1D.</param>
+        /// <returns>A DelftIniCategory describing the <c>[AdvancedOptions]</c> header of the specified <paramref name="waterFlowModel1D"/></returns>
         public static DelftIniCategory GenerateAdvancedOptionsValues(WaterFlowModel1D waterFlowModel1D)
         {
             var advancedOptionsValues = new DelftIniCategory(ModelDefinitionsRegion.AdvancedOptionsHeader);
@@ -177,6 +182,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return advancedOptionsValues;
         }
 
+        /// <summary>
+        /// Generate the SimulationOptions category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
+        /// </summary>
+        /// <param name="waterFlowModel1D">The WaterFlowModel1D.</param>
+        /// <returns>A DelftIniCategory describing the <c>[SimulationOptions]</c> header of the specified <paramref name="waterFlowModel1D"/></returns>
         public static DelftIniCategory GenerateSimulationOptionsValues(WaterFlowModel1D waterFlowModel1D)
         {
             DelftIniCategory simulationOptionsValues = new DelftIniCategory(ModelDefinitionsRegion.SimulationOptionsValuesHeader);
@@ -324,6 +334,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         }
 
+        /// <summary>
+        /// Generate the NumericalParameters category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
+        /// </summary>
+        /// <param name="waterFlowModel1D">The WaterFlowModel1D.</param>
+        /// <returns>A DelftIniCategory describing the <c>[NumericalParameters]</c> header of the specified <paramref name="waterFlowModel1D"/></returns>
         public static DelftIniCategory GenerateNumericalParametersValues(WaterFlowModel1D waterFlowModel1D)
         {
             DelftIniCategory numericalParametersValues = new DelftIniCategory(ModelDefinitionsRegion.NumericalParametersValuesHeader);
@@ -461,6 +476,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return numericalParametersValues;
         }
 
+        /// <summary>
+        /// Generate the Specials category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
+        /// </summary>
+        /// <param name="waterFlowModel1D">The WaterFlowModel1D.</param>
+        /// <returns>A DelftIniCategory describing the <c>[Specials]</c> header of the specified <paramref name="waterFlowModel1D"/></returns>
         public static DelftIniCategory GenerateSpecialsValues(WaterFlowModel1D waterFlowModel1D)
         {
             DelftIniCategory specialsValuesGroup = new DelftIniCategory(ModelDefinitionsRegion.SpecialsValuesHeader);
@@ -468,9 +488,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             //TODO: Add DesignFactorDLG ???
 
             return specialsValuesGroup;
-
         }
 
+        /// <summary>
+        /// Generate the Sediment category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
+        /// </summary>
+        /// <param name="waterFlowModel1D">The WaterFlowModel1D.</param>
+        /// <returns>A DelftIniCategory describing the <c>[Sediment]</c> header of the specified <paramref name="waterFlowModel1D"/></returns>
         public static DelftIniCategory GenerateSedimentValues(WaterFlowModel1D waterFlowModel1D)
         {
             DelftIniCategory resultsGeneralValuesGroup = new DelftIniCategory(ModelDefinitionsRegion.SedimentValuesHeader);
@@ -484,6 +508,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return resultsGeneralValuesGroup;
         }
 
+        /// <summary>
+        /// Generate the InitialConditions category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
+        /// </summary>
+        /// <param name="waterFlowModel1D">The WaterFlowModel1D.</param>
+        /// <returns>A DelftIniCategory describing the <c>[InitialConditions]</c> header of the specified <paramref name="waterFlowModel1D"/></returns>
         public static DelftIniCategory GenerateInitialConditionsValues(WaterFlowModel1D waterFlowModel1D)
         {
             DelftIniCategory initialConditionsValuesGroup = new DelftIniCategory(ModelDefinitionsRegion.InitialConditionsValuesHeader);
@@ -496,6 +525,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return initialConditionsValuesGroup;
         }
 
+        /// <summary>
+        /// Generate the Salinity category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
+        /// </summary>
+        /// <param name="waterFlowModel1D">The WaterFlowModel1D.</param>
+        /// <returns>A DelftIniCategory describing the <c>[Salinity]</c> header of the specified <paramref name="waterFlowModel1D"/></returns>
         public static DelftIniCategory GenerateSalinityValues(WaterFlowModel1D waterFlowModel1D)
         {
             DelftIniCategory salinityValuesGroup = new DelftIniCategory(ModelDefinitionsRegion.SalinityValuesHeader);
@@ -511,6 +545,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return salinityValuesGroup;
         }
 
+        /// <summary>
+        /// Generate the Temperature category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
+        /// </summary>
+        /// <param name="waterFlowModel1D">The WaterFlowModel1D.</param>
+        /// <returns>A DelftIniCategory describing the <c>[Temperature]</c> header of the specified <paramref name="waterFlowModel1D"/></returns>
         public static DelftIniCategory GenerateTemperatureValues(WaterFlowModel1D waterFlowModel1D)
         {
             var temperatureValues = new DelftIniCategory(ModelDefinitionsRegion.TemperatureValuesHeader);
@@ -536,6 +575,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return temperatureValues;
         }
 
+        /// <summary>
+        /// Generate the Morphology category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
+        /// </summary>
+        /// <param name="waterFlowModel1D">The WaterFlowModel1D.</param>
+        /// <returns>A DelftIniCategory describing the <c>[Morphology]</c> header of the specified <paramref name="waterFlowModel1D"/></returns>
         public static DelftIniCategory GenerateMorphologyValues(WaterFlowModel1D waterFlowModel1D)
         {
             var morphologyValues = new DelftIniCategory(ModelDefinitionsRegion.MorphologyValuesHeader);
@@ -555,6 +599,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return morphologyValues;
         }
 
+        /// <summary>
+        /// Generate the Observations category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
+        /// </summary>
+        /// <param name="waterFlowModel1D">The WaterFlowModel1D.</param>
+        /// <returns>A DelftIniCategory describing the <c>[Observations]</c> header of the specified <paramref name="waterFlowModel1D"/></returns>
         public static DelftIniCategory GenerateObservationValues(WaterFlowModel1D waterFlowModel1D)
         {
             DelftIniCategory observationValues = new DelftIniCategory(ModelDefinitionsRegion.ObservationsHeader);
@@ -567,6 +616,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             
             return observationValues;
         }
+
+        /// <summary>
+        /// Generate the RestartOptions category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
+        /// </summary>
+        /// <param name="waterFlowModel1D">The WaterFlowModel1D.</param>
+        /// <returns>A DelftIniCategory describing the <c>[RestartOptions]</c> header of the specified <paramref name="waterFlowModel1D"/></returns>
         public static DelftIniCategory GenerateRestartOptionsValues(WaterFlowModel1D waterFlowModel1D)
         {
             DelftIniCategory restartValues = new DelftIniCategory(ModelDefinitionsRegion.RestartHeader);
@@ -584,10 +639,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             var writeRestart = writeRestartParameter != null ? Convert.ToBoolean(writeRestartParameter.Value) : waterFlowModel1D.WriteRestart;
             restartValues.AddProperty(ModelDefinitionsRegion.WriteRestart.Key, writeRestart ? 1 : 0, ModelDefinitionsRegion.WriteRestart.Description);
 
-
             return restartValues;
         }
 
+        /// <summary>
+        /// Generate the Global category of the md1d file describing the specified <paramref name="waterFlowModel1D"/>.
+        /// </summary>
+        /// <param name="waterFlowModel1D">The WaterFlowModel1D.</param>
+        /// <returns>A DelftIniCategory describing the <c>[Global]</c> header of the specified <paramref name="waterFlowModel1D"/></returns>
         public static DelftIniCategory GenerateGlobalValues(WaterFlowModel1D waterFlowModel1D)
         {
             var globalValuesGroup = new DelftIniCategory(ModelDefinitionsRegion.GlobalValuesHeader);

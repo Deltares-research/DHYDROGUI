@@ -5,11 +5,17 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
 {
+    /// <summary>
+    /// WaterFlowModelTimePropertiesSetter is responsible for setting the properties defined in the
+    /// [Time] header of the md1d file on the 0WaterFlowModel1D.
+    /// </summary>
+    /// <seealso cref="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition.IWaterFlowModelCategoryPropertySetter" />
     public class WaterFlowModelTimePropertiesSetter : IWaterFlowModelCategoryPropertySetter
     {
+        /// <inheritdoc />
         /// <summary>
         /// Set the model time properties as specified in the ModelDefinitionsRegion.TimeHeader
-        /// of the <paramref name="timeCategory"/>
+        /// of the <paramref name="timeCategory" />
         /// </summary>
         /// <param name="timeCategory"> A DelftIniCategory holding time settings data read from a md1d file. </param>
         /// <param name="model"> The model whose time variables should be changed. </param>
@@ -24,18 +30,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             var startTime = timeCategory.ReadProperty<DateTime>(ModelDefinitionsRegion.StartTime.Key, true);
             var stopTime = timeCategory.ReadProperty<DateTime>(ModelDefinitionsRegion.StopTime.Key, true);
             var timeStep = timeCategory.ReadProperty<double>(ModelDefinitionsRegion.TimeStep.Key, true);
-            var gridPointsOutputTimeStep = GetCategoryWithDeprecation<double>(timeCategory,
-                                                                              ModelDefinitionsRegion.MapOutputTimeStep,
-                                                                              ModelDefinitionsRegion.OutTimeStepGridPoints,
-                                                                              errorMessages,
-                                                                              true);
-            var structuresOutputTimeStep = GetCategoryWithDeprecation<double>(timeCategory,
-                                                                              ModelDefinitionsRegion.HisOutputTimeStep,
-                                                                              ModelDefinitionsRegion
-                                                                                  .OutTimeStepStructures,
-                                                                              errorMessages,
-                                                                              true);
-
+            var gridPointsOutputTimeStep = 
+                GetCategoryWithDeprecation<double>(timeCategory,
+                                                   ModelDefinitionsRegion.MapOutputTimeStep,
+                                                   ModelDefinitionsRegion.OutTimeStepGridPoints,
+                                                   errorMessages,
+                                                   true);
+            var structuresOutputTimeStep = 
+                GetCategoryWithDeprecation<double>(timeCategory,
+                                                   ModelDefinitionsRegion.HisOutputTimeStep,
+                                                   ModelDefinitionsRegion.OutTimeStepStructures,
+                                                   errorMessages,
+                                                   true);
 
             model.StartTime = startTime;
             model.StopTime = stopTime;
@@ -47,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         }
 
         /// <summary>
-        /// Gets the category specified with <paramref name="currentProperty"/> or
+        /// Get the category specified with <paramref name="currentProperty"/> or
         /// with the deprecated <paramref name="previousProperty"/>.
         /// </summary>
         /// <typeparam name="T">The type of the specified property. </typeparam>
@@ -57,6 +63,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// <param name="errorMessages">The error messages.</param>
         /// <param name="isOptional">if set to <c>true</c> [is optional].</param>
         /// <returns> The specified property read from the <paramref name="category"/> </returns>
+        /// <remarks>
+        /// if the <paramref name="previousProperty"/> is detected, the appropriate error message
+        /// is added to <paramref name="errorMessages"/>.
+        /// </remarks>
         private static T GetCategoryWithDeprecation<T>(IDelftIniCategory category,
                                                        ConfigurationSetting currentProperty,
                                                        ConfigurationSetting previousProperty,
@@ -64,15 +74,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                                                        bool isOptional)
         {
             var hasPrevious = category.Properties.Any(prop => prop.Name == previousProperty.Key);
-            var hasCurrent = category.Properties.Any(prop => prop.Name  == currentProperty.Key);
+            var hasCurrent  = category.Properties.Any(prop => prop.Name == currentProperty.Key);
 
             if (hasPrevious && hasCurrent)
             {
-                errorMessages.Add($"Detected both {currentProperty.Key} and deprecated {previousProperty.Key}, using {currentProperty.Key}, {previousProperty.Key} will be removed upon saving.");
+                errorMessages?.Add($"Detected both {currentProperty.Key} and deprecated {previousProperty.Key}, using {currentProperty.Key}, {previousProperty.Key} will be removed upon saving.");
             }
             else if (hasPrevious)
             {
-                errorMessages.Add($"{previousProperty.Key} has been deprecated and will be replaced with {currentProperty.Key} upon saving.");
+                errorMessages?.Add($"{previousProperty.Key} has been deprecated and will be replaced with {currentProperty.Key} upon saving.");
                 return category.ReadProperty<T>(previousProperty.Key, isOptional);
             }
 

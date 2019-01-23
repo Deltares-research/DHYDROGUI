@@ -291,8 +291,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             StructureOutputTimeStep = defaultTimeStep;
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
-        
+
+        /// <summary>
+        /// Get or set the grid output time step.
+        /// </summary>
+        /// <value>
+        /// The grid output time step.
+        /// </value>
+        /// <remarks> This property corresponds with the MapOutputTimeStep. </remarks>
         public virtual TimeSpan GridOutputTimeStep { get; set; }
+
+        /// <summary>
+        /// Gets or sets the structure output time step.
+        /// </summary>
+        /// <value>
+        /// The structure output time step.
+        /// </value>
+        /// <remarks> This property corresponds with the HisOutputTimeStep. </remarks>
         public virtual TimeSpan StructureOutputTimeStep { get; set; }
 
         public virtual IList<DelftIniCategory> GenerateAdvancedOptionsValues()
