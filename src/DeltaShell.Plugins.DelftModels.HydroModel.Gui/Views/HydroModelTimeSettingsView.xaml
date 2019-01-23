@@ -12,10 +12,10 @@
     </UserControl.DataContext>
     <UserControl.Resources>
         <Style TargetType="xctk:DateTimePicker" x:Key="DateTimePickerStyle">
-            <Setter Property="FormatString" Value="yyyy/MM/dd HH:mm:ss"/>
+            <Setter Property="FormatString" Value="yyyy-MM-dd HH:mm:ss"/>
             <Setter Property="Format" Value="Custom"/>            
             <Setter Property="TimeFormat" Value="Custom"/>
-            <Setter Property="TimeFormatString" Value="yyyy/MM/dd HH:mm:ss"/>
+            <Setter Property="TimeFormatString" Value="yyyy-MM-dd HH:mm:ss"/>
             <Setter Property="AutoCloseCalendar" Value="True"/>
             <Setter Property="UpdateValueOnEnterKey" Value="True"/>
             <Setter Property="ShowButtonSpinner" Value="False"/>
