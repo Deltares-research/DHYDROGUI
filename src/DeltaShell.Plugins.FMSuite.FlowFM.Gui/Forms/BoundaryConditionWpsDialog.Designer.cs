@@ -98,7 +98,8 @@
             // 
             // startDatePicker
             // 
-            this.startDatePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.startDatePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.startDatePicker.CustomFormat = "yyyy-MM-dd";
             this.startDatePicker.Location = new System.Drawing.Point(112, 22);
             this.startDatePicker.Name = "startDatePicker";
             this.startDatePicker.Size = new System.Drawing.Size(98, 20);
@@ -106,7 +107,8 @@
             // 
             // endDatePicker
             // 
-            this.endDatePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.endDatePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.endDatePicker.CustomFormat = "yyyy-MM-dd";
             this.endDatePicker.Location = new System.Drawing.Point(112, 54);
             this.endDatePicker.Name = "endDatePicker";
             this.endDatePicker.Size = new System.Drawing.Size(98, 20);
@@ -114,7 +116,8 @@
             // 
             // startTimePicker
             // 
-            this.startTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.startTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.startTimePicker.CustomFormat = "HH:mm:ss";
             this.startTimePicker.Location = new System.Drawing.Point(216, 22);
             this.startTimePicker.Name = "startTimePicker";
             this.startTimePicker.ShowUpDown = true;
@@ -123,7 +126,8 @@
             // 
             // endTimePicker
             // 
-            this.endTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.endTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.endTimePicker.CustomFormat = "HH:mm:ss";
             this.endTimePicker.Location = new System.Drawing.Point(216, 54);
             this.endTimePicker.Name = "endTimePicker";
             this.endTimePicker.ShowUpDown = true;

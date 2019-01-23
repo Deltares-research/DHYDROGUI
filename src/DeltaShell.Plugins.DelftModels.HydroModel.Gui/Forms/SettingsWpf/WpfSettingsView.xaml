@@ -152,8 +152,10 @@
                     Grid.Column="1"
                     Value="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True}" 
                     Style="{StaticResource ControlWithErrorStyle}"
+                    AllowTextInput="True"
                     Format="Custom"
-                    FormatString="dd/MMM/yyyy HH:mm:ss"
+                    FormatString="yyyy-MM-dd HH:mm:ss"
+                    UpdateValueOnEnterKey="True"
                     TextAlignment="Left"/>
             </Grid>
         </DataTemplate>
