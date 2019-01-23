@@ -2094,16 +2094,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             return (IFunction)dataItem.Value;
         }
 
-        protected virtual void SetOrAddModelApiParameter(ParameterCategory parameterCategory, string parameterName, string value)
-        {
-            var modelApiParameter = GetModelApiParameter(parameterName, parameterCategory);
-            if (modelApiParameter == null)
-            {
-                modelApiParameter = new ModelApiParameter { Name = parameterName, Category = parameterCategory };
-                ParameterSettings.Add(modelApiParameter);
-            }
-            modelApiParameter.Value = value;
-        }
         protected virtual void InitializeOutputCoverageArguments(EngineParameter modelApiParameter, ICollection<DateTime> times)
         {
             if (modelApiParameter.AggregationOptions != AggregationOptions.None)
@@ -3749,10 +3739,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         protected override void OnInitialize()
         {
             DataItems.RemoveAllWhere(di => di.Tag == SobekLogfileDataItemTag);
-
-            SetOrAddModelApiParameter(ParameterCategory.SimulationOptions, "UseRestart", UseRestart ? "true" : "false");
-            SetOrAddModelApiParameter(ParameterCategory.SimulationOptions, "WriteSamples",WriteRestart ? "true" : "false");
-
+            
             boundaryConditionDataList = BoundaryConditions.ToList();
 
             // performance optimization: skip validation in boundary condition

@@ -725,10 +725,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             waterFlowModel1D.SaveStateTimeStep = timeStep;
             waterFlowModel1D.UseSaveStateTimeRange = useSaveStateTimeRange;
 
+            waterFlowModel1D.UseRestart = true;
+            waterFlowModel1D.WriteRestart = true;
+
             // Retrieve values from Model
-            var expectedUseRestart = SetModelParameter(waterFlowModel1D, ModelDefinitionsRegion.UseRestart.Key);
-            var expectedWriteRestart = SetModelParameter(waterFlowModel1D, ModelDefinitionsRegion.WriteRestart.Key);
-            
+            var expectedUseRestart = true;
+            var expectedWriteRestart = true;
+
             // Write Md1d File
             var targetPath = Path.Combine(Environment.CurrentDirectory, FileWriterTestHelper.RelativeTargetDirectory);
             var modelDefinitionFile = Path.Combine(targetPath, ModelFileNames.ModelDefinitionFilename);

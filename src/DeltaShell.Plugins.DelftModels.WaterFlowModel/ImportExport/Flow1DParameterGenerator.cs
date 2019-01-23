@@ -635,13 +635,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 restartValues.AddProperty(ModelDefinitionsRegion.RestartStopTime.Key, waterFlowModel1D.SaveStateStopTime, ModelDefinitionsRegion.RestartStopTime.Description);
                 restartValues.AddProperty(ModelDefinitionsRegion.RestartTimeStep.Key, int.Parse(waterFlowModel1D.SaveStateTimeStep.TotalSeconds.ToString(CultureInfo.InvariantCulture)), ModelDefinitionsRegion.RestartTimeStep.Description);
             }
-            var useRestartParameter = waterFlowModel1D.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.UseRestart.Key);
-            var useRestart = useRestartParameter != null ? Convert.ToBoolean(useRestartParameter.Value) : waterFlowModel1D.UseRestart;
-            restartValues.AddProperty(ModelDefinitionsRegion.UseRestart.Key, useRestart ? 1 : 0, ModelDefinitionsRegion.UseRestart.Description);
-
-            var writeRestartParameter = waterFlowModel1D.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.WriteRestart.Key);
-            var writeRestart = writeRestartParameter != null ? Convert.ToBoolean(writeRestartParameter.Value) : waterFlowModel1D.WriteRestart;
-            restartValues.AddProperty(ModelDefinitionsRegion.WriteRestart.Key, writeRestart ? 1 : 0, ModelDefinitionsRegion.WriteRestart.Description);
+            
+            restartValues.AddProperty(ModelDefinitionsRegion.UseRestart.Key, waterFlowModel1D.UseRestart ? 1 : 0, ModelDefinitionsRegion.UseRestart.Description);
+            restartValues.AddProperty(ModelDefinitionsRegion.WriteRestart.Key, waterFlowModel1D.WriteRestart ? 1 : 0, ModelDefinitionsRegion.WriteRestart.Description);
 
             return restartValues;
         }
