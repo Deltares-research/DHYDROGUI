@@ -485,7 +485,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             DelftIniCategory specialsValuesGroup = new DelftIniCategory(ModelDefinitionsRegion.SpecialsValuesHeader);
 
-            //TODO: Add DesignFactorDLG ???
+            var designFactorDlg = waterFlowModel1D.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.DesignFactorDLG.Key);
+            if (designFactorDlg != null)
+            {
+                specialsValuesGroup.AddProperty(ModelDefinitionsRegion.DesignFactorDLG.Key, designFactorDlg.Value, ModelDefinitionsRegion.DesignFactorDLG.Description);
+            }
 
             return specialsValuesGroup;
         }

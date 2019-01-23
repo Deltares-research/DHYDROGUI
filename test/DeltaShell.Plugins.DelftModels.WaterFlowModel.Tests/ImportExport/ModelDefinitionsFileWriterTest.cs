@@ -440,6 +440,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             var waterFlowModel1D = new WaterFlowModel1D();
 
             // Retrieve values from Model
+            var expectedSpecials = SetModelParameter(waterFlowModel1D, ModelDefinitionsRegion.DesignFactorDLG.Key);
 
             // Write Md1d File
             var targetPath = Path.Combine(Environment.CurrentDirectory, FileWriterTestHelper.RelativeTargetDirectory);
@@ -455,7 +456,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             Assert.NotNull(content);
 
             // Check values are present in category
-            // TODO: DesignFactorDLG (not implemented yet)
+            var designFactorDlg = content.Properties.First(p => p.Name == ModelDefinitionsRegion.DesignFactorDLG.Key);
+            Assert.AreEqual(expectedSpecials, designFactorDlg.Value);
         }
 
         [Test]
