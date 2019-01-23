@@ -16,6 +16,7 @@
     <UserControl.Resources>
         <Style TargetType="TextBox">
             <Setter Property="Margin" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="true">
                     <Setter Property="ToolTip"
@@ -287,15 +288,15 @@
                     </ContentControl>
 
                     <CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding EnableLowerEdgeLevelTimeSeries}"/>
-                    <Label Grid.Row="2" Grid.Column="0" Content="Door opening height" Visibility="{Binding GatedVisibility}"/>
-                   
-                    <Grid Grid.Row="2" Grid.Column="1">
+                    <Label Grid.Row="2" Grid.Column="0" Content="Door opening height" Visibility="{Binding GatedVisibility}" IsEnabled="False"/>
+
+                    <Grid Grid.Row="2" Grid.Column="1" ToolTip="Calculated value from: Gate Lower edge level - Sill Crest level" >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Text="{Binding GateOpeningHeight, Mode=OneWay}" Visibility="{Binding GatedVisibility}" IsReadOnly="True" Foreground="Gray" Background="Transparent" />
-                        <TextBlock Grid.Column="1" Text="m"  Visibility="{Binding GatedVisibility}" Style="{StaticResource UnitLabelStyle}"/>
+                        <Label Content="{Binding GateOpeningHeight, Mode=OneWay}" Visibility="{Binding GatedVisibility}" VerticalAlignment="Center" Foreground="Gray"/>
+                        <TextBlock Grid.Column="1" Text="m"  Visibility="{Binding GatedVisibility}" Width="{StaticResource UnitWidth}" Margin="3" Foreground="Gray"/>
                     </Grid>
                     <Label Grid.Row="3" Grid.Column="0" Content="Door height"/>
 
@@ -369,17 +370,12 @@
 
             <GroupBox Grid.Row="4" Grid.Column="0" Header="Extra Resistance" Visibility="{Binding GeneralStructurePropertiesVisibility}">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="175"/>
-                        <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0" Content="Extra Resistance"></Label>
-                    <TextBox Grid.Row="0" Grid.Column="1" Width="100" Text="{Binding ExtraResistance}"/>
+                    <Label Grid.Column="0" Content="Extra Resistance"></Label>
+                    <TextBox Grid.Column="1" Width="100" Text="{Binding ExtraResistance}"/>
                 </Grid>
             </GroupBox>
         </Grid>

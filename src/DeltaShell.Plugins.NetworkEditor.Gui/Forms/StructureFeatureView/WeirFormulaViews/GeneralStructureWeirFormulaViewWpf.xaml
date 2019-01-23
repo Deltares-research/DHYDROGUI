@@ -8,6 +8,7 @@
     <UserControl.Resources>
         <Style TargetType="TextBox">
             <Setter Property="Margin" Value="0,0,1,1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
     </UserControl.Resources>
     <Grid>
