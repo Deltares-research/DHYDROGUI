@@ -198,4 +198,7 @@
   <data name="HydroModelConverter_AddModels_Renamed_model__0__to__1_" xml:space="preserve">
     <value>Renamed model {0} to {1}.</value>
   </data>
+  <data name="HydroModelConverter_CoupleSubModels_Could_not_couple_models____0___to___1___" xml:space="preserve">
+    <value>Could not couple models: '{0}' to '{1}'.</value>
+  </data>
 </root>

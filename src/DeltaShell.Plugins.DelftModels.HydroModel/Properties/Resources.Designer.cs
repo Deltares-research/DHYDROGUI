@@ -156,6 +156,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not couple models: &apos;{0}&apos; to &apos;{1}&apos;..
+        /// </summary>
+        public static string HydroModelConverter_CoupleSubModels_Could_not_couple_models____0___to___1___ {
+            get {
+                return ResourceManager.GetString("HydroModelConverter_CoupleSubModels_Could_not_couple_models____0___to___1___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start time must be earlier than stop time.
         /// </summary>
         public static string HydroModelTimeSettingsViewModel_DetermineErrorText_Start_time_must_be_earlier_than_stop_time {
