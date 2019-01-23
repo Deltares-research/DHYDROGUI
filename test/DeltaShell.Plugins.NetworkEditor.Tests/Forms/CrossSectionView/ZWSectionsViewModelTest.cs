@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         [SetUp]
         public void SetUp()
         {
-            //hook up a crossection to a network via a branch.. because the network is used te get the section types
+            //hook up a cross section to a network via a branch.. because the network is used to get the section types
             crossSectionDefinition = new CrossSectionDefinitionZW();
             
             var main = new CrossSectionSectionType { Name = "Main" };
@@ -39,20 +39,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             crossSectionDefinition.AddSection(fp2, 16);
 
             crossSectionZWSectionsViewModel = new ZWSectionsViewModel(crossSectionDefinition, crossSectionSectionTypes);
-                
-        }
-
-        private void AlterTestModelToIncludeStorage()
-        {
-            var table = crossSectionDefinition.ZWDataTable;
-            table.Clear();
-            table.AddCrossSectionZWRow(10d, 30d, 20d);
-            table.AddCrossSectionZWRow(0d, 10d, 10d);
-            crossSectionZWSectionsViewModel.UpdateViewModelFromCrossSection(true);
         }
 
         [Test]
-        public void ViewModelWidthAssumesASymetricalProfile()
+        public void ViewModelWidthAssumesASymmetricalProfile()
         {
             Assert.AreEqual(10,crossSectionZWSectionsViewModel.MainWidth);
             Assert.AreEqual(4, crossSectionZWSectionsViewModel.FloodPlain1Width);
@@ -63,13 +53,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         public void ViewModelUpdatesSectionsOnMain()
         {
             //decrease in main is added to fp2
-            crossSectionZWSectionsViewModel.MainWidth = 2.2;
+            crossSectionZWSectionsViewModel.MainWidth = 2;
 
             Assert.AreEqual(0, crossSectionDefinition.Sections[0].MinY);
-            Assert.AreEqual(1.1, crossSectionDefinition.Sections[0].MaxY);
-            Assert.AreEqual(1.1, crossSectionDefinition.Sections[1].MinY);
-            Assert.AreEqual(3.1, crossSectionDefinition.Sections[1].MaxY);
-            Assert.AreEqual(3.1, crossSectionDefinition.Sections[2].MinY);
+            Assert.AreEqual(1, crossSectionDefinition.Sections[0].MaxY);
+            Assert.AreEqual(1, crossSectionDefinition.Sections[1].MinY);
+            Assert.AreEqual(3, crossSectionDefinition.Sections[1].MaxY);
+            Assert.AreEqual(3, crossSectionDefinition.Sections[2].MinY);
             Assert.AreEqual(15, crossSectionDefinition.Sections[2].MaxY);
         }
 
@@ -97,36 +87,68 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         }
 
         [Test]
-        public void ViewModelUpdateSectionsUsingStorage() // TODO: this test should be re-worked
+        public void GivenCrossSectionDefinitionWithZeroWidthFloodPlain1Section_WhenSettingMainSectionWidthToDifferentValue_ThenFloodPlain1AndMainAreEqualToTotalWidth()
         {
-            AlterTestModelToIncludeStorage();
-            
-            //decrease in main add to fp2
-            crossSectionZWSectionsViewModel.MainWidth = 2.2;
-            Assert.AreEqual(0, crossSectionDefinition.Sections[0].MinY);
-            Assert.AreEqual(1.1, crossSectionDefinition.Sections[0].MaxY);
-            Assert.AreEqual(1.1, crossSectionDefinition.Sections[1].MinY);
-            Assert.AreEqual(1.1, crossSectionDefinition.Sections[1].MaxY);
-            Assert.AreEqual(1.1, crossSectionDefinition.Sections[2].MinY);
-            Assert.AreEqual(5, crossSectionDefinition.Sections[2].MaxY);
+            // Given
+            var table = crossSectionDefinition.ZWDataTable;
+            table.Clear();
+            table.AddCrossSectionZWRow(10d, 30d, 10d);
+            table.AddCrossSectionZWRow(0d, 10d, 5d);
 
-            // increase in fp1 should remove from fp2
-            crossSectionZWSectionsViewModel.FloodPlain1Width += 2d;
-            Assert.AreEqual(0, crossSectionDefinition.Sections[0].MinY);
-            Assert.AreEqual(1.1, crossSectionDefinition.Sections[0].MaxY);
-            Assert.AreEqual(1.1, crossSectionDefinition.Sections[1].MinY);
-            Assert.AreEqual(2.1, crossSectionDefinition.Sections[1].MaxY);
-            Assert.AreEqual(2.1, crossSectionDefinition.Sections[2].MinY);
-            Assert.AreEqual(5, crossSectionDefinition.Sections[2].MaxY);
+            crossSectionZWSectionsViewModel.FloodPlain1Width = 0.0;
 
-            // big increase in main should remove from fp1 and fp2
-            crossSectionZWSectionsViewModel.MainWidth += 7d;
+            // When
+            crossSectionZWSectionsViewModel.MainWidth = 2;
+
+            // Then
             Assert.AreEqual(0, crossSectionDefinition.Sections[0].MinY);
-            Assert.AreEqual(4.6, crossSectionDefinition.Sections[0].MaxY);
-            Assert.AreEqual(4.6, crossSectionDefinition.Sections[1].MinY);
-            Assert.AreEqual(5.0, crossSectionDefinition.Sections[1].MaxY);
-            Assert.AreEqual(5.0, crossSectionDefinition.Sections[2].MinY);
-            Assert.AreEqual(5, crossSectionDefinition.Sections[2].MaxY);
+            Assert.AreEqual(1.0, crossSectionDefinition.Sections[0].MaxY);
+            Assert.AreEqual(1.0, crossSectionDefinition.Sections[1].MinY);
+            Assert.AreEqual(10.0, crossSectionDefinition.Sections[1].MaxY);
+            Assert.AreEqual(10.0, crossSectionDefinition.Sections[2].MinY);
+            Assert.AreEqual(10.0, crossSectionDefinition.Sections[2].MaxY);
+        }
+
+        [Test]
+        public void GivenCrossSectionDefinitionWithZeroWidthFloodPlain1Section_WhenSettingFloodPlain1SectionWidthSectionToDifferentValue_ThenFloodPlain1AndMainAreEqualToTotalWidth()
+        {
+            // When
+            crossSectionZWSectionsViewModel.FloodPlain1Width = 50.0;
+
+            // Then
+            Assert.AreEqual(0, crossSectionDefinition.Sections[0].MinY);
+            Assert.AreEqual(5.0, crossSectionDefinition.Sections[0].MaxY);
+            Assert.AreEqual(5.0, crossSectionDefinition.Sections[1].MinY);
+            Assert.AreEqual(15.0, crossSectionDefinition.Sections[1].MaxY);
+            Assert.AreEqual(15.0, crossSectionDefinition.Sections[2].MinY);
+            Assert.AreEqual(15.0, crossSectionDefinition.Sections[2].MaxY);
+        }
+
+        [TestCase(10.0)]
+        [TestCase(50.0)]
+        public void GivenCrossSectionDefinitionWithMainSection_WhenSettingMainSectionToDifferentValueThanTotalWidth_ThenMainWidthIsCorrectedToTotalWidth(double setValue)
+        {
+            // Given
+            var mainCrossSectionSectionType = new CrossSectionSectionType { Name = "Main" };
+            var crossSectionSectionTypes = new EventedList<CrossSectionSectionType>
+            {
+                mainCrossSectionSectionType
+            };
+
+            var crossSectionDefinition = new CrossSectionDefinitionZW();
+            var table = crossSectionDefinition.ZWDataTable;
+            table.AddCrossSectionZWRow(10d, 30d, 0d);
+            table.AddCrossSectionZWRow(0d, 10d, 0d);
+
+            crossSectionDefinition.AddSection(mainCrossSectionSectionType, 30);
+            crossSectionZWSectionsViewModel = new ZWSectionsViewModel(crossSectionDefinition, crossSectionSectionTypes);
+
+            // When
+            crossSectionZWSectionsViewModel.MainWidth = setValue;
+
+            // Then
+            Assert.AreEqual(0.0, crossSectionDefinition.Sections[0].MinY);
+            Assert.AreEqual(15.0, crossSectionDefinition.Sections[0].MaxY);
         }
 
         [Test]
@@ -153,22 +175,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             //this should not disable main but merely set it 0
             Assert.IsTrue(crossSectionZWSectionsViewModel.MainEnabled);
             Assert.AreEqual(0,crossSectionZWSectionsViewModel.MainWidth);
-        }
-
-        [Test]
-        public void SettingWidthCanAddASection()
-        {
-            //remove main
-            var main = crossSectionDefinition.Sections.First(s => s.SectionType.Name == "Main");
-            crossSectionDefinition.Sections.Remove(main);
-
-            crossSectionZWSectionsViewModel.UpdateViewModelFromCrossSection();
-
-            //now set a value for main..this should re-add the section. 
-            crossSectionZWSectionsViewModel.MainWidth = 1.0;
-
-            var newMain = crossSectionDefinition.Sections.FirstOrDefault(s => s.SectionType.Name == "Main");
-            Assert.IsNotNull(newMain,"Main section should be re-added");
         }
 
         [Test]
