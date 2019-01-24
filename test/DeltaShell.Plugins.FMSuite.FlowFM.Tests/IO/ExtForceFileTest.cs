@@ -295,7 +295,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void ExtFileDoesNotSaveSedimentSpatiallyVaryingOperationsButSedConc()
         {
@@ -308,10 +307,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel(sedFile);
-                fmModel.ModelDefinition.UseMorphologySediment = true;
-                var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-                fmModel.Grid = grid;
+                var fmModel = new WaterFlowFMModel(sedFile)
+                {
+                    ModelDefinition = {UseMorphologySediment = true},
+                    Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2)
+                };
 
                 /* Define test properties */
                 var doubleSpatProp = new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, 0, true, "cc", "mydoubledescription", true, false)
@@ -378,8 +378,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 /* Create coverage for CustomProp */
                 var thickDataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == "mysedimentName_IniSedThick");
 
-                // retrieve / create value converter for mysedimentName_SedConc dataitem
-                var valueConverThick = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(thickDataItem, "mysedimentName_IniSedThick");
+                // retrieve / create value converter for mysedimentName_SedConc data item
+                var valueConvertThick = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(thickDataItem, "mysedimentName_IniSedThick");
                 var samplesThick = new AddSamplesOperation(false);
                 samplesThick.SetInputData(AddSamplesOperation.SamplesInputName, new PointCloudFeatureProvider
                 {
@@ -394,8 +394,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     },
 
                 });
-                valueConverThick.SpatialOperationSet.AddOperation(samplesThick);
-                valueConverThick.SpatialOperationSet.Execute();
+                valueConvertThick.SpatialOperationSet.AddOperation(samplesThick);
+                valueConvertThick.SpatialOperationSet.Execute();
 
                 // update model definition (called during export)
                 var initialSpatialOps = new List<string>() { doubleSpatProp.SpatiallyVaryingName, thickProp.SpatiallyVaryingName };
@@ -407,7 +407,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.IsNotNull(valueConverter.SpatialOperationSet.AddOperation(intOpSedConc));
                 var intOpThick = new InterpolateOperation();
                 intOpThick.SetInputData(InterpolateOperation.InputSamplesName, samplesThick.Output.Provider);
-                Assert.IsNotNull(valueConverThick.SpatialOperationSet.AddOperation(intOpThick));
+                Assert.IsNotNull(valueConvertThick.SpatialOperationSet.AddOperation(intOpThick));
 
                 // update model definition (called during export)
                 fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
@@ -786,28 +786,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var path = model.BndExtFilePath;
             var blocks = new DelftIniReader().ReadDelftIniFile(path);
             Assert.AreEqual(2, blocks.Count());
-        }
-
-        [Test]
-        [Category(TestCategory.Performance)]
-        public void ReadExtForcingsShouldBeFast()
-        {
-            var def = new WaterFlowFMModelDefinition();
-            var testDataPath = TestHelper.GetTestFilePath(@"dcsm");
-            var externalForcingZipFileName = "dcsm.zip";
-            var externalForcingZipFilePath = Path.Combine(testDataPath, externalForcingZipFileName);
-
-            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
-            {
-                FileUtils.CopyDirectory(testDataPath, tempDir);
-                ZipFileUtils.Extract(externalForcingZipFilePath, tempDir);
-
-                var externalForcingFileName = "dcsmv6.ext";
-                var externalForcingFile = Path.Combine(tempDir, externalForcingFileName);
-
-                var extForceFile = new ExtForceFile();
-                TestHelper.AssertIsFasterThan(30000, () => extForceFile.Read(externalForcingFile, def));
-            });
         }
 
         [Test]
