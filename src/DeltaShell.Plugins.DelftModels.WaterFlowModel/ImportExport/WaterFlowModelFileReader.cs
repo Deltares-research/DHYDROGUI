@@ -194,8 +194,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             Action<string, IList<string>> createAndAddErrorReport)
         {
             var retentionFileReader= new RetentionFileReader(createAndAddErrorReport);
-            retentionFileReader.ReadRetention(fileName, network.Channels.ToList());
-            
+            var retentionList = retentionFileReader.ReadRetention(fileName, network.Channels.ToList());
+
+            foreach (var retention in retentionList)
+            {
+                var correspondingBranch = network.Channels.FirstOrDefault(c => c.Name == retention.Branch.Name);
+                correspondingBranch?.BranchFeatures.Add(retention);
+            }
+
         }
 
         private static void ReadCrossSectionsFile(ModelFileNames fileName, IHydroNetwork network, Action<string, IList<string>> createAndAddErrorReport)
