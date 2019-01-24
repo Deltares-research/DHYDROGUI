@@ -12,11 +12,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
     [Entity(FireOnCollectionChange=false)]
     public class ZWSectionsViewModel : IDisposable
     {
-        private readonly ICrossSectionDefinition crossSectionDefinition;
-        private readonly IEventedList<CrossSectionSectionType> crossSectionSectionTypes;
-        private const string mainSectionName = "Main";
-        private const string floodplain1SectionTypeName = "FloodPlain1";
-        private const string floodplain2SectionTypeName = "FloodPlain2";
+        protected readonly ICrossSectionDefinition crossSectionDefinition;
+        protected readonly IEventedList<CrossSectionSectionType> crossSectionSectionTypes;
+
+        private enum CrossSectionSectionName
+        {
+            Main, FloodPlain1, FloodPlain2
+        }
+
+        private readonly IDictionary<CrossSectionSectionName, SectionData> sectionSettings = new Dictionary<CrossSectionSectionName, SectionData>
+        {
+            {CrossSectionSectionName.Main, new SectionData(false, 0d)},
+            {CrossSectionSectionName.FloodPlain1, new SectionData(false, 0d)},
+            {CrossSectionSectionName.FloodPlain2, new SectionData(false, 0d)}
+        };
+
+        public ZWSectionsViewModel(ICrossSectionDefinition crossSectionDefinition,IEventedList<CrossSectionSectionType> crossSectionSectionTypes)
+        {
+            this.crossSectionDefinition = crossSectionDefinition;
+            this.crossSectionSectionTypes = crossSectionSectionTypes;
+
+            Subscribe();
+            //TODO: react to changes in the list
+            UpdateViewModelFromCrossSection();
+        }
 
         private class SectionData
         {
@@ -31,19 +50,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         }
 
         // indicates if the section is enabled, and remember its length
-        private IDictionary<string, SectionData> sectionSettings = new Dictionary<string, SectionData>
-        {
-            {mainSectionName, new SectionData(false, 0d)},
-            {floodplain1SectionTypeName, new SectionData(false, 0d)},
-            {floodplain2SectionTypeName, new SectionData(false, 0d)}
-        };
 
         private bool MainExist { get; set; }
         private bool FloodPlain1Exist { get; set; }
         private bool FloodPlain2Exist { get; set; }
         
         // returns the total available flow width for the cross section
-        public double TotalWidth
+        private double TotalWidth
         {
             get
             {
@@ -55,11 +68,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         // main section is always considered to be in center, this settings indicates its diameter.
         public double MainWidth
         {
-            get => sectionSettings[mainSectionName].Width;
+            get => sectionSettings[CrossSectionSectionName.Main].Width;
             set
             {
-                sectionSettings[mainSectionName].Width = value > 0.0 ? value : 0.0;
-                RecalculateSectionWidths(mainSectionName);
+                sectionSettings[CrossSectionSectionName.Main].Width = value > 0.0 ? value : 0.0;
+                CalculateSectionWidths(CrossSectionSectionName.Main);
             }
         }
 
@@ -67,11 +80,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         // two part of the floodplain to the left and right of the main section.
         public double FloodPlain1Width
         {
-            get => sectionSettings[floodplain1SectionTypeName].Width;
+            get => sectionSettings[CrossSectionSectionName.FloodPlain1].Width;
             set
             {
-                sectionSettings[floodplain1SectionTypeName].Width = value > 0.0 ? value : 0.0;
-                RecalculateSectionWidths(floodplain1SectionTypeName);
+                sectionSettings[CrossSectionSectionName.FloodPlain1].Width = value > 0.0 ? value : 0.0;
+                CalculateSectionWidths(CrossSectionSectionName.FloodPlain1);
             }
         }
 
@@ -79,59 +92,69 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         // of the two part of the second floodplain to the left and right of the first floodplain.
         public double FloodPlain2Width
         {
-            get => sectionSettings[floodplain2SectionTypeName].Width;
+            get => sectionSettings[CrossSectionSectionName.FloodPlain2].Width;
             set
             {
-                sectionSettings[floodplain2SectionTypeName].Width = value > 0.0 ? value : 0.0;
-                RecalculateSectionWidths(floodplain2SectionTypeName);
+                sectionSettings[CrossSectionSectionName.FloodPlain2].Width = value > 0.0 ? value : 0.0;
+                CalculateSectionWidths(CrossSectionSectionName.FloodPlain2);
             }
         }
-        
-        private void RecalculateSectionWidths(string lastUpdated)
-        {
-            var totalWidth = TotalWidth;
 
-            var mainWidth = sectionSettings[mainSectionName].Width;
-            var fp1Width = sectionSettings[floodplain1SectionTypeName].Width;
-            var fp2Width = sectionSettings[floodplain2SectionTypeName].Width;
+        private bool IsCalculatingSectionWidths;
+
+        private void CalculateSectionWidths(CrossSectionSectionName updatedSection)
+        {
+            if(IsCalculatingSectionWidths) return;
+            IsCalculatingSectionWidths = true;
+
+            var mainWidth = sectionSettings[CrossSectionSectionName.Main].Width;
+            var fp1Width = sectionSettings[CrossSectionSectionName.FloodPlain1].Width;
+            var fp2Width = sectionSettings[CrossSectionSectionName.FloodPlain2].Width;
 
             // Note: Only validate and update MainWidth if it was directly edited
-            if (lastUpdated == mainSectionName)
+            if (updatedSection == CrossSectionSectionName.Main)
             {
                 if (!FloodPlain1Exist && !FloodPlain2Exist ||     // Main is the only section 
-                     !(mainWidth > 0 && mainWidth <= totalWidth))   // MainWidth out of bounds
+                     !(mainWidth > 0 && mainWidth <= TotalWidth))   // MainWidth out of bounds
                 {
-                    mainWidth = totalWidth;
+                    mainWidth = TotalWidth;
                     fp1Width = 0;
+                }
+
+                if (FloodPlain1Exist && !FloodPlain2Exist)
+                {
+                    fp1Width = TotalWidth - mainWidth;
                 }
 
                 if (FloodPlain1Exist && FloodPlain2Exist)
                 {
                     if (Math.Abs(fp1Width) < double.Epsilon)
                     {
-                        fp1Width = totalWidth - mainWidth;
+                        fp1Width = TotalWidth - mainWidth;
                         fp2Width = 0;
                     }
                     else
                     {
-                        fp2Width = Math.Max(0, totalWidth - mainWidth - fp1Width);
-                        fp1Width = totalWidth - mainWidth - fp2Width;
+                        fp2Width = Math.Max(0, TotalWidth - mainWidth - fp1Width);
+                        fp1Width = TotalWidth - mainWidth - fp2Width;
                     }
                 }
             }
-            else
+            else if (updatedSection == CrossSectionSectionName.FloodPlain1)
             {
-                fp2Width = Math.Max(0, totalWidth - mainWidth - fp1Width);
+                fp2Width = Math.Max(0, TotalWidth - mainWidth - fp1Width);
                 if (Math.Abs(fp2Width) < double.Epsilon)
                 {
-                    fp1Width = totalWidth - mainWidth;
+                    fp1Width = TotalWidth - mainWidth;
                 }
             }
 
             // Update the Sections with the new Widths
-            SetSection(mainSectionName, 0, mainWidth / 2);
-            SetSection(floodplain1SectionTypeName, mainWidth / 2, (mainWidth + fp1Width) / 2);
-            SetSection(floodplain2SectionTypeName, (mainWidth + fp1Width) / 2, (mainWidth + fp1Width + fp2Width) / 2);
+            SetSection(CrossSectionSectionName.Main, 0, mainWidth / 2);
+            SetSection(CrossSectionSectionName.FloodPlain1, mainWidth / 2, (mainWidth + fp1Width) / 2);
+            SetSection(CrossSectionSectionName.FloodPlain2, (mainWidth + fp1Width) / 2, (mainWidth + fp1Width + fp2Width) / 2);
+
+            IsCalculatingSectionWidths = false;
         }
 
         private void ForceRecalculationOfSectionWidths()
@@ -141,45 +164,36 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
         private void UpdateSectionWidths()
         {
-            UpdateSectionWidth(mainSectionName);
-            UpdateSectionWidth(floodplain1SectionTypeName);
-            UpdateSectionWidth(floodplain2SectionTypeName);
+            UpdateSectionWidth(CrossSectionSectionName.Main);
+            UpdateSectionWidth(CrossSectionSectionName.FloodPlain1);
+            UpdateSectionWidth(CrossSectionSectionName.FloodPlain2);
         }
 
         /// <summary>
         /// Not using only getters because we bind the these properties. Should allow for PC
         /// </summary>
-        public bool MainEnabled
+        public bool MainEnabled // Do not make this property private, as it is used in ZWSectionsView
         {
-            get { return sectionSettings[mainSectionName].Enabled; }
-            set { sectionSettings[mainSectionName].Enabled = value; }
+            get => sectionSettings[CrossSectionSectionName.Main].Enabled;
+            private set => sectionSettings[CrossSectionSectionName.Main].Enabled = value;
         }
 
-        public bool FloodPlain1Enabled
+        public bool FloodPlain1Enabled // Do not make this property private, as it is used in ZWSectionsView
         {
-            get { return sectionSettings[floodplain1SectionTypeName].Enabled; }
-            set { sectionSettings[floodplain1SectionTypeName].Enabled = value; }
-        }
-        public bool FloodPlain2Enabled
-        {
-            get { return sectionSettings[floodplain2SectionTypeName].Enabled; }
-            set { sectionSettings[floodplain2SectionTypeName].Enabled = value; }
+            get => sectionSettings[CrossSectionSectionName.FloodPlain1].Enabled;
+            set => sectionSettings[CrossSectionSectionName.FloodPlain1].Enabled = value;
         }
 
-        public bool MainCanAdd { get; set; }
-        public bool FloodPlain1CanAdd { get; set; }
-        public bool FloodPlain2CanAdd { get; set; }
-
-        public ZWSectionsViewModel(ICrossSectionDefinition crossSectionDefinition,IEventedList<CrossSectionSectionType> crossSectionSectionTypes)
+        public bool FloodPlain2Enabled // Do not make this property private, as it is used in ZWSectionsView
         {
-            this.crossSectionDefinition = crossSectionDefinition;
-            this.crossSectionSectionTypes = crossSectionSectionTypes;
-
-            Subscribe();
-            //TODO: react to changes in the list
-            UpdateViewModelFromCrossSection();
+            get => sectionSettings[CrossSectionSectionName.FloodPlain2].Enabled;
+            set => sectionSettings[CrossSectionSectionName.FloodPlain2].Enabled = value;
         }
-        
+
+        public bool MainCanAdd { get; set; } // Do not make this property private, as it is used in ZWSectionsView
+        public bool FloodPlain1CanAdd { get; set; } // Do not make this property private, as it is used in ZWSectionsView
+        public bool FloodPlain2CanAdd { get; set; } // Do not make this property private, as it is used in ZWSectionsView
+
         public void UpdateViewModelFromCrossSection(bool recalculate=false)
         {
             if (recalculate)
@@ -189,9 +203,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
             UpdateSectionWidths();
 
-            MainExist = GetSectionExists(mainSectionName);
-            FloodPlain1Exist = GetSectionExists(floodplain1SectionTypeName);
-            FloodPlain2Exist = GetSectionExists(floodplain2SectionTypeName);
+            MainExist = SectionExists(CrossSectionSectionName.Main);
+            FloodPlain1Exist = SectionExists(CrossSectionSectionName.FloodPlain1);
+            FloodPlain2Exist = SectionExists(CrossSectionSectionName.FloodPlain2);
 
             MainEnabled = FloodPlain1Exist;
             FloodPlain1Enabled = FloodPlain2Exist;
@@ -202,15 +216,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             FloodPlain2CanAdd = !FloodPlain2Exist && FloodPlain1Exist;
         }       
 
-        private bool GetSectionExists(string sectionName)
+        private bool SectionExists(CrossSectionSectionName sectionName)
         {
-            return crossSectionSectionTypes.Any(s => s.Name == sectionName);
+            return crossSectionSectionTypes.Any(s => s.Name == sectionName.ToString());
         }
 
-        private void UpdateSectionWidth(string  sectionTypeName)
+        private void UpdateSectionWidth(CrossSectionSectionName crossSectionSectionName)
         {
-            var section = crossSectionDefinition.Sections.FirstOrDefault(s => s.SectionType.Name == sectionTypeName);
-            var c = sectionSettings[sectionTypeName];
+            var section = crossSectionDefinition.Sections.FirstOrDefault(s => s.SectionType.Name == crossSectionSectionName.ToString());
+            var c = sectionSettings[crossSectionSectionName];
             if (section != null)
             {
                 c.Width = 2 * (section.MaxY - section.MinY);
@@ -222,31 +236,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             }
         }
         
-        private void SetSection(string sectionTypeName, double minY, double maxY)
+        private void SetSection(CrossSectionSectionName sectionName, double minY, double maxY)
         {
-            var section = crossSectionDefinition.Sections.FirstOrDefault(s => s.SectionType.Name == sectionTypeName);
-            
-            //var crossSectionSectionType = crossSectionSectionTypes.FirstOrDefault(st=>st.Name == sectionTypeName);
-            //if (section == null && crossSectionSectionType != null)
-            //{
-            //    section = new CrossSectionSection {SectionType = crossSectionSectionType};
-            //    crossSectionDefinition.Sections.Add(section);
-            //    if (sectionSettings.ContainsKey(sectionTypeName))
-            //    {
-            //        sectionSettings[sectionTypeName].Enabled = true;
-            //        sectionSettings[sectionTypeName].Width = 2 * (maxY - minY);
-            //    }
-            //}
-
+            var section = crossSectionDefinition.Sections.FirstOrDefault(s => s.SectionType.Name == sectionName.ToString());
             if (section == null) return;
-            if(Math.Abs(minY - section.MinY) >= double.Epsilon) section.MinY = minY;
-            if(Math.Abs(maxY - section.MaxY) >= double.Epsilon) section.MaxY = maxY;
-            sectionSettings[sectionTypeName].Width = 2 * (maxY - minY);
+
+            if (Math.Abs(minY - section.MinY) >= double.Epsilon) section.MinY = minY;
+            if (Math.Abs(maxY - section.MaxY) >= double.Epsilon) section.MaxY = maxY;
+            sectionSettings[sectionName].Width = 2 * (maxY - minY);
         }
         
         public void Dispose()
         {
-            UnSubscribe();
+            Unsubscribe();
         }
 
         private void Subscribe()
@@ -255,7 +257,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             ((INotifyPropertyChange)crossSectionSectionTypes).PropertyChanged += SectionTypesChanged;
         }
 
-        private void UnSubscribe()
+        private void Unsubscribe()
         {
             crossSectionSectionTypes.CollectionChanged -= SectionTypesChanged;
             ((INotifyPropertyChange)crossSectionSectionTypes).PropertyChanged -= SectionTypesChanged;
@@ -268,27 +270,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         
         public void AddMainSectionType()
         {
-            AddSectionType(mainSectionName);
+            AddSectionType(CrossSectionSectionName.Main);
         }
 
         public void AddFp1SectionType()
         {
-            AddSectionType(floodplain1SectionTypeName);
+            AddSectionType(CrossSectionSectionName.FloodPlain1);
         }
 
         public void AddFp2SectionType()
         {
-            AddSectionType(floodplain2SectionTypeName);
+            AddSectionType(CrossSectionSectionName.FloodPlain2);
         }
 
-        private void AddSectionType(string sectionName)
+        private void AddSectionType(CrossSectionSectionName sectionName)
         {
-            if (!GetSectionExists(sectionName))
-            {
-                var crossSectionSectionType = new CrossSectionSectionType {Name = sectionName};
-                crossSectionSectionTypes.Add(crossSectionSectionType);
-                crossSectionDefinition.Sections.Add(new CrossSectionSection { SectionType = crossSectionSectionType });
-            }
+            if (SectionExists(sectionName)) return;
+
+            var crossSectionSectionType = new CrossSectionSectionType {Name = sectionName.ToString()};
+            Unsubscribe();
+            crossSectionSectionTypes.Add(crossSectionSectionType);
+            Subscribe();
+            crossSectionDefinition.Sections.Add(new CrossSectionSection { SectionType = crossSectionSectionType });
+
+            UpdateViewModelFromCrossSection();
         }
     }
 }
