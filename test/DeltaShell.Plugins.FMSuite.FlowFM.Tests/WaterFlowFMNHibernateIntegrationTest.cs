@@ -312,12 +312,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 app.SaveProjectAs("spatial_hibernate.dsproj");
 
+                var testDataDirectory = TestHelper.GetTestFilePath(@"MorphologySpatialVarying_Project\FM_model_Zandmotor_MOR1.dsproj_data\zm_dfm");
+                var zipFileName = "zm_dfm.zip";
+                var zipFilePath = Path.Combine(testDataDirectory, zipFileName);
+
                 TestHelper.PerformActionInTemporaryDirectory(tempDir =>
                 {
-                    var testDataDirectory = TestHelper.GetTestFilePath(@"MorphologySpatialVarying_Project\FM_model_Zandmotor_MOR1.dsproj_data\zm_dfm");
-                    var zipFileName = "zm_dfm.zip";
-                    var zipFilePath = Path.Combine(testDataDirectory, zipFileName);
-
                     FileUtils.CopyDirectory(testDataDirectory, tempDir);
                     ZipFileUtils.Extract(zipFilePath, tempDir);
 

@@ -22,12 +22,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void OpenMapFileCheckFunctions_Sedimentation() // Issue #: DELFT3DFM-775
         {
+            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            var zmDfmZipFileName = "zm_dfm_map.zip";
+            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
-                var zmDfmZipFileName = "zm_dfm_map.zip";
-                var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
-
                 FileUtils.CopyDirectory(testDataFilePath, tempDir);
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
@@ -55,12 +55,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void OpenMapFileCheckFunctions()
         {
+            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            var zmDfmZipFileName = "zm_dfm_map.zip";
+            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
-                var zmDfmZipFileName = "zm_dfm_map.zip";
-                var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
-
                 FileUtils.CopyDirectory(testDataFilePath, tempDir);
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
@@ -73,19 +73,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 Assert.AreEqual(12, store.Functions.Count);
             });
-
-       
         }
 
         [Test]
         public void OpenMapFileCheckFunctions_NcFileContaining3DimensionalDataWithLowerUgridVersion()
         {
+            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            var zmDfmZipFileName = "zm_dfm_map.zip";
+            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
-                var zmDfmZipFileName = "zm_dfm_map.zip";
-                var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
-
                 FileUtils.CopyDirectory(testDataFilePath, tempDir);
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
@@ -104,12 +102,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Slow)]
         public void OpenMapFileCheckMinMax()
         {
+            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            var zmDfmZipFileName = "zm_dfm_map.zip";
+            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
-                var zmDfmZipFileName = "zm_dfm_map.zip";
-                var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
-
                 FileUtils.CopyDirectory(testDataFilePath, tempDir);
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
@@ -133,12 +131,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Slow)]
         public void OpenSingleTimeSliceMapFileCheckWaterLevelFunction()
         {
+            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            var zmDfmZipFileName = "zm_dfm_map.zip";
+            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
-                var zmDfmZipFileName = "zm_dfm_map.zip";
-                var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
-
                 FileUtils.CopyDirectory(testDataFilePath, tempDir);
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
@@ -165,12 +163,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void OpenSingleTimeSliceMapFileFilterTime()
         {
+            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            var zmDfmZipFileName = "zm_dfm_map.zip";
+            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
-                var zmDfmZipFileName = "zm_dfm_map.zip";
-                var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
-
                 FileUtils.CopyDirectory(testDataFilePath, tempDir);
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
@@ -197,12 +195,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void OpenMapFileReadFlowElements()
         {
+            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            var zmDfmZipFileName = "zm_dfm_map.zip";
+            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
-                var zmDfmZipFileName = "zm_dfm_map.zip";
-                var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
-
                 FileUtils.CopyDirectory(testDataFilePath, tempDir);
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
@@ -225,12 +223,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void OpenMapFileCheckWaterLevelFunction()
         {
+            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            var zmDfmZipFileName = "zm_dfm_map.zip";
+            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
-                var zmDfmZipFileName = "zm_dfm_map.zip";
-                var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
-
                 FileUtils.CopyDirectory(testDataFilePath, tempDir);
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
@@ -263,8 +261,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.AreEqual(19456, waterLevelFunction.GetValues(filter).Count);
                 Assert.AreEqual(new DateTime(2011, 8, 1, 0, 0, 0), waterLevelFunction.Time.GetValues(filter)[0]);
             });
-
-
         }
 
         [Test]
@@ -299,12 +295,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Slow)]
         public void OpenUgridMapFileCheckFunctions()
         {
+            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            var zmDfmZipFileName = "zm_dfm_map.zip";
+            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
-                var zmDfmZipFileName = "zm_dfm_map.zip";
-                var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
-
                 FileUtils.CopyDirectory(testDataFilePath, tempDir);
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
@@ -351,20 +347,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.AreEqual("mesh2d_ucx", customVelocityCoverage.Components[0].Name);
                 Assert.AreEqual("mesh2d_ucy", customVelocityCoverage.Components[1].Name);
             });
-
-
         }
 
         [Test]
         [Category(TestCategory.Slow)]
         public void OpenMapFileAndSetCoordinateSystemShouldChangeCoordinateSystem()
         {
+            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            var zmDfmZipFileName = "zm_dfm_map.zip";
+            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
-                var zmDfmZipFileName = "zm_dfm_map.zip";
-                var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
-
                 FileUtils.CopyDirectory(testDataFilePath, tempDir);
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
@@ -387,12 +381,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void Test_GivenAThreeDimensionalVariable_CorrectAmountOfValuesIsGiven()
         {
+            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            var zmDfmZipFileName = "zm_dfm_map.zip";
+            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
-                var zmDfmZipFileName = "zm_dfm_map.zip";
-                var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
-
                 FileUtils.CopyDirectory(testDataFilePath, tempDir);
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 

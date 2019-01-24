@@ -63,12 +63,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 var importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
                 Assert.IsNotNull(importer);
 
+                var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+                var zmDfmZipFileName = "zm_dfm_map.zip";
+                var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+
                 TestHelper.PerformActionInTemporaryDirectory(tempDir =>
                 {
-                    var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
-                    var zmDfmZipFileName = "zm_dfm_map.zip";
-                    var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
-
                     FileUtils.CopyDirectory(testDataFilePath, tempDir);
                     ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
@@ -154,12 +154,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [Category(TestCategory.DataAccess)]
         public void GivenImportedFMNetFileWhenExportingWithDifferentPathThenCreateFileCopyAndReturnTrue()
         {
+            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            var zmDfmZipFileName = "zm_dfm_map.zip";
+            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
-                var zmDfmZipFileName = "zm_dfm_map.zip";
-                var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
-
                 FileUtils.CopyDirectory(testDataFilePath, tempDir);
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 

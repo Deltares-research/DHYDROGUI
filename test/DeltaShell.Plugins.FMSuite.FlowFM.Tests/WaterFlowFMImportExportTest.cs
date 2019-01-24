@@ -61,12 +61,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Slow)]
         public void ModelImportTestDcsm()
         {
+            var testDataFilePath = TestHelper.GetTestFilePath(@"dcsm");
+            var dcsmZipFileName = "dcsm.zip";
+            var dcsmZipFilePath = Path.Combine(testDataFilePath, dcsmZipFileName);
+
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var testDataFilePath = TestHelper.GetTestFilePath(@"dcsm");
-                var dcsmZipFileName = "dcsm.zip";
-                var dcsmZipFilePath = Path.Combine(testDataFilePath, dcsmZipFileName);
-
                 FileUtils.CopyDirectory(testDataFilePath, tempDir);
                 ZipFileUtils.Extract(dcsmZipFilePath, tempDir);
 

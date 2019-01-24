@@ -793,14 +793,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ReadExtForcingsShouldBeFast()
         {
             var def = new WaterFlowFMModelDefinition();
+            var testDataPath = TestHelper.GetTestFilePath(@"dcsm");
+            var externalForcingZipFileName = "dcsm.zip";
+            var externalForcingZipFilePath = Path.Combine(testDataPath, externalForcingZipFileName);
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var testDataPath = TestHelper.GetTestFilePath(@"dcsm");
-                 var externalForcingZipFileName = "dcsm.zip";
-
-                var externalForcingZipFilePath = Path.Combine(testDataPath, externalForcingZipFileName);
-
                 FileUtils.CopyDirectory(testDataPath, tempDir);
                 ZipFileUtils.Extract(externalForcingZipFilePath, tempDir);
 

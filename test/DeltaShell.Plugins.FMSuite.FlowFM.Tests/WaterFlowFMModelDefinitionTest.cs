@@ -121,17 +121,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         public void WriteMduFile_UpdatesCoordinateSystemInNetFileIfNecessary()
         {
+            const string netFileName = "bendprof_map.nc";
+            const string outputDirName = "readWriteMdu";
+            if (Directory.Exists(outputDirName)) Directory.Delete(outputDirName, true);
+
+            // setup
+            var mduFilePath = TestHelper.GetTestFilePath(TestFilePath);
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            var modelName = Path.GetFileName(mduFilePath);
+
+            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            var zmDfmZipFileName = "zm_dfm_map.zip";
+            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                const string netFileName = "bendprof_map.nc";
-                const string outputDirName = "readWriteMdu";
-                if (Directory.Exists(outputDirName)) Directory.Delete(outputDirName, true);
-
-                // setup
-                var mduFilePath = TestHelper.GetTestFilePath(TestFilePath);
-                var mduDir = Path.GetDirectoryName(mduFilePath);
-                var modelName = Path.GetFileName(mduFilePath);
-
                 var area = new HydroArea();
                 var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
                 var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
@@ -144,10 +148,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 // setup test netfile
                 modelDefinition.Properties.First(p => p.PropertyDefinition.MduPropertyName == "NetFile").Value = netFileName;
-
-                var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
-                var zmDfmZipFileName = "zm_dfm_map.zip";
-                var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
 
                 FileUtils.CopyDirectory(testDataFilePath, tempDir);
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
