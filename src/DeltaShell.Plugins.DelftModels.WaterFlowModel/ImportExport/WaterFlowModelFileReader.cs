@@ -13,6 +13,7 @@ using DelftTools.Hydro.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.IO.FileReaders.Retention;
 using DeltaShell.NGHS.IO.FileReaders.SpatialData;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary;
@@ -36,11 +37,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 errorReport.Add($"{header}:{Environment.NewLine}    {string.Join($"{Environment.NewLine}    ", errorMessages)}");
 
             var name = Path.GetFileNameWithoutExtension(modelFilename);
-            var model = name.Length > 0 ? new WaterFlowModel1D(name) : new WaterFlowModel1D();
+            var model = name?.Length > 0 ? new WaterFlowModel1D(name) : new WaterFlowModel1D();
 
             try
             {
-                const int totalSteps = 12;
+                const int totalSteps = 13;
                 var stepCounter = 1;
 
                 reportProgress($"Reading filenames from {Path.GetFileName(modelFilename)}.", stepCounter, totalSteps);
@@ -112,9 +113,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 stepCounter++;
 
                 reportProgress(
-                    $"Reading structures from {fileNames.Structures} and {fileNames.Structures}.",
+                    $"Reading structures from {fileNames.Structures}.",
                     stepCounter, totalSteps);
                 ReadStructuresFile(fileNames.Structures, model.Network, CreateAndAddErrorReport);
+                stepCounter++;
+
+                reportProgress(
+                    $"Reading retention from {fileNames.Retention}.",
+                    stepCounter, totalSteps);
+                ReadRetentionFile(fileNames.Retention, model.Network, CreateAndAddErrorReport);
                 stepCounter++;
 
                 reportProgress(
@@ -181,8 +188,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 var correspondingBranch = network.Channels.FirstOrDefault(c => c.Name == compositeBranchStructure.Branch.Name);
                 correspondingBranch?.BranchFeatures.Add(compositeBranchStructure);
             }
-
         }
+
+        private static void ReadRetentionFile(string fileName, IHydroNetwork network,
+            Action<string, IList<string>> createAndAddErrorReport)
+        {
+            var retentionFileReader= new RetentionFileReader(createAndAddErrorReport);
+            retentionFileReader.ReadRetention(fileName, network.Channels.ToList());
+            
+        }
+
         private static void ReadCrossSectionsFile(ModelFileNames fileName, IHydroNetwork network, Action<string, IList<string>> createAndAddErrorReport)
         {
             var crossSectionsReader = new CrossSectionFileReader(createAndAddErrorReport);

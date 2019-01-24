@@ -129,6 +129,7 @@
     <Compile Include="FileReaders\NetworkDefinitionFileReaderTest.cs" />
     <Compile Include="Converters\NetworkDiscretizationConverterTest.cs" />
     <Compile Include="FileReaders\ObservationPointFileReaderTest.cs" />
+    <Compile Include="FileReaders\RetentionFileReaderTest.cs" />
     <Compile Include="FileReaders\SalinityConverterTest.cs" />
     <Compile Include="FileReaders\SpatialDataConverterTest.cs" />
     <Compile Include="FileReaders\SpatialDataReaderTest.cs" />

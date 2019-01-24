@@ -59,7 +59,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                         $"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
 
                 var reader = new LateralSourceFileReader(CreateAndAddErrorReport);
-                var filePath = TestHelper.GetTestFilePath(Path.Combine("LateralSourcesAndObservationPoints",
+                TestHelper.GetTestFilePath(Path.Combine("LateralSourcesAndObservationPoints",
                     "LateralDischargeLocations.ini"));
                 var allLateralSources = reader.ReadLateralSources(testFile, channelsList);
 
