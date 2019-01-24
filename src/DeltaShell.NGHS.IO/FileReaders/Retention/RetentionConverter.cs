@@ -84,11 +84,11 @@ namespace DeltaShell.NGHS.IO.FileReaders.Retention
             throw new NotImplementedException(useTableErrorMessage);
         }
 
-        private static void ValidateConvertedRetention(IRetention readRetentionPoint, IList<IRetention> generatedRetentionPoint)
+        private static void ValidateConvertedRetention(IRetention readRetention, IList<IRetention> generatedRetention)
         {
-            if (!readRetentionPoint.IsDuplicateIn(generatedRetentionPoint)) return;
+            if (!readRetention.IsDuplicateIn(generatedRetention)) return;
             var errorMessage =
-                $"Retention point with id {readRetentionPoint.Name} already exists, there cannot be any duplicate retention ids.{Environment.NewLine}";
+                $"Retention point with id {readRetention.Name} already exists, there cannot be any duplicate retention ids.{Environment.NewLine}";
             throw new Exception(errorMessage);
         }
 
