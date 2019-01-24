@@ -80,8 +80,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Retention
                 };
             }
 
-            Log.ErrorFormat("UseTable is not yet implemented in the RetentionFileReader, please set UseTable to 0 to continue with this model.");
-            return new DelftTools.Hydro.Retention();
+            const string useTableErrorMessage = "UseTable is not yet implemented in the RetentionFileReader, please set UseTable to 0 to continue with this model.";
+            throw new NotImplementedException(useTableErrorMessage);
         }
 
         private static void ValidateConvertedRetention(IRetention readRetentionPoint, IList<IRetention> generatedRetentionPoint)
