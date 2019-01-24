@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         /// <param name="startTime">The model start time.</param>
         /// <param name="stopTime">The model stop time.</param>
         /// <returns> A set of validation issues encountered. </returns>
-        public static IEnumerable<ValidationIssue> Validate(IEnumerable<Weir2D> weirs, Envelope gridExtent, DateTime startTime, DateTime stopTime)
+        public static IEnumerable<ValidationIssue> Validate(this IEnumerable<Weir2D> weirs, Envelope gridExtent, DateTime startTime, DateTime stopTime)
         {
             var issues = new List<ValidationIssue>();
 

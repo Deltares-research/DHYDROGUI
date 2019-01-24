@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             weirs.Add(weir);
 
             // When
-            var validationIssues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
+            var validationIssues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
             AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, WeirValidator.CrestWidthPropertyName, weir, validCrestWidth);
@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             weirs.Add(weir);
 
             // When
-            var validationIssues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
+            var validationIssues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
             AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, WeirValidator.CrestWidthPropertyName, weir, emptyCrestWidth);
@@ -186,7 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             var gridExtent = new Envelope();
 
             // When
-            var issues = WeirValidator.Validate(weirs, gridExtent, modelStartTime, modelStopTime).ToList();
+            var issues = weirs.Validate(gridExtent, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -208,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
+            var issues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -231,7 +231,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
+            var issues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -249,7 +249,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
+            var issues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -270,7 +270,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
+            var issues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -296,7 +296,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
+            var issues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -325,7 +325,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
+            var issues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -354,7 +354,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
+            var issues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(5, issues.Count, "Exactly 5 log messages were expected when validating this weir.");
@@ -390,7 +390,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
+            var issues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -413,7 +413,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
+            var issues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -440,7 +440,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
+            var issues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -463,7 +463,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
+            var issues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -489,7 +489,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
+            var issues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -515,7 +515,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
+            var issues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);
@@ -538,7 +538,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             weirs.Add(weir);
 
             // When
-            var issues = WeirValidator.Validate(weirs, null, modelStartTime, modelStopTime).ToList();
+            var issues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageOneValidationIssueExpected);

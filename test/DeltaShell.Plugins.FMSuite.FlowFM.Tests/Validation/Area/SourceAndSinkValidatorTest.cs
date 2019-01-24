@@ -31,7 +31,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             };
 
             // When
-            var validationIssues = SourceAndSinkValidator.Validate(new List<SourceAndSink> { sourceAndSink }, envelope, new DateTime(), new DateTime());
+            var sourceAndSinks = new List<SourceAndSink> { sourceAndSink };
+            var validationIssues = sourceAndSinks.Validate(envelope, new DateTime(), new DateTime());
 
             // Then
             var validationWarnings = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Warning).ToArray();
@@ -56,7 +57,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             };
 
             // When
-            var validationIssues = SourceAndSinkValidator.Validate(new List<SourceAndSink>{sourceAndSink}, null, new DateTime(), new DateTime());
+            var sourceAndSinks = new List<SourceAndSink>{sourceAndSink};
+            var validationIssues = sourceAndSinks.Validate(null, new DateTime(), new DateTime());
 
             // Then
             var validationErrors = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
@@ -92,7 +94,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             sourceAndSink.Function.Arguments[0].SetValues(new List<DateTime> { dateTimeNow.AddDays(addedDaysToStartTime), dateTimeNow.AddDays(addedDaysToStopTime) });
 
             // When
-            var validationIssues = SourceAndSinkValidator.Validate(new List<SourceAndSink> { sourceAndSink }, null, startTime, stopTime);
+            var sourceAndSinks = new List<SourceAndSink> { sourceAndSink };
+            var validationIssues = sourceAndSinks.Validate(null, startTime, stopTime);
 
             // Then
             var validationErrors = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
@@ -122,7 +125,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             sourceAndSink.Function.Arguments[0].SetValues(new List<DateTime> { dateTimeNow, dateTimeNow.AddDays(6) });
 
             // When
-            var validationIssues = SourceAndSinkValidator.Validate(new List<SourceAndSink> { sourceAndSink }, null, startTime, stopTime);
+            var sourceAndSinks = new List<SourceAndSink> { sourceAndSink };
+            var validationIssues = sourceAndSinks.Validate(null, startTime, stopTime);
 
             // Then
             var validationErrors = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();

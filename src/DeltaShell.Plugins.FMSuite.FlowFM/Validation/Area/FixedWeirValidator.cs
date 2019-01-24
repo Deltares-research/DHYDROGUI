@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         /// <param name="gridExtent">The grid extent to which the fixed weir should be snapped.</param>
         /// <param name="fixedWeirsProperties">The fixed weir properties</param>
         /// <returns> A set of validation issues encountered. </returns>
-        public static IEnumerable<ValidationIssue> Validate(IEnumerable<FixedWeir> fixedWeirs, Envelope gridExtent, IEnumerable<ModelFeatureCoordinateData<FixedWeir>> fixedWeirsProperties)
+        public static IEnumerable<ValidationIssue> Validate(this IEnumerable<FixedWeir> fixedWeirs, Envelope gridExtent, IEnumerable<ModelFeatureCoordinateData<FixedWeir>> fixedWeirsProperties)
         {
             var issues = new List<ValidationIssue>();
             var fixedWeirsPropertyList = fixedWeirsProperties.ToList();

@@ -39,9 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             var gridExtent = new Envelope();
 
             // When
-            var issues = FixedWeirValidator.Validate(
-                fixedWeirs,
-                gridExtent,
+            var issues = fixedWeirs.Validate(gridExtent,
                 new List<ModelFeatureCoordinateData<FixedWeir>>()
             ).ToList();
 
@@ -61,9 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             var fixedWeirsProperties = CreateModelFeatureCoordinateDataWithInvalidValues(fixedWeirs.First());
 
             // When
-            var issues = FixedWeirValidator.Validate(
-                fixedWeirs,
-                gridExtent,
+            var issues = fixedWeirs.Validate(gridExtent,
                 fixedWeirsProperties
             ).ToList();
 

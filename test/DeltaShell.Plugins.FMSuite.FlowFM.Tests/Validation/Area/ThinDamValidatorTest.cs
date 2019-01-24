@@ -26,7 +26,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             };
 
             // When
-            var validationIssues = ThinDamValidator.Validate(new List<ThinDam2D> {thinDam}, envelope);
+            var thinDams = new List<ThinDam2D> {thinDam};
+            var validationIssues = thinDams.Validate(envelope);
 
             // Then
             var validationWarnings = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Warning).ToArray();

@@ -14,12 +14,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         public static ValidationReport Validate(WaterFlowFMModel model)
         {
             var area = model.Area;
-            
-            var issues = ThinDamValidator.Validate(model.Area.ThinDams, model.GridExtent)
-                .Concat(SourceAndSinkValidator.Validate(model.SourcesAndSinks, model.GridExtent, model.StartTime, model.StopTime))
-                .Concat(FixedWeirValidator.Validate(model.Area.FixedWeirs, model.GridExtent, model.FixedWeirsProperties))
-                .Concat(WeirValidator.Validate(model.Area.Weirs, model.GridExtent, model.StartTime, model.StopTime))
-                .Concat(PumpValidator.ValidatePumps(model, area.Pumps));
+
+            var issues = area.ThinDams.Validate(model.GridExtent)
+                .Concat(model.SourcesAndSinks.Validate(model.GridExtent, model.StartTime, model.StopTime))
+                .Concat(area.FixedWeirs.Validate(model.GridExtent, model.FixedWeirsProperties))
+                .Concat(area.Weirs.Validate(model.GridExtent, model.StartTime, model.StopTime))
+                .Concat(area.Pumps.Validate(model.GridExtent, model.StartTime, model.StopTime));
 
             return new ValidationReport("Structures", issues);
         }
