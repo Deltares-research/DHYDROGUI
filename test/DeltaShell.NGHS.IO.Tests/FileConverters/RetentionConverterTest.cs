@@ -33,18 +33,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
         {
             var errorReport = new List<string>();
             var categories = new List<DelftIniCategory>();
-            var category1 = new DelftIniCategory(RetentionRegion.Header);
 
-            category1.AddProperty(RetentionRegion.Id.Key, "Retention1");
-            category1.AddProperty(RetentionRegion.BranchId.Key, "Channel1");
-            category1.AddProperty(RetentionRegion.Chainage.Key, 800.0);
-            category1.AddProperty(RetentionRegion.StorageType.Key, "Reservoir");
-            category1.AddProperty(RetentionRegion.UseTable.Key, 0);
-            category1.AddProperty(RetentionRegion.BedLevel.Key, 4.0);
-            category1.AddProperty(RetentionRegion.Area.Key, 1000000.0);
-            category1.AddProperty(RetentionRegion.StreetLevel.Key, 4.0);
-            category1.AddProperty(RetentionRegion.StreetStorageArea.Key, 1000000.0);
-
+            var category1 = PopulateDelftIniCategory();
             var category2 = new DelftIniCategory(RetentionRegion.Header);
 
             category2.AddProperty(RetentionRegion.Id.Key, "Retention2");
@@ -88,17 +78,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
         {
             var errorReport = new List<string>();
             var categories = new List<DelftIniCategory>();
-            var category1 = new DelftIniCategory(RetentionRegion.Header);
 
-            category1.AddProperty(RetentionRegion.Id.Key, "Retention1");
+            var category1 = PopulateDelftIniCategory();
+            //Remove and re-add the property that we want to test.
+            category1.RemoveProperty(category1.Properties.Single(p => p.Name == RetentionRegion.BranchId.Key));
             category1.AddProperty(RetentionRegion.BranchId.Key, "AllYourBranchAreBelongToUs");
-            category1.AddProperty(RetentionRegion.Chainage.Key, 800.0);
-            category1.AddProperty(RetentionRegion.StorageType.Key, "Reservoir");
-            category1.AddProperty(RetentionRegion.UseTable.Key, 0);
-            category1.AddProperty(RetentionRegion.BedLevel.Key, 4.0);
-            category1.AddProperty(RetentionRegion.Area.Key, 1000000.0);
-            category1.AddProperty(RetentionRegion.StreetLevel.Key, 4.0);
-            category1.AddProperty(RetentionRegion.StreetStorageArea.Key, 1000000.0);
 
             categories.Add(category1);
 
@@ -110,23 +94,17 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
                     $"Unable to parse {category1.Name} property: {RetentionRegion.BranchId.Key}, Branch not found in Network.{Environment.NewLine}"));
         }
 
-
         [Test]
         public void GivenARetentionDataModelWhichUsesUseTable_WhenConverting_ThenTheErrorReportIsProperlyFilled()
         {
             var errorReport = new List<string>();
             var categories = new List<DelftIniCategory>();
-            var category1 = new DelftIniCategory(RetentionRegion.Header);
 
-            category1.AddProperty(RetentionRegion.Id.Key, "Retention1");
-            category1.AddProperty(RetentionRegion.BranchId.Key, "Channel1");
-            category1.AddProperty(RetentionRegion.Chainage.Key, 800.0);
-            category1.AddProperty(RetentionRegion.StorageType.Key, "Reservoir");
+            var category1 = PopulateDelftIniCategory();
+
+            //Remove and re-add the property that we want to test.
+            category1.RemoveProperty(category1.Properties.Single(p => p.Name == RetentionRegion.UseTable.Key));
             category1.AddProperty(RetentionRegion.UseTable.Key, 1);
-            category1.AddProperty(RetentionRegion.BedLevel.Key, 4.0);
-            category1.AddProperty(RetentionRegion.Area.Key, 1000000.0);
-            category1.AddProperty(RetentionRegion.StreetLevel.Key, 4.0);
-            category1.AddProperty(RetentionRegion.StreetStorageArea.Key, 1000000.0);
 
             categories.Add(category1);
 
@@ -144,29 +122,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
         {
             var errorReport = new List<string>();
             var categories = new List<DelftIniCategory>();
-            var category1 = new DelftIniCategory(RetentionRegion.Header);
 
-            category1.AddProperty(RetentionRegion.Id.Key, "Retention1");
-            category1.AddProperty(RetentionRegion.BranchId.Key, "Channel1");
-            category1.AddProperty(RetentionRegion.Chainage.Key, 800.0);
-            category1.AddProperty(RetentionRegion.StorageType.Key, "Reservoir");
-            category1.AddProperty(RetentionRegion.UseTable.Key, 0);
-            category1.AddProperty(RetentionRegion.BedLevel.Key, 4.0);
-            category1.AddProperty(RetentionRegion.Area.Key, 1000000.0);
-            category1.AddProperty(RetentionRegion.StreetLevel.Key, 4.0);
-            category1.AddProperty(RetentionRegion.StreetStorageArea.Key, 1000000.0);
-
-            var category2 = new DelftIniCategory(RetentionRegion.Header);
-
-            category2.AddProperty(RetentionRegion.Id.Key, "Retention1");
-            category2.AddProperty(RetentionRegion.BranchId.Key, "Channel1");
-            category2.AddProperty(RetentionRegion.Chainage.Key, 1500.0);
-            category2.AddProperty(RetentionRegion.StorageType.Key, "Reservoir");
-            category2.AddProperty(RetentionRegion.UseTable.Key, 0);
-            category2.AddProperty(RetentionRegion.BedLevel.Key, 3.0);
-            category2.AddProperty(RetentionRegion.Area.Key, 500000.0);
-            category2.AddProperty(RetentionRegion.StreetLevel.Key, 3.0);
-            category2.AddProperty(RetentionRegion.StreetStorageArea.Key, 500000.0);
+            var category1 = PopulateDelftIniCategory();
+            var category2 = PopulateDelftIniCategory();
 
             categories.Add(category1);
             categories.Add(category2);
@@ -176,6 +134,22 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
             Assert.That(errorReport.Count, Is.EqualTo(1));
             Assert.That(errorReport[0],
                 Is.EqualTo($"Retention point with id {category1.Properties[0].Value} already exists, there cannot be any duplicate retention ids.{Environment.NewLine}"));
+        }
+
+        private static DelftIniCategory PopulateDelftIniCategory()
+        {
+            var category = new DelftIniCategory(RetentionRegion.Header);
+
+            category.AddProperty(RetentionRegion.Id.Key, "Retention1");
+            category.AddProperty(RetentionRegion.BranchId.Key, "Channel1");
+            category.AddProperty(RetentionRegion.Chainage.Key, 800.0);
+            category.AddProperty(RetentionRegion.StorageType.Key, "Reservoir");
+            category.AddProperty(RetentionRegion.UseTable.Key, 0);
+            category.AddProperty(RetentionRegion.BedLevel.Key, 4.0);
+            category.AddProperty(RetentionRegion.Area.Key, 1000000.0);
+            category.AddProperty(RetentionRegion.StreetLevel.Key, 4.0);
+            category.AddProperty(RetentionRegion.StreetStorageArea.Key, 1000000.0);
+            return category;
         }
     }
 }
