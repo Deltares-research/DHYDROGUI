@@ -1,8 +1,10 @@
-﻿using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using System.IO;
-using System.Linq;
+﻿using DelftTools.Utils.Collections;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using log4net;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
@@ -19,24 +21,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             }
 
             var rtcModel = new RealTimeControlModel();
-            var controlGroups = rtcModel.ControlGroups;
 
             var runTimeConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlRuntime);
             RealTimeControlRuntimeConfigXmlReader.Read(runTimeConfigFilePath, rtcModel);
 
             var dataConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlData);
-            var connectionPoints = RealTimeControlDataConfigXmlReader.Read(dataConfigFilePath, controlGroups);
-            
             var toolsConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlTools);
-            RealTimeControlToolsConfigXmlReader.Read(toolsConfigFilePath, controlGroups, connectionPoints);
+            var controlGroups = RealTimeControlDataAndToolsConfigXmlReader.Read(dataConfigFilePath, toolsConfigFilePath);
 
             var timeSeriesFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlTimeSeries);
             RealTimeControlTimeSeriesXmlReader.Read(timeSeriesFilePath, controlGroups);
 
             var stateImportFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlImportState);
-            RealTimeControlStateImportXmlReader.Read(stateImportFilePath, connectionPoints.OfType<Output>().ToList());
+
+            var outputs = controlGroups.SelectMany(cg => cg.Outputs);
+            RealTimeControlStateImportXmlReader.Read(stateImportFilePath, outputs.ToList());
+
+            AddCreatedControlGroupsToRtcModel(controlGroups, rtcModel);
 
             return rtcModel;
+        }
+
+        private static void AddCreatedControlGroupsToRtcModel(IList<IControlGroup> controlGroups, RealTimeControlModel rtcModel)
+        {
+            controlGroups.ForEach(cg => rtcModel.ControlGroups.Add((ControlGroup) cg));
         }
     }
 }

@@ -107,8 +107,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 StartTime = startTime,
                 EndTime = endTime,
-                Name = XmlTag + prefix + "/" + LocationId,
-                LocationId = prefix + "/" + LocationId,
+                Name = prefix + LocationId,
+                LocationId = XmlTag + prefix + LocationId,
                 ParameterId = QuantityId,
                 TimeStep = timeStep,
                 TimeSeries = (TimeSeries) TimeSeries.Clone(),
@@ -129,11 +129,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         {
             var result = base.ToXml(xNamespace, prefix);
             result.Add(new XElement(xNamespace + "timeAbsolute",
-                                    new XAttribute("id", prefix + "/" + Name),
+                                    new XAttribute("id", XmlTag + prefix + Name),
                                     new XElement(xNamespace + "input",
                                                  new XElement(xNamespace + "x",
                                                               Reference == string.Empty ? null : new XAttribute("ref", Reference),
-                                                              XmlTag + prefix +"/"+ Name)),
+                                                              prefix + Name)),
                                     Outputs.Select(output => output.ToXml(xNamespace, "y", null))));
             return result;
         }

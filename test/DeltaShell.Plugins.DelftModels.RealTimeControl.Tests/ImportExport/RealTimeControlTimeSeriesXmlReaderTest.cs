@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var filePath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "Invalid"));
             Assert.That(!File.Exists(filePath));
 
-            var controlGroups = new List<ControlGroup>();
+            var controlGroups = new List<IControlGroup>();
 
             // Then
             TestHelper.AssertLogMessageIsGenerated(() =>
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             controlGroup.Conditions.Add(timeCondition);
             controlGroup.Rules.Add(timeRule);
 
-            var controlGroups = new List<ControlGroup> { controlGroup };
+            var controlGroups = new List<IControlGroup> { controlGroup };
 
             // When
             RealTimeControlTimeSeriesXmlReader.Read(filePath, controlGroups);

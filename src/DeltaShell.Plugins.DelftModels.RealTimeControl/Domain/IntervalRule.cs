@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Xml.Linq;
-using DelftTools.Functions;
+﻿using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Converters;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 using log4net;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Xml.Linq;
 using ValidationAspects;
-using ValidationAspects.Exceptions;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
@@ -101,21 +100,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             set { timeSeries = value; }
         }
         
-        public string Status
-        {
-            get
-            {
-                return Name + "_status";
-            }
-        }
-        public string SetPoint
-        {
-            get
-            {
-                return Name + "_SP";
-            }
-        }
-
         public IntervalRule()
             : this(null)
         {
@@ -133,11 +117,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             var result = base.ToXml(xNamespace, prefix);
             foreach (var input in Inputs)
             {
-                input.SetPoint = prefix + SetPoint;
+                input.SetPoint = RtcXmlTag.SP + prefix + Name;
             }
             foreach (var output in Outputs)
             {
-                output.IntegralPart = prefix + Status;  // also in data export and statevector
+                output.IntegralPart = RtcXmlTag.Status + prefix + Name;  // also in data export and statevector
             }
 
             var deadBandSetpoint = "deadbandSetpointAbsolute";
@@ -161,7 +145,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
 
             result.Add(new XElement(xNamespace + "interval",
-                    new XAttribute("id", prefix + "/" + Name),
+                    new XAttribute("id", XmlTag + prefix + Name),
                     new XElement(xNamespace + "settingBelow", Setting.Below.ToString(CultureInfo.InvariantCulture)),
                     new XElement(xNamespace + "settingAbove", Setting.Above.ToString(CultureInfo.InvariantCulture)),
                     new XElement(xNamespace + settingMax, settingMaxValue.ToString(CultureInfo.InvariantCulture)),
@@ -204,8 +188,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 StartTime = startTime,
                 EndTime = endTime,
-                Name = prefix + SetPoint,
-                LocationId = prefix+Name,
+                Name = RtcXmlTag.SP + prefix + Name,
+                LocationId = XmlTag + prefix + Name,
                 ParameterId = "SP",
                 TimeStep = timeStep,
                 TimeSeries = (TimeSeries) TimeSeries.Clone(),
@@ -235,8 +219,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         {
             var xmlTimeSeries = new XmlTimeSeries
             {
-                Name = prefix + Status,
-                LocationId = prefix+Name,
+                Name = RtcXmlTag.Status + prefix + Name,
+                LocationId = XmlTag + prefix + Name,
                 ParameterId = "Status",
             };
 

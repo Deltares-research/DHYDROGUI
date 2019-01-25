@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public virtual XElement ToXmlReference(XNamespace xNamespace, string prefix)
         {
-            return new XElement(xNamespace + "trigger", new XElement(xNamespace + "ruleReference", prefix + "/" + Name));
+            return new XElement(xNamespace + "trigger", new XElement(xNamespace + "ruleReference", XmlTag + prefix + Name));
         }
 
         /// <summary>
@@ -78,7 +78,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public const string HydraulicRule = "[HydraulicRule]";
         public const string IntervalRule = "[IntervalRule]";
         public const string LookupSignal = "[LookupSignal]";
-        public const string PIDRule = "[PIDRule]";
+        public const string PIDRule = "[PID]";
+        public const string SP = "[SP]";
+        public const string IP = "[IP]";
+        public const string DP = "[DP]";
         public const string RelativeTimeRule = "[RelativeTimeRule]";
         public const string StandardCondition = "[StandardCondition]";
         public const string TimeCondition = "[TimeCondition]";

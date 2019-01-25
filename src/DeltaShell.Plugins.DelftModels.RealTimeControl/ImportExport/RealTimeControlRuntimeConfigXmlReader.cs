@@ -1,12 +1,11 @@
-﻿using DeltaShell.NGHS.IO;
+﻿using DelftTools.Shell.Core.Workflow;
 using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 using log4net;
 using System;
 using System.Globalization;
 using System.IO;
-using DelftTools.Shell.Core.Workflow;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
@@ -21,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 Log.ErrorFormat(Resources.RealTimeControlRuntimeConfigXmlReader_Read_File___0___does_not_exist_, runtimeConfigFilePath);
                 return;
             }
-                
+
             if (rtcModel == null) return;
 
             var runtimeConfigObject = DelftConfigXmlFileParser.Read<RtcRuntimeConfigXML>(runtimeConfigFilePath);

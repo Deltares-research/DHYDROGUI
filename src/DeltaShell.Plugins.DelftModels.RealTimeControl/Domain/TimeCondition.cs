@@ -105,8 +105,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 StartTime = startTime,
                 EndTime = endTime,
-                Name = XmlTag + prefix +"/" + LocationId,
-                LocationId = prefix + "/" + LocationId,
+                Name = prefix + LocationId,
+                LocationId = XmlTag + prefix + LocationId,
                 ParameterId = QuantityId,
                 TimeStep = timeStep,
                 TimeSeries = (TimeSeries) TimeSeries.Clone(),
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public override XElement ToXml(XNamespace xNamespace, string prefix)
         {
-            return ToXml(xNamespace, prefix, XmlTag + prefix + "/" + Name);
+            return ToXml(xNamespace, prefix, XmlTag + prefix + Name);
         }
 
         public override IEnumerable<XElement> ToDataConfigImportSeries(string prefix, XNamespace xNamespace)
@@ -138,9 +138,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 yield return export;
             }
-            yield return new XElement(xNamespace + "timeSeries", new XAttribute("id", XmlTag + prefix + "/" + Name),
+            yield return new XElement(xNamespace + "timeSeries", new XAttribute("id", prefix + Name),
                 new XElement(xNamespace + "PITimeSeries",
-                    new XElement(xNamespace + "locationId", prefix + "/" + LocationId),
+                    new XElement(xNamespace + "locationId", XmlTag + prefix + LocationId),
                     new XElement(xNamespace + "parameterId",QuantityId),
                     new XElement(xNamespace + "interpolationOption",InterpolationOptionsTime == InterpolationType.Constant ? "BLOCK" : "LINEAR"),
                     new XElement(xNamespace + "extrapolationOption", TimeSeries.Time.ExtrapolationType == ExtrapolationType.Periodic ? "PERIODIC" : "BLOCK")
