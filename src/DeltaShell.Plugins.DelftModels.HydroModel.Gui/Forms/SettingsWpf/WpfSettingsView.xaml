@@ -168,14 +168,17 @@
                     <ColumnDefinition Width="{StaticResource ControlLength}" />
                     <ColumnDefinition Width="{StaticResource UnitLength}" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding Label}" Style="{StaticResource LabelTextBlockStyle}"/>
-                <xctk:TimeSpanUpDown Grid.Column="1"
-                                     FractionalSecondsDigitsCount="1" 
-                                     Style="{StaticResource ControlWithErrorStyle}"
-                                     Value="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True}"
-                                     Minimum="00:00:00.1"
-                                     DefaultValue="{Binding Value}"
-                                     TextAlignment="Left"/>
+                <TextBlock 
+                    Text="{Binding Label}" 
+                    Style="{StaticResource LabelTextBlockStyle}"/>
+                <settingsWpf:WpfCustomTimeSpan
+                    Grid.Column="1"
+                    FractionalSecondsDigitsCount="3" 
+                    Style="{StaticResource ControlWithErrorStyle}"
+                    Value="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True}"
+                    Minimum="00:00:00.001"
+                    DefaultValue="{Binding Value}"
+                    TextAlignment="Left"/>
             </Grid>
         </DataTemplate>
 

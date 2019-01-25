@@ -14,7 +14,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf.WpfEnumConverter" BaseTypeListCollapsed="true">
-    <Position X="5.25" Y="4" Width="1.75" />
+    <Position X="5.25" Y="4" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Forms\SettingsWpf\WpfEnumConverter.cs</FileName>
@@ -72,7 +72,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAIAAAAAAAAEAAAIAAAAAAAgAAAAAAAAAABAAAiAAA=</HashCode>
+      <HashCode>AAAIAAAAAAAAEAAAIAAAAAAAgAAAAIAAAACBAAAiAAA=</HashCode>
       <FileName>Forms\SettingsWpf\WpfGuiSubCategory.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -89,7 +89,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACIAAACAAACAAAAQAAAAABBIAAAACAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAACIAAACAAACAAAAUAAAAABBIAAAACAAAAAA=</HashCode>
       <FileName>Forms\SettingsWpf\WpfSettingsView.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -136,6 +136,17 @@
       <HashCode>ABABAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Forms\SettingsWpf\DoubleWrapper.cs</FileName>
     </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf.WpfCustomTimeSpan">
+    <Position X="5.25" Y="6.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAAAAAEAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Forms\SettingsWpf\WpfCustomTimeSpan.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Xceed.Wpf.Toolkit.TimeSpanUpDown" Collapsed="true">
+    <Position X="5.25" Y="5.5" Width="2" />
+    <TypeIdentifier />
   </Class>
   <Interface Name="DelftTools.Shell.Core.Workflow.IModel" Collapsed="true">
     <Position X="12.25" Y="1.5" Width="1.5" />

@@ -221,6 +221,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
+    <Reference Include="Xceed.Wpf.Toolkit">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.41635\lib\net40\DeltaShell\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AcceptanceModelsTest.cs" />
@@ -237,6 +240,7 @@
     <Compile Include="Forms\ActivityShapes\SimpleActivityShapeTest.cs" />
     <Compile Include="Forms\HydroModelSettingsTest.cs" />
     <Compile Include="Forms\SettingsWpf\SettingsTemplateSelectorTest.cs" />
+    <Compile Include="Forms\SettingsWpf\WpfCustomTimeSpanTest.cs" />
     <Compile Include="Forms\SettingsWpf\WpfEnumConverterTest.cs" />
     <Compile Include="Forms\SettingsWpf\WpfGuiCategoryTest.cs" />
     <Compile Include="Forms\SettingsWpf\WpfGuiPropertyTest.cs" />
