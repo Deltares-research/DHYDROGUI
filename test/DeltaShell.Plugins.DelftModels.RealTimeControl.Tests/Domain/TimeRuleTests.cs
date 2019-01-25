@@ -49,9 +49,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private string OriginXml()
         {
             return "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<timeAbsolute id=\"/" + Name + "\">" +
+                   "<timeAbsolute id=\"[TimeRule]" + Name + "\">" +
                    "<input>" +
-                   "<x ref=\"" + InputReferenceEnumStringType + "\">" + RtcXmlTag.TimeRule +"/"+ Name + "</x>" +
+                   "<x ref=\"" + InputReferenceEnumStringType + "\">" + Name + "</x>" +
                    "</input>" +
                    "<output>" +
                    "<y>" + RtcXmlTag.Output + OutputLocationName + "/" + OutputParameterName + "</y>" +
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             var stop = new DateTime(2011, 1, 1, 15, 30, 0);
             var step = new TimeSpan(0, 6, 0, 0);
 
-            var xmlTimeSeries = timeRule.XmlImportTimeSeries("prefix", start, stop, step)
+            var xmlTimeSeries = timeRule.XmlImportTimeSeries("prefix/", start, stop, step)
                     .FirstOrDefault().GetTimeSeriesXElementForTimeSeriesFile("", new TimeSpan(0, 1, 0, 0)).ToString(SaveOptions.DisableFormatting);
 
             Assert.AreEqual(TimeSeriesXml(), xmlTimeSeries);
@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             return "<series>" +
                    "<header>" +
                    "<type>instantaneous</type>" +
-                   "<locationId>prefix/TimeRule</locationId>" +
+                   "<locationId>[TimeRule]prefix/TimeRule</locationId>" +
                    "<parameterId>TimeSeries</parameterId>" +
                    "<timeStep unit=\"hour\" multiplier=\"1\" />" +
                    "<startDate date=\"2011-01-01\" time=\"09:30:00\" />" +

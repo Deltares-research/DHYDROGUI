@@ -20,13 +20,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private static readonly XNamespace Fns = "http://www.wldelft.nl/fews";
 
         //private const string IffezheimKi = "Iffezheim_KI";
-        private const string IffezheimKi = "pid rule_IP";
-        private const string DifferentialPart = "pid rule_DP";
+        private const string IffezheimKi = "[IP]pid rule";
+        private const string DifferentialPart = "[DP]pid rule";
         private const string RuleName = "pid rule";
         private const string IffezheimHin1 = "Iffezheim";
         private const string IffezheimHin2 = "HIn";
         //private const string IffezheimHsp = "Iffezheim_HSP";
-        private const string IffezheimHsp = "pid rule_SP";
+        private const string IffezheimHsp = "[SP]pid rule";
         private const string IffezheimSout1 = "Iffezheim";
         private const string IffezheimSout2 = "SOut";
         private const double SMin = 116;
@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private static string OriginXml()
         {
             return "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
-                    "<pid id=\"/" + RuleName + "\">" +
+                    "<pid id=\"[PID]" + RuleName + "\">" +
                     "<mode>PIDVEL</mode>" +
                     "<settingMin>" + SMin.ToString(CultureInfo.InvariantCulture) + "</settingMin>" +
                     "<settingMax>" + SMax.ToString(CultureInfo.InvariantCulture) + "</settingMax>" +
@@ -147,7 +147,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
         private static string OriginXmlReference()
         {
-            return "<trigger xmlns=\"http://www.wldelft.nl/fews\"><ruleReference>/" + RuleName + "</ruleReference></trigger>";
+            return "<trigger xmlns=\"http://www.wldelft.nl/fews\"><ruleReference>[PID]" + RuleName + "</ruleReference></trigger>";
         }
 
         [Test]
