@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public override XElement ToXml(XNamespace xNamespace, string prefix)
         {
-            return ToXml(xNamespace, prefix, XmlTag + prefix + Name);
+            return ToXml(xNamespace, prefix, prefix + Name);
         }
 
         public override IEnumerable<XElement> ToDataConfigImportSeries(string prefix, XNamespace xNamespace)
