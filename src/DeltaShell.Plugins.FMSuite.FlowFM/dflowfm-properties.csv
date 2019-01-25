@@ -66,7 +66,7 @@ geometry,Conveyance2D,numerics,Numerical Parameters,Conveyance-2D type:R=HU|R=H|
 geometry,Nonlin2D,numerics,Numerical Parameters,Nonlinear iteration 2D:No|Yes,0|1,0,,,FALSE,,,,,,"Non-linear 2D volumes, only used if ibedlevtype=3 and Conveyance2D>=1"
 geometry,Nonlin1D,numerics,Numerical Parameters,Nonlinear iteration 1D:No|pipes open|pipes closed,0|1|2,0,0,2,FALSE,,,,,,"Non-linear 1D volumes, 1 = pipes open, 2 = pipes closed"
 geometry,Slotw2D,numerics,Numerical Parameters,Preissmann slot width 2D,Double,0,,,FALSE,,,,,,"Preissman slot width in 2D"
-geometry,Slotw1D,numerics,Numerical Parameters,Preissmann slot width 1D,Double,1.d-3,,,FALSE,,,,,,"Preissman slot width in 1D"
+geometry,Slotw1D,numerics,Numerical Parameters,Preissmann slot width 1D,Double,5.d-3,,,FALSE,,,,,,"Preissman slot width in 1D"
 geometry,Sillheightmin,,,Weir treatment threshold,Double,0,0,,TRUE,,,,,,Weir treatment only if both sills larger than this value (m)
 geometry,Makeorthocenters,,,From circum- to orthocentres?,0|1,0,0,1,TRUE,,,,,,"Switch from circumcentres to orthocentres in geominit (1: yes, 0: no)"
 geometry,Dcenterinside,,,Limit cell center,Double,1,0,,TRUE,,,,,,"Limit cell center (1.0: in cell, 0.0: on c/g)"
