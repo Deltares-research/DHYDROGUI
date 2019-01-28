@@ -9,37 +9,40 @@ using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 {
+    /// <summary>
+    /// This class represents data and its logic that is shown on the view for sections.
+    /// The main focus are the widths of the <see cref="CrossSectionSection"/> objects that are on
+    /// the <see cref="crossSectionDefinition"/> object.
+    /// </summary>
+    /// <seealso cref="System.IDisposable" />
     [Entity(FireOnCollectionChange=false)]
     public class ZWSectionsViewModel : IDisposable
     {
+        private bool isCalculatingSectionWidths;
         protected readonly ICrossSectionDefinition crossSectionDefinition;
         protected readonly IEventedList<CrossSectionSectionType> crossSectionSectionTypes;
 
-        private enum CrossSectionSectionName
+        public enum CrossSectionSectionName
         {
             Main, FloodPlain1, FloodPlain2
         }
 
-        private readonly IDictionary<CrossSectionSectionName, SectionData> sectionSettings = new Dictionary<CrossSectionSectionName, SectionData>
-        {
-            {CrossSectionSectionName.Main, new SectionData(false, 0d)},
-            {CrossSectionSectionName.FloodPlain1, new SectionData(false, 0d)},
-            {CrossSectionSectionName.FloodPlain2, new SectionData(false, 0d)}
-        };
-
-        public ZWSectionsViewModel(ICrossSectionDefinition crossSectionDefinition,IEventedList<CrossSectionSectionType> crossSectionSectionTypes)
-        {
-            this.crossSectionDefinition = crossSectionDefinition;
-            this.crossSectionSectionTypes = crossSectionSectionTypes;
-
-            Subscribe();
-            //TODO: react to changes in the list
-            UpdateViewModelFromCrossSection();
-        }
-
+        /// <summary>
+        /// Holds information about fields on the ZW sections view.
+        /// </summary>
         private class SectionData
         {
+            /// <summary>
+            /// Gets or sets a value indicating whether the field corresponding to this object is enabled.
+            /// </summary>
+            /// <value>
+            ///   <c>true</c> if enabled; otherwise, <c>false</c>.
+            /// </value>
             public bool Enabled { get; set; }
+
+            /// <summary>
+            /// Gets or sets the width of the corresponding section.
+            /// </summary>
             public double Width { get; set; }
 
             public SectionData(bool enabled, double width)
@@ -49,13 +52,35 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             }
         }
 
-        // indicates if the section is enabled, and remember its length
+        private readonly IDictionary<CrossSectionSectionName, SectionData> sectionSettings = new Dictionary<CrossSectionSectionName, SectionData>
+        {
+            {CrossSectionSectionName.Main, new SectionData(false, 0d)},
+            {CrossSectionSectionName.FloodPlain1, new SectionData(false, 0d)},
+            {CrossSectionSectionName.FloodPlain2, new SectionData(false, 0d)}
+        };
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ZWSectionsViewModel"/> class.
+        /// </summary>
+        /// <param name="crossSectionDefinition">The cross section definition which section widths are shown in the view.</param>
+        /// <param name="crossSectionSectionTypes">The cross section section type objects.</param>
+        public ZWSectionsViewModel(ICrossSectionDefinition crossSectionDefinition, IEventedList<CrossSectionSectionType> crossSectionSectionTypes)
+        {
+            this.crossSectionDefinition = crossSectionDefinition;
+            this.crossSectionSectionTypes = crossSectionSectionTypes;
+
+            Subscribe();
+            //TODO: react to changes in the list
+            UpdateViewModelFromCrossSection();
+        }
 
         private bool MainExist { get; set; }
         private bool FloodPlain1Exist { get; set; }
         private bool FloodPlain2Exist { get; set; }
-        
-        // returns the total available flow width for the cross section
+
+        /// <summary>
+        /// returns the total available flow width for the cross section.
+        /// </summary>
         private double TotalWidth
         {
             get
@@ -65,7 +90,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             }
         }
 
-        // main section is always considered to be in center, this settings indicates its diameter.
+        /// <summary>
+        /// The total width of the main section.
+        /// </summary>
+        /// <remarks>The main section is always considered to be in the center of the flow width.</remarks>
         public double MainWidth
         {
             get => sectionSettings[CrossSectionSectionName.Main].Width;
@@ -76,8 +104,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             }
         }
 
-        // first floodplain is always adjacent to main center, this settings indicates the sum of the
-        // two part of the floodplain to the left and right of the main section.
+        /// <summary>
+        /// The total width of the first floodplain.
+        /// </summary>
+        /// <remarks>The first floodplain is always adjacent to the main section, this settings indicates the sum of the
+        /// two parts of the floodplain to the left and right of the main section.</remarks>
         public double FloodPlain1Width
         {
             get => sectionSettings[CrossSectionSectionName.FloodPlain1].Width;
@@ -88,8 +119,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             }
         }
 
-        // second floodplain is always adjacent to first floodplain, this settings indicates the sum
-        // of the two part of the second floodplain to the left and right of the first floodplain.
+        /// <summary>
+        /// The total width of the second floodplain.
+        /// </summary>
+        /// <remarks>The second floodplain is always adjacent to first floodplain, this settings indicates the sum
+        /// of the two parts of the second floodplain to the left and right of the first floodplain.</remarks>
         public double FloodPlain2Width
         {
             get => sectionSettings[CrossSectionSectionName.FloodPlain2].Width;
@@ -100,12 +134,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             }
         }
 
-        private bool IsCalculatingSectionWidths;
-
         private void CalculateSectionWidths(CrossSectionSectionName updatedSection)
         {
-            if(IsCalculatingSectionWidths) return;
-            IsCalculatingSectionWidths = true;
+            if(isCalculatingSectionWidths) return;
+            isCalculatingSectionWidths = true;
 
             var mainWidth = sectionSettings[CrossSectionSectionName.Main].Width;
             var fp1Width = sectionSettings[CrossSectionSectionName.FloodPlain1].Width;
@@ -154,7 +186,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             SetSection(CrossSectionSectionName.FloodPlain1, mainWidth / 2, (mainWidth + fp1Width) / 2);
             SetSection(CrossSectionSectionName.FloodPlain2, (mainWidth + fp1Width) / 2, (mainWidth + fp1Width + fp2Width) / 2);
 
-            IsCalculatingSectionWidths = false;
+            isCalculatingSectionWidths = false;
         }
 
         private void ForceRecalculationOfSectionWidths()
@@ -170,30 +202,57 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         }
 
         /// <summary>
-        /// Not using only getters because we bind the these properties. Should allow for PC
+        /// Indicates whether the field of the main section width is enabled.
         /// </summary>
-        public bool MainEnabled // Do not make this property private, as it is used in ZWSectionsView
+        /// <remarks>Do not make this property private, as it is used in bindings in <see cref="ZWSectionsView"/>.</remarks>
+        public bool MainEnabled
         {
             get => sectionSettings[CrossSectionSectionName.Main].Enabled;
             private set => sectionSettings[CrossSectionSectionName.Main].Enabled = value;
         }
 
-        public bool FloodPlain1Enabled // Do not make this property private, as it is used in ZWSectionsView
+        /// <summary>
+        /// Indicates whether the field of the first floodplain section width is enabled.
+        /// </summary>
+        /// <remarks>Do not make this property private, as it is used in bindings in <see cref="ZWSectionsView"/>.</remarks>
+        public bool FloodPlain1Enabled
         {
             get => sectionSettings[CrossSectionSectionName.FloodPlain1].Enabled;
             set => sectionSettings[CrossSectionSectionName.FloodPlain1].Enabled = value;
         }
 
-        public bool FloodPlain2Enabled // Do not make this property private, as it is used in ZWSectionsView
+        /// <summary>
+        /// Indicates whether the field of the second floodplain section width is enabled.
+        /// </summary>
+        /// <remarks>Do not make this property private, as it is used in bindings in <see cref="ZWSectionsView"/>.</remarks>
+        public bool FloodPlain2Enabled
         {
             get => sectionSettings[CrossSectionSectionName.FloodPlain2].Enabled;
             set => sectionSettings[CrossSectionSectionName.FloodPlain2].Enabled = value;
         }
 
-        public bool MainCanAdd { get; set; } // Do not make this property private, as it is used in ZWSectionsView
-        public bool FloodPlain1CanAdd { get; set; } // Do not make this property private, as it is used in ZWSectionsView
-        public bool FloodPlain2CanAdd { get; set; } // Do not make this property private, as it is used in ZWSectionsView
+        /// <summary>
+        /// Indicates whether the main section width field can still be enabled.
+        /// </summary>
+        /// <remarks>Do not make this property private, as it is used in bindings in <see cref="ZWSectionsView"/>.</remarks>
+        public bool MainCanAdd { get; set; }
 
+        /// <summary>
+        /// Indicates whether the first floodplain section width field can still be enabled.
+        /// </summary>
+        /// <remarks>Do not make this property private, as it is used in bindings in <see cref="ZWSectionsView"/>.</remarks>
+        public bool FloodPlain1CanAdd { get; set; }
+
+        /// <summary>
+        /// Indicates whether the second floodplain section width field can still be enabled.
+        /// </summary>
+        /// <remarks>Do not make this property private, as it is used in bindings in <see cref="ZWSectionsView"/>.</remarks>
+        public bool FloodPlain2CanAdd { get; set; }
+
+        /// <summary>
+        /// Updates the view model (and thus, the view) for the current state of <see cref="crossSectionDefinition"/>.
+        /// </summary>
+        /// <param name="recalculate">if set to <c>true</c>, the section widths are recalculated.</param>
         public void UpdateViewModelFromCrossSection(bool recalculate=false)
         {
             if (recalculate)
@@ -231,7 +290,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             }
             else
             {
-
                 c.Width = 0d;
             }
         }
@@ -245,7 +303,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             if (Math.Abs(maxY - section.MaxY) >= double.Epsilon) section.MaxY = maxY;
             sectionSettings[sectionName].Width = 2 * (maxY - minY);
         }
-        
+
+        /// <summary>
+        /// Adds a section to the <see cref="crossSectionDefinition"/> field and updates the view as well.
+        /// </summary>
+        /// <param name="sectionName">Name of the section.</param>
+        public void AddSection(CrossSectionSectionName sectionName)
+        {
+            if (SectionExists(sectionName)) return;
+
+            var crossSectionSectionType = new CrossSectionSectionType {Name = sectionName.ToString()};
+            Unsubscribe();
+            crossSectionSectionTypes.Add(crossSectionSectionType);
+            Subscribe();
+            crossSectionDefinition.Sections.Add(new CrossSectionSection { SectionType = crossSectionSectionType });
+
+            UpdateViewModelFromCrossSection();
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             Unsubscribe();
@@ -263,36 +341,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             ((INotifyPropertyChange)crossSectionSectionTypes).PropertyChanged -= SectionTypesChanged;
         }
 
-        void SectionTypesChanged(object sender, EventArgs e)
+        private void SectionTypesChanged(object sender, EventArgs e)
         {
-            UpdateViewModelFromCrossSection();
-        }
-        
-        public void AddMainSectionType()
-        {
-            AddSectionType(CrossSectionSectionName.Main);
-        }
-
-        public void AddFp1SectionType()
-        {
-            AddSectionType(CrossSectionSectionName.FloodPlain1);
-        }
-
-        public void AddFp2SectionType()
-        {
-            AddSectionType(CrossSectionSectionName.FloodPlain2);
-        }
-
-        private void AddSectionType(CrossSectionSectionName sectionName)
-        {
-            if (SectionExists(sectionName)) return;
-
-            var crossSectionSectionType = new CrossSectionSectionType {Name = sectionName.ToString()};
-            Unsubscribe();
-            crossSectionSectionTypes.Add(crossSectionSectionType);
-            Subscribe();
-            crossSectionDefinition.Sections.Add(new CrossSectionSection { SectionType = crossSectionSectionType });
-
             UpdateViewModelFromCrossSection();
         }
     }

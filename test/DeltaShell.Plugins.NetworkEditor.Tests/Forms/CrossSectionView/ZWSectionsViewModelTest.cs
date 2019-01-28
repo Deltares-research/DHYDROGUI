@@ -15,7 +15,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         [Test]
         public void ViewModelWidthAssumesASymmetricalProfile()
         {
-            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(new Tuple<bool, double>(true, 10.0), new Tuple<bool, double>(true, 4.0), new Tuple<bool, double>(true, 16.0));
+            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(
+                new Tuple<bool, double>(true, 10.0),
+                new Tuple<bool, double>(true, 4.0),
+                new Tuple<bool, double>(true, 16.0));
+
             Assert.AreEqual(10.0, crossSectionZwSectionsViewModel.MainWidth);
             Assert.AreEqual(4.0, crossSectionZwSectionsViewModel.FloodPlain1Width);
             Assert.AreEqual(16.0, crossSectionZwSectionsViewModel.FloodPlain2Width);
@@ -24,7 +28,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         [Test]
         public void ViewModelUpdatesSectionsOnMain()
         {
-            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(new Tuple<bool, double>(true, 10.0), new Tuple<bool, double>(true, 4.0), new Tuple<bool, double>(true, 16.0));
+            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(
+                new Tuple<bool, double>(true, 10.0), 
+                new Tuple<bool, double>(true, 4.0), 
+                new Tuple<bool, double>(true, 16.0));
             
             //decrease in main is added to fp2
             crossSectionZwSectionsViewModel.MainWidth = 2;
@@ -41,7 +48,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         [Test]
         public void ViewModelUpdatesSectionsOnFp1()
         {
-            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(new Tuple<bool, double>(true, 10.0), new Tuple<bool, double>(true, 4.0), new Tuple<bool, double>(true, 16.0));
+            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(
+                new Tuple<bool, double>(true, 10.0), 
+                new Tuple<bool, double>(true, 4.0), 
+                new Tuple<bool, double>(true, 16.0));
 
             //decrease in fp1 is added to fp2
             crossSectionZwSectionsViewModel.FloodPlain1Width = 3;
@@ -58,7 +68,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         [Test]
         public void ViewModelUpdatesSectionsOnMainTooBig()
         {
-            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(new Tuple<bool, double>(true, 10.0), new Tuple<bool, double>(true, 4.0), new Tuple<bool, double>(true, 16.0));
+            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(
+                new Tuple<bool, double>(true, 10.0),
+                new Tuple<bool, double>(true, 4.0), 
+                new Tuple<bool, double>(true, 16.0));
 
             // Increase of main width should put fp2 width to 0 and decrease fp1 width
             crossSectionZwSectionsViewModel.MainWidth = 28;
@@ -75,7 +88,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         [Test]
         public void GivenCrossSectionDefinitionWithZeroWidthFloodPlain1AndFloodPlain2Section_WhenSettingMainSectionWidthToDifferentValue_ThenFloodPlain1AndMainAreEqualToTotalWidth()
         {
-            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(new Tuple<bool, double>(true, 30.0), new Tuple<bool, double>(true, 0.0), new Tuple<bool, double>(true, 0.0));
+            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(
+                new Tuple<bool, double>(true, 30.0), 
+                new Tuple<bool, double>(true, 0.0), 
+                new Tuple<bool, double>(true, 0.0));
 
             // Increase of main width should put fp2 width to 0 and decrease fp1 width
             crossSectionZwSectionsViewModel.MainWidth = 20.0;
@@ -93,7 +109,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         public void GivenCrossSectionDefinitionWithZeroWidthFloodPlain1Section_WhenSettingMainSectionWidthToDifferentValue_ThenFloodPlain1AndMainAreEqualToTotalWidth()
         {
             // Given
-            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(new Tuple<bool, double>(true, 10.0), new Tuple<bool, double>(true, 0.0), new Tuple<bool, double>(true, 16.0));
+            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(
+                new Tuple<bool, double>(true, 10.0), 
+                new Tuple<bool, double>(true, 0.0), 
+                new Tuple<bool, double>(true, 16.0));
 
             var table = crossSectionZwSectionsViewModel.CrossSectionDefinitionZw.ZWDataTable;
             table.Clear();
@@ -117,7 +136,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         public void GivenCrossSectionDefinitionWithZeroWidthFloodPlain1Section_WhenSettingFloodPlain1SectionWidthSectionToDifferentValue_ThenFloodPlain1AndMainAreEqualToTotalWidth()
         {
             // Given
-            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(new Tuple<bool, double>(true, 10.0), new Tuple<bool, double>(true, 4.0), new Tuple<bool, double>(true, 16.0));
+            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(
+                new Tuple<bool, double>(true, 10.0), 
+                new Tuple<bool, double>(true, 4.0), 
+                new Tuple<bool, double>(true, 16.0));
 
             // When
             crossSectionZwSectionsViewModel.FloodPlain1Width = 50.0;
@@ -137,7 +159,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         public void GivenCrossSectionDefinitionWithMainSection_WhenSettingMainSectionToDifferentValueThanTotalWidth_ThenMainWidthIsCorrectedToTotalWidth(double setValue)
         {
             // Given
-            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(new Tuple<bool, double>(true, 30.0), new Tuple<bool, double>(false, 4.0), new Tuple<bool, double>(false, 16.0));
+            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(
+                new Tuple<bool, double>(true, 30.0), 
+                new Tuple<bool, double>(false, 4.0), 
+                new Tuple<bool, double>(false, 16.0));
 
             // When
             crossSectionZwSectionsViewModel.MainWidth = setValue;
@@ -151,7 +176,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         public void GivenCrossSectionDefinitionWithMainAndFloodPlain1Sections_WhenSettingMainSectionToDifferentValueThanTotalWidth_ThenFloodPlain1WidthIsCorrectedToTotalWidth()
         {
             // Given
-            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(new Tuple<bool, double>(true, 30.0), new Tuple<bool, double>(true, 0.0), new Tuple<bool, double>(false, 0.0));
+            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(
+                new Tuple<bool, double>(true, 30.0), 
+                new Tuple<bool, double>(true, 0.0), 
+                new Tuple<bool, double>(false, 0.0));
 
             // When
             crossSectionZwSectionsViewModel.MainWidth = 20.0;
@@ -168,7 +196,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         public void GivenCrossSectionDefinitionWithMainAndFloodPlain1Sections_WhenSettingMainSectionToLargerValueThanTotalWidth_ThenFloodPlain1WidthIsZeroAndMainWidthIsEqualToTotalWidth()
         {
             // Given
-            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(new Tuple<bool, double>(true, 20.0), new Tuple<bool, double>(true, 10.0), new Tuple<bool, double>(false, 0.0));
+            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(
+                new Tuple<bool, double>(true, 20.0), 
+                new Tuple<bool, double>(true, 10.0), 
+                new Tuple<bool, double>(false, 0.0));
 
             // When
             // Total width is 30.0, so set main width to higher value
@@ -183,50 +214,68 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         }
 
         [Test]
-        public void EnabledIsBasedOnExistenceOfSectionsWithNames()
+        public void GivenZwSectionViewModel_WhenRemovingFloodPlain1Section_ThenMainSectionWidthFieldIsDisabled()
         {
-            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(new Tuple<bool, double>(true, 10.0), new Tuple<bool, double>(true, 4.0), new Tuple<bool, double>(true, 16.0));
+            // Given
+            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(
+                new Tuple<bool, double>(true, 10.0), 
+                new Tuple<bool, double>(true, 4.0), 
+                new Tuple<bool, double>(true, 16.0));
             Assert.IsTrue(crossSectionZwSectionsViewModel.MainEnabled);
 
-            //remove the fp1 section
-            crossSectionZwSectionsViewModel.CrossSectionSectionTypes.RemoveAt(1);
-
+            // When
+            crossSectionZwSectionsViewModel.CrossSectionSectionTypes.RemoveAllWhere(s => s.Name == ZWSectionsViewModel.CrossSectionSectionName.FloodPlain1.ToString());
             crossSectionZwSectionsViewModel.UpdateViewModelFromCrossSection();
-            //this should disabled main in the VM
+
+            // Then
             Assert.IsFalse(crossSectionZwSectionsViewModel.MainEnabled);
         }
 
         [Test]
-        public void MissingSectionsAreShownWithZeroWidth()
+        public void GivenZwSectionViewModel_WhenRemovingMainSectionAndRefreshingViewModel_ThenMainIsEnabledAndSetToZero()
         {
-            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(new Tuple<bool, double>(true, 10.0), new Tuple<bool, double>(true, 4.0), new Tuple<bool, double>(true, 16.0));
+            // Given
+            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(
+                new Tuple<bool, double>(true, 10.0), 
+                new Tuple<bool, double>(true, 4.0), 
+                new Tuple<bool, double>(true, 16.0));
 
-            //remove main
+            // When
             var main = crossSectionZwSectionsViewModel.CrossSectionDefinitionZw.Sections.First(s => s.SectionType.Name == "Main");
             crossSectionZwSectionsViewModel.CrossSectionDefinitionZw.Sections.Remove(main);
-
             crossSectionZwSectionsViewModel.UpdateViewModelFromCrossSection();
-            //this should not disable main but merely set it 0
+
+            // Then
             Assert.IsTrue(crossSectionZwSectionsViewModel.MainEnabled);
             Assert.AreEqual(0, crossSectionZwSectionsViewModel.MainWidth);
         }
 
         [Test]
-        public void RemovingSectionTypeCanResultInDisablingOfTextBox()
+        public void GivenZwSectionViewModel_WhenRemovingSectionType_ThenMainFieldIsDisabled()
         {
-            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(new Tuple<bool, double>(true, 10.0), new Tuple<bool, double>(true, 4.0), new Tuple<bool, double>(true, 16.0));
+            // Given
+            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(
+                new Tuple<bool, double>(true, 10.0),
+                new Tuple<bool, double>(true, 4.0),
+                new Tuple<bool, double>(true, 16.0));
             Assert.IsTrue(crossSectionZwSectionsViewModel.MainEnabled);
 
-            //remove fp1 section type from network
-            crossSectionZwSectionsViewModel.CrossSectionSectionTypes.RemoveAt(1);
+            // When
+            crossSectionZwSectionsViewModel.CrossSectionSectionTypes.RemoveAllWhere(s => s.Name == ZWSectionsViewModel.CrossSectionSectionName.FloodPlain1.ToString());
 
-            Assert.IsFalse(crossSectionZwSectionsViewModel.MainEnabled);
+            // Then
+            Assert.IsFalse(crossSectionZwSectionsViewModel.MainEnabled, "The field for main section width was not disabled");
         }
 
         [Test]
-        public void RemovingSectionTypeFiresPropertyChangedOfMainEnabled()
+        public void GivenZwSectionViewModel_WhenRemovingSectionType_ThenPropertyChangedEventOfMainEnabledHasBeenCalled()
         {
-            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(new Tuple<bool, double>(true, 10.0), new Tuple<bool, double>(true, 4.0), new Tuple<bool, double>(true, 16.0));
+            // Given
+            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(
+                new Tuple<bool, double>(true, 10.0), 
+                new Tuple<bool, double>(true, 4.0), 
+                new Tuple<bool, double>(true, 16.0));
+
             IList<string> propertyNames = new List<string>();
             ((INotifyPropertyChange) crossSectionZwSectionsViewModel).PropertyChanged += (s, e) =>
                                                                                              {
@@ -235,16 +284,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
                                                                                                  propertyNames.Add(e.PropertyName);
                                                                                              };
 
-            //action! remove main section type from network
-            crossSectionZwSectionsViewModel.CrossSectionSectionTypes.RemoveAllWhere(s => s.Name == "Main");
+            // When
+            crossSectionZwSectionsViewModel.CrossSectionSectionTypes.RemoveAllWhere(s => s.Name == ZWSectionsViewModel.CrossSectionSectionName.Main.ToString());
 
+            // Then
             Assert.IsTrue(propertyNames.Contains("MainEnabled"));
         }
 
         [Test]
-        public void RenamingSectionTypeFiresPropertyChangedOfMainEnabled()
+        public void GivenZwSectionViewModel_WhenRenamingSectionType_ThenPropertyChangedEventOfMainEnabledHasBeenCalled()
         {
-            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(new Tuple<bool, double>(true, 10.0), new Tuple<bool, double>(true, 4.0), new Tuple<bool, double>(true, 16.0));
+            // Given
+            var crossSectionZwSectionsViewModel = SetupCrossSectionDefinitionZw(
+                new Tuple<bool, double>(true, 10.0), 
+                new Tuple<bool, double>(true, 4.0), 
+                new Tuple<bool, double>(true, 16.0));
 
             IList<string> propertyNames = new List<string>();
             ((INotifyPropertyChange)crossSectionZwSectionsViewModel).PropertyChanged += (s, e) =>
@@ -253,14 +307,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
                 propertyNames.Add(e.PropertyName);
             };
 
-            //action! remove main section type from network
-            var main = crossSectionZwSectionsViewModel.CrossSectionSectionTypes.First(s => s.Name == "Main");
+            // When
+            var main = crossSectionZwSectionsViewModel.CrossSectionSectionTypes.First(s => s.Name == ZWSectionsViewModel.CrossSectionSectionName.Main.ToString());
             main.Name = "notMain";
             
+            // Then
             Assert.IsTrue(propertyNames.Contains("MainEnabled"));
         }
 
-        private static TestZwSectionsViewModel SetupCrossSectionDefinitionZw(Tuple<bool, double> mainExistsWidthPair, Tuple<bool, double> fp1ExistsWidthPair, Tuple<bool, double> fp2ExistsWidthPair)
+        private static TestZwSectionsViewModel SetupCrossSectionDefinitionZw(
+            Tuple<bool, double> mainExistsWidthPair, Tuple<bool, double> fp1ExistsWidthPair, Tuple<bool, double> fp2ExistsWidthPair)
         {
             var crossSectionDefinition = new CrossSectionDefinitionZW();
 
@@ -273,19 +329,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             
             if (mainExistsWidthPair.First)
             {
-                var mainSectionType = new CrossSectionSectionType { Name = "Main" };
+                var mainSectionType = new CrossSectionSectionType { Name = ZWSectionsViewModel.CrossSectionSectionName.Main.ToString() };
                 csSectionTypes.Add(mainSectionType);
                 crossSectionDefinition.AddSection(mainSectionType, mainExistsWidthPair.Second);
             }
             if (fp1ExistsWidthPair.First)
             {
-                var fp1SectionType = new CrossSectionSectionType { Name = "FloodPlain1" };
+                var fp1SectionType = new CrossSectionSectionType { Name = ZWSectionsViewModel.CrossSectionSectionName.FloodPlain1.ToString() };
                 csSectionTypes.Add(fp1SectionType);
                 crossSectionDefinition.AddSection(fp1SectionType, fp1ExistsWidthPair.Second);
             }
             if (fp2ExistsWidthPair.First)
             {
-                var fp2SectionType = new CrossSectionSectionType { Name = "FloodPlain2" };
+                var fp2SectionType = new CrossSectionSectionType { Name = ZWSectionsViewModel.CrossSectionSectionName.FloodPlain2.ToString() };
                 csSectionTypes.Add(fp2SectionType);
                 crossSectionDefinition.AddSection(fp2SectionType, fp2ExistsWidthPair.Second);
             }
@@ -295,7 +351,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
 
         private class TestZwSectionsViewModel : ZWSectionsViewModel
         {
-            public TestZwSectionsViewModel(ICrossSectionDefinition crossSectionDefinition, IEventedList<CrossSectionSectionType> crossSectionSectionTypes) : base(crossSectionDefinition, crossSectionSectionTypes)
+            public TestZwSectionsViewModel(ICrossSectionDefinition crossSectionDefinition, IEventedList<CrossSectionSectionType> crossSectionSectionTypes) 
+                : base(crossSectionDefinition, crossSectionSectionTypes)
             {
             }
 

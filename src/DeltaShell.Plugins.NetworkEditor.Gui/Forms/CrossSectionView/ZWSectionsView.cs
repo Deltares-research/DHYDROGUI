@@ -54,17 +54,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
         private void addSectionTypeMain_Click(object sender, EventArgs e)
         {
-            data.AddMainSectionType();
+            data.AddSection(ZWSectionsViewModel.CrossSectionSectionName.Main);
         }
 
         private void addSectionTypeFp1_Click(object sender, EventArgs e)
         {
-            data.AddFp1SectionType();
+            data.AddSection(ZWSectionsViewModel.CrossSectionSectionName.FloodPlain1);
         }
 
         private void addSectionTypeFp2_Click(object sender, EventArgs e)
         {
-            data.AddFp2SectionType();
+            data.AddSection(ZWSectionsViewModel.CrossSectionSectionName.FloodPlain2);
         }
 
         private void viewModelBindingSource_CurrentChanged(object sender, EventArgs e)
