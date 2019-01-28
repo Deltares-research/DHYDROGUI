@@ -24,7 +24,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             var pump = structure as Pump;
             if (pump == null) return IniCategory;
 
-            var direction = (pump.DirectionIsPositive ? (int)pump.ControlDirection : -1 * (int)pump.ControlDirection);
+            var direction = pump.DirectionIsPositive 
+                ? (int)pump.ControlDirection 
+                : -1 * (int)pump.ControlDirection;
             IniCategory.AddProperty(StructureRegion.Direction.Key, direction, StructureRegion.Direction.Description);
 
             // Note: The core is expecting an array of doubles but there is only ever 1 value, see WFM1D.SetPump(...)

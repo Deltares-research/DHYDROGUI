@@ -55,11 +55,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             branch.Expect(b => b.Network).Return(network).Repeat.Any();
         }
 
-        [TestCase("1", PumpControlDirection.SuctionSideControl)]
-        [TestCase("2", PumpControlDirection.DeliverySideControl)]
-        [TestCase("3", PumpControlDirection.SuctionAndDeliverySideControl)]
+        [TestCase("1", PumpControlDirection.SuctionSideControl, true)]
+        [TestCase("2", PumpControlDirection.DeliverySideControl, true)]
+        [TestCase("3", PumpControlDirection.SuctionAndDeliverySideControl, true)]
+        [TestCase("-1", PumpControlDirection.SuctionSideControl, false)]
+        [TestCase("-2", PumpControlDirection.DeliverySideControl, false)]
+        [TestCase("-3", PumpControlDirection.SuctionAndDeliverySideControl, false)]
         public void GivenPumpStructureIniCategoryWithDirection_WhenConvertingToStructure1D_ThenPumpWithSpecificControlDirectionIsReturned
-            (string valueAsString, PumpControlDirection direction)
+            (string valueAsString, PumpControlDirection expectedDirection, bool expectedIsDirectionPositive)
         {
             // Given
             var category = GetStructureCategoryWithBasicProperties();
@@ -76,7 +79,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             // Then
             Assert.IsNotNull(pump, "PumpConverter did not return a Pump object.");
-            Assert.That(pump.ControlDirection, Is.EqualTo(direction));
+            Assert.That(pump.ControlDirection, Is.EqualTo(expectedDirection));
+            Assert.That(pump.DirectionIsPositive, Is.EqualTo(expectedIsDirectionPositive));
 
             mocks.VerifyAll();
         }

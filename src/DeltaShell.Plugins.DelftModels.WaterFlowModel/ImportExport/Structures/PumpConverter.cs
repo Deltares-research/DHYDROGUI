@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro;
+﻿using System;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
@@ -23,7 +24,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             var pump = new Pump();
             BasicStructuresOperations.ReadCommonRegionElements(category, branch, pump);
 
-            pump.ControlDirection = (PumpControlDirection)category.ReadProperty<int>(StructureRegion.Direction.Key);
+            var direction = category.ReadProperty<int>(StructureRegion.Direction.Key);
+            pump.ControlDirection = (PumpControlDirection) Math.Abs(direction);
+            pump.DirectionIsPositive = direction > 0;
 
             return pump;
         }
