@@ -297,7 +297,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 {
                     // RTCTools needs and extra state variable for controllers that use the previous state
                     // when determining the new state.
-                    // If a restart file has to be written, the extra state varable is needed for all controllers,
+                    // If a restart file has to be written, the extra state variable is needed for all controllers,
                     // to be able to store a complete state.
                     if (includeExtraStatesForRestart || rule is PIDRule || rule is IntervalRule || rule is RelativeTimeRule)
                     {

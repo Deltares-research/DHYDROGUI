@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public override XElement ToXml(XNamespace xNamespace, string prefix)
         {
             var result = base.ToXml(xNamespace, prefix);
-            IList<Record> table = GetTable();
+            var table = GetTable();
             foreach (var output in Outputs)
             {
                 output.IntegralPart = prefix + Name;  // also in data export and statevector
@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 var outputAsInput = Outputs[0];
                 
                 // if RelativeTimeRuleFromValue set by rule also be set as input.
-                // RTCTools has problem with dupicate series with same name (input and output)
+                // RTCTools has problem with duplicate series with same name (input and output)
                 // and will not function correctly. Generate new name for RTCTools in XML.
                 // When result are passed back to controlled model identification is based on
                 // Feature and  and thus connect to the same Connection.
@@ -199,7 +199,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             // <record time="10001" value="66" />
             //         </controlTable>"
 
-            if (table.Count > 0)
+            if ( table.Count > 0 && !HasExtrapolationFix(table))
             {
                 table.Add(new Record
                               {
@@ -211,6 +211,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
 
             return table;
+        }
+
+        /// <summary>
+        /// Determines whether <paramref name="table"/> already contains a fix for the extrapolation
+        /// behaviour of RTCTools.
+        /// </summary>
+        /// <param name="table">The table.</param>
+        /// <returns>
+        ///   <c>true</c> if [the specified table] [has extrapolation fix] ; otherwise, <c>false</c>.
+        /// </returns>
+        /// <remarks>table != null && table.Count >= 1 </remarks>
+        private static bool HasExtrapolationFix(IList<Record> table)
+        {
+            var nElements = table.Count;
+            if (nElements == 1) return false;
+
+            return table[nElements - 1].Y == table[nElements - 2].Y;
         }
 
         private IXmlTimeSeries GetExportTimeSeries(string prefix)
