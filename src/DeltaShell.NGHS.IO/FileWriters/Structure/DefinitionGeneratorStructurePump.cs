@@ -45,13 +45,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
             if (arguments != null && components != null && arguments[0].Values.Count > 0 && components[0].Values.Count > 0)
             {
-                var head = arguments[0].Values.Cast<double>().ToList();
-                var reductionFactor = components[0].Values.Cast<double>();
+                var pumpHeadValues = arguments[0].Values.Cast<double>().ToList();
+                var reductionFactorValues = components[0].Values.Cast<double>();
 
-                IniCategory.AddProperty(StructureRegion.ReductionFactorLevels.Key, head.Count, StructureRegion.ReductionFactorLevels.Description);
-                IniCategory.AddProperty(StructureRegion.Head.Key, head, StructureRegion.Head.Description, StructureRegion.Head.Format);
-                IniCategory.AddProperty(StructureRegion.ReductionFactor.Key, reductionFactor, StructureRegion.ReductionFactor.Description, StructureRegion.ReductionFactor.Format);
-
+                IniCategory.AddProperty(StructureRegion.ReductionFactorLevels.Key, pumpHeadValues.Count, StructureRegion.ReductionFactorLevels.Description);
+                IniCategory.AddProperty(StructureRegion.Head.Key, pumpHeadValues, StructureRegion.Head.Description, StructureRegion.Head.Format);
+                IniCategory.AddProperty(StructureRegion.ReductionFactor.Key, reductionFactorValues, StructureRegion.ReductionFactor.Description, StructureRegion.ReductionFactor.Format);
             }
             else
             {

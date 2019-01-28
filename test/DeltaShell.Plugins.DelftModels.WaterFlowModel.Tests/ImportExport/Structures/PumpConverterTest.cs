@@ -146,6 +146,68 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             mocks.VerifyAll();
         }
 
+        [Test]
+        public void GivenPumpStructureIniCategoryWithReductionTableEntries_WhenConvertingToStructure1D_ThenPumpWithSpecificReductionTableValuesIsReturned()
+        {
+            // Given
+            var category = GetStructureCategoryWithBasicProperties();
+            category.SetProperty(StructureRegion.ReductionFactorLevels.Key, "2");
+            category.SetProperty(StructureRegion.Head.Key, "1.000 2.000");
+            category.SetProperty(StructureRegion.ReductionFactor.Key, "3.000 4.000");
+
+            var branch = mocks.DynamicMock<IBranch>();
+            SetBranchMockProperties(branch, network);
+            mocks.ReplayAll();
+
+            // When
+            var structure = new PumpConverter().ConvertToStructure1D(category, branch);
+            var pump = structure as Pump;
+
+            // Then
+            Assert.IsNotNull(pump, "PumpConverter did not return a Pump object.");
+
+            var reductionTable = pump.ReductionTable;
+            var argumentValues = reductionTable.Arguments[0].Values;
+            Assert.That(argumentValues.Count, Is.EqualTo(2));
+            Assert.That(argumentValues[0], Is.EqualTo(1.0));
+            Assert.That(argumentValues[1], Is.EqualTo(2.0));
+
+            var componentValues = reductionTable.Components[0].Values;
+            Assert.That(componentValues.Count, Is.EqualTo(2));
+            Assert.That(componentValues[0], Is.EqualTo(3.0));
+            Assert.That(componentValues[1], Is.EqualTo(4.0));
+
+            mocks.VerifyAll();
+        }
+
+        [Test]
+        public void GivenPumpStructureIniCategoryWithZeroReductionTableEntries_WhenConvertingToStructure1D_ThenPumpWithoutReductionTableValuesIsReturned()
+        {
+            // Given
+            var category = GetStructureCategoryWithBasicProperties();
+            category.SetProperty(StructureRegion.ReductionFactorLevels.Key, "0");
+
+            var branch = mocks.DynamicMock<IBranch>();
+            SetBranchMockProperties(branch, network);
+            mocks.ReplayAll();
+
+            // When
+            var structure = new PumpConverter().ConvertToStructure1D(category, branch);
+            var pump = structure as Pump;
+
+            // Then
+            Assert.IsNotNull(pump, "PumpConverter did not return a Pump object.");
+
+            var reductionTable = pump.ReductionTable;
+            var argumentValues = reductionTable.Arguments[0].Values;
+            Assert.That(argumentValues.Count, Is.EqualTo(0));
+
+            var componentValues = reductionTable.Components[0].Values;
+            Assert.That(componentValues.Count, Is.EqualTo(0));
+
+            mocks.VerifyAll();
+        }
+
         private static IDelftIniCategory GetStructureCategoryWithBasicProperties()
         {
             var category = new DelftIniCategory(StructureRegion.Header);
@@ -158,6 +220,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.AddProperty(StructureRegion.StopLevelSuctionSide.Key, "2.23");
             category.AddProperty(StructureRegion.StartLevelDeliverySide.Key, "2.23");
             category.AddProperty(StructureRegion.StopLevelDeliverySide.Key, "2.23");
+            category.AddProperty(StructureRegion.ReductionFactorLevels.Key, "0");
+            category.AddProperty(StructureRegion.Head.Key, "0.0");
+            category.AddProperty(StructureRegion.ReductionFactor.Key, "1.0");
 
             return category;
         }

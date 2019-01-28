@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
@@ -34,7 +36,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             pump.StartDelivery = category.ReadProperty<double>(StructureRegion.StartLevelDeliverySide.Key);
             pump.StopDelivery = category.ReadProperty<double>(StructureRegion.StopLevelDeliverySide.Key);
 
+            var numberOfFunctionEntries = category.ReadProperty<int>(StructureRegion.ReductionFactorLevels.Key);
+            if (numberOfFunctionEntries > 0)
+            {
+                var pumpHeadValues = TransformToDoubleArray(category.ReadProperty<string>(StructureRegion.Head.Key));
+                var reductionFactorValues = TransformToDoubleArray(category.ReadProperty<string>(StructureRegion.ReductionFactor.Key));
+                for (var i = 0; i < numberOfFunctionEntries; i++)
+                {
+                    pump.ReductionTable[pumpHeadValues[i]] = reductionFactorValues[i];
+                }
+            }
+
             return pump;
+        }
+
+        private static double[] TransformToDoubleArray(string valuesString)
+        {
+            return valuesString.Split(' ').Select(v => double.Parse(v, CultureInfo.InvariantCulture)).ToArray();
         }
     }
 }
