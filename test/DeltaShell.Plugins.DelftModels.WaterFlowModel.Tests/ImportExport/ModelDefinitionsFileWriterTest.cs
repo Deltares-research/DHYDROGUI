@@ -723,8 +723,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
 
             var timeStep = new TimeSpan(0, 1, 0, 0);
             waterFlowModel1D.SaveStateTimeStep = timeStep;
-            waterFlowModel1D.UseSaveStateTimeRange = useSaveStateTimeRange;
-
+            
             waterFlowModel1D.UseRestart = true;
             waterFlowModel1D.WriteRestart = true;
 
@@ -750,7 +749,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
 
             var writeRestartProperty = content.Properties.First(p => p.Name == ModelDefinitionsRegion.WriteRestart.Key);
             Assert.AreEqual(Convert.ToBoolean(expectedWriteRestart) ? "1" : "0", writeRestartProperty.Value);
-            if (Convert.ToBoolean(expectedWriteRestart) && waterFlowModel1D.UseSaveStateTimeRange)
+            if (Convert.ToBoolean(expectedWriteRestart))
             {
                 var restartStartTime = content.Properties.First(p => p.Name == ModelDefinitionsRegion.RestartStartTime.Key);
                 var formattedExpectedRestartStartTime = waterFlowModel1D.SaveStateStartTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);

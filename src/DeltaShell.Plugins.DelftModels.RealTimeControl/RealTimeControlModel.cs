@@ -89,6 +89,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             LimitMemory = true;
 
             InternalControlledModelsList = new EventedList<IModel>();
+
+            SaveStateStartTime = StopTime;
+            SaveStateStopTime = StopTime;
+            SaveStateTimeStep = TimeStep;
+
             runner = new DimrRunner(this);
             DimrConfigModelCouplerFactory.CouplerProviders.Add(new RealTimeControlDimrConfigModelCouplerProvider());
 
@@ -1079,8 +1084,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         #region Save State: Time Range
 
-        public virtual bool UseSaveStateTimeRange { get; set; }
-
         public virtual DateTime SaveStateStartTime { get; set; }
 
         public virtual DateTime SaveStateStopTime { get; set; }
@@ -1091,8 +1094,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual IEnumerable<DateTime> GetRestartWriteTimes()
         {
-            if (UseSaveStateTimeRange)
-            {
                 var time = SaveStateStartTime;
                 while (time <= SaveStateStopTime)
                 {
@@ -1100,7 +1101,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                     time += SaveStateTimeStep;
                 }
-            }
         }
 
         void IStateAwareModelEngine.SaveStateToFile(IModelState modelState, string persistentStateFilePath)

@@ -107,18 +107,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         }
 
         [PropertyOrder(8)]
-        [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_RunParameters")]
-        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_UseSaveStateTimeRange_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_UseSaveStateTimeRange_Description")]
-        public bool UseSaveStateTimeRange
-        {
-            get { return data.UseSaveStateTimeRange; }
-            set { data.UseSaveStateTimeRange = value; }
-        }
-
-        [PropertyOrder(9)]
-        [DynamicReadOnly]
         [TypeConverter(typeof(DeltaShellDateTimeConverter))]
+        [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_RunParameters")]
         [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_SaveStateStartTime_DisplayName")]
         [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_SaveStateStartTime_Description")]
@@ -128,9 +118,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
             set { data.SaveStateStartTime = value; }
         }
 
-        [PropertyOrder(10)]
-        [DynamicReadOnly]
+        [PropertyOrder(9)]
         [TypeConverter(typeof(DeltaShellTimeSpanConverter))]
+        [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_RunParameters")]
         [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_SaveStateTimeStep_DisplayName")]
         [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_SaveStateTimeStep_Description")]
@@ -140,9 +130,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
             set { data.SaveStateTimeStep = value; }
         }
 
-        [PropertyOrder(11)]
-        [DynamicReadOnly]
+        [PropertyOrder(10)]
         [TypeConverter(typeof(DeltaShellDateTimeConverter))]
+        [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_RunParameters")]
         [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_SaveStateStopTime_DisplayName")]
         [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_SaveStateStopTime_Description")]
@@ -260,7 +250,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
                 propertyName.Equals(nameof(SaveStateStopTime)) ||
                 propertyName.Equals(nameof(SaveStateTimeStep)))
             {
-                return !data.UseSaveStateTimeRange;
+                return !data.WriteRestart;
             }
 
             return false;

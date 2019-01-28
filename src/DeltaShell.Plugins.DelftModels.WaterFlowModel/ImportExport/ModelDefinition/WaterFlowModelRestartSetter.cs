@@ -11,6 +11,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         {
             if (category?.Name != ModelDefinitionsRegion.RestartHeader) return;
             
+            //Set save state properties equal to imported run times
+            model.SaveStateStartTime = model.StopTime;
+            model.SaveStateStopTime = model.StopTime;
+            model.SaveStateTimeStep = model.TimeStep;
+
             var containsRestartStartTime =
                 category.Properties.Any(p => p.Name == ModelDefinitionsRegion.RestartStartTime.Key);
             var containsRestartStopTime =
@@ -20,7 +25,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 
             if (containsRestartTimeStep && containsRestartStartTime && containsRestartStopTime)
             {
-                model.UseSaveStateTimeRange = true;
                 foreach (var prop in category.Properties)
                 {
                     if (prop.Name == ModelDefinitionsRegion.RestartStartTime.Key)
@@ -41,7 +45,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             }
             else
             {
-                model.UseSaveStateTimeRange = false;
                 if (containsRestartTimeStep || containsRestartStartTime || containsRestartStopTime)
                 {
                     errorMessages.Add(string.Format("Line {0}: Information about the Save State is not complete and therefore ignored during import", category.LineNumber));

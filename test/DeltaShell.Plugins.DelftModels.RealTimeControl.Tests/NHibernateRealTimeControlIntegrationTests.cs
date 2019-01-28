@@ -59,7 +59,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             var rtcModel = new RealTimeControlModel("testingRTCModel")
                 {
-                    UseSaveStateTimeRange = true,
                     SaveStateStartTime = new DateTime(2012, 1, 1),
                     SaveStateTimeStep = new TimeSpan(1, 0, 0),
                     SaveStateStopTime = new DateTime(2012, 1, 3)
@@ -68,7 +67,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             var retrievedEntity = SaveAndRetrieveObject(rtcModel);
 
             Assert.IsNotNull(retrievedEntity);
-            Assert.AreEqual(rtcModel.UseSaveStateTimeRange, retrievedEntity.UseSaveStateTimeRange);
             Assert.AreEqual(rtcModel.SaveStateStartTime, retrievedEntity.SaveStateStartTime);
             Assert.AreEqual(rtcModel.SaveStateTimeStep, retrievedEntity.SaveStateTimeStep);
             Assert.AreEqual(rtcModel.SaveStateStopTime, retrievedEntity.SaveStateStopTime);

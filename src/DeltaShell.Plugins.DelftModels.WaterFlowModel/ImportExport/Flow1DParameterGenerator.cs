@@ -629,15 +629,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         public static DelftIniCategory GenerateRestartOptionsValues(WaterFlowModel1D waterFlowModel1D)
         {
             DelftIniCategory restartValues = new DelftIniCategory(ModelDefinitionsRegion.RestartHeader);
-            if (waterFlowModel1D.UseSaveStateTimeRange)
-            {
-                restartValues.AddProperty(ModelDefinitionsRegion.RestartStartTime.Key, waterFlowModel1D.SaveStateStartTime, ModelDefinitionsRegion.RestartStartTime.Description);
-                restartValues.AddProperty(ModelDefinitionsRegion.RestartStopTime.Key, waterFlowModel1D.SaveStateStopTime, ModelDefinitionsRegion.RestartStopTime.Description);
-                restartValues.AddProperty(ModelDefinitionsRegion.RestartTimeStep.Key, int.Parse(waterFlowModel1D.SaveStateTimeStep.TotalSeconds.ToString(CultureInfo.InvariantCulture)), ModelDefinitionsRegion.RestartTimeStep.Description);
-            }
+
+            restartValues.AddProperty(ModelDefinitionsRegion.UseRestart.Key, waterFlowModel1D.UseRestart ? 1 : 0,
+                ModelDefinitionsRegion.UseRestart.Description);
+            restartValues.AddProperty(ModelDefinitionsRegion.WriteRestart.Key, waterFlowModel1D.WriteRestart ? 1 : 0,
+                ModelDefinitionsRegion.WriteRestart.Description);
             
-            restartValues.AddProperty(ModelDefinitionsRegion.UseRestart.Key, waterFlowModel1D.UseRestart ? 1 : 0, ModelDefinitionsRegion.UseRestart.Description);
-            restartValues.AddProperty(ModelDefinitionsRegion.WriteRestart.Key, waterFlowModel1D.WriteRestart ? 1 : 0, ModelDefinitionsRegion.WriteRestart.Description);
+            restartValues.AddProperty(ModelDefinitionsRegion.RestartStartTime.Key, waterFlowModel1D.SaveStateStartTime,
+                ModelDefinitionsRegion.RestartStartTime.Description);
+            restartValues.AddProperty(ModelDefinitionsRegion.RestartStopTime.Key, waterFlowModel1D.SaveStateStopTime,
+                ModelDefinitionsRegion.RestartStopTime.Description);
+            restartValues.AddProperty(ModelDefinitionsRegion.RestartTimeStep.Key,
+                int.Parse(waterFlowModel1D.SaveStateTimeStep.TotalSeconds.ToString(CultureInfo.InvariantCulture)),
+                ModelDefinitionsRegion.RestartTimeStep.Description);
 
             return restartValues;
         }

@@ -263,7 +263,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
 
             
             model.WriteRestart = true;
-            model.UseSaveStateTimeRange = true;
             model.SaveStateStartTime = model.StartTime;
             model.SaveStateStopTime =  model.StopTime;
             model.SaveStateTimeStep =  model.TimeStep;

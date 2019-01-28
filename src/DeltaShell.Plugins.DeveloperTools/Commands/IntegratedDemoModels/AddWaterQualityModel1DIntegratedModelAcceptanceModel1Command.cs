@@ -109,7 +109,6 @@ namespace DeltaShell.Plugins.DeveloperTools.Commands.IntegratedDemoModels
             flowModel1D.UseSaltInCalculation = false;
             // * Run parameters:
             flowModel1D.UseRestart = false;
-            flowModel1D.UseSaveStateTimeRange = false;
             flowModel1D.WriteRestart = false;
 
             // Use default model output settings.

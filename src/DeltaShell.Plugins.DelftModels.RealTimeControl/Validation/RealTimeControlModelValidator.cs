@@ -16,18 +16,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
         public ValidationReport Validate(RealTimeControlModel rootObject, RealTimeControlModel target = null)
         {
             var validationReports = new List<ValidationReport>
-                {
-                    ValidateRealTimeControlModel(rootObject),
-                    RestartTimeRangeValidator.ValidateRestartTimeRangeSettings(rootObject.UseSaveStateTimeRange,
-                                                                               rootObject.SaveStateStartTime,
-                                                                               rootObject.SaveStateStopTime,
-                                                                               rootObject.SaveStateTimeStep,
-                                                                               rootObject),
-                    ValidateRestartInputState(rootObject),
-                };
-            validationReports.AddRange(rootObject.ControlGroups.Select(cg => new ControlGroupValidator().Validate(rootObject, cg)));
+            {
+                ValidateRealTimeControlModel(rootObject),
+                RestartTimeRangeValidator.ValidateRestartTimeRangeSettings(true,
+                    rootObject.SaveStateStartTime,
+                    rootObject.SaveStateStopTime,
+                    rootObject.SaveStateTimeStep,
+                    rootObject),
+                ValidateRestartInputState(rootObject),
+            };
+            validationReports.AddRange(
+                rootObject.ControlGroups.Select(cg => new ControlGroupValidator().Validate(rootObject, cg)));
             return new ValidationReport(rootObject.Name + " (Real Time Control)",
-                                        validationReports);
+                validationReports);
         }
 
         private static ValidationReport ValidateRealTimeControlModel(RealTimeControlModel model)

@@ -82,7 +82,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.AreEqual(TimeSpan.FromSeconds(Convert.ToDouble("16")), model.SaveStateTimeStep);
             Assert.AreEqual(DateTime.Parse("2014 - 01 - 01 00:00:00"), model.SaveStateStartTime);
             Assert.AreEqual(DateTime.Parse("2014 - 01 - 02 00:00:00"), model.SaveStateStopTime);
-            Assert.AreEqual(true, model.UseSaveStateTimeRange);
         }
 
         [Test]
@@ -109,8 +108,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
             Assert.AreEqual(1, errorMessages.Count);
             Assert.AreEqual("Line 0: Information about the Save State is not complete and therefore ignored during import", errorMessages[0]);
-
-            Assert.AreEqual(false, model.UseSaveStateTimeRange);
         }
 
         [Test]
@@ -137,8 +134,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
             Assert.AreEqual(1, errorMessages.Count);
             Assert.AreEqual("Line 0: Information about the Save State is not complete and therefore ignored during import", errorMessages[0]);
-
-            Assert.AreEqual(false, model.UseSaveStateTimeRange);
         }
 
         [Test]
@@ -165,8 +160,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
             Assert.AreEqual(1, errorMessages.Count);
             Assert.AreEqual("Line 0: Information about the Save State is not complete and therefore ignored during import", errorMessages[0]);
-
-            Assert.AreEqual(false, model.UseSaveStateTimeRange);
         }
 
         [Test]
@@ -190,7 +183,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.AreEqual(model.WriteRestart, true);
 
             Assert.AreEqual(1, errorMessages.Count);
-            Assert.AreEqual(false, model.UseSaveStateTimeRange);
             Assert.AreEqual("Line 0: Parameter bla found. This parameter will not be imported, since it is not supported by the GUI", errorMessages[0]);
         }
     }

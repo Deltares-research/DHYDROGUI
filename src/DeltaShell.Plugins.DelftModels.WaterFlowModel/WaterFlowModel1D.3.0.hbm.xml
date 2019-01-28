@@ -15,7 +15,6 @@
       <one-to-many class="DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi.ModelApiParameter, DeltaShell.Plugins.DelftModels.WaterFlowModel" />
     </list>
 
-    <property name="UseSaveStateTimeRange" />
     <property name="SaveStateStartTime" />
     <property name="SaveStateStopTime" />
     <property name="SaveStateTimeStep" />

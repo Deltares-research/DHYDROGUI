@@ -2949,7 +2949,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             // Setup model to generate statefiles            
             realTimeControlModel.WriteRestart = true;
-            realTimeControlModel.UseSaveStateTimeRange = true; // Use below fields (otherwise state is only written at end of run)
             realTimeControlModel.SaveStateStartTime = realTimeControlModel.StartTime;
             realTimeControlModel.SaveStateStopTime = realTimeControlModel.StopTime;
             realTimeControlModel.SaveStateTimeStep = realTimeControlModel.TimeStep;

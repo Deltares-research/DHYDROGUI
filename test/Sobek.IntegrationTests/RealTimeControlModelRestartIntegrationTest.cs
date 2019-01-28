@@ -175,7 +175,7 @@ namespace Sobek.IntegrationTests
                     // Set up restart time ranges on WaterFlowModel1D.
                     flowModel.WriteRestart = true;
                     flowModel.UseRestart = false;
-                    flowModel.UseSaveStateTimeRange = true;
+                    
                     flowModel.SaveStateStartTime = flowModel.StartTime.AddHours(offsetSaveStateInHours);
                     flowModel.SaveStateStopTime = flowModel.SaveStateStartTime.AddHours(runLengthSaveStateInHours);
                     flowModel.SaveStateTimeStep = TimeSpan.FromHours(intervalSaveStateInHours);
@@ -184,7 +184,6 @@ namespace Sobek.IntegrationTests
                     rtcModel.WriteRestart = true;
                     rtcModel.UseRestart = false;
 
-                    rtcModel.UseSaveStateTimeRange = true;
                     rtcModel.SaveStateStartTime = rtcModel.StartTime.AddHours(offsetSaveStateInHours);
                     rtcModel.SaveStateStopTime = rtcModel.SaveStateStartTime.AddHours(runLengthSaveStateInHours);
                     rtcModel.SaveStateTimeStep = TimeSpan.FromHours(intervalSaveStateInHours);
@@ -346,7 +345,6 @@ namespace Sobek.IntegrationTests
                     flowModel.WriteRestart = true;
                     flowModel.UseRestart = false;
 
-                    flowModel.UseSaveStateTimeRange = true;
                     flowModel.SaveStateStartTime = flowModel.StartTime.AddHours(offsetSaveStateInHours);
                     flowModel.SaveStateStopTime = flowModel.SaveStateStartTime.AddHours(runLengthSaveStateInHours);
                     flowModel.SaveStateTimeStep = TimeSpan.FromHours(intervalSaveStateInHours);
@@ -355,7 +353,6 @@ namespace Sobek.IntegrationTests
                     rtcModel.WriteRestart = true;
                     rtcModel.UseRestart = false;
 
-                    rtcModel.UseSaveStateTimeRange = true;
                     rtcModel.SaveStateStartTime = rtcModel.StartTime.AddHours(offsetSaveStateInHours);
                     rtcModel.SaveStateStopTime = rtcModel.SaveStateStartTime.AddHours(runLengthSaveStateInHours);
                     rtcModel.SaveStateTimeStep = TimeSpan.FromHours(intervalSaveStateInHours);

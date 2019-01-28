@@ -10,7 +10,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         public void SetProperties(DelftIniCategory simulationOptionsCategory, WaterFlowModel1D model, IList<string> errorMessages)
         {
             if (simulationOptionsCategory?.Name != ModelDefinitionsRegion.SimulationOptionsValuesHeader) return;
-            
+
+            //Set save state properties equal to imported run times
+            model.SaveStateStartTime = model.StopTime;
+            model.SaveStateStopTime = model.StopTime;
+            model.SaveStateTimeStep = model.TimeStep;
+
             foreach (var prop in simulationOptionsCategory.Properties)
             {
                 var modelParameter = model.ParameterSettings.FirstOrDefault(ps => ps.Name == prop.Name);

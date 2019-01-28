@@ -37,6 +37,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             rtcModel.SetStopTime(settings);
             rtcModel.SetTimeStep(settings);
             rtcModel.SetLimitedMemory(runtimeConfigObject);
+
+            var settingsRestart = runtimeConfigObject.stateFiles as UserDefinedStateExportXML;
+
+            if (settingsRestart.stateTimeStep == -1)
+            {
+                rtcModel.WriteRestart = false;
+                rtcModel.SaveStateStartTime = rtcModel.StopTime;
+                rtcModel.SaveStateStopTime = rtcModel.StopTime;
+                rtcModel.SaveStateTimeStep = rtcModel.TimeStep;
+                return;
+            };
+
+            rtcModel.WriteRestart = true;
+            rtcModel.SetRestartStartTime(settingsRestart);
+            rtcModel.SetRestartStopTime(settingsRestart);
+            rtcModel.SetRestartTimeStep(settingsRestart);
+            
         }
 
         private static void SetTimeStep(this ITimeDependentModel rtcModel, UserDefinedRuntimeXML settings)
@@ -109,6 +126,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             var simulationMode = mode?.Item as ModeSimulationXML;
 
             if (simulationMode != null) rtcModel.LimitMemory = simulationMode.limitedMemory;
+        }
+
+        private static void SetRestartStartTime(this RealTimeControlModel rtcModel, UserDefinedStateExportXML settings)
+        {
+            var startDateElement = settings.startDate;
+            rtcModel.SaveStateStartTime = CreateDateTimeFromDateAndTime(startDateElement.date, startDateElement.time);
+        }
+
+        private static void SetRestartStopTime(this RealTimeControlModel rtcModel, UserDefinedStateExportXML settings)
+        {
+            var endDateElement = settings.endDate;
+            rtcModel.SaveStateStopTime = CreateDateTimeFromDateAndTime(endDateElement.date, endDateElement.time);
+        }
+
+        private static void SetRestartTimeStep(this RealTimeControlModel rtcModel, UserDefinedStateExportXML settings)
+        {
+            var timeStepDouble = settings.stateTimeStep;
+            rtcModel.SaveStateTimeStep = TimeSpan.FromSeconds(timeStepDouble);
         }
     }
 }

@@ -54,18 +54,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             get { return data.WriteRestart; }
             set { data.WriteRestart = value; }
         }
-
+        
         [PropertyOrder(2)]
-        [ResourcesCategory(typeof(Resources), "RealTimeControlModelProperties_Category_RunParameters")]
-        [ResourcesDisplayName(typeof(Resources), "RealTimeControlModelProperties_UseSaveStateTimeRange_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_UseSaveStateTimeRange_Description")]
-        public bool UseSaveStateTimeRange
-        {
-            get { return data.UseSaveStateTimeRange; }
-            set { data.UseSaveStateTimeRange = value; }
-        }
-
-        [PropertyOrder(3)]
         [TypeConverter(typeof(DeltaShellDateTimeConverter))]
         [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "RealTimeControlModelProperties_Category_RunParameters")]
@@ -77,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             set { data.SaveStateStartTime = value; }
         }
 
-        [PropertyOrder(4)]
+        [PropertyOrder(3)]
         [TypeConverter(typeof(DeltaShellTimeSpanConverter))]
         [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "RealTimeControlModelProperties_Category_RunParameters")]
@@ -89,7 +79,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             set { data.SaveStateTimeStep = value; }
         }
 
-        [PropertyOrder(5)]
+        [PropertyOrder(4)]
         [TypeConverter(typeof(DeltaShellDateTimeConverter))]
         [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "RealTimeControlModelProperties_Category_RunParameters")]
@@ -108,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                 propertyName.Equals(nameof(SaveStateStopTime)) ||
                 propertyName.Equals(nameof(SaveStateTimeStep)))
             {
-                return !data.UseSaveStateTimeRange;
+                return !data.WriteRestart;
             }
 
             return false;

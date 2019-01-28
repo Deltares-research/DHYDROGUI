@@ -88,7 +88,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         {
             // Given
             var model = new RealTimeControlModel();
-            model.UseSaveStateTimeRange = true;
             model.SaveStateStartTime = DateTime.Today;
             model.SaveStateStopTime = model.SaveStateStartTime.AddDays(1);
             model.SaveStateTimeStep = TimeSpan.FromHours(1);

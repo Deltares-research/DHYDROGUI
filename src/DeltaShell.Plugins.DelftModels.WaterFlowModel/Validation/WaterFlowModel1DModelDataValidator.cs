@@ -28,8 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                                                 WaterFlowModel1DDiscretizationValidator.Validate(flowModel1D.NetworkDiscretization, flowModel1D),
                                                 ValidateRoughness(flowModel1D),
                                                 ValidateExtraResistance(flowModel1D),
-                                                RestartTimeRangeValidator.ValidateRestartTimeRangeSettings(
-                                                    flowModel1D.UseSaveStateTimeRange,
+                                                RestartTimeRangeValidator.ValidateRestartTimeRangeSettings(true,
                                                     flowModel1D.SaveStateStartTime,
                                                     flowModel1D.SaveStateStopTime,
                                                     flowModel1D.SaveStateTimeStep, 

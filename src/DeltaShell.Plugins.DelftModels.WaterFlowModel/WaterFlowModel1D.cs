@@ -176,8 +176,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             Latitude = latitudeDefault;
             Longitude = longitudDefault;
 
-            /* */
-            var boundaryNodeDataItemSet = new DataItemSet(new EventedList<WaterFlowModel1DBoundaryNodeData>(), WaterFlowModel1DDataSet.BoundaryConditionsTag, DataItemRole.Input, true, WaterFlowModel1DDataSet.BoundaryConditionsTag, typeof(WaterFlowModel1DBoundaryNodeData))
+           var boundaryNodeDataItemSet = new DataItemSet(new EventedList<WaterFlowModel1DBoundaryNodeData>(), WaterFlowModel1DDataSet.BoundaryConditionsTag, DataItemRole.Input, true, WaterFlowModel1DDataSet.BoundaryConditionsTag, typeof(WaterFlowModel1DBoundaryNodeData))
                 {
                     ValueType = typeof(FeatureData<IFunction, INode>)
                 };
@@ -199,6 +198,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             SubscribeToInitialConditionsCoverageDataItem();
 
             parameterSettings = GetParametersFromModelApi();
+            SaveStateStartTime = StopTime;
+            SaveStateStopTime = StopTime;
+            SaveStateTimeStep = TimeStep;
 
             ((INotifyPropertyChanged)this).PropertyChanged += WaterFlowModel1DPropertyChanged;
 
@@ -314,7 +316,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
             return base.IsDataItemActive(dataItem);
         }
-        
+       
         public virtual INetworkCoverage InitialFlow //Q(cell)
         {
             get { return GetNetworkCoverageByTag(WaterFlowModel1DDataSet.InputInitialFlowTag); }
@@ -3218,9 +3220,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         }
 
         #region Save State: Time Range
-
-        public virtual bool UseSaveStateTimeRange { get; set; }
-
+        
         public virtual DateTime SaveStateStartTime { get; set; }
 
         public virtual DateTime SaveStateStopTime { get; set; }
@@ -3231,15 +3231,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
         public virtual IEnumerable<DateTime> GetRestartWriteTimes()
         {
-            if (UseSaveStateTimeRange)
+            var time = SaveStateStartTime;
+            while (time <= SaveStateStopTime)
             {
-                var time = SaveStateStartTime;
-                while (time <= SaveStateStopTime)
-                {
-                    yield return time;
+                yield return time;
 
-                    time += SaveStateTimeStep;
-                }
+                time += SaveStateTimeStep;
             }
         }
 

@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.DeveloperTools.Commands.IntegratedDemoModels
 
             // Run parameters
             flowModel1D.UseRestart = false;
-            flowModel1D.UseSaveStateTimeRange = false;
+            
             flowModel1D.WriteRestart = false;
 
             flowModel1D.OutputTimeStep = new TimeSpan(0, 0, 0, 20);

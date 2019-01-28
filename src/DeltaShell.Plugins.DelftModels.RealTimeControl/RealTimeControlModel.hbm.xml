@@ -15,7 +15,6 @@
       </list>
       <property name="LimitMemory" column="limit_memory"/>
       
-      <property name="UseSaveStateTimeRange" />
       <property name="SaveStateStartTime" />
       <property name="SaveStateStopTime" />
       <property name="SaveStateTimeStep" />

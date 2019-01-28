@@ -2073,7 +2073,7 @@ namespace Sobek.IntegrationTests
         public void SaveLoadWFM1DWithParameterSettings()
         {
             var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
-            model.UseSaveStateTimeRange = true;
+            
             model.Initialize();
             //Assert.IsNotNull(model.ModelEngine);
             var origParamSettings = model.ParameterSettings;
@@ -2091,7 +2091,6 @@ namespace Sobek.IntegrationTests
                     Assert.AreEqual(origParamSettings[i].Value, retrievedParameterSettings[i].Value);
                 }
 
-                Assert.AreEqual(model.UseSaveStateTimeRange, retrievedModel.UseSaveStateTimeRange);
                 Assert.AreEqual(model.SaveStateStartTime, retrievedModel.SaveStateStartTime);
                 Assert.AreEqual(model.SaveStateStopTime, retrievedModel.SaveStateStopTime);
                 Assert.AreEqual(model.SaveStateTimeStep, retrievedModel.SaveStateTimeStep);

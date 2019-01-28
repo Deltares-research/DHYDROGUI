@@ -52,7 +52,9 @@ namespace Sobek.IntegrationTests
 
                     // run flow & write restart
                     flowModel.WriteRestart = true;
-                    flowModel.StopTime = flowModel.StartTime.AddHours(24.0);
+
+                    var report = flowModel.Validate();
+
                     ActivityRunner.RunActivity(flowModel);
                     Assert.AreEqual(ActivityStatus.Cleaned, flowModel.Status);
 
@@ -62,18 +64,18 @@ namespace Sobek.IntegrationTests
                     // we assume .zip files are only written for state files, and that statefiles are in zips
                     var projectDataDirectory = app.ProjectDataDirectory;
 
-                    Assert.AreEqual(1, Directory.GetFiles(projectDataDirectory).Count(f => f.EndsWith(".zip")));
+                    Assert.AreEqual(10, Directory.GetFiles(projectDataDirectory).Count(f => f.EndsWith(".zip")));
 
                     // make copy & add as input (mimic what happens on 'use as initial state')
                     flowModel.RestartInput = (FileBasedRestartState) flowModel.GetRestartOutputStates().Last().Clone();
 
                     // copy of state added, so now there's 2 files
-                    Assert.AreEqual(2, Directory.GetFiles(projectDataDirectory).Count(f => f.EndsWith(".zip")));
+                    Assert.AreEqual(11, Directory.GetFiles(projectDataDirectory).Count(f => f.EndsWith(".zip")));
 
                     app.CloseProject();
 
                     //last state delete again: we closed the project without saving
-                    Assert.AreEqual(1, Directory.GetFiles(projectDataDirectory).Count(f => f.EndsWith(".zip")));
+                    Assert.AreEqual(10, Directory.GetFiles(projectDataDirectory).Count(f => f.EndsWith(".zip")));
                 });
             }
         }
@@ -105,7 +107,7 @@ namespace Sobek.IntegrationTests
 
                     // run flow & write restart
                     flowModel.WriteRestart = true;
-                    flowModel.StopTime = flowModel.StartTime.AddHours(24.0);
+                    
                     ActivityRunner.RunActivity(flowModel);
                     Assert.AreEqual(ActivityStatus.Cleaned, flowModel.Status);
                     
@@ -118,20 +120,20 @@ namespace Sobek.IntegrationTests
 
                     // we assume .zip files are only written for state files, and that statefiles are in zips
                     // get number of zips
-                    Assert.AreEqual(1, Directory.GetFiles(app.ProjectDataDirectory).Count(f => f.EndsWith(".zip")));
+                    Assert.AreEqual(10, Directory.GetFiles(app.ProjectDataDirectory).Count(f => f.EndsWith(".zip")));
 
                     // import state (overwrite)
                     var importer = new FileBasedRestartStateImporter();
                     flowModel.RestartInput = (FileBasedRestartState)importer.ImportItem(tempFile);
                     
                     // ds gives it a place in the data dir
-                    Assert.AreEqual(2, Directory.GetFiles(app.ProjectDataDirectory).Count(f => f.EndsWith(".zip")));
+                    Assert.AreEqual(11, Directory.GetFiles(app.ProjectDataDirectory).Count(f => f.EndsWith(".zip")));
 
                     // save project
                     app.SaveProjectAs("s1.dsproj");
 
                     // stil two
-                    Assert.AreEqual(2, Directory.GetFiles(app.ProjectDataDirectory).Count(f => f.EndsWith(".zip")));
+                    Assert.AreEqual(11, Directory.GetFiles(app.ProjectDataDirectory).Count(f => f.EndsWith(".zip")));
                     
                     app.CloseProject();
                 });
@@ -344,7 +346,7 @@ namespace Sobek.IntegrationTests
             flowModel.WriteRestart = true;
             flowModel.StopTime = flowModel.StartTime.AddHours(24.0);
             flowModel.OutputTimeStep = new TimeSpan(0,1,0,0);
-            flowModel.UseSaveStateTimeRange = true;
+
             flowModel.SaveStateStartTime = flowModel.StartTime;
             flowModel.SaveStateStopTime = flowModel.StopTime;
             flowModel.SaveStateTimeStep = flowModel.OutputTimeStep;
@@ -397,7 +399,6 @@ namespace Sobek.IntegrationTests
                     flowModel.WriteRestart = true;
                     flowModel.StopTime = flowModel.StartTime.AddHours(runLengthInHours);
 
-                    flowModel.UseSaveStateTimeRange = true;
                     flowModel.SaveStateStartTime = flowModel.StartTime.AddHours(offsetSaveStateInHours);
                     flowModel.SaveStateStopTime = flowModel.SaveStateStartTime.AddHours(runLengthSaveStateInHours);
                     flowModel.SaveStateTimeStep = TimeSpan.FromHours(intervalSaveStateInHours);
@@ -476,7 +477,6 @@ namespace Sobek.IntegrationTests
             flowModel.BoundaryConditions[0].Flow = 300.0;
             flowModel.BoundaryConditions[2].DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
             flowModel.BoundaryConditions[2].Flow = -100.0;
-            flowModel.OutputTimeStep = new TimeSpan(0, 0, 10, 0);
             return flowModel;
         }
     }

@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     xDocument.Root.Add(GetXmlForLoggingOptions(logLevel));
                 }
                 // check if we want to write restart files
-                if (realTimeControlModel.UseSaveStateTimeRange && realTimeControlModel.WriteRestart)
+                if (realTimeControlModel.WriteRestart)
                 {
                     xDocument.Root.Add(GetXmlRestartStateFromModel(realTimeControlModel));
                 }
