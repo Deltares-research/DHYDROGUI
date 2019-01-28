@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Xml;
-using System.Xml.Linq;
 using DeltaShell.Dimr.xsd;
 using DeltaShell.NGHS.IO.FileConverters;
 using log4net;
@@ -24,6 +22,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
         /// <param name="xmlFileSource">Path to the xml file</param>
         /// <typeparam name="T"><see cref="IXmlParsedObject"/> object to parse from the <see cref="xmlFileSource"/></typeparam>
         /// <returns>De-serialized <see cref="IXmlParsedObject"/> object</returns>
+        /// <exception cref="FileNotFoundException">When the path to the file or the file does not exist.</exception>
         public static T Read<T>(string xmlFileSource) where T : class, IXmlParsedObject
         {
             if (string.IsNullOrEmpty(xmlFileSource) || !File.Exists(xmlFileSource))

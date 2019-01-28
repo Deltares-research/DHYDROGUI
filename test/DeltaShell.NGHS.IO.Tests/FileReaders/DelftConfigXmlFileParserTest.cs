@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Xml;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr.xsd;
@@ -9,7 +8,7 @@ using NUnit.Framework;
 namespace DeltaShell.NGHS.IO.Tests.FileReaders
 {
     [TestFixture]
-    class DelftConfigXmlFileParserTest
+    public class DelftConfigXmlFileParserTest
     {
         private string XmlFileDirectory = @"FileReaders\ConfigXmlReader";
 
@@ -31,7 +30,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         [Test]
         public void ConfigurationFilePathIsUnknown()
         {
-            var unknownFilePath = @"unknowpathtofile.xml";
+            var unknownFilePath = @"unknownpathtofile.xml";
             var dimrFileSource = Path.Combine(TestHelper.GetDataDir(), XmlFileDirectory, unknownFilePath);
             
             var exception = Assert.Throws<FileNotFoundException>(() => { DelftConfigXmlFileParser.Read<dimrXML>(dimrFileSource); });

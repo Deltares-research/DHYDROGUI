@@ -20,7 +20,7 @@ namespace DeltaShell.NGHS.IO.FileConverters
         /// <param name="unsupportedFeatures">List of unsupported item messages</param>
         /// <returns>Parsed <see cref="IXmlParsedObject"/> object</returns>
         /// <exception cref="ArgumentException">When one of the arguments is null</exception>
-        /// <exception cref="InvalidOperationException">When de-serializing fails</exception>
+        /// <exception cref="XmlException">When de-serializing fails</exception>
         public static T Convert<T>(StreamReader file, List<string> unsupportedFeatures) where T : class, IXmlParsedObject
         {
             if (file == null)
