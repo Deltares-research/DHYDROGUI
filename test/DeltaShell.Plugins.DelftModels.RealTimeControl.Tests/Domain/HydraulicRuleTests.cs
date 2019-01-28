@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private string OriginXml()
         {
             return "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<lookupTable id=\"" + "[HydraulicRule]" + RuleName + "\">" +
+                   "<lookupTable id=\"" + "/" + RuleName + "\">" +
                    "<table>" +
                    "<record x=\"" +
                    ((double) tableFunction.Arguments[0].Values[0]).ToString(CultureInfo.InvariantCulture) + "\" y=\"" +
@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private string HydraulicRuleWithTimeLagXml()
         {
             return "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<lookupTable id=\"" + "[HydraulicRule]" + RuleName + "\">" +
+                   "<lookupTable id=\"" + "/" + RuleName + "\">" +
                    "<table>" +
                    "<record x=\"" +
                    ((double)tableFunction.Arguments[0].Values[0]).ToString(CultureInfo.InvariantCulture) + "\" y=\"" +

@@ -63,20 +63,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
             return
                 "<trigger xmlns=\"" + Fns.ToString() + "\">" +
-                "<standard id=\"" + "[DirectionalCondition]" + directionalCondition.Name + "\">" +
+                "<standard id=\"" + "/" + directionalCondition.Name + "\">" +
                 "<condition>" +
                 "<x1Series ref=\"" + Implicit + "\">" + seriesOne + "</x1Series>" +
                 "<relationalOperator>Greater</relationalOperator>" +
                 "<x2Series ref=\"" + Implicit + "\">" + previousTimeStep + "</x2Series>" +
                 "</condition>" +
                 "<true>" +
-                "<trigger><ruleReference>" + "[PID]" + TrueReference + "</ruleReference></trigger>" +
+                "<trigger><ruleReference>" + "/" + TrueReference + "</ruleReference></trigger>" +
                 "</true>" +
                 "<false>" +
-                "<trigger><ruleReference>" + "[PID]" + FalseReference + "</ruleReference></trigger>" +
+                "<trigger><ruleReference>" + "/" + FalseReference + "</ruleReference></trigger>" +
                 "</false>" +
                 "<output>" +
-                "<status>" + RtcXmlTag.Status + directionalCondition.Name + "</status>" +
+                "<status>" + RtcXmlTag.DirectionalCondition + RtcXmlTag.Status + "/" +
+                directionalCondition.Name + "</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>";

@@ -1,15 +1,16 @@
-﻿using DelftTools.Functions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
+using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 using log4net;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
+using ValidationAspects.Factories;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
@@ -119,10 +120,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             var table = GetTable();
             foreach (var output in Outputs)
             {
-                output.IntegralPart = prefix + Name;  // also in data export and statevector
+                output.IntegralPart = XmlTag + prefix + "/" + Name; // also in data export and statevector
             }
             var element = new XElement(xNamespace + "timeRelative",
-                                       new XAttribute("id", XmlTag + prefix + Name),
+                                       new XAttribute("id", prefix + "/" + Name),
                                        new XElement(xNamespace + "mode", "RETAINVALUEWHENINACTIVE"),
                                        new XElement(xNamespace + "valueOption", TimeValueOption),
                                        new XElement(xNamespace + "maximumPeriod", MinimumPeriod.ToString()),
@@ -234,8 +235,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         {
             var xmlTimeSeries = new XmlTimeSeries
                                     {
-                                        Name = prefix + Name,
-                                        LocationId = XmlTag + prefix + Name,
+                                        Name = XmlTag + prefix +"/"+ Name,
+                                        LocationId = prefix + "/" + Name,
                                         ParameterId = "t",
                                     };
             return xmlTimeSeries;

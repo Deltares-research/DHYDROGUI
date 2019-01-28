@@ -1,20 +1,21 @@
-﻿using DelftTools.Functions;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using DelftTools.Functions;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 using log4net;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
-    public static class RealTimeControlTimeSeriesSetter
+    public static class RealTimeControlTimeSeriesConnector
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlTimeSeriesSetter));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlTimeSeriesConnector));
 
-        public static void SetTimeSeries(IList<TimeSeriesComplexType> timeSeriesElements, IList<IControlGroup> controlGroups)
+        public static void ConnectTimeSeries(IList<TimeSeriesComplexType> timeSeriesElements, IList<ControlGroup> controlGroups)
         {
             if (timeSeriesElements == null || controlGroups == null) return;
 
@@ -40,11 +41,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             }
         }
 
-        private static RtcBaseObject GetCorrespondingRuleOrCondition(string locationId, IList<IControlGroup> controlGroups)
+        private static RtcBaseObject GetCorrespondingRuleOrCondition(string locationId, IList<ControlGroup> controlGroups)
         {
             if (controlGroups == null) return null;
 
-            var controlGroup = controlGroups.GetControlGroupByElementId(locationId);
+            var controlGroup = RealTimeControlXmlReaderHelper.GetControlGroupByElementId(locationId, controlGroups);
             var name = RealTimeControlXmlReaderHelper.GetRuleOrConditionNameFromElementId(locationId);
 
             return controlGroup.Rules.Concat<RtcBaseObject>(controlGroup.Conditions).FirstOrDefault(o => o.Name == name);
@@ -58,12 +59,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             var doubleValues = records.Select(r => r.value);
 
             timeSeries.Time.SetValues(dates);
-
+            
             if (timeSeries.Components[0].ValueType == typeof(bool))
             {
                 // because we write the opposite ( 0 = true, 1 = false)
                 var booleanValues = doubleValues.Select(e => !Convert.ToBoolean(e));
-                timeSeries.Components[0].SetValues(booleanValues);
+                timeSeries.Components[0].SetValues(booleanValues);          
             }
             else
             {

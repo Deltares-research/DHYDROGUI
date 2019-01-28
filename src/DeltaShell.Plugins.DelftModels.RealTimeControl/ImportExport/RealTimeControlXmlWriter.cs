@@ -245,9 +245,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     var startObject = ControlGroupHelper.StartObjectsForOutput(group, output).FirstOrDefault();
                     if (startObject is ConditionBase)
                     {
-                        var groupNameWithSeparator = group.Name + "/";
+                        var gf = group.Name;
                         var condition = (ConditionBase) startObject;
-                        triggersElement.Add(condition.ToXml(Fns, groupNameWithSeparator));
+                        triggersElement.Add(condition.ToXml(Fns, gf));
                     }
                 }
             }
@@ -282,14 +282,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             foreach (var group in controlGroups)
             {
-                var groupNameWithSeparator = group.Name + "/";
 
                 foreach (var signal in group.Signals)
                 {
                     if (signal is LookupSignal)
                     {
+                        string gf = group.Name;
                         signal.StoreAsRule = true;
-                        rulesElementXmlContents.Add(signal.ToXml(Fns, groupNameWithSeparator));
+                        rulesElementXmlContents.Add(signal.ToXml(Fns, gf));
                     }
                 }
 
@@ -311,7 +311,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     }
 
                     // add support for standard setpint or lookup table
-                    var setPointId = groupNameWithSeparator + rule.Name + "_SP";
+                    var setPointId = group.Name + rule.Name + "_SP";
                     foreach (var signal in group.Signals)
                     {
                         if (signal is LookupSignal)
@@ -320,7 +320,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                             {
                                 if (ruleBase.IsLinkedFromSignal() && ruleBase.Name == rule.Name)
                                 {
-                                    setPointId = groupNameWithSeparator + signal.Name;
+                                    setPointId = group.Name + signal.Name;
                                 }
                             }
                         }
@@ -331,7 +331,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                         input.SetPoint = setPointId;
                     }
 
-                    rulesElementXmlContents.Add(rule.ToXml(Fns, groupNameWithSeparator));
+                    var gf = group.Name;
+                    rulesElementXmlContents.Add(rule.ToXml(Fns, gf));
                 }
             }
 
@@ -351,13 +352,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             foreach (var group in controlGroups)
             {
-                var groupNameWithSeparator = group.Name + "/";
-
                 foreach (var signal in group.Signals)
                 {
                     if (!(signal is LookupSignal))
                     {
-                        signalsElementXmlContents.Add(signal.ToXml(Fns, groupNameWithSeparator));
+                        string gf = group.Name;
+                        signalsElementXmlContents.Add(signal.ToXml(Fns, gf));
                     }
                 }
             }
@@ -508,8 +508,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             foreach (var group in controlGroups)
             {
-                var groupNameWithSeparator = group.Name + "/";
-
                 foreach (var input in group.Inputs)
                 {
                     if (inputItems.Contains(input.Name))
@@ -534,7 +532,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
                 foreach (var conditionBase in group.Conditions)
                 {
-                    foreach (var importTimeSeries in conditionBase.ToDataConfigImportSeries(groupNameWithSeparator, Fns))
+                    foreach (var importTimeSeries in conditionBase.ToDataConfigImportSeries(group.Name, Fns))
                     {
                         var key = importTimeSeries.Attribute("id").Value;
 
@@ -557,7 +555,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     // used by RelativeTimeRule and PIDRule
                     import.Add(ruleBase.OutputAsInputToDataConfigXml(Fns));
                     // add tines series that are part of the rules to the xml
-                    foreach (var timeSeries in ruleBase.XmlImportTimeSeries(groupNameWithSeparator, timeDependentModel.StartTime, timeDependentModel.StopTime, timeDependentModel.TimeStep))
+                    foreach (var timeSeries in ruleBase.XmlImportTimeSeries(@group.Name, timeDependentModel.StartTime, timeDependentModel.StopTime, timeDependentModel.TimeStep))
                     {
                         import.Add(timeSeries.GetTimeSeriesXElementForDataConfigFile(Fns, false));
                     }
@@ -588,8 +586,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             foreach (var group in controlGroups)
             {
-                var groupNameWithSeparator = group.Name + "/";
-
                 foreach (var output in group.Outputs)
                 {
                     string nameWithoutHashSigns = output.Name.Replace("##", "~~");
@@ -612,7 +608,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 }
                 foreach (var conditionBase in group.Conditions)
                 {
-                    foreach (var exportTimeSeries in conditionBase.ToDataConfigExportSeries(Fns, groupNameWithSeparator))
+                    foreach (var exportTimeSeries in conditionBase.ToDataConfigExportSeries(Fns, group.Name))
                     {
                         var key = exportTimeSeries.Attribute("id").Value;
 
@@ -629,7 +625,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
                 foreach (var ruleBase in group.Rules)
                 {
-                    foreach (var timeSeries in ruleBase.XmlExportTimeSeries(groupNameWithSeparator))
+                    foreach (var timeSeries in ruleBase.XmlExportTimeSeries(@group.Name))
                     {
                         export.Add(timeSeries.GetTimeSeriesXElementForDataConfigFile(Fns, true));
                     }
@@ -637,7 +633,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
                 foreach (var signal in group.Signals)
                 {
-                    foreach (var timeSeries in signal.XmlExportTimeSeries(groupNameWithSeparator))
+                    foreach (var timeSeries in signal.XmlExportTimeSeries(@group.Name))
                     {
                         export.Add(timeSeries.GetTimeSeriesXElementForDataConfigFile(Fns, true));
                     }
@@ -709,7 +705,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             var seriesNames = new HashSet<string>();
             foreach (var group in controlGroups)
             {
-                var groupNameWithSeparator = group.Name + "/";
                 foreach (var ruleBase in group.Rules)
                 {
                     var ruleAsPid = ruleBase as PIDRule;
@@ -718,9 +713,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                         Log.WarnFormat(Resources.RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_PIDRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Constant, ruleAsPid.Name);
                         continue;
                     }
-                    foreach (var timeSeries in ruleBase.XmlImportTimeSeries(groupNameWithSeparator, timeDependentModel.StartTime, timeDependentModel.StopTime, timeDependentModel.TimeStep))
+                    foreach (var timeSeries in ruleBase.XmlImportTimeSeries(@group.Name, timeDependentModel.StartTime, timeDependentModel.StopTime, timeDependentModel.TimeStep))
                     {
-                        var key = groupNameWithSeparator + timeSeries.LocationId + "/" + timeSeries.ParameterId;
+                        var key = group.Name + "/" + timeSeries.LocationId + "/" + timeSeries.ParameterId;
                         if (seriesNames.Contains(key))
                         {
                             continue;
@@ -733,9 +728,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 }
                 foreach (var conditionBase in group.Conditions)
                 {
-                    foreach (var timeSeries in conditionBase.XmlImportTimeSeries(@groupNameWithSeparator, timeDependentModel.StartTime, timeDependentModel.StopTime, timeDependentModel.TimeStep))
+                    foreach (var timeSeries in conditionBase.XmlImportTimeSeries(@group.Name, timeDependentModel.StartTime, timeDependentModel.StopTime, timeDependentModel.TimeStep))
                     {
-                        var key = groupNameWithSeparator + timeSeries.LocationId + "/" + timeSeries.ParameterId;
+                        var key = group.Name + "/" + timeSeries.LocationId + "/" + timeSeries.ParameterId;
 
                         if (seriesNames.Contains(key))
                         {

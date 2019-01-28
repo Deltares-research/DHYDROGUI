@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public virtual IEnumerable<XElement> ToDataConfigExportSeries(XNamespace xNamespace, string prefix)
         {
-            yield return new XElement(xNamespace + "timeSeries", new XAttribute("id", RtcXmlTag.Status + prefix + Name));
+            yield return new XElement(xNamespace + "timeSeries", new XAttribute("id", XmlTag + RtcXmlTag.Status + prefix + "/" + Name));
         }
 
         public virtual IEnumerable<XElement> ToDataConfigImportSeries(string prefix, XNamespace xNamespace)

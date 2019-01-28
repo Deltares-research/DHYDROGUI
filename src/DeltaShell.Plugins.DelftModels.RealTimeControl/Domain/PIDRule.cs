@@ -21,7 +21,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public PIDRule() : this(null)
         {
-            XmlTag = RtcXmlTag.PIDRule;
         }
 
         private TimeSeries timeSeries;
@@ -31,6 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             if (name != null) Name = name;
 
             Setting = new Setting {MaxSpeed = 0};
+            XmlTag = RtcXmlTag.PIDRule;
         }
 
         public PIDRuleSetpointType PidRuleSetpointType { get; set; }
@@ -82,6 +82,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             set { timeSeries = value; }
         }
 
+        public string IntegralPart
+        {
+            get { return Name + "_IP"; }
+        }
+
+        public string DifferentialPart
+        {
+            get { return Name + "_DP"; }
+        }
+
+        public string SetPoint
+        {
+            get
+            {
+                return Name + "_SP";
+            }
+        }
+
         public override IEnumerable<IXmlTimeSeries> XmlImportTimeSeries(string prefix, DateTime start, DateTime stop, TimeSpan step)
         {
             yield return GetImportTimeSeries(prefix, start, stop, step);
@@ -89,8 +107,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public override IEnumerable<IXmlTimeSeries> XmlExportTimeSeries(string prefix)
         {
-            yield return GetExportTimeSeries(RtcXmlTag.IP + prefix + Name);
-            yield return GetExportTimeSeries(RtcXmlTag.DP + prefix + Name);
+            yield return GetExportTimeSeries(prefix + IntegralPart);
+            yield return GetExportTimeSeries(prefix + DifferentialPart);
         }
 
 
@@ -100,11 +118,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
             foreach (var output in Outputs)
             {
-                output.IntegralPart = RtcXmlTag.IP + prefix + Name;
-                output.DifferentialPart = RtcXmlTag.DP + prefix + Name;
+                output.IntegralPart = prefix + IntegralPart;  // also in data export and statevector
+                output.DifferentialPart = prefix + DifferentialPart;  // also in data export and statevector
             }
             result.Add(new XElement(xNamespace + "pid",
-                                    new XAttribute("id", XmlTag + prefix + Name),
+                                    new XAttribute("id", prefix + "/" + Name),
                                     new XElement(xNamespace + "mode", "PIDVEL"),
                                     new XElement(xNamespace + "settingMin", Setting.Min),
                                     new XElement(xNamespace + "settingMax", Setting.Max),
@@ -152,8 +170,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                                     {
                                         StartTime = startTime,
                                         EndTime = endTime,
-                                        Name = RtcXmlTag.SP + prefix + Name,
-                                        LocationId = XmlTag + prefix + Name,
+                                        Name = prefix + SetPoint,
+                                        LocationId = prefix + Name,
                                         ParameterId = "SP",
                                         TimeStep = timeStep,
                                         TimeSeries = (TimeSeries) TimeSeries.Clone(),

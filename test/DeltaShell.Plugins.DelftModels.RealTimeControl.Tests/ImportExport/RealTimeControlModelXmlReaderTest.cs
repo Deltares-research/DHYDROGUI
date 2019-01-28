@@ -85,10 +85,90 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GivenAValidRtcDirectoryPath_WhenReadingAllTheFiles_ThenNoExceptionIsThrown()
+        public void GivenAValidRtcDirectoryPath_WhenReadingAllTheFiles_TheExpectedRtcModelIsReturned_RMM()
         {
             // Given
-            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "SimpleModel"));
+            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RMM"));
+            Assert.That(Directory.Exists(directoryPath));
+
+            // When
+            var rtcModel = RealTimeControlModelXmlReader.Read(directoryPath);
+
+            // Then
+            Assert.NotNull(rtcModel);
+
+            Assert.AreEqual(false, rtcModel.LimitMemory);
+
+            CheckRmmModelTimeSettings(rtcModel);
+
+            CheckRmmModelControlGroups(rtcModel);
+        }
+
+        private static void CheckRmmModelTimeSettings(RealTimeControlModel rtcModel)
+        {
+            Assert.AreEqual(new DateTime(1991, 1, 5, 3, 20, 0), rtcModel.StartTime);
+            Assert.AreEqual(new DateTime(1991, 1, 9, 0, 0, 0), rtcModel.StopTime);
+            Assert.AreEqual(new TimeSpan(0, 1, 0), rtcModel.TimeStep);
+        }
+
+        private static void CheckRmmModelControlGroups(RealTimeControlModel rtcModel)
+        {
+            Assert.AreEqual(23, rtcModel.ControlGroups.Count);
+
+            var controlGroups = rtcModel.ControlGroups;
+
+            var allInputs = controlGroups.SelectMany(c => c.Inputs);
+            Assert.AreEqual(23, allInputs.Count());
+
+            var allOutputs = controlGroups.SelectMany(c => c.Outputs);
+            Assert.AreEqual(31, allOutputs.Count());
+
+            var allConditions = controlGroups.SelectMany(c => c.Conditions);
+            Assert.AreEqual(43, allConditions.Count());
+
+            var allRules = controlGroups.SelectMany(c => c.Rules);
+            Assert.AreEqual(53, allRules.Count());
+
+            // Sample
+            var controlGroupHi = controlGroups.FirstOrDefault(cg => cg.Name == "HollandscheIJsselkering");
+            Assert.NotNull(controlGroupHi);
+
+            var inputs = controlGroupHi.Inputs;
+            Assert.AreEqual(3, inputs.Count);
+
+            var outputs = controlGroupHi.Outputs;
+            Assert.AreEqual(1, outputs.Count);
+
+            var conditions = controlGroupHi.Conditions;
+            Assert.AreEqual(5, conditions.Count);
+
+            var timeCondition = conditions.OfType<TimeCondition>().ToList();
+            Assert.NotNull(timeCondition);
+            Assert.AreEqual(2, timeCondition.Count);
+
+            var standardConditions = conditions.OfType<StandardCondition>().Where(c => c.GetType() != typeof(TimeCondition)).ToList();
+            Assert.NotNull(standardConditions);
+            Assert.AreEqual(3, standardConditions.Count);
+
+            var rules = controlGroupHi.Rules;
+            Assert.AreEqual(4, rules.Count);
+
+            var timeRules = rules.OfType<TimeRule>().ToList();
+            Assert.NotNull(timeRules);
+            Assert.AreEqual(1, timeRules.Count);
+
+            var relativeTimeRules = rules.OfType<RelativeTimeRule>().ToList();
+            Assert.NotNull(relativeTimeRules);
+            Assert.AreEqual(3, relativeTimeRules.Count);
+        }
+
+        [TestCase("SimpleModel")]
+        [TestCase("RMM")]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAValidRtcDirectoryPath_WhenReadingAllTheFiles_ThenNoExceptionIsThrown(string directoryName)
+        {
+            // Given
+            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", directoryName));
             Assert.That(Directory.Exists(directoryPath));
 
             // Then
@@ -97,7 +177,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
                 // When
                 var rtcModel = RealTimeControlModelXmlReader.Read(directoryPath);
                 Assert.NotNull(rtcModel);
-            });
+            });            
         }
 
         [Test]
@@ -109,7 +189,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             // Then
             TestHelper.AssertLogMessageIsGenerated(() =>
                 {
-                    // When
+					// When
                     var model = RealTimeControlModelXmlReader.Read(invalidPath);
                     Assert.IsNull(model);
                 }, 

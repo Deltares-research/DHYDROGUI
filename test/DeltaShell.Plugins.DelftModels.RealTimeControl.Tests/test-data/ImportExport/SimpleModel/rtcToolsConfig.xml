@@ -17,9 +17,9 @@
       </unitDelay>
     </rule>
     <rule>
-      <timeAbsolute id="[TimeRule]control_group/time_rule">
+      <timeAbsolute id="control_group/time_rule">
         <input>
-          <x>control_group/time_rule</x>
+          <x>[TimeRule]control_group/time_rule</x>
         </input>
         <output>
           <y>[Output]parameter/quantity</y>
@@ -27,7 +27,7 @@
       </timeAbsolute>
     </rule>
     <rule>
-      <timeRelative id="[RelativeTimeRule]control_group/relative_time_rule">
+      <timeRelative id="control_group/relative_time_rule">
         <mode>RETAINVALUEWHENINACTIVE</mode>
         <valueOption>RELATIVE</valueOption>
         <maximumPeriod>0</maximumPeriod>
@@ -43,27 +43,27 @@
         </input>
         <output>
           <y>[Output]parameter/quantity</y>
-          <timeActive>control_group/relative_time_rule</timeActive>
+          <timeActive>[RelativeTimeRule]control_group/relative_time_rule</timeActive>
         </output>
       </timeRelative>
     </rule>
   </rules>
   <triggers>
     <trigger>
-      <standard id="[TimeCondition]control_group/time_condition">
+      <standard id="control_group/time_condition">
         <condition>
-          <x1Series ref="IMPLICIT">control_group/time_condition</x1Series>
+          <x1Series ref="IMPLICIT">[TimeCondition]control_group/time_condition</x1Series>
           <relationalOperator>Equal</relationalOperator>
           <x2Value>0</x2Value>
         </condition>
         <true>
           <trigger>
-            <ruleReference>[TimeRule]control_group/time_rule</ruleReference>
+            <ruleReference>control_group/time_rule</ruleReference>
           </trigger>
         </true>
         <false>
           <trigger>
-            <standard id="[StandardCondition]control_group/standard_condition">
+            <standard id="control_group/standard_condition">
               <condition>
                 <x1Series ref="EXPLICIT">[Input]parameter/quantity</x1Series>
                 <relationalOperator>GreaterEqual</relationalOperator>
@@ -71,17 +71,17 @@
               </condition>
               <true>
                 <trigger>
-                  <ruleReference>[RelativeTimeRule]control_group/relative_time_rule</ruleReference>
+                  <ruleReference>control_group/relative_time_rule</ruleReference>
                 </trigger>
               </true>
               <output>
-                <status>[Status]control_group/standard_condition</status>
+                <status>[StandardCondition][Status]control_group/standard_condition</status>
               </output>
             </standard>
           </trigger>
         </false>
         <output>
-          <status>[Status]control_group/time_condition</status>
+          <status>[TimeCondition][Status]control_group/time_condition</status>
         </output>
       </standard>
     </trigger>

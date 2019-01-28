@@ -12,17 +12,17 @@
         <unit>m</unit>
       </OpenMIExchangeItem>
     </timeSeries>
-    <timeSeries id="control_group/time_condition">
+    <timeSeries id="[TimeCondition]control_group/time_condition">
       <PITimeSeries>
-        <locationId>[TimeCondition]control_group/time_condition</locationId>
+        <locationId>control_group/time_condition</locationId>
         <parameterId>TimeSeries</parameterId>
         <interpolationOption>BLOCK</interpolationOption>
         <extrapolationOption>BLOCK</extrapolationOption>
       </PITimeSeries>
     </timeSeries>
-    <timeSeries id="control_group/time_rule">
+    <timeSeries id="[TimeRule]control_group/time_rule">
       <PITimeSeries>
-        <locationId>[TimeRule]control_group/time_rule</locationId>
+        <locationId>control_group/time_rule</locationId>
         <parameterId>TimeSeries</parameterId>
         <interpolationOption>LINEAR</interpolationOption>
         <extrapolationOption>BLOCK</extrapolationOption>
@@ -49,8 +49,8 @@
         <unit>m</unit>
       </OpenMIExchangeItem>
     </timeSeries>
-    <timeSeries id="[Status]control_group/standard_condition" />
-    <timeSeries id="[Status]control_group/time_condition" />
-    <timeSeries id="control_group/relative_time_rule" />
+    <timeSeries id="[StandardCondition][Status]control_group/standard_condition" />
+    <timeSeries id="[TimeCondition][Status]control_group/time_condition" />
+    <timeSeries id="[RelativeTimeRule]control_group/relative_time_rule" />
   </exportSeries>
 </rtcDataConfig>

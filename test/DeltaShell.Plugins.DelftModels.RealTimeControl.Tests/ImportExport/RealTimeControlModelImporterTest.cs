@@ -35,12 +35,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             });
         }
 
-        [Test]
         [Category(TestCategory.DataAccess)]
-        public void GivenAValidRtcDirectoryPath_WhenReading_ThenNoExceptionIsThrownAndRtcModelIsReturned()
+        [TestCase("SimpleModel")]
+        [TestCase("RMM")]
+        public void GivenAValidRtcDirectoryPath_WhenReading_ThenNoExceptionIsThrownAndRtcModelIsReturned(string directoryName)
         {
             // Given
-            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "SimpleModel"));
+            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", directoryName));
             Assert.That(Directory.Exists(directoryPath));
 
             Assert.DoesNotThrow(() =>

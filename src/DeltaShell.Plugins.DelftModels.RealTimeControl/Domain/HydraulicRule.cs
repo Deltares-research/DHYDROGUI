@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
 
             result.Add(new XElement(xNamespace + "lookupTable",
-                            new XAttribute("id", XmlTag + prefix + Name),
+                            new XAttribute("id", prefix + "/" + Name),
                             new XElement(xNamespace + "table", table.Select(record => record.ToXml(xNamespace))),
                             new XElement(xNamespace + "interpolationOption", Interpolation == InterpolationType.Constant ? "BLOCK" : "LINEAR"),
                             new XElement(xNamespace + "extrapolationOption", Extrapolation == ExtrapolationType.Constant ? "BLOCK" : "LINEAR"),

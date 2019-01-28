@@ -39,6 +39,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAnExistingFileForRmmModel_WhenReading_ThenNoExceptionIsThrown()
+        {
+            // Given
+            const string fileName = "rtcRuntimeConfig.xml";
+            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RMM"));
+            var filePath = Path.Combine(directoryPath, fileName);
+
+            Assert.That(Directory.Exists(directoryPath));   
+            Assert.That(File.Exists(filePath));
+
+            var rtcModel = new RealTimeControlModel();
+
+            // Then
+            Assert.DoesNotThrow(() =>
+            {
+                // When
+                RealTimeControlRuntimeConfigXmlReader.Read(filePath, rtcModel);
+            });
+        }
+
+        [Test]
         public void GivenANonExistingFile_WhenReading_ThenExpectedMessageIsGivenAndModelHasDefaultValues()
         {
             // Given
