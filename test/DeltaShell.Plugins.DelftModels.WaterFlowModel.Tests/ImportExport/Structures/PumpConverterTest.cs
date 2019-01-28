@@ -18,33 +18,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         private const string PumpLongName = "myPump_longName";
         private const string ChainageAsString = "2.0";
 
+        private MockRepository mocks = new MockRepository();
+        private readonly ILineString geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 0) });
+
         [Test]
         public void GivenPumpStructureIniCategoryWithMatchingChannel_WhenConvertingToStructure1D_ThenPumpIsReturnedWithCommonPropertyValues()
         {
             // Given
-            var category = new DelftIniCategory(StructureRegion.Header);
-            category.AddProperty(StructureRegion.DefinitionType.Key, StructureRegion.StructureTypeName.Pump);
-            category.AddProperty(StructureRegion.Id.Key, PumpName);
-            category.AddProperty(StructureRegion.Name.Key, PumpLongName);
-            category.AddProperty(StructureRegion.Chainage.Key, ChainageAsString);
-            category.AddProperty(StructureRegion.BranchId.Key, "myBranch");
+            var category = GetStructureCategoryWithBasicProperties();
 
-            var geometry = new LineString(new[]{new Coordinate(0, 0), new Coordinate(10, 0) });
-
-            var mocks = new MockRepository();
             var branch = mocks.DynamicMock<IBranch>();
             var network = mocks.DynamicMock<INetwork>();
-
-            branch.Expect(b => b.Length).Return(10.0).Repeat.Any();
-            branch.Expect(b => b.Geometry).Return(geometry).Repeat.Any();
-            branch.Expect(b => b.Network).Return(network).Repeat.Any();
+            SetBranchMockProperties(branch, network);
             mocks.ReplayAll();
 
             // When
             var structure = new PumpConverter().ConvertToStructure1D(category, branch);
+            var pump = structure as Pump;
 
             // Then
-            var pump = structure as Pump;
             Assert.IsNotNull(pump, "PumpConverter did not return a Pump object.");
             Assert.That(pump.Name, Is.EqualTo(PumpName));
             Assert.That(pump.LongName, Is.EqualTo(PumpLongName));
@@ -54,6 +46,50 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             Assert.That(pump.Network, Is.EqualTo(network));
             
             mocks.VerifyAll();
+        }
+
+        private void SetBranchMockProperties(IBranch branch, INetwork network)
+        {
+            branch.Expect(b => b.Length).Return(10.0).Repeat.Any();
+            branch.Expect(b => b.Geometry).Return(geometry).Repeat.Any();
+            branch.Expect(b => b.Network).Return(network).Repeat.Any();
+        }
+
+        [TestCase("1", PumpControlDirection.SuctionSideControl)]
+        [TestCase("2", PumpControlDirection.DeliverySideControl)]
+        [TestCase("3", PumpControlDirection.SuctionAndDeliverySideControl)]
+        public void GivenPumpStructureIniCategoryWithDirection_WhenConvertingToStructure1D_ThenPumpWithSpecificControlDirectionIsReturned
+            (string valueAsString, PumpControlDirection direction)
+        {
+            // Given
+            var category = GetStructureCategoryWithBasicProperties();
+            category.SetProperty(StructureRegion.Direction.Key, valueAsString);
+
+            var branch = mocks.DynamicMock<IBranch>();
+            var network = mocks.DynamicMock<INetwork>();
+            SetBranchMockProperties(branch, network);
+            mocks.ReplayAll();
+
+            // When
+            var structure = new PumpConverter().ConvertToStructure1D(category, branch);
+            var pump = structure as Pump;
+
+            // Then
+            Assert.IsNotNull(pump, "PumpConverter did not return a Pump object.");
+            Assert.That(pump.ControlDirection, Is.EqualTo(direction));
+
+            mocks.VerifyAll();
+        }
+
+        private static IDelftIniCategory GetStructureCategoryWithBasicProperties()
+        {
+            var category = new DelftIniCategory(StructureRegion.Header);
+            category.AddProperty(StructureRegion.Id.Key, PumpName);
+            category.AddProperty(StructureRegion.Name.Key, PumpLongName);
+            category.AddProperty(StructureRegion.Chainage.Key, ChainageAsString);
+            category.AddProperty(StructureRegion.Direction.Key, "1");
+
+            return category;
         }
     }
 }
