@@ -19,7 +19,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         private const string ChainageAsString = "2.0";
 
         private MockRepository mocks = new MockRepository();
+        private INetwork network;
         private readonly ILineString geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 0) });
+
+        [SetUp]
+        public void Setup()
+        {
+            network = mocks.DynamicMock<INetwork>();
+        }
 
         [Test]
         public void GivenPumpStructureIniCategoryWithMatchingChannel_WhenConvertingToStructure1D_ThenPumpIsReturnedWithCommonPropertyValues()
@@ -28,7 +35,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var category = GetStructureCategoryWithBasicProperties();
 
             var branch = mocks.DynamicMock<IBranch>();
-            var network = mocks.DynamicMock<INetwork>();
             SetBranchMockProperties(branch, network);
             mocks.ReplayAll();
 
@@ -61,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         [TestCase("-1", PumpControlDirection.SuctionSideControl, false)]
         [TestCase("-2", PumpControlDirection.DeliverySideControl, false)]
         [TestCase("-3", PumpControlDirection.SuctionAndDeliverySideControl, false)]
-        public void GivenPumpStructureIniCategoryWithDirection_WhenConvertingToStructure1D_ThenPumpWithSpecificControlDirectionIsReturned
+        public void GivenPumpStructureIniCategoryWithDirection_WhenConvertingToStructure1D_ThenPumpWithSpecificDirectionSettingsIsReturned
             (string valueAsString, PumpControlDirection expectedDirection, bool expectedIsDirectionPositive)
         {
             // Given
@@ -69,7 +75,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.SetProperty(StructureRegion.Direction.Key, valueAsString);
 
             var branch = mocks.DynamicMock<IBranch>();
-            var network = mocks.DynamicMock<INetwork>();
             SetBranchMockProperties(branch, network);
             mocks.ReplayAll();
 
@@ -85,6 +90,62 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             mocks.VerifyAll();
         }
 
+        [Test]
+        public void GivenPumpStructureIniCategoryWithCapacity_WhenConvertingToStructure1D_ThenPumpWithSpecificCapacityIsReturned()
+        {
+            // Given
+            const string capacity = "5.0";
+            var category = GetStructureCategoryWithBasicProperties();
+            category.SetProperty(StructureRegion.Capacity.Key, capacity);
+
+            var branch = mocks.DynamicMock<IBranch>();
+            SetBranchMockProperties(branch, network);
+            mocks.ReplayAll();
+
+            // When
+            var structure = new PumpConverter().ConvertToStructure1D(category, branch);
+            var pump = structure as Pump;
+
+            // Then
+            Assert.IsNotNull(pump, "PumpConverter did not return a Pump object.");
+            Assert.That(pump.Capacity, Is.EqualTo(double.Parse(capacity, CultureInfo.InvariantCulture)));
+
+            mocks.VerifyAll();
+        }
+
+        [Test]
+        public void GivenPumpStructureIniCategoryWithSuctionAndDeliverySideValues_WhenConvertingToStructure1D_ThenPumpWithSpecificSuctionAndDeliveryValuesIsReturned()
+        {
+            // Given
+            const string startSuction = "10.0";
+            const string stopSuction = "20.0";
+            const string startDelivery = "30.0";
+            const string stopDelivery = "40.0";
+
+            var category = GetStructureCategoryWithBasicProperties();
+            category.SetProperty(StructureRegion.StartLevelSuctionSide.Key, startSuction);
+            category.SetProperty(StructureRegion.StopLevelSuctionSide.Key, stopSuction);
+            category.SetProperty(StructureRegion.StartLevelDeliverySide.Key, startDelivery);
+            category.SetProperty(StructureRegion.StopLevelDeliverySide.Key, stopDelivery);
+
+            var branch = mocks.DynamicMock<IBranch>();
+            SetBranchMockProperties(branch, network);
+            mocks.ReplayAll();
+
+            // When
+            var structure = new PumpConverter().ConvertToStructure1D(category, branch);
+            var pump = structure as Pump;
+
+            // Then
+            Assert.IsNotNull(pump, "PumpConverter did not return a Pump object.");
+            Assert.That(pump.StartSuction, Is.EqualTo(double.Parse(startSuction, CultureInfo.InvariantCulture)));
+            Assert.That(pump.StopSuction, Is.EqualTo(double.Parse(stopSuction, CultureInfo.InvariantCulture)));
+            Assert.That(pump.StartDelivery, Is.EqualTo(double.Parse(startDelivery, CultureInfo.InvariantCulture)));
+            Assert.That(pump.StopDelivery, Is.EqualTo(double.Parse(stopDelivery, CultureInfo.InvariantCulture)));
+
+            mocks.VerifyAll();
+        }
+
         private static IDelftIniCategory GetStructureCategoryWithBasicProperties()
         {
             var category = new DelftIniCategory(StructureRegion.Header);
@@ -92,6 +153,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.AddProperty(StructureRegion.Name.Key, PumpLongName);
             category.AddProperty(StructureRegion.Chainage.Key, ChainageAsString);
             category.AddProperty(StructureRegion.Direction.Key, "1");
+            category.AddProperty(StructureRegion.Capacity.Key, "2.23");
+            category.AddProperty(StructureRegion.StartLevelSuctionSide.Key, "2.23");
+            category.AddProperty(StructureRegion.StopLevelSuctionSide.Key, "2.23");
+            category.AddProperty(StructureRegion.StartLevelDeliverySide.Key, "2.23");
+            category.AddProperty(StructureRegion.StopLevelDeliverySide.Key, "2.23");
 
             return category;
         }

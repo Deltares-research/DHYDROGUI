@@ -28,6 +28,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             pump.ControlDirection = (PumpControlDirection) Math.Abs(direction);
             pump.DirectionIsPositive = direction > 0;
 
+            pump.Capacity = category.ReadProperty<double>(StructureRegion.Capacity.Key);
+            pump.StartSuction = category.ReadProperty<double>(StructureRegion.StartLevelSuctionSide.Key);
+            pump.StopSuction = category.ReadProperty<double>(StructureRegion.StopLevelSuctionSide.Key);
+            pump.StartDelivery = category.ReadProperty<double>(StructureRegion.StartLevelDeliverySide.Key);
+            pump.StopDelivery = category.ReadProperty<double>(StructureRegion.StopLevelDeliverySide.Key);
+
             return pump;
         }
     }
