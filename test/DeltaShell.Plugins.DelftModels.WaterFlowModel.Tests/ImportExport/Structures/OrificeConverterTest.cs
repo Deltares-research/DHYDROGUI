@@ -1,40 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Structures
 {
     [TestFixture]
-    public class OrificeConverterTest
+    public class OrificeConverterTest : StructureConverterTest
     {
-        private IHydroNetwork originalNetwork;
-        private IList<IChannel> channelsList;
-
-        [SetUp]
-        public void SetUp()
-        {
-            originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch();
-            channelsList = originalNetwork.Channels.ToList();
-
-        }
-
         [Test]
         public void GivenAStructureBranchCategoryOfASimpleWeir_WhenConvertingToASimpleWeir_ThenAWeirOfThisTypeShouldBeCreated()
         {
             //Given
             var category = CreatePerfectOrificeCategory();
+            var branch = GetSimpleBranchWith2Nodes();
 
             //When
             var converter = new OrificeConverter();
-            var structure = (Weir)converter.ConvertToStructure1D(category, channelsList);
+            var structure = (Weir)converter.ConvertToStructure1D(category, branch);
             var weirFormula = structure.WeirFormula as GatedWeirFormula;
 
             //Then
@@ -67,6 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         {
             //Given
             var category = CreatePerfectOrificeCategory();
+            var branch = GetSimpleBranchWith2Nodes();
 
             var removeProperty = category.Properties.FirstOrDefault(p => p.Name == propertyName);
             category.RemoveProperty(removeProperty);
@@ -74,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             //When
             var converter = new OrificeConverter();
 
-            Assert.That(() => converter.ConvertToStructure1D(category, channelsList), Throws
+            Assert.That(() => converter.ConvertToStructure1D(category, branch), Throws
                 .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(string.Format(
                     "Property {0} is not found in the file", propertyName)));
         }
@@ -104,6 +92,5 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             return category;
         }
-
     }
 }

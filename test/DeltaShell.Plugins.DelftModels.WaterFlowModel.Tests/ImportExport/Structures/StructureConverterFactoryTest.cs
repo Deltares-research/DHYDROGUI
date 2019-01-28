@@ -16,16 +16,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         [TestCase(StructureRegion.StructureTypeName.Orifice, typeof(OrificeConverter))]
         [TestCase(StructureRegion.StructureTypeName.RiverWeir, typeof(RiverWeirConverter))]
         [TestCase(StructureRegion.StructureTypeName.ExtraResistanceStructure, typeof(ExtraResistanceConverter))]
-        public void GivenAsType_WhenCreatingTheConverter_ThenTheCorrespondingConverterShouldBeCreated(string type, System.Type classConverter )
+        [TestCase(StructureRegion.StructureTypeName.Pump, typeof(PumpConverter))]
+        public void GivenAsType_WhenCreatingTheConverter_ThenTheCorrespondingConverterShouldBeCreated(string type, Type classConverter)
         {
-            var converter = StructureConverterFactory.GetSpecificConverter(type);
+            var converter = StructureConverterFactory.GetStructureConverter(type);
 
-            Assert.AreEqual(classConverter, converter.GetType());
+            Assert.That(converter.GetType(), Is.EqualTo(classConverter));
         }
 
         // Not yet implemented, see issue SOBEK3-1569
         [Test]
-        [TestCase(StructureRegion.StructureTypeName.Pump)]
         [TestCase(StructureRegion.StructureTypeName.Gate)]
         [TestCase(StructureRegion.StructureTypeName.Culvert)]
         [TestCase(StructureRegion.StructureTypeName.InvertedSiphon)]
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
         public void GivenANotSupportedStructureAsType_WhenCreatingTheConverter_ThenAnExtraResistanceConverterShouldBeCreated(string type)
         {
-            var converter = StructureConverterFactory.GetSpecificConverter(type);
+            var converter = StructureConverterFactory.GetStructureConverter(type);
             
             Assert.IsNull(converter);
         }

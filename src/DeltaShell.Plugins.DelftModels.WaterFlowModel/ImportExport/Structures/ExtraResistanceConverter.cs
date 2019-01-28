@@ -1,20 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
+using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
     public class ExtraResistanceConverter : IStructureConverter
     {
-        public IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory, IList<IChannel> channelsList)
+        public IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory, IBranch branch)
         {
             var extraResistance = new ExtraResistance();
 
             // Essential Properties (an error will be generated if these fail)
-            BasicStructuresOperations.ReadCommonRegionElements(structureBranchCategory, channelsList, extraResistance);
+            BasicStructuresOperations.ReadCommonRegionElements(structureBranchCategory, branch, extraResistance);
 
             var numValues = structureBranchCategory.ReadProperty<int>(StructureRegion.NumValues.Key);
             var argumentsLevels = structureBranchCategory.ReadPropertiesToListOfType<double>(StructureRegion.Levels.Key);

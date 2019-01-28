@@ -4,23 +4,23 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using System;
-using System.Collections.Generic;
+using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
     public class GeneralStructureConverter : IStructureConverter
     {
-        public IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory, IList<IChannel> channelsList)
+        public IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory, IBranch branch)
         {
             var weirFormula = new GeneralStructureWeirFormula();
 
-            var weir = new Weir()
+            var weir = new Weir
             {
                 WeirFormula = weirFormula
             };
 
             // Essential Properties (an error will be generated if these fail)
-            BasicStructuresOperations.ReadCommonRegionElements(structureBranchCategory, channelsList, weir);
+            BasicStructuresOperations.ReadCommonRegionElements(structureBranchCategory, branch, weir);
 
             weirFormula.WidthLeftSideOfStructure = structureBranchCategory.ReadProperty<double>(StructureRegion.WidthLeftW1.Key);
             weirFormula.WidthStructureLeftSide = structureBranchCategory.ReadProperty<double>(StructureRegion.WidthLeftWsdl.Key);

@@ -1,39 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Structures
 {
     [TestFixture]
-    public class ExtraResistanceConverterTest
+    public class ExtraResistanceConverterTest : StructureConverterTest
     {
-        private IHydroNetwork originalNetwork;
-        private IList<IChannel> channelsList;
-
-        [SetUp]
-        public void SetUp()
-        {
-            originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch();
-            channelsList = originalNetwork.Channels.ToList();
-
-        }
-        
         [Test]
         public void GivenAStructureBranchCategoryOfAnExtraResistance_WhenConvertingToAnExtraResistance_ThenAStructureOfThisTypeShouldBeCreated()
         {
             //Given
             var category = CreatePerfectExtraResistanceCategory();
+            var branch = GetSimpleBranchWith2Nodes();
 
             //When
             var converter = new ExtraResistanceConverter();
-            var structure = converter.ConvertToStructure1D(category, channelsList) as ExtraResistance;
+            var structure = converter.ConvertToStructure1D(category, branch) as ExtraResistance;
             
             //Then
             Assert.NotNull(structure);
@@ -48,34 +35,37 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             //Given
             var category = CreatePerfectExtraResistanceCategory();
             category.SetProperty(StructureRegion.NumValues.Key, "2");
-            
+
+            var branch = GetSimpleBranchWith2Nodes();
+
             //When
             var converter = new ExtraResistanceConverter();
-            var structure = converter.ConvertToStructure1D(category, channelsList) as ExtraResistance;
+            var structure = converter.ConvertToStructure1D(category, branch) as ExtraResistance;
 
             //Then
             Assert.NotNull(structure);
-            Assert.AreEqual(new double[] { -2.000, 0.000, 3.400 }, structure.FrictionTable.Arguments[0].Values);
-            Assert.AreEqual(new double[] { 0, 0, 2E-09 }, structure.FrictionTable.Components[0].Values);
+            Assert.AreEqual(new[] { -2.000, 0.000, 3.400 }, structure.FrictionTable.Arguments[0].Values);
+            Assert.AreEqual(new[] { 0, 0, 2E-09 }, structure.FrictionTable.Components[0].Values);
         }
 
         [Test]
         [TestCase("numValues")]
         [TestCase("levels")]
         [TestCase("ksi")]
-       public void
+        public void
             GivenAStructureBranchCategoryOfAnExtraResistanceWithAMissingMandatoryParameter_WhenConvertingToAnExtraResistance_ThenAnExceptionShouldBeThrown(string propertyName)
         {
             //Given
             var category = CreatePerfectExtraResistanceCategory();
-
             var removeProperty = category.Properties.FirstOrDefault(p => p.Name == propertyName);
             category.RemoveProperty(removeProperty);
+
+            var branch = GetSimpleBranchWith2Nodes();
 
             //When
             var converter = new ExtraResistanceConverter();
 
-            Assert.That(() => converter.ConvertToStructure1D(category, channelsList), Throws
+            Assert.That(() => converter.ConvertToStructure1D(category, branch), Throws
                 .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(string.Format(
                     "Property {0} is not found in the file", propertyName)));
         }

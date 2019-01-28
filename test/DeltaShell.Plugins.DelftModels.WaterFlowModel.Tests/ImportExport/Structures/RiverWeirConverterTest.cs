@@ -1,43 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Structures
 {
     [TestFixture]
-    public class RiverWeirConverterTest
+    public class RiverWeirConverterTest : StructureConverterTest
     {
-        private IHydroNetwork originalNetwork;
-        private IList<IChannel> channelsList;
-
-        [SetUp]
-        public void SetUp()
-        {
-            originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch();
-            channelsList = originalNetwork.Channels.ToList();
-
-        }
-        
         [Test]
         public void GivenAStructureBranchCategoryOfARiverWeir_WhenConvertingToARiverWeir_ThenAStructureOfThisTypeShouldBeCreated()
         {
             //Given
             var category = CreatePerfectRiverWeirCategory();
+            var branch = GetSimpleBranchWith2Nodes();
 
             //When
             var converter = new RiverWeirConverter();
-            var structure = (Weir)converter.ConvertToStructure1D(category, channelsList);
+            var structure = (Weir)converter.ConvertToStructure1D(category, branch);
             var weirFormula = structure.WeirFormula as RiverWeirFormula;
 
-           //Then
+            // Then
             Assert.NotNull(weirFormula);
             Assert.AreEqual(2.3, structure.CrestLevel);
             Assert.AreEqual(100.0, structure.CrestWidth);
@@ -48,11 +35,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             Assert.AreEqual(1.1, weirFormula.CorrectionCoefficientNeg);
             Assert.AreEqual(0.920, weirFormula.SubmergeLimitNeg);
 
-            Assert.AreEqual(new double[] { 0.8, 0.9, 1.0 }, weirFormula.SubmergeReductionPos.Arguments[0].Values);
-            Assert.AreEqual(new double[] { 1.0, 0.7, 0.0 }, weirFormula.SubmergeReductionPos.Components[0].Values);
+            Assert.AreEqual(new[] { 0.8, 0.9, 1.0 }, weirFormula.SubmergeReductionPos.Arguments[0].Values);
+            Assert.AreEqual(new[] { 1.0, 0.7, 0.0 }, weirFormula.SubmergeReductionPos.Components[0].Values);
 
-            Assert.AreEqual(new double[] { 0.6, 0.7, 1.0 }, weirFormula.SubmergeReductionNeg.Arguments[0].Values);
-            Assert.AreEqual(new double[] { 1.0, 0.9, 0.0 }, weirFormula.SubmergeReductionNeg.Components[0].Values);
+            Assert.AreEqual(new[] { 0.6, 0.7, 1.0 }, weirFormula.SubmergeReductionNeg.Arguments[0].Values);
+            Assert.AreEqual(new[] { 1.0, 0.9, 0.0 }, weirFormula.SubmergeReductionNeg.Components[0].Values);
         }
 
         [Test]
@@ -62,10 +49,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             //Given
             var category = CreatePerfectRiverWeirCategory();
             category.SetProperty(StructureRegion.PosSfCount.Key, "4");
+            var branch = GetSimpleBranchWith2Nodes();
 
             //When
             var converter = new RiverWeirConverter();
-            var structure = converter.ConvertToStructure1D(category, channelsList);
+            converter.ConvertToStructure1D(category, branch);
         }
 
         [Test]
@@ -75,10 +63,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             //Given
             var category = CreatePerfectRiverWeirCategory();
             category.SetProperty(StructureRegion.NegSfCount.Key, "5");
+            var branch = GetSimpleBranchWith2Nodes();
 
             //When
             var converter = new RiverWeirConverter();
-            var structure = converter.ConvertToStructure1D(category, channelsList);
+            converter.ConvertToStructure1D(category, branch);
         }
 
         [Test]
@@ -99,19 +88,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         {
             //Given
             var category = CreatePerfectRiverWeirCategory();
-
             var removeProperty = category.Properties.FirstOrDefault(p => p.Name == propertyName);
             category.RemoveProperty(removeProperty);
+
+            var branch = GetSimpleBranchWith2Nodes();
 
             //When
             var converter = new RiverWeirConverter();
 
-            Assert.That(() => converter.ConvertToStructure1D(category, channelsList), Throws
+            Assert.That(() => converter.ConvertToStructure1D(category, branch), Throws
                 .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(string.Format(
                     "Property {0} is not found in the file", propertyName)));
         }
 
-        private DelftIniCategory CreatePerfectRiverWeirCategory()
+        private static DelftIniCategory CreatePerfectRiverWeirCategory()
         {
             var category = new DelftIniCategory(StructureRegion.Header);
 

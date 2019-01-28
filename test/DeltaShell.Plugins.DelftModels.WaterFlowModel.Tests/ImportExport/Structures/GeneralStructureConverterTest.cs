@@ -1,39 +1,27 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Hydro;
+﻿using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Structures
 {
     [TestFixture]
-    public class GeneralStructureConverterTest
+    public class GeneralStructureConverterTest : StructureConverterTest
     {
-        private IHydroNetwork originalNetwork;
-        private IList<IChannel> channelsList;
-
-        [SetUp]
-        public void SetUp()
-        {
-            originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch();
-            channelsList = originalNetwork.Channels.ToList();
-        }
-
         [Test]
         public void
             GivenAStructureBranchCategoryOfAGeneralStructureWithExtraResistance_WhenConvertingToAGeneralStructure_ThenAWeirOfThisTypeShouldBeCreated()
         {
             //Given
             var category = CreatePerfectGeneralStructureCategory();
+            var branch = GetSimpleBranchWith2Nodes();
 
             //When
             var converter = new GeneralStructureConverter();
-            var structure = (Weir)converter.ConvertToStructure1D(category, channelsList);
+            var structure = (Weir)converter.ConvertToStructure1D(category, branch);
             var weirFormula = structure.WeirFormula as GeneralStructureWeirFormula;
 
             //Then
@@ -88,9 +76,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var category = CreatePerfectGeneralStructureCategory();
             category.SetProperty(StructureRegion.ExtraResistance.Key, "0");
 
+            var branch = GetSimpleBranchWith2Nodes();
+
             //When
             var converter = new GeneralStructureConverter();
-            var structure = (Weir)converter.ConvertToStructure1D(category, channelsList);
+            var structure = (Weir)converter.ConvertToStructure1D(category, branch);
             var weirFormula = structure.WeirFormula as GeneralStructureWeirFormula;
 
             //Then
@@ -128,14 +118,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         {
             //Given
             var category = CreatePerfectGeneralStructureCategory();
-
             var removeProperty = category.Properties.FirstOrDefault(p => p.Name == propertyName);
             category.RemoveProperty(removeProperty);
+
+            var branch = GetSimpleBranchWith2Nodes();
 
             //When
             var converter = new GeneralStructureConverter();
             
-            Assert.That(() => converter.ConvertToStructure1D(category, channelsList), Throws
+            Assert.That(() => converter.ConvertToStructure1D(category, branch), Throws
                 .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(string.Format(
                     "Property {0} is not found in the file", propertyName)));
         }

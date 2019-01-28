@@ -4,13 +4,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
     public static class StructureConverterFactory
     {
-        public static IStructureConverter GetSpecificConverter(string type)
+        public static IStructureConverter GetStructureConverter(string type)
         {
 
             IStructureConverter converter = null;
 
             switch (type)
             {
+                case StructureRegion.StructureTypeName.Pump:
+                    converter = new PumpConverter();
+                    break;
                 case StructureRegion.StructureTypeName.Weir:
                     converter = new WeirConverter();
                     break;

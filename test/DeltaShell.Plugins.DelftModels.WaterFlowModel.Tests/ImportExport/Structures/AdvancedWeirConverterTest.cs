@@ -1,38 +1,26 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Hydro;
+﻿using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Structures
 {
     [TestFixture]
-    public class AdvancedWeirConverterTest
+    public class AdvancedWeirConverterTest : StructureConverterTest
     {
-        private IHydroNetwork originalNetwork;
-        private IList<IChannel> channelsList;
-
-        [SetUp]
-        public void SetUp() 
-        {
-            originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch();
-            channelsList = originalNetwork.Channels.ToList();
-        }
-
         [Test]
         public void GivenAStructureBranchCategoryOfAnAdvancedWeir_WhenConvertingToAnAdvancedWeir_ThenAWeirOfThisTypeShouldBeCreated()
         {
             //Given
             var category = CreatePerfectAdvancedWeirCategory();
+            var branch = GetSimpleBranchWith2Nodes();
 
             //When
             var converter = new AdvancedWeirConverter();
-            var structure = (Weir)converter.ConvertToStructure1D(category, channelsList);
+            var structure = (Weir)converter.ConvertToStructure1D(category, branch);
             var weirFormula = structure.WeirFormula as PierWeirFormula;
 
             //Then
@@ -71,14 +59,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         {
             //Given
             var category = CreatePerfectAdvancedWeirCategory();
-
             var removeProperty = category.Properties.FirstOrDefault(p => p.Name == propertyName);
             category.RemoveProperty(removeProperty);
+
+            var branch = GetSimpleBranchWith2Nodes();
 
             //When
             var converter = new AdvancedWeirConverter();
 
-            Assert.That(() => converter.ConvertToStructure1D(category, channelsList), Throws
+            Assert.That(() => converter.ConvertToStructure1D(category, branch), Throws
                 .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(string.Format(
                     "Property {0} is not found in the file", propertyName)));
         }

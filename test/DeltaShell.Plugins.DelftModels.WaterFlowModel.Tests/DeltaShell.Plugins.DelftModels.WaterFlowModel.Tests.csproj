@@ -280,8 +280,10 @@
     <Compile Include="ImportExport\Structures\ExtraResistanceConverterTest.cs" />
     <Compile Include="ImportExport\Structures\GeneralStructureConverterTest.cs" />
     <Compile Include="ImportExport\Structures\OrificeConverterTest.cs" />
+    <Compile Include="ImportExport\Structures\PumpConverterTest.cs" />
     <Compile Include="ImportExport\Structures\RiverWeirConverterTest.cs" />
     <Compile Include="ImportExport\Structures\StructureConverterFactoryTest.cs" />
+    <Compile Include="ImportExport\Structures\StructureConverterTest.cs" />
     <Compile Include="ImportExport\Structures\StructuresFileReaderTest.cs" />
     <Compile Include="ImportExport\Structures\UniversalWeirConverterTest.cs" />
     <Compile Include="ImportExport\Structures\WeirConverterTest.cs" />

@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             Func<DelftIniCategory, IStructure1D, IList<ICompositeBranchStructure>, ICompositeBranchStructure>
             getCompositeBranchStructureFunc;
 
-        public CompositeBranchStructureConverter() : this(StructureConverterFactory.GetSpecificConverter,
+        public CompositeBranchStructureConverter() : this(StructureConverterFactory.GetStructureConverter,
             BasicStructuresOperations.CreateCompositeBranchStructuresIfNeeded)
         {
         }
@@ -56,12 +56,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
         }
 
         private void CreationOfStructuresAndCompositeBranchStructures(DelftIniCategory structureBranchCategory,
-            IList<IChannel> channelsList, IList<ICompositeBranchStructure> compositeBranchStructures,
-            List<string> errorMessages)   
+            IEnumerable<IChannel> channels, IList<ICompositeBranchStructure> compositeBranchStructures,
+            ICollection<string> errorMessages)   
         {
             try
             {
                 var type = structureBranchCategory.ReadProperty<string>(StructureRegion.DefinitionType.Key);
+                var branchName = structureBranchCategory.ReadProperty<string>(StructureRegion.BranchId.Key);
+                var channel = channels.FirstOrDefault(c => c.Name == branchName);
 
                 var converter = getTypeConverterFunc.Invoke(type);
 
@@ -72,7 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                         type, structureBranchCategory.LineNumber));
                 }
 
-                var structure = converter.ConvertToStructure1D(structureBranchCategory, channelsList);
+                var structure = converter.ConvertToStructure1D(structureBranchCategory, channel);
 
                 if (structure == null)
                 {

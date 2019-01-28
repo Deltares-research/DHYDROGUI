@@ -1,40 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Structures
 {
     [TestFixture]
-    public class UniversalWeirConverterTest
+    public class UniversalWeirConverterTest : StructureConverterTest
     {
-        private IHydroNetwork originalNetwork;
-        private IList<IChannel> channelsList;
-
-        [SetUp]
-        public void SetUp()
-        {
-            originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch();
-            channelsList = originalNetwork.Channels.ToList();
-        }
-
-       [Test]
+        [Test]
         public void
             GivenAStructureBranchCategoryOfAnUniversalWeir_WhenConvertingToAnUniversalWeir_ThenAWeirOfThisTypeShouldBeCreated()
         {
             //Given
             var category = CreatePerfectUniversalWeirCategory();
+            var branch = GetSimpleBranchWith2Nodes();
 
             //When
             var converter = new UniversalWeirConverter();
-            var structure = (Weir) converter.ConvertToStructure1D(category, channelsList);
+            var structure = (Weir) converter.ConvertToStructure1D(category, branch);
             var weirFormula = structure.WeirFormula as FreeFormWeirFormula;
 
             //Then
@@ -45,67 +33,75 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             Assert.AreEqual(0, (int) structure.FlowDirection);
 
-            Assert.AreEqual(new double[] {1.1, 1.2}, weirFormula.Y.ToArray());
+            Assert.AreEqual(new[] {1.1, 1.2}, weirFormula.Y.ToArray());
 
-            Assert.AreEqual(new double[] {0.5, 0.7}, weirFormula.Z.ToArray());
+            Assert.AreEqual(new[] {0.5, 0.7}, weirFormula.Z.ToArray());
 
             Assert.AreEqual(0.1, weirFormula.DischargeCoefficient);
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "For universal weir Weir1 the value for the crestlevel should be the same as the minimum value of the ZValues")]
+        [ExpectedException(typeof(Exception), ExpectedMessage =
+            "For universal weir Weir1 the value for the crestlevel should be the same as the minimum value of the ZValues")]
         public void
             GivenAStructureBranchCategoryOfAnUniversalWeirWithErrorForCrestLevel_WhenConvertingToAnUniversalWeir_ThenAWeirOfThisTypeShouldNotBeCreated()
         {
             //Given
             var category = CreatePerfectUniversalWeirCategory();
             category.SetProperty(StructureRegion.CrestLevel.Key, 100);
+            var branch = GetSimpleBranchWith2Nodes();
 
             //When
             var converter = new UniversalWeirConverter();
-            var structure = (Weir)converter.ConvertToStructure1D(category, channelsList);
+            converter.ConvertToStructure1D(category, branch);
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "There are more values for the Z coordinate for universal weir")]
+        [ExpectedException(typeof(Exception), ExpectedMessage =
+            "There are more values for the Z coordinate for universal weir")]
         public void
             GivenAStructureBranchCategoryOfAnUniversalWeirWithMoreValuesForTheZCoordinate_WhenConvertingToAnUniversalWeir_ThenAWeirOfThisTypeShouldNotBeCreated()
         {
             //Given
             var category = CreatePerfectUniversalWeirCategory();
             category.SetProperty(StructureRegion.YValues.Key, "1.1");
+            var branch = GetSimpleBranchWith2Nodes();
 
             //When
             var converter = new UniversalWeirConverter();
-            var structure = (Weir)converter.ConvertToStructure1D(category, channelsList);
+            converter.ConvertToStructure1D(category, branch);
         }
-        
+
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "There are more values for the Y coordinate for universal weir")]
+        [ExpectedException(typeof(Exception), ExpectedMessage =
+            "There are more values for the Y coordinate for universal weir")]
         public void
             GivenAStructureBranchCategoryOfAnUniversalWeirWithMoreValuesForTheYCoordinate_WhenConvertingToAnUniversalWeir_ThenAWeirOfThisTypeShouldNotBeCreated()
         {
             //Given
             var category = CreatePerfectUniversalWeirCategory();
             category.SetProperty(StructureRegion.ZValues.Key, "0.5");
+            var branch = GetSimpleBranchWith2Nodes();
 
             //When
             var converter = new UniversalWeirConverter();
-            var structure = (Weir)converter.ConvertToStructure1D(category, channelsList);
+            converter.ConvertToStructure1D(category, branch);
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "There are more YZ coordinates given than mentioned in the levelsCount parameter")]
+        [ExpectedException(typeof(Exception), ExpectedMessage =
+            "There are more YZ coordinates given than mentioned in the levelsCount parameter")]
         public void
             GivenAStructureBranchCategoryOfAnUniversalWeirWithErrorInLevelCount_WhenConvertingToAnUniversalWeir_ThenAWeirOfThisTypeShouldNotBeCreated()
         {
             //Given
             var category = CreatePerfectUniversalWeirCategory();
             category.SetProperty(StructureRegion.LevelsCount.Key, "3");
+            var branch = GetSimpleBranchWith2Nodes();
 
             //When
             var converter = new UniversalWeirConverter();
-            var structure = (Weir)converter.ConvertToStructure1D(category, channelsList);
+            converter.ConvertToStructure1D(category, branch);
         }
 
         [Test]
@@ -116,18 +112,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         [TestCase("dischargecoeff")]
         [TestCase("allowedflowdir")]
         public void
-            GivenAStructureBranchCategoryOfAnUniversalWeirWithAMissingMandatoryParameter_WhenConvertingToAnUniversalWeir_ThenAnExceptionShouldBeThrown(string propertyName)
+            GivenAStructureBranchCategoryOfAnUniversalWeirWithAMissingMandatoryParameter_WhenConvertingToAnUniversalWeir_ThenAnExceptionShouldBeThrown(
+                string propertyName)
         {
             //Given
             var category = CreatePerfectUniversalWeirCategory();
-
             var removeProperty = category.Properties.FirstOrDefault(p => p.Name == propertyName);
             category.RemoveProperty(removeProperty);
+
+            var branch = GetSimpleBranchWith2Nodes();
 
             //When
             var converter = new UniversalWeirConverter();
 
-            Assert.That(() => converter.ConvertToStructure1D(category, channelsList), Throws
+            Assert.That(() => converter.ConvertToStructure1D(category, branch), Throws
                 .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(string.Format(
                     "Property {0} is not found in the file", propertyName)));
         }

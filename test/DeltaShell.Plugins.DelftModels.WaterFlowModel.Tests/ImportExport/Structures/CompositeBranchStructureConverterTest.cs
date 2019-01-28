@@ -16,13 +16,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
     public class CompositeBranchStructureConverterTest
     {
         private IHydroNetwork originalNetwork;
-        private IList<IChannel> channelsList;
+        private IList<IChannel> channels;
 
         [SetUp]
         public void SetUp()
         {
             originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch();
-            channelsList = originalNetwork.Channels.ToList();
+            channels = originalNetwork.Channels.ToList();
         }
 
         [Test]
@@ -57,6 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             var converter = new CompositeBranchStructureConverter(null,someCompositeBranchStructureConverter);
         }
+
         [Test]
         public void GivenTwoCategoriesOnTheSameCompositeStructure_WhenImporting_ThenACompositeStructureShouldBeCreatedWithTheTwoStructures()
         {
@@ -76,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             categories.Add(category2);
 
             //When
-            var compositeBranchStructures = (new CompositeBranchStructureConverter()).Convert(categories, channelsList, errorMessages);
+            var compositeBranchStructures = (new CompositeBranchStructureConverter()).Convert(categories, channels, errorMessages);
 
             //Then
             Assert.AreEqual(1, compositeBranchStructures.Count);
@@ -109,7 +110,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             //When
             var converter = new CompositeBranchStructureConverter(someFactoryMock, compositeBranchStructuresFunc );
-            var compositeBranchStructures = converter.Convert(categories, channelsList, errorMessages);
+            converter.Convert(categories, channels, errorMessages);
 
             //Then
 
@@ -134,7 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             categories.Add(category);
 
             var convertMock = mocks.StrictMock<IStructureConverter>();
-            convertMock.Expect(e=>e.ConvertToStructure1D(category,channelsList))
+            convertMock.Expect(e => e.ConvertToStructure1D(category, channels.FirstOrDefault()))
                 .Return(null)
                 .Repeat.AtLeastOnce();
 
@@ -150,7 +151,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             //When
             var converter = new CompositeBranchStructureConverter(someFactoryMock,compositeBranchStructuresFunc);
-            var compositeBranchStructures = converter.Convert(categories, channelsList, errorMessages);
+            converter.Convert(categories, channels, errorMessages);
 
             //Then
 
@@ -177,7 +178,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var someStructure = new Weir();
             
             var convertMock = mocks.DynamicMock<IStructureConverter>();
-            convertMock.Expect(e => e.ConvertToStructure1D(category, channelsList))
+            convertMock.Expect(e => e.ConvertToStructure1D(category, channels.FirstOrDefault()))
                 .Return(someStructure)
                 .Repeat.AtLeastOnce();
 
@@ -199,7 +200,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             
             //When
             var converter = new CompositeBranchStructureConverter(someFactoryMock, someCompositeBranchStructureMock);
-            var compositeBranchStructures = converter.Convert(categories, channelsList, errorMessages);
+            converter.Convert(categories, channels, errorMessages);
 
             //Then
 
