@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
     /// <summary>
     /// This class is responsible for converting <see cref="IDelftIniCategory"/> objects into <see cref="Pump"/> objects.
     /// </summary>
-    /// <seealso cref="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures.IStructureConverter" />
+    /// <seealso cref="IStructureConverter" />
     public class PumpConverter : IStructureConverter
     {
         /// <summary>
