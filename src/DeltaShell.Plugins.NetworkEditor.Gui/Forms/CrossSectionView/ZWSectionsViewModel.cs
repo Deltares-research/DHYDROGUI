@@ -189,11 +189,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             isCalculatingSectionWidths = false;
         }
 
-        private void ForceRecalculationOfSectionWidths()
-        {
-            MainWidth = MainWidth;
-        }
-
         private void UpdateSectionWidths()
         {
             UpdateSectionWidth(CrossSectionSectionName.Main);
@@ -257,7 +252,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         {
             if (recalculate)
             {
-                ForceRecalculationOfSectionWidths();
+                CalculateSectionWidths(CrossSectionSectionName.Main);
             }
 
             UpdateSectionWidths();

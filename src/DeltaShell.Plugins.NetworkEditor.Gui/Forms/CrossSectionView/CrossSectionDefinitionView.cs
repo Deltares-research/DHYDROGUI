@@ -193,7 +193,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
         void CrossSectionSectionsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            RefreshView();
+            var recalculateSectionWidths = e.PropertyName != "MinY" && e.PropertyName != "MaxY";
+            RefreshView(recalculateSectionWidths);
         }
 
         private void Cleanup()
@@ -368,10 +369,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                 return;
             }
 
-            RefreshView();
+            var recalculateSectionWidths = e.PropertyName != "MinY" && e.PropertyName != "MaxY";
+            RefreshView(recalculateSectionWidths);
         }
 
-        private void RefreshView()
+        private void RefreshView(bool recalculateSectionWidths = true)
         {
             UnsubscribeToData();
 
@@ -380,7 +382,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             crossSectionStandardDataView1.RefreshView();
             if (crossSectionZWSectionsViewModel != null)
             {
-                crossSectionZWSectionsViewModel.UpdateViewModelFromCrossSection(true);
+                crossSectionZWSectionsViewModel.UpdateViewModelFromCrossSection(recalculateSectionWidths);
             }
             SubscribeToData();
         }
