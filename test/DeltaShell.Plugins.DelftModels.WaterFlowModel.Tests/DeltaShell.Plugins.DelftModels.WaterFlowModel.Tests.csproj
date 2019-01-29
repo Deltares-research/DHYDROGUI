@@ -277,6 +277,7 @@
     <Compile Include="ImportExport\Structures\AdvancedWeirConverterTest.cs" />
     <Compile Include="ImportExport\Structures\CompositeBranchStructureConverterTest.cs" />
     <Compile Include="ImportExport\Structures\BasicStructuresOperationsTest.cs" />
+    <Compile Include="ImportExport\Structures\CulvertConverterTest.cs" />
     <Compile Include="ImportExport\Structures\ExtraResistanceConverterTest.cs" />
     <Compile Include="ImportExport\Structures\GeneralStructureConverterTest.cs" />
     <Compile Include="ImportExport\Structures\OrificeConverterTest.cs" />

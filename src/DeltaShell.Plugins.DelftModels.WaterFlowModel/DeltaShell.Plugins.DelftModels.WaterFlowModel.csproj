@@ -209,6 +209,7 @@
     <Compile Include="ImportExport\Roughness\RoughnessConverter.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessReader.cs" />
     <Compile Include="ImportExport\Structures\AdvancedWeirConverter.cs" />
+    <Compile Include="ImportExport\Structures\CulvertConverter.cs" />
     <Compile Include="ImportExport\Structures\ExtraResistanceConverter.cs" />
     <Compile Include="ImportExport\Structures\GeneralStructureConverter.cs" />
     <Compile Include="ImportExport\Structures\OrificeConverter.cs" />

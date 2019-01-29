@@ -35,6 +35,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                 case StructureRegion.StructureTypeName.ExtraResistanceStructure:
                     converter = new ExtraResistanceConverter();
                     break;
+                case StructureRegion.StructureTypeName.Culvert:
+                    converter = new CulvertConverter();
+                    break;
             }
 
             return converter;
