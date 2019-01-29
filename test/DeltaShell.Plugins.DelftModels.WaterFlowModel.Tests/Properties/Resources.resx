@@ -117,4 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ModelDefinitionFileReaderTest_GivenDataModelWithCategoryThatHasAnUnknownHeader_WhenSettingProperties_ThenLogMessageIsReturned_There_is_unrecognized_data_read_from_the_md1d_file_with_header__0___This_category_has_been_skipped_when_reading_" xml:space="preserve">
+    <value>There is unrecognized data read from the md1d file with header {0}. This category has been skipped when reading.</value>
+  </data>
 </root>

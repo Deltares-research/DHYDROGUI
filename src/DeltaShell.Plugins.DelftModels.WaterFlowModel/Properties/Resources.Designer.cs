@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -125,6 +125,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} Property &apos;{1}&apos; on line number is missing, &apos;{2}&apos; will be set as default.
+        /// </summary>
+        public static string DelftIniPropertyValidator_CheckPropertyAvailability__0__Property___1___on_line_number_is_missing____2___will_be_set_as_default {
+            get {
+                return ResourceManager.GetString("DelftIniPropertyValidator_CheckPropertyAvailability__0__Property___1___on_line_nu" +
+                        "mber_is_missing____2___will_be_set_as_default", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Property {1} on line number is invalid, &apos;{2}&apos; will be set as default.
+        /// </summary>
+        public static string DelftIniPropertyValidator_CheckPropertyAvailability__0__Property__1__on_line_number_is_invalid____2___will_be_set_as_default {
+            get {
+                return ResourceManager.GetString("DelftIniPropertyValidator_CheckPropertyAvailability__0__Property__1__on_line_numb" +
+                        "er_is_invalid____2___will_be_set_as_default", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap feedback {
@@ -198,6 +218,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         public static string LateralSourceDataMapTool_AddToolStripMenuItems_Turn_selected_laterals_into_Q_t_ {
             get {
                 return ResourceManager.GetString("LateralSourceDataMapTool_AddToolStripMenuItems_Turn_selected_laterals_into_Q_t_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is unrecognized data read from the md1d file with header {0}.
+        /// </summary>
+        public static string ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header__0_ {
+            get {
+                return ResourceManager.GetString("ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_" +
+                        "md1d_file_with_header__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is unrecognized data read from the md1d file with header {0}. This category has been skipped when reading..
+        /// </summary>
+        public static string ModelDefinitionFileReaderTest_GivenDataModelWithCategoryThatHasAnUnknownHeader_WhenSettingProperties_ThenLogMessageIsReturned_There_is_unrecognized_data_read_from_the_md1d_file_with_header__0___This_category_has_been_skipped_when_reading_ {
+            get {
+                return ResourceManager.GetString("ModelDefinitionFileReaderTest_GivenDataModelWithCategoryThatHasAnUnknownHeader_Wh" +
+                        "enSettingProperties_ThenLogMessageIsReturned_There_is_unrecognized_data_read_fro" +
+                        "m_the_md1d_file_with_header__0___This_category_has_been_skipped_when_reading_", resourceCulture);
             }
         }
         
@@ -1107,16 +1148,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowModel1DTemperatureValidator_ValidateModelParameters_Values_should_be_in_" +
                         "double_format_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to There is unrecognized data read from the md1d file with header &apos;{0}&apos;. This category has been skipped when reading..
-        /// </summary>
-        public static string WaterFlowModelPropertySetter_SetWaterFlowModelProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header___0___ {
-            get {
-                return ResourceManager.GetString("WaterFlowModelPropertySetter_SetWaterFlowModelProperties_There_is_unrecognized_da" +
-                        "ta_read_from_the_md1d_file_with_header___0___", resourceCulture);
             }
         }
         

@@ -253,6 +253,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         public string Name { get; set; }
         public string Value { get; set; }
         public string Comment { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// The line where this property was read in the file.

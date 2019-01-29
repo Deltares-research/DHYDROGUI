@@ -157,4 +157,22 @@
   <data name="HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_following_Branch_features_have_been_renamed_" xml:space="preserve">
     <value>Branch feature names must be unique, the following Branch features have been renamed:</value>
   </data>
+  <data name="ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header__category_Name_" xml:space="preserve">
+    <value>There is unrecognized data read from the md1d file with_header {category.Name}</value>
+  </data>
+  <data name="DelftIniPropertyValidator_CheckPropertyAvailability__0__Property__1__on_line_number_is_missing___2__will_be_set_as_default_" xml:space="preserve">
+    <value>{0} Property {1} on line number is missing, {2} will be set as default'</value>
+  </data>
+  <data name="ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header__0_" xml:space="preserve">
+    <value>There is unrecognized data read from the md1d file with header {0}</value>
+  </data>
+  <data name="ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_the_header__0_" xml:space="preserve">
+    <value>There is unrecognized data read from the md1d file with the header {0}</value>
+  </data>
+  <data name="DelftIniPropertyValidator_CheckPropertyAvailability__0__Property___1___on_line_number_is_missing____2___will_be_set_as_default" xml:space="preserve">
+    <value>{0} Property '{1}' on line number is missing, '{2}' will be set as default</value>
+  </data>
+  <data name="ModelDefinitionFileReaderTest_GivenDataModelWithCategoryThatHasAnUnknownHeader_WhenSettingProperties_ThenLogMessageIsReturned_There_is_unrecognized_data_read_from_the_md1d_file_with_header___0____This_category_has_been_skipped_when_reading_" xml:space="preserve">
+    <value>There is unrecognized data read from the md1d file with header '{0}'. This category has been skipped when reading.</value>
+  </data>
 </root>

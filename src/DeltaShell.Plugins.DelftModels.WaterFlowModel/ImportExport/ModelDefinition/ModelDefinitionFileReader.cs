@@ -4,7 +4,7 @@ using System.Linq;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
+using Resources = DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties.Resources;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
 {
@@ -100,15 +100,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             {
                 try
                 {
+                    DelftIniPropertyValidator.ValidateProperties(category, errorMessages);
                     var propertySetter = WaterFlowModelPropertySetterFactory.GetPropertySetter(category);
                     propertySetter.SetProperties(category, model, errorMessages);
                 }
                 catch (Exception)
                 {
-                    var errorMessage = string.Format(Resources.WaterFlowModelPropertySetter_SetWaterFlowModelProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header___0___, category.Name);
+                    var errorMessage = string.Format(Resources.ModelDefinitionFileReaderTest_GivenDataModelWithCategoryThatHasAnUnknownHeader_WhenSettingProperties_ThenLogMessageIsReturned_There_is_unrecognized_data_read_from_the_md1d_file_with_header__0___This_category_has_been_skipped_when_reading_, "Unknown Header");
                     errorMessages.Add(errorMessage);
                 }
             }
         }
+
+
     }
 }

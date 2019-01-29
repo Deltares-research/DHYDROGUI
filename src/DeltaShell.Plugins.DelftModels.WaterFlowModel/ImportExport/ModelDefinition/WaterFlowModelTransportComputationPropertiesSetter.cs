@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;
 
@@ -14,8 +15,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             var temperatureModelType = category.ReadProperty<string>(ModelDefinitionsRegion.HeatTransferModel.Key);
 
             model.UseTemperature = useTemperature != "0" && useTemperature == "1";
-            model.DensityType = (DensityType) Enum.Parse(typeof(DensityType), densityType);
-            model.TemperatureModelType = (TemperatureModelType) Enum.Parse(typeof(TemperatureModelType), temperatureModelType);
+            model.DensityType = (DensityType)Enum.Parse(typeof(DensityType), densityType);
+            model.TemperatureModelType = (TemperatureModelType)Enum.Parse(typeof(TemperatureModelType), temperatureModelType);
         }
     }
 }

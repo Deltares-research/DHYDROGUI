@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Properties;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -107,7 +106,7 @@ namespace DelftTools.Hydro.Tests
             // Make unique and check messages
             TestHelper.AssertAtLeastOneLogMessagesContains(
                 () => network.MakeNamesUnique<ICompositeBranchStructure>(),
-                Resources.HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_following_Branch_features_have_been_renamed_);
+                Properties.Resources.HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_following_Branch_features_have_been_renamed_);
 
             Assert.IsTrue(network.CompositeBranchStructures.Select(cbs => cbs.Name).HasUniqueValues());
         }

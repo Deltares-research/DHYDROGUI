@@ -91,6 +91,26 @@ namespace DelftTools.Hydro.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} Property &apos;{1}&apos; on line number is missing, &apos;{2}&apos; will be set as default.
+        /// </summary>
+        internal static string DelftIniPropertyValidator_CheckPropertyAvailability__0__Property___1___on_line_number_is_missing____2___will_be_set_as_default {
+            get {
+                return ResourceManager.GetString("DelftIniPropertyValidator_CheckPropertyAvailability__0__Property___1___on_line_nu" +
+                        "mber_is_missing____2___will_be_set_as_default", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Property {1} on line number is missing, {2} will be set as default&apos;.
+        /// </summary>
+        internal static string DelftIniPropertyValidator_CheckPropertyAvailability__0__Property__1__on_line_number_is_missing___2__will_be_set_as_default_ {
+            get {
+                return ResourceManager.GetString("DelftIniPropertyValidator_CheckPropertyAvailability__0__Property__1__on_line_numb" +
+                        "er_is_missing___2__will_be_set_as_default_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap greenhouse {
@@ -117,6 +137,47 @@ namespace DelftTools.Hydro.Properties {
             get {
                 return ResourceManager.GetString("HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_f" +
                         "ollowing_Branch_features_have_been_renamed_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is unrecognized data read from the md1d file with header {0}.
+        /// </summary>
+        internal static string ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header__0_ {
+            get {
+                return ResourceManager.GetString("ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_" +
+                        "md1d_file_with_header__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is unrecognized data read from the md1d file with_header {category.Name}.
+        /// </summary>
+        internal static string ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header__category_Name_ {
+            get {
+                return ResourceManager.GetString("ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_" +
+                        "md1d_file_with_header__category_Name_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is unrecognized data read from the md1d file with the header {0}.
+        /// </summary>
+        internal static string ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_the_header__0_ {
+            get {
+                return ResourceManager.GetString("ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_" +
+                        "md1d_file_with_the_header__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is unrecognized data read from the md1d file with header &apos;{0}&apos;. This category has been skipped when reading..
+        /// </summary>
+        internal static string ModelDefinitionFileReaderTest_GivenDataModelWithCategoryThatHasAnUnknownHeader_WhenSettingProperties_ThenLogMessageIsReturned_There_is_unrecognized_data_read_from_the_md1d_file_with_header___0____This_category_has_been_skipped_when_reading_ {
+            get {
+                return ResourceManager.GetString("ModelDefinitionFileReaderTest_GivenDataModelWithCategoryThatHasAnUnknownHeader_Wh" +
+                        "enSettingProperties_ThenLogMessageIsReturned_There_is_unrecognized_data_read_fro" +
+                        "m_the_md1d_file_with_header___0____This_category_has_been_skipped_when_reading_", resourceCulture);
             }
         }
         

@@ -10,20 +10,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
     [TestFixture]
     public class WaterFlowModelTransportComputationPropertiesSetterTest
     {
+        private WaterFlowModelTransportComputationPropertiesSetter transportComputationPropertiesSetter;
+        private WaterFlowModel1D waterFlowModel1D;
+
+        [SetUp]
+        public void Initialize()
+        {
+            transportComputationPropertiesSetter = new WaterFlowModelTransportComputationPropertiesSetter();
+            waterFlowModel1D = new WaterFlowModel1D();
+        }
+
         [Test]
-        public void GivenCorrectTranpostComputationDataModel_WhenSettingModelProperties_ThenCorrectPropertiesAreSet()
+        public void GivenCorrectTransportComputationDataModel_WhenSettingModelProperties_ThenCorrectPropertiesAreSet()
         {
             // Given
             var category = GetCorrectTransportComputationDataModel();
-            var model = new WaterFlowModel1D();
 
             // When
-            new WaterFlowModelTransportComputationPropertiesSetter().SetProperties(category, model, new List<string>());
+            transportComputationPropertiesSetter.SetProperties(category, waterFlowModel1D, new List<string>());
 
             // Then
-            Assert.IsTrue(model.UseTemperature);
-            Assert.That(model.DensityType, Is.EqualTo(DensityType.eckart));
-            Assert.That(model.TemperatureModelType, Is.EqualTo(TemperatureModelType.Excess));
+            Assert.IsTrue(waterFlowModel1D.UseTemperature);
+            Assert.That(waterFlowModel1D.DensityType, Is.EqualTo(DensityType.eckart));
+            Assert.That(waterFlowModel1D.TemperatureModelType, Is.EqualTo(TemperatureModelType.Excess));
         }
 
         private static DelftIniCategory GetCorrectTransportComputationDataModel()
