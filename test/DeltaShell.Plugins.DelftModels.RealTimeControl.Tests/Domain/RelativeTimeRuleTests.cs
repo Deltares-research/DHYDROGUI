@@ -170,10 +170,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         /// <summary>
         /// GIVEN a RelativeTimeRule with a table containing a single entry
         /// WHEN ToXml is called
-        /// THEN the controlTable contains the correct entries
+        /// THEN the controlTable contains two entries with subsequent argument values and equal component values
         /// </summary>
         [Test]
-        public void GivenATableContainingASingleEntry_WhenToXmlIsCalled_ThenTheControlTableContainsTheCorrectEntries()
+        public void GivenATableContainingASingleEntry_WhenToXmlIsCalled_ThenTheControlTableContainsTwoEntries()
         {
             // Given
             const double expectedArgVal = 5.0;
@@ -206,35 +206,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             AssertThatControlTableElementHasCorrectValues(tableElementsList[1], expectedArgVal + 1.0, expectedCompVal);
         }
 
-        private static void AssertThatControlTableElementHasCorrectValues(XElement element, double expectedArgVal, double expectedCompVal)
-        {
-            Assert.That(element, Is.Not.Null, 
-                        "Expected the elements in controlTable to not be null.");
-            var attributes = element.Attributes();
-            Assert.That(attributes, Is.Not.Null, 
-                        "Expected attributes of the elements of controlTable to not be null.");
-            var attributesList = attributes.ToList();
-
-            var timeAttribute = attributesList.FirstOrDefault(att => att.Name.LocalName == "time");
-            Assert.That(timeAttribute, Is.Not.Null, 
-                        "Expected elements to have a time attribute.");
-            Assert.That(timeAttribute.Value, Is.EqualTo(expectedArgVal.ToString()),
-                        "Expected time attribute to match with original value:");
-
-            var valueAttribute = attributesList.FirstOrDefault(att => att.Name.LocalName == "value");
-            Assert.That(valueAttribute, Is.Not.Null, 
-                        "Expected elements to have a value attribute.");
-            Assert.That(valueAttribute.Value, Is.EqualTo(expectedCompVal.ToString()),
-                        "Expected value attribute to match with original value:");
-        }
-
         /// <summary>
         /// GIVEN a RelativeTimeRule with a table containing multiple unique Y value entries
         /// WHEN ToXml is called
-        /// THEN the controlTable contains the correct entries
+        /// THEN the controlTable contains these entries and a subsequent entry with an equal component
         /// </summary>
         [Test]
-        public void GivenATableContainingMultipleUniqueYValueEntries_WhenToXmlIsCalled_ThenTheControlTableContainsTheCorrectEntries()
+        public void GivenATableContainingMultipleUniqueYValueEntries_WhenToXmlIsCalled_ThenTheControlTableContainsTheseEntriesAndASubsequentElement()
         {
             // Given
             var expectedArgVals = new List<double>() {5.0, 10.0, 20.0, 40.0};
@@ -282,11 +260,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         /// <summary>
         /// GIVEN a RelativeTimeRule with a table containing two consecutive Y values entries
         /// WHEN ToXml is called
-        /// THEN the controlTable contains the correct entries
+        /// THEN the controlTable contains only the table entries
         /// </summary>
         [TestCase(1.0)]
         [TestCase(100.0)]
-        public void GivenATableContainingTwoConsecutiveYValuesEntries_WhenToXmlIsCalled_ThenTheControlTableContainsTheCorrectEntries(double timeBetweenYValues)
+        public void GivenATableContainingTwoConsecutiveYValuesEntries_WhenToXmlIsCalled_ThenTheControlTableContainsOnlyTheTableEntries(double timeBetweenYValues)
         {
             // Given
             var expectedArgVals = new List<double>() { 5.0, 10.0, 20.0, 40.0, 40.0 + timeBetweenYValues };
@@ -325,5 +303,37 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                                                               expectedArgVals[i],
                                                               expectedCompVals[i]);
         }
+
+        #region TestHelpers        
+        /// <summary>
+        /// Assert the that control table element <paramref name="element"/> has the expected arg
+        /// value <paramref name="expectedAcfVal"/> and expected component value
+        /// <paramref name="expectedCompVal"/>.
+        /// </summary>
+        /// <param name="element">The element to be checked.</param>
+        /// <param name="expectedArgVal">The expected argument value.</param>
+        /// <param name="expectedCompVal">The expected component value.</param>
+        private static void AssertThatControlTableElementHasCorrectValues(XElement element, double expectedArgVal, double expectedCompVal)
+        {
+            Assert.That(element, Is.Not.Null,
+                        "Expected the elements in controlTable to not be null.");
+            var attributes = element.Attributes();
+            Assert.That(attributes, Is.Not.Null,
+                        "Expected attributes of the elements of controlTable to not be null.");
+            var attributesList = attributes.ToList();
+
+            var timeAttribute = attributesList.FirstOrDefault(att => att.Name.LocalName == "time");
+            Assert.That(timeAttribute, Is.Not.Null,
+                        "Expected elements to have a time attribute.");
+            Assert.That(timeAttribute.Value, Is.EqualTo(expectedArgVal.ToString()),
+                        "Expected time attribute to match with original value:");
+
+            var valueAttribute = attributesList.FirstOrDefault(att => att.Name.LocalName == "value");
+            Assert.That(valueAttribute, Is.Not.Null,
+                        "Expected elements to have a value attribute.");
+            Assert.That(valueAttribute.Value, Is.EqualTo(expectedCompVal.ToString()),
+                        "Expected value attribute to match with original value:");
+        }
+        #endregion
     }
 }
