@@ -50,7 +50,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     Label = label,
                     Name = prop.PropertyDefinition.FilePropertyName,
                     ValueType = prop.PropertyDefinition.DataType,
-                    ToolTip = GetToolTip(prop)
+                    ToolTip = GetToolTip(prop),
+                    UnitSymbol = prop.PropertyDefinition.Unit
                 };
         }
 

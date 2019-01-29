@@ -26,7 +26,7 @@ external forcing,,,,,,,,,,,,,,,
 equatorial,,,,,,,,,,,,,,,
 output,,,,,,,,,,,,,,,
 trachytopes,,,,,,,,,,,,,,,
-MduGroup,MduName,GUIGroup,Subcategory,Caption,Type,Default,Min,Max,MduOnly,Enabled,Visible,DocSection,FromRev,ToRev,Description
+MduGroup,MduName,GUIGroup,Subcategory,Caption,Type,Default,Min,Max,MduOnly,Enabled,Visible,DocSection,FromRev,ToRev,Description,Unit
 model,Program,,,,String,D-Flow FM,,,TRUE,,,,,,Program name
 model,Version,,,,String,,,,TRUE,,,,,,FM kernel Version
 model,MDUFormatVersion,,,,String,1.02,,,TRUE,,,,,,File format version (do not edit this)
@@ -48,7 +48,7 @@ geometry,ProfdefFile,,,,FileName,,,,TRUE,,,,,,"Channel profile definition file *
 geometry,ProfdefxyzFile,,,,FileName,,,,TRUE,,,,,,"Channel profile definition file _profdefinition.def with definition for all profile numbers"
 geometry,Uniformwidth1D,,,Default 1D channel width,Double,2,,,TRUE,,,,,,"Uniform width for channel profiles not specified by profloc"
 geometry,ManholeFile,,,,FileName,,,,TRUE,,,,,,"File *.ini containing manholes"
-geometry,WaterLevIni,initial,Water level,Initial water level,Double,0,,,FALSE,,,,,,"Initial water level at missing s0 values"
+geometry,WaterLevIni,initial,Water level,Initial water level,Double,0,,,FALSE,,,,,,"Initial water level at missing s0 values", m3
 geometry,Bedlevuni,physics,Bed level,Uniform bed level,Double,-5,,,FALSE,,,,,,"Uniform bed level used at missing z values if BedlevType > 2"
 geometry,Bedslope,physics,Bed level,Bed slope,Double,0,0,,FALSE,,,,,,"Bed slope inclination if BedlevType > 2"
 geometry,BedlevType,physics,Bed level,Bed level locations:faces (cell centers)|cell edges|nodes/MeanLev|nodes/MinLev|nodes/MaxLev|faces/MeanLevFromNodes,1|2|3|4|5|6,3,1,6,FALSE,,,,,,"Bathymetry specification (1: at cell centers (from BathymetryFile), 2: at cell interfaces (from BathymetryFile), 3: at nodes, face levels mean of node values, 4: at nodes, face levels min. of node values, 5: at nodes, face levels max. of node values, 6: at cell centers, cell levels mean of node values)"

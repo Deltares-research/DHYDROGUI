@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NUnit.Framework;
@@ -10,6 +12,61 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
     [TestFixture]
     public class WaveModelSchemaCsvFileTest
     {
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_FMModelSchema_DoesNotSplitCommentWithCommas()
+        {
+            //01. Load test file
+            var csvTestFile = TestHelper.GetTestFilePath(@"CsvFile\properties_test.csv");
+            Assert.IsNotNull(csvTestFile);
+            Assert.IsTrue(File.Exists(csvTestFile));
+
+            //02. Create local copy
+            csvTestFile = TestHelper.CreateLocalCopySingleFile(csvTestFile);
+            Assert.IsTrue(File.Exists(csvTestFile));
+
+            //03. Set expectations
+            var testPropName = "PropertyWithCommasOnDescription";
+            var expectedDescription = "Dummy description, with comma in it";
+            var expectedUnit = "dummyUnit";
+
+            //04. Load CSV into properties.
+            var modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaveModelPropertyDefinition>(csvTestFile, "MdwGroup");
+
+            //05. Find property, and check description.
+            var testProp = modelPropertySchema.PropertyDefinitions.FirstOrDefault(pd => pd.Value.FilePropertyName == testPropName);
+            Assert.IsNotNull(testProp);
+            Assert.AreEqual(expectedDescription, testProp.Value.Description);
+            Assert.AreEqual(expectedUnit, testProp.Value.Unit);
+
+            //Remove test data
+            FileUtils.DeleteIfExists(csvTestFile);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_FMModelSchema_LoadsUnits()
+        {
+            //01. Load test file
+            var csvTestFile = TestHelper.GetTestFilePath(@"CsvFile\properties_test.csv");
+            Assert.IsNotNull(csvTestFile);
+            Assert.IsTrue(File.Exists(csvTestFile));
+            //02. Create local copy
+            csvTestFile = TestHelper.CreateLocalCopySingleFile(csvTestFile);
+            Assert.IsTrue(File.Exists(csvTestFile));
+
+            //03. Load CSV into properties.
+            var modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaveModelPropertyDefinition>(csvTestFile, "MdwGroup");
+
+            //04. Check units have been loaded
+            Assert.IsTrue(modelPropertySchema.PropertyDefinitions.Any(pd => !string.IsNullOrEmpty(pd.Value.Unit)));
+            Assert.IsTrue(modelPropertySchema.PropertyDefinitions.Any(pd => pd.Value.Unit.Equals("dummyUnit")));
+
+            //Remove test data
+            FileUtils.DeleteIfExists(csvTestFile);
+        }
+
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void GivenADwavePropertiesCsvWithPropertiesUsingMultipleDefaultValues_WhenReadingThisFile_ThenThePropertyDefinitionShouldBeSetCorrectly()

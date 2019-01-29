@@ -101,6 +101,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// Additional descriptive text for this property.
         /// </summary>
         public string Description { get; set; }
+        
+        /// <summary>
+        /// Optional descriptive text for this property
+        /// </summary>
+        /// <value>
+        /// The unit.
+        /// </value>
+        public string Unit { get; set; }
 
         /// <summary>
         /// Indicates if this property occurs in the schema or not.

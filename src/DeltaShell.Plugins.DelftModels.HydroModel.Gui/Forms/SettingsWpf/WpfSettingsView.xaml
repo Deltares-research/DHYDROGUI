@@ -97,10 +97,10 @@
                             ValidatesOnDataErrors=True, 
                             ValidatesOnExceptions=True,
                             Converter={StaticResource DoubleToStringConverter}}"
+                    TextAlignment="Right"
                     Style="{StaticResource ControlWithErrorStyle}"
                     IsEnabled="{Binding Path=IsEditable}"
                     attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"/>
-
                 <TextBlock Grid.Column="2"
                            Text="{Binding UnitSymbol}" 
                            Style="{StaticResource LabelTextBlockStyle}"
@@ -126,7 +126,6 @@
                     <ColumnDefinition Width="{StaticResource ControlLength}" />
                     <ColumnDefinition Width="{StaticResource UnitLength}" />
                 </Grid.ColumnDefinitions>
-
                 <TextBlock Grid.Column="0"
                            Text="{Binding Label}" 
                            Style="{StaticResource LabelTextBlockStyle}" />
@@ -144,7 +143,6 @@
                     <ColumnDefinition Width="{StaticResource ControlLength}" />
                     <ColumnDefinition Width="{StaticResource UnitLength}" />
                 </Grid.ColumnDefinitions>
-
                 <TextBlock Grid.Column="0"
                            Text="{Binding Label}" 
                            Style="{StaticResource LabelTextBlockStyle}"/>

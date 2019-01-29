@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using DelftTools.TestUtils;
 using DelftTools.Utils;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
@@ -23,6 +26,60 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.AreEqual("H", EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[0]));
             Assert.AreEqual("S", tunitProperty.DefaultValueAsString);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_FMModelSchema_DoesNotSplitCommentWithCommas()
+        {
+            //01. Load test file
+            var csvTestFile = TestHelper.GetTestFilePath(@"CsvFile\properties_test.csv");
+            Assert.IsNotNull(csvTestFile);
+            Assert.IsTrue(File.Exists(csvTestFile));
+            
+            //02. Create local copy
+            csvTestFile = TestHelper.CreateLocalCopySingleFile(csvTestFile);
+            Assert.IsTrue(File.Exists(csvTestFile));
+
+            //03. Set expectations
+            var testPropName = "PropertyWithCommasOnDescription";
+            var expectedDescription = "Dummy description, with comma in it";
+            var expectedUnit = "dummyUnit";
+            
+            //04. Load CSV into properties.
+            var modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(csvTestFile, "MduGroup");
+
+            //05. Find property, and check description.
+            var testProp = modelPropertySchema.PropertyDefinitions.FirstOrDefault( pd => pd.Value.MduPropertyName == testPropName);
+            Assert.IsNotNull(testProp);
+            Assert.AreEqual(expectedDescription, testProp.Value.Description);
+            Assert.AreEqual(expectedUnit, testProp.Value.Unit);
+
+            //Remove test data
+            FileUtils.DeleteIfExists(csvTestFile);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_FMModelSchema_LoadsUnits()
+        {
+            //Load test file
+            var csvTestFile = TestHelper.GetTestFilePath(@"CsvFile\properties_test.csv");
+            Assert.IsNotNull(csvTestFile);
+            Assert.IsTrue(File.Exists(csvTestFile));
+            //Create local copy
+            csvTestFile = TestHelper.CreateLocalCopySingleFile(csvTestFile);
+            Assert.IsTrue(File.Exists(csvTestFile));
+
+            //Load CSV into properties.
+            var modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(csvTestFile, "MduGroup");
+
+            //Check units have been loaded
+            Assert.IsTrue(modelPropertySchema.PropertyDefinitions.Any( pd => !string.IsNullOrEmpty(pd.Value.Unit)));
+            Assert.IsTrue(modelPropertySchema.PropertyDefinitions.Any( pd => pd.Value.Unit.Equals("dummyUnit")));
+
+            //Remove test data
+            FileUtils.DeleteIfExists(csvTestFile);
         }
 
         [Test]

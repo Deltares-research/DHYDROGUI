@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
@@ -8,15 +9,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
     {
         public const string DefaultGUIGroupID = "misc";
         public const string DefaultGUIGroupCaption = "Miscellaneous";
-        const int NumberOfColumnsBeforeDescription = 15;
+        const int DescriptionIndex = 15;
+        const int UnitIndex = 16;
 
         /// <summary>
         /// Method for reading the csv's and creating the corresponding model schema with the property definitions.
         /// </summary>
-        /// <typeparam name="TDef"></typeparam>
-        /// <param name="propertiesDefinitionFile"></param>
-        /// <param name="fileGroupName"></param>
+        /// <typeparam name="TDef">The type of the definition.</typeparam>
+        /// <param name="propertiesDefinitionFile">The properties definition file.</param>
+        /// <param name="fileGroupName">Name of the file group.</param>
         /// <returns></returns>
+        /// <exception cref="System.FormatException">
+        /// </exception>
         public ModelSchema<TDef> ReadModelSchema<TDef>(string propertiesDefinitionFile, string fileGroupName) 
             where TDef:ModelPropertyDefinition,new()
         {
@@ -73,22 +77,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 // Mdu properties
                 while ((line = GetNextLine()) != null)
                 {
-                    var lineFields = line.Split(',');
-                    if (lineFields.Length < NumberOfColumnsBeforeDescription)
+                    var regexRule = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+                    /*
+                     About the RegEx:
+                    
+                    , the separator to be found
+                    ?= Asserts that the following will be matched
+                    [^\"]* matches any number of characters not present on the list (the double comma)
+                    \" matches a double comma
+                     
+                    So, if an expression is found, where a comma is present BUT between double commas ("),
+                    then that expression will not be split.
+                     */
+                    var lineFields = regexRule.Split(line).Select(lf => lf.Trim()).ToList();
+                    if (lineFields.Count < DescriptionIndex
+                        || lineFields.All(String.IsNullOrEmpty))
                     {
                         // todo: report
-                        continue;
-                    }
-
-                    bool atLeastOneColumnFilled = false;
-                    for (int i = 0; i < NumberOfColumnsBeforeDescription; ++i)
-                    {
-                        lineFields[i] = lineFields[i].Trim();
-                        atLeastOneColumnFilled |= !String.IsNullOrEmpty(lineFields[i]);
-                    }
-
-                    if (!atLeastOneColumnFilled)
-                    {
                         continue;
                     }
 
@@ -107,6 +112,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     var docSection = lineFields[12];
                     var fromRevString = lineFields[13];
                     var toRevString = lineFields[14];
+                    var description = lineFields.ElementAtOrDefault(DescriptionIndex) != null ? lineFields[DescriptionIndex].Trim('"') : string.Empty;
+                    var unit = lineFields.ElementAtOrDefault(UnitIndex) != null ? lineFields[UnitIndex] : string.Empty;
+
                     string defaultValueDependentOn = null;
                     string defaultValues = null;
                  
@@ -121,9 +129,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     int fromRev;
                     int toRev;
                     ParseRevisions(fromRevString, toRevString, out fromRev, out toRev);
-
-                    var description = string.Join("",
-                        lineFields.Skip(NumberOfColumnsBeforeDescription).Select(s => s.Trim('"')));
 
                     var dataType = FMParser.GetClrType(mduPropertyName, typeField, ref captionField,
                         propertiesDefinitionFile, LineNumber);
@@ -156,6 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                                  typeField.ToLower().Equals("multipleentriesfilename"),
                         ModelFileOnly = isReadOnly.ToLower().Equals("true"),
                         Description = description,
+                        Unit = unit,
                         DocumentationSection = docSection,
                         EnabledDependencies = enabledDeps.ToLower(),
                         VisibleDependencies = visibleDeps.ToLower(),
