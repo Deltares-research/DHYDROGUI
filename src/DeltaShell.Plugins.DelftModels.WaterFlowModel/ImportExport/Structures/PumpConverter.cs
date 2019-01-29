@@ -27,14 +27,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             BasicStructuresOperations.ReadCommonRegionElements(category, branch, pump);
 
             pump.Capacity = category.ReadProperty<double>(StructureRegion.Capacity.Key);
-            SetSuctionAndDeliveryTriggerPropertiesSetSuctionAndDeliveryTiggerProperties(category, pump);
+            SetSuctionAndDeliveryTriggerProperties(category, pump);
             SetDirectionProperties(category, pump);
             SetReductionTableValues(category, pump);
 
             return pump;
         }
 
-        private static void SetSuctionAndDeliveryTriggerPropertiesSetSuctionAndDeliveryTiggerProperties(IDelftIniCategory category, IPump pump)
+        private static void SetSuctionAndDeliveryTriggerProperties(IDelftIniCategory category, IPump pump)
         {
             pump.StartSuction = category.ReadProperty<double>(StructureRegion.StartLevelSuctionSide.Key);
             pump.StopSuction = category.ReadProperty<double>(StructureRegion.StopLevelSuctionSide.Key);
