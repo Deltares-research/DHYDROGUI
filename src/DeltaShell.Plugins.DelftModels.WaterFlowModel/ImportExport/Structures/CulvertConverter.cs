@@ -14,13 +14,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
     {
         protected override IStructure1D CreateNewStructure()
         {
-            return new Culvert();
+            return new Culvert
+            {
+                CulvertType = CulvertType.Culvert
+            };
         }
 
         protected override void SetStructureProperties(IStructure1D structure, IDelftIniCategory category)
         {
             var culvert = structure as Culvert;
+            SetCommonCulvertProperties(culvert, category);
+        }
 
+        protected static void SetCommonCulvertProperties(Culvert culvert, IDelftIniCategory category)
+        {
             culvert.FlowDirection = (FlowDirection) category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
             culvert.InletLevel = category.ReadProperty<double>(StructureRegion.LeftLevel.Key);
             culvert.OutletLevel = category.ReadProperty<double>(StructureRegion.RightLevel.Key);

@@ -186,7 +186,7 @@
     <Compile Include="ImportExport\CrossSections\CrossSectionFileReader.cs" />
     <Compile Include="ImportExport\CrossSections\CrossSectionLocationConverter.cs" />
     <Compile Include="ImportExport\CrossSections\CrossSectionLocationFileReader.cs" />
-	<Compile Include="ImportExport\ModelDefinition\DelftIniPropertyValidation.cs" />
+    <Compile Include="ImportExport\ModelDefinition\DelftIniPropertyValidation.cs" />
     <Compile Include="ImportExport\ModelDefinition\DelftIniPropertyValidator.cs" />
     <Compile Include="ImportExport\ModelDefinition\IWaterFlowModelCategoryPropertySetter.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelAdvancedOptionsSetter.cs" />
@@ -214,6 +214,7 @@
     <Compile Include="ImportExport\Structures\CulvertConverter.cs" />
     <Compile Include="ImportExport\Structures\ExtraResistanceConverter.cs" />
     <Compile Include="ImportExport\Structures\GeneralStructureConverter.cs" />
+    <Compile Include="ImportExport\Structures\InvertedSiphonConverter.cs" />
     <Compile Include="ImportExport\Structures\OrificeConverter.cs" />
     <Compile Include="ImportExport\Structures\CompositeBranchStructureConverter.cs" />
     <Compile Include="ImportExport\Structures\PumpConverter.cs" />

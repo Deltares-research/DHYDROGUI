@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var pump = ConvertAndCheckForNull<PumpConverter, Pump>(category, branch);
 
             // Then
-            Assert.That(pump.Capacity, Is.EqualTo(double.Parse(capacity, CultureInfo.InvariantCulture)));
+            Assert.That(pump.Capacity, Is.EqualTo(ParseToDouble(capacity)));
 
             mocks.VerifyAll();
         }
@@ -108,10 +108,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var pump = ConvertAndCheckForNull<PumpConverter, Pump>(category, branch);
 
             // Then
-            Assert.That(pump.StartSuction, Is.EqualTo(double.Parse(startSuction, CultureInfo.InvariantCulture)));
-            Assert.That(pump.StopSuction, Is.EqualTo(double.Parse(stopSuction, CultureInfo.InvariantCulture)));
-            Assert.That(pump.StartDelivery, Is.EqualTo(double.Parse(startDelivery, CultureInfo.InvariantCulture)));
-            Assert.That(pump.StopDelivery, Is.EqualTo(double.Parse(stopDelivery, CultureInfo.InvariantCulture)));
+            Assert.That(pump.StartSuction, Is.EqualTo(ParseToDouble(startSuction)));
+            Assert.That(pump.StopSuction, Is.EqualTo(ParseToDouble(stopSuction)));
+            Assert.That(pump.StartDelivery, Is.EqualTo(ParseToDouble(startDelivery)));
+            Assert.That(pump.StopDelivery, Is.EqualTo(ParseToDouble(stopDelivery)));
 
             mocks.VerifyAll();
         }

@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro;
+﻿using System.Globalization;
+using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using GeoAPI.Extensions.Networks;
@@ -39,6 +40,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             Assert.IsNotNull(culvert, $"Converter did not return a {typeof(TConverter)} object.");
 
             return culvert;
+        }
+
+        protected static double ParseToDouble(string bendLossCoefficient)
+        {
+            return double.Parse(bendLossCoefficient, CultureInfo.InvariantCulture);
         }
     }
 }

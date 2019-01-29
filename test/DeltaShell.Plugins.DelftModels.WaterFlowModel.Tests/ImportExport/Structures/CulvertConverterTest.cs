@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
@@ -23,6 +22,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             Network = mocks.DynamicMock<INetwork>();
         }
 
+        #region Culvert
+
         [Test]
         public void GivenCulvertStructureIniCategoryWithMatchingBranch_WhenConvertingToStructure1D_ThenCulvertIsReturnedWithCommonPropertyValues()
         {
@@ -36,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             // Then
             Assert.That(culvert.Name, Is.EqualTo(CulvertName));
             Assert.That(culvert.LongName, Is.EqualTo(CulvertLongName));
-            Assert.That(culvert.Chainage, Is.EqualTo(double.Parse(ChainageAsString, CultureInfo.InvariantCulture)));
+            Assert.That(culvert.Chainage, Is.EqualTo(ParseToDouble(ChainageAsString)));
             Assert.That(culvert.Geometry, Is.EqualTo(new Point(2, 0)));
             Assert.That(culvert.Branch, Is.EqualTo(branch));
             Assert.That(culvert.Network, Is.EqualTo(Network));
@@ -111,12 +112,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var culvert = ConvertAndCheckForNull<CulvertConverter, Culvert>(category, branch);
 
             // Then
-            Assert.That(culvert.InletLevel, Is.EqualTo(double.Parse(inletLevel, CultureInfo.InvariantCulture)));
-            Assert.That(culvert.OutletLevel, Is.EqualTo(double.Parse(outletLevel, CultureInfo.InvariantCulture)));
-            Assert.That(culvert.Length, Is.EqualTo(double.Parse(length, CultureInfo.InvariantCulture)));
-            Assert.That(culvert.InletLossCoefficient, Is.EqualTo(double.Parse(inletLossCoefficient, CultureInfo.InvariantCulture)));
-            Assert.That(culvert.OutletLossCoefficient, Is.EqualTo(double.Parse(outletLossCoefficient, CultureInfo.InvariantCulture)));
-            Assert.That(culvert.GateInitialOpening, Is.EqualTo(double.Parse(gateInitialOpening, CultureInfo.InvariantCulture)));
+            Assert.That(culvert.InletLevel, Is.EqualTo(ParseToDouble(inletLevel)));
+            Assert.That(culvert.OutletLevel, Is.EqualTo(ParseToDouble(outletLevel)));
+            Assert.That(culvert.Length, Is.EqualTo(ParseToDouble(length)));
+            Assert.That(culvert.InletLossCoefficient, Is.EqualTo(ParseToDouble(inletLossCoefficient)));
+            Assert.That(culvert.OutletLossCoefficient, Is.EqualTo(ParseToDouble(outletLossCoefficient)));
+            Assert.That(culvert.GateInitialOpening, Is.EqualTo(ParseToDouble(gateInitialOpening)));
 
             mocks.VerifyAll();
         }
@@ -196,6 +197,31 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             mocks.VerifyAll();
         }
+
+        #endregion
+
+        #region Inverted Siphon
+
+        [Test]
+        public void GivenInvertedSiphonStructureIniCategoryWithBendLossCoefficient_WhenConvertingToStructure1D_ThenCulvertSpecificBendLossCoefficientIsReturned()
+        {
+            // Given
+            var bendLossCoefficient = "0.25";
+            var category = GetStructureCategoryWithBasicProperties();
+            category.AddProperty(StructureRegion.BendLossCoef.Key, bendLossCoefficient);
+
+            var branch = GetMockedBranch();
+
+            // When
+            var invertedSiphon = ConvertAndCheckForNull<InvertedSiphonConverter, Culvert>(category, branch);
+
+            // Then
+            Assert.That(invertedSiphon.BendLossCoefficient, Is.EqualTo(ParseToDouble(bendLossCoefficient)));
+
+            mocks.VerifyAll();
+        }
+
+        #endregion
 
         private static IDelftIniCategory GetStructureCategoryWithBasicProperties()
         {

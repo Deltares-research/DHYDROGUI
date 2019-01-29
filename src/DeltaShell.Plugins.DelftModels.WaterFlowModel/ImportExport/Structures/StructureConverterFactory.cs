@@ -27,6 +27,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                     return new ExtraResistanceConverter();
                 case StructureRegion.StructureTypeName.Culvert:
                     return new CulvertConverter();
+                case StructureRegion.StructureTypeName.InvertedSiphon:
+                    return new InvertedSiphonConverter();
                 default:
                     return null;
             }
