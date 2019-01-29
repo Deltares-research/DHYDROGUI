@@ -1,20 +1,17 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-
 using DelftTools.TestUtils;
-
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
-
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 {
     [TestFixture]
-    [Category(TestCategory.DataAccess)]
     public class AttributesFileReaderTest
     {
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ReadAllWhileFileDoesNotExist()
         {
             // setup
@@ -30,6 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ReadAllFromSquareModel()
         {
             // setup
@@ -67,6 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         }
         
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ReadAllFromRandom3Layer5SegmentsPerLayerFile()
         {
             // setup
@@ -92,6 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ReadAllFromRandom2Layer2SegmentsPerLayerFileWithTopBottomFirst()
         {
             // setup
@@ -117,6 +117,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ReadAllFromRandom2Layer2SegmentsPerLayerFileWithOnlyTopBottomFirst()
         {
             // setup
