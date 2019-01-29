@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
         private MockRepository mocks = new MockRepository();
         private INetwork network;
-        private readonly ILineString geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 0) });
+        private readonly ILineString branchGeometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 0) });
 
         [SetUp]
         public void Setup()
@@ -52,13 +52,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             Assert.That(pump.Network, Is.EqualTo(network));
             
             mocks.VerifyAll();
-        }
-
-        private void SetBranchMockProperties(IBranch branch, INetwork network)
-        {
-            branch.Expect(b => b.Length).Return(10.0).Repeat.Any();
-            branch.Expect(b => b.Geometry).Return(geometry).Repeat.Any();
-            branch.Expect(b => b.Network).Return(network).Repeat.Any();
         }
 
         [TestCase("1", PumpControlDirection.SuctionSideControl, true)]
@@ -225,6 +218,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.AddProperty(StructureRegion.ReductionFactor.Key, "1.0");
 
             return category;
+        }
+
+        private void SetBranchMockProperties(IBranch branch, INetwork network)
+        {
+            branch.Expect(b => b.Length).Return(10.0).Repeat.Any();
+            branch.Expect(b => b.Geometry).Return(branchGeometry).Repeat.Any();
+            branch.Expect(b => b.Network).Return(network).Repeat.Any();
         }
     }
 }
