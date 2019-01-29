@@ -1,4 +1,5 @@
-﻿using DeltaShell.NGHS.IO.FileWriters.Structure;
+﻿using DelftTools.Hydro;
+using DeltaShell.NGHS.IO.FileWriters.Structure;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
@@ -6,44 +7,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
     {
         public static IStructureConverter GetStructureConverter(string type)
         {
-
-            IStructureConverter converter = null;
-
             switch (type)
             {
                 case StructureRegion.StructureTypeName.Pump:
-                    converter = new PumpConverter();
-                    break;
+                    return new PumpConverter();
                 case StructureRegion.StructureTypeName.Weir:
-                    converter = new WeirConverter();
-                    break;
+                    return new WeirConverter();
                 case StructureRegion.StructureTypeName.UniversalWeir:
-                    converter = new UniversalWeirConverter();
-                    break;
+                    return new UniversalWeirConverter();
                 case StructureRegion.StructureTypeName.RiverWeir:
-                    converter = new RiverWeirConverter();
-                    break;
+                    return new RiverWeirConverter();
                 case StructureRegion.StructureTypeName.AdvancedWeir:
-                    converter = new AdvancedWeirConverter();
-                    break;
+                    return new AdvancedWeirConverter();
                 case StructureRegion.StructureTypeName.Orifice:
-                    converter = new OrificeConverter();
-                    break;
+                    return new OrificeConverter();
                 case StructureRegion.StructureTypeName.GeneralStructure:
-                    converter = new GeneralStructureConverter();
-                    break;
+                    return new GeneralStructureConverter();
                 case StructureRegion.StructureTypeName.ExtraResistanceStructure:
-                    converter = new ExtraResistanceConverter();
-                    break;
+                    return new ExtraResistanceConverter();
                 case StructureRegion.StructureTypeName.Culvert:
-                    converter = new CulvertConverter();
-                    break;
+                    return new CulvertConverter();
+                default:
+                    return null;
             }
-
-            return converter;
-
         }
     }
-
 }
 

@@ -5,31 +5,31 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
-using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    public class UniversalWeirConverter : IStructureConverter
+    public class UniversalWeirConverter : AStructureConverter
     {
-        public IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory, IBranch branch)
+        protected override IStructure1D CreateNewStructure()
         {
-            var weirFormula = new FreeFormWeirFormula();
-
-            var weir = new Weir
+            return new Weir
             {
-                WeirFormula = weirFormula
+                WeirFormula = new FreeFormWeirFormula()
             };
+        }
 
-            // Essential Properties (an error will be generated if these fail)
-            BasicStructuresOperations.ReadCommonRegionElements(structureBranchCategory, branch, weir);
+        protected override void SetStructureProperties(IStructure1D structure, IDelftIniCategory category)
+        {
+            var weir = structure as Weir;
+            var weirFormula = weir.WeirFormula as FreeFormWeirFormula;
 
             weir.FlowDirection =
-                (FlowDirection) structureBranchCategory.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
-            var yValues = structureBranchCategory.ReadPropertiesToListOfType<double>(StructureRegion.YValues.Key);
-            var zValues = structureBranchCategory.ReadPropertiesToListOfType<double>(StructureRegion.ZValues.Key);
-            var crestLevel = structureBranchCategory.ReadProperty<double>(StructureRegion.CrestLevel.Key);
+                (FlowDirection)category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
+            var yValues = category.ReadPropertiesToListOfType<double>(StructureRegion.YValues.Key);
+            var zValues = category.ReadPropertiesToListOfType<double>(StructureRegion.ZValues.Key);
+            var crestLevel = category.ReadProperty<double>(StructureRegion.CrestLevel.Key);
 
-            if (crestLevel - zValues.Min()>Double.Epsilon)
+            if (crestLevel - zValues.Min() > double.Epsilon)
             {
                 throw new Exception(string.Format("For universal weir {0} the value for the crestlevel should be the same as the minimum value of the ZValues", weir.Name));
             }
@@ -37,13 +37,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             {
                 throw new Exception("There are more values for the Z coordinate for universal weir");
             }
-            else if (yValues.Count > zValues.Count)
+
+            if (yValues.Count > zValues.Count)
             {
                 throw new Exception("There are more values for the Y coordinate for universal weir");
             }
 
             weirFormula.SetShape(yValues.ToArray(), zValues.ToArray());
-            var counterCheck = structureBranchCategory.ReadProperty<int>(StructureRegion.LevelsCount.Key);
+            var counterCheck = category.ReadProperty<int>(StructureRegion.LevelsCount.Key);
 
             if (counterCheck != weirFormula.Y.Count())
             {
@@ -51,9 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             }
 
             weirFormula.DischargeCoefficient =
-                structureBranchCategory.ReadProperty<double>(StructureRegion.DischargeCoeff.Key);
-
-            return weir;
+                category.ReadProperty<double>(StructureRegion.DischargeCoeff.Key);
         }
     }
 }

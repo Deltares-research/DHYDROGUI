@@ -4,36 +4,37 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using System;
-using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    public class RiverWeirConverter : IStructureConverter
+    public class RiverWeirConverter : AStructureConverter
     {
-        public IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory, IBranch branch)
+        protected override IStructure1D CreateNewStructure()
         {
-            var weirFormula = new RiverWeirFormula();
-            var weir = new Weir
+            return new Weir
             {
-                WeirFormula = weirFormula
+                WeirFormula = new RiverWeirFormula()
             };
+        }
 
-            // Essential Properties (an error will be generated if these fail)
-            BasicStructuresOperations.ReadCommonRegionElements(structureBranchCategory, branch, weir);
-            
-            weir.CrestLevel = structureBranchCategory.ReadProperty<double>(StructureRegion.CrestLevel.Key);
-            weir.CrestWidth = structureBranchCategory.ReadProperty<double>(StructureRegion.CrestWidth.Key);
+        protected override void SetStructureProperties(IStructure1D structure, IDelftIniCategory category)
+        {
+            var weir = structure as Weir;
+            var weirFormula = weir.WeirFormula as RiverWeirFormula;
 
-            weirFormula.CorrectionCoefficientPos = structureBranchCategory.ReadProperty<double>(StructureRegion.PosCwCoef.Key);
-            weirFormula.SubmergeLimitPos = structureBranchCategory.ReadProperty<double>(StructureRegion.PosSlimLimit.Key);
+            weir.CrestLevel = category.ReadProperty<double>(StructureRegion.CrestLevel.Key);
+            weir.CrestWidth = category.ReadProperty<double>(StructureRegion.CrestWidth.Key);
 
-            weirFormula.CorrectionCoefficientNeg = structureBranchCategory.ReadProperty<double>(StructureRegion.NegCwCoef.Key);
-            weirFormula.SubmergeLimitNeg = structureBranchCategory.ReadProperty<double>(StructureRegion.NegSlimLimit.Key);
+            weirFormula.CorrectionCoefficientPos = category.ReadProperty<double>(StructureRegion.PosCwCoef.Key);
+            weirFormula.SubmergeLimitPos = category.ReadProperty<double>(StructureRegion.PosSlimLimit.Key);
 
-            var posCount = structureBranchCategory.ReadProperty<int>(StructureRegion.PosSfCount.Key);
-            var argumentsPos = structureBranchCategory.ReadPropertiesToListOfType<double>(StructureRegion.PosSf.Key);
-            var componentsPos = structureBranchCategory.ReadPropertiesToListOfType<double>(StructureRegion.PosRed.Key);
-            
+            weirFormula.CorrectionCoefficientNeg = category.ReadProperty<double>(StructureRegion.NegCwCoef.Key);
+            weirFormula.SubmergeLimitNeg = category.ReadProperty<double>(StructureRegion.NegSlimLimit.Key);
+
+            var posCount = category.ReadProperty<int>(StructureRegion.PosSfCount.Key);
+            var argumentsPos = category.ReadPropertiesToListOfType<double>(StructureRegion.PosSf.Key);
+            var componentsPos = category.ReadPropertiesToListOfType<double>(StructureRegion.PosRed.Key);
+
             if (posCount != argumentsPos.Count || posCount != componentsPos.Count)
             {
                 throw new Exception(string.Format(
@@ -46,11 +47,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             {
                 weirFormula.SubmergeReductionPos[argumentsPos[i]] = componentsPos[i];
             }
-            
-            var negCount = structureBranchCategory.ReadProperty<int>(StructureRegion.NegSfCount.Key);
-            var argumentsNeg = structureBranchCategory.ReadPropertiesToListOfType<double>(StructureRegion.NegSf.Key);
-            var componentsNeg = structureBranchCategory.ReadPropertiesToListOfType<double>(StructureRegion.NegRed.Key);
-            
+
+            var negCount = category.ReadProperty<int>(StructureRegion.NegSfCount.Key);
+            var argumentsNeg = category.ReadPropertiesToListOfType<double>(StructureRegion.NegSf.Key);
+            var componentsNeg = category.ReadPropertiesToListOfType<double>(StructureRegion.NegRed.Key);
+
             if (negCount != argumentsNeg.Count || negCount != componentsNeg.Count)
             {
                 throw new Exception(string.Format("For river weir {0} the reduction table for negative flow direction contains an error", weir.Name));
@@ -62,8 +63,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             {
                 weirFormula.SubmergeReductionNeg[argumentsNeg[i]] = componentsNeg[i];
             }
-            
-            return weir;
         }
     }
 }

@@ -4,43 +4,41 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using System;
-using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    public class OrificeConverter : IStructureConverter
+    public class OrificeConverter : AStructureConverter
     {
-        public IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory, IBranch branch)
+        protected override IStructure1D CreateNewStructure()
         {
-            var weirFormula = new GatedWeirFormula();
-
-            var weir = new Weir
+            return new Weir
             {
-                WeirFormula = weirFormula
+                WeirFormula = new GatedWeirFormula()
             };
+        }
 
-            // Essential Properties (an error will be generated if these fail)
-            BasicStructuresOperations.ReadCommonRegionElements(structureBranchCategory, branch, weir);
-            
-            weir.CrestLevel = structureBranchCategory.ReadProperty<double>(StructureRegion.CrestLevel.Key);
-            weir.CrestWidth = structureBranchCategory.ReadProperty<double>(StructureRegion.CrestWidth.Key);
+        protected override void SetStructureProperties(IStructure1D structure, IDelftIniCategory category)
+        {
+            var weir = structure as Weir;
+            var weirFormula = weir.WeirFormula as GatedWeirFormula;
+
+            weir.CrestLevel = category.ReadProperty<double>(StructureRegion.CrestLevel.Key);
+            weir.CrestWidth = category.ReadProperty<double>(StructureRegion.CrestWidth.Key);
             weir.FlowDirection =
-                (FlowDirection) structureBranchCategory.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
+                (FlowDirection)category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
 
             weirFormula.ContractionCoefficient =
-                structureBranchCategory.ReadProperty<double>(StructureRegion.ContractionCoeff.Key);
+                category.ReadProperty<double>(StructureRegion.ContractionCoeff.Key);
             weirFormula.LateralContraction =
-                structureBranchCategory.ReadProperty<double>(StructureRegion.LatContrCoeff.Key);
-            weirFormula.GateOpening = structureBranchCategory.ReadProperty<double>(StructureRegion.OpenLevel.Key) -
+                category.ReadProperty<double>(StructureRegion.LatContrCoeff.Key);
+            weirFormula.GateOpening = category.ReadProperty<double>(StructureRegion.OpenLevel.Key) -
                                       weir.CrestLevel;
             weirFormula.UseMaxFlowPos =
-                Convert.ToBoolean(structureBranchCategory.ReadProperty<int>(StructureRegion.UseLimitFlowPos.Key));
+                Convert.ToBoolean(category.ReadProperty<int>(StructureRegion.UseLimitFlowPos.Key));
             weirFormula.UseMaxFlowNeg =
-                Convert.ToBoolean(structureBranchCategory.ReadProperty<int>(StructureRegion.UseLimitFlowNeg.Key));
-            weirFormula.MaxFlowPos = structureBranchCategory.ReadProperty<double>(StructureRegion.LimitFlowPos.Key);
-            weirFormula.MaxFlowNeg = structureBranchCategory.ReadProperty<double>(StructureRegion.LimitFlowNeg.Key);
-
-            return weir;
+                Convert.ToBoolean(category.ReadProperty<int>(StructureRegion.UseLimitFlowNeg.Key));
+            weirFormula.MaxFlowPos = category.ReadProperty<double>(StructureRegion.LimitFlowPos.Key);
+            weirFormula.MaxFlowNeg = category.ReadProperty<double>(StructureRegion.LimitFlowNeg.Key);
         }
     }
 }

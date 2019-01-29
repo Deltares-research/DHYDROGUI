@@ -5,33 +5,28 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
-using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
     /// <summary>
     /// This class is responsible for converting <see cref="IDelftIniCategory"/> objects into <see cref="Pump"/> objects.
     /// </summary>
-    /// <seealso cref="IStructureConverter" />
-    public class PumpConverter : IStructureConverter
+    /// <seealso cref="AStructureConverter" />
+    public class PumpConverter : AStructureConverter
     {
-        /// <summary>
-        /// Converts a <see cref="IDelftIniCategory"/> object into a <see cref="Pump"/> object.
-        /// </summary>
-        /// <param name="category">The data model for setting property values on the pump.</param>
-        /// <param name="branch">The branch on which the pump should be added.</param>
-        /// <returns>A <see cref="Pump"/> object with properties set from <paramref name="category"/>.</returns>
-        public IStructure1D ConvertToStructure1D(IDelftIniCategory category, IBranch branch)
+        protected override IStructure1D CreateNewStructure()
         {
-            var pump = new Pump();
-            BasicStructuresOperations.ReadCommonRegionElements(category, branch, pump);
+            return new Pump();
+        }
+
+        protected override void SetStructureProperties(IStructure1D structure, IDelftIniCategory category)
+        {
+            var pump = structure as Pump;
 
             pump.Capacity = category.ReadProperty<double>(StructureRegion.Capacity.Key);
             SetSuctionAndDeliveryTriggerProperties(category, pump);
             SetDirectionProperties(category, pump);
             SetReductionTableValues(category, pump);
-
-            return pump;
         }
 
         private static void SetSuctionAndDeliveryTriggerProperties(IDelftIniCategory category, IPump pump)

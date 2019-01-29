@@ -1,4 +1,5 @@
 ﻿using System;
+using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using NUnit.Framework;

@@ -3,36 +3,34 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
-using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    public class WeirConverter : IStructureConverter
+    public class WeirConverter : AStructureConverter
     {
-        public IStructure1D ConvertToStructure1D(IDelftIniCategory structureBranchCategory, IBranch branch)
+        protected override IStructure1D CreateNewStructure()
         {
-            var weirFormula = new SimpleWeirFormula();
-
-            var weir = new Weir
+            return new Weir
             {
-                WeirFormula = weirFormula
+                WeirFormula = new SimpleWeirFormula()
             };
-
-            // Essential Properties (an error will be generated if these fail)
-            BasicStructuresOperations.ReadCommonRegionElements(structureBranchCategory, branch, weir);
-
-            weir.CrestLevel = structureBranchCategory.ReadProperty<double>(StructureRegion.CrestLevel.Key);
-            weir.CrestWidth = structureBranchCategory.ReadProperty<double>(StructureRegion.CrestWidth.Key);
-
-            weirFormula.DischargeCoefficient =
-                structureBranchCategory.ReadProperty<double>(StructureRegion.DischargeCoeff.Key);
-            weirFormula.LateralContraction =
-                structureBranchCategory.ReadProperty<double>(StructureRegion.LatDisCoeff.Key);
-
-            weir.FlowDirection =
-                (FlowDirection) structureBranchCategory.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
-            return weir;
         }
 
+        protected override void SetStructureProperties(IStructure1D structure, IDelftIniCategory category)
+        {
+            var weir = structure as Weir;
+            var weirFormula = weir.WeirFormula as SimpleWeirFormula;
+
+            weir.CrestLevel = category.ReadProperty<double>(StructureRegion.CrestLevel.Key);
+            weir.CrestWidth = category.ReadProperty<double>(StructureRegion.CrestWidth.Key);
+
+            weirFormula.DischargeCoefficient =
+                category.ReadProperty<double>(StructureRegion.DischargeCoeff.Key);
+            weirFormula.LateralContraction =
+                category.ReadProperty<double>(StructureRegion.LatDisCoeff.Key);
+
+            weir.FlowDirection =
+                (FlowDirection)category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
+        }
     }
 }
