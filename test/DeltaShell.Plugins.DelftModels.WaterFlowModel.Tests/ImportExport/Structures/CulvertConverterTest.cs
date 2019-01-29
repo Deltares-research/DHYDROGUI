@@ -5,28 +5,22 @@ using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using GeoAPI.Extensions.Networks;
-using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Structures
 {
     [TestFixture]
-    public class CulvertConverterTest
+    public class CulvertConverterTest : StructureConverterTestHelper
     {
         private const string CulvertName = "myCulvert";
         private const string CulvertLongName = "myCulvert_longName";
         private const string ChainageAsString = "2.0";
 
-        private MockRepository mocks = new MockRepository();
-        private INetwork network;
-        private readonly ILineString branchGeometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 0) });
-
         [SetUp]
         public void Setup()
         {
-            network = mocks.DynamicMock<INetwork>();
+            Network = mocks.DynamicMock<INetwork>();
         }
 
         [Test]
@@ -37,7 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var branch = GetMockedBranch();
 
             // When
-            var culvert = ConvertToCulvertAndCheckForNull(category, branch);
+            var culvert = ConvertAndCheckForNull<CulvertConverter, Culvert>(category, branch);
 
             // Then
             Assert.That(culvert.Name, Is.EqualTo(CulvertName));
@@ -45,7 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             Assert.That(culvert.Chainage, Is.EqualTo(double.Parse(ChainageAsString, CultureInfo.InvariantCulture)));
             Assert.That(culvert.Geometry, Is.EqualTo(new Point(2, 0)));
             Assert.That(culvert.Branch, Is.EqualTo(branch));
-            Assert.That(culvert.Network, Is.EqualTo(network));
+            Assert.That(culvert.Network, Is.EqualTo(Network));
 
             mocks.VerifyAll();
         }
@@ -64,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var branch = GetMockedBranch();
 
             // When
-            var culvert = ConvertToCulvertAndCheckForNull(category, branch);
+            var culvert = ConvertAndCheckForNull<CulvertConverter, Culvert>(category, branch);
 
             // Then
             Assert.That(culvert.FlowDirection, Is.EqualTo(expectedFlowDirection));
@@ -84,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var branch = GetMockedBranch();
 
             // When
-            var culvert = ConvertToCulvertAndCheckForNull(category, branch);
+            var culvert = ConvertAndCheckForNull<CulvertConverter, Culvert>(category, branch);
 
             // Then
             Assert.That(culvert.IsGated, Is.EqualTo(expectedIsGatedValue));
@@ -114,7 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var branch = GetMockedBranch();
 
             // When
-            var culvert = ConvertToCulvertAndCheckForNull(category, branch);
+            var culvert = ConvertAndCheckForNull<CulvertConverter, Culvert>(category, branch);
 
             // Then
             Assert.That(culvert.InletLevel, Is.EqualTo(double.Parse(inletLevel, CultureInfo.InvariantCulture)));
@@ -139,7 +133,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var branch = GetMockedBranch();
 
             // When
-            var culvert = ConvertToCulvertAndCheckForNull(category, branch);
+            var culvert = ConvertAndCheckForNull<CulvertConverter, Culvert>(category, branch);
 
             // Then
             var lossCoefficientFunction = culvert.GateOpeningLossCoefficientFunction;
@@ -165,7 +159,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var branch = GetMockedBranch();
 
             // When
-            var culvert = ConvertToCulvertAndCheckForNull(category, branch);
+            var culvert = ConvertAndCheckForNull<CulvertConverter, Culvert>(category, branch);
 
             // Then
             var lossCoefficientFunction = culvert.GateOpeningLossCoefficientFunction;
@@ -190,7 +184,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var branch = GetMockedBranch();
 
             // When
-            var culvert = ConvertToCulvertAndCheckForNull(category, branch);
+            var culvert = ConvertAndCheckForNull<CulvertConverter, Culvert>(category, branch);
 
             // Then
             var lossCoefficientFunction = culvert.GateOpeningLossCoefficientFunction;
@@ -220,30 +214,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.SetProperty(StructureRegion.ValveOnOff.Key, "0");
 
             return category;
-        }
-
-        private IBranch GetMockedBranch()
-        {
-            var branch = mocks.DynamicMock<IBranch>();
-            SetBranchMockProperties(branch, network);
-            mocks.ReplayAll();
-            return branch;
-        }
-
-        private void SetBranchMockProperties(IBranch branch, INetwork network)
-        {
-            branch.Expect(b => b.Length).Return(10.0).Repeat.Any();
-            branch.Expect(b => b.Geometry).Return(branchGeometry).Repeat.Any();
-            branch.Expect(b => b.Network).Return(network).Repeat.Any();
-        }
-
-        private static ICulvert ConvertToCulvertAndCheckForNull(IDelftIniCategory category, IBranch branch)
-        {
-            var structure = new CulvertConverter().ConvertToStructure1D(category, branch);
-            var culvert = structure as Culvert;
-            Assert.IsNotNull(culvert, "CulvertConverter did not return a Culvert object.");
-
-            return culvert;
         }
     }
 }

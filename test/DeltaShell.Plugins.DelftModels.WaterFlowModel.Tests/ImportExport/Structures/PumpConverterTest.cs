@@ -4,28 +4,22 @@ using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using GeoAPI.Extensions.Networks;
-using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Structures
 {
     [TestFixture]
-    public class PumpConverterTest
+    public class PumpConverterTest : StructureConverterTestHelper
     {
         private const string PumpName = "myPump";
         private const string PumpLongName = "myPump_longName";
         private const string ChainageAsString = "2.0";
-
-        private MockRepository mocks = new MockRepository();
-        private INetwork network;
-        private readonly ILineString branchGeometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 0) });
-
+        
         [SetUp]
         public void Setup()
         {
-            network = mocks.DynamicMock<INetwork>();
+            Network = mocks.DynamicMock<INetwork>();
         }
 
         [Test]
@@ -33,23 +27,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         {
             // Given
             var category = GetStructureCategoryWithBasicProperties();
-
-            var branch = mocks.DynamicMock<IBranch>();
-            SetBranchMockProperties(branch, network);
-            mocks.ReplayAll();
+            var branch = GetMockedBranch();
 
             // When
-            var structure = new PumpConverter().ConvertToStructure1D(category, branch);
-            var pump = structure as Pump;
+            var pump = ConvertAndCheckForNull<PumpConverter, Pump>(category, branch);
 
             // Then
-            Assert.IsNotNull(pump, "PumpConverter did not return a Pump object.");
             Assert.That(pump.Name, Is.EqualTo(PumpName));
             Assert.That(pump.LongName, Is.EqualTo(PumpLongName));
             Assert.That(pump.Chainage, Is.EqualTo(double.Parse(ChainageAsString, CultureInfo.InvariantCulture)));
             Assert.That(pump.Geometry, Is.EqualTo(new Point(2, 0)));
             Assert.That(pump.Branch, Is.EqualTo(branch));
-            Assert.That(pump.Network, Is.EqualTo(network));
+            Assert.That(pump.Network, Is.EqualTo(Network));
             
             mocks.VerifyAll();
         }
@@ -67,16 +56,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var category = GetStructureCategoryWithBasicProperties();
             category.SetProperty(StructureRegion.Direction.Key, valueAsString);
 
-            var branch = mocks.DynamicMock<IBranch>();
-            SetBranchMockProperties(branch, network);
-            mocks.ReplayAll();
+            var branch = GetMockedBranch();
 
             // When
-            var structure = new PumpConverter().ConvertToStructure1D(category, branch);
-            var pump = structure as Pump;
+            var pump = ConvertAndCheckForNull<PumpConverter, Pump>(category, branch);
 
             // Then
-            Assert.IsNotNull(pump, "PumpConverter did not return a Pump object.");
             Assert.That(pump.ControlDirection, Is.EqualTo(expectedDirection));
             Assert.That(pump.DirectionIsPositive, Is.EqualTo(expectedIsDirectionPositive));
 
@@ -91,16 +76,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var category = GetStructureCategoryWithBasicProperties();
             category.SetProperty(StructureRegion.Capacity.Key, capacity);
 
-            var branch = mocks.DynamicMock<IBranch>();
-            SetBranchMockProperties(branch, network);
-            mocks.ReplayAll();
+            var branch = GetMockedBranch();
 
             // When
-            var structure = new PumpConverter().ConvertToStructure1D(category, branch);
-            var pump = structure as Pump;
+            var pump = ConvertAndCheckForNull<PumpConverter, Pump>(category, branch);
 
             // Then
-            Assert.IsNotNull(pump, "PumpConverter did not return a Pump object.");
             Assert.That(pump.Capacity, Is.EqualTo(double.Parse(capacity, CultureInfo.InvariantCulture)));
 
             mocks.VerifyAll();
@@ -121,16 +102,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.SetProperty(StructureRegion.StartLevelDeliverySide.Key, startDelivery);
             category.SetProperty(StructureRegion.StopLevelDeliverySide.Key, stopDelivery);
 
-            var branch = mocks.DynamicMock<IBranch>();
-            SetBranchMockProperties(branch, network);
-            mocks.ReplayAll();
+            var branch = GetMockedBranch();
 
             // When
-            var structure = new PumpConverter().ConvertToStructure1D(category, branch);
-            var pump = structure as Pump;
+            var pump = ConvertAndCheckForNull<PumpConverter, Pump>(category, branch);
 
             // Then
-            Assert.IsNotNull(pump, "PumpConverter did not return a Pump object.");
             Assert.That(pump.StartSuction, Is.EqualTo(double.Parse(startSuction, CultureInfo.InvariantCulture)));
             Assert.That(pump.StopSuction, Is.EqualTo(double.Parse(stopSuction, CultureInfo.InvariantCulture)));
             Assert.That(pump.StartDelivery, Is.EqualTo(double.Parse(startDelivery, CultureInfo.InvariantCulture)));
@@ -148,17 +125,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.SetProperty(StructureRegion.Head.Key, "1.000 2.000");
             category.SetProperty(StructureRegion.ReductionFactor.Key, "3.000 4.000");
 
-            var branch = mocks.DynamicMock<IBranch>();
-            SetBranchMockProperties(branch, network);
-            mocks.ReplayAll();
+            var branch = GetMockedBranch();
 
             // When
-            var structure = new PumpConverter().ConvertToStructure1D(category, branch);
-            var pump = structure as Pump;
+            var pump = ConvertAndCheckForNull<PumpConverter, Pump>(category, branch);
 
             // Then
-            Assert.IsNotNull(pump, "PumpConverter did not return a Pump object.");
-
             var reductionTable = pump.ReductionTable;
             var argumentValues = reductionTable.Arguments[0].Values;
             Assert.That(argumentValues.Count, Is.EqualTo(2));
@@ -180,17 +152,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var category = GetStructureCategoryWithBasicProperties();
             category.SetProperty(StructureRegion.ReductionFactorLevels.Key, "0");
 
-            var branch = mocks.DynamicMock<IBranch>();
-            SetBranchMockProperties(branch, network);
-            mocks.ReplayAll();
+            var branch = GetMockedBranch();
 
             // When
-            var structure = new PumpConverter().ConvertToStructure1D(category, branch);
-            var pump = structure as Pump;
+            var pump = ConvertAndCheckForNull<PumpConverter, Pump>(category, branch);
 
             // Then
-            Assert.IsNotNull(pump, "PumpConverter did not return a Pump object.");
-
             var reductionTable = pump.ReductionTable;
             var argumentValues = reductionTable.Arguments[0].Values;
             Assert.That(argumentValues.Count, Is.EqualTo(0));
@@ -218,13 +185,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.AddProperty(StructureRegion.ReductionFactor.Key, "1.0");
 
             return category;
-        }
-
-        private void SetBranchMockProperties(IBranch branch, INetwork network)
-        {
-            branch.Expect(b => b.Length).Return(10.0).Repeat.Any();
-            branch.Expect(b => b.Geometry).Return(branchGeometry).Repeat.Any();
-            branch.Expect(b => b.Network).Return(network).Repeat.Any();
         }
     }
 }

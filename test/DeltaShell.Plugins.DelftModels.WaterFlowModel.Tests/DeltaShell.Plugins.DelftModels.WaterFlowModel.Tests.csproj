@@ -286,6 +286,7 @@
     <Compile Include="ImportExport\Structures\RiverWeirConverterTest.cs" />
     <Compile Include="ImportExport\Structures\StructureConverterFactoryTest.cs" />
     <Compile Include="ImportExport\Structures\StructureConverterTest.cs" />
+    <Compile Include="ImportExport\Structures\StructureConverterTestHelper.cs" />
     <Compile Include="ImportExport\Structures\StructuresFileReaderTest.cs" />
     <Compile Include="ImportExport\Structures\UniversalWeirConverterTest.cs" />
     <Compile Include="ImportExport\Structures\WeirConverterTest.cs" />
