@@ -16,6 +16,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
 {
+    [Category(TestCategory.DataAccess)]
     [TestFixture]
     public class ModelDefinitionsFileWriterTest
     {

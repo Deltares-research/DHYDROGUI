@@ -82,16 +82,31 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         }
 
         [Test]
+        [TestCase(true, true, TestName = "UseRestart and WriteRestart are true")]
+        [TestCase(false, false, TestName = "UseRestart and WriteRestart are false")]
+        [TestCase(true, false, TestName = "UseRestart is true and WriteRestart is false")]
+        [TestCase(false, true, TestName = "UseRestart is false and WriteRestart is true")]
         public void
-            GivenASimulationOptionsCategoryWithRestartSettings_WhenSettingTheseModelProperties_ThenTheseParametersShouldBeSetInTheModel()
+            GivenAnOldFormatSimulationOptionsCategoryWithRestartSettings_WhenSettingTheseModelProperties_ThenSaveStateStartTimeAndSaveStateStopTimeShouldBeEqualToModelStopTimeIndependentOfUseRestartAndWriteRestartSettings(bool useRestart, bool writeRestart)
         {
             //Given
             var category = new DelftIniCategory(ModelDefinitionsRegion.SimulationOptionsValuesHeader);
-            category.AddProperty(ModelDefinitionsRegion.UseRestart.Key, "1");
-            category.AddProperty(ModelDefinitionsRegion.WriteRestart.Key, "1");
+            category.AddProperty(ModelDefinitionsRegion.WriteRestart.Key, writeRestart ? "1" : "0");
+            category.AddProperty(ModelDefinitionsRegion.UseRestart.Key, useRestart ? "1" : "0");
 
             // Create ModelParameters
-            var model = new WaterFlowModel1D();
+            var startTime = DateTime.Today;
+            var stopTime = startTime.AddDays(2);
+            var timeStep = TimeSpan.FromSeconds(3);
+
+            // Create ModelParameters
+            var model = new WaterFlowModel1D()
+            {
+                StartTime = startTime,
+                StopTime = stopTime,
+                TimeStep = timeStep,
+            };
+
             var errorMessages = new List<string>();
 
             //When
@@ -99,9 +114,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
             //Then
             Assert.AreEqual(0, errorMessages.Count);
+            
+            Assert.AreEqual(useRestart, model.UseRestart);
+            Assert.AreEqual(writeRestart, model.WriteRestart);
 
-            Assert.AreEqual(true, model.UseRestart);
-            Assert.AreEqual(true, model.WriteRestart);
+            Assert.AreEqual(stopTime, model.SaveStateStartTime);
+            Assert.AreEqual(stopTime, model.SaveStateStopTime);
+            Assert.AreEqual(timeStep, model.SaveStateTimeStep);
         }
     }
 }

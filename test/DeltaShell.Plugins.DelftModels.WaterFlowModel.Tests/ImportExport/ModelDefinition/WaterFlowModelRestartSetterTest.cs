@@ -39,12 +39,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             //When
             (new WaterFlowModelRestartSetter()).SetProperties(category, model, errorMessages);
 
-            Assert.AreEqual(model.UseRestart, useRestart);
-            Assert.AreEqual(model.WriteRestart, writeRestart);
+            Assert.AreEqual(useRestart, model.UseRestart);
+            Assert.AreEqual(writeRestart, model.WriteRestart);
 
-            Assert.AreEqual(model.SaveStateStartTime, stopTime);
-            Assert.AreEqual(model.SaveStateStopTime, stopTime);
-            Assert.AreEqual(model.SaveStateTimeStep, timeStep);
+            Assert.AreEqual(stopTime, model.SaveStateStartTime);
+            Assert.AreEqual(stopTime, model.SaveStateStopTime);
+            Assert.AreEqual(timeStep, model.SaveStateTimeStep);
 
             Assert.AreEqual(0, errorMessages.Count);
         }
