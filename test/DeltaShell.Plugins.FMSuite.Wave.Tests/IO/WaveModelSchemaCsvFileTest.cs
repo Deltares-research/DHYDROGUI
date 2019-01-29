@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
     {
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void Read_FMModelSchema_DoesNotSplitCommentWithCommas()
+        public void Read_WaveModelSchema_DoesNotSplitCommentWithCommas()
         {
             //01. Load test file
             var csvTestFile = TestHelper.GetTestFilePath(@"CsvFile\properties_test.csv");
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void Read_FMModelSchema_LoadsUnits()
+        public void Read_WaveModelSchema_LoadsUnits()
         {
             //01. Load test file
             var csvTestFile = TestHelper.GetTestFilePath(@"CsvFile\properties_test.csv");
