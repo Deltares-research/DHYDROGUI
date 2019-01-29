@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             if( dhhmmssfff.Length !=3 )
                 return new TimeSpan(0);
 
-            // Get seconds and miliseconds
+            // Get seconds and milliseconds
             var ssfff = dhhmmssfff[2].Split('.');
             var ss = ReplaceToValidDigit(ssfff.First());
             var fff = ssfff.Length == 2 
@@ -36,9 +36,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             var mm = ReplaceToValidDigit(dhhmmssfff[1]);
 
             //Get hours and days
+            /*Try to split by either the letter d or the space.*/
             var dhh = dhhmmssfff[0].Split('d');
-            var hh = ReplaceToValidDigit(dhh.Last());
-            var d = dhh.Length == 2 ? ReplaceToValidDigit(dhh.First()) : 0;
+            dhh = dhh.Length == 2 ? dhh : dhh.Last().Split(' ');
+            /*Get only the values that are next to the d or the :*/
+            var hh = ReplaceToValidDigit(dhh.Last().Split(' ').Last());
+            var d = dhh.Length == 2 ? ReplaceToValidDigit(dhh.First().Split(' ').Last()) : 0;
 
             //Return new timespan
             return new TimeSpan(d, hh, mm, ss, fff);

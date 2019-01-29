@@ -40,6 +40,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [Test]
         [TestCase("0d 00:00:00.000", 0, 0, 0, 0, 0)]
         [TestCase("0d 25:61:61.1001", 1, 2, 2, 2, 1)]
+        [TestCase("23 01:61:61.1001", 23, 2, 2, 2, 1)]
+        [TestCase("23d 13 01:61:61.1001", 23, 2, 2, 2, 1)]
         public void Test_WpfCustomTimeSpan_ConvertTextToValue_Given_Valid_Input(string text, int d, int hh, int mm, int ss, int fff)
         {
             var control = new WpfCustomTimeSpan();
