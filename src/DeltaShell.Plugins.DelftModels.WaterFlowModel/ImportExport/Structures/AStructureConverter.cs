@@ -1,4 +1,6 @@
-﻿using DelftTools.Hydro;
+﻿using System.Globalization;
+using System.Linq;
+using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
 
@@ -19,6 +21,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             SetStructureProperties(structure, category);
 
             return structure;
+        }
+
+        protected static double[] TransformToDoubleArray(string valuesString)
+        {
+            return valuesString.Split(' ').Select(v => double.Parse(v, CultureInfo.InvariantCulture)).ToArray();
         }
 
         protected abstract IStructure1D CreateNewStructure();

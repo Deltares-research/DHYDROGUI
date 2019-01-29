@@ -42,11 +42,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
             if (arguments != null && components != null && arguments[0].Values.Count > 0 && components[0].Values.Count > 0)
             {
-                var relOpening = arguments[0].Values.Cast<double>();
-                var lossCoeff = components[0].Values.Cast<double>().ToList();
+                var relativeOpeningValues = arguments[0].Values.Cast<double>();
+                var lossCoeff = components[0].Values.Cast<double>().ToArray();
 
-                IniCategory.AddProperty(StructureRegion.LossCoeffCount.Key, lossCoeff.Count, StructureRegion.LossCoeffCount.Description);
-                IniCategory.AddProperty(StructureRegion.RelativeOpening.Key, relOpening, StructureRegion.RelativeOpening.Description, StructureRegion.RelativeOpening.Format);
+                IniCategory.AddProperty(StructureRegion.LossCoeffCount.Key, lossCoeff.Length, StructureRegion.LossCoeffCount.Description);
+                IniCategory.AddProperty(StructureRegion.RelativeOpening.Key, relativeOpeningValues, StructureRegion.RelativeOpening.Description, StructureRegion.RelativeOpening.Format);
                 IniCategory.AddProperty(StructureRegion.LossCoefficient.Key, lossCoeff, StructureRegion.LossCoefficient.Description, StructureRegion.LossCoefficient.Format);
             }
             

@@ -31,6 +31,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             culvert.GateInitialOpening = category.ReadProperty<double>(StructureRegion.IniValveOpen.Key);
 
             culvert.IsGated = Convert.ToBoolean(category.ReadProperty<int>(StructureRegion.ValveOnOff.Key));
+
+            SetGateOpeningLossCoefficientFunctionValues(culvert, category);
+        }
+
+        private static void SetGateOpeningLossCoefficientFunctionValues(ICulvert culvert, IDelftIniCategory category)
+        {
+            try
+            {
+                var numberOfFunctionEntries = category.ReadProperty<int>(StructureRegion.LossCoeffCount.Key);
+                if (numberOfFunctionEntries <= 0) return;
+
+                var relativeOpeningValues = TransformToDoubleArray(category.ReadProperty<string>(StructureRegion.RelativeOpening.Key));
+                var lossCoefficientValues = TransformToDoubleArray(category.ReadProperty<string>(StructureRegion.LossCoefficient.Key));
+                for (var i = 0; i < numberOfFunctionEntries; i++)
+                {
+                    culvert.GateOpeningLossCoefficientFunction[relativeOpeningValues[i]] = lossCoefficientValues[i];
+                }
+            }
+            catch (Exception)
+            {
+                // Skip setting values on culvert.GateOpeningLossCoefficientFunction, because there was something wrong when reading it.
+                culvert.GateOpeningLossCoefficientFunction.RemoveValues();
+            }
         }
     }
 }

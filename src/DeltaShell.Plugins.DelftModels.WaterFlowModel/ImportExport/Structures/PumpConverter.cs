@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Globalization;
-using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
@@ -55,11 +53,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             {
                 pump.ReductionTable[pumpHeadValues[i]] = reductionFactorValues[i];
             }
-        }
-
-        private static double[] TransformToDoubleArray(string valuesString)
-        {
-            return valuesString.Split(' ').Select(v => double.Parse(v, CultureInfo.InvariantCulture)).ToArray();
         }
     }
 }

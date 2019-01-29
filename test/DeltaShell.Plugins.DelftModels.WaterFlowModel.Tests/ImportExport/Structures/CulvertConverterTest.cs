@@ -34,17 +34,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         {
             // Given
             var category = GetStructureCategoryWithBasicProperties();
-
-            var branch = mocks.DynamicMock<IBranch>();
-            SetBranchMockProperties(branch, network);
-            mocks.ReplayAll();
+            var branch = GetMockedBranch();
 
             // When
-            var structure = new CulvertConverter().ConvertToStructure1D(category, branch);
-            var culvert = structure as Culvert;
+            var culvert = ConvertToCulvertAndCheckForNull(category, branch);
 
             // Then
-            Assert.IsNotNull(culvert, "CulvertConverter did not return a Culvert object.");
             Assert.That(culvert.Name, Is.EqualTo(CulvertName));
             Assert.That(culvert.LongName, Is.EqualTo(CulvertLongName));
             Assert.That(culvert.Chainage, Is.EqualTo(double.Parse(ChainageAsString, CultureInfo.InvariantCulture)));
@@ -66,16 +61,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var category = GetStructureCategoryWithBasicProperties();
             category.SetProperty(StructureRegion.AllowedFlowDir.Key, valueAsString);
 
-            var branch = mocks.DynamicMock<IBranch>();
-            SetBranchMockProperties(branch, network);
-            mocks.ReplayAll();
+            var branch = GetMockedBranch();
 
             // When
-            var structure = new CulvertConverter().ConvertToStructure1D(category, branch);
-            var culvert = structure as Culvert;
+            var culvert = ConvertToCulvertAndCheckForNull(category, branch);
 
             // Then
-            Assert.IsNotNull(culvert, "CulvertConverter did not return a Culvert object.");
             Assert.That(culvert.FlowDirection, Is.EqualTo(expectedFlowDirection));
 
             mocks.VerifyAll();
@@ -90,16 +81,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var category = GetStructureCategoryWithBasicProperties();
             category.SetProperty(StructureRegion.ValveOnOff.Key, valueAsString);
 
-            var branch = mocks.DynamicMock<IBranch>();
-            SetBranchMockProperties(branch, network);
-            mocks.ReplayAll();
+            var branch = GetMockedBranch();
 
             // When
-            var structure = new CulvertConverter().ConvertToStructure1D(category, branch);
-            var culvert = structure as Culvert;
+            var culvert = ConvertToCulvertAndCheckForNull(category, branch);
 
             // Then
-            Assert.IsNotNull(culvert, "CulvertConverter did not return a Culvert object.");
             Assert.That(culvert.IsGated, Is.EqualTo(expectedIsGatedValue));
 
             mocks.VerifyAll();
@@ -123,23 +110,95 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.SetProperty(StructureRegion.InletLossCoeff.Key, inletLossCoefficient);
             category.SetProperty(StructureRegion.OutletLossCoeff.Key, outletLossCoefficient);
             category.SetProperty(StructureRegion.IniValveOpen.Key, gateInitialOpening);
-            
-            var branch = mocks.DynamicMock<IBranch>();
-            SetBranchMockProperties(branch, network);
-            mocks.ReplayAll();
+
+            var branch = GetMockedBranch();
 
             // When
-            var structure = new CulvertConverter().ConvertToStructure1D(category, branch);
-            var culvert = structure as Culvert;
+            var culvert = ConvertToCulvertAndCheckForNull(category, branch);
 
             // Then
-            Assert.IsNotNull(culvert, "CulvertConverter did not return a Culvert object.");
             Assert.That(culvert.InletLevel, Is.EqualTo(double.Parse(inletLevel, CultureInfo.InvariantCulture)));
             Assert.That(culvert.OutletLevel, Is.EqualTo(double.Parse(outletLevel, CultureInfo.InvariantCulture)));
             Assert.That(culvert.Length, Is.EqualTo(double.Parse(length, CultureInfo.InvariantCulture)));
             Assert.That(culvert.InletLossCoefficient, Is.EqualTo(double.Parse(inletLossCoefficient, CultureInfo.InvariantCulture)));
             Assert.That(culvert.OutletLossCoefficient, Is.EqualTo(double.Parse(outletLossCoefficient, CultureInfo.InvariantCulture)));
             Assert.That(culvert.GateInitialOpening, Is.EqualTo(double.Parse(gateInitialOpening, CultureInfo.InvariantCulture)));
+
+            mocks.VerifyAll();
+        }
+
+        [Test]
+        public void GivenCulvertStructureIniCategoryWithLossCoefficientFunctionEntries_WhenConvertingToStructure1D_ThenCulvertWithSpecificReductionTableValuesIsReturned()
+        {
+            // Given
+            var category = GetStructureCategoryWithBasicProperties();
+            category.AddProperty(StructureRegion.LossCoeffCount.Key, "2");
+            category.AddProperty(StructureRegion.RelativeOpening.Key, "1.000 2.000");
+            category.AddProperty(StructureRegion.LossCoefficient.Key, "3.000 4.000");
+
+            var branch = GetMockedBranch();
+
+            // When
+            var culvert = ConvertToCulvertAndCheckForNull(category, branch);
+
+            // Then
+            var lossCoefficientFunction = culvert.GateOpeningLossCoefficientFunction;
+            var argumentValues = lossCoefficientFunction.Arguments[0].Values;
+            Assert.That(argumentValues.Count, Is.EqualTo(2));
+            Assert.That(argumentValues[0], Is.EqualTo(1.0));
+            Assert.That(argumentValues[1], Is.EqualTo(2.0));
+
+            var componentValues = lossCoefficientFunction.Components[0].Values;
+            Assert.That(componentValues.Count, Is.EqualTo(2));
+            Assert.That(componentValues[0], Is.EqualTo(3.0));
+            Assert.That(componentValues[1], Is.EqualTo(4.0));
+
+            mocks.VerifyAll();
+        }
+        
+        [Test]
+        public void GivenCulvertStructureIniCategoryWithoutLossCoefficientFunctionEntries_WhenConvertingToStructure1D_ThenCulvertWithoutLossCoefficientFunctionEntriesIsReturned()
+        {
+            // Given
+            var category = GetStructureCategoryWithBasicProperties();
+
+            var branch = GetMockedBranch();
+
+            // When
+            var culvert = ConvertToCulvertAndCheckForNull(category, branch);
+
+            // Then
+            var lossCoefficientFunction = culvert.GateOpeningLossCoefficientFunction;
+            var argumentValues = lossCoefficientFunction.Arguments[0].Values;
+            Assert.That(argumentValues.Count, Is.EqualTo(0));
+
+            var componentValues = lossCoefficientFunction.Components[0].Values;
+            Assert.That(componentValues.Count, Is.EqualTo(0));
+
+            mocks.VerifyAll();
+        }
+
+        [Test]
+        public void GivenCulvertStructureIniCategoryWithIncorrectLossCoefficientFunctionEntries_WhenConvertingToStructure1D_ThenCulvertWithoutLossCoefficientFunctionEntriesIsReturned()
+        {
+            // Given
+            var category = GetStructureCategoryWithBasicProperties();
+            category.AddProperty(StructureRegion.LossCoeffCount.Key, "2");
+            category.AddProperty(StructureRegion.RelativeOpening.Key, "1.000"); // Too less values for RelativeOpening
+            category.AddProperty(StructureRegion.LossCoefficient.Key, "3.000 4.000");
+
+            var branch = GetMockedBranch();
+
+            // When
+            var culvert = ConvertToCulvertAndCheckForNull(category, branch);
+
+            // Then
+            var lossCoefficientFunction = culvert.GateOpeningLossCoefficientFunction;
+            var argumentValues = lossCoefficientFunction.Arguments[0].Values;
+            Assert.That(argumentValues.Count, Is.EqualTo(0));
+
+            var componentValues = lossCoefficientFunction.Components[0].Values;
+            Assert.That(componentValues.Count, Is.EqualTo(0));
 
             mocks.VerifyAll();
         }
@@ -163,11 +222,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             return category;
         }
 
+        private IBranch GetMockedBranch()
+        {
+            var branch = mocks.DynamicMock<IBranch>();
+            SetBranchMockProperties(branch, network);
+            mocks.ReplayAll();
+            return branch;
+        }
+
         private void SetBranchMockProperties(IBranch branch, INetwork network)
         {
             branch.Expect(b => b.Length).Return(10.0).Repeat.Any();
             branch.Expect(b => b.Geometry).Return(branchGeometry).Repeat.Any();
             branch.Expect(b => b.Network).Return(network).Repeat.Any();
+        }
+
+        private static ICulvert ConvertToCulvertAndCheckForNull(IDelftIniCategory category, IBranch branch)
+        {
+            var structure = new CulvertConverter().ConvertToStructure1D(category, branch);
+            var culvert = structure as Culvert;
+            Assert.IsNotNull(culvert, "CulvertConverter did not return a Culvert object.");
+
+            return culvert;
         }
     }
 }
