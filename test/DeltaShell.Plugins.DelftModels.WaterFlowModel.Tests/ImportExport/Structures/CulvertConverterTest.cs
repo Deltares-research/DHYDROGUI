@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
@@ -54,12 +55,110 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             mocks.VerifyAll();
         }
 
+        [TestCase("0", FlowDirection.Both)]
+        [TestCase("1", FlowDirection.Positive)]
+        [TestCase("2", FlowDirection.Negative)]
+        [TestCase("3", FlowDirection.None)]
+        public void GivenCulvertStructureIniCategoryWithSpecificFlowDirection_WhenConvertingToStructure1D_ThenCulvertIsReturnedWithSpecificFlowDirectionPropertyValue
+            (string valueAsString, FlowDirection expectedFlowDirection)
+        {
+            // Given
+            var category = GetStructureCategoryWithBasicProperties();
+            category.SetProperty(StructureRegion.AllowedFlowDir.Key, valueAsString);
+
+            var branch = mocks.DynamicMock<IBranch>();
+            SetBranchMockProperties(branch, network);
+            mocks.ReplayAll();
+
+            // When
+            var structure = new CulvertConverter().ConvertToStructure1D(category, branch);
+            var culvert = structure as Culvert;
+
+            // Then
+            Assert.IsNotNull(culvert, "CulvertConverter did not return a Culvert object.");
+            Assert.That(culvert.FlowDirection, Is.EqualTo(expectedFlowDirection));
+
+            mocks.VerifyAll();
+        }
+
+        [TestCase("0", false)]
+        [TestCase("1", true)]
+        public void GivenCulvertStructureIniCategoryWithSpecificIsGatedValue_WhenConvertingToStructure1D_ThenCulvertIsReturnedWithSpecificIsGatedPropertyValue
+            (string valueAsString, bool expectedIsGatedValue)
+        {
+            // Given
+            var category = GetStructureCategoryWithBasicProperties();
+            category.SetProperty(StructureRegion.ValveOnOff.Key, valueAsString);
+
+            var branch = mocks.DynamicMock<IBranch>();
+            SetBranchMockProperties(branch, network);
+            mocks.ReplayAll();
+
+            // When
+            var structure = new CulvertConverter().ConvertToStructure1D(category, branch);
+            var culvert = structure as Culvert;
+
+            // Then
+            Assert.IsNotNull(culvert, "CulvertConverter did not return a Culvert object.");
+            Assert.That(culvert.IsGated, Is.EqualTo(expectedIsGatedValue));
+
+            mocks.VerifyAll();
+        }
+
+        [Test]
+        public void GivenCulvertStructureIniCategoryWithSpecificPropertyValues_WhenConvertingToStructure1D_ThenCulvertIsReturnedWithSpecificPropertyValues()
+        {
+            // Given
+            var inletLevel = "2.0";
+            var outletLevel = "3.0";
+            var length = "4.0";
+            var inletLossCoefficient = "5.0";
+            var outletLossCoefficient = "6.0";
+            var gateInitialOpening = "7.0";
+
+            var category = GetStructureCategoryWithBasicProperties();
+            category.SetProperty(StructureRegion.LeftLevel.Key, inletLevel);
+            category.SetProperty(StructureRegion.RightLevel.Key, outletLevel);
+            category.SetProperty(StructureRegion.Length.Key, length);
+            category.SetProperty(StructureRegion.InletLossCoeff.Key, inletLossCoefficient);
+            category.SetProperty(StructureRegion.OutletLossCoeff.Key, outletLossCoefficient);
+            category.SetProperty(StructureRegion.IniValveOpen.Key, gateInitialOpening);
+            
+            var branch = mocks.DynamicMock<IBranch>();
+            SetBranchMockProperties(branch, network);
+            mocks.ReplayAll();
+
+            // When
+            var structure = new CulvertConverter().ConvertToStructure1D(category, branch);
+            var culvert = structure as Culvert;
+
+            // Then
+            Assert.IsNotNull(culvert, "CulvertConverter did not return a Culvert object.");
+            Assert.That(culvert.InletLevel, Is.EqualTo(double.Parse(inletLevel, CultureInfo.InvariantCulture)));
+            Assert.That(culvert.OutletLevel, Is.EqualTo(double.Parse(outletLevel, CultureInfo.InvariantCulture)));
+            Assert.That(culvert.Length, Is.EqualTo(double.Parse(length, CultureInfo.InvariantCulture)));
+            Assert.That(culvert.InletLossCoefficient, Is.EqualTo(double.Parse(inletLossCoefficient, CultureInfo.InvariantCulture)));
+            Assert.That(culvert.OutletLossCoefficient, Is.EqualTo(double.Parse(outletLossCoefficient, CultureInfo.InvariantCulture)));
+            Assert.That(culvert.GateInitialOpening, Is.EqualTo(double.Parse(gateInitialOpening, CultureInfo.InvariantCulture)));
+
+            mocks.VerifyAll();
+        }
+
         private static IDelftIniCategory GetStructureCategoryWithBasicProperties()
         {
             var category = new DelftIniCategory(StructureRegion.Header);
             category.AddProperty(StructureRegion.Id.Key, CulvertName);
             category.AddProperty(StructureRegion.Name.Key, CulvertLongName);
             category.AddProperty(StructureRegion.Chainage.Key, ChainageAsString);
+            category.AddProperty(StructureRegion.AllowedFlowDir.Key, "0");
+            category.AddProperty(StructureRegion.LeftLevel.Key, "0.0");
+            category.AddProperty(StructureRegion.RightLevel.Key, "0.0");
+            category.AddProperty(StructureRegion.Length.Key, "1.0");
+            category.AddProperty(StructureRegion.InletLossCoeff.Key, "1.0");
+            category.AddProperty(StructureRegion.OutletLossCoeff.Key, "1.0");
+            category.AddProperty(StructureRegion.ValveOnOff.Key, "1");
+            category.AddProperty(StructureRegion.IniValveOpen.Key, "0.0");
+            category.SetProperty(StructureRegion.ValveOnOff.Key, "0");
 
             return category;
         }
