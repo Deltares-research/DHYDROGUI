@@ -10,14 +10,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
     [TestFixture]
     public class RealTimeControlRuntimeConfigXmlReaderTest
     {
-        [TestCase("rtcRuntimeConfig_false_minute.xml", "00:01:00", false)]
-        [TestCase("rtcRuntimeConfig_true_second.xml", "00:00:01", true)]
-        [TestCase("rtcRuntimeConfig_true_minute.xml", "00:01:00", true)]
-        [TestCase("rtcRuntimeConfig_true_hour.xml", "01:00:00", true)]
-        [TestCase("rtcRuntimeConfig_true_day.xml", "1.00:00:00", true)]
-        [TestCase("rtcRuntimeConfig_true_week.xml", "7.00:00:00", true)]
+        [TestCase("rtcRuntimeConfig_false_minute.xml", "00:01:00", false, false)]
+        [TestCase("rtcRuntimeConfig_true_second.xml", "00:00:01", true, false)]
+        [TestCase("rtcRuntimeConfig_true_minute.xml", "00:01:00", true, false)]
+        [TestCase("rtcRuntimeConfig_true_hour.xml", "01:00:00", true, false)]
+        [TestCase("rtcRuntimeConfig_true_day.xml", "1.00:00:00", true, false)]
+        [TestCase("rtcRuntimeConfig_true_week.xml", "7.00:00:00", true, false)]
+        [TestCase("rtcRuntimeConfig_true_week _with_writeRestartTrue.xml", "7.00:00:00", true, true)]
         [Category(TestCategory.DataAccess)]
-        public void GivenAnExistingFileWithTimeData_WhenReading_ThenCorrectDateTimesAreSetOnModel(string fileName, string expectedTimeSpanString, bool limitedMemory)
+        public void GivenAnExistingFileWithTimeData_WhenReading_ThenCorrectDateTimesAreSetOnModel(string fileName, string expectedTimeSpanString, bool limitedMemory, bool writeRestart)
         {
             // Given
             var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "RuntimeConfigFiles"));
@@ -36,6 +37,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             Assert.AreEqual(expectedTimeSpanString, rtcModel.TimeStep.ToString());
             Assert.AreEqual(new DateTime(2018, 12, 13), rtcModel.StopTime);
             Assert.AreEqual(limitedMemory, rtcModel.LimitMemory);
+
+            if (writeRestart)
+            {
+                Assert.AreEqual(rtcModel.StartTime, rtcModel.SaveStateStartTime);
+                Assert.AreEqual(rtcModel.StopTime, rtcModel.SaveStateStopTime);
+                Assert.AreEqual(3600, rtcModel.SaveStateTimeStep.TotalSeconds);
+            }
+            else
+            {
+                Assert.AreEqual(rtcModel.StopTime, rtcModel.SaveStateStartTime);
+                Assert.AreEqual(rtcModel.StopTime, rtcModel.SaveStateStopTime);
+                Assert.AreEqual(rtcModel.TimeStep, rtcModel.SaveStateTimeStep);
+            }
         }
 
         [Test]

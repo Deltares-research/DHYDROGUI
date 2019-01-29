@@ -18,6 +18,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
 {
     public static class WaterFlowModel1DModelDataValidator
     {
+        /// <summary>
+        /// Validation method for 1D model settings. Since the bool useSaveStateTimeRange is removed
+        /// from the plugin the first argument of the ValidateRestartTimeRangeSettings is always true.
+        /// </summary>
+        /// <param name="flowModel1D">1D model</param>
+        /// <returns>This method will return a validation report</returns>
         public static ValidationReport Validate(WaterFlowModel1D flowModel1D)
         {
             return new ValidationReport("Model Data",

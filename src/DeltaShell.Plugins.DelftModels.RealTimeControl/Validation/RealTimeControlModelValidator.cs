@@ -13,6 +13,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
 {
     public class RealTimeControlModelValidator : IValidator<RealTimeControlModel, RealTimeControlModel>
     {
+        /// <summary>
+        /// Validation method for real time control settings. Since the bool useSaveStateTimeRange is removed
+        /// from the plugin the first argument of the ValidateRestartTimeRangeSettings is always true.
+        /// </summary>
+        /// <param name="rootObject">RTC model</param>
+        /// <param name="target">Optional</param>
+        /// <returns>This method will return a validation report</returns>
         public ValidationReport Validate(RealTimeControlModel rootObject, RealTimeControlModel target = null)
         {
             var validationReports = new List<ValidationReport>

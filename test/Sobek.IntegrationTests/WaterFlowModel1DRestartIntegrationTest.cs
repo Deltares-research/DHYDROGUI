@@ -5,6 +5,7 @@ using System.Windows;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Core;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
@@ -366,6 +367,34 @@ namespace Sobek.IntegrationTests
             Assert.AreEqual(ActivityStatus.Cleaned, flowModel.Status);
 
             Assert.AreEqual(24, flowModel.GetRestartOutputStates().Count());
+        }
+
+        [Test]
+        public void WriteSingleRestartFilesDuringRun()
+        {
+            var flowModel = CreateSimpleFlowModel();
+
+            // do one full run
+            flowModel.WriteRestart = true;
+            flowModel.StopTime = flowModel.StartTime.AddHours(24.0);
+            flowModel.OutputTimeStep = new TimeSpan(0, 1, 0, 0);
+
+            flowModel.SaveStateStartTime = flowModel.StopTime;
+            flowModel.SaveStateStopTime = flowModel.StopTime;
+            flowModel.SaveStateTimeStep = flowModel.OutputTimeStep;
+
+            ActivityRunner.RunActivity(flowModel);
+            
+            Assert.AreEqual(ActivityStatus.Cleaned, flowModel.Status);
+
+            var restartOutputStates = flowModel.GetRestartOutputStates().ToList();
+            Assert.AreEqual(1, restartOutputStates.Count());
+
+            var zipFilePath = restartOutputStates[0].Path;
+            var filesInsideZip = ZipFileUtils.GetFilePathsInZip(zipFilePath, null);
+
+            //Check if the nda and ndf files were really created by the kernel
+            Assert.AreEqual(3, filesInsideZip.Count);
         }
 
         [TestCase(24, 24, 4, 0, TestName = "GivenASimpleFlowModelWithAStateSaveMatchingTheRunPeriodWhenThisModelRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun")]

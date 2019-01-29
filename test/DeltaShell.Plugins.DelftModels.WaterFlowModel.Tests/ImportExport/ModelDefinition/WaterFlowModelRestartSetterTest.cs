@@ -11,57 +11,55 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
     public class WaterFlowModelRestartSetterTest
     {
         [Test]
-        public void GivenARestartCategoryWithoutSaveStateTimeRangePropertiesAndBothPropertiesFalse_WhenSettingTheseModelProperties_ThenTheseParametersShouldBeSetInTheModel()
+        [TestCase(true, true, TestName = "UseRestart and WriteRestart are true")]
+        [TestCase(false, false, TestName = "UseRestart and WriteRestart are false")]
+        [TestCase(true, false, TestName = "UseRestart is true and WriteRestart is false")]
+        [TestCase(false, true, TestName = "UseRestart is false and WriteRestart is true")]
+        public void GivenARestartCategoryWithoutSaveStateTimeRangeProperties_WhenSettingTheseModelProperties_ThenSaveStateStartTimeAndSaveStateStopTimeShouldBeEqualToModelStopTimeIndependentOfUseRestartAndWriteRestartSettings(bool useRestart, bool writeRestart)
         {
             var category = new DelftIniCategory(ModelDefinitionsRegion.RestartHeader);
 
-            category.AddProperty(ModelDefinitionsRegion.WriteRestart.Key, "0");
-            category.AddProperty(ModelDefinitionsRegion.UseRestart.Key, "0");
+            category.AddProperty(ModelDefinitionsRegion.WriteRestart.Key, writeRestart ? "1" : "0");
+            category.AddProperty(ModelDefinitionsRegion.UseRestart.Key, useRestart ? "1" : "0");
+
+            var startTime = DateTime.Today;
+            var stopTime = startTime.AddDays(2);
+            var timeStep = TimeSpan.FromSeconds(3);
 
             // Create ModelParameters
-            var model = new WaterFlowModel1D();
+            var model = new WaterFlowModel1D()
+            {
+                StartTime = startTime,
+                StopTime = stopTime,
+                TimeStep = timeStep,
+            };
 
             var errorMessages = new List<string>();
 
             //When
             (new WaterFlowModelRestartSetter()).SetProperties(category, model, errorMessages);
 
-            Assert.AreEqual(model.UseRestart, false);
-            Assert.AreEqual(model.WriteRestart, false);
+            Assert.AreEqual(model.UseRestart, useRestart);
+            Assert.AreEqual(model.WriteRestart, writeRestart);
+
+            Assert.AreEqual(model.SaveStateStartTime, stopTime);
+            Assert.AreEqual(model.SaveStateStopTime, stopTime);
+            Assert.AreEqual(model.SaveStateTimeStep, timeStep);
 
             Assert.AreEqual(0, errorMessages.Count);
         }
 
         [Test]
-        public void GivenARestartCategoryWithoutSaveStateTimeRangePropertiesAndBothPropertiesTrue_WhenSettingTheseModelProperties_ThenTheseParametersShouldBeSetInTheModel()
+        [TestCase(true, true, TestName = "UseRestart and WriteRestart are true")]
+        [TestCase(false, false, TestName = "UseRestart and WriteRestart are false")]
+        [TestCase(true, false, TestName = "UseRestart is true and WriteRestart is false")]
+        [TestCase(false, true, TestName = "UseRestart is false and WriteRestart is true")]
+        public void GivenARestartCategoryWithSaveStateTimeRangeProperties_WhenSettingTheseModelProperties_ThenAllPropertiesShouldBeSetInTheModelIndependentOfUseRestartAndWriteRestartSettings(bool useRestart, bool writeRestart)
         {
             var category = new DelftIniCategory(ModelDefinitionsRegion.RestartHeader);
 
-            category.AddProperty(ModelDefinitionsRegion.WriteRestart.Key, "1");
-            category.AddProperty(ModelDefinitionsRegion.UseRestart.Key, "1");
-            
-
-            // Create ModelParameters
-            var model = new WaterFlowModel1D();
-
-            var errorMessages = new List<string>();
-
-            //When
-            (new WaterFlowModelRestartSetter()).SetProperties(category, model, errorMessages);
-
-            Assert.AreEqual(model.UseRestart, true);
-            Assert.AreEqual(model.WriteRestart, true);
-
-            Assert.AreEqual(0, errorMessages.Count);
-        }
-
-        [Test]
-        public void GivenARestartCategoryWithSaveStateTimeRangeProperties_WhenSettingTheseModelProperties_ThenTheseParametersShouldAlsoBeSetInTheModel()
-        {
-            var category = new DelftIniCategory(ModelDefinitionsRegion.RestartHeader);
-
-            category.AddProperty(ModelDefinitionsRegion.WriteRestart.Key, "1");
-            category.AddProperty(ModelDefinitionsRegion.UseRestart.Key, "0");
+            category.AddProperty(ModelDefinitionsRegion.WriteRestart.Key, writeRestart ? "1" : "0");
+            category.AddProperty(ModelDefinitionsRegion.UseRestart.Key, useRestart ? "1" : "0");
 
             category.AddProperty(ModelDefinitionsRegion.RestartStartTime.Key, "2014 - 01 - 01 00:00:00");
             category.AddProperty(ModelDefinitionsRegion.RestartStopTime.Key, "2014-01-02 00:00:00");
@@ -75,8 +73,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             //When
             (new WaterFlowModelRestartSetter()).SetProperties(category, model, errorMessages);
 
-            Assert.AreEqual(model.UseRestart, false);
-            Assert.AreEqual(model.WriteRestart, true);
+            Assert.AreEqual(model.UseRestart, useRestart);
+            Assert.AreEqual(model.WriteRestart, writeRestart);
 
             Assert.AreEqual(0, errorMessages.Count);
             Assert.AreEqual(TimeSpan.FromSeconds(Convert.ToDouble("16")), model.SaveStateTimeStep);

@@ -69,6 +69,59 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             AssertThatCategoryContainsPropertyWithValue(properties, ModelDefinitionsRegion.HisOutputTimeStep, expectedStructureTimeStepString);
         }
 
+        /// <summary>
+        /// GIVEN a WaterFlowModel1D
+        /// WHEN GenerateRestartOptionsValues is called with this model
+        /// THEN a correct Restart DelftIniCategory is generated. This correct category always contains all the 5 properties,
+        /// so this is independent of the userestart and writerestart settings.
+        /// </summary>
+        [Test]
+        [TestCase(true, true, TestName = "UseRestart and WriteRestart are true")]
+        [TestCase(false, false, TestName = "UseRestart and WriteRestart are false")]
+        [TestCase(true, false, TestName = "UseRestart is true and WriteRestart is false")]
+        [TestCase(false, true, TestName = "UseRestart is false and WriteRestart is true")]
+        public void GivenAWaterFlowModel1D_WhenGenerateRestartOptionsValuesIsCalledWithThisModel_ThenACorrectRestartDelftIniCategoryIsGenerated(bool useRestart, bool writeRestart)
+        {
+            // Given
+            // Relevant values
+            var saveStateStartTime = DateTime.Today;
+            var saveStateStopTime = saveStateStartTime.AddDays(2);
+            var saveStateTimeStep = TimeSpan.FromSeconds(3);
+            
+            // Set up the model with relevant values
+            var model = new WaterFlowModel1D("TestModel")
+            { 
+                UseRestart = useRestart,
+                WriteRestart = writeRestart,
+                SaveStateStartTime = saveStateStartTime,
+                SaveStateStopTime = saveStateStopTime,
+                SaveStateTimeStep = saveStateTimeStep,
+            };
+
+            // When
+            var result = Flow1DParameterCategoryGenerator.GenerateRestartOptionsValues(model);
+
+            // Then
+            Assert.That(result.Properties, Is.Not.Null, "Expected the returned DelftIniCategory.Properties not to be null.");
+            var properties = result.Properties.ToList();
+
+            Assert.That(properties.Count, Is.EqualTo(5), "Expected the [Time] DelftIniCategory to have a different number of properties:");
+
+            // Expected strings
+            var expectedRestartStartTimeString = saveStateStartTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+            var expectedRestartStopTimeString = saveStateStopTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+            var expectedRestartTimeStepString = ((int)(saveStateTimeStep.TotalSeconds)).ToString(CultureInfo.InvariantCulture);
+            var expectedUseRestart = useRestart ? "1" : "0";
+            var expectedWriteRestart = writeRestart ? "1" : "0";
+
+            // Verify expected properties
+            AssertThatCategoryContainsPropertyWithValue(properties, ModelDefinitionsRegion.RestartStartTime, expectedRestartStartTimeString);
+            AssertThatCategoryContainsPropertyWithValue(properties, ModelDefinitionsRegion.RestartStopTime, expectedRestartStopTimeString);
+            AssertThatCategoryContainsPropertyWithValue(properties, ModelDefinitionsRegion.RestartTimeStep, expectedRestartTimeStepString);
+            AssertThatCategoryContainsPropertyWithValue(properties, ModelDefinitionsRegion.UseRestart, expectedUseRestart);
+            AssertThatCategoryContainsPropertyWithValue(properties, ModelDefinitionsRegion.WriteRestart, expectedWriteRestart);
+        }
+
         private static void AssertThatCategoryContainsPropertyWithValue(IList<DelftIniProperty> properties, 
                                                                         ConfigurationSetting expectedProperty,
                                                                         string expectedValueString)
