@@ -315,4 +315,16 @@
   <data name="SpatialDataConverter_ConvertToSpatialData_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_" xml:space="preserve">
     <value>Unable to parse {0} property: {1}, Branch not found in Network.{2}</value>
   </data>
+  <data name="RetentionConverter_ConvertToRetention_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_" xml:space="preserve">
+    <value>Unable to parse {0} property: {1}, Branch not found in Network.{2}</value>
+  </data>
+  <data name="RetentionConverter_ValidateConvertedRetention_Retention_point_with_id__0__already_exists__there_cannot_be_any_duplicate_retention_ids__1_" xml:space="preserve">
+    <value>Retention point with id {0} already exists, there cannot be any duplicate retention ids.{1}</value>
+  </data>
+  <data name="RetentionFileReader_ReadRetention_While_reading_the_retention_from_file__an_error_occured" xml:space="preserve">
+    <value>While reading the retention from file, an error occured</value>
+  </data>
+  <data name="RetentionConverterTest_GivenARetentionDataModelWhichUsesUseTable_WhenConverting_ThenTheErrorReportIsProperlyFilled_UseTable_is_not_yet_implemented_in_the_RetentionFileReader__please_set_UseTable_to_0_to_continue_with_this_model_" xml:space="preserve">
+    <value>UseTable is not yet implemented in the RetentionFileReader, please set UseTable to 0 to continue with this model.</value>
+  </data>
 </root>

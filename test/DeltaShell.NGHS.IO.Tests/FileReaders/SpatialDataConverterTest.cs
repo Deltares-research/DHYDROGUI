@@ -23,7 +23,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         [SetUp]
         public void SetUp()
         {
-            originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAndMaasmondBranch();
+            originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch("node1", "node2", "Maasmond");
             channelsList = originalNetwork.Channels.ToList();
         }
 

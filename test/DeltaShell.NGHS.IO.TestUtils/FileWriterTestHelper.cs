@@ -15,71 +15,26 @@ namespace DeltaShell.NGHS.IO.TestUtils
         public const string RelativeTargetDirectory = "FileWriters";
         private static readonly string targetPath = Path.Combine(Environment.CurrentDirectory, RelativeTargetDirectory);
         public static readonly ModelFileNames ModelFileNames = new ModelFileNames(Path.Combine(targetPath, ModelFileNames.ModelDefinitionFilename));
-        
-        public static IHydroNetwork SetupSimpleHydroNetworkWith2NodesAnd1Branch()
+
+        /// <summary>
+        /// Setups a simple hydro network with 2 nodes and 1 branch.
+        /// </summary>
+        /// <param name="node1Name">Name of the node1.</param>
+        /// <param name="node2Name">Name of the node2.</param>
+        /// <param name="branchName">Name of the branch.</param>
+        /// <returns>Hydro Network</returns>
+        public static IHydroNetwork SetupSimpleHydroNetworkWith2NodesAnd1Branch(string node1Name, string node2Name, string branchName)
         {
             // specify your network here
             var network = new HydroNetwork();
 
             // add nodes and branches
-            IHydroNode node1 = new HydroNode {Name = "node1", LongName = string.Empty, Network = network};
-            IHydroNode node2 = new HydroNode {Name = "node2", LongName = string.Empty, Network = network};
+            IHydroNode node1 = new HydroNode {Name = node1Name, LongName = string.Empty, Network = network};
+            IHydroNode node2 = new HydroNode {Name = node2Name, LongName = string.Empty, Network = network};
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
 
-            var branch = new Channel("branch", node1, node2)
-            {
-                LongName = string.Empty,
-                OrderNumber = 0,
-                Geometry = new LineString(new[]
-                {
-                    new Coordinate(0, 0),
-                    new Coordinate(100, 0)
-                })
-            };
-
-            network.Branches.Add(branch);
-            return network;
-        }
-
-        public static IHydroNetwork SetupSimpleHydroNetworkWith2NodesAndChannel1Branch()
-        {
-            // specify your network here
-            var network = new HydroNetwork();
-
-            // add nodes and branches
-            IHydroNode node1 = new HydroNode { Name = "node1", LongName = string.Empty, Network = network };
-            IHydroNode node2 = new HydroNode { Name = "node2", LongName = string.Empty, Network = network };
-            network.Nodes.Add(node1);
-            network.Nodes.Add(node2);
-
-            var branch = new Channel("Channel1", node1, node2)
-            {
-                LongName = string.Empty,
-                OrderNumber = 0,
-                Geometry = new LineString(new[]
-                {
-                    new Coordinate(0, 0),
-                    new Coordinate(100, 0)
-                })
-            };
-
-            network.Branches.Add(branch);
-            return network;
-        }
-
-        public static IHydroNetwork SetupSimpleHydroNetworkWith2NodesAndMaasmondBranch()
-        {
-            // specify your network here
-            var network = new HydroNetwork();
-
-            // add nodes and branches
-            IHydroNode node1 = new HydroNode {Name = "node1", LongName = string.Empty, Network = network};
-            IHydroNode node2 = new HydroNode {Name = "node2", LongName = string.Empty, Network = network};
-            network.Nodes.Add(node1);
-            network.Nodes.Add(node2);
-
-            var branch = new Channel("Maasmond", node1, node2)
+            var branch = new Channel(branchName, node1, node2)
             {
                 LongName = string.Empty,
                 OrderNumber = 0,

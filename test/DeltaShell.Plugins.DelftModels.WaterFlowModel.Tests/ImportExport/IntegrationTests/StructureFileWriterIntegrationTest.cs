@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
         [SetUp]
         public void SetUp()
         {
-            network = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch();
+            network = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch("node1", "node2", "branch");
         }
 
         [TearDown]

@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileReaders.Retention;
+using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.NGHS.IO.TestUtils;
 using NUnit.Framework;
 
@@ -20,13 +21,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         [SetUp]
         public void SetUp()
         {
-            originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAndChannel1Branch();
+            originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch("node1", "node2", "Channel1");
             channelsList = originalNetwork.Channels.ToList();
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
         }
 
         [Test]
@@ -40,8 +36,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                     $"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
 
             var fileReader = new RetentionFileReader(CreateAndAddErrorReport);
-            var filePath =
-                TestHelper.GetTestFilePath(Path.Combine("FileReaders", "RetentionFileReader", "Retention.ini"));
+            var filePath = TestHelper.GetTestFilePath(Path.Combine("FileReaders", "RetentionFileReader", "Retention.ini"));
             var testFile = TestHelper.CreateLocalCopy(filePath);
 
             try
@@ -97,7 +92,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             {
                 fileReader.ReadRetention(testFile, channelsList);
                 var expectedMessage =
-                    $"While reading the retention from file, an error occured:{Environment.NewLine} Could not read file {testFile} properly, it seems empty";
+                    string.Concat(Resources.RetentionFileReader_ReadRetention_While_reading_the_retention_from_file__an_error_occured,
+                        ":",
+                        Environment.NewLine,
+                        $" Could not read file {testFile} properly, it seems empty");
 
                 Assert.AreEqual(expectedMessage, errorReport[0]);
             }

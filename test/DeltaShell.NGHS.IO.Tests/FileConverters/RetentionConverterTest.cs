@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileReaders.Retention;
 using DeltaShell.NGHS.IO.FileWriters.Retention;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.NGHS.IO.TestUtils;
 using NUnit.Framework;
 
@@ -19,18 +20,14 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
         [SetUp]
         public void SetUp()
         {
-            originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAndChannel1Branch();
+            originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch("node1", "node2", "Channel1");
             channelsList = originalNetwork.Channels.ToList();
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
         }
 
         [Test]
         public void GivenARetentionDataModel_WhenConverting_ThenAListOfRetentionsIsReturned()
         {
+            // Given
             var errorReport = new List<string>();
             var categories = new List<DelftIniCategory>();
 
@@ -50,8 +47,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
             categories.Add(category1);
             categories.Add(category2);
 
+            // When
             var retention = RetentionConverter.Convert(categories, channelsList, errorReport);
 
+            // Then
             Assert.AreEqual("Retention1", retention[0].Name);
             Assert.AreEqual("Channel1", retention[0].Branch.Name);
             Assert.AreEqual(800.0, retention[0].Chainage);
@@ -80,6 +79,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
             var categories = new List<DelftIniCategory>();
 
             var category1 = PopulateDelftIniCategory();
+            
             //Remove and re-add the property that we want to test.
             category1.RemoveProperty(category1.Properties.Single(p => p.Name == RetentionRegion.BranchId.Key));
             category1.AddProperty(RetentionRegion.BranchId.Key, "AllYourBranchAreBelongToUs");
@@ -90,8 +90,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
 
             Assert.That(errorReport.Count, Is.EqualTo(1));
             Assert.That(errorReport[0],
-                Is.EqualTo(
-                    $"Unable to parse {category1.Name} property: {RetentionRegion.BranchId.Key}, Branch not found in Network.{Environment.NewLine}"));
+                Is.EqualTo(string.Format(Resources.RetentionConverter_ConvertToRetention_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_, category1.Name,
+                        RetentionRegion.BranchId.Key, Environment.NewLine)));
         }
 
         [Test]
@@ -112,13 +112,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
 
             Assert.That(errorReport.Count, Is.EqualTo(1));
             Assert.That(errorReport[0],
-                Is.EqualTo(
-                    "UseTable is not yet implemented in the RetentionFileReader, please set UseTable to 0 to continue with this model."));
+                Is.EqualTo(Resources.RetentionConverterTest_GivenARetentionDataModelWhichUsesUseTable_WhenConverting_ThenTheErrorReportIsProperlyFilled_UseTable_is_not_yet_implemented_in_the_RetentionFileReader__please_set_UseTable_to_0_to_continue_with_this_model_));
         }
 
         [Test]
-        public void
-            GivenARetentionDataModelWithDuplicateRetentionIds_WhenConverting_ThenTheErrorReportIsProperlyFilled()
+        public void GivenARetentionDataModelWithDuplicateRetentionIds_WhenConverting_ThenTheErrorReportIsProperlyFilled()
         {
             var errorReport = new List<string>();
             var categories = new List<DelftIniCategory>();
@@ -132,8 +130,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
             RetentionConverter.Convert(categories, channelsList, errorReport);
 
             Assert.That(errorReport.Count, Is.EqualTo(1));
-            Assert.That(errorReport[0],
-                Is.EqualTo($"Retention point with id {category1.Properties[0].Value} already exists, there cannot be any duplicate retention ids.{Environment.NewLine}"));
+            Assert.That(errorReport[0], Is.EqualTo(string.Format(
+                Resources.RetentionConverter_ValidateConvertedRetention_Retention_point_with_id__0__already_exists__there_cannot_be_any_duplicate_retention_ids__1_,
+                category1.Properties[0].Value, Environment.NewLine)));
         }
 
         private static DelftIniCategory PopulateDelftIniCategory()

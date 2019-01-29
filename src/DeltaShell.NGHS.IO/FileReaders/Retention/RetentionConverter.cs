@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Retention;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.Properties;
 using log4net;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
@@ -13,8 +14,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Retention
 {
     public static class RetentionConverter
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(RetentionConverter));
-
         public static IList<IRetention> Convert(IEnumerable<DelftIniCategory> categories, IList<IChannel> channelsList,
             IList<string> errorMessages)
         {
@@ -45,18 +44,19 @@ namespace DeltaShell.NGHS.IO.FileReaders.Retention
             if (branch == null)
             {
                 var errorMessage =
-                    $"Unable to parse {category.Name} property: {RetentionRegion.BranchId.Key}, Branch not found in Network.{Environment.NewLine}";
+                    string.Format(Resources.RetentionConverter_ConvertToRetention_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_, category.Name,
+                        RetentionRegion.BranchId.Key, Environment.NewLine);
                 throw new Exception(errorMessage);
             }
             var chainage = category.ReadProperty<double>(RetentionRegion.Chainage.Key);
             var storageType = category.ReadProperty<RetentionType>(RetentionRegion.StorageType.Key);
             var useTableAsInt = category.ReadProperty<int>(RetentionRegion.UseTable.Key);
-            var useTable = System.Convert.ToBoolean(useTableAsInt);
-
+           
             var resultingChainage = chainage / branch.Length * branch.Geometry.Length;
-            var geometry = new Point(
-                LengthLocationMap.GetLocation(branch.Geometry, resultingChainage).GetCoordinate(branch.Geometry));
+            var coordinate = LengthLocationMap.GetLocation(branch.Geometry, resultingChainage).GetCoordinate(branch.Geometry);
+            var geometry = new Point(coordinate);
 
+            var useTable = System.Convert.ToBoolean(useTableAsInt);
             if (!useTable)
             {
                 var bedLevel = category.ReadProperty<double>(RetentionRegion.BedLevel.Key);
@@ -80,7 +80,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Retention
                 };
             }
 
-            const string useTableErrorMessage = "UseTable is not yet implemented in the RetentionFileReader, please set UseTable to 0 to continue with this model.";
+            var useTableErrorMessage = Resources.RetentionConverterTest_GivenARetentionDataModelWhichUsesUseTable_WhenConverting_ThenTheErrorReportIsProperlyFilled_UseTable_is_not_yet_implemented_in_the_RetentionFileReader__please_set_UseTable_to_0_to_continue_with_this_model_;
             throw new NotImplementedException(useTableErrorMessage);
         }
 
@@ -88,7 +88,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Retention
         {
             if (!readRetention.IsDuplicateIn(generatedRetention)) return;
             var errorMessage =
-                $"Retention point with id {readRetention.Name} already exists, there cannot be any duplicate retention ids.{Environment.NewLine}";
+                string.Format(
+                    Resources.RetentionConverter_ValidateConvertedRetention_Retention_point_with_id__0__already_exists__there_cannot_be_any_duplicate_retention_ids__1_,
+                    readRetention.Name, Environment.NewLine);
             throw new Exception(errorMessage);
         }
 

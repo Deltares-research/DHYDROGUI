@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.Properties;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Retention
 {
@@ -30,7 +31,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Retention
             var retention = RetentionConverter.Convert(categories, channelsList, errorMessages);
 
             if (errorMessages.Count > 0)
-                createAndAddErrorReport?.Invoke("While reading the retention from file, an error occured", errorMessages);
+                createAndAddErrorReport?.Invoke(Resources.RetentionFileReader_ReadRetention_While_reading_the_retention_from_file__an_error_occured, errorMessages);
 
             return retention;
         }

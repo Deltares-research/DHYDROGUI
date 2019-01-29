@@ -10,9 +10,8 @@
 
 namespace DeltaShell.NGHS.IO.Properties {
     using System;
-    using System.Diagnostics.CodeAnalysis;
-
-
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -30,7 +29,6 @@ namespace DeltaShell.NGHS.IO.Properties {
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        [ExcludeFromCodeCoverage]
         internal Resources() {
         }
         
@@ -52,7 +50,6 @@ namespace DeltaShell.NGHS.IO.Properties {
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
-        [ExcludeFromCodeCoverage]
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
         public static global::System.Globalization.CultureInfo Culture {
             get {
@@ -84,7 +81,6 @@ namespace DeltaShell.NGHS.IO.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t get the network ids.
         /// </summary>
-        [ExcludeFromCodeCoverage]
         public static string AGrid_Couldn_t_get_the_network_ids {
             get {
                 return ResourceManager.GetString("AGrid_Couldn_t_get_the_network_ids", resourceCulture);
@@ -94,7 +90,6 @@ namespace DeltaShell.NGHS.IO.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t get the number of networks.
         /// </summary>
-        [ExcludeFromCodeCoverage]
         public static string AGrid_Couldn_t_get_the_number_of_networks {
             get {
                 return ResourceManager.GetString("AGrid_Couldn_t_get_the_number_of_networks", resourceCulture);
@@ -113,7 +108,6 @@ namespace DeltaShell.NGHS.IO.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t get coordinate system code because of err nr : .
         /// </summary>
-        [ExcludeFromCodeCoverage]
         public static string AGrid_Initialize_Couldn_t_get_coordinate_system_code_because_of_err_nr___ {
             get {
                 return ResourceManager.GetString("AGrid_Initialize_Couldn_t_get_coordinate_system_code_because_of_err_nr___", resourceCulture);
@@ -137,11 +131,10 @@ namespace DeltaShell.NGHS.IO.Properties {
                 return ResourceManager.GetString("AGrid_ThrowIfError__because_of_error_number___0_", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Level: {0}. message = {1}.
         /// </summary>
-        [ExcludeFromCodeCoverage]
         public static string GridApi_Initialize_Level_0__Message_1_ {
             get {
                 return ResourceManager.GetString("GridApi_Initialize_Level_0__Message_1_", resourceCulture);
@@ -151,10 +144,50 @@ namespace DeltaShell.NGHS.IO.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Progress: {0:P2}. message = {1}.
         /// </summary>
-        [ExcludeFromCodeCoverage]
         public static string GridApi_Initialize_Progress_0_Message_1_ {
             get {
                 return ResourceManager.GetString("GridApi_Initialize_Progress_0_Message_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to parse {0} property: {1}, Branch not found in Network.{2}.
+        /// </summary>
+        public static string RetentionConverter_ConvertToRetention_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_ {
+            get {
+                return ResourceManager.GetString("RetentionConverter_ConvertToRetention_Unable_to_parse__0__property___1___Branch_n" +
+                        "ot_found_in_Network__2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retention point with id {0} already exists, there cannot be any duplicate retention ids.{1}.
+        /// </summary>
+        public static string RetentionConverter_ValidateConvertedRetention_Retention_point_with_id__0__already_exists__there_cannot_be_any_duplicate_retention_ids__1_ {
+            get {
+                return ResourceManager.GetString("RetentionConverter_ValidateConvertedRetention_Retention_point_with_id__0__already" +
+                        "_exists__there_cannot_be_any_duplicate_retention_ids__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UseTable is not yet implemented in the RetentionFileReader, please set UseTable to 0 to continue with this model..
+        /// </summary>
+        public static string RetentionConverterTest_GivenARetentionDataModelWhichUsesUseTable_WhenConverting_ThenTheErrorReportIsProperlyFilled_UseTable_is_not_yet_implemented_in_the_RetentionFileReader__please_set_UseTable_to_0_to_continue_with_this_model_ {
+            get {
+                return ResourceManager.GetString("RetentionConverterTest_GivenARetentionDataModelWhichUsesUseTable_WhenConverting_T" +
+                        "henTheErrorReportIsProperlyFilled_UseTable_is_not_yet_implemented_in_the_Retenti" +
+                        "onFileReader__please_set_UseTable_to_0_to_continue_with_this_model_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to While reading the retention from file, an error occured.
+        /// </summary>
+        public static string RetentionFileReader_ReadRetention_While_reading_the_retention_from_file__an_error_occured {
+            get {
+                return ResourceManager.GetString("RetentionFileReader_ReadRetention_While_reading_the_retention_from_file__an_error" +
+                        "_occured", resourceCulture);
             }
         }
         

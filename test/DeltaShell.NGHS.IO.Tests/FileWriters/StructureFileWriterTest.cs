@@ -19,7 +19,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
         [SetUp]
         public void SetUp()
         {
-            network = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch();
+            network = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch("node1", "node2", "branch");
         }
 
         [TearDown]

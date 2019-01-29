@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         [SetUp]
         public void SetUp()
         {
-            originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch();
+            originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch("node1", "node2", "branch");
             channels = originalNetwork.Channels.ToList();
             branch = channels.FirstOrDefault();
         }
