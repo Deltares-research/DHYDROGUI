@@ -6,7 +6,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Retention
 {
 /// <summary>
 /// This class serves as a DTO for the Retention properties.
-/// The class holds the properties of Retention during reading and sets the values when converting Retention. 
+/// The class serves as storage for the properties of Retention during reading and transfers the values when converting to a Retention. 
 /// </summary>
     public class RetentionPropertiesDTO
     {

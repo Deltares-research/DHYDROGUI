@@ -77,7 +77,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Retention
            var useTableErrorMessage = Resources
                .RetentionConverterTest_GivenARetentionDataModelWhichUsesUseTable_WhenConverting_ThenTheErrorReportIsProperlyFilled_UseTable_is_not_yet_implemented_in_the_RetentionFileReader__please_set_UseTable_to_0_to_continue_with_this_model_;
            throw new NotImplementedException(useTableErrorMessage);
-
         }
 
         private static void CalculateGeometry(RetentionPropertiesDTO retentionPropertiesDto)
