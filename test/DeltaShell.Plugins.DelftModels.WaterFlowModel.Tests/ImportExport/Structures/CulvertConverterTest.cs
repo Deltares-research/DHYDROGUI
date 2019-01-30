@@ -35,6 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var culvert = ConvertAndCheckForNull<CulvertConverter, Culvert>(category, branch);
 
             // Then
+            Assert.That(culvert.CulvertType, Is.EqualTo(CulvertType.Culvert));
             Assert.That(culvert.Name, Is.EqualTo(CulvertName));
             Assert.That(culvert.LongName, Is.EqualTo(CulvertLongName));
             Assert.That(culvert.Chainage, Is.EqualTo(ParseToDouble(ChainageAsString)));
@@ -62,6 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var culvert = ConvertAndCheckForNull<CulvertConverter, Culvert>(category, branch);
 
             // Then
+            Assert.That(culvert.CulvertType, Is.EqualTo(CulvertType.Culvert));
             Assert.That(culvert.FlowDirection, Is.EqualTo(expectedFlowDirection));
 
             mocks.VerifyAll();
@@ -82,6 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var culvert = ConvertAndCheckForNull<CulvertConverter, Culvert>(category, branch);
 
             // Then
+            Assert.That(culvert.CulvertType, Is.EqualTo(CulvertType.Culvert));
             Assert.That(culvert.IsGated, Is.EqualTo(expectedIsGatedValue));
 
             mocks.VerifyAll();
@@ -112,6 +115,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var culvert = ConvertAndCheckForNull<CulvertConverter, Culvert>(category, branch);
 
             // Then
+            Assert.That(culvert.CulvertType, Is.EqualTo(CulvertType.Culvert));
             Assert.That(culvert.InletLevel, Is.EqualTo(ParseToDouble(inletLevel)));
             Assert.That(culvert.OutletLevel, Is.EqualTo(ParseToDouble(outletLevel)));
             Assert.That(culvert.Length, Is.EqualTo(ParseToDouble(length)));
@@ -137,6 +141,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var culvert = ConvertAndCheckForNull<CulvertConverter, Culvert>(category, branch);
 
             // Then
+            Assert.That(culvert.CulvertType, Is.EqualTo(CulvertType.Culvert));
+
             var lossCoefficientFunction = culvert.GateOpeningLossCoefficientFunction;
             var argumentValues = lossCoefficientFunction.Arguments[0].Values;
             Assert.That(argumentValues.Count, Is.EqualTo(2));
@@ -163,6 +169,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var culvert = ConvertAndCheckForNull<CulvertConverter, Culvert>(category, branch);
 
             // Then
+            Assert.That(culvert.CulvertType, Is.EqualTo(CulvertType.Culvert));
+
             var lossCoefficientFunction = culvert.GateOpeningLossCoefficientFunction;
             var argumentValues = lossCoefficientFunction.Arguments[0].Values;
             Assert.That(argumentValues.Count, Is.EqualTo(0));
@@ -188,6 +196,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var culvert = ConvertAndCheckForNull<CulvertConverter, Culvert>(category, branch);
 
             // Then
+            Assert.That(culvert.CulvertType, Is.EqualTo(CulvertType.Culvert));
+
             var lossCoefficientFunction = culvert.GateOpeningLossCoefficientFunction;
             var argumentValues = lossCoefficientFunction.Arguments[0].Values;
             Assert.That(argumentValues.Count, Is.EqualTo(0));
@@ -216,6 +226,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var invertedSiphon = ConvertAndCheckForNull<InvertedSiphonConverter, Culvert>(category, branch);
 
             // Then
+            Assert.That(invertedSiphon.CulvertType, Is.EqualTo(CulvertType.InvertedSiphon));
             Assert.That(invertedSiphon.BendLossCoefficient, Is.EqualTo(ParseToDouble(bendLossCoefficient)));
 
             mocks.VerifyAll();
