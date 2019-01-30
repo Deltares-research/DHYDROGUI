@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -121,6 +121,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         public static string BoundaryNodeDataMapTool_AddToolStripMenuItems_Turn_selected_nodes_into_Q_t_ {
             get {
                 return ResourceManager.GetString("BoundaryNodeDataMapTool_AddToolStripMenuItems_Turn_selected_nodes_into_Q_t_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A {0} is found in the structure file (line {1}) and this type is not supported during an import. Therefore it is not imported in the GUI.
+        /// </summary>
+        public static string CompositeBranchStructureConverter_CreationOfStructuresAndCompositeBranchStructures_A__0__is_found_in_the_structure_file__line__1___and_this_type_is_not_supported_during_an_import_ {
+            get {
+                return ResourceManager.GetString("CompositeBranchStructureConverter_CreationOfStructuresAndCompositeBranchStructure" +
+                        "s_A__0__is_found_in_the_structure_file__line__1___and_this_type_is_not_supported" +
+                        "_during_an_import_", resourceCulture);
             }
         }
         

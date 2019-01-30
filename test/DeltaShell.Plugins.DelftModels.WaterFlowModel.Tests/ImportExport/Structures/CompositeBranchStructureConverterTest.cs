@@ -7,6 +7,7 @@ using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -113,13 +114,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             converter.Convert(categories, channels, errorMessages);
 
             //Then
-
             mocks.VerifyAll();
 
             Assert.AreEqual(1, errorMessages.Count);
-            Assert.AreEqual(
-                "A weir is found in the structure file (line 55) and this type is not supported during an import.Therefore it is not imported in the GUI",
-                errorMessages[0]);
+            var expectedMessage = 
+                string.Format(Resources.CompositeBranchStructureConverter_CreationOfStructuresAndCompositeBranchStructures_A__0__is_found_in_the_structure_file__line__1___and_this_type_is_not_supported_during_an_import_,
+                "weir", 55);
+            Assert.AreEqual(expectedMessage, errorMessages[0]);
         }
 
         [Test]
