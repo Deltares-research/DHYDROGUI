@@ -38,9 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var bridge = ConvertAndCheckForNull<BridgeConverter, Bridge>(category, branch);
 
             // Then
-            Assert.IsFalse(bridge.IsPillar);
-            Assert.That(bridge.GetStructureType(), Is.EqualTo(StructureType.Bridge));
-
+            IsBridge(bridge);
             Assert.That(bridge.Name, Is.EqualTo(BridgeName));
             Assert.That(bridge.LongName, Is.EqualTo(BridgeLongName));
             Assert.That(bridge.Chainage, Is.EqualTo(ParseToDouble(ChainageAsString)));
@@ -69,9 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var bridge = ConvertAndCheckForNull<BridgeConverter, Bridge>(category, branch);
 
             // Then
-            Assert.IsFalse(bridge.IsPillar);
-            Assert.That(bridge.GetStructureType(), Is.EqualTo(StructureType.Bridge));
-
+            IsBridge(bridge);
             Assert.That(bridge.FlowDirection, Is.EqualTo(FlowDirection.Both));
             Assert.That(bridge.BottomLevel, Is.EqualTo(ParseToDouble(bedLevel)));
         }
@@ -95,9 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var bridge = ConvertAndCheckForNull<BridgeConverter, Bridge>(category, branch);
 
             // Then
-            Assert.IsFalse(bridge.IsPillar);
-            Assert.That(bridge.GetStructureType(), Is.EqualTo(StructureType.Bridge));
-
+            IsBridge(bridge);
             Assert.That(bridge.CrossSectionDefinition.Name, Is.EqualTo(BridgeName));
             Assert.That(bridge.Length, Is.EqualTo(ParseToDouble(length)));
             Assert.That(bridge.InletLossCoefficient, Is.EqualTo(ParseToDouble(inletLossCoefficient)));
@@ -118,6 +112,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.AddProperty(StructureRegion.OutletLossCoeff.Key, "1.0");
 
             return category;
+        }
+
+        private static void IsBridge(IBridge bridge)
+        {
+            Assert.IsFalse(bridge.IsPillar);
+            Assert.That(bridge.GetStructureType(), Is.EqualTo(StructureType.Bridge));
         }
     }
 }
