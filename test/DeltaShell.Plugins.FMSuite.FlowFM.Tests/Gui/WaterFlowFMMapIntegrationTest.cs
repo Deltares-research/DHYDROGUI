@@ -35,7 +35,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Performance)]
+        [Category(TestCategory.VerySlow)]
         public void TestRunningSmallModelWithManyTimeSteps()
         {
             var mduPath = TestHelper.GetTestFilePath(@"smallModelWithManyTimeSteps\r01.mdu");
@@ -62,8 +63,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 app.Project.RootFolder.Add(model);
 
-                var sw = new Stopwatch();
-                sw.Start();
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
 
                 gui.Application.ActivityRunner.Enqueue(model);
 
@@ -72,8 +73,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Application.DoEvents();
                 }
 
-                sw.Stop();
-                Assert.Less(sw.ElapsedMilliseconds, 40000);
+                stopwatch.Stop();
+                Assert.Less(stopwatch.ElapsedMilliseconds, 40000);
                 Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned), "The model run did not finish successfully.");
             }
         }
