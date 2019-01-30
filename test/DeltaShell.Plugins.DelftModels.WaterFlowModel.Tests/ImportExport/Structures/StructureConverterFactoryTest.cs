@@ -21,6 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         [TestCase(StructureRegion.StructureTypeName.InvertedSiphon, typeof(InvertedSiphonConverter))]
         [TestCase(StructureRegion.StructureTypeName.Siphon, typeof(SiphonConverter))]
         [TestCase(StructureRegion.StructureTypeName.Bridge, typeof(BridgeConverter))]
+        [TestCase(StructureRegion.StructureTypeName.BridgePillar, typeof(BridgePillarConverter))]
         public void GivenAsType_WhenCreatingTheConverter_ThenTheCorrespondingConverterShouldBeCreated(string type, Type classConverter)
         {
             var converter = StructureConverterFactory.GetStructureConverter(type);
@@ -28,11 +29,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             Assert.That(converter.GetType(), Is.EqualTo(classConverter));
         }
 
-        // Not yet implemented, see issue SOBEK3-1569
         [Test]
-        [TestCase(StructureRegion.StructureTypeName.BridgePillar)]
         [TestCase("SomeName")]
-
         public void GivenANotSupportedStructureAsType_WhenCreatingTheConverter_ThenAnExtraResistanceConverterShouldBeCreated(string type)
         {
             var converter = StructureConverterFactory.GetStructureConverter(type);

@@ -33,6 +33,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                     return new SiphonConverter();
                 case StructureRegion.StructureTypeName.Bridge:
                     return new BridgeConverter();
+                case StructureRegion.StructureTypeName.BridgePillar:
+                    return new BridgePillarConverter();
                 default:
                     return null;
             }

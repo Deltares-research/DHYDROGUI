@@ -277,6 +277,7 @@
     <Compile Include="ImportExport\SobekToFMExporterTest.cs" />
     <Compile Include="ImportExport\Structures\AdvancedWeirConverterTest.cs" />
     <Compile Include="ImportExport\Structures\BridgeConverterTest.cs" />
+    <Compile Include="ImportExport\Structures\BridgePillarTest.cs" />
     <Compile Include="ImportExport\Structures\CompositeBranchStructureConverterTest.cs" />
     <Compile Include="ImportExport\Structures\BasicStructuresOperationsTest.cs" />
     <Compile Include="ImportExport\Structures\CulvertConverterTest.cs" />

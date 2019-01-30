@@ -17,16 +17,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             var bridge = structure as IBridge;
 
             SetCommonBridgeProperties(bridge, category);
-            SetStandardBridgeProperties(category, bridge);
+            SetStandardBridgeProperties(bridge, category);
         }
 
-        private static void SetCommonBridgeProperties(IBridge bridge, IDelftIniCategory category)
+        protected static void SetCommonBridgeProperties(IBridge bridge, IDelftIniCategory category)
         {
             bridge.BottomLevel = category.ReadProperty<double>(StructureRegion.BedLevel.Key);
             bridge.FlowDirection = (FlowDirection) category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
         }
 
-        private static void SetStandardBridgeProperties(IDelftIniCategory category, IBridge bridge)
+        private static void SetStandardBridgeProperties(IBridge bridge, IDelftIniCategory category)
         {
             bridge.Length = category.ReadProperty<double>(StructureRegion.Length.Key);
             bridge.InletLossCoefficient = category.ReadProperty<double>(StructureRegion.InletLossCoeff.Key);
