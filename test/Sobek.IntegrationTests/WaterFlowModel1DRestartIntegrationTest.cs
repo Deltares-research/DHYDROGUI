@@ -54,8 +54,6 @@ namespace Sobek.IntegrationTests
                     // run flow & write restart
                     flowModel.WriteRestart = true;
 
-                    var report = flowModel.Validate();
-
                     ActivityRunner.RunActivity(flowModel);
                     Assert.AreEqual(ActivityStatus.Cleaned, flowModel.Status);
 
