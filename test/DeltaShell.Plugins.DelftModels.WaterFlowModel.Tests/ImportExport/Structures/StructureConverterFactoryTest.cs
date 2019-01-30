@@ -29,7 +29,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
         // Not yet implemented, see issue SOBEK3-1569
         [Test]
-        [TestCase(StructureRegion.StructureTypeName.Gate)]
         [TestCase(StructureRegion.StructureTypeName.Bridge)]
         [TestCase(StructureRegion.StructureTypeName.BridgePillar)]
         [TestCase("SomeName")]
