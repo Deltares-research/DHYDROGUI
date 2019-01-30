@@ -213,7 +213,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         #region Inverted Siphon
 
         [Test]
-        public void GivenInvertedSiphonStructureIniCategoryWithBendLossCoefficient_WhenConvertingToStructure1D_ThenCulvertSpecificBendLossCoefficientIsReturned()
+        public void GivenInvertedSiphonStructureIniCategoryWithBendLossCoefficient_WhenConvertingToStructure1D_ThenCulvertWithSpecificBendLossCoefficientIsReturned()
         {
             // Given
             var bendLossCoefficient = "0.25";
@@ -228,6 +228,38 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             // Then
             Assert.That(invertedSiphon.CulvertType, Is.EqualTo(CulvertType.InvertedSiphon));
             Assert.That(invertedSiphon.BendLossCoefficient, Is.EqualTo(ParseToDouble(bendLossCoefficient)));
+
+            mocks.VerifyAll();
+        }
+
+        #endregion
+
+        #region Siphon
+
+        [Test]
+        public void GivenSiphonStructureIniCategoryWithSiphonLevels_WhenConvertingToStructure1D_ThenCulvertWithSpecificSiphonLevelsIsReturned()
+        {
+            // Given
+            var bendLossCoefficient = "0.25";
+            var siphonOnLevel = "1.0";
+            var siphonOffLevel = "2.0";
+
+            var category = GetStructureCategoryWithBasicProperties();
+            category.AddProperty(StructureRegion.BendLossCoef.Key, bendLossCoefficient);
+            category.AddProperty(StructureRegion.TurnOnLevel.Key, siphonOnLevel);
+            category.AddProperty(StructureRegion.TurnOffLevel.Key, siphonOffLevel);
+            category.SetProperty(StructureRegion.AllowedFlowDir.Key, "1"); // Set To FlowDirection.Positive, because negative flow is not allowed for siphons.
+
+            var branch = GetMockedBranch();
+
+            // When
+            var invertedSiphon = ConvertAndCheckForNull<SiphonConverter, Culvert>(category, branch);
+
+            // Then
+            Assert.That(invertedSiphon.CulvertType, Is.EqualTo(CulvertType.Siphon));
+            Assert.That(invertedSiphon.BendLossCoefficient, Is.EqualTo(ParseToDouble(bendLossCoefficient)));
+            Assert.That(invertedSiphon.SiphonOnLevel, Is.EqualTo(ParseToDouble(siphonOnLevel)));
+            Assert.That(invertedSiphon.SiphonOffLevel, Is.EqualTo(ParseToDouble(siphonOffLevel)));
 
             mocks.VerifyAll();
         }

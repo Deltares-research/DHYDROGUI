@@ -20,6 +20,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             var invertedSiphon = structure as Culvert;
 
             SetCommonCulvertProperties(invertedSiphon, category);
+            SetInvertedSiphonProperties(invertedSiphon, category);
+        }
+
+        protected static void SetInvertedSiphonProperties(ICulvert invertedSiphon, IDelftIniCategory category)
+        {
             invertedSiphon.BendLossCoefficient = category.ReadProperty<double>(StructureRegion.BendLossCoef.Key);
         }
     }

@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                 if (converter == null)
                 {
                     throw new Exception(string.Format(
-                        "A {0} is found in the structure file (line {1}) and this type is not supported during an import.Therefore it is not imported in the GUI",
+                        "A {0} is found in the structure file (line {1}) and this type is not supported during an import. Therefore it is not imported in the GUI",
                         type, structureBranchCategory.LineNumber));
                 }
 

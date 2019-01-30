@@ -220,6 +220,7 @@
     <Compile Include="ImportExport\Structures\PumpConverter.cs" />
     <Compile Include="ImportExport\Structures\RiverWeirConverter.cs" />
     <Compile Include="ImportExport\Structures\AStructureConverter.cs" />
+    <Compile Include="ImportExport\Structures\SiphonConverter.cs" />
     <Compile Include="ImportExport\Structures\StructureConverterFactory.cs" />
     <Compile Include="ImportExport\Structures\UniversalWeirConverter.cs" />
     <Compile Include="ImportExport\Structures\WeirConverter.cs" />
