@@ -21,6 +21,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             Network = mocks.DynamicMock<INetwork>();
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            mocks.VerifyAll();
+        }
+
         [Test]
         public void GivenBridgeStructureIniCategoryWithMatchingBranch_WhenConvertingToStructure1D_ThenBridgeWithCommonPropertyValuesIsReturned()
         {
@@ -41,8 +47,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             Assert.That(bridge.Geometry, Is.EqualTo(new Point(2, 0)));
             Assert.That(bridge.Branch, Is.EqualTo(branch));
             Assert.That(bridge.Network, Is.EqualTo(Network));
+        }
 
-            mocks.VerifyAll();
+        [TestCase("0", FlowDirection.Both)]
+        [TestCase("1", FlowDirection.Positive)]
+        [TestCase("2", FlowDirection.Negative)]
+        [TestCase("3", FlowDirection.None)]
+        public void GivenBridgeStructureIniCategoryWithCommonBridgeSpecificPropertyValues_WhenConvertingToStructure1D_ThenBridgeWithCommonBridgePropertyValuesIsReturned
+            (string allowedFlowDirValue, FlowDirection expectedFlowDirection)
+        {
+            // Given
+            var bedLevel = "3.0";
+
+            var category = GetStructureCategoryWithBasicProperties();
+            category.SetProperty(StructureRegion.AllowedFlowDir.Key, "0");
+            category.SetProperty(StructureRegion.BedLevel.Key, bedLevel);
+
+            var branch = GetMockedBranch();
+
+            // When
+            var bridge = ConvertAndCheckForNull<BridgeConverter, Bridge>(category, branch);
+
+            // Then
+            Assert.IsFalse(bridge.IsPillar);
+            Assert.That(bridge.GetStructureType(), Is.EqualTo(StructureType.Bridge));
+
+            Assert.That(bridge.FlowDirection, Is.EqualTo(FlowDirection.Both));
+            Assert.That(bridge.BottomLevel, Is.EqualTo(ParseToDouble(bedLevel)));
         }
 
         [Test]
@@ -71,8 +102,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             Assert.That(bridge.Length, Is.EqualTo(ParseToDouble(length)));
             Assert.That(bridge.InletLossCoefficient, Is.EqualTo(ParseToDouble(inletLossCoefficient)));
             Assert.That(bridge.OutletLossCoefficient, Is.EqualTo(ParseToDouble(outletLossCoefficient)));
-
-            mocks.VerifyAll();
         }
 
         private static IDelftIniCategory GetStructureCategoryWithBasicProperties()
@@ -81,6 +110,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.AddProperty(StructureRegion.Id.Key, BridgeName);
             category.AddProperty(StructureRegion.Name.Key, BridgeLongName);
             category.AddProperty(StructureRegion.Chainage.Key, ChainageAsString);
+            category.AddProperty(StructureRegion.AllowedFlowDir.Key, "0");
+            category.AddProperty(StructureRegion.BedLevel.Key, "0.0");
             category.AddProperty(StructureRegion.CsDefId.Key, BridgeName);
             category.AddProperty(StructureRegion.Length.Key, "1.0");
             category.AddProperty(StructureRegion.InletLossCoeff.Key, "1.0");
