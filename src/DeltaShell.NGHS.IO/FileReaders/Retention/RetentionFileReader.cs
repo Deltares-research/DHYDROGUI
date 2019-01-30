@@ -19,7 +19,13 @@ namespace DeltaShell.NGHS.IO.FileReaders.Retention
         {
             this.createAndAddErrorReport = createAndAddErrorReport;
         }
-
+        
+        /// <summary>
+        /// Reads the retention from file.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="channelsList">The channels list.</param>
+        /// <returns></returns>
         public IList<IRetention> ReadRetention(string filePath, IList<IChannel> channelsList)
         {
             var errorMessages = new List<string>();

@@ -8,6 +8,12 @@ namespace DeltaShell.NGHS.IO.FileReaders.Retention
 {
     public static class RetentionConverter
     {
+        /// <summary>
+        /// Converts the specified list of retention properties into Retention.
+        /// </summary>
+        /// <param name="retentionProperties">The retention properties.</param>
+        /// <param name="errorMessages">The error messages.</param>
+        /// <returns></returns>
         public static IList<IRetention> Convert(List<RetentionPropertiesDTO> retentionProperties, IList<string> errorMessages)
         {
             IList<IRetention> retention = new List<IRetention>();
