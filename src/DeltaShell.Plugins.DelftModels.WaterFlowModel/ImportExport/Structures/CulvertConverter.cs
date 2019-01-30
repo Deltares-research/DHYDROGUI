@@ -22,11 +22,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
         protected override void SetStructureProperties(IStructure1D structure, IDelftIniCategory category)
         {
-            var culvert = structure as Culvert;
+            var culvert = structure as ICulvert;
             SetCommonCulvertProperties(culvert, category);
         }
 
-        protected static void SetCommonCulvertProperties(Culvert culvert, IDelftIniCategory category)
+        protected static void SetCommonCulvertProperties(ICulvert culvert, IDelftIniCategory category)
         {
             culvert.FlowDirection = (FlowDirection) category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
             culvert.InletLevel = category.ReadProperty<double>(StructureRegion.LeftLevel.Key);

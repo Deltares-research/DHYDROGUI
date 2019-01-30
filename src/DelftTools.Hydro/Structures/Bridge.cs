@@ -358,8 +358,9 @@ namespace DelftTools.Hydro.Structures
 
         public override StructureType GetStructureType()
         {
-            if(IsPillar) return StructureType.BridgePillar;
-            else return StructureType.Bridge;
+            return IsPillar 
+                ? StructureType.BridgePillar 
+                : StructureType.Bridge;
         }
 
         private void UpdateCrossSectionDefinition(BridgeType type)

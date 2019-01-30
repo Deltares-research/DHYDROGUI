@@ -20,6 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         [TestCase(StructureRegion.StructureTypeName.Culvert, typeof(CulvertConverter))]
         [TestCase(StructureRegion.StructureTypeName.InvertedSiphon, typeof(InvertedSiphonConverter))]
         [TestCase(StructureRegion.StructureTypeName.Siphon, typeof(SiphonConverter))]
+        [TestCase(StructureRegion.StructureTypeName.Bridge, typeof(BridgeConverter))]
         public void GivenAsType_WhenCreatingTheConverter_ThenTheCorrespondingConverterShouldBeCreated(string type, Type classConverter)
         {
             var converter = StructureConverterFactory.GetStructureConverter(type);
@@ -29,7 +30,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
         // Not yet implemented, see issue SOBEK3-1569
         [Test]
-        [TestCase(StructureRegion.StructureTypeName.Bridge)]
         [TestCase(StructureRegion.StructureTypeName.BridgePillar)]
         [TestCase("SomeName")]
 
