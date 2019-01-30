@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileReaders.Retention;
-using DeltaShell.NGHS.IO.FileWriters.Retention;
-using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.NGHS.IO.TestUtils;
 using NUnit.Framework;
@@ -29,26 +27,29 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
         {
             // Given
             var errorReport = new List<string>();
-            var categories = new List<DelftIniCategory>();
+            var retentionProperties = new List<RetentionPropertiesDTO>();
 
-            var category1 = PopulateDelftIniCategory();
-            var category2 = new DelftIniCategory(RetentionRegion.Header);
+            var retentionProperty1 = GenerateDefaultRetentionPropertiesDto();
 
-            category2.AddProperty(RetentionRegion.Id.Key, "Retention2");
-            category2.AddProperty(RetentionRegion.BranchId.Key, "Channel1");
-            category2.AddProperty(RetentionRegion.Chainage.Key, 1500.0);
-            category2.AddProperty(RetentionRegion.StorageType.Key, "Reservoir");
-            category2.AddProperty(RetentionRegion.UseTable.Key, 0);
-            category2.AddProperty(RetentionRegion.BedLevel.Key, 3.0);
-            category2.AddProperty(RetentionRegion.Area.Key, 500000.0);
-            category2.AddProperty(RetentionRegion.StreetLevel.Key, 3.0);
-            category2.AddProperty(RetentionRegion.StreetStorageArea.Key, 500000.0);
+            var retentionProperty2 = new RetentionPropertiesDTO
+            {
+                Id = "Retention2",
+                BranchName = "Channel1",
+                Branch = channelsList.FirstOrDefault(c => c.Name == "Channel1"),
+                Chainage = 1500.0,
+                StorageType = RetentionType.Reservoir,
+                UseTable = false,
+                BedLevel = 3.0,
+                StorageArea = 500000.0,
+                StreetLevel = 3.0,
+                StreetStorageArea = 500000.0
+            };
 
-            categories.Add(category1);
-            categories.Add(category2);
+            retentionProperties.Add(retentionProperty1);
+            retentionProperties.Add(retentionProperty2);
 
             // When
-            var retention = RetentionConverter.Convert(categories, channelsList, errorReport);
+            var retention = RetentionConverter.Convert(retentionProperties, errorReport);
 
             // Then
             Assert.AreEqual("Retention1", retention[0].Name);
@@ -72,83 +73,42 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
             Assert.AreEqual(500000.0, retention[1].StreetStorageArea);
         }
 
-        [Test]
-        public void GivenARetentionDataModelWithANonExistingBranch_WhenConverting_ThenTheErrorReportIsProperlyFilled()
+        private RetentionPropertiesDTO GenerateDefaultRetentionPropertiesDto()
         {
-            var errorReport = new List<string>();
-            var categories = new List<DelftIniCategory>();
-
-            var category1 = PopulateDelftIniCategory();
-            
-            //Remove and re-add the property that we want to test.
-            category1.RemoveProperty(category1.Properties.Single(p => p.Name == RetentionRegion.BranchId.Key));
-            category1.AddProperty(RetentionRegion.BranchId.Key, "AllYourBranchAreBelongToUs");
-
-            categories.Add(category1);
-
-            RetentionConverter.Convert(categories, channelsList, errorReport);
-
-            Assert.That(errorReport.Count, Is.EqualTo(1));
-            Assert.That(errorReport[0],
-                Is.EqualTo(string.Format(Resources.RetentionConverter_ConvertToRetention_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_, category1.Name,
-                        RetentionRegion.BranchId.Key, Environment.NewLine)));
-        }
-
-        [Test]
-        public void GivenARetentionDataModelWhichUsesUseTable_WhenConverting_ThenTheErrorReportIsProperlyFilled()
-        {
-            var errorReport = new List<string>();
-            var categories = new List<DelftIniCategory>();
-
-            var category1 = PopulateDelftIniCategory();
-
-            //Remove and re-add the property that we want to test.
-            category1.RemoveProperty(category1.Properties.Single(p => p.Name == RetentionRegion.UseTable.Key));
-            category1.AddProperty(RetentionRegion.UseTable.Key, 1);
-
-            categories.Add(category1);
-
-            RetentionConverter.Convert(categories, channelsList, errorReport);
-
-            Assert.That(errorReport.Count, Is.EqualTo(1));
-            Assert.That(errorReport[0],
-                Is.EqualTo(Resources.RetentionConverterTest_GivenARetentionDataModelWhichUsesUseTable_WhenConverting_ThenTheErrorReportIsProperlyFilled_UseTable_is_not_yet_implemented_in_the_RetentionFileReader__please_set_UseTable_to_0_to_continue_with_this_model_));
+            var retentionProperty = new RetentionPropertiesDTO
+            {
+                Id = "Retention1",
+                BranchName = "Channel1",
+                Branch = channelsList.FirstOrDefault(c => c.Name == "Channel1"),
+                Chainage = 800.0,
+                StorageType = RetentionType.Reservoir,
+                UseTable = false,
+                BedLevel = 4.0,
+                StorageArea = 1000000.0,
+                StreetLevel = 4.0,
+                StreetStorageArea = 1000000.0
+            };
+            return retentionProperty;
         }
 
         [Test]
         public void GivenARetentionDataModelWithDuplicateRetentionIds_WhenConverting_ThenTheErrorReportIsProperlyFilled()
         {
             var errorReport = new List<string>();
-            var categories = new List<DelftIniCategory>();
+            var retentionProperties = new List<RetentionPropertiesDTO>();
 
-            var category1 = PopulateDelftIniCategory();
-            var category2 = PopulateDelftIniCategory();
+            var retentionProperty1 = GenerateDefaultRetentionPropertiesDto();
+            var retentionProperty2 = GenerateDefaultRetentionPropertiesDto();
 
-            categories.Add(category1);
-            categories.Add(category2);
+            retentionProperties.Add(retentionProperty1);
+            retentionProperties.Add(retentionProperty2);
 
-            RetentionConverter.Convert(categories, channelsList, errorReport);
+            RetentionConverter.Convert(retentionProperties, errorReport);
 
             Assert.That(errorReport.Count, Is.EqualTo(1));
             Assert.That(errorReport[0], Is.EqualTo(string.Format(
                 Resources.RetentionConverter_ValidateConvertedRetention_Retention_point_with_id__0__already_exists__there_cannot_be_any_duplicate_retention_ids__1_,
-                category1.Properties[0].Value, Environment.NewLine)));
-        }
-
-        private static DelftIniCategory PopulateDelftIniCategory()
-        {
-            var category = new DelftIniCategory(RetentionRegion.Header);
-
-            category.AddProperty(RetentionRegion.Id.Key, "Retention1");
-            category.AddProperty(RetentionRegion.BranchId.Key, "Channel1");
-            category.AddProperty(RetentionRegion.Chainage.Key, 800.0);
-            category.AddProperty(RetentionRegion.StorageType.Key, "Reservoir");
-            category.AddProperty(RetentionRegion.UseTable.Key, 0);
-            category.AddProperty(RetentionRegion.BedLevel.Key, 4.0);
-            category.AddProperty(RetentionRegion.Area.Key, 1000000.0);
-            category.AddProperty(RetentionRegion.StreetLevel.Key, 4.0);
-            category.AddProperty(RetentionRegion.StreetStorageArea.Key, 1000000.0);
-            return category;
+                retentionProperty1.Id, Environment.NewLine)));
         }
     }
 }

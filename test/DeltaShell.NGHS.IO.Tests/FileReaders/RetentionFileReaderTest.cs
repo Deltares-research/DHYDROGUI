@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileReaders.Retention;
+using DeltaShell.NGHS.IO.FileWriters.Retention;
 using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.NGHS.IO.TestUtils;
 using NUnit.Framework;
@@ -98,6 +99,59 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                         $" Could not read file {testFile} properly, it seems empty");
 
                 Assert.AreEqual(expectedMessage, errorReport[0]);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testFile);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenARetentionIniFileWithAnUnknownBranch_WhenReadingRetentionPointsFromFile_ThenAnErrorShouldBeCreated()
+        {
+            Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
+                new List<string>().Add(
+                    $"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
+
+            var fileReader = new RetentionFileReader(CreateAndAddErrorReport);
+            var filePath =
+                TestHelper.GetTestFilePath(Path.Combine("FileReaders", "RetentionFileReader", "RetentionUnknownBranch.ini"));
+            var testFile = TestHelper.CreateLocalCopy(filePath);
+
+            try
+            {
+                var expectedMessage = string.Format(
+                    Resources
+                        .RetentionConverter_ConvertToRetention_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_,
+                    testFile,
+                    RetentionRegion.BranchId.Key, Environment.NewLine);
+                Assert.Throws<Exception>(() => fileReader.ReadRetention(testFile, channelsList), expectedMessage);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testFile);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenARetentionIniFileWithUseTableSetToTrue_WhenReadingRetentionPointsFromFile_ThenAnErrorShouldBeCreated()
+        {
+            Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
+                new List<string>().Add(
+                    $"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
+
+            var fileReader = new RetentionFileReader(CreateAndAddErrorReport);
+            var filePath =
+                TestHelper.GetTestFilePath(Path.Combine("FileReaders", "RetentionFileReader", "RetentionUseTableTrue.ini"));
+            var testFile = TestHelper.CreateLocalCopy(filePath);
+
+            try
+            {
+                var expectedMessage = Resources
+                    .RetentionConverterTest_GivenARetentionDataModelWhichUsesUseTable_WhenConverting_ThenTheErrorReportIsProperlyFilled_UseTable_is_not_yet_implemented_in_the_RetentionFileReader__please_set_UseTable_to_0_to_continue_with_this_model_;
+                Assert.Throws<NotImplementedException>(() => fileReader.ReadRetention(testFile, channelsList), expectedMessage);
             }
             finally
             {
