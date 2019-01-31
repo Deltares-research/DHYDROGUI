@@ -6,7 +6,7 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    public class WeirConverter : StructureConverter
+    public class SimpleWeirConverter : StructureConverter
     {
         protected override IStructure1D CreateNewStructure()
         {
@@ -18,8 +18,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
         protected override void SetStructureProperties()
         {
-            var weir = Structure as Weir;
-            var weirFormula = weir.WeirFormula as SimpleWeirFormula;
+            if (!(Structure is IWeir weir)) return;
+            if (!(weir.WeirFormula is SimpleWeirFormula weirFormula)) return;
 
             weir.CrestLevel = Category.ReadProperty<double>(StructureRegion.CrestLevel.Key);
             weir.CrestWidth = Category.ReadProperty<double>(StructureRegion.CrestWidth.Key);

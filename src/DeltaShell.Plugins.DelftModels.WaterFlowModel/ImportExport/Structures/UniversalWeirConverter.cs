@@ -20,8 +20,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
         protected override void SetStructureProperties()
         {
-            var weir = Structure as Weir;
-            var weirFormula = weir.WeirFormula as FreeFormWeirFormula;
+            if (!(Structure is IWeir weir)) return;
+            if (!(weir.WeirFormula is FreeFormWeirFormula weirFormula)) return;
 
             weir.FlowDirection =
                 (FlowDirection)Category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);

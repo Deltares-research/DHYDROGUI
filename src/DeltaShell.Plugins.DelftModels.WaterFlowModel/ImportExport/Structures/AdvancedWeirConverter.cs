@@ -18,8 +18,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
         protected override void SetStructureProperties()
         {
-            var weir = Structure as Weir;
-            var weirFormula = weir.WeirFormula as PierWeirFormula;
+            if (!(Structure is IWeir weir)) return;
+            if (!(weir.WeirFormula is PierWeirFormula weirFormula)) return;
 
             weir.CrestLevel = Category.ReadProperty<double>(StructureRegion.CrestLevel.Key);
             weir.CrestWidth = Category.ReadProperty<double>(StructureRegion.CrestWidth.Key);
@@ -29,12 +29,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             weirFormula.UpstreamFacePos = Category.ReadProperty<double>(StructureRegion.PosHeight.Key);
             weirFormula.DesignHeadPos = Category.ReadProperty<double>(StructureRegion.PosDesignHead.Key);
             weirFormula.PierContractionPos = Category.ReadProperty<double>(StructureRegion.PosPierContractCoef.Key);
-            weirFormula.AbutmentContractionPos = Category.ReadProperty<double>(StructureRegion.PosAbutContractCoef.Key);
+            weirFormula.AbutmentContractionPos =
+                Category.ReadProperty<double>(StructureRegion.PosAbutContractCoef.Key);
 
             weirFormula.UpstreamFaceNeg = Category.ReadProperty<double>(StructureRegion.NegHeight.Key);
             weirFormula.DesignHeadNeg = Category.ReadProperty<double>(StructureRegion.NegDesignHead.Key);
             weirFormula.PierContractionNeg = Category.ReadProperty<double>(StructureRegion.NegPierContractCoef.Key);
-            weirFormula.AbutmentContractionNeg = Category.ReadProperty<double>(StructureRegion.NegAbutContractCoef.Key);
+            weirFormula.AbutmentContractionNeg =
+                Category.ReadProperty<double>(StructureRegion.NegAbutContractCoef.Key);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                 case StructureRegion.StructureTypeName.Pump:
                     return new PumpConverter();
                 case StructureRegion.StructureTypeName.Weir:
-                    return new WeirConverter();
+                    return new SimpleWeirConverter();
                 case StructureRegion.StructureTypeName.UniversalWeir:
                     return new UniversalWeirConverter();
                 case StructureRegion.StructureTypeName.RiverWeir:

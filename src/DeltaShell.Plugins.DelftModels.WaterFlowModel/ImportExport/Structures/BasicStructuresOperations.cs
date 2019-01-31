@@ -6,6 +6,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -17,10 +18,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
     {
         public static void SetCommonRegionElements(this IStructure1D structure, IDelftIniCategory structureBranchCategory, IBranch branch)
         {
+            if (structure == null || structureBranchCategory == null) throw new ArgumentException();
+
             if (branch == null)
             {
                 var errorMessage =
-                    string.Format("Unable to parse {0} property: {1}, Branch not found in Network.{2}",
+                    string.Format(Resources.BasicStructuresOperations_SetCommonRegionElements_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_,
                         structureBranchCategory.Name, StructureRegion.BranchId.Key, Environment.NewLine);
                 throw new Exception(errorMessage);
             }
@@ -30,8 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             var chainage = structureBranchCategory.ReadProperty<double>(StructureRegion.Chainage.Key);
 
             var resultingChainage = chainage / branch.Length * branch.Geometry.Length;
-            var geometry = new Point(
-                LengthLocationMap.GetLocation(branch.Geometry, resultingChainage).GetCoordinate(branch.Geometry));
+            var geometry = CalculateStructureGeometry(branch, resultingChainage);
 
             structure.Name = name;
             structure.Chainage = chainage;
@@ -41,6 +43,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             structure.LongName = longName;
         }
 
+        private static Point CalculateStructureGeometry(IBranch branch, double resultingChainage)
+        {
+            var location = LengthLocationMap.GetLocation(branch.Geometry, resultingChainage);
+            var geometry = new Point(location.GetCoordinate(branch.Geometry));
+            return geometry;
+        }
+
         /*If compound is 0 it means that there is only one structure at a certain location. 
         For users this means no composite structure, however in the code behind all structures (alone or groups) are placed in a composite structure.
         Therefore if 0 is given always a new composite structure should be created.
@@ -48,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
         the first time a composite structure should be created
         */
         public static ICompositeBranchStructure CreateCompositeBranchStructuresIfNeeded
-            (DelftIniCategory structureBranchCategory, IStructure1D structure, IList<ICompositeBranchStructure> compositeBranchStructures)
+            (IDelftIniCategory structureBranchCategory, IStructure1D structure, IList<ICompositeBranchStructure> compositeBranchStructures)
         {
             ICompositeBranchStructure compositeBranchStructure;
 

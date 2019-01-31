@@ -10,11 +10,10 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Structures
 {
     [TestFixture]
-    public class UniversalWeirConverterTest : StructureConverterTest
+    public class UniversalWeirConverterTest : StructureConverterTestBase
     {
         [Test]
-        public void
-            GivenAStructureBranchCategoryOfAnUniversalWeir_WhenConvertingToAnUniversalWeir_ThenAWeirOfThisTypeShouldBeCreated()
+        public void GivenAStructureBranchCategoryOfAnUniversalWeir_WhenConvertingToAnUniversalWeir_ThenAWeirOfThisTypeShouldBeCreated()
         {
             //Given
             var category = CreatePerfectUniversalWeirCategory();
@@ -23,6 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             //When
             var converter = new UniversalWeirConverter();
             var structure = (Weir) converter.ConvertToStructure1D(category, branch);
+            Assert.IsNotNull(structure);
             var weirFormula = structure.WeirFormula as FreeFormWeirFormula;
 
             //Then
@@ -43,8 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         [Test]
         [ExpectedException(typeof(Exception), ExpectedMessage =
             "For universal weir Weir1 the value for the crestlevel should be the same as the minimum value of the ZValues")]
-        public void
-            GivenAStructureBranchCategoryOfAnUniversalWeirWithErrorForCrestLevel_WhenConvertingToAnUniversalWeir_ThenAWeirOfThisTypeShouldNotBeCreated()
+        public void GivenAStructureBranchCategoryOfAnUniversalWeirWithErrorForCrestLevel_WhenConvertingToAnUniversalWeir_ThenAWeirOfThisTypeShouldNotBeCreated()
         {
             //Given
             var category = CreatePerfectUniversalWeirCategory();
@@ -59,8 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         [Test]
         [ExpectedException(typeof(Exception), ExpectedMessage =
             "There are more values for the Z coordinate for universal weir")]
-        public void
-            GivenAStructureBranchCategoryOfAnUniversalWeirWithMoreValuesForTheZCoordinate_WhenConvertingToAnUniversalWeir_ThenAWeirOfThisTypeShouldNotBeCreated()
+        public void GivenAStructureBranchCategoryOfAnUniversalWeirWithMoreValuesForTheZCoordinate_WhenConvertingToAnUniversalWeir_ThenAWeirOfThisTypeShouldNotBeCreated()
         {
             //Given
             var category = CreatePerfectUniversalWeirCategory();
@@ -75,8 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         [Test]
         [ExpectedException(typeof(Exception), ExpectedMessage =
             "There are more values for the Y coordinate for universal weir")]
-        public void
-            GivenAStructureBranchCategoryOfAnUniversalWeirWithMoreValuesForTheYCoordinate_WhenConvertingToAnUniversalWeir_ThenAWeirOfThisTypeShouldNotBeCreated()
+        public void GivenAStructureBranchCategoryOfAnUniversalWeirWithMoreValuesForTheYCoordinate_WhenConvertingToAnUniversalWeir_ThenAWeirOfThisTypeShouldNotBeCreated()
         {
             //Given
             var category = CreatePerfectUniversalWeirCategory();
@@ -91,8 +88,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         [Test]
         [ExpectedException(typeof(Exception), ExpectedMessage =
             "There are more YZ coordinates given than mentioned in the levelsCount parameter")]
-        public void
-            GivenAStructureBranchCategoryOfAnUniversalWeirWithErrorInLevelCount_WhenConvertingToAnUniversalWeir_ThenAWeirOfThisTypeShouldNotBeCreated()
+        public void GivenAStructureBranchCategoryOfAnUniversalWeirWithErrorInLevelCount_WhenConvertingToAnUniversalWeir_ThenAWeirOfThisTypeShouldNotBeCreated()
         {
             //Given
             var category = CreatePerfectUniversalWeirCategory();
@@ -111,8 +107,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         [TestCase("crestlevel")]
         [TestCase("dischargecoeff")]
         [TestCase("allowedflowdir")]
-        public void
-            GivenAStructureBranchCategoryOfAnUniversalWeirWithAMissingMandatoryParameter_WhenConvertingToAnUniversalWeir_ThenAnExceptionShouldBeThrown(
+        public void GivenAStructureBranchCategoryOfAnUniversalWeirWithAMissingMandatoryParameter_WhenConvertingToAnUniversalWeir_ThenAnExceptionShouldBeThrown(
                 string propertyName)
         {
             //Given

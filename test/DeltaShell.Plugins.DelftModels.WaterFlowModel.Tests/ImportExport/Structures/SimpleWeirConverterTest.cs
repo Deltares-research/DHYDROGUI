@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Structures
 {
     [TestFixture]
-    public class WeirConverterTest : StructureConverterTest
+    public class SimpleWeirConverterTest : StructureConverterTestBase
     {
         [Test]
         public void GivenAStructureBranchCategoryOfASimpleWeir_WhenConvertingToASimpleWeir_ThenAWeirOfThisTypeShouldBeCreated()
@@ -19,8 +19,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var branch = GetSimpleBranchWith2Nodes();
 
             //When
-            var converter = new WeirConverter();
+            var converter = new SimpleWeirConverter();
             var structure = (Weir)converter.ConvertToStructure1D(category, branch);
+            Assert.IsNotNull(structure);
             var weirFormula = structure.WeirFormula as SimpleWeirFormula;
 
             //Then
@@ -48,11 +49,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var branch = GetSimpleBranchWith2Nodes();
 
             //When
-            var converter = new WeirConverter();
+            var converter = new SimpleWeirConverter();
 
             Assert.That(() => converter.ConvertToStructure1D(category, branch), Throws
-                .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(string.Format(
-                    "Property {0} is not found in the file", propertyName)));
+                .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(
+                    $"Property {propertyName} is not found in the file"));
         }
 
         private DelftIniCategory CreatePerfectSimpleWeirCategory()

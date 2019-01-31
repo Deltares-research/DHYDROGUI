@@ -8,10 +8,12 @@ using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Structures
 {
@@ -21,6 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         private IHydroNetwork originalNetwork;
         private IList<IChannel> channels;
         private IBranch branch;
+        private MockRepository mocks;
 
         [SetUp]
         public void SetUp()
@@ -28,6 +31,39 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch("node1", "node2", "branch");
             channels = originalNetwork.Channels.ToList();
             branch = channels.FirstOrDefault();
+            mocks = new MockRepository();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            mocks.VerifyAll();
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void WhenSettingCommonRegionElementsWithNullStructure_ThenArgumentExceptionIsThrown()
+        {
+            var category = mocks.DynamicMock<IDelftIniCategory>();
+            var branch = mocks.DynamicMock<IBranch>();
+
+            mocks.ReplayAll();
+
+            // When/Then
+            BasicStructuresOperations.SetCommonRegionElements(null, category, branch);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void WhenSettingCommonRegionElementsWithNullDelftIniCategory_ThenArgumentExceptionIsThrown()
+        {
+            var structure = mocks.DynamicMock<IStructure1D>();
+            var branch = mocks.DynamicMock<IBranch>();
+
+            mocks.ReplayAll();
+
+            // When/Then
+            structure.SetCommonRegionElements(null, branch);
         }
 
         [Test]
@@ -42,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             };
             
             //When
-            BasicStructuresOperations.SetCommonRegionElements(weir, category, branch);
+            weir.SetCommonRegionElements(category, branch);
            
             //Then
             //calculating expected geometry
@@ -71,10 +107,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             };
 
             //When - Then
-            Assert.That(() => BasicStructuresOperations.SetCommonRegionElements(weir, category, null), 
-                Throws.TypeOf<Exception>().With.Message.EqualTo(string.Format(
-                    "Unable to parse {0} property: {1}, Branch not found in Network.{2}", category.Name,
-                    StructureRegion.BranchId.Key,Environment.NewLine)));
+            var expectedMessage = string.Format(
+                Resources.BasicStructuresOperations_SetCommonRegionElements_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_,
+                category.Name,
+                StructureRegion.BranchId.Key, Environment.NewLine);
+
+            Assert.That(() => weir.SetCommonRegionElements(category, null),
+                Throws.TypeOf<Exception>().With.Message.EqualTo(expectedMessage));
         }
 
         [Test]
@@ -93,9 +132,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             };
 
             //When - Then
-            Assert.That(() => BasicStructuresOperations.SetCommonRegionElements(weir, category, branch), Throws
-                .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(string.Format(
-                    "Property {0} is not found in the file", propertyName)));
+            Assert.That(() => weir.SetCommonRegionElements(category, branch), Throws
+                .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(
+                    $"Property {propertyName} is not found in the file"));
         }
 
         [Test]
@@ -111,7 +150,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
                 WeirFormula = new SimpleWeirFormula()
             };
 
-            BasicStructuresOperations.SetCommonRegionElements(weir, category, branch);
+            weir.SetCommonRegionElements(category, branch);
 
             Assert.AreEqual("Weir1", weir.Name);
             Assert.AreEqual("branch", weir.Branch.Name);
@@ -134,7 +173,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
                 WeirFormula = new SimpleWeirFormula(),
             };
 
-            BasicStructuresOperations.SetCommonRegionElements(structure, structureBranchCategory, branch);
+            structure.SetCommonRegionElements(structureBranchCategory, branch);
             
             //When
             var compositeBranchStructure = BasicStructuresOperations.CreateCompositeBranchStructuresIfNeeded(structureBranchCategory, structure,
@@ -153,22 +192,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             var structureBranchCategory = CreatePerfectCategory2();
 
-            var structure = new Weir()
+            var structure = new Weir
             {
                 WeirFormula = new SimpleWeirFormula(),
             };
 
-            BasicStructuresOperations.SetCommonRegionElements(structure, structureBranchCategory, branch);
+            structure.SetCommonRegionElements(structureBranchCategory, branch);
 
 
             var structureBranchCategory2 = CreatePerfectCategory2();
 
-            var structure2 = new Weir()
+            var structure2 = new Weir
             {
                 WeirFormula = new SimpleWeirFormula(),
             };
 
-            BasicStructuresOperations.SetCommonRegionElements(structure2, structureBranchCategory2, branch);
+            structure2.SetCommonRegionElements(structureBranchCategory2, branch);
             
             //When
             var compositeBranchStructure = BasicStructuresOperations.CreateCompositeBranchStructuresIfNeeded(structureBranchCategory, structure,

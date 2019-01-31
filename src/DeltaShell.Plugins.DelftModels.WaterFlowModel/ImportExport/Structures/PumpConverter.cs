@@ -19,18 +19,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
         protected override void SetStructureProperties()
         {
-            var pump = Structure as Pump;
+            if (!(Structure is Pump pump)) return;
 
             pump.Capacity = Category.ReadProperty<double>(StructureRegion.Capacity.Key);
-            SetSuctionAndDeliveryTriggerProperties(pump);
+            SetSuctionTriggerProperties(pump);
+            SetDeliveryTriggerProperties(pump);
             SetDirectionProperties(pump);
             SetReductionTableValues(pump);
         }
 
-        private static void SetSuctionAndDeliveryTriggerProperties(IPump pump)
+        private static void SetSuctionTriggerProperties(IPump pump)
         {
             pump.StartSuction = Category.ReadProperty<double>(StructureRegion.StartLevelSuctionSide.Key);
             pump.StopSuction = Category.ReadProperty<double>(StructureRegion.StopLevelSuctionSide.Key);
+        }
+
+        private static void SetDeliveryTriggerProperties(IPump pump)
+        {
             pump.StartDelivery = Category.ReadProperty<double>(StructureRegion.StartLevelDeliverySide.Key);
             pump.StopDelivery = Category.ReadProperty<double>(StructureRegion.StopLevelDeliverySide.Key);
         }

@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             Func<DelftIniCategory, IStructure1D, IList<ICompositeBranchStructure>, ICompositeBranchStructure>
                 getCompositeBranchStructureFunc)
         {
-            if (getTypeConverter != null) this.getTypeConverterFunc = getTypeConverter;
+            if (getTypeConverter != null) getTypeConverterFunc = getTypeConverter;
             else throw new ArgumentException("getTypeConverterFunc cannot be null.");
 
             if (getCompositeBranchStructureFunc != null)

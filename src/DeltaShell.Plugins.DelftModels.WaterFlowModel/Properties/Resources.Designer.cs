@@ -61,6 +61,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to parse {0} property: {1}, Branch not found in Network.{2}.
+        /// </summary>
+        public static string BasicStructuresOperations_SetCommonRegionElements_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_ {
+            get {
+                return ResourceManager.GetString("BasicStructuresOperations_SetCommonRegionElements_Unable_to_parse__0__property___" +
+                        "1___Branch_not_found_in_Network__2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Boundary {

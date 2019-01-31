@@ -278,11 +278,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
 
             IList<string> propertyNames = new List<string>();
             ((INotifyPropertyChange) crossSectionZwSectionsViewModel).PropertyChanged += (s, e) =>
-                                                                                             {
-                                                                                                 Assert.AreEqual(s,
-                                                                                                                 crossSectionZwSectionsViewModel);
-                                                                                                 propertyNames.Add(e.PropertyName);
-                                                                                             };
+            {
+                Assert.AreEqual(s,
+                    crossSectionZwSectionsViewModel);
+                propertyNames.Add(e.PropertyName);
+            };
 
             // When
             crossSectionZwSectionsViewModel.CrossSectionSectionTypes.RemoveAllWhere(s => s.Name == ZWSectionsViewModel.CrossSectionSectionName.Main.ToString());

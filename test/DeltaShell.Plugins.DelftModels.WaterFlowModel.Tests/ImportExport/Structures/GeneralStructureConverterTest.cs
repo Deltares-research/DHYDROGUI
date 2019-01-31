@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Structures
 {
     [TestFixture]
-    public class GeneralStructureConverterTest : StructureConverterTest
+    public class GeneralStructureConverterTest : StructureConverterTestBase
     {
         [Test]
         public void
@@ -127,8 +127,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var converter = new GeneralStructureConverter();
             
             Assert.That(() => converter.ConvertToStructure1D(category, branch), Throws
-                .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(string.Format(
-                    "Property {0} is not found in the file", propertyName)));
+                .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(
+                    $"Property {propertyName} is not found in the file"));
         }
     
 

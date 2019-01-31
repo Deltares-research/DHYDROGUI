@@ -5,7 +5,7 @@ using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Structures
 {
-    public class StructureConverterTest
+    public class StructureConverterTestBase
     {
         protected static IBranch GetSimpleBranchWith2Nodes()
         {

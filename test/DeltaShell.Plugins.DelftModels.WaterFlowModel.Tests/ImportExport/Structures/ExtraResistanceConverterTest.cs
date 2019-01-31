@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Structures
 {
     [TestFixture]
-    public class ExtraResistanceConverterTest : StructureConverterTest
+    public class ExtraResistanceConverterTest : StructureConverterTestBase
     {
         [Test]
         public void GivenAStructureBranchCategoryOfAnExtraResistance_WhenConvertingToAnExtraResistance_ThenAStructureOfThisTypeShouldBeCreated()
@@ -24,8 +24,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             
             //Then
             Assert.NotNull(structure);
-            Assert.AreEqual(new double[]{-2.000, 0.000, 3.400}, structure.FrictionTable.Arguments[0].Values);
-            Assert.AreEqual(new double[] { 0, 0, 2E-09 }, structure.FrictionTable.Components[0].Values);
+            Assert.AreEqual(new[]{-2.000, 0.000, 3.400}, structure.FrictionTable.Arguments[0].Values);
+            Assert.AreEqual(new[] { 0, 0, 2E-09 }, structure.FrictionTable.Components[0].Values);
         }
 
         [Test]
@@ -66,8 +66,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var converter = new ExtraResistanceConverter();
 
             Assert.That(() => converter.ConvertToStructure1D(category, branch), Throws
-                .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(string.Format(
-                    "Property {0} is not found in the file", propertyName)));
+                .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(
+                    $"Property {propertyName} is not found in the file"));
         }
 
         private DelftIniCategory CreatePerfectExtraResistanceCategory()

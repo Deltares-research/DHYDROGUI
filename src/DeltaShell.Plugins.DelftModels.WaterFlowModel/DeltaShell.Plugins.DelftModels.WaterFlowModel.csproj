@@ -225,7 +225,7 @@
     <Compile Include="ImportExport\Structures\SiphonConverter.cs" />
     <Compile Include="ImportExport\Structures\StructureConverterFactory.cs" />
     <Compile Include="ImportExport\Structures\UniversalWeirConverter.cs" />
-    <Compile Include="ImportExport\Structures\WeirConverter.cs" />
+    <Compile Include="ImportExport\Structures\SimpleWeirConverter.cs" />
     <Compile Include="ImportExport\Structures\StructuresFileReader.cs" />
     <Compile Include="ImportExport\Structures\BasicStructuresOperations.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DBoundaryFileWriter.cs" />

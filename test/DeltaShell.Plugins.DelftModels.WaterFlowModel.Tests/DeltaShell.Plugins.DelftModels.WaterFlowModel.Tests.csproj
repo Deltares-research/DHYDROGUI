@@ -287,11 +287,11 @@
     <Compile Include="ImportExport\Structures\PumpConverterTest.cs" />
     <Compile Include="ImportExport\Structures\RiverWeirConverterTest.cs" />
     <Compile Include="ImportExport\Structures\StructureConverterFactoryTest.cs" />
-    <Compile Include="ImportExport\Structures\StructureConverterTest.cs" />
+    <Compile Include="ImportExport\Structures\StructureConverterTestBase.cs" />
     <Compile Include="ImportExport\Structures\StructureConverterTestHelper.cs" />
     <Compile Include="ImportExport\Structures\StructuresFileReaderTest.cs" />
     <Compile Include="ImportExport\Structures\UniversalWeirConverterTest.cs" />
-    <Compile Include="ImportExport\Structures\WeirConverterTest.cs" />
+    <Compile Include="ImportExport\Structures\SimpleWeirConverterTest.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DFileImporterTest.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DFileReaderTest.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DImporterHelperTest.cs" />

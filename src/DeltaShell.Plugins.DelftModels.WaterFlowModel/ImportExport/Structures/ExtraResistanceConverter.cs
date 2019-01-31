@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
         protected override void SetStructureProperties()
         {
-            var extraResistance = Structure as ExtraResistance;
+            if (!(Structure is ExtraResistance extraResistance)) return;
 
             var numValues = Category.ReadProperty<int>(StructureRegion.NumValues.Key);
             var argumentsLevels = Category.ReadPropertiesToListOfType<double>(StructureRegion.Levels.Key);
@@ -23,7 +23,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
             if (numValues != argumentsLevels.Count || numValues != componentsKsi.Count)
             {
-                throw new Exception(string.Format("For extra resistance {0} the friction table contains an error", extraResistance.Name));
+                throw new Exception(string.Format("For extra resistance {0} the friction table contains an error",
+                    extraResistance.Name));
             }
 
             extraResistance.FrictionTable.Clear();

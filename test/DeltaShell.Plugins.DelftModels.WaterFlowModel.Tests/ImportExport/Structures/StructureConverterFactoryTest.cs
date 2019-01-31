@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
     public class StructureConverterFactoryTest
     {
         [Test]
-        [TestCase(StructureRegion.StructureTypeName.Weir, typeof(WeirConverter))]
+        [TestCase(StructureRegion.StructureTypeName.Weir, typeof(SimpleWeirConverter))]
         [TestCase(StructureRegion.StructureTypeName.UniversalWeir, typeof(UniversalWeirConverter))]
         [TestCase(StructureRegion.StructureTypeName.AdvancedWeir, typeof(AdvancedWeirConverter))]
         [TestCase(StructureRegion.StructureTypeName.GeneralStructure, typeof(GeneralStructureConverter))]
