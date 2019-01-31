@@ -9,8 +9,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
     /// <summary>
     /// This class is responsible for converting <see cref="IDelftIniCategory" /> objects into <see cref="Culvert" /> objects.
     /// </summary>
-    /// <seealso cref="AStructureConverter" />
-    public class CulvertConverter : AStructureConverter
+    /// <seealso cref="StructureConverter" />
+    public class CulvertConverter : StructureConverter
     {
         protected override IStructure1D CreateNewStructure()
         {
@@ -20,37 +20,39 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             };
         }
 
-        protected override void SetStructureProperties(IStructure1D structure, IDelftIniCategory category)
+        protected override void SetStructureProperties()
         {
-            var culvert = structure as ICulvert;
-            SetCommonCulvertProperties(culvert, category);
+            if (Structure is ICulvert culvert)
+            {
+                SetCommonCulvertProperties(culvert);
+            }
         }
 
-        protected static void SetCommonCulvertProperties(ICulvert culvert, IDelftIniCategory category)
+        protected static void SetCommonCulvertProperties(ICulvert culvert)
         {
-            culvert.FlowDirection = (FlowDirection) category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
-            culvert.InletLevel = category.ReadProperty<double>(StructureRegion.LeftLevel.Key);
-            culvert.OutletLevel = category.ReadProperty<double>(StructureRegion.RightLevel.Key);
+            culvert.FlowDirection = (FlowDirection) Category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
+            culvert.InletLevel = Category.ReadProperty<double>(StructureRegion.LeftLevel.Key);
+            culvert.OutletLevel = Category.ReadProperty<double>(StructureRegion.RightLevel.Key);
 
-            culvert.Length = category.ReadProperty<double>(StructureRegion.Length.Key);
-            culvert.InletLossCoefficient = category.ReadProperty<double>(StructureRegion.InletLossCoeff.Key);
-            culvert.OutletLossCoefficient = category.ReadProperty<double>(StructureRegion.OutletLossCoeff.Key);
-            culvert.GateInitialOpening = category.ReadProperty<double>(StructureRegion.IniValveOpen.Key);
+            culvert.Length = Category.ReadProperty<double>(StructureRegion.Length.Key);
+            culvert.InletLossCoefficient = Category.ReadProperty<double>(StructureRegion.InletLossCoeff.Key);
+            culvert.OutletLossCoefficient = Category.ReadProperty<double>(StructureRegion.OutletLossCoeff.Key);
+            culvert.GateInitialOpening = Category.ReadProperty<double>(StructureRegion.IniValveOpen.Key);
 
-            culvert.IsGated = Convert.ToBoolean(category.ReadProperty<int>(StructureRegion.ValveOnOff.Key));
+            culvert.IsGated = Convert.ToBoolean(Category.ReadProperty<int>(StructureRegion.ValveOnOff.Key));
 
-            SetGateOpeningLossCoefficientFunctionValues(culvert, category);
+            SetGateOpeningLossCoefficientFunctionValues(culvert);
         }
 
-        private static void SetGateOpeningLossCoefficientFunctionValues(ICulvert culvert, IDelftIniCategory category)
+        private static void SetGateOpeningLossCoefficientFunctionValues(ICulvert culvert)
         {
             try
             {
-                var numberOfFunctionEntries = category.ReadProperty<int>(StructureRegion.LossCoeffCount.Key);
+                var numberOfFunctionEntries = Category.ReadProperty<int>(StructureRegion.LossCoeffCount.Key);
                 if (numberOfFunctionEntries <= 0) return;
 
-                var relativeOpeningValues = TransformToDoubleArray(category.ReadProperty<string>(StructureRegion.RelativeOpening.Key));
-                var lossCoefficientValues = TransformToDoubleArray(category.ReadProperty<string>(StructureRegion.LossCoefficient.Key));
+                var relativeOpeningValues = TransformToDoubleArray(Category.ReadProperty<string>(StructureRegion.RelativeOpening.Key));
+                var lossCoefficientValues = TransformToDoubleArray(Category.ReadProperty<string>(StructureRegion.LossCoefficient.Key));
                 for (var i = 0; i < numberOfFunctionEntries; i++)
                 {
                     culvert.GateOpeningLossCoefficientFunction[relativeOpeningValues[i]] = lossCoefficientValues[i];

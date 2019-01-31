@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
     public static class BasicStructuresOperations
     {
-        public static void ReadCommonRegionElements(IDelftIniCategory structureBranchCategory, IBranch branch, IStructure1D structure)
+        public static void SetCommonRegionElements(this IStructure1D structure, IDelftIniCategory structureBranchCategory, IBranch branch)
         {
             if (branch == null)
             {

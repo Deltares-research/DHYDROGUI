@@ -15,19 +15,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             };
         }
 
-        protected override void SetStructureProperties(IStructure1D structure, IDelftIniCategory category)
+        protected override void SetStructureProperties()
         {
-            var siphon = structure as Culvert;
+            var siphon = Structure as Culvert;
 
-            SetCommonCulvertProperties(siphon, category);
-            SetInvertedSiphonProperties(siphon, category);
-            SetSiphonProperties(siphon, category);
+            SetCommonCulvertProperties(siphon);
+            SetInvertedSiphonProperties(siphon);
+            SetSiphonProperties(siphon);
         }
 
-        private static void SetSiphonProperties(ICulvert siphon, IDelftIniCategory category)
+        private static void SetSiphonProperties(ICulvert siphon)
         {
-            siphon.SiphonOnLevel = category.ReadProperty<double>(StructureRegion.TurnOnLevel.Key);
-            siphon.SiphonOffLevel = category.ReadProperty<double>(StructureRegion.TurnOffLevel.Key);
+            siphon.SiphonOnLevel = Category.ReadProperty<double>(StructureRegion.TurnOnLevel.Key);
+            siphon.SiphonOffLevel = Category.ReadProperty<double>(StructureRegion.TurnOffLevel.Key);
         }
     }
 }

@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             };
             
             //When
-            BasicStructuresOperations.ReadCommonRegionElements(category, branch, weir);
+            BasicStructuresOperations.SetCommonRegionElements(weir, category, branch);
            
             //Then
             //calculating expected geometry
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             };
 
             //When - Then
-            Assert.That(() => BasicStructuresOperations.ReadCommonRegionElements(category, null, weir), 
+            Assert.That(() => BasicStructuresOperations.SetCommonRegionElements(weir, category, null), 
                 Throws.TypeOf<Exception>().With.Message.EqualTo(string.Format(
                     "Unable to parse {0} property: {1}, Branch not found in Network.{2}", category.Name,
                     StructureRegion.BranchId.Key,Environment.NewLine)));
@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             };
 
             //When - Then
-            Assert.That(() => BasicStructuresOperations.ReadCommonRegionElements(category, branch, weir), Throws
+            Assert.That(() => BasicStructuresOperations.SetCommonRegionElements(weir, category, branch), Throws
                 .TypeOf<PropertyNotFoundInFileException>().With.Message.EqualTo(string.Format(
                     "Property {0} is not found in the file", propertyName)));
         }
@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
                 WeirFormula = new SimpleWeirFormula()
             };
 
-            BasicStructuresOperations.ReadCommonRegionElements(category, branch, weir);
+            BasicStructuresOperations.SetCommonRegionElements(weir, category, branch);
 
             Assert.AreEqual("Weir1", weir.Name);
             Assert.AreEqual("branch", weir.Branch.Name);
@@ -134,7 +134,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
                 WeirFormula = new SimpleWeirFormula(),
             };
 
-            BasicStructuresOperations.ReadCommonRegionElements(structureBranchCategory, branch, structure);
+            BasicStructuresOperations.SetCommonRegionElements(structure, structureBranchCategory, branch);
             
             //When
             var compositeBranchStructure = BasicStructuresOperations.CreateCompositeBranchStructuresIfNeeded(structureBranchCategory, structure,
@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
                 WeirFormula = new SimpleWeirFormula(),
             };
 
-            BasicStructuresOperations.ReadCommonRegionElements(structureBranchCategory, branch, structure);
+            BasicStructuresOperations.SetCommonRegionElements(structure, structureBranchCategory, branch);
 
 
             var structureBranchCategory2 = CreatePerfectCategory2();
@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
                 WeirFormula = new SimpleWeirFormula(),
             };
 
-            BasicStructuresOperations.ReadCommonRegionElements(structureBranchCategory2, branch, structure2);
+            BasicStructuresOperations.SetCommonRegionElements(structure2, structureBranchCategory2, branch);
             
             //When
             var compositeBranchStructure = BasicStructuresOperations.CreateCompositeBranchStructuresIfNeeded(structureBranchCategory, structure,

@@ -37,7 +37,5 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             
             Assert.IsNull(converter);
         }
-
-
     }
 }

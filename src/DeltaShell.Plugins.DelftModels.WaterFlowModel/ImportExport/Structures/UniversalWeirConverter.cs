@@ -8,7 +8,7 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    public class UniversalWeirConverter : AStructureConverter
+    public class UniversalWeirConverter : StructureConverter
     {
         protected override IStructure1D CreateNewStructure()
         {
@@ -18,16 +18,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             };
         }
 
-        protected override void SetStructureProperties(IStructure1D structure, IDelftIniCategory category)
+        protected override void SetStructureProperties()
         {
-            var weir = structure as Weir;
+            var weir = Structure as Weir;
             var weirFormula = weir.WeirFormula as FreeFormWeirFormula;
 
             weir.FlowDirection =
-                (FlowDirection)category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
-            var yValues = category.ReadPropertiesToListOfType<double>(StructureRegion.YValues.Key);
-            var zValues = category.ReadPropertiesToListOfType<double>(StructureRegion.ZValues.Key);
-            var crestLevel = category.ReadProperty<double>(StructureRegion.CrestLevel.Key);
+                (FlowDirection)Category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
+            var yValues = Category.ReadPropertiesToListOfType<double>(StructureRegion.YValues.Key);
+            var zValues = Category.ReadPropertiesToListOfType<double>(StructureRegion.ZValues.Key);
+            var crestLevel = Category.ReadProperty<double>(StructureRegion.CrestLevel.Key);
 
             if (crestLevel - zValues.Min() > double.Epsilon)
             {
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             }
 
             weirFormula.SetShape(yValues.ToArray(), zValues.ToArray());
-            var counterCheck = category.ReadProperty<int>(StructureRegion.LevelsCount.Key);
+            var counterCheck = Category.ReadProperty<int>(StructureRegion.LevelsCount.Key);
 
             if (counterCheck != weirFormula.Y.Count())
             {
@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             }
 
             weirFormula.DischargeCoefficient =
-                category.ReadProperty<double>(StructureRegion.DischargeCoeff.Key);
+                Category.ReadProperty<double>(StructureRegion.DischargeCoeff.Key);
         }
     }
 }

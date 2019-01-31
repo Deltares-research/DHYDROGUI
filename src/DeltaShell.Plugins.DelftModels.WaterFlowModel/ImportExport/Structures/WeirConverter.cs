@@ -6,7 +6,7 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    public class WeirConverter : AStructureConverter
+    public class WeirConverter : StructureConverter
     {
         protected override IStructure1D CreateNewStructure()
         {
@@ -16,21 +16,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             };
         }
 
-        protected override void SetStructureProperties(IStructure1D structure, IDelftIniCategory category)
+        protected override void SetStructureProperties()
         {
-            var weir = structure as Weir;
+            var weir = Structure as Weir;
             var weirFormula = weir.WeirFormula as SimpleWeirFormula;
 
-            weir.CrestLevel = category.ReadProperty<double>(StructureRegion.CrestLevel.Key);
-            weir.CrestWidth = category.ReadProperty<double>(StructureRegion.CrestWidth.Key);
+            weir.CrestLevel = Category.ReadProperty<double>(StructureRegion.CrestLevel.Key);
+            weir.CrestWidth = Category.ReadProperty<double>(StructureRegion.CrestWidth.Key);
 
             weirFormula.DischargeCoefficient =
-                category.ReadProperty<double>(StructureRegion.DischargeCoeff.Key);
+                Category.ReadProperty<double>(StructureRegion.DischargeCoeff.Key);
             weirFormula.LateralContraction =
-                category.ReadProperty<double>(StructureRegion.LatDisCoeff.Key);
+                Category.ReadProperty<double>(StructureRegion.LatDisCoeff.Key);
 
             weir.FlowDirection =
-                (FlowDirection)category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
+                (FlowDirection)Category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
         }
     }
 }

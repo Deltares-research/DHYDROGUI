@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         [Test]
         public void GivenSomeFactoryAndSomeCompositeBranchStructureConverter_WhenACompositeBranchStructureConverterIsConstructed_ThenNoExceptionIsThrown()
         {
-            Func<string, AStructureConverter> someFactory = a => null;
+            Func<string, StructureConverter> someFactory = a => null;
             Func<DelftIniCategory, IStructure1D, IList<ICompositeBranchStructure>, ICompositeBranchStructure> someCompositeBranchStructureConverter = (a, b,c) => null;
            
             Assert.That(new CompositeBranchStructureConverter(someFactory, someCompositeBranchStructureConverter), Is.Not.Null);
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         [ExpectedException(typeof(ArgumentException), ExpectedMessage = "getCompositeBranchStructureFunc cannot be null.")]
         public void GivenSomeFactoryAndANullCompositeBranchStructureConverter_WhenACompositeBranchStructureConverterIsConstructed_ThenAnArgumentExceptionIsThrown()
         {
-            Func<string, AStructureConverter> someFactory = a => null;
+            Func<string, StructureConverter> someFactory = a => null;
 
             var converter = new CompositeBranchStructureConverter(someFactory, null);
         }
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var category = CreatePerfectCategory();
             categories.Add(category);
 
-            var someFactoryMock = mocks.DynamicMock<Func<string, AStructureConverter>>();
+            var someFactoryMock = mocks.DynamicMock<Func<string, StructureConverter>>();
             someFactoryMock.Expect(e => e.Invoke("weir"))
                 .Return(null)
                 .Repeat.AtLeastOnce();

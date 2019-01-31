@@ -15,17 +15,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             };
         }
 
-        protected override void SetStructureProperties(IStructure1D structure, IDelftIniCategory category)
+        protected override void SetStructureProperties()
         {
-            var invertedSiphon = structure as Culvert;
+            var invertedSiphon = Structure as Culvert;
 
-            SetCommonCulvertProperties(invertedSiphon, category);
-            SetInvertedSiphonProperties(invertedSiphon, category);
+            SetCommonCulvertProperties(invertedSiphon);
+            SetInvertedSiphonProperties(invertedSiphon);
         }
 
-        protected static void SetInvertedSiphonProperties(ICulvert invertedSiphon, IDelftIniCategory category)
+        protected static void SetInvertedSiphonProperties(ICulvert invertedSiphon)
         {
-            invertedSiphon.BendLossCoefficient = category.ReadProperty<double>(StructureRegion.BendLossCoef.Key);
+            invertedSiphon.BendLossCoefficient = Category.ReadProperty<double>(StructureRegion.BendLossCoef.Key);
         }
     }
 }

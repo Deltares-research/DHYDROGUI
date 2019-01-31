@@ -6,20 +6,20 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    public class ExtraResistanceConverter : AStructureConverter
+    public class ExtraResistanceConverter : StructureConverter
     {
         protected override IStructure1D CreateNewStructure()
         {
             return new ExtraResistance();
         }
 
-        protected override void SetStructureProperties(IStructure1D structure, IDelftIniCategory category)
+        protected override void SetStructureProperties()
         {
-            var extraResistance = structure as ExtraResistance;
+            var extraResistance = Structure as ExtraResistance;
 
-            var numValues = category.ReadProperty<int>(StructureRegion.NumValues.Key);
-            var argumentsLevels = category.ReadPropertiesToListOfType<double>(StructureRegion.Levels.Key);
-            var componentsKsi = category.ReadPropertiesToListOfType<double>(StructureRegion.Ksi.Key);
+            var numValues = Category.ReadProperty<int>(StructureRegion.NumValues.Key);
+            var argumentsLevels = Category.ReadPropertiesToListOfType<double>(StructureRegion.Levels.Key);
+            var componentsKsi = Category.ReadPropertiesToListOfType<double>(StructureRegion.Ksi.Key);
 
             if (numValues != argumentsLevels.Count || numValues != componentsKsi.Count)
             {

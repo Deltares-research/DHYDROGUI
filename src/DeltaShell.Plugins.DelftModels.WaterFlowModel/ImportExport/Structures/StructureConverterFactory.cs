@@ -1,5 +1,4 @@
-﻿using DelftTools.Hydro;
-using DeltaShell.NGHS.IO.FileWriters.Structure;
+﻿using DeltaShell.NGHS.IO.FileWriters.Structure;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {

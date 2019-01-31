@@ -15,17 +15,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             };
         }
 
-        protected override void SetStructureProperties(IStructure1D structure, IDelftIniCategory category)
+        protected override void SetStructureProperties()
         {
-            var bridge = structure as IBridge;
-            SetCommonBridgeProperties(bridge, category);
-            SetBridgePillarProperties(bridge, category);
+            var bridge = Structure as IBridge;
+            SetCommonBridgeProperties(bridge);
+            SetBridgePillarProperties(bridge);
         }
 
-        private static void SetBridgePillarProperties(IBridge bridge, IDelftIniCategory category)
+        private static void SetBridgePillarProperties(IBridge bridge)
         {
-            bridge.PillarWidth = category.ReadProperty<double>(StructureRegion.PillarWidth.Key);
-            bridge.ShapeFactor = category.ReadProperty<double>(StructureRegion.FormFactor.Key);
+            bridge.PillarWidth = Category.ReadProperty<double>(StructureRegion.PillarWidth.Key);
+            bridge.ShapeFactor = Category.ReadProperty<double>(StructureRegion.FormFactor.Key);
         }
     }
 }

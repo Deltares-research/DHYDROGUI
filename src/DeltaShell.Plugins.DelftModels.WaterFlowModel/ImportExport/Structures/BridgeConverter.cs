@@ -5,32 +5,32 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    public class BridgeConverter : AStructureConverter
+    public class BridgeConverter : StructureConverter
     {
         protected override IStructure1D CreateNewStructure()
         {
             return new Bridge();
         }
 
-        protected override void SetStructureProperties(IStructure1D structure, IDelftIniCategory category)
+        protected override void SetStructureProperties()
         {
-            var bridge = structure as IBridge;
+            var bridge = Structure as IBridge;
 
-            SetCommonBridgeProperties(bridge, category);
-            SetStandardBridgeProperties(bridge, category);
+            SetCommonBridgeProperties(bridge);
+            SetStandardBridgeProperties(bridge);
         }
 
-        protected static void SetCommonBridgeProperties(IBridge bridge, IDelftIniCategory category)
+        protected static void SetCommonBridgeProperties(IBridge bridge)
         {
-            bridge.BottomLevel = category.ReadProperty<double>(StructureRegion.BedLevel.Key);
-            bridge.FlowDirection = (FlowDirection) category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
+            bridge.BottomLevel = Category.ReadProperty<double>(StructureRegion.BedLevel.Key);
+            bridge.FlowDirection = (FlowDirection) Category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
         }
 
-        private static void SetStandardBridgeProperties(IBridge bridge, IDelftIniCategory category)
+        private static void SetStandardBridgeProperties(IBridge bridge)
         {
-            bridge.Length = category.ReadProperty<double>(StructureRegion.Length.Key);
-            bridge.InletLossCoefficient = category.ReadProperty<double>(StructureRegion.InletLossCoeff.Key);
-            bridge.OutletLossCoefficient = category.ReadProperty<double>(StructureRegion.OutletLossCoeff.Key);
+            bridge.Length = Category.ReadProperty<double>(StructureRegion.Length.Key);
+            bridge.InletLossCoefficient = Category.ReadProperty<double>(StructureRegion.InletLossCoeff.Key);
+            bridge.OutletLossCoefficient = Category.ReadProperty<double>(StructureRegion.OutletLossCoeff.Key);
         }
     }
 }
