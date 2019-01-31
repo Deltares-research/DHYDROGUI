@@ -44,8 +44,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 hydroRegions.Add(sourceModel.Region);
             }
             // Move (overwrite) model itself to target HydroModel. 
-            var targetFlowModel =
-                targetHydroModel.Activities.FirstOrDefault(a => a.GetType().Implements(sourceModel.GetType()));
+            var targetFlowModel = targetHydroModel.Activities
+                                                  .FirstOrDefault(a => a.GetType().Implements(sourceModel.GetType()));
             if (targetFlowModel != null)
             {
                 targetHydroModel.Activities.Remove(targetFlowModel);
