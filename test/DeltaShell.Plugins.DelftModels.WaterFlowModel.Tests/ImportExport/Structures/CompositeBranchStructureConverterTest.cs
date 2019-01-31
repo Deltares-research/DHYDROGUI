@@ -47,7 +47,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         {
             Func<string, StructureConverter> someFactory = a => null;
 
-            new CompositeBranchStructureConverter(someFactory, null);
+            var converter = new CompositeBranchStructureConverter(someFactory, null);
+            Assert.IsNotNull(converter);
         }
 
         [Test]
@@ -56,7 +57,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         {
             Func<DelftIniCategory, IStructure1D, IList<ICompositeBranchStructure>, ICompositeBranchStructure> someCompositeBranchStructureConverter = (a, b, c) => null;
 
-            new CompositeBranchStructureConverter(null,someCompositeBranchStructureConverter);
+            var converter = new CompositeBranchStructureConverter(null,someCompositeBranchStructureConverter);
+            Assert.IsNotNull(converter);
         }
 
         [Test]
