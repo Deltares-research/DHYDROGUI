@@ -469,7 +469,7 @@
   <data name="ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header__0_" xml:space="preserve">
     <value>There is unrecognized data read from the md1d file with header {0}</value>
   </data>
-  <data name="ModelDefinitionFileReaderTest_GivenDataModelWithCategoryThatHasAnUnknownHeader_WhenSettingProperties_ThenLogMessageIsReturned_There_is_unrecognized_data_read_from_the_md1d_file_with_header__0___This_category_has_been_skipped_when_reading_" xml:space="preserve">
+  <data name="ModelDefinitionFileReaderTest_There_is_unrecognized_data_read_from_the_md1d_file_with_header__0___This_category_has_been_skipped_when_reading_" xml:space="preserve">
     <value>There is unrecognized data read from the md1d file with header {0}. This category has been skipped when reading.</value>
   </data>
   <data name="CompositeBranchStructureConverter_CreationOfStructuresAndCompositeBranchStructures_A__0__is_found_in_the_structure_file__line__1___and_this_type_is_not_supported_during_an_import_" xml:space="preserve">

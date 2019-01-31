@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;
 
-namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition {
-    public static class DelftIniPropertyValidation
+namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
+{
+    public static class DelftIniPropertyValidationLookup
     {
-        public static Dictionary<string, List<Tuple<string, bool, string>>> LookupTable =
+        /// <summary>
+        /// Lookup table including validation objects with default value reference used for DelftIniProperty validation.
+        /// <remarks>other validation objects to be configured here</remarks>
+        /// </summary>
+        public static readonly Dictionary<string, List<Tuple<string, bool, string>>> LookupTable =
             new Dictionary<string, List<Tuple<string, bool, string>>>
             {
                 {
@@ -18,8 +23,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                         new Tuple<string, bool, string>(ModelDefinitionsRegion.UseTemperature.Key, true, "0"),
                     }
                 },
-
-                // todo: other validation objects to be configured here : See Issue ....
             };
     }
 }

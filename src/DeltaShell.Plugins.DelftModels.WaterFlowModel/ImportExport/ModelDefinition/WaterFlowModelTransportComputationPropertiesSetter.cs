@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;
 

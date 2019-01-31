@@ -39,8 +39,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         {
             var timeSettingsCategory = new DelftIniCategory(ModelDefinitionsRegion.TransportComputationValuesHeader);
             timeSettingsCategory.AddProperty(ModelDefinitionsRegion.UseTemperature.Key, "1");
-            timeSettingsCategory.AddProperty(ModelDefinitionsRegion.Density.Key, "eckart");
-            timeSettingsCategory.AddProperty(ModelDefinitionsRegion.HeatTransferModel.Key, "Excess");
+            timeSettingsCategory.AddProperty(ModelDefinitionsRegion.Density.Key, DensityType.eckart.ToString());
+            timeSettingsCategory.AddProperty(ModelDefinitionsRegion.HeatTransferModel.Key, TemperatureModelType.Excess.ToString());
 
             return timeSettingsCategory;
         }

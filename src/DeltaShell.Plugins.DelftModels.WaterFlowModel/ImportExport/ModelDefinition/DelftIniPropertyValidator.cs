@@ -4,69 +4,78 @@ using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
 using Resources = DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties.Resources;
 
-namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition {
+namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
+{
     public static class DelftIniPropertyValidator
     {
-        private static List<DelftIniProperty> properties;
-        private static List<Tuple<string, bool, string>> defaultPropertyValues;
-        private static IList<string> errors;
-        public static string categoryHeader;
+        private static List<DelftIniProperty> Properties;
 
-        public static void ValidateProperties(DelftIniCategory category, IList<string> errorMessages)
+        private static readonly IList<string> Errors = new List<string>();
+
+        private static string CategoryHeader;
+
+        /// <summary>
+        /// List of default values extracted from <see cref="DelftIniPropertyValidationLookup"/> belonging to
+        /// a specific <see cref="DelftIniCategory"/> >
+        /// </summary>
+        private static List<Tuple<string, bool, string>> DefaultPropertyValues;
+
+        public static IList<string> ValidateProperty(this DelftIniCategory category)
         {
-            errors = errorMessages;
-            categoryHeader = category.Name;
-            properties = category.Properties.ToList();
+            CategoryHeader = category.Name;
+            Properties = category.Properties.ToList();
 
-            RestrictPropertyToCategory(category);
+            category.RestrictPropertyToCategory();
             GetDefaultValues();
             CheckIfRequired();
+
+            return Errors;
         }
 
         private static void GetDefaultValues()
         {
-            var values = DelftIniPropertyValidation.LookupTable.
-                         Where(t => t.Key.Equals(categoryHeader)).
+            var values = DelftIniPropertyValidationLookup.LookupTable.
+                         Where(t => t.Key.Equals(CategoryHeader)).
                          Select(t => t.Value).ToList(); 
 
-            defaultPropertyValues = new List<Tuple<string, bool, string>>();
-            values.ForEach(v => v.ForEach(pv => defaultPropertyValues.Add(pv)));
+            DefaultPropertyValues = new List<Tuple<string, bool, string>>();
+            values.ForEach(v => v.ForEach(pv => DefaultPropertyValues.Add(pv)));
         }
 
         private static void CheckIfRequired()
         {
-            foreach (var property in properties)
+            foreach (var property in Properties)
             {
-                var propertyIsRequired = defaultPropertyValues.Any(pv => pv.Item2 && pv.Item1 == property.Name);
+                var propertyIsRequired = DefaultPropertyValues.Any(pv => pv.Item2 && pv.Item1 == property.Name);
 
                 if (propertyIsRequired)
                 {
-                    CheckPropertyAvailability(property);
+                    property.CheckPropertyAvailability();
                 }
             }
         }
 
-        private static void RestrictPropertyToCategory(DelftIniCategory category)
+        private static void RestrictPropertyToCategory(this DelftIniCategory category)
         {
-            properties.ForEach(property => property.Id = category.Name);
+            Properties.ForEach(property => property.Id = category.Name);
         }
 
-        private static void CheckPropertyAvailability(DelftIniProperty property)
+        private static void CheckPropertyAvailability(this DelftIniProperty property)
         {
-            var propertyValueMatchesDefaultValue = defaultPropertyValues.Any(dpv => dpv.Item3.Equals(property.Value)); 
-            var propertyNameMatchesDefaultName =defaultPropertyValues.Where(pv => pv.Item1.Equals(property.Name)).ToList();
-            var defaultValues = propertyNameMatchesDefaultName.FirstOrDefault(pv => pv.Item2 && property.Id == categoryHeader);
+            var propertyValueMatchesDefaultValue = DefaultPropertyValues.Any(dpv => dpv.Item3.Equals(property.Value)); 
+            var propertyNameMatchesDefaultName =DefaultPropertyValues.Where(pv => pv.Item1.Equals(property.Name)).ToList();
+            var defaultValues = propertyNameMatchesDefaultName.FirstOrDefault(pv => pv.Item2 && property.Id == CategoryHeader);
 
             if (string.IsNullOrEmpty(property.Value))
             {
                 var errorMessage = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability__0__Property___1___on_line_number_is_missing____2___will_be_set_as_default, property.LineNumber, property.Name, defaultValues?.Item3);
-                errors.Add(errorMessage);
+                Errors.Add(errorMessage);
             }
 
             if (!propertyValueMatchesDefaultValue && !string.IsNullOrEmpty(property.Value))
             {
                 var errorMessage = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability__0__Property__1__on_line_number_is_invalid____2___will_be_set_as_default, property.LineNumber, property.Name, defaultValues?.Item3);
-                errors.Add(errorMessage);
+                Errors.Add(errorMessage);
             }
         }
     }

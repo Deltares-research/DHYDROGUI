@@ -194,7 +194,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             if (Path == null || !File.Exists(path))
             {
-                Log.InfoFormat("Please run the model", variable.Name, Path);
+                Log.WarnFormat("Unable to get variable values for function: {0}, path = {1}", variable.Name, Path);
                 var genericType = typeof(MultiDimensionalArray<>).MakeGenericType(variable.ValueType);
                 return (IMultiDimensionalArray) Activator.CreateInstance(genericType);
             }
