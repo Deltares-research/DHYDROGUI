@@ -216,6 +216,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void ValidateIntegratedModelFlowFMAndWaveBothModelsHaveTheSameTypeOfGrid()
         {

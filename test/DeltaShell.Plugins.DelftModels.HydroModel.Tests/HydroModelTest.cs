@@ -26,6 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void HydroModelAddsItsSelfToIHydroModelWorkFlow()
         {
@@ -46,7 +47,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void AddingRegionsCreatesChildDataItems()
         {
             var hydroModel = new HydroModel();
@@ -63,7 +65,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void RemovingModelBreaksLinks()
         {
             var childModel = new SimpleHydroModel();
@@ -190,7 +193,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        [Category(TestCategory.Slow)]
+        [Category(TestCategory.Integration)]
         public void GetCompositeWorkFlowDataForHydroModelWorkFlows()
         {
             var mocks = new MockRepository();

@@ -96,6 +96,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
         public void ImportModelWithLinkageNodesCheckUpdateDiscretization()
         {

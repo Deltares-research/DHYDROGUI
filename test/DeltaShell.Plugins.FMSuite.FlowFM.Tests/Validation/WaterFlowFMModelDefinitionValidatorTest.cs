@@ -27,6 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void DoNotValidateCalculationTimeStep()
         {

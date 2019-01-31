@@ -390,7 +390,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.VerySlow)]
         public void RunModelCheckIfStatisticsAreWrittenToDiaFile()
         {
             var mduPath =
@@ -418,20 +419,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Slow)]
-        public void CheckFileBasedStatesofFMModel()
+        public void WhenInstantiatingWaterFlowFMModelWithDefaultConstructor_ThenDefaultStateIsExpected()
         {
-            var model1 = new WaterFlowFMModel();
-            Assert.AreEqual("FlowFM", model1.Name);
-            Assert.AreEqual(null, model1.MduFilePath);
+            var fmModel = new WaterFlowFMModel();
+            Assert.That(fmModel.Name, Is.EqualTo("FlowFM"));
+            Assert.IsNull(fmModel.MduFilePath);
+        }
 
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
+        public void CheckFileBasedStatesOfFMModel()
+        {
             var mduPath =
                 TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            var model2 = new WaterFlowFMModel(mduPath);
-            Assert.AreEqual("bendprof", model2.Name);
-            Assert.AreEqual("bendprof.mdu", Path.GetFileName(model2.MduFilePath));
+            var fmModel = new WaterFlowFMModel(mduPath);
+            Assert.That(fmModel.Name, Is.EqualTo("bendprof"));
+            Assert.That(Path.GetFileName(fmModel.MduFilePath), Is.EqualTo("bendprof.mdu"));
         }
 
         [Test]
@@ -463,6 +469,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         [NUnit.Framework.Category(TestCategory.Slow)]
         public void TransformCoordinateSystemTest()
         {
@@ -471,8 +478,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
             var factory = Map.CoordinateSystemFactory;
-            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(localMduFilePath));
-            model.CoordinateSystem = factory.CreateFromEPSG(28992);
+            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(localMduFilePath))
+            {
+                CoordinateSystem = factory.CreateFromEPSG(28992)
+            };
 
             var newCoordinateSystem = factory.CreateFromEPSG(4326);
             var transformation = factory.CreateTransformation(model.CoordinateSystem, newCoordinateSystem);
@@ -1191,7 +1200,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.VerySlow)]
         public void GivenValidFmModel_WhenModelHasRun_ThenProgressTextHasBeenReset()
         {
             var originalDir = TestHelper.GetTestFilePath("flow1d2dLinks");
@@ -1303,7 +1313,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-       [NUnit.Framework.Category(TestCategory.VerySlow)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.VerySlow)]
         public void RunModelWithGeneralStructuresAcceptanceTest()
         {
             var filePath = TestHelper.GetTestFilePath(@"GeneralStructures\BasicModel\FlowFM.mdu");
@@ -1409,6 +1420,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         [NUnit.Framework.Category(TestCategory.VerySlow)]
         public void ResultsFromWeirGeneralStructuresShouldDifferFromSimpleWeirAcceptanceTest()
         {

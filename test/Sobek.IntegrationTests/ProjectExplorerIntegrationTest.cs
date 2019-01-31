@@ -106,6 +106,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void CustomNodePresentersShouldBeRegisteredOnCloseReopen_Tools8350()
         {

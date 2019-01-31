@@ -13,6 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Ribbon
     public class WaterQualityRibbonTest
     {
         [Test]
+        [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void GetCommandsInRibbonTest()
         {

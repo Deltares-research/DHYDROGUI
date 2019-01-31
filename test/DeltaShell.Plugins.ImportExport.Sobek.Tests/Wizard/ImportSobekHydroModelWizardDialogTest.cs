@@ -9,6 +9,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.Wizard
     public class ImportSobekHydroModelWizardDialogTest
     {
         [Test]
+        [Category(TestCategory.WindowsForms)]
         [Category(TestCategory.Slow)]
         public void Show()
         {

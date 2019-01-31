@@ -80,7 +80,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.Slow)]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.VerySlow)]
         public void ExportOutputCoverage()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");

@@ -11,11 +11,12 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 {
     [TestFixture]
-    [Category(TestCategory.Slow)]
     public class FMRstFileImporterTest
     {
         //test is available on model in root
         [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void FMRstFileImporterWorksOnModel()
         {
             using (var gui = new DeltaShellGui())
@@ -37,6 +38,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
         //test if available on model in integrated model
         [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void FMRstFileImporterWorksOnModelInIntegratedModel()
         {
             using (var gui = new DeltaShellGui())
@@ -61,6 +64,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         
         //test if restart file is copied
         [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.VerySlow)]
         public void FMRstFileImporterCopiedRestartFile()
         {
             using (var gui = new DeltaShellGui())

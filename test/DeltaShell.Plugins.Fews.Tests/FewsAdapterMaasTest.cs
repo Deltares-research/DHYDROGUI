@@ -28,6 +28,7 @@ namespace DeltaShell.Plugins.Fews.Tests
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
         [Category(TestCategory.BackwardCompatibility)]
         public void LoadMaasProjectShouldNotCrash()
@@ -51,6 +52,7 @@ namespace DeltaShell.Plugins.Fews.Tests
         [Ignore]  // all OpenDa, Fews and OpenMI tests are ignored
         [Category(TestCategory.VerySlow)]
         [Category(TestCategory.BackwardCompatibility)]
+        [Category(TestCategory.Integration)]
         public void ImportMaasProjectShouldNotCrash()
         {
             string testRunDir = "ImportMaas";

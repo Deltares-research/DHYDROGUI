@@ -1262,6 +1262,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void UpdateWriteOutputSnappedFeaturesWaterfallFromFileTest()
         {
