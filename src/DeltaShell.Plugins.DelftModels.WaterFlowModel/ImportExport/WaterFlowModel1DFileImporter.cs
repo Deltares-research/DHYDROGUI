@@ -30,13 +30,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         public bool CanImportOn(object targetObject)
         {
-            return targetObject is ICompositeActivity || targetObject is WaterFlowModel1D; ;
+            return targetObject is ICompositeActivity || targetObject is WaterFlowModel1D;
         }
 
         public bool CanImportOnRootLevel => true;
 
         public string FileFilter => "md1d|*.md1d";
 
+        [ExcludeFromCodeCoverage]
         public string TargetDataDirectory { get; set; }
         
         public bool ShouldCancel { get; set; }
