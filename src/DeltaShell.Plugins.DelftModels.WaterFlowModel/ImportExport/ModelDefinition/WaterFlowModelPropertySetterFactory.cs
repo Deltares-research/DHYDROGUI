@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
@@ -33,6 +33,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                     return new WaterFlowModelAdvancedOptionsSetter();
                 case ModelDefinitionsRegion.InitialConditionsValuesHeader:
                     return new WaterFlowModelInitialConditionsParameterSetter();
+                case ModelDefinitionsRegion.SedimentValuesHeader:
+                    return new WaterFlowModelSedimentOptionsSetter();
                 case ModelDefinitionsRegion.TemperatureValuesHeader:
                     return new WaterFlowModelTemperatureSetter();
                 case ModelDefinitionsRegion.MorphologyValuesHeader:

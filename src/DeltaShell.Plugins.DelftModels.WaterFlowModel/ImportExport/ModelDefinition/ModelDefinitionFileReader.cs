@@ -91,8 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         {
             return category.Name == GeneralRegion.IniHeader ||
                    category.Name == ModelDefinitionsRegion.FilesIniHeader ||
-                   category.Name == ModelDefinitionsRegion.SpecialsValuesHeader || // This needs to be removed as part of issue: SOBEK3-1618
-                   category.Name == ModelDefinitionsRegion.SedimentValuesHeader;   // This needs to be removed as part of issue: SOBEK3-1619
+                   category.Name == ModelDefinitionsRegion.SpecialsValuesHeader; // This needs to be removed as part of issue: SOBEK3-1618
         }
 
         private static void SetProperties(this WaterFlowModel1D model, IEnumerable<DelftIniCategory> modelSettingsCategories, IList<string> errorMessages)

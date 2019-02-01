@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -963,6 +963,42 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to D50.
+        /// </summary>
+        internal static string WaterFlowModel1DProperties_D50_Description {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DProperties_D50_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to D50.
+        /// </summary>
+        internal static string WaterFlowModel1DProperties_D50_DisplayName {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DProperties_D50_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to D90.
+        /// </summary>
+        internal static string WaterFlowModel1DProperties_D90_Description {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DProperties_D90_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to D90.
+        /// </summary>
+        internal static string WaterFlowModel1DProperties_D90_DisplayName {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DProperties_D90_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dalton number.
         /// </summary>
         internal static string WaterFlowModel1DProperties_DaltonNumber_Description {
@@ -1031,6 +1067,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         internal static string WaterFlowModel1DProperties_Density_DisplayName {
             get {
                 return ResourceManager.GetString("WaterFlowModel1DProperties_Density_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Depth used for sediment.
+        /// </summary>
+        internal static string WaterFlowModel1DProperties_DepthUsedForSediment_Description {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DProperties_DepthUsedForSediment_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Depth used for sediment.
+        /// </summary>
+        internal static string WaterFlowModel1DProperties_DepthUsedForSediment_DisplayName {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DProperties_DepthUsedForSediment_DisplayName", resourceCulture);
             }
         }
         
@@ -1215,7 +1269,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reference node.
+        ///   Looks up a localized string similar to Estuary mouth node id (must be a node that is connected to only one channel).
         /// </summary>
         internal static string WaterFlowModel1DProperties_SalinityNode_Description {
             get {
@@ -1224,7 +1278,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reference node.
+        ///   Looks up a localized string similar to Estuary mouth.
         /// </summary>
         internal static string WaterFlowModel1DProperties_SalinityNode_DisplayName {
             get {

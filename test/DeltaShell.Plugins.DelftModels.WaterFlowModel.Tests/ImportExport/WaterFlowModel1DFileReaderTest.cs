@@ -37,7 +37,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             Assert.IsNotNull(waterFlowModel1D);
         }
 
-        [Test]
+       [Test]
+       public void GivenAnMd1dFileWithSediment_WhenReadingTheAttachedNetworkDefinitionFile_ThenAModelIsReturned()
+       {
+           var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExportWithSediment.md1d");
+
+           var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
+           Assert.IsNotNull(waterFlowModel1D);
+       }
+
+       [Test]
         public void GivenAnMd1dFileWithReversedRoughnessSectionDefined_WhenReadingFlow1DModel_ThenModelUsesReversedRoughness()
         {
             var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExportWithReversedRoughnessSection.md1d");

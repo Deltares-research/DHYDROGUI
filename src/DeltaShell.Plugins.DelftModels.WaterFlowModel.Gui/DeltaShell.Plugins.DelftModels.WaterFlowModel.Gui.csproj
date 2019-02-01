@@ -71,6 +71,7 @@
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DProperties.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DRoughnessProperties.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DSalinityProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\WaterFlowModel1DSedimentProperties.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DTemperatureProperties.cs" />
     <Compile Include="Forms\RefreshMainSectionWidthsDialog.xaml.cs">
       <DependentUpon>RefreshMainSectionWidthsDialog.xaml</DependentUpon>

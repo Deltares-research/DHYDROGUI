@@ -143,6 +143,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             var defaultInitialDepthParameter = new Parameter<double>(WaterFlowModel1DDataSet.DefaultInitialDepthTag) { Value = 0 };
             AddDataItem(defaultInitialDepthParameter, DataItemRole.Input, WaterFlowModel1DDataSet.DefaultInitialDepthTag);
 
+            var d50Parameter = new Parameter<double>(WaterFlowModel1DDataSet.D50PathTag) { Value = 0.0005 };
+            AddDataItem(d50Parameter, DataItemRole.Input, WaterFlowModel1DDataSet.D50PathTag);
+
+            var d90Parameter = new Parameter<double>(WaterFlowModel1DDataSet.D90PathTag) { Value = 0.001 };
+            AddDataItem(d90Parameter, DataItemRole.Input, WaterFlowModel1DDataSet.D90PathTag);
+
+            var depthUsedForSedimentParameter = new Parameter<double>(WaterFlowModel1DDataSet.DepthUsedForSedimentPathTag) { Value = 0.3 };
+            AddDataItem(depthUsedForSedimentParameter, DataItemRole.Input, WaterFlowModel1DDataSet.DepthUsedForSedimentPathTag);
+
             var useSaltInCalculationParameter = new Parameter<bool>(WaterFlowModel1DDataSet.UseSaltInCalculationParameterTag) { Value = false };
             AddDataItem(useSaltInCalculationParameter, DataItemRole.Input, WaterFlowModel1DDataSet.UseSaltInCalculationParameterTag);
 
@@ -841,6 +850,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         public virtual double SurfaceArea { get; set; }
 
         public virtual double AtmosphericPressure { get; set; }
+        public virtual double D50 { get; set; }
+        public virtual double D90 { get; set; }
+        public virtual double DepthUsedForSediment { get; set; }
 
         public virtual double HeatCapacityWater { get; set; }
 

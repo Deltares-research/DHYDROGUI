@@ -202,6 +202,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
             get { return new WaterFlowModel1DMorphologyProperties(data); }
         }
 
+        [PropertyOrder(6)]
+        [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_ModelSettings")]
+        [DisplayName("Sediment properties")]
+        [Description("Sediment properties")]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public WaterFlowModel1DSedimentProperties Sediment
+        {
+            get { return new WaterFlowModel1DSedimentProperties(data); }
+        }
+
         [PropertyOrder(1)]
         [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_InitialConditions")]
         [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_InitialConditionsType_DisplayName")]

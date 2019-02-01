@@ -501,15 +501,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         /// <returns>A DelftIniCategory describing the <c>[Sediment]</c> header of the specified <paramref name="waterFlowModel1D"/></returns>
         public static DelftIniCategory GenerateSedimentValues(WaterFlowModel1D waterFlowModel1D)
         {
-            DelftIniCategory resultsGeneralValuesGroup = new DelftIniCategory(ModelDefinitionsRegion.SedimentValuesHeader);
-            
-            //TODO: Add D50 ???
+            DelftIniCategory sedimentValuesGroup = new DelftIniCategory(ModelDefinitionsRegion.SedimentValuesHeader);
 
-            //TODO: Add D90 ???
+            var d50 = waterFlowModel1D.D50;
+            sedimentValuesGroup.AddProperty(ModelDefinitionsRegion.D50.Key, d50, ModelDefinitionsRegion.D50.Description);
 
-            //TODO: Add DepthUsedForSediment ???
-            
-            return resultsGeneralValuesGroup;
+            var d90 = waterFlowModel1D.D90;
+            sedimentValuesGroup.AddProperty(ModelDefinitionsRegion.D90.Key, d90, ModelDefinitionsRegion.D90.Description);
+
+            var depthUsedForSediment = waterFlowModel1D.DepthUsedForSediment;
+            sedimentValuesGroup.AddProperty(ModelDefinitionsRegion.DepthUsedForSediment.Key, depthUsedForSediment, ModelDefinitionsRegion.DepthUsedForSediment.Description);
+
+            return sedimentValuesGroup;
         }
 
         /// <summary>

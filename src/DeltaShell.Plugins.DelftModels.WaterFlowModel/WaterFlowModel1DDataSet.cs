@@ -42,6 +42,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         public const string DefaultInitialDepthTag = "defaultinitialdepth";
         public const string DefaultInitialWaterLevelTag = "defaultinitialwaterlevel";
         public const string SedimentPathTag = "sedimentpath";
+        public const string D50PathTag = "D50 Path Tag";
+        public const string D90PathTag = "D90 Path Tag";
+        public const string DepthUsedForSedimentPathTag = "Depth Used For Sediment Path Tag";
         public const string InputMeteoDataTag = "Meteo data";
         public const string InputInitialTemperatureTag = "Initial temperature";
         public const string UseTemperatureParameterTag = "usetemperature";
