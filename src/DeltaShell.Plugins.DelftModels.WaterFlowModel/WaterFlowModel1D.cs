@@ -53,8 +53,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
     [Entity(FireOnCollectionChange=false)]
     public class WaterFlowModel1D : TimeDependentModelBase, IDisposable, ICloneable, IHydroModel, IDimrStateAwareModel, IHydFileModel, IModelMerge, IDimrModel
     {
-        #region Fields
-
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowModel1D));
         internal static readonly string SalinityFileName = "Salinity.ini";
         public static readonly string SobekLogfileDataItemTag = "SobekLog";
@@ -65,6 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// </summary>
         private WaterFlowModel1DOutputSettingData outputSettings;
         private IList<ModelApiParameter> parameterSettings;
+        public static string TemplateDataZipFile { get; private set; }
 
         private string workDirectory; // model engine work directory
         private string previousWorkDirectory;
@@ -77,20 +76,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         private List<ILateralSource> lateralSourcesMappingToModelApi;
         private List<IRetention> retentionMappingToModelApi;
         private List<IPump> pumpMappingToModelApi;
-
+        
         private bool useMorphology;
         private bool additionalMorphologyOutput;
 
         private readonly bool created;
         private InitialConditionsType initialConditionsType;
-        private const double Epsilon = 1e-3;
-
-        #endregion
-
-        #region Constructor
 
         public WaterFlowModel1D()
-         : this("Flow1D")
+            : this("Flow1D")
         {
         }
 
@@ -110,7 +104,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
             // init output settings
             outputSettings = new WaterFlowModel1DOutputSettingData();
-
+            
             ((INotifyPropertyChanged)outputSettings).PropertyChanged += OutputSettingsPropertyChanged;
 
             outputSettings.LocationWaterLevel = AggregationOptions.Current;
@@ -130,7 +124,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             AddBcmFileDataItem();
             AddSedimentFileDataItem();
             AddTraFileDataItem();
-
+            
             var useReverseRoughnessParameter = new Parameter<bool>(WaterFlowModel1DDataSet.UseReverseRoughnessParameterTag) { Value = false };
             AddDataItem(useReverseRoughnessParameter, DataItemRole.Input, WaterFlowModel1DDataSet.UseReverseRoughnessParameterTag);
 
@@ -183,18 +177,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             AddDensityTypeDataItem();
             AddTemperatureMeteoDataDataItem();
 
-            SurfaceArea = SurfaceAreaDefault;
-            AtmosphericPressure = AtmosphericPressureDefault;
-            DaltonNumber = DaltonNumberDefault;
-            StantonNumber = StantonNumberDefault;
-            HeatCapacityWater = HeatCapacityWaterDefault;
-            Latitude = LatitudeDefault;
-            Longitude = LongitudeDefault;
+            SurfaceArea = surfaceAreaDefault;
+            AtmosphericPressure = atmosphericPressureDefault;
+            DaltonNumber = daltonNumberDefault;
+            StantonNumber = stantonNumberDefault;
+            HeatCapacityWater = heatCapacityWaterDefault;
+            Latitude = latitudeDefault;
+            Longitude = longitudDefault;
 
-            var boundaryNodeDataItemSet = new DataItemSet(new EventedList<WaterFlowModel1DBoundaryNodeData>(), WaterFlowModel1DDataSet.BoundaryConditionsTag, DataItemRole.Input, true, WaterFlowModel1DDataSet.BoundaryConditionsTag, typeof(WaterFlowModel1DBoundaryNodeData))
-            {
-                ValueType = typeof(FeatureData<IFunction, INode>)
-            };
+           var boundaryNodeDataItemSet = new DataItemSet(new EventedList<WaterFlowModel1DBoundaryNodeData>(), WaterFlowModel1DDataSet.BoundaryConditionsTag, DataItemRole.Input, true, WaterFlowModel1DDataSet.BoundaryConditionsTag, typeof(WaterFlowModel1DBoundaryNodeData))
+                {
+                    ValueType = typeof(FeatureData<IFunction, INode>)
+                };
             dataItems.Add(boundaryNodeDataItemSet);
 
             var lateralSourceDataItemSet = new DataItemSet(new EventedList<WaterFlowModel1DLateralSourceData>(), WaterFlowModel1DDataSet.LateralSourcesDataTag, DataItemRole.Input, true, WaterFlowModel1DDataSet.LateralSourcesDataTag, typeof(WaterFlowModel1DLateralSourceData));
@@ -224,9 +218,91 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             created = true;
         }
 
-        #endregion
+        private void AddDispersionFormulationTypeDataItem()
+        {
+            var dispersionFormulationsTypeParameter = new Parameter<string>(WaterFlowModel1DDataSet.DispersionFormulationTypeTag)
+            {
+                Value = DispersionFormulationType.Constant.ToString()
+            };
+            AddDataItem(dispersionFormulationsTypeParameter, DataItemRole.Input, WaterFlowModel1DDataSet.DispersionFormulationTypeTag);
+        }
 
-        #region Properties
+        private void AddUseTemperatureParameterDataItem()
+        {
+            var useTemperatureParameter = new Parameter<bool>(WaterFlowModel1DDataSet.UseTemperatureParameterTag) { Value = false };
+            AddDataItem(useTemperatureParameter, DataItemRole.Input, WaterFlowModel1DDataSet.UseTemperatureParameterTag);
+        }
+
+        private void AddTemperatureModelTypeDataItem()
+        {
+            var temperatureModelTypeParameter = new Parameter<string>(WaterFlowModel1DDataSet.TemperatureModelTypeTag)
+            {
+                Value = TemperatureModelType.Transport.ToString()
+            };
+            AddDataItem(temperatureModelTypeParameter, DataItemRole.Input, WaterFlowModel1DDataSet.TemperatureModelTypeTag);
+        }
+
+        private void AddDensityTypeDataItem()
+        {
+            var densityTypeParameter = new Parameter<string>(WaterFlowModel1DDataSet.DensityTypeTag)
+            {
+                Value = DensityType.eckart_modified.ToString()
+            };
+            AddDataItem(densityTypeParameter, DataItemRole.Input, WaterFlowModel1DDataSet.DensityTypeTag);
+        }
+
+        private void AddTemperatureMeteoDataDataItem()
+        {
+            var meteo = new MeteoFunction(WaterFlowModel1DDataSet.InputMeteoDataTag);
+            AddDataItem(meteo, DataItemRole.Input, WaterFlowModel1DDataSet.InputMeteoDataTag);
+        }
+        
+        private void AddMorphologyFileDataItem()
+        {
+            var morphologyFile = new WaterFlowModel1DMorphologyFile() {Path = string.Empty };
+            AddDataItem(morphologyFile, DataItemRole.None, WaterFlowModel1DDataSet.MorphologyFileDataObjectTag);
+        }
+
+        private void AddBcmFileDataItem()
+        {
+            var bcmFile = new WaterFlowModel1DMorphologyFile() { Path = string.Empty };
+            AddDataItem(bcmFile, DataItemRole.None, WaterFlowModel1DDataSet.BcmFileDataObjectTag);
+        }
+
+        private void AddSedimentFileDataItem()
+        {
+            var sedimentFile = new WaterFlowModel1DMorphologyFile() { Path = string.Empty };
+            AddDataItem(sedimentFile, DataItemRole.None, WaterFlowModel1DDataSet.SedimentFileDataObjectTag);
+        }
+
+        private void AddTraFileDataItem()
+        {
+            var traFile = new WaterFlowModel1DMorphologyFile() { Path = string.Empty };
+            AddDataItem(traFile, DataItemRole.None, WaterFlowModel1DDataSet.TraFileDataObjectTag);
+        }
+
+        void WaterFlowModel1DPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // deal with undo/redo of linking..yes..I know
+            if (EditActionSettings.Disabled) //this makes sure this ONLY works DURING undo/redo
+            {
+                if ((e.PropertyName == "Value" || e.PropertyName == "LinkedTo") &&
+                    Equals(sender, GetDataItemByTag(WaterFlowModel1DDataSet.NetworkTag)))
+                {
+                    UnSubscribeFromNetwork();
+                    SubscribeToNetwork();
+                }
+            }
+        }
+
+        private void AddInflowsDataItem()
+        {
+            var inflows = new FeatureCoverage("Inflows");
+            inflows.Arguments.Add(new Variable<DateTime>()); //time variable
+            inflows.Arguments.Add(new Variable<IFeature> {IsAutoSorted = false}); //feature variable
+            inflows.Components.Add(new Variable<double>("Inflows", new Unit("Discharge", "m³/s"))); //component
+            AddDataItem(inflows, DataItemRole.Input, WaterFlowModel1DDataSet.InflowsTag);
+        }
 
         public override IEnumerable<IDataItem> AllDataItems
         {
@@ -239,18 +315,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
         }
 
-        public static string TemplateDataZipFile { get; private set; }
+        public override bool IsDataItemActive(IDataItem dataItem)
+        {
+            if (dataItem.Tag == WaterFlowModel1DDataSet.InputInitialConditionsTag || 
+                dataItem.Tag == WaterFlowModel1DDataSet.InputInitialFlowTag ||
+                dataItem.Tag == WaterFlowModel1DDataSet.InputInitialSaltConcentrationTag)
+            {
+                return !UseRestart;
+            }
+            return base.IsDataItemActive(dataItem);
+        }
+       
+        public virtual INetworkCoverage InitialFlow //Q(cell)
+        {
+            get { return GetNetworkCoverageByTag(WaterFlowModel1DDataSet.InputInitialFlowTag); }
+        }
 
-        public virtual INetworkCoverage InitialFlow => GetNetworkCoverageByTag(WaterFlowModel1DDataSet.InputInitialFlowTag); //Q(cell)
-
-        public virtual INetworkCoverage WindShielding => GetNetworkCoverageByTag(WaterFlowModel1DDataSet.WindShieldingTag);
+        public virtual INetworkCoverage WindShielding
+        {
+            get { return GetNetworkCoverageByTag(WaterFlowModel1DDataSet.WindShieldingTag); }
+        }
 
         public virtual INetworkCoverage InitialSaltConcentration
         {
             get
             {
                 var initialSaltDataItem = GetDataItemByTag(WaterFlowModel1DDataSet.InputInitialSaltConcentrationTag);
-                return (INetworkCoverage)initialSaltDataItem?.Value;
+                return (INetworkCoverage) initialSaltDataItem?.Value;
             }
         }
 
@@ -259,7 +350,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             get
             {
                 var initialTemperatureDataItem = GetDataItemByTag(WaterFlowModel1DDataSet.InputInitialTemperatureTag);
-                return (INetworkCoverage)initialTemperatureDataItem?.Value;
+                return (INetworkCoverage) initialTemperatureDataItem?.Value;
             }
         }
 
@@ -268,7 +359,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             get
             {
                 var dispersionDataItem = GetDataItemByTag(WaterFlowModel1DDataSet.InputDispersionCoverageTag);
-                return (INetworkCoverage)dispersionDataItem?.Value;
+                return (INetworkCoverage) dispersionDataItem?.Value;
             }
         }
 
@@ -277,7 +368,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             get
             {
                 var dispersionF3DataItem = GetDataItemByTag(WaterFlowModel1DDataSet.InputDispersionF3CoverageTag);
-                return (INetworkCoverage)dispersionF3DataItem?.Value;
+                return (INetworkCoverage) dispersionF3DataItem?.Value;
             }
         }
 
@@ -286,7 +377,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             get
             {
                 var dispersionF4DataItem = GetDataItemByTag(WaterFlowModel1DDataSet.InputDispersionF4CoverageTag);
-                return (INetworkCoverage)dispersionF4DataItem?.Value;
+                return (INetworkCoverage) dispersionF4DataItem?.Value;
             }
         }
 
@@ -294,49 +385,124 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// Can be depth or level based on the initial conditions type
         /// </summary>
         public virtual INetworkCoverage InitialConditions //D(cell)
-            => GetNetworkCoverageByTag(WaterFlowModel1DDataSet.InputInitialConditionsTag);
+        {
+            get { return GetNetworkCoverageByTag(WaterFlowModel1DDataSet.InputInitialConditionsTag); }
+        }
 
         /// <summary>
         /// Gets the roughness sections for this model
         /// </summary>
-        public virtual IEventedList<RoughnessSection> RoughnessSections => GetDataItemSetByTag(WaterFlowModel1DDataSet.RoughnessSectionsTag).AsEventedList<RoughnessSection>();
+        public virtual IEventedList<RoughnessSection> RoughnessSections
+        {
+            get { return GetDataItemSetByTag(WaterFlowModel1DDataSet.RoughnessSectionsTag).AsEventedList<RoughnessSection>(); }
+        }
 
         /// <summary>
         /// Gets the boundary conditions for this model
         /// </summary>
-        public virtual IEventedList<WaterFlowModel1DBoundaryNodeData> BoundaryConditions => GetDataItemSetByTag(WaterFlowModel1DDataSet.BoundaryConditionsTag).AsEventedList<WaterFlowModel1DBoundaryNodeData>();
-
+        public virtual IEventedList<WaterFlowModel1DBoundaryNodeData> BoundaryConditions
+        {
+            get { return GetDataItemSetByTag(WaterFlowModel1DDataSet.BoundaryConditionsTag).AsEventedList<WaterFlowModel1DBoundaryNodeData>(); }
+        }
+        
         /// <summary>
         /// Gets the boundary conditions data item set for this model
         /// </summary>
-        public virtual IDataItemSet BoundaryConditionsDataItemSet => GetDataItemSetByTag(WaterFlowModel1DDataSet.BoundaryConditionsTag);
+        public virtual IDataItemSet BoundaryConditionsDataItemSet
+        {
+            get { return GetDataItemSetByTag(WaterFlowModel1DDataSet.BoundaryConditionsTag); }
+        }
 
         /// <summary>
         /// Gets the lateral source data for this model
         /// </summary>
-        public virtual IEventedList<WaterFlowModel1DLateralSourceData> LateralSourceData => GetDataItemSetByTag(WaterFlowModel1DDataSet.LateralSourcesDataTag).AsEventedList<WaterFlowModel1DLateralSourceData>();
+        public virtual IEventedList<WaterFlowModel1DLateralSourceData> LateralSourceData
+        {
+            get { return GetDataItemSetByTag(WaterFlowModel1DDataSet.LateralSourcesDataTag).AsEventedList<WaterFlowModel1DLateralSourceData>(); }
+        }
 
         /// <summary>
         /// Gets the lateral sources data item set for this model
         /// </summary>
-        public virtual IDataItemSet LateralSourcesDataItemSet => GetDataItemSetByTag(WaterFlowModel1DDataSet.LateralSourcesDataTag);
+        public virtual IDataItemSet LateralSourcesDataItemSet
+        {
+            get { return GetDataItemSetByTag(WaterFlowModel1DDataSet.LateralSourcesDataTag); }
+        }
 
-        public virtual INetworkCoverage OutputFlow => (INetworkCoverage)RetrieveOutputFunctionByDataItemTag(WaterFlowModelParameterNames.BranchDischarge);
+        public virtual INetworkCoverage OutputFlow
+        {
+            get { return (INetworkCoverage)RetrieveOutputFunctionByDataItemTag(WaterFlowModelParameterNames.BranchDischarge); }
+        } 
 
-        public virtual INetworkCoverage OutputDepth => (INetworkCoverage)RetrieveOutputFunctionByDataItemTag(WaterFlowModelParameterNames.LocationWaterDepth);
+        public virtual INetworkCoverage OutputDepth
+        {
+            get { return (INetworkCoverage)RetrieveOutputFunctionByDataItemTag(WaterFlowModelParameterNames.LocationWaterDepth); }
+        }
 
-        public virtual INetworkCoverage OutputWaterLevel => (INetworkCoverage)RetrieveOutputFunctionByDataItemTag(WaterFlowModelParameterNames.LocationWaterLevel);
+        public virtual INetworkCoverage OutputWaterLevel
+        {
+            get { return (INetworkCoverage)RetrieveOutputFunctionByDataItemTag(WaterFlowModelParameterNames.LocationWaterLevel); }
+        }
 
-        public virtual INetworkCoverage OutputVelocity => (INetworkCoverage)RetrieveOutputFunctionByDataItemTag(WaterFlowModelParameterNames.BranchVelocity);
+        public virtual INetworkCoverage OutputVelocity
+        {
+            get { return (INetworkCoverage)RetrieveOutputFunctionByDataItemTag(WaterFlowModelParameterNames.BranchVelocity); }
+        }
 
         [NoNotifyPropertyChange]
-        public virtual IFeatureCoverage Inflows => (IFeatureCoverage)GetDataItemValueByTag(WaterFlowModel1DDataSet.InflowsTag);
+        public virtual IFeatureCoverage Inflows
+        {
+            get { return (IFeatureCoverage)GetDataItemValueByTag(WaterFlowModel1DDataSet.InflowsTag); }
+        }
 
         [NoNotifyPropertyChange]
         public virtual IDiscretization NetworkDiscretization
         {
             get { return (IDiscretization)GetDataItemValueByTag(WaterFlowModel1DDataSet.NetworkDiscretizationTag); }
             set { GetDataItemByTag(WaterFlowModel1DDataSet.NetworkDiscretizationTag).Value = value; }
+        }
+
+        private const double Epsilon = 1e-3;
+
+        public static IDiscretization CreateEnergyHeadDiscretization(IDiscretization discretization)
+        {
+            var locations = new List<INetworkLocation>();
+            var network = discretization.Network;
+            INetworkLocation previousLocation = null;
+            foreach (var location in discretization.Locations.Values)
+            {
+                var branch = location.Branch;
+                var chainage = location.Chainage;
+                if (previousLocation != null && Equals(previousLocation.Branch, branch))
+                {
+                    locations.Add(new NetworkLocation(branch, 0.5*(previousLocation.Chainage + chainage))
+                        {
+                            Network = network
+                        });
+                }
+                if (branch == null || Math.Abs(chainage) < double.Epsilon || Math.Abs(chainage - branch.Length) < double.Epsilon)
+                {
+                    locations.Add((INetworkLocation)location.Clone());
+                }
+                else
+                {
+                    locations.Add(new NetworkLocation(branch, chainage - Epsilon)
+                        {
+                            Network = network,
+                            Name = location.Name + "-"
+                        });
+                    locations.Add(new NetworkLocation(branch, chainage + Epsilon)
+                        {
+                            Network = network,
+                            Name = location.Name + "+"
+                        });
+                }
+                previousLocation = location;
+            }
+
+            var result = new Discretization();
+            result.Locations.AddValues(locations);
+            return result;
         }
 
         [NoNotifyPropertyChange]
@@ -360,9 +526,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 RefreshNetworkRelatedData();
             }
         }
-        public virtual WindFunction Wind => (WindFunction)GetDataItemValueByTag(WaterFlowModel1DDataSet.InputWindTag);
-
-        public virtual MeteoFunction MeteoData => (MeteoFunction)GetDataItemValueByTag(WaterFlowModel1DDataSet.InputMeteoDataTag);
+        public virtual WindFunction Wind
+        {
+            get { return (WindFunction)GetDataItemValueByTag(WaterFlowModel1DDataSet.InputWindTag); }
+        }
+        
+        public virtual MeteoFunction MeteoData
+        {
+            get { return (MeteoFunction)GetDataItemValueByTag(WaterFlowModel1DDataSet.InputMeteoDataTag); }
+        }
 
         public virtual IEnumerable<IFunction> OutputFunctions
         {
@@ -390,6 +562,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
         }
 
+        private void AfterUseReverseRoughnessInCalculationSet(bool value)
+        {
+            RoughnessSections.OfType<ReverseRoughnessSection>().ForEach(rrs => rrs.UseNormalRoughness = !value);
+        }
+
         [NoNotifyPropertyChange]
         public virtual bool UseReverseRoughness
         {
@@ -407,6 +584,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
         }
 
+        [EditAction]
+        private void AfterUseReverseRoughnessSet(bool value)
+        {
+            UpdateRoughnessSectionsForReverseRoughness();
+            UseReverseRoughnessInCalculation = value;
+        }
+        
         [NoNotifyPropertyChange]
         public virtual TimeSpan OutputTimeStep
         {
@@ -431,19 +615,58 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 if (OutputSettings.StructureOutputTimeStep < value) OutputSettings.StructureOutputTimeStep = value;
             }
         }
-        public virtual Parameter<string> InitialConditionsTypeParameter => GetDataItemValueByTag<Parameter<string>>(WaterFlowModel1DDataSet.InitialConditionsTypeTag);
 
-        public virtual Parameter<string> TemperatureModelTypeParameter => GetDataItemValueByTag<Parameter<string>>(WaterFlowModel1DDataSet.TemperatureModelTypeTag);
+        public virtual Parameter<string> InitialConditionsTypeParameter
+        {
+            get { return GetDataItemValueByTag<Parameter<string>>(WaterFlowModel1DDataSet.InitialConditionsTypeTag); }
+        }
 
-        public virtual Parameter<string> DensityTypeParameter => GetDataItemValueByTag<Parameter<string>>(WaterFlowModel1DDataSet.DensityTypeTag);
+        public virtual Parameter<string> TemperatureModelTypeParameter
+        {
+            get { return GetDataItemValueByTag<Parameter<string>>(WaterFlowModel1DDataSet.TemperatureModelTypeTag); }
+        }
 
-        public virtual Parameter<string> DispersionFormulationTypeParameter => GetDataItemValueByTag<Parameter<string>>(WaterFlowModel1DDataSet.DispersionFormulationTypeTag);
+        public virtual Parameter<string> DensityTypeParameter
+        {
+            get { return GetDataItemValueByTag<Parameter<string>>(WaterFlowModel1DDataSet.DensityTypeTag); }
+        }
+        
+        public virtual Parameter<string> DispersionFormulationTypeParameter
+        {
+            get { return GetDataItemValueByTag<Parameter<string>>(WaterFlowModel1DDataSet.DispersionFormulationTypeTag); }
+        }
 
         public virtual IList<ModelApiParameter> ParameterSettings
         {
             get { return parameterSettings ?? (parameterSettings = GetParametersFromModelApi()); }
             protected set { parameterSettings = UpdateMissingOrSurplusParameters(value); }
         }
+
+        private IList<ModelApiParameter> UpdateMissingOrSurplusParameters(IList<ModelApiParameter> sourceParameters)
+        {
+            var desiredParametersList = GetParametersFromModelApi();
+
+            var different = sourceParameters.Count != desiredParametersList.Count || //unequal count
+                            !sourceParameters.Select(p => p.Name) //or intersection not full
+                                             .Intersect(desiredParametersList.Select(p => p.Name))
+                                             .Count().Equals(sourceParameters.Count);
+
+            if (!different)
+                return sourceParameters;
+
+            foreach (var item in desiredParametersList)
+            {
+                var matchingItem = sourceParameters.FirstOrDefault(p => p.Name == item.Name);
+                if (matchingItem != null)
+                {
+                    item.Value = matchingItem.Value; //copy source values where possible
+                }
+            }
+            sourceParameters.Clear(); //reuse the same instance to keep nhibernate happy
+            sourceParameters.AddRange(desiredParametersList);
+            return sourceParameters;
+        }
+
         [NoNotifyPropertyChange]
         public virtual InitialConditionsType InitialConditionsType
         {
@@ -460,10 +683,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 //suspend tracking changes in the coverage..since the type does not math up while the 
                 //convertor changes the model
                 UnSubscribeToInitialConditionsCoverageDataItem();
-
+                
                 //hack to trigger undo/redo nesting, do not remove or whine until you have a better solution ;-)
                 ((INotifyPropertyChanging)InitialConditionsTypeParameter).PropertyChanging += InitialConditionsTypeParameterValueChanging;
-
+                                
                 try
                 {
                     //set the parameter (can cause exception)
@@ -482,36 +705,128 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
         }
 
+        [EditAction]
+        private void InitialConditionsTypeParameterValueChanging(object sender, PropertyChangingEventArgs e)
+        {
+            //let an external mutator handle the change..
+            InitialConditionsConverter.ChangeInitialConditionsType(this, initialConditionsType);
+            SetAttributeInitialDepth();
+        }
 
-        public virtual double LatitudeDefault => WaterFlowModel1DDataSet.Meteo.valueLatitudeDefault;
+        private void SetAttributeInitialDepth()
+        {
+            var dataItem = GetDataItemByTag(WaterFlowModel1DDataSet.InputInitialConditionsTag);
+            var attributes = ((NetworkCoverage)dataItem.Value).Components[0].Attributes;
+            attributes[FunctionAttributes.StandardName] = initialConditionsType == InitialConditionsType.Depth
+                                                              ? FunctionAttributes.StandardNames.WaterDepth
+                                                              : FunctionAttributes.StandardNames.WaterLevel;
+        }
 
-        public virtual double LongitudeDefault => WaterFlowModel1DDataSet.Meteo.valueLongitudDefault;
+        public virtual bool UseTemperature
+        {
+            get { return GetDataItemValueByTag<Parameter<bool>>(WaterFlowModel1DDataSet.UseTemperatureParameterTag).Value; }
+            set
+            {
+                ToggleTemperature(value);
+            }
+        }
 
-        public virtual double BackgroundTemperatureDefault => WaterFlowModel1DDataSet.Meteo.valueBackgroundTemperatureDefault;
+        private void ToggleTemperature(bool useTemperature)
+        {
+            var oldUseTempValue = UseTemperature;
 
-        public virtual double BackgroundTemperatureMin => WaterFlowModel1DDataSet.Meteo.valueBackgroundTemperatureMin;
+            GetDataItemValueByTag<Parameter<bool>>(WaterFlowModel1DDataSet.UseTemperatureParameterTag).Value = useTemperature;
 
-        public virtual double BackgroundTemperatureMax => WaterFlowModel1DDataSet.Meteo.valueBackgroundTemperatureMax;
+            if (oldUseTempValue == useTemperature)
+            {
+                return;
+            }
 
-        public virtual double SurfaceAreaDefault => WaterFlowModel1DDataSet.Meteo.valueSurfaceAreaDefault;
+            if (useTemperature)
+            {
+                var initialTemperature = new NetworkCoverage("Initial Temperature", false, "Temperature", "°C") { Network = Network };
+                initialTemperature.Components[0].Attributes[FunctionAttributes.StandardName] = FunctionAttributes.StandardProcessNames.Temperature;
+                initialTemperature.Locations.ExtrapolationType = ExtrapolationType.Constant;
+                AddDataItem(initialTemperature, DataItemRole.Input, WaterFlowModel1DDataSet.InputInitialTemperatureTag);
+            }
+            else
+            {
+                DataItems.RemoveAllWhere(d => d.Tag == WaterFlowModel1DDataSet.InputInitialTemperatureTag );
+            }
 
-        public virtual double SurfaceAreaMin => WaterFlowModel1DDataSet.Meteo.valueSurfaceAreaMin;
+            BoundaryConditions.ForEach(bc => bc.UseTemperature = useTemperature);
+            LateralSourceData.ForEach(lat => lat.UseTemperature = useTemperature);
+        }
 
-        public virtual double AtmosphericPressureDefault => WaterFlowModel1DDataSet.Meteo.valueAtmosphericPressureDefault;
+        public virtual double latitudeDefault
+        {
+            get { return WaterFlowModel1DDataSet.Meteo.valueLatitudeDefault; }
+        }
 
-        public virtual double DaltonNumberDefault => WaterFlowModel1DDataSet.Meteo.valueDaltonNumberDefault;
+        public virtual double longitudDefault
+        {
+            get { return WaterFlowModel1DDataSet.Meteo.valueLongitudDefault; }
+        }
 
-        public virtual double DaltonNumberMin => WaterFlowModel1DDataSet.Meteo.valueDaltonNumberMin;
+        public virtual double backgroundTemperatureDefault
+        {
+            get { return WaterFlowModel1DDataSet.Meteo.valueBackgroundTemperatureDefault; }
+        }
 
-        public virtual double DaltonNumberMax => WaterFlowModel1DDataSet.Meteo.valueDaltonNumberMax;
+        public virtual double backgroundTemperatureMin
+        {
+            get { return WaterFlowModel1DDataSet.Meteo.valueBackgroundTemperatureMin; }
+        }
 
-        public virtual double StantonNumberDefault => WaterFlowModel1DDataSet.Meteo.valueStantonNumberDefault;
+        public virtual double backgroundTemperatureMax
+        {
+            get { return WaterFlowModel1DDataSet.Meteo.valueBackgroundTemperatureMax; }
+        }
 
-        public virtual double StantonNumberMin => WaterFlowModel1DDataSet.Meteo.valueStantonNumberMin;
+        public virtual double surfaceAreaDefault
+        {
+            get { return WaterFlowModel1DDataSet.Meteo.valueSurfaceAreaDefault; }
+        }
+        public virtual double surfaceAreaMin
+        {
+            get { return WaterFlowModel1DDataSet.Meteo.valueSurfaceAreaMin; }
+        }
 
-        public virtual double StantonNumberMax => WaterFlowModel1DDataSet.Meteo.valueStantonNumberMax;
+        public virtual double atmosphericPressureDefault
+        {
+            get { return WaterFlowModel1DDataSet.Meteo.valueAtmosphericPressureDefault; }
+        }
 
-        public virtual double HeatCapacityWaterDefault => WaterFlowModel1DDataSet.Meteo.valueHeatCapacityWaterDefault;
+        public virtual double daltonNumberDefault
+        {
+            get { return WaterFlowModel1DDataSet.Meteo.valueDaltonNumberDefault; }
+        }
+        public virtual double daltonNumberMin
+        {
+            get { return WaterFlowModel1DDataSet.Meteo.valueDaltonNumberMin; }
+        }
+        public virtual double daltonNumberMax
+        {
+            get { return WaterFlowModel1DDataSet.Meteo.valueDaltonNumberMax; }
+        }
+
+        public virtual double stantonNumberDefault
+        {
+            get { return WaterFlowModel1DDataSet.Meteo.valueStantonNumberDefault; }
+        }
+        public virtual double stantonNumberMin
+        {
+            get { return WaterFlowModel1DDataSet.Meteo.valueStantonNumberMin; }
+        }
+        public virtual double stantonNumberMax
+        {
+            get { return WaterFlowModel1DDataSet.Meteo.valueStantonNumberMax; }
+        }
+
+        public virtual double heatCapacityWaterDefault
+        {
+            get { return WaterFlowModel1DDataSet.Meteo.valueHeatCapacityWaterDefault; }
+        }
 
         public virtual TemperatureModelType TemperatureModelType
         {
@@ -540,8 +855,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         public virtual double DepthUsedForSediment { get; set; }
 
         public virtual double HeatCapacityWater { get; set; }
-
-        public virtual double DesignFactorDlg { get; set; }
 
         public virtual DensityType DensityType
         {
@@ -606,7 +919,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             set
             {
                 var morphologyFileDataItem = GetDataItemByTag(WaterFlowModel1DDataSet.MorphologyFileDataObjectTag);
-                if (morphologyFileDataItem != null) morphologyFileDataItem.Value = new WaterFlowModel1DMorphologyFile { Path = value };
+                if(morphologyFileDataItem != null) morphologyFileDataItem.Value = new WaterFlowModel1DMorphologyFile { Path = value };
             }
         }
 
@@ -653,7 +966,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         }
 
         //need to expose parameter for view.. :(
-        public virtual Parameter<double> DefaultInitialWaterLevelParameter => GetDataItemValueByTag<Parameter<double>>(WaterFlowModel1DDataSet.DefaultInitialWaterLevelTag);
+        public virtual Parameter<double> DefaultInitialWaterLevelParameter
+        {
+            get
+            {
+                return GetDataItemValueByTag<Parameter<double>>(WaterFlowModel1DDataSet.DefaultInitialWaterLevelTag);
+            }
+        }
 
         [NoNotifyPropertyChange]
         public virtual double DefaultInitialWaterLevel
@@ -675,7 +994,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
         }
 
-        public virtual Parameter<double> DefaultInitialDepthParameter => GetDataItemValueByTag<Parameter<double>>(WaterFlowModel1DDataSet.DefaultInitialDepthTag);
+        public virtual Parameter<double> DefaultInitialDepthParameter
+        {
+            get
+            {
+                return GetDataItemValueByTag<Parameter<double>>(WaterFlowModel1DDataSet.DefaultInitialDepthTag);
+            }
+        }
 
         [NoNotifyPropertyChange]
         public virtual double DefaultInitialDepth
@@ -723,238 +1048,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
         }
 
-        #endregion
-
-        #region Methods
-        private void AddDispersionFormulationTypeDataItem()
-        {
-            var dispersionFormulationsTypeParameter = new Parameter<string>(WaterFlowModel1DDataSet.DispersionFormulationTypeTag)
-            {
-                Value = DispersionFormulationType.Constant.ToString()
-            };
-            AddDataItem(dispersionFormulationsTypeParameter, DataItemRole.Input, WaterFlowModel1DDataSet.DispersionFormulationTypeTag);
-        }
-
-        private void AddUseTemperatureParameterDataItem()
-        {
-            var useTemperatureParameter = new Parameter<bool>(WaterFlowModel1DDataSet.UseTemperatureParameterTag) { Value = false };
-            AddDataItem(useTemperatureParameter, DataItemRole.Input, WaterFlowModel1DDataSet.UseTemperatureParameterTag);
-        }
-
-        private void AddTemperatureModelTypeDataItem()
-        {
-            var temperatureModelTypeParameter = new Parameter<string>(WaterFlowModel1DDataSet.TemperatureModelTypeTag)
-            {
-                Value = TemperatureModelType.Transport.ToString()
-            };
-            AddDataItem(temperatureModelTypeParameter, DataItemRole.Input, WaterFlowModel1DDataSet.TemperatureModelTypeTag);
-        }
-
-        private void AddDensityTypeDataItem()
-        {
-            var densityTypeParameter = new Parameter<string>(WaterFlowModel1DDataSet.DensityTypeTag)
-            {
-                Value = DensityType.eckart_modified.ToString()
-            };
-            AddDataItem(densityTypeParameter, DataItemRole.Input, WaterFlowModel1DDataSet.DensityTypeTag);
-        }
-
-        private void AddTemperatureMeteoDataDataItem()
-        {
-            var meteo = new MeteoFunction(WaterFlowModel1DDataSet.InputMeteoDataTag);
-            AddDataItem(meteo, DataItemRole.Input, WaterFlowModel1DDataSet.InputMeteoDataTag);
-        }
-
-        private void AddMorphologyFileDataItem()
-        {
-            var morphologyFile = new WaterFlowModel1DMorphologyFile() { Path = string.Empty };
-            AddDataItem(morphologyFile, DataItemRole.None, WaterFlowModel1DDataSet.MorphologyFileDataObjectTag);
-        }
-
-        private void AddBcmFileDataItem()
-        {
-            var bcmFile = new WaterFlowModel1DMorphologyFile() { Path = string.Empty };
-            AddDataItem(bcmFile, DataItemRole.None, WaterFlowModel1DDataSet.BcmFileDataObjectTag);
-        }
-
-        private void AddSedimentFileDataItem()
-        {
-            var sedimentFile = new WaterFlowModel1DMorphologyFile() { Path = string.Empty };
-            AddDataItem(sedimentFile, DataItemRole.None, WaterFlowModel1DDataSet.SedimentFileDataObjectTag);
-        }
-
-        private void AddTraFileDataItem()
-        {
-            var traFile = new WaterFlowModel1DMorphologyFile() { Path = string.Empty };
-            AddDataItem(traFile, DataItemRole.None, WaterFlowModel1DDataSet.TraFileDataObjectTag);
-        }
-
-        private void AddInflowsDataItem()
-        {
-            var inflows = new FeatureCoverage("Inflows");
-            inflows.Arguments.Add(new Variable<DateTime>()); //time variable
-            inflows.Arguments.Add(new Variable<IFeature> { IsAutoSorted = false }); //feature variable
-            inflows.Components.Add(new Variable<double>("Inflows", new Unit("Discharge", "m³/s"))); //component
-            AddDataItem(inflows, DataItemRole.Input, WaterFlowModel1DDataSet.InflowsTag);
-        }
-        public override bool IsDataItemActive(IDataItem dataItem)
-        {
-            if (dataItem.Tag == WaterFlowModel1DDataSet.InputInitialConditionsTag ||
-                dataItem.Tag == WaterFlowModel1DDataSet.InputInitialFlowTag ||
-                dataItem.Tag == WaterFlowModel1DDataSet.InputInitialSaltConcentrationTag)
-            {
-                return !UseRestart;
-            }
-            return base.IsDataItemActive(dataItem);
-        }
-
-        public static IDiscretization CreateEnergyHeadDiscretization(IDiscretization discretization)
-        {
-            var locations = new List<INetworkLocation>();
-            var network = discretization.Network;
-            INetworkLocation previousLocation = null;
-            foreach (var location in discretization.Locations.Values)
-            {
-                var branch = location.Branch;
-                var chainage = location.Chainage;
-                if (previousLocation != null && Equals(previousLocation.Branch, branch))
-                {
-                    locations.Add(new NetworkLocation(branch, 0.5 * (previousLocation.Chainage + chainage))
-                    {
-                        Network = network
-                    });
-                }
-                if (branch == null || Math.Abs(chainage) < double.Epsilon || Math.Abs(chainage - branch.Length) < double.Epsilon)
-                {
-                    locations.Add((INetworkLocation)location.Clone());
-                }
-                else
-                {
-                    locations.Add(new NetworkLocation(branch, chainage - Epsilon)
-                    {
-                        Network = network,
-                        Name = location.Name + "-"
-                    });
-                    locations.Add(new NetworkLocation(branch, chainage + Epsilon)
-                    {
-                        Network = network,
-                        Name = location.Name + "+"
-                    });
-                }
-                previousLocation = location;
-            }
-
-            var result = new Discretization();
-            result.Locations.AddValues(locations);
-            return result;
-        }
-
-        private void AfterUseReverseRoughnessInCalculationSet(bool value)
-        {
-            RoughnessSections.OfType<ReverseRoughnessSection>().ForEach(rrs => rrs.UseNormalRoughness = !value);
-        }
-        [EditAction]
-        private void AfterUseReverseRoughnessSet(bool value)
-        {
-            UpdateRoughnessSectionsForReverseRoughness();
-            UseReverseRoughnessInCalculation = value;
-        }
-
-        private IList<ModelApiParameter> UpdateMissingOrSurplusParameters(IList<ModelApiParameter> sourceParameters)
-        {
-            var desiredParametersList = GetParametersFromModelApi();
-
-            var different = sourceParameters.Count != desiredParametersList.Count || //unequal count
-                            !sourceParameters.Select(p => p.Name) //or intersection not full
-                                .Intersect(desiredParametersList.Select(p => p.Name))
-                                .Count().Equals(sourceParameters.Count);
-
-            if (!different)
-                return sourceParameters;
-
-            foreach (var item in desiredParametersList)
-            {
-                var matchingItem = sourceParameters.FirstOrDefault(p => p.Name == item.Name);
-                if (matchingItem != null)
-                {
-                    item.Value = matchingItem.Value; //copy source values where possible
-                }
-            }
-            sourceParameters.Clear(); //reuse the same instance to keep nhibernate happy
-            sourceParameters.AddRange(desiredParametersList);
-            return sourceParameters;
-        }
-
-        [EditAction]
-        private void InitialConditionsTypeParameterValueChanging(object sender, PropertyChangingEventArgs e)
-        {
-            //let an external mutator handle the change..
-            InitialConditionsConverter.ChangeInitialConditionsType(this, initialConditionsType);
-            SetAttributeInitialDepth();
-        }
-
-        private void SetAttributeInitialDepth()
-        {
-            var dataItem = GetDataItemByTag(WaterFlowModel1DDataSet.InputInitialConditionsTag);
-            var attributes = ((NetworkCoverage)dataItem.Value).Components[0].Attributes;
-            attributes[FunctionAttributes.StandardName] = initialConditionsType == InitialConditionsType.Depth
-                ? FunctionAttributes.StandardNames.WaterDepth
-                : FunctionAttributes.StandardNames.WaterLevel;
-        }
-        #endregion
-
-        #region ToBeRarranged
-
-        void WaterFlowModel1DPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // deal with undo/redo of linking..yes..I know
-            if (EditActionSettings.Disabled) //this makes sure this ONLY works DURING undo/redo
-            {
-                if ((e.PropertyName == "Value" || e.PropertyName == "LinkedTo") &&
-                    Equals(sender, GetDataItemByTag(WaterFlowModel1DDataSet.NetworkTag)))
-                {
-                    UnSubscribeFromNetwork();
-                    SubscribeToNetwork();
-                }
-            }
-        }
-
-        public virtual bool UseTemperature
-        {
-            get { return GetDataItemValueByTag<Parameter<bool>>(WaterFlowModel1DDataSet.UseTemperatureParameterTag).Value; }
-            set
-            {
-                ToggleTemperature(value);
-            }
-        }
-
-        private void ToggleTemperature(bool useTemperature)
-        {
-            var oldUseTempValue = UseTemperature;
-
-            GetDataItemValueByTag<Parameter<bool>>(WaterFlowModel1DDataSet.UseTemperatureParameterTag).Value = useTemperature;
-
-            if (oldUseTempValue == useTemperature)
-            {
-                return;
-            }
-
-            if (useTemperature)
-            {
-                var initialTemperature = new NetworkCoverage("Initial Temperature", false, "Temperature", "°C") { Network = Network };
-                initialTemperature.Components[0].Attributes[FunctionAttributes.StandardName] = FunctionAttributes.StandardProcessNames.Temperature;
-                initialTemperature.Locations.ExtrapolationType = ExtrapolationType.Constant;
-                AddDataItem(initialTemperature, DataItemRole.Input, WaterFlowModel1DDataSet.InputInitialTemperatureTag);
-            }
-            else
-            {
-                DataItems.RemoveAllWhere(d => d.Tag == WaterFlowModel1DDataSet.InputInitialTemperatureTag);
-            }
-
-            BoundaryConditions.ForEach(bc => bc.UseTemperature = useTemperature);
-            LateralSourceData.ForEach(lat => lat.UseTemperature = useTemperature);
-        }
-
         // internal so that LegacyLoader can access this
         protected internal virtual void EnableThatcherHarlemanCoverages()
         {
@@ -977,7 +1070,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             // Retrieve existing coverage
             var dispersionCoverage = dispersionCoverageDataItem.Value as INetworkCoverage;
             if (dispersionCoverage == null) return; // should not happen
-
+            
             // add argument values
             foreach (var argument in dispersionCoverage.Arguments)
             {
@@ -1184,7 +1277,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
             return false;
         }
-
+        
         protected virtual void AddRoughnessSection(RoughnessSection roughnessSection)
         {
             var bcSet = GetDataItemSetByTag(WaterFlowModel1DDataSet.RoughnessSectionsTag);
@@ -1249,7 +1342,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 var isFiniteVolumeGrid = engineParameter.Name == WaterFlowModelParameterNames.FiniteVolumeGridType;
                 var expectedRole = isFiniteVolumeGrid ? DataItemRole.None : DataItemRole.Output;
 
-                AddOrRemoveOutputCoverages(engineParameter, expectedRole);
+                AddOrRemoveOutputCoverages(engineParameter, expectedRole); 
             }
 
             MarkOutputOutOfSync();
@@ -1301,8 +1394,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             var networkValue = networkDataItem.Value;
             if (networkValue != null)
             {
-                ((INotifyCollectionChange)networkValue).CollectionChanged += NetworkCollectionChanged;
-                ((INotifyPropertyChanged)networkValue).PropertyChanged += NetworkPropertyChanged;
+                ((INotifyCollectionChange) networkValue).CollectionChanged += NetworkCollectionChanged;
+                ((INotifyPropertyChanged) networkValue).PropertyChanged += NetworkPropertyChanged;
                 ((INotifyPropertyChanging)networkValue).PropertyChanging += NetworkPropertyChanging;
             }
             observedNetwork = (IHydroNetwork)networkValue;
@@ -1313,7 +1406,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             base.OnDataItemLinking(sender, e);
 
             // if network data item is being linked
-            if (Equals(e.Target, GetDataItemByTag(WaterFlowModel1DDataSet.NetworkTag)))
+            if(Equals(e.Target, GetDataItemByTag(WaterFlowModel1DDataSet.NetworkTag)))
             {
                 UnSubscribeFromNetwork();
             }
@@ -1372,7 +1465,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 }
                 else
                 {
-                    networkBeforeLinking = (IHydroNetwork)e.PreviousValue;
+                    networkBeforeLinking = (IHydroNetwork) e.PreviousValue;
                 }
             }
         }
@@ -1510,7 +1603,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
             if (UseTemperature)
             {
-                InitialTemperature.Clear();
+                InitialTemperature.Clear();    
             }
 
             ClearOutput();
@@ -1615,9 +1708,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             if (UseReverseRoughness)
             {
                 AddRoughnessSection(new ReverseRoughnessSection(roughnessSection)
-                {
-                    UseNormalRoughness = !UseReverseRoughnessInCalculation
-                });
+                    {
+                        UseNormalRoughness = !UseReverseRoughnessInCalculation
+                    });
             }
         }
 
@@ -1663,10 +1756,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
             else
             {
-                DataItems.RemoveAllWhere(d => d.Tag == WaterFlowModel1DDataSet.InputInitialSaltConcentrationTag || d.Tag == WaterFlowModel1DDataSet.InputDispersionCoverageTag ||
+                DataItems.RemoveAllWhere(d => d.Tag == WaterFlowModel1DDataSet.InputInitialSaltConcentrationTag || d.Tag == WaterFlowModel1DDataSet.InputDispersionCoverageTag || 
                     d.Tag == WaterFlowModel1DDataSet.InputDispersionF3CoverageTag || d.Tag == WaterFlowModel1DDataSet.InputDispersionF4CoverageTag);
                 cachedDispersionF3Coverage = null;
-                cachedDispersionF4Coverage = null;
+                cachedDispersionF4Coverage = null; 
             }
 
             BoundaryConditions.ForEach(bc => bc.UseSalt = useSalt);
@@ -1681,7 +1774,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 DefaultValue = WaterFlowModel1DDataSet.DefaultSaltDispersion
             };
             dispersionCoverage.Locations.ExtrapolationType = ExtrapolationType.Constant;
-
+            
             return dispersionCoverage;
         }
 
@@ -1745,7 +1838,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
         }
 
-
+        
 
         /// <summary>
         /// - Synchronize the boundary condition in the model with the IsBoundary property of the Nodes. Since this property
@@ -1783,57 +1876,57 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                     {
                         case NotifyCollectionChangeAction.Remove:
                             {
-                                var channel = (IChannel)e.Item;
-                                foreach (var lateralSource in channel.BranchSources)
-                                {
-                                    RemoveLateralSourceData(lateralSource);
-                                }
+                        var channel = (IChannel)e.Item;
+                        foreach (var lateralSource in channel.BranchSources)
+                        {
+                            RemoveLateralSourceData(lateralSource);
+                        }
 
-                                // remove all child data items
-                                var dataItemsToRemove = new List<IDataItem>();
-                                var networkDataItem = GetDataItemByValue(Network);
-                                foreach (var dataItem in networkDataItem.Children)
-                                {
-                                    // check if child data item uses WaterFlowModelBranchFeatureValueConverter
-                                    var valueConverter = dataItem.ValueConverter as WaterFlowModelBranchFeatureValueConverter;
-                                    if (valueConverter == null || !(valueConverter.Location is IBranchFeature))
-                                    {
-                                        continue;
-                                    }
-
-                                    // check if data item is related to the removed branch
-                                    var branchFeature = (IBranchFeature)valueConverter.Location;
-                                    if (!channel.BranchFeatures.Contains(branchFeature))
-                                    {
-                                        continue;
-                                    }
-
-                                    dataItemsToRemove.Add(dataItem);
-                                }
-
-                                foreach (var dataItem in dataItemsToRemove)
-                                {
-                                    dataItem.Unlink();
-                                    dataItem.LinkedBy.ToArray().ForEach(di => di.Unlink());
-                                    networkDataItem.Children.Remove(dataItem);
-                                }
+                        // remove all child data items
+                        var dataItemsToRemove = new List<IDataItem>();
+                        var networkDataItem = GetDataItemByValue(Network);
+                        foreach (var dataItem in networkDataItem.Children)
+                        {
+                            // check if child data item uses WaterFlowModelBranchFeatureValueConverter
+                            var valueConverter = dataItem.ValueConverter as WaterFlowModelBranchFeatureValueConverter;
+                            if (valueConverter == null || !(valueConverter.Location is IBranchFeature))
+                            {
+                                continue;
                             }
+
+                            // check if data item is related to the removed branch
+                            var branchFeature = (IBranchFeature)valueConverter.Location;
+                            if (!channel.BranchFeatures.Contains(branchFeature))
+                            {
+                                continue;
+                            }
+
+                            dataItemsToRemove.Add(dataItem);
+                        }
+
+                        foreach (var dataItem in dataItemsToRemove)
+                        {
+                            dataItem.Unlink();
+                            dataItem.LinkedBy.ToArray().ForEach(di => di.Unlink());
+                            networkDataItem.Children.Remove(dataItem);
+                        }
+                    }
                             break;
                         case NotifyCollectionChangeAction.Add:
-                            {
-                                var channel = (IChannel)e.Item;
-                                foreach (var lateralSource in channel.BranchSources)
-                                {
-                                    AddLateralSourceData(new WaterFlowModel1DLateralSourceData { Feature = lateralSource });
-                                }
-                            }
+                    {
+                        var channel = (IChannel)e.Item;
+                        foreach (var lateralSource in channel.BranchSources)
+                        {
+                            AddLateralSourceData(new WaterFlowModel1DLateralSourceData { Feature = lateralSource });
+                        }
+                    }
                             break;
                     }
-
+                    
                     ClearOutput();
                 }
             }
-
+            
             // check if removed item is used in the child data items
             if (e.Item is IFeature && e.Action == NotifyCollectionChangeAction.Remove)
             {
@@ -1858,7 +1951,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 }
             }
         }
-
+        
         private void OnEndingBranchSplit(BranchSplitAction splitAction)
         {
             var locations = (splitAction.NewBranch.Source == splitAction.SplittedBranch.Target
@@ -1867,7 +1960,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                             new NetworkLocation(splitAction.SplittedBranch, splitAction.SplittedBranch.Length)
                                 {
                                     // reset chainage to realy put the chainage to the end of the branch (this is not done via the contructor)
-                                    Chainage = splitAction.SplittedBranch.Length
+                                    Chainage = splitAction.SplittedBranch.Length 
                                 },
                             new NetworkLocation(splitAction.NewBranch, 0)
                         }
@@ -1961,7 +2054,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 return "Kernel: " + Flow1DApiDll.CF_DLL_NAME + "  " + FileVersionInfo.GetVersionInfo(file).FileVersion;
             }
         }
-
+       
         private IDictionary<IFeature, int> indexInInflowsCache = new Dictionary<IFeature, int>();
 
         protected virtual void BuildInflowsCoverage()
@@ -1971,7 +2064,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
             var inflowsDataItem = GetDataItemByTag(WaterFlowModel1DDataSet.InflowsTag);
             var inflowsIsLinked = inflowsDataItem.Children.Count > 0;
-
+            
             if (inflowsIsLinked)
             {
                 // do this here because it's a heavier check
@@ -1983,7 +2076,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
                 if (linkedFeatures.Count > 0)
                 {
-                    indexInInflowsCache = linkedFeatures.Select((f, i) => new { Feat = f, Index = i })
+                    indexInInflowsCache = linkedFeatures.Select((f, i) => new {Feat = f, Index = i})
                                                         .ToDictionary(a => a.Feat, a => a.Index);
 
                     // set the features:
@@ -2066,7 +2159,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 else if (modelApiParameter.ElementSet == ElementSet.Pumps)
                 {
                     var coverage = (IFeatureCoverage)GetDataItemValueByTag(modelApiParameter.Name);
-                    AddFeaturesToFeatureCoverage(coverage, pumpMappingToModelApi, times);
+                    AddFeaturesToFeatureCoverage(coverage, pumpMappingToModelApi, times);                    
                 }
             }
         }
@@ -2077,7 +2170,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             {
                 return modelApiParameter.Name;
             }
-
+            
             return String.Format("{0} ({1})", modelApiParameter.Name, modelApiParameter.AggregationOptions);
         }
 
@@ -2091,9 +2184,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 if (modelApiParameter.ElementSet == ElementSet.GridpointsOnBranches)
                 {
                     var coverage = new NetworkCoverage(coverageName, true, coverageName, modelApiParameter.Unit.Symbol)
-                    {
-                        Network = Network,
-                    };
+                        {
+                            Network = Network,
+                        };
                     coverage.Components[0].NoDataValue = double.NaN;
                     coverage.Locations.FixedSize = 0;
                     AddDataItem(coverage, dataItemRole, modelApiParameter.Name);
@@ -2103,9 +2196,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 else if (modelApiParameter.ElementSet == ElementSet.ReachSegElmSet)
                 {
                     var coverage = new NetworkCoverage(coverageName, true, coverageName, modelApiParameter.Unit.Symbol)
-                    {
-                        Network = Network,
-                    };
+                        {
+                            Network = Network,
+                        };
                     coverage.Components[0].NoDataValue = double.NaN;
                     coverage.Locations.FixedSize = 0;
                     AddDataItem(coverage, dataItemRole, modelApiParameter.Name);
@@ -2179,7 +2272,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             var featureCoverage = new FeatureCoverage(GetOutputCoverageName(modelApiParameter));
             featureCoverage.Components.Add(new Variable<double>("value")
             {
-                NoDataValue = double.NaN,
+                NoDataValue = double.NaN, 
                 Unit = (IUnit)modelApiParameter.Unit.Clone()
             });
             IVariable timeVariable = new Variable<DateTime>("time");
@@ -2201,13 +2294,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             timeseries.Components.Add(new Variable<double>("value")
             {
                 NoDataValue = double.NaN,
-                Unit = (IUnit)engineParameter.Unit.Clone()
+                Unit = (IUnit) engineParameter.Unit.Clone()
             });
             timeseries.IsEditable = false;
             AddDataItem(timeseries, DataItemRole.Output, engineParameter.Name);
             return timeseries;
         }
-
+        
         private static void AddFeaturesToFeatureCoverage(IFeatureCoverage featureCoverage, ICollection features, ICollection<DateTime> times)
         {
             if (featureCoverage.Store is WaterFlowModel1DNetCdfFunctionStore) return; // temporary until modelApi is removed
@@ -2254,7 +2347,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
             var networkLocations = discretization.Locations.Values.OrderBy(l => l).ToArray();
             var staggeredLocations = new List<INetworkLocation>();
-
+            
             IBranch branch = null;
             INetworkLocation previous = null;
 
@@ -2266,7 +2359,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 }
                 else if (previous != null)
                 {
-                    staggeredLocations.Add(new NetworkLocation(branch, previous.Chainage + (networkLocation.Chainage - previous.Chainage) / 2));
+                    staggeredLocations.Add(new NetworkLocation(branch,previous.Chainage +  (networkLocation.Chainage - previous.Chainage) / 2));
                 }
 
                 previous = networkLocation;
@@ -2280,7 +2373,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             if (times.Count != 0) networkCoverage.Time.SetValues(times);
             networkCoverage.SetLocations(staggeredLocations);
         }
-
+        
         public override void UpdateLink(object data)
         {
             if (data is IHydroNetwork)
@@ -2292,7 +2385,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 throw new ArgumentException("Only network objects can be linked to 1d model");
             }
         }
-
+        
         public override bool IsLinkAllowed(IDataItem source, IDataItem target)
         {
             if (target == null)
@@ -2315,7 +2408,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             var boundaryCondition = BoundaryConditions.FirstOrDefault(bc => Equals(bc.SeriesDataItem, target));
 
             if (boundaryCondition != null)
-            {
+            {  
                 // Q(H) || Q(t)
                 if (source.Value is FlowWaterLevelTable)
                 {
@@ -2343,7 +2436,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         protected override void OnBeforeDataItemsSet()
         {
             base.OnBeforeDataItemsSet();
-
+            
             UnSubscribeFromNetwork();
             UnSubscribeToInitialConditionsCoverageDataItem();
             // weird what is use of this? outputCrestLevel = null;
@@ -2418,7 +2511,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
 
             // Make sure that output is not always out of sync when updating this ValueType. 
-            if (!BoundaryConditionsDataItemSet.ValueType.Equals(typeof(FeatureData<IFunction, INode>)))
+            if (!BoundaryConditionsDataItemSet.ValueType.Equals(typeof (FeatureData<IFunction, INode>)))
             {
                 BoundaryConditionsDataItemSet.ValueType = typeof(FeatureData<IFunction, INode>);
             }
@@ -2435,7 +2528,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
         private IEnumerable<object> GetExtraDirectChilderenForFews()
         {
-            if (UseSalt)
+            if (UseSalt) 
             {
                 foreach (var bc in BoundaryConditions.Where(bc => bc.UseSalt))
                 {
@@ -2450,8 +2543,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
 
             yield return new FakeParameterTimeSpan("TimeStep", () => TimeStep, x => TimeStep = x);
-            yield return new FakeParameterTimeSpan("GridOutputTimeStep", () => OutputSettings.GridOutputTimeStep, x => OutputSettings.GridOutputTimeStep = x);
-            yield return new FakeParameterTimeSpan("StructureOutputTimeStep", () => OutputSettings.StructureOutputTimeStep, x => OutputSettings.StructureOutputTimeStep = x);
+            yield return new FakeParameterTimeSpan("GridOutputTimeStep", () => OutputSettings.GridOutputTimeStep,x => OutputSettings.GridOutputTimeStep = x);
+            yield return new FakeParameterTimeSpan("StructureOutputTimeStep", () => OutputSettings.StructureOutputTimeStep,x => OutputSettings.StructureOutputTimeStep = x);
         }
 
         private static IDataItem CreateFeatureTimeseriesInputDataItem(ITimeSeries timeSeries, IFeature feature)
@@ -2613,7 +2706,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
                 var branchFeature = valueConverter.Location as INetworkFeature;
 
-                if (branchFeature != null && !Equals(branchFeature.Network, clonedModel.Network))
+                if(branchFeature != null && !Equals(branchFeature.Network, clonedModel.Network))
                 {
                     var index = allFeatures.IndexOf(valueConverter.Location);
                     valueConverter.Location = (IFeature)allFeaturesCloned[index];
@@ -2635,11 +2728,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         private static void UpdateNetworkInCoverages(WaterFlowModel1D clonedModel, IHydroNetwork originalNetwork)
         {
             var clonedNetwork = clonedModel.Network;
-
+            
             NetworkCoverage.ReplaceNetworkForClone(clonedNetwork, clonedModel.InitialFlow);
             NetworkCoverage.ReplaceNetworkForClone(clonedNetwork, clonedModel.InitialConditions);
             NetworkCoverage.ReplaceNetworkForClone(clonedNetwork, clonedModel.WindShielding);
-
+            
             if (clonedModel.InitialSaltConcentration != null)
             {
                 NetworkCoverage.ReplaceNetworkForClone(clonedNetwork, clonedModel.InitialSaltConcentration);
@@ -2733,7 +2826,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 clonedLateralSourceData.Feature = (LateralSource)clonedLateralSourceFeatures[index];
             }
         }
-
+        
         public override IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
         {
             if ((role & DataItemRole.Input) == DataItemRole.Input || (role & DataItemRole.Output) == DataItemRole.Output)
@@ -2759,7 +2852,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                     yield return lateralSource;
                 }
                 foreach (var hydroNode in Network.HydroNodes.Where(hn => !hn.IsConnectedToMultipleBranches))
-                {
+                {                    
                     yield return hydroNode;
                 }
             }
@@ -2776,31 +2869,31 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
                 INetworkLocation[] segmentsCentroidLocations = NetworkDiscretization.Segments.Values
                                         .Where(s => s.Geometry.Centroid != null)
-                                        .Select(s => new NetworkLocation(s.Branch, (s.EndChainage + s.Chainage) / 2))
+                                        .Select(s => new NetworkLocation(s.Branch, (s.EndChainage + s.Chainage)/ 2))
                                         .OfType<INetworkLocation>()
                                         .ToArray();
 
                 yield return new Feature // all locations
-                {
-                    Geometry = NetworkDiscretization.Geometry,
-                    Attributes = new DictionaryFeatureAttributeCollection
+                    {
+                        Geometry = NetworkDiscretization.Geometry,
+                        Attributes = new DictionaryFeatureAttributeCollection
                             {
                                 { "locations", NetworkDiscretization.Locations.Values },
                                 { "StandardFeatureName", EngineParameters.GetStandardFeatureName(ElementSet.GridpointsOnBranches)},
                                 { "ElementType", "GridpointsOnBranches" }
                             }
-                };
+                    };
 
                 yield return new Feature // all staggered locations
-                {
-                    Geometry = new GeometryCollection(segmentsCentroidLocations.Select(nl => nl.Geometry).ToArray()),
-                    Attributes = new DictionaryFeatureAttributeCollection
+                    {
+                        Geometry = new GeometryCollection(segmentsCentroidLocations.Select(nl => nl.Geometry).ToArray()),
+                        Attributes = new DictionaryFeatureAttributeCollection
                             {
                                 { "locations", segmentsCentroidLocations },
                                 { "StandardFeatureName", EngineParameters.GetStandardFeatureName(ElementSet.ReachSegElmSet)},
                                 { "ElementType", "ReachSegElmSet" }
                             }
-                };
+                    };
             }
         }
 
@@ -2817,7 +2910,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
             if (location.Geometry is GeometryCollection && location.Attributes.ContainsKey("ElementType"))
             {
-                var elementSet = (ElementSet)Enum.Parse(typeof(ElementSet), (string)location.Attributes["ElementType"], true);
+                var elementSet = (ElementSet) Enum.Parse(typeof(ElementSet), (string)location.Attributes["ElementType"], true);
                 foreach (EngineParameter engineParameter in EngineParameters.EngineMapping().Where(p => p.ElementSet == elementSet))
                 {
                     if (engineParameter.QuantityType == QuantityType.Salinity && !UseSaltInCalculation) continue;
@@ -2849,7 +2942,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                     // search it first in existing data items
                     var existingDataItem =
                         networkDataItem.Children.FirstOrDefault(
-                            delegate (IDataItem di)
+                            delegate(IDataItem di)
                             {
                                 var valueConverter = di.ValueConverter as WaterFlowModelBranchFeatureValueConverter;
                                 return di.ValueType == typeof(double)
@@ -2936,10 +3029,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         {
             return EngineParameters.GetInitialValue(feature, parameterName);
         }
-
-
+        
+        
         //'hack' there must another way to do this...why it output not cleared when currenttime changes???
-        private readonly string[] ignoreProperties = new[] { "IsEditing" };
+        private readonly string[] ignoreProperties = new[] { "IsEditing"};
 
         [EditAction]
         protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -2969,7 +3062,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             {
                 return;
             }
-
+            
             if (ignoreProperties.Contains(e.PropertyName))
             {
                 return;
@@ -3066,7 +3159,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
             return ParameterSettings.FirstOrDefault(p => p.Name == parameterName);
         }
-
+        
         public virtual IHydroRegion Region { get { return Network; } }
 
         public virtual Type SupportedRegionType { get { return typeof(HydroNetwork); } }
@@ -3091,8 +3184,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             NetworkCoverageHelper.ExtractTimeSlice(OutputFlow, InitialFlow, outputTime, true);
             return true;
         }
-
-
+       
+      
         public virtual string HydFilePath
         {
             get { return WorkingDirectory == null ? "" : Path.Combine(WorkingDirectory, "sobek.hyd"); }
@@ -3139,7 +3232,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         }
 
         #region Save State: Time Range
-
+        
         public virtual DateTime SaveStateStartTime { get; set; }
 
         public virtual DateTime SaveStateStopTime { get; set; }
@@ -3220,20 +3313,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
             RunInWorkingDirectory(() => ModelStateHandler.SaveStateToFile(modelState, persistentStateFilePath));
         }
-        #endregion
-
+        #endregion        
+        
         #region IModelMerge
         public virtual ValidationReport ValidateMerge(IModelMerge sourceModel)
         {
-
+            
             if (!CanMerge(sourceModel))
             {
                 return new ValidationReport(Name + " (Water Flow 1D Model)", new[]
                                                                    {
                                                                        new ValidationReport("Model", new [] { new ValidationIssue(sourceModel, ValidationSeverity.Error, string.Format("sourceModel {0} (of type {1}) can't be merged with this model {2} (of type {3})",sourceModel.Name, sourceModel.GetType(),Name,GetType())) })
-                                                                   });
+                                                                   });    
             }
-
+            
             return new WaterFlowModel1DModelMergeValidator().Validate(this, (WaterFlowModel1D)sourceModel);
         }
 
@@ -3289,7 +3382,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             get { return "dflow1d"; }
         }
 
-
+        
         public virtual string ShortName
         {
             get { return "flow1d"; }
@@ -3319,10 +3412,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         {
             var idParts = itemString.Split('/');
             var category = idParts[0];
-            var featureName = idParts[1].Replace("~~", "##");
+            var featureName = idParts[1].Replace("~~","##");
             var parameterName = GetConvertedParameterName(idParts[2], category, true);
 
-            var feature = (INetworkFeature)GetFeatureListForCategory(category).FirstOrDefault(n => n.Name == featureName);
+            var feature = (INetworkFeature) GetFeatureListForCategory(category).FirstOrDefault(n => n.Name == featureName);
             var childDataItems = GetChildDataItems(feature);
 
             var dataItem = childDataItems.FirstOrDefault(di => (di.ValueConverter?.OriginalValue as INetworkFeature)?.Name == featureName &&
@@ -3362,8 +3455,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                     : parameterName;
             }
 
-            return namesLookup.ContainsValue(parameterName)
-                ? namesLookup.First(kvp => kvp.Value == parameterName).Key
+            return namesLookup.ContainsValue(parameterName) 
+                ? namesLookup.First(kvp => kvp.Value == parameterName).Key 
                 : parameterName;
         }
 
@@ -3609,7 +3702,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                     break;
             }
 
-            return new[] { EngineParameters.GetInitialValue(feature, parameter) };
+            return new[] {EngineParameters.GetInitialValue(feature, parameter)};
         }
         public virtual void SetVar(Array values, string category, string itemName = null, string parameter = null)
         {
@@ -3655,7 +3748,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         protected override void OnInitialize()
         {
             DataItems.RemoveAllWhere(di => di.Tag == SobekLogfileDataItemTag);
-
+            
             boundaryConditionDataList = BoundaryConditions.ToList();
 
             // performance optimization: skip validation in boundary condition
@@ -3883,6 +3976,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
         }
 
-        #endregion
+        private static Unit CreateUnit(WaterFlowModel1DDataSet.UnitIds knownUnitId)
+        {
+            switch (knownUnitId)
+            {
+                case WaterFlowModel1DDataSet.UnitIds.Meter:
+                    return new Unit("meter", "m");
+                case WaterFlowModel1DDataSet.UnitIds.CubicMeterPerSecond:
+                    return new Unit("cubic meter per second", "m³/s");
+                //case UnitIds.None:
+                default:
+                    return new Unit("", "");
+            }
+        }
     }
 }
