@@ -41,6 +41,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
             culvert.IsGated = Convert.ToBoolean(Category.ReadProperty<int>(StructureRegion.ValveOnOff.Key));
 
+            culvert.FrictionDataType = (Friction) Category.ReadProperty<int>(StructureRegion.BedFrictionType.Key);
+            var bedFriction = Category.ReadProperty<double>(StructureRegion.BedFriction.Key);
+            var groundFriction = Category.ReadProperty<double>(StructureRegion.GroundFriction.Key);
+            culvert.Friction = bedFriction;
+            if (Math.Abs(groundFriction - bedFriction) > double.Epsilon)
+            {
+                culvert.GroundLayerRoughness = groundFriction;
+                culvert.GroundLayerEnabled = true;
+            }
+
             SetGateOpeningLossCoefficientFunctionValues(culvert);
         }
 
