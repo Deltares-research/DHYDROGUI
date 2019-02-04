@@ -118,7 +118,7 @@ namespace DeltaShell.NGHS.IO.Helpers
             AddProperty(name, value.ToString(CultureInfo.InvariantCulture), comment);
         }
 
-        public void AddProperty(string name, ICoordinate coordinate, string comment = null, string format = "F4")
+        public void AddProperty(string name, Coordinate coordinate, string comment = null, string format = "F4")
         {
             var coordinateAsIniValue = coordinate.X.ToString(format, CultureInfo.InvariantCulture) + " " + coordinate.Y.ToString(format, CultureInfo.InvariantCulture);
             Properties.Add(new DelftIniProperty { Name = name, Value = coordinateAsIniValue, Comment = comment ?? "" });

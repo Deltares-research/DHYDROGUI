@@ -1,36 +1,26 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Deltares.Dimr")]
+// BUG: windows 7 displays the assembly title as file description
+[assembly: AssemblyTitle("DeltaShell.Plugins.DelftModels.RainfallRunoff")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Deltares.Dimr")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2016")]
+[assembly: AssemblyProduct("DeltaShell.Plugins.DelftModels.RainfallRunoff")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
+
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("c8da3172-27a0-452f-9294-2d1d15443be7")]
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.5.1.$WCREV$")]
-[assembly: AssemblyFileVersion("1.5.1.$WCREV$")]
+[assembly: Guid("819b5a2f-46db-4e00-9cff-5b61ddd61c98")]
+
+[assembly: InternalsVisibleTo("DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests")]

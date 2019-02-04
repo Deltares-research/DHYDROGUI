@@ -6,12 +6,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 // BUG: windows 7 displays the assembly title as file description
-[assembly: AssemblyTitle("DeltaShell.Plugins.DelftModels.QualityModel")]
+[assembly: AssemblyTitle("DeltaShell.Plugins.DelftModels.RealTimeControl")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Deltares")]
-[assembly: AssemblyProduct("DeltaShell.Plugins.DelftModels.QualityModel")]
-[assembly: AssemblyCopyright("Copyright © Deltares 2010-2013")]
+[assembly: AssemblyProduct("DeltaShell.Plugins.DelftModels.RealTimeControl")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -21,17 +19,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("44482fbc-e074-47ba-ae14-753da18caf2f")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.7.15.$WCREV$")]
-[assembly: AssemblyFileVersion("3.7.15.$WCREV$")]
+[assembly: Guid("6f1a3fe4-e580-4fa6-b47f-45a28c778397")]

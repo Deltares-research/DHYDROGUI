@@ -137,6 +137,9 @@
     <Reference Include="System.Data.DataSetExtensions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\AssemblyInfo.Version.Sobek.cs">
+      <Link>Properties\AssemblyInfo.Version.Sobek.cs</Link>
+    </Compile>
     <Compile Include="PartialSobekImporter\ToDictionaryExtensions.cs" />
     <Compile Include="PartialSobekImporter\SobekLinkageNodeImporter.cs" />
     <Compile Include="PartialSobekImporter\SobekMeteoDataImporterHelper.cs" />
@@ -314,7 +317,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>

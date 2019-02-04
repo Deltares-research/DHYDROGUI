@@ -4,12 +4,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DeltaShell.Plugins.DeveloperTools")]
+[assembly: AssemblyTitle("DeltaShell.Sobek.Readers")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Deltares")]
-[assembly: AssemblyProduct("DeltaShell.Plugins.DeveloperTools")]
-[assembly: AssemblyCopyright("Copyright © Deltares 2008")]
+[assembly: AssemblyProduct("DeltaShell.Sobek.Readers")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,17 +17,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("483b1e27-f4cd-4463-9f14-cf85e46d21ea")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.5.1.$WCREV$")]
-[assembly: AssemblyFileVersion("1.5.1.$WCREV$")]
+[assembly: Guid("38748490-5882-47ce-9def-ebb23208325f")]

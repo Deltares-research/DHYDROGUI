@@ -4,12 +4,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DeltaShell.Plugins.DelftModels.HydroModel.Gui")]
+[assembly: AssemblyTitle("DeltaShell.Plugins.FMSuite.Wave.Gui")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DeltaShell.Plugins.DelftModels.HydroModel.Gui")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
+[assembly: AssemblyProduct("DeltaShell.Plugins.FMSuite.Wave.Gui")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,14 +17,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("dfb86213-fc30-4827-84ad-9475da8dc770")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-[assembly: AssemblyVersion("1.5.1.$WCREV$")]
-[assembly: AssemblyFileVersion("1.5.1.$WCREV$")]
+[assembly: Guid("1b9f065e-107d-4547-9d95-4bc14092e08f")]

@@ -4,12 +4,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DeltaShell.Plugins.DelftModels.RealTimeControl.Gui")]
+[assembly: AssemblyTitle("DeltaShell.Plugins.FMSuite.Common")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DeltaShell.Plugins.DelftModels.RealTimeControl.Gui")]
-[assembly: AssemblyCopyright("Copyright © 2010-2013")]
+[assembly: AssemblyProduct("DeltaShell.Plugins.FMSuite.Common")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,14 +17,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("5ff826cc-fb21-4d22-a457-d91fd064f6c7")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-[assembly: AssemblyVersion("3.7.15.$WCREV$")]
-[assembly: AssemblyFileVersion("3.7.15.$WCREV$")]
+[assembly: Guid("e0c449e6-c7e9-47c5-81ea-d357f3ff4fef")]

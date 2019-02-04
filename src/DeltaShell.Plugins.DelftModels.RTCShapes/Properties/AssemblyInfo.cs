@@ -7,9 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("DeltaShell.Plugins.DelftModels.RTCShapes")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("WL | Delft Hydraulics")]
 [assembly: AssemblyProduct("DeltaShell.Plugins.DelftModels.RTCShapes")]
-[assembly: AssemblyCopyright("Copyright © WL | Delft Hydraulics 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,16 +18,3 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("e5d24ffb-08b8-4729-bbb6-1377246b51e8")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.7.15.$WCREV$")]
-[assembly: AssemblyFileVersion("3.7.15.$WCREV$")]

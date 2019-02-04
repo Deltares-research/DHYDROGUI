@@ -1,16 +1,14 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Mono.Addins;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DeltaShell.Plugins.SobekImport")]
+[assembly: AssemblyTitle("DeltaShell.Plugins.FMSuite.FlowFM")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Deltares")]
-[assembly: AssemblyProduct("DeltaShell.Plugins.SobekImport")]
-[assembly: AssemblyCopyright("Copyright © Deltares 2008-2013")]
+[assembly: AssemblyProduct("DeltaShell.Plugins.FMSuite.FlowFM")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,16 +18,6 @@ using Mono.Addins;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("07e99397-7aab-4ef4-b2b4-352d7dd283de")]
+[assembly: Guid("85b4a545-ad5c-49d1-b8b6-d50022801fbb")]
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Revision and Build Numbers 
-// by using the '*' as shown below:
-[assembly: AssemblyVersion("3.7.15.$WCREV$")]
-[assembly: AssemblyFileVersion("3.7.15.$WCREV$")]
+[assembly: InternalsVisibleTo("DeltaShell.Plugins.FMSuite.FlowFM.Tests")]

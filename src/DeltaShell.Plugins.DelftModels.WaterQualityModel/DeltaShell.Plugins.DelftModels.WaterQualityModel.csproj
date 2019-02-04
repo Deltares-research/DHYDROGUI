@@ -61,6 +61,9 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\AssemblyInfo.Version.Sobek.cs">
+      <Link>Properties\AssemblyInfo.Version.Sobek.cs</Link>
+    </Compile>
     <Compile Include="DataItemMetaData\ADataItemMetaData.cs" />
     <Compile Include="DataItemMetaData\KnownWaqDataItemMetaData.cs" />
     <Compile Include="DataObjects\BloomInfo.cs" />
@@ -519,7 +522,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

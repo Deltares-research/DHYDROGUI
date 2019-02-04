@@ -1,17 +1,13 @@
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-// BUG: windows 7 displays the assembly title as file description
-[assembly: AssemblyTitle("DeltaShell.Plugins.Fews")]
+[assembly: AssemblyTitle("DeltaShell.Plugins.NetworkEditor.Gui")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Deltares")]
-[assembly: AssemblyProduct("DeltaShell.Plugins.Fews")]
-[assembly: AssemblyCopyright("Copyright © Deltares 2011")]
+[assembly: AssemblyProduct("DeltaShell.Plugins.NetworkEditor.Gui")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -21,15 +17,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("67f660ab-92d8-488e-b6ef-ebe5c1f270b5")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-[assembly: AssemblyVersion("3.7.15.$WCREV$")]
-[assembly: AssemblyFileVersion("3.7.15.$WCREV$")]
-[assembly: InternalsVisibleTo("DeltaShell.Plugins.Fews.Tests")]
+[assembly: Guid("8e7c03ce-31d8-4e11-be6e-73bf7618936c")]

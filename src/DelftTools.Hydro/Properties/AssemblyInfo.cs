@@ -9,9 +9,7 @@ using System.Security.Permissions;
 [assembly : AssemblyTitle("DataObjects")]
 [assembly : AssemblyDescription("")]
 [assembly : AssemblyConfiguration("")]
-[assembly : AssemblyCompany("Deltares")]
 [assembly : AssemblyProduct("DataObjects")]
-[assembly : AssemblyCopyright("Copyright © Deltares 2008")]
 [assembly : AssemblyTrademark("")]
 [assembly : AssemblyCulture("")]
 
@@ -25,15 +23,3 @@ using System.Security.Permissions;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly : Guid("da83993d-ebc6-4c99-95fd-00bf0ad97308")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Revision and Build Numbers 
-// by using the '*' as shown below:
-[assembly: AssemblyVersion("1.5.1.$WCREV$")]
-[assembly: AssemblyFileVersion("1.5.1.$WCREV$")]

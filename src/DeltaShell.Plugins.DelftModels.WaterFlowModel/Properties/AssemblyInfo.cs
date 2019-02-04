@@ -10,9 +10,7 @@ using Mono.Addins;
 [assembly: AssemblyTitle("DeltaShell.Plugins.DelftModels.WaterFlowModel")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Deltares")]
 [assembly: AssemblyProduct("DeltaShell.Plugins.DelftModels.WaterFlowModel")]
-[assembly: AssemblyCopyright("Copyright © Deltares 2008-2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -23,17 +21,3 @@ using Mono.Addins;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("1ef47b03-4304-48fe-8e2f-da56906b4be0")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.7.15.$WCREV$")]
-[assembly: AssemblyFileVersion("3.7.15.$WCREV$")]
-
