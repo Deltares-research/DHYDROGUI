@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
@@ -143,6 +144,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             Assert.That(componentValues[1], Is.EqualTo(4.0));
 
             mocks.VerifyAll();
+        }
+
+        [TestCase("1.000", "3.000 4.000")]
+        [TestCase("1.000 2.000", "3.000")]
+        [ExpectedException(typeof(Exception))]
+        public void GivenPumpStructureIniCategoryWithAmountOfEntriesNotEqualToAmountOfLevels_WhenConvertingToStructure1D_ThenPumpWithoutReductionTableValuesIsReturned
+            (string headValues, string reductionFactorValues)
+        {
+            // Given
+            var category = GetStructureCategoryWithBasicProperties();
+            category.SetProperty(StructureRegion.ReductionFactorLevels.Key, "2");
+            category.SetProperty(StructureRegion.Head.Key, headValues);
+            category.SetProperty(StructureRegion.ReductionFactor.Key, reductionFactorValues);
+
+            var branch = GetMockedBranch();
+
+            // When-Then
+            ConvertAndCheckForNull<PumpConverter, Pump>(category, branch);
         }
 
         [Test]

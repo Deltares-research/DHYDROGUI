@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             var compositeBranchStructures = new CompositeBranchStructureConverter().Convert(categories, channels, crossSectionDefinitions, groundLayerDataTransferObject, errorMessages);
             
             if (errorMessages.Count > 0)
-                createAndAddErrorReport?.Invoke("While reading the structures from file, an error occured", errorMessages);
+                createAndAddErrorReport?.Invoke($"While reading the structures from file '{filePath}', an error occured", errorMessages);
 
             return compositeBranchStructures;
 
