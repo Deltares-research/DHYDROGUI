@@ -854,6 +854,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         public virtual double? D90 { get; set; }
         public virtual double? DepthUsedForSediment { get; set; }
 
+        public virtual double DesignFactorDlg { get; set; }
         public virtual double HeatCapacityWater { get; set; }
 
         public virtual DensityType DensityType
