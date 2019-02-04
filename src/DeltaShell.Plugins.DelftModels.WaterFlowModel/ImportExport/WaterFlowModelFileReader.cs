@@ -154,8 +154,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             var crossSectionDefinitions = ReadCrossSectionsFile(network, CreateAndAddErrorReport);
             stepCounter++;
 
+            var groundLayerData = CrossSectionDefinitionFileReader.ReadGroundLayerData(fileNames.CrossSectionDefinitions).ToArray();
+
             reportProgress($"Reading structures from {fileNames.Structures}.", stepCounter, TotalSteps);
-            ReadStructuresFile(network, crossSectionDefinitions, CreateAndAddErrorReport);
+            ReadStructuresFile(network, crossSectionDefinitions, groundLayerData, CreateAndAddErrorReport);
             stepCounter++;
         }
 
@@ -165,10 +167,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return crossSectionsReader.Read(fileNames.CrossSectionDefinitions, fileNames.CrossSectionLocations, network);
         }
 
-        private static void ReadStructuresFile(IHydroNetwork network, IList<ICrossSectionDefinition> crossSectionDefinitions, Action<string, IList<string>> createAndAddErrorReport)
+        private static void ReadStructuresFile(IHydroNetwork network, IList<ICrossSectionDefinition> crossSectionDefinitions, GroundLayerDataTransferObject[] groundLayerDataTransferObject, Action<string, IList<string>> createAndAddErrorReport)
         {
             var structuresFileReader = new StructuresFileReader(createAndAddErrorReport);
-            var compositeBranchStructures = structuresFileReader.ReadStructures(fileNames.Structures, network.Channels.ToList(), crossSectionDefinitions);
+            var compositeBranchStructures = structuresFileReader.ReadStructures(fileNames.Structures, network.Channels.ToList(), crossSectionDefinitions, groundLayerDataTransferObject);
 
             foreach (var compositeBranchStructure in compositeBranchStructures)
             {

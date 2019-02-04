@@ -83,7 +83,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
             Assert.AreEqual(1, definitions.First().Sections.Count);
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAValidCrossSectionDefinitionFile_WhenReadingGroundLayerData_ThenGroundLayerDataObjectShouldBeReturnedWithoutErrors()
+        {
+            // Given
+            var filePath = TestHelper.GetTestFilePath(@"ImportCrossSections\CrossSectionDefinitions_Standard.ini");
+            Assert.That(File.Exists(filePath));
 
+            // When
+            var groundLayerDataObjects = CrossSectionDefinitionFileReader.ReadGroundLayerData(filePath).ToArray();
+
+            // Then
+            Assert.That(groundLayerDataObjects.Length, Is.EqualTo(1));
+            var groundLayerData = groundLayerDataObjects.FirstOrDefault();
+            Assert.IsNotNull(groundLayerData);
+            Assert.That(groundLayerData.CrossSectionDefinitionId, Is.EqualTo("CrossSection1"));
+            Assert.IsTrue(groundLayerData.GroundLayerUsed);
+            Assert.That(groundLayerData.GroundLayerThickness, Is.EqualTo(2.0));
+        }
 
         [Test]
         [Category(TestCategory.DataAccess)]

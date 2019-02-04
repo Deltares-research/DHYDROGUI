@@ -9,6 +9,7 @@ using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using NUnit.Framework;
 
@@ -62,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
                         $"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
 
                 var reader = new StructuresFileReader(CreateAndAddErrorReport);
-                var allCompositeBranchStructures = reader.ReadStructures(testFile, channels, new List<ICrossSectionDefinition>());
+                var allCompositeBranchStructures = reader.ReadStructures(testFile, channels, new List<ICrossSectionDefinition>(), new GroundLayerDataTransferObject[] { });
 
                 Assert.AreEqual(1, allCompositeBranchStructures.Count);
                 Assert.AreEqual(1, allCompositeBranchStructures[0].Structures.Count);
@@ -101,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
                         $"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
 
                 var reader = new StructuresFileReader(CreateAndAddErrorReport);
-                var allCompositeBranchStructures = reader.ReadStructures(testFile, channels, new List<ICrossSectionDefinition>());
+                var allCompositeBranchStructures = reader.ReadStructures(testFile, channels, new List<ICrossSectionDefinition>(), new GroundLayerDataTransferObject[] { });
 
                 Assert.AreEqual(0, allCompositeBranchStructures.Count);
                 Assert.AreEqual(1, errorReport.Count);

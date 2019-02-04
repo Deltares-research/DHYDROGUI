@@ -8,6 +8,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using GeoAPI.Extensions.Networks;
 
@@ -41,6 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
         public IList<ICompositeBranchStructure> Convert(IList<DelftIniCategory> categories,
             IList<IChannel> channels,
             IList<ICrossSectionDefinition> crossSectionDefinitions,
+            GroundLayerDataTransferObject[] groundLayerDataTransferObject,
             List<string> errorMessages)
         {
             IList<ICompositeBranchStructure> compositeBranchStructures = new List<ICompositeBranchStructure>();
@@ -50,12 +52,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             foreach (var structureBranchCategory in categories.Where(
                 category => category.Name == StructureRegion.Header && System.Convert.ToInt32((category.GetPropertyValue(StructureRegion.Compound.Key))) != 0))
             {
-                CreationOfStructuresAndCompositeBranchStructures(structureBranchCategory, channels, crossSectionDefinitions, compositeBranchStructures, errorMessages);
+                CreationOfStructuresAndCompositeBranchStructures(structureBranchCategory, channels, crossSectionDefinitions, groundLayerDataTransferObject, compositeBranchStructures, errorMessages);
             }
             foreach (var structureBranchCategory in categories.Where(
                 category => category.Name == StructureRegion.Header && System.Convert.ToInt32((category.GetPropertyValue(StructureRegion.Compound.Key))) == 0))
             {
-                CreationOfStructuresAndCompositeBranchStructures(structureBranchCategory, channels, crossSectionDefinitions, compositeBranchStructures, errorMessages);
+                CreationOfStructuresAndCompositeBranchStructures(structureBranchCategory, channels, crossSectionDefinitions, groundLayerDataTransferObject, compositeBranchStructures, errorMessages);
             }
             return compositeBranchStructures;
         }
@@ -63,6 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
         private void CreationOfStructuresAndCompositeBranchStructures(DelftIniCategory structureBranchCategory,
             IEnumerable<IBranch> channels, 
             IEnumerable<ICrossSectionDefinition> crossSectionDefinitions,
+            GroundLayerDataTransferObject[] groundLayerDataTransferObject,
             IList<ICompositeBranchStructure> compositeBranchStructures,
             ICollection<string> errorMessages)   
         {
@@ -86,9 +89,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                 {
                     var crossSectionDefinitionId = structureBranchCategory.ReadProperty<string>(StructureRegion.CsDefId.Key);
                     var matchingCrossSectionDefinition = crossSectionDefinitions.FirstOrDefault(csd => csd.Name == crossSectionDefinitionId);
-                    if (matchingCrossSectionDefinition == null) return;
-                    
-                    SetCulvertCrossSectionDefinition(matchingCrossSectionDefinition, culvert);
+                    if (matchingCrossSectionDefinition != null)
+                    {
+                        SetCulvertCrossSectionDefinition(matchingCrossSectionDefinition, culvert);
+                    }
+
+                    var matchingGroundLayerData = groundLayerDataTransferObject.FirstOrDefault(g => g.CrossSectionDefinitionId == crossSectionDefinitionId);
+                    if (matchingGroundLayerData != null)
+                    {
+                        culvert.GroundLayerEnabled = matchingGroundLayerData.GroundLayerUsed;
+                        culvert.GroundLayerThickness = matchingGroundLayerData.GroundLayerThickness;
+                    }
                 }
 
                 if (structure == null)

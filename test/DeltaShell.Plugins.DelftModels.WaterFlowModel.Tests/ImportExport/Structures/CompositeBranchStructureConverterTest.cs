@@ -8,6 +8,7 @@ using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using NUnit.Framework;
@@ -82,7 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             categories.Add(category2);
 
             //When
-            var compositeBranchStructures = new CompositeBranchStructureConverter().Convert(categories, channels, new List<ICrossSectionDefinition>(), errorMessages);
+            var compositeBranchStructures = new CompositeBranchStructureConverter().Convert(categories, channels, new List<ICrossSectionDefinition>(), new GroundLayerDataTransferObject[]{}, errorMessages);
 
             //Then
             Assert.AreEqual(1, compositeBranchStructures.Count);
@@ -104,7 +105,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             };
 
             // When
-            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(roundShape);
+            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(roundShape, new GroundLayerDataTransferObject[0]);
 
             // Then
             var shape = GetCulvertShapeFromCompositeStructure<CrossSectionStandardShapeRound>(compositeBranchStructures);
@@ -122,7 +123,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             };
 
             // When
-            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(rectangleShape);
+            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(rectangleShape, new GroundLayerDataTransferObject[0]);
 
             // Then
             var shape = GetCulvertShapeFromCompositeStructure<CrossSectionStandardShapeRectangle>(compositeBranchStructures);
@@ -141,7 +142,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             };
 
             // When
-            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(ellipticalShape);
+            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(ellipticalShape, new GroundLayerDataTransferObject[0]);
 
             // Then
             var shape = GetCulvertShapeFromCompositeStructure<CrossSectionStandardShapeElliptical>(compositeBranchStructures);
@@ -159,7 +160,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             };
 
             // When
-            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(eggShape);
+            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(eggShape, new GroundLayerDataTransferObject[0]);
 
             // Then
             var shape = GetCulvertShapeFromCompositeStructure<CrossSectionStandardShapeEgg>(compositeBranchStructures);
@@ -179,7 +180,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             };
 
             // When
-            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(archShape);
+            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(archShape, new GroundLayerDataTransferObject[0]);
 
             // Then
             var shape = GetCulvertShapeFromCompositeStructure<CrossSectionStandardShapeArch>(compositeBranchStructures);
@@ -198,7 +199,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             };
 
             // When
-            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(cunetteShape);
+            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(cunetteShape, new GroundLayerDataTransferObject[0]);
 
             // Then
             var shape = GetCulvertShapeFromCompositeStructure<CrossSectionStandardShapeCunette>(compositeBranchStructures);
@@ -227,7 +228,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             };
 
             // When
-            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(steelCunetteShape);
+            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(steelCunetteShape, new GroundLayerDataTransferObject[0]);
 
             // Then
             var shape = GetCulvertShapeFromCompositeStructure<CrossSectionStandardShapeSteelCunette>(compositeBranchStructures);
@@ -240,16 +241,50 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             Assert.That(shape.AngleA1, Is.EqualTo(crossSectionDefinitionAngle1));
         }
 
-        private IList<ICompositeBranchStructure> ConvertCulvertDelftIniCategoryToCompositeBranchStructures(ICrossSectionStandardShape shape)
+        [Test]
+        public void GivenCulvertDelftIniCategoryWithMatchingGroundLayerData_WhenConvertingToCompositeBranchStructure_ThenCulvertCrossSectionGroundLayerPropertiesAreAsExpected()
         {
-            var crossSectionDefinitions = new List<ICrossSectionDefinition> {GetCrossSectionDefinition(shape)};
+            // Given
+            var cunetteShape = new CrossSectionStandardShapeRectangle
+            {
+                Width = CrossSectionDefinitionWidth,
+                Height = CrossSectionDefinitionHeight
+            };
+
+            var groundLayerThickness = 2.5;
+            var layerData = new GroundLayerDataTransferObject
+            {
+                CrossSectionDefinitionId = CulvertName,
+                GroundLayerUsed = true,
+                GroundLayerThickness = groundLayerThickness
+            };
+            var groundLayerData = new[] { layerData };
+
+            // When
+            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(cunetteShape, groundLayerData);
+
+            // Then
+            Assert.That(compositeBranchStructures.Count, Is.EqualTo(1));
+
+            var compositeBranchStructure = compositeBranchStructures.FirstOrDefault();
+            var branchFeatures = compositeBranchStructure?.Branch.BranchFeatures;
+            var culvert = branchFeatures?.FirstOrDefault() as Culvert;
+            Assert.IsNotNull(culvert);
+
+            Assert.IsTrue(culvert.GroundLayerEnabled);
+            Assert.That(culvert.GroundLayerThickness, Is.EqualTo(groundLayerThickness));
+        }
+
+        private IList<ICompositeBranchStructure> ConvertCulvertDelftIniCategoryToCompositeBranchStructures(ICrossSectionStandardShape shape, GroundLayerDataTransferObject[] groundLayerDataTransferObjects)
+        {
+            var crossSectionDefinitions = new List<ICrossSectionDefinition> {GetCrossSectionDefinition(shape)};            
             Network = new HydroNetwork();
             var categories = new List<DelftIniCategory> {GetCulvertCategoryWithBasicProperties()};
             var branches = new List<IChannel> {GetMockedChannel()};
 
             var converter = new CompositeBranchStructureConverter();
             var compositeBranchStructures =
-                converter.Convert(categories, branches, crossSectionDefinitions, new List<string>());
+                converter.Convert(categories, branches, crossSectionDefinitions, groundLayerDataTransferObjects, new List<string>());
             return compositeBranchStructures;
         }
 
@@ -308,7 +343,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             var converter = new CompositeBranchStructureConverter();
             var compositeBranchStructures =
-                converter.Convert(categories, branches, crossSectionDefinitions, new List<string>());
+                converter.Convert(categories, branches, crossSectionDefinitions, new GroundLayerDataTransferObject[] { }, new List<string>());
             return compositeBranchStructures;
         }
 
@@ -349,7 +384,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.AddProperty(StructureRegion.OutletLossCoeff.Key, "1.0");
             category.AddProperty(StructureRegion.ValveOnOff.Key, "1");
             category.AddProperty(StructureRegion.IniValveOpen.Key, "0.0");
-            category.SetProperty(StructureRegion.ValveOnOff.Key, "0");
+            category.AddProperty(StructureRegion.BedFrictionType.Key, "1");
+            category.AddProperty(StructureRegion.BedFriction.Key, "45.0");
+            category.AddProperty(StructureRegion.GroundFrictionType.Key, "1");
+            category.AddProperty(StructureRegion.GroundFriction.Key, "45.0");
 
             return category;
         }
@@ -380,7 +418,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             //When
             var converter = new CompositeBranchStructureConverter(someFactoryMock, compositeBranchStructuresFunc );
-            converter.Convert(categories, channels, new List<ICrossSectionDefinition>(), errorMessages);
+            converter.Convert(categories, channels, new List<ICrossSectionDefinition>(), new GroundLayerDataTransferObject[] { }, errorMessages);
 
             //Then
             mocks.VerifyAll();
@@ -421,7 +459,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             //When
             var converter = new CompositeBranchStructureConverter(someFactoryMock, compositeBranchStructuresFunc);
-            converter.Convert(categories, channels, new List<ICrossSectionDefinition>(), errorMessages);
+            converter.Convert(categories, channels, new List<ICrossSectionDefinition>(), new GroundLayerDataTransferObject[] { }, errorMessages);
 
             //Then
 
@@ -471,7 +509,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             
             //When
             var converter = new CompositeBranchStructureConverter(someFactoryMock, someCompositeBranchStructureMock);
-            converter.Convert(categories, channels, new List<ICrossSectionDefinition>(), errorMessages);
+            converter.Convert(categories, channels, new List<ICrossSectionDefinition>(), new GroundLayerDataTransferObject[] { }, errorMessages);
 
             //Then
 

@@ -5,6 +5,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
@@ -17,7 +18,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             this.createAndAddErrorReport = createAndAddErrorReport;
         }
 
-        public IList<ICompositeBranchStructure> ReadStructures(string filePath, IList<IChannel> channels, IList<ICrossSectionDefinition> crossSectionDefinitions)
+        public IList<ICompositeBranchStructure> ReadStructures(
+            string filePath, 
+            IList<IChannel> channels, 
+            IList<ICrossSectionDefinition> crossSectionDefinitions, 
+            GroundLayerDataTransferObject[] groundLayerDataTransferObject)
         {
             var errorMessages = new List<string>();
             IList<DelftIniCategory> categories = new List<DelftIniCategory>();
@@ -30,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                 errorMessages.Add(e.Message);
             }
             
-            var compositeBranchStructures = new CompositeBranchStructureConverter().Convert(categories, channels, crossSectionDefinitions, errorMessages);
+            var compositeBranchStructures = new CompositeBranchStructureConverter().Convert(categories, channels, crossSectionDefinitions, groundLayerDataTransferObject, errorMessages);
             
             if (errorMessages.Count > 0)
                 createAndAddErrorReport?.Invoke("While reading the structures from file, an error occured", errorMessages);

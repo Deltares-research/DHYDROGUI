@@ -5,6 +5,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.CrossSections
 {
@@ -207,6 +208,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
             Assert.AreEqual(1, errorMessages.Count);
 
             Assert.That(errorMessages.Any(e => e.Equals($"Property {missingPropertyName} is not found in the file"))); 
+        }
+
+        [Test]
+        public void GivenCrossSectionDefinitionDelftIniCategory_WhenConvertingToGroundLayerData_ThenCorrectGroundLayerDataObjectIsReturned()
+        {
+            // Given
+            var id = "myCrossSectionId";
+            var category = new DelftIniCategory(DefinitionRegion.Header);
+            category.AddProperty(DefinitionRegion.Id.Key, id);
+            category.AddProperty(DefinitionRegion.GroundlayerUsed.Key, "1");
+            category.AddProperty(DefinitionRegion.Groundlayer.Key, "20.0");
+            var categories = new List<DelftIniCategory> { category };
+
+            // When
+            var groundLayerDataObjects = CrossSectionDefinitionConverter.ConvertToGroundLayerData(categories).ToArray();
+
+            // Then
+            Assert.That(groundLayerDataObjects.Length, Is.EqualTo(1));
+
+            var groundLayerData = groundLayerDataObjects.FirstOrDefault();
+            Assert.IsNotNull(groundLayerData);
+            Assert.That(groundLayerData.CrossSectionDefinitionId, Is.EqualTo(id));
+            Assert.That(groundLayerData.GroundLayerUsed, Is.EqualTo(true));
+            Assert.That(groundLayerData.GroundLayerThickness, Is.EqualTo(20.0));
         }
 
         private DelftIniCategory CreateCrossSectionDefinitionCategory_YZ(string id)
