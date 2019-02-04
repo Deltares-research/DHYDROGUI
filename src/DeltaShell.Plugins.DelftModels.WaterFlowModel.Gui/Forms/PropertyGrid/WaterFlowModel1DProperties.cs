@@ -229,10 +229,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
                     return;
                 }
 
-                data.InitialConditionsType= value;
+                data.InitialConditionsType = value;
             }
         }
-        
+
         [PropertyOrder(2)]
         [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_InitialConditions")]
         [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_DefaultInitialWaterLevel_DisplayName")]
@@ -251,6 +251,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         {
             get { return data.DefaultInitialDepth; }
             set { data.DefaultInitialDepth = value; }
+        }
+
+        [PropertyOrder(1)]
+        [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_ModelSettings")]
+        [DisplayName("Specials properties")]
+        [Description("Specials properties")]
+        public WaterFlowModel1DSpecialsProperties Specials
+        {
+            get { return new WaterFlowModel1DSpecialsProperties(data); }
         }
 
         [DynamicReadOnlyValidationMethod]

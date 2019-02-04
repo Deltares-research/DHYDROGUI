@@ -72,6 +72,7 @@
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DRoughnessProperties.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DSalinityProperties.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DSedimentProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\WaterFlowModel1DSpecialsProperties.cs" />
     <Compile Include="Forms\PropertyGrid\WaterFlowModel1DTemperatureProperties.cs" />
     <Compile Include="Forms\RefreshMainSectionWidthsDialog.xaml.cs">
       <DependentUpon>RefreshMainSectionWidthsDialog.xaml</DependentUpon>
@@ -132,7 +133,9 @@
     <EmbeddedResource Include="Forms\RoughnessAsFunctionOfView.resx">
       <DependentUpon>RoughnessAsFunctionOfView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />
+    <EmbeddedResource Include="Properties\Resources.nl-NL.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
