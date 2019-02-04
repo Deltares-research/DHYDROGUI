@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [PropertyOrder(1)]
         [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_D50_DisplayName")]
         [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_D50_Description")]
-        public double D50
+        public double? D50
         {
             get { return data.D50; }
             set { data.D50 = value; }
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [PropertyOrder(2)]
         [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_D90_DisplayName")]
         [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_D90_Description")]
-        public double D90
+        public double? D90
         {
             get { return data.D90; }
             set { data.D90 = value; }
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [PropertyOrder(3)]
         [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_DepthUsedForSediment_DisplayName")]
         [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_DepthUsedForSediment_Description")]
-        public double DepthUsedForSediment
+        public double? DepthUsedForSediment
         {
             get { return data.DepthUsedForSediment; }
             set { data.DepthUsedForSediment = value; }
