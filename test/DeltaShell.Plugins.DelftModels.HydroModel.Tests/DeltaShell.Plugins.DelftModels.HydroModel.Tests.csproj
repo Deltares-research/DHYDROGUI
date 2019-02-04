@@ -251,6 +251,7 @@
     <Compile Include="HydroModelGuiIntegrationTest.cs" />
     <Compile Include="HydroModelTest.cs" />
     <Compile Include="Import\RtcXmlDirectoryLookupTest.cs" />
+    <Compile Include="Import\WaterFlowModel1DFileImporterHydroTest.cs" />
     <Compile Include="Iterative1D2DCouplerLinkFeatureCollectionTest.cs" />
     <Compile Include="Iterative1D2DCouplerLinkTest.cs" />
     <Compile Include="Iterative1D2DCouplerTest.cs" />

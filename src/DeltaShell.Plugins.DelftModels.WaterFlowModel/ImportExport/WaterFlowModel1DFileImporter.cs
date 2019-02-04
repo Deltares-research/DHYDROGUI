@@ -15,6 +15,39 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
     public class WaterFlowModel1DFileImporter : IDimrModelFileImporter
     {
+        /// <summary>
+        /// Initialize a new instance of the <see cref="WaterFlowModel1DFileImporter"/> class
+        /// with the specified model read function.
+        /// </summary>
+        /// <param name="modelReaderFunc">The model reader function.</param>
+        public WaterFlowModel1DFileImporter(Func<string, Action<string, int, int>, WaterFlowModel1D> modelReaderFunc)
+        {
+            this.modelReaderFunc = modelReaderFunc;
+        }
+
+        /// <inheritdoc />
+        /// <summary>Initializes a new instance of the <see cref="T:DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.WaterFlowModel1DFileImporter" /> class using
+        /// WaterFlowModel1DFileReader to read specified items.
+        /// </summary>
+        public WaterFlowModel1DFileImporter() : this(WaterFlowModel1DFileReader.Read)
+        {
+
+        }
+
+        /// <summary>
+        /// Read the model with the specified model read function..
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns> The model read from the specified path.</returns>
+        private WaterFlowModel1D ReadModel(string path)
+        {
+            void ReportProgress(string currentStepName, int currentStep, int totalSteps) => ProgressChanged(currentStepName, currentStep, totalSteps);
+            return modelReaderFunc.Invoke(path, ReportProgress);
+        }
+
+        /// <summary> Function responsible for reading the model. </summary>
+        private readonly Func<string, Action<string, int, int>, WaterFlowModel1D> modelReaderFunc;
+
         private readonly ILog log = LogManager.GetLogger(typeof(WaterFlowModel1DFileImporter));
 
         [ExcludeFromCodeCoverage]
@@ -42,6 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         
         public bool ShouldCancel { get; set; }
         
+        [ExcludeFromCodeCoverage]
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
         public bool OpenViewAfterImport => true;
@@ -50,8 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             try
             {
-                void ReportProgress(string currentStepName, int currentStep, int totalSteps) => ProgressChanged(currentStepName, currentStep, totalSteps);
-                var imported1DModel = WaterFlowModel1DFileReader.Read(path, ReportProgress);
+                var imported1DModel = ReadModel(path);
 
                 var target1DModel = target as WaterFlowModel1D;
                 if (target1DModel != null)
@@ -83,7 +116,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                                         e is IOException          || 
                                         e is InvalidOperationException)
             {
-                log.Error($"An error occurred while trying to import a {Name}; Cause: ", e);
+                log.Error($"An error occurred while trying to import a {Name};", e);
                 return null;
             }
         }
