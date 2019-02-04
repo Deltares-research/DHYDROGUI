@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using DelftTools.Utils.Collections;
@@ -29,6 +30,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowModel1DFileReader));
 
+        private static int stepCounter;
+        private static ModelFileNames fileNames;
+        private const int TotalSteps = 13;
+
         public static WaterFlowModel1D Read(string modelFilename, Action<string, int, int> reportProgress = null)
         {
             reportProgress = reportProgress ?? ((s, c, t) => { });
@@ -41,54 +46,52 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             try
             {
-                const int totalSteps = 13;
-                var stepCounter = 1;
+                stepCounter = 1;
 
-                reportProgress($"Reading filenames from {Path.GetFileName(modelFilename)}.", stepCounter, totalSteps);
-                var fileNames = new ModelFileNames(modelFilename);
+                reportProgress($"Reading filenames from {Path.GetFileName(modelFilename)}.", stepCounter, TotalSteps);
+                fileNames = new ModelFileNames(modelFilename);
                 stepCounter++;
 
-                var networkDefinitionFilePath = fileNames.Network;
-                reportProgress($"Reading network from {networkDefinitionFilePath}.", stepCounter, totalSteps);
-                ReadNetworkDefinitionFile(networkDefinitionFilePath, model, CreateAndAddErrorReport);
+                reportProgress($"Reading network from {fileNames.Network}.", stepCounter, TotalSteps);
+                ReadNetworkDefinitionFile(model, CreateAndAddErrorReport);
                 if (errorReport.Any())
                 {
                     throw new Exception(); // If anything goes wrong with reading the network, stop reading.
                 }
                 stepCounter++;
 
-                reportProgress($"'Reading model wide parameters from {Path.GetFileName(modelFilename)}", stepCounter, totalSteps);
+                reportProgress($"'Reading model wide parameters from {Path.GetFileName(modelFilename)}", stepCounter, TotalSteps);
                 ModelDefinitionFileReader.SetWaterFlowModelProperties(modelFilename, model, CreateAndAddErrorReport);
 
                 if (fileNames.Salinity == null)
                 {
-                    reportProgress("Skipping reading of Salinity data.", stepCounter, totalSteps);
+                    reportProgress("Skipping reading of Salinity data.", stepCounter, TotalSteps);
                 }
                 else
                 {
-                    reportProgress($"'Reading salinity from {fileNames.Salinity}.", stepCounter, totalSteps);
+                    reportProgress($"'Reading salinity from {fileNames.Salinity}.", stepCounter, TotalSteps);
                     var estuaryMouthNodeId = new SalinityFileReader(CreateAndAddErrorReport).ReadEstuaryMouthNodeId(fileNames.Salinity);
                     if (estuaryMouthNodeId != null) model.SalinityEstuaryMouthNodeId = estuaryMouthNodeId;
                 }
 
                 reportProgress($"Reading lateral discharge locations from {fileNames.LateralDischarge}.", stepCounter,
-                    totalSteps);
-                ReadFileLateralDischargeLocations(fileNames.LateralDischarge, model.Network.Channels, CreateAndAddErrorReport);
+                    TotalSteps);
+                ReadFileLateralDischargeLocations(model.Network.Channels, CreateAndAddErrorReport);
                 stepCounter++;
 
                 reportProgress($"Reading boundary condition locations from {fileNames.BoundaryLocations}.",
-                    stepCounter, totalSteps);
-                ReadFileBoundaryConditionLocations(fileNames.BoundaryLocations, model.BoundaryConditions, CreateAndAddErrorReport);
+                    stepCounter, TotalSteps);
+                ReadFileBoundaryConditionLocations(model.BoundaryConditions, CreateAndAddErrorReport);
                 stepCounter++;
 
                 reportProgress(
                     $"Reading boundary conditions and lateral sources from {fileNames.BoundaryConditions}.", stepCounter,
-                    totalSteps);
-                ReadBoundaryConditionFile(fileNames.BoundaryConditions, model, CreateAndAddErrorReport);
+                    TotalSteps);
+                ReadBoundaryConditionFile(model, CreateAndAddErrorReport);
                 stepCounter++;
 
-                reportProgress($"Reading observation points from {fileNames.ObservationPoints}.", stepCounter, totalSteps);
-                ReadFileObservationPointLocations(fileNames.ObservationPoints, model.Network.Channels, CreateAndAddErrorReport);
+                reportProgress($"Reading observation points from {fileNames.ObservationPoints}.", stepCounter, TotalSteps);
+                ReadFileObservationPointLocations(model.Network.Channels, CreateAndAddErrorReport);
                 stepCounter++;
 
                 var totalRoughnessFiles = fileNames.RoughnessFiles.Count;
@@ -99,36 +102,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 foreach (var roughnessFilePath in fileNames.RoughnessFiles)
                 {
                     var importUpdateText = $"Reading roughness section from {roughnessFilePath}. (reading roughness file {i} of {totalRoughnessFiles})";
-                    reportProgress(importUpdateText, stepCounter, totalSteps);
+                    reportProgress(importUpdateText, stepCounter, TotalSteps);
                     i++;
                     var roughnessSection = ReadRoughnessFile(roughnessFilePath, model, CreateAndAddErrorReport);
                     AddRoughnessSectionToModel(model, roughnessSection);
                 }
                 stepCounter++;
 
-                reportProgress(
-                    $"Reading cross sections from {fileNames.CrossSectionLocations} and {fileNames.CrossSectionDefinitions}.",
-                    stepCounter, totalSteps);
-                ReadCrossSectionsFile(fileNames, model.Network, CreateAndAddErrorReport);
-                stepCounter++;
+                ReadStructuresAndCrossSections(model.Network, reportProgress, CreateAndAddErrorReport);
 
-                reportProgress(
-                    $"Reading structures from {fileNames.Structures}.",
-                    stepCounter, totalSteps);
-                ReadStructuresFile(fileNames.Structures, model.Network, CreateAndAddErrorReport);
-                stepCounter++;
-
-                reportProgress(
-                    $"Reading retention from {fileNames.Retention}.",
-                    stepCounter, totalSteps);
-                ReadRetentionFile(fileNames.Retention, model.Network, CreateAndAddErrorReport);
+                reportProgress($"Reading retention from {fileNames.Retention}.",
+                    stepCounter, TotalSteps);
+                ReadRetentionFile(model.Network, CreateAndAddErrorReport);
                 stepCounter++;
 
                 reportProgress(
                     $"Reading spatial data from {fileNames}.",
-                    stepCounter, totalSteps);
+                    stepCounter, TotalSteps);
 
-                var spatialDataFileNames = PopulateSpatialDataFileNamesList(fileNames, model.DispersionFormulationType);
+                var spatialDataFileNames = PopulateSpatialDataFileNamesList(model.DispersionFormulationType);
 
                 foreach (var fileName in spatialDataFileNames)
                 {
@@ -146,7 +138,55 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return model;
         }
 
-        private static IEnumerable<string> PopulateSpatialDataFileNamesList(ModelFileNames fileNames, DispersionFormulationType modelDispersionFormulationType)
+        /// <summary>
+        /// Reads structures and cross sections.
+        /// </summary>
+        /// <param name="network">The model network.</param>
+        /// <param name="reportProgress">The report progress that is shown to the user.</param>
+        /// <param name="CreateAndAddErrorReport">The create and add error report action.</param>
+        /// <remarks>We want to read cross sections and cross section definitions before we read structures, because some structures
+        /// (like Culvert and Bridge objects) need cross section definitions. So, do not interchange the order of reading please.</remarks>
+        private static void ReadStructuresAndCrossSections(IHydroNetwork network,
+            Action<string, int, int> reportProgress, Action<string, IList<string>> CreateAndAddErrorReport)
+        {
+            reportProgress($"Reading cross sections from {fileNames.CrossSectionLocations} and {fileNames.CrossSectionDefinitions}.",
+                stepCounter, TotalSteps);
+            var crossSectionDefinitions = ReadCrossSectionsFile(network, CreateAndAddErrorReport);
+            stepCounter++;
+
+            reportProgress($"Reading structures from {fileNames.Structures}.", stepCounter, TotalSteps);
+            ReadStructuresFile(network, crossSectionDefinitions, CreateAndAddErrorReport);
+            stepCounter++;
+        }
+
+        private static IList<ICrossSectionDefinition> ReadCrossSectionsFile(IHydroNetwork network, Action<string, IList<string>> createAndAddErrorReport)
+        {
+            var crossSectionsReader = new CrossSectionFileReader(createAndAddErrorReport);
+            return crossSectionsReader.Read(fileNames.CrossSectionDefinitions, fileNames.CrossSectionLocations, network);
+        }
+
+        private static void ReadStructuresFile(IHydroNetwork network, IList<ICrossSectionDefinition> crossSectionDefinitions, Action<string, IList<string>> createAndAddErrorReport)
+        {
+            var structuresFileReader = new StructuresFileReader(createAndAddErrorReport);
+            var compositeBranchStructures = structuresFileReader.ReadStructures(fileNames.Structures, network.Channels.ToList(), crossSectionDefinitions);
+
+            foreach (var compositeBranchStructure in compositeBranchStructures)
+            {
+                if (network.CompositeBranchStructures.Any(bf => bf.Name == compositeBranchStructure.Name))
+                {
+                    //Extra check, since the composite structures will be added to the network at this level and 
+                    // due to this all the new composite branch structures containing only one structure have the same name.  
+                    compositeBranchStructure.Name =
+                        HydroNetworkHelper.GetUniqueFeatureName(compositeBranchStructure.Network as HydroNetwork,
+                            compositeBranchStructure);
+                }
+
+                var correspondingBranch = network.Channels.FirstOrDefault(c => c.Name == compositeBranchStructure.Branch.Name);
+                correspondingBranch?.BranchFeatures.Add(compositeBranchStructure);
+            }
+        }
+
+        private static IEnumerable<string> PopulateSpatialDataFileNamesList(DispersionFormulationType modelDispersionFormulationType)
         {
             var spatialDataFileNames = new List<string>
             {
@@ -168,33 +208,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             return spatialDataFileNames.Where(fn => fn != null);
         }
 
-        private static void ReadStructuresFile(string fileName, IHydroNetwork network,
-            Action<string, IList<string>> createAndAddErrorReport)
-        {
-            var structuresFileReader = new StructuresFileReader(createAndAddErrorReport);
-            var compositeBranchStructures = structuresFileReader.ReadStructures(fileName, network.Channels.ToList());
-
-            foreach (var compositeBranchStructure in compositeBranchStructures)
-            {
-                if (network.CompositeBranchStructures.Any(bf => bf.Name == compositeBranchStructure.Name))
-                {
-                    //Extra check, since the composite structures will be added to the network at this level and 
-                    // due to this all the new composite branch structures containing only one structure have the same name.  
-                    compositeBranchStructure.Name =
-                        HydroNetworkHelper.GetUniqueFeatureName(compositeBranchStructure.Network as HydroNetwork,
-                            compositeBranchStructure);
-                }
-
-                var correspondingBranch = network.Channels.FirstOrDefault(c => c.Name == compositeBranchStructure.Branch.Name);
-                correspondingBranch?.BranchFeatures.Add(compositeBranchStructure);
-            }
-        }
-
-        private static void ReadRetentionFile(string fileName, IHydroNetwork network,
-            Action<string, IList<string>> createAndAddErrorReport)
+        private static void ReadRetentionFile(IHydroNetwork network, Action<string, IList<string>> createAndAddErrorReport)
         {
             var retentionFileReader= new RetentionFileReader(createAndAddErrorReport);
-            var retentionList = retentionFileReader.ReadRetention(fileName, network.Channels.ToList());
+            var retentionList = retentionFileReader.ReadRetention(fileNames.Retention, network.Channels.ToList());
 
             foreach (var retention in retentionList)
             {
@@ -202,12 +219,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 correspondingBranch?.BranchFeatures.Add(retention);
             }
 
-        }
-
-        private static void ReadCrossSectionsFile(ModelFileNames fileName, IHydroNetwork network, Action<string, IList<string>> createAndAddErrorReport)
-        {
-            var crossSectionsReader = new CrossSectionFileReader(createAndAddErrorReport);
-            crossSectionsReader.Read(fileName.CrossSectionDefinitions, fileName.CrossSectionLocations, network);
         }
 
         private static RoughnessSection ReadRoughnessFile(string roughnessFilePath, WaterFlowModel1D model, Action<string, IList<string>> CreateAndAddErrorReport)
@@ -227,30 +238,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             model.RoughnessSections.Add(roughnessSection);
         }
 
-        private static void ReadNetworkDefinitionFile(string networkDefinitionFilePath, WaterFlowModel1D model,
-            Action<string, IList<string>> createAndAddErrorReport)
+        private static void ReadNetworkDefinitionFile(WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
         {
             var network = model.Network;
             var networkDefinitionFileReader = new NetworkDefinitionFileReader(createAndAddErrorReport);
 
-            var nodes = networkDefinitionFileReader.ReadHydroNodes(networkDefinitionFilePath);
+            var nodes = networkDefinitionFileReader.ReadHydroNodes(fileNames.Network);
             network.Nodes.AddRange(nodes);
 
-            var branches = networkDefinitionFileReader.ReadBranches(networkDefinitionFilePath, network.Nodes);
+            var branches = networkDefinitionFileReader.ReadBranches(fileNames.Network, network.Nodes);
             network.Branches.AddRange(branches);
 
-            var readNetworkLocations = networkDefinitionFileReader.ReadNetworkLocations(networkDefinitionFilePath, network.Branches).ToList();
+            var readNetworkLocations = networkDefinitionFileReader.ReadNetworkLocations(fileNames.Network, network.Branches).ToList();
             model.NetworkDiscretization.Locations.Values.AddRange(readNetworkLocations);
         }
 
-        private static void ReadFileLateralDischargeLocations(string locationFilePath, IEnumerable<IChannel> channels,
-            Action<string, IList<string>> createAndAddErrorReport)
+        private static void ReadFileLateralDischargeLocations(IEnumerable<IChannel> channels, Action<string, IList<string>> createAndAddErrorReport)
         {
             var channelsList = channels.ToList();
 
             var lateralSourceFileReader = new LateralSourceFileReader(createAndAddErrorReport);
 
-            var lateralSources = lateralSourceFileReader.ReadLateralSources(locationFilePath, channelsList);
+            var lateralSources = lateralSourceFileReader.ReadLateralSources(fileNames.LateralDischarge, channelsList);
 
             foreach (var lateralSource in lateralSources)
             {
@@ -259,9 +268,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
         }
 
-        private static void ReadFileBoundaryConditionLocations(string locationFilePath, IEventedList<WaterFlowModel1DBoundaryNodeData> boundaryNodes, Action<string, IList<string>> createAndAddErrorReport)
+        private static void ReadFileBoundaryConditionLocations(IEventedList<WaterFlowModel1DBoundaryNodeData> boundaryNodes, Action<string, IList<string>> createAndAddErrorReport)
         {
-            var boundaryLocations = (new BoundaryLocationReader(createAndAddErrorReport)).Read(locationFilePath);
+            var boundaryLocations = new BoundaryLocationReader(createAndAddErrorReport).Read(fileNames.BoundaryLocations);
             if (boundaryLocations == null) return; // File could not be read
 
             var errorMessages = new List<string>();
@@ -282,24 +291,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 createAndAddErrorReport?.Invoke("While adding the boundary locations to the network, the following errors occured", errorMessages);
         }
 
-        private static void ReadBoundaryConditionFile(string boundaryConditionsFilePath, WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
+        private static void ReadBoundaryConditionFile(WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
         {
-            new BoundaryConditionFileReader(createAndAddErrorReport).Read(boundaryConditionsFilePath, 
+            new BoundaryConditionFileReader(createAndAddErrorReport).Read(fileNames.BoundaryConditions, 
                                                                           model.MeteoData, 
                                                                           model.Wind, 
                                                                           model.BoundaryConditions, 
                                                                           model.LateralSourceData);
         }
 
-
-        private static void ReadFileObservationPointLocations(string locationFilePath, IEnumerable<IChannel> channels,
-            Action<string, IList<string>> createAndAddErrorReport)
+        private static void ReadFileObservationPointLocations(IEnumerable<IChannel> channels, Action<string, IList<string>> createAndAddErrorReport)
         {
             var channelsList = channels.ToList();
 
             var observationPointFileReader = new ObservationPointFileReader(createAndAddErrorReport);
 
-            var observationPoints = observationPointFileReader.ReadObservationPoints(locationFilePath, channelsList);
+            var observationPoints = observationPointFileReader.ReadObservationPoints(fileNames.ObservationPoints, channelsList);
 
             foreach (var observationPoint in observationPoints)
             {

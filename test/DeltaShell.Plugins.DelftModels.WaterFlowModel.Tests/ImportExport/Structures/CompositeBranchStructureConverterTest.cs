@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
@@ -14,7 +16,7 @@ using Rhino.Mocks;
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Structures
 {
     [TestFixture]
-    public class CompositeBranchStructureConverterTest
+    public class CompositeBranchStructureConverterTest : StructureConverterTestHelper
     {
         private IHydroNetwork originalNetwork;
         private IList<IChannel> channels;
@@ -80,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             categories.Add(category2);
 
             //When
-            var compositeBranchStructures = (new CompositeBranchStructureConverter()).Convert(categories, channels, errorMessages);
+            var compositeBranchStructures = new CompositeBranchStructureConverter().Convert(categories, channels, new List<ICrossSectionDefinition>(), errorMessages);
 
             //Then
             Assert.AreEqual(1, compositeBranchStructures.Count);
@@ -88,7 +90,272 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             Assert.AreEqual("Weir1", compositeBranchStructures[0].Structures[0].Name);
             Assert.AreEqual("Weir2", compositeBranchStructures[0].Structures[1].Name);
         }
-        
+
+        #region Reading Culvert Cross Section Definition
+
+        [Test]
+        public void GivenCulvertDelftIniCategoryWithMatchingCrossSectionDefinitionWithRoundShape_WhenConvertingToCompositeBranchStructure_ThenCulvertCrossSectionShapePropertiesAreAsExpected()
+        {
+            // Given
+            const double crossSectionDefinitionDiameter = 5.0;
+            var roundShape = new CrossSectionStandardShapeRound
+            {
+                Diameter = crossSectionDefinitionDiameter
+            };
+
+            // When
+            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(roundShape);
+
+            // Then
+            var shape = GetCulvertShapeFromCompositeStructure<CrossSectionStandardShapeRound>(compositeBranchStructures);
+            Assert.That(shape.Diameter, Is.EqualTo(crossSectionDefinitionDiameter));
+        }
+
+        [Test]
+        public void GivenCulvertDelftIniCategoryWithMatchingCrossSectionDefinitionWithRectangleShape_WhenConvertingToCompositeBranchStructure_ThenCulvertCrossSectionShapePropertiesAreAsExpected()
+        {
+            // Given
+            var rectangleShape = new CrossSectionStandardShapeRectangle
+            {
+                Width = CrossSectionDefinitionWidth,
+                Height = CrossSectionDefinitionHeight
+            };
+
+            // When
+            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(rectangleShape);
+
+            // Then
+            var shape = GetCulvertShapeFromCompositeStructure<CrossSectionStandardShapeRectangle>(compositeBranchStructures);
+            Assert.That(shape.Width, Is.EqualTo(CrossSectionDefinitionWidth));
+            Assert.That(shape.Height, Is.EqualTo(CrossSectionDefinitionHeight));
+        }
+
+        [Test]
+        public void GivenCulvertDelftIniCategoryWithMatchingCrossSectionDefinitionWithEllipseShape_WhenConvertingToCompositeBranchStructure_ThenCulvertCrossSectionShapePropertiesAreAsExpected()
+        {
+            // Given
+            var ellipticalShape = new CrossSectionStandardShapeElliptical
+            {
+                Width = CrossSectionDefinitionWidth,
+                Height = CrossSectionDefinitionHeight
+            };
+
+            // When
+            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(ellipticalShape);
+
+            // Then
+            var shape = GetCulvertShapeFromCompositeStructure<CrossSectionStandardShapeElliptical>(compositeBranchStructures);
+            Assert.That(shape.Width, Is.EqualTo(CrossSectionDefinitionWidth));
+            Assert.That(shape.Height, Is.EqualTo(CrossSectionDefinitionHeight));
+        }
+
+        [Test]
+        public void GivenCulvertDelftIniCategoryWithMatchingCrossSectionDefinitionWithEggShape_WhenConvertingToCompositeBranchStructure_ThenCulvertCrossSectionShapePropertiesAreAsExpected()
+        {
+            // Given
+            var eggShape = new CrossSectionStandardShapeEgg
+            {
+                Width = CrossSectionDefinitionWidth
+            };
+
+            // When
+            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(eggShape);
+
+            // Then
+            var shape = GetCulvertShapeFromCompositeStructure<CrossSectionStandardShapeEgg>(compositeBranchStructures);
+            Assert.That(shape.Width, Is.EqualTo(CrossSectionDefinitionWidth));
+        }
+
+        [Test]
+        public void GivenCulvertDelftIniCategoryWithMatchingCrossSectionDefinitionWithArchShape_WhenConvertingToCompositeBranchStructure_ThenCulvertCrossSectionShapePropertiesAreAsExpected()
+        {
+            // Given
+            var CrossSectionDefinitionArcHeight = 1.0;
+            var archShape = new CrossSectionStandardShapeArch
+            {
+                Width = CrossSectionDefinitionWidth,
+                Height = CrossSectionDefinitionHeight,
+                ArcHeight = CrossSectionDefinitionArcHeight
+            };
+
+            // When
+            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(archShape);
+
+            // Then
+            var shape = GetCulvertShapeFromCompositeStructure<CrossSectionStandardShapeArch>(compositeBranchStructures);
+            Assert.That(shape.Width, Is.EqualTo(CrossSectionDefinitionWidth));
+            Assert.That(shape.Height, Is.EqualTo(CrossSectionDefinitionHeight));
+            Assert.That(shape.ArcHeight, Is.EqualTo(CrossSectionDefinitionArcHeight));
+        }
+
+        [Test]
+        public void GivenCulvertDelftIniCategoryWithMatchingCrossSectionDefinitionWithCunetteShape_WhenConvertingToCompositeBranchStructure_ThenCulvertCrossSectionShapePropertiesAreAsExpected()
+        {
+            // Given
+            var cunetteShape = new CrossSectionStandardShapeCunette
+            {
+                Width = CrossSectionDefinitionWidth
+            };
+
+            // When
+            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(cunetteShape);
+
+            // Then
+            var shape = GetCulvertShapeFromCompositeStructure<CrossSectionStandardShapeCunette>(compositeBranchStructures);
+            Assert.That(shape.Width, Is.EqualTo(CrossSectionDefinitionWidth));
+        }
+
+        [Test]
+        public void GivenCulvertDelftIniCategoryWithMatchingCrossSectionDefinitionWithSteelCunetteShape_WhenConvertingToCompositeBranchStructure_ThenCulvertCrossSectionShapePropertiesAreAsExpected()
+        {
+            // Given
+            const double crossSectionDefinitionRadius = 2.2;
+            const double crossSectionDefinitionRadius1 = 3.3;
+            const double crossSectionDefinitionRadius2 = 0.6;
+            const double crossSectionDefinitionRadius3 = 0.9;
+            const double crossSectionDefinitionAngle = 1.0;
+            const double crossSectionDefinitionAngle1 = 3.3;
+            var steelCunetteShape = new CrossSectionStandardShapeSteelCunette
+            {
+                Height = CrossSectionDefinitionHeight,
+                RadiusR = crossSectionDefinitionRadius,
+                RadiusR1 = crossSectionDefinitionRadius1,
+                RadiusR2 = crossSectionDefinitionRadius2,
+                RadiusR3 = crossSectionDefinitionRadius3,
+                AngleA = crossSectionDefinitionAngle,
+                AngleA1 = crossSectionDefinitionAngle1
+            };
+
+            // When
+            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(steelCunetteShape);
+
+            // Then
+            var shape = GetCulvertShapeFromCompositeStructure<CrossSectionStandardShapeSteelCunette>(compositeBranchStructures);
+            Assert.That(shape.Height, Is.EqualTo(CrossSectionDefinitionHeight));
+            Assert.That(shape.RadiusR, Is.EqualTo(crossSectionDefinitionRadius));
+            Assert.That(shape.RadiusR1, Is.EqualTo(crossSectionDefinitionRadius1));
+            Assert.That(shape.RadiusR2, Is.EqualTo(crossSectionDefinitionRadius2));
+            Assert.That(shape.RadiusR3, Is.EqualTo(crossSectionDefinitionRadius3));
+            Assert.That(shape.AngleA, Is.EqualTo(crossSectionDefinitionAngle));
+            Assert.That(shape.AngleA1, Is.EqualTo(crossSectionDefinitionAngle1));
+        }
+
+        private IList<ICompositeBranchStructure> ConvertCulvertDelftIniCategoryToCompositeBranchStructures(ICrossSectionStandardShape shape)
+        {
+            var crossSectionDefinitions = new List<ICrossSectionDefinition> {GetCrossSectionDefinition(shape)};
+            Network = new HydroNetwork();
+            var categories = new List<DelftIniCategory> {GetCulvertCategoryWithBasicProperties()};
+            var branches = new List<IChannel> {GetMockedChannel()};
+
+            var converter = new CompositeBranchStructureConverter();
+            var compositeBranchStructures =
+                converter.Convert(categories, branches, crossSectionDefinitions, new List<string>());
+            return compositeBranchStructures;
+        }
+
+        private static CrossSectionDefinitionStandard GetCrossSectionDefinition(ICrossSectionStandardShape shape)
+        {
+            var crossSectionDefinitionRound = new CrossSectionDefinitionStandard(shape)
+            {
+                Name = CulvertName
+            };
+            return crossSectionDefinitionRound;
+        }
+
+        private static T GetCulvertShapeFromCompositeStructure<T>(ICollection<ICompositeBranchStructure> compositeBranchStructures)
+            where T : class, ICrossSectionStandardShape
+        {
+            Assert.That(compositeBranchStructures.Count, Is.EqualTo(1));
+
+            var compositeBranchStructure = compositeBranchStructures.FirstOrDefault();
+            var branchFeatures = compositeBranchStructure?.Branch.BranchFeatures;
+            var culvert = branchFeatures?.FirstOrDefault() as Culvert;
+            Assert.That(branchFeatures?.Count, Is.EqualTo(1));
+            Assert.IsNotNull(culvert, "CompositeBranchStructureConverter did not return a Culvert object");
+
+            var crossSectionDefinition = culvert.CrossSectionDefinition as CrossSectionDefinitionStandard;
+            var shape = crossSectionDefinition?.Shape as T;
+            Assert.IsNotNull(shape, $"CompositeBranchStructureConverter did not return a Culvert object with a {typeof(T)} shape type");
+
+            return shape;
+        }
+
+        [Test]
+        public void GivenCulvertDelftIniCategoryWithMatchingCrossSectionDefinitionZw_WhenConvertingToCompositeBranchStructure_ThenCulvertHasTabulatedShapeType()
+        {
+            // Given
+            var crossSectionDefinitionZw = new CrossSectionDefinitionZW
+            {
+                Name = CulvertName
+            };
+            crossSectionDefinitionZw.ZWDataTable.AddCrossSectionZWRow(10.0, 5.0, 0.0);
+            crossSectionDefinitionZw.ZWDataTable.AddCrossSectionZWRow(15.0, 3.0, 2.0);
+
+            // When
+            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(crossSectionDefinitionZw);
+
+            // Then
+            var csDefinitionZw = GetCrossSectionDefinitionZwFromCompositeBranchStructure(compositeBranchStructures);
+            Assert.That(csDefinitionZw, Is.EqualTo(crossSectionDefinitionZw));
+        }
+
+        private IList<ICompositeBranchStructure> ConvertCulvertDelftIniCategoryToCompositeBranchStructures(CrossSectionDefinitionZW crossSectionDefinition)
+        {
+            var crossSectionDefinitions = new List<ICrossSectionDefinition> { crossSectionDefinition };
+            Network = new HydroNetwork();
+            var categories = new List<DelftIniCategory> { GetCulvertCategoryWithBasicProperties() };
+            var branches = new List<IChannel> { GetMockedChannel() };
+
+            var converter = new CompositeBranchStructureConverter();
+            var compositeBranchStructures =
+                converter.Convert(categories, branches, crossSectionDefinitions, new List<string>());
+            return compositeBranchStructures;
+        }
+
+        private static CrossSectionDefinitionZW GetCrossSectionDefinitionZwFromCompositeBranchStructure(ICollection<ICompositeBranchStructure> compositeBranchStructures)
+        {
+            Assert.That(compositeBranchStructures.Count, Is.EqualTo(1));
+
+            var compositeBranchStructure = compositeBranchStructures.FirstOrDefault();
+            var branchFeatures = compositeBranchStructure?.Branch.BranchFeatures;
+            var culvert = branchFeatures?.FirstOrDefault() as Culvert;
+            Assert.That(branchFeatures?.Count, Is.EqualTo(1));
+            Assert.IsNotNull(culvert, "CompositeBranchStructureConverter did not return a Culvert object");
+
+            return culvert.CrossSectionDefinition as CrossSectionDefinitionZW;
+        }
+
+        private const string CulvertName = "myCulvert";
+        private const string CulvertLongName = "myCulvert_longName";
+        private const string ChainageAsString = "2.0";
+        private const double CrossSectionDefinitionWidth = 2.0;
+        private const double CrossSectionDefinitionHeight = 3.0;
+
+        private static DelftIniCategory GetCulvertCategoryWithBasicProperties()
+        {
+            var category = new DelftIniCategory(StructureRegion.Header);
+            category.AddProperty(StructureRegion.DefinitionType.Key, StructureRegion.StructureTypeName.Culvert);
+            category.AddProperty(StructureRegion.Id.Key, CulvertName);
+            category.AddProperty(StructureRegion.Name.Key, CulvertLongName);
+            category.AddProperty(StructureRegion.BranchId.Key, BranchName);
+            category.AddProperty(StructureRegion.CsDefId.Key, CulvertName);
+            category.AddProperty(StructureRegion.Chainage.Key, ChainageAsString);
+            category.AddProperty(StructureRegion.Compound.Key, "0");
+            category.AddProperty(StructureRegion.AllowedFlowDir.Key, "0");
+            category.AddProperty(StructureRegion.LeftLevel.Key, "0.0");
+            category.AddProperty(StructureRegion.RightLevel.Key, "0.0");
+            category.AddProperty(StructureRegion.Length.Key, "1.0");
+            category.AddProperty(StructureRegion.InletLossCoeff.Key, "1.0");
+            category.AddProperty(StructureRegion.OutletLossCoeff.Key, "1.0");
+            category.AddProperty(StructureRegion.ValveOnOff.Key, "1");
+            category.AddProperty(StructureRegion.IniValveOpen.Key, "0.0");
+            category.SetProperty(StructureRegion.ValveOnOff.Key, "0");
+
+            return category;
+        }
+
+        #endregion
+
         [Test]
         public void GivenAnUnknownTypeForAStructure_WhenTheConverterFactoryIsCreatingAConverter_ThenAnErrorMessageShouldBeCreated()
         {
@@ -113,7 +380,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             //When
             var converter = new CompositeBranchStructureConverter(someFactoryMock, compositeBranchStructuresFunc );
-            converter.Convert(categories, channels, errorMessages);
+            converter.Convert(categories, channels, new List<ICrossSectionDefinition>(), errorMessages);
 
             //Then
             mocks.VerifyAll();
@@ -154,7 +421,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             //When
             var converter = new CompositeBranchStructureConverter(someFactoryMock, compositeBranchStructuresFunc);
-            converter.Convert(categories, channels, errorMessages);
+            converter.Convert(categories, channels, new List<ICrossSectionDefinition>(), errorMessages);
 
             //Then
 
@@ -204,7 +471,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             
             //When
             var converter = new CompositeBranchStructureConverter(someFactoryMock, someCompositeBranchStructureMock);
-            converter.Convert(categories, channels, errorMessages);
+            converter.Convert(categories, channels, new List<ICrossSectionDefinition>(), errorMessages);
 
             //Then
 

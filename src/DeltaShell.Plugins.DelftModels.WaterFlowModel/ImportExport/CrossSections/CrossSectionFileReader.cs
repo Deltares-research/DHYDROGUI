@@ -25,14 +25,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
             crossSectionLocationFileReader = new CrossSectionLocationFileReader(createAndAddErrorReport);
         }
 
-        public void Read(string definitionFilePath, string locationFilePath, IHydroNetwork network)
+        public IList<ICrossSectionDefinition> Read(string definitionFilePath, string locationFilePath, IHydroNetwork network)
         {
             var errorMessages = new List<string>();
 
             var crossSectionDefinitions = crossSectionDefinitionFileReader.Read(definitionFilePath, network);
-
             var crossSectionLocations = crossSectionLocationFileReader.Read(locationFilePath);
-
             crossSectionLocations?.ForEach(csl =>
             {
                 try
@@ -46,6 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
             });
 
             CreateErrorReport("cross sections", errorMessages);
+            return crossSectionDefinitions;
         }
 
         private static void CreateCrossSectionAndAddToBranch(string definitionFilePath, IHydroNetwork network,

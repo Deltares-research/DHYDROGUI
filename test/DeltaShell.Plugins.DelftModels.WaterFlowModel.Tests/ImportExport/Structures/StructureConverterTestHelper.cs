@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using DelftTools.Hydro;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
 using GeoAPI.Extensions.Networks;
@@ -15,6 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         protected readonly MockRepository mocks = new MockRepository();
         private readonly ILineString branchGeometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 0) });
         protected INetwork Network;
+        protected static string BranchName = "myBranch";
 
         protected IBranch GetMockedBranch()
         {
@@ -24,11 +26,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             return branch;
         }
 
+        protected IChannel GetMockedChannel()
+        {
+            var channel = mocks.DynamicMock<IChannel>();
+            SetBranchMockProperties(channel);
+            mocks.ReplayAll();
+            return channel;
+        }
+
         private void SetBranchMockProperties(IBranch branch)
         {
+            branch.Expect(b => b.Name).Return(BranchName).Repeat.Any();
             branch.Expect(b => b.Length).Return(10.0).Repeat.Any();
             branch.Expect(b => b.Geometry).Return(branchGeometry).Repeat.Any();
             branch.Expect(b => b.Network).Return(Network).Repeat.Any();
+            branch.Expect(b => b.BranchFeatures).Return(new EventedList<IBranchFeature>()).Repeat.Any();
         }
 
         protected static TType ConvertAndCheckForNull<TConverter, TType>(IDelftIniCategory category, IBranch branch)

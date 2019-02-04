@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters;
@@ -17,13 +18,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
     public class StructuresFileReaderTest
     {
         private IHydroNetwork originalNetwork;
-        private IList<IChannel> channelsList;
+        private IList<IChannel> channels;
 
         [SetUp]
         public void SetUp()
         {
             originalNetwork = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch("node1", "node2", "branch");
-            channelsList = originalNetwork.Channels.ToList();
+            channels = originalNetwork.Channels.ToList();
         }
 
         [Test, Category(TestCategory.DataAccess)]
@@ -61,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
                         $"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
 
                 var reader = new StructuresFileReader(CreateAndAddErrorReport);
-                var allCompositeBranchStructures = reader.ReadStructures(testFile, channelsList);
+                var allCompositeBranchStructures = reader.ReadStructures(testFile, channels, new List<ICrossSectionDefinition>());
 
                 Assert.AreEqual(1, allCompositeBranchStructures.Count);
                 Assert.AreEqual(1, allCompositeBranchStructures[0].Structures.Count);
@@ -100,7 +101,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
                         $"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
 
                 var reader = new StructuresFileReader(CreateAndAddErrorReport);
-                var allCompositeBranchStructures = reader.ReadStructures(testFile, channelsList);
+                var allCompositeBranchStructures = reader.ReadStructures(testFile, channels, new List<ICrossSectionDefinition>());
 
                 Assert.AreEqual(0, allCompositeBranchStructures.Count);
                 Assert.AreEqual(1, errorReport.Count);
