@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         private static DelftIniCategory GetCorrectSpecialsDataModel()
         {
             var specialsCategory = new DelftIniCategory(ModelDefinitionsRegion.SpecialsValuesHeader);
-            specialsCategory.AddProperty(ModelDefinitionsRegion.DesignFactorDLG.Key, "1.0");
+            specialsCategory.AddProperty(ModelDefinitionsRegion.DesignFactorDlg.Key, "1.0");
 
             return specialsCategory;
         }

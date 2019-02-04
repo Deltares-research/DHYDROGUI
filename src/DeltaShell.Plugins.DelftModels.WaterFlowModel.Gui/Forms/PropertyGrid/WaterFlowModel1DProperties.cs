@@ -257,6 +257,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_ModelSettings")]
         [DisplayName("Specials properties")]
         [Description("Specials properties")]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public WaterFlowModel1DSpecialsProperties Specials
         {
             get { return new WaterFlowModel1DSpecialsProperties(data); }

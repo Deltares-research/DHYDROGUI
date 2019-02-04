@@ -17,13 +17,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid {
 
 
         [PropertyOrder(1)]
-        [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_Categories_ModelSettings")]
+        [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_DesignFactorDlg_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_DesignFactorDlg_Description")]
         public double DesignFactorDlg
         {
             get { return data.DesignFactorDlg; }
             set { data.DesignFactorDlg = value; }
         }
-
-
+        public override string ToString()
+        {
+            return "";
+        }
     }
 }

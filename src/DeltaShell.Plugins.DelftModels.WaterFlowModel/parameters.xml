@@ -27,6 +27,7 @@
   <ModelApiParameter Id="D50"                               Description="D50"                                                                     Value="0.0005"  Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
   <ModelApiParameter Id="D90"                               Description="D90"                                                                     Value="0.001"   Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
   <ModelApiParameter Id="DepthUsedForSediment"              Description="Depth used for Sediment"                                                 Value="0.3"     Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="DesignFactorDlg"                   Description="DesignFactorDlg"                                                         Value="1.0"     Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
   <!--<ModelApiParameter Id="StructureDynamicsFactor"       Description="Factor for Structure Dynamics (1DFLOW (Rural) & 1DFLOW (Urban) Only)"    Value="1.0"     Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />-->
   <!-- Advanced Options-->
   <ModelApiParameter Id="ExtraResistanceGeneralStructure"   Description="Extra Resistance for General Structure"                                  Value="0.0"     Type="typeof(double)"   Visible="true"  Category="AdvancedOptions" />

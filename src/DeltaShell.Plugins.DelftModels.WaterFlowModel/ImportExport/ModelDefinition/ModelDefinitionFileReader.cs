@@ -90,8 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         private static bool IsExcluded(IDelftIniCategory category)
         {
             return category.Name == GeneralRegion.IniHeader ||
-                   category.Name == ModelDefinitionsRegion.FilesIniHeader ||
-                   category.Name == ModelDefinitionsRegion.SpecialsValuesHeader; // This needs to be removed as part of issue: SOBEK3-1618
+                   category.Name == ModelDefinitionsRegion.FilesIniHeader;
         }
 
         private static void SetProperties(this WaterFlowModel1D model, IEnumerable<DelftIniCategory> modelSettingsCategories, IList<string> errorMessages)

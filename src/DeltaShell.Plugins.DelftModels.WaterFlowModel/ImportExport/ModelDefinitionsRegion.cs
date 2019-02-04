@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         public static readonly ConfigurationSetting DepthUsedForSediment = new ConfigurationSetting(key: "DepthUsedForSediment", description: "Depth used for sediment");
         
         public const string SpecialsValuesHeader = "Specials";
-        public static readonly ConfigurationSetting DesignFactorDLG = new ConfigurationSetting(key: "DesignFactorDLG", description: "");
+        public static readonly ConfigurationSetting DesignFactorDlg = new ConfigurationSetting(key: "DesignFactorDlg", description: "");
 
         public const string NumericalParametersValuesHeader = "NumericalParameters";
         public static readonly ConfigurationSetting AccelerationTermFactor = new ConfigurationSetting(key: "AccelerationTermFactor", description: "");
