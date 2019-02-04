@@ -25,6 +25,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                     return new WaterFlowModelGlobalValuesSetter();
                 case ModelDefinitionsRegion.TransportComputationValuesHeader:
                     return new WaterFlowModelTransportComputationPropertiesSetter();
+                case ModelDefinitionsRegion.SpecialsValuesHeader:
+                    return new WaterFlowModelSpecialsPropertiesSetter();
                 case ModelDefinitionsRegion.NumericalParametersValuesHeader:
                     return new WaterFlowModelNumericalParametersSetter();
                 case ModelDefinitionsRegion.SimulationOptionsValuesHeader:
