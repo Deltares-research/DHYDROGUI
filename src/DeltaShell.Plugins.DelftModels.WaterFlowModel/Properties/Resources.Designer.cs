@@ -146,22 +146,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} Property &apos;{1}&apos; on line number is missing, &apos;{2}&apos; will be set as default.
+        ///   Looks up a localized string similar to Line {0}: Invalid value is given for property &apos;{1}&apos;, &apos;{2}&apos; will be set as default.
         /// </summary>
-        public static string DelftIniPropertyValidator_CheckPropertyAvailability__0__Property___1___on_line_number_is_missing____2___will_be_set_as_default {
+        public static string DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_invalid_will_be_set_as_default {
             get {
-                return ResourceManager.GetString("DelftIniPropertyValidator_CheckPropertyAvailability__0__Property___1___on_line_nu" +
-                        "mber_is_missing____2___will_be_set_as_default", resourceCulture);
+                return ResourceManager.GetString("DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_in" +
+                        "valid_will_be_set_as_default", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} Property {1} on line number is invalid, &apos;{2}&apos; will be set as default.
+        ///   Looks up a localized string similar to Line {0}: Missing value is given for property &apos;{1}&apos;, &apos;{2}&apos; will be set as default.
         /// </summary>
-        public static string DelftIniPropertyValidator_CheckPropertyAvailability__0__Property__1__on_line_number_is_invalid____2___will_be_set_as_default {
+        public static string DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default {
             get {
-                return ResourceManager.GetString("DelftIniPropertyValidator_CheckPropertyAvailability__0__Property__1__on_line_numb" +
-                        "er_is_invalid____2___will_be_set_as_default", resourceCulture);
+                return ResourceManager.GetString("DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_mi" +
+                        "ssing_will_be_set_as_default", resourceCulture);
             }
         }
         

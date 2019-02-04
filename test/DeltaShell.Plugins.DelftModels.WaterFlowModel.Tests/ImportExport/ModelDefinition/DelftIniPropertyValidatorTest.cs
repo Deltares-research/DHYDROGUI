@@ -21,11 +21,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         }
 
         [Test]
-        public void GivenDelftIniCategoryWithValidPropertyValues_WhenValidating_ThenNoErrorMessageIsReported()
+        public void GivenDelftIniCategoryWithValidDefaultPropertyValues_WhenValidating_ThenNoErrorMessageIsReported()
         {
             //Given
             Category.ValidateProperty().Clear();
-            Category = AddValidPropertyValues();
+            Category = AddValidDefaultPropertyValues();
 
             //When
             var errorMessages = Category.ValidateProperty().ToList();
@@ -33,7 +33,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             //Then
             Assert.That(errorMessages, Is.Empty);
             Assert.That(errorMessages.Count, Is.EqualTo(0));
-        }    
+        }
+
+        [Test]
+        public void GivenDelftIniCategoryWithValidStandardPropertyValues_WhenValidating_ThenNoErrorMessageIsReported()
+        {
+            //Given
+            Category.ValidateProperty().Clear();
+            Category = AddValidStandardPropertyValues();
+
+            //When
+            var errorMessages = Category.ValidateProperty().ToList();
+
+            //Then
+            Assert.That(errorMessages, Is.Empty);
+            Assert.That(errorMessages.Count, Is.EqualTo(0));
+        }
 
         [Test]
         public void GivenDelftIniCategoryWithMissingPropertyValues_WhenValidating_ThenErrorMessageIsReported()
@@ -53,15 +68,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var property2 = Category.Properties.ElementAt(1);
             var property3 = Category.Properties.ElementAt(2);
 
-            var expectedMessage1 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability__0__Property___1___on_line_number_is_missing____2___will_be_set_as_default, 
+            var expectedMessage1 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default, 
                                                 property1.LineNumber, 
                                                 property1.Name, 
                                                 "0");
-            var expectedMessage2 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability__0__Property___1___on_line_number_is_missing____2___will_be_set_as_default, 
+            var expectedMessage2 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default, 
                                                 property2.LineNumber, 
                                                 property2.Name, 
                                                 DensityType.eckart_modified.ToString());
-            var expectedMessage3 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability__0__Property___1___on_line_number_is_missing____2___will_be_set_as_default, 
+            var expectedMessage3 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default, 
                                                 property3.LineNumber, 
                                                 property3.Name,
                                                 TemperatureModelType.Transport.ToString());
@@ -70,6 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.That(errorMessages.ElementAt(1), Is.EqualTo(expectedMessage2));
             Assert.That(errorMessages.ElementAt(2), Is.EqualTo(expectedMessage3));
         }
+
 
         [Test]
         public void GivenDelftIniCategoryWithInvalidPropertyValues_WhenValidating_ThenErrorMessageIsReported()
@@ -89,15 +105,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var property2 = Category.Properties.ElementAt(1);
             var property3 = Category.Properties.ElementAt(2);
 
-            var expectedMessage1 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability__0__Property__1__on_line_number_is_invalid____2___will_be_set_as_default,
+            var expectedMessage1 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_invalid_will_be_set_as_default,
                 property1.LineNumber,
                 property1.Name,
                 "0");
-            var expectedMessage2 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability__0__Property__1__on_line_number_is_invalid____2___will_be_set_as_default,
+            var expectedMessage2 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_invalid_will_be_set_as_default,
                 property2.LineNumber,
                 property2.Name,
                 DensityType.eckart_modified.ToString());
-            var expectedMessage3 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability__0__Property__1__on_line_number_is_invalid____2___will_be_set_as_default,
+            var expectedMessage3 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_invalid_will_be_set_as_default,
                 property3.LineNumber,
                 property3.Name,
                 TemperatureModelType.Transport.ToString());
@@ -105,6 +121,63 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.That(errorMessages.ElementAt(0), Is.EqualTo(expectedMessage1));
             Assert.That(errorMessages.ElementAt(1), Is.EqualTo(expectedMessage2));
             Assert.That(errorMessages.ElementAt(2), Is.EqualTo(expectedMessage3));
+        }
+
+        [Test]
+        public void GivenDelftIniCategoryWithOneInvalidOneStandardAndOneDefaultPropertyValue_WhenValidating_ThenOneErrorMessageIsReported()
+        {
+            //Given
+            Category.ValidateProperty().Clear();
+            Category = AddVariousPropertyValues1();
+
+            //When
+            var errorMessages = Category.ValidateProperty().ToList();
+
+            //Then
+            Assert.That(errorMessages, Is.Not.Empty);
+            Assert.That(errorMessages.Count, Is.EqualTo(1));
+
+            var property1 = Category.Properties.ElementAt(0);
+
+
+            var expectedMessage1 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_invalid_will_be_set_as_default,
+                property1.LineNumber,
+                property1.Name,
+                "0");
+
+            Assert.That(errorMessages.ElementAt(0), Is.EqualTo(expectedMessage1));
+        }
+
+        [Test]
+        public void GivenDelftIniCategoryWithOneInvalidOneMissingAndOneDefaultPropertyValue_WhenValidating_ThenTwoErrorMessagesAreReported()
+        {
+            //Given
+            Category.ValidateProperty().Clear();
+            Category = AddVariousPropertyValues2();
+
+            //When
+            var errorMessages = Category.ValidateProperty().ToList();
+
+            //Then
+            Assert.That(errorMessages, Is.Not.Empty);
+            Assert.That(errorMessages.Count, Is.EqualTo(2));
+
+            var property1 = Category.Properties.ElementAt(0);
+            var property2 = Category.Properties.ElementAt(1);
+
+
+            var expectedMessage1 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_invalid_will_be_set_as_default,
+                property1.LineNumber,
+                property1.Name,
+                "0");
+
+            var expectedMessage2 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default,
+                property2.LineNumber,
+                property2.Name,
+                DensityType.eckart_modified.ToString());
+
+            Assert.That(errorMessages.ElementAt(0), Is.EqualTo(expectedMessage1));
+            Assert.That(errorMessages.ElementAt(1), Is.EqualTo(expectedMessage2));
         }
 
         private DelftIniCategory AddMissingPropertyValues()
@@ -118,11 +191,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             return Category;
         }
 
-        private static DelftIniCategory AddValidPropertyValues()
+        private static DelftIniCategory AddValidDefaultPropertyValues()
         {
             Category.AddProperty(ModelDefinitionsRegion.UseTemperature.Key, "0");
             Category.AddProperty(ModelDefinitionsRegion.Density.Key, DensityType.eckart_modified.ToString());
             Category.AddProperty(ModelDefinitionsRegion.HeatTransferModel.Key, TemperatureModelType.Transport.ToString());
+
+            Assert.That(Category.Properties, Is.Not.Null);
+            Assert.That(Category.Properties.Count, Is.EqualTo(3));
+            return Category;
+        }
+        private static DelftIniCategory AddValidStandardPropertyValues()
+        {
+            Category.AddProperty(ModelDefinitionsRegion.UseTemperature.Key, "1");
+            Category.AddProperty(ModelDefinitionsRegion.Density.Key, DensityType.eckart.ToString());
+            Category.AddProperty(ModelDefinitionsRegion.HeatTransferModel.Key, TemperatureModelType.Composite.ToString());
 
             Assert.That(Category.Properties, Is.Not.Null);
             Assert.That(Category.Properties.Count, Is.EqualTo(3));
@@ -140,6 +223,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.That(Category.Properties.Count, Is.EqualTo(3));
             return Category;
         }
+        private static DelftIniCategory AddVariousPropertyValues1()
+        {
+            Category.AddProperty(ModelDefinitionsRegion.UseTemperature.Key, "invalidValue");
+            Category.AddProperty(ModelDefinitionsRegion.Density.Key, DensityType.unesco.ToString());
+            Category.AddProperty(ModelDefinitionsRegion.HeatTransferModel.Key, TemperatureModelType.Transport.ToString());
+
+
+            Assert.That(Category.Properties, Is.Not.Null);
+            Assert.That(Category.Properties.Count, Is.EqualTo(3));
+            return Category;
+        }
+        private static DelftIniCategory AddVariousPropertyValues2()
+        {
+            Category.AddProperty(ModelDefinitionsRegion.UseTemperature.Key, "invalidValue");
+            Category.AddProperty(ModelDefinitionsRegion.Density.Key, string.Empty);
+            Category.AddProperty(ModelDefinitionsRegion.HeatTransferModel.Key, TemperatureModelType.Transport.ToString());
+
+
+            Assert.That(Category.Properties, Is.Not.Null);
+            Assert.That(Category.Properties.Count, Is.EqualTo(3));
+            return Category;
+        }
+
         private static DelftIniCategory CreateDelftIniCategory()
         {
             var category = new DelftIniCategory(ModelDefinitionsRegion.TransportComputationValuesHeader);

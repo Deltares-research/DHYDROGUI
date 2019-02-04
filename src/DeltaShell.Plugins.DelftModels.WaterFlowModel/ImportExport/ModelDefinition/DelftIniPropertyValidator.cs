@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// List of default values extracted from <see cref="DelftIniPropertyValidationLookup"/> belonging to
         /// a specific <see cref="DelftIniCategory"/> >
         /// </summary>
-        private static List<Tuple<string, bool, string>> DefaultPropertyValues;
+        private static List<Tuple<string, bool, List<string>>> DefaultPropertyValues;
 
         public static IList<string> ValidateProperty(this DelftIniCategory category)
         {
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                          Where(t => t.Key.Equals(CategoryHeader)).
                          Select(t => t.Value).ToList(); 
 
-            DefaultPropertyValues = new List<Tuple<string, bool, string>>();
+            DefaultPropertyValues = new List<Tuple<string, bool, List<string>>>();
             values.ForEach(v => v.ForEach(pv => DefaultPropertyValues.Add(pv)));
         }
 
@@ -62,19 +62,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 
         private static void CheckPropertyAvailability(this DelftIniProperty property)
         {
-            var propertyValueMatchesDefaultValue = DefaultPropertyValues.Any(dpv => dpv.Item3.Equals(property.Value)); 
+            var propertyValueMatchesDefaultValue = DefaultPropertyValues.Any(dpv => dpv.Item3.Any(i => i.Equals(property.Value))); 
             var propertyNameMatchesDefaultName =DefaultPropertyValues.Where(pv => pv.Item1.Equals(property.Name)).ToList();
             var defaultValues = propertyNameMatchesDefaultName.FirstOrDefault(pv => pv.Item2 && property.Id == CategoryHeader);
 
             if (string.IsNullOrEmpty(property.Value))
             {
-                var errorMessage = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability__0__Property___1___on_line_number_is_missing____2___will_be_set_as_default, property.LineNumber, property.Name, defaultValues?.Item3);
+                var errorMessage = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default, property.LineNumber, property.Name, defaultValues?.Item3.First());
                 Errors.Add(errorMessage);
             }
 
             if (!propertyValueMatchesDefaultValue && !string.IsNullOrEmpty(property.Value))
             {
-                var errorMessage = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability__0__Property__1__on_line_number_is_invalid____2___will_be_set_as_default, property.LineNumber, property.Name, defaultValues?.Item3);
+                var errorMessage = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_invalid_will_be_set_as_default, property.LineNumber, property.Name, defaultValues?.Item3.First());
                 Errors.Add(errorMessage);
             }
         }
