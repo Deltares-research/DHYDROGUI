@@ -68,9 +68,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         public static readonly ConfigurationSetting SobeksimStamp = new ConfigurationSetting(key: "SobeksimStamp", description: "0=false, 1=true");
 
         public const string SedimentValuesHeader = "Sediment";
-        public static readonly ConfigurationSetting D50 = new ConfigurationSetting(key: "D50", description: "");
-        public static readonly ConfigurationSetting D90 = new ConfigurationSetting(key: "D90", description: "");
-        public static readonly ConfigurationSetting DepthUsedForSediment = new ConfigurationSetting(key: "DepthUsedForSediment", description: "");
+        public static readonly ConfigurationSetting D50 = new ConfigurationSetting(key: "D50", description: "Grain diameter at which 50% of the grains is smaller");
+        public static readonly ConfigurationSetting D90 = new ConfigurationSetting(key: "D90", description: "Grain diameter at which 90% of the grains is smaller");
+        public static readonly ConfigurationSetting DepthUsedForSediment = new ConfigurationSetting(key: "DepthUsedForSediment", description: "Depth used for sediment");
         
         public const string SpecialsValuesHeader = "Specials";
         public static readonly ConfigurationSetting DesignFactorDLG = new ConfigurationSetting(key: "DesignFactorDLG", description: "");
