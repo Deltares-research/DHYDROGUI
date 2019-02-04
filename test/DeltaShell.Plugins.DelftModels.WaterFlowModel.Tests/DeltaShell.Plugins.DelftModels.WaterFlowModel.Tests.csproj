@@ -261,6 +261,7 @@
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelSalinitySetterTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelSedimentOptionsSetterTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelSimulationOptionsSetterTest.cs" />
+    <Compile Include="ImportExport\ModelDefinition\WaterFlowModelSpecialsPropertiesSetterTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelTemperatureSetterTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelTimePropertiesSetterTest.cs" />
     <Compile Include="ImportExport\ModelDefinition\WaterFlowModelTransportComputationPropertiesSetterTest.cs" />
