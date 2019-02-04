@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.Linq;
 using DelftTools.Shell.Core;
 using DeltaShell.Dimr;
 
@@ -8,26 +10,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 {
     public class DHydroConfigXmlImporter: IFileImporter
     {
-        private readonly Func<List<IDimrModelFileImporter>> getDimrModelFileImporters;
-
         public DHydroConfigXmlImporter(Func<List<IDimrModelFileImporter>> dimrFileImporters)
         {
             getDimrModelFileImporters = dimrFileImporters;
         }
 
         /// <inheritdoc />
-        public string Name
-        {
-            get { return "DIMR Configuration File (*.xml)"; }
-        }
+        [ExcludeFromCodeCoverage]
+        public string Name => "DIMR Configuration File (*.xml)";
 
         /// <inheritdoc />
-        public string Category
-        {
-            get { return "DIMR Configuration File"; }
-        }
+        [ExcludeFromCodeCoverage]
+        public string Category => "DIMR Configuration File";
 
         /// <inheritdoc />
+        [ExcludeFromCodeCoverage]
         public Bitmap Image { get; }
 
         /// <inheritdoc />
@@ -37,16 +34,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         }
 
         /// <inheritdoc />
-        public bool CanImportOnRootLevel
-        {
-            get { return true; }
-        }
+        public bool CanImportOnRootLevel => GetDimrModelFileImporters.Any(e => e.CanImportOnRootLevel);
 
         /// <inheritdoc />
-        public string FileFilter
-        {
-            get { return "xml|*.xml"; }
-        }
+        public string FileFilter => "xml|*.xml";
 
         /// <inheritdoc />
         public string TargetDataDirectory { get; set; }
@@ -58,22 +49,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
         /// <inheritdoc />
-        public bool OpenViewAfterImport
-        {
-            get { return true; }
-        }
+        public bool OpenViewAfterImport => true;
 
         /// <inheritdoc />
         public bool CanImportOn(object targetObject)
         {
-            return targetObject is Project;
+            return targetObject is Project && GetDimrModelFileImporters.Any(e => e.CanImportOn(targetObject));
         }
 
         /// <inheritdoc />
         public object ImportItem(string path, object target = null)
         {
-            var dimrModelFileImporters = getDimrModelFileImporters?.Invoke() ?? new List<IDimrModelFileImporter>();
+            var dimrModelFileImporters = GetDimrModelFileImporters;
             return HydroModelReader.Read(path, dimrModelFileImporters );
         }
+
+        private List<IDimrModelFileImporter> GetDimrModelFileImporters =>
+            getDimrModelFileImporters?.Invoke() ?? new List<IDimrModelFileImporter>();
+
+        private readonly Func<List<IDimrModelFileImporter>> getDimrModelFileImporters;
     }
 }
