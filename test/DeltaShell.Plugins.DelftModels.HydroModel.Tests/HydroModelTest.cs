@@ -16,6 +16,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     public class HydroModelTest
     {
         [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void HydroModelValidatesCurrentWorkflow()
         {
             var hydroModel = new HydroModel();

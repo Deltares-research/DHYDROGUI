@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Linq;
+using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using Fluent;
 
@@ -13,7 +14,8 @@ namespace DeltaShell.Dimr.Gui.Tests
         {
             get { return TestValue; }
         }
-}
+    }
+
     [TestFixture()]
     public class DimrGuiRibbonTests
     {
@@ -29,6 +31,7 @@ namespace DeltaShell.Dimr.Gui.Tests
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         public void TestIsContextualTabVisible()
         {
             var ribbon = new Ribbon();

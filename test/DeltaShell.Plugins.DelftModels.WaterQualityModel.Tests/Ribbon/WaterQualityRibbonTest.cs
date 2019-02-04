@@ -10,11 +10,11 @@ using Rhino.Mocks;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Ribbon
 {
     [TestFixture]
+    [Category(TestCategory.Integration)]
+    [Category(TestCategory.Slow)]
     public class WaterQualityRibbonTest
     {
         [Test]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.Slow)]
         public void GetCommandsInRibbonTest()
         {
             MockRepository mocks = new MockRepository();
