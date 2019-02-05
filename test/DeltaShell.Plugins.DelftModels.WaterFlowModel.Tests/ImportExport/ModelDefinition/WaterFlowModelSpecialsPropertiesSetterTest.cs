@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         }
 
         [Test]
-        public void GivenCorrectTransportComputationDataModel_WhenSettingModelProperties_ThenCorrectPropertiesAreSet()
+        public void GivenCorrectSpecialsDataModel_WhenSettingModelProperties_ThenCorrectModelPropertiesAreSet()
         {
             // Given
             var category = GetCorrectSpecialsDataModel();
@@ -30,6 +30,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
             // Then
             Assert.That(waterFlowModel1D.DesignFactorDlg, Is.EqualTo(1.0d));
+        }
+
+        [Test]
+        public void GivenEmptySpecialsDataModel_WhenSettingModelProperties_ThenNoExceptionIsThrownAndDesignFactorDlgIsNotChanged()
+        {
+            // Given
+            var specialsCategory = new DelftIniCategory(ModelDefinitionsRegion.SpecialsValuesHeader); // DelftIniCategory without properties
+            Assert.That(waterFlowModel1D.DesignFactorDlg, Is.EqualTo(0.0));
+
+            // When
+            Assert.DoesNotThrow(() => specialsPropertiesSetter.SetProperties(specialsCategory, waterFlowModel1D, new List<string>()));
+
+            // Then
+            Assert.That(waterFlowModel1D.DesignFactorDlg, Is.EqualTo(0.0));
         }
 
         private static DelftIniCategory GetCorrectSpecialsDataModel()

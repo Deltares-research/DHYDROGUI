@@ -8,12 +8,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
     {
         public void SetProperties(DelftIniCategory category, WaterFlowModel1D model, IList<string> errorMessages)
         {
-            var useDesignFactorDlg = category.ReadProperty<string>(ModelDefinitionsRegion.DesignFactorDlg.Key);
-
-            model.DesignFactorDlg = ParseStringToDouble(useDesignFactorDlg);
+            var useDesignFactorDlg = category.ReadProperty<string>(ModelDefinitionsRegion.DesignFactorDlg.Key, true);
+            if(useDesignFactorDlg != null) model.DesignFactorDlg = ParseStringToDouble(useDesignFactorDlg);
         }
 
-        private double ParseStringToDouble(string value)
+        private static double ParseStringToDouble(string value)
         {
             try
             {
