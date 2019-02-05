@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
                 StructureRegion.BranchId.Key, Environment.NewLine);
 
             Assert.That(() => weir.SetCommonRegionElements(category, null),
-                Throws.TypeOf<Exception>().With.Message.EqualTo(expectedMessage));
+                Throws.TypeOf<ArgumentException>().With.Message.EqualTo(expectedMessage));
         }
 
         [Test]
