@@ -20,13 +20,13 @@ class UgridWriter:
         self.init_1dnetwork(ncfile,networkdata)
 
         print("init ugrid 2d")
-        self.init_2dmesh(ncfile, griddata)
+        #self.init_2dmesh(ncfile, griddata)
 
         print("set ugrid 1d data")
         self.set_1dnetwork(ncfile,networkdata)
 
         print("set ugrid 2d data")
-        self.set_2dmesh(ncfile, griddata)
+        #self.set_2dmesh(ncfile, griddata)
 
         print("finished ugrid section")
 
@@ -79,7 +79,6 @@ class UgridWriter:
     def set_1dnetwork(self, ncfile, data):
 
         # geometry
-        #ntw = ncfile.createVariable("network1D", "u4", ())
         ntw = ncfile.createVariable("network", "i4", ())
         ntw.cf_role = 'mesh_topology'
         ntw.edge_dimension = 'nnetwork_branches'
@@ -100,7 +99,7 @@ class UgridWriter:
         ntw_node_id.standard_name = 'network_node_ids'
         ntw_node_id.long_name = "The identification name of the node"
         ntw_node_id.mesh = 'network1D'
-        ntw_node_id[:] = data["node_ids"]
+        ntw_node_id[:] = data["node_names"]
 
         ntw_node_longname = ncfile.createVariable("network_node_long_names", "c", ("nnetwork_nodes", "longstrlength"))
         ntw_node_longname.standard_name = 'network_node_longname'

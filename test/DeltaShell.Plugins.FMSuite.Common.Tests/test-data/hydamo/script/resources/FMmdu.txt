@@ -8,8 +8,8 @@ MDUFormatVersion                  = 1.06                # File format version (d
 AutoStart                         = 0                   # Autostart simulation after loading MDU (0: no, 1: autostart, 2: autostartstop)
 
 [geometry]
-NetFile                           = hydamo_net.nc # Unstructured grid file *_net.nc
-OneDNetworkFile                   = hydamo.md1d   # 1d networkfile
+NetFile                           = hydamo_net.nc       # Unstructured grid file *_net.nc
+OneDNetworkFile                   =                    # 1d networkfile
 BedlevelFile                      =                     # street_level.xyz , Bedlevels points file e.g. *.xyz, only needed for bedlevtype not equal 3
 DryPointsFile                     =                     # Dry points file *.xyz (third column dummy z values), or dry areas polygon file *.pol (third column 1/-1: inside/outside)
 WaterLevIniFile                   =                     # Initial water levels sample file *.xyz
@@ -27,9 +27,9 @@ ManholeFile                       =                     # File *.ini containing 
 PipeFile                          =                     # File *.pliz containing pipe-based 'culverts'
 ShipdefFile                       =                     # File *.shd containing ship definitions
 StructureFile                     =                     # File *.ini containing structures
-CrossLocFile                      = cross_section_locations.ini  # Name and location of the file containing the locations of the cross sections
-CrossDefFile                      = cross_section_definitions.ini  # Name and location of the file containing the definitions of the cross sections
-RoughnessFile                     = roughness_hydamo.ini # Name and location of the file containing the roughness data
+CrossLocFile                      = hydamo_cross_section_locations.ini      # Name and location of the file containing the locations of the cross sections
+CrossDefFile                      = hydamo_cross_section_definitions.ini    # Name and location of the file containing the definitions of the cross sections
+RoughnessFile                     = hydamo_roughness_hydamo.ini             # Name and location of the file containing the roughness data
 WaterLevIni                       = -10.                # Initial water level at missing s0 values
 BedlevUni                         = -5.                 # Uniform bed level used at missing z values if BedlevType > 2
 BedlevType                        = 1                   # Bathymetry specification
@@ -117,7 +117,7 @@ RestartDateTime                   =                     # Restart date and time 
 
 [external forcing]
 ExtForceFile                      =                     # Old format for external forcings file *.ext, link with tim/cmp-format boundary conditions specification
-ExtForceFileNew                   = ext_force_file.ext  # New format for external forcings file *.ext, link with bc-format boundary conditions specification
+ExtForceFileNew                   =                     # New format for external forcings file *.ext, link with bc-format boundary conditions specification
 
 [output]
 OutputDir                         =                     # Output directory of map-, his-, rst-, dat- and timings-files, default: DFM_OUTPUT_<modelname>. Set to . for current dir.

@@ -5,3 +5,5 @@ class FMmodel:
     networkdata= {}         # 1d mesh
 
     griddata = {}           # 2d mesh
+
+    crosssections = []      #cross-sections

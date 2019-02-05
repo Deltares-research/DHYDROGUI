@@ -18,7 +18,7 @@ class HyDAMOreader:
         self.inputDir = inputDir
         model = HyDAMOmodel()
         model.network = self.readNetwork2Dict()
-        #model.profiles = self.readProfiles2Dict()
+        model.profiles = self.readProfiles2Dict()
         if gridFile is not None and gridFile != '':
             reader = UgridReader(model)
             filePath = os.path.join(self.dirPath, self.inputDir, gridFile)
@@ -40,14 +40,15 @@ class HyDAMOreader:
             fData = []
             fId = feature.GetField(fields[0])
             geometry = feature.GetGeometryRef()
-            fData.append(geometry.GetPoints())
+            points = geometry.GetPoints()
+            fData.append(points)
 
-            try:
+            if len(points) > 1:
                 length = geometry.Length()
-            except:
-                length = 0.0
+                fData.append(length)
+            else:
+                fData.append(0.0)
 
-            fData.append(length)
             for field in fields:
                 fData.append(feature.GetField(field))
             dict[fId] = fData

@@ -1,5 +1,6 @@
 # coding: latin-1
 import os, sys, math
+from gdal import ogr
 from collections import OrderedDict
 from HyDAMOmodel import HyDAMOmodel
 from FMmodel import FMmodel
@@ -15,6 +16,7 @@ class HyDAMO2FMConverter:
         fm_model = FMmodel()
         fm_model.networkdata = self.generate_networkdata(hydamo_model, one_d_mesh_distance)
         fm_model.griddata = self.generate_2dmesh_data(fm_model.networkdata["geom_x"], fm_model.networkdata["geom_y"])
+        fm_model.crosssections = self.generate_crossections(hydamo_model.profiles, hydamo_model.network)
         return fm_model
 
 
@@ -22,6 +24,7 @@ class HyDAMO2FMConverter:
     def generate_networkdata(self, hydamo_model, one_d_mesh_distance = 40.0):
         networkdata = {}
         networkdata["node_ids"] = []
+        networkdata["node_names"] = []
         networkdata["node_longnames"] = []
         networkdata["node_x"] = []
         networkdata["node_y"] = []
@@ -44,82 +47,99 @@ class HyDAMO2FMConverter:
         nodes = OrderedDict()
 
         #parse branches
-        i_branch = 0
+        i_branch = 1
         i_edge_point = 1
-        i_edge_node = 1
         for key, value in hydamo_model.network.items():
+
             branch_id = key
             points = value[0]
-            branch_name = value[2]
+            branch_name = value[3]
+
+            #test AaMaas
+            if branch_name != 'AaMaas':
+                continue
+
             if points is None or len(points) < 2:
                 continue
 
             length = value[1]
             first_point = points[0]
-            first_point_id = self.get_point_id(first_point)
+            first_point_x_y_name =  self.get_point_id(first_point) #for filtering duplicates
             last_point = points[-1]
-            last_point_id = self.get_point_id(last_point)
+            last_point_x_y_name =  self.get_point_id(last_point) #for filtering duplicates
             n_points = len(points)
 
-
-            if first_point_id not in nodes:
-                nodes[first_point_id] = first_point
-            if last_point_id not in nodes:
-                nodes[last_point_id] = last_point
+            if first_point_x_y_name not in nodes:
+                nodes[first_point_x_y_name] = first_point
+            if last_point_x_y_name not in nodes:
+                nodes[last_point_x_y_name] = last_point
 
             #save branches
             networkdata["branch_ids"].append(i_branch)
             networkdata["branch_names"].append(self.str2chars(branch_id,self.idstrlength))
-            networkdata["branch_longnames"].append(self.str2chars("longname " + branch_name,self.longstrlength))
+            networkdata["branch_longnames"].append(self.str2chars("long_"+ branch_id,self.longstrlength))
             networkdata["branch_order"].append(-1)
             networkdata["branch_ngeometrypoints"].append(n_points)
             networkdata["branch_length"].append(length)
 
+            #edge_node (start & endnode branch)
+            i_from = list(nodes.keys()).index(first_point_x_y_name) + 1
+            i_to = list(nodes.keys()).index(last_point_x_y_name) + 1
+            networkdata["edge_node"].append([i_from, i_to])
+
+            #if branch_id == 'riv_1160550_62' or branch_id == 'riv_1160540_63' or branch_id == 'riv_1160530_83':
+            #   jippie = True
+
             #calculation points [1d mesh]
+
+            #first point
             offset = 0.0
-            i_mesh_point = 1
-            while offset < length:
-                mesh_point_name = branch_id + str("%.0f" %offset)
+            mesh_point_name = branch_id + '_'+ str("%.0f" % offset)
+            networkdata["point_ids"].append(self.str2chars(mesh_point_name, self.idstrlength))
+            networkdata["point_longnames"].append(self.str2chars(mesh_point_name, self.longstrlength))
+            networkdata["point_branch_id"].append(i_branch)
+            networkdata["point_branch_offset"].append(offset)
+            i_edge_point += 1
+            offset = one_d_mesh_distance
+
+            while offset < length - (one_d_mesh_distance/10.0):
+                mesh_point_name = branch_id + '_'+ str("%.0f" %offset)
                 networkdata["point_ids"].append(self.str2chars(mesh_point_name,self.idstrlength))
                 networkdata["point_longnames"].append(self.str2chars(mesh_point_name,self.longstrlength))
                 networkdata["point_branch_id"].append(i_branch)
                 networkdata["point_branch_offset"].append(offset)
-                if i_mesh_point > 1:
-                    networkdata["edge_point"].append([i_edge_point - 1, i_edge_point])
-                i_mesh_point += 1
+                networkdata["edge_point"].append([i_edge_point - 1, i_edge_point])
                 i_edge_point += 1
                 offset += one_d_mesh_distance
 
             #last calcpoint
-            if i_mesh_point > 1:
-                mesh_point_name = branch_id + str("%.0f" % length)
-                networkdata["point_ids"].append(self.str2chars(mesh_point_name,self.idstrlength))
-                networkdata["point_longnames"].append(self.str2chars(mesh_point_name,self.longstrlength))
-                networkdata["point_branch_id"].append(i_branch)
-                networkdata["point_branch_offset"].append(length)
-                networkdata["edge_point"].append([i_edge_point - 1, i_edge_point])
-                i_edge_point += 1
+            mesh_point_name = branch_id + '_'+ str("%.0f" % length)
+            networkdata["point_ids"].append(self.str2chars(mesh_point_name,self.idstrlength))
+            networkdata["point_longnames"].append(self.str2chars(mesh_point_name,self.longstrlength))
+            networkdata["point_branch_id"].append(i_branch)
+            networkdata["point_branch_offset"].append(length)
+            networkdata["edge_point"].append([i_edge_point - 1, i_edge_point])
+            i_edge_point += 1
 
             #save geometry
-            first_point = True
             for p in points:
                 x, y = p
                 networkdata["geom_x"].append(x)
                 networkdata["geom_y"].append(y)
-                if not first_point:
-                    networkdata["edge_node"].append([i_edge_node-1, i_edge_node])
-                first_point = False
-                i_edge_node += 1
 
-        i = 0
+            i_branch += 1
+
+        node_i = 1
         for keyvalue in nodes.items():
             id = keyvalue[0]
             tuple = keyvalue[1]
-            networkdata["node_ids"].append(self.str2chars("node" + id,self.idstrlength))
+            networkdata["node_ids"].append(node_i)
+            networkdata["node_names"].append(self.str2chars("node" + id, self.idstrlength))
             networkdata["node_longnames"].append(self.str2chars("longname" + id,self.longstrlength))
             x, y = tuple
             networkdata["node_x"].append(x)
             networkdata["node_y"].append(y)
+            node_i += 1
 
         return networkdata
 
@@ -157,6 +177,58 @@ class HyDAMO2FMConverter:
 
         return grid
 
+    def generate_crossections(self, profiles, branches):
+        crosssections = []
+        line = ogr.Geometry(ogr.wkbLineString)
+        z_values = []
+        name = None
+        for keyvalue in profiles.items():
+            value = keyvalue[1]
+            if name is None:
+                name = value[8]
+
+            if name != value[8]:
+
+                #get cs
+                cs = self.get_yz_cs(name,line,z_values, branches)
+                if cs is not None:
+                    crosssections.append(cs)
+
+                #new cs
+                line = ogr.Geometry(ogr.wkbLineString)
+                z_values = []
+                name = value[8]
+
+            point = value[0][0]
+            x, y, z = point
+            line.AddPoint(x,y)
+            z_values.append(z)
+
+        if name is not None:
+            cs = self.get_yz_cs(name, line, z_values, branches)
+            if cs is not None:
+                crosssections.append(cs)
+
+        return crosssections
+
+    def get_yz_cs(self, name, cs_line, z_values, branches):
+
+        for keyvalue in branches.items():
+            branch_id = keyvalue[0]
+            points = keyvalue[1][0]
+            branch = ogr.Geometry(ogr.wkbLineString)
+            for xy in points:
+                branch.AddPoint(xy[0], xy[1])
+
+            if branch.Intersects(cs_line):
+                point = branch.Intersection(cs_line)
+                offset = self.get_offset(branch, point)
+                yz_values = self.get_yz_values(cs_line, z_values)
+                return [name, branch_id, offset, yz_values]
+
+        print('No intersection of crossection = ' + str(name))
+        return None
+
     def get_point_id(self, point):
         x,y = point
         return str("%.0f" % float(x)) + "_" + str("%.0f" % float(y))
@@ -168,3 +240,42 @@ class HyDAMO2FMConverter:
         elif len(chars) < size:
             chars.extend(list(' '* (size - len(chars))))
         return chars
+
+    def get_offset(self, line, geom):
+        offset = 0.0
+
+        for i in range(1, line.GetPointCount()):
+            p_from = ogr.Geometry(ogr.wkbPoint)
+            p = line.GetPoint(i-1)
+            p_from.AddPoint(p[0],p[1])
+            p_to = ogr.Geometry(ogr.wkbPoint)
+            p = line.GetPoint(i)
+            p_to.AddPoint(p[0],p[1])
+            distance = p_from.Distance(p_to)
+            segment = ogr.Geometry(ogr.wkbLineString)
+            segment.AddPoint(p_from.GetX(),p_from.GetY())
+            segment.AddPoint(p_to.GetX(),p_to.GetY())
+
+            if(segment.Distance(geom) < 0.001):
+                offset += p_from.Distance(geom)
+                return offset
+
+            offset += distance
+
+        return -1.0
+
+    def get_yz_values(self, line,z_values):
+        points = []
+        y = 0.0
+        points.append([y,z_values[0]])
+        for i in range(1, line.GetPointCount()):
+            p_from = ogr.Geometry(ogr.wkbPoint)
+            p = line.GetPoint(i-1)
+            p_from.AddPoint(p[0],p[1])
+            p_to = ogr.Geometry(ogr.wkbPoint)
+            p = line.GetPoint(i)
+            p_to.AddPoint(p[0],p[1])
+            distance = p_from.Distance(p_to)
+            y += distance
+            points.append([y, z_values[i]])
+        return points
