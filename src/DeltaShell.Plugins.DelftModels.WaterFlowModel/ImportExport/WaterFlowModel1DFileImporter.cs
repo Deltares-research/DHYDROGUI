@@ -15,6 +15,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
     public class WaterFlowModel1DFileImporter : IDimrModelFileImporter
     {
+        private readonly ILog log = LogManager.GetLogger(typeof(WaterFlowModel1DFileImporter));
+
         /// <summary>
         /// Initialize a new instance of the <see cref="WaterFlowModel1DFileImporter"/> class
         /// with the specified model read function.
@@ -33,22 +35,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
 
         }
-
-        /// <summary>
-        /// Read the model with the specified model read function..
-        /// </summary>
-        /// <param name="path">The path.</param>
-        /// <returns> The model read from the specified path.</returns>
-        private WaterFlowModel1D ReadModel(string path)
-        {
-            void ReportProgress(string currentStepName, int currentStep, int totalSteps) => ProgressChanged(currentStepName, currentStep, totalSteps);
-            return modelReaderFunc.Invoke(path, ReportProgress);
-        }
-
-        /// <summary> Function responsible for reading the model. </summary>
-        private readonly Func<string, Action<string, int, int>, WaterFlowModel1D> modelReaderFunc;
-
-        private readonly ILog log = LogManager.GetLogger(typeof(WaterFlowModel1DFileImporter));
 
         [ExcludeFromCodeCoverage]
         public string Name => "Water Flow Model 1D (*.md1d)";
@@ -120,6 +106,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 return null;
             }
         }
+
+        /// <summary>
+        /// Read the model with the specified model read function..
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns> The model read from the specified path.</returns>
+        private WaterFlowModel1D ReadModel(string path)
+        {
+            void ReportProgress(string currentStepName, int currentStep, int totalSteps) => ProgressChanged(currentStepName, currentStep, totalSteps);
+            return modelReaderFunc.Invoke(path, ReportProgress);
+        }
+
+        /// <summary> Function responsible for reading the model. </summary>
+        private readonly Func<string, Action<string, int, int>, WaterFlowModel1D> modelReaderFunc;
 
         public string MasterFileExtension => "md1d";
 

@@ -141,10 +141,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         [Test]
         public void GivenAWaterFlowModel1D_WhenCanImportOnThisObjectIsCalled_ThenTrueIsReturned()
         {
-            var compositeActivity = new WaterFlowModel1D();
+            var currentModel = new WaterFlowModel1D();
 
             // When
-            var result = Importer.CanImportOn(compositeActivity);
+            var result = Importer.CanImportOn(currentModel);
 
             Assert.That(result, Is.True);
         }
