@@ -54,7 +54,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             if (Math.Abs(groundFriction - bedFriction) > double.Epsilon)
             {
                 culvert.GroundLayerRoughness = groundFriction;
-                culvert.GroundLayerEnabled = true;
             }
         }
 

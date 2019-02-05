@@ -105,7 +105,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                     if (matchingGroundLayerData != null)
                     {
                         culvert.GroundLayerEnabled = matchingGroundLayerData.GroundLayerUsed;
-                        culvert.GroundLayerThickness = matchingGroundLayerData.GroundLayerThickness;
+                        if (matchingGroundLayerData.GroundLayerUsed)
+                        {
+                            culvert.GroundLayerThickness = matchingGroundLayerData.GroundLayerThickness;
+                        }
+                        else
+                        {
+                            culvert.GroundLayerRoughness = 0.0;
+                            culvert.GroundLayerThickness = 0.0;
+                        }
                     }
                 }
 

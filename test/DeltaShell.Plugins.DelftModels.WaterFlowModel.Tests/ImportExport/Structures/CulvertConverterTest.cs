@@ -185,7 +185,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             Assert.That(culvert.FrictionDataType, Is.EqualTo(expectedFrictionDataType));
             Assert.That(culvert.Friction, Is.EqualTo(ParseToDouble(bedFriction)));
             Assert.That(culvert.GroundLayerRoughness, Is.EqualTo(ParseToDouble(groundFriction)));
-            Assert.IsTrue(culvert.GroundLayerEnabled);
 
             mocks.VerifyAll();
         }

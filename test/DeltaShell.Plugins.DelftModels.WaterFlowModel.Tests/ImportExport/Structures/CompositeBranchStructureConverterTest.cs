@@ -246,7 +246,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
         public void GivenCulvertDelftIniCategoryWithMatchingGroundLayerData_WhenConvertingToCompositeBranchStructure_ThenCulvertCrossSectionGroundLayerPropertiesAreAsExpected()
         {
             // Given
-            var cunetteShape = new CrossSectionStandardShapeRectangle
+            var rectangleShape = new CrossSectionStandardShapeRectangle
             {
                 Width = CrossSectionDefinitionWidth,
                 Height = CrossSectionDefinitionHeight
@@ -262,7 +262,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var groundLayerData = new[] { layerData };
 
             // When
-            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(cunetteShape, groundLayerData);
+            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(rectangleShape, groundLayerData);
 
             // Then
             Assert.That(compositeBranchStructures.Count, Is.EqualTo(1));
@@ -274,6 +274,41 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
             Assert.IsTrue(culvert.GroundLayerEnabled);
             Assert.That(culvert.GroundLayerThickness, Is.EqualTo(groundLayerThickness));
+        }
+
+        [Test]
+        public void GivenCulvertDelftIniCategoryWithMatchingGroundLayerDataWithNoGroundLayerUsed_WhenConvertingToCompositeBranchStructure_ThenCulvertCrossSectionGroundLayerPropertiesAreAsExpected()
+        {
+            // Given
+            var rectangleShape = new CrossSectionStandardShapeRectangle
+            {
+                Width = CrossSectionDefinitionWidth,
+                Height = CrossSectionDefinitionHeight
+            };
+
+            var groundLayerThickness = 2.5;
+            var layerData = new GroundLayerDataTransferObject
+            {
+                CrossSectionDefinitionId = CulvertName,
+                GroundLayerUsed = false, // GroundLayer is not used
+                GroundLayerThickness = groundLayerThickness
+            };
+            var groundLayerData = new[] { layerData };
+
+            // When
+            var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(rectangleShape, groundLayerData);
+
+            // Then
+            Assert.That(compositeBranchStructures.Count, Is.EqualTo(1));
+
+            var compositeBranchStructure = compositeBranchStructures.FirstOrDefault();
+            var branchFeatures = compositeBranchStructure?.Branch.BranchFeatures;
+            var culvert = branchFeatures?.FirstOrDefault() as Culvert;
+            Assert.IsNotNull(culvert);
+
+            Assert.IsFalse(culvert.GroundLayerEnabled);
+            Assert.That(culvert.GroundLayerRoughness, Is.EqualTo(0.0));
+            Assert.That(culvert.GroundLayerThickness, Is.EqualTo(0.0));
         }
 
         private IList<ICompositeBranchStructure> ConvertCulvertDelftIniCategoryToCompositeBranchStructures(ICrossSectionStandardShape shape, GroundLayerDataTransferObject[] groundLayerDataTransferObjects)
