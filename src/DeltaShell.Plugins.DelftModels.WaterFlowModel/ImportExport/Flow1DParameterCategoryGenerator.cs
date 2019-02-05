@@ -449,7 +449,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 sedimentValuesGroup.AddProperty(ModelDefinitionsRegion.D90.Key, valueOfD90, ModelDefinitionsRegion.D90.Description, string.Empty);
             }
 
-            var depthUsedForSediment = waterFlowModel1D.D50;
+            var depthUsedForSediment = waterFlowModel1D.DepthUsedForSediment;
             if (depthUsedForSediment is double valueOfDepthUsedForSediment)
             {
                 sedimentValuesGroup.AddProperty(ModelDefinitionsRegion.DepthUsedForSediment.Key, valueOfDepthUsedForSediment, ModelDefinitionsRegion.DepthUsedForSediment.Description, string.Empty);
