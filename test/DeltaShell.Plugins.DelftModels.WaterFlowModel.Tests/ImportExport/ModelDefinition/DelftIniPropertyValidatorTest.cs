@@ -52,40 +52,40 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.That(errorMessages.Count, Is.EqualTo(0));
         }
 
-        [Test]
-        public void GivenDelftIniCategoryWithMissingPropertyValues_WhenValidating_ThenErrorMessageIsReported()
-        {
-            //Given
-            AddMissingPropertyValues();
+        //[Test]
+        //public void GivenDelftIniCategoryWithMissingPropertyValues_WhenValidating_ThenErrorMessageIsReported()
+        //{
+        //    //Given
+        //    AddMissingPropertyValues();
 
-            //When
-            errorMessages = category.ValidateProperties().ToList();
+        //    //When
+        //    errorMessages = category.ValidateProperties().ToList();
 
-            //Then
-            Assert.That(errorMessages, Is.Not.Null);
-            Assert.That(errorMessages.Count, Is.EqualTo(3));
+        //    //Then
+        //    Assert.That(errorMessages, Is.Not.Null);
+        //    Assert.That(errorMessages.Count, Is.EqualTo(3));
 
-            var property1 = category.Properties.ElementAt(0);
-            var property2 = category.Properties.ElementAt(1);
-            var property3 = category.Properties.ElementAt(2);
+        //    var property1 = category.Properties.ElementAt(0);
+        //    var property2 = category.Properties.ElementAt(1);
+        //    var property3 = category.Properties.ElementAt(2);
 
-            var expectedMessage1 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default, 
-                                                property1.LineNumber, 
-                                                property1.Name, 
-                                                "0");
-            var expectedMessage2 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default, 
-                                                property2.LineNumber, 
-                                                property2.Name, 
-                                                DensityType.eckart_modified.ToString());
-            var expectedMessage3 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default, 
-                                                property3.LineNumber, 
-                                                property3.Name,
-                                                TemperatureModelType.Transport.ToString());
+        //    var expectedMessage1 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default,
+        //                                        property1.LineNumber,
+        //                                        property1.Name,
+        //                                        "0");
+        //    var expectedMessage2 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default,
+        //                                        property2.LineNumber,
+        //                                        property2.Name,
+        //                                        DensityType.eckart_modified.ToString());
+        //    var expectedMessage3 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default,
+        //                                        property3.LineNumber,
+        //                                        property3.Name,
+        //                                        TemperatureModelType.Transport.ToString());
 
-            Assert.That(errorMessages.ElementAt(0), Is.EqualTo(expectedMessage1));
-            Assert.That(errorMessages.ElementAt(1), Is.EqualTo(expectedMessage2));
-            Assert.That(errorMessages.ElementAt(2), Is.EqualTo(expectedMessage3));
-        }
+        //    Assert.That(errorMessages.ElementAt(0), Is.EqualTo(expectedMessage1));
+        //    Assert.That(errorMessages.ElementAt(1), Is.EqualTo(expectedMessage2));
+        //    Assert.That(errorMessages.ElementAt(2), Is.EqualTo(expectedMessage3));
+        //}
 
 
         [Test]
@@ -147,36 +147,36 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.That(errorMessages.ElementAt(0), Is.EqualTo(expectedMessage1));
         }
 
-        [Test]
-        public void GivenDelftIniCategoryWithOneInvalidOneMissingAndOneDefaultPropertyValue_WhenValidating_ThenTwoErrorMessagesAreReported()
-        {
-            //Given
-            AddVariousPropertyValues2();
+        //[Test]
+        //public void GivenDelftIniCategoryWithOneInvalidOneMissingAndOneDefaultPropertyValue_WhenValidating_ThenTwoErrorMessagesAreReported()
+        //{
+        //    //Given
+        //    AddVariousPropertyValues2();
 
-            //When
-            errorMessages = category.ValidateProperties().ToList();
+        //    //When
+        //    errorMessages = category.ValidateProperties().ToList();
 
-            //Then
-            Assert.That(errorMessages, Is.Not.Null);
-            Assert.That(errorMessages.Count, Is.EqualTo(2));
+        //    //Then
+        //    Assert.That(errorMessages, Is.Not.Null);
+        //    Assert.That(errorMessages.Count, Is.EqualTo(2));
 
-            var property1 = category.Properties.ElementAt(0);
-            var property2 = category.Properties.ElementAt(1);
+        //    var property1 = category.Properties.ElementAt(0);
+        //    var property2 = category.Properties.ElementAt(1);
 
 
-            var expectedMessage1 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_invalid_will_be_set_as_default,
-                property1.LineNumber,
-                property1.Name,
-                "0");
+        //    var expectedMessage1 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_invalid_will_be_set_as_default,
+        //        property1.LineNumber,
+        //        property1.Name,
+        //        "0");
 
-            var expectedMessage2 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default,
-                property2.LineNumber,
-                property2.Name,
-                DensityType.eckart_modified.ToString());
+        //    var expectedMessage2 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default,
+        //        property2.LineNumber,
+        //        property2.Name,
+        //        DensityType.eckart_modified.ToString());
 
-            Assert.That(errorMessages.ElementAt(0), Is.EqualTo(expectedMessage1));
-            Assert.That(errorMessages.ElementAt(1), Is.EqualTo(expectedMessage2));
-        }
+        //    Assert.That(errorMessages.ElementAt(0), Is.EqualTo(expectedMessage1));
+        //    Assert.That(errorMessages.ElementAt(1), Is.EqualTo(expectedMessage2));
+        //}
 
         private void AddMissingPropertyValues()
         {
