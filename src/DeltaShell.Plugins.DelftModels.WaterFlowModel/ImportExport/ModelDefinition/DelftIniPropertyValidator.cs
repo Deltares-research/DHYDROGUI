@@ -19,39 +19,31 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// a specific <see cref="DelftIniCategory"/>>
         /// <remarks>Temporary check until other delft ini properties can be validated.</remarks>
         /// </summary>
-        private static List<Tuple<string, bool, List<string>>> DefaultPropertyValues;
+        private static List<Tuple<string, bool, List<string>>> DefaultPropertyValues = new List<Tuple<string, bool, List<string>>>();
 
         public static IList<string> ValidateProperties(this DelftIniCategory category)
         {
-            if (category.Name != ModelDefinitionsRegion.TransportComputationValuesHeader)
-            {
-                return new List<string>();
-            }
+            Errors.Clear();
+            DefaultPropertyValues.Clear();
 
             CategoryHeader = category.Name;
             Properties = category.Properties.ToList();
-
             category.RestrictPropertyToCategory();
-            GetDefaultValues();
+
             CheckIfRequired();
-
+            
             return Errors;
-        }
-
-        private static void GetDefaultValues()
-        {
-            var values = DelftIniPropertyValidationLookup.LookupTable.
-                         Where(t => t.Key.Equals(CategoryHeader)).
-                         Select(t => t.Value).ToList();
-
-            DefaultPropertyValues = new List<Tuple<string, bool, List<string>>>();
-            values.ForEach(v => v.ForEach(pv => DefaultPropertyValues.Add(pv)));
         }
 
         private static void CheckIfRequired()
         {
+            GetDefaultValues();
+
             foreach (var property in Properties)
             {
+                if (DefaultPropertyValues.Count == 0)
+                    return;
+
                 var propertyIsRequired = DefaultPropertyValues.Any(pv => pv.Item2 && pv.Item1 == property.Name);
 
                 if (propertyIsRequired)
@@ -59,6 +51,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                     property.CheckPropertyAvailability();
                 }
             }
+        }
+
+        private static void GetDefaultValues()
+        {
+            var values = DelftIniPropertyValidationLookup.LookupTable.
+                Where(t => t.Key.Equals(CategoryHeader)).
+                Select(t => t.Value).ToList();
+
+            if (values.Count == 0) return;
+
+            values.ForEach(v => v.ForEach(pv => DefaultPropertyValues.Add(pv)));
         }
 
         private static void RestrictPropertyToCategory(this DelftIniCategory category)
@@ -75,12 +78,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             if (string.IsNullOrEmpty(property.Value))
             {
                 var errorMessage = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default, property.LineNumber, property.Name, defaultValues?.Item3.First());
+                property.Value = defaultValues?.Item3.FirstOrDefault();
                 Errors.Add(errorMessage);
             }
 
-            if (!propertyValueMatchesDefaultValue && !string.IsNullOrEmpty(property.Value))
+            if (propertyValueMatchesDefaultValue || string.IsNullOrEmpty(property.Value)) return;
             {
                 var errorMessage = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_invalid_will_be_set_as_default, property.LineNumber, property.Name, defaultValues?.Item3.First());
+                property.Value = defaultValues?.Item3.FirstOrDefault();
+
                 Errors.Add(errorMessage);
             }
         }

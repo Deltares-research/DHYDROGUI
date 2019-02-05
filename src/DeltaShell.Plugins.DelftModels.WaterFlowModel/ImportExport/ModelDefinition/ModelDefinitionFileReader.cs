@@ -101,8 +101,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             {
                 try
                 {
-                    ValidateProperties(errorMessages, category);
-                    SetProperties(model, errorMessages, category);
+                    ValidateProperties(category, errorMessages);
+                  
+                    var propertySetter = WaterFlowModelPropertySetterFactory.GetPropertySetter(category);
+                    propertySetter.SetProperties(category, model, errorMessages);
                 }
                 catch (Exception)
                 {
@@ -112,16 +114,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             }
         }
 
-        private static void ValidateProperties(IList<string> errorMessages, DelftIniCategory category)
+        private static void ValidateProperties(DelftIniCategory category, IList<string> errorMessages)
         {
             var errors = category.ValidateProperties();
             errors.ForEach(errorMessages.Add);
-        }
-
-        private static void SetProperties(WaterFlowModel1D model, IList<string> errorMessages, DelftIniCategory category)
-        {
-            var propertySetter = WaterFlowModelPropertySetterFactory.GetPropertySetter(category);
-            propertySetter.SetProperties(category, model, errorMessages);
         }
     }
 }
