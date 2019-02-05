@@ -39,6 +39,17 @@ namespace DeltaShell.NGHS.IO.FileReaders.Retention
                 errorMessages.Add(e.Message);
             }
 
+            var retentionProperties = ReadAndAddPropertiesToCategory(channelsList, categories, errorMessages);
+
+            var retention = RetentionConverter.Convert(retentionProperties, errorMessages);
+            if (errorMessages.Count > 0)
+                createAndAddErrorReport?.Invoke(Resources.RetentionFileReader_ReadRetention_While_reading_the_retention_from_file__an_error_occured, errorMessages);
+
+            return retention;
+        }
+
+        private static List<RetentionPropertiesDTO> ReadAndAddPropertiesToCategory(IList<IChannel> channelsList, IList<DelftIniCategory> categories, List<string> errorMessages)
+        {
             var retentionProperties = new List<RetentionPropertiesDTO>();
             foreach (var category in categories)
             {
@@ -55,11 +66,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Retention
                 retentionProperties.Add(readPropertiesFromCategory);
             }
 
-            var retention = RetentionConverter.Convert(retentionProperties, errorMessages);
-            if (errorMessages.Count > 0)
-                createAndAddErrorReport?.Invoke(Resources.RetentionFileReader_ReadRetention_While_reading_the_retention_from_file__an_error_occured, errorMessages);
-
-            return retention;
+            return retentionProperties;
         }
 
         private static RetentionPropertiesDTO ReadPropertiesFromCategory(DelftIniCategory category,
