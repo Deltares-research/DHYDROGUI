@@ -557,6 +557,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to While reading the structures from file at &apos;{0}&apos;, an error occured.
+        /// </summary>
+        public static string StructuresFileReader_ReadStructures_While_reading_the_structures_from_file_at___0____an_error_occured {
+            get {
+                return ResourceManager.GetString("StructuresFileReader_ReadStructures_While_reading_the_structures_from_file_at___0" +
+                        "____an_error_occured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap unstruc {

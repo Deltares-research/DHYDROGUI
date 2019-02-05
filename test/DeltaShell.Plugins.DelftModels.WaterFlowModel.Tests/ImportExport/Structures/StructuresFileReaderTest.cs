@@ -11,6 +11,7 @@ using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Structures
@@ -107,9 +108,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
                 Assert.AreEqual(0, allCompositeBranchStructures.Count);
                 Assert.AreEqual(1, errorReport.Count);
 
+                var firstPartOfMessage = string.Format(Resources.StructuresFileReader_ReadStructures_While_reading_the_structures_from_file_at___0____an_error_occured,
+                    testFile);
                 var expectedMessage =
-                    string.Format(
-                        "While reading the structures from file, an error occured:{0} Could not read file {1} properly, it seems empty", Environment.NewLine, testFile);
+                    string.Format(firstPartOfMessage + ":{0} Could not read file {1} properly, it seems empty", Environment.NewLine, testFile);
 
                 Assert.AreEqual(expectedMessage, errorReport[0]);
             }

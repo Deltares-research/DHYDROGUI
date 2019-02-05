@@ -6,6 +6,7 @@ using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSections;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
@@ -38,7 +39,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             var compositeBranchStructures = new CompositeBranchStructureConverter().Convert(categories, channels, crossSectionDefinitions, groundLayerDataTransferObject, errorMessages);
             
             if (errorMessages.Count > 0)
-                createAndAddErrorReport?.Invoke($"While reading the structures from file '{filePath}', an error occured", errorMessages);
+                createAndAddErrorReport?.Invoke(
+                    string.Format(Resources.StructuresFileReader_ReadStructures_While_reading_the_structures_from_file_at___0____an_error_occured, filePath), errorMessages);
 
             return compositeBranchStructures;
 
