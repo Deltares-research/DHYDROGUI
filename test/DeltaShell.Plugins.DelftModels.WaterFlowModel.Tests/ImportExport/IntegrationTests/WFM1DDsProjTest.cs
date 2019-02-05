@@ -46,7 +46,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
 
             [Test]
             [Category(TestCategory.Integration)]
-            [Category(TestCategory.Jira)] // Will be fixed as part of SOBEK3-1696 & SOBEK3-1697. Bridges are not imported with a cross section definition.
             public void WriteModelFromDsProjAndReadFromFiles()
             {
                 string testDataDirName = "WFM1D";
