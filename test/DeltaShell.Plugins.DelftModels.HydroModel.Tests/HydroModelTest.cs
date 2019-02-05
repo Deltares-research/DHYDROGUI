@@ -168,6 +168,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void RunUsingSimpleModel2()
         {
             var m1 = new SimpleModel { Input = 1, Name = "SimpleModel1"};
