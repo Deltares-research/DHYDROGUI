@@ -78,17 +78,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             if (string.IsNullOrEmpty(property.Value))
             {
                 var errorMessage = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default, property.LineNumber, property.Name, defaultValues?.Item3.First());
-                property.Value = defaultValues?.Item3.FirstOrDefault();
                 Errors.Add(errorMessage);
             }
 
-            if (propertyValueMatchesDefaultValue || string.IsNullOrEmpty(property.Value)) return;
+            if (!propertyValueMatchesDefaultValue && !string.IsNullOrEmpty(property.Value))
             {
                 var errorMessage = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_invalid_will_be_set_as_default, property.LineNumber, property.Name, defaultValues?.Item3.First());
-                property.Value = defaultValues?.Item3.FirstOrDefault();
-
                 Errors.Add(errorMessage);
             }
+            property.Value = defaultValues?.Item3.FirstOrDefault();
         }
     }
 }
