@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
@@ -497,6 +498,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             // Given
             var category = GetBridgeCategoryWithBasicProperties();
             category.SetProperty(StructureRegion.DefinitionType.Key, "bridgePillar");
+            category.Properties.RemoveAllWhere(p => p.Name == StructureRegion.CsDefId.Key); // No cross section ID for bridge pillars
 
             Network = new HydroNetwork();
             var categories = new List<DelftIniCategory> { category };

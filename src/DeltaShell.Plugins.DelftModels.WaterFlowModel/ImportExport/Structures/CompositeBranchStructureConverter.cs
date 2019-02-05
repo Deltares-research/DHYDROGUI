@@ -111,16 +111,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
                 if (structure is Bridge bridge)
                 {
-                    var crossSectionDefinitionId = structureBranchCategory.ReadProperty<string>(StructureRegion.CsDefId.Key);
+                    var crossSectionDefinitionId = structureBranchCategory.ReadProperty<string>(StructureRegion.CsDefId.Key, true);
+                    if (crossSectionDefinitionId == null)
+                    {
+                        // Bridge Pillars do not have a cross section defined
+                        bridge.BridgeType = BridgeType.Pillar;
+                    }
+
                     var matchingCrossSectionDefinition = crossSectionDefinitions.FirstOrDefault(csd => csd.Name == crossSectionDefinitionId);
                     if (matchingCrossSectionDefinition != null)
                     {
                         SetBridgeCrossSectionDefinition(matchingCrossSectionDefinition, bridge);
-                    }
-                    else
-                    {
-                        // Bridge Pillars do not have a cross section defined
-                        bridge.BridgeType = BridgeType.Pillar;
                     }
                 }
 
