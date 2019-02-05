@@ -171,17 +171,6 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UseTable is not yet implemented in the RetentionFileReader, please set UseTable to 0 to continue with this model..
-        /// </summary>
-        public static string RetentionConverterTest_GivenARetentionDataModelWhichUsesUseTable_WhenConverting_ThenTheErrorReportIsProperlyFilled_UseTable_is_not_yet_implemented_in_the_RetentionFileReader__please_set_UseTable_to_0_to_continue_with_this_model_ {
-            get {
-                return ResourceManager.GetString("RetentionConverterTest_GivenARetentionDataModelWhichUsesUseTable_WhenConverting_T" +
-                        "henTheErrorReportIsProperlyFilled_UseTable_is_not_yet_implemented_in_the_Retenti" +
-                        "onFileReader__please_set_UseTable_to_0_to_continue_with_this_model_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to While reading the retention from file, an error occured.
         /// </summary>
         public static string RetentionFileReader_ReadRetention_While_reading_the_retention_from_file__an_error_occured {

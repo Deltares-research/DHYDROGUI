@@ -138,8 +138,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         [Category(TestCategory.DataAccess)]
         public void GivenARetentionIniFileWithUseTableSetToTrue_WhenReadingRetentionPointsFromFile_ThenAnErrorShouldBeCreated()
         {
+            var errorReport = new List<string>();
+
             Action<string, IList<string>> CreateAndAddErrorReport = (header, errorMessages) =>
-                new List<string>().Add(
+                errorReport.Add(
                     $"{header}:{Environment.NewLine} {string.Join(Environment.NewLine, errorMessages)}");
 
             var fileReader = new RetentionFileReader(CreateAndAddErrorReport);
@@ -149,14 +151,19 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
             try
             {
-                var expectedMessage = Resources
-                    .RetentionConverterTest_GivenARetentionDataModelWhichUsesUseTable_WhenConverting_ThenTheErrorReportIsProperlyFilled_UseTable_is_not_yet_implemented_in_the_RetentionFileReader__please_set_UseTable_to_0_to_continue_with_this_model_;
-                Assert.Throws<NotImplementedException>(() => fileReader.ReadRetention(testFile, channelsList), expectedMessage);
+                fileReader.ReadRetention(testFile, channelsList);
             }
             finally
             {
                 FileUtils.DeleteIfExists(testFile);
             }
+
+            var expectedMessage = string.Concat(Resources.RetentionFileReader_ReadRetention_While_reading_the_retention_from_file__an_error_occured,
+                ":",
+                Environment.NewLine,
+                " The retention Retention1 has useTable set to 1, this is not supported by the GUI. The importing of this retention value has been skipped");
+
+            Assert.AreEqual(expectedMessage, errorReport[0]);
         }
     }
 }
