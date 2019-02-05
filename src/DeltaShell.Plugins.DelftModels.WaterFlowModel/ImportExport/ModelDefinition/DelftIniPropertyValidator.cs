@@ -16,12 +16,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 
         /// <summary>
         /// List of default values extracted from <see cref="DelftIniPropertyValidationLookup"/> belonging to
-        /// a specific <see cref="DelftIniCategory"/> >
+        /// a specific <see cref="DelftIniCategory"/>>
+        /// <remarks>Temporary check until other delft ini properties can be validated.</remarks>
         /// </summary>
         private static List<Tuple<string, bool, List<string>>> DefaultPropertyValues;
 
-        public static IList<string> ValidateProperty(this DelftIniCategory category)
+        public static IList<string> ValidateProperties(this DelftIniCategory category)
         {
+            if (category.Name != ModelDefinitionsRegion.TransportComputationValuesHeader)
+            {
+                return new List<string>();
+            }
+
             CategoryHeader = category.Name;
             Properties = category.Properties.ToList();
 
@@ -36,7 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         {
             var values = DelftIniPropertyValidationLookup.LookupTable.
                          Where(t => t.Key.Equals(CategoryHeader)).
-                         Select(t => t.Value).ToList(); 
+                         Select(t => t.Value).ToList();
 
             DefaultPropertyValues = new List<Tuple<string, bool, List<string>>>();
             values.ForEach(v => v.ForEach(pv => DefaultPropertyValues.Add(pv)));

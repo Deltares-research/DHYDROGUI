@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         public void Initialize()
         {
             category = new DelftIniCategory(ModelDefinitionsRegion.TransportComputationValuesHeader);
-            category.ValidateProperty().Clear();
+            category.ValidateProperties().Clear();
             errorMessages = new List<string>();
             CreateTransportComputationDelftIniCategory();
         }
@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             AddValidDefaultPropertyValues();
 
             //When
-            errorMessages = category.ValidateProperty().ToList();
+            errorMessages = category.ValidateProperties().ToList();
 
             //Then
             Assert.That(errorMessages, Is.Not.Null);
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             AddValidStandardPropertyValues();
 
             //When
-            errorMessages = category.ValidateProperty().ToList();
+            errorMessages = category.ValidateProperties().ToList();
 
             //Then
             Assert.That(errorMessages, Is.Not.Null);
@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             AddMissingPropertyValues();
 
             //When
-            errorMessages = category.ValidateProperty().ToList();
+            errorMessages = category.ValidateProperties().ToList();
 
             //Then
             Assert.That(errorMessages, Is.Not.Null);
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             AddInValidPropertyValues();
 
             //When
-            errorMessages = category.ValidateProperty().ToList();
+            errorMessages = category.ValidateProperties().ToList();
 
             //Then
             Assert.That(errorMessages, Is.Not.Null);
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             AddVariousPropertyValues1();
 
             //When
-            errorMessages = category.ValidateProperty().ToList();
+            errorMessages = category.ValidateProperties().ToList();
 
             //Then
             Assert.That(errorMessages, Is.Not.Null);
@@ -154,7 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             AddVariousPropertyValues2();
 
             //When
-            errorMessages = category.ValidateProperty().ToList();
+            errorMessages = category.ValidateProperties().ToList();
 
             //Then
             Assert.That(errorMessages, Is.Not.Null);
@@ -210,7 +210,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
         private void AddInValidPropertyValues()
         {
-            category.AddProperty(ModelDefinitionsRegion.UseTemperature.Key, "invalidValue");
+            category.AddProperty(ModelDefinitionsRegion.UseTemperature.Key, "2");
             category.AddProperty(ModelDefinitionsRegion.Density.Key, "invalidValue");
             category.AddProperty(ModelDefinitionsRegion.HeatTransferModel.Key, "invalidValue");
 

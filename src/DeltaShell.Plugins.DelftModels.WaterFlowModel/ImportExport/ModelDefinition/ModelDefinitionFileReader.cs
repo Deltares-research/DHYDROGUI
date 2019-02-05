@@ -93,24 +93,35 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                    category.Name == ModelDefinitionsRegion.FilesIniHeader;
         }
 
+ 
+        /// <remarks>Please use the ValidateProperties method to validate delftIniProperties</remarks>
         private static void SetProperties(this WaterFlowModel1D model, IEnumerable<DelftIniCategory> modelSettingsCategories, IList<string> errorMessages)
         {
             foreach (var category in modelSettingsCategories)
             {
                 try
                 {
-                    var errors = category.ValidateProperty();
-                    errors.ForEach(errorMessages.Add);
-
-                    var propertySetter = WaterFlowModelPropertySetterFactory.GetPropertySetter(category);
-                    propertySetter.SetProperties(category, model, errorMessages);
+                    ValidateProperties(errorMessages, category);
+                    SetProperties(model, errorMessages, category);
                 }
                 catch (Exception)
                 {
-                    var errorMessage = string.Format(Resources.ModelDefinitionFileReaderTest_There_is_unrecognized_data_read_from_the_md1d_file_with_header__0___This_category_has_been_skipped_when_reading_, "Unknown Header");
+                    var errorMessage = string.Format(Resources.ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header__0_, category.Name);
                     errorMessages.Add(errorMessage);
                 }
             }
+        }
+
+        private static void ValidateProperties(IList<string> errorMessages, DelftIniCategory category)
+        {
+            var errors = category.ValidateProperties();
+            errors.ForEach(errorMessages.Add);
+        }
+
+        private static void SetProperties(WaterFlowModel1D model, IList<string> errorMessages, DelftIniCategory category)
+        {
+            var propertySetter = WaterFlowModelPropertySetterFactory.GetPropertySetter(category);
+            propertySetter.SetProperties(category, model, errorMessages);
         }
     }
 }
