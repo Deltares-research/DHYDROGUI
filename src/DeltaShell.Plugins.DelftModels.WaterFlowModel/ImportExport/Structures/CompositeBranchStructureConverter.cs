@@ -85,6 +85,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                 }
 
                 var structure = converter.ConvertToStructure1D(structureBranchCategory, channel);
+                if (structure == null)
+                {
+                    throw new Exception(string.Format(
+                        "Failed to create a structure from the structures file (line {0})",
+                        structureBranchCategory.LineNumber));
+                }
+
                 if (structure is Culvert culvert)
                 {
                     var crossSectionDefinitionId = structureBranchCategory.ReadProperty<string>(StructureRegion.CsDefId.Key);
@@ -102,11 +109,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                     }
                 }
 
-                if (structure == null)
+                if (structure is Bridge bridge)
                 {
-                    throw new Exception(string.Format(
-                        "Failed to create a structure from the structures file (line {0})",
-                        structureBranchCategory.LineNumber));
+                    var crossSectionDefinitionId = structureBranchCategory.ReadProperty<string>(StructureRegion.CsDefId.Key);
+                    var matchingCrossSectionDefinition = crossSectionDefinitions.FirstOrDefault(csd => csd.Name == crossSectionDefinitionId);
+                    if (matchingCrossSectionDefinition != null)
+                    {
+                        SetBridgeCrossSectionDefinition(matchingCrossSectionDefinition, bridge);
+                    }
+                    else
+                    {
+                        // Bridge Pillars do not have a cross section defined
+                        bridge.BridgeType = BridgeType.Pillar;
+                    }
                 }
 
                 var compositeBranchStructure = getCompositeBranchStructureFunc.Invoke(structureBranchCategory,
@@ -124,6 +139,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             catch (Exception e)
             {
                 errorMessages.Add(e.Message);
+            }
+        }
+
+        private static void SetBridgeCrossSectionDefinition(ICrossSectionDefinition crossSectionDefinition, Bridge bridge)
+        {
+            switch (crossSectionDefinition)
+            {
+                case CrossSectionDefinitionStandard crossSectionDefinitionStandard:
+                    switch (crossSectionDefinitionStandard.ShapeType)
+                    {
+                        case CrossSectionStandardShapeType.Rectangle:
+                            var rectangleShape = (CrossSectionStandardShapeRectangle)crossSectionDefinitionStandard.Shape;
+                            bridge.BridgeType = BridgeType.Rectangle;
+                            bridge.Width = rectangleShape.Width;
+                            bridge.Height = rectangleShape.Height;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    break;
+                case CrossSectionDefinitionZW crossSectionDefinitionZw:
+                    bridge.BridgeType = BridgeType.Tabulated;
+                    bridge.TabulatedCrossSectionDefinition = crossSectionDefinitionZw;
+                    break;
             }
         }
 

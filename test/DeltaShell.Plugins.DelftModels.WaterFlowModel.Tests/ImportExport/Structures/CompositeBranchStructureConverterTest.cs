@@ -277,7 +277,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
 
         private IList<ICompositeBranchStructure> ConvertCulvertDelftIniCategoryToCompositeBranchStructures(ICrossSectionStandardShape shape, GroundLayerDataTransferObject[] groundLayerDataTransferObjects)
         {
-            var crossSectionDefinitions = new List<ICrossSectionDefinition> {GetCrossSectionDefinition(shape)};            
+            var crossSectionDefinitions = new List<ICrossSectionDefinition> {GetCrossSectionDefinition(CulvertName, shape) };            
             Network = new HydroNetwork();
             var categories = new List<DelftIniCategory> {GetCulvertCategoryWithBasicProperties()};
             var branches = new List<IChannel> {GetMockedChannel()};
@@ -288,11 +288,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             return compositeBranchStructures;
         }
 
-        private static CrossSectionDefinitionStandard GetCrossSectionDefinition(ICrossSectionStandardShape shape)
+        private static CrossSectionDefinitionStandard GetCrossSectionDefinition(string name, ICrossSectionStandardShape shape)
         {
             var crossSectionDefinitionRound = new CrossSectionDefinitionStandard(shape)
             {
-                Name = CulvertName
+                Name = name
             };
             return crossSectionDefinitionRound;
         }
@@ -330,7 +330,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             var compositeBranchStructures = ConvertCulvertDelftIniCategoryToCompositeBranchStructures(crossSectionDefinitionZw);
 
             // Then
-            var csDefinitionZw = GetCrossSectionDefinitionZwFromCompositeBranchStructure(compositeBranchStructures);
+            var csDefinitionZw = GetCrossSectionDefinitionZwFromCulvertCompositeBranchStructure(compositeBranchStructures);
             Assert.That(csDefinitionZw, Is.EqualTo(crossSectionDefinitionZw));
         }
 
@@ -347,7 +347,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             return compositeBranchStructures;
         }
 
-        private static CrossSectionDefinitionZW GetCrossSectionDefinitionZwFromCompositeBranchStructure(ICollection<ICompositeBranchStructure> compositeBranchStructures)
+        private static CrossSectionDefinitionZW GetCrossSectionDefinitionZwFromCulvertCompositeBranchStructure(ICollection<ICompositeBranchStructure> compositeBranchStructures)
         {
             Assert.That(compositeBranchStructures.Count, Is.EqualTo(1));
 
@@ -388,6 +388,157 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.AddProperty(StructureRegion.BedFriction.Key, "45.0");
             category.AddProperty(StructureRegion.GroundFrictionType.Key, "1");
             category.AddProperty(StructureRegion.GroundFriction.Key, "45.0");
+
+            return category;
+        }
+
+        #endregion
+
+        #region Reading Bridge Cross Section Definition
+        
+        [Test]
+        public void GivenBridgeDelftIniCategoryWithMatchingCrossSectionDefinitionWithRectangleShape_WhenConvertingToCompositeBranchStructure_ThenBridgeCrossSectionShapePropertiesAreAsExpected()
+        {
+            // Given
+            var rectangleShape = new CrossSectionStandardShapeRectangle
+            {
+                Width = CrossSectionDefinitionWidth,
+                Height = CrossSectionDefinitionHeight
+            };
+
+            // When
+            var compositeBranchStructures = ConvertBridgeDelftIniCategoryToCompositeBranchStructures(rectangleShape, new GroundLayerDataTransferObject[0]);
+
+            // Then
+            var shape = GetBridgeShapeFromCompositeStructure<CrossSectionStandardShapeRectangle>(compositeBranchStructures);
+            Assert.That(shape.Width, Is.EqualTo(CrossSectionDefinitionWidth));
+            Assert.That(shape.Height, Is.EqualTo(CrossSectionDefinitionHeight));
+        }
+
+        private IList<ICompositeBranchStructure> ConvertBridgeDelftIniCategoryToCompositeBranchStructures(ICrossSectionStandardShape shape, GroundLayerDataTransferObject[] groundLayerDataTransferObjects)
+        {
+            var crossSectionDefinitions = new List<ICrossSectionDefinition> { GetCrossSectionDefinition(BridgeName, shape) };
+            Network = new HydroNetwork();
+            var categories = new List<DelftIniCategory> { GetBridgeCategoryWithBasicProperties() };
+            var branches = new List<IChannel> { GetMockedChannel() };
+
+            var converter = new CompositeBranchStructureConverter();
+            var compositeBranchStructures =
+                converter.Convert(categories, branches, crossSectionDefinitions, groundLayerDataTransferObjects, new List<string>());
+            return compositeBranchStructures;
+        }
+
+        private static T GetBridgeShapeFromCompositeStructure<T>(ICollection<ICompositeBranchStructure> compositeBranchStructures)
+            where T : class, ICrossSectionStandardShape
+        {
+            Assert.That(compositeBranchStructures.Count, Is.EqualTo(1));
+
+            var compositeBranchStructure = compositeBranchStructures.FirstOrDefault();
+            var branchFeatures = compositeBranchStructure?.Branch.BranchFeatures;
+            var bridge = branchFeatures?.FirstOrDefault() as Bridge;
+            Assert.That(branchFeatures?.Count, Is.EqualTo(1));
+            Assert.IsNotNull(bridge, "CompositeBranchStructureConverter did not return a Bridge object");
+
+            var crossSectionDefinition = bridge.CrossSectionDefinition as CrossSectionDefinitionStandard;
+            var shape = crossSectionDefinition?.Shape as T;
+            Assert.IsNotNull(shape, $"CompositeBranchStructureConverter did not return a Bridge object with a {typeof(T)} shape type");
+
+            return shape;
+        }
+
+        [Test]
+        public void GivenBridgeDelftIniCategoryWithMatchingCrossSectionDefinitionZw_WhenConvertingToCompositeBranchStructure_ThenBridgeHasTabulatedShapeType()
+        {
+            // Given
+            var crossSectionDefinitionZw = new CrossSectionDefinitionZW
+            {
+                Name = BridgeName
+            };
+            crossSectionDefinitionZw.ZWDataTable.AddCrossSectionZWRow(10.0, 5.0, 0.0);
+            crossSectionDefinitionZw.ZWDataTable.AddCrossSectionZWRow(15.0, 3.0, 2.0);
+
+            // When
+            var compositeBranchStructures = ConvertBridgeDelftIniCategoryToCompositeBranchStructures(crossSectionDefinitionZw);
+
+            // Then
+            var csDefinitionZw = GetCrossSectionDefinitionZwFromBridgeCompositeBranchStructure(compositeBranchStructures);
+            Assert.That(csDefinitionZw, Is.EqualTo(crossSectionDefinitionZw));
+        }
+
+        private IList<ICompositeBranchStructure> ConvertBridgeDelftIniCategoryToCompositeBranchStructures(CrossSectionDefinitionZW crossSectionDefinition)
+        {
+            var crossSectionDefinitions = new List<ICrossSectionDefinition> { crossSectionDefinition };
+            Network = new HydroNetwork();
+            var categories = new List<DelftIniCategory> { GetBridgeCategoryWithBasicProperties() };
+            var branches = new List<IChannel> { GetMockedChannel() };
+
+            var converter = new CompositeBranchStructureConverter();
+            var compositeBranchStructures =
+                converter.Convert(categories, branches, crossSectionDefinitions, new GroundLayerDataTransferObject[] { }, new List<string>());
+            return compositeBranchStructures;
+        }
+
+        private static CrossSectionDefinitionZW GetCrossSectionDefinitionZwFromBridgeCompositeBranchStructure(ICollection<ICompositeBranchStructure> compositeBranchStructures)
+        {
+            Assert.That(compositeBranchStructures.Count, Is.EqualTo(1));
+
+            var compositeBranchStructure = compositeBranchStructures.FirstOrDefault();
+            var branchFeatures = compositeBranchStructure?.Branch.BranchFeatures;
+            var culvert = branchFeatures?.FirstOrDefault() as Bridge;
+            Assert.That(branchFeatures?.Count, Is.EqualTo(1));
+            Assert.IsNotNull(culvert, "CompositeBranchStructureConverter did not return a Bridge object");
+
+            return culvert.CrossSectionDefinition as CrossSectionDefinitionZW;
+        }
+
+        [Test]
+        public void GivenBridgePillarDelftIniCategoryWithMatchingCrossSectionDefinition_WhenConvertingToCompositeBranchStructure_ThenBridgePillarHasNullCrossSectionDefinition()
+        {
+            // Given
+            var category = GetBridgeCategoryWithBasicProperties();
+            category.SetProperty(StructureRegion.DefinitionType.Key, "bridgePillar");
+
+            Network = new HydroNetwork();
+            var categories = new List<DelftIniCategory> { category };
+            var branches = new List<IChannel> { GetMockedChannel() };
+
+            // When
+            var converter = new CompositeBranchStructureConverter();
+            var compositeBranchStructures =
+                converter.Convert(categories, branches, new List<ICrossSectionDefinition>(), new GroundLayerDataTransferObject[0], new List<string>());
+
+            // Then
+            Assert.That(compositeBranchStructures.Count, Is.EqualTo(1));
+            var compositeBranchStructure = compositeBranchStructures.FirstOrDefault();
+            var branchFeatures = compositeBranchStructure?.Branch.BranchFeatures;
+            var bridge = branchFeatures?.FirstOrDefault() as Bridge;
+
+            Assert.IsNotNull(bridge);
+            Assert.That(bridge.BridgeType, Is.EqualTo(BridgeType.Pillar));
+            Assert.IsNull(bridge.CrossSectionDefinition);
+
+        }
+
+        private const string BridgeName = "myBridge";
+        private const string BridgeLongName = "myBridge_longName";
+
+        private static DelftIniCategory GetBridgeCategoryWithBasicProperties()
+        {
+            var category = new DelftIniCategory(StructureRegion.Header);
+            category.AddProperty(StructureRegion.Id.Key, BridgeName);
+            category.AddProperty(StructureRegion.BranchId.Key, BranchName);
+            category.AddProperty(StructureRegion.Name.Key, BridgeLongName);
+            category.AddProperty(StructureRegion.Chainage.Key, ChainageAsString);
+            category.AddProperty(StructureRegion.Compound.Key, "0");
+            category.AddProperty(StructureRegion.DefinitionType.Key, "bridge");
+            category.AddProperty(StructureRegion.AllowedFlowDir.Key, "0");
+            category.AddProperty(StructureRegion.BedLevel.Key, "0.0");
+            category.AddProperty(StructureRegion.CsDefId.Key, BridgeName);
+            category.AddProperty(StructureRegion.Length.Key, "1.0");
+            category.AddProperty(StructureRegion.InletLossCoeff.Key, "1.0");
+            category.AddProperty(StructureRegion.OutletLossCoeff.Key, "1.0");
+            category.AddProperty(StructureRegion.PillarWidth.Key, "1.0");
+            category.AddProperty(StructureRegion.FormFactor.Key, "1.0");
 
             return category;
         }
