@@ -23,15 +23,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             if (!(Structure is IWeir weir)) return;
             if (!(weir.WeirFormula is FreeFormWeirFormula weirFormula)) return;
 
-            weir.FlowDirection =
-                (FlowDirection)Category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
+            weir.FlowDirection = (FlowDirection)Category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key);
             var yValues = Category.ReadPropertiesToListOfType<double>(StructureRegion.YValues.Key);
             var zValues = Category.ReadPropertiesToListOfType<double>(StructureRegion.ZValues.Key);
             var crestLevel = Category.ReadProperty<double>(StructureRegion.CrestLevel.Key);
 
             if (crestLevel - zValues.Min() > double.Epsilon)
             {
-                throw new Exception(string.Format("For universal weir {0} the value for the crestlevel should be the same as the minimum value of the ZValues", weir.Name));
+                throw new Exception($"For universal weir {weir.Name} the value for the crestlevel should be the same as the minimum value of the ZValues");
             }
             if (yValues.Count < zValues.Count)
             {

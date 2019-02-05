@@ -223,6 +223,7 @@
     <Compile Include="ImportExport\Structures\ExtraResistanceConverter.cs" />
     <Compile Include="ImportExport\Structures\GeneralStructureConverter.cs" />
     <Compile Include="ImportExport\Structures\InvertedSiphonConverter.cs" />
+    <Compile Include="ImportExport\Structures\IStructureConverter.cs" />
     <Compile Include="ImportExport\Structures\OrificeConverter.cs" />
     <Compile Include="ImportExport\Structures\CompositeBranchStructureConverter.cs" />
     <Compile Include="ImportExport\Structures\PumpConverter.cs" />

@@ -6,6 +6,11 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
+    /// <summary>
+    /// This class is responsible for converting <see cref="IDelftIniCategory"/> objects into <see cref="Weir"/> objects with
+    /// a <see cref="PierWeirFormula"/> object as WeirFormula.
+    /// </summary>
+    /// <seealso cref="StructureConverter" />
     public class AdvancedWeirConverter : StructureConverter
     {
         protected override IStructure1D CreateNewStructure()

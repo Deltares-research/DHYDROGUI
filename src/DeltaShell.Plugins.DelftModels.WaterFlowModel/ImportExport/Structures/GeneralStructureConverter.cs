@@ -48,10 +48,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             weirFormula.NegativeDrownedWeirFlow = Category.ReadProperty<double>(StructureRegion.NegDrownWeirFlowCoeff.Key);
             weirFormula.NegativeContractionCoefficient = Category.ReadProperty<double>(StructureRegion.NegContrCoefFreeGate.Key);
 
+            SetExtraResistanceProperties(weirFormula);
+        }
+
+        private static void SetExtraResistanceProperties(GeneralStructureWeirFormula weirFormula)
+        {
             var extraResistance = Category.ReadProperty<double>(StructureRegion.ExtraResistance.Key);
             if (Math.Abs(extraResistance) > 0.0)
             {
-                ((GeneralStructureWeirFormula)(weir.WeirFormula)).ExtraResistance = extraResistance;
+                weirFormula.ExtraResistance = extraResistance;
                 weirFormula.UseExtraResistance = true;
             }
             else

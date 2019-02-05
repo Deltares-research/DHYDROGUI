@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             // assert
             var exception = Assert.Throws<InvalidOperationException>(call);
-            Assert.AreEqual(string.Format("Cannot find attributes file ({0}).", nonexistentAttributesFile.FullName), 
+            Assert.AreEqual($"Cannot find attributes file ({nonexistentAttributesFile.FullName}).", 
                 exception.Message);
         }
 
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             // assert
             var exception = Assert.Throws<FormatException>(call);
-            Assert.AreEqual(string.Format("Attributes file ({0}) does not contain data block for enabled state of segments.", filePath), 
+            Assert.AreEqual($"Attributes file ({filePath}) does not contain data block for enabled state of segments.", 
                 exception.Message);
         }
     }

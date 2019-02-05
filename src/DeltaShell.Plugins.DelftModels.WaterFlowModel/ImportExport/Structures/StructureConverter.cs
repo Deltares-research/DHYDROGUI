@@ -39,9 +39,4 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
         /// </summary>
         protected abstract void SetStructureProperties();
     }
-
-    public interface IStructureConverter
-    {
-        IStructure1D ConvertToStructure1D(IDelftIniCategory category, IBranch branch);
-    }
 }

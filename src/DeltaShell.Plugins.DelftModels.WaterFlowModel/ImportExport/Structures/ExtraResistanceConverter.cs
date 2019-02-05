@@ -23,8 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
             if (numValues != argumentsLevels.Count || numValues != componentsKsi.Count)
             {
-                throw new Exception(string.Format("For extra resistance {0} the friction table contains an error",
-                    extraResistance.Name));
+                throw new Exception($"For extra resistance {extraResistance.Name} the friction table contains an error");
             }
 
             extraResistance.FrictionTable.Clear();

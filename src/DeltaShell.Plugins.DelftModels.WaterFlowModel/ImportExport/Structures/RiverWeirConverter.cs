@@ -37,8 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
             if (posCount != argumentsPos.Count || posCount != componentsPos.Count)
             {
-                throw new Exception(string.Format(
-                    "For river weir {0} the reduction table for positive flow direction contains an error", weir.Name));
+                throw new Exception($"For river weir {weir.Name} the reduction table for positive flow direction contains an error");
             }
 
             weirFormula.SubmergeReductionPos.Clear();
@@ -54,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
             if (negCount != argumentsNeg.Count || negCount != componentsNeg.Count)
             {
-                throw new Exception(string.Format("For river weir {0} the reduction table for negative flow direction contains an error", weir.Name));
+                throw new Exception($"For river weir {weir.Name} the reduction table for negative flow direction contains an error");
             }
 
             weirFormula.SubmergeReductionNeg.Clear();

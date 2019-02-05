@@ -16,6 +16,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
     public static class BasicStructuresOperations
     {
+        /// <summary>
+        /// Sets the common structure properties that are available for every structure.
+        /// </summary>
+        /// <param name="structure">The structure to set the values on.</param>
+        /// <param name="structureBranchCategory">The <see cref="IDelftIniCategory"/> object to extract the property values from.</param>
+        /// <param name="branch">The branch that is associated with the structure.</param>
+        /// <exception cref="ArgumentException">When one of the arguments is equal to null.</exception>
         public static void SetCommonRegionElements(this IStructure1D structure, IDelftIniCategory structureBranchCategory, IBranch branch)
         {
             if (structure == null || structureBranchCategory == null) throw new ArgumentException();
@@ -25,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                 var errorMessage =
                     string.Format(Resources.BasicStructuresOperations_SetCommonRegionElements_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_,
                         structureBranchCategory.Name, StructureRegion.BranchId.Key, Environment.NewLine);
-                throw new Exception(errorMessage);
+                throw new ArgumentException(errorMessage);
             }
 
             var name = structureBranchCategory.ReadProperty<string>(StructureRegion.Id.Key);
