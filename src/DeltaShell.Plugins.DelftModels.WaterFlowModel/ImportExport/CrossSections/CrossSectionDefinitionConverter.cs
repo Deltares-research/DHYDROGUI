@@ -68,8 +68,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectio
         public static IEnumerable<GroundLayerDataTransferObject> ConvertToGroundLayerData(IEnumerable<DelftIniCategory> categories)
         {
             var definitionCategories = categories.Where(c => c.Name == DefinitionRegion.Header);
+            
             foreach (var category in definitionCategories)
             {
+                if(!category.Properties.Any(p => p.Name == DefinitionRegion.GroundlayerUsed.Key) || !category.Properties.Any(p => p.Name == DefinitionRegion.Groundlayer.Key))
+                    continue;
+
                 var groundLayerData = new GroundLayerDataTransferObject
                 {
                     CrossSectionDefinitionId = category.ReadProperty<string>(DefinitionRegion.Id.Key),

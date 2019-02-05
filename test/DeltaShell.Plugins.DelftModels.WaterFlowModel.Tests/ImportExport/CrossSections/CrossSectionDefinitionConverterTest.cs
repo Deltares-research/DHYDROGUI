@@ -234,6 +234,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Cross
             Assert.That(groundLayerData.GroundLayerThickness, Is.EqualTo(20.0));
         }
 
+        [Test]
+        public void GivenCrossSectionDefinitionCategoryWithoutGroundLayerProperties_WhenConvertingToGroundLayerObject_ThenNoExceptionIsThrownAndNoObjectHasBeenRead()
+        {
+            // Given
+            var id = "myCrossSectionId";
+            var category = new DelftIniCategory(DefinitionRegion.Header);
+            var categories = new List<DelftIniCategory> { category };
+
+            // When
+            var groundLayerDataObjects = CrossSectionDefinitionConverter.ConvertToGroundLayerData(categories).ToArray();
+
+            // Then
+            Assert.IsEmpty(groundLayerDataObjects);
+        }
+
         private DelftIniCategory CreateCrossSectionDefinitionCategory_YZ(string id)
         {
             var category = new DelftIniCategory("Definition");
