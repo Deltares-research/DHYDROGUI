@@ -23,11 +23,8 @@ using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands.SpatialOperations;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
-
 using NUnit.Framework;
-
 using Rhino.Mocks;
-
 using SharpMap.UI.Tools;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
@@ -36,6 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
     public class WaterQualityModelGuiPluginTest
     {
         [Test]
+        [Category(TestCategory.Slow)]
         public void GetRibbonCommandHandlerReturnsWaterQualityRibbon()
         {
             MockRepository mocks = new MockRepository();
