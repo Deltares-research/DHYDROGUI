@@ -5,7 +5,6 @@ using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
-using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 {
@@ -16,8 +15,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
     [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DOutputSettingsProperties_DisplayName")]
     public class WaterFlowModel1DOutputSettingsProperties : ObjectProperties<WaterFlowModel1D>
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowModel1DOutputSettingsProperties));
-
         private const string TimeCategoryName = "Output time step";
         private const string LocationsCategoryName = "Grid points";
         private const string BranchCategoryName = "Reach segments";
