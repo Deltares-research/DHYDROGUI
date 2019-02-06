@@ -22,25 +22,78 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             category.AddProperty(ModelDefinitionsRegion.D50.Key, d50);
             category.AddProperty(ModelDefinitionsRegion.D90.Key, d90);
             category.AddProperty(ModelDefinitionsRegion.DepthUsedForSediment.Key, depthUsedForSediment);
+           
+            var model = new WaterFlowModel1D();
+
+            var errorMessages = new List<string>();
+
+            // When 
+            new WaterFlowModelSedimentOptionsSetter().SetProperties(category, model, errorMessages);
+
+            // Then
+            Assert.NotNull(model.D50);
+            Assert.NotNull(model.D90);
+            Assert.NotNull(model.DepthUsedForSediment);
+            Assert.AreEqual(0.0005, model.D50);
+            Assert.AreEqual(0.001, model.D90);
+            Assert.AreEqual(0.3, model.DepthUsedForSediment);
+
+            Assert.AreEqual(0, errorMessages.Count);
+        }
+
+        [Test]
+        public void GivenACategoryWithSedimentProperties_WhenTryingToSetThesePropertiesOnTheWrongCategory_ThenTheseParametersShouldNotBeSetInTheModel()
+        {
+            // Given
+            const string d50 = "0.0005";
+            const string d90 = "0.001";
+            const string depthUsedForSediment = "0.3";
+
+            var category = new DelftIniCategory(ModelDefinitionsRegion.AdvancedOptionsHeader);
+            category.AddProperty(ModelDefinitionsRegion.D50.Key, d50);
+            category.AddProperty(ModelDefinitionsRegion.D90.Key, d90);
+            category.AddProperty(ModelDefinitionsRegion.DepthUsedForSediment.Key, depthUsedForSediment);
 
             var model = new WaterFlowModel1D();
 
             var errorMessages = new List<string>();
-            
-            // When 
-            new WaterFlowModelSalinitySetter().SetProperties(category, model, errorMessages);
 
-            var d50ParameterSetting = model.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.D50.Key);
-            var d90ParameterSetting = model.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.D90.Key);
-            var depthUsedForSedimentParameterSetting = model.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.DepthUsedForSediment.Key);
+            // When 
+            new WaterFlowModelSedimentOptionsSetter().SetProperties(category, model, errorMessages);
 
             // Then
-            Assert.NotNull(d50ParameterSetting);
-            Assert.NotNull(d90ParameterSetting);
-            Assert.NotNull(depthUsedForSedimentParameterSetting);
-            Assert.AreEqual(d50, d50ParameterSetting.Value);
-            Assert.AreEqual(d90, d90ParameterSetting.Value);
-            Assert.AreEqual(depthUsedForSediment, depthUsedForSedimentParameterSetting.Value);
+            Assert.Null(model.D50);
+            Assert.Null(model.D90);
+            Assert.Null(model.DepthUsedForSediment);
+        }
+
+        [Test]
+        public void GivenACategoryWithOneEmptySedimentProperty_WhenSettingTheseModelProperties_ThenThisParameterIsNotSetButTheOthersAreSet()
+        {
+            // Given
+            const string d50 = "0.0005";
+            var d90 = string.Empty;
+            const string depthUsedForSediment = "0.3";
+
+            var category = new DelftIniCategory(ModelDefinitionsRegion.SedimentValuesHeader);
+            category.AddProperty(ModelDefinitionsRegion.D50.Key, d50);
+            category.AddProperty(ModelDefinitionsRegion.D90.Key, d90);
+            category.AddProperty(ModelDefinitionsRegion.DepthUsedForSediment.Key, depthUsedForSediment);
+
+            var model = new WaterFlowModel1D();
+
+            var errorMessages = new List<string>();
+
+            // When 
+            new WaterFlowModelSedimentOptionsSetter().SetProperties(category, model, errorMessages);
+
+            // Then
+            Assert.NotNull(model.D50);
+            Assert.Null(model.D90);
+            Assert.NotNull(model.DepthUsedForSediment);
+            Assert.AreEqual(0.0005, model.D50);
+            Assert.AreEqual(null, model.D90);
+            Assert.AreEqual(0.3, model.DepthUsedForSediment);
 
             Assert.AreEqual(0, errorMessages.Count);
         }

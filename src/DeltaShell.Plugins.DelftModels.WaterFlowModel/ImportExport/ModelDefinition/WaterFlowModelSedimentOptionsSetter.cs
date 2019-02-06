@@ -7,6 +7,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 {
     public class WaterFlowModelSedimentOptionsSetter : IWaterFlowModelCategoryPropertySetter
     {
+        /// <summary>
+        /// Sets the properties of the Sediment DelftIniCategory.
+        /// </summary>
+        /// <param name="sedimentParameterCategory">The sediment parameter category.</param>
+        /// <param name="model">The model.</param>
+        /// <param name="errorMessages">The error messages.</param>
         public void SetProperties(DelftIniCategory sedimentParameterCategory, WaterFlowModel1D model, IList<string> errorMessages)
         {
             if (sedimentParameterCategory?.Name != ModelDefinitionsRegion.SedimentValuesHeader) return;
