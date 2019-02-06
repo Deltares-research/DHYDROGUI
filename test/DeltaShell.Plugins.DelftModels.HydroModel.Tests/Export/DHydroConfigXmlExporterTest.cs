@@ -25,6 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
     public class DHydroConfigXmlExporterTest
     {
         [Test]
+        [Category(TestCategory.Slow)]
         public void ExportCoupledFmModelToRtc()
         {
             var hydroModelBuilder = new HydroModelBuilder();

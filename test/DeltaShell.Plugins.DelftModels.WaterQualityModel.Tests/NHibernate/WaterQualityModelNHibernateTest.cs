@@ -156,6 +156,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         }
         
         [Test]
+        [Category(TestCategory.Slow)]
         public void SaveAndRetrieveDataTableManager()
         {
             // setup

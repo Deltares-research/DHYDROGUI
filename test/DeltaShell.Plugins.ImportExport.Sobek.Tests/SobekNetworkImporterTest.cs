@@ -1193,6 +1193,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void IgnoreOrphanedBDFRrecords()
         {
             var path = TestHelper.GetDataDir() + @"\profshft.lit\1\friction.dat";

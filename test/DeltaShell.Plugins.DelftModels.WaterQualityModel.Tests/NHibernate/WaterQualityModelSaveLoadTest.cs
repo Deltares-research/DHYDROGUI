@@ -260,6 +260,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         }
         
         [Test]
+        [Category(TestCategory.Slow)]
         public void SaveModel_RemoveHydFile_LoadModel_FiresHydNotFound()
         {
             // copy hyd file and related files
@@ -532,6 +533,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void Check_That_Property_ImportedSubstanceFilePath_Persists_After_SaveLoad_Model()
         {
             // copy hyd file and related files
@@ -692,7 +694,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 FileUtils.DeleteIfExists(dir);
             }
         }
+
         [Test]
+        [Category(TestCategory.Slow)]
         public void OnProjectOpenedTestWaqModelWithHydFileAfterRunShouldReimportThatFileAndWaqOutputInSync()
         {
             string savePath = Path.Combine(Environment.CurrentDirectory, "OutOfSync", "project1.dsproj");

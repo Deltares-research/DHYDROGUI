@@ -73,6 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void ImportItemTest_WhenBoundaryConditionModelDoesNotExist_ThenWarningIsLogged()
         {
             importer = new WaveBoundaryFileImporter();

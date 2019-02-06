@@ -16,7 +16,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [TestCase("fileDoesNotExist.nc", false)]
         [TestCase(@"ugrid\Custom_Ugrid.nc", true)]
         [TestCase(@"nonUgrid\TAK3_net.nc", true)]
-
         public void TestLoadFromFile(string filePath, bool gridShouldLoad)
         {
             var testFilePath = Path.Combine(TestHelper.GetDataDir(), filePath);
@@ -308,6 +307,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [TestCase(4326,  TestName = "GivenAnEmptyUnstructuredGridFileAndASphericalCoordinateSystem_WhenThisCoordinateSystemIsWrittenToThisFile_ThenThisCoordinateSystemShouldBeWrittenCorrectly")]
         [TestCase(28992, TestName = "GivenAnEmptyUnstructuredGridFileAndACartesianCoordinateSystem_WhenThisCoordinateSystemIsWrittenToThisFile_ThenThisCoordinateSystemShouldBeWrittenCorrectly")]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void GivenAnEmptyUnstructuredGridFileAndACoordinateSystem_WhenThisCoordinateSystemIsWrittenToThisFile_ThenTheUnstructuredGridFileShouldContainTheCoordinateSystem(int epsg)
         {
             const string fileName = "unstructured_grid_file_net.nc";
@@ -349,6 +349,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         /// </summary>
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void GivenAnUnstructuredGridFileContainingACoordinateSystemAndACoordinateSystemOfEqualType_WhenThisCoordinateSystemOfEqualTypeIsWrittenToTheGridFile_ThenThisUnstructuredGridFileShouldContainTheNewCoordinateSystem()
         {
             // Given
@@ -454,6 +455,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         /// </summary>
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void GivenAnUnstructuredGridFileContainingANullCoordinateSystem_WhenTheSameCoordinateSystemIsWrittenToThisFile_ThenTheFileShouldContainTheCorrectCoordinateSystem()
         {
             // Given
@@ -510,6 +512,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [TestCase(4326, 28992)]
         [TestCase(28992, 4326)]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void GivenAnUnstructuredFileContainingACoordinateSystemAndACoordinateSystemOfADifferentType_WhenThisCoordinateSystemIsWrittenToTheUnstructuredGridFile_ThenBothVariablesAreSetToTheExpectedEPSG(
             int originalEpsg, int newEpsg)
         {

@@ -206,6 +206,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void WriteAndCheckEmptyDocumentIsNotValid()
         {
             var model = new HydroModel();
@@ -278,6 +279,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void WriteDocument_RR_1D_HasLoggerElement()
         {
             var hydroModel = CreateSimpleCoupledModelWithOneCatchment(CatchmentType.Paved);

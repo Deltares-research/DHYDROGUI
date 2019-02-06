@@ -16,6 +16,7 @@ using NUnit.Framework;
 namespace Sobek.IntegrationTests
 {
     [TestFixture]
+    [Category(TestCategory.DataAccess)]
     public class NHibernateWaterFlowModel1DWeirsTest
     {
         private NHibernateProjectRepository projectRepository;
@@ -52,14 +53,13 @@ namespace Sobek.IntegrationTests
 
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void SaveLoadSimpleWeirFormula()
         {
             TestSimplePropertiesAreSavedForWeirFormula<SimpleWeirFormula>();
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void SaveLoadFreeFormWeirFormula()
         {
@@ -82,7 +82,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void SaveLoadGatedWeirFormula()
         {
@@ -91,14 +90,12 @@ namespace Sobek.IntegrationTests
 
         
         [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void SaveLoadPierWeirFormula()
         {
             TestSimplePropertiesAreSavedForWeirFormula<PierWeirFormula>();
         }
         [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void SaveLoadRiverWeirFormula()
         {
@@ -106,7 +103,6 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void SaveLoadGeneralStructureWeirFormula()
         {

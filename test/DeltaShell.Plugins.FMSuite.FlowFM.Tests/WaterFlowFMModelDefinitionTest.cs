@@ -692,6 +692,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void ReadWriteModelDefinitionHarlingenAndCheckAstroComponents()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");

@@ -345,6 +345,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
         
         [Test]
+        [Category(TestCategory.Slow)]
         public void ImportZBOtestCheckGreenhouseDataOfSeventhItem()
         {
             // GRHS id 'GH3_GFE1224' na 10 ar 0 334051 0 0 0 0 0 0 0 0 sl 0.94 as 0 sd 'STOR1' si '1' ms 'GFE1224' aaf 1 is 50 grhs

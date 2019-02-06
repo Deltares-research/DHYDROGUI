@@ -67,8 +67,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
             }
         }
 
-        [Category(TestCategory.DataAccess)]
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void TestChangeTemperatureDataTypeInViewModelIsReflectedInObjectModel()
         {
             using (var view = new WaterFlowModel1DBoundaryNodeDataViewWpf { Data = boundaryNodeData })

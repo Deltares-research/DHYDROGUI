@@ -504,6 +504,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void SaveSedFileWithSpatiallyVaryingPropertiesAndNoOperationsGeneratesWarningMessages()
         {
             var sedFile = Path.GetTempFileName();
