@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
@@ -101,10 +102,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             {
                 try
                 {
-                    ValidateProperties(category, errorMessages);
-                  
-                    var propertySetter = WaterFlowModelPropertySetterFactory.GetPropertySetter(category);
-                    propertySetter.SetProperties(category, model, errorMessages);
+                    errorMessages.AddRange(category.ValidateProperties());
+                    SetProperties(model, errorMessages, category);
                 }
                 catch (Exception)
                 {
@@ -114,10 +113,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             }
         }
 
-        private static void ValidateProperties(DelftIniCategory category, IList<string> errorMessages)
+        private static void SetProperties(WaterFlowModel1D model, IList<string> errorMessages, DelftIniCategory category)
         {
-            var errors = category.ValidateProperties();
-            errors.ForEach(errorMessages.Add);
+            var propertySetter = WaterFlowModelPropertySetterFactory.GetPropertySetter(category);
+            propertySetter.SetProperties(category, model, errorMessages);
         }
     }
 }

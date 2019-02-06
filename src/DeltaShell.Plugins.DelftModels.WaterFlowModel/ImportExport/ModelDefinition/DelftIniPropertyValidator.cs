@@ -6,6 +6,9 @@ using Resources = DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties.Resou
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
 {
+    /// <summary>
+    /// Validator class to detect missing or invalid <see cref="DelftIniProperty"/> values>
+    /// </summary>
     public static class DelftIniPropertyValidator
     {
         private static List<DelftIniProperty> Properties;
@@ -19,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// a specific <see cref="DelftIniCategory"/>>
         /// <remarks>Temporary check until other delft ini properties can be validated.</remarks>
         /// </summary>
-        private static List<Tuple<string, bool, List<string>>> DefaultPropertyValues = new List<Tuple<string, bool, List<string>>>();
+        private static readonly List<Tuple<string, bool, List<string>>> DefaultPropertyValues = new List<Tuple<string, bool, List<string>>>();
 
         public static IList<string> ValidateProperties(this DelftIniCategory category)
         {

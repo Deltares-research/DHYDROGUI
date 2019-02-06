@@ -467,7 +467,7 @@
     <value>Line {0}: Invalid value is given for property '{1}', '{2}' will be set as default</value>
   </data>
   <data name="ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header__0_" xml:space="preserve">
-    <value>There is unrecognized data read from the md1d file with header {0}</value>
+    <value>There is unrecognized data read from the md1d file with header {0}. This category has been skipped when reading.</value>
   </data>
   <data name="ModelDefinitionFileReaderTest_There_is_unrecognized_data_read_from_the_md1d_file_with_header__0___This_category_has_been_skipped_when_reading_" xml:space="preserve">
     <value>There is unrecognized data read from the md1d file with header {0}. This category has been skipped when reading.</value>

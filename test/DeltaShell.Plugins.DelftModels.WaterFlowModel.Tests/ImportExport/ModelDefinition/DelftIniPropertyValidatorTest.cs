@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
@@ -148,6 +149,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         }
 
         [Test]
+        public void GivenDelftIniCategoryWithUnknownHeader_WhenValidating_ThenNoErrorMessagesAreReturned()
+        {
+            //Given
+            AddCategoryWithUnknownHeader();
+
+            //When
+            errorMessages = category.ValidateProperties().ToList();
+
+            //Then
+            Assert.That(errorMessages, Is.Not.Null);
+            Assert.That(errorMessages.Count, Is.EqualTo(0));
+        }
+
+        [Test]
         public void GivenDelftIniCategoryWithOneInvalidOneMissingAndOneDefaultPropertyValue_WhenValidating_ThenTwoErrorMessagesAreReported()
         {
             //Given
@@ -221,6 +236,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
 
         private void AddVariousPropertyValues1()
         {
+            category.AddProperty(ModelDefinitionsRegion.UseTemperature.Key, "invalidValue");
+            category.AddProperty(ModelDefinitionsRegion.Density.Key, DensityType.unesco.ToString());
+            category.AddProperty(ModelDefinitionsRegion.HeatTransferModel.Key, TemperatureModelType.Transport.ToString());
+
+
+            Assert.That(category.Properties, Is.Not.Null);
+            Assert.That(category.Properties.Count, Is.EqualTo(3));
+        }
+        private void AddCategoryWithUnknownHeader()
+        {
+            TypeUtils.SetPrivatePropertyValue(category, "Name", "UnknownHeader");
             category.AddProperty(ModelDefinitionsRegion.UseTemperature.Key, "invalidValue");
             category.AddProperty(ModelDefinitionsRegion.Density.Key, DensityType.unesco.ToString());
             category.AddProperty(ModelDefinitionsRegion.HeatTransferModel.Key, TemperatureModelType.Transport.ToString());
