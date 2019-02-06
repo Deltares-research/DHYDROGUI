@@ -98,6 +98,70 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             Assert.That(bridge.OutletLossCoefficient, Is.EqualTo(ParseToDouble(outletLossCoefficient)));
         }
 
+        [TestCase("1", BridgeFrictionType.Chezy, Friction.Chezy)]
+        [TestCase("4", BridgeFrictionType.Manning, Friction.Mannings)]
+        [TestCase("5", BridgeFrictionType.StricklerKn, Friction.Nikuradse)]
+        [TestCase("6", BridgeFrictionType.StricklerKs, Friction.Strickler)]
+        [TestCase("7", BridgeFrictionType.WhiteColebrook, Friction.WhiteColebrook)]
+        public void GivenBridgeStructureIniCategoryWithBedFrictionEntries_WhenConvertingToStructure1D_ThenBridgeWithExpectedFrictionValuesIsReturned
+            (string frictionTypeValue, BridgeFrictionType expectedBridgeFrictionType, Friction expectedFrictionDataType)
+        {
+            // Given
+            var friction = "10.0";
+            var category = GetStructureCategoryWithBasicProperties();
+            // Same values for bed friction and ground friction
+            category.SetProperty(StructureRegion.BedFrictionType.Key, frictionTypeValue);
+            category.SetProperty(StructureRegion.BedFriction.Key, friction);
+            category.SetProperty(StructureRegion.GroundFrictionType.Key, frictionTypeValue);
+            category.SetProperty(StructureRegion.GroundFriction.Key, friction);
+
+            var branch = GetMockedBranch();
+
+            // When
+            var bridge = ConvertAndCheckForNull<BridgeConverter, Bridge>(category, branch);
+
+            // Then
+            IsBridge(bridge);
+            Assert.That(bridge.FrictionType, Is.EqualTo(expectedBridgeFrictionType));
+            Assert.That(bridge.FrictionDataType, Is.EqualTo(expectedFrictionDataType));
+            Assert.That(bridge.Friction, Is.EqualTo(ParseToDouble(friction)));
+            Assert.That(bridge.GroundLayerRoughness, Is.EqualTo(0.0));
+
+            mocks.VerifyAll();
+        }
+
+        [TestCase("1", BridgeFrictionType.Chezy, Friction.Chezy)]
+        [TestCase("4", BridgeFrictionType.Manning, Friction.Mannings)]
+        [TestCase("5", BridgeFrictionType.StricklerKn, Friction.Nikuradse)]
+        [TestCase("6", BridgeFrictionType.StricklerKs, Friction.Strickler)]
+        [TestCase("7", BridgeFrictionType.WhiteColebrook, Friction.WhiteColebrook)]
+        public void GivenBridgeStructureIniCategoryWithBedFrictionEntriesThatAreDifferentFromGroundLayerSettings_WhenConvertingToStructure1D_ThenBridgeWithExpectedFrictionAndGroundLayerValuesIsReturned
+            (string frictionTypeValue, BridgeFrictionType expectedBridgeFrictionType, Friction expectedFrictionDataType)
+        {
+            // Given
+            var friction = "10.0";
+            var groundFriction = "7.0";
+            var category = GetStructureCategoryWithBasicProperties();
+            category.SetProperty(StructureRegion.BedFrictionType.Key, frictionTypeValue);
+            category.SetProperty(StructureRegion.BedFriction.Key, friction);
+            category.SetProperty(StructureRegion.GroundFrictionType.Key, frictionTypeValue);
+            category.SetProperty(StructureRegion.GroundFriction.Key, groundFriction);
+
+            var branch = GetMockedBranch();
+
+            // When
+            var bridge = ConvertAndCheckForNull<BridgeConverter, Bridge>(category, branch);
+
+            // Then
+            IsBridge(bridge);
+            Assert.That(bridge.FrictionType, Is.EqualTo(expectedBridgeFrictionType));
+            Assert.That(bridge.FrictionDataType, Is.EqualTo(expectedFrictionDataType));
+            Assert.That(bridge.Friction, Is.EqualTo(ParseToDouble(friction)));
+            Assert.That(bridge.GroundLayerRoughness, Is.EqualTo(ParseToDouble(groundFriction)));
+
+            mocks.VerifyAll();
+        }
+
         private static IDelftIniCategory GetStructureCategoryWithBasicProperties()
         {
             var category = new DelftIniCategory(StructureRegion.Header);
@@ -110,6 +174,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.AddProperty(StructureRegion.Length.Key, "1.0");
             category.AddProperty(StructureRegion.InletLossCoeff.Key, "1.0");
             category.AddProperty(StructureRegion.OutletLossCoeff.Key, "1.0");
+            category.AddProperty(StructureRegion.BedFrictionType.Key, "1");
+            category.AddProperty(StructureRegion.BedFriction.Key, "45.0");
+            category.AddProperty(StructureRegion.GroundFrictionType.Key, "1");
+            category.AddProperty(StructureRegion.GroundFriction.Key, "45.0");
 
             return category;
         }

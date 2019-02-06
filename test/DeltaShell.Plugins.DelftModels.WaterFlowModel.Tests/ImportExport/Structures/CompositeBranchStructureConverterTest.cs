@@ -553,7 +553,75 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             Assert.IsNotNull(bridge);
             Assert.That(bridge.BridgeType, Is.EqualTo(BridgeType.Pillar));
             Assert.IsNull(bridge.CrossSectionDefinition);
+        }
 
+        [Test]
+        public void GivenBridgeDelftIniCategoryWithMatchingGroundLayerDataWithNoGroundLayerUsed_WhenConvertingToCompositeBranchStructure_ThenBridgeCrossSectionGroundLayerPropertiesAreAsExpected()
+        {
+            // Given
+            var rectangleShape = new CrossSectionStandardShapeRectangle
+            {
+                Width = CrossSectionDefinitionWidth,
+                Height = CrossSectionDefinitionHeight
+            };
+
+            var groundLayerThickness = 2.5;
+            var layerData = new GroundLayerDataTransferObject
+            {
+                CrossSectionDefinitionId = BridgeName,
+                GroundLayerUsed = false, // GroundLayer is not used
+                GroundLayerThickness = groundLayerThickness
+            };
+            var groundLayerData = new[] { layerData };
+
+            // When
+            var compositeBranchStructures = ConvertBridgeDelftIniCategoryToCompositeBranchStructures(rectangleShape, groundLayerData);
+
+            // Then
+            Assert.That(compositeBranchStructures.Count, Is.EqualTo(1));
+
+            var compositeBranchStructure = compositeBranchStructures.FirstOrDefault();
+            var branchFeatures = compositeBranchStructure?.Branch.BranchFeatures;
+            var bridge = branchFeatures?.FirstOrDefault() as Bridge;
+            Assert.IsNotNull(bridge);
+
+            Assert.IsFalse(bridge.GroundLayerEnabled);
+            Assert.That(bridge.GroundLayerRoughness, Is.EqualTo(0.0));
+            Assert.That(bridge.GroundLayerThickness, Is.EqualTo(0.0));
+        }
+
+        [Test]
+        public void GivenBridgeDelftIniCategoryWithMatchingGroundLayerData_WhenConvertingToCompositeBranchStructure_ThenBridgeCrossSectionGroundLayerPropertiesAreAsExpected()
+        {
+            // Given
+            var rectangleShape = new CrossSectionStandardShapeRectangle
+            {
+                Width = CrossSectionDefinitionWidth,
+                Height = CrossSectionDefinitionHeight
+            };
+
+            var groundLayerThickness = 2.5;
+            var layerData = new GroundLayerDataTransferObject
+            {
+                CrossSectionDefinitionId = BridgeName,
+                GroundLayerUsed = true, // GroundLayer is not used
+                GroundLayerThickness = groundLayerThickness
+            };
+            var groundLayerData = new[] { layerData };
+
+            // When
+            var compositeBranchStructures = ConvertBridgeDelftIniCategoryToCompositeBranchStructures(rectangleShape, groundLayerData);
+
+            // Then
+            Assert.That(compositeBranchStructures.Count, Is.EqualTo(1));
+
+            var compositeBranchStructure = compositeBranchStructures.FirstOrDefault();
+            var branchFeatures = compositeBranchStructure?.Branch.BranchFeatures;
+            var bridge = branchFeatures?.FirstOrDefault() as Bridge;
+            Assert.IsNotNull(bridge);
+
+            Assert.IsTrue(bridge.GroundLayerEnabled);
+            Assert.That(bridge.GroundLayerThickness, Is.EqualTo(groundLayerThickness));
         }
 
         private const string BridgeName = "myBridge";
@@ -574,6 +642,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             category.AddProperty(StructureRegion.Length.Key, "1.0");
             category.AddProperty(StructureRegion.InletLossCoeff.Key, "1.0");
             category.AddProperty(StructureRegion.OutletLossCoeff.Key, "1.0");
+            category.AddProperty(StructureRegion.BedFrictionType.Key, "1");
+            category.AddProperty(StructureRegion.BedFriction.Key, "45.0");
+            category.AddProperty(StructureRegion.GroundFrictionType.Key, "1");
+            category.AddProperty(StructureRegion.GroundFriction.Key, "45.0");
             category.AddProperty(StructureRegion.PillarWidth.Key, "1.0");
             category.AddProperty(StructureRegion.FormFactor.Key, "1.0");
 

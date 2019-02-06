@@ -137,6 +137,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Struc
             // Given
             var friction = "10.0";
             var category = GetStructureCategoryWithBasicProperties();
+            // Same values for bed friction and ground friction
             category.SetProperty(StructureRegion.BedFrictionType.Key, frictionTypeValue);
             category.SetProperty(StructureRegion.BedFriction.Key, friction);
             category.SetProperty(StructureRegion.GroundFrictionType.Key, frictionTypeValue);

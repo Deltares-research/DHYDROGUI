@@ -5,7 +5,7 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 {
-    public class BridgeConverter : StructureConverter
+    public class BridgeConverter : FrictionAndGroundLayerStructureConverter
     {
         protected override IStructure1D CreateNewStructure()
         {
@@ -18,6 +18,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
 
             SetCommonBridgeProperties(bridge);
             SetStandardBridgeProperties(bridge);
+            SetFrictionValues(bridge);
+            SetGroundLayerValues(bridge);
         }
 
         protected static void SetCommonBridgeProperties(IBridge bridge)

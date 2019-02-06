@@ -102,34 +102,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
                     }
 
                     var matchingGroundLayerData = groundLayerDataTransferObject.FirstOrDefault(g => g.CrossSectionDefinitionId == crossSectionDefinitionId);
-                    if (matchingGroundLayerData != null)
-                    {
-                        culvert.GroundLayerEnabled = matchingGroundLayerData.GroundLayerUsed;
-                        if (matchingGroundLayerData.GroundLayerUsed)
-                        {
-                            culvert.GroundLayerThickness = matchingGroundLayerData.GroundLayerThickness;
-                        }
-                        else
-                        {
-                            culvert.GroundLayerRoughness = 0.0;
-                            culvert.GroundLayerThickness = 0.0;
-                        }
-                    }
+                    SetGroundLayerProperties(matchingGroundLayerData, culvert);
                 }
 
                 if (structure is Bridge bridge)
                 {
                     var crossSectionDefinitionId = structureBranchCategory.ReadProperty<string>(StructureRegion.CsDefId.Key, true);
-                    if (crossSectionDefinitionId == null)
+                    if (crossSectionDefinitionId != null)
                     {
-                        // Bridge Pillars do not have a cross section defined
-                        bridge.BridgeType = BridgeType.Pillar;
-                    }
+                        var matchingCrossSectionDefinition = crossSectionDefinitions.FirstOrDefault(csd => csd.Name == crossSectionDefinitionId);
+                        if (matchingCrossSectionDefinition != null)
+                        {
+                            SetBridgeCrossSectionDefinition(matchingCrossSectionDefinition, bridge);
+                        }
 
-                    var matchingCrossSectionDefinition = crossSectionDefinitions.FirstOrDefault(csd => csd.Name == crossSectionDefinitionId);
-                    if (matchingCrossSectionDefinition != null)
-                    {
-                        SetBridgeCrossSectionDefinition(matchingCrossSectionDefinition, bridge);
+                        var matchingGroundLayerData = groundLayerDataTransferObject.FirstOrDefault(g => g.CrossSectionDefinitionId == crossSectionDefinitionId);
+                        SetGroundLayerProperties(matchingGroundLayerData, bridge);
                     }
                 }
 
@@ -148,6 +136,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             catch (Exception e)
             {
                 errorMessages.Add(e.Message);
+            }
+        }
+
+        private static void SetGroundLayerProperties(GroundLayerDataTransferObject matchingGroundLayerData, IGroundLayer culvert)
+        {
+            if (matchingGroundLayerData != null)
+            {
+                culvert.GroundLayerEnabled = matchingGroundLayerData.GroundLayerUsed;
+                if (matchingGroundLayerData.GroundLayerUsed)
+                {
+                    culvert.GroundLayerThickness = matchingGroundLayerData.GroundLayerThickness;
+                }
+                else
+                {
+                    culvert.GroundLayerRoughness = 0.0;
+                    culvert.GroundLayerThickness = 0.0;
+                }
             }
         }
 

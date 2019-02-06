@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
     /// This class is responsible for converting <see cref="IDelftIniCategory" /> objects into <see cref="Culvert" /> objects.
     /// </summary>
     /// <seealso cref="StructureConverter" />
-    public class CulvertConverter : StructureConverter
+    public class CulvertConverter : FrictionAndGroundLayerStructureConverter
     {
         protected override IStructure1D CreateNewStructure()
         {
@@ -42,19 +42,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Structures
             culvert.IsGated = Convert.ToBoolean(Category.ReadProperty<int>(StructureRegion.ValveOnOff.Key));
 
             SetFrictionValues(culvert);
+            SetGroundLayerValues(culvert);
             SetGateOpeningLossCoefficientFunctionValues(culvert);
-        }
-
-        private static void SetFrictionValues(ICulvert culvert)
-        {
-            culvert.FrictionDataType = (Friction) Category.ReadProperty<int>(StructureRegion.BedFrictionType.Key);
-            var bedFriction = Category.ReadProperty<double>(StructureRegion.BedFriction.Key);
-            var groundFriction = Category.ReadProperty<double>(StructureRegion.GroundFriction.Key);
-            culvert.Friction = bedFriction;
-            if (Math.Abs(groundFriction - bedFriction) > double.Epsilon)
-            {
-                culvert.GroundLayerRoughness = groundFriction;
-            }
         }
 
         private static void SetGateOpeningLossCoefficientFunctionValues(ICulvert culvert)

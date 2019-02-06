@@ -221,6 +221,7 @@
     <Compile Include="ImportExport\Structures\BridgePillarConverter.cs" />
     <Compile Include="ImportExport\Structures\CulvertConverter.cs" />
     <Compile Include="ImportExport\Structures\ExtraResistanceConverter.cs" />
+    <Compile Include="ImportExport\Structures\FrictionAndGroundLayerStructureConverter.cs" />
     <Compile Include="ImportExport\Structures\GeneralStructureConverter.cs" />
     <Compile Include="ImportExport\Structures\InvertedSiphonConverter.cs" />
     <Compile Include="ImportExport\Structures\IStructureConverter.cs" />
