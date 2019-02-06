@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
 {
@@ -17,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 if (modelParameter == null)
                 {
                     errorMessages.Add(string.Format(
-                        "Line {0}: Parameter {1} found. This parameter will not be imported, since it is not supported by the GUI",
+                        Resources.SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported__since_it_is_not_supported_by_the_GUI,
                         prop.LineNumber, prop.Name));
                     continue;
                 }

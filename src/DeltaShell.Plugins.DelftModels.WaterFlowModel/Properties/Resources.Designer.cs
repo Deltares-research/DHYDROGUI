@@ -557,6 +557,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Line {0}: Parameter &apos;{1}&apos; found in the md1d file. This parameter will not be imported, since it is not supported by the GUI.
+        /// </summary>
+        public static string SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported__since_it_is_not_supported_by_the_GUI {
+            get {
+                return ResourceManager.GetString("SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_wi" +
+                        "ll_not_be_imported__since_it_is_not_supported_by_the_GUI", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to While reading the structures from file at &apos;{0}&apos;, an error occured.
         /// </summary>
         public static string StructuresFileReader_ReadStructures_While_reading_the_structures_from_file_at___0____an_error_occured {
@@ -1198,17 +1208,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowModelTemperatureSetter_ParseStringToDouble_Line__0___Parameter___1___wil" +
                         "l_not_be_imported__Valid_values_are_doubles_only_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Line {0}: Parameter &apos;{1}&apos; found in the md1d file. This parameter will not be imported, since it is not supported by the GUI.
-        /// </summary>
-        public static string WaterFlowModelTemperatureSetter_SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported__since_it_is_not_supported_by_the_GUI {
-            get {
-                return ResourceManager.GetString("WaterFlowModelTemperatureSetter_SetProperties_Line__0___Parameter___1___found_in_" +
-                        "the_md1d_file__This_parameter_will_not_be_imported__since_it_is_not_supported_by" +
-                        "_the_GUI", resourceCulture);
             }
         }
         

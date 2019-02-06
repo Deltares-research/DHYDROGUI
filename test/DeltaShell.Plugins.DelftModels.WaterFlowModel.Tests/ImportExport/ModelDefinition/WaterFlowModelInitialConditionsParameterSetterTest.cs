@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             // Then
             Assert.AreEqual(1, errorMessages.Count);
             Assert.AreEqual(
-                "Line 0: Parameter bla found in the md1d file. This parameter will not be imported, since it is not supported by the GUI",
+                "Line 0: Parameter 'bla' found in the md1d file. This parameter will not be imported, since it is not supported by the GUI",
                 errorMessages[0]);
 
             var parameterSetting = model.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.InitialEmptyWells.Key);

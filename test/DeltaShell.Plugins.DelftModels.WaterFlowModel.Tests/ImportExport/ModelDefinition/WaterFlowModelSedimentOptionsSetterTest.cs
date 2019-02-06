@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.AreEqual(d50, d50ParameterSetting.Value);
             
             Assert.AreEqual(1, errorMessages.Count);
-            Assert.AreEqual($"Line 0: Parameter {ModelDefinitionsRegion.DelwaqNoStaggeredGrid.Key} found in the md1d file. This parameter will not be imported, since it is not supported by the GUI", errorMessages[0]);
+            Assert.AreEqual($"Line 0: Parameter '{ModelDefinitionsRegion.DelwaqNoStaggeredGrid.Key}' found in the md1d file. This parameter will not be imported, since it is not supported by the GUI", errorMessages[0]);
         }
     }
 }
