@@ -1,6 +1,6 @@
 [General]
 FileType=DelftIO HIA file
-DioVersion=Deltares, DELFTIO Version 1.09.00.7650, Oct 10 2017, 13:02:05
+DioVersion=Deltares, DELFTIO Version 1.09.00.63085, Feb 06 2019, 14:09:43
 HiaVersion=1.00
  
 [DioCheck]
@@ -15,4 +15,7 @@ TimeStepMultiplyer=60
 10=Discharge Coefficient (-)
  
 [Long Locations]
+ 
+[Location Descriptions]
+1=5
  
