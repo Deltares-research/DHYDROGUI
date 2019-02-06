@@ -21,6 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         private const string TimeCategoryName = "Output time step";
         private const string LocationsCategoryName = "Grid points";
         private const string BranchCategoryName = "Reach segments";
+        private const string SubsectionParametersCategoryName = "Subsection parameters";
         private const string StructureCategoryName = "Structures";
         private const string PumpsCategoryName = "Pumps";
         private const string ObservationPointsCategoryName = "Observation points";
@@ -392,21 +393,178 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
             set { data.OutputSettings.GetEngineParameter(QuantityType.Froude, ElementSet.ReachSegElmSet).AggregationOptions = value; }
         }
 
-        [Category(BranchCategoryName)]
-        [Description("Results for Discharge, Flow area, Hydraulic radius and Chezy at Main channel, Floodplain1 and Floodplain2")]
-        [DisplayName(WaterFlowModelParameterNames.BranchSubsectionParameters)]
-        [PropertyOrder(29)]
+        #endregion
+
+        #region Subsection parameters
+
+        [Category(SubsectionParametersCategoryName)]
+        [Description("Main Flow area")]
+        [DisplayName(WaterFlowModelParameterNames.AreaMain)]
+        [PropertyOrder(1)]
         [DefaultValue(typeof(AggregationOptions), "None")]
-        public AggregationOptions BranchSubsectionsNumber
+        public AggregationOptions AreaMain
         {
-            get { return data.OutputSettings.SubSections; }
-            set { data.OutputSettings.SubSections = value; }
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.AreaMain, ElementSet.ReachSegElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.AreaMain, ElementSet.ReachSegElmSet).AggregationOptions = value; }
         }
 
+        [Category(SubsectionParametersCategoryName)]
+        [Description("FloodPlain1 Flow area")]
+        [DisplayName(WaterFlowModelParameterNames.AreaFP1)]
+        [PropertyOrder(2)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions AreaFP1
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.AreaFP1, ElementSet.ReachSegElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.AreaFP1, ElementSet.ReachSegElmSet).AggregationOptions = value; }
+        }
 
-        # endregion
+        [Category(SubsectionParametersCategoryName)]
+        [Description("FloodPlain2 Flow area")]
+        [DisplayName(WaterFlowModelParameterNames.AreaFP2)]
+        [PropertyOrder(3)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions AreaFP2
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.AreaFP2, ElementSet.ReachSegElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.AreaFP2, ElementSet.ReachSegElmSet).AggregationOptions = value; }
+        }
 
-        # region Structures
+        [Category(SubsectionParametersCategoryName)]
+        [Description("Main Chezy values")]
+        [DisplayName(WaterFlowModelParameterNames.ChezyMain)]
+        [PropertyOrder(4)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions ChezyMain
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.ChezyMain, ElementSet.ReachSegElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.ChezyMain, ElementSet.ReachSegElmSet).AggregationOptions = value; }
+        }
+
+        [Category(SubsectionParametersCategoryName)]
+        [Description("FloodPlain1 Chezy values")]
+        [DisplayName(WaterFlowModelParameterNames.ChezyFP1)]
+        [PropertyOrder(5)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions ChezyFP1
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.ChezyFP1, ElementSet.ReachSegElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.ChezyFP1, ElementSet.ReachSegElmSet).AggregationOptions = value; }
+        }
+
+        [Category(SubsectionParametersCategoryName)]
+        [Description("FloodPlain2 Chezy values")]
+        [DisplayName(WaterFlowModelParameterNames.ChezyFP2)]
+        [PropertyOrder(6)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions ChezyFP2
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.ChezyFP2, ElementSet.ReachSegElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.ChezyFP2, ElementSet.ReachSegElmSet).AggregationOptions = value; }
+        }
+
+        [Category(SubsectionParametersCategoryName)]
+        [Description("Main Discharge")]
+        [DisplayName(WaterFlowModelParameterNames.DischargeMain)]
+        [PropertyOrder(7)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions DischargeMain
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.DischargeMain, ElementSet.ReachSegElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.DischargeMain, ElementSet.ReachSegElmSet).AggregationOptions = value; }
+        }
+
+        [Category(SubsectionParametersCategoryName)]
+        [Description("FloodPlain1 Discharge")]
+        [DisplayName(WaterFlowModelParameterNames.DischargeFP1)]
+        [PropertyOrder(8)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions DischargeFP1
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.DischargeFP1, ElementSet.ReachSegElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.DischargeFP1, ElementSet.ReachSegElmSet).AggregationOptions = value; }
+        }
+
+        [Category(SubsectionParametersCategoryName)]
+        [Description("FloodPlain2 Discharge")]
+        [DisplayName(WaterFlowModelParameterNames.DischargeFP2)]
+        [PropertyOrder(9)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions DischargeFP2
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.DischargeFP2, ElementSet.ReachSegElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.DischargeFP2, ElementSet.ReachSegElmSet).AggregationOptions = value; }
+        }
+
+        [Category(SubsectionParametersCategoryName)]
+        [Description("Main Hydraulic radius")]
+        [DisplayName(WaterFlowModelParameterNames.HydradMain)]
+        [PropertyOrder(10)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions HydradMain
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.HydradMain, ElementSet.ReachSegElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.HydradMain, ElementSet.ReachSegElmSet).AggregationOptions = value; }
+        }
+
+        [Category(SubsectionParametersCategoryName)]
+        [Description("FloodPlain1 Hydraulic radius")]
+        [DisplayName(WaterFlowModelParameterNames.HydradFP1)]
+        [PropertyOrder(11)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions HydradFP1
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.HydradFP1, ElementSet.ReachSegElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.HydradFP1, ElementSet.ReachSegElmSet).AggregationOptions = value; }
+        }
+
+        [Category(SubsectionParametersCategoryName)]
+        [Description("FloodPlain2 Hydraulic radius")]
+        [DisplayName(WaterFlowModelParameterNames.HydradFP2)]
+        [PropertyOrder(12)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions HydradFP2
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.HydradFP2, ElementSet.ReachSegElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.HydradFP2, ElementSet.ReachSegElmSet).AggregationOptions = value; }
+        }
+
+        [Category(SubsectionParametersCategoryName)]
+        [Description("Main Flow width")]
+        [DisplayName(WaterFlowModelParameterNames.WidthMain)]
+        [PropertyOrder(13)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions WidthMain
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.WidthMain, ElementSet.ReachSegElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.WidthMain, ElementSet.ReachSegElmSet).AggregationOptions = value; }
+        }
+
+        [Category(SubsectionParametersCategoryName)]
+        [Description("FloodPlain1 Flow width")]
+        [DisplayName(WaterFlowModelParameterNames.WidthFP1)]
+        [PropertyOrder(14)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions WidthFP1
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.WidthFP1, ElementSet.ReachSegElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.WidthFP1, ElementSet.ReachSegElmSet).AggregationOptions = value; }
+        }
+
+        [Category(SubsectionParametersCategoryName)]
+        [Description("FloodPlain2 Flow width")]
+        [DisplayName(WaterFlowModelParameterNames.WidthFP2)]
+        [PropertyOrder(15)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions WidthFP2
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.WidthFP2, ElementSet.ReachSegElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.WidthFP2, ElementSet.ReachSegElmSet).AggregationOptions = value; }
+        }
+
+        #endregion
+
+        #region Structures
 
         [Category(StructureCategoryName)]
         [Description("Discharge at Structures")]

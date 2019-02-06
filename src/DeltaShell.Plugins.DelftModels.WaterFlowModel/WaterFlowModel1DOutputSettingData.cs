@@ -55,10 +55,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         public const string BranchRoughness = "Chezy values";
         public const string BranchWaterLevelGradient = "Water level gradient";
         public const string BranchFroudeNumber = "Froude number";
-        public const string BranchSubsectionParameters = "Subsection parameters";
 
         /// <summary>
-        /// subsectie parameters; only for coverages; in propertygrid BranchSubsectionParameters is used
+        /// subsection parameters; only for coverages; in propertygrid BranchSubsectionParameters is used
         /// </summary>
         public const string MainChannel = "Main ";
         public const string FloodPlain1 = "FloodPlain1 ";
@@ -68,6 +67,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         public const string SubSectionFlowWidth = "Flow width";
         public const string SubSectionHydraulicRadius = "Hydraulic radius";
         public const string SubSectionRoughness = "Chezy values";
+
+        public const string AreaFP1 = "AreaFP1";
+        public const string AreaFP2 = "AreaFP2";
+        public const string AreaMain = "AreaMain";
+        public const string ChezyFP1 = "ChezyFP1";
+        public const string ChezyFP2 = "ChezyFP2";
+        public const string ChezyMain = "ChezyMain";
+        public const string DischargeFP1 = "DischargeFP1";
+        public const string DischargeFP2 = "DischargeFP2";
+        public const string DischargeMain = "DischargeMain";
+        public const string HydradFP1 = "HydradFP1";
+        public const string HydradFP2 = "HydradFP2";
+        public const string HydradMain = "HydradMain";
+        public const string WidthFP1 = "WidthFP1";
+        public const string WidthFP2 = "WidthFP2";
+        public const string WidthMain = "WidthMain";
 
         /// <summary>
         /// Structure parameter names
