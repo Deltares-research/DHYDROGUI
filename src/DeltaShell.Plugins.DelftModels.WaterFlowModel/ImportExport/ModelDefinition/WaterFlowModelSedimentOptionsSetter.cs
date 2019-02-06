@@ -23,16 +23,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
                 switch (property.Name)
                 {
                     case "D50":
-                        model.D50 = double.Parse(property.Value, CultureInfo.InvariantCulture);
+                        bool d50ParseSuccess = ParseProperty(property, out var d50);
+                        if (d50ParseSuccess)
+                        {
+                            model.D50 = d50;
+                        }
                         break;
                     case "D90":
-                        model.D90 = double.Parse(property.Value, CultureInfo.InvariantCulture);
+                        bool d90ParseSuccess = ParseProperty(property, out var d90);
+                        if (d90ParseSuccess)
+                        {
+                            model.D90 = d90;
+                        }
                         break;
                     case "DepthUsedForSediment":
-                        model.DepthUsedForSediment = double.Parse(property.Value, CultureInfo.InvariantCulture);
+                        bool depthUsedForSedimentParseSuccess = ParseProperty(property, out var depthUsedForSediment);
+                        if (depthUsedForSedimentParseSuccess)
+                        {
+                            model.DepthUsedForSediment = depthUsedForSediment;
+                        }
                         break;
                 }
             }
+        }
+
+        private static bool ParseProperty(DelftIniProperty property, out double parsedValue)
+        {
+            return double.TryParse(property.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedValue);
         }
     }
 }
