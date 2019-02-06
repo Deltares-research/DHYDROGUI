@@ -417,8 +417,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.VerySlow)]
         public void ImportModelWithBigNetfileGridIntoProject()
         {
             using (var gui = new DeltaShellGui())
@@ -467,8 +467,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.VerySlow)]
         public void ImportModelWithBigUgridIntoProject()
         {
             using (var gui = new DeltaShellGui())

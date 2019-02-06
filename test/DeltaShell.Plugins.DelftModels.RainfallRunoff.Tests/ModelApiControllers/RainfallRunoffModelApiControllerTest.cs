@@ -401,6 +401,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void RunModelForSeveralCatchmentsAndGetOutputCoverageOnSingleBoundary()
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())

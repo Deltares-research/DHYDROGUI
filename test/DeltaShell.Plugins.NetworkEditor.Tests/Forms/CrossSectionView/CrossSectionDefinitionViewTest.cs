@@ -698,7 +698,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void ShowWithCrossSectionZWWithRoughnessSections()
         {
             var mainType = new CrossSectionSectionType { Name = "Main" };

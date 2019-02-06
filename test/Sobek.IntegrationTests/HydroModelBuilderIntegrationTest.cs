@@ -62,6 +62,7 @@ namespace Sobek.IntegrationTests
         }
         
         [Test]
+        [Category(TestCategory.Slow)]
         public void ActivitiesRunSimultaneous()
         {
             var builder = new HydroModelBuilder();

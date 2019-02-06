@@ -21,6 +21,7 @@ namespace Sobek.IntegrationTests
     public class RainfallRunoffModelRestartIntegrationTest
     {
         [Test]
+        [Category(TestCategory.Slow)]
         public void CompareFullRunWithRestartedRunPaved()
         {
             var rrModel = CreateSimpleRRModelWithPavedArea();

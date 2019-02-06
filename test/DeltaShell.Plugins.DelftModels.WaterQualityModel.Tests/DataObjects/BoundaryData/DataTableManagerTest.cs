@@ -467,6 +467,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void Test_CreateNewDataTable_WithSameName_Twice_DataRow_Is_StillCreated_And_WarningMessage_IsThrown()
         {
             const string bacteriaCopy = "bacteria(1)";

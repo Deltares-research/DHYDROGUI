@@ -46,6 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
 
             [Test]
             [Category(TestCategory.Integration)]
+            [Category(TestCategory.Slow)]
             public void WriteModelFromDsProjAndReadFromFiles()
             {
                 string testDataDirName = "WFM1D";

@@ -95,6 +95,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void ImportRrStandaloneWithFlowConnectionNode()
         {
             // TOOLS-20516

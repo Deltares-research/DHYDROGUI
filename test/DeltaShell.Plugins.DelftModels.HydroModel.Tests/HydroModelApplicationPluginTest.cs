@@ -128,6 +128,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void AdditionalOwnerCheckTest_FlowFM()
         {
             using (var app = new DeltaShellApplication())

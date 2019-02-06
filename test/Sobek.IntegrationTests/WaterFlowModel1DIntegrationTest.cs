@@ -260,6 +260,7 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void Test_LegacyLoader350_UpdatesDispersionCoverages() // Issue#: SOBEK3-791
         {
             // Make copy of legacy project
@@ -1068,6 +1069,7 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void CopyPasteModelWithLinkedNetworkShouldNotDamageBoundaryConditionTypes()
         {
             using (var gui = new DeltaShellGui())

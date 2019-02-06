@@ -20,7 +20,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 {
     [TestFixture]
     [Category(TestCategory.Integration)]
-    [Category(TestCategory.DataAccess)]
     public class WaterQualityModelIntegrationTest
     {
         [Test]
@@ -87,6 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void ImportUgridHydFileAndRun()
         {
             var dataDir = TestHelper.GetDataDir();

@@ -59,6 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void OpenedMonitoringOutputViewsAreClosedAfterRemovingModel()
         {
             using (var gui = CreateDeltaShellGuiWithMonitoringOutputView())

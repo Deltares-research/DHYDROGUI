@@ -18,6 +18,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.IntegrationTests
 {
     [TestFixture]
+    [Category(TestCategory.Integration)]
     public class CrossSectionDefinitionFileWriterIntegrationTestInMemory
     {
         [SetUp]
@@ -34,7 +35,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
         public void TestIntegrationFileWriterCrossSectionDefinitions()
         {
 
@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
         }
         
         [Test]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void TestIntegrationFileReaderCrossSection()
         {
             var fileName = "Sobek_FB_Read.dsproj";

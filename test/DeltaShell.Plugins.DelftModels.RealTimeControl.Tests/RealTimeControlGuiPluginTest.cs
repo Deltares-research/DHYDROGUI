@@ -20,6 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void ReleaseCopiedBranchFeatureOnProjectClosing()
         {
             var gui = mocks.DynamicMock<IGui>();
