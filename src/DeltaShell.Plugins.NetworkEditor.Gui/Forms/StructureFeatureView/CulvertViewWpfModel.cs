@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.Structures;
@@ -16,11 +17,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             get { return culvert; }
             set
             {
+                if (culvert != null)
+                {
+                    ((INotifyPropertyChanged) culvert).PropertyChanged -= OnCulvertPropertyChanged;
+                }
+
                 culvert = value;
                 SelectedCulvertGeometryType = culvert.GeometryType;
                 SelectedCulvertFrictionType = culvert.FrictionType;
                 SelectedCulvertStructureType = culvert.CulvertType;
                 GeometryTabulated = culvert.TabulatedCrossSectionDefinition.ZWDataTable;
+
+                ((INotifyPropertyChanged)culvert).PropertyChanged += OnCulvertPropertyChanged;
+            }
+        }
+
+        private void OnCulvertPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Width" || e.PropertyName == "GeometryType")
+            {
+                GeometryHeight = culvert.Height;
             }
         }
 
@@ -111,6 +127,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 IsTabulated = value == CulvertGeometryType.Tabulated;
 
                 GeometryHeightVisibility = IsSteelCunette || IsCunette || IsArch || IsEllipse || IsRectangle || IsEgg;
+                GeometryHeightEnabled = IsSteelCunette || IsArch || IsEllipse || IsRectangle;
                 GeometryWidthVisibility = IsCunette || IsArch || IsEllipse || IsRectangle || IsEgg;
             }
         }
@@ -277,6 +294,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         public bool IsEgg { get; set; }
         public bool GeometryWidthVisibility { get; set; }
         public bool GeometryHeightVisibility { get; set; }
+        public bool GeometryHeightEnabled { get; set; }
         public bool BendLossCoeffVisibility { get; set; }
         public bool NegativeFlowDirectionFlowVisibility { get; set; }
         public string GroundLayerRoughnessUnit { get; set; }

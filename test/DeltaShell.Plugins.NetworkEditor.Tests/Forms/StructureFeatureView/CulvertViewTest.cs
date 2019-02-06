@@ -1,8 +1,6 @@
-﻿using DelftTools.Controls.Swf.Table;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 using NUnit.Framework;
 

@@ -119,7 +119,7 @@ namespace DelftTools.Hydro.Structures
         {
             get
             {
-                UpdateCrossSectionDefinition(geometryType);
+                UpdateCrossSectionDefinition();
                 return crossSectionDefinition;
             }
         }
@@ -161,9 +161,22 @@ namespace DelftTools.Hydro.Structures
             set { Length = value; }
         }
 
+        private double width;
+
         [DynamicReadOnly]
         [FeatureAttribute(Order = 24)]
-        public virtual double Width { get; set; }
+        public virtual double Width
+        {
+            get { return width; }
+            set
+            {
+                width = value;
+                if (geometryType == CulvertGeometryType.Egg || geometryType == CulvertGeometryType.Cunette)
+                {
+                    UpdateCrossSectionDefinition();
+                }
+            }
+        }
 
         [DynamicReadOnly]
         [FeatureAttribute(Order = 25)]
@@ -282,17 +295,17 @@ namespace DelftTools.Hydro.Structures
             set
             {
                 geometryType = value;
-                UpdateCrossSectionDefinition(geometryType);
+                UpdateCrossSectionDefinition();
             }
         }
 
-        private void UpdateCrossSectionDefinition(CulvertGeometryType type)
+        private void UpdateCrossSectionDefinition()
         {
-            switch (type)
+            switch (geometryType)
             {
                 case CulvertGeometryType.Rectangle:
                     crossSectionDefinition =
-                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRectangle()
+                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRectangle
                         {
                             Width = Width,
                             Height = Height
@@ -300,29 +313,30 @@ namespace DelftTools.Hydro.Structures
                     break;
                 case CulvertGeometryType.Round:
                     crossSectionDefinition =
-                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRound()
+                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRound
                         {
                             Diameter = Diameter,
                         }) { Name = Name };
                     break;
                 case CulvertGeometryType.Ellipse:
                     crossSectionDefinition =
-                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeElliptical()
+                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeElliptical
                         {
                             Width = Width,
                             Height = Height
                         }) { Name = Name };
                     break;
                 case CulvertGeometryType.Egg:
-                    crossSectionDefinition =
-                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeEgg()
-                        {
-                            Width = Width
-                        }) { Name = Name };
+                    var eggShape = new CrossSectionStandardShapeEgg
+                    {
+                        Width = Width
+                    };
+                    crossSectionDefinition = new CrossSectionDefinitionStandard(eggShape) { Name = Name };
+                    Height = eggShape.Height;
                     break;
                 case CulvertGeometryType.Arch:
                     crossSectionDefinition =
-                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeArch()
+                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeArch
                         {
                             Width = Width,
                             Height = Height,
@@ -330,15 +344,16 @@ namespace DelftTools.Hydro.Structures
                         }) { Name = Name };
                     break;
                 case CulvertGeometryType.Cunette:
-                    crossSectionDefinition =
-                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCunette()
-                        {
-                            Width = Width
-                        }) { Name = Name };
+                    var cunetteShape = new CrossSectionStandardShapeCunette
+                    {
+                        Width = Width
+                    };
+                    crossSectionDefinition = new CrossSectionDefinitionStandard(cunetteShape) { Name = Name };
+                    Height = cunetteShape.Height;
                     break;
                 case CulvertGeometryType.SteelCunette:
                     crossSectionDefinition =
-                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeSteelCunette()
+                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeSteelCunette
                         {
                             Height = Height,
                             RadiusR = Radius,

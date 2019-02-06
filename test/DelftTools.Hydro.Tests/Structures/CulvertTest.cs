@@ -195,7 +195,62 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.IsFalse(culvert.AllowNegativeFlow);
             culvert.FlowDirection = FlowDirection.Both;
         }
-    }
 
-    
+        [TestCase(CulvertGeometryType.Egg, 1.5)]
+        [TestCase(CulvertGeometryType.Cunette, 0.634)]
+        public void GivenCulvert_WhenChangingGeometryTypeWidthTypeShape_ThenHeightAFactorAsLarge(CulvertGeometryType geometryType, double heightFactor)
+        {
+            // Given
+            var culvert = new Culvert
+            {
+                Width = 10.0
+            };
+
+            // When
+            culvert.GeometryType = geometryType;
+
+            // Then
+            Assert.That(culvert.Width * heightFactor, Is.EqualTo(culvert.Height));
+        }
+
+        [TestCase(CulvertGeometryType.Egg, 1.5)]
+        [TestCase(CulvertGeometryType.Cunette, 0.634)]
+        public void GivenCulvertWithWidthTypeShape_WhenChangingWidth_ThenHeightIsChangedAsWell(CulvertGeometryType geometryType, double heightFactor)
+        {
+            // Given
+            var culvert = new Culvert
+            {
+                Width = 10.0,
+                GeometryType = geometryType
+            };
+            Assert.That(culvert.Width * heightFactor, Is.EqualTo(culvert.Height));
+
+            // When
+            culvert.Width = 20.0;
+
+            // Then
+            Assert.That(culvert.Width * heightFactor, Is.EqualTo(culvert.Height));
+        }
+
+        [TestCase(CulvertGeometryType.Rectangle)]
+        [TestCase(CulvertGeometryType.Ellipse)]
+        [TestCase(CulvertGeometryType.Arch)]
+        public void GivenCulvertWithHeightWidthTypeShape_WhenChangingWidth_ThenHeightIsUnchanged(CulvertGeometryType geometryType)
+        {
+            // Given
+            var expectedHeight = 20.0;
+            var culvert = new Culvert
+            {
+                Width = 10.0,
+                Height = expectedHeight,
+                GeometryType = geometryType
+            };
+
+            // When
+            culvert.Width = 15.0;
+
+            // Then
+            Assert.That(culvert.Height, Is.EqualTo(expectedHeight));
+        }
+    }
 }
