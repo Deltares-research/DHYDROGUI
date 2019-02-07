@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -559,10 +559,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Line {0}: Parameter &apos;{1}&apos; found in the md1d file. This parameter will not be imported, since it is not supported by the GUI.
         /// </summary>
-        public static string SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported__since_it_is_not_supported_by_the_GUI {
+        public static string SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported {
             get {
                 return ResourceManager.GetString("SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_wi" +
-                        "ll_not_be_imported__since_it_is_not_supported_by_the_GUI", resourceCulture);
+                        "ll_not_be_imported", resourceCulture);
             }
         }
         

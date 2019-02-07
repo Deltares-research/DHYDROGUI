@@ -3,6 +3,7 @@ using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.ModelDefinition
@@ -122,7 +123,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             Assert.AreEqual(d50, d50ParameterSetting.Value);
             
             Assert.AreEqual(1, errorMessages.Count);
-            Assert.AreEqual($"Line 0: Parameter '{ModelDefinitionsRegion.DelwaqNoStaggeredGrid.Key}' found in the md1d file. This parameter will not be imported, since it is not supported by the GUI", errorMessages[0]);
+            var expectedMessage = string.Format(
+                Resources.SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported,
+                0, ModelDefinitionsRegion.DelwaqNoStaggeredGrid.Key);
+            Assert.AreEqual(expectedMessage, errorMessages[0]);
         }
     }
 }

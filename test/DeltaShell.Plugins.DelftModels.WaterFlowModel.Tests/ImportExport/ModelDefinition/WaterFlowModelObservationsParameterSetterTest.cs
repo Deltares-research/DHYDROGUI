@@ -3,6 +3,7 @@ using System.Linq;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.ModelDefinition
@@ -69,9 +70,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             GivenANumericalParameterCategoryWithAnUnknownAndKnownProperty_WhenSettingTheseModelProperties_ThenOnlyTheKnownParameterShouldBeSetInTheModel()
         {
             // Given
+            var unknownPropertyName = "bla";
             var category = new DelftIniCategory(ModelDefinitionsRegion.ObservationsHeader);
 
-            category.AddProperty("bla", "2");
+            category.AddProperty(unknownPropertyName, "2");
             category.AddProperty(ModelDefinitionsRegion.InterpolationType.Key, "Nearest");
 
             var model = new WaterFlowModel1D();
@@ -82,9 +84,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
                 errorMessages);
 
             // Then
-            Assert.AreEqual(
-                "Line 0: Parameter 'bla' found in the md1d file. This parameter will not be imported, since it is not supported by the GUI",
-                errorMessages[0]);
+            var expectedMessage = string.Format(
+                Resources.SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported,
+                0, unknownPropertyName);
+            Assert.AreEqual(expectedMessage, errorMessages[0]);
 
             var parameterSetting = model.ParameterSettings
                 .FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.InterpolationType.Key);

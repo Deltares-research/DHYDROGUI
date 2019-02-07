@@ -3,6 +3,7 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
 using NUnit.Framework;
 using System.Collections.Generic;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.ModelDefinition
 {
@@ -71,10 +72,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             new WaterFlowModelMorphologySetter().SetProperties(category, model, errorMessages);
 
             //Then
+            var expectedMessage = string.Format(
+                Resources.SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported,
+                0, unknownPropertyName);
             Assert.AreEqual(1, errorMessages.Count);
-            Assert.AreEqual(
-                $"Line 0: Parameter '{unknownPropertyName}' found in the md1d file. This parameter will not be imported, since it is not supported by the GUI",
-                errorMessages[0]);
+            Assert.AreEqual(expectedMessage, errorMessages[0]);
             Assert.AreEqual(true, model.UseMorphology);
         }
 

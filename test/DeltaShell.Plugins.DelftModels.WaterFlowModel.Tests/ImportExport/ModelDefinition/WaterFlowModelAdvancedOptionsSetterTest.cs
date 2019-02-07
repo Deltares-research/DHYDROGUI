@@ -4,6 +4,7 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.ModelDefinition
 {
@@ -107,8 +108,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         public void GivenAnAdvancedOptionsCategoryWithAnUnknownAndKnownProperty_WhenSettingTheseModelProperties_ThenOnlyTheKnownParameterShouldBeSetInTheModel()
         {
             //Given
+            var unknownPropertyName = "Unknown Property";
             var category = new DelftIniCategory(ModelDefinitionsRegion.AdvancedOptionsHeader);
-            category.AddProperty("Unknown Property", "unknown");
+            category.AddProperty(unknownPropertyName, "unknown");
             category.AddProperty(ModelDefinitionsRegion.ExtraResistanceGeneralStructure.Key, "1.0");
 
             var model = new WaterFlowModel1D();
@@ -118,10 +120,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             new WaterFlowModelAdvancedOptionsSetter().SetProperties(category, model, errorMessages);
 
             //Then
+            var expectedMessage = string.Format(
+                Resources.SetProperties_Line__0___Parameter___1___found_in_the_md1d_file__This_parameter_will_not_be_imported,
+                0, unknownPropertyName);
             Assert.AreEqual(1, errorMessages.Count);
-            Assert.AreEqual(
-                "Line 0: Parameter 'Unknown Property' found in the md1d file. This parameter will not be imported, since it is not supported by the GUI",
-                errorMessages[0]);
+            Assert.AreEqual(expectedMessage, errorMessages[0]);
             var parameterSetting = model.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.ExtraResistanceGeneralStructure.Key);
             Assert.NotNull(parameterSetting);
             Assert.AreEqual("1.0", parameterSetting.Value);
