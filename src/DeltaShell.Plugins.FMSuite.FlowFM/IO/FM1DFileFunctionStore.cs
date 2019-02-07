@@ -122,6 +122,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 outputNetwork = outputNetworkAndDiscretization.Item1;
                 outputDiscretization = outputNetworkAndDiscretization.Item2;
+                foreach (var hydroObject in outputNetwork.AllHydroObjects)
+                {
+                    hydroObject.Name = hydroObject.Name + "_output";
+                }
+                foreach (var outputNetworkLocation in outputDiscretization.Locations.AllValues)
+                {
+                    outputNetworkLocation.Name = outputNetworkLocation.Name + "_output";
+                }
+
             }
         }
         private GridApiDataSet.DataSetConventions GetNcFileConvention()
