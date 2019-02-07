@@ -22,7 +22,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
         /// a specific <see cref="DelftIniCategory"/>>
         /// <remarks>Temporary check until other delft ini properties can be validated.</remarks>
         /// </summary>
-        private static readonly List<Tuple<string, bool, List<string>>> DefaultPropertyValues = new List<Tuple<string, bool, List<string>>>();
+        private static readonly List<Tuple<string, bool, List<string>>> DefaultPropertyValues =
+            new List<Tuple<string, bool, List<string>>>();
 
         public static IList<string> ValidateProperties(this DelftIniCategory category)
         {
@@ -34,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
             category.RestrictPropertyToCategory();
 
             CheckIfRequired();
-            
+
             return Errors;
         }
 
@@ -58,9 +59,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 
         private static void GetDefaultValues()
         {
-            var values = DelftIniPropertyValidationLookup.LookupTable.
-                Where(t => t.Key.Equals(CategoryHeader)).
-                Select(t => t.Value).ToList();
+            var values = DelftIniPropertyValidationLookup.LookupTable.Where(t => t.Key.Equals(CategoryHeader))
+                .Select(t => t.Value).ToList();
 
             if (values.Count == 0) return;
 
@@ -74,22 +74,37 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefini
 
         private static void CheckPropertyAvailability(this DelftIniProperty property)
         {
-            var propertyValueMatchesDefaultValue = DefaultPropertyValues.Any(dpv => dpv.Item3.Any(i => i.Equals(property.Value))); 
-            var propertyNameMatchesDefaultName =DefaultPropertyValues.Where(pv => pv.Item1.Equals(property.Name)).ToList();
-            var defaultValues = propertyNameMatchesDefaultName.FirstOrDefault(pv => pv.Item2 && property.Id == CategoryHeader);
+            var propertyValueMatchesDefaultValue =
+                DefaultPropertyValues.Any(dpv => dpv.Item3.Any(i => i.Equals(property.Value)));
+            var propertyNameMatchesDefaultName =
+                DefaultPropertyValues.Where(pv => pv.Item1.Equals(property.Name)).ToList();
+            var defaultValues =
+                propertyNameMatchesDefaultName.FirstOrDefault(pv => pv.Item2 && property.Id == CategoryHeader);
 
             if (string.IsNullOrEmpty(property.Value))
             {
-                var errorMessage = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default, property.LineNumber, property.Name, defaultValues?.Item3.First());
-                Errors.Add(errorMessage);
+                var missingValueMessage = Resources
+                    .DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default;
+                property.SetDefaultValueAndReportError(defaultValues, missingValueMessage);
+                propertyValueMatchesDefaultValue = true;
             }
 
             if (!propertyValueMatchesDefaultValue && !string.IsNullOrEmpty(property.Value))
             {
-                var errorMessage = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_invalid_will_be_set_as_default, property.LineNumber, property.Name, defaultValues?.Item3.First());
-                Errors.Add(errorMessage);
+                var invalidValueMessage = Resources
+                    .DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_invalid_will_be_set_as_default;
+                SetDefaultValueAndReportError(property, defaultValues, invalidValueMessage);
             }
+        }
+
+        private static void SetDefaultValueAndReportError(this DelftIniProperty property,
+            Tuple<string, bool, List<string>> defaultValues, string message)
+        {
+            var defaultValue = defaultValues?.Item3.First() == "0" ? "false" : defaultValues?.Item3.First();
             property.Value = defaultValues?.Item3.FirstOrDefault();
+
+            var errorMessage = string.Format(message, property.LineNumber, property.Name, defaultValue);
+            Errors.Add(errorMessage);
         }
     }
 }

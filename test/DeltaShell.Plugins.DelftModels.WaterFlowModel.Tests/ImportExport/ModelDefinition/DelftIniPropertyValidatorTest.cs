@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var expectedMessage1 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default,
                                                 property1.LineNumber,
                                                 property1.Name,
-                                                "0");
+                                                "false");
             var expectedMessage2 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default,
                                                 property2.LineNumber,
                                                 property2.Name,
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var expectedMessage1 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_invalid_will_be_set_as_default,
                 property1.LineNumber,
                 property1.Name,
-                "0");
+                "false");
             var expectedMessage2 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_invalid_will_be_set_as_default,
                 property2.LineNumber,
                 property2.Name,
@@ -143,7 +143,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var expectedMessage1 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_invalid_will_be_set_as_default,
                 property1.LineNumber,
                 property1.Name,
-                "0");
+                "false");
 
             Assert.That(errorMessages.ElementAt(0), Is.EqualTo(expectedMessage1));
         }
@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
             var expectedMessage1 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_invalid_will_be_set_as_default,
                 property1.LineNumber,
                 property1.Name,
-                "0");
+                "false");
 
             var expectedMessage2 = string.Format(Resources.DelftIniPropertyValidator_CheckPropertyAvailability_Property_on_line_number_is_missing_will_be_set_as_default,
                 property2.LineNumber,
