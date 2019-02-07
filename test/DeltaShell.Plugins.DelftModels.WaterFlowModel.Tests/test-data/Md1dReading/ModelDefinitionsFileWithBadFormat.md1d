@@ -1,0 +1,2 @@
+[Files]
+    networkFile            NetworkDefinition.ini # The '=' sign is missing, so reading this file should throw a FormatException

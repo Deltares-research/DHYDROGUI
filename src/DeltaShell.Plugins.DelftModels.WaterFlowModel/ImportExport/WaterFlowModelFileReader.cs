@@ -128,6 +128,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 }
 
             }
+            catch (FormatException)
+            {
+                throw;
+            }
             catch (Exception)
             {
                 LogErrorReport(errorReport, report => Log.Error(report));

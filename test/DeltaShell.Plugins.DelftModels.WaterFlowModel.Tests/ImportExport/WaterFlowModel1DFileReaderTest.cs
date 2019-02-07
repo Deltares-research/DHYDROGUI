@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using NUnit.Framework;
@@ -29,7 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         }
         
         [Test]
-       public void GivenAnMd1dFile_WhenReadingTheAttachedNetworkDefinitionFile_ThenAModelIsReturned()
+        public void GivenAnMd1dFile_WhenReadingTheAttachedNetworkDefinitionFile_ThenAModelIsReturned()
         {
             var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExport.md1d");
 
@@ -37,16 +39,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             Assert.IsNotNull(waterFlowModel1D);
         }
 
-       [Test]
-       public void GivenAnMd1dFileWithSediment_WhenReadingTheAttachedNetworkDefinitionFile_ThenAModelIsReturned()
-       {
-           var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExportWithSediment.md1d");
+        [Test]
+        public void GivenAnMd1dFileWithSediment_WhenReadingTheAttachedNetworkDefinitionFile_ThenAModelIsReturned()
+        {
+            var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExportWithSediment.md1d");
 
-           var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
-           Assert.IsNotNull(waterFlowModel1D);
-       }
+            var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
+            Assert.IsNotNull(waterFlowModel1D);
+        }
 
-       [Test]
+        [Test]
         public void GivenAnMd1dFileWithReversedRoughnessSectionDefined_WhenReadingFlow1DModel_ThenModelUsesReversedRoughness()
         {
             var md1dFilePath = Path.Combine(tempFolderPath, "Md1dExportWithReversedRoughnessSection.md1d");
@@ -108,6 +110,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
 
             var waterFlowModel1D = WaterFlowModel1DFileReader.Read(md1dFilePath);
             Assert.IsNull(waterFlowModel1D);
+        }
+
+        [Test]
+        public void GivenBadlyFormattedMd1dFile_WhenReadingMd1dfFile_ThenFormatExceptionIsThrown()
+        {
+            // Given
+            var md1dFilePath = Path.Combine(tempFolderPath, "ModelDefinitionsFileWithBadFormat.md1d");
+
+            // When - Then
+            Assert.Throws<FormatException>(() => WaterFlowModel1DFileReader.Read(md1dFilePath));
         }
 
         [Test]

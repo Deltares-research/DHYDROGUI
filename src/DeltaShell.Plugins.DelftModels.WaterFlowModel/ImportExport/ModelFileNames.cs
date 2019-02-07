@@ -108,54 +108,49 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             var filename = Path.Combine(targetPath, modelFilename);
             if (!File.Exists(filename))
-                throw new FileReadingException(String.Format("Could not read file {0} properly, it doesn't exist.",
+                throw new FileReadingException(string.Format("Could not read file {0} properly, it doesn't exist.",
                     filename));
             var categories = new DelftIniReader().ReadDelftIniFile(filename);
             if (categories.Count == 0)
-                throw new FileReadingException(String.Format("Could not read file {0} properly, it seems empty",
+                throw new FileReadingException(string.Format("Could not read file {0} properly, it seems empty",
                     filename));
-            var fileSection =
-                categories.Where(category => category.Name == ModelDefinitionsRegion.FilesIniHeader).ToList();
-            if (fileSection.Count() > 1 && fileSection.Any())
-                throw new FileReadingException(String.Format("Could not read files section {0} properly", filename));
+            var fileSection = categories.Where(category => category.Name == ModelDefinitionsRegion.FilesIniHeader).ToArray();
+            if (fileSection.Length != 1)
+                throw new FileReadingException(string.Format("Could not read files section {0} properly", filename));
+            
+            ReadMandatoryFileNames(fileSection.FirstOrDefault());
+            ReadOptionalFileNames(fileSection.FirstOrDefault());
+        }
 
-            Network = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.NetworkFile.Key);
-            Structures = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.StructuresFile.Key);
-            ObservationPoints = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.ObservationPointsFile.Key);
-            InitialDischarge = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialDischargeFile.Key, true);
-            InitialSalinity = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialSalinityFile.Key, true);
-            InitialTemperature = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialTemperatureFile.Key, true);
-            InitialWaterLevel = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialWaterLevelFile.Key, true);
-            InitialWaterDepth = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.InitialWaterDepthFile.Key, true);
-            Dispersion = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.DispersionFile.Key, true);
-            DispersionF3 = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.DispersionF3File.Key, true);
-            DispersionF4 = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.DispersionF4File.Key, true);
-            WindShielding = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.WindShieldingFile.Key, true);
-            LateralDischarge =
-                fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.LateralDischargeLocationsFile.Key);
-            BoundaryConditions =
-                fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.BoundaryConditionsFile.Key);
-            BoundaryLocations =
-                fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.BoundaryLocationsFile.Key);
-            CrossSectionDefinitions =
-                fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.CrossSectionDefinitionsFile.Key);
-            CrossSectionLocations =
-                fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.CrossSectionLocationsFile.Key);
-            Retention =
-                fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.RetentionFile.Key);
-            SobekSim =
-                fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.SobekSimIniFile.Key);
+        private void ReadMandatoryFileNames(IDelftIniCategory filesNamesCategory)
+        {
+            Network = filesNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.NetworkFile.Key);
+            Structures = filesNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.StructuresFile.Key);
+            ObservationPoints = filesNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.ObservationPointsFile.Key);
+            LateralDischarge = filesNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.LateralDischargeLocationsFile.Key);
+            BoundaryConditions = filesNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.BoundaryConditionsFile.Key);
+            BoundaryLocations = filesNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.BoundaryLocationsFile.Key);
+            CrossSectionDefinitions = filesNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.CrossSectionDefinitionsFile.Key);
+            CrossSectionLocations = filesNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.CrossSectionLocationsFile.Key);
+            Retention = filesNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.RetentionFile.Key);
+            SobekSim = filesNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.SobekSimIniFile.Key);
+        }
 
-            LogFile =
-                fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.LogFile.Key);
+        private void ReadOptionalFileNames(DelftIniCategory fileNamesCategory)
+        {
+            InitialDischarge = fileNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.InitialDischargeFile.Key, true);
+            InitialSalinity = fileNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.InitialSalinityFile.Key, true);
+            InitialTemperature = fileNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.InitialTemperatureFile.Key, true);
+            InitialWaterLevel = fileNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.InitialWaterLevelFile.Key, true);
+            InitialWaterDepth = fileNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.InitialWaterDepthFile.Key, true);
+            Dispersion = fileNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.DispersionFile.Key, true);
+            DispersionF3 = fileNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.DispersionF3File.Key, true);
+            DispersionF4 = fileNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.DispersionF4File.Key, true);
+            WindShielding = fileNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.WindShieldingFile.Key, true);
+            LogFile = fileNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.LogFile.Key, true);
+            Salinity = fileNamesCategory.ReadProperty<string>(ModelDefinitionsRegion.SalinityParametersFile.Key, true);
 
-            Salinity =
-                fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.SalinityParametersFile.Key, true);
-
-
-            var readRoughnessFiles =
-                fileSection[0].ReadPropertiesToListOfType<string>(ModelDefinitionsRegion.RoughnessFile.Key,
-                    separator: ';', isOptional:true);
+            var readRoughnessFiles = fileNamesCategory.ReadPropertiesToListOfType<string>(ModelDefinitionsRegion.RoughnessFile.Key, separator: ';', isOptional: true);
             if (readRoughnessFiles == null) return;
             foreach (var file in readRoughnessFiles)
             {
@@ -253,7 +248,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             get
             {
-                return initialWaterLevel == null ? null : Path.Combine(targetPath, initialWaterDepth);
+                return initialWaterDepth == null ? null : Path.Combine(targetPath, initialWaterDepth);
             }
             private set { initialWaterDepth = value; }
         }
