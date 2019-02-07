@@ -412,9 +412,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         [Test]
         public void TestModelDefinitionFileWriter_Sediment()
         {
-            var waterFlowModel1D = new WaterFlowModel1D();
-
-            // Retrieve values from Model
+            var waterFlowModel1D = new WaterFlowModel1D {D50 = 0.0006, D90 = 0.004, DepthUsedForSediment = 0.02};
 
             // Write Md1d File
             var targetPath = Path.Combine(Environment.CurrentDirectory, FileWriterTestHelper.RelativeTargetDirectory);
@@ -430,11 +428,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             Assert.NotNull(content);
 
             // Check values are present in category
-            // TODO: D50 (not implemented yet)
-            // TODO: D90 (not implemented yet)
-            // TODO: DepthUsedForSediment (not implemented yet)
+            var d50 = content.Properties.First(p => p.Name == ModelDefinitionsRegion.D50.Key);
+            Assert.AreEqual("0.0006", d50.Value);
+            var d90 = content.Properties.First(p => p.Name == ModelDefinitionsRegion.D90.Key);
+            Assert.AreEqual("0.004", d90.Value);
+            var depthUsedForSediment = content.Properties.First(p => p.Name == ModelDefinitionsRegion.DepthUsedForSediment.Key);
+            Assert.AreEqual("0.02", depthUsedForSediment.Value);
         }
-        
+
         [Test]
         public void TestModelDefinitionFileWriter_Specials()
         {
