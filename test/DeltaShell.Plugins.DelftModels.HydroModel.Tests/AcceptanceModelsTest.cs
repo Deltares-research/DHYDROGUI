@@ -180,7 +180,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [TestCase("c01_sobek-rijn-j17_5-v1/sobek-rijn-j17_5-v1.zip", @"sobek-rijn-j17_5-v1.dsproj", TestName = "c01_sobek-rijn-j17_5-v1")]
         [TestCase("c02_sobek-maas-j17_5-v1/sobek-maas-j17_5-v1.zip", @"sobek-maas-j17_5-v1.dsproj", TestName = "c02_sobek-maas-j17_5-v1")]
-        [TestCase("c03_sobek-rmm-j15_5-v1/sobek-rmm-j15_5-v1.zip", @"sobek-rmm-j15_5-v1.dsproj", TestName = "c03_sobek-rmm-j15_5-v1")]
+        [TestCase("c03_sobek-rmm-j15_5-v2/sobek-rmm-vozo-j15_5-v2(3-7-14a).zip", @"sobek-rmm-vozo-j15_5-v2(3-7-14a).dsproj", TestName = "sobek-rmm-vozo-j15_5-v2(3-7-14a)")]
         [TestCase("c04_sobek-ovd-j14_5-v1/sobek-ovd-j14_5-v1.zip", @"sobek-ovd-j14_5-v1.dsproj", TestName = "c04_sobek-ovd-j14_5-v1")]
         [TestCase("c05_sobek-markermeer-j10_5-v1/sobek-markermeer-j10_5-v1.zip", @"sobek-markermeer-j10_5-v1_rvw2006.dsproj", TestName = "c05_sobek-markermeer-j10_5-v1 (sobek-markermeer-j10_5-v1_rvw2006)")]
         [TestCase("c05_sobek-markermeer-j10_5-v1/sobek-markermeer-j10_5-v1.zip", @"sobek-markermeer-j10_5-v1_rvw2007.dsproj", TestName = "c05_sobek-markermeer-j10_5-v1 (sobek-markermeer-j10_5-v1_rvw2007)")]
