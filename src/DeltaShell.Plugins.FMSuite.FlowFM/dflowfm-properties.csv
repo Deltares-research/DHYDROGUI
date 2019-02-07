@@ -111,6 +111,7 @@ numerics,Maxwaterleveldiff,,,Water level threshold,Double,0,,,FALSE,,,,,,Upper b
 numerics,Maxvelocitydiff,,,Velocity threshold,Double,0,,,FALSE,,,,,,Upper bound (in m/s) on velocity changes (<=0: no bounds)
 numerics,Epshu,,,Dry cell threshold,Double,1.d-4,,,FALSE,,,,,,Threshold water depth for wet and dry cells
 numerics,SobekDFM_umin,,,Sobek-DFM umin,Double,0,,,FALSE,,,,,,Minimal velocity treshold for weir losses in Sobek-DFM coupling.
+numerics,SetHorizontalBobsFor1d2d,,,,0|1,1,0,1,TRUE,FALSE,FALSE,,,,Bobs will be set to ground level on sewer side
 physics,UnifFrictCoef,physics,Roughness,Uniform friction coefficient,Double,2.3d-2,0,,FALSE,,,,,,Uniform friction coefficient (0: no friction)
 physics,UnifFrictType,physics,Roughness,Uniform friction type:Chezy|Manning|White-Colebrook|Z0,0|1|2|3,1,0,3,FALSE,,,,,,"Uniform friction type (0: Chezy, 1: Manning, 2: White-Colebrook, 3: idem, WAQUA style)"
 physics,UnifFrictCoef1D,physics,Roughness,Uniform 1D friction coefficient,Double,2.3d-2,0,,TRUE,,,,,,Uniform friction coefficient in 1D links (0: no friction)
