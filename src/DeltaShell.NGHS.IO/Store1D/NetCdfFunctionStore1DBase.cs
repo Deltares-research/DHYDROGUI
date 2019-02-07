@@ -364,7 +364,7 @@ namespace DeltaShell.NGHS.IO.Store1D
             Path = newPath;
         }
 
-        public void Delete()
+        public virtual void Delete()
         {
             FileUtils.DeleteIfExists(path);
         }

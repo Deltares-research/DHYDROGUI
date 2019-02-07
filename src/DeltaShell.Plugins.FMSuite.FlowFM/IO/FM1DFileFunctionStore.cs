@@ -34,6 +34,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             OutputFileReader = new FmMapFile1DOutputFileReader();
             sobekStartIndex = 0;
         }
+        public override void Delete()
+        {
+            //lets not delete! I only do this for the stipid prototype.... the _map.nc file is also used by fmfilefunctionstore.... can't delete it!!
+        }
+
         public override object Clone()
         {
             var clonedStore = new FM1DFileFunctionStore() { Path = this.Path, OutputFileReader = new FmMapFile1DOutputFileReader() };
