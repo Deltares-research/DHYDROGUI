@@ -106,20 +106,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             if (targetPath == null || modelFilename == null) return;
 
-            var filename = Path.Combine(targetPath, modelFilename);
-            if (!File.Exists(filename))
+            var modelDefinitionFileName = Path.Combine(targetPath, modelFilename);
+            if (!File.Exists(modelDefinitionFileName))
                 throw new FileReadingException(string.Format("Could not read file {0} properly, it doesn't exist.",
-                    filename));
-            var categories = new DelftIniReader().ReadDelftIniFile(filename);
+                    modelDefinitionFileName));
+            var categories = new DelftIniReader().ReadDelftIniFile(modelDefinitionFileName);
             if (categories.Count == 0)
                 throw new FileReadingException(string.Format("Could not read file {0} properly, it seems empty",
-                    filename));
+                    modelDefinitionFileName));
             var fileSection = categories.Where(category => category.Name == ModelDefinitionsRegion.FilesIniHeader).ToArray();
             if (fileSection.Length != 1)
-                throw new FileReadingException(string.Format("Could not read files section {0} properly", filename));
-            
-            ReadMandatoryFileNames(fileSection.FirstOrDefault());
-            ReadOptionalFileNames(fileSection.FirstOrDefault());
+                throw new FileReadingException(string.Format("Could not read files section {0} properly", modelDefinitionFileName));
+
+            try
+            {
+                ReadMandatoryFileNames(fileSection.FirstOrDefault());
+                ReadOptionalFileNames(fileSection.FirstOrDefault());
+            }
+            catch (PropertyNotFoundInFileException e)
+            {
+                var errorMessage = string.Join(" ", e.Message, $"'{modelDefinitionFileName}' under category '{ModelDefinitionsRegion.FilesIniHeader}'.");
+                throw new PropertyNotFoundInFileException(errorMessage);
+            }
         }
 
         private void ReadMandatoryFileNames(IDelftIniCategory filesNamesCategory)

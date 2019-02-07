@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.Properties;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using NUnit.Framework;
@@ -120,6 +120,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
 
             // When - Then
             Assert.Throws<FormatException>(() => WaterFlowModel1DFileReader.Read(md1dFilePath));
+        }
+
+        [Test]
+        public void GivenMd1dFileWithMandatoryFileNameMissing_WhenReadingMd1dfFile_ThenPropertyNotFoundInFileExceptionIsThrown()
+        {
+            // Given
+            var md1dFilePath = Path.Combine(tempFolderPath, "ModelDefinitionsFileWithMissingMandatoryFileProperty.md1d");
+
+            // When - Then
+            Assert.Throws<PropertyNotFoundInFileException>(() => WaterFlowModel1DFileReader.Read(md1dFilePath));
         }
 
         [Test]

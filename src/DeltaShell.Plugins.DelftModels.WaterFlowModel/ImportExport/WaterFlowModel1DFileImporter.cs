@@ -8,6 +8,8 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using log4net;
 
 
@@ -100,9 +102,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                                         e is FormatException      ||
                                         e is OutOfMemoryException || 
                                         e is IOException          || 
-                                        e is InvalidOperationException)
+                                        e is InvalidOperationException ||
+                                        e is PropertyNotFoundInFileException)
             {
-                log.Error($"An error occurred while trying to import a {Name};", e);
+                log.Error(string.Format(Resources.WaterFlowModel1DFileImporter_ImportItem_An_error_occurred_while_trying_to_import_a__0___, Name), e);
                 return null;
             }
         }

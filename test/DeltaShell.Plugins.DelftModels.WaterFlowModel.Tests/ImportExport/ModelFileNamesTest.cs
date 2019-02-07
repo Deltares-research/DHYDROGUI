@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using NUnit.Framework;
 
@@ -12,25 +13,47 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
     [TestFixture]
     public class ModelFileNamesTest
     {
-        private static class CustomModelFilenames
+        private string tempFolderPath;
+
+        [TestFixtureSetUp]
+        public void FixtureSetup()
         {
-            public static string SavePath { private get; set; }
-            public static string NetworkFilename {get { return Path.Combine(SavePath, "My_NetworkDefinition.ini");}}
-            public static string CrossSectionLocationFilename {get { return Path.Combine(SavePath, "My_CrossSectionLocations.ini");}} 
-            public static string CrossSectionDefinitionFilename {get { return Path.Combine(SavePath, "My_CrossSectionDefinitions.ini");}}
-            public static string StructureFilename {get { return Path.Combine(SavePath, "My_Structures.ini");}}
-            public static string ObservationPointFilename {get { return Path.Combine(SavePath, "My_ObservationPoints.ini");}}
-                          
-            public static string roughnessFile1 {get { return Path.Combine(SavePath, "My_roughness-1.ini");}}
-            public static string roughnessFile2 {get { return Path.Combine(SavePath, "My_roughness-2.ini");}}
-                          
-            public static string BoundaryLocationFilename {get { return Path.Combine(SavePath, "My_BoundaryLocations.ini");}} 
-            public static string LateralDischargeFilename {get { return Path.Combine(SavePath, "My_LateralDischargeLocations.ini");}}
-            public static string BoundaryConditionsFilename {get { return Path.Combine(SavePath, "My_BoundaryConditions.bc");}}
-                          
-            public static string SobekSimFilename {get { return Path.Combine(SavePath, "My_SobekSim.ini");}}
-            public static string RetentionFilename {get { return Path.Combine(SavePath, "My_Retention.ini");}}
-            public static string LogFileName {get { return Path.Combine(SavePath, "My_sobek.log");}}
+            var testFolder = TestHelper.GetTestDataPath(Assembly.GetExecutingAssembly(), @"Md1dReading");
+            tempFolderPath = TestHelper.CreateLocalCopy(testFolder);
+        }
+
+        [TestFixtureTearDown]
+        public void FixtureTearDown()
+        {
+            FileUtils.DeleteIfExists(tempFolderPath);
+        }
+
+        [Test]
+        public void GivenMd1dFileWithMandatoryFileNameMissing_WhenInstantiatingModelFileNames_ThenPropertyNotFoundInFileExceptionIsThrown()
+        {
+            // Given
+            var modelDefinitionFilePath = Path.Combine(tempFolderPath, "ModelDefinitionsFileWithMissingMandatoryFileProperty.md1d");
+
+            // When - Then
+            Assert.Throws<PropertyNotFoundInFileException>(() => new ModelFileNames(modelDefinitionFilePath));
+        }
+
+        [Test]
+        public void GivenMd1dFileWithMandatoryFileNameMissing_WhenInstantiatingModelFileNames_ThenPropertyNotFoundInFileExceptionIsThrownWithMessage()
+        {
+            // Given
+            var modelDefinitionFilePath = Path.Combine(tempFolderPath, "ModelDefinitionsFileWithMissingMandatoryFileProperty.md1d");
+
+            // When - Then
+            try
+            {
+                new ModelFileNames(modelDefinitionFilePath);
+            }
+            catch (PropertyNotFoundInFileException e)
+            {
+                var errorMessage = $"Property {ModelDefinitionsRegion.NetworkFile.Key} is not found in the file '{modelDefinitionFilePath}' under category '{ModelDefinitionsRegion.FilesIniHeader}'.";
+                Assert.That(e.Message, Is.EqualTo(errorMessage));
+            }
         }
 
         [Test]
@@ -94,6 +117,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
                     BindingFlags.NonPublic | BindingFlags.Static)
                     .FirstOrDefault(fi => fi.Name == name);
             return fieldInfo == null ? null : Path.Combine(Environment.CurrentDirectory, fieldInfo.GetValue(null).ToString());
+        }
+
+        private static class CustomModelFilenames
+        {
+            public static string SavePath { private get; set; }
+            public static string NetworkFilename {get { return Path.Combine(SavePath, "My_NetworkDefinition.ini");}}
+            public static string CrossSectionLocationFilename {get { return Path.Combine(SavePath, "My_CrossSectionLocations.ini");}} 
+            public static string CrossSectionDefinitionFilename {get { return Path.Combine(SavePath, "My_CrossSectionDefinitions.ini");}}
+            public static string StructureFilename {get { return Path.Combine(SavePath, "My_Structures.ini");}}
+            public static string ObservationPointFilename {get { return Path.Combine(SavePath, "My_ObservationPoints.ini");}}
+                          
+            public static string roughnessFile1 {get { return Path.Combine(SavePath, "My_roughness-1.ini");}}
+            public static string roughnessFile2 {get { return Path.Combine(SavePath, "My_roughness-2.ini");}}
+                          
+            public static string BoundaryLocationFilename {get { return Path.Combine(SavePath, "My_BoundaryLocations.ini");}} 
+            public static string LateralDischargeFilename {get { return Path.Combine(SavePath, "My_LateralDischargeLocations.ini");}}
+            public static string BoundaryConditionsFilename {get { return Path.Combine(SavePath, "My_BoundaryConditions.bc");}}
+                          
+            public static string SobekSimFilename {get { return Path.Combine(SavePath, "My_SobekSim.ini");}}
+            public static string RetentionFilename {get { return Path.Combine(SavePath, "My_Retention.ini");}}
+            public static string LogFileName {get { return Path.Combine(SavePath, "My_sobek.log");}}
         }
     }
 }

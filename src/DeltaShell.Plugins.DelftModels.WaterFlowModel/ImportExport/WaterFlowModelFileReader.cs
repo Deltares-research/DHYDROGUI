@@ -16,6 +16,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.FileReaders.Retention;
 using DeltaShell.NGHS.IO.FileReaders.SpatialData;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Boundary;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinition;
@@ -128,7 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 }
 
             }
-            catch (FormatException)
+            catch (Exception e) when (e is FormatException || e is PropertyNotFoundInFileException)
             {
                 throw;
             }

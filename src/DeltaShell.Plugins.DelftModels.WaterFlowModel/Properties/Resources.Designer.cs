@@ -663,6 +663,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred while trying to import a {0}; .
+        /// </summary>
+        public static string WaterFlowModel1DFileImporter_ImportItem_An_error_occurred_while_trying_to_import_a__0___ {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DFileImporter_ImportItem_An_error_occurred_while_trying_to_import_" +
+                        "a__0___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FloodPlain2 width cannot be larger than 0.0, if FloodPlain1 width is equal to 0.0.
         /// </summary>
         public static string WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_FloodPlain2_width_may_not_be_larger_than_zero_if_FloodPlain1_width_is_equal_to_zero_ {

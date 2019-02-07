@@ -10,6 +10,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -262,7 +263,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             TestHelper.AssertLogMessageIsGenerated(() =>
             {
                 result = (WaterFlowModel1D) importer.ImportItem(path);
-            }, $"An error occurred while trying to import a {importer.Name};", 1);
+            }, string.Format(Resources.WaterFlowModel1DFileImporter_ImportItem_An_error_occurred_while_trying_to_import_a__0___, importer.Name), 1);
 
             readFunc.VerifyAllExpectations();
             Assert.That(result, Is.Null, "Expected ImportItem to file upon reading and return null:");
