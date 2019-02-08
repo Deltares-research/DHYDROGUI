@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
         /// <summary>
         /// WHEN SupportedItemTypes is retrieved
-        /// THEN a set containing ICompositeActivityIsReturend
+        /// THEN a set containing ICompositeActivity is returned
         /// </summary>
         [Test]
         public void WhenSupportedItemTypesIsRetrieved_ThenASetContainingICompositeActivityIsReturned()

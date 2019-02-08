@@ -542,9 +542,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
         [InvokeRequired]
         private void ActivityRunnerActivityStatusChanged(object sender, ActivityStatusChangedEventArgs e)
         {
-            if (!(sender is WaterFlowModel1D) || e.NewStatus != ActivityStatus.Failed) return;
+            if (sender is WaterFlowModel1D && e.NewStatus == ActivityStatus.Failed)
+                Gui?.CommandHandler?.OpenView(sender, typeof(ValidationView));
 
-            Gui?.CommandHandler?.OpenView(sender, typeof(ValidationView));
+            if (sender is FileImportActivity importActivity &&
+                importActivity.FileImporter is WaterFlowModel1DFileImporter importer &&
+                e.NewStatus == ActivityStatus.Finished)
+            {
+                Gui?.MainWindow?.ProjectExplorer?.TreeView?.Refresh();
+            }
         }
     }
 
