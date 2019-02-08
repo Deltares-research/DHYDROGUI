@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileReaders.Network;
@@ -45,15 +46,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             // Read from file
             IHydroNetwork readNetwork = new HydroNetwork();
             IDiscretization readDiscretization = new Discretization();
-            
-            var networkDefinitionFileReader = new NetworkDefinitionFileReader((header, errorMessages) => {});
-            var nodes = networkDefinitionFileReader.ReadHydroNodes(FileWriterTestHelper.ModelFileNames.Network);
-            readNetwork.Nodes.AddRange(nodes);
-            var branches = networkDefinitionFileReader.ReadBranches(FileWriterTestHelper.ModelFileNames.Network, readNetwork.Nodes);
-            readNetwork.Branches.AddRange(branches);
-            var readNetworkLocations = networkDefinitionFileReader.ReadNetworkLocations(FileWriterTestHelper.ModelFileNames.Network, readNetwork.Branches);
-            readDiscretization.Locations.Values.AddRange(readNetworkLocations.ToList());
 
+            var networkDefinitionFileReader = new NetworkDefinitionFileReader((header, errorMessages) => {});
+            var readNetworkLocations = networkDefinitionFileReader.ReadNetworkDefinitionFile(FileWriterTestHelper.ModelFileNames.Network, readNetwork);
+            readDiscretization.Locations.Values.AddRange(readNetworkLocations.ToList());
 
             // Comparison
             var originalNodes = originalNetwork.HydroNodes.ToArray();
@@ -81,7 +77,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
-        public void GivenAnIncorrectTestIniFile_WhenTryingToRead_AnErrorReportWithAnErrorIsReturned()
+        public void GivenAnIncorrectTestIniFile_WhenTryingToRead_ThenAnErrorReportWithAnErrorIsReturned()
         {
             // Setup network data
             originalNetwork.Nodes[0].Geometry = new Point(NetworkAndGridReaderTestHelper.NODE1_X, NetworkAndGridReaderTestHelper.NODE1_Y);
@@ -103,7 +99,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             // Read from model
             var errorReport = new List<string>();
             var networkDefinitionFileReader = new NetworkDefinitionFileReader((header, errorMessages) => { errorReport.AddRange(errorMessages); });
-            networkDefinitionFileReader.ReadHydroNodes(FileWriterTestHelper.ModelFileNames.Network);
+            networkDefinitionFileReader.ReadNetworkDefinitionFile(FileWriterTestHelper.ModelFileNames.Network, new HydroNetwork());
 
             Assert.That(errorReport.Count, Is.GreaterThan(0));
         }
@@ -131,9 +127,23 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             //Read from model
             var errorReport = new List<string>();
             var networkDefinitionFileReader = new NetworkDefinitionFileReader((header, errorMessages) => { errorReport.AddRange(errorMessages); });
-            networkDefinitionFileReader.ReadHydroNodes(FileWriterTestHelper.ModelFileNames.Network);
+            networkDefinitionFileReader.ReadNetworkDefinitionFile(FileWriterTestHelper.ModelFileNames.Network, new HydroNetwork());
 
             Assert.That(errorReport.Count, Is.GreaterThan(0));
+        }
+
+        [Test]
+        public void GivenNetworkDefinitionFileReader_WhenReadingHydroNodesFromNonExistentFilePath_ThenFileNotFoundExceptionIsThrown()
+        {
+            // Given
+            void ErrorReportAction(string header, IList<string> errorMessages)
+            {
+            }
+
+            var reader = new NetworkDefinitionFileReader(ErrorReportAction);
+
+            // When - Then
+            Assert.Throws<FileNotFoundException>(() => reader.ReadNetworkDefinitionFile("NonExistentPath.me", new HydroNetwork()));
         }
     }
 }

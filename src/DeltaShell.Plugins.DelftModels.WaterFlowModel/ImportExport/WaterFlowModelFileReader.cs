@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 }
 
             }
-            catch (Exception e) when (e is FormatException || e is PropertyNotFoundInFileException)
+            catch (Exception e) when (e is FormatException || e is PropertyNotFoundInFileException || e is FileNotFoundException)
             {
                 throw;
             }
@@ -247,17 +247,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         private static void ReadNetworkDefinitionFile(WaterFlowModel1D model, Action<string, IList<string>> createAndAddErrorReport)
         {
-            var network = model.Network;
-            var networkDefinitionFileReader = new NetworkDefinitionFileReader(createAndAddErrorReport);
-
-            var nodes = networkDefinitionFileReader.ReadHydroNodes(fileNames.Network);
-            network.Nodes.AddRange(nodes);
-
-            var branches = networkDefinitionFileReader.ReadBranches(fileNames.Network, network.Nodes);
-            network.Branches.AddRange(branches);
-
-            var readNetworkLocations = networkDefinitionFileReader.ReadNetworkLocations(fileNames.Network, network.Branches).ToList();
-            model.NetworkDiscretization.Locations.Values.AddRange(readNetworkLocations);
+            var reader = new NetworkDefinitionFileReader(createAndAddErrorReport);
+            var networkLocations = reader.ReadNetworkDefinitionFile(fileNames.Network, model.Network);
+            model.NetworkDiscretization.Locations.Values.AddRange(networkLocations);
         }
 
         private static void ReadFileLateralDischargeLocations(IEnumerable<IChannel> channels, Action<string, IList<string>> createAndAddErrorReport)
