@@ -27,7 +27,7 @@ class FMwriter:
         return result;
 
     def writeMdFiles(self, dirPath, outputDir):
-        srcMdu = os.path.join(dirPath, 'python','resources', 'FMmdu.txt')
+        srcMdu = os.path.join(dirPath, 'script','resources', 'FMmdu.txt')
         targetMdu = os.path.join(dirPath, outputDir, 'hydamo.mdu')
 
         shutil.copy2(srcMdu, targetMdu)
@@ -61,12 +61,11 @@ class FMwriter:
         fileRough.write('globalValue = 45.0\n')
         fileRough.write('\n')
 
-        for keyvalue in self.model.crosssections.items():
+        for cs in self.model.crosssections:
 
-            value = keyvalue[1]
-            id = str(value[0])
-            branch_id = str(value[1])
-            offset = str(value[2])
+            id = str(cs[0])
+            branch_id = str(cs[1])
+            offset = str(cs[2])
 
             fileCSLoc.write('[crosssection]\n')
             fileCSLoc.write('id = ' + id + '\n')
@@ -107,25 +106,24 @@ class FMwriter:
         # roughnessNames String[]
         # roughnessPositions Double[]
 
-        for keyvalue in self.model.crosssections.items():
+        for cs in self.model.crosssections:
 
-            value = keyvalue[1]
-            id = str(value[0])
+            id = str(cs[0])
             yValues = []
             zValues = []
-            for point in value[3]:
+            for point in cs[3]:
                 yValues.append(point[0])
                 zValues.append(point[1])
 
             fileCSDef.write('[definition]\n')
             fileCSDef.write('id = def_' + id + '\n')
             fileCSDef.write('type = yz\n')
-            fileCSDef.write('yzCount = 1\n')
+            fileCSDef.write('yzCount = ' + str(len(yValues)) + '\n')
             fileCSDef.write('yValues = ' + " ".join(str(y) for y in yValues) + '\n')
             fileCSDef.write('zValues = ' + " ".join(str(z) for z in zValues) + '\n')
             fileCSDef.write('sectionCount = 1\n')
             fileCSDef.write('roughnessNames = HyDAMO\n')
-            fileCSDef.write('roughnessPositions = 0.0 ' + yValues[-1] + '\n')
+            fileCSDef.write('roughnessPositions = 0.0 ' + str(yValues[-1]) + '\n')
             fileCSDef.write('\n')
 
         fileCSDef.close()

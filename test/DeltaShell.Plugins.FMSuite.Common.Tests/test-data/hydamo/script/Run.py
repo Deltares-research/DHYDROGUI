@@ -1,5 +1,5 @@
 # coding: latin-1
-import os, sys
+import os, sys, time
 from HyDAMO2FMConverter import HyDAMO2FMConverter
 from HyDAMOreader import HyDAMOreader
 from FMwriter import FMwriter
@@ -21,8 +21,7 @@ if __name__ == '__main__':
     fm_model = converter.ConvertToFMmodel(hydamo_model, oneDMeshDistance)
     writer = FMwriter(fm_model)
     succeeded = writer.writeAll(dirPath, outputDir)
-    succeeded = True
-    print('Succeeded = ' + str(succeeded))
+    print('*********    ' + time.strftime("%Y-%m-%d %H:%M") + '     *********\n')
 
 
 

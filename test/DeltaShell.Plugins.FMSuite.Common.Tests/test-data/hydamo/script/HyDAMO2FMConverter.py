@@ -56,8 +56,8 @@ class HyDAMO2FMConverter:
             branch_name = value[3]
 
             #test AaMaas
-            if branch_name != 'AaMaas':
-                continue
+            #if branch_name != 'AaMaas':
+            #    continue
 
             if points is None or len(points) < 2:
                 continue
@@ -86,9 +86,6 @@ class HyDAMO2FMConverter:
             i_from = list(nodes.keys()).index(first_point_x_y_name) + 1
             i_to = list(nodes.keys()).index(last_point_x_y_name) + 1
             networkdata["edge_node"].append([i_from, i_to])
-
-            #if branch_id == 'riv_1160550_62' or branch_id == 'riv_1160540_63' or branch_id == 'riv_1160530_83':
-            #   jippie = True
 
             #calculation points [1d mesh]
 
@@ -129,6 +126,8 @@ class HyDAMO2FMConverter:
 
             i_branch += 1
 
+            #if i_branch > 100: break
+
         node_i = 1
         for keyvalue in nodes.items():
             id = keyvalue[0]
@@ -146,9 +145,11 @@ class HyDAMO2FMConverter:
 
     def generate_2dmesh_data(self, geom_x, geom_y):
 
+        #just generate a west and east cell of the area for running the model
         minX = min(geom_x)
         maxX = max(geom_x)
-        deltaX = maxX - minX
+        deltaX = (maxX - minX) * 0.5
+        middleX = minX + deltaX
         minY = min(geom_y)
         maxY = max(geom_y)
         deltaY = maxY - minY
@@ -166,13 +167,15 @@ class HyDAMO2FMConverter:
         grid["face_y"] = []
         grid["edge_faces"] = []
 
-        grid["node_x"].extend([minX, minX, maxX, maxX])
-        grid["node_y"].extend([minY, maxY, maxY, minY])
-        grid["edge_node"].extend([[1, 2],[2, 3],[3, 4],[4, 1]])
-        grid["edge_x"].extend([minX, minX + (0.5 * deltaX), maxX, minX + (0.5 * deltaX)])
-        grid["edge_y"].extend([minY + (0.5 * deltaY), maxY, minY + (0.5 * deltaY), minY])
-        grid["face_node"].append([1, 2, 3, 4])
+        grid["node_x"].extend([minX, minX, middleX, middleX, maxX, maxX])
+        grid["node_y"].extend([minY, maxY, minY, minY, minY, maxY])
+        grid["edge_node"].extend([[1, 2],[2, 4],[4, 3],[3, 1],[3,5],[5,6],[6,4]])
+        grid["edge_x"].extend([minX, minX + (0.5 * deltaX), maxX, minX + (0.5 * deltaX),minX + (1.5 * deltaX),maxX,minX + (1.5 * deltaX)])
+        grid["edge_y"].extend([minY + (0.5 * deltaY), maxY, minY + (0.5 * deltaY), minY,minY, minY + (0.5 * deltaY), maxY])
+        grid["face_node"].append([3, 5, 6, 7])
         grid["face_x"].append(minX + (0.5 * deltaX))
+        grid["face_x"].append(minX + (1.5 * deltaX))
+        grid["face_y"].append(minY + (0.5 * deltaY))
         grid["face_y"].append(minY + (0.5 * deltaY))
 
         return grid
@@ -182,6 +185,8 @@ class HyDAMO2FMConverter:
         line = ogr.Geometry(ogr.wkbLineString)
         z_values = []
         name = None
+        i_cs = 0
+
         for keyvalue in profiles.items():
             value = keyvalue[1]
             if name is None:
@@ -190,14 +195,22 @@ class HyDAMO2FMConverter:
             if name != value[8]:
 
                 #get cs
-                cs = self.get_yz_cs(name,line,z_values, branches)
-                if cs is not None:
-                    crosssections.append(cs)
+                if line.GetPointCount() <= 1:
+                    print(str(name) + " has not enough points to construct a cross-section")
+                else:
+                    cs = self.get_yz_cs(name,line,z_values, branches)
+                    if cs is not None:
+                        crosssections.append(cs)
+                        i_cs += 1
+
+                        #if i_cs > 100: return crosssections
+
 
                 #new cs
                 line = ogr.Geometry(ogr.wkbLineString)
                 z_values = []
                 name = value[8]
+
 
             point = value[0][0]
             x, y, z = point
@@ -205,9 +218,12 @@ class HyDAMO2FMConverter:
             z_values.append(z)
 
         if name is not None:
-            cs = self.get_yz_cs(name, line, z_values, branches)
-            if cs is not None:
-                crosssections.append(cs)
+            if line.GetPointCount() <= 1:
+                print(str(name) + " has not enough points to construct a cross-section")
+            else:
+                cs = self.get_yz_cs(name, line, z_values, branches)
+                if cs is not None:
+                    crosssections.append(cs)
 
         return crosssections
 
@@ -219,6 +235,9 @@ class HyDAMO2FMConverter:
             branch = ogr.Geometry(ogr.wkbLineString)
             for xy in points:
                 branch.AddPoint(xy[0], xy[1])
+
+            if branch.GetPointCount() <= 1:
+                continue
 
             if branch.Intersects(cs_line):
                 point = branch.Intersection(cs_line)
