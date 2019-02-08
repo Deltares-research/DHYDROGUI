@@ -682,6 +682,12 @@
   <data name="WaterFlowModel1DProperties_D90_DisplayName" xml:space="preserve">
     <value>D90</value>
   </data>
+  <data name="WaterFlowModel1DProperties_DesignFactorDlg_DisplayName" xml:space="preserve">
+    <value>DesignFactorDlg</value>
+  </data>
+  <data name="WaterFlowModel1DProperties_DesignFactorDlg_Description" xml:space="preserve">
+    <value>DesignFactorDlg</value>
+  </data>
   <data name="WaterFlowModel1DProperties_DepthUsedForSediment_Description" xml:space="preserve">
     <value>Depth used for sediment</value>
   </data>

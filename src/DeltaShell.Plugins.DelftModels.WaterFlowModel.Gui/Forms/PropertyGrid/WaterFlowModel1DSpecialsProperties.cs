@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid {
         [PropertyOrder(1)]
         [ResourcesCategory(typeof(Resources), "WaterFlowModel1DProperties_DesignFactorDlg_DisplayName")]
         [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_DesignFactorDlg_Description")]
-        public double DesignFactorDlg
+        public double? DesignFactorDlg
         {
             get { return data.DesignFactorDlg; }
             set { data.DesignFactorDlg = value; }

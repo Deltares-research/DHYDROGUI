@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         public const string BranchFroudeNumber = "Froude number";
 
         /// <summary>
-        /// subsection parameters; only for coverages; in propertygrid BranchSubsectionParameters is used
+        /// subsection parameters; only for coverages; in property grid BranchSubsectionParameters is used
         /// </summary>
         public const string MainChannel = "Main ";
         public const string FloodPlain1 = "FloodPlain1 ";

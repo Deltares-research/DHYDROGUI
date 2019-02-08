@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         public void Initialize()
         {
             specialsPropertiesSetter = new WaterFlowModelSpecialsPropertiesSetter();
-            waterFlowModel1D = new WaterFlowModel1D();
+            waterFlowModel1D = new WaterFlowModel1D(){DesignFactorDlg = 0.0};
         }
 
         [Test]
@@ -37,6 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Model
         {
             // Given
             var specialsCategory = new DelftIniCategory(ModelDefinitionsRegion.SpecialsValuesHeader); // DelftIniCategory without properties
+
             Assert.That(waterFlowModel1D.DesignFactorDlg, Is.EqualTo(0.0));
 
             // When

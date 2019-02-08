@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             //Given 
             var model = new WaterFlowModel1D("TestModel")
             {
-                DesignFactorDlg = 1.0
+                DesignFactorDlg = 2.0
             };
 
             //When

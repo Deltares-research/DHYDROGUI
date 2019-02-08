@@ -152,6 +152,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             var depthUsedForSedimentParameter = new Parameter<double>(WaterFlowModel1DDataSet.DepthUsedForSedimentPathTag) { Value = 0.3 };
             AddDataItem(depthUsedForSedimentParameter, DataItemRole.Input, WaterFlowModel1DDataSet.DepthUsedForSedimentPathTag);
 
+            var designFactorDlgParameter = new Parameter<double>(WaterFlowModel1DDataSet.SpecialsPathTag) { Value = 1.0 };
+            AddDataItem(designFactorDlgParameter, DataItemRole.Input, WaterFlowModel1DDataSet.SpecialsPathTag);
+
             var useSaltInCalculationParameter = new Parameter<bool>(WaterFlowModel1DDataSet.UseSaltInCalculationParameterTag) { Value = false };
             AddDataItem(useSaltInCalculationParameter, DataItemRole.Input, WaterFlowModel1DDataSet.UseSaltInCalculationParameterTag);
 
@@ -620,6 +623,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         {
             get { return GetDataItemValueByTag<Parameter<string>>(WaterFlowModel1DDataSet.InitialConditionsTypeTag); }
         }
+        public virtual Parameter<string> SpecialsTypeParameter
+        {
+            get { return GetDataItemValueByTag<Parameter<string>>(WaterFlowModel1DDataSet.SpecialsPathTag); }
+        }
 
         public virtual Parameter<string> TemperatureModelTypeParameter
         {
@@ -853,8 +860,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         public virtual double? D50 { get; set; }
         public virtual double? D90 { get; set; }
         public virtual double? DepthUsedForSediment { get; set; }
-
-        public virtual double DesignFactorDlg { get; set; }
+        public virtual double? DesignFactorDlg { get; set; }
         public virtual double HeatCapacityWater { get; set; }
 
         public virtual DensityType DensityType
