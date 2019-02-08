@@ -756,7 +756,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         private void MakeLayerVisibleAfterImport(object layerData)
         {
-            var layer = GetActiveMapView().GetLayerForData(layerData);
+            var layer = GetActiveMapView()?.GetLayerForData(layerData);
             if (layer != null)
             {
                 layer.Visible = true;

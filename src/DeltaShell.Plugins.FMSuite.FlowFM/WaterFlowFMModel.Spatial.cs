@@ -250,7 +250,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get
             {
                 return ModelDefinition.Bathymetry.Components[0].GetValues<double>()
-                    .Select(v => double.IsNaN(v) ? 999.0 : v).ToArray();
+                    .Select(v => double.IsNaN(v) ? -999.0 : v).ToArray();
             }
         }
         private UnstructuredGridFileHelper.BedLevelLocation BedLevelLocation
@@ -382,21 +382,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 case UnstructuredGridFileHelper.BedLevelLocation.Faces:
                 case UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes:
-                    if (Bathymetry is UnstructuredGridCellCoverage) return;
+                    if (Bathymetry is UnstructuredGridCellCoverage && Bathymetry.GetValues().Count == Grid.Cells.Count) return;
                     zValues = GetZValuesFromNetFile(bedLevelType);
                     Bathymetry = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
                     break;
                 case UnstructuredGridFileHelper.BedLevelLocation.CellEdges:
                     Log.WarnFormat(Resources.WaterFlowFMModel_UpdateBathymetryCoverage_Unstructured_grid_edge_coverages_are_not_currently_supported);
                     // Not supported yet, so create a VertexCoverage for now
-                    if (Bathymetry is UnstructuredGridVertexCoverage) return;
+                    if (Bathymetry is UnstructuredGridVertexCoverage && Bathymetry.GetValues().Count == Grid.Vertices.Count) return;
                     zValues = GetZValuesFromNetFile(bedLevelType);
                     Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
                     break;
                 case UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev:
                 case UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev:
                 case UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev:
-                    if (Bathymetry is UnstructuredGridVertexCoverage) return;
+                    if (Bathymetry is UnstructuredGridVertexCoverage && Bathymetry.GetValues().Count == Grid.Vertices.Count) return;
                     zValues = GetZValuesFromNetFile(bedLevelType);
                     Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
                     break;

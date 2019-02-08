@@ -1,11 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
+using DeltaShell.Gui;
+using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.NetworkEditor;
+using DeltaShell.Plugins.NetworkEditor.Gui;
+using DeltaShell.Plugins.ProjectExplorer;
+using DeltaShell.Plugins.SharpMapGis;
+using DeltaShell.Plugins.SharpMapGis.Gui;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
@@ -199,6 +210,140 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             //Assert.AreEqual(33 * 46, bedLevels.Count);
             Assert.AreEqual(876, bedLevels.Count); //876 points with value others are nodatavalue  
         }
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Slow)]
+        public void LoadbedlevelandgridfromrasterwithGui()
+        {
+            var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\2D_bedlevels_Tutorial2.asc");
+            testFilePath = TestHelper.CreateLocalCopy(testFilePath);
+
+            
+            using (var gui = new DeltaShellGui())
+            {
+                var app = gui.Application;
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+
+                gui.Run();
+
+                Action mainWindowShown = delegate
+                {
+                    using (var model = new WaterFlowFMModel())
+                    {
+                        var project = app.Project;
+                        project.RootFolder.Add(model);
+                        var facesValue = ((int)UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
+                        model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(facesValue);
+
+                        // open view for model
+                        gui.CommandHandler.OpenView(model);
+                        var importer = new RasterFileImporter();
+                        importer.ImportItem(testFilePath, model);
+                        // open view for model
+                        gui.CommandHandler.OpenView(model);
+                        gui.GetFocusedMapView().Map.ZoomToExtents();
+                    }
+                };
+
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+            }
+        }
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Slow)]
+        public void LoadbedlevelandgridfromrasterwithGu1i()
+        {
+            var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\2D_bedlevels_Tutorial2.asc");
+            testFilePath = TestHelper.CreateLocalCopy(testFilePath);
+
+
+            using (var gui = new DeltaShellGui())
+            {
+                var app = gui.Application;
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+
+                gui.Run();
+
+                Action mainWindowShown = delegate
+                {
+                    using (var model = new WaterFlowFMModel())
+                    {
+                        var project = app.Project;
+                        project.RootFolder.Add(model);
+                        //var facesValue = ((int)UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
+                        //model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(facesValue);
+
+                        // open view for model
+                        gui.CommandHandler.OpenView(model);
+                        var importer = new RasterFileImporter();
+                        importer.ImportItem(testFilePath, model);
+                        // open view for model
+                        gui.CommandHandler.OpenView(model);
+                        gui.GetFocusedMapView().Map.ZoomToExtents();
+                    }
+                };
+
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+            }
+        }
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Slow)]
+        public void LoadbedlevelfromrasterwithGuifirstgridandthenbedlevel()
+        {
+            var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\2D_bedlevels_Tutorial2.asc");
+            testFilePath = TestHelper.CreateLocalCopy(testFilePath);
+
+
+            using (var gui = new DeltaShellGui())
+            {
+                var app = gui.Application;
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+
+                gui.Run();
+
+                Action mainWindowShown = delegate
+                {
+                    using (var model = new WaterFlowFMModel())
+                    {
+                        var project = app.Project;
+                        project.RootFolder.Add(model);
+                        var facesValue = ((int)UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
+                        model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(facesValue);
+
+                        // open view for model
+                        gui.CommandHandler.OpenView(model);
+                        var importer = new RasterFileImporter();
+                        importer.ImportItem(testFilePath, model.Grid);
+                        importer.ImportItem(testFilePath, model.Bathymetry);
+                        // open view for model
+                        gui.CommandHandler.OpenView(model);
+                        gui.GetFocusedMapView().Map.ZoomToExtents();
+                    }
+                };
+
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+            }
+        }
     }
+
 }
 

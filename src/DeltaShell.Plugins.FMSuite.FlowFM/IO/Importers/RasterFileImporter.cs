@@ -58,6 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             makeLayerVisibleAction?.Invoke(flowModel.Grid);
             SetBedLevel(path, flowModel);
             makeLayerVisibleAction?.Invoke(flowModel.Bathymetry);
+            flowModel.ReloadGrid(false);
             return flowModel;
         }
 
@@ -131,7 +132,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 {
                     var location = (UnstructuredGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
                     BathymetryFileWriter.Write(flowModel.NetFilePath, location, bedlevels.Select(bl => bl.Value).ToArray());
-                    flowModel.ReloadGrid(false ,true);
+                    flowModel.Bathymetry.Arguments[0].Clear();
+                    flowModel.Bathymetry.Components[0].Clear(); 
+                    flowModel.UpdateBathymetryCoverage(location);
+                    flowModel.ReloadGrid(false);
+                    
                 }
             }
         }

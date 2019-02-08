@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var model = new WaterFlowFMModel(localMduFilePath);
 
             ActivityRunner.RunActivity(model);
-
+            Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned));
             var leveeBrachDepthFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "dambreak_breach_depth");
             Assert.IsNotNull(leveeBrachDepthFunction);
             Assert.AreSame(model.Area.LeveeBreaches.First(),
