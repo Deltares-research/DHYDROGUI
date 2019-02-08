@@ -48,8 +48,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         private bool creating;
         private bool updating; // updating property values which can trigger other changes
 
-        private bool migrating; // moving existing models into an integrated model (as opposed to adding a new model)
-
         private bool overrideStartTime;
         private bool overrideStopTime;
         private bool overrideTimeStep;
@@ -58,13 +56,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         private CompositeHydroModelWorkFlowData currentWorkFlowData;
 
         public virtual bool ReadOnly { get; set; }
-
-        public virtual bool Migrating
-        {
-            get { return migrating; }
-            set { migrating = value; }
-        }
-
         #endregion
 
         #region Constructor and dispose
@@ -359,7 +350,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         {
                             model.Owner = this;
 
-                            if (migrating || (IsEditing && CurrentEditAction is ImportingFullModelAction))
+                            if (IsEditing && (CurrentEditAction is MovingModelAction ||
+                                              CurrentEditAction is ImportingFullModelAction))
                             {
                                 // rebuild links and keep related data structure
                                 RebuildModelLinks();

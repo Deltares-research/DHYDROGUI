@@ -626,38 +626,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         }
 
         [InvokeRequired]
-        private void OnActivityRunnerStatusChanged(object sender,
-            ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
+        private void OnActivityRunnerStatusChanged(object sender,ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
         {
-            if (sender is FileImportActivity)
+            var importer = (sender as FileImportActivity)?.FileImporter;
+            if (importer != null && activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished)
             {
-                var importer = ((FileImportActivity) sender).FileImporter;
+                if (importer is FlowFMNetFileImporter      || 
+                    importer is IFeature2DImporterExporter ||
+                    importer is WaterFlowFMFileImporter)
+                {
+                    ActiveMapView?.Map?.ZoomToExtents();
+                }
 
-                if (importer is FlowFMNetFileImporter || importer is IFeature2DImporterExporter)
+                if (importer is WaterFlowFMFileImporter)
                 {
-                    if (activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished)
-                    {
-                        if (ActiveMapView != null)
-                        {
-                            ActiveMapView.Map.ZoomToExtents();
-                        }                        
-                    }
+                    Gui?.MainWindow?.ProjectExplorer?.TreeView?.Refresh();
                 }
-                if (importer is WaterFlowFMFileImporter &&
-                    activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished)
-                {
-                    Gui.MainWindow.ProjectExplorer.TreeView.Refresh();
-                    if (ActiveMapView != null)
-                    {
-                        ActiveMapView.Map.ZoomToExtents();
-                    }
-                }
+
+                return;
             }
 
             var model = sender as WaterFlowFMModel;
             if ( model != null && model.WriteSnappedFeatures && activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing)
             {
-                //Clean output snapped layers;
+                // Clean output snapped layers;
                 // release file locks
                 var mapViews = Gui.DocumentViews.OfType<ProjectItemMapView>().Where( m => (m.Data as WaterFlowFMModel) == model);
 

@@ -7,13 +7,24 @@ using DelftTools.Utils.Reflection;
 
 namespace DelftTools.Hydro
 {
+    /// <summary>
+    /// Action used for importing a full model 
+    /// This can be used to skip specific logic that is not necessary during full model import
+    /// </summary>
+    public class MovingModelAction : EditActionBase
+    {
+        public MovingModelAction(string name) : base(name)
+        {
+        }
+    }
+
     public static class IHydroModelExtensions
     {
         [InvokeRequired]
         public static void MoveModelIntoIntegratedModel(this IHydroModel sourceModel, Folder rootFolder,
             ICompositeActivity targetHydroModel)
         {
-            var editAction = new DefaultEditAction("Move model " + sourceModel.Name + " into " + targetHydroModel.Name);
+            var editAction = new MovingModelAction("Move model " + sourceModel.Name + " into " + targetHydroModel.Name);
             var eobjectmodel = targetHydroModel as IEditableObject;
             if (eobjectmodel == null) return;
             eobjectmodel.BeginEdit(editAction);
@@ -22,7 +33,7 @@ namespace DelftTools.Hydro
             eobjectmodel.EndEdit();
         }
 
-        private static void MoveActivity(IHydroModel sourceModel, Folder rootFolder, ICompositeActivity targetHydroModel)
+        public static void MoveActivity(this IHydroModel sourceModel, Folder rootFolder, ICompositeActivity targetHydroModel)
         {
             if (rootFolder != null)
             {
@@ -36,7 +47,7 @@ namespace DelftTools.Hydro
                 
                 var hydroRegions = hmodel.Region.SubRegions;
                 var integratedModelHydroRegion =
-                    hydroRegions.FirstOrDefault(region => TypeUtils.Implements(region.GetType(), sourceModel.Region.GetType()));
+                    hydroRegions.FirstOrDefault(region => region.GetType().Implements(sourceModel.Region.GetType()));
 
                 if (integratedModelHydroRegion != null)
                 {
@@ -45,12 +56,13 @@ namespace DelftTools.Hydro
                 hydroRegions.Add(sourceModel.Region);
             }
             // Move (overwrite) model itself to target CompositeModel. 
-            var targetFlowModel =
-                targetHydroModel.Activities.FirstOrDefault(a => a.GetType().Implements(sourceModel.GetType()));
+            var targetFlowModel = targetHydroModel.Activities
+                                                  .FirstOrDefault(a => a.GetType().Implements(sourceModel.GetType()));
             if (targetFlowModel != null)
             {
                 targetHydroModel.Activities.Remove(targetFlowModel);
             }
+
             targetHydroModel.Activities.Add(sourceModel);
         }
     }

@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Dimr;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
@@ -30,7 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// <inheritdoc />
         public IEnumerable<Type> SupportedItemTypes
         {
-            get { yield break; }
+            get { yield return typeof(ICompositeActivity); }
         }
 
         /// <inheritdoc />
@@ -54,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// <inheritdoc />
         public bool CanImportOn(object targetObject)
         {
-            return targetObject is Project && GetDimrModelFileImporters.Any(e => e.CanImportOn(targetObject));
+            return GetDimrModelFileImporters.Any(e => e.CanImportOn(targetObject));
         }
 
         /// <inheritdoc />

@@ -544,7 +544,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
         {
             if (!(sender is WaterFlowModel1D) || e.NewStatus != ActivityStatus.Failed) return;
 
-            Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
+            Gui?.CommandHandler?.OpenView(sender, typeof(ValidationView));
         }
     }
 

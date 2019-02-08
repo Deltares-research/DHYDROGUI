@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
@@ -24,10 +26,30 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var importers = mocks.DynamicMock(typeof(Func<List<IDimrModelFileImporter>>));
             var importer = mocks.DynamicMock<DHydroConfigXmlImporter>(importers);
        
-            var model =importer.ImportItem(dimrXmlPath);
+            var model = importer.ImportItem(dimrXmlPath);
 
             Assert.IsNotNull(model);
             Assert.That(model, Is.TypeOf<HydroModel>());
+        }
+
+        /// <summary>
+        /// WHEN SupportedItemTypes is retrieved
+        /// THEN a set containing ICompositeActivityIsReturend
+        /// </summary>
+        [Test]
+        public void WhenSupportedItemTypesIsRetrieved_ThenASetContainingICompositeActivityIsReturned()
+        {
+            // Given
+            var importers = new List<IDimrModelFileImporter>();
+            var importer = new DHydroConfigXmlImporter(() => importers);
+
+            // When
+            var result = importer.SupportedItemTypes.ToList();
+
+            // Then
+            Assert.That(result, Is.Not.Null, "Expected the retrieved item types not to be null:");
+            Assert.That(result.Count, Is.EqualTo(1), "Expected the supported item types to contain a different number of items:");
+            Assert.That(result.Contains(typeof(ICompositeActivity)), Is.True, "Expected supported item types to contain ICompositeActivity");
         }
 
         /// <summary>
